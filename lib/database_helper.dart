@@ -25,7 +25,7 @@ class DatabaseHelper {
     String path = join(await getDatabasesPath(), 'inventory_database.db');
     return await openDatabase(
       path,
-      version: 2, // Increase the version number
+      version: 1, // Increase the version number
       onCreate: (db, version) {
         // Create the tables
         db.execute(
@@ -35,7 +35,6 @@ class DatabaseHelper {
               'duration INTEGER, '
               'isPaused INTEGER, '
               'isFinished INTEGER, '
-              'remainingTime INTEGER, '
               'elapsedTime REAL, '
               'startTime TEXT, '
               'endTime TEXT, '
@@ -78,23 +77,23 @@ class DatabaseHelper {
               'FOREIGN KEY (speciesId) REFERENCES species(id))'
         );
       },
-      onUpgrade: (db, oldVersion, newVersion) {
-        // Add logic to update the database from previous versions
-        if (oldVersion < 2) {
-          db.execute(
-            'ALTER TABLE inventories ADD COLUMN elapsedTime REAL',
-          );
-          db.execute(
-            'ALTER TABLE inventories ADD COLUMN startTime TEXT',
-          );
-          db.execute(
-            'ALTER TABLE inventories ADD COLUMN endTime TEXT',
-          );
-          db.execute(
-            'ALTER TABLE species ADD COLUMN isOutOfInventory INTEGER',
-          );
-        }
-      },
+      // onUpgrade: (db, oldVersion, newVersion) {
+      //   // Add logic to update the database from previous versions
+      //   if (oldVersion < 2) {
+      //     db.execute(
+      //       'ALTER TABLE inventories ADD COLUMN elapsedTime REAL',
+      //     );
+      //     db.execute(
+      //       'ALTER TABLE inventories ADD COLUMN startTime TEXT',
+      //     );
+      //     db.execute(
+      //       'ALTER TABLE inventories ADD COLUMN endTime TEXT',
+      //     );
+      //     db.execute(
+      //       'ALTER TABLE species ADD COLUMN isOutOfInventory INTEGER',
+      //     );
+      //   }
+      // },
     );
   }
 
@@ -238,7 +237,7 @@ class DatabaseHelper {
     return inventories;
   }
 
-  Future<List<Inventory>> getUnfinishedInventories() async {
+  Future<List<Inventory>> loadActiveInventories() async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db?.query(
       'inventories',

@@ -1,4 +1,8 @@
 
+import 'dart:async';
+import 'package:flutter/foundation.dart';
+import 'database_helper.dart';
+
 class Poi {
   final int? id;
   final int speciesId;
@@ -247,7 +251,6 @@ class Inventory {
   int duration;
   bool isPaused;
   bool isFinished;
-  int remainingTime;
   double elapsedTime;
   DateTime? startTime;
   DateTime? endTime;
@@ -257,6 +260,9 @@ class Inventory {
   double? endLatitude;
   List<Species> speciesList;
   List<Vegetation> vegetationList;
+  Timer? _timer;
+  final ValueNotifier<double> _elapsedTimeNotifier = ValueNotifier<double>(0);
+  ValueNotifier<double> get elapsedTimeNotifier => _elapsedTimeNotifier;
 
   Inventory({
     required this.id,
@@ -264,7 +270,6 @@ class Inventory {
     required this.duration,
     this.isPaused = false,
     this.isFinished = false,
-    this.remainingTime = 0,
     this.elapsedTime = 0,
     this.startTime,
     this.endTime,
@@ -279,10 +284,9 @@ class Inventory {
   Inventory.fromMap(Map<String, dynamic> map, List<Species> speciesList, List<Vegetation> vegetationList)
       : id = map['id'],
         type = InventoryType.values[map['type']], // Converte de índice para enum
-        duration = (map['duration'] as num).toInt(),
+        duration = map['duration'],
         isPaused = map['isPaused'] == 1,
         isFinished = map['isFinished'] == 1,
-        remainingTime = map['remainingTime'],
         elapsedTime = map['elapsedTime'],
         startTime = map['startTime'] != null ? DateTime.parse(map['startTime']) : null,
         endTime = map['endTime'] != null ? DateTime.parse(map['endTime']) : null,
@@ -290,8 +294,8 @@ class Inventory {
         startLatitude = map['startLatitude'],
         endLongitude = map['endLongitude'],
         endLatitude = map['endLatitude'],
-        speciesList = speciesList,
-        vegetationList = vegetationList;
+        this.speciesList = speciesList,
+        this.vegetationList = vegetationList;
 
   Inventory copyWith({
     String? id,
@@ -299,7 +303,6 @@ class Inventory {
     int? duration,
     bool? isPaused,
     bool? isFinished,
-    int? remainingTime,
     double? elapsedTime,
     DateTime? startTime,
     DateTime? endTime,
@@ -316,7 +319,6 @@ class Inventory {
       duration: duration ?? this.duration,
       isPaused: isPaused ?? this.isPaused,
       isFinished: isFinished ?? this.isFinished,
-      remainingTime: remainingTime ?? this.remainingTime,
       elapsedTime: elapsedTime ?? this.elapsedTime,
       startTime: startTime ?? this.startTime,
       endTime: endTime ?? this.endTime,
@@ -336,7 +338,6 @@ class Inventory {
       'duration': duration,
       'isPaused': isPaused ? 1 : 0,
       'isFinished': isFinished ? 1 : 0,
-      'remainingTime': remainingTime,
       'elapsedTime': elapsedTime,
       'startTime': startTime?.toIso8601String(),
       'endTime': endTime?.toIso8601String(),
@@ -355,7 +356,6 @@ class Inventory {
         'duration: $duration, '
         'isPaused: $isPaused, '
         'isFinished: $isFinished, '
-        'remainingTime: $remainingTime, '
         'elapsedTime: $elapsedTime, '
         'startTime: $startTime, '
         'endTime: $endTime, '
@@ -363,6 +363,42 @@ class Inventory {
         'startLatitude: $startLatitude, '
         'endLongitude: $endLongitude, '
         'endLatitude: $endLatitude}';
+  }
+
+  void startTimer() {
+    if (duration > 0 && !isFinished && _timer == null) {
+      _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+        elapsedTime++;
+        _elapsedTimeNotifier.value = elapsedTime;
+        if (elapsedTime >= duration) {
+          stopTimer();
+          isFinished = true;
+          // Atualize o inventário no banco de dados
+          DatabaseHelper().insertInventory(this);
+        } else {
+          // Atualize o inventário no banco de dados
+          DatabaseHelper().insertInventory(this);
+        }
+      });
+    }
+  }
+
+  void pauseTimer() {
+    _timer?.cancel();
+    _timer = null;
+    // Atualize o inventário no banco de dados
+    DatabaseHelper().insertInventory(this);
+  }
+
+  void resumeTimer() {
+    startTimer();
+  }
+
+  void stopTimer() {
+    _timer?.cancel();
+    _timer = null;
+    // Atualize o inventário no banco de dados
+    DatabaseHelper().insertInventory(this);
   }
 }
 

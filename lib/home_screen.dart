@@ -1,10 +1,9 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'inventory_detail_screen.dart';
+import 'package:animated_list/animated_list.dart';
 import 'inventory.dart';
-import 'new_inventory_screen.dart';
-import 'inventory_provider.dart';
+import 'database_helper.dart';
+import 'add_inventory_screen.dart';
+import 'inventory_detail_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -14,114 +13,139 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
+  List<Inventory> _activeInventories = [];
+  final dbHelper = DatabaseHelper();
+
   @override
   void initState() {
     super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<InventoryProvider>(context, listen: false).loadInventories();
-      if (kDebugMode) {
-        print('loadInventories chamado');
-      }
-    });
-    Provider.of<InventoryProvider>(context, listen: false).startTimer();
+    _loadActiveInventories();
   }
 
-  @override
-  void dispose() {
-    // Stop timer when the widget is disposed
-    Provider.of<InventoryProvider>(context, listen: false).stopTimer();
-    super.dispose();
+  Future<void> _loadActiveInventories() async {final inventories = await dbHelper.loadActiveInventories();
+  setState(() {
+    _activeInventories = inventories;
+  });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Inventários ativos'),
-        //backgroundColor: Colors.green,
-      ),
-      body: Consumer<InventoryProvider>(
-        builder: (context, provider, child) {
-          if (provider.isLoading) { // Check if isLoading is true
-            return const Center(child: CircularProgressIndicator());
-          } else if (provider.inventories.isEmpty) {
-            return const Center(child: Text('Nenhum inventário ativo.'));
-          } else {
-            return ListView.builder(
-              itemCount: provider.inventories.length,
-              itemBuilder: (context, index) {
-                final inventory = provider.inventories[index];
-                return ListTile(
-                  leading: CircularProgressIndicator(
-                    value: _calculateProgress(inventory),
-                  ),
-                  title: Text(inventory.id),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('${inventoryTypeFriendlyNames[inventory.type]}'),
-                      if (inventory.duration > 0) Text('${inventory.duration} minutos de duração'),
-                      Text('${inventory.speciesList.length} espécies'),
-                    ],
-                  ),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Visibility(
-                        visible: inventory.duration > 0,
-                        child: IconButton(
-                          icon: Icon(inventory.isPaused ? Icons.play_arrow : Icons.pause),
-                            onPressed: () {
-                              Provider.of<InventoryProvider>(context, listen: false)
-                                .updateInventoryIsPaused(inventory, !inventory.isPaused, context);
-                            },
-                        ),
-                      ),
-                    ],
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            InventoryDetailScreen(
-                              inventory: inventory,
-                              allInventories: provider.inventories,
-                            ),
-                      ),
-                    );
-                  },
-                );
-              },
-            );
-          }
+      body: AnimatedList(
+        key: _listKey,
+        initialItemCount: _activeInventories.length,
+        itemBuilder: (context, index, animation) {
+          final inventory = _activeInventories[index];
+          return InventoryListItem(
+            inventory: inventory,
+            animation: animation,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => InventoryDetailScreen(inventory: inventory),
+                ),
+              );
+            },
+          );
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          bool? result = await Navigator.push(
+        onPressed: () {
+          Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const NewInventoryScreen()),
-          );
-
-          if (result == true) {
-            // Reload the inventories after add a new one
-            Provider.of<InventoryProvider>(context, listen: false).loadInventories();
-          }
+            MaterialPageRoute(builder: (context) => const AddInventoryScreen()),
+          ).then((newInventory) {
+            if (newInventory != null && newInventory is Inventory) {
+              setState(() {
+                _activeInventories.add(newInventory);
+                _listKey.currentState!.insertItem(_activeInventories.length - 1);
+              });
+            }
+          });
         },
-        tooltip: 'Criar novo inventário',
         child: const Icon(Icons.add),
       ),
     );
   }
 
-  double _calculateProgress(Inventory inventory) {
-    if (inventory.type == InventoryType.invCumulativeTime && inventory.duration > 0) {
-      return (inventory.elapsedTime / inventory.duration);
-    }
-    return 0.0;
+  void _addInventory() {
+    final newInventory = Inventory(
+      id: 'Novo Inventário',
+      type: InventoryType.invQualitative,
+      duration: 0,
+      speciesList: [],
+      vegetationList: [],
+    );
+
+    newInventory.startTimer();
+
+    dbHelper.insertInventory(newInventory).then((success) {
+      if (success) {setState(() {
+        _activeInventories.add(newInventory);
+        _listKey.currentState!.insertItem(_activeInventories.length - 1);
+      });
+      } else {
+        // Lidar com erro de inserção
+      }
+    });
   }
 }
 
+class InventoryListItem extends StatelessWidget {
+  final Inventory inventory;
+  final Animation<double> animation;
+  final VoidCallback? onTap;
 
+  const InventoryListItem({
+    super.key,
+    required this.inventory,
+    required this.animation,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell( // Ou GestureDetector
+        onTap: onTap,
+        child:SizeTransition(
+          sizeFactor: animation,
+          child: ListTile(
+            leading: inventory.duration > 0
+                ? CircularProgressIndicator(
+              value: inventory.elapsedTime / inventory.duration,
+            )
+                : null,
+            title: Text(inventory.id),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('${inventoryTypeFriendlyNames[inventory.type]}'),
+                if (inventory.duration > 0) Text('${inventory.duration} minutos de duração'),
+                Text('${inventory.speciesList.length} espécies'),
+              ],
+            ),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Visibility(
+                  visible: inventory.duration > 0,
+                  child: IconButton(
+                    icon: Icon(inventory.isPaused ? Icons.play_arrow : Icons.pause),
+                    onPressed: () {
+                      if (inventory.isPaused) {
+                        inventory.resumeTimer();
+                      } else {
+                        inventory.pauseTimer();
+                      }
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        )
+    );
+  }
+}

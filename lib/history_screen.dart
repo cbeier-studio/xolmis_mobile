@@ -1,85 +1,62 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'inventory_detail_screen.dart';
-import 'inventory_provider.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:csv/csv.dart';
 import 'inventory.dart';
+import 'database_helper.dart';
+import 'inventory_detail_screen.dart';
 
-class HistoryScreen extends StatefulWidget {const HistoryScreen({super.key});
+class HistoryScreen extends StatefulWidget {
+  const HistoryScreen({super.key});
 
-@override
-_HistoryScreenState createState() => _HistoryScreenState();
+  @override
+  State<HistoryScreen> createState() => _HistoryScreenState();
 }
 
 class _HistoryScreenState extends State<HistoryScreen> {
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
+  List<Inventory> _closedInventories = [];
+  final dbHelper = DatabaseHelper();
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<InventoryProvider>(context, listen: false)
-          .loadFinishedInventories();
+    _loadClosedInventories();
+  }
+
+  Future<void> _loadClosedInventories() async {
+    final inventories = await dbHelper.getFinishedInventories();
+    setState(() {
+      _closedInventories = inventories;
     });
   }
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Histórico'),
-      ),
-      body: Consumer<InventoryProvider>(
-        builder: (context, provider, child) {
-          if (provider.isLoadingFinished) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (provider.finishedInventories.isEmpty) {
-            return const Center(child: Text('Nenhum inventário encontrado.'));
-          } else {
-            return AnimatedList(
-              key: _listKey,
-              initialItemCount: provider.finishedInventories.length,
-              itemBuilder: (context, index, animation) {
-                final inventory = provider.finishedInventories[index];
-                return HistoryListItem(
-                  key: ValueKey(inventory.id),
-                  inventory: inventory,
-                  animation: animation,
-                  onDelete: () => _removeInventory(provider, inventory, index),
-                );
-              },
-            );
-          }
+      body: AnimatedList(
+        key: _listKey,
+        initialItemCount: _closedInventories.length,
+        itemBuilder: (context, index, animation) {
+          final inventory = _closedInventories[index];
+          return InventoryListItem(
+            inventory: inventory,
+            animation: animation,
+          );
         },
       ),
     );
   }
-
-  void _removeInventory(InventoryProvider provider, Inventory inventory, int index) {
-    _listKey.currentState!.removeItem(
-      index,
-          (context, animation) => SizeTransition(
-        sizeFactor: animation,
-        child: DismissedHistoryListItem(
-          key: ValueKey(inventory.id),
-          inventory: inventory,
-          animation: animation,
-        ),
-      ),
-    );
-    provider.removeFinishedInventory(inventory);
-  }
 }
 
-class HistoryListItem extends StatelessWidget {
+class InventoryListItem extends StatelessWidget {
   final Inventory inventory;
   final Animation<double> animation;
-  final VoidCallback onDelete;
 
-  const HistoryListItem({
+  const InventoryListItem({
     super.key,
     required this.inventory,
     required this.animation,
-    required this.onDelete,
   });
 
   @override
@@ -98,17 +75,12 @@ class HistoryListItem extends StatelessWidget {
         ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
-          children: [
+          children:[
             IconButton(
               icon: const Icon(Icons.file_download),
               onPressed: () {
-                Provider.of<InventoryProvider>(context, listen: false)
-                    .exportInventory(inventory);
+                _exportInventoryToCsv(context, inventory);
               },
-            ),
-            IconButton(
-              icon: const Icon(Icons.delete),
-              onPressed: onDelete,
             ),
           ],
         ),
@@ -116,44 +88,39 @@ class HistoryListItem extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => InventoryDetailScreen(
-                inventory: inventory,
-                allInventories: const [],
-              ),
+              builder: (context) => InventoryDetailScreen(inventory: inventory),
             ),
           );
         },
       ),
     );
   }
-}
 
-class DismissedHistoryListItem extends StatelessWidget {
-  final Inventory inventory;
-  final Animation<double> animation;
+  Future<void> _exportInventoryToCsv(BuildContext context, Inventory inventory) async {
+    // 1. Create a list of data for the CSV
+    List<List<dynamic>> rows = [];
+    rows.add(['ID do Inventário', 'Tipo', 'Duração', 'Pausado', 'Finalizado', 'Tempo Restante', 'Tempo Decorrido']);
+    rows.add([inventory.id, inventory.type.toString(), inventory.duration, inventory.isPaused, inventory.isFinished, inventory.elapsedTime]);
+    rows.add([]); // Empty line to separate the inventory of the species
+    rows.add(['Espécie', 'Contagem']);
+    for (var species in inventory.speciesList) {
+      rows.add([species.name, species.count]);
+    }
 
-  const DismissedHistoryListItem({
-    super.key,
-    required this.inventory,
-    required this.animation,
-  });
+    // 2. Convert the list of data to CSV
+    String csv = const ListToCsvConverter().convert(rows);
 
-  @override
-  Widget build(BuildContext context) {
-    return SizeTransition(
-      sizeFactor: animation,
-      child: ListTile(
-        title: Text(inventory.id),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('${inventoryTypeFriendlyNames[inventory.type]}'),
-            Text('${inventory.startTime}'),
-            Text('${inventory.speciesList.length} espécies registradas'),
-          ],
-        ),
-        // Remove trailing here as it contains the delete button
-      ),
+    // 3. Get the documents folder of the device
+    final directory = await getApplicationDocumentsDirectory();
+    final path = '${directory.path}/inventory_${inventory.id}.csv';
+
+    // 4. Create the file and save the data
+    final file = File(path);
+    await file.writeAsString(csv);
+
+    // 5. (Optional) Show a success message
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Inventário exportado para: $path')),
     );
   }
 }
