@@ -1,6 +1,7 @@
 
 import 'dart:async';
 import 'package:flutter/foundation.dart';
+import 'package:geolocator/geolocator.dart';
 import 'database_helper.dart';
 
 class Poi {
@@ -261,6 +262,7 @@ class Inventory {
   List<Species> speciesList;
   List<Vegetation> vegetationList;
   Timer? _timer;
+  Timer? _elapsedTimeTimer;
   final ValueNotifier<double> _elapsedTimeNotifier = ValueNotifier<double>(0);
   ValueNotifier<double> get elapsedTimeNotifier => _elapsedTimeNotifier;
 
@@ -368,37 +370,67 @@ class Inventory {
   void startTimer() {
     if (duration > 0 && !isFinished && _timer == null) {
       _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-        elapsedTime++;
-        _elapsedTimeNotifier.value = elapsedTime;
-        if (elapsedTime >= duration) {
-          stopTimer();
-          isFinished = true;
-          // Atualize o inventário no banco de dados
-          DatabaseHelper().insertInventory(this);
-        } else {
-          // Atualize o inventário no banco de dados
-          DatabaseHelper().insertInventory(this);
+        if (!isPaused && !isFinished) {
+          elapsedTime++;
+          elapsedTimeNotifier.value = elapsedTime.toDouble();
+          if (duration > 0 && elapsedTime >= duration * 60) {
+            stopTimer();
+          }
         }
+      });
+      _elapsedTimeTimer = Timer.periodic(const Duration(minutes: 1), (timer) {
+        _updateElapsedTimeInDatabase();
       });
     }
   }
 
   void pauseTimer() {
+    isPaused = true;
     _timer?.cancel();
+    _elapsedTimeTimer?.cancel();
     _timer = null;
-    // Atualize o inventário no banco de dados
-    DatabaseHelper().insertInventory(this);
+    elapsedTimeNotifier.value = elapsedTime;
+    elapsedTimeNotifier.notifyListeners();
+    DatabaseHelper().updateInventory(this);
   }
 
   void resumeTimer() {
-    startTimer();
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      elapsedTime++;
+      elapsedTimeNotifier.value = elapsedTime; // Notifica o ValueListenableBuilder
+      if (elapsedTime >= duration * 60) {
+        _timer?.cancel();
+        isFinished = true;
+        elapsedTimeNotifier.value = elapsedTime; // Notifica o ValueListenableBuilder
+      }
+    });
+    isPaused = false;
+    elapsedTimeNotifier.value = elapsedTime;
+    elapsedTimeNotifier.notifyListeners();
+    DatabaseHelper().updateInventory(this);
   }
 
-  void stopTimer() {
+  Future<void> stopTimer() async {
     _timer?.cancel();
+    _elapsedTimeTimer?.cancel();
     _timer = null;
-    // Atualize o inventário no banco de dados
-    DatabaseHelper().insertInventory(this);
+    isFinished = true;
+    isPaused = false;
+    elapsedTimeNotifier.value = elapsedTime.toDouble();
+    elapsedTimeNotifier.notifyListeners();
+
+    // Define endTime, endLatitude e endLongitude ao encerrar o inventário
+    endTime = DateTime.now();
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    endLatitude = position.latitude;
+    endLongitude = position.longitude;
+
+    await DatabaseHelper().updateInventory(this);
+  }
+
+  Future<void> _updateElapsedTimeInDatabase() async {
+    // Atualiza o elapsedTime no banco de dados
+    await DatabaseHelper().updateInventoryElapsedTime(id, elapsedTime);
   }
 }
 

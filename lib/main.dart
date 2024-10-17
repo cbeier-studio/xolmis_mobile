@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Xolmis Mobile',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.deepPurple,
       ),
       home: const MainScreen(),
     );
@@ -45,7 +45,7 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Xolmis Mobile'),
+        title: const Text('Inventários'),
       ),
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),

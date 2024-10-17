@@ -5,8 +5,13 @@ import 'database_helper.dart';
 
 class AddVegetationDataScreen extends StatefulWidget {
   final Inventory inventory;
+  final Function(Vegetation) onVegetationAdded;
 
-  const AddVegetationDataScreen({Key? key,required this.inventory}) : super(key: key);
+  const AddVegetationDataScreen({
+    super.key,
+    required this.inventory,
+    required this.onVegetationAdded
+  });
 
   @override
   _AddVegetationDataScreenState createState() => _AddVegetationDataScreenState();
@@ -58,7 +63,7 @@ class _AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Adicionar Dados de Vegetação'),
+        title: const Text('Novos Dados de Vegetação'),
       ),
       body: Form(
         key: _formKey,
@@ -66,9 +71,27 @@ class _AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              _buildVegetationRow('Ervas', _herbsProportionController, _herbsDistributionController, _herbsHeightController),
-              _buildVegetationRow('Arbustos', _shrubsProportionController, _shrubsDistributionController, _shrubsHeightController),
-              _buildVegetationRow('Árvores', _treesProportionController, _treesDistributionController, _treesHeightController),
+              const Text('Ervas',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              _buildVegetationRow(_herbsProportionController, _herbsDistributionController, _herbsHeightController),
+              const Text('Arbustos',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              _buildVegetationRow(_shrubsProportionController, _shrubsDistributionController, _shrubsHeightController),
+              const Text('Árvores',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              _buildVegetationRow(_treesProportionController, _treesDistributionController, _treesHeightController),
               TextFormField(
                 controller: _notesController,
                 maxLines: 3,
@@ -101,8 +124,18 @@ class _AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
                       treesHeight: int.tryParse(_treesHeightController.text) ?? 0,
                       notes: _notesController.text,
                     );
-                    DatabaseHelper().insertVegetation(vegetation);
-                    Navigator.pop(context); // Volte para a tela anterior
+                    int? result = await DatabaseHelper().insertVegetation(vegetation).then((result) {
+                      if (result != 0) {
+                        // Inserção bem-sucedida
+                        widget.onVegetationAdded(vegetation); // Chama o callback
+                        Navigator.pop(context); // Volte para a tela anterior
+                      } else {
+                        // Inserção falhou
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Erro ao salvar os dados de vegetação')),
+                        );
+                      }
+                    });
                   }
                 },
                 child: const Text('Salvar'),
@@ -114,15 +147,15 @@ class _AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
     );
   }
 
-  Widget _buildVegetationRow(String label, TextEditingController proportionController, TextEditingController distributionController, TextEditingController heightController) {
+  Widget _buildVegetationRow(TextEditingController proportionController, TextEditingController distributionController, TextEditingController heightController) {
     return Row(
       children: [
         Expanded(
           child: TextFormField(
             controller: proportionController,
             keyboardType: TextInputType.number,
-            decoration: InputDecoration(
-              labelText: '$label - Proporção',
+            decoration: const InputDecoration(
+              labelText: 'Proporção %',
             ),
           ),
         ),
@@ -130,8 +163,8 @@ class _AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
         Expanded(
           child: TextFormField(
             controller: distributionController,
-            decoration: InputDecoration(
-              labelText: '$label - Distribuição',
+            decoration: const InputDecoration(
+              labelText: 'Distribuição',
             ),
           ),
         ),
@@ -140,8 +173,8 @@ class _AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
           child: TextFormField(
             controller: heightController,
             keyboardType: TextInputType.number,
-            decoration: InputDecoration(
-              labelText: '$label - Altura',
+            decoration: const InputDecoration(
+              labelText: 'Altura cm',
             ),
           ),
         ),

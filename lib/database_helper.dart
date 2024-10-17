@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'package:geolocator/geolocator.dart';
 import 'inventory.dart';
 
 class DatabaseHelper {
@@ -46,9 +47,11 @@ class DatabaseHelper {
         db.execute(
           'CREATE TABLE species('
               'id INTEGER PRIMARY KEY AUTOINCREMENT, '
-              'inventoryId TEXT, '
+              'inventoryId TEXT NOT NULL, '
               'name TEXT, '
-              'count INTEGER)',
+              'isOutOfInventory INTEGER, '
+              'count INTEGER, '
+              'FOREIGN KEY (inventoryId) REFERENCES inventories(id))',
         );
         db.execute(
           'CREATE TABLE vegetation ('
@@ -57,23 +60,24 @@ class DatabaseHelper {
               'sampleTime TEXT NOT NULL, '
               'longitude REAL, '
               'latitude REAL, '
-              'herbsProportion REAL, '
-              'herbsDistribution REAL, '
-              'herbsHeight REAL, '
-              'shrubsProportion REAL, '
-              'shrubsDistribution REAL, '
-              'shrubsHeight REAL, '
-              'treesProportion REAL, '
-              'treesDistribution REAL, '
-              'treesHeight REAL, '
-              'notes TEXT)'
+              'herbsProportion INTEGER, '
+              'herbsDistribution INTEGER, '
+              'herbsHeight INTEGER, '
+              'shrubsProportion INTEGER, '
+              'shrubsDistribution INTEGER, '
+              'shrubsHeight INTEGER, '
+              'treesProportion INTEGER, '
+              'treesDistribution INTEGER, '
+              'treesHeight INTEGER, '
+              'notes TEXT, '
+              'FOREIGN KEY (inventoryId) REFERENCES inventories(id))'
         );
         db.execute(
           'CREATE TABLE pois ('
               'id INTEGER PRIMARY KEY AUTOINCREMENT, '
-              'speciesId INTEGER NOT NULL,'
-              'longitude REAL NOT NULL,'
-              'latitude REAL NOT NULL,'
+              'speciesId INTEGER NOT NULL, '
+              'longitude REAL NOT NULL, '
+              'latitude REAL NOT NULL, '
               'FOREIGN KEY (speciesId) REFERENCES species(id))'
         );
       },
@@ -100,6 +104,11 @@ class DatabaseHelper {
   Future<bool> insertInventory(Inventory inventory) async {
     final db = await database;
     try {
+      inventory.startTime = DateTime.now();
+      Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      inventory.startLatitude = position.latitude;
+      inventory.startLongitude = position.longitude;
+
       int? id = await db?.insert(
         'inventories',
         inventory.toMap(),
@@ -125,13 +134,45 @@ class DatabaseHelper {
     }
   }
 
-  Future<void> insertSpecies(Species species) async {
+  Future<void> deleteInventory(String? inventoryId) async {
     final db = await database;
-    await db?.insert(
-      'species',
-      species.toMap(species.inventoryId),
-      conflictAlgorithm: ConflictAlgorithm.replace,
+    await db?.delete(
+      'inventories',
+      where: 'id = ?',
+      whereArgs: [inventoryId],
     );
+  }
+
+  Future<void> updateInventory(Inventory inventory) async {
+    final db = await database;
+    await db?.update(
+      'inventories',
+      inventory.toMap(),where: 'id = ?',
+      whereArgs: [inventory.id],
+    );
+  }
+
+  Future<void> updateInventoryElapsedTime(String inventoryId, double elapsedTime) async {
+    final db = await database;
+    await db?.update(
+      'inventories',
+      {'elapsedTime': elapsedTime},
+      where: 'id = ?',
+      whereArgs: [inventoryId],
+    );
+  }
+
+  Future<int?> insertSpecies(String inventoryId, Species species) async {
+    final db = await database;
+    try {
+      int? id = await db?.insert('species', species.toMap(inventoryId));
+      return id; // Retorna o ID da espécie inserida
+    } catch (e) {
+      if (kDebugMode) {
+        print('Erro ao inserir espécie: $e');
+      }
+      return 0; // Retorna 0 em caso de erro
+    }
   }
 
   Future<void> deleteSpeciesFromInventory(String inventoryId, String speciesName) async {
@@ -296,13 +337,21 @@ class DatabaseHelper {
     await db?.close();
   }
 
-  Future<void> insertVegetation(Vegetation vegetation) async {
+  Future<int?> insertVegetation(Vegetation vegetation) async {
     final db = await database;
-    await db?.insert(
-      'vegetation',
-      vegetation.toMap(vegetation.inventoryId),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+    try {
+      int? id = await db?.insert(
+        'vegetation',
+        vegetation.toMap(vegetation.inventoryId),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+      return id; // Retorna o ID da espécie inserida
+    } catch (e) {
+      if (kDebugMode) {
+        print('Erro ao inserir vegetação: $e');
+      }
+      return 0; // Retorna 0 em caso de erro
+    }
   }
 
   Future<void> deleteVegetation(int? vegetationId) async {
@@ -316,7 +365,14 @@ class DatabaseHelper {
 
   Future<void> insertPoi(Poi poi) async {
     final db = await database;
-    await db?.insert('pois', poi.toMap(poi.speciesId));}
+    try {
+      await db?.insert('pois', poi.toMap(poi.speciesId));
+    } catch (e) {
+      if (kDebugMode) {
+        print('Erro ao inserir POI: $e');
+      }
+    }
+  }
 
   Future<List<Poi>> getPoisForSpecies(int speciesId) async {
     final db = await database;

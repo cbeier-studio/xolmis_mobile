@@ -5,7 +5,7 @@ import 'database_helper.dart';
 class SpeciesDetailScreen extends StatefulWidget {
   final Species species;
 
-  const SpeciesDetailScreen({Key? key, required this.species}) : super(key: key);
+  const SpeciesDetailScreen({super.key, required this.species});
 
   @override
   _SpeciesDetailScreenState createState() => _SpeciesDetailScreenState();
@@ -35,7 +35,7 @@ class _SpeciesDetailScreenState extends State<SpeciesDetailScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('POIs de ${widget.species.name}'),
+        title: Text(widget.species.name),
       ),
       body: AnimatedList(
         key: _listKey,
@@ -103,8 +103,7 @@ class PoiListItem extends StatelessWidget {
   final Poi poi;
   final Animation<double> animation;
 
-  const PoiListItem({Key? key, required this.poi, required this.animation})
-      : super(key: key);
+  const PoiListItem({super.key, required this.poi, required this.animation});
 
   @override
   Widget build(BuildContext context) {

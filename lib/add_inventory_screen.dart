@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'inventory.dart';
 import 'database_helper.dart';
 
-class AddInventoryScreen extends StatefulWidget {const AddInventoryScreen({Key? key}) : super(key: key);
+class AddInventoryScreen extends StatefulWidget {const AddInventoryScreen({super.key});
 
 @override
 _AddInventoryScreenState createState() => _AddInventoryScreenState();
@@ -12,13 +12,13 @@ class _AddInventoryScreenState extends State<AddInventoryScreen> {
   final _formKey = GlobalKey<FormState>();
   final _idController = TextEditingController();
   InventoryType _selectedType = InventoryType.invQualitative;
-  int _duration = 0;
+  final _durationController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Adicionar Inventário'),),
+        title: const Text('Novo Inventário'),),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -46,26 +46,27 @@ class _AddInventoryScreenState extends State<AddInventoryScreen> {
                     child: Text(inventoryTypeFriendlyNames[type]!),
                   );
                 }).toList(),
-                onChanged: (value) {
+                onChanged: (InventoryType? newValue) {
                   setState(() {
-                    _selectedType = value!;
+                    _selectedType = newValue!;
+                    if (newValue == InventoryType.invCumulativeTime) {
+                      _durationController.text = '30'; // Define a duração para 30 minutos
+                    } else {
+                      _durationController.text = ''; // Limpa o campo de duração
+                    }
                   });
                 },
               ),const SizedBox(height: 16.0),
               TextFormField(
+                controller: _durationController,
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(labelText: 'Duração (minutos)'),
-                onChanged: (value) {
-                  setState(() {
-                    _duration = int.tryParse(value) ?? 0;
-                  });
-                },
               ),
               const SizedBox(height: 32.0),
               Center(
                 child: ElevatedButton(
                   onPressed: _submitForm,
-                  child: const Text('Criar Inventário'),
+                  child: const Text('Iniciar Inventário'),
                 ),
               ),
             ],
@@ -80,7 +81,7 @@ class _AddInventoryScreenState extends State<AddInventoryScreen> {
       final newInventory = Inventory(
         id: _idController.text,
         type: _selectedType,
-        duration: _duration,
+        duration: int.tryParse(_durationController.text) ?? 0,
         speciesList: [],
         vegetationList: [],
       );

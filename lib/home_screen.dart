@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:animated_list/animated_list.dart';
+import 'package:geolocator/geolocator.dart';
 import 'inventory.dart';
 import 'database_helper.dart';
 import 'add_inventory_screen.dart';
@@ -20,36 +21,85 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    _loadActiveInventories();
+    _checkLocationPermissions();
+    _loadActiveInventories().then((_) { // Chama _loadActiveInventories e, em seguida, verifica os inventários
+      for (var inventory in _activeInventories) {
+        if (inventory.duration > 0 && !inventory.isFinished) { // Verifica se a duração é maior que 0 e se o inventário não está finalizado
+          inventory.resumeTimer(); // Chama resumeTimer para os inventários que atendem às condições
+        }}
+    });
   }
 
-  Future<void> _loadActiveInventories() async {final inventories = await dbHelper.loadActiveInventories();
-  setState(() {
-    _activeInventories = inventories;
-  });
+  Future<void> _checkLocationPermissions() async {
+    LocationPermission permission = await Geolocator.checkPermission();
+
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // Permissões negadas permanentemente
+        // Exiba uma mensagem ao usuário ou redirecione para as configurações do app
+        return Future.error('Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      // Permissões negadas permanentemente
+      // Exiba uma mensagem ao usuário ou redirecione para as configurações do app
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+
+    // Permissões concedidas, você pode usar o Geolocator aqui
+  }
+
+  Future<void> _loadActiveInventories() async {
+    final inventories = await dbHelper.loadActiveInventories();
+    setState(() {
+      _activeInventories = inventories;
+    });
+  }
+
+  void _onInventoryPausedOrResumed() {
+    setState(() {
+      _loadActiveInventories(); // Recarrega os inventários
+    });
+  }
+
+  void onInventoryUpdated() {
+    setState(() {
+      _loadActiveInventories(); // Recarrega os inventários
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: AnimatedList(
-        key: _listKey,
-        initialItemCount: _activeInventories.length,
-        itemBuilder: (context, index, animation) {
-          final inventory = _activeInventories[index];
-          return InventoryListItem(
-            inventory: inventory,
-            animation: animation,
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => InventoryDetailScreen(inventory: inventory),
-                ),
-              );
-            },
-          );
-        },
+      body: RefreshIndicator(
+        onRefresh: _loadActiveInventories,
+        child: _activeInventories.isEmpty // Verifica se a lista está vazia
+            ? const Center(child: Text('Nenhum inventário ativo.')) // Mostra o texto se a lista estiver vazia
+            : AnimatedList(
+          key: _listKey,
+          initialItemCount: _activeInventories.length,
+          itemBuilder: (context, index, animation) {
+            final inventory = _activeInventories[index];
+            return InventoryListItem(
+              inventory: inventory,
+              animation: animation,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => InventoryDetailScreen(inventory: inventory,
+                    onInventoryUpdated: onInventoryUpdated,
+                    ),
+                  ),
+                );
+              },
+              onInventoryPausedOrResumed: _onInventoryPausedOrResumed,
+            );
+          },
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -97,12 +147,14 @@ class InventoryListItem extends StatelessWidget {
   final Inventory inventory;
   final Animation<double> animation;
   final VoidCallback? onTap;
+  final VoidCallback? onInventoryPausedOrResumed;
 
   const InventoryListItem({
     super.key,
     required this.inventory,
     required this.animation,
     this.onTap,
+    this.onInventoryPausedOrResumed,
   });
 
   @override
@@ -112,11 +164,15 @@ class InventoryListItem extends StatelessWidget {
         child:SizeTransition(
           sizeFactor: animation,
           child: ListTile(
-            leading: inventory.duration > 0
-                ? CircularProgressIndicator(
-              value: inventory.elapsedTime / inventory.duration,
-            )
-                : null,
+            leading: ValueListenableBuilder<double>( // Usa ValueListenableBuilder para atualizar a CircularProgressIndicator
+              key: ValueKey(inventory.id),
+              valueListenable: inventory.elapsedTimeNotifier,
+              builder: (context, elapsedTime, child) {
+                return CircularProgressIndicator(
+                  value: inventory.duration == 0 ? 0 : (elapsedTime / (inventory.duration * 60)),
+                );
+              },
+            ),
             title: Text(inventory.id),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -139,6 +195,7 @@ class InventoryListItem extends StatelessWidget {
                       } else {
                         inventory.pauseTimer();
                       }
+                      onInventoryPausedOrResumed?.call();
                     },
                   ),
                 ),
