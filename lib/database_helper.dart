@@ -207,6 +207,23 @@ class DatabaseHelper {
     }
   }
 
+  Future<Inventory> getInventoryById(String id) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db?.query(
+        'inventories',
+        where: 'id = ?',
+        whereArgs: [id]
+    ) ?? [];
+    if (maps.isNotEmpty) {
+      final map = maps.first;
+      List<Species> speciesList = await getSpeciesByInventory(map['id']);
+      List<Vegetation> vegetationList = await getVegetationByInventory(map['id']);
+      return Inventory.fromMap(map, speciesList, vegetationList);
+    } else {
+      throw Exception('Inventory not found with ID $id');
+    }
+  }
+
   Future<Species> getSpeciesById(int id) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db?.query(

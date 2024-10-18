@@ -1,7 +1,11 @@
 
 import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
+import 'package:sqflite/sqflite.dart';
 import 'database_helper.dart';
 
 class Poi {
@@ -262,9 +266,9 @@ class Inventory with ChangeNotifier {
   List<Species> speciesList;
   List<Vegetation> vegetationList;
   Timer? _timer;
-  Timer? _elapsedTimeTimer;
   final ValueNotifier<double> _elapsedTimeNotifier = ValueNotifier<double>(0);
   ValueNotifier<double> get elapsedTimeNotifier => _elapsedTimeNotifier;
+  final ValueNotifier<bool> isFinishedNotifier = ValueNotifier<bool>(false);
 
   Inventory({
     required this.id,
@@ -368,18 +372,23 @@ class Inventory with ChangeNotifier {
   }
 
   void startTimer() {
-    if (duration > 0 && !isFinished && _timer == null) {
+    if (duration > 0 && !isFinished) {
+      _timer?.cancel();
       _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
         if (!isPaused && !isFinished) {
           elapsedTime++;
-          elapsedTimeNotifier.value = elapsedTime.toDouble();
-          if (duration > 0 && elapsedTime >= duration * 60) {
-            stopTimer();
+          elapsedTimeNotifier.value = elapsedTime;
+
+          if (elapsedTime >= duration * 60) {
+            timer.cancel();
+            isFinished = true;
+            isFinishedNotifier.value = true;
+          }
+
+          if (elapsedTime % 15 == 0) {
+            DatabaseHelper().updateInventoryElapsedTime(id, elapsedTime);
           }
         }
-      });
-      _elapsedTimeTimer = Timer.periodic(const Duration(minutes: 1), (timer) {
-        _updateElapsedTimeInDatabase();
       });
     }
   }
@@ -387,37 +396,24 @@ class Inventory with ChangeNotifier {
   void pauseTimer() {
     isPaused = true;
     _timer?.cancel();
-    _elapsedTimeTimer?.cancel();
     _timer = null;
     elapsedTimeNotifier.value = elapsedTime;
-    elapsedTimeNotifier.notifyListeners();
     DatabaseHelper().updateInventory(this);
   }
 
   void resumeTimer() {
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      elapsedTime++;
-      elapsedTimeNotifier.value = elapsedTime; // Notify the ValueListenableBuilder
-      if (elapsedTime >= duration * 60) {
-        _timer?.cancel();
-        isFinished = true;
-        elapsedTimeNotifier.value = elapsedTime; // Notify the ValueListenableBuilder
-      }
-    });
     isPaused = false;
-    elapsedTimeNotifier.value = elapsedTime;
-    elapsedTimeNotifier.notifyListeners();
+    startTimer();
     DatabaseHelper().updateInventory(this);
   }
 
   Future<void> stopTimer() async {
     _timer?.cancel();
-    _elapsedTimeTimer?.cancel();
     _timer = null;
     isFinished = true;
+    isFinishedNotifier.value = true;
     isPaused = false;
     elapsedTimeNotifier.value = elapsedTime.toDouble();
-    elapsedTimeNotifier.notifyListeners();
 
     // Define endTime, endLatitude and endLongitude when finishing the inventory
     endTime = DateTime.now();
@@ -431,6 +427,40 @@ class Inventory with ChangeNotifier {
   Future<void> _updateElapsedTimeInDatabase() async {
     // Update the elapsedTime in the database
     await DatabaseHelper().updateInventoryElapsedTime(id, elapsedTime);
+  }
+}
+
+void _inventoryTimer(String inventoryId) async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await getDatabasesPath();
+  // Carregue o inventário do banco de dados
+  Inventory? inventory = await DatabaseHelper().getInventoryById(inventoryId);
+
+  if (inventory != null) {
+  // Inicie o timer
+  Timer.periodic(const Duration(seconds: 1), (timer) {
+    if (!inventory.isPaused && !inventory.isFinished) {
+      inventory.elapsedTime++;
+      inventory.elapsedTimeNotifier.value = inventory.elapsedTime;
+
+      if (inventory.duration > 0 && inventory.elapsedTime >= inventory.duration * 60) {
+        timer.cancel();
+        inventory.isFinished = true;
+        inventory.isFinishedNotifier.value = true;
+        inventory.elapsedTimeNotifier.value = inventory.elapsedTime;
+      }
+
+      if (inventory.elapsedTime % 15 == 0) {
+        // Salve o elapsedTime no banco de dados
+        DatabaseHelper().updateInventoryElapsedTime(inventory.id, inventory.elapsedTime);
+      }
+    }
+  });
+  } else {
+    // Trate o caso em que o inventário não foi encontrado
+    if (kDebugMode) {
+      print('Inventory not found with ID: $inventoryId');
+    }
   }
 }
 

@@ -128,7 +128,7 @@ class PoiListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizeTransition(
       sizeFactor: animation,
-      child: ListTile(title: Text('Latitude: ${poi.latitude}, Longitude: ${poi.longitude}'),
+      child: ListTile(title: Text('${poi.latitude}, ${poi.longitude}'),
       ),
     );
   }

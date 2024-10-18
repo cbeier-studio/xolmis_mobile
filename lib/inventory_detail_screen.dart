@@ -107,6 +107,8 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
       // Restart the timer if the inventory is of type invCumulativeTime
       if (widget.inventory.type == InventoryType.invCumulativeTime) {
         widget.inventory.elapsedTime = 0;
+        widget.inventory.isFinished = false;
+        await DatabaseHelper().updateInventoryElapsedTime(widget.inventory.id, widget.inventory.elapsedTime);
         widget.inventory.startTimer();
       }
 
@@ -119,9 +121,9 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
     }
   }
 
-  void _updateSpeciesList() {
-    setState(() async {
-      final updatedSpeciesList = await DatabaseHelper().getSpeciesByInventory(widget.inventory.id);
+  void _updateSpeciesList() async {
+    final updatedSpeciesList = await DatabaseHelper().getSpeciesByInventory(widget.inventory.id);
+    setState(() {
       widget.inventory.speciesList = updatedSpeciesList;
     });
   }
@@ -183,9 +185,9 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
             valueListenable: widget.inventory.elapsedTimeNotifier,
             builder: (context, elapsedTime, child) {
               return LinearProgressIndicator(
-                value: elapsedTime / widget.inventory.duration,
+                value: elapsedTime / (widget.inventory.duration * 60),
                 backgroundColor: Colors.grey[200],
-                valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
+                valueColor: const AlwaysStoppedAnimation<Color>(Colors.deepPurple),
               );
             },
           )
@@ -204,7 +206,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
           // Finishing the inventory
           await widget.inventory.stopTimer();
           widget.onInventoryUpdated();
-          Navigator.pop(context);
+          Navigator.pop(context, true);
         },
         backgroundColor: Colors.red,
         child: const Icon(Icons.stop, color: Colors.white),
@@ -336,10 +338,10 @@ class SpeciesListItemState extends State<SpeciesListItem> {
             IconButton(
               icon: const Icon(Icons.remove),
               onPressed: () {
-                if (mounted) {
-                  setState(() {
-                    widget.species.count--;
-                    DatabaseHelper().updateSpecies(widget.species);
+                if (mounted && widget.species.count > 0) {
+                  widget.species.count--;
+                  DatabaseHelper().updateSpecies(widget.species).then((_) {
+                    setState(() {});
                   });
                 }
               },
@@ -349,9 +351,9 @@ class SpeciesListItemState extends State<SpeciesListItem> {
               icon: const Icon(Icons.add),
               onPressed: () {
                 if (mounted) {
-                  setState(() {
-                    widget.species.count++;
-                    DatabaseHelper().updateSpecies(widget.species);
+                  widget.species.count++;
+                  DatabaseHelper().updateSpecies(widget.species).then((_) {
+                    setState(() {});
                   });
                 }
               },
@@ -361,7 +363,9 @@ class SpeciesListItemState extends State<SpeciesListItem> {
               onPressed: () async {
                 // Get the current location
                 Position position = await Geolocator.getCurrentPosition(
-                  desiredAccuracy: LocationAccuracy.high,
+                  locationSettings: LocationSettings(
+                    accuracy: LocationAccuracy.high,
+                  ),
                 );
 
                 // Create a new POI

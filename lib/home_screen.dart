@@ -80,20 +80,33 @@ class _HomeScreenState extends State<HomeScreen> {
           initialItemCount: _activeInventories.length,
           itemBuilder: (context, index, animation) {
             final inventory = _activeInventories[index];
-            return InventoryListItem(
-              inventory: inventory,
-              animation: animation,
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => InventoryDetailScreen(inventory: inventory,
-                    onInventoryUpdated: onInventoryUpdated,
-                    ),
-                  ),
-                );
-              },
-              onInventoryPausedOrResumed: _onInventoryPausedOrResumed,
+            return ValueListenableBuilder<bool>( // Envolve o InventoryListItem com ValueListenableBuilder
+                valueListenable: inventory.isFinishedNotifier, // Agora acessa o isFinishedNotifier do inventory correto
+                builder: (context, isFinished, child) {
+                  if (isFinished) {
+                    _loadActiveInventories(); // Recarrega a lista de inventários
+                  }
+                  return child!; // Retorna o widget filho (InventoryListItem)
+                },
+                child: InventoryListItem(
+                  inventory: inventory,
+                  animation: animation,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => InventoryDetailScreen(inventory: inventory,
+                          onInventoryUpdated: onInventoryUpdated,
+                        ),
+                      ),
+                    ).then((result) {
+                      if (result == true) {
+                        _loadActiveInventories();
+                      }
+                    });
+                  },
+                  onInventoryPausedOrResumed: _onInventoryPausedOrResumed,
+                )
             );
           },
         ),
