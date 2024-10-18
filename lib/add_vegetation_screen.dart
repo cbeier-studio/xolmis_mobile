@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'inventory.dart';
@@ -14,10 +15,10 @@ class AddVegetationDataScreen extends StatefulWidget {
   });
 
   @override
-  _AddVegetationDataScreenState createState() => _AddVegetationDataScreenState();
+  AddVegetationDataScreenState createState() => AddVegetationDataScreenState();
 }
 
-class _AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
+class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _herbsProportionController;
   late TextEditingController _herbsDistributionController;
@@ -128,14 +129,21 @@ class _AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
                     int? result = await DatabaseHelper().insertVegetation(vegetation).then((result) {
                       if (result != 0) {
                         // Successful insert
-                        widget.onVegetationAdded(vegetation); // Call the callback
-                        Navigator.pop(context); // Go back to previous screen
+                        widget.onVegetationAdded(vegetation);
+                        Navigator.pop(context);
+                        return result;
                       } else {
                         // Insert failed
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Erro ao salvar os dados de vegetação')),
                         );
+                        return null;
                       }
+                    }).catchError((error) {
+                      if (kDebugMode) {
+                        print('Error inserting vegetation data: $error');
+                      }
+                      return null;
                     });
                   }
                 },

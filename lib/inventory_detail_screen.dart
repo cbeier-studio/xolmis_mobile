@@ -19,10 +19,10 @@ class InventoryDetailScreen extends StatefulWidget {
   });
 
   @override
-  _InventoryDetailScreenState createState() => _InventoryDetailScreenState();
+  InventoryDetailScreenState createState() => InventoryDetailScreenState();
 }
 
-class _InventoryDetailScreenState extends State<InventoryDetailScreen>
+class InventoryDetailScreenState extends State<InventoryDetailScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final GlobalKey<AnimatedListState> _speciesListKey = GlobalKey<AnimatedListState>();
@@ -120,11 +120,14 @@ class _InventoryDetailScreenState extends State<InventoryDetailScreen>
   }
 
   void _updateSpeciesList() {
-    setState(() {});
+    setState(() async {
+      final updatedSpeciesList = await DatabaseHelper().getSpeciesByInventory(widget.inventory.id);
+      widget.inventory.speciesList = updatedSpeciesList;
+    });
   }
 
   void _sortSpeciesList() {
-    widget.inventory.speciesList.sort((a, b) => a.name!.compareTo(b.name!));
+    widget.inventory.speciesList.sort((a, b) => a.name.compareTo(b.name));
     setState(() {});
   }
 
@@ -141,7 +144,8 @@ class _InventoryDetailScreenState extends State<InventoryDetailScreen>
   }
 
   void onVegetationAdded(Vegetation vegetation) {
-    setState(() {widget.inventory.vegetationList.add(vegetation);
+    setState(() {
+      widget.inventory.vegetationList.add(vegetation);
     });
   }
 
@@ -203,7 +207,7 @@ class _InventoryDetailScreenState extends State<InventoryDetailScreen>
           Navigator.pop(context);
         },
         backgroundColor: Colors.red,
-        child: const Icon(Icons.stop, color: Colors.grey),
+        child: const Icon(Icons.stop, color: Colors.white),
       ) : null,
     );
   }
@@ -315,10 +319,10 @@ class SpeciesListItem extends StatefulWidget {
   });
 
   @override
-  _SpeciesListItemState createState() => _SpeciesListItemState();
+  SpeciesListItemState createState() => SpeciesListItemState();
 }
 
-class _SpeciesListItemState extends State<SpeciesListItem> {
+class SpeciesListItemState extends State<SpeciesListItem> {
   @override
   Widget build(BuildContext context) {
     return SizeTransition(
@@ -369,11 +373,11 @@ class _SpeciesListItemState extends State<SpeciesListItem> {
 
                 // Insert the POI in the database
                 await DatabaseHelper().insertPoi(poi).then((_) {
-                  if (mounted) {
+                  // if (mounted) {
                     setState(() {
                       widget.species.pois.add(poi);
                     });
-                  }
+                  // }
                 });
               },
             ),

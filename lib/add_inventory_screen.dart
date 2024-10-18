@@ -4,11 +4,11 @@ import 'database_helper.dart';
 
 class AddInventoryScreen extends StatefulWidget {const AddInventoryScreen({super.key});
 
-@override
-_AddInventoryScreenState createState() => _AddInventoryScreenState();
+  @override
+  AddInventoryScreenState createState() => AddInventoryScreenState();
 }
 
-class _AddInventoryScreenState extends State<AddInventoryScreen> {
+class AddInventoryScreenState extends State<AddInventoryScreen> {
   final _formKey = GlobalKey<FormState>();
   final _idController = TextEditingController();
   InventoryType _selectedType = InventoryType.invQualitative;

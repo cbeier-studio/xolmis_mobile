@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'inventory.dart';
 import 'database_helper.dart';
@@ -8,10 +9,10 @@ class SpeciesDetailScreen extends StatefulWidget {
   const SpeciesDetailScreen({super.key, required this.species});
 
   @override
-  _SpeciesDetailScreenState createState() => _SpeciesDetailScreenState();
+  SpeciesDetailScreenState createState() => SpeciesDetailScreenState();
 }
 
-class _SpeciesDetailScreenState extends State<SpeciesDetailScreen>
+class SpeciesDetailScreenState extends State<SpeciesDetailScreen>
     with SingleTickerProviderStateMixin {
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   late AnimationController _animationController;
@@ -23,12 +24,30 @@ class _SpeciesDetailScreenState extends State<SpeciesDetailScreen>
       vsync: this,
       duration: const Duration(milliseconds: 300),
     );
+    _loadSpeciesData();
   }
 
   @override
   void dispose() {
     _animationController.dispose();
     super.dispose();
+  }
+
+  Future<void> _loadSpeciesData() async {
+    try {
+      final loadedSpecies = await DatabaseHelper().getSpeciesById(
+          widget.species.id!);
+      setState(() {
+        widget.species.pois = loadedSpecies.pois;
+      });
+    } catch (error) {
+      if (kDebugMode) {
+        print('Error loading species data: $error');
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Espécie não encontrada')),
+      );
+    }
   }
 
   @override

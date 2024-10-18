@@ -246,7 +246,7 @@ const Map<InventoryType, String> inventoryTypeFriendlyNames = {
   InventoryType.invCumulativeTime: 'Lista Cumulativa por Tempo',
 };
 
-class Inventory {
+class Inventory with ChangeNotifier {
   final String id;
   final InventoryType type;
   int duration;

@@ -45,6 +45,7 @@ dependencies:
   csv: ^5.0.1
   geolocator: ^9.0.2
   google_maps_flutter: ^2.2.0
+  flutter_launcher_icons: ^0.14.1
 
 dev_dependencies:
   flutter_test:
@@ -101,3 +102,8 @@ flutter:
 
   assets:
     - assets/species_data.json
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/Xolmis-icon-1024.png"
