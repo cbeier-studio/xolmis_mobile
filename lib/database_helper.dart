@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -117,17 +116,17 @@ class DatabaseHelper {
       return id != null && id > 0;
     } on DatabaseException catch (e) {
       if (kDebugMode) {
-        print('Erro de banco de dados: $e');
-        print('Tipo de exceção: ${e.runtimeType}');
-        print('Mensagem detalhada: ${e.toString()}');
+        print('Database error: $e');
+        print('Exception type: ${e.runtimeType}');
+        print('Detailed message: ${e.toString()}');
       }
       return false;
       // Handle the database error
     } catch (e) {
       if (kDebugMode) {
-        print('Erro genérico: $e');
-        print('Tipo de exceção: ${e.runtimeType}');
-        print('Mensagem detalhada: ${e.toString()}');
+        print('Generic error: $e');
+        print('Exception type: ${e.runtimeType}');
+        print('Detailed message: ${e.toString()}');
       }
       // Handle other errors
       return false;
@@ -166,12 +165,12 @@ class DatabaseHelper {
     final db = await database;
     try {
       int? id = await db?.insert('species', species.toMap(inventoryId));
-      return id; // Retorna o ID da espécie inserida
+      return id;
     } catch (e) {
       if (kDebugMode) {
-        print('Erro ao inserir espécie: $e');
+        print('Error inserting species: $e');
       }
-      return 0; // Retorna 0 em caso de erro
+      return 0;
     }
   }
 
@@ -196,12 +195,12 @@ class DatabaseHelper {
       }).toList());
 
       if (kDebugMode) {
-        print('Inventários carregados: ${inventories.length}');
+        print('Loaded inventories: ${inventories.length}');
       }
       return inventories;
     } catch (e) {
       if (kDebugMode) {
-        print('Erro ao carregar inventários: $e');
+        print('Error loading inventories: $e');
       }
       // Handle the error, e.g.: return an empty list or rethrow exception
       return []; // Or rethrow;
@@ -216,10 +215,10 @@ class DatabaseHelper {
         whereArgs: [id]
     ) ?? [];
     if (maps.isNotEmpty) {
-      final pois = await getPoisForSpecies(id); // Obter os POIs para a espécie
-      return Species.fromMap(maps.first, pois); // Passar os POIs para o fromMap
+      final pois = await getPoisForSpecies(id);
+      return Species.fromMap(maps.first, pois);
     } else {
-      throw Exception('Espécie não encontrada com o ID $id');
+      throw Exception('Species not found with ID $id');
     }
   }
 
@@ -231,7 +230,7 @@ class DatabaseHelper {
       whereArgs: [inventoryId],
     ) ?? [];
     if (kDebugMode) {
-      print('Espécies carregadas para o inventário $inventoryId: ${maps.length}');
+      print('Species loaded for inventory $inventoryId: ${maps.length}');
     }
     // Create the species list with the corresponding POIs
     final speciesList = await Future.wait(maps.map((map) async {
@@ -251,7 +250,7 @@ class DatabaseHelper {
       whereArgs: [inventoryId],
     ) ?? [];
     if (kDebugMode) {
-      print('Dados de vegetação carregados para o inventário $inventoryId: ${maps.length}');
+      print('Vegetation data loaded for inventory $inventoryId: ${maps.length}');
     }
     return List.generate(maps.length, (i) {
       return Vegetation.fromMap(maps[i]);
@@ -273,7 +272,7 @@ class DatabaseHelper {
       inventories.add(Inventory.fromMap(map, speciesList, vegetationList));
     }
     if (kDebugMode) {
-      print('Inventários finalizados carregados: ${inventories.length}');
+      print('Finished inventories loaded: ${inventories.length}');
     }
     return inventories;
   }
@@ -345,12 +344,12 @@ class DatabaseHelper {
         vegetation.toMap(vegetation.inventoryId),
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
-      return id; // Retorna o ID da espécie inserida
+      return id;
     } catch (e) {
       if (kDebugMode) {
-        print('Erro ao inserir vegetação: $e');
+        print('Error inserting vegetation data: $e');
       }
-      return 0; // Retorna 0 em caso de erro
+      return 0;
     }
   }
 
@@ -369,7 +368,7 @@ class DatabaseHelper {
       await db?.insert('pois', poi.toMap(poi.speciesId));
     } catch (e) {
       if (kDebugMode) {
-        print('Erro ao inserir POI: $e');
+        print('Error inserting POI: $e');
       }
     }
   }

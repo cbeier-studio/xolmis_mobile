@@ -77,7 +77,7 @@ class Species {
       inventoryId: map['inventoryId'],
       name: map['name'],
       count: map['count'],
-      isOutOfInventory: map['isOutOfInventory'] == 1, // Converte int para boolean
+      isOutOfInventory: map['isOutOfInventory'] == 1, // Convert int to boolean
       pois: pois,
     );
   }
@@ -285,7 +285,7 @@ class Inventory {
 
   Inventory.fromMap(Map<String, dynamic> map, List<Species> speciesList, List<Vegetation> vegetationList)
       : id = map['id'],
-        type = InventoryType.values[map['type']], // Converte de índice para enum
+        type = InventoryType.values[map['type']], // Convert the índex to enum
         duration = map['duration'],
         isPaused = map['isPaused'] == 1,
         isFinished = map['isFinished'] == 1,
@@ -397,11 +397,11 @@ class Inventory {
   void resumeTimer() {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       elapsedTime++;
-      elapsedTimeNotifier.value = elapsedTime; // Notifica o ValueListenableBuilder
+      elapsedTimeNotifier.value = elapsedTime; // Notify the ValueListenableBuilder
       if (elapsedTime >= duration * 60) {
         _timer?.cancel();
         isFinished = true;
-        elapsedTimeNotifier.value = elapsedTime; // Notifica o ValueListenableBuilder
+        elapsedTimeNotifier.value = elapsedTime; // Notify the ValueListenableBuilder
       }
     });
     isPaused = false;
@@ -419,7 +419,7 @@ class Inventory {
     elapsedTimeNotifier.value = elapsedTime.toDouble();
     elapsedTimeNotifier.notifyListeners();
 
-    // Define endTime, endLatitude e endLongitude ao encerrar o inventário
+    // Define endTime, endLatitude and endLongitude when finishing the inventory
     endTime = DateTime.now();
     Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     endLatitude = position.latitude;
@@ -429,7 +429,7 @@ class Inventory {
   }
 
   Future<void> _updateElapsedTimeInDatabase() async {
-    // Atualiza o elapsedTime no banco de dados
+    // Update the elapsedTime in the database
     await DatabaseHelper().updateInventoryElapsedTime(id, elapsedTime);
   }
 }

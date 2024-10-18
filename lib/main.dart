@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Xolmis Mobile',
+      title: 'Xolmis',
       theme: ThemeData(
         primarySwatch: Colors.deepPurple,
       ),

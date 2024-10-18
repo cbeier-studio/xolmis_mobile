@@ -18,7 +18,8 @@ class _AddInventoryScreenState extends State<AddInventoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Novo Inventário'),),
+        title: const Text('Novo Inventário'),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -50,9 +51,9 @@ class _AddInventoryScreenState extends State<AddInventoryScreen> {
                   setState(() {
                     _selectedType = newValue!;
                     if (newValue == InventoryType.invCumulativeTime) {
-                      _durationController.text = '30'; // Define a duração para 30 minutos
+                      _durationController.text = '30'; // Define duration to 30 minutes
                     } else {
-                      _durationController.text = ''; // Limpa o campo de duração
+                      _durationController.text = ''; // Clear duration field
                     }
                   });
                 },
@@ -88,10 +89,10 @@ class _AddInventoryScreenState extends State<AddInventoryScreen> {
 
       DatabaseHelper().insertInventory(newInventory).then((success) {
         if (success) {
-          // Inventário inserido com sucesso
-          Navigator.pop(context, newInventory); // Retorna o novo inventário
+          // Inventory inserted successfully
+          Navigator.pop(context, newInventory);
         } else {
-          // Lidar com erro de inserção
+          // Handle insertion error
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Erro ao inserir inventário')),
           );

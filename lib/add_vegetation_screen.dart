@@ -24,7 +24,8 @@ class _AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
   late TextEditingController _herbsHeightController;
   late TextEditingController _shrubsProportionController;
   late TextEditingController _shrubsDistributionController;
-  late TextEditingController _shrubsHeightController;late TextEditingController _treesProportionController;
+  late TextEditingController _shrubsHeightController;
+  late TextEditingController _treesProportionController;
   late TextEditingController _treesDistributionController;
   late TextEditingController _treesHeightController;
   late TextEditingController _notesController;
@@ -71,7 +72,7 @@ class _AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              const Text('Ervas',
+              const Text('Herbáceas',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -107,7 +108,7 @@ class _AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
                       desiredAccuracy: LocationAccuracy.high,
                     );
 
-                    // Salve os dados de vegetação
+                    // Save the vegetation data
                     final vegetation = Vegetation(
                       inventoryId: widget.inventory.id,
                       sampleTime: DateTime.now(),
@@ -126,11 +127,11 @@ class _AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
                     );
                     int? result = await DatabaseHelper().insertVegetation(vegetation).then((result) {
                       if (result != 0) {
-                        // Inserção bem-sucedida
-                        widget.onVegetationAdded(vegetation); // Chama o callback
-                        Navigator.pop(context); // Volte para a tela anterior
+                        // Successful insert
+                        widget.onVegetationAdded(vegetation); // Call the callback
+                        Navigator.pop(context); // Go back to previous screen
                       } else {
-                        // Inserção falhou
+                        // Insert failed
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Erro ao salvar os dados de vegetação')),
                         );

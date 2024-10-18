@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'inventory.dart';
 import 'database_helper.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:animated_list/animated_list.dart';
 import 'add_vegetation_screen.dart';
 import 'species_detail_screen.dart';
 
@@ -43,11 +42,11 @@ class _InventoryDetailScreenState extends State<InventoryDetailScreen>
   }
 
   void _addSpeciesToInventory(String speciesName) async {
-    // Verifica se a espécie já existe na lista do inventário atual
+    // Check if species already exists in current inventory
     bool speciesExistsInCurrentInventory = widget.inventory.speciesList.any((species) => species.name == speciesName);
 
     if (!speciesExistsInCurrentInventory) {
-      // Adicione a espécie ao inventário atual
+      // Add the species to the current inventory
       final newSpecies = Species(
         inventoryId: widget.inventory.id,
         name: speciesName,
@@ -56,14 +55,14 @@ class _InventoryDetailScreenState extends State<InventoryDetailScreen>
       );
       await DatabaseHelper().insertSpecies(newSpecies.inventoryId, newSpecies).then((id) {
         if (id != 0) {
-          // Espécie inserida com sucesso
+          // Species inserted successfully
           if (kDebugMode) {
-            print('Espécie inserida com ID: $id');
+            print('Species inserted with ID: $id');
           }
         } else {
-          // Lidar com erro de inserção
+          // Handle insert error
           if (kDebugMode) {
-            print('Erro ao inserir espécie');
+            print('Error inserting species');
           }
         }
       });
@@ -77,35 +76,35 @@ class _InventoryDetailScreenState extends State<InventoryDetailScreen>
 
       final activeInventories = await DatabaseHelper().loadActiveInventories();
       for (final inventory in activeInventories) {
-        // Verifica se o inventário é diferente do atual e se a espécie não existe nele
+        // Check if the inventory is different from the current and if species exists in it
         if (inventory.id != widget.inventory.id &&
             !inventory.speciesList.any((species) => species.name == speciesName)) {
           final newSpeciesForOtherInventory = Species(inventoryId: inventory.id,
             name: speciesName,
-            isOutOfInventory: inventory.isFinished, // Define isOutOfInventory com base no inventário atual
+            isOutOfInventory: inventory.isFinished,
             pois: [],
           );
           await DatabaseHelper().insertSpecies(newSpeciesForOtherInventory.inventoryId, newSpeciesForOtherInventory).then((id) {
             if (id != 0) {
-              // Espécie inserida com sucesso
+              // Species inserted successfully
               if (kDebugMode) {
-                print('Espécie inserida com ID: $id');
+                print('Species inserted with ID: $id');
               }
             } else {
-              // Lidar com erro de inserção
+              // Handle insert error
               if (kDebugMode) {
-                print('Erro ao inserir espécie');
+                print('Error inserting species');
               }
             }
           });
 
-          // Atualiza a lista de espécies do inventário ativo
+          // Update the species list of the active inventory
           inventory.speciesList.add(newSpeciesForOtherInventory);
-          await DatabaseHelper().updateInventory(inventory); // Atualiza o inventário no banco de dados
+          await DatabaseHelper().updateInventory(inventory); // Update the inventory in the database
         }
       }
 
-      // Reinicia o temporizador se o inventário for do tipo invCumulativeTime
+      // Restart the timer if the inventory is of type invCumulativeTime
       if (widget.inventory.type == InventoryType.invCumulativeTime) {
         widget.inventory.elapsedTime = 0;
         widget.inventory.startTimer();
@@ -113,7 +112,7 @@ class _InventoryDetailScreenState extends State<InventoryDetailScreen>
 
       widget.onInventoryUpdated();
     } else {
-      // Exibe uma mensagem informando que a espécie já existe
+      // Show message informing that species already exists
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Espécie já adicionada a este inventário.')),
       );
@@ -121,12 +120,12 @@ class _InventoryDetailScreenState extends State<InventoryDetailScreen>
   }
 
   void _updateSpeciesList() {
-    setState(() {}); // Atualiza o estado do InventoryDetailScreen
+    setState(() {});
   }
 
   void _sortSpeciesList() {
     widget.inventory.speciesList.sort((a, b) => a.name!.compareTo(b.name!));
-    setState(() {}); // Atualiza a interface do usuário
+    setState(() {});
   }
 
   void _showSpeciesSearch() async {
@@ -198,13 +197,13 @@ class _InventoryDetailScreenState extends State<InventoryDetailScreen>
       ),
       floatingActionButton: !widget.inventory.isFinished ? FloatingActionButton(
         onPressed: () async {
-          // Lógica para encerrar oinventário
-          await widget.inventory.stopTimer(); // Para o timer
+          // Finishing the inventory
+          await widget.inventory.stopTimer();
           widget.onInventoryUpdated();
-          Navigator.pop(context); // Navega de volta para a tela anterior
+          Navigator.pop(context);
         },
         backgroundColor: Colors.red,
-        child: const Icon(Icons.stop), // Ícone do botão
+        child: const Icon(Icons.stop, color: Colors.grey),
       ) : null,
     );
   }
@@ -220,7 +219,7 @@ class _InventoryDetailScreenState extends State<InventoryDetailScreen>
               prefixIcon: Icon(Icons.search),
               border: OutlineInputBorder(),
             ),
-            readOnly: true, // Impede a edição direta do campo
+            readOnly: true,
             onTap: () async {
               _showSpeciesSearch();
             },
@@ -233,7 +232,7 @@ class _InventoryDetailScreenState extends State<InventoryDetailScreen>
             itemBuilder: (context, index, animation) {
               final species = widget.inventory.speciesList[index];
               return Dismissible(
-                key: Key(species.id.toString()), // Chave única para o item da lista
+                key: Key(species.id.toString()),
                 background: Container(
                   color: Colors.red,
                   alignment: Alignment.centerRight,
@@ -241,7 +240,6 @@ class _InventoryDetailScreenState extends State<InventoryDetailScreen>
                   child: const Icon(Icons.delete, color: Colors.white),
                 ),
                 confirmDismiss: (direction) async {
-                  // Exibe um diálogo de confirmação
                   return await showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -262,14 +260,14 @@ class _InventoryDetailScreenState extends State<InventoryDetailScreen>
                   );
                 },
                 onDismissed: (direction) {
-                  // Remove a espécie da lista e do AnimatedList
+                  // Remove the species from list and AnimatedList
                   final removedSpecies = widget.inventory.speciesList.removeAt(index);
                   _speciesListKey.currentState!.removeItem(
                     index,
                         (context, animation) => SpeciesListItem(species: removedSpecies, animation: animation),
                   );
                   DatabaseHelper().deleteSpeciesFromInventory(widget.inventory.id, removedSpecies.name);
-                  // Atualiza o inventário no banco de dados
+                  // Update the inventory in the database
                   DatabaseHelper().updateInventory(widget.inventory);
                 },
                 child: SpeciesListItem(
@@ -337,7 +335,7 @@ class _SpeciesListItemState extends State<SpeciesListItem> {
                 if (mounted) {
                   setState(() {
                     widget.species.count--;
-                    DatabaseHelper().updateSpecies(widget.species); // Atualiza no banco de dados
+                    DatabaseHelper().updateSpecies(widget.species);
                   });
                 }
               },
@@ -349,7 +347,7 @@ class _SpeciesListItemState extends State<SpeciesListItem> {
                 if (mounted) {
                   setState(() {
                     widget.species.count++;
-                    DatabaseHelper().updateSpecies(widget.species); // Atualiza no banco de dados
+                    DatabaseHelper().updateSpecies(widget.species);
                   });
                 }
               },
@@ -357,19 +355,19 @@ class _SpeciesListItemState extends State<SpeciesListItem> {
             IconButton(
               icon: const Icon(Icons.add_location),
               onPressed: () async {
-                // Obtém a localização atual
+                // Get the current location
                 Position position = await Geolocator.getCurrentPosition(
                   desiredAccuracy: LocationAccuracy.high,
                 );
 
-                // Cria um novo POI
+                // Create a new POI
                 final poi = Poi(
                   speciesId: widget.species.id!,
                   longitude: position.longitude,
                   latitude: position.latitude,
                 );
 
-                // Insere o POI no banco de dados
+                // Insert the POI in the database
                 await DatabaseHelper().insertPoi(poi).then((_) {
                   if (mounted) {
                     setState(() {
@@ -411,7 +409,7 @@ class VegetationListItem extends StatelessWidget {
       child: ListTile(
         title: Text(vegetation.sampleTime.toIso8601String()),
         subtitle: Text('${vegetation.latitude}; ${vegetation.longitude}'),
-        // ... outros widgets para exibir informações da vegetação ...
+        // ... other widgets to show vegetation info ...
       ),
     );
   }
@@ -449,7 +447,7 @@ class SpeciesSearchDelegate extends SearchDelegate<String> {
   @override
   Widget buildSuggestions(BuildContext context) {
     final suggestions = allSpecies
-        .where((species) => speciesMatchesQuery(species, query)) // Chama a função speciesMatchesQuery
+        .where((species) => speciesMatchesQuery(species, query))
         .toList();
 
     return ListView.builder(
@@ -460,7 +458,7 @@ class SpeciesSearchDelegate extends SearchDelegate<String> {
           title: Text(species),
           onTap: () {
             addSpeciesToInventory(species);
-            close(context, species); // Fecha a lista de sugestões e retorna a espécie selecionada
+            close(context, species); // Close the suggestions list and return the selected species
           },
         );
       },
@@ -477,29 +475,29 @@ class SpeciesSearchDelegate extends SearchDelegate<String> {
         final firstPart = query.substring(0, firstPartLength);
         final secondPart = query.substring(firstPartLength);
 
-        // Verifica se as partes da consulta correspondem às partes do nome da espécie
+        // Check if the parts of query match the parts of the species name
         return firstWord.toLowerCase().startsWith(firstPart.toLowerCase()) &&
             secondWord.toLowerCase().startsWith(secondPart.toLowerCase());
       }
     }
-    // Se a consulta não tiver 4 ou 6 letras, ou se o nome da espécie não tiver duas palavras,
-    // utilize a lógica de busca anterior (ex: contains)
+    // If que query do not have 4 or 6 characters, or if the species name do not have two words,
+    // use the previous search logic (e.g.: contains)
     return speciesName.toLowerCase().contains(query.toLowerCase());
   }
 
   @override
   Widget buildResults(BuildContext context) {
-    // Adicionao primeiro item da lista de sugestões à lista
-    if (query.isNotEmpty) { // Verifica se a consulta não está vazia
+    // Add the first item from suggestions list
+    if (query.isNotEmpty) {
       final suggestions = allSpecies.where((species) => speciesMatchesQuery(species, query)).toList();
-      if (suggestions.isNotEmpty) { // Verifica se a lista de sugestões não está vazia
-        final firstSuggestion = suggestions[0]; // Obtém o primeiro item da lista de sugestões
-        addSpeciesToInventory(firstSuggestion); // Adiciona o primeiro item à lista
+      if (suggestions.isNotEmpty) {
+        final firstSuggestion = suggestions[0];
+        addSpeciesToInventory(firstSuggestion);
         // updateSpeciesList();
-        close(context, firstSuggestion); // Fecha a busca e retorna o primeiro item
+        close(context, firstSuggestion);
       }
     }
-    return Container(); // Retorna um widget vazio, pois buildResults não é usado neste caso
+    return Container(); // Return a empty widget, because buildResults is not used in this case
   }
 }
 
@@ -522,7 +520,7 @@ class SpeciesSuggestions extends StatelessWidget {
         return ListTile(
           title: Text(species),
           onTap: () {
-            onTap(species); // Chame o callback onTap com a espécie selecionada
+            onTap(species);
           },
         );
       },

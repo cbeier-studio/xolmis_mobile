@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:csv/csv.dart';
 import 'package:file_picker/file_picker.dart';
 import 'inventory.dart';
@@ -27,7 +26,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   void onInventoryUpdated() {
     setState(() {
-      _loadClosedInventories(); // Recarrega os inventários
+      _loadClosedInventories(); // Reload the inventories
     });
   }
 
@@ -39,10 +38,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   void _deleteInventory(Inventory inventory) async {
-    // Remove o inventário do banco de dados
+    // Remove the inventory from database
     await dbHelper.deleteInventory(inventory.id);
 
-    // Remove o inventário da lista e atualiza a UI
+    // Remove the inventory from list and update UI
     setState(() {
       final index = _closedInventories.indexOf(inventory);
       _closedInventories.removeAt(index);
@@ -61,16 +60,16 @@ class _HistoryScreenState extends State<HistoryScreen> {
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: _loadClosedInventories,
-        child: _closedInventories.isEmpty // Verifica se a lista está vazia
-        ? const Center(child: Text('Nenhum inventário no histórico.')) // Mostra o texto se a lista estiver vazia
+        child: _closedInventories.isEmpty
+        ? const Center(child: Text('Nenhum inventário no histórico.'))
         : AnimatedList(
         key: _listKey,
         initialItemCount: _closedInventories.length,
           itemBuilder: (context, index, animation) {
             final inventory = _closedInventories[index];
-            return Dismissible( // Adiciona o Dismissable
-              key: Key(inventory.id), // Define uma chave única para o Dismissable
-              onDismissed: (direction) {// Exibe um AlertDialog para confirmar a exclusão
+            return Dismissible(
+              key: Key(inventory.id),
+              onDismissed: (direction) {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
@@ -81,14 +80,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         TextButton(
                           child: const Text('Cancelar'),
                           onPressed: () {
-                            Navigator.of(context).pop(); // Fecha o AlertDialog
-                            setState(() {}); // Reconstrói a lista para restaurar o item
+                            Navigator.of(context).pop();
+                            setState(() {}); // Rebuild the list to restore the item
                           },
                         ),
                         TextButton(child: const Text('Excluir'),
                           onPressed: () {
-                            Navigator.of(context).pop(); // Fecha o AlertDialog
-                            _deleteInventory(inventory); // Exclui o inventário
+                            Navigator.of(context).pop();
+                            _deleteInventory(inventory); // Delete the inventory
                           },
                         ),
                       ],
@@ -96,13 +95,13 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   },
                 );
               },
-              background: Container( // Widget exibido durante o arrasto
+              background: Container(
                 color: Colors.red,
                 alignment: Alignment.centerRight,
                 padding: const EdgeInsets.only(right: 20.0),
                 child: const Icon(Icons.delete, color: Colors.white),
               ),
-              child: InventoryListItem( // Widget do item da lista
+              child: InventoryListItem(
                 inventory: inventory,
                 animation: animation,
                 onInventoryUpdated: onInventoryUpdated,
@@ -193,7 +192,7 @@ class InventoryListItem extends StatelessWidget {
       rows.add([species.name, species.count, species.isOutOfInventory]);
     }
 
-    // Adicionar dados da vegetação
+    // Add vegetation data
     rows.add([]); // Empty line to separate vegetation data
     rows.add(['Vegetação']);
     rows.add([
@@ -228,7 +227,7 @@ class InventoryListItem extends StatelessWidget {
       ]);
     }
 
-    // Adicionar dados dos POIs
+    // Add POIs data
     rows.add([]); // Empty line to separate POI data
     rows.add(['POIs das Espécies']);
     for (var species in inventory.speciesList) {

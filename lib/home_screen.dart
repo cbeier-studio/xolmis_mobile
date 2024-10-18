@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:animated_list/animated_list.dart';
 import 'package:geolocator/geolocator.dart';
 import 'inventory.dart';
 import 'database_helper.dart';
@@ -22,10 +21,10 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _checkLocationPermissions();
-    _loadActiveInventories().then((_) { // Chama _loadActiveInventories e, em seguida, verifica os inventários
+    _loadActiveInventories().then((_) {
       for (var inventory in _activeInventories) {
-        if (inventory.duration > 0 && !inventory.isFinished) { // Verifica se a duração é maior que 0 e se o inventário não está finalizado
-          inventory.resumeTimer(); // Chama resumeTimer para os inventários que atendem às condições
+        if (inventory.duration > 0 && !inventory.isFinished) {
+          inventory.resumeTimer();
         }}
     });
   }
@@ -36,20 +35,18 @@ class _HomeScreenState extends State<HomeScreen> {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        // Permissões negadas permanentemente
-        // Exiba uma mensagem ao usuário ou redirecione para as configurações do app
+        // Permissions permanently denied
         return Future.error('Location permissions are denied');
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
-      // Permissões negadas permanentemente
-      // Exiba uma mensagem ao usuário ou redirecione para as configurações do app
+      // Permissions permanently denied
       return Future.error(
           'Location permissions are permanently denied, we cannot request permissions.');
     }
 
-    // Permissões concedidas, você pode usar o Geolocator aqui
+    // Permissions granted, you can use the Geolocator here
   }
 
   Future<void> _loadActiveInventories() async {
@@ -61,13 +58,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _onInventoryPausedOrResumed() {
     setState(() {
-      _loadActiveInventories(); // Recarrega os inventários
+      _loadActiveInventories();
     });
   }
 
   void onInventoryUpdated() {
     setState(() {
-      _loadActiveInventories(); // Recarrega os inventários
+      _loadActiveInventories();
     });
   }
 
@@ -76,8 +73,8 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: _loadActiveInventories,
-        child: _activeInventories.isEmpty // Verifica se a lista está vazia
-            ? const Center(child: Text('Nenhum inventário ativo.')) // Mostra o texto se a lista estiver vazia
+        child: _activeInventories.isEmpty
+            ? const Center(child: Text('Nenhum inventário ativo.'))
             : AnimatedList(
           key: _listKey,
           initialItemCount: _activeInventories.length,
@@ -137,7 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
         _listKey.currentState!.insertItem(_activeInventories.length - 1);
       });
       } else {
-        // Lidar com erro de inserção
+        // Handle insertion error
       }
     });
   }
@@ -164,7 +161,8 @@ class InventoryListItem extends StatelessWidget {
         child:SizeTransition(
           sizeFactor: animation,
           child: ListTile(
-            leading: ValueListenableBuilder<double>( // Usa ValueListenableBuilder para atualizar a CircularProgressIndicator
+            // Use ValueListenableBuilder for update the CircularProgressIndicator
+            leading: ValueListenableBuilder<double>(
               key: ValueKey(inventory.id),
               valueListenable: inventory.elapsedTimeNotifier,
               builder: (context, elapsedTime, child) {

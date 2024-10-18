@@ -42,7 +42,7 @@ class _SpeciesDetailScreenState extends State<SpeciesDetailScreen>
         initialItemCount: widget.species.pois.length,
         itemBuilder: (context, index, animation){
           final poi = widget.species.pois[index];
-          return Dismissible( // Adicione o Dismissible aqui
+          return Dismissible(
             key: ValueKey(poi),
             direction: DismissDirection.endToStart,
             background: Container(
@@ -73,10 +73,10 @@ class _SpeciesDetailScreenState extends State<SpeciesDetailScreen>
               );
             },
             onDismissed: (direction) {
-              // Apague o POI do banco de dados
-              DatabaseHelper().deletePoi(poi.id!); // Supondo que Poi tenha um ID
+              // Delete the POI from database
+              DatabaseHelper().deletePoi(poi.id!);
 
-              // Remova o POI da lista e atualize a AnimatedList
+              // Remove the POI from list and update the AnimatedList
               setState(() {
                 widget.species.pois.removeAt(index);
                 _listKey.currentState!.removeItem(
