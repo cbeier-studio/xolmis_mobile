@@ -106,7 +106,9 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     Position position = await Geolocator.getCurrentPosition(
-                      desiredAccuracy: LocationAccuracy.high,
+                      locationSettings: LocationSettings(
+                    accuracy: LocationAccuracy.high,
+                  ),
                     );
 
                     // Save the vegetation data

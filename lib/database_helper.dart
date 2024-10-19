@@ -161,6 +161,12 @@ class DatabaseHelper {
     );
   }
 
+  Future<int> getActiveInventoriesCount() async {
+    final db = await database;
+    final result = await db?.rawQuery('SELECT COUNT(*) FROM inventories WHERE isFinished = 0');
+    return Sqflite.firstIntValue(result!) ?? 0;
+  }
+
   Future<int?> insertSpecies(String inventoryId, Species species) async {
     final db = await database;
     try {

@@ -373,37 +373,36 @@ class Inventory with ChangeNotifier {
 
   void startTimer() {
     if (duration > 0 && !isFinished) {
-      _timer?.cancel();
-      _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      // _timer?.cancel();
+      _timer ??= Timer.periodic(const Duration(seconds: 1), (timer) {
         if (!isPaused && !isFinished) {
           elapsedTime++;
-          elapsedTimeNotifier.value = elapsedTime;
-
-          if (elapsedTime >= duration * 60) {
-            timer.cancel();
-            isFinished = true;
-            isFinishedNotifier.value = true;
-          }
 
           if (elapsedTime % 15 == 0) {
             DatabaseHelper().updateInventoryElapsedTime(id, elapsedTime);
           }
+
+          if (elapsedTime >= duration * 60) {
+            stopTimer();
+          }
         }
+        elapsedTimeNotifier.value = elapsedTime;
       });
     }
   }
 
   void pauseTimer() {
     isPaused = true;
-    _timer?.cancel();
-    _timer = null;
-    elapsedTimeNotifier.value = elapsedTime;
+    // _timer?.cancel();
+    // elapsedTimeNotifier.value = elapsedTime;
+    elapsedTimeNotifier.notifyListeners();
     DatabaseHelper().updateInventory(this);
   }
 
   void resumeTimer() {
     isPaused = false;
     startTimer();
+    elapsedTimeNotifier.notifyListeners();
     DatabaseHelper().updateInventory(this);
   }
 
@@ -413,54 +412,30 @@ class Inventory with ChangeNotifier {
     isFinished = true;
     isFinishedNotifier.value = true;
     isPaused = false;
-    elapsedTimeNotifier.value = elapsedTime.toDouble();
+    elapsedTimeNotifier.value = elapsedTime;
 
     // Define endTime, endLatitude and endLongitude when finishing the inventory
     endTime = DateTime.now();
-    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    Position position = await Geolocator.getCurrentPosition(
+      locationSettings: LocationSettings(
+        accuracy: LocationAccuracy.high,
+      ),
+    );
     endLatitude = position.latitude;
     endLongitude = position.longitude;
 
     await DatabaseHelper().updateInventory(this);
   }
-
-  Future<void> _updateElapsedTimeInDatabase() async {
-    // Update the elapsedTime in the database
-    await DatabaseHelper().updateInventoryElapsedTime(id, elapsedTime);
-  }
 }
 
-void _inventoryTimer(String inventoryId) async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await getDatabasesPath();
-  // Carregue o inventário do banco de dados
-  Inventory? inventory = await DatabaseHelper().getInventoryById(inventoryId);
+class InventoryCountNotifier extends ChangeNotifier {
+  int _count = 0;
 
-  if (inventory != null) {
-  // Inicie o timer
-  Timer.periodic(const Duration(seconds: 1), (timer) {
-    if (!inventory.isPaused && !inventory.isFinished) {
-      inventory.elapsedTime++;
-      inventory.elapsedTimeNotifier.value = inventory.elapsedTime;
+  int get count => _count;
 
-      if (inventory.duration > 0 && inventory.elapsedTime >= inventory.duration * 60) {
-        timer.cancel();
-        inventory.isFinished = true;
-        inventory.isFinishedNotifier.value = true;
-        inventory.elapsedTimeNotifier.value = inventory.elapsedTime;
-      }
-
-      if (inventory.elapsedTime % 15 == 0) {
-        // Salve o elapsedTime no banco de dados
-        DatabaseHelper().updateInventoryElapsedTime(inventory.id, inventory.elapsedTime);
-      }
-    }
-  });
-  } else {
-    // Trate o caso em que o inventário não foi encontrado
-    if (kDebugMode) {
-      print('Inventory not found with ID: $inventoryId');
-    }
+  Future<void> updateCount() async {
+    _count = await DatabaseHelper().getActiveInventoriesCount();
+    notifyListeners();
   }
 }
 

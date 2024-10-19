@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.xolmis">
     <application
-        android:label="xolmis"
+        android:label="Xolmis"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

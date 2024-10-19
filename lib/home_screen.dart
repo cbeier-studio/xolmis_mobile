@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:provider/provider.dart';
 import 'inventory.dart';
 import 'database_helper.dart';
 import 'add_inventory_screen.dart';
 import 'inventory_detail_screen.dart';
+import 'main.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -53,6 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final inventories = await dbHelper.loadActiveInventories();
     setState(() {
       _activeInventories = inventories;
+      Provider.of<InventoryCountNotifier>(context, listen: false).updateCount();
     });
   }
 
@@ -129,28 +132,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
-  void _addInventory() {
-    final newInventory = Inventory(
-      id: 'Novo Inventário',
-      type: InventoryType.invQualitative,
-      duration: 0,
-      speciesList: [],
-      vegetationList: [],
-    );
-
-    newInventory.startTimer();
-
-    dbHelper.insertInventory(newInventory).then((success) {
-      if (success) {setState(() {
-        _activeInventories.add(newInventory);
-        _listKey.currentState!.insertItem(_activeInventories.length - 1);
-      });
-      } else {
-        // Handle insertion error
-      }
-    });
-  }
 }
 
 class InventoryListItem extends StatelessWidget {
@@ -179,8 +160,12 @@ class InventoryListItem extends StatelessWidget {
               key: ValueKey(inventory.id),
               valueListenable: inventory.elapsedTimeNotifier,
               builder: (context, elapsedTime, child) {
+                final progress = inventory.duration == 0 ? 0 : (elapsedTime / (inventory.duration * 60));
                 return CircularProgressIndicator(
-                  value: inventory.duration == 0 ? 0 : (elapsedTime / (inventory.duration * 60)),
+                  value: (inventory.isPaused && inventory.duration > 0) ? null : progress.toDouble(),
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    inventory.isPaused ? Colors.amber : Theme.of(context).primaryColor,
+                  ),
                 );
               },
             ),

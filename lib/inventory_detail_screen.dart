@@ -173,9 +173,21 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
         ],
         bottom: TabBar(
           controller: _tabController,
-          tabs: const [
-            Tab(text: 'Espécies'),
-            Tab(text: 'Vegetação'),
+          tabs: [
+            widget.inventory.speciesList.isNotEmpty
+                ? Badge.count(
+              alignment: AlignmentDirectional.centerEnd,
+              offset: Offset(24, -8),
+              count: widget.inventory.speciesList.length,
+              child: const Tab(text: 'Espécies'),
+            ): const Tab(text: 'Espécies'),
+            widget.inventory.vegetationList.isNotEmpty
+                ? Badge.count(
+              alignment: AlignmentDirectional.centerEnd,
+              offset: Offset(24, -8),
+              count: widget.inventory.vegetationList.length,
+              child: const Tab(text: 'Vegetação'),
+            ): const Tab(text: 'Vegetação'),
           ],
         ),
         flexibleSpace: PreferredSize(
@@ -359,7 +371,11 @@ class SpeciesListItemState extends State<SpeciesListItem> {
               },
             ),
             IconButton(
-              icon: const Icon(Icons.add_location),
+              icon: widget.species.pois.isNotEmpty
+              ? Badge.count(
+              count: widget.species.pois.length,
+              child: const Icon(Icons.add_location),
+            ) : const Icon(Icons.add_location),
               onPressed: () async {
                 // Get the current location
                 Position position = await Geolocator.getCurrentPosition(

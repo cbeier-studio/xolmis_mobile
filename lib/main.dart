@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'home_screen.dart';
 import 'history_screen.dart';
 import 'database_helper.dart';
+import 'inventory.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,10 +35,23 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
-  static const List<Widget> _widgetOptions = <Widget>[
-    HomeScreen(),
-    HistoryScreen(),
+  final ValueNotifier<int> activeInventoriesCount = ValueNotifier<int>(0);
+  final inventoryCountNotifier = InventoryCountNotifier();
+  static final List<Widget> _widgetOptions = <Widget>[
+    const HomeScreen(),
+    const HistoryScreen(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    inventoryCountNotifier.updateCount();
+  }
+
+  Future<void> updateActiveInventoriesCount() async {
+    final count = await DatabaseHelper().getActiveInventoriesCount();
+    activeInventoriesCount.value = count;
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -46,27 +61,39 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Inventários'),
-      ),
-      body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.history),
-            label: 'Histórico',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
-        onTap: _onItemTapped,
+    return ChangeNotifierProvider.value(
+      value: inventoryCountNotifier,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Inventários'),
+        ),
+        body: Center(
+          child: _widgetOptions.elementAt(_selectedIndex),
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          items: <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Consumer<InventoryCountNotifier>(
+                builder: (context, inventoryCount, child) {
+                  return inventoryCount.count > 0
+                      ? Badge.count(
+                    count: inventoryCount.count,
+                    child: const Icon(Icons.home),
+                  )
+                      : const Icon(Icons.home);
+                },
+              ),
+              label: 'Home',
+            ),
+            const BottomNavigationBarItem(
+              icon: Icon(Icons.history),
+              label: 'Histórico',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: Colors.amber[800],
+          onTap: _onItemTapped,
+        ),
       ),
     );
   }
