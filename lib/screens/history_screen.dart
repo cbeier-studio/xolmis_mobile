@@ -1,9 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:csv/csv.dart';
 import 'package:file_picker/file_picker.dart';
-import 'inventory.dart';
-import 'database_helper.dart';
+import '../models/inventory.dart';
+import '../data/database_helper.dart';
+import '../providers/inventory_provider.dart';
 import 'inventory_detail_screen.dart';
 
 class HistoryScreen extends StatefulWidget {
@@ -15,58 +17,62 @@ class HistoryScreen extends StatefulWidget {
 
 class _HistoryScreenState extends State<HistoryScreen> {
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
-  List<Inventory> _closedInventories = [];
+  // List<Inventory> _closedInventories = [];
   final dbHelper = DatabaseHelper();
 
   @override
   void initState() {
     super.initState();
-    _loadClosedInventories();
+    Provider.of<InventoryProvider>(context, listen: false).loadInventories();
   }
 
-  void onInventoryUpdated() {
-    setState(() {
-      _loadClosedInventories(); // Reload the inventories
-    });
+  void onInventoryUpdated(Inventory inventory) {
+    Provider.of<InventoryProvider>(context, listen: false).updateInventory(inventory);
   }
 
-  Future<void> _loadClosedInventories() async {
-    final inventories = await dbHelper.getFinishedInventories();
-    setState(() {
-      _closedInventories = inventories;
-    });
-  }
+  // Future<void> _loadClosedInventories() async {
+  //   final inventories = await dbHelper.getFinishedInventories();
+  //   setState(() {
+  //     _closedInventories = inventories;
+  //   });
+  // }
 
-  void _deleteInventory(Inventory inventory) async {
-    // Remove the inventory from database
-    await dbHelper.deleteInventory(inventory.id);
-
-    // Remove the inventory from list and update UI
-    setState(() {
-      final index = _closedInventories.indexOf(inventory);
-      _closedInventories.removeAt(index);
-      _listKey.currentState!.removeItem(index, (context, animation) {
-        return InventoryListItem(
-          inventory: inventory,
-          animation: animation,
-          onInventoryUpdated: onInventoryUpdated,
-        );
-      });
-    });
-  }
+  // void _deleteInventory(Inventory inventory) async {
+  //   // Remove the inventory from database
+  //   await dbHelper.deleteInventory(inventory.id);
+  //
+  //   // Remove the inventory from list and update UI
+  //   setState(() {
+  //     final index = _closedInventories.indexOf(inventory);
+  //     _closedInventories.removeAt(index);
+  //     _listKey.currentState!.removeItem(index, (context, animation) {
+  //       return InventoryListItem(
+  //         inventory: inventory,
+  //         animation: animation,
+  //         onInventoryUpdated: onInventoryUpdated,
+  //       );
+  //     });
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
+    final inventoryProvider = Provider.of<InventoryProvider>(context);
+
     return Scaffold(
       body: RefreshIndicator(
-        onRefresh: _loadClosedInventories,
-        child: _closedInventories.isEmpty
-        ? const Center(child: Text('Nenhum inventário no histórico.'))
-        : AnimatedList(
+        onRefresh: () async {
+          await inventoryProvider.loadInventories();
+        },
+        child: inventoryProvider.isLoading // Verifica o estado de carregamento
+            ? const Center(child: CircularProgressIndicator()) // Exibe o indicador de progresso
+            : inventoryProvider.finishedInventories.isEmpty
+            ? const Center(child: Text('Nenhum inventário no histórico.'))
+            : AnimatedList(
         key: _listKey,
-        initialItemCount: _closedInventories.length,
+        initialItemCount: inventoryProvider.finishedInventories.length,
           itemBuilder: (context, index, animation) {
-            final inventory = _closedInventories[index];
+            final inventory = inventoryProvider.finishedInventories[index];
             return Dismissible(
               key: Key(inventory.id),
               onDismissed: (direction) {
@@ -86,8 +92,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         ),
                         TextButton(child: const Text('Excluir'),
                           onPressed: () {
+                            inventoryProvider.removeInventory(inventory.id);
                             Navigator.of(context).pop();
-                            _deleteInventory(inventory); // Delete the inventory
+                            // _deleteInventory(inventory); // Delete the inventory
                           },
                         ),
                       ],
@@ -117,7 +124,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
 class InventoryListItem extends StatelessWidget {
   final Inventory inventory;
   final Animation<double> animation;
-  final VoidCallback onInventoryUpdated;
+  final void Function(Inventory) onInventoryUpdated;
 
   const InventoryListItem({
     super.key,
@@ -160,7 +167,7 @@ class InventoryListItem extends StatelessWidget {
                   onInventoryUpdated: onInventoryUpdated,
               ),
             ),
-          ).then((_) => onInventoryUpdated());
+          ).then((_) => onInventoryUpdated(inventory));
         },
       ),
     );

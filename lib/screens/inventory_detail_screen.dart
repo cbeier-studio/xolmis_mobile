@@ -2,15 +2,15 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'inventory.dart';
-import 'database_helper.dart';
+import '../models/inventory.dart';
+import '../data/database_helper.dart';
 import 'package:geolocator/geolocator.dart';
 import 'add_vegetation_screen.dart';
 import 'species_detail_screen.dart';
 
 class InventoryDetailScreen extends StatefulWidget {
   final Inventory inventory;
-  final VoidCallback onInventoryUpdated;
+  final void Function(Inventory) onInventoryUpdated;
 
   const InventoryDetailScreen({
     super.key,
@@ -112,7 +112,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
         widget.inventory.startTimer();
       }
 
-      widget.onInventoryUpdated();
+      widget.onInventoryUpdated(widget.inventory);
     } else {
       // Show message informing that species already exists
       ScaffoldMessenger.of(context).showSnackBar(
@@ -217,7 +217,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
         onPressed: () async {
           // Finishing the inventory
           await widget.inventory.stopTimer();
-          widget.onInventoryUpdated();
+          widget.onInventoryUpdated(widget.inventory);
           Navigator.pop(context, true);
         },
         backgroundColor: Colors.red,

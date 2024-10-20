@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'inventory.dart';
-import 'database_helper.dart';
+import '../models/inventory.dart';
+import '../data/database_helper.dart';
 
 class AddVegetationDataScreen extends StatefulWidget {
   final Inventory inventory;

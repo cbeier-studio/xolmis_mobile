@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'inventory.dart';
-import 'database_helper.dart';
+import '../models/inventory.dart';
+import '../data/database_helper.dart';
 
 class SpeciesDetailScreen extends StatefulWidget {
   final Species species;

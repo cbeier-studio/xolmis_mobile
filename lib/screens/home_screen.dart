@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
-import 'inventory.dart';
-import 'database_helper.dart';
+import '../models/inventory.dart';
+import '../data/database_helper.dart';
 import 'add_inventory_screen.dart';
 import 'inventory_detail_screen.dart';
-import 'main.dart';
+import '../providers/inventory_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -16,19 +16,31 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
-  List<Inventory> _activeInventories = [];
+  // List<Inventory> _activeInventories = [];
   final dbHelper = DatabaseHelper();
 
   @override
   void initState() {
     super.initState();
     _checkLocationPermissions();
-    _loadActiveInventories().then((_) {
-      for (var inventory in _activeInventories) {
-        if (inventory.duration > 0 && !inventory.isFinished) {
-          inventory.resumeTimer();
-        }}
+    Provider.of<InventoryProvider>(context, listen: false).loadInventories();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
+      Future.delayed(Duration.zero, ()
+      { // Adiciona um Future.delayed
+        for (var inventory in inventoryProvider.activeInventories) {
+          if (inventory.duration != 0 && !inventory.isPaused) {
+            inventory.startTimer();
+          }
+        }
+      });
     });
+    // _loadActiveInventories().then((_) {
+    //   for (var inventory in _activeInventories) {
+    //     if (inventory.duration > 0 && !inventory.isFinished) {
+    //       inventory.resumeTimer();
+    //     }}
+    // });
   }
 
   Future<void> _checkLocationPermissions() async {
@@ -51,64 +63,67 @@ class _HomeScreenState extends State<HomeScreen> {
     // Permissions granted, you can use the Geolocator here
   }
 
-  Future<void> _loadActiveInventories() async {
-    final inventories = await dbHelper.loadActiveInventories();
-    setState(() {
-      _activeInventories = inventories;
-      Provider.of<InventoryCountNotifier>(context, listen: false).updateCount();
-    });
+  // Future<void> _loadActiveInventories() async {
+  //   final inventories = await dbHelper.loadActiveInventories();
+  //   setState(() {
+  //     _activeInventories = inventories;
+  //     Provider.of<InventoryCountNotifier>(context, listen: false).updateCount();
+  //   });
+  // }
+
+  void _onInventoryPausedOrResumed(Inventory inventory) {
+    Provider.of<InventoryProvider>(context, listen: false).updateInventory(inventory);
   }
 
-  void _onInventoryPausedOrResumed() {
-    setState(() {
-      _loadActiveInventories();
-    });
-  }
-
-  void onInventoryUpdated() {
-    setState(() {
-      _loadActiveInventories();
-    });
+  void onInventoryUpdated(Inventory inventory) {
+    Provider.of<InventoryProvider>(context, listen: false).updateInventory(inventory);
   }
 
   @override
   Widget build(BuildContext context) {
+    final inventoryProvider = Provider.of<InventoryProvider>(context);
+
     return Scaffold(
       body: RefreshIndicator(
-        onRefresh: _loadActiveInventories,
-        child: _activeInventories.isEmpty
+        onRefresh: () async {
+          await inventoryProvider.loadInventories();
+        },
+        child: inventoryProvider.isLoading // Verifica o estado de carregamento
+            ? const Center(child: CircularProgressIndicator()) // Exibe o indicador de progresso
+            : inventoryProvider.activeInventories.isEmpty
             ? const Center(child: Text('Nenhum inventário ativo.'))
             : AnimatedList(
           key: _listKey,
-          initialItemCount: _activeInventories.length,
+          initialItemCount: inventoryProvider.activeInventories.length,
           itemBuilder: (context, index, animation) {
-            final inventory = _activeInventories[index];
-            return ValueListenableBuilder<bool>( // Envolve o InventoryListItem com ValueListenableBuilder
-                valueListenable: inventory.isFinishedNotifier, // Agora acessa o isFinishedNotifier do inventory correto
+            final inventory = inventoryProvider.activeInventories[index];
+            return ValueListenableBuilder<bool>(
+                valueListenable: inventory.isFinishedNotifier,
                 builder: (context, isFinished, child) {
                   if (isFinished) {
-                    _loadActiveInventories(); // Recarrega a lista de inventários
+                    inventoryProvider.loadInventories();
                   }
                   return child!; // Retorna o widget filho (InventoryListItem)
                 },
                 child: InventoryListItem(
                   inventory: inventory,
                   animation: animation,
-                  onTap: () {
+                  onTap: (inventory) {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => InventoryDetailScreen(inventory: inventory,
-                          onInventoryUpdated: onInventoryUpdated,
+                        builder: (context) => InventoryDetailScreen(
+                          inventory: inventory,
+                          onInventoryUpdated: (inventory) => onInventoryUpdated(inventory),
                         ),
                       ),
                     ).then((result) {
                       if (result == true) {
-                        _loadActiveInventories();
+                        inventoryProvider.loadInventories();
                       }
                     });
                   },
-                  onInventoryPausedOrResumed: _onInventoryPausedOrResumed,
+                  onInventoryPausedOrResumed: (inventory) => _onInventoryPausedOrResumed(inventory),
                 )
             );
           },
@@ -121,10 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
             MaterialPageRoute(builder: (context) => const AddInventoryScreen()),
           ).then((newInventory) {
             if (newInventory != null && newInventory is Inventory) {
-              setState(() {
-                _activeInventories.add(newInventory);
-                _listKey.currentState!.insertItem(_activeInventories.length - 1);
-              });
+              inventoryProvider.addInventory(newInventory);
             }
           });
         },
@@ -137,8 +149,8 @@ class _HomeScreenState extends State<HomeScreen> {
 class InventoryListItem extends StatelessWidget {
   final Inventory inventory;
   final Animation<double> animation;
-  final VoidCallback? onTap;
-  final VoidCallback? onInventoryPausedOrResumed;
+  final void Function(Inventory)? onTap;
+  final void Function(Inventory)? onInventoryPausedOrResumed;
 
   const InventoryListItem({
     super.key,
@@ -151,20 +163,29 @@ class InventoryListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell( // Ou GestureDetector
-        onTap: onTap,
+        onTap: () {
+          onTap?.call(inventory);
+        },
         child:SizeTransition(
           sizeFactor: animation,
           child: ListTile(
             // Use ValueListenableBuilder for update the CircularProgressIndicator
-            leading: ValueListenableBuilder<double>(
-              key: ValueKey(inventory.id),
-              valueListenable: inventory.elapsedTimeNotifier,
-              builder: (context, elapsedTime, child) {
-                final progress = inventory.duration == 0 ? 0 : (elapsedTime / (inventory.duration * 60));
+            leading: Consumer<InventoryProvider>(
+              builder: (context, inventoryProvider, child) {
+                final activeInventory = inventoryProvider.getActiveInventoryById(inventory.id);
+                final progress = (activeInventory.isPaused && activeInventory.duration > 0)
+                    ? null
+                    : (activeInventory.elapsedTime / (activeInventory.duration * 60)).toDouble();
+
+                // Verifica se o progress é um número válido entre 0 e 1
+                if (progress != null && (progress.isNaN || progress.isInfinite || progress < 0 || progress > 1)) {
+                  return const SizedBox.shrink(); // Ou qualquer outro widget que você queira exibir em caso de erro
+                }
+
                 return CircularProgressIndicator(
-                  value: (inventory.isPaused && inventory.duration > 0) ? null : progress.toDouble(),
+                  value: progress,
                   valueColor: AlwaysStoppedAnimation<Color>(
-                    inventory.isPaused ? Colors.amber : Theme.of(context).primaryColor,
+                    activeInventory.isPaused ? Colors.amber : Theme.of(context).primaryColor,
                   ),
                 );
               },
@@ -186,12 +207,12 @@ class InventoryListItem extends StatelessWidget {
                   child: IconButton(
                     icon: Icon(inventory.isPaused ? Icons.play_arrow : Icons.pause),
                     onPressed: () {
-                      if (inventory.isPaused) {
-                        inventory.resumeTimer();
-                      } else {
-                        inventory.pauseTimer();
-                      }
-                      onInventoryPausedOrResumed?.call();
+                      inventory.isPaused = !inventory.isPaused;
+                      inventory.isPaused
+                          ? inventory.resumeTimer()
+                          : inventory.pauseTimer();
+                      // inventoryProvider.updateInventory(inventory);
+                      onInventoryPausedOrResumed?.call(inventory);
                     },
                   ),
                 ),

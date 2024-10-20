@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'home_screen.dart';
-import 'history_screen.dart';
-import 'database_helper.dart';
-import 'inventory.dart';
+import 'screens/home_screen.dart';
+import 'screens/history_screen.dart';
+import 'data/database_helper.dart';
+import 'models/inventory.dart';
+import 'providers/inventory_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,12 +17,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Xolmis',
-      theme: ThemeData(
-        primarySwatch: Colors.deepPurple,
+    return ChangeNotifierProvider(
+      create: (context) => InventoryProvider(),
+      child:MaterialApp(
+        title: 'Xolmis',
+        theme: ThemeData(
+          primarySwatch: Colors.deepPurple,
+        ),
+        home: const MainScreen(),
       ),
-      home: const MainScreen(),
     );
   }
 }
