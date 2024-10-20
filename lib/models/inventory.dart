@@ -1,9 +1,9 @@
 
-import 'dart:isolate';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import '../data/database_helper.dart';
 
 class Poi {
@@ -296,33 +296,6 @@ class Inventory with ChangeNotifier {
     startTimer();
   }
 
-  // {
-  //   print('Inventory constructor called');
-  //   _receivePort = ReceivePort();
-  //   // Inicializa o _sendPort e conclui o _sendPortCompleter antes de iniciar o Isolate
-  //   _sendPort = _receivePort.sendPort;
-  //   _sendPortCompleter.complete();
-  //   print('SendPort assigned: $_sendPort');
-  //
-  //   Isolate.spawn(_timerIsolate, [_sendPort, _receivePort, isFinished, duration, id])
-  //       .then((isolate) {
-  //     print('Isolate spawned');
-  //     _isolate = isolate;
-  //     // _sendPort = _receivePort.sendPort;
-  //     // _sendPortCompleter.complete();
-  //   });
-  //
-  //   _receivePort.listen((message) {
-  //     print('Message received: $message');
-  //     if (message is double) {
-  //       elapsedTime = message;
-  //       elapsedTimeNotifier.value = elapsedTime;
-  //     }
-  //   });
-  //
-  //   // startTimer();
-  // }
-
   Inventory.fromMap(Map<String, dynamic> map, List<Species> speciesList,
       List<Vegetation> vegetationList)
       : id = map['id'],
@@ -419,21 +392,8 @@ class Inventory with ChangeNotifier {
 
   void startTimer() async {
     print('startTimer called');
-    // await ensureSendPortInitialized();
     if (duration > 0 && !isFinished && !isPaused) {
-      // _timer?.cancel();
-      // _receivePort = ReceivePort();
-      // Isolate.spawn(_timerIsolate, _receivePort.sendPort);
-      // _sendPort = _receivePort.sendPort;
-      //
-      // _receivePort.listen((message) {
-      //   if (message is double) {
-      //     elapsedTime = message;
-      //   }
-      // });
 
-      // await ensureSendPortInitialized();
-      // _sendPort.send(elapsedTime);
       if (duration == 0) {
         elapsedTime = 0;
         notifyListeners();
@@ -448,6 +408,12 @@ class Inventory with ChangeNotifier {
             }
 
             if (elapsedTime >= duration * 60) {
+              FlutterRingtonePlayer().play(
+                android: AndroidSounds.notification,
+                ios: IosSounds.glass,
+                volume: 0.1,
+                looping: false,
+              );
               stopTimer();
             }
           }

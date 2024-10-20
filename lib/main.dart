@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_background/flutter_background.dart';
 import 'screens/home_screen.dart';
 import 'screens/history_screen.dart';
 import 'data/database_helper.dart';
@@ -8,6 +9,11 @@ import 'providers/inventory_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await FlutterBackground.initialize(androidConfig: FlutterBackgroundAndroidConfig(
+    notificationTitle: "Xolmis",
+    notificationText: "O Xolmis está rodando em segundo plano.",
+    notificationImportance: AndroidNotificationImportance.normal,
+  ));
   await DatabaseHelper().initDatabase();
   runApp(const MyApp());
 }
@@ -49,7 +55,13 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
+    enableBackgroundExecution();
     inventoryCountNotifier.updateCount();
+  }
+
+  Future<void> enableBackgroundExecution() async {
+    await FlutterBackground.enableBackgroundExecution();
+    setState(() {});
   }
 
   Future<void> updateActiveInventoriesCount() async {
