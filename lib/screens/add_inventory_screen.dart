@@ -29,7 +29,10 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
             children: [
               TextFormField(
                 controller: _idController,
-                decoration: const InputDecoration(labelText: 'ID do Inventário'),
+                decoration: const InputDecoration(
+                  labelText: 'ID do Inventário',
+                  border: OutlineInputBorder(),
+                ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Por favor, insira um ID para o inventário';
@@ -40,7 +43,10 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
               const SizedBox(height: 16.0),
               DropdownButtonFormField<InventoryType>(
                 value: _selectedType,
-                decoration: const InputDecoration(labelText: 'Tipo de Inventário'),
+                decoration: const InputDecoration(
+                  labelText: 'Tipo de Inventário',
+                  border: OutlineInputBorder(),
+                ),
                 items: InventoryType.values.map((type) {
                   return DropdownMenuItem(
                     value: type,
@@ -61,7 +67,11 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
               TextFormField(
                 controller: _durationController,
                 keyboardType: TextInputType.number,
-                decoration: const InputDecoration(labelText: 'Duração (minutos)'),
+                decoration: const InputDecoration(
+                  labelText: 'Duração',
+                  border: OutlineInputBorder(),
+                  suffixText: 'minutos',
+                ),
               ),
               const SizedBox(height: 32.0),
               Center(

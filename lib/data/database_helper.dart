@@ -104,7 +104,11 @@ class DatabaseHelper {
     final db = await database;
     try {
       inventory.startTime = DateTime.now();
-      Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      Position position = await Geolocator.getCurrentPosition(
+        locationSettings: LocationSettings(
+          accuracy: LocationAccuracy.high,
+        ),
+      );
       inventory.startLatitude = position.latitude;
       inventory.startLongitude = position.longitude;
 
@@ -197,7 +201,26 @@ class DatabaseHelper {
       List<Inventory> inventories = await Future.wait(maps.map((map) async {
         List<Species> speciesList = await getSpeciesByInventory(map['id']);
         List<Vegetation> vegetationList = await getVegetationByInventory(map['id']);
-        return Inventory.fromMap(map, speciesList, vegetationList);
+        // return Inventory.fromMap(map, speciesList, vegetationList);
+        // Cria a instância de Inventory usando o construtor principal
+        Inventory inventory = Inventory(
+          id: map['id'],
+          type: InventoryType.values[map['type']],
+          duration: map['duration'],
+          isPaused: map['isPaused'] == 1,
+          isFinished: map['isFinished'] == 1,
+          elapsedTime: map['elapsedTime'],
+          startTime: map['startTime'] != null ? DateTime.parse(map['startTime']) : null,
+          endTime: map['endTime'] != null ? DateTime.parse(map['endTime']) : null,
+          startLongitude: map['startLongitude'],
+          startLatitude: map['startLatitude'],
+          endLongitude: map['endLongitude'],
+          endLatitude: map['endLatitude'],
+          speciesList: speciesList,
+          vegetationList: vegetationList,
+        );
+
+        return inventory;
       }).toList());
 
       if (kDebugMode) {

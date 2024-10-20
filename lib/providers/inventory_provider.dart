@@ -14,13 +14,16 @@ class InventoryProvider with ChangeNotifier {
   List<Inventory> get finishedInventories =>
       _inventories.where((inventory) => inventory.isFinished).toList();
 
+  int get inventoriesCount => activeInventories.length;
+
   Future<void> loadInventories() async {
     _isLoading = true;
-    notifyListeners();
+    // notifyListeners();
     try {
       _inventories.clear();
       final inventories = await DatabaseHelper().getInventories();
       _inventories.addAll(inventories);
+      print('Inventories loaded');
       notifyListeners();
     } catch (e) {
       print('Error loading inventories: $e');
@@ -51,5 +54,17 @@ class InventoryProvider with ChangeNotifier {
 
   Inventory getActiveInventoryById(String id) {
     return activeInventories.firstWhere((inventory) => inventory.id == id);
+  }
+
+  void pauseInventoryTimer(Inventory inventory) {
+    inventory.pauseTimer();
+    updateInventory(inventory); // Atualiza o estado do Inventory no Provider
+    notifyListeners(); // Notifica os listeners do Provider
+  }
+
+  void resumeInventoryTimer(Inventory inventory) {
+    inventory.resumeTimer();
+    updateInventory(inventory); // Atualiza o estado do Inventory no Provider
+    notifyListeners(); // Notifica os listeners do Provider
   }
 }

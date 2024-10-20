@@ -263,11 +263,14 @@ class Inventory with ChangeNotifier {
   double? endLatitude;
   List<Species> speciesList;
   List<Vegetation> vegetationList;
-  // Timer? _timer;
-  late Isolate _isolate;
-  late SendPort _sendPort;
-  late ReceivePort _receivePort;
+  Timer? _timer;
+
+  // late Isolate _isolate;
+  // late SendPort _sendPort;
+  // late ReceivePort _receivePort;
+  // final Completer<void> _sendPortCompleter = Completer<void>();
   final ValueNotifier<double> _elapsedTimeNotifier = ValueNotifier<double>(0);
+
   ValueNotifier<double> get elapsedTimeNotifier => _elapsedTimeNotifier;
   final ValueNotifier<bool> isFinishedNotifier = ValueNotifier<bool>(false);
 
@@ -287,36 +290,54 @@ class Inventory with ChangeNotifier {
     this.speciesList = const [],
     this.vegetationList = const [],
   }) {
-    print('Inventory constructor called');
-    _receivePort = ReceivePort();
-    Isolate.spawn(_timerIsolate, _receivePort.sendPort)
-        .then((isolate) {
-      print('Isolate spawned');
-      _isolate = isolate;
-      _sendPort = _receivePort.sendPort;
-      print('SendPort assigned: $_sendPort');
-    });
-
-    _receivePort.listen((message) {
-      print('Message received: $message');
-      if (message is double) {
-        elapsedTime = message;
-        // elapsedTimeNotifier.value = elapsedTime;
-      }
-    });
-
-    // startTimer();
+    if (duration == 0) {
+      elapsedTime = 0;
+    }
+    startTimer();
   }
 
-  Inventory.fromMap(Map<String, dynamic> map, List<Species> speciesList, List<Vegetation> vegetationList)
+  // {
+  //   print('Inventory constructor called');
+  //   _receivePort = ReceivePort();
+  //   // Inicializa o _sendPort e conclui o _sendPortCompleter antes de iniciar o Isolate
+  //   _sendPort = _receivePort.sendPort;
+  //   _sendPortCompleter.complete();
+  //   print('SendPort assigned: $_sendPort');
+  //
+  //   Isolate.spawn(_timerIsolate, [_sendPort, _receivePort, isFinished, duration, id])
+  //       .then((isolate) {
+  //     print('Isolate spawned');
+  //     _isolate = isolate;
+  //     // _sendPort = _receivePort.sendPort;
+  //     // _sendPortCompleter.complete();
+  //   });
+  //
+  //   _receivePort.listen((message) {
+  //     print('Message received: $message');
+  //     if (message is double) {
+  //       elapsedTime = message;
+  //       elapsedTimeNotifier.value = elapsedTime;
+  //     }
+  //   });
+  //
+  //   // startTimer();
+  // }
+
+  Inventory.fromMap(Map<String, dynamic> map, List<Species> speciesList,
+      List<Vegetation> vegetationList)
       : id = map['id'],
-        type = InventoryType.values[map['type']], // Convert the índex to enum
+        type = InventoryType.values[map['type']],
+  // Convert the índex to enum
         duration = map['duration'],
         isPaused = map['isPaused'] == 1,
         isFinished = map['isFinished'] == 1,
         elapsedTime = map['elapsedTime'],
-        startTime = map['startTime'] != null ? DateTime.parse(map['startTime']) : null,
-        endTime = map['endTime'] != null ? DateTime.parse(map['endTime']) : null,
+        startTime = map['startTime'] != null
+            ? DateTime.parse(map['startTime'])
+            : null,
+        endTime = map['endTime'] != null
+            ? DateTime.parse(map['endTime'])
+            : null,
         startLongitude = map['startLongitude'],
         startLatitude = map['startLatitude'],
         endLongitude = map['endLongitude'],
@@ -392,9 +413,14 @@ class Inventory with ChangeNotifier {
         'endLatitude: $endLatitude}';
   }
 
-  void startTimer() {
+  // Future<void> ensureSendPortInitialized() async {
+  //   await _sendPortCompleter.future; // Aguarda a inicialização do _sendPort
+  // }
+
+  void startTimer() async {
     print('startTimer called');
-    if (duration > 0 && !isFinished) {
+    // await ensureSendPortInitialized();
+    if (duration > 0 && !isFinished && !isPaused) {
       // _timer?.cancel();
       // _receivePort = ReceivePort();
       // Isolate.spawn(_timerIsolate, _receivePort.sendPort);
@@ -406,55 +432,72 @@ class Inventory with ChangeNotifier {
       //   }
       // });
 
-      _sendPort.send(elapsedTime);
+      // await ensureSendPortInitialized();
+      // _sendPort.send(elapsedTime);
+      if (duration == 0) {
+        elapsedTime = 0;
+        notifyListeners();
+        return; // Sai do método se duration for zero
+      }
+      _timer ??= Timer.periodic(const Duration(seconds: 1), (timer) {
+          if (!isPaused && !isFinished) {
+            elapsedTime++;
 
-      // _timer ??= Timer.periodic(const Duration(seconds: 1), (timer) {
-      //   if (!isPaused && !isFinished) {
-      //     elapsedTime++;
-      //
-      //     if (elapsedTime % 15 == 0) {
-      //       DatabaseHelper().updateInventoryElapsedTime(id, elapsedTime);
-      //     }
-      //
-      //     if (elapsedTime >= duration * 60) {
-      //       stopTimer();
-      //     }
-      //   }
-      //   elapsedTimeNotifier.value = elapsedTime;
-      // });
+            if (elapsedTime % 15 == 0) {
+              DatabaseHelper().updateInventoryElapsedTime(id, elapsedTime);
+            }
+
+            if (elapsedTime >= duration * 60) {
+              stopTimer();
+            }
+          }
+          elapsedTimeNotifier.value = elapsedTime;
+          elapsedTimeNotifier.notifyListeners();
+          notifyListeners();
+        });
     }
   }
 
-  void pauseTimer() {
-    Future.delayed(const Duration(milliseconds: 500), ()
-    {
-      isPaused = true;
-      _sendPort.send('pause');
-      // _timer?.cancel();
-      elapsedTimeNotifier.value = elapsedTime;
-      elapsedTimeNotifier.notifyListeners();
-      DatabaseHelper().updateInventory(this);
-    });
+  void pauseTimer() async {
+    print('pauseTimer called');
+    // await ensureSendPortInitialized();
+    // Future.delayed(const Duration(milliseconds: 500), ()
+    // {
+    isPaused = true;
+    // await ensureSendPortInitialized();
+    // _sendPort.send('pause');
+    // _timer?.cancel();
+    elapsedTimeNotifier.value = elapsedTime;
+    elapsedTimeNotifier.notifyListeners();
+    notifyListeners();
+    DatabaseHelper().updateInventory(this);
+    // });
   }
 
-  void resumeTimer() {
+  void resumeTimer() async {
+    print('resumeTimer called');
+    // await ensureSendPortInitialized();
     isPaused = false;
-    _sendPort.send('resume');
-    // startTimer();
+    // await ensureSendPortInitialized();
+    // _sendPort.send('resume');
+    startTimer();
     elapsedTimeNotifier.value = elapsedTime.toDouble();
     elapsedTimeNotifier.notifyListeners();
+    notifyListeners();
     DatabaseHelper().updateInventory(this);
   }
 
   Future<void> stopTimer() async {
-    _sendPort.send('stop');
-    _isolate.kill();
-    // _timer?.cancel();
-    // _timer = null;
+    print('stopTimer called');
+    // await ensureSendPortInitialized();
+    // _sendPort.send('stop');
+    // _isolate.kill();
     isFinished = true;
-    isFinishedNotifier.value = true;
+    isFinishedNotifier.value = isFinished;
     isPaused = false;
     elapsedTimeNotifier.value = elapsedTime;
+    _timer?.cancel();
+    _timer = null;
 
     // Define endTime, endLatitude and endLongitude when finishing the inventory
     endTime = DateTime.now();
@@ -467,52 +510,57 @@ class Inventory with ChangeNotifier {
     endLongitude = position.longitude;
 
     await DatabaseHelper().updateInventory(this);
-  }
-
-  void _updateElapsedTime(double newElapsedTime) {
-    elapsedTime = newElapsedTime;
     notifyListeners();
   }
-
-  void _timerIsolate(SendPort sendPort) {
-    double elapsedTime = 0.0;
-    bool isPaused = false;
-
-    print('Isolate started');
-    Timer.periodic(Duration(seconds: 1), (timer) {
-      if (!isPaused) {
-        elapsedTime++;
-
-        if (elapsedTime % 15 == 0) {
-          DatabaseHelper().updateInventoryElapsedTime(id, elapsedTime);
-        }
-
-        if (elapsedTime >= duration * 60) {
-          timer.cancel();
-        }
-        elapsedTimeNotifier.value = elapsedTime;
-        elapsedTimeNotifier.notifyListeners();
-        sendPort.send(elapsedTime);
-      }
-
-      _receivePort.listen((message) {
-        if (message is String) {
-          if (message == 'pause') {
-            isPaused = true;
-          } else if (message == 'resume') {
-            isPaused = false;
-          } else if (message == 'stop') {
-            timer.cancel();
-          }
-        } else if (message is double) {
-          Future.delayed(Duration.zero, () {
-            _updateElapsedTime(message);
-          });
-        }
-      });
-    });
-  }
 }
+
+//   void _timerIsolate(List<dynamic> args) {
+//     SendPort mainSendPort = args[0]; // _sendPort recebido como argumento
+//     ReceivePort _receivePort = args[1]; // SendPort do ReceivePort externo
+//     bool isFinished = args[2]; // isFinished recebido como argumento
+//     int duration = args[3]; // duration recebido como argumento
+//     String inventoryId = args[4];
+//     double elapsedTime = 0.0;
+//     bool isPaused = false;
+//
+//     print('Isolate started');
+//     Timer.periodic(Duration(seconds: 1), (timer) async {
+//       if (!isPaused && !isFinished) {
+//         elapsedTime++;
+//
+//         if (elapsedTime % 15 == 0) {
+//           DatabaseHelper().updateInventoryElapsedTime(inventoryId, elapsedTime);
+//         }
+//
+//         if (elapsedTime >= duration * 60) {
+//           timer.cancel();
+//         }
+//
+//         // elapsedTimeNotifier.notifyListeners();
+//         await ensureSendPortInitialized();
+//         mainSendPort.send(elapsedTime);
+//         // elapsedTimeNotifier.value = elapsedTime;
+//       }
+//
+//       // ReceivePort _receivePort = ReceivePort();
+//       _receivePort.listen((message) {
+//         print('Message received: $message');
+//         if (message is String) {
+//           if (message == 'pause') {
+//             isPaused = true;
+//           } else if (message == 'resume') {
+//             isPaused = false;
+//           } else if (message == 'stop') {
+//             timer.cancel();
+//           }
+//         } else if (message is double) {
+//           elapsedTime = message;
+//           // elapsedTimeNotifier.value = elapsedTime;
+//         }
+//       });
+//     });
+//   }
+// }
 
 class InventoryCountNotifier extends ChangeNotifier {
   int _count = 0;

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import '../models/inventory.dart';
 import '../data/database_helper.dart';
 import 'package:geolocator/geolocator.dart';
@@ -100,6 +101,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
 
           // Update the species list of the active inventory
           inventory.speciesList.add(newSpeciesForOtherInventory);
+          // Provider.of<InventoryProvider>(context, listen: false).updateInventory(inventory);
           await DatabaseHelper().updateInventory(inventory); // Update the inventory in the database
         }
       }
@@ -107,6 +109,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
       // Restart the timer if the inventory is of type invCumulativeTime
       if (widget.inventory.type == InventoryType.invCumulativeTime) {
         widget.inventory.elapsedTime = 0;
+        widget.inventory.isPaused = false;
         widget.inventory.isFinished = false;
         await DatabaseHelper().updateInventoryElapsedTime(widget.inventory.id, widget.inventory.elapsedTime);
         widget.inventory.startTimer();
@@ -431,7 +434,7 @@ class VegetationListItem extends StatelessWidget {
     return SizeTransition(
       sizeFactor: animation,
       child: ListTile(
-        title: Text(vegetation.sampleTime.toIso8601String()),
+        title: Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(vegetation.sampleTime)),
         subtitle: Text('${vegetation.latitude}; ${vegetation.longitude}'),
         // ... other widgets to show vegetation info ...
       ),

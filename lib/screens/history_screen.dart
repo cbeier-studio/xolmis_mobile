@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:csv/csv.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:intl/intl.dart';
 import '../models/inventory.dart';
 import '../data/database_helper.dart';
 import '../providers/inventory_provider.dart';
@@ -28,6 +29,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   void onInventoryUpdated(Inventory inventory) {
     Provider.of<InventoryProvider>(context, listen: false).updateInventory(inventory);
+    Provider.of<InventoryProvider>(context, listen: false).loadInventories();
   }
 
   // Future<void> _loadClosedInventories() async {
@@ -92,8 +94,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         ),
                         TextButton(child: const Text('Excluir'),
                           onPressed: () {
+                            final index = inventoryProvider.finishedInventories.indexOf(inventory); // Obter o índice do inventário
                             inventoryProvider.removeInventory(inventory.id);
                             Navigator.of(context).pop();
+                            _listKey.currentState?.removeItem(index, (context, animation) => SizedBox.shrink());
                             // _deleteInventory(inventory); // Delete the inventory
                           },
                         ),
@@ -143,7 +147,7 @@ class InventoryListItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('${inventoryTypeFriendlyNames[inventory.type]}'),
-            Text('${inventory.startTime}'),
+            Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(inventory.startTime!)),
             Text('${inventory.speciesList.length} espécies registradas'),
           ],
         ),
@@ -238,12 +242,14 @@ class InventoryListItem extends StatelessWidget {
     rows.add([]); // Empty line to separate POI data
     rows.add(['POIs das Espécies']);
     for (var species in inventory.speciesList) {
-      rows.add(['Espécie: ${species.name}']);
-      rows.add(['Latitude', 'Longitude']);
-      for (var poi in species.pois) {
-        rows.add([poi.latitude, poi.longitude]);
-      }
-      rows.add([]); // Empty line to separate species POIs
+      if (species.pois.isNotEmpty) {
+        rows.add(['Espécie: ${species.name}']);
+        rows.add(['Latitude', 'Longitude']);
+        for (var poi in species.pois) {
+          rows.add([poi.latitude, poi.longitude]);
+        }
+        rows.add([]); // Empty line to
+      }// separate species POIs
     }
 
     // 2. Convert the list of data to CSV

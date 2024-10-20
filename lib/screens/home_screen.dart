@@ -170,22 +170,25 @@ class InventoryListItem extends StatelessWidget {
           sizeFactor: animation,
           child: ListTile(
             // Use ValueListenableBuilder for update the CircularProgressIndicator
-            leading: Consumer<InventoryProvider>(
-              builder: (context, inventoryProvider, child) {
-                final activeInventory = inventoryProvider.getActiveInventoryById(inventory.id);
-                final progress = (activeInventory.isPaused && activeInventory.duration > 0)
-                    ? null
-                    : (activeInventory.elapsedTime / (activeInventory.duration * 60)).toDouble();
+            leading: ValueListenableBuilder<double>(
+              valueListenable: inventory.elapsedTimeNotifier,
+              builder: (context, elapsedTime, child) {
+                if (inventory == null) {
+                  return const Text('Inventário não encontrado');
+                }
 
-                // Verifica se o progress é um número válido entre 0 e 1
+                var progress = (inventory.isPaused || inventory.duration < 0)
+                    ? null
+                    : (elapsedTime / (inventory.duration * 60)).toDouble();
+
                 if (progress != null && (progress.isNaN || progress.isInfinite || progress < 0 || progress > 1)) {
-                  return const SizedBox.shrink(); // Ou qualquer outro widget que você queira exibir em caso de erro
+                  progress = 0;
                 }
 
                 return CircularProgressIndicator(
                   value: progress,
                   valueColor: AlwaysStoppedAnimation<Color>(
-                    activeInventory.isPaused ? Colors.amber : Theme.of(context).primaryColor,
+                    inventory.isPaused ? Colors.amber : Theme.of(context).primaryColor,
                   ),
                 );
               },
@@ -207,10 +210,11 @@ class InventoryListItem extends StatelessWidget {
                   child: IconButton(
                     icon: Icon(inventory.isPaused ? Icons.play_arrow : Icons.pause),
                     onPressed: () {
-                      inventory.isPaused = !inventory.isPaused;
-                      inventory.isPaused
-                          ? inventory.resumeTimer()
-                          : inventory.pauseTimer();
+                      if (inventory.isPaused) {
+                        Provider.of<InventoryProvider>(context, listen: false).resumeInventoryTimer(inventory);
+                      } else {
+                        Provider.of<InventoryProvider>(context, listen: false).pauseInventoryTimer(inventory);
+                      }
                       // inventoryProvider.updateInventory(inventory);
                       onInventoryPausedOrResumed?.call(inventory);
                     },

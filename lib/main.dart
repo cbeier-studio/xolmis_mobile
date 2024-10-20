@@ -77,11 +77,11 @@ class _MainScreenState extends State<MainScreen> {
         bottomNavigationBar: BottomNavigationBar(
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Consumer<InventoryCountNotifier>(
-                builder: (context, inventoryCount, child) {
-                  return inventoryCount.count > 0
+              icon: Consumer<InventoryProvider>(
+                builder: (context, inventoryProvider, child) {
+                  return inventoryProvider.inventoriesCount > 0
                       ? Badge.count(
-                    count: inventoryCount.count,
+                    count: inventoryProvider.inventoriesCount,
                     child: const Icon(Icons.home),
                   )
                       : const Icon(Icons.home);

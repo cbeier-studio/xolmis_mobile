@@ -94,11 +94,12 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
                 ),
               ),
               _buildVegetationRow(_treesProportionController, _treesDistributionController, _treesHeightController),
+              const SizedBox(height: 16.0),
               TextFormField(
                 controller: _notesController,
-                maxLines: 3,
                 decoration: const InputDecoration(
                   labelText: 'Observações',
+                  border: OutlineInputBorder(),
                 ),
               ),
               const SizedBox(height: 16.0),
@@ -166,7 +167,9 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
             controller: proportionController,
             keyboardType: TextInputType.number,
             decoration: const InputDecoration(
-              labelText: 'Proporção %',
+              labelText: 'Proporção',
+              border: OutlineInputBorder(),
+              suffixText: '%',
             ),
           ),
         ),
@@ -174,8 +177,10 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
         Expanded(
           child: TextFormField(
             controller: distributionController,
+            keyboardType: TextInputType.number,
             decoration: const InputDecoration(
               labelText: 'Distribuição',
+              border: OutlineInputBorder(),
             ),
           ),
         ),
@@ -185,7 +190,9 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
             controller: heightController,
             keyboardType: TextInputType.number,
             decoration: const InputDecoration(
-              labelText: 'Altura cm',
+              labelText: 'Altura',
+              border: OutlineInputBorder(),
+              suffixText: 'cm',
             ),
           ),
         ),
