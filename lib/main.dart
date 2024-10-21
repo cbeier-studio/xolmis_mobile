@@ -6,6 +6,9 @@ import 'screens/history_screen.dart';
 import 'data/database_helper.dart';
 import 'models/inventory.dart';
 import 'providers/inventory_provider.dart';
+import 'providers/species_provider.dart';
+import 'providers/poi_provider.dart';
+import 'providers/vegetation_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,8 +21,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => InventoryProvider(),
+    return MultiProvider( // Use MultiProvider para vários providers
+      providers: [
+        ChangeNotifierProvider(create: (context) => InventoryProvider()),
+        ChangeNotifierProvider(create: (context) => SpeciesProvider()),
+        ChangeNotifierProvider(create: (context) => PoiProvider()),
+        ChangeNotifierProvider(create: (context) => VegetationProvider()),
+      ],
       child:MaterialApp(
         title: 'Xolmis',
         theme: ThemeData(
@@ -94,8 +102,7 @@ class _MainScreenState extends State<MainScreen> {
             BottomNavigationBarItem(
               icon: Consumer<InventoryProvider>(
                 builder: (context, inventoryProvider, child) {
-                  return inventoryProvider.inventoriesCount > 0
-                      ? Badge.count(
+                  return inventoryProvider.inventoriesCount > 0 ? Badge.count(
                     count: inventoryProvider.inventoriesCount,
                     child: const Icon(Icons.home),
                   )

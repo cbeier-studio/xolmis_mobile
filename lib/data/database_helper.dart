@@ -278,9 +278,9 @@ class DatabaseHelper {
       where: 'inventoryId = ?',
       whereArgs: [inventoryId],
     ) ?? [];
-    if (kDebugMode) {
-      print('Species loaded for inventory $inventoryId: ${maps.length}');
-    }
+    // if (kDebugMode) {
+    //   print('Species loaded for inventory $inventoryId: ${maps.length}');
+    // }
     // Create the species list with the corresponding POIs
     final speciesList = await Future.wait(maps.map((map) async {
       final speciesId = map['id'] as int;
@@ -298,9 +298,9 @@ class DatabaseHelper {
       where: 'inventoryId = ?',
       whereArgs: [inventoryId],
     ) ?? [];
-    if (kDebugMode) {
-      print('Vegetation data loaded for inventory $inventoryId: ${maps.length}');
-    }
+    // if (kDebugMode) {
+    //   print('Vegetation data loaded for inventory $inventoryId: ${maps.length}');
+    // }
     return List.generate(maps.length, (i) {
       return Vegetation.fromMap(maps[i]);
     });
@@ -432,6 +432,16 @@ class DatabaseHelper {
     return List.generate(maps.length, (i) {
       return Poi.fromMap(maps[i]);
     });
+  }
+
+  Future<void> updatePoi(Poi poi) async {
+    final db = await database;
+    await db?.update(
+      'pois',
+      poi.toMap(poi.speciesId),
+      where: 'id = ?',
+      whereArgs: [poi.id],
+    );
   }
 
   Future<void> deletePoi(int poiId) async {

@@ -23,6 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _checkLocationPermissions();
+    // Load the inventories
     Provider.of<InventoryProvider>(context, listen: false).loadInventories();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);

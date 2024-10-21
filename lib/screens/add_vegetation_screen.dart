@@ -1,17 +1,17 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:provider/provider.dart';
 import '../models/inventory.dart';
-import '../data/database_helper.dart';
+import '../providers/vegetation_provider.dart';
+import 'inventory_detail_screen.dart';
 
 class AddVegetationDataScreen extends StatefulWidget {
   final Inventory inventory;
-  final Function(Vegetation) onVegetationAdded;
 
   const AddVegetationDataScreen({
     super.key,
     required this.inventory,
-    required this.onVegetationAdded
   });
 
   @override
@@ -61,8 +61,18 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
     super.dispose();
   }
 
+  // void onVegetationAdded(Vegetation vegetation) {
+  //   Provider.of<VegetationProvider>(context, listen: false)
+  //       .addVegetation(context, widget.inventory.id, vegetation)
+  //       .then((_) {
+  //     // Update the UI after the vegetation is inserted
+  //     Navigator.of(context).pop();
+  //   });
+  // }
+
   @override
   Widget build(BuildContext context) {
+    // final vegetationProvider = Provider.of<VegetationProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Novos Dados de Vegetação'),
@@ -129,25 +139,19 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
                       treesHeight: int.tryParse(_treesHeightController.text) ?? 0,
                       notes: _notesController.text,
                     );
-                    int? result = await DatabaseHelper().insertVegetation(vegetation).then((result) {
-                      if (result != 0) {
-                        // Successful insert
-                        widget.onVegetationAdded(vegetation);
-                        Navigator.pop(context);
-                        return result;
-                      } else {
-                        // Insert failed
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Erro ao salvar os dados de vegetação')),
-                        );
-                        return null;
-                      }
-                    }).catchError((error) {
+                    final vegetationProvider = Provider.of<VegetationProvider>(context, listen: false);
+                    try {
+                      await vegetationProvider.addVegetation(context, widget.inventory.id, vegetation);
+                      // onVegetationAdded(vegetation);
+                      Navigator.pop(context);
+                    } catch (error) {
                       if (kDebugMode) {
-                        print('Error inserting vegetation data: $error');
+                        print('Error adding vegetation: $error');
                       }
-                      return null;
-                    });
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Erro ao salvar os dados de vegetação')),
+                      );
+                    }
                   }
                 },
                 child: const Text('Salvar'),

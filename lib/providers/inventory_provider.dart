@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
 import '../models/inventory.dart';
 import '../data/database_helper.dart';
+import 'vegetation_provider.dart';
 
 class InventoryProvider with ChangeNotifier {
   final List<Inventory> _inventories = [];
@@ -18,43 +18,71 @@ class InventoryProvider with ChangeNotifier {
 
   int get inventoriesCount => activeInventories.length;
 
+  InventoryProvider() {
+    // Add a listener to VegetationProvider
+    VegetationProvider().addListener(_onVegetationListChanged);
+  }
+
   Future<void> loadInventories() async {
     _isLoading = true;
     // notifyListeners();
     try {
       _inventories.clear();
+      _inventoryMap.clear();
       final inventories = await DatabaseHelper().getInventories();
       _inventories.addAll(inventories);
+      for (var inventory in inventories) {
+        _inventoryMap[inventory.id] = inventory; // Populate the inventories map
+      }
       if (kDebugMode) {
         print('Inventories loaded');
       }
-      notifyListeners();
+      // notifyListeners();
     } catch (e) {
       if (kDebugMode) {
         print('Error loading inventories: $e');
       }
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
-    _isLoading = false;
-    notifyListeners();
   }
 
-  void addInventory(Inventory inventory) {
-    _inventories.add(inventory);
-    // inventory.startTimer();
-    notifyListeners();
+  Inventory? getInventoryById(String id) {
+    return _inventoryMap[id]; // Get the inventory from map
   }
 
-  void updateInventory(Inventory inventory) {
+  Future<bool> inventoryIdExists(String id) async {
+    return await DatabaseHelper().inventoryIdExists(id);
+  }
+
+  Future<bool> addInventory(Inventory inventory) async {
+    try {
+      await DatabaseHelper().insertInventory(inventory);
+      _inventories.add(inventory);
+      notifyListeners();
+      return true;
+    } catch (error) {
+      // Handle insertion error
+      if (kDebugMode) {
+        print('Error adding inventory: $error');
+      }
+      return false;
+    }
+  }
+
+  void updateInventory(Inventory inventory) async {
+    await DatabaseHelper().updateInventory(inventory);
+
     _inventoryMap[inventory.id] = inventory;
-    final index = _inventories.indexWhere((inv) => inv.id == inventory.id);
-    if (index != -1) {
-      _inventories[index] = inventory;
-    }
     notifyListeners();
   }
 
-  void removeInventory(String id) {
+  void removeInventory(String id) async {
+    await DatabaseHelper().deleteInventory(id);
+
     _inventories.removeWhere((inventory) => inventory.id == id);
+    _inventoryMap.remove(id);
     notifyListeners();
   }
 
@@ -71,6 +99,19 @@ class InventoryProvider with ChangeNotifier {
   void resumeInventoryTimer(Inventory inventory) {
     inventory.resumeTimer();
     updateInventory(inventory);
+    notifyListeners();
+  }
+
+  void _onVegetationListChanged() {
+    // Update the vegetation list when have changes in VegetationProvider
+    for (var inventoryId in _inventoryMap.keys) {
+      final inventoryList = _inventoryMap[inventoryId];
+      if (inventoryList != null) {
+        for (var inventory in _inventories) {
+          inventory.vegetationList = VegetationProvider().getVegetationForInventory(inventory.id);
+        }
+      }
+    }
     notifyListeners();
   }
 }

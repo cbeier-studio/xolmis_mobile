@@ -1,14 +1,17 @@
-import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import '../providers/inventory_provider.dart';
 import '../models/inventory.dart';
 import '../data/database_helper.dart';
-import 'package:geolocator/geolocator.dart';
 import 'add_vegetation_screen.dart';
-import 'add_inventory_screen.dart';
-import 'species_detail_screen.dart';
+import '../providers/species_provider.dart';
+import '../providers/poi_provider.dart';
+import '../providers/vegetation_provider.dart';
+import 'species_list_item.dart';
+import 'vegetation_list_item.dart';
+import 'species_search_delegate.dart';
+import 'inventory_detail_helpers.dart';
 
 class InventoryDetailScreen extends StatefulWidget {
   final Inventory inventory;
@@ -27,70 +30,61 @@ class InventoryDetailScreen extends StatefulWidget {
 class InventoryDetailScreenState extends State<InventoryDetailScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  final GlobalKey<AnimatedListState> _speciesListKey = GlobalKey<AnimatedListState>();
-  final GlobalKey<AnimatedListState> _vegetationListKey = GlobalKey<AnimatedListState>();
+  final GlobalKey<AnimatedListState> _speciesListKey = GlobalKey<
+      AnimatedListState>();
+  final GlobalKey<AnimatedListState> _vegetationListKey = GlobalKey<
+      AnimatedListState>();
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     _sortSpeciesList();
+
+    // Access the providers
+    final speciesProvider = Provider.of<SpeciesProvider>(context, listen: false);
+    final poiProvider = Provider.of<PoiProvider>(context, listen: false);
+    final vegetationProvider = Provider.of<VegetationProvider>(context, listen: false);
+
+    // Add the listener to PoiProvider
+    Provider.of<PoiProvider>(context, listen: false).addListener(
+        _onPoisChanged);
+
+    // Load the species for the current inventory
+    speciesProvider.loadSpeciesForInventory(widget.inventory.id);
+    // Load the vegetation for the current inventory
+    vegetationProvider.loadVegetationForInventory(widget.inventory.id);
+
+    // Load the POIs for each species of the inventory
+    for (var species in widget.inventory.speciesList) {
+      poiProvider.loadPoisForSpecies(species.id ?? 0);
+    }
+  }
+
+  @override
+  void deactivate() {
+    Provider.of<PoiProvider>(context, listen: false).removeListener(_onPoisChanged);
+    super.deactivate();
   }
 
   @override
   void dispose() {
+    // Provider.of<PoiProvider>(context, listen: false).removeListener(
+    //     _onPoisChanged);
     _tabController.dispose();
     super.dispose();
   }
 
-  void checkMackinnonCompletion(BuildContext context) {
-    if (widget.inventory.type == InventoryType.invMackinnon && widget.inventory.speciesList.length >= widget.inventory.maxSpecies) {
-      widget.inventory.isFinished = true;
-      _showMackinnonDialog(context);
+  void _onPoisChanged() {
+    if (mounted) {
+      setState(() {});
     }
-  }
-
-  void _showMackinnonDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Inventário Concluído'),
-          content: Text('O inventário atingiu o número máximo de espécies. Deseja iniciar a próxima lista ou encerrar o processo?'),
-          actions: [
-            TextButton(
-              child: Text('Iniciar Próxima Lista'),
-              onPressed: () async {
-                // Finish the inventory and open the screen to add inventory
-                await widget.inventory.stopTimer();
-                widget.onInventoryUpdated(widget.inventory);
-                Navigator.pop(context, true);
-                Navigator.of(context).pop();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => AddInventoryScreen()),
-                );
-              },
-            ),
-            TextButton(
-              child: Text('Encerrar'),
-              onPressed: () async {
-                // Finish the inventory and go back to the Home screen
-                await widget.inventory.stopTimer();
-                widget.onInventoryUpdated(widget.inventory);
-                Navigator.pop(context, true);
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
   }
 
   void _addSpeciesToInventory(String speciesName) async {
     // Check if species already exists in current inventory
-    bool speciesExistsInCurrentInventory = widget.inventory.speciesList.any((species) => species.name == speciesName);
+    bool speciesExistsInCurrentInventory = widget.inventory.speciesList.any((
+        species) => species.name == speciesName);
 
     if (!speciesExistsInCurrentInventory) {
       // Add the species to the current inventory
@@ -100,38 +94,32 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
         isOutOfInventory: widget.inventory.isFinished,
         pois: [],
       );
-      await DatabaseHelper().insertSpecies(newSpecies.inventoryId, newSpecies).then((id) {
-        if (id != 0) {
-          // Species inserted successfully
-          if (kDebugMode) {
-            print('Species inserted with ID: $id');
-          }
-        } else {
-          // Handle insert error
-          if (kDebugMode) {
-            print('Error inserting species');
-          }
-        }
-      });
+      final speciesProvider = Provider.of<SpeciesProvider>(
+          context, listen: false);
+      speciesProvider.addSpecies(widget.inventory.id, newSpecies);
+
       setState(() {
         widget.inventory.speciesList.add(newSpecies);
-        _speciesListKey.currentState!.insertItem(
-          widget.inventory.speciesList.length - 1,
-          duration: const Duration(milliseconds: 300),
-        );
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          final index = widget.inventory.speciesList.length - 1;
+          _speciesListKey.currentState!.insertItem(index);
+        });
       });
 
       final activeInventories = await DatabaseHelper().loadActiveInventories();
       for (final inventory in activeInventories) {
         // Check if the inventory is different from the current and if species exists in it
         if (inventory.id != widget.inventory.id &&
-            !inventory.speciesList.any((species) => species.name == speciesName)) {
+            !inventory.speciesList.any((species) =>
+            species.name == speciesName)) {
           final newSpeciesForOtherInventory = Species(inventoryId: inventory.id,
             name: speciesName,
             isOutOfInventory: inventory.isFinished,
             pois: [],
           );
-          await DatabaseHelper().insertSpecies(newSpeciesForOtherInventory.inventoryId, newSpeciesForOtherInventory).then((id) {
+          await DatabaseHelper().insertSpecies(
+              newSpeciesForOtherInventory.inventoryId,
+              newSpeciesForOtherInventory).then((id) {
             if (id != 0) {
               // Species inserted successfully
               if (kDebugMode) {
@@ -148,19 +136,21 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
           // Update the species list of the active inventory
           inventory.speciesList.add(newSpeciesForOtherInventory);
           // Provider.of<InventoryProvider>(context, listen: false).updateInventory(inventory);
-          await DatabaseHelper().updateInventory(inventory); // Update the inventory in the database
+          await DatabaseHelper().updateInventory(
+              inventory); // Update the inventory in the database
         }
       }
 
       // Check if Mackinnon list reached the maximum number of species per list
-      checkMackinnonCompletion(context);
+      checkMackinnonCompletion(context, widget.inventory, widget.onInventoryUpdated);
 
       // Restart the timer if the inventory is of type invCumulativeTime
       if (widget.inventory.type == InventoryType.invCumulativeTime) {
         widget.inventory.elapsedTime = 0;
         widget.inventory.isPaused = false;
         widget.inventory.isFinished = false;
-        await DatabaseHelper().updateInventoryElapsedTime(widget.inventory.id, widget.inventory.elapsedTime);
+        await DatabaseHelper().updateInventoryElapsedTime(
+            widget.inventory.id, widget.inventory.elapsedTime);
         widget.inventory.startTimer();
       }
 
@@ -168,15 +158,18 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
     } else {
       // Show message informing that species already exists
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Espécie já adicionada a este inventário.')),
+        const SnackBar(
+            content: Text('Espécie já adicionada a este inventário.')),
       );
     }
   }
 
   void _updateSpeciesList() async {
-    final updatedSpeciesList = await DatabaseHelper().getSpeciesByInventory(widget.inventory.id);
+    final speciesProvider = Provider.of<SpeciesProvider>(
+        context, listen: false);
     setState(() {
-      widget.inventory.speciesList = updatedSpeciesList;
+      widget.inventory.speciesList =
+          speciesProvider.getSpeciesForInventory(widget.inventory.id);
     });
   }
 
@@ -186,21 +179,16 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
   }
 
   void _showSpeciesSearch() async {
-    final allSpecies = await _loadSpeciesData();
+    final allSpecies = await loadSpeciesData();
     final selectedSpecies = await showSearch(
       context: context,
-      delegate: SpeciesSearchDelegate(allSpecies, _addSpeciesToInventory, _updateSpeciesList),
+      delegate: SpeciesSearchDelegate(
+          allSpecies, _addSpeciesToInventory, _updateSpeciesList),
     );
 
     if (selectedSpecies != null) {
       _updateSpeciesList();
     }
-  }
-
-  void onVegetationAdded(Vegetation vegetation) {
-    setState(() {
-      widget.inventory.vegetationList.add(vegetation);
-    });
   }
 
   @override
@@ -209,15 +197,32 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
       appBar: AppBar(
         title: Text(widget.inventory.id),
         actions: [
+          !widget.inventory.isFinished && widget.inventory.duration > 0
+              ? Consumer<InventoryProvider>(
+            builder: (context, inventoryProvider, child) {
+              final inventory = widget.inventory;
+              return IconButton(
+                icon: Icon(inventory.isPaused ? Icons.play_arrow : Icons.pause),
+                onPressed: () {
+                  if (inventory.isPaused) {
+                    inventoryProvider.resumeInventoryTimer(inventory);
+                  } else {
+                    inventoryProvider.pauseInventoryTimer(inventory);
+                  }
+                  Provider.of<InventoryProvider>(context, listen: false).updateInventory(inventory);
+                },
+              );
+            },
+          ): const SizedBox.shrink(),
           IconButton(
-            icon: const Icon(Icons.nature_people),
+            icon: const Icon(Icons.grass),
             onPressed: () {
               Navigator.push(context,
                 MaterialPageRoute(
-                  builder: (context) => AddVegetationDataScreen(
-                    inventory: widget.inventory,
-                    onVegetationAdded: onVegetationAdded,
-                  ),
+                  builder: (context) =>
+                      AddVegetationDataScreen(
+                        inventory: widget.inventory,
+                      ),
                 ),
               );
             },
@@ -226,20 +231,20 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
         bottom: TabBar(
           controller: _tabController,
           tabs: [
-            widget.inventory.speciesList.isNotEmpty
-                ? Badge.count(
+            widget.inventory.speciesList.isNotEmpty ? Badge.count(
+              backgroundColor: Colors.deepPurple,
               alignment: AlignmentDirectional.centerEnd,
               offset: Offset(24, -8),
               count: widget.inventory.speciesList.length,
               child: const Tab(text: 'Espécies'),
-            ): const Tab(text: 'Espécies'),
-            widget.inventory.vegetationList.isNotEmpty
-                ? Badge.count(
+            ) : const Tab(text: 'Espécies'),
+            widget.inventory.vegetationList.isNotEmpty ? Badge.count(
+              backgroundColor: Colors.deepPurple,
               alignment: AlignmentDirectional.centerEnd,
               offset: Offset(24, -8),
               count: widget.inventory.vegetationList.length,
               child: const Tab(text: 'Vegetação'),
-            ): const Tab(text: 'Vegetação'),
+            ) : const Tab(text: 'Vegetação'),
           ],
         ),
         flexibleSpace: PreferredSize(
@@ -249,9 +254,15 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
             valueListenable: widget.inventory.elapsedTimeNotifier,
             builder: (context, elapsedTime, child) {
               return LinearProgressIndicator(
-                value: elapsedTime / (widget.inventory.duration * 60),
+                value: widget.inventory.isPaused
+                    ? null
+                    : elapsedTime / (widget.inventory.duration * 60),
                 backgroundColor: Colors.grey[200],
-                valueColor: const AlwaysStoppedAnimation<Color>(Colors.deepPurple),
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  widget.inventory.isPaused
+                      ? Colors.amber
+                      : Colors.deepPurple,
+                ),
               );
             },
           )
@@ -296,54 +307,69 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
           ),
         ),
         Expanded(
-          child: AnimatedList(
-            key: _speciesListKey,
-            initialItemCount: widget.inventory.speciesList.length,
-            itemBuilder: (context, index, animation) {
-              final species = widget.inventory.speciesList[index];
-              return Dismissible(
-                key: Key(species.id.toString()),
-                background: Container(
-                  color: Colors.red,
-                  alignment: Alignment.centerRight,
-                  padding: const EdgeInsets.only(right: 16.0),
-                  child: const Icon(Icons.delete, color: Colors.white),
-                ),
-                confirmDismiss: (direction) async {
-                  return await showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text('Confirmar exclusão'),
-                        content: const Text('Tem certeza que deseja excluir esta espécie?'),
-                        actions: <Widget>[
-                          TextButton(
-                            onPressed: () => Navigator.of(context).pop(false),child: const Text('Cancelar'),
-                          ),
-                          TextButton(
-                            onPressed: () => Navigator.of(context).pop(true),
-                            child: const Text('Excluir'),
-                          ),
-                        ],
+          child: Consumer<SpeciesProvider>(
+            builder: (context, speciesProvider, child) {
+              return AnimatedList(
+                key: _speciesListKey,
+                initialItemCount: widget.inventory.speciesList.length,
+                itemBuilder: (context, index, animation) {
+                  final species = widget.inventory.speciesList[index];
+                  return Dismissible(
+                    key: Key(species.id.toString()),
+                    background: Container(
+                      color: Colors.red,
+                      alignment: Alignment.centerRight,
+                      padding: const EdgeInsets.only(right: 16.0),
+                      child: const Icon(Icons.delete, color: Colors.white),
+                    ),
+                    confirmDismiss: (direction) async {
+                      return await showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Confirmar exclusão'),
+                            content: const Text(
+                                'Tem certeza que deseja excluir esta espécie?'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.of(context).pop(false),
+                                child: const Text('Cancelar'),
+                              ),
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.of(context).pop(true),
+                                style: TextButton.styleFrom(
+                                  textStyle: const TextStyle(color: Colors.red),
+                                ),
+                                child: const Text('Excluir'),
+                              ),
+                            ],
+                          );
+                        },
                       );
                     },
+                    onDismissed: (direction) {
+                      // Remove the species from list and AnimatedList
+                      final removedSpecies = widget.inventory.speciesList
+                          .removeAt(index);
+                      _speciesListKey.currentState!.removeItem(
+                        index,
+                            (context, animation) =>
+                            SpeciesListItem(
+                                species: removedSpecies, animation: animation),
+                      );
+                      DatabaseHelper().deleteSpeciesFromInventory(
+                          widget.inventory.id, removedSpecies.name);
+                      // Update the inventory in the database
+                      DatabaseHelper().updateInventory(widget.inventory);
+                    },
+                    child: SpeciesListItem(
+                      species: species,
+                      animation: animation,
+                    ),
                   );
                 },
-                onDismissed: (direction) {
-                  // Remove the species from list and AnimatedList
-                  final removedSpecies = widget.inventory.speciesList.removeAt(index);
-                  _speciesListKey.currentState!.removeItem(
-                    index,
-                        (context, animation) => SpeciesListItem(species: removedSpecies, animation: animation),
-                  );
-                  DatabaseHelper().deleteSpeciesFromInventory(widget.inventory.id, removedSpecies.name);
-                  // Update the inventory in the database
-                  DatabaseHelper().updateInventory(widget.inventory);
-                },
-                child: SpeciesListItem(
-                  species: species,
-                  animation: animation,
-                ),
               );
             },
           ),
@@ -352,258 +378,64 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
     );
   }
 
-  Future<List<String>> _loadSpeciesData() async {
-    final jsonString = await rootBundle.loadString('assets/species_data.json');
-    final jsonData = json.decode(jsonString) as List<dynamic>;
-    return jsonData.map((species) => species['scientificName'].toString())
-        .toList();
-  }
-
   Widget _buildVegetationList() {
-    return AnimatedList(
-      key: _vegetationListKey,
-      initialItemCount: widget.inventory.vegetationList.length,
-      itemBuilder: (context, index, animation) {
-        final vegetation = widget.inventory.vegetationList[index];
-        return VegetationListItem(
-          vegetation: vegetation,
-          animation: animation,
-        );
-      },
-    );
-  }
-}
-
-class SpeciesListItem extends StatefulWidget {
-  final Species species;
-  final Animation<double> animation;
-
-  const SpeciesListItem({
-    super.key,
-    required this.species,
-    required this.animation,
-  });
-
-  @override
-  SpeciesListItemState createState() => SpeciesListItemState();
-}
-
-class SpeciesListItemState extends State<SpeciesListItem> {
-  @override
-  Widget build(BuildContext context) {
-    return SizeTransition(
-      sizeFactor: widget.animation,
-      child: ListTile(
-        title: Text(widget.species.name),
-        tileColor: widget.species.isOutOfInventory ? Colors.grey[200] : null,
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            IconButton(
-              icon: const Icon(Icons.remove),
-              onPressed: () {
-                if (mounted && widget.species.count > 0) {
-                  widget.species.count--;
-                  DatabaseHelper().updateSpecies(widget.species).then((_) {
-                    setState(() {});
-                  });
-                }
+    return Consumer<VegetationProvider>(
+      builder: (context, vegetationProvider, child) {
+        final vegetationList = vegetationProvider.getVegetationForInventory(
+            widget.inventory.id);
+        return AnimatedList(
+          key: _vegetationListKey,
+          initialItemCount: vegetationList.length,
+          itemBuilder: (context, index, animation) {
+            final vegetation = vegetationList[index];
+            return Dismissible(
+              key: ValueKey(vegetation),
+              direction: DismissDirection.endToStart,
+              background: Container(
+                color: Colors.red,
+                alignment: Alignment.centerRight,
+                padding: const EdgeInsets.only(right: 20.0),
+                child: const Icon(Icons.delete, color: Colors.white),
+              ),
+              confirmDismiss: (direction) async {
+                return await showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text('Confirmar exclusão'),
+                      content: const Text('Tem certeza que deseja excluir esta vegetação?'),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(false),
+                          child: const Text('Cancelar'),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(true),
+                          style: TextButton.styleFrom(
+                            textStyle: const TextStyle(color: Colors.red),
+                          ),
+                          child: const Text('Excluir'),
+                        ),
+                      ],
+                    );
+                  },
+                );
               },
-            ),
-            Text(widget.species.count.toString()),
-            IconButton(
-              icon: const Icon(Icons.add),
-              onPressed: () {
-                if (mounted) {
-                  widget.species.count++;
-                  DatabaseHelper().updateSpecies(widget.species).then((_) {
-                    setState(() {});
-                  });
-                }
-              },
-            ),
-            IconButton(
-              icon: widget.species.pois.isNotEmpty
-              ? Badge.count(
-              count: widget.species.pois.length,
-              child: const Icon(Icons.add_location),
-            ) : const Icon(Icons.add_location),
-              onPressed: () async {
-                // Get the current location
-                Position position = await Geolocator.getCurrentPosition(
-                  locationSettings: LocationSettings(
-                    accuracy: LocationAccuracy.high,
+              onDismissed: (direction) {
+                vegetationProvider.removeVegetation(widget.inventory.id, vegetation.id!);
+                _vegetationListKey.currentState!.removeItem(
+                  index,
+                      (context, animation) => VegetationListItem(
+                    vegetation: vegetation,
+                    animation: animation,
                   ),
                 );
-
-                // Create a new POI
-                final poi = Poi(
-                  speciesId: widget.species.id!,
-                  longitude: position.longitude,
-                  latitude: position.latitude,
-                );
-
-                // Insert the POI in the database
-                await DatabaseHelper().insertPoi(poi).then((_) {
-                  // if (mounted) {
-                    setState(() {
-                      widget.species.pois.add(poi);
-                    });
-                  // }
-                });
               },
-            ),
-          ],
-        ),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => SpeciesDetailScreen(species: widget.species),
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
-
-class VegetationListItem extends StatelessWidget {
-  final Vegetation vegetation;
-  final Animation<double> animation;
-
-  const VegetationListItem({
-    super.key,
-    required this.vegetation,
-    required this.animation,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SizeTransition(
-      sizeFactor: animation,
-      child: ListTile(
-        title: Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(vegetation.sampleTime)),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('${vegetation.latitude}; ${vegetation.longitude}'),
-            Text('Herbáceas: ${vegetation.herbsDistribution}; ${vegetation.herbsProportion}%; ${vegetation.herbsHeight} cm'),
-            Text('Arbustos: ${vegetation.shrubsDistribution}; ${vegetation.shrubsProportion}%; ${vegetation.shrubsHeight} cm'),
-            Text('Árvores: ${vegetation.treesDistribution}; ${vegetation.treesProportion}%; ${vegetation.treesHeight} cm'),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class SpeciesSearchDelegate extends SearchDelegate<String> {
-  final List<String> allSpecies;
-  final Function(String) addSpeciesToInventory;
-  final VoidCallback updateSpeciesList;
-
-  SpeciesSearchDelegate(this.allSpecies, this.addSpeciesToInventory, this.updateSpeciesList);
-
-  @override
-  List<Widget>? buildActions(BuildContext context) {
-    return [
-      IconButton(
-        icon: const Icon(Icons.clear),
-        onPressed: () {
-          query = '';
-        },
-      ),
-    ];
-  }
-
-  @override
-  Widget? buildLeading(BuildContext context) {
-    return IconButton(
-      icon: const Icon(Icons.arrow_back),
-      onPressed: () {
-        close(context, '');
-      },
-    );
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    final suggestions = allSpecies
-        .where((species) => speciesMatchesQuery(species, query))
-        .toList();
-
-    return ListView.builder(
-      itemCount: suggestions.length,
-      itemBuilder: (context, index) {
-        final species = suggestions[index];
-        return ListTile(
-          title: Text(species),
-          onTap: () {
-            addSpeciesToInventory(species);
-            close(context, species); // Close the suggestions list and return the selected species
-          },
-        );
-      },
-    );
-  }
-
-  bool speciesMatchesQuery(String speciesName, String query) {
-    if (query.length == 4 || query.length == 6) {
-      final words = speciesName.split(' ');
-      if (words.length >= 2) {
-        final firstWord = words[0];
-        final secondWord = words[1];
-        final firstPartLength = query.length == 4 ? 2 : 3;
-        final firstPart = query.substring(0, firstPartLength);
-        final secondPart = query.substring(firstPartLength);
-
-        // Check if the parts of query match the parts of the species name
-        return firstWord.toLowerCase().startsWith(firstPart.toLowerCase()) &&
-            secondWord.toLowerCase().startsWith(secondPart.toLowerCase());
-      }
-    }
-    // If que query do not have 4 or 6 characters, or if the species name do not have two words,
-    // use the previous search logic (e.g.: contains)
-    return speciesName.toLowerCase().contains(query.toLowerCase());
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    // Add the first item from suggestions list
-    if (query.isNotEmpty) {
-      final suggestions = allSpecies.where((species) => speciesMatchesQuery(species, query)).toList();
-      if (suggestions.isNotEmpty) {
-        final firstSuggestion = suggestions[0];
-        addSpeciesToInventory(firstSuggestion);
-        // updateSpeciesList();
-        close(context, firstSuggestion);
-      }
-    }
-    return Container(); // Return a empty widget, because buildResults is not used in this case
-  }
-}
-
-class SpeciesSuggestions extends StatelessWidget {
-  final List<String> suggestions;
-  final Function(String) onTap;
-
-  const SpeciesSuggestions({
-    super.key,
-    required this.suggestions,
-    required this.onTap
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: suggestions.length,
-      itemBuilder: (context, index) {
-        final species = suggestions[index];
-        return ListTile(
-          title: Text(species),
-          onTap: () {
-            onTap(species);
+              child: VegetationListItem(
+                vegetation: vegetation,
+                animation: animation,
+              ),
+            );
           },
         );
       },

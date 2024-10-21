@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/inventory_provider.dart';
 import '../models/inventory.dart';
-import '../data/database_helper.dart';
 
 class AddInventoryScreen extends StatefulWidget {const AddInventoryScreen({super.key});
 
@@ -67,7 +68,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                     }
                   });
                 },
-              ),const SizedBox(height: 16.0),
+              ), const SizedBox(height: 16.0),
               Row(
                   children: [
                     Expanded(
@@ -121,7 +122,10 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
       );
 
       // Check if the ID already exists in the database
-      final idExists = await DatabaseHelper().inventoryIdExists(newInventory.id);
+      final inventoryProvider = Provider.of<InventoryProvider>(
+          context, listen: false);
+      final idExists = await inventoryProvider.inventoryIdExists(
+          newInventory.id);
 
       if (idExists) {
         // ID already exists, show a SnackBar
@@ -132,17 +136,17 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
       }
 
       // ID do not exist, insert inventory
-      DatabaseHelper().insertInventory(newInventory).then((success) {
-        if (success) {
-          // Inventory inserted successfully
-          Navigator.pop(context, newInventory);
-        } else {
-          // Handle insertion error
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Erro ao inserir inventário')),
-          );
-        }
-      });
+      final success = await inventoryProvider.addInventory(newInventory);
+
+      if (success) {
+        // Inventory inserted successfully
+        Navigator.pop(context); // Return to the previous screen
+      } else {
+        // Handle insertion error
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Erro ao inserir inventário')),
+        );
+      }
     }
   }
 }

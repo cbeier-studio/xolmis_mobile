@@ -32,31 +32,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
     Provider.of<InventoryProvider>(context, listen: false).loadInventories();
   }
 
-  // Future<void> _loadClosedInventories() async {
-  //   final inventories = await dbHelper.getFinishedInventories();
-  //   setState(() {
-  //     _closedInventories = inventories;
-  //   });
-  // }
-
-  // void _deleteInventory(Inventory inventory) async {
-  //   // Remove the inventory from database
-  //   await dbHelper.deleteInventory(inventory.id);
-  //
-  //   // Remove the inventory from list and update UI
-  //   setState(() {
-  //     final index = _closedInventories.indexOf(inventory);
-  //     _closedInventories.removeAt(index);
-  //     _listKey.currentState!.removeItem(index, (context, animation) {
-  //       return InventoryListItem(
-  //         inventory: inventory,
-  //         animation: animation,
-  //         onInventoryUpdated: onInventoryUpdated,
-  //       );
-  //     });
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
     final inventoryProvider = Provider.of<InventoryProvider>(context);
