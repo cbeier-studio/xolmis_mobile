@@ -7,6 +7,7 @@ import '../models/inventory.dart';
 import '../data/database_helper.dart';
 import 'package:geolocator/geolocator.dart';
 import 'add_vegetation_screen.dart';
+import 'add_inventory_screen.dart';
 import 'species_detail_screen.dart';
 
 class InventoryDetailScreen extends StatefulWidget {
@@ -40,6 +41,51 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
   void dispose() {
     _tabController.dispose();
     super.dispose();
+  }
+
+  void checkMackinnonCompletion(BuildContext context) {
+    if (widget.inventory.type == InventoryType.invMackinnon && widget.inventory.speciesList.length >= widget.inventory.maxSpecies) {
+      widget.inventory.isFinished = true;
+      _showMackinnonDialog(context);
+    }
+  }
+
+  void _showMackinnonDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Inventário Concluído'),
+          content: Text('O inventário atingiu o número máximo de espécies. Deseja iniciar a próxima lista ou encerrar o processo?'),
+          actions: [
+            TextButton(
+              child: Text('Iniciar Próxima Lista'),
+              onPressed: () async {
+                // Finish the inventory and open the screen to add inventory
+                await widget.inventory.stopTimer();
+                widget.onInventoryUpdated(widget.inventory);
+                Navigator.pop(context, true);
+                Navigator.of(context).pop();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AddInventoryScreen()),
+                );
+              },
+            ),
+            TextButton(
+              child: Text('Encerrar'),
+              onPressed: () async {
+                // Finish the inventory and go back to the Home screen
+                await widget.inventory.stopTimer();
+                widget.onInventoryUpdated(widget.inventory);
+                Navigator.pop(context, true);
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _addSpeciesToInventory(String speciesName) async {
@@ -106,6 +152,9 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
         }
       }
 
+      // Check if Mackinnon list reached the maximum number of species per list
+      checkMackinnonCompletion(context);
+
       // Restart the timer if the inventory is of type invCumulativeTime
       if (widget.inventory.type == InventoryType.invCumulativeTime) {
         widget.inventory.elapsedTime = 0;
@@ -166,8 +215,8 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
               Navigator.push(context,
                 MaterialPageRoute(
                   builder: (context) => AddVegetationDataScreen(
-                      inventory: widget.inventory,
-                      onVegetationAdded: onVegetationAdded,
+                    inventory: widget.inventory,
+                    onVegetationAdded: onVegetationAdded,
                   ),
                 ),
               );
@@ -435,8 +484,15 @@ class VegetationListItem extends StatelessWidget {
       sizeFactor: animation,
       child: ListTile(
         title: Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(vegetation.sampleTime)),
-        subtitle: Text('${vegetation.latitude}; ${vegetation.longitude}'),
-        // ... other widgets to show vegetation info ...
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('${vegetation.latitude}; ${vegetation.longitude}'),
+            Text('Herbáceas: ${vegetation.herbsDistribution}; ${vegetation.herbsProportion}%; ${vegetation.herbsHeight} cm'),
+            Text('Arbustos: ${vegetation.shrubsDistribution}; ${vegetation.shrubsProportion}%; ${vegetation.shrubsHeight} cm'),
+            Text('Árvores: ${vegetation.treesDistribution}; ${vegetation.treesProportion}%; ${vegetation.treesHeight} cm'),
+          ],
+        ),
       ),
     );
   }

@@ -9,11 +9,6 @@ import 'providers/inventory_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await FlutterBackground.initialize(androidConfig: FlutterBackgroundAndroidConfig(
-    notificationTitle: "Xolmis",
-    notificationText: "O Xolmis está rodando em segundo plano.",
-    notificationImportance: AndroidNotificationImportance.normal,
-  ));
   await DatabaseHelper().initDatabase();
   runApp(const MyApp());
 }
@@ -55,13 +50,21 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
-    enableBackgroundExecution();
+    initializeBackgroundExecution();
     inventoryCountNotifier.updateCount();
   }
 
-  Future<void> enableBackgroundExecution() async {
-    await FlutterBackground.enableBackgroundExecution();
-    setState(() {});
+  Future<void> initializeBackgroundExecution() async {
+    final androidConfig = FlutterBackgroundAndroidConfig(
+      notificationTitle: 'Xolmis',
+      notificationText: 'O Xolmis está rodando em segundo plano',
+      notificationImportance: AndroidNotificationImportance.normal,
+      notificationIcon: AndroidResource(name: 'background_icon', defType: 'drawable'),
+    );
+    bool success = await FlutterBackground.initialize(androidConfig: androidConfig);
+    if (success) {
+      await FlutterBackground.enableBackgroundExecution();
+    }
   }
 
   Future<void> updateActiveInventoriesCount() async {

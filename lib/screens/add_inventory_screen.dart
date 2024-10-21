@@ -13,6 +13,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
   final _idController = TextEditingController();
   InventoryType _selectedType = InventoryType.invQualitative;
   final _durationController = TextEditingController();
+  final _maxSpeciesController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -57,21 +58,42 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                   setState(() {
                     _selectedType = newValue!;
                     if (newValue == InventoryType.invCumulativeTime) {
-                      _durationController.text = '30'; // Define duration to 30 minutes
+                      _durationController.text = '30';
+                    } else if (newValue == InventoryType.invMackinnon) {
+                      _maxSpeciesController.text = '10';
                     } else {
-                      _durationController.text = ''; // Clear duration field
+                      _durationController.text = '';
+                      _maxSpeciesController.text = '';
                     }
                   });
                 },
               ),const SizedBox(height: 16.0),
-              TextFormField(
-                controller: _durationController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  labelText: 'Duração',
-                  border: OutlineInputBorder(),
-                  suffixText: 'minutos',
-                ),
+              Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        controller: _durationController,
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(
+                          labelText: 'Duração',
+                          border: OutlineInputBorder(),
+                          suffixText: 'minutos',
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8.0),
+                    Expanded(
+                      child: TextFormField(
+                        controller: _maxSpeciesController,
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(
+                          labelText: 'Máx. espécies',
+                          border: OutlineInputBorder(),
+                          suffixText: 'spp.',
+                        ),
+                      ),
+                    ),
+                  ]
               ),
               const SizedBox(height: 32.0),
               Center(
@@ -87,16 +109,29 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
     );
   }
 
-  void _submitForm() {
+  void _submitForm() async {
     if (_formKey.currentState!.validate()) {
       final newInventory = Inventory(
         id: _idController.text,
         type: _selectedType,
         duration: int.tryParse(_durationController.text) ?? 0,
+        maxSpecies: int.tryParse(_maxSpeciesController.text) ?? 0,
         speciesList: [],
         vegetationList: [],
       );
 
+      // Check if the ID already exists in the database
+      final idExists = await DatabaseHelper().inventoryIdExists(newInventory.id);
+
+      if (idExists) {
+        // ID already exists, show a SnackBar
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Já existe um inventário com esta ID.')),
+        );
+        return; // Prevent adding inventory
+      }
+
+      // ID do not exist, insert inventory
       DatabaseHelper().insertInventory(newInventory).then((success) {
         if (success) {
           // Inventory inserted successfully

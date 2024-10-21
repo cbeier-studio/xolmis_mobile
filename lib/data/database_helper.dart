@@ -25,7 +25,7 @@ class DatabaseHelper {
     String path = join(await getDatabasesPath(), 'inventory_database.db');
     return await openDatabase(
       path,
-      version: 1, // Increase the version number
+      version: 2, // Increase the version number
       onCreate: (db, version) {
         // Create the tables
         db.execute(
@@ -33,6 +33,7 @@ class DatabaseHelper {
               'id TEXT PRIMARY KEY, '
               'type INTEGER, '
               'duration INTEGER, '
+              'maxSpecies INTEGER, '
               'isPaused INTEGER, '
               'isFinished INTEGER, '
               'elapsedTime REAL, '
@@ -80,24 +81,25 @@ class DatabaseHelper {
               'FOREIGN KEY (speciesId) REFERENCES species(id))'
         );
       },
-      // onUpgrade: (db, oldVersion, newVersion) {
-      //   // Add logic to update the database from previous versions
-      //   if (oldVersion < 2) {
-      //     db.execute(
-      //       'ALTER TABLE inventories ADD COLUMN elapsedTime REAL',
-      //     );
-      //     db.execute(
-      //       'ALTER TABLE inventories ADD COLUMN startTime TEXT',
-      //     );
-      //     db.execute(
-      //       'ALTER TABLE inventories ADD COLUMN endTime TEXT',
-      //     );
-      //     db.execute(
-      //       'ALTER TABLE species ADD COLUMN isOutOfInventory INTEGER',
-      //     );
-      //   }
-      // },
+      onUpgrade: (db, oldVersion, newVersion) {
+        // Add logic to update the database from previous versions
+        if (oldVersion < 2) {
+          db.execute(
+            'ALTER TABLE inventories ADD COLUMN maxSpecies INTEGER',
+          );
+        }
+      },
     );
+  }
+
+  Future<bool> inventoryIdExists(String id) async {
+    final db = await database;
+    final result = await db?.query(
+      'inventories',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+    return result!.isNotEmpty;
   }
 
   Future<bool> insertInventory(Inventory inventory) async {
@@ -202,11 +204,12 @@ class DatabaseHelper {
         List<Species> speciesList = await getSpeciesByInventory(map['id']);
         List<Vegetation> vegetationList = await getVegetationByInventory(map['id']);
         // return Inventory.fromMap(map, speciesList, vegetationList);
-        // Cria a instância de Inventory usando o construtor principal
+        // Create Inventory instance using the main constructor
         Inventory inventory = Inventory(
           id: map['id'],
           type: InventoryType.values[map['type']],
           duration: map['duration'],
+          maxSpecies: map['maxSpecies'],
           isPaused: map['isPaused'] == 1,
           isFinished: map['isFinished'] == 1,
           elapsedTime: map['elapsedTime'],

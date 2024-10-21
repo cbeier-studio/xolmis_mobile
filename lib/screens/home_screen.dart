@@ -27,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
       Future.delayed(Duration.zero, ()
-      { // Adiciona um Future.delayed
+      {
         for (var inventory in inventoryProvider.activeInventories) {
           if (inventory.duration != 0 && !inventory.isPaused) {
             inventory.startTimer();
@@ -35,12 +35,6 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       });
     });
-    // _loadActiveInventories().then((_) {
-    //   for (var inventory in _activeInventories) {
-    //     if (inventory.duration > 0 && !inventory.isFinished) {
-    //       inventory.resumeTimer();
-    //     }}
-    // });
   }
 
   Future<void> _checkLocationPermissions() async {
@@ -63,14 +57,6 @@ class _HomeScreenState extends State<HomeScreen> {
     // Permissions granted, you can use the Geolocator here
   }
 
-  // Future<void> _loadActiveInventories() async {
-  //   final inventories = await dbHelper.loadActiveInventories();
-  //   setState(() {
-  //     _activeInventories = inventories;
-  //     Provider.of<InventoryCountNotifier>(context, listen: false).updateCount();
-  //   });
-  // }
-
   void _onInventoryPausedOrResumed(Inventory inventory) {
     Provider.of<InventoryProvider>(context, listen: false).updateInventory(inventory);
   }
@@ -88,8 +74,8 @@ class _HomeScreenState extends State<HomeScreen> {
         onRefresh: () async {
           await inventoryProvider.loadInventories();
         },
-        child: inventoryProvider.isLoading // Verifica o estado de carregamento
-            ? const Center(child: CircularProgressIndicator()) // Exibe o indicador de progresso
+        child: inventoryProvider.isLoading // Check the loading status
+            ? const Center(child: CircularProgressIndicator())
             : inventoryProvider.activeInventories.isEmpty
             ? const Center(child: Text('Nenhum inventário ativo.'))
             : AnimatedList(
@@ -103,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   if (isFinished) {
                     inventoryProvider.loadInventories();
                   }
-                  return child!; // Retorna o widget filho (InventoryListItem)
+                  return child!;
                 },
                 child: InventoryListItem(
                   inventory: inventory,

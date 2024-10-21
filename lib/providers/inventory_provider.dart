@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 import '../models/inventory.dart';
 import '../data/database_helper.dart';
 
@@ -23,10 +25,14 @@ class InventoryProvider with ChangeNotifier {
       _inventories.clear();
       final inventories = await DatabaseHelper().getInventories();
       _inventories.addAll(inventories);
-      print('Inventories loaded');
+      if (kDebugMode) {
+        print('Inventories loaded');
+      }
       notifyListeners();
     } catch (e) {
-      print('Error loading inventories: $e');
+      if (kDebugMode) {
+        print('Error loading inventories: $e');
+      }
     }
     _isLoading = false;
     notifyListeners();
@@ -58,13 +64,13 @@ class InventoryProvider with ChangeNotifier {
 
   void pauseInventoryTimer(Inventory inventory) {
     inventory.pauseTimer();
-    updateInventory(inventory); // Atualiza o estado do Inventory no Provider
-    notifyListeners(); // Notifica os listeners do Provider
+    updateInventory(inventory);
+    notifyListeners();
   }
 
   void resumeInventoryTimer(Inventory inventory) {
     inventory.resumeTimer();
-    updateInventory(inventory); // Atualiza o estado do Inventory no Provider
-    notifyListeners(); // Notifica os listeners do Provider
+    updateInventory(inventory);
+    notifyListeners();
   }
 }
