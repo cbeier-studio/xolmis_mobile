@@ -7,16 +7,18 @@ import '../data/database_helper.dart';
 
 class VegetationProvider with ChangeNotifier {
   final Map<String, List<Vegetation>> _vegetationMap = {};
+  GlobalKey<AnimatedListState>? vegetationListKey;
 
   Future<void> loadVegetationForInventory(String inventoryId) async {
     try {
       final vegetationList = await DatabaseHelper().getVegetationByInventory(inventoryId);
       _vegetationMap[inventoryId] = vegetationList;
-      notifyListeners();
     } catch (e) {
       if (kDebugMode) {
         print('Error loading vegetation for inventory $inventoryId: $e');
       }
+    } finally {
+      notifyListeners();
     }
   }
 
@@ -32,9 +34,11 @@ class VegetationProvider with ChangeNotifier {
     _vegetationMap[inventoryId] = _vegetationMap[inventoryId] ?? [];
     _vegetationMap[inventoryId]!.add(vegetation);
 
+    vegetationListKey?.currentState?.insertItem(
+        getVegetationForInventory(inventoryId).length - 1);
     notifyListeners();
 
-    (context as Element).markNeedsBuild(); // Force screen to update
+    // (context as Element).markNeedsBuild(); // Force screen to update
   }
 
   Future<void> removeVegetation(String inventoryId, int vegetationId) async {
@@ -42,8 +46,9 @@ class VegetationProvider with ChangeNotifier {
 
     final vegetationList = _vegetationMap[inventoryId];
     if (vegetationList != null) {
+      // listKey.currentState?.removeItem(index, (context, animation) => Container());
       vegetationList.removeWhere((v) => v.id == vegetationId);
-      notifyListeners();
     }
+    notifyListeners();
   }
 }

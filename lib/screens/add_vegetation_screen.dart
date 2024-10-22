@@ -144,12 +144,29 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
                       await vegetationProvider.addVegetation(context, widget.inventory.id, vegetation);
                       // onVegetationAdded(vegetation);
                       Navigator.pop(context);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Row(
+                          children: [
+                            const Icon(Icons.check, color: Colors.green),
+                            const SizedBox(width: 8),
+                            const Text('Dados de vegetação adicionados!'),
+                          ],
+                        ),
+                        ),
+                      );
                     } catch (error) {
                       if (kDebugMode) {
                         print('Error adding vegetation: $error');
                       }
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Erro ao salvar os dados de vegetação')),
+                        const SnackBar(content: Row(
+                          children: [
+                            const Icon(Icons.warning, color: Colors.yellow),
+                            const SizedBox(width: 8),
+                            const Text('Erro ao salvar os dados de vegetação'),
+                          ],
+                        ),
+                      ),
                       );
                     }
                   }

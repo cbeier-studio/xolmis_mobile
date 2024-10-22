@@ -56,10 +56,11 @@ class SpeciesListItemState extends State<SpeciesListItem> {
             ),
             Consumer<PoiProvider>(
               builder: (context, poiProvider, child) {
+                final pois = poiProvider.getPoisForSpecies(widget.species.id ?? 0);
                 return IconButton(
-                  icon: widget.species.pois.isNotEmpty ? Badge.count(
+                  icon: pois.isNotEmpty ? Badge.count(
                     backgroundColor: Colors.deepPurple,
-                    count: widget.species.pois.length,
+                    count: pois.length,
                     child: const Icon(Icons.add_location),
                   ) : const Icon(Icons.add_location),
                   onPressed: () async {
@@ -78,7 +79,6 @@ class SpeciesListItemState extends State<SpeciesListItem> {
                     );
 
                     // Insert the POI in the database
-                    final poiProvider = Provider.of<PoiProvider>(context, listen: false);
                     poiProvider.addPoi(context, widget.species.id!, poi);
                     poiProvider.notifyListeners();
 
@@ -89,9 +89,7 @@ class SpeciesListItemState extends State<SpeciesListItem> {
                     );
 
                     // Update the POIs list of the species
-                    setState(() {
-                      widget.species.pois = poiProvider.getPoisForSpecies(widget.species.id!);
-                    });
+                    // widget.species.pois = poiProvider.getPoisForSpecies(widget.species.id!);
                   },
                 );
               },

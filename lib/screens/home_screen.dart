@@ -17,7 +17,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   // List<Inventory> _activeInventories = [];
-  final dbHelper = DatabaseHelper();
+  // final dbHelper = DatabaseHelper();
 
   @override
   void initState() {
@@ -35,6 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
           }
         }
       });
+      inventoryProvider.inventoryListKey = _listKey;
     });
   }
 
@@ -75,43 +76,132 @@ class _HomeScreenState extends State<HomeScreen> {
         onRefresh: () async {
           await inventoryProvider.loadInventories();
         },
-        child: inventoryProvider.isLoading // Check the loading status
+        child: inventoryProvider.isLoading
             ? const Center(child: CircularProgressIndicator())
-            : inventoryProvider.activeInventories.isEmpty
-            ? const Center(child: Text('Nenhum inventário ativo.'))
-            : AnimatedList(
-          key: _listKey,
-          initialItemCount: inventoryProvider.activeInventories.length,
-          itemBuilder: (context, index, animation) {
-            final inventory = inventoryProvider.activeInventories[index];
-            return ValueListenableBuilder<bool>(
-                valueListenable: inventory.isFinishedNotifier,
-                builder: (context, isFinished, child) {
-                  if (isFinished) {
-                    inventoryProvider.loadInventories();
-                  }
-                  return child!;
-                },
-                child: InventoryListItem(
-                  inventory: inventory,
-                  animation: animation,
-                  onTap: (inventory) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => InventoryDetailScreen(
-                          inventory: inventory,
-                          onInventoryUpdated: (inventory) => onInventoryUpdated(inventory),
-                        ),
-                      ),
-                    ).then((result) {
-                      if (result == true) {
+            : Consumer<InventoryProvider>(
+          builder: (context, inventoryProvider, child) {
+            return inventoryProvider.activeInventories.isEmpty
+                ? const Center(child: Text('Nenhum inventário ativo.'))
+                : AnimatedList(
+              key: _listKey,
+              initialItemCount: inventoryProvider.activeInventories.length,
+              itemBuilder: (context, index, animation) {
+                final inventory = inventoryProvider.activeInventories[index];
+                return Dismissible(
+                    key: ValueKey(inventory.id),
+                    direction: DismissDirection.horizontal,
+                    background: Container(
+                      color: Colors.green,
+                      alignment: Alignment.centerLeft,
+                      padding: const EdgeInsets.only(left: 20.0),
+                      child: const Icon(Icons.flag, color: Colors.white),
+                    ),
+                    secondaryBackground: Container(
+                      color: Colors.red,
+                      alignment: Alignment.centerRight,
+                      padding: const EdgeInsets.only(right: 20.0),
+                      child: const Icon(Icons.delete, color: Colors.white),
+                    ),
+                    confirmDismiss: (direction) async {
+                      // Drag to left
+                      if (direction == DismissDirection.endToStart) {
+                        // Show confirmation dialog for deleting
+                        return await showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('Confirmar exclusão'),
+                              content: const Text('Tem certeza que deseja excluir este inventário?'),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () => Navigator.of(context).pop(false),
+                                  child: const Text('Cancelar'),
+                                ),
+                                TextButton(
+                                  onPressed: () => Navigator.of(context).pop(true),
+                                  child: const Text('Excluir'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                        // Drag to right
+                      } else if (direction == DismissDirection.startToEnd) {
+                        // Show confirmation dialog for finishing
+                        return await showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('Confirmar Encerramento'),
+                              content: const Text('Tem certeza que deseja encerrar este inventário?'),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () => Navigator.of(context).pop(false),
+                                  child: const Text('Cancelar'),
+                                ),
+                                TextButton(
+                                  onPressed: () => Navigator.of(context).pop(true),
+                                  child: const Text('Encerrar'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      }
+                      return false; // Default to not dismissing
+                    },
+                    onDismissed: (direction) {
+                      // Drag to left
+                      if (direction == DismissDirection.endToStart) {
+                        // Remove the inventory from list
+                        final indexToRemove = inventoryProvider.activeInventories.indexOf(inventory);
+                        inventoryProvider.removeInventory(inventory.id);
+                        _listKey.currentState?.removeItem(
+                          indexToRemove,
+                              (context, animation) => InventoryListItem(
+                            inventory: inventory,
+                            animation: animation,
+                          ),
+                        );
+                        // Drag to right
+                      } else if (direction == DismissDirection.startToEnd) {
+                        // Finish the inventory
+                        inventory.stopTimer();
+                        inventoryProvider.updateInventory(inventory);
                         inventoryProvider.loadInventories();
                       }
-                    });
-                  },
-                  onInventoryPausedOrResumed: (inventory) => _onInventoryPausedOrResumed(inventory),
-                )
+                    },
+                    child: ValueListenableBuilder<bool>(
+                        valueListenable: inventory.isFinishedNotifier,
+                        builder: (context, isFinished, child) {
+                          if (isFinished) {
+                            inventoryProvider.loadInventories();
+                          }
+                          return child!;
+                        },
+                        child: InventoryListItem(
+                          inventory: inventory,
+                          animation: animation,
+                          onTap: (inventory) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => InventoryDetailScreen(
+                                  inventory: inventory,
+                                  // onInventoryUpdated: (inventory) => onInventoryUpdated(inventory),
+                                ),
+                              ),
+                            ).then((result) {
+                              if (result == true) {
+                                inventoryProvider.loadInventories();
+                              }
+                            });
+                          },
+                          onInventoryPausedOrResumed: (inventory) => _onInventoryPausedOrResumed(inventory),
+                        )
+                    )
+                );
+              },
             );
           },
         ),
@@ -122,8 +212,9 @@ class _HomeScreenState extends State<HomeScreen> {
             context,
             MaterialPageRoute(builder: (context) => const AddInventoryScreen()),
           ).then((newInventory) {
-            if (newInventory != null && newInventory is Inventory) {
-              inventoryProvider.addInventory(newInventory);
+            // Reload the inventory list
+            if (newInventory != null) {
+              inventoryProvider.loadInventories();
             }
           });
         },
@@ -149,6 +240,8 @@ class InventoryListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
+
     return InkWell( // Ou GestureDetector
         onTap: () {
           onTap?.call(inventory);

@@ -11,15 +11,15 @@ Future<List<String>> loadSpeciesData() async {
       .toList();
 }
 
-void checkMackinnonCompletion(BuildContext context, Inventory inventory, Function(Inventory) onInventoryUpdated) {
+void checkMackinnonCompletion(BuildContext context, Inventory inventory) {
   if (inventory.type == InventoryType.invMackinnon &&
       inventory.speciesList.length >= inventory.maxSpecies) {
     inventory.isFinished = true;
-    _showMackinnonDialog(context, inventory, onInventoryUpdated);
+    _showMackinnonDialog(context, inventory);
   }
 }
 
-void _showMackinnonDialog(BuildContext context, Inventory inventory, Function(Inventory) onInventoryUpdated) {
+void _showMackinnonDialog(BuildContext context, Inventory inventory) {
   showDialog(
     context: context,
     builder: (context) {
@@ -33,7 +33,7 @@ void _showMackinnonDialog(BuildContext context, Inventory inventory, Function(In
             onPressed: () async {
               // Finish the inventory and open the screen to add inventory
               await inventory.stopTimer();
-              onInventoryUpdated(inventory);
+              // onInventoryUpdated(inventory);
               Navigator.pop(context, true);
               Navigator.of(context).pop();
               Navigator.push(
@@ -47,7 +47,7 @@ void _showMackinnonDialog(BuildContext context, Inventory inventory, Function(In
             onPressed: () async {
               // Finish the inventory and go back to the Home screen
               await inventory.stopTimer();
-              onInventoryUpdated(inventory);
+              // onInventoryUpdated(inventory);
               Navigator.pop(context, true);
               Navigator.of(context).pop();
             },

@@ -1,11 +1,11 @@
 import 'dart:io';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:csv/csv.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:intl/intl.dart';
 import '../models/inventory.dart';
-import '../data/database_helper.dart';
 import '../providers/inventory_provider.dart';
 import 'inventory_detail_screen.dart';
 
@@ -18,8 +18,6 @@ class HistoryScreen extends StatefulWidget {
 
 class _HistoryScreenState extends State<HistoryScreen> {
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
-  // List<Inventory> _closedInventories = [];
-  final dbHelper = DatabaseHelper();
 
   @override
   void initState() {
@@ -28,7 +26,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   void onInventoryUpdated(Inventory inventory) {
-    Provider.of<InventoryProvider>(context, listen: false).updateInventory(inventory);
+    Provider.of<InventoryProvider>(context, listen: false).updateInventory(
+        inventory);
     Provider.of<InventoryProvider>(context, listen: false).loadInventories();
   }
 
@@ -41,61 +40,72 @@ class _HistoryScreenState extends State<HistoryScreen> {
         onRefresh: () async {
           await inventoryProvider.loadInventories();
         },
-        child: inventoryProvider.isLoading // Verifica o estado de carregamento
-            ? const Center(child: CircularProgressIndicator()) // Exibe o indicador de progresso
-            : inventoryProvider.finishedInventories.isEmpty
-            ? const Center(child: Text('Nenhum inventário no histórico.'))
-            : AnimatedList(
-        key: _listKey,
-        initialItemCount: inventoryProvider.finishedInventories.length,
-          itemBuilder: (context, index, animation) {
-            final inventory = inventoryProvider.finishedInventories[index];
-            return Dismissible(
-              key: Key(inventory.id),
-              onDismissed: (direction) {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: const Text('Confirmar Exclusão'),
-                      content: const Text('Tem certeza que deseja excluir este inventário?'),
-                      actions: <Widget>[
-                        TextButton(
-                          child: const Text('Cancelar'),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            setState(() {}); // Rebuild the list to restore the item
-                          },
-                        ),
-                        TextButton(child: const Text('Excluir'),
-                          onPressed: () {
-                            final index = inventoryProvider.finishedInventories.indexOf(inventory); // Obter o índice do inventário
-                            inventoryProvider.removeInventory(inventory.id);
-                            Navigator.of(context).pop();
-                            _listKey.currentState?.removeItem(index, (context, animation) => SizedBox.shrink());
-                            // _deleteInventory(inventory); // Delete the inventory
-                          },
-                        ),
-                      ],
-                    );
-                  },
+        child: inventoryProvider.isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : _buildInventoryList(inventoryProvider),
+      ),
+    );
+
+  }
+
+  Widget _buildInventoryList(InventoryProvider inventoryProvider) {
+    return inventoryProvider.finishedInventories.isEmpty
+        ? const Center(child: Text('Nenhum inventário encontrado.'))
+        : AnimatedList(
+      key: _listKey,
+      initialItemCount: inventoryProvider.finishedInventories.length,
+      itemBuilder: (context, index, animation) {
+        final inventory = inventoryProvider.finishedInventories[index];
+        return Dismissible(
+          key: Key(inventory.id),
+          onDismissed: (direction) {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: const Text('Confirmar Exclusão'),
+                  content: const Text(
+                      'Tem certeza que deseja excluir este inventário?'),
+                  actions: <Widget>[
+                    TextButton(
+                      child: const Text('Cancelar'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        setState(() {}); // Rebuild the list to restore the item
+                      },
+                    ),
+                    TextButton(child: const Text('Excluir'),
+                      onPressed: () {
+                        final index = inventoryProvider
+                            .finishedInventories.indexOf(
+                            inventory); // Obter o índice do inventário
+                        inventoryProvider.removeInventory(
+                            inventory.id);
+                        Navigator.of(context).pop();
+                        _listKey.currentState?.removeItem(
+                            index, (context, animation) =>
+                            SizedBox.shrink());
+                        // _deleteInventory(inventory); // Delete the inventory
+                      },
+                    ),
+                  ],
                 );
               },
-              background: Container(
-                color: Colors.red,
-                alignment: Alignment.centerRight,
-                padding: const EdgeInsets.only(right: 20.0),
-                child: const Icon(Icons.delete, color: Colors.white),
-              ),
-              child: InventoryListItem(
-                inventory: inventory,
-                animation: animation,
-                onInventoryUpdated: onInventoryUpdated,
-              ),
             );
           },
-      ),
-      ),
+          background: Container(
+            color: Colors.red,
+            alignment: Alignment.centerRight,
+            padding: const EdgeInsets.only(right: 20.0),
+            child: const Icon(Icons.delete, color: Colors.white),
+          ),
+          child: InventoryListItem(
+            inventory: inventory,
+            animation: animation,
+            onInventoryUpdated: onInventoryUpdated,
+          ),
+        );
+      },
     );
   }
 }
@@ -143,7 +153,7 @@ class InventoryListItem extends StatelessWidget {
             MaterialPageRoute(
               builder: (context) => InventoryDetailScreen(
                   inventory: inventory,
-                  onInventoryUpdated: onInventoryUpdated,
+                  // onInventoryUpdated: onInventoryUpdated,
               ),
             ),
           ).then((_) => onInventoryUpdated(inventory));

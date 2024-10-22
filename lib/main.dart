@@ -21,20 +21,31 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider( // Use MultiProvider para vários providers
-      providers: [
-        ChangeNotifierProvider(create: (context) => InventoryProvider()),
-        ChangeNotifierProvider(create: (context) => SpeciesProvider()),
-        ChangeNotifierProvider(create: (context) => PoiProvider()),
-        ChangeNotifierProvider(create: (context) => VegetationProvider()),
-      ],
-      child:MaterialApp(
-        title: 'Xolmis',
-        theme: ThemeData(
-          primarySwatch: Colors.deepPurple,
-        ),
-        home: const MainScreen(),
-      ),
+    return MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (context) => PoiProvider()),
+        ],
+        builder: (context, child) {
+          final speciesProvider = SpeciesProvider();
+          final vegetationProvider = VegetationProvider();
+          final inventoryProvider = InventoryProvider(
+              speciesProvider, vegetationProvider);
+
+          return MultiProvider(
+            providers: [
+              ChangeNotifierProvider(create: (context) => inventoryProvider),
+              ChangeNotifierProvider(create: (context) => speciesProvider),
+              ChangeNotifierProvider(create: (context) => vegetationProvider),
+            ],
+            child: MaterialApp(
+              title: 'Xolmis',
+              theme: ThemeData(
+                primarySwatch: Colors.deepPurple,
+              ),
+              home: const MainScreen(),
+            ),
+          );
+        }
     );
   }
 }

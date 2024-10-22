@@ -2,11 +2,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../models/inventory.dart';
 import '../data/database_helper.dart';
+import 'species_provider.dart';
 import 'vegetation_provider.dart';
 
 class InventoryProvider with ChangeNotifier {
   final List<Inventory> _inventories = [];
   final Map<String, Inventory> _inventoryMap = {};
+  GlobalKey<AnimatedListState>? inventoryListKey;
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
@@ -18,9 +20,14 @@ class InventoryProvider with ChangeNotifier {
 
   int get inventoriesCount => activeInventories.length;
 
-  InventoryProvider() {
+  final SpeciesProvider _speciesProvider;
+  final VegetationProvider _vegetationProvider;
+  SpeciesProvider get speciesProvider => _speciesProvider;
+  VegetationProvider get vegetationProvider => _vegetationProvider;
+
+  InventoryProvider(this._speciesProvider, this._vegetationProvider) {
     // Add a listener to VegetationProvider
-    VegetationProvider().addListener(_onVegetationListChanged);
+    _vegetationProvider.addListener(_onVegetationListChanged);
   }
 
   Future<void> loadInventories() async {
@@ -33,6 +40,8 @@ class InventoryProvider with ChangeNotifier {
       _inventories.addAll(inventories);
       for (var inventory in inventories) {
         _inventoryMap[inventory.id] = inventory; // Populate the inventories map
+        await _speciesProvider.loadSpeciesForInventory(inventory.id);
+        await _vegetationProvider.loadVegetationForInventory(inventory.id);
       }
       if (kDebugMode) {
         print('Inventories loaded');
@@ -60,7 +69,9 @@ class InventoryProvider with ChangeNotifier {
     try {
       await DatabaseHelper().insertInventory(inventory);
       _inventories.add(inventory);
-      notifyListeners();
+      // Notify the AnimatedList about adding a item
+      inventoryListKey!.currentState!.insertItem(activeInventories.length - 1);
+
       return true;
     } catch (error) {
       // Handle insertion error
@@ -68,6 +79,8 @@ class InventoryProvider with ChangeNotifier {
         print('Error adding inventory: $error');
       }
       return false;
+    } finally {
+      notifyListeners();
     }
   }
 

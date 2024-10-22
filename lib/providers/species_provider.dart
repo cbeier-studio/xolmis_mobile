@@ -7,19 +7,34 @@ class SpeciesProvider with ChangeNotifier {
   final Map<String, List<Species>> _speciesMap = {};
 
   SpeciesProvider() {
-    // Add a listener to PoiProvider
-    PoiProvider().addListener(_onPoisChanged);
+    _loadInitialData();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  Future<void> _loadInitialData() async {
+    // Carregue os dados do banco de dados e inicialize o _speciesMap
+    final inventories = await DatabaseHelper().getInventories();
+    for (var inventory in inventories) {
+      final speciesList = await DatabaseHelper().getSpeciesByInventory(inventory.id);
+      _speciesMap[inventory.id] = speciesList;
+    }
+    notifyListeners();
   }
 
   Future<void> loadSpeciesForInventory(String inventoryId) async {
     try {
       final speciesList = await DatabaseHelper().getSpeciesByInventory(inventoryId);
       _speciesMap[inventoryId] = speciesList;
-      notifyListeners();
     } catch (e) {
       if (kDebugMode) {
         print('Error loading species for inventory $inventoryId: $e');
       }
+    } finally {
+      notifyListeners();
     }
   }
 
@@ -42,9 +57,9 @@ class SpeciesProvider with ChangeNotifier {
       final index = speciesList.indexWhere((s) => s.id == species.id);
       if (index != -1) {
         speciesList[index] = species;
-        notifyListeners();
       }
     }
+    notifyListeners();
   }
 
   void removeSpecies(String inventoryId, int speciesId) async {
@@ -53,8 +68,16 @@ class SpeciesProvider with ChangeNotifier {
     final speciesList = _speciesMap[inventoryId];
     if (speciesList != null) {
       speciesList.removeWhere((s) => s.id == speciesId);
-      notifyListeners();
     }
+    notifyListeners();
+  }
+
+  void sortSpeciesForInventory(String inventoryId) {
+    final speciesList = _speciesMap[inventoryId];
+    if (speciesList != null) {
+      speciesList.sort((a, b) => a.name.compareTo(b.name));
+    }
+    notifyListeners();
   }
 
   void _onPoisChanged() {
@@ -63,6 +86,7 @@ class SpeciesProvider with ChangeNotifier {
       final speciesList = _speciesMap[inventoryId];
       if (speciesList != null) {
         for (var species in speciesList) {
+          // final poiProvider = Provider.of<PoiProvider>(context, listen: false);
           species.pois = PoiProvider().getPoisForSpecies(species.id!);
         }
       }

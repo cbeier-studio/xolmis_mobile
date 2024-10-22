@@ -15,12 +15,10 @@ import 'inventory_detail_helpers.dart';
 
 class InventoryDetailScreen extends StatefulWidget {
   final Inventory inventory;
-  final void Function(Inventory) onInventoryUpdated;
 
   const InventoryDetailScreen({
     super.key,
     required this.inventory,
-    required this.onInventoryUpdated,
   });
 
   @override
@@ -39,16 +37,19 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-    _sortSpeciesList();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
 
     // Access the providers
-    final speciesProvider = Provider.of<SpeciesProvider>(context, listen: false);
+    final speciesProvider = Provider.of<SpeciesProvider>(
+        context, listen: false);
     final poiProvider = Provider.of<PoiProvider>(context, listen: false);
-    final vegetationProvider = Provider.of<VegetationProvider>(context, listen: false);
-
-    // Add the listener to PoiProvider
-    Provider.of<PoiProvider>(context, listen: false).addListener(
-        _onPoisChanged);
+    final vegetationProvider = Provider.of<VegetationProvider>(
+        context, listen: false);
+    vegetationProvider.vegetationListKey = _vegetationListKey;
 
     // Load the species for the current inventory
     speciesProvider.loadSpeciesForInventory(widget.inventory.id);
@@ -62,23 +63,9 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
   }
 
   @override
-  void deactivate() {
-    Provider.of<PoiProvider>(context, listen: false).removeListener(_onPoisChanged);
-    super.deactivate();
-  }
-
-  @override
   void dispose() {
-    // Provider.of<PoiProvider>(context, listen: false).removeListener(
-    //     _onPoisChanged);
     _tabController.dispose();
     super.dispose();
-  }
-
-  void _onPoisChanged() {
-    if (mounted) {
-      setState(() {});
-    }
   }
 
   void _addSpeciesToInventory(String speciesName) async {
@@ -94,55 +81,42 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
         isOutOfInventory: widget.inventory.isFinished,
         pois: [],
       );
+      final inventoryProvider = Provider.of<InventoryProvider>(
+          context, listen: false);
+      final activeInventories = inventoryProvider.activeInventories;
       final speciesProvider = Provider.of<SpeciesProvider>(
           context, listen: false);
       speciesProvider.addSpecies(widget.inventory.id, newSpecies);
+      await Future.microtask(() {}); // Wait the next microtask
+      _speciesListKey.currentState?.insertItem(speciesProvider
+          .getSpeciesForInventory(widget.inventory.id)
+          .length - 1);
 
-      setState(() {
-        widget.inventory.speciesList.add(newSpecies);
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          final index = widget.inventory.speciesList.length - 1;
-          _speciesListKey.currentState!.insertItem(index);
-        });
-      });
+      // If not finished, add species to other active inventories
+      if (!widget.inventory.isFinished) {
+        for (final inventory in activeInventories) {
+          // Check if the inventory is different from the current and if species exists in it
+          if (inventory.id != widget.inventory.id &&
+              !inventory.speciesList.any((species) =>
+              species.name == speciesName)) {
+            final newSpeciesForOtherInventory = Species(
+              inventoryId: inventory.id,
+              name: speciesName,
+              isOutOfInventory: inventory.isFinished,
+              pois: [],
+            );
 
-      final activeInventories = await DatabaseHelper().loadActiveInventories();
-      for (final inventory in activeInventories) {
-        // Check if the inventory is different from the current and if species exists in it
-        if (inventory.id != widget.inventory.id &&
-            !inventory.speciesList.any((species) =>
-            species.name == speciesName)) {
-          final newSpeciesForOtherInventory = Species(inventoryId: inventory.id,
-            name: speciesName,
-            isOutOfInventory: inventory.isFinished,
-            pois: [],
-          );
-          await DatabaseHelper().insertSpecies(
-              newSpeciesForOtherInventory.inventoryId,
-              newSpeciesForOtherInventory).then((id) {
-            if (id != 0) {
-              // Species inserted successfully
-              if (kDebugMode) {
-                print('Species inserted with ID: $id');
-              }
-            } else {
-              // Handle insert error
-              if (kDebugMode) {
-                print('Error inserting species');
-              }
-            }
-          });
+            // Update the species list of the active inventory
+            speciesProvider.addSpecies(newSpeciesForOtherInventory.inventoryId,
+                newSpeciesForOtherInventory);
 
-          // Update the species list of the active inventory
-          inventory.speciesList.add(newSpeciesForOtherInventory);
-          // Provider.of<InventoryProvider>(context, listen: false).updateInventory(inventory);
-          await DatabaseHelper().updateInventory(
-              inventory); // Update the inventory in the database
+            inventoryProvider.updateInventory(inventory);
+          }
         }
       }
 
       // Check if Mackinnon list reached the maximum number of species per list
-      checkMackinnonCompletion(context, widget.inventory, widget.onInventoryUpdated);
+      checkMackinnonCompletion(context, widget.inventory);
 
       // Restart the timer if the inventory is of type invCumulativeTime
       if (widget.inventory.type == InventoryType.invCumulativeTime) {
@@ -154,12 +128,12 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
         widget.inventory.startTimer();
       }
 
-      widget.onInventoryUpdated(widget.inventory);
+      inventoryProvider.notifyListeners();
     } else {
       // Show message informing that species already exists
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-            content: Text('Espécie já adicionada a este inventário.')),
+            content: Text('Espécie já adicionada à lista.')),
       );
     }
   }
@@ -167,15 +141,14 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
   void _updateSpeciesList() async {
     final speciesProvider = Provider.of<SpeciesProvider>(
         context, listen: false);
-    setState(() {
-      widget.inventory.speciesList =
-          speciesProvider.getSpeciesForInventory(widget.inventory.id);
-    });
+    speciesProvider.loadSpeciesForInventory(widget.inventory.id);
   }
 
   void _sortSpeciesList() {
-    widget.inventory.speciesList.sort((a, b) => a.name.compareTo(b.name));
-    setState(() {});
+    // widget.inventory.speciesList.sort((a, b) => a.name.compareTo(b.name));
+    final speciesProvider = Provider.of<SpeciesProvider>(
+        context, listen: false);
+    speciesProvider.sortSpeciesForInventory(widget.inventory.id);
   }
 
   void _showSpeciesSearch() async {
@@ -193,6 +166,10 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
 
   @override
   Widget build(BuildContext context) {
+    final speciesProvider = Provider.of<SpeciesProvider>(
+        context, listen: false);
+    final speciesList = speciesProvider.getSpeciesForInventory(
+        widget.inventory.id!);
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.inventory.id),
@@ -209,11 +186,12 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                   } else {
                     inventoryProvider.pauseInventoryTimer(inventory);
                   }
-                  Provider.of<InventoryProvider>(context, listen: false).updateInventory(inventory);
+                  Provider.of<InventoryProvider>(context, listen: false)
+                      .updateInventory(inventory);
                 },
               );
             },
-          ): const SizedBox.shrink(),
+          ) : const SizedBox.shrink(),
           IconButton(
             icon: const Icon(Icons.grass),
             onPressed: () {
@@ -231,20 +209,36 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
         bottom: TabBar(
           controller: _tabController,
           tabs: [
-            widget.inventory.speciesList.isNotEmpty ? Badge.count(
-              backgroundColor: Colors.deepPurple,
-              alignment: AlignmentDirectional.centerEnd,
-              offset: Offset(24, -8),
-              count: widget.inventory.speciesList.length,
-              child: const Tab(text: 'Espécies'),
-            ) : const Tab(text: 'Espécies'),
-            widget.inventory.vegetationList.isNotEmpty ? Badge.count(
-              backgroundColor: Colors.deepPurple,
-              alignment: AlignmentDirectional.centerEnd,
-              offset: Offset(24, -8),
-              count: widget.inventory.vegetationList.length,
-              child: const Tab(text: 'Vegetação'),
-            ) : const Tab(text: 'Vegetação'),
+            Consumer<SpeciesProvider>(
+              builder: (context, speciesProvider, child) {
+                final speciesList = speciesProvider.getSpeciesForInventory(
+                    widget.inventory.id);
+                return speciesList.isNotEmpty
+                    ? Badge.count(
+                  backgroundColor: Colors.deepPurple,
+                  alignment: AlignmentDirectional.centerEnd,
+                  offset: const Offset(24, -8),
+                  count: speciesList.length,
+                  child: const Tab(text: 'Espécies'),
+                )
+                    : const Tab(text: 'Espécies');
+              },
+            ),
+            Consumer<VegetationProvider>(
+              builder: (context, vegetationProvider, child) {
+                final vegetationList = vegetationProvider
+                    .getVegetationForInventory(widget.inventory.id);
+                return vegetationList.isNotEmpty
+                    ? Badge.count(
+                  backgroundColor: Colors.deepPurple,
+                  alignment: AlignmentDirectional.centerEnd,
+                  offset: const Offset(24, -8),
+                  count: vegetationList.length,
+                  child: const Tab(text: 'Vegetação'),
+                )
+                    : const Tab(text: 'Vegetação');
+              },
+            ),
           ],
         ),
         flexibleSpace: PreferredSize(
@@ -280,11 +274,11 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
         onPressed: () async {
           // Finishing the inventory
           await widget.inventory.stopTimer();
-          widget.onInventoryUpdated(widget.inventory);
+          // widget.onInventoryUpdated(widget.inventory);
           Navigator.pop(context, true);
         },
-        backgroundColor: Colors.red,
-        child: const Icon(Icons.stop, color: Colors.white),
+        backgroundColor: Colors.green,
+        child: const Icon(Icons.flag, color: Colors.white),
       ) : null,
     );
   }
@@ -309,11 +303,13 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
         Expanded(
           child: Consumer<SpeciesProvider>(
             builder: (context, speciesProvider, child) {
+              final speciesList = speciesProvider.getSpeciesForInventory(
+                  widget.inventory.id);
               return AnimatedList(
                 key: _speciesListKey,
-                initialItemCount: widget.inventory.speciesList.length,
+                initialItemCount: speciesList.length,
                 itemBuilder: (context, index, animation) {
-                  final species = widget.inventory.speciesList[index];
+                  final species = speciesList[index];
                   return Dismissible(
                     key: Key(species.id.toString()),
                     background: Container(
@@ -339,9 +335,6 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                               TextButton(
                                 onPressed: () =>
                                     Navigator.of(context).pop(true),
-                                style: TextButton.styleFrom(
-                                  textStyle: const TextStyle(color: Colors.red),
-                                ),
                                 child: const Text('Excluir'),
                               ),
                             ],
@@ -350,19 +343,17 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                       );
                     },
                     onDismissed: (direction) {
-                      // Remove the species from list and AnimatedList
-                      final removedSpecies = widget.inventory.speciesList
-                          .removeAt(index);
-                      _speciesListKey.currentState!.removeItem(
-                        index,
-                            (context, animation) =>
-                            SpeciesListItem(
-                                species: removedSpecies, animation: animation),
+                      final indexToRemove = speciesList.indexOf(species); // Obter o índice antes da remoção
+                      speciesProvider.removeSpecies(widget.inventory.id, species.id!); // Remover o then
+                      _speciesListKey.currentState?.removeItem(
+                        indexToRemove,
+                            (context, animation) => SpeciesListItem(
+                          species: species,
+                          animation: animation,
+                        ),
                       );
-                      DatabaseHelper().deleteSpeciesFromInventory(
-                          widget.inventory.id, removedSpecies.name);
-                      // Update the inventory in the database
-                      DatabaseHelper().updateInventory(widget.inventory);
+                      final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
+                      inventoryProvider.updateInventory(widget.inventory);
                     },
                     child: SpeciesListItem(
                       species: species,
@@ -403,7 +394,8 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                   builder: (BuildContext context) {
                     return AlertDialog(
                       title: const Text('Confirmar exclusão'),
-                      content: const Text('Tem certeza que deseja excluir esta vegetação?'),
+                      content: const Text(
+                          'Tem certeza que deseja excluir esta vegetação?'),
                       actions: <Widget>[
                         TextButton(
                           onPressed: () => Navigator.of(context).pop(false),
@@ -411,9 +403,6 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                         ),
                         TextButton(
                           onPressed: () => Navigator.of(context).pop(true),
-                          style: TextButton.styleFrom(
-                            textStyle: const TextStyle(color: Colors.red),
-                          ),
                           child: const Text('Excluir'),
                         ),
                       ],
@@ -422,14 +411,20 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                 );
               },
               onDismissed: (direction) {
-                vegetationProvider.removeVegetation(widget.inventory.id, vegetation.id!);
-                _vegetationListKey.currentState!.removeItem(
-                  index,
-                      (context, animation) => VegetationListItem(
-                    vegetation: vegetation,
-                    animation: animation,
-                  ),
-                );
+                final indexToRemove = vegetationList.indexOf(
+                    vegetation); // Obter o índice antes da remoção
+                vegetationProvider.removeVegetation(
+                    widget.inventory.id, vegetation.id!).then((_) {
+                  // Remover o item do AnimatedList após a atualização do Provider
+                  _vegetationListKey.currentState?.removeItem(
+                    indexToRemove,
+                        (context, animation) =>
+                        VegetationListItem(
+                          vegetation: vegetation,
+                          animation: animation,
+                        ),
+                  );
+                });
               },
               child: VegetationListItem(
                 vegetation: vegetation,
