@@ -9,6 +9,7 @@ import 'providers/inventory_provider.dart';
 import 'providers/species_provider.dart';
 import 'providers/poi_provider.dart';
 import 'providers/vegetation_provider.dart';
+import 'providers/weather_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,14 +29,16 @@ class MyApp extends StatelessWidget {
         builder: (context, child) {
           final speciesProvider = SpeciesProvider();
           final vegetationProvider = VegetationProvider();
+          final weatherProvider = WeatherProvider();
           final inventoryProvider = InventoryProvider(
-              speciesProvider, vegetationProvider);
+              speciesProvider, vegetationProvider, weatherProvider);
 
           return MultiProvider(
             providers: [
               ChangeNotifierProvider(create: (context) => inventoryProvider),
               ChangeNotifierProvider(create: (context) => speciesProvider),
               ChangeNotifierProvider(create: (context) => vegetationProvider),
+              ChangeNotifierProvider(create: (context) => weatherProvider),
             ],
             child: MaterialApp(
               title: 'Xolmis',

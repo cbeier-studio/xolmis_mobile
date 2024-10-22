@@ -69,7 +69,8 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                     }
                   });
                 },
-              ), const SizedBox(height: 16.0),
+              ),
+              const SizedBox(height: 16.0),
               Row(
                   children: [
                     Expanded(
@@ -126,6 +127,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
         maxSpecies: int.tryParse(_maxSpeciesController.text) ?? 0,
         speciesList: [],
         vegetationList: [],
+        weatherList: [],
       );
 
       // Check if the ID already exists in the database

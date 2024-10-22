@@ -25,7 +25,7 @@ class DatabaseHelper {
     String path = join(await getDatabasesPath(), 'inventory_database.db');
     return await openDatabase(
       path,
-      version: 2, // Increase the version number
+      version: 3, // Increase the version number
       onCreate: (db, version) {
         // Create the tables
         db.execute(
@@ -80,12 +80,36 @@ class DatabaseHelper {
               'latitude REAL NOT NULL, '
               'FOREIGN KEY (speciesId) REFERENCES species(id))'
         );
+        db.execute(
+          'CREATE TABLE weather ('
+              'id INTEGER PRIMARY KEY AUTOINCREMENT, '
+              'inventoryId INTEGER NOT NULL, '
+              'sampleTime TEXT NOT NULL, '
+              'cloudCover INTEGER, '
+              'precipitation INTEGER, '
+              'temperature REAL, '
+              'windSpeed INTEGER, '
+              'FOREIGN KEY (inventoryId) REFERENCES inventories(id))'
+        );
       },
       onUpgrade: (db, oldVersion, newVersion) {
         // Add logic to update the database from previous versions
         if (oldVersion < 2) {
           db.execute(
             'ALTER TABLE inventories ADD COLUMN maxSpecies INTEGER',
+          );
+        }
+        if (oldVersion < 3) {
+          db.execute(
+              'CREATE TABLE weather ('
+                  'id INTEGER PRIMARY KEY AUTOINCREMENT, '
+                  'inventoryId INTEGER NOT NULL, '
+                  'sampleTime TEXT NOT NULL, '
+                  'cloudCover INTEGER, '
+                  'precipitation INTEGER, '
+                  'temperature REAL, '
+                  'windSpeed INTEGER, '
+                  'FOREIGN KEY (inventoryId) REFERENCES inventories(id))'
           );
         }
       },
@@ -203,6 +227,7 @@ class DatabaseHelper {
       List<Inventory> inventories = await Future.wait(maps.map((map) async {
         List<Species> speciesList = await getSpeciesByInventory(map['id']);
         List<Vegetation> vegetationList = await getVegetationByInventory(map['id']);
+        List<Weather> weatherList = await getWeatherByInventory(map['id']);
         // return Inventory.fromMap(map, speciesList, vegetationList);
         // Create Inventory instance using the main constructor
         Inventory inventory = Inventory(
@@ -221,6 +246,7 @@ class DatabaseHelper {
           endLatitude: map['endLatitude'],
           speciesList: speciesList,
           vegetationList: vegetationList,
+          weatherList: weatherList,
         );
 
         return inventory;
@@ -250,7 +276,8 @@ class DatabaseHelper {
       final map = maps.first;
       List<Species> speciesList = await getSpeciesByInventory(map['id']);
       List<Vegetation> vegetationList = await getVegetationByInventory(map['id']);
-      return Inventory.fromMap(map, speciesList, vegetationList);
+      List<Weather> weatherList = await getWeatherByInventory(map['id']);
+      return Inventory.fromMap(map, speciesList, vegetationList, weatherList);
     } else {
       throw Exception('Inventory not found with ID $id');
     }
@@ -306,6 +333,21 @@ class DatabaseHelper {
     });
   }
 
+  Future<List<Weather>> getWeatherByInventory(String inventoryId) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db?.query(
+      'weather',
+      where: 'inventoryId = ?',
+      whereArgs: [inventoryId],
+    ) ?? [];
+    // if (kDebugMode) {
+    //   print('Vegetation data loaded for inventory $inventoryId: ${maps.length}');
+    // }
+    return List.generate(maps.length, (i) {
+      return Weather.fromMap(maps[i]);
+    });
+  }
+
   Future<List<Inventory>> getFinishedInventories() async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db?.query(
@@ -318,7 +360,8 @@ class DatabaseHelper {
     for (Map<String, dynamic> map in maps) {
       List<Species> speciesList = await getSpeciesByInventory(map['id']);
       List<Vegetation> vegetationList = await getVegetationByInventory(map['id']);
-      inventories.add(Inventory.fromMap(map, speciesList, vegetationList));
+      List<Weather> weatherList = await getWeatherByInventory(map['id']);
+      inventories.add(Inventory.fromMap(map, speciesList, vegetationList, weatherList));
     }
     if (kDebugMode) {
       print('Finished inventories loaded: ${inventories.length}');
@@ -338,7 +381,8 @@ class DatabaseHelper {
     for (Map<String, dynamic> map in maps) {
       List<Species> speciesList = await getSpeciesByInventory(map['id']);
       List<Vegetation> vegetationList = await getVegetationByInventory(map['id']);
-      inventories.add(Inventory.fromMap(map, speciesList, vegetationList));
+      List<Weather> weatherList = await getWeatherByInventory(map['id']);
+      inventories.add(Inventory.fromMap(map, speciesList, vegetationList, weatherList));
     }
 
     return inventories;
@@ -408,6 +452,32 @@ class DatabaseHelper {
       'vegetation',
       where: 'id = ?',
       whereArgs: [vegetationId],
+    );
+  }
+
+  Future<int?> insertWeather(Weather weather) async {
+    final db = await database;
+    try {
+      int? id = await db?.insert(
+        'weather',
+        weather.toMap(weather.inventoryId),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+      return id;
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error inserting weather data: $e');
+      }
+      return 0;
+    }
+  }
+
+  Future<void> deleteWeather(int? weatherId) async {
+    final db = await database;
+    await db?.delete(
+      'weather',
+      where: 'id = ?',
+      whereArgs: [weatherId],
     );
   }
 

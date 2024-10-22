@@ -4,6 +4,7 @@ import '../models/inventory.dart';
 import '../data/database_helper.dart';
 import 'species_provider.dart';
 import 'vegetation_provider.dart';
+import 'weather_provider.dart';
 
 class InventoryProvider with ChangeNotifier {
   final List<Inventory> _inventories = [];
@@ -22,10 +23,12 @@ class InventoryProvider with ChangeNotifier {
 
   final SpeciesProvider _speciesProvider;
   final VegetationProvider _vegetationProvider;
+  final WeatherProvider _weatherProvider;
   SpeciesProvider get speciesProvider => _speciesProvider;
   VegetationProvider get vegetationProvider => _vegetationProvider;
+  WeatherProvider get weatherProvider => _weatherProvider;
 
-  InventoryProvider(this._speciesProvider, this._vegetationProvider) {
+  InventoryProvider(this._speciesProvider, this._vegetationProvider, this._weatherProvider) {
     // Add a listener to VegetationProvider
     _vegetationProvider.addListener(_onVegetationListChanged);
   }
@@ -42,6 +45,7 @@ class InventoryProvider with ChangeNotifier {
         _inventoryMap[inventory.id] = inventory; // Populate the inventories map
         await _speciesProvider.loadSpeciesForInventory(inventory.id);
         await _vegetationProvider.loadVegetationForInventory(inventory.id);
+        await _weatherProvider.loadWeatherForInventory(inventory.id);
       }
       if (kDebugMode) {
         print('Inventories loaded');

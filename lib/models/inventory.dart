@@ -119,7 +119,7 @@ class Species {
 class Vegetation {
   final int? id;
   final String inventoryId;
-  final DateTime sampleTime;
+  final DateTime? sampleTime;
   double? longitude;
   double? latitude;
   int? herbsProportion;
@@ -155,7 +155,9 @@ class Vegetation {
     return Vegetation(
       id: map['id'],
       inventoryId: map['inventoryId'],
-      sampleTime: DateTime.parse(map['sampleTime']),
+      sampleTime: map['sampleTime'] != null
+          ? DateTime.parse(map['sampleTime'])
+          : null,
       longitude: map['longitude'],
       latitude: map['latitude'],
       herbsProportion: map['herbsProportion'],
@@ -195,7 +197,7 @@ class Vegetation {
     return {
       'id': id,
       'inventoryId': inventoryId,
-      'sampleTime': sampleTime.toIso8601String(),
+      'sampleTime': sampleTime?.toIso8601String(),
       'longitude': longitude,
       'latitude': latitude,
       'herbsProportion': herbsProportion,
@@ -232,6 +234,92 @@ class Vegetation {
   }
 }
 
+enum PrecipitationType {
+  preNone,
+  preFog,
+  preMist,
+  preDrizzle,
+  preRain,
+}
+
+const Map<PrecipitationType, String> precipitationTypeFriendlyNames = {
+  PrecipitationType.preNone: 'Nenhuma',
+  PrecipitationType.preFog: 'Névoa',
+  PrecipitationType.preMist: 'Neblina',
+  PrecipitationType.preDrizzle: 'Garoa',
+  PrecipitationType.preRain: 'Chuva',
+};
+
+class Weather {
+  final int? id;
+  final String inventoryId;
+  final DateTime? sampleTime;
+  int? cloudCover;
+  PrecipitationType? precipitation = PrecipitationType.preNone;
+  double? temperature;
+  int? windSpeed;
+
+  Weather({
+    this.id,
+    required this.inventoryId,
+    required this.sampleTime,
+    this.cloudCover,
+    this.precipitation,
+    this.temperature,
+    this.windSpeed,
+  });
+
+  factory Weather.fromMap(Map<String, dynamic> map) {
+    return Weather(
+      id: map['id'],
+      inventoryId: map['inventoryId'],
+      sampleTime: map['sampleTime'] != null
+          ? DateTime.parse(map['sampleTime'])
+          : null,
+      cloudCover: map['cloudCover'],
+      precipitation: PrecipitationType.values[map['precipitation']],
+      temperature: map['temperature'],
+      windSpeed: map['windSpeed'],
+    );
+  }
+
+  Weather copyWith({int? id, String? inventoryId, DateTime? sampleTime, int? cloudCover, int? precipitation, double? temperature, int? windSpeed}) {
+    return Weather(
+      id: id ?? this.id,
+      inventoryId: this.inventoryId,
+      sampleTime: sampleTime ?? this.sampleTime,
+      cloudCover: this.cloudCover,
+      precipitation: this.precipitation,
+      temperature: this.temperature,
+      windSpeed: this.windSpeed,
+    );
+  }
+
+  Map<String, dynamic> toMap(String inventoryId) {
+    return {
+      'id': id,
+      'inventoryId': inventoryId,
+      'sampleTime': sampleTime?.toIso8601String(),
+      'cloudCover': cloudCover,
+      'precipitation': precipitation?.index,
+      'temperature': temperature,
+      'windSpeed': windSpeed,
+    };
+  }
+
+  @override
+  String toString() {
+    return 'Weather{ '
+        'id: $id, '
+        'inventoryId: $inventoryId, '
+        'sampleTime: $sampleTime, '
+        'cloudCover: $cloudCover, '
+        'precipitation: $precipitation, '
+        'temperature: $temperature, '
+        'windSpeed: $windSpeed }';
+  }
+}
+
 enum InventoryType {
   invQualitative,
   invMackinnon,
@@ -264,6 +352,7 @@ class Inventory with ChangeNotifier {
   double? endLatitude;
   List<Species> speciesList;
   List<Vegetation> vegetationList;
+  List<Weather> weatherList;
   Timer? _timer;
   final ValueNotifier<double> _elapsedTimeNotifier = ValueNotifier<double>(0);
   ValueNotifier<double> get elapsedTimeNotifier => _elapsedTimeNotifier;
@@ -285,6 +374,7 @@ class Inventory with ChangeNotifier {
     this.endLatitude,
     this.speciesList = const [],
     this.vegetationList = const [],
+    this.weatherList = const [],
   }) {
     if (duration == 0) {
       elapsedTime = 0;
@@ -293,7 +383,7 @@ class Inventory with ChangeNotifier {
   }
 
   Inventory.fromMap(Map<String, dynamic> map, List<Species> speciesList,
-      List<Vegetation> vegetationList)
+      List<Vegetation> vegetationList, List<Weather> weatherList)
       : id = map['id'],
         type = InventoryType.values[map['type']],
         duration = map['duration'],
@@ -312,7 +402,8 @@ class Inventory with ChangeNotifier {
         endLongitude = map['endLongitude'],
         endLatitude = map['endLatitude'],
         this.speciesList = speciesList,
-        this.vegetationList = vegetationList;
+        this.vegetationList = vegetationList,
+        this.weatherList = weatherList;
 
   Inventory copyWith({
     String? id,
@@ -330,6 +421,7 @@ class Inventory with ChangeNotifier {
     double? endLatitude,
     List<Species>? speciesList,
     List<Vegetation>? vegetationList,
+    List<Weather>? weatherList,
   }) {
     return Inventory(
       id: id ?? this.id,
@@ -347,6 +439,7 @@ class Inventory with ChangeNotifier {
       endLatitude: endLatitude ?? this.endLatitude,
       speciesList: speciesList ?? this.speciesList,
       vegetationList: vegetationList ?? this.vegetationList,
+      weatherList: weatherList ?? this.weatherList,
     );
   }
 
