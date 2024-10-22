@@ -21,6 +21,8 @@ class SpeciesListItem extends StatefulWidget {
 }
 
 class SpeciesListItemState extends State<SpeciesListItem> {
+  bool _isAddingPoi = false;
+
   @override
   Widget build(BuildContext context) {
     return SizeTransition(
@@ -58,12 +60,24 @@ class SpeciesListItemState extends State<SpeciesListItem> {
               builder: (context, poiProvider, child) {
                 final pois = poiProvider.getPoisForSpecies(widget.species.id ?? 0);
                 return IconButton(
-                  icon: pois.isNotEmpty ? Badge.count(
+                  icon: _isAddingPoi
+                      ? const SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ) // Exibe o CircularProgressIndicator enquanto _isAddingPoi for true
+                      : pois.isNotEmpty
+                      ? Badge.count(
                     backgroundColor: Colors.deepPurple,
                     count: pois.length,
                     child: const Icon(Icons.add_location),
-                  ) : const Icon(Icons.add_location),
-                  onPressed: () async {
+                  )
+                      : const Icon(Icons.add_location),
+                  onPressed: _isAddingPoi ? null : () async {
+                    setState(() {
+                      _isAddingPoi = true;
+                    });
+
                     // Get the current location
                     Position position = await Geolocator.getCurrentPosition(
                       locationSettings: LocationSettings(
@@ -82,14 +96,21 @@ class SpeciesListItemState extends State<SpeciesListItem> {
                     poiProvider.addPoi(context, widget.species.id!, poi);
                     poiProvider.notifyListeners();
 
+                    setState(() {
+                      _isAddingPoi = false;
+                    });
+
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text('POI inserido com sucesso!'),
+                        content: Row(
+                          children: [
+                            const Icon(Icons.check, color: Colors.green),
+                            const SizedBox(width: 8),
+                            const Text('POI inserido com sucesso!'),
+                          ],
+                        ),
                       ),
                     );
-
-                    // Update the POIs list of the species
-                    // widget.species.pois = poiProvider.getPoisForSpecies(widget.species.id!);
                   },
                 );
               },

@@ -16,7 +16,7 @@ class SpeciesProvider with ChangeNotifier {
   }
 
   Future<void> _loadInitialData() async {
-    // Carregue os dados do banco de dados e inicialize o _speciesMap
+    // Load data from database and initialize the _speciesMap
     final inventories = await DatabaseHelper().getInventories();
     for (var inventory in inventories) {
       final speciesList = await DatabaseHelper().getSpeciesByInventory(inventory.id);
@@ -76,20 +76,6 @@ class SpeciesProvider with ChangeNotifier {
     final speciesList = _speciesMap[inventoryId];
     if (speciesList != null) {
       speciesList.sort((a, b) => a.name.compareTo(b.name));
-    }
-    notifyListeners();
-  }
-
-  void _onPoisChanged() {
-    // Update the species list when have changes in POIs
-    for (var inventoryId in _speciesMap.keys) {
-      final speciesList = _speciesMap[inventoryId];
-      if (speciesList != null) {
-        for (var species in speciesList) {
-          // final poiProvider = Provider.of<PoiProvider>(context, listen: false);
-          species.pois = PoiProvider().getPoisForSpecies(species.id!);
-        }
-      }
     }
     notifyListeners();
   }

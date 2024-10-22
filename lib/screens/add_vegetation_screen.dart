@@ -4,7 +4,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import '../models/inventory.dart';
 import '../providers/vegetation_provider.dart';
-import 'inventory_detail_screen.dart';
 
 class AddVegetationDataScreen extends StatefulWidget {
   final Inventory inventory;
@@ -30,6 +29,7 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
   late TextEditingController _treesDistributionController;
   late TextEditingController _treesHeightController;
   late TextEditingController _notesController;
+  bool _isSubmitting = false;
 
   @override
   void initState() {
@@ -61,18 +61,8 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
     super.dispose();
   }
 
-  // void onVegetationAdded(Vegetation vegetation) {
-  //   Provider.of<VegetationProvider>(context, listen: false)
-  //       .addVegetation(context, widget.inventory.id, vegetation)
-  //       .then((_) {
-  //     // Update the UI after the vegetation is inserted
-  //     Navigator.of(context).pop();
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
-    // final vegetationProvider = Provider.of<VegetationProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Novos Dados de Vegetação'),
@@ -114,12 +104,16 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
               ),
               const SizedBox(height: 16.0),
               ElevatedButton(
-                onPressed: () async {
+                onPressed: _isSubmitting ? null : () async {
+                  setState(() {
+                    _isSubmitting = true;
+                  });
+
                   if (_formKey.currentState!.validate()) {
                     Position position = await Geolocator.getCurrentPosition(
                       locationSettings: LocationSettings(
-                    accuracy: LocationAccuracy.high,
-                  ),
+                        accuracy: LocationAccuracy.high,
+                      ),
                     );
 
                     // Save the vegetation data
@@ -139,10 +133,14 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
                       treesHeight: int.tryParse(_treesHeightController.text) ?? 0,
                       notes: _notesController.text,
                     );
+
+                    setState(() {
+                      _isSubmitting = false;
+                    });
+
                     final vegetationProvider = Provider.of<VegetationProvider>(context, listen: false);
                     try {
                       await vegetationProvider.addVegetation(context, widget.inventory.id, vegetation);
-                      // onVegetationAdded(vegetation);
                       Navigator.pop(context);
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Row(
@@ -161,17 +159,19 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Row(
                           children: [
-                            const Icon(Icons.warning, color: Colors.yellow),
+                            const Icon(Icons.error, color: Colors.red),
                             const SizedBox(width: 8),
                             const Text('Erro ao salvar os dados de vegetação'),
                           ],
                         ),
-                      ),
+                        ),
                       );
                     }
                   }
                 },
-                child: const Text('Salvar'),
+                child: _isSubmitting
+                    ? const CircularProgressIndicator()
+                    : const Text('Salvar'),
               ),
             ],
           ),

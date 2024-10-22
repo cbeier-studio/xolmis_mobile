@@ -70,7 +70,7 @@ class InventoryProvider with ChangeNotifier {
       await DatabaseHelper().insertInventory(inventory);
       _inventories.add(inventory);
       // Notify the AnimatedList about adding a item
-      inventoryListKey!.currentState!.insertItem(activeInventories.length - 1);
+      inventoryListKey?.currentState?.insertItem(activeInventories.length - 1);
 
       return true;
     } catch (error) {

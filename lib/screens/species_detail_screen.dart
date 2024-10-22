@@ -18,6 +18,7 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen>
     with SingleTickerProviderStateMixin {
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   late AnimationController _animationController;
+  bool _isAddingPoi = false;
 
   @override
   void initState() {
@@ -49,8 +50,18 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen>
         title: Text(widget.species.name),
         actions: [
           IconButton(
-            icon: const Icon(Icons.add_location),
-            onPressed: () async {
+            icon: _isAddingPoi
+                ? const SizedBox(
+              width: 24,
+              height: 24,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            )
+                : const Icon(Icons.add_location),
+            onPressed: _isAddingPoi ? null : () async {
+              setState(() {
+                _isAddingPoi = true;
+              });
+
               // Get the current location
               Position position = await Geolocator.getCurrentPosition(
                 locationSettings: LocationSettings(
@@ -66,16 +77,31 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen>
               );
 
               // Insert the POI in the database
-              Provider.of<PoiProvider>(context, listen: false)
-                  .addPoi(context, widget.species.id!, poi)
+              final poiProvider = Provider.of<PoiProvider>(context, listen: false);
+              poiProvider.addPoi(context, widget.species.id!, poi)
                   .then((_) {
                 // Update the UI after the POI is inserted
-                _listKey.currentState!.insertItem(widget.species.pois.length - 1);
+                poiProvider.notifyListeners();
+
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  final poiList = poiProvider.getPoisForSpecies(widget.species.id!);
+                  _listKey.currentState?.insertItem(poiList.length -1, duration: const Duration(milliseconds: 300));
+                });
+              });
+
+              setState(() {
+                _isAddingPoi = false;
               });
 
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('POI inserido com sucesso!'),
+                  content: Row(
+                    children: [
+                      const Icon(Icons.check, color: Colors.green),
+                      const SizedBox(width: 8),
+                      const Text('POI inserido com sucesso!'),
+                    ],
+                  ),
                 ),
               );
             },
@@ -90,59 +116,61 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen>
             key: _listKey,
             initialItemCount: pois.length,
             itemBuilder: (context, index, animation) {
-              final poi = pois[index];
-              return Dismissible(
-                key: ValueKey(poi),
-                direction: DismissDirection.endToStart,
-                background: Container(
-                  color: Colors.red,
-                  alignment: Alignment.centerRight,
-                  padding: const EdgeInsets.only(right: 20.0),
-                  child: const Icon(Icons.delete, color: Colors.white),
-                ),
-                confirmDismiss: (direction) async {
-                  return await showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text('Confirmar exclusão'),
-                        content: const Text(
-                            'Tem certeza que deseja excluir este POI?'),
-                        actions: <Widget>[
-                          TextButton(
-                            onPressed: () => Navigator.of(context).pop(false),
-                            child: const Text('Cancelar'),
-                          ),
-                          TextButton(
-                            onPressed: () => Navigator.of(context).pop(true),
-                            style: TextButton.styleFrom(
-                              textStyle: const TextStyle(color: Colors.red),
+              if (pois.isEmpty) {
+                return const SizedBox.shrink();
+              } else {
+                final poi = pois[index];
+                return Dismissible(
+                  key: ValueKey(poi),
+                  direction: DismissDirection.endToStart,
+                  background: Container(
+                    color: Colors.red,
+                    alignment: Alignment.centerRight,
+                    padding: const EdgeInsets.only(right: 20.0),
+                    child: const Icon(Icons.delete, color: Colors.white),
+                  ),
+                  confirmDismiss: (direction) async {
+                    return await showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('Confirmar exclusão'),
+                          content: const Text(
+                              'Tem certeza que deseja excluir este POI?'),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(false),
+                              child: const Text('Cancelar'),
                             ),
-                            child: const Text('Excluir'),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                },
-                onDismissed: (direction) {
-                  // Delete the POI from database
-                  poiProvider.removePoi(widget.species.id!, poi.id!);
-                  // poiProvider.notifyListeners();
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(true),
+                              child: const Text('Excluir'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                  onDismissed: (direction) {
+                    // Delete the POI from database
+                    poiProvider.removePoi(widget.species.id!, poi.id!);
+                    // poiProvider.notifyListeners();
 
-                  // Remove the POI from list and update the AnimatedList
-                  _listKey.currentState!.removeItem(
-                    index, (context, animation) => PoiListItem(
-                      poi: poi,
-                      animation: animation,
-                    ),
-                  );
-                },
-                child: PoiListItem(
-                  poi: poi,
-                  animation: animation,
-                ),
-              );
+                    // Remove the POI from list and update the AnimatedList
+                    _listKey.currentState!.removeItem(
+                      index, (context, animation) =>
+                        PoiListItem(
+                          poi: poi,
+                          animation: animation,
+                        ),
+                    );
+                  },
+                  child: PoiListItem(
+                    poi: poi,
+                    animation: animation,
+                  ),
+                );
+              }
             },
           );
         },

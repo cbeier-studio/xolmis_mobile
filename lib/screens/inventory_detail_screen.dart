@@ -45,7 +45,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
 
     // Access the providers
     final speciesProvider = Provider.of<SpeciesProvider>(
-        context, listen: false);
+        context, listen: true);
     final poiProvider = Provider.of<PoiProvider>(context, listen: false);
     final vegetationProvider = Provider.of<VegetationProvider>(
         context, listen: false);
@@ -88,9 +88,11 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
           context, listen: false);
       speciesProvider.addSpecies(widget.inventory.id, newSpecies);
       await Future.microtask(() {}); // Wait the next microtask
-      _speciesListKey.currentState?.insertItem(speciesProvider
-          .getSpeciesForInventory(widget.inventory.id)
-          .length - 1);
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final speciesList = speciesProvider.getSpeciesForInventory(widget.inventory.id);
+        _speciesListKey.currentState?.insertItem(speciesList.length -1, duration: const Duration(milliseconds: 300));
+      });
 
       // If not finished, add species to other active inventories
       if (!widget.inventory.isFinished) {
@@ -133,7 +135,14 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
       // Show message informing that species already exists
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-            content: Text('Espécie já adicionada à lista.')),
+            content: Row(
+              children: [
+                const Icon(Icons.info, color: Colors.blue),
+                const SizedBox(width: 8),
+                const Text('Espécie já adicionada à lista.'),
+              ],
+            ),
+        ),
       );
     }
   }
@@ -309,6 +318,9 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                 key: _speciesListKey,
                 initialItemCount: speciesList.length,
                 itemBuilder: (context, index, animation) {
+                  if (index >= speciesList.length) {
+                    return const SizedBox.shrink();
+                  }
                   final species = speciesList[index];
                   return Dismissible(
                     key: Key(species.id.toString()),
@@ -343,8 +355,8 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                       );
                     },
                     onDismissed: (direction) {
-                      final indexToRemove = speciesList.indexOf(species); // Obter o índice antes da remoção
-                      speciesProvider.removeSpecies(widget.inventory.id, species.id!); // Remover o then
+                      final indexToRemove = speciesList.indexOf(species);
+                      speciesProvider.removeSpecies(widget.inventory.id, species.id!);
                       _speciesListKey.currentState?.removeItem(
                         indexToRemove,
                             (context, animation) => SpeciesListItem(

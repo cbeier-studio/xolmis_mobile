@@ -15,6 +15,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
   InventoryType _selectedType = InventoryType.invQualitative;
   final _durationController = TextEditingController();
   final _maxSpeciesController = TextEditingController();
+  bool _isSubmitting = false;
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +99,9 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
               ),
               const SizedBox(height: 32.0),
               Center(
-                child: ElevatedButton(
+                child: _isSubmitting
+                    ? CircularProgressIndicator()
+                    : ElevatedButton(
                   onPressed: _submitForm,
                   child: const Text('Iniciar Inventário'),
                 ),
@@ -111,6 +114,10 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
   }
 
   void _submitForm() async {
+    setState(() {
+      _isSubmitting = true;
+    });
+
     if (_formKey.currentState!.validate()) {
       final newInventory = Inventory(
         id: _idController.text,
@@ -130,7 +137,14 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
       if (idExists) {
         // ID already exists, show a SnackBar
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Já existe um inventário com esta ID.')),
+          const SnackBar(content: Row(
+            children: [
+              const Icon(Icons.info, color: Colors.blue),
+              const SizedBox(width: 8),
+              const Text('Já existe um inventário com esta ID.'),
+            ],
+          ),
+          ),
         );
         return; // Prevent adding inventory
       }
@@ -138,13 +152,35 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
       // ID do not exist, insert inventory
       final success = await inventoryProvider.addInventory(newInventory);
 
+      setState(() {
+        _isSubmitting = false;
+      });
+
       if (success) {
         // Inventory inserted successfully
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Row(
+              children: [
+                Icon(Icons.check, color: Colors.green),
+                SizedBox(width: 8),
+                Text('Inventário inserido com sucesso.'),
+              ],
+            ),
+          ),
+        );
         Navigator.pop(context); // Return to the previous screen
       } else {
         // Handle insertion error
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Erro ao inserir inventário')),
+          const SnackBar(content: Row(
+            children: [
+              const Icon(Icons.error, color: Colors.red),
+              const SizedBox(width: 8),
+              const Text('Erro ao inserir inventário.'),
+            ],
+          ),
+          ),
         );
       }
     }

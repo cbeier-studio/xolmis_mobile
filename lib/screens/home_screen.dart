@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import '../models/inventory.dart';
-import '../data/database_helper.dart';
 import 'add_inventory_screen.dart';
 import 'inventory_detail_screen.dart';
 import '../providers/inventory_provider.dart';
@@ -16,8 +15,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
-  // List<Inventory> _activeInventories = [];
-  // final dbHelper = DatabaseHelper();
 
   @override
   void initState() {
@@ -188,7 +185,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               MaterialPageRoute(
                                 builder: (context) => InventoryDetailScreen(
                                   inventory: inventory,
-                                  // onInventoryUpdated: (inventory) => onInventoryUpdated(inventory),
                                 ),
                               ),
                             ).then((result) {
@@ -254,7 +250,7 @@ class InventoryListItem extends StatelessWidget {
               valueListenable: inventory.elapsedTimeNotifier,
               builder: (context, elapsedTime, child) {
                 if (inventory == null) {
-                  return const Text('Inventário não encontrado');
+                  return const Icon(Icons.error);
                 }
 
                 var progress = (inventory.isPaused || inventory.duration < 0)
@@ -295,7 +291,6 @@ class InventoryListItem extends StatelessWidget {
                       } else {
                         Provider.of<InventoryProvider>(context, listen: false).pauseInventoryTimer(inventory);
                       }
-                      // inventoryProvider.updateInventory(inventory);
                       onInventoryPausedOrResumed?.call(inventory);
                     },
                   ),

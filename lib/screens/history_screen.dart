@@ -79,14 +79,13 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       onPressed: () {
                         final index = inventoryProvider
                             .finishedInventories.indexOf(
-                            inventory); // Obter o índice do inventário
+                            inventory);
                         inventoryProvider.removeInventory(
                             inventory.id);
                         Navigator.of(context).pop();
                         _listKey.currentState?.removeItem(
                             index, (context, animation) =>
                             SizedBox.shrink());
-                        // _deleteInventory(inventory); // Delete the inventory
                       },
                     ),
                   ],
