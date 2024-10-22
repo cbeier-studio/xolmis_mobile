@@ -2,8 +2,9 @@ import 'dart:io';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:csv/csv.dart';
-import 'package:file_picker/file_picker.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:intl/intl.dart';
 import '../models/inventory.dart';
 import '../providers/inventory_provider.dart';
@@ -240,24 +241,16 @@ class InventoryListItem extends StatelessWidget {
     // 2. Convert the list of data to CSV
     String csv = const ListToCsvConverter().convert(rows);
 
-    // 3. Request save location from user
-    String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
+    // 3. Create the file ina a temporary directory
+    Directory tempDir = await getTemporaryDirectory();
+    final filePath = '${tempDir.path}/inventory_${inventory.id}.csv';
+    final file = File(filePath);
+    await file.writeAsString(csv);
 
-    if (selectedDirectory != null) {
-      // 4. Create the file and save the data
-      final filePath = '$selectedDirectory/inventory_${inventory.id}.csv';
-      final file = File(filePath);
-      await file.writeAsString(csv);
+    // 4. Share the file using share_plus
+    await Share.shareXFiles([
+      XFile(filePath, mimeType: 'text/csv'),
+    ], text: 'Inventário exportado!', subject: 'Dados do Inventário ${inventory.id}');
 
-      // 5. Show a success message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Inventário exportado para: $filePath')),
-      );
-    } else {
-      // User canceled the save dialog
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Exportação de inventário cancelada')),
-      );
-    }
   }
 }
