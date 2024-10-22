@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../models/inventory.dart';
-import '../data/database_helper.dart';
+import '../models/database_helper.dart';
 
 class PoiProvider with ChangeNotifier {
   final Map<int, List<Poi>> _poiMap = {};
@@ -30,7 +30,7 @@ class PoiProvider with ChangeNotifier {
     _poiMap[speciesId]!.add(poi);
     notifyListeners();
 
-    (context as Element).markNeedsBuild(); // Force screen to update
+    // (context as Element).markNeedsBuild(); // Force screen to update
   }
 
   void updatePoi(int speciesId, Poi poi) async {

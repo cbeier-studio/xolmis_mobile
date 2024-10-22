@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../models/inventory.dart';
-import '../data/database_helper.dart';
+import '../models/database_helper.dart';
 
 class VegetationProvider with ChangeNotifier {
   final Map<String, List<Vegetation>> _vegetationMap = {};

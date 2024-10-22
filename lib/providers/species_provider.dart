@@ -1,18 +1,12 @@
 import 'package:flutter/foundation.dart';
-import '../providers/poi_provider.dart';
 import '../models/inventory.dart';
-import '../data/database_helper.dart';
+import '../models/database_helper.dart';
 
 class SpeciesProvider with ChangeNotifier {
   final Map<String, List<Species>> _speciesMap = {};
 
   SpeciesProvider() {
     _loadInitialData();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   Future<void> _loadInitialData() async {
@@ -72,11 +66,30 @@ class SpeciesProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void sortSpeciesForInventory(String inventoryId) {
-    final speciesList = _speciesMap[inventoryId];
-    if (speciesList != null) {
-      speciesList.sort((a, b) => a.name.compareTo(b.name));
-    }
+  // void sortSpeciesForInventory(String inventoryId) {
+  //   final speciesList = _speciesMap[inventoryId];
+  //   if (speciesList != null) {
+  //     speciesList.sort((a, b) => a.name.compareTo(b.name));
+  //   }
+  //   notifyListeners();
+  // }
+
+  void incrementSpeciesCount(Species species) {
+    species.count++;
+    DatabaseHelper().updateSpecies(species);
     notifyListeners();
+  }
+
+  void decrementSpeciesCount(Species species) {
+    if (species.count > 0) {
+      species.count--;
+      DatabaseHelper().updateSpecies(species);
+      notifyListeners();
+    }
+  }
+
+  bool speciesExistsInInventory(String inventoryId, String speciesName) {
+    final speciesList = getSpeciesForInventory(inventoryId);
+    return speciesList.any((species) => species.name == speciesName);
   }
 }

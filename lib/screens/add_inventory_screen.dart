@@ -137,13 +137,16 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
           newInventory.id);
 
       if (idExists) {
+        setState(() {
+          _isSubmitting = false;
+        });
         // ID already exists, show a SnackBar
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Row(
             children: [
-              const Icon(Icons.info, color: Colors.blue),
-              const SizedBox(width: 8),
-              const Text('Já existe um inventário com esta ID.'),
+              Icon(Icons.info, color: Colors.blue),
+              SizedBox(width: 8),
+              Text('Já existe um inventário com esta ID.'),
             ],
           ),
           ),
@@ -177,9 +180,9 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Row(
             children: [
-              const Icon(Icons.error, color: Colors.red),
-              const SizedBox(width: 8),
-              const Text('Erro ao inserir inventário.'),
+              Icon(Icons.error, color: Colors.red),
+              SizedBox(width: 8),
+              Text('Erro ao inserir inventário.'),
             ],
           ),
           ),

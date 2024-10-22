@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
-import '../data/database_helper.dart';
+import 'database_helper.dart';
 
 class Poi {
   final int? id;
@@ -510,9 +510,10 @@ class Inventory with ChangeNotifier {
           }
           elapsedTimeNotifier.value = elapsedTime;
           elapsedTimeNotifier.notifyListeners();
-          notifyListeners();
         });
+
     }
+    notifyListeners();
   }
 
   void pauseTimer() async {

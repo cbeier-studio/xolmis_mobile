@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
-import '../data/database_helper.dart';
 import '../models/inventory.dart';
+import '../providers/species_provider.dart';
 import '../providers/poi_provider.dart';
 import 'species_detail_screen.dart';
 
@@ -37,10 +37,8 @@ class SpeciesListItemState extends State<SpeciesListItem> {
               icon: const Icon(Icons.remove),
               onPressed: () {
                 if (mounted && widget.species.count > 0) {
-                  widget.species.count--;
-                  DatabaseHelper().updateSpecies(widget.species).then((_) {
-                    setState(() {});
-                  });
+                  final speciesProvider = Provider.of<SpeciesProvider>(context, listen: false);
+                  speciesProvider.decrementSpeciesCount(widget.species);
                 }
               },
             ),
@@ -49,10 +47,8 @@ class SpeciesListItemState extends State<SpeciesListItem> {
               icon: const Icon(Icons.add),
               onPressed: () {
                 if (mounted) {
-                  widget.species.count++;
-                  DatabaseHelper().updateSpecies(widget.species).then((_) {
-                    setState(() {});
-                  });
+                  final speciesProvider = Provider.of<SpeciesProvider>(context, listen: false);
+                  speciesProvider.incrementSpeciesCount(widget.species);
                 }
               },
             ),

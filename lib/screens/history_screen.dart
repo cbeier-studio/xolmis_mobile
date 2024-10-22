@@ -59,6 +59,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
         final inventory = inventoryProvider.finishedInventories[index];
         return Dismissible(
           key: Key(inventory.id),
+          direction: DismissDirection.endToStart,
           onDismissed: (direction) {
             showDialog(
               context: context,

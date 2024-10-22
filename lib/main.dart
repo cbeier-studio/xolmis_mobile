@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_background/flutter_background.dart';
 import 'screens/home_screen.dart';
 import 'screens/history_screen.dart';
-import 'data/database_helper.dart';
+import 'models/database_helper.dart';
 import 'models/inventory.dart';
 import 'providers/inventory_provider.dart';
 import 'providers/species_provider.dart';
@@ -23,32 +23,26 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-        providers: [
-          ChangeNotifierProvider(create: (context) => PoiProvider()),
-        ],
-        builder: (context, child) {
-          final speciesProvider = SpeciesProvider();
-          final vegetationProvider = VegetationProvider();
-          final weatherProvider = WeatherProvider();
-          final inventoryProvider = InventoryProvider(
-              speciesProvider, vegetationProvider, weatherProvider);
-
-          return MultiProvider(
-            providers: [
-              ChangeNotifierProvider(create: (context) => inventoryProvider),
-              ChangeNotifierProvider(create: (context) => speciesProvider),
-              ChangeNotifierProvider(create: (context) => vegetationProvider),
-              ChangeNotifierProvider(create: (context) => weatherProvider),
-            ],
-            child: MaterialApp(
-              title: 'Xolmis',
-              theme: ThemeData(
-                primarySwatch: Colors.deepPurple,
-              ),
-              home: const MainScreen(),
-            ),
-          );
-        }
+      providers: [
+        ChangeNotifierProvider(create: (context) => PoiProvider()),
+        ChangeNotifierProvider(create: (context) => SpeciesProvider()),
+        ChangeNotifierProvider(create: (context) => VegetationProvider()),
+        ChangeNotifierProvider(create: (context) => WeatherProvider()),
+        ChangeNotifierProvider(
+          create: (context) => InventoryProvider(
+            context.read<SpeciesProvider>(),
+            context.read<VegetationProvider>(),
+            context.read<WeatherProvider>(),
+          ),
+        ),
+      ],
+      child: MaterialApp(
+        title: 'Xolmis',
+        theme: ThemeData(
+          primarySwatch: Colors.deepPurple,
+        ),
+        home: const MainScreen(),
+      ),
     );
   }
 }

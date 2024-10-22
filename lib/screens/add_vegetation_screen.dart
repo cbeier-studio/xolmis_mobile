@@ -145,9 +145,9 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Row(
                           children: [
-                            const Icon(Icons.check, color: Colors.green),
-                            const SizedBox(width: 8),
-                            const Text('Dados de vegetação adicionados!'),
+                            Icon(Icons.check, color: Colors.green),
+                            SizedBox(width: 8),
+                            Text('Dados de vegetação adicionados!'),
                           ],
                         ),
                         ),
@@ -159,9 +159,9 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Row(
                           children: [
-                            const Icon(Icons.error, color: Colors.red),
-                            const SizedBox(width: 8),
-                            const Text('Erro ao salvar os dados de vegetação'),
+                            Icon(Icons.error, color: Colors.red),
+                            SizedBox(width: 8),
+                            Text('Erro ao salvar os dados de vegetação'),
                           ],
                         ),
                         ),

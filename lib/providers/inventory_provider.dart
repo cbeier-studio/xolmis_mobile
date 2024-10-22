@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../models/inventory.dart';
-import '../data/database_helper.dart';
+import '../models/database_helper.dart';
 import 'species_provider.dart';
 import 'vegetation_provider.dart';
 import 'weather_provider.dart';
@@ -116,6 +116,12 @@ class InventoryProvider with ChangeNotifier {
   void resumeInventoryTimer(Inventory inventory) {
     inventory.resumeTimer();
     updateInventory(inventory);
+    notifyListeners();
+  }
+
+  Future<void> updateInventoryElapsedTime(String inventoryId, double elapsedTime) async {
+    await DatabaseHelper().updateInventoryElapsedTime(inventoryId, elapsedTime);
+
     notifyListeners();
   }
 

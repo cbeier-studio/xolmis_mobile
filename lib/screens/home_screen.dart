@@ -236,8 +236,6 @@ class InventoryListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
-
     return InkWell( // Ou GestureDetector
         onTap: () {
           onTap?.call(inventory);
