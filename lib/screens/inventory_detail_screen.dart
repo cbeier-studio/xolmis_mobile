@@ -217,16 +217,36 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
       floatingActionButton: !widget.inventory.isFinished
           ? FloatingActionButton(
         onPressed: () async {
-          setState(() {
-            _isSubmitting = true;
-          });
-          // Finishing the inventory
-          await widget.inventory.stopTimer();
+          // Show confirmation dialog
+          final confirmed = await showDialog<bool>(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('Confirmar Encerramento'),
+              content: const Text('Tem certeza que deseja encerrar este inventário?'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context, false),
+                  child: const Text('Cancelar'),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pop(context, true),
+                  child: const Text('Encerrar'),
+                ),
+              ],
+            ),
+          );
 
-          Navigator.pop(context, true);
-          setState(() {
-            _isSubmitting = false;
-          });
+          // If confirmed, finish the inventory
+          if (confirmed == true) {
+            setState(() {
+              _isSubmitting = true;
+            });
+            await widget.inventory.stopTimer();
+            Navigator.pop(context, true);
+            setState(() {
+              _isSubmitting = false;
+            });
+          }
         },
         backgroundColor: Colors.green,
         child: _isSubmitting

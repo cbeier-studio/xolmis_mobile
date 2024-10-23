@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_background/flutter_background.dart';
 import 'screens/home_screen.dart';
-import 'screens/history_screen.dart';
+import 'screens/nests_screen.dart';
 import 'models/database_helper.dart';
 import 'models/inventory.dart';
 import 'providers/inventory_provider.dart';
@@ -60,7 +60,7 @@ class _MainScreenState extends State<MainScreen> {
   final inventoryCountNotifier = InventoryCountNotifier();
   static final List<Widget> _widgetOptions = <Widget>[
     const HomeScreen(),
-    const HistoryScreen(),
+    const NestsScreen(),
   ];
 
   @override
@@ -99,9 +99,9 @@ class _MainScreenState extends State<MainScreen> {
     return ChangeNotifierProvider.value(
       value: inventoryCountNotifier,
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Inventários'),
-        ),
+        // appBar: AppBar(
+        //   title: const Text('Inventários'),
+        // ),
         body: Center(
           child: _widgetOptions.elementAt(_selectedIndex),
         ),
@@ -112,16 +112,16 @@ class _MainScreenState extends State<MainScreen> {
                 builder: (context, inventoryProvider, child) {
                   return inventoryProvider.inventoriesCount > 0 ? Badge.count(
                     count: inventoryProvider.inventoriesCount,
-                    child: const Icon(Icons.home),
+                    child: const Icon(Icons.list_alt),
                   )
-                      : const Icon(Icons.home);
+                      : const Icon(Icons.list_alt);
                 },
               ),
-              label: 'Home',
+              label: 'Inventários',
             ),
             const BottomNavigationBarItem(
-              icon: Icon(Icons.history),
-              label: 'Histórico',
+              icon: Icon(Icons.egg),
+              label: 'Ninhos',
             ),
           ],
           currentIndex: _selectedIndex,

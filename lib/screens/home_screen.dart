@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
+
 import '../models/inventory.dart';
+import '../providers/inventory_provider.dart';
+
+import 'history_screen.dart';
 import 'add_inventory_screen.dart';
 import 'inventory_detail_screen.dart';
-import '../providers/inventory_provider.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -69,6 +73,20 @@ class _HomeScreenState extends State<HomeScreen> {
     final inventoryProvider = Provider.of<InventoryProvider>(context);
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Inventários ativos'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.history),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const HistoryScreen()),
+              );
+            },
+          ),
+        ],
+      ),
       body: RefreshIndicator(
         onRefresh: () async {
           await inventoryProvider.loadInventories();

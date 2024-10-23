@@ -37,6 +37,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
     final inventoryProvider = Provider.of<InventoryProvider>(context);
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Inventários encerrados'),
+      ),
       body: RefreshIndicator(
         onRefresh: () async {
           await inventoryProvider.loadInventories();
