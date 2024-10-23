@@ -4,6 +4,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:geolocator/geolocator.dart';
 import 'inventory.dart';
+import 'nest.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper._internal();
@@ -25,7 +26,7 @@ class DatabaseHelper {
     String path = join(await getDatabasesPath(), 'inventory_database.db');
     return await openDatabase(
       path,
-      version: 3, // Increase the version number
+      version: 5, // Increase the version number
       onCreate: (db, version) {
         // Create the tables
         db.execute(
@@ -91,6 +92,55 @@ class DatabaseHelper {
               'windSpeed INTEGER, '
               'FOREIGN KEY (inventoryId) REFERENCES inventories(id))'
         );
+        db.execute('''
+        CREATE TABLE nests (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          fieldNumber TEXT,
+          speciesName TEXT,
+          localityName TEXT,
+          longitude REAL,
+          latitude REAL,
+          support TEXT,
+          heightAboveGround REAL,
+          foundTime TEXT,
+          lastTime TEXT,
+          nestFate INTEGER,
+          male TEXT,
+          female TEXT,
+          helpers TEXT,
+          isActive INTEGER
+        )
+      ''');
+        db.execute('''
+        CREATE TABLE eggs (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          nestId INTEGER,
+          sampleTime TEXT,
+          fieldNumber TEXT,
+          eggShape INTEGER,
+          width REAL,
+          length REAL,
+          mass REAL,
+          speciesName TEXT,
+          FOREIGN KEY (nestId) REFERENCES nests(id)
+        )
+      ''');
+        db.execute('''
+        CREATE TABLE nest_revisions (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          nestId INTEGER,
+          sampleTime TEXT,
+          nestStatus INTEGER,
+          nestStage INTEGER,
+          eggsHost INTEGER,
+          nestlingsHost INTEGER,
+          eggsParasite INTEGER,
+          nestlingsParasite INTEGER,
+          hasPhilornisLarvae INTEGER,
+          notes TEXT,
+          FOREIGN KEY (nestId) REFERENCES nests(id)
+        )
+      ''');
       },
       onUpgrade: (db, oldVersion, newVersion) {
         // Add logic to update the database from previous versions
@@ -112,9 +162,66 @@ class DatabaseHelper {
                   'FOREIGN KEY (inventoryId) REFERENCES inventories(id))'
           );
         }
+        if (oldVersion < 4) {
+          db.execute('''
+        CREATE TABLE nests (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          fieldNumber TEXT,
+          speciesName TEXT,
+          localityName TEXT,
+          longitude REAL,
+          latitude REAL,
+          support TEXT,
+          heightAboveGround REAL,
+          foundTime TEXT,
+          lastTime TEXT,
+          nestFate INTEGER,
+          male TEXT,
+          female TEXT,
+          helpers TEXT,
+        )
+      ''');
+          db.execute('''
+        CREATE TABLE eggs (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          nestId INTEGER,
+          sampleTime TEXT,
+          fieldNumber TEXT,
+          eggShape INTEGER,
+          width REAL,
+          length REAL,
+          mass REAL,
+          speciesName TEXT,
+          FOREIGN KEY (nestId) REFERENCES nests(id)
+        )
+      ''');
+          db.execute('''
+        CREATE TABLE nest_revisions (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          nestId INTEGER,
+          sampleTime TEXT,
+          nestStatus INTEGER,
+          nestStage INTEGER,
+          eggsHost INTEGER,
+          nestlingsHost INTEGER,
+          eggsParasite INTEGER,
+          nestlingsParasite INTEGER,
+          hasPhilornisLarvae INTEGER,
+          notes TEXT,
+          FOREIGN KEY (nestId) REFERENCES nests(id)
+        )
+      ''');
+        }
+        if (oldVersion < 5) {
+          db.execute(
+            'ALTER TABLE nests ADD COLUMN isActive INTEGER',
+          );
+        }
       },
     );
   }
+
+  // Inventories
 
   Future<bool> inventoryIdExists(String id) async {
     final db = await database;
@@ -388,6 +495,8 @@ class DatabaseHelper {
     return inventories;
   }
 
+  // Species
+
   Future<void> deleteSpecies(int? speciesId) async {
     final db = await database;
     await db?.delete(
@@ -429,6 +538,8 @@ class DatabaseHelper {
     await db?.close();
   }
 
+  // Vegetation data
+
   Future<int?> insertVegetation(Vegetation vegetation) async {
     final db = await database;
     try {
@@ -455,6 +566,8 @@ class DatabaseHelper {
     );
   }
 
+  // Weather data
+
   Future<int?> insertWeather(Weather weather) async {
     final db = await database;
     try {
@@ -480,6 +593,8 @@ class DatabaseHelper {
       whereArgs: [weatherId],
     );
   }
+
+  // Species POI
 
   Future<void> insertPoi(Poi poi) async {
     final db = await database;
@@ -517,6 +632,133 @@ class DatabaseHelper {
   Future<void> deletePoi(int poiId) async {
     final db = await database;
     await db?.delete('pois', where: 'id = ?', whereArgs: [poiId]);
+  }
+
+  // Nests
+
+  Future<void> insertNest(Nest nest) async {
+    final db = await database;
+    await db?.insert(
+      'nests',
+      nest.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Future<List<Nest>> getNests() async {
+    final db = await database;
+    try {
+      final List<Map<String, dynamic>> maps = await db?.query('nests') ?? [];
+
+      List<Nest> nests = await Future.wait(maps.map((map) async {
+        List<NestRevision> revisionsList = await getNestRevisionsForNest(map['id']);
+        List<Egg> eggsList = await getEggsForNest(map['id']);
+        // Create Inventory instance using the main constructor
+        Nest nest = Nest(
+          id: map['id']?.toInt(),
+          fieldNumber: map['fieldNumber'],
+          speciesName: map['speciesName'],
+          localityName: map['localityName'],
+          longitude: map['longitude']?.toDouble(),
+          latitude: map['latitude']?.toDouble(),
+          support: map['support'],
+          heightAboveGround: map['heightAboveGround']?.toDouble(),
+          foundTime: map['foundTime'] != null ? DateTime.parse(map['foundTime']) : null,
+          lastTime: map['lastTime'] != null ? DateTime.parse(map['lastTime']) : null,
+          nestFate: NestFateType.values[map['nestFate']],
+          male: map['male'],
+          female: map['female'],
+          helpers: map['helpers'],
+          isActive: map['isActive'] == 1,
+          revisionsList: revisionsList,
+          eggsList: eggsList,
+        );
+
+        return nest;
+      }).toList());
+
+      if (kDebugMode) {
+        print('Loaded nests: ${nests.length}');
+      }
+      return nests;
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error loading nests: $e');
+      }
+      // Handle the error, e.g.: return an empty list or rethrow exception
+      return []; // Or rethrow;
+    }
+  }
+
+  Future<int?> updateNest(Nest nest) async {
+    final db = await database;
+    return await db?.update(
+      'nests',
+      nest.toMap(),
+      where: 'id = ?',
+      whereArgs: [nest.id],
+    );
+  }
+
+  Future<void> deleteNest(int nestId) async {
+    final db = await database;
+    await db?.delete('nests', where: 'id = ?', whereArgs: [nestId]);
+  }
+
+  // Nest revisions
+
+  Future<void> insertNestRevision(NestRevision nestRevision) async {
+    final db = await database;
+    await db?.insert(
+      'nest_revisions',
+      nestRevision.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Future<List<NestRevision>> getNestRevisionsForNest(int nestId) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db?.query(
+      'nest_revisions',
+      where: 'nestId = ?',
+      whereArgs: [nestId],
+    ) ?? [];
+    return List.generate(maps.length, (i) {
+      return NestRevision.fromMap(maps[i]);
+    });
+  }
+
+  Future<void> deleteNestRevision(int nestRevisionId) async {
+    final db = await database;
+    await db?.delete('nest_revisions', where: 'id = ?', whereArgs: [nestRevisionId]);
+  }
+
+  // Eggs
+
+  Future<void> insertEgg(Egg egg) async {
+    final db = await database;
+    await db?.insert(
+      'eggs',
+      egg.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Future<List<Egg>> getEggsForNest(int nestId) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db?.query(
+      'eggs',
+      where: 'nestId = ?',
+      whereArgs: [nestId],
+    ) ?? [];
+    return List.generate(maps.length, (i) {
+      return Egg.fromMap(maps[i]);
+    });
+  }
+
+  Future<void> deleteEgg(int eggId) async {
+    final db = await database;
+    await db?.delete('eggs', where: 'id = ?', whereArgs: [eggId]);
   }
 }
 

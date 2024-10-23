@@ -4,18 +4,16 @@ import 'package:intl/intl.dart';
 
 import '../providers/nest_provider.dart';
 
-import 'nests_history_screen.dart';
-import 'add_nest_screen.dart';
 import 'nest_detail_screen.dart';
 
-class ActiveNestsScreen extends StatefulWidget {
-  const ActiveNestsScreen({super.key});
+class NestsHistoryScreen extends StatefulWidget {
+  const NestsHistoryScreen({super.key});
 
   @override
-  _ActiveNestsScreenState createState() => _ActiveNestsScreenState();
+  _NestsHistoryScreenState createState() => _NestsHistoryScreenState();
 }
 
-class _ActiveNestsScreenState extends State<ActiveNestsScreen> {
+class _NestsHistoryScreenState extends State<NestsHistoryScreen> {
   @override
   void initState() {
     super.initState();
@@ -26,33 +24,22 @@ class _ActiveNestsScreenState extends State<ActiveNestsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Ninhos ativos'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.history),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const NestsHistoryScreen()),
-              );
-            },
-          ),
-        ],
+        title: const Text('Ninhos inativos'),
       ),
       body: Consumer<NestProvider>(
         builder: (context, nestProvider, child) {
-          final activeNests = nestProvider.activeNests;
+          final inactiveNests = nestProvider.inactiveNests;
 
-          if (activeNests.isEmpty) {
+          if (inactiveNests.isEmpty) {
             return const Center(
-              child: Text('Nenhum ninho ativo.'),
+              child: Text('Nenhum ninho inativo.'),
             );
           }
 
           return ListView.builder(
-            itemCount: activeNests.length,
+            itemCount: inactiveNests.length,
             itemBuilder: (context, index) {
-              final nest = activeNests[index];
+              final nest = inactiveNests[index];
               return Dismissible(
                 key: Key(nest.id.toString()),
                 direction: DismissDirection.endToStart,
@@ -118,15 +105,6 @@ class _ActiveNestsScreenState extends State<ActiveNestsScreen> {
             },
           );
         },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const AddNestScreen()),
-          );
-        },
-        child: const Icon(Icons.add),
       ),
     );
   }

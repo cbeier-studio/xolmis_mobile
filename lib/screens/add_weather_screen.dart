@@ -110,6 +110,7 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
                       decoration: const InputDecoration(
                         labelText: 'Vento',
                         border: OutlineInputBorder(),
+                        suffixText: 'bft',
                       ),
                     ),
                   ),

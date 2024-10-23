@@ -133,7 +133,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
         ],
         bottom: TabBar(
           controller: _tabController,
-          physics: const NeverScrollableScrollPhysics(),
+          // physics: const NeverScrollableScrollPhysics(),
           tabs: [
             Consumer<SpeciesProvider>(
               builder: (context, speciesProvider, child) {

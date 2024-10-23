@@ -10,6 +10,9 @@ import 'providers/species_provider.dart';
 import 'providers/poi_provider.dart';
 import 'providers/vegetation_provider.dart';
 import 'providers/weather_provider.dart';
+import 'providers/nest_provider.dart';
+import 'providers/nest_revision_provider.dart';
+import 'providers/egg_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,6 +27,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (context) => NestRevisionProvider()),
+        ChangeNotifierProvider(create: (context) => EggProvider()),
         ChangeNotifierProvider(create: (context) => PoiProvider()),
         ChangeNotifierProvider(create: (context) => SpeciesProvider()),
         ChangeNotifierProvider(create: (context) => VegetationProvider()),
@@ -35,6 +40,7 @@ class MyApp extends StatelessWidget {
             context.read<WeatherProvider>(),
           ),
         ),
+        ChangeNotifierProvider(create: (_) => NestProvider()),
       ],
       child: MaterialApp(
         title: 'Xolmis',
@@ -60,7 +66,7 @@ class _MainScreenState extends State<MainScreen> {
   final inventoryCountNotifier = InventoryCountNotifier();
   static final List<Widget> _widgetOptions = <Widget>[
     const HomeScreen(),
-    const NestsScreen(),
+    const ActiveNestsScreen(),
   ];
 
   @override
@@ -119,8 +125,16 @@ class _MainScreenState extends State<MainScreen> {
               ),
               label: 'Inventários',
             ),
-            const BottomNavigationBarItem(
-              icon: Icon(Icons.egg),
+            BottomNavigationBarItem(
+              icon: Consumer<NestProvider>(
+                builder: (context, nestProvider, child) {
+                  return nestProvider.nestsCount > 0 ? Badge.count(
+                    count: nestProvider.nestsCount,
+                    child: const Icon(Icons.egg),
+                  )
+                      : const Icon(Icons.egg);
+                },
+              ),
               label: 'Ninhos',
             ),
           ],
