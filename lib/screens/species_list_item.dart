@@ -42,7 +42,12 @@ class SpeciesListItemState extends State<SpeciesListItem> {
                 }
               },
             ),
-            Text(widget.species.count.toString()),
+            Selector<SpeciesProvider, int>(
+              selector: (context, speciesProvider) => speciesProvider.speciesCountNotifier.value,
+              builder: (context, count, child) {
+                return Text(widget.species.count.toString());
+              },
+            ),
             IconButton(
               icon: const Icon(Icons.add),
               onPressed: () {

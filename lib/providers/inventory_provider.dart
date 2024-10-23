@@ -9,6 +9,7 @@ import 'weather_provider.dart';
 class InventoryProvider with ChangeNotifier {
   final List<Inventory> _inventories = [];
   final Map<String, Inventory> _inventoryMap = {};
+  final ValueNotifier<int> speciesCountNotifier = ValueNotifier<int>(0);
   GlobalKey<AnimatedListState>? inventoryListKey;
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -123,6 +124,13 @@ class InventoryProvider with ChangeNotifier {
     await DatabaseHelper().updateInventoryElapsedTime(inventoryId, elapsedTime);
 
     notifyListeners();
+  }
+
+  void updateSpeciesCount(String inventoryId) {
+    final inventory = getInventoryById(inventoryId);
+    if (inventory != null) {
+      speciesCountNotifier.value = inventory.speciesList.length;
+    }
   }
 
   void _onVegetationListChanged() {

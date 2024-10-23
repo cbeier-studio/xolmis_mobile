@@ -273,7 +273,12 @@ class InventoryListItem extends StatelessWidget {
               children: [
                 Text('${inventoryTypeFriendlyNames[inventory.type]}'),
                 if (inventory.duration > 0) Text('${inventory.duration} minutos de duração'),
-                Text('${inventory.speciesList.length} espécies'),
+                Selector<InventoryProvider, int>(
+                  selector: (context, inventoryProvider) => inventoryProvider.speciesCountNotifier.value,
+                  builder: (context, speciesCount, child) {
+                    return Text('${inventory.speciesList.length} espécies');
+                  },
+                ),
               ],
             ),
             trailing: Row(

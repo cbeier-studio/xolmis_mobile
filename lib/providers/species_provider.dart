@@ -1,9 +1,13 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../models/inventory.dart';
 import '../models/database_helper.dart';
+import '../providers/inventory_provider.dart';
 
 class SpeciesProvider with ChangeNotifier {
   final Map<String, List<Species>> _speciesMap = {};
+  final speciesCountNotifier = ValueNotifier<int>(0);
 
   SpeciesProvider() {
     _loadInitialData();
@@ -36,14 +40,15 @@ class SpeciesProvider with ChangeNotifier {
     return _speciesMap[inventoryId] ?? [];
   }
 
-  void addSpecies(String inventoryId, Species species) async {
+  Future<void> addSpecies(BuildContext context, String inventoryId, Species species) async {
     await DatabaseHelper().insertSpecies(inventoryId, species);
     _speciesMap[inventoryId] = _speciesMap[inventoryId] ?? [];
     _speciesMap[inventoryId]!.add(species);
+    Provider.of<InventoryProvider>(context, listen: false).updateSpeciesCount(inventoryId);
     notifyListeners();
   }
 
-  void updateSpecies(String inventoryId, Species species) async {
+  Future<void> updateSpecies(String inventoryId, Species species) async {
     await DatabaseHelper().updateSpecies(species);
 
     final speciesList = _speciesMap[inventoryId];
@@ -56,10 +61,11 @@ class SpeciesProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void removeSpecies(String inventoryId, int speciesId) async {
+  Future<void> removeSpecies(BuildContext context, String inventoryId, int speciesId) async {
     await DatabaseHelper().deleteSpecies(speciesId);
 
     final speciesList = _speciesMap[inventoryId];
+    Provider.of<InventoryProvider>(context, listen: false).updateSpeciesCount(inventoryId);
     if (speciesList != null) {
       speciesList.removeWhere((s) => s.id == speciesId);
     }
@@ -74,16 +80,34 @@ class SpeciesProvider with ChangeNotifier {
   //   notifyListeners();
   // }
 
-  void incrementSpeciesCount(Species species) {
+  Future<void> incrementSpeciesCount(Species species) async {
     species.count++;
-    DatabaseHelper().updateSpecies(species);
+    await DatabaseHelper().updateSpecies(species);
+    speciesCountNotifier.value = species.count;
+
+    final speciesList = _speciesMap[species.inventoryId];
+    if (speciesList != null) {
+      final index = speciesList.indexWhere((s) => s.id == species.id);
+      if (index != -1) {
+        speciesList[index].count = species.count;
+      }
+    }
     notifyListeners();
   }
 
-  void decrementSpeciesCount(Species species) {
+  Future<void> decrementSpeciesCount(Species species) async {
     if (species.count > 0) {
       species.count--;
-      DatabaseHelper().updateSpecies(species);
+      await DatabaseHelper().updateSpecies(species);
+      speciesCountNotifier.value = species.count;
+
+      final speciesList = _speciesMap[species.inventoryId];
+      if (speciesList != null) {
+        final index = speciesList.indexWhere((s) => s.id == species.id);
+        if (index != -1) {
+          speciesList[index].count = species.count;
+        }
+      }
       notifyListeners();
     }
   }

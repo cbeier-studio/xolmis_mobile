@@ -29,55 +29,61 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
       builder: (context, vegetationProvider, child) {
         final vegetationList = vegetationProvider.getVegetationForInventory(
             widget.inventory.id);
-        return AnimatedList(
-          key: widget.vegetationListKey,
-          initialItemCount: vegetationList.length,
-          itemBuilder: (context, index, animation) {
-            final vegetation = vegetationList[index];
-            return VegetationListItem(
-              vegetation: vegetation,
-              animation: animation,
-              onDelete: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: const Text('Confirmar exclusão'),
-                      content: const Text(
-                          'Tem certeza que deseja excluir estes dados de vegetação?'),
-                      actions: <Widget>[
-                        TextButton(
-                          onPressed: () => Navigator.of(context).pop(false),
-                          child: const Text('Cancelar'),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop(true);
-                            final indexToRemove = vegetationList.indexOf(
-                                vegetation);
-                            vegetationProvider.removeVegetation(
-                                widget.inventory.id, vegetation.id!).then((
-                                _) {
-                              widget.vegetationListKey.currentState?.removeItem(
-                                indexToRemove,
-                                    (context, animation) =>
-                                    VegetationListItem(
-                                        vegetation: vegetation,
-                                        animation: animation,
-                                        onDelete: () {}),
-                              );
-                            });
-                          },
-                          child: const Text('Excluir'),
-                        ),
-                      ],
-                    );
-                  },
-                );
-              },
-            );
-          },
-        );
+        if (vegetationList.isEmpty) {
+          return const Center(
+            child: Text('Nenhum dado de vegetação registrado.'),
+          );
+        } else {
+          return AnimatedList(
+            key: widget.vegetationListKey,
+            initialItemCount: vegetationList.length,
+            itemBuilder: (context, index, animation) {
+              final vegetation = vegetationList[index];
+              return VegetationListItem(
+                vegetation: vegetation,
+                animation: animation,
+                onDelete: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text('Confirmar exclusão'),
+                        content: const Text(
+                            'Tem certeza que deseja excluir estes dados de vegetação?'),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(false),
+                            child: const Text('Cancelar'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(true);
+                              final indexToRemove = vegetationList.indexOf(
+                                  vegetation);
+                              vegetationProvider.removeVegetation(
+                                  widget.inventory.id, vegetation.id!).then((
+                                  _) {
+                                widget.vegetationListKey.currentState?.removeItem(
+                                  indexToRemove,
+                                      (context, animation) =>
+                                      VegetationListItem(
+                                          vegetation: vegetation,
+                                          animation: animation,
+                                          onDelete: () {}),
+                                );
+                              });
+                            },
+                            child: const Text('Excluir'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+              );
+            },
+          );
+        }
       },
     );
   }

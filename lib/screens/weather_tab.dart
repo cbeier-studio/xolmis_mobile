@@ -29,54 +29,60 @@ class _WeatherTabState extends State<WeatherTab> with AutomaticKeepAliveClientMi
       builder: (context, weatherProvider, child) {
         final weatherList = weatherProvider.getWeatherForInventory(
             widget.inventory.id);
-        return AnimatedList(
-          key: widget.weatherListKey,
-          initialItemCount: weatherList.length,
-          itemBuilder: (context, index, animation) {
-            final weather = weatherList[index];
-            return WeatherListItem(
-              weather: weather,
-              animation: animation,
-              onDelete: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: const Text('Confirmar exclusão'),
-                      content: const Text(
-                          'Tem certeza que deseja excluir este registro do tempo?'),
-                      actions: <Widget>[
-                        TextButton(
-                          onPressed: () => Navigator.of(context).pop(false),
-                          child: const Text('Cancelar'),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop(true);
-                            final indexToRemove = weatherList.indexOf(
-                                weather);
-                            weatherProvider.removeWeather(
-                                widget.inventory.id, weather.id!).then((
-                                _) {
-                              widget.weatherListKey.currentState?.removeItem(
-                                indexToRemove,
-                                    (context, animation) =>
-                                    WeatherListItem(weather: weather,
-                                        animation: animation,
-                                        onDelete: () {}),
-                              );
-                            });
-                          },
-                          child: const Text('Excluir'),
-                        ),
-                      ],
-                    );
-                  },
-                );
-              },
-            );
-          },
-        );
+        if (weatherList.isEmpty) {
+          return const Center(
+            child: Text('Nenhum dado de tempo registrado.'),
+          );
+        } else {
+          return AnimatedList(
+            key: widget.weatherListKey,
+            initialItemCount: weatherList.length,
+            itemBuilder: (context, index, animation) {
+              final weather = weatherList[index];
+              return WeatherListItem(
+                weather: weather,
+                animation: animation,
+                onDelete: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text('Confirmar exclusão'),
+                        content: const Text(
+                            'Tem certeza que deseja excluir este registro do tempo?'),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(false),
+                            child: const Text('Cancelar'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(true);
+                              final indexToRemove = weatherList.indexOf(
+                                  weather);
+                              weatherProvider.removeWeather(
+                                  widget.inventory.id, weather.id!).then((
+                                  _) {
+                                widget.weatherListKey.currentState?.removeItem(
+                                  indexToRemove,
+                                      (context, animation) =>
+                                      WeatherListItem(weather: weather,
+                                          animation: animation,
+                                          onDelete: () {}),
+                                );
+                              });
+                            },
+                            child: const Text('Excluir'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+              );
+            },
+          );
+        }
       },
     );
   }

@@ -43,7 +43,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
       pois: [],
     );
 
-    speciesProvider.addSpecies(widget.inventory.id, newSpecies);
+    speciesProvider.addSpecies(context, widget.inventory.id, newSpecies);
     // if (speciesProvider.getSpeciesForInventory(widget.inventory.id).isEmpty) {
     //   speciesProvider.loadSpeciesForInventory(widget.inventory.id);
     // }
@@ -98,7 +98,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
           isOutOfInventory: inventory.isFinished,
           pois: [],
         );
-        speciesProvider.addSpecies(newSpeciesForOtherInventory.inventoryId, newSpeciesForOtherInventory);
+        speciesProvider.addSpecies(context, newSpeciesForOtherInventory.inventoryId, newSpeciesForOtherInventory);
         inventoryProvider.updateInventory(inventory);
       }
     }
@@ -161,68 +161,74 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
           child: Selector<SpeciesProvider, List<Species>>(
             selector: (context, speciesProvider) => speciesProvider.getSpeciesForInventory(widget.inventory.id),
             builder: (context, speciesProvider, child) {
-              return AnimatedList(
-                key: widget.speciesListKey,
-                initialItemCount: speciesList.length,
-                itemBuilder: (context, index, animation) {
-                  // print('speciesList: ${speciesList.length} ; AnimatedList: $index');
-                  if (index >= speciesList.length) {
-                    return const SizedBox.shrink();
-                  }
-                  final species = speciesList[index];
-                  return Dismissible(
-                    key: Key(species.id.toString()),
-                    direction: DismissDirection.endToStart,
-                    background: Container(
-                      color: Colors.red,
-                      alignment: Alignment.centerRight,
-                      padding: const EdgeInsets.only(right: 16.0),
-                      child: const Icon(Icons.delete, color: Colors.white),
-                    ),
-                    confirmDismiss: (direction) async {
-                      return await showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: const Text('Confirmar exclusão'),
-                            content: const Text(
-                                'Tem certeza que deseja excluir esta espécie?'),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () =>
-                                    Navigator.of(context).pop(false),
-                                child: const Text('Cancelar'),
-                              ),
-                              TextButton(
-                                onPressed: () =>
-                                    Navigator.of(context).pop(true),
-                                child: const Text('Excluir'),
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    },
-                    onDismissed: (direction) {
-                      final indexToRemove = speciesList.indexOf(species);
-                      Provider.of<SpeciesProvider>(context, listen: false).removeSpecies(widget.inventory.id, species.id!);
-                      widget.speciesListKey.currentState?.removeItem(
-                        indexToRemove,
-                            (context, animation) => SpeciesListItem(
-                          species: species,
-                          animation: animation,
-                        ),
-                      );
-                      final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
-                      inventoryProvider.updateInventory(widget.inventory);
-                    },
-                    child: SpeciesListItem(
-                      species: species,
-                      animation: animation,
-                    ),
-                  );
-                },
-              );
+              if (speciesList.isEmpty) {
+                return const Center(
+                  child: Text('Nenhuma espécie registrada.'),
+                );
+              } else {
+                return AnimatedList(
+                  key: widget.speciesListKey,
+                  initialItemCount: speciesList.length,
+                  itemBuilder: (context, index, animation) {
+                    // print('speciesList: ${speciesList.length} ; AnimatedList: $index');
+                    if (index >= speciesList.length) {
+                      return const SizedBox.shrink();
+                    }
+                    final species = speciesList[index];
+                    return Dismissible(
+                      key: Key(species.id.toString()),
+                      direction: DismissDirection.endToStart,
+                      background: Container(
+                        color: Colors.red,
+                        alignment: Alignment.centerRight,
+                        padding: const EdgeInsets.only(right: 16.0),
+                        child: const Icon(Icons.delete, color: Colors.white),
+                      ),
+                      confirmDismiss: (direction) async {
+                        return await showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('Confirmar exclusão'),
+                              content: const Text(
+                                  'Tem certeza que deseja excluir esta espécie?'),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.of(context).pop(false),
+                                  child: const Text('Cancelar'),
+                                ),
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.of(context).pop(true),
+                                  child: const Text('Excluir'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      onDismissed: (direction) {
+                        final indexToRemove = speciesList.indexOf(species);
+                        Provider.of<SpeciesProvider>(context, listen: false).removeSpecies(context, widget.inventory.id, species.id!);
+                        widget.speciesListKey.currentState?.removeItem(
+                          indexToRemove,
+                              (context, animation) => SpeciesListItem(
+                            species: species,
+                            animation: animation,
+                          ),
+                        );
+                        final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
+                        inventoryProvider.updateInventory(widget.inventory);
+                      },
+                      child: SpeciesListItem(
+                        species: species,
+                        animation: animation,
+                      ),
+                    );
+                  },
+                );
+              }
             },
           ),
         ),
