@@ -183,6 +183,8 @@ class InventoryListItem extends StatelessWidget {
       inventory.isFinished,
       inventory.elapsedTime
     ]);
+
+    // Add species data
     rows.add([]); // Empty line to separate the inventory of the species
     rows.add(['Espécie', 'Contagem', 'Fora da amostra']);
     for (var species in inventory.speciesList) {
@@ -193,11 +195,12 @@ class InventoryListItem extends StatelessWidget {
     rows.add([]); // Empty line to separate vegetation data
     rows.add(['Vegetação']);
     rows.add([
-      'Data/Hora','Latitude',
+      'Data/Hora',
+      'Latitude',
       'Longitude',
-      'Proporção de Ervas',
-      'Distribuição de Ervas',
-      'Altura de Ervas',
+      'Proporção de Herbáceas',
+      'Distribuição de Herbáceas',
+      'Altura de Herbáceas',
       'Proporção de Arbustos',
       'Distribuição de Arbustos',
       'Altura de Arbustos',
@@ -224,6 +227,26 @@ class InventoryListItem extends StatelessWidget {
       ]);
     }
 
+    // Add weather data
+    rows.add([]); // Empty line to separate weather data
+    rows.add(['Tempo']);
+    rows.add([
+      'Data/Hora',
+      'Nebulosidade',
+      'Precipitação',
+      'Temperatura',
+      'Vento'
+    ]);
+    for (var weather in inventory.weatherList) {
+      rows.add([
+        weather.sampleTime,
+        weather.cloudCover,
+        precipitationTypeFriendlyNames[weather.precipitation],
+        weather.temperature,
+        weather.windSpeed
+      ]);
+    }
+
     // Add POIs data
     rows.add([]); // Empty line to separate POI data
     rows.add(['POIs das Espécies']);
@@ -241,7 +264,7 @@ class InventoryListItem extends StatelessWidget {
     // 2. Convert the list of data to CSV
     String csv = const ListToCsvConverter().convert(rows);
 
-    // 3. Create the file ina a temporary directory
+    // 3. Create the file in a temporary directory
     Directory tempDir = await getTemporaryDirectory();
     final filePath = '${tempDir.path}/inventory_${inventory.id}.csv';
     final file = File(filePath);
