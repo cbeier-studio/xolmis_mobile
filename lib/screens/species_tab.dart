@@ -51,7 +51,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
       _insertSpeciesListItem(newSpecies);
     });
 
-    if (!widget.inventory.isFinished) {
+    if (!widget.inventory.isFinished && widget.inventory.type != InventoryType.invBanding) {
       _addSpeciesToOtherActiveInventories(speciesName, speciesProvider, inventoryProvider);
     }
 

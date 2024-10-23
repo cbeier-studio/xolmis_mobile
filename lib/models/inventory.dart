@@ -326,14 +326,18 @@ enum InventoryType {
   invTransection,
   invPointCount,
   invCumulativeTime,
+  invBanding,
+  invCasual,
 }
 
 const Map<InventoryType, String> inventoryTypeFriendlyNames = {
-  InventoryType.invQualitative: 'Lista Qualitativa',
+  InventoryType.invQualitative: 'Lista Qualitativa Livre',
   InventoryType.invMackinnon: 'Lista de Mackinnon',
   InventoryType.invTransection: 'Contagem em Transeção',
   InventoryType.invPointCount: 'Ponto de Contagem',
-  InventoryType.invCumulativeTime: 'Lista Cumulativa por Tempo',
+  InventoryType.invCumulativeTime: 'Lista Qualitativa Temporizada',
+  InventoryType.invBanding: 'Anilhamento',
+  InventoryType.invCasual: 'Observação Casual',
 };
 
 class Inventory with ChangeNotifier {
