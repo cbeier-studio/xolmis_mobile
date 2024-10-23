@@ -57,7 +57,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
 
     checkMackinnonCompletion(context, widget.inventory);
 
-    if (widget.inventory.type == InventoryType.invCumulativeTime) {
+    if (!widget.inventory.isFinished && widget.inventory.type == InventoryType.invCumulativeTime) {
       _restartInventoryTimer(inventoryProvider);
     }
 

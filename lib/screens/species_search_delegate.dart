@@ -61,8 +61,14 @@ class SpeciesSearchDelegate extends SearchDelegate<String> {
         final secondPart = query.substring(firstPartLength);
 
         // Check if the parts of query match the parts of the species name
-        return firstWord.toLowerCase().startsWith(firstPart.toLowerCase()) &&
-            secondWord.toLowerCase().startsWith(secondPart.toLowerCase());
+        if (firstWord.toLowerCase().startsWith(firstPart.toLowerCase()) &&
+            secondWord.toLowerCase().startsWith(secondPart.toLowerCase())) {
+          return true;
+        }
+      }
+
+      if (speciesName.toLowerCase().contains(query.toLowerCase())) {
+        return true;
       }
     }
     // If que query do not have 4 or 6 characters, or if the species name do not have two words,
