@@ -24,7 +24,7 @@ class VegetationListItemState extends State<VegetationListItem> {
     return SizeTransition(
       sizeFactor: widget.animation,
       child: ListTile(
-        leading: const Icon(Icons.grass),
+        leading: const Icon(Icons.local_florist),
         title: Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(widget.vegetation.sampleTime!)),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

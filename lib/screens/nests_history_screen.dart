@@ -1,6 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
+
+import '../models/nest.dart';
 
 import '../providers/nest_provider.dart';
 
@@ -86,6 +92,17 @@ class _NestsHistoryScreenState extends State<NestsHistoryScreen> {
                       Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(nest.foundTime!)),
                     ],
                   ),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children:[
+                      IconButton(
+                        icon: const Icon(Icons.file_download),
+                        onPressed: () {
+                          _exportNestToJson(context, nest);
+                        },
+                      ),
+                    ],
+                  ),
                   onTap: () {
                     Navigator.push(
                       context,
@@ -107,5 +124,34 @@ class _NestsHistoryScreenState extends State<NestsHistoryScreen> {
         },
       ),
     );
+  }
+
+  Future<void> _exportNestToJson(BuildContext context, Nest nest) async {
+    try {
+      // 1. Create a list of data
+      final nestJson = nest.toJson();
+
+      // 2. Create the file in a temporary directory
+      Directory tempDir = await getTemporaryDirectory();
+      final filePath = '${tempDir.path}/nest_${nest.fieldNumber}.json';
+      final file = File(filePath);
+      await file.writeAsString(nestJson);
+
+      // 3. Share the file using share_plus
+      await Share.shareXFiles([
+        XFile(filePath, mimeType: 'text/json'),
+      ], text: 'Ninho exportado!', subject: 'Dados do Ninho ${nest.fieldNumber}');
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Row(
+          children: [
+            Icon(Icons.error, color: Colors.red),
+            SizedBox(width: 8),
+            Text('Erro ao exportar o ninho: $error'),
+          ],
+        ),
+        ),
+      );
+    }
   }
 }

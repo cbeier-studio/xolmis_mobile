@@ -105,7 +105,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
             },
           ) : const SizedBox.shrink(),
           IconButton(
-            icon: const Icon(Icons.grass),
+            icon: const Icon(Icons.local_florist),
             onPressed: () {
               Navigator.push(context,
                 MaterialPageRoute(

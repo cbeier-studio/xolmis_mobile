@@ -167,116 +167,128 @@ class InventoryListItem extends StatelessWidget {
   }
 
   Future<void> _exportInventoryToCsv(BuildContext context, Inventory inventory) async {
-    // 1. Create a list of data for the CSV
-    List<List<dynamic>> rows = [];
-    rows.add([
-      'ID do Inventário',
-      'Tipo',
-      'Duração',
-      'Pausado',
-      'Finalizado',
-      'Tempo Restante',
-      'Tempo Decorrido'
-    ]);
-    rows.add([
-      inventory.id,
-      inventoryTypeFriendlyNames[inventory.type],
-      inventory.duration,
-      inventory.isPaused,
-      inventory.isFinished,
-      inventory.elapsedTime
-    ]);
-
-    // Add species data
-    rows.add([]); // Empty line to separate the inventory of the species
-    rows.add(['Espécie', 'Contagem', 'Fora da amostra']);
-    for (var species in inventory.speciesList) {
-      rows.add([species.name, species.count, species.isOutOfInventory]);
-    }
-
-    // Add vegetation data
-    rows.add([]); // Empty line to separate vegetation data
-    rows.add(['Vegetação']);
-    rows.add([
-      'Data/Hora',
-      'Latitude',
-      'Longitude',
-      'Proporção de Herbáceas',
-      'Distribuição de Herbáceas',
-      'Altura de Herbáceas',
-      'Proporção de Arbustos',
-      'Distribuição de Arbustos',
-      'Altura de Arbustos',
-      'Proporção de Árvores',
-      'Distribuição de Árvores',
-      'Altura de Árvores',
-      'Observações'
-    ]);
-    for (var vegetation in inventory.vegetationList) {
+    try {
+      // 1. Create a list of data for the CSV
+      List<List<dynamic>> rows = [];
       rows.add([
-        vegetation.sampleTime,
-        vegetation.latitude,
-        vegetation.longitude,
-        vegetation.herbsProportion,
-        vegetation.herbsDistribution,
-        vegetation.herbsHeight,
-        vegetation.shrubsProportion,
-        vegetation.shrubsDistribution,
-        vegetation.shrubsHeight,
-        vegetation.treesProportion,
-        vegetation.treesDistribution,
-        vegetation.treesHeight,
-        vegetation.notes
+        'ID do Inventário',
+        'Tipo',
+        'Duração',
+        'Pausado',
+        'Finalizado',
+        'Tempo Restante',
+        'Tempo Decorrido'
       ]);
-    }
-
-    // Add weather data
-    rows.add([]); // Empty line to separate weather data
-    rows.add(['Tempo']);
-    rows.add([
-      'Data/Hora',
-      'Nebulosidade',
-      'Precipitação',
-      'Temperatura',
-      'Vento'
-    ]);
-    for (var weather in inventory.weatherList) {
       rows.add([
-        weather.sampleTime,
-        weather.cloudCover,
-        precipitationTypeFriendlyNames[weather.precipitation],
-        weather.temperature,
-        weather.windSpeed
+        inventory.id,
+        inventoryTypeFriendlyNames[inventory.type],
+        inventory.duration,
+        inventory.isPaused,
+        inventory.isFinished,
+        inventory.elapsedTime
       ]);
+
+      // Add species data
+      rows.add([]); // Empty line to separate the inventory of the species
+      rows.add(['Espécie', 'Contagem', 'Fora da amostra']);
+      for (var species in inventory.speciesList) {
+        rows.add([species.name, species.count, species.isOutOfInventory]);
+      }
+
+      // Add vegetation data
+      rows.add([]); // Empty line to separate vegetation data
+      rows.add(['Vegetação']);
+      rows.add([
+        'Data/Hora',
+        'Latitude',
+        'Longitude',
+        'Proporção de Herbáceas',
+        'Distribuição de Herbáceas',
+        'Altura de Herbáceas',
+        'Proporção de Arbustos',
+        'Distribuição de Arbustos',
+        'Altura de Arbustos',
+        'Proporção de Árvores',
+        'Distribuição de Árvores',
+        'Altura de Árvores',
+        'Observações'
+      ]);
+      for (var vegetation in inventory.vegetationList) {
+        rows.add([
+          vegetation.sampleTime,
+          vegetation.latitude,
+          vegetation.longitude,
+          vegetation.herbsProportion,
+          vegetation.herbsDistribution,
+          vegetation.herbsHeight,
+          vegetation.shrubsProportion,
+          vegetation.shrubsDistribution,
+          vegetation.shrubsHeight,
+          vegetation.treesProportion,
+          vegetation.treesDistribution,
+          vegetation.treesHeight,
+          vegetation.notes
+        ]);
+      }
+
+      // Add weather data
+      rows.add([]); // Empty line to separate weather data
+      rows.add(['Tempo']);
+      rows.add([
+        'Data/Hora',
+        'Nebulosidade',
+        'Precipitação',
+        'Temperatura',
+        'Vento'
+      ]);
+      for (var weather in inventory.weatherList) {
+        rows.add([
+          weather.sampleTime,
+          weather.cloudCover,
+          precipitationTypeFriendlyNames[weather.precipitation],
+          weather.temperature,
+          weather.windSpeed
+        ]);
+      }
+
+      // Add POIs data
+      rows.add([]); // Empty line to separate POI data
+      rows.add(['POIs das Espécies']);
+      for (var species in inventory.speciesList) {
+        if (species.pois.isNotEmpty) {
+          rows.add(['Espécie: ${species.name}']);
+          rows.add(['Latitude', 'Longitude']);
+          for (var poi in species.pois) {
+            rows.add([poi.latitude, poi.longitude]);
+          }
+          rows.add([]); // Empty line to
+        }// separate species POIs
+      }
+
+      // 2. Convert the list of data to CSV
+      String csv = const ListToCsvConverter().convert(rows);
+
+      // 3. Create the file in a temporary directory
+      Directory tempDir = await getTemporaryDirectory();
+      final filePath = '${tempDir.path}/inventory_${inventory.id}.csv';
+      final file = File(filePath);
+      await file.writeAsString(csv);
+
+      // 4. Share the file using share_plus
+      await Share.shareXFiles([
+        XFile(filePath, mimeType: 'text/csv'),
+      ], text: 'Inventário exportado!', subject: 'Dados do Inventário ${inventory.id}');
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Row(
+          children: [
+            Icon(Icons.error, color: Colors.red),
+            SizedBox(width: 8),
+            Text('Erro ao exportar o inventário: $error'),
+          ],
+        ),
+        ),
+      );
     }
-
-    // Add POIs data
-    rows.add([]); // Empty line to separate POI data
-    rows.add(['POIs das Espécies']);
-    for (var species in inventory.speciesList) {
-      if (species.pois.isNotEmpty) {
-        rows.add(['Espécie: ${species.name}']);
-        rows.add(['Latitude', 'Longitude']);
-        for (var poi in species.pois) {
-          rows.add([poi.latitude, poi.longitude]);
-        }
-        rows.add([]); // Empty line to
-      }// separate species POIs
-    }
-
-    // 2. Convert the list of data to CSV
-    String csv = const ListToCsvConverter().convert(rows);
-
-    // 3. Create the file in a temporary directory
-    Directory tempDir = await getTemporaryDirectory();
-    final filePath = '${tempDir.path}/inventory_${inventory.id}.csv';
-    final file = File(filePath);
-    await file.writeAsString(csv);
-
-    // 4. Share the file using share_plus
-    await Share.shareXFiles([
-      XFile(filePath, mimeType: 'text/csv'),
-    ], text: 'Inventário exportado!', subject: 'Dados do Inventário ${inventory.id}');
-
   }
 }
