@@ -74,6 +74,8 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
                     builder: (context) =>
                         AddEggScreen(
                           nest: widget.nest,
+                          initialFieldNumber: '${widget.nest.fieldNumber}-${widget.nest.eggsList!.length + 1}',
+                          initialSpeciesName: widget.nest.speciesName,
                         ),
                   ),
                 );

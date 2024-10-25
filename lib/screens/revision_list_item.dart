@@ -29,9 +29,9 @@ class RevisionListItemState extends State<RevisionListItem> {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('${widget.nestRevision.nestStatus}: ${widget.nestRevision.nestStage}'),
-            Text('Hospedeiro: ${widget.nestRevision.eggsHost} ovo(s), ${widget.nestRevision.nestlingsHost} ninhego(s)'),
-            Text('Nidoparasita: ${widget.nestRevision.eggsParasite} ovo(s), ${widget.nestRevision.nestlingsParasite} ninhego(s)'),
+            Text('${nestStatusTypeFriendlyNames[widget.nestRevision.nestStatus]}: ${nestStageTypeFriendlyNames[widget.nestRevision.nestStage]}'),
+            Text('Hospedeiro: ${widget.nestRevision.eggsHost ?? 0} ovo(s), ${widget.nestRevision.nestlingsHost ?? 0} ninhego(s)'),
+            Text('Nidoparasita: ${widget.nestRevision.eggsParasite ?? 0} ovo(s), ${widget.nestRevision.nestlingsParasite ?? 0} ninhego(s)'),
           ],
         ),
         trailing: IconButton(

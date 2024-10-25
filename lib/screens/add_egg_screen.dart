@@ -9,8 +9,10 @@ import 'species_search_delegate.dart';
 
 class AddEggScreen extends StatefulWidget {
   final Nest nest;
+  final String? initialFieldNumber;
+  final String? initialSpeciesName;
 
-  const AddEggScreen({super.key, required this.nest});
+  const AddEggScreen({super.key, required this.nest, this.initialFieldNumber, this.initialSpeciesName});
 
   @override
   _AddEggScreenState createState() => _AddEggScreenState();
@@ -32,6 +34,13 @@ class _AddEggScreenState extends State<AddEggScreen> {
 
   void _updateEgg() async {
     // Empty
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _fieldNumberController.text = widget.initialFieldNumber ?? '';
+    _speciesNameController.text = widget.initialSpeciesName ?? '';
   }
 
   @override
