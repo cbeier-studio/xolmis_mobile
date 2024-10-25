@@ -27,6 +27,7 @@ class EggProvider with ChangeNotifier {
 
   Future<void> addEgg(BuildContext context, int nestId, Egg egg) async {
     // Insert the egg in the database
+    egg.nestId = nestId;
     await DatabaseHelper().insertEgg(egg);
 
     // Add the egg to the list of the provider

@@ -178,7 +178,7 @@ class DatabaseHelper {
           nestFate INTEGER,
           male TEXT,
           female TEXT,
-          helpers TEXT,
+          helpers TEXT
         )
       ''');
           db.execute('''

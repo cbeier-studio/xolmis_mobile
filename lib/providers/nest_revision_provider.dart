@@ -26,10 +26,11 @@ class NestRevisionProvider with ChangeNotifier {
   }
 
   Future<void> addNestRevision(BuildContext context, int nestId, NestRevision nestRevision) async {
-    // Insert the vegetation data in the database
+    // Insert the nest revision data in the database
+    nestRevision.nestId = nestId;
     await DatabaseHelper().insertNestRevision(nestRevision);
 
-    // Add the POI to the list of the provider
+    // Add the nest revision to the list of the provider
     _nestRevisionMap[nestId] = _nestRevisionMap[nestId] ?? [];
     _nestRevisionMap[nestId]!.add(nestRevision);
 
