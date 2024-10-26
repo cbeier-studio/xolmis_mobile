@@ -43,23 +43,27 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
       pois: [],
     );
 
-    speciesProvider.addSpecies(context, widget.inventory.id, newSpecies);
+    await speciesProvider.addSpecies(context, widget.inventory.id, newSpecies);
+    inventoryProvider.updateInventory(widget.inventory);
     // if (speciesProvider.getSpeciesForInventory(widget.inventory.id).isEmpty) {
     //   speciesProvider.loadSpeciesForInventory(widget.inventory.id);
     // }
     setState(() {
       _insertSpeciesListItem(newSpecies);
+      checkMackinnonCompletion(context, widget.inventory);
     });
 
     if (!widget.inventory.isFinished && widget.inventory.type != InventoryType.invBanding) {
       _addSpeciesToOtherActiveInventories(speciesName, speciesProvider, inventoryProvider);
     }
 
-    checkMackinnonCompletion(context, widget.inventory);
-
     if (!widget.inventory.isFinished && widget.inventory.type == InventoryType.invCumulativeTime) {
       _restartInventoryTimer(inventoryProvider);
     }
+
+    _updateSpeciesList();
+
+    // checkMackinnonCompletion(context, widget.inventory);
 
     inventoryProvider.notifyListeners();
   }

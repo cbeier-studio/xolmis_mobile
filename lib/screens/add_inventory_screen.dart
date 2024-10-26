@@ -3,7 +3,11 @@ import 'package:provider/provider.dart';
 import '../providers/inventory_provider.dart';
 import '../models/inventory.dart';
 
-class AddInventoryScreen extends StatefulWidget {const AddInventoryScreen({super.key});
+class AddInventoryScreen extends StatefulWidget {
+  final String? initialInventoryId;
+  final InventoryType? initialInventoryType;
+
+  const AddInventoryScreen({super.key, this.initialInventoryId, this.initialInventoryType});
 
   @override
   AddInventoryScreenState createState() => AddInventoryScreenState();
@@ -12,10 +16,20 @@ class AddInventoryScreen extends StatefulWidget {const AddInventoryScreen({super
 class AddInventoryScreenState extends State<AddInventoryScreen> {
   final _formKey = GlobalKey<FormState>();
   final _idController = TextEditingController();
-  InventoryType _selectedType = InventoryType.invQualitative;
   final _durationController = TextEditingController();
   final _maxSpeciesController = TextEditingController();
+  InventoryType _selectedType = InventoryType.invQualitative;
   bool _isSubmitting = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _idController.text = widget.initialInventoryId ?? '';
+    _selectedType = widget.initialInventoryType ?? _selectedType;
+    if (_selectedType == InventoryType.invMackinnon) {
+      _maxSpeciesController.text = '10';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
