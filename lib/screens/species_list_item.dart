@@ -28,7 +28,10 @@ class SpeciesListItemState extends State<SpeciesListItem> {
     return SizeTransition(
       sizeFactor: widget.animation,
       child: ListTile(
-        title: Text(widget.species.name),
+        title: Text(
+          widget.species.name,
+          style: const TextStyle(fontStyle: FontStyle.italic),
+        ),
         tileColor: widget.species.isOutOfInventory ? Colors.grey[200] : null,
         trailing: Row(
           mainAxisSize: MainAxisSize.min,

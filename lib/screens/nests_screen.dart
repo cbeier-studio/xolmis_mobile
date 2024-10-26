@@ -108,7 +108,10 @@ class _ActiveNestsScreenState extends State<ActiveNestsScreen> {
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(nest.speciesName!),
+                      Text(
+                        nest.speciesName!,
+                        style: const TextStyle(fontStyle: FontStyle.italic),
+                      ),
                       Text(nest.localityName!),
                       Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(nest.foundTime!)),
                     ],

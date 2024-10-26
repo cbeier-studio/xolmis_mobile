@@ -131,6 +131,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
 
   void _showSpeciesSearch() async {
     final allSpecies = await loadSpeciesData();
+    allSpecies.sort((a, b) => a.compareTo(b));
     final selectedSpecies = await showSearch(
       context: context,
       delegate: SpeciesSearchDelegate(

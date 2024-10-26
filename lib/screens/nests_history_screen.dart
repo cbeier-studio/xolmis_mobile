@@ -87,11 +87,19 @@ class _NestsHistoryScreenState extends State<NestsHistoryScreen> {
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(nest.speciesName!),
+                      Text(
+                        nest.speciesName!,
+                        style: const TextStyle(fontStyle: FontStyle.italic),
+                      ),
                       Text(nest.localityName!),
                       Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(nest.foundTime!)),
                     ],
                   ),
+                  leading: nest.nestFate == NestFateType.fatSuccess
+                      ? const Icon(Icons.check_circle, color: Colors.green)
+                      : nest.nestFate == NestFateType.fatLost
+                      ? const Icon(Icons.cancel, color: Colors.red)
+                      : const Icon(Icons.help, color: Colors.grey),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children:[
