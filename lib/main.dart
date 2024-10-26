@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_background/flutter_background.dart';
-import 'screens/home_screen.dart';
-import 'screens/nests_screen.dart';
+
 import 'models/database_helper.dart';
 import 'models/inventory.dart';
+
 import 'providers/inventory_provider.dart';
 import 'providers/species_provider.dart';
 import 'providers/poi_provider.dart';
@@ -14,14 +14,21 @@ import 'providers/nest_provider.dart';
 import 'providers/nest_revision_provider.dart';
 import 'providers/egg_provider.dart';
 
+import 'screens/home_screen.dart';
+import 'screens/nests_screen.dart';
+import 'screens/utils.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await DatabaseHelper().initDatabase();
-  runApp(const MyApp());
+  final themeMode = await getThemeMode();
+  runApp(MyApp(themeMode: themeMode));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final ThemeMode themeMode;
+
+  const MyApp({super.key, required this.themeMode});
 
   @override
   Widget build(BuildContext context) {
@@ -44,9 +51,12 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         title: 'Xolmis',
-        theme: ThemeData(
-          primarySwatch: Colors.deepPurple,
-        ),
+        theme: ThemeData.light(),
+        darkTheme: ThemeData.dark(),
+        themeMode: themeMode,
+        // theme: ThemeData(
+        //   primarySwatch: Colors.deepPurple,
+        // ),
         home: const MainScreen(),
       ),
     );

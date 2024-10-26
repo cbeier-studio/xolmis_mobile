@@ -8,6 +8,7 @@ import '../providers/inventory_provider.dart';
 import 'history_screen.dart';
 import 'add_inventory_screen.dart';
 import 'inventory_detail_screen.dart';
+import 'settings_screen.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -82,6 +83,15 @@ class _HomeScreenState extends State<HomeScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const HistoryScreen()),
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SettingsScreen()),
               );
             },
           ),

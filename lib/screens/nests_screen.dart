@@ -7,6 +7,7 @@ import '../providers/nest_provider.dart';
 import 'nests_history_screen.dart';
 import 'add_nest_screen.dart';
 import 'nest_detail_screen.dart';
+import 'settings_screen.dart';
 
 class ActiveNestsScreen extends StatefulWidget {
   const ActiveNestsScreen({super.key});
@@ -37,6 +38,15 @@ class _ActiveNestsScreenState extends State<ActiveNestsScreen> {
               );
             },
           ),
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SettingsScreen()),
+              );
+            },
+          ),
         ],
       ),
       body: Consumer<NestProvider>(
@@ -49,7 +59,11 @@ class _ActiveNestsScreenState extends State<ActiveNestsScreen> {
             );
           }
 
-          return ListView.builder(
+          return RefreshIndicator(
+              onRefresh: () async {
+            await nestProvider.fetchNests();
+          },
+          child: ListView.builder(
             itemCount: activeNests.length,
             itemBuilder: (context, index) {
               final nest = activeNests[index];
@@ -116,6 +130,7 @@ class _ActiveNestsScreenState extends State<ActiveNestsScreen> {
                 ),
               );
             },
+          ),
           );
         },
       ),
