@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../providers/inventory_provider.dart';
 import '../models/inventory.dart';
 
 class AddInventoryScreen extends StatefulWidget {
   final String? initialInventoryId;
   final InventoryType? initialInventoryType;
+  final int? initialMaxSpecies;
 
-  const AddInventoryScreen({super.key, this.initialInventoryId, this.initialInventoryType});
+  const AddInventoryScreen({super.key, this.initialInventoryId, this.initialInventoryType, this.initialMaxSpecies});
 
   @override
   AddInventoryScreenState createState() => AddInventoryScreenState();
@@ -26,9 +28,6 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
     super.initState();
     _idController.text = widget.initialInventoryId ?? '';
     _selectedType = widget.initialInventoryType ?? _selectedType;
-    if (_selectedType == InventoryType.invMackinnon) {
-      _maxSpeciesController.text = '10';
-    }
   }
 
   @override
@@ -39,90 +38,124 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextFormField(
-                controller: _idController,
-                decoration: const InputDecoration(
-                  labelText: 'ID do Inventário',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor, insira um ID para o inventário';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16.0),
-              DropdownButtonFormField<InventoryType>(
-                value: _selectedType,
-                decoration: const InputDecoration(
-                  labelText: 'Tipo de Inventário',
-                  border: OutlineInputBorder(),
-                ),
-                items: InventoryType.values.map((type) {
-                  return DropdownMenuItem(
-                    value: type,
-                    child: Text(inventoryTypeFriendlyNames[type]!),
-                  );
-                }).toList(),
-                onChanged: (InventoryType? newValue) {
-                  setState(() {
-                    _selectedType = newValue!;
-                    if (newValue == InventoryType.invCumulativeTime) {
-                      _durationController.text = '30';
-                    } else if (newValue == InventoryType.invMackinnon) {
-                      _maxSpeciesController.text = '10';
-                    } else {
-                      _durationController.text = '';
-                      _maxSpeciesController.text = '';
-                    }
-                  });
-                },
-              ),
-              const SizedBox(height: 16.0),
-              Row(
+        child: FutureBuilder<SharedPreferences>(
+          future: SharedPreferences.getInstance(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              final prefs = snapshot.data!;
+              final maxSpeciesMackinnon = prefs.getInt('maxSpeciesMackinnon') ?? 10;
+              final pointCountsDuration = prefs.getInt('pointCountsDuration') ?? 8;
+              final cumulativeTimeDuration = prefs.getInt('cumulativeTimeDuration') ?? 30;
+
+              if (_selectedType == InventoryType.invMackinnon) {
+                _maxSpeciesController.text = widget.initialMaxSpecies.toString();
+              }
+
+              return Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: TextFormField(
-                        controller: _durationController,
-                        keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
-                          labelText: 'Duração',
-                          border: OutlineInputBorder(),
-                          suffixText: 'minutos',
-                        ),
+                    TextFormField(
+                      controller: _idController,
+                      textCapitalization: TextCapitalization.words,
+                      decoration: const InputDecoration(
+                        labelText: 'ID do Inventário',
+                        border: OutlineInputBorder(),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Por favor, insira um ID para o inventário';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16.0),
+                    DropdownButtonFormField<InventoryType>(
+                      value: _selectedType,
+                      decoration: const InputDecoration(
+                        labelText: 'Tipo de Inventário',
+                        border: OutlineInputBorder(),
+                      ),
+                      items: InventoryType.values.map((type) {
+                        return DropdownMenuItem(
+                          value: type,
+                          child: Text(inventoryTypeFriendlyNames[type]!),
+                        );
+                      }).toList(),
+                      onChanged: (InventoryType? newValue) {
+                        setState(() async {
+                          _selectedType = newValue!;
+                          if (newValue == InventoryType.invCumulativeTime) {
+                            _durationController.text =
+                            await cumulativeTimeDuration.toString();
+                            _maxSpeciesController.text = '';
+                          } else if (newValue == InventoryType.invMackinnon) {
+                            _maxSpeciesController.text =
+                            await maxSpeciesMackinnon.toString();
+                            _durationController.text = '';
+                          } else
+                          if (newValue == InventoryType.invPointCount) {
+                            _durationController.text =
+                            await pointCountsDuration.toString();
+                            _maxSpeciesController.text = '';
+                          } else {
+                            _durationController.text = '';
+                            _maxSpeciesController.text = '';
+                          }
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 16.0),
+                    Row(
+                        children: [
+                          Expanded(
+                            child: TextFormField(
+                              controller: _durationController,
+                              keyboardType: TextInputType.number,
+                              decoration: const InputDecoration(
+                                labelText: 'Duração',
+                                border: OutlineInputBorder(),
+                                suffixText: 'minutos',
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8.0),
+                          Expanded(
+                            child: TextFormField(
+                              controller: _maxSpeciesController,
+                              keyboardType: TextInputType.number,
+                              decoration: const InputDecoration(
+                                labelText: 'Máx. espécies',
+                                border: OutlineInputBorder(),
+                                suffixText: 'spp.',
+                              ),
+                            ),
+                          ),
+                        ]
+                    ),
+                    const SizedBox(height: 32.0),
+                    Center(
+                      child: _isSubmitting
+                          ? CircularProgressIndicator()
+                          : ElevatedButton(
+                        onPressed: _submitForm,
+                        child: const Text('Iniciar Inventário'),
                       ),
                     ),
-                    const SizedBox(width: 8.0),
-                    Expanded(
-                      child: TextFormField(
-                        controller: _maxSpeciesController,
-                        keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
-                          labelText: 'Máx. espécies',
-                          border: OutlineInputBorder(),
-                          suffixText: 'spp.',
-                        ),
-                      ),
-                    ),
-                  ]
-              ),
-              const SizedBox(height: 32.0),
-              Center(
-                child: _isSubmitting
-                    ? CircularProgressIndicator()
-                    : ElevatedButton(
-                  onPressed: _submitForm,
-                  child: const Text('Iniciar Inventário'),
+                  ],
                 ),
-              ),
-            ],
-          ),
+              );
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text('Erro ao carregar preferências: ${snapshot.error}'),
+              );
+            } else {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          },
         ),
       ),
     );

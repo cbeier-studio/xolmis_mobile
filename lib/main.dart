@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_background/flutter_background.dart';
 
@@ -20,6 +22,10 @@ import 'screens/utils.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  LicenseRegistry.addLicense(() async* {
+    final license = await rootBundle.loadString('assets/license.txt');
+    yield LicenseEntryWithLineBreaks(['xolmis'], license);
+  });
   await DatabaseHelper().initDatabase();
   final themeMode = await getThemeMode();
   runApp(MyApp(themeMode: themeMode));
@@ -84,6 +90,7 @@ class _MainScreenState extends State<MainScreen> {
     super.initState();
     initializeBackgroundExecution();
     inventoryCountNotifier.updateCount();
+    Provider.of<NestProvider>(context, listen: false).fetchNests();
   }
 
   Future<void> initializeBackgroundExecution() async {

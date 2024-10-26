@@ -97,6 +97,7 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
               const SizedBox(height: 16.0),
               TextFormField(
                 controller: _notesController,
+                textCapitalization: TextCapitalization.sentences,
                 decoration: const InputDecoration(
                   labelText: 'Observações',
                   border: OutlineInputBorder(),

@@ -90,6 +90,7 @@ class _AddNestScreenState extends State<AddNestScreen> {
             children: [
               TextFormField(
                 controller: _fieldNumberController,
+                textCapitalization: TextCapitalization.characters,
                 decoration: const InputDecoration(
                   labelText: 'Número de Campo',
                   border: OutlineInputBorder(),
@@ -133,6 +134,7 @@ class _AddNestScreenState extends State<AddNestScreen> {
               const SizedBox(height: 16.0),
               TextFormField(
                 controller: _localityNameController,
+                textCapitalization: TextCapitalization.words,
                 decoration: const InputDecoration(
                   labelText: 'Localidade',
                   border: OutlineInputBorder(),
@@ -147,6 +149,7 @@ class _AddNestScreenState extends State<AddNestScreen> {
               const SizedBox(height: 16.0),
               TextFormField(
                 controller: _supportController,
+                textCapitalization: TextCapitalization.sentences,
                 decoration: const InputDecoration(
                   labelText: 'Suporte do ninho',
                   border: OutlineInputBorder(),

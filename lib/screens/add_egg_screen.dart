@@ -58,6 +58,7 @@ class _AddEggScreenState extends State<AddEggScreen> {
             children: [
               TextFormField(
                 controller: _fieldNumberController,
+                textCapitalization: TextCapitalization.characters,
                 decoration: const InputDecoration(
                   labelText: 'Número de Campo',
                   border: OutlineInputBorder(),

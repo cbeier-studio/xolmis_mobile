@@ -53,7 +53,12 @@ void _showMackinnonDialog(BuildContext context, Inventory inventory) {
               final nextInventoryId = getNextInventoryId(inventory.id!);
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => AddInventoryScreen(initialInventoryId: nextInventoryId, initialInventoryType: InventoryType.invMackinnon,)),
+                MaterialPageRoute(builder: (context) => AddInventoryScreen(
+                  initialInventoryId: nextInventoryId,
+                  initialInventoryType: InventoryType.invMackinnon,
+                  initialMaxSpecies: inventory.maxSpecies,
+                )
+                ),
               );
             },
           ),

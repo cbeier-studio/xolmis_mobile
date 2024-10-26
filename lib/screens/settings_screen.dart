@@ -1,6 +1,8 @@
+import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:numberpicker/numberpicker.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -12,21 +14,27 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   ThemeMode _themeMode = ThemeMode.system;
   int _maxSpeciesMackinnon = 10;
-  int _countingPointDuration = 8; // em minutos
-  int _cumulativeTimeDuration = 30; // em minutos
+  int _pointCountsDuration = 8;
+  int _cumulativeTimeDuration = 30;
+  PackageInfo? _packageInfo;
 
   @override
   void initState() {
     super.initState();
+    _setPackageInfo();
     _loadSettings();
   }
+
+  Future<void> _setPackageInfo() async => PackageInfo.fromPlatform().then(
+        (PackageInfo packageInfo) => setState(() => _packageInfo = packageInfo),
+  );
 
   Future<void> _loadSettings() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       _themeMode = ThemeMode.values[prefs.getInt('themeMode') ?? 0];
       _maxSpeciesMackinnon = prefs.getInt('maxSpeciesMackinnon') ?? 10;
-      _countingPointDuration = prefs.getInt('countingPointDuration') ?? 8;
+      _pointCountsDuration = prefs.getInt('pointCountsDuration') ?? 8;
       _cumulativeTimeDuration = prefs.getInt('cumulativeTimeDuration') ?? 30;
     });
   }
@@ -35,7 +43,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt('themeMode', _themeMode.index);
     await prefs.setInt('maxSpeciesMackinnon', _maxSpeciesMackinnon);
-    await prefs.setInt('countingPointDuration', _countingPointDuration);
+    await prefs.setInt('pointCountsDuration', _pointCountsDuration);
     await prefs.setInt('cumulativeTimeDuration', _cumulativeTimeDuration);
   }
 
@@ -79,7 +87,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         },
                       ),
                       SimpleDialogOption(
-                        child: const Text('Sistema'),
+                        child: const Text('Tema do sistema'),
                         onPressed: () {
                           setState(() {
                             _themeMode = ThemeMode.system;
@@ -95,7 +103,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             },
           ),
           ListTile(
-            title: const Text('Máximo de espécies (Mackinnon)'),
+            title: const Text('Máximo de espécies (listas de Mackinnon)'),
             subtitle: Text('$_maxSpeciesMackinnon spp.'),
             onTap: () async {
               final newMaxSpecies = await showDialog<int>(
@@ -119,7 +127,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           ListTile(
             title: const Text('Duração dos pontos de contagem'),
-            subtitle: Text('$_countingPointDuration minutos'),
+            subtitle: Text('$_pointCountsDuration minutos'),
             onTap: () async {
               final newDuration = await showDialog<int>(
                 context: context,
@@ -127,21 +135,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   return NumberPickerDialog(
                     minValue: 1,
                     maxValue: 60,
-                    initialValue: _countingPointDuration,
-                    title: 'Duração dos pontos de contagem',
+                    initialValue: _pointCountsDuration,
+                    title: 'Duração (min)',
                   );
                 },
               );
               if (newDuration != null) {
                 setState(() {
-                  _countingPointDuration = newDuration;
+                  _pointCountsDuration = newDuration;
                 });
                 _saveSettings();
               }
             },
           ),
           ListTile(
-            title: const Text('Duração do inventário (Tempo Cumulativo)'),
+            title: const Text('Duração das listas qualitativas temporizadas'),
             subtitle: Text('$_cumulativeTimeDuration minutos'),
             onTap: () async {
               final newDuration = await showDialog<int>(
@@ -151,7 +159,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     minValue: 1,
                     maxValue: 120,
                     initialValue: _cumulativeTimeDuration,
-                    title: 'Duração do inventário',
+                    title: 'Duração (min)',
                   );
                 },
               );
@@ -163,13 +171,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
               }
             },
           ),
+          ListTile(
+            title: const Text('Sobre o app'),
+            onTap: () => showLicensePage(
+              context: context,
+              applicationIcon: Image.asset(
+                'assets/xolmis_icon.png',
+                scale: 1,
+              ),
+              applicationLegalese: '© ${DateTime.now().year} Christian Beier',
+              applicationName: _packageInfo?.appName ?? 'Xolmis',
+              applicationVersion: _packageInfo?.version ?? '',
+            ),
+          ),
         ],
       ),
     );
   }
 }
 
-// Widget auxiliar para selecionar um número
+// Auxiliary widget to select a number
 class NumberPickerDialog extends StatefulWidget {
   final int minValue;
   final int maxValue;
