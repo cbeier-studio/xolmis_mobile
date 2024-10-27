@@ -289,6 +289,7 @@ class InventoryListItem extends StatelessWidget {
 
                 return CircularProgressIndicator(
                   value: progress,
+                  backgroundColor: inventory.duration > 0 ? Colors.grey[200] : null,
                   valueColor: AlwaysStoppedAnimation<Color>(
                     inventory.isPaused ? Colors.amber : Theme.of(context).primaryColor,
                   ),

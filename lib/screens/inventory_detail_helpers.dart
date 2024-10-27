@@ -26,7 +26,7 @@ String getNextInventoryId(String currentId) {
 void checkMackinnonCompletion(BuildContext context, Inventory inventory) {
   final speciesProvider = Provider.of<SpeciesProvider>(context, listen: false);
   final speciesList = speciesProvider.getSpeciesForInventory(inventory.id);
-  print('speciesList: ${speciesList.length} ; maxSpecies: ${inventory.maxSpecies}');
+  // print('speciesList: ${speciesList.length} ; maxSpecies: ${inventory.maxSpecies}');
   if (inventory.type == InventoryType.invMackinnon &&
       speciesList.length == inventory.maxSpecies) {
     _showMackinnonDialog(context, inventory);

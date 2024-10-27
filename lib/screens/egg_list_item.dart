@@ -29,7 +29,10 @@ class EggListItemState extends State<EggListItem> {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('${widget.egg.speciesName}'),
+            Text(
+              widget.egg.speciesName!,
+              style: const TextStyle(fontStyle: FontStyle.italic),
+            ),
             Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(widget.egg.sampleTime!)),
           ],
         ),

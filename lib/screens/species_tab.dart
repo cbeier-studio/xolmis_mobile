@@ -45,9 +45,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
 
     await speciesProvider.addSpecies(context, widget.inventory.id, newSpecies);
     inventoryProvider.updateInventory(widget.inventory);
-    // if (speciesProvider.getSpeciesForInventory(widget.inventory.id).isEmpty) {
-    //   speciesProvider.loadSpeciesForInventory(widget.inventory.id);
-    // }
+
     setState(() {
       _insertSpeciesListItem(newSpecies);
       checkMackinnonCompletion(context, widget.inventory);
@@ -62,8 +60,6 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     }
 
     _updateSpeciesList();
-
-    // checkMackinnonCompletion(context, widget.inventory);
 
     inventoryProvider.notifyListeners();
   }

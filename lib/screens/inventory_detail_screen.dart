@@ -192,7 +192,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                 value: widget.inventory.isPaused
                     ? null
                     : elapsedTime / (widget.inventory.duration * 60),
-                backgroundColor: Colors.grey[200],
+                backgroundColor: Colors.grey[300],
                 valueColor: AlwaysStoppedAnimation<Color>(
                   widget.inventory.isPaused
                       ? Colors.amber

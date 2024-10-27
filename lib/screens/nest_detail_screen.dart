@@ -69,12 +69,13 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
             widget.nest.isActive ? IconButton(
               icon: const Icon(Icons.egg),
               onPressed: () {
+                final nextNumber = widget.nest.eggsList!.length + 1;
                 Navigator.push(context,
                   MaterialPageRoute(
                     builder: (context) =>
                         AddEggScreen(
                           nest: widget.nest,
-                          initialFieldNumber: '${widget.nest.fieldNumber}-${widget.nest.eggsList!.length + 1}',
+                          initialFieldNumber: '${widget.nest.fieldNumber}-${nextNumber.toString().padLeft(2, '0')}',
                           initialSpeciesName: widget.nest.speciesName,
                         ),
                   ),

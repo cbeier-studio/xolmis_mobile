@@ -86,6 +86,7 @@ class _AddEggScreenState extends State<AddEggScreen> {
                 },
                 onTap: () async {
                   final allSpecies = await loadSpeciesData();
+                  allSpecies.sort((a, b) => a.compareTo(b));
                   final speciesSearchDelegate = SpeciesSearchDelegate(allSpecies, _addSpeciesToEgg, _updateEgg);
                   final selectedSpecies = await showSearch(
                     context: context,
