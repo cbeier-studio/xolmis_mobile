@@ -4,8 +4,6 @@ import 'package:provider/provider.dart';
 
 import '../models/nest.dart';
 import '../providers/nest_revision_provider.dart';
-import 'inventory_detail_helpers.dart';
-import 'species_search_delegate.dart';
 
 class AddNestRevisionScreen extends StatefulWidget {
   final Nest nest;

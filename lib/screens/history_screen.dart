@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:async';
 import 'package:flutter/material.dart';
@@ -39,6 +40,13 @@ class _HistoryScreenState extends State<HistoryScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Inventários encerrados'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.file_download),
+            onPressed: () => _exportAllInventoriesToJson(inventoryProvider),
+            tooltip: 'Exportar todos os inventários',
+          ),
+        ],
       ),
       body: RefreshIndicator(
         onRefresh: () async {
@@ -112,6 +120,36 @@ class _HistoryScreenState extends State<HistoryScreen> {
       },
     );
   }
+
+  Future<void> _exportAllInventoriesToJson(InventoryProvider inventoryProvider) async {
+    try {
+      final finishedInventories = inventoryProvider.finishedInventories;
+      final jsonData = finishedInventories.map((inventory) => inventory.toJson()).toList();
+      final jsonString = jsonEncode(jsonData);
+
+      // Create the file in a temporary folder
+      Directory tempDir = await getTemporaryDirectory();
+      final filePath = '${tempDir.path}/inventories.json';
+      final file = File(filePath);
+      await file.writeAsString(jsonString);
+
+      // Share the file using share_plus
+      await Share.shareXFiles([
+        XFile(filePath, mimeType: 'application/json'),
+      ], text: 'Inventários exportados!', subject: 'Dados dos Inventários');
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Row(
+          children: [
+            Icon(Icons.error, color: Colors.red),
+            SizedBox(width: 8),
+            Text('Erro ao exportar os inventários: $error'),
+          ],
+        ),
+        ),
+      );
+    }
+  }
 }
 
 class InventoryListItem extends StatelessWidget {
@@ -145,6 +183,7 @@ class InventoryListItem extends StatelessWidget {
           children:[
             IconButton(
               icon: const Icon(Icons.file_download),
+              tooltip: 'Exportar inventário',
               onPressed: () {
                 _exportInventoryToCsv(context, inventory);
               },

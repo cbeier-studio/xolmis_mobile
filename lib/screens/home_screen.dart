@@ -79,6 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.history),
+            tooltip: 'Inventários encerrados',
             onPressed: () {
               Navigator.push(
                 context,
@@ -88,6 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           IconButton(
             icon: const Icon(Icons.settings),
+            tooltip: 'Configurações',
             onPressed: () {
               Navigator.push(
                 context,
@@ -231,6 +233,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        tooltip: 'Novo inventário',
         onPressed: () {
           Navigator.push(
             context,
@@ -317,6 +320,7 @@ class InventoryListItem extends StatelessWidget {
                   visible: inventory.duration > 0,
                   child: IconButton(
                     icon: Icon(inventory.isPaused ? Icons.play_arrow : Icons.pause),
+                    tooltip: inventory.isPaused ? 'Retomar' : 'Pausa',
                     onPressed: () {
                       if (inventory.isPaused) {
                         Provider.of<InventoryProvider>(context, listen: false).resumeInventoryTimer(inventory);

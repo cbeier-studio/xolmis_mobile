@@ -31,6 +31,7 @@ class _ActiveNestsScreenState extends State<ActiveNestsScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.history),
+            tooltip: 'Ninhos inativos',
             onPressed: () {
               Navigator.push(
                 context,
@@ -40,6 +41,7 @@ class _ActiveNestsScreenState extends State<ActiveNestsScreen> {
           ),
           IconButton(
             icon: const Icon(Icons.settings),
+            tooltip: 'Configurações',
             onPressed: () {
               Navigator.push(
                 context,
@@ -138,6 +140,7 @@ class _ActiveNestsScreenState extends State<ActiveNestsScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
+        tooltip: 'Novo ninho',
         onPressed: () {
           Navigator.push(
             context,

@@ -37,6 +37,7 @@ class VegetationListItemState extends State<VegetationListItem> {
         ),
         trailing: IconButton(
           icon: const Icon(Icons.delete),
+          tooltip: 'Apagar dados de vegetação',
           onPressed: widget.onDelete,
         ),
         onTap: () {

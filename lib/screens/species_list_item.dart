@@ -38,6 +38,7 @@ class SpeciesListItemState extends State<SpeciesListItem> {
           children: [
             IconButton(
               icon: const Icon(Icons.remove),
+              tooltip: 'Diminuir contagem de indivíduos',
               onPressed: () {
                 if (mounted && widget.species.count > 0) {
                   final speciesProvider = Provider.of<SpeciesProvider>(context, listen: false);
@@ -53,6 +54,7 @@ class SpeciesListItemState extends State<SpeciesListItem> {
             ),
             IconButton(
               icon: const Icon(Icons.add),
+              tooltip: 'Aumentar contagem de indivíduos',
               onPressed: () {
                 if (mounted) {
                   final speciesProvider = Provider.of<SpeciesProvider>(context, listen: false);
@@ -77,6 +79,7 @@ class SpeciesListItemState extends State<SpeciesListItem> {
                     child: const Icon(Icons.add_location),
                   )
                       : const Icon(Icons.add_location),
+                  tooltip: 'Adicionar POI',
                   onPressed: _isAddingPoi ? null : () async {
                     setState(() {
                       _isAddingPoi = true;

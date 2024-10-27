@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import '../models/inventory.dart';
 import '../providers/inventory_provider.dart';
 import '../providers/species_provider.dart';
-import 'inventory_detail_helpers.dart';
+import 'utils.dart';
 import 'species_search_delegate.dart';
 import 'species_list_item.dart';
 

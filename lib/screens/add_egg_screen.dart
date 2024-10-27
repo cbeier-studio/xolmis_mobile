@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../models/nest.dart';
 import '../providers/egg_provider.dart';
-import 'inventory_detail_helpers.dart';
+import 'utils.dart';
 import 'species_search_delegate.dart';
 
 class AddEggScreen extends StatefulWidget {

@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../models/nest.dart';
 import '../providers/nest_provider.dart';
-import 'inventory_detail_helpers.dart';
+import 'utils.dart';
 import 'species_search_delegate.dart';
 
 class AddNestScreen extends StatefulWidget {

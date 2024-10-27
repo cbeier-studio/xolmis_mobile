@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -31,6 +32,13 @@ class _NestsHistoryScreenState extends State<NestsHistoryScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Ninhos inativos'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.file_download),
+            onPressed: () => _exportAllInactiveNestsToJson(context),
+            tooltip: 'Exportar todos os ninhos inativos',
+          ),
+        ],
       ),
       body: Consumer<NestProvider>(
         builder: (context, nestProvider, child) {
@@ -105,6 +113,7 @@ class _NestsHistoryScreenState extends State<NestsHistoryScreen> {
                     children:[
                       IconButton(
                         icon: const Icon(Icons.file_download),
+                        tooltip: 'Exportar ninho',
                         onPressed: () {
                           _exportNestToJson(context, nest);
                         },
@@ -134,16 +143,46 @@ class _NestsHistoryScreenState extends State<NestsHistoryScreen> {
     );
   }
 
+  Future<void> _exportAllInactiveNestsToJson(BuildContext context) async {
+    try {
+      final nestProvider = Provider.of<NestProvider>(context, listen: false);
+      final inactiveNests = nestProvider.inactiveNests;
+      final jsonData = inactiveNests.map((nest) => nest.toJson()).toList();
+      final jsonString = jsonEncode(jsonData);
+
+      Directory tempDir = await getTemporaryDirectory();
+      final filePath = '${tempDir.path}/inactive_nests.json';
+      final file = File(filePath);
+      await file.writeAsString(jsonString);
+
+      await Share.shareXFiles([
+        XFile(filePath, mimeType: 'application/json'),
+      ], text: 'Ninhos inativos exportados!', subject: 'Dados dos Ninhos Inativos');
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Row(
+          children: [
+            Icon(Icons.error, color: Colors.red),
+            SizedBox(width: 8),
+            Text('Erro ao exportar os ninhos inativos: $error'),
+          ],
+        ),
+        ),
+      );
+    }
+  }
+
   Future<void> _exportNestToJson(BuildContext context, Nest nest) async {
     try {
       // 1. Create a list of data
       final nestJson = nest.toJson();
+      final jsonString = jsonEncode(nestJson);
 
       // 2. Create the file in a temporary directory
       Directory tempDir = await getTemporaryDirectory();
       final filePath = '${tempDir.path}/nest_${nest.fieldNumber}.json';
       final file = File(filePath);
-      await file.writeAsString(nestJson);
+      await file.writeAsString(jsonString);
 
       // 3. Share the file using share_plus
       await Share.shareXFiles([

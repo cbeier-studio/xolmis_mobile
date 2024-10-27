@@ -38,6 +38,7 @@ class EggListItemState extends State<EggListItem> {
         ),
         trailing: IconButton(
           icon: const Icon(Icons.delete),
+          tooltip: 'Apagar ovo',
           onPressed: widget.onDelete,
         ),
         onTap: () {

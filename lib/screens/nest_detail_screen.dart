@@ -54,7 +54,11 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
           title: Text('${widget.nest.fieldNumber}'),
           actions: [
             widget.nest.isActive ? IconButton(
-              icon: const Icon(Icons.reviews),
+              icon: const Icon(
+                Icons.reviews,
+                semanticLabel: 'Adicionar revisão de ninho',
+              ),
+              tooltip: 'Adicionar revisão de ninho',
               onPressed: () {
                 Navigator.push(context,
                   MaterialPageRoute(
@@ -67,7 +71,11 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
               },
             ) : const SizedBox.shrink(),
             widget.nest.isActive ? IconButton(
-              icon: const Icon(Icons.egg),
+              icon: const Icon(
+                Icons.egg,
+                semanticLabel: 'Adicionar ovo',
+              ),
+              tooltip: 'Adicionar ovo',
               onPressed: () {
                 final nextNumber = widget.nest.eggsList!.length + 1;
                 Navigator.push(context,
@@ -120,23 +128,21 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
         ),
         body: TabBarView(
           children: [
-            // Tela de Revisões
             NestRevisionsTab(nest: widget.nest, revisionListKey: _revisionListKey),
-
-            // Tela de Ovos
             EggsTab(nest: widget.nest, eggListKey: _eggListKey),
           ],
         ),
         floatingActionButton: widget.nest.isActive
             ? FloatingActionButton(
+          tooltip: 'Desativar ninho',
           onPressed: () async {
             NestFateType? selectedNestFate;
 
-            // Exibir o diálogo com o DropdownButton
+            // Show dialog with the DropdownButton
             await showDialog<NestFateType>(
               context: context,
               builder: (context) => AlertDialog(
-                title: const Text('Confirmar Encerramento'),
+                title: const Text('Confirmar Desativação'),
                 content: DropdownButtonFormField<NestFateType>(
                   value: selectedNestFate,
                   decoration: const InputDecoration(
@@ -151,7 +157,17 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
                   items: NestFateType.values.map((NestFateType fate) {
                     return DropdownMenuItem<NestFateType>(
                       value: fate,
-                      child: Text(nestFateTypeFriendlyNames[fate]!),
+                      child: Row(
+                        children: [
+                          fate == NestFateType.fatSuccess
+                              ? const Icon(Icons.check_circle, color: Colors.green)
+                              : fate == NestFateType.fatLost
+                              ? const Icon(Icons.cancel, color: Colors.red)
+                              : const Icon(Icons.help, color: Colors.grey),
+                          const SizedBox(width: 8),
+                          Text(nestFateTypeFriendlyNames[fate]!),
+                        ],
+                      ),
                     );
                   }).toList(),
                 ),
@@ -168,12 +184,12 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
                         });
 
                         try {
-                          // Atualizar o ninho com o destino, lastTime e isActive = false
+                          // Update nest with fate, lastTime and isActive = false
                           widget.nest.nestFate = selectedNestFate;
                           widget.nest.lastTime = DateTime.now();
                           widget.nest.isActive = false;
 
-                          // Salvar as alterações no banco de dados usando o provider
+                          // Save changes to database using the provider
                           await Provider.of<NestProvider>(context, listen: false)
                               .updateNest(widget.nest);
 
@@ -183,11 +199,11 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
                             ),
                           );
 
-                          // Fechar a tela de detalhes do ninho
+                          // Close screen of nest details
                           Navigator.pop(context, selectedNestFate);
                           Navigator.pop(context);
                         } catch (error) {
-                          // Lidar com erros
+                          // Handle errors
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text('Erro ao desativar o ninho: $error'),

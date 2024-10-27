@@ -36,6 +36,7 @@ class RevisionListItemState extends State<RevisionListItem> {
         ),
         trailing: IconButton(
           icon: const Icon(Icons.delete),
+          tooltip: 'Apagar revisão de ninho',
           onPressed: widget.onDelete,
         ),
         onTap: () {

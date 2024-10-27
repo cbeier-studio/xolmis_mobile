@@ -59,6 +59,20 @@ class Egg {
     };
   }
 
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'nestId': nestId,
+      'sampleTime': sampleTime?.toIso8601String(),
+      'fieldNumber': fieldNumber,
+      'eggShape': eggShape.index,
+      'width': width,
+      'length': length,
+      'mass': mass,
+      'speciesName': speciesName,
+    };
+  }
+
   factory Egg.fromMap(Map<String, dynamic> map) {
     return Egg(
       id: map['id']?.toInt(),
@@ -134,6 +148,22 @@ class NestRevision {
   });
 
   Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'nestId': nestId,
+      'sampleTime': sampleTime?.toIso8601String(),
+      'nestStatus': nestStatus.index,
+      'nestStage': nestStage.index,
+      'eggsHost': eggsHost,
+      'nestlingsHost': nestlingsHost,
+      'eggsParasite': eggsParasite,
+      'nestlingsParasite': nestlingsParasite,
+      'hasPhilornisLarvae': hasPhilornisLarvae == true ? 1 : 0, // Convert bool to int
+      'notes': notes,
+    };
+  }
+
+  Map<String, dynamic> toJson() {
     return {
       'id': id,
       'nestId': nestId,
@@ -237,6 +267,28 @@ class Nest {
     };
   }
 
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'fieldNumber': fieldNumber,
+      'speciesName': speciesName,
+      'localityName': localityName,
+      'longitude': longitude,
+      'latitude': latitude,
+      'support': support,
+      'heightAboveGround': heightAboveGround,
+      'foundTime': foundTime?.toIso8601String(),
+      'lastTime': lastTime?.toIso8601String(),
+      'nestFate': nestFate?.index,
+      'male': male,
+      'female': female,
+      'helpers': helpers,
+      'isActive': isActive,
+      'revisionsList': revisionsList?.map((nestRevision) => nestRevision.toJson()).toList(),
+      'eggsList': eggsList?.map((egg) => egg.toJson()).toList(),
+    };
+  }
+
   factory Nest.fromMap(Map<String, dynamic> map, List<NestRevision> revisionsList, List<Egg> eggsList) {
     return Nest(
       id: map['id']?.toInt(),
@@ -260,28 +312,28 @@ class Nest {
   }
 }
 
-extension NestExport on Nest {
-  String toJson() {
-    final data = {
-      'id': id,
-      'fieldNumber': fieldNumber,
-      'speciesName': speciesName,
-      'localityName': localityName,
-      'longitude': longitude,
-      'latitude': latitude,
-      'support': support,
-      'heightAboveGround': heightAboveGround,
-      'foundTime': foundTime?.toIso8601String(),
-      'lastTime': lastTime?.toIso8601String(),
-      'nestFate': nestFate?.index,
-      'male': male,
-      'female': female,
-      'helpers': helpers,
-      'isActive': isActive,
-      'revisionsList': revisionsList?.map((revision) => revision.toMap())
-          .toList(),
-      'eggsList': eggsList?.map((egg) => egg.toMap()).toList(),
-    };
-    return jsonEncode(data);
-  }
-}
+// extension NestExport on Nest {
+//   String toJson() {
+//     final data = {
+//       'id': id,
+//       'fieldNumber': fieldNumber,
+//       'speciesName': speciesName,
+//       'localityName': localityName,
+//       'longitude': longitude,
+//       'latitude': latitude,
+//       'support': support,
+//       'heightAboveGround': heightAboveGround,
+//       'foundTime': foundTime?.toIso8601String(),
+//       'lastTime': lastTime?.toIso8601String(),
+//       'nestFate': nestFate?.index,
+//       'male': male,
+//       'female': female,
+//       'helpers': helpers,
+//       'isActive': isActive,
+//       'revisionsList': revisionsList?.map((revision) => revision.toMap())
+//           .toList(),
+//       'eggsList': eggsList?.map((egg) => egg.toMap()).toList(),
+//     };
+//     return jsonEncode(data);
+//   }
+// }

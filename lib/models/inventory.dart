@@ -46,6 +46,15 @@ class Poi {
     };
   }
 
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'speciesId': speciesId,
+      'longitude': longitude,
+      'latitude': latitude,
+    };
+  }
+
   @override
   String toString() {
     return 'Poi{'
@@ -102,6 +111,17 @@ class Species {
       'name': name,
       'isOutOfInventory': isOutOfInventory ? 1 : 0,
       'count': count,
+    };
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'inventoryId': inventoryId,
+      'name': name,
+      'isOutOfInventory': isOutOfInventory ? 1 : 0,
+      'count': count,
+      'pois': pois.map((poi) => poi.toJson()).toList(),
     };
   }
 
@@ -213,6 +233,26 @@ class Vegetation {
     };
   }
 
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'inventoryId': inventoryId,
+      'sampleTime': sampleTime?.toIso8601String(),
+      'longitude': longitude,
+      'latitude': latitude,
+      'herbsProportion': herbsProportion,
+      'herbsDistribution': herbsDistribution,
+      'herbsHeight': herbsHeight,
+      'shrubsProportion': shrubsProportion,
+      'shrubsDistribution': shrubsDistribution,
+      'shrubsHeight': shrubsHeight,
+      'treesProportion': treesProportion,
+      'treesDistribution': treesDistribution,
+      'treesHeight': treesHeight,
+      'notes': notes,
+    };
+  }
+
   @override
   String toString() {
     return 'Vegetation{'
@@ -296,6 +336,18 @@ class Weather {
   }
 
   Map<String, dynamic> toMap(String inventoryId) {
+    return {
+      'id': id,
+      'inventoryId': inventoryId,
+      'sampleTime': sampleTime?.toIso8601String(),
+      'cloudCover': cloudCover,
+      'precipitation': precipitation?.index,
+      'temperature': temperature,
+      'windSpeed': windSpeed,
+    };
+  }
+
+  Map<String, dynamic> toJson() {
     return {
       'id': id,
       'inventoryId': inventoryId,
@@ -481,6 +533,24 @@ class Inventory with ChangeNotifier {
         'startLatitude: $startLatitude, '
         'endLongitude: $endLongitude, '
         'endLatitude: $endLatitude}';
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'type': type.index,
+      'duration': duration,
+      'maxSpecies': maxSpecies,
+      'startTime': startTime?.toIso8601String(),
+      'endTime': endTime?.toIso8601String(),
+      'startLongitude': startLongitude,
+      'startLatitude': startLatitude,
+      'endLongitude': endLongitude,
+      'endLatitude': endLatitude,
+      'speciesList': speciesList.map((species) => species.toJson()).toList(),
+      'vegetationList': vegetationList.map((vegetation) => vegetation.toJson()).toList(),
+      'weatherList': weatherList.map((weather) => weather.toJson()).toList(),
+    };
   }
 
   void startTimer() async {

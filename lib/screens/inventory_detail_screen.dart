@@ -92,6 +92,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
               final inventory = widget.inventory;
               return IconButton(
                 icon: Icon(inventory.isPaused ? Icons.play_arrow : Icons.pause),
+                tooltip: inventory.isPaused ? 'Retomar' : 'Pausa',
                 onPressed: () {
                   if (inventory.isPaused) {
                     inventoryProvider.resumeInventoryTimer(inventory);
@@ -106,6 +107,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
           ) : const SizedBox.shrink(),
           IconButton(
             icon: const Icon(Icons.local_florist),
+            tooltip: 'Adicionar dados de vegetação',
             onPressed: () {
               Navigator.push(context,
                 MaterialPageRoute(
@@ -119,6 +121,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
           ),
           IconButton(
             icon: const Icon(Icons.cloudy_snowing),
+            tooltip: 'Adicionar dados do tempo',
             onPressed: () {
               Navigator.push(context,
                 MaterialPageRoute(
@@ -216,6 +219,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
       ),
       floatingActionButton: !widget.inventory.isFinished
           ? FloatingActionButton(
+        tooltip: 'Encerrar inventário',
         onPressed: () async {
           // Show confirmation dialog
           final confirmed = await showDialog<bool>(
