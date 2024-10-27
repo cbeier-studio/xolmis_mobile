@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
+import '../models/database_helper.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -102,6 +105,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               );
             },
           ),
+          Divider(),
           ListTile(
             title: const Text('Máximo de espécies (listas de Mackinnon)'),
             subtitle: Text('$_maxSpeciesMackinnon spp.'),
@@ -171,6 +175,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               }
             },
           ),
+          Divider(),
           ListTile(
             title: const Text('Sobre o app'),
             onTap: () => showLicensePage(
@@ -184,9 +189,66 @@ class _SettingsScreenState extends State<SettingsScreen> {
               applicationVersion: _packageInfo?.version ?? '',
             ),
           ),
+          Divider(),
+          ListTile(
+            title: const Text(
+              'Apagar dados do aplicativo',
+              style: TextStyle(color: Colors.red),
+            ),
+            onTap: () {
+              _showDeleteConfirmationDialog(context);
+            },
+          ),
         ],
       ),
     );
+  }
+
+  Future<void> _showDeleteConfirmationDialog(BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Apagar dados'),
+          content: const Text('Tem certeza que deseja apagar todos os dados do aplicativo? Esta ação não poderá ser desfeita.'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancelar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Apagar'),
+              onPressed: () async {
+                // Delete the app data
+                await _deleteAppData();
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Dados do aplicativo apagados com sucesso!')),
+                );
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _deleteAppData() async {
+    // 1. Get the database path
+    var databasesPath = await getDatabasesPath();
+    String path = join(databasesPath, 'inventory_database.db');
+
+    // 2. Delete the database file
+    await deleteDatabase(path);
+
+    // 3. Recreate the database
+    DatabaseHelper databaseHelper = DatabaseHelper();
+    await databaseHelper.initDatabase();
+
+    // 4. Clear other app data, if necessary (ex: SharedPreferences)
+    // ...
   }
 }
 
