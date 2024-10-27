@@ -557,7 +557,7 @@ class Inventory with ChangeNotifier {
     if (kDebugMode) {
       print('startTimer called');
     }
-    if (duration > 0 && !isFinished && !isPaused) {
+    if (duration > 0 && !isFinished) {
 
       if (duration == 0) {
         elapsedTime = 0;
@@ -567,8 +567,10 @@ class Inventory with ChangeNotifier {
       _timer ??= Timer.periodic(const Duration(seconds: 1), (timer) {
           if (!isPaused && !isFinished) {
             elapsedTime++;
+            elapsedTimeNotifier.value = elapsedTime;
+            elapsedTimeNotifier.notifyListeners();
 
-            if (elapsedTime % 15 == 0) {
+            if (elapsedTime == 0 || elapsedTime % 15 == 0) {
               DatabaseHelper().updateInventoryElapsedTime(id, elapsedTime);
             }
 
@@ -582,10 +584,12 @@ class Inventory with ChangeNotifier {
               stopTimer();
             }
           }
-          elapsedTimeNotifier.value = elapsedTime;
-          elapsedTimeNotifier.notifyListeners();
         });
 
+      // Restart the Timer if isPaused was true and now is false
+      if (!isPaused && _timer == null) {
+        startTimer(); // Call startTimer recursively to restart the Timer
+      }
     }
     notifyListeners();
   }

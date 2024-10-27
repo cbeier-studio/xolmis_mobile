@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../models/inventory.dart';
 import '../providers/inventory_provider.dart';
+import '../providers/species_provider.dart';
 
 import 'history_screen.dart';
 import 'add_inventory_screen.dart';
@@ -305,10 +306,10 @@ class InventoryListItem extends StatelessWidget {
               children: [
                 Text('${inventoryTypeFriendlyNames[inventory.type]}'),
                 if (inventory.duration > 0) Text('${inventory.duration} minutos de duração'),
-                Selector<InventoryProvider, int>(
-                  selector: (context, inventoryProvider) => inventoryProvider.speciesCountNotifier.value,
-                  builder: (context, speciesCount, child) {
-                    return Text('${inventory.speciesList.length} espécies');
+                Selector<SpeciesProvider, List<Species>>(
+                  selector: (context, speciesProvider) => speciesProvider.getSpeciesForInventory(inventory.id),
+                  builder: (context, speciesList, child) {
+                    return Text('${speciesList.length} espécies');
                   },
                 ),
               ],

@@ -8,6 +8,9 @@ class SpeciesSearchDelegate extends SearchDelegate<String> {
   SpeciesSearchDelegate(this.allSpecies, this.addSpeciesToInventory, this.updateSpeciesList);
 
   @override
+  String? get searchFieldLabel => 'Buscar espécie';
+
+  @override
   List<Widget>? buildActions(BuildContext context) {
     return [
       IconButton(

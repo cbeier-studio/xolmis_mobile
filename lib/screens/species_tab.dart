@@ -55,9 +55,9 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
       _addSpeciesToOtherActiveInventories(speciesName, speciesProvider, inventoryProvider);
     }
 
-    if (!widget.inventory.isFinished && widget.inventory.type == InventoryType.invCumulativeTime) {
-      _restartInventoryTimer(inventoryProvider);
-    }
+    // if (!widget.inventory.isFinished && widget.inventory.type == InventoryType.invCumulativeTime) {
+    //   _restartInventoryTimer(inventoryProvider);
+    // }
 
     _updateSpeciesList();
 
@@ -99,17 +99,23 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
           pois: [],
         );
         speciesProvider.addSpecies(context, newSpeciesForOtherInventory.inventoryId, newSpeciesForOtherInventory);
+      }
+      if (inventory.type == InventoryType.invCumulativeTime) {
+        _restartInventoryTimer(inventoryProvider, inventory);
+      } else {
         inventoryProvider.updateInventory(inventory);
       }
     }
   }
 
-  void _restartInventoryTimer(InventoryProvider inventoryProvider) async {
-    widget.inventory.elapsedTime = 0;
-    widget.inventory.isPaused = false;
-    widget.inventory.isFinished = false;
-    await inventoryProvider.updateInventoryElapsedTime(widget.inventory.id, widget.inventory.elapsedTime);
-    widget.inventory.startTimer();
+  void _restartInventoryTimer(InventoryProvider inventoryProvider, Inventory inventory) async {
+    inventory.elapsedTime = 0;
+    inventory.isPaused = false;
+    inventory.isFinished = false;
+    inventory.startTimer();
+    inventoryProvider.updateInventory(inventory);
+    // await inventoryProvider.updateInventoryElapsedTime(widget.inventory.id, widget.inventory.elapsedTime);
+
   }
 
   void _updateSpeciesList() async {
