@@ -77,10 +77,17 @@ class _AddNestScreenState extends State<AddNestScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final nestProvider = Provider.of<NestProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Adicionar Ninho'),
+        title: const Text('Novo Ninho'),
+          actions: [
+            _isSubmitting
+                ? CircularProgressIndicator()
+                : TextButton(
+              onPressed: _submitForm,
+              child: const Text('Salvar'),
+            ),
+          ]
       ),
       body: Form(
         key: _formKey,
@@ -196,69 +203,75 @@ class _AddNestScreenState extends State<AddNestScreen> {
                   border: OutlineInputBorder(),
                 ),
               ),
-              const SizedBox(height: 16.0),
-              ElevatedButton(
-                onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
-                    // Create Nest object with form data
-                    final newNest = Nest(
-                      fieldNumber: _fieldNumberController.text,
-                      speciesName: _speciesNameController.text,
-                      localityName: _localityNameController.text,
-                      longitude: _currentPosition!.longitude,
-                      latitude: _currentPosition!.latitude,
-                      support: _supportController.text,
-                      heightAboveGround: double.tryParse(_heightAboveGroundController.text),
-                      male: _maleController.text,
-                      female: _femaleController.text,
-                      helpers: _helpersController.text,
-                      foundTime: DateTime.now(),
-                      isActive: true,
-                      nestFate: NestFateType.fatUnknown,
-                    );
-
-                    setState(() {
-                      _isSubmitting = false;
-                    });
-
-                    try {
-                      await nestProvider.addNest(newNest);
-                      Navigator.pop(context);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Row(
-                          children: [
-                            Icon(Icons.check, color: Colors.green),
-                            SizedBox(width: 8),
-                            Text('Ninho adicionado!'),
-                          ],
-                        ),
-                        ),
-                      );
-                    } catch (error) {
-                      if (kDebugMode) {
-                        print('Error adding nest: $error');
-                      }
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Row(
-                          children: [
-                            Icon(Icons.error, color: Colors.red),
-                            SizedBox(width: 8),
-                            Text('Erro ao salvar o ninho'),
-                          ],
-                        ),
-                        ),
-                      );
-                    }
-                  }
-                },
-                child: _isSubmitting
-                    ? const CircularProgressIndicator()
-                    : const Text('Salvar'),
-              ),
+              // const SizedBox(height: 16.0),
+              // ElevatedButton(
+              //   onPressed: () async {
+              //     _submitForm();
+              //   },
+              //   child: _isSubmitting
+              //       ? const CircularProgressIndicator()
+              //       : const Text('Salvar'),
+              // ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  void _submitForm() async {
+    final nestProvider = Provider.of<NestProvider>(context, listen: false);
+
+    if (_formKey.currentState!.validate()) {
+      // Create Nest object with form data
+      final newNest = Nest(
+        fieldNumber: _fieldNumberController.text,
+        speciesName: _speciesNameController.text,
+        localityName: _localityNameController.text,
+        longitude: _currentPosition!.longitude,
+        latitude: _currentPosition!.latitude,
+        support: _supportController.text,
+        heightAboveGround: double.tryParse(_heightAboveGroundController.text),
+        male: _maleController.text,
+        female: _femaleController.text,
+        helpers: _helpersController.text,
+        foundTime: DateTime.now(),
+        isActive: true,
+        nestFate: NestFateType.fatUnknown,
+      );
+
+      setState(() {
+        _isSubmitting = false;
+      });
+
+      try {
+        await nestProvider.addNest(newNest);
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Row(
+            children: [
+              Icon(Icons.check, color: Colors.green),
+              SizedBox(width: 8),
+              Text('Ninho adicionado!'),
+            ],
+          ),
+          ),
+        );
+      } catch (error) {
+        if (kDebugMode) {
+          print('Error adding nest: $error');
+        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Row(
+            children: [
+              Icon(Icons.error, color: Colors.red),
+              SizedBox(width: 8),
+              Text('Erro ao salvar o ninho'),
+            ],
+          ),
+          ),
+        );
+      }
+    }
   }
 }

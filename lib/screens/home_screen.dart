@@ -233,6 +233,36 @@ class _HomeScreenState extends State<HomeScreen> {
           },
         ),
       ),
+      // floatingActionButton: FloatingActionButton(
+      //   tooltip: 'Novo inventário',
+      //   onPressed: () {
+      //     showDialog(
+      //       context: context,
+      //       builder: (context) {
+      //         const dialogContent = AddInventoryScreen();
+      //         final showFullScreenDialog = MediaQuery.sizeOf(context).width < 600;
+      //         if (showFullScreenDialog) {
+      //           return const Dialog.fullscreen(
+      //             child: dialogContent,
+      //           );
+      //         } else {
+      //           return Dialog(
+      //             child: ConstrainedBox(
+      //               constraints: BoxConstraints(maxWidth: 400),
+      //               child: dialogContent,
+      //             )
+      //           );
+      //         }
+      //       },
+      //     ).then((newInventory) {
+      //       // Reload the inventory list
+      //       if (newInventory != null) {
+      //         inventoryProvider.loadInventories();
+      //       }
+      //     });
+      //   },
+      //   child: const Icon(Icons.add),
+      // ),
       floatingActionButton: FloatingActionButton(
         tooltip: 'Novo inventário',
         onPressed: () {

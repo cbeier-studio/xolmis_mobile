@@ -35,6 +35,14 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Novo Inventário'),
+        actions: [
+          _isSubmitting
+              ? CircularProgressIndicator()
+              : TextButton(
+            onPressed: _submitForm,
+            child: const Text('Iniciar'),
+          ),
+        ]
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -53,7 +61,9 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
 
               return Form(
                 key: _formKey,
-                child: Column(
+                child: SingleChildScrollView( // Prevent keyboard overflow
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TextFormField(
@@ -134,16 +144,17 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                           ),
                         ]
                     ),
-                    const SizedBox(height: 32.0),
-                    Center(
-                      child: _isSubmitting
-                          ? CircularProgressIndicator()
-                          : ElevatedButton(
-                        onPressed: _submitForm,
-                        child: const Text('Iniciar Inventário'),
-                      ),
-                    ),
+                    // const SizedBox(height: 32.0),
+                    // Center(
+                    //   child: _isSubmitting
+                    //       ? CircularProgressIndicator()
+                    //       : ElevatedButton(
+                    //     onPressed: _submitForm,
+                    //     child: const Text('Iniciar Inventário'),
+                    //   ),
+                    // ),
                   ],
+                ),
                 ),
               );
             } else if (snapshot.hasError) {

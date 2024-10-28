@@ -36,10 +36,17 @@ class _AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final revisionProvider = Provider.of<NestRevisionProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Adicionar Revisão de Ninho'),
+        title: const Text('Revisão de Ninho'),
+          actions: [
+            _isSubmitting
+                ? CircularProgressIndicator()
+                : TextButton(
+              onPressed: _submitForm,
+              child: const Text('Salvar'),
+            ),
+          ]
       ),
       body: Form(
         key: _formKey,
@@ -47,11 +54,9 @@ class _AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              Text('Hospedeiro',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: const Text('Hospedeiro'),
               ),
               const SizedBox(height: 8.0),
               Row(
@@ -80,11 +85,9 @@ class _AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
                 ],
               ),
               const SizedBox(height: 8.0),
-              Text('Nidoparasita',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: const Text('Nidoparasita'),
               ),
               const SizedBox(height: 8.0),
               Row(
@@ -112,7 +115,7 @@ class _AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 16.0),
+              const SizedBox(height: 20.0),
               Row(
                 children: [
                   Expanded(
@@ -158,7 +161,7 @@ class _AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 16.0),
+              const SizedBox(height: 8.0),
               CheckboxListTile(
                 title: const Text('Presença de larvas de Philornis'),
                 value: _hasPhilornisLarvae,
@@ -168,7 +171,7 @@ class _AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
                   });
                 },
               ),
-              const SizedBox(height: 16.0),
+              const SizedBox(height: 8.0),
               TextFormField(
                 controller: _notesController,
                 maxLines: 3,
@@ -177,65 +180,71 @@ class _AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
                   border: OutlineInputBorder(),
                 ),
               ),
-              const SizedBox(height: 16.0),
-              ElevatedButton(
-                onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
-                    // Create Nest object with form data
-                    final newRevision = NestRevision(
-                      eggsHost: int.tryParse(_eggsHostController.text),
-                      nestlingsHost: int.tryParse(_nestlingsHostController.text),
-                      eggsParasite: int.tryParse(_eggsParasiteController.text),
-                      nestlingsParasite: int.tryParse(_nestlingsParasiteController.text),
-                      nestStatus: _selectedNestStatus,
-                      nestStage: _selectedNestStage,
-                      notes: _notesController.text,
-                      sampleTime: DateTime.now(),
-                      hasPhilornisLarvae: _hasPhilornisLarvae,
-                    );
-
-                    setState(() {
-                      _isSubmitting = false;
-                    });
-
-                    try {
-                      await revisionProvider.addNestRevision(context, widget.nest.id!, newRevision);
-                      Navigator.pop(context);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Row(
-                          children: [
-                            Icon(Icons.check, color: Colors.green),
-                            SizedBox(width: 8),
-                            Text('Revisão de ninho adicionada!'),
-                          ],
-                        ),
-                        ),
-                      );
-                    } catch (error) {
-                      if (kDebugMode) {
-                        print('Error adding nest revision: $error');
-                      }
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Row(
-                          children: [
-                            Icon(Icons.error, color: Colors.red),
-                            SizedBox(width: 8),
-                            Text('Erro ao salvar a revisão de ninho.'),
-                          ],
-                        ),
-                        ),
-                      );
-                    }
-                  }
-                },
-                child: _isSubmitting
-                    ? const CircularProgressIndicator()
-                    : const Text('Salvar'),
-              ),
+              // const SizedBox(height: 16.0),
+              // ElevatedButton(
+              //   onPressed: () async {
+              //
+              //   },
+              //   child: _isSubmitting
+              //       ? const CircularProgressIndicator()
+              //       : const Text('Salvar'),
+              // ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  void _submitForm() async {
+    final revisionProvider = Provider.of<NestRevisionProvider>(context, listen: false);
+
+    if (_formKey.currentState!.validate()) {
+      // Create Nest object with form data
+      final newRevision = NestRevision(
+        eggsHost: int.tryParse(_eggsHostController.text),
+        nestlingsHost: int.tryParse(_nestlingsHostController.text),
+        eggsParasite: int.tryParse(_eggsParasiteController.text),
+        nestlingsParasite: int.tryParse(_nestlingsParasiteController.text),
+        nestStatus: _selectedNestStatus,
+        nestStage: _selectedNestStage,
+        notes: _notesController.text,
+        sampleTime: DateTime.now(),
+        hasPhilornisLarvae: _hasPhilornisLarvae,
+      );
+
+      setState(() {
+        _isSubmitting = false;
+      });
+
+      try {
+        await revisionProvider.addNestRevision(context, widget.nest.id!, newRevision);
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Row(
+            children: [
+              Icon(Icons.check, color: Colors.green),
+              SizedBox(width: 8),
+              Text('Revisão de ninho adicionada!'),
+            ],
+          ),
+          ),
+        );
+      } catch (error) {
+        if (kDebugMode) {
+          print('Error adding nest revision: $error');
+        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Row(
+            children: [
+              Icon(Icons.error, color: Colors.red),
+              SizedBox(width: 8),
+              Text('Erro ao salvar a revisão de ninho.'),
+            ],
+          ),
+          ),
+        );
+      }
+    }
   }
 }

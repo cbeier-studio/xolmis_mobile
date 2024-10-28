@@ -45,10 +45,17 @@ class _AddEggScreenState extends State<AddEggScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final eggProvider = Provider.of<EggProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Adicionar Ovo'),
+          actions: [
+            _isSubmitting
+                ? CircularProgressIndicator()
+                : TextButton(
+              onPressed: _submitForm,
+              child: const Text('Salvar'),
+            ),
+          ]
       ),
       body: Form(
         key: _formKey,
@@ -149,63 +156,69 @@ class _AddEggScreenState extends State<AddEggScreen> {
                   suffixText: 'g',
                 ),
               ),
-              const SizedBox(height: 16.0),
-              ElevatedButton(
-                onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
-                    // Create Nest object with form data
-                    final newEgg = Egg(
-                      fieldNumber: _fieldNumberController.text,
-                      speciesName: _speciesNameController.text,
-                      eggShape: _selectedEggShape,
-                      width: double.tryParse(_widthController.text),
-                      length: double.tryParse(_lengthController.text),
-                      mass: double.tryParse(_massController.text),
-                      sampleTime: DateTime.now(),
-                    );
-
-                    setState(() {
-                      _isSubmitting = false;
-                    });
-
-                    try {
-                      await eggProvider.addEgg(context, widget.nest.id!, newEgg);
-                      Navigator.pop(context);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Row(
-                          children: [
-                            Icon(Icons.check, color: Colors.green),
-                            SizedBox(width: 8),
-                            Text('Ovo adicionado!'),
-                          ],
-                        ),
-                        ),
-                      );
-                    } catch (error) {
-                      if (kDebugMode) {
-                        print('Error adding egg: $error');
-                      }
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Row(
-                          children: [
-                            Icon(Icons.error, color: Colors.red),
-                            SizedBox(width: 8),
-                            Text('Erro ao salvar o ovo'),
-                          ],
-                        ),
-                        ),
-                      );
-                    }
-                  }
-                },
-                child: _isSubmitting
-                    ? const CircularProgressIndicator()
-                    : const Text('Salvar'),
-              ),
+              // const SizedBox(height: 16.0),
+              // ElevatedButton(
+              //   onPressed: () async {
+              //
+              //   },
+              //   child: _isSubmitting
+              //       ? const CircularProgressIndicator()
+              //       : const Text('Salvar'),
+              // ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  void _submitForm() async {
+    final eggProvider = Provider.of<EggProvider>(context, listen: false);
+
+    if (_formKey.currentState!.validate()) {
+      // Create Nest object with form data
+      final newEgg = Egg(
+        fieldNumber: _fieldNumberController.text,
+        speciesName: _speciesNameController.text,
+        eggShape: _selectedEggShape,
+        width: double.tryParse(_widthController.text),
+        length: double.tryParse(_lengthController.text),
+        mass: double.tryParse(_massController.text),
+        sampleTime: DateTime.now(),
+      );
+
+      setState(() {
+        _isSubmitting = false;
+      });
+
+      try {
+        await eggProvider.addEgg(context, widget.nest.id!, newEgg);
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Row(
+            children: [
+              Icon(Icons.check, color: Colors.green),
+              SizedBox(width: 8),
+              Text('Ovo adicionado!'),
+            ],
+          ),
+          ),
+        );
+      } catch (error) {
+        if (kDebugMode) {
+          print('Error adding egg: $error');
+        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Row(
+            children: [
+              Icon(Icons.error, color: Colors.red),
+              SizedBox(width: 8),
+              Text('Erro ao salvar o ovo'),
+            ],
+          ),
+          ),
+        );
+      }
+    }
   }
 }
