@@ -167,7 +167,7 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Row(
             children: [
-              Icon(Icons.check, color: Colors.green),
+              Icon(Icons.check_circle_outlined, color: Colors.green),
               SizedBox(width: 8),
               Text('Dados do tempo adicionados!'),
             ],
@@ -181,7 +181,7 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Row(
             children: [
-              Icon(Icons.error, color: Colors.red),
+              Icon(Icons.error_outlined, color: Colors.red),
               SizedBox(width: 8),
               Text('Erro ao salvar os dados do tempo'),
             ],

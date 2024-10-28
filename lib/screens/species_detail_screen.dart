@@ -56,7 +56,7 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen>
               height: 24,
               child: CircularProgressIndicator(strokeWidth: 2),
             )
-                : const Icon(Icons.add_location),
+                : const Icon(Icons.add_location_outlined),
             onPressed: _isAddingPoi ? null : () async {
               setState(() {
                 _isAddingPoi = true;
@@ -97,7 +97,7 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen>
                 SnackBar(
                   content: Row(
                     children: [
-                      const Icon(Icons.check, color: Colors.green),
+                      const Icon(Icons.check_circle_outlined, color: Colors.green),
                       const SizedBox(width: 8),
                       const Text('POI inserido com sucesso!'),
                     ],
@@ -127,7 +127,7 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen>
                     color: Colors.red,
                     alignment: Alignment.centerRight,
                     padding: const EdgeInsets.only(right: 20.0),
-                    child: const Icon(Icons.delete, color: Colors.white),
+                    child: const Icon(Icons.delete_outlined, color: Colors.white),
                   ),
                   confirmDismiss: (direction) async {
                     return await showDialog(
@@ -191,7 +191,7 @@ class PoiListItem extends StatelessWidget {
       sizeFactor: animation,
       child: ListTile(
         title: Text('${poi.latitude}, ${poi.longitude}'),
-        leading: const Icon(Icons.location_pin),
+        leading: const Icon(Icons.location_on_outlined),
       ),
     );
   }

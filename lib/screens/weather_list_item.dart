@@ -36,7 +36,7 @@ class WeatherListItemState extends State<WeatherListItem> {
           ],
         ),
         trailing: IconButton(
-          icon: const Icon(Icons.delete),
+          icon: const Icon(Icons.delete_outlined),
           tooltip: 'Apagar dados do tempo',
           onPressed: widget.onDelete,
         ),

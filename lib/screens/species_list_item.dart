@@ -37,7 +37,7 @@ class SpeciesListItemState extends State<SpeciesListItem> {
           mainAxisSize: MainAxisSize.min,
           children: [
             IconButton(
-              icon: const Icon(Icons.remove),
+              icon: const Icon(Icons.remove_outlined),
               tooltip: 'Diminuir contagem de indivíduos',
               onPressed: () {
                 if (mounted && widget.species.count > 0) {
@@ -53,7 +53,7 @@ class SpeciesListItemState extends State<SpeciesListItem> {
               },
             ),
             IconButton(
-              icon: const Icon(Icons.add),
+              icon: const Icon(Icons.add_outlined),
               tooltip: 'Aumentar contagem de indivíduos',
               onPressed: () {
                 if (mounted) {
@@ -76,9 +76,9 @@ class SpeciesListItemState extends State<SpeciesListItem> {
                       ? Badge.count(
                     backgroundColor: Colors.deepPurple,
                     count: pois.length,
-                    child: const Icon(Icons.add_location),
+                    child: const Icon(Icons.add_location_outlined),
                   )
-                      : const Icon(Icons.add_location),
+                      : const Icon(Icons.add_location_outlined),
                   tooltip: 'Adicionar POI',
                   onPressed: _isAddingPoi ? null : () async {
                     setState(() {
@@ -111,7 +111,7 @@ class SpeciesListItemState extends State<SpeciesListItem> {
                       SnackBar(
                         content: Row(
                           children: [
-                            const Icon(Icons.check, color: Colors.green),
+                            const Icon(Icons.check_circle_outlined, color: Colors.green),
                             const SizedBox(width: 8),
                             const Text('POI inserido com sucesso!'),
                           ],

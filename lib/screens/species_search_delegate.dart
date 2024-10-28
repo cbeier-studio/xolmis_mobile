@@ -14,7 +14,7 @@ class SpeciesSearchDelegate extends SearchDelegate<String> {
   List<Widget>? buildActions(BuildContext context) {
     return [
       IconButton(
-        icon: const Icon(Icons.clear),
+        icon: const Icon(Icons.clear_outlined),
         onPressed: () {
           query = '';
         },
@@ -25,7 +25,7 @@ class SpeciesSearchDelegate extends SearchDelegate<String> {
   @override
   Widget? buildLeading(BuildContext context) {
     return IconButton(
-      icon: const Icon(Icons.arrow_back),
+      icon: const Icon(Icons.arrow_back_outlined),
       onPressed: () {
         close(context, '');
       },

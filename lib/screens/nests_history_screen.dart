@@ -34,7 +34,7 @@ class _NestsHistoryScreenState extends State<NestsHistoryScreen> {
         title: const Text('Ninhos inativos'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.file_download),
+            icon: const Icon(Icons.file_download_outlined),
             onPressed: () => _exportAllInactiveNestsToJson(context),
             tooltip: 'Exportar todos os ninhos inativos',
           ),
@@ -61,7 +61,7 @@ class _NestsHistoryScreenState extends State<NestsHistoryScreen> {
                   color: Colors.red,
                   alignment: Alignment.centerRight,
                   padding: const EdgeInsets.only(right: 20.0),
-                  child: const Icon(Icons.delete, color: Colors.white),
+                  child: const Icon(Icons.delete_outlined, color: Colors.white),
                 ),
                 onDismissed: (direction) {
                   showDialog(
@@ -112,7 +112,7 @@ class _NestsHistoryScreenState extends State<NestsHistoryScreen> {
                     mainAxisSize: MainAxisSize.min,
                     children:[
                       IconButton(
-                        icon: const Icon(Icons.file_download),
+                        icon: const Icon(Icons.file_download_outlined),
                         tooltip: 'Exportar ninho',
                         onPressed: () {
                           _exportNestToJson(context, nest);
@@ -162,7 +162,7 @@ class _NestsHistoryScreenState extends State<NestsHistoryScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Row(
           children: [
-            Icon(Icons.error, color: Colors.red),
+            Icon(Icons.error_outlined, color: Colors.red),
             SizedBox(width: 8),
             Text('Erro ao exportar os ninhos inativos: $error'),
           ],
@@ -192,7 +192,7 @@ class _NestsHistoryScreenState extends State<NestsHistoryScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Row(
           children: [
-            Icon(Icons.error, color: Colors.red),
+            Icon(Icons.error_outlined, color: Colors.red),
             SizedBox(width: 8),
             Text('Erro ao exportar o ninho: $error'),
           ],

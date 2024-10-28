@@ -24,7 +24,7 @@ class EggListItemState extends State<EggListItem> {
     return SizeTransition(
       sizeFactor: widget.animation,
       child: ListTile(
-        leading: const Icon(Icons.egg),
+        leading: const Icon(Icons.egg_outlined),
         title: Text('${widget.egg.fieldNumber}'),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -37,7 +37,7 @@ class EggListItemState extends State<EggListItem> {
           ],
         ),
         trailing: IconButton(
-          icon: const Icon(Icons.delete),
+          icon: const Icon(Icons.delete_outlined),
           tooltip: 'Apagar ovo',
           onPressed: widget.onDelete,
         ),

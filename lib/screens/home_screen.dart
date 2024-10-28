@@ -79,7 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Text('Inventários ativos'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.history),
+            icon: const Icon(Icons.history_outlined),
             tooltip: 'Inventários encerrados',
             onPressed: () {
               Navigator.push(
@@ -89,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
             },
           ),
           IconButton(
-            icon: const Icon(Icons.settings),
+            icon: const Icon(Icons.settings_outlined),
             tooltip: 'Configurações',
             onPressed: () {
               Navigator.push(
@@ -122,13 +122,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: Colors.green,
                       alignment: Alignment.centerLeft,
                       padding: const EdgeInsets.only(left: 20.0),
-                      child: const Icon(Icons.flag, color: Colors.white),
+                      child: const Icon(Icons.flag_outlined, color: Colors.white),
                     ),
                     secondaryBackground: Container(
                       color: Colors.red,
                       alignment: Alignment.centerRight,
                       padding: const EdgeInsets.only(right: 20.0),
-                      child: const Icon(Icons.delete, color: Colors.white),
+                      child: const Icon(Icons.delete_outlined, color: Colors.white),
                     ),
                     confirmDismiss: (direction) async {
                       // Drag to left
@@ -276,7 +276,7 @@ class _HomeScreenState extends State<HomeScreen> {
             }
           });
         },
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add_outlined),
       ),
     );
   }
@@ -310,7 +310,7 @@ class InventoryListItem extends StatelessWidget {
               valueListenable: inventory.elapsedTimeNotifier,
               builder: (context, elapsedTime, child) {
                 if (inventory == null) {
-                  return const Icon(Icons.error);
+                  return const Icon(Icons.error_outlined);
                 }
 
                 var progress = (inventory.isPaused || inventory.duration < 0)
@@ -350,7 +350,7 @@ class InventoryListItem extends StatelessWidget {
                 Visibility(
                   visible: inventory.duration > 0,
                   child: IconButton(
-                    icon: Icon(inventory.isPaused ? Icons.play_arrow : Icons.pause),
+                    icon: Icon(inventory.isPaused ? Icons.play_arrow_outlined : Icons.pause_outlined),
                     tooltip: inventory.isPaused ? 'Retomar' : 'Pausa',
                     onPressed: () {
                       if (inventory.isPaused) {

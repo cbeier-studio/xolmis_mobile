@@ -197,7 +197,7 @@ class _AddEggScreenState extends State<AddEggScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Row(
             children: [
-              Icon(Icons.check, color: Colors.green),
+              Icon(Icons.check_circle_outlined, color: Colors.green),
               SizedBox(width: 8),
               Text('Ovo adicionado!'),
             ],
@@ -211,7 +211,7 @@ class _AddEggScreenState extends State<AddEggScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Row(
             children: [
-              Icon(Icons.error, color: Colors.red),
+              Icon(Icons.error_outlined, color: Colors.red),
               SizedBox(width: 8),
               Text('Erro ao salvar o ovo'),
             ],

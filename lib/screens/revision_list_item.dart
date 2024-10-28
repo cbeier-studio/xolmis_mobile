@@ -24,7 +24,7 @@ class RevisionListItemState extends State<RevisionListItem> {
     return SizeTransition(
       sizeFactor: widget.animation,
       child: ListTile(
-        leading: const Icon(Icons.rate_review),
+        leading: const Icon(Icons.rate_review_outlined),
         title: Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(widget.nestRevision.sampleTime!)),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -35,7 +35,7 @@ class RevisionListItemState extends State<RevisionListItem> {
           ],
         ),
         trailing: IconButton(
-          icon: const Icon(Icons.delete),
+          icon: const Icon(Icons.delete_outlined),
           tooltip: 'Apagar revisão de ninho',
           onPressed: widget.onDelete,
         ),

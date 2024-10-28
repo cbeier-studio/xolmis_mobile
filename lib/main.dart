@@ -143,9 +143,9 @@ class _MainScreenState extends State<MainScreen> {
                 builder: (context, inventoryProvider, child) {
                   return inventoryProvider.inventoriesCount > 0 ? Badge.count(
                     count: inventoryProvider.inventoriesCount,
-                    child: const Icon(Icons.list_alt),
+                    child: const Icon(Icons.list_alt_outlined),
                   )
-                      : const Icon(Icons.list_alt);
+                      : const Icon(Icons.list_alt_outlined);
                 },
               ),
               label: 'Inventários',
@@ -155,9 +155,9 @@ class _MainScreenState extends State<MainScreen> {
                 builder: (context, nestProvider, child) {
                   return nestProvider.nestsCount > 0 ? Badge.count(
                     count: nestProvider.nestsCount,
-                    child: const Icon(Icons.egg),
+                    child: const Icon(Icons.egg_outlined),
                   )
-                      : const Icon(Icons.egg);
+                      : const Icon(Icons.egg_outlined);
                 },
               ),
               label: 'Ninhos',

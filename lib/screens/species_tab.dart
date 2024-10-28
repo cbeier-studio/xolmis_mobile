@@ -69,7 +69,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
       const SnackBar(
         content: Row(
           children: [
-            Icon(Icons.info, color: Colors.blue),
+            Icon(Icons.info_outlined, color: Colors.blue),
             SizedBox(width: 8),
             Text('Espécie já adicionada à lista.'),
           ],
@@ -155,7 +155,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
           child: TextField(
             decoration: const InputDecoration(
               hintText: 'Buscar espécie...',
-              prefixIcon: Icon(Icons.search),
+              prefixIcon: Icon(Icons.search_outlined),
               border: OutlineInputBorder(),
             ),
             readOnly: true,
@@ -189,7 +189,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                         color: Colors.red,
                         alignment: Alignment.centerRight,
                         padding: const EdgeInsets.only(right: 16.0),
-                        child: const Icon(Icons.delete, color: Colors.white),
+                        child: const Icon(Icons.delete_outlined, color: Colors.white),
                       ),
                       confirmDismiss: (direction) async {
                         return await showDialog(

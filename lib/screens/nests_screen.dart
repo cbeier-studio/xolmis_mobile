@@ -30,7 +30,7 @@ class _ActiveNestsScreenState extends State<ActiveNestsScreen> {
         title: const Text('Ninhos ativos'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.history),
+            icon: const Icon(Icons.history_outlined),
             tooltip: 'Ninhos inativos',
             onPressed: () {
               Navigator.push(
@@ -40,7 +40,7 @@ class _ActiveNestsScreenState extends State<ActiveNestsScreen> {
             },
           ),
           IconButton(
-            icon: const Icon(Icons.settings),
+            icon: const Icon(Icons.settings_outlined),
             tooltip: 'Configurações',
             onPressed: () {
               Navigator.push(
@@ -76,7 +76,7 @@ class _ActiveNestsScreenState extends State<ActiveNestsScreen> {
                   color: Colors.red,
                   alignment: Alignment.centerRight,
                   padding: const EdgeInsets.only(right: 20.0),
-                  child: const Icon(Icons.delete, color: Colors.white),
+                  child: const Icon(Icons.delete_outlined, color: Colors.white),
                 ),
                 onDismissed: (direction) {
                   showDialog(
@@ -147,7 +147,7 @@ class _ActiveNestsScreenState extends State<ActiveNestsScreen> {
             MaterialPageRoute(builder: (context) => const AddNestScreen()),
           );
         },
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add_outlined),
       ),
     );
   }

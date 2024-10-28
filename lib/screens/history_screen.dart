@@ -1,14 +1,17 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:csv/csv.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:intl/intl.dart';
+
 import '../models/inventory.dart';
 import '../providers/inventory_provider.dart';
+
 import 'inventory_detail_screen.dart';
 
 class HistoryScreen extends StatefulWidget {
@@ -42,7 +45,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
         title: const Text('Inventários encerrados'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.file_download),
+            icon: const Icon(Icons.file_download_outlined),
             onPressed: () => _exportAllInventoriesToJson(inventoryProvider),
             tooltip: 'Exportar todos os inventários',
           ),
@@ -109,7 +112,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
             color: Colors.red,
             alignment: Alignment.centerRight,
             padding: const EdgeInsets.only(right: 20.0),
-            child: const Icon(Icons.delete, color: Colors.white),
+            child: const Icon(Icons.delete_outlined, color: Colors.white),
           ),
           child: InventoryListItem(
             inventory: inventory,
@@ -141,7 +144,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Row(
           children: [
-            Icon(Icons.error, color: Colors.red),
+            Icon(Icons.error_outlined, color: Colors.red),
             SizedBox(width: 8),
             Text('Erro ao exportar os inventários: $error'),
           ],
@@ -182,7 +185,7 @@ class InventoryListItem extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children:[
             IconButton(
-              icon: const Icon(Icons.file_download),
+              icon: const Icon(Icons.file_download_outlined),
               tooltip: 'Exportar inventário',
               onPressed: () {
                 _exportInventoryToCsv(context, inventory);
@@ -321,7 +324,7 @@ class InventoryListItem extends StatelessWidget {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Row(
           children: [
-            Icon(Icons.error, color: Colors.red),
+            Icon(Icons.error_outlined, color: Colors.red),
             SizedBox(width: 8),
             Text('Erro ao exportar o inventário: $error'),
           ],

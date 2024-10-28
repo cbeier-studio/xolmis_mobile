@@ -55,7 +55,7 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
           actions: [
             widget.nest.isActive ? IconButton(
               icon: const Icon(
-                Icons.reviews,
+                Icons.reviews_outlined,
                 semanticLabel: 'Adicionar revisão de ninho',
               ),
               tooltip: 'Adicionar revisão de ninho',
@@ -72,7 +72,7 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
             ) : const SizedBox.shrink(),
             widget.nest.isActive ? IconButton(
               icon: const Icon(
-                Icons.egg,
+                Icons.egg_outlined,
                 semanticLabel: 'Adicionar ovo',
               ),
               tooltip: 'Adicionar ovo',
@@ -227,7 +227,7 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
               ? const CircularProgressIndicator(
             valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
           )
-              : const Icon(Icons.flag, color: Colors.white),
+              : const Icon(Icons.flag_outlined, color: Colors.white),
         )
             : null,
       ),

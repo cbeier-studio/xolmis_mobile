@@ -91,7 +91,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
             builder: (context, inventoryProvider, child) {
               final inventory = widget.inventory;
               return IconButton(
-                icon: Icon(inventory.isPaused ? Icons.play_arrow : Icons.pause),
+                icon: Icon(inventory.isPaused ? Icons.play_arrow_outlined : Icons.pause_outlined),
                 tooltip: inventory.isPaused ? 'Retomar' : 'Pausa',
                 onPressed: () {
                   if (inventory.isPaused) {
@@ -257,7 +257,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
             ? const CircularProgressIndicator(
           valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
         )
-            : const Icon(Icons.flag, color: Colors.white),
+            : const Icon(Icons.flag_outlined, color: Colors.white),
       )
           : null,
     );
