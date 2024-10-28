@@ -127,16 +127,43 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final useSideNavRail = MediaQuery.sizeOf(context).width >= 600;
+    const List<NavigationRailDestination> destinations = [
+      NavigationRailDestination(
+          icon: Icon(Icons.list_alt_outlined),
+          label: Text('Inventários'),
+      ),
+      NavigationRailDestination(
+          icon: Icon(Icons.egg_outlined),
+          label: Text('Ninhos'),
+      ),
+    ];
+
     return ChangeNotifierProvider.value(
       value: inventoryCountNotifier,
       child: Scaffold(
         // appBar: AppBar(
-        //   title: const Text('Inventários'),
+        //   title: const Text('Xolmis'),
         // ),
-        body: Center(
-          child: _widgetOptions.elementAt(_selectedIndex),
+        body: Row(
+          children: [
+            if (useSideNavRail) NavigationRail(
+              destinations: destinations,
+              selectedIndex: _selectedIndex,
+              onDestinationSelected: (int index) {
+                setState(() {
+                  _selectedIndex = index;
+                });
+              },
+            ),
+            Expanded(
+              child: _widgetOptions.elementAt(_selectedIndex),
+            ),
+          ],
         ),
-        bottomNavigationBar: BottomNavigationBar(
+        bottomNavigationBar: useSideNavRail
+          ? null
+          : BottomNavigationBar(
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Consumer<InventoryProvider>(
