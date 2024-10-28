@@ -52,7 +52,7 @@ class DatabaseHelper {
               'name TEXT, '
               'isOutOfInventory INTEGER, '
               'count INTEGER, '
-              'FOREIGN KEY (inventoryId) REFERENCES inventories(id))',
+              'FOREIGN KEY (inventoryId) REFERENCES inventories(id) ON DELETE CASCADE )',
         );
         db.execute(
           'CREATE TABLE vegetation ('
@@ -71,7 +71,7 @@ class DatabaseHelper {
               'treesDistribution INTEGER, '
               'treesHeight INTEGER, '
               'notes TEXT, '
-              'FOREIGN KEY (inventoryId) REFERENCES inventories(id))'
+              'FOREIGN KEY (inventoryId) REFERENCES inventories(id) ON DELETE CASCADE )'
         );
         db.execute(
           'CREATE TABLE pois ('
@@ -79,7 +79,7 @@ class DatabaseHelper {
               'speciesId INTEGER NOT NULL, '
               'longitude REAL NOT NULL, '
               'latitude REAL NOT NULL, '
-              'FOREIGN KEY (speciesId) REFERENCES species(id))'
+              'FOREIGN KEY (speciesId) REFERENCES species(id) ON DELETE CASCADE )'
         );
         db.execute(
           'CREATE TABLE weather ('
@@ -90,7 +90,7 @@ class DatabaseHelper {
               'precipitation INTEGER, '
               'temperature REAL, '
               'windSpeed INTEGER, '
-              'FOREIGN KEY (inventoryId) REFERENCES inventories(id))'
+              'FOREIGN KEY (inventoryId) REFERENCES inventories(id) ON DELETE CASCADE )'
         );
         db.execute('''
         CREATE TABLE nests (
@@ -122,7 +122,7 @@ class DatabaseHelper {
           length REAL,
           mass REAL,
           speciesName TEXT,
-          FOREIGN KEY (nestId) REFERENCES nests(id)
+          FOREIGN KEY (nestId) REFERENCES nests(id) ON DELETE CASCADE
         )
       ''');
         db.execute('''
@@ -138,7 +138,7 @@ class DatabaseHelper {
           nestlingsParasite INTEGER,
           hasPhilornisLarvae INTEGER,
           notes TEXT,
-          FOREIGN KEY (nestId) REFERENCES nests(id)
+          FOREIGN KEY (nestId) REFERENCES nests(id) ON DELETE CASCADE
         )
       ''');
       },
@@ -159,7 +159,7 @@ class DatabaseHelper {
                   'precipitation INTEGER, '
                   'temperature REAL, '
                   'windSpeed INTEGER, '
-                  'FOREIGN KEY (inventoryId) REFERENCES inventories(id))'
+                  'FOREIGN KEY (inventoryId) REFERENCES inventories(id) ON DELETE CASCADE)'
           );
         }
         if (oldVersion < 4) {
@@ -192,7 +192,7 @@ class DatabaseHelper {
           length REAL,
           mass REAL,
           speciesName TEXT,
-          FOREIGN KEY (nestId) REFERENCES nests(id)
+          FOREIGN KEY (nestId) REFERENCES nests(id) ON DELETE CASCADE
         )
       ''');
           db.execute('''
@@ -208,7 +208,7 @@ class DatabaseHelper {
           nestlingsParasite INTEGER,
           hasPhilornisLarvae INTEGER,
           notes TEXT,
-          FOREIGN KEY (nestId) REFERENCES nests(id)
+          FOREIGN KEY (nestId) REFERENCES nests(id) ON DELETE CASCADE
         )
       ''');
         }

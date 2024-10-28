@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_background/flutter_background.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 import 'models/database_helper.dart';
 import 'models/inventory.dart';
@@ -88,9 +89,16 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
+    WakelockPlus.enable();
     initializeBackgroundExecution();
     inventoryCountNotifier.updateCount();
     Provider.of<NestProvider>(context, listen: false).fetchNests();
+  }
+
+  @override
+  void dispose() {
+    WakelockPlus.disable();
+    super.dispose();
   }
 
   Future<void> initializeBackgroundExecution() async {
