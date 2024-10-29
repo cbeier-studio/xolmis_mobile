@@ -131,7 +131,7 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
           actions: [
             widget.nest.isActive ? IconButton(
               icon: const Icon(
-                Icons.reviews_outlined,
+                Icons.beenhere_outlined,
                 semanticLabel: 'Adicionar revisão de ninho',
               ),
               tooltip: 'Adicionar revisão de ninho',

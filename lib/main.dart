@@ -143,7 +143,7 @@ class _MainScreenState extends State<MainScreen> {
           label: Text('Ninhos'),
       ),
       NavigationRailDestination(
-        icon: Icon(Icons.label_outlined),
+        icon: Icon(Icons.local_offer_outlined),
         label: Text('Espécimes'),
       ),
     ];
@@ -203,9 +203,9 @@ class _MainScreenState extends State<MainScreen> {
                 builder: (context, specimenProvider, child) {
                   return specimenProvider.specimensCount > 0 ? Badge.count(
                     count: specimenProvider.specimensCount,
-                    child: const Icon(Icons.label_outlined),
+                    child: const Icon(Icons.local_offer_outlined),
                   )
-                      : const Icon(Icons.label_outlined);
+                      : const Icon(Icons.local_offer_outlined);
                 },
               ),
               label: 'Espécimes',

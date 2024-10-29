@@ -24,7 +24,7 @@ class RevisionListItemState extends State<RevisionListItem> {
     return SizeTransition(
       sizeFactor: widget.animation,
       child: ListTile(
-        leading: const Icon(Icons.rate_review_outlined),
+        leading: const Icon(Icons.beenhere_outlined),
         title: Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(widget.nestRevision.sampleTime!)),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

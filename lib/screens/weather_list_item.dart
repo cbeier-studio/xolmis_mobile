@@ -24,7 +24,7 @@ class WeatherListItemState extends State<WeatherListItem> {
     return SizeTransition(
       sizeFactor: widget.animation,
       child: ListTile(
-        leading: const Icon(Icons.cloudy_snowing),
+        leading: const Icon(Icons.wb_sunny_outlined),
         title: Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(widget.weather.sampleTime!)),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

@@ -247,6 +247,9 @@ class DatabaseHelper {
       ''');
         }
       },
+      onOpen: (db) {
+        db.execute('PRAGMA foreign_keys = ON;');
+      }
     );
   }
 

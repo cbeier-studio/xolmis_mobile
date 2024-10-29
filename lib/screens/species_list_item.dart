@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
+
 import '../models/inventory.dart';
 import '../providers/species_provider.dart';
 import '../providers/poi_provider.dart';
+
 import 'species_detail_screen.dart';
 
 class SpeciesListItem extends StatefulWidget {

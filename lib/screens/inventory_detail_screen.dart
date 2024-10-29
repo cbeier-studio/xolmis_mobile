@@ -176,14 +176,14 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
             },
           ) : const SizedBox.shrink(),
           IconButton(
-            icon: const Icon(Icons.local_florist),
+            icon: const Icon(Icons.local_florist_outlined),
             tooltip: 'Adicionar dados de vegetação',
             onPressed: () {
               _showAddVegetationScreen(context);
             },
           ),
           IconButton(
-            icon: const Icon(Icons.cloudy_snowing),
+            icon: const Icon(Icons.wb_sunny_outlined),
             tooltip: 'Adicionar dados do tempo',
             onPressed: () {
               _showAddWeatherScreen(context);
