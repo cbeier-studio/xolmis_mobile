@@ -44,9 +44,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
           ),
         ]
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: FutureBuilder<SharedPreferences>(
+      body: FutureBuilder<SharedPreferences>(
           future: SharedPreferences.getInstance(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
@@ -168,7 +166,6 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
             }
           },
         ),
-      ),
     );
   }
 

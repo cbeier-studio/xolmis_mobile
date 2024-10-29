@@ -23,6 +23,37 @@ class _ActiveNestsScreenState extends State<ActiveNestsScreen> {
     Provider.of<NestProvider>(context, listen: false).fetchNests();
   }
 
+  void _showAddNestScreen(BuildContext context) {
+    if (MediaQuery.sizeOf(context).width > 600) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 400),
+              child: const AddNestScreen(),
+            ),
+          );
+        },
+      ).then((newNest) {
+        // Reload the inventory list
+        if (newNest != null) {
+          Provider.of<NestProvider>(context, listen: false).fetchNests();
+        }
+      });
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const AddNestScreen()),
+      ).then((newNest) {
+        // Reload the inventory list
+        if (newNest != null) {
+          Provider.of<NestProvider>(context, listen: false).fetchNests();
+        }
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -142,10 +173,7 @@ class _ActiveNestsScreenState extends State<ActiveNestsScreen> {
       floatingActionButton: FloatingActionButton(
         tooltip: 'Novo ninho',
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const AddNestScreen()),
-          );
+          _showAddNestScreen(context);
         },
         child: const Icon(Icons.add_outlined),
       ),

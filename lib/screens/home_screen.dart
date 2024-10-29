@@ -70,9 +70,40 @@ class _HomeScreenState extends State<HomeScreen> {
     Provider.of<InventoryProvider>(context, listen: false).updateInventory(inventory);
   }
 
+  void _showAddInventoryScreen(BuildContext context) {
+    if (MediaQuery.sizeOf(context).width > 600) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 400),
+              child: const AddInventoryScreen(),
+            ),
+          );
+        },
+      ).then((newInventory) {
+        // Reload the inventory list
+        if (newInventory != null) {
+          Provider.of<InventoryProvider>(context, listen: false).loadInventories();
+        }
+      });
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const AddInventoryScreen()),
+      ).then((newInventory) {
+        // Reload the inventory list
+        if (newInventory != null) {
+          Provider.of<InventoryProvider>(context, listen: false).loadInventories();
+        }
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final inventoryProvider = Provider.of<InventoryProvider>(context);
+    final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
 
     return Scaffold(
       appBar: AppBar(
@@ -233,48 +264,10 @@ class _HomeScreenState extends State<HomeScreen> {
           },
         ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   tooltip: 'Novo inventário',
-      //   onPressed: () {
-      //     showDialog(
-      //       context: context,
-      //       builder: (context) {
-      //         const dialogContent = AddInventoryScreen();
-      //         final showFullScreenDialog = MediaQuery.sizeOf(context).width < 600;
-      //         if (showFullScreenDialog) {
-      //           return const Dialog.fullscreen(
-      //             child: dialogContent,
-      //           );
-      //         } else {
-      //           return Dialog(
-      //             child: ConstrainedBox(
-      //               constraints: BoxConstraints(maxWidth: 400),
-      //               child: dialogContent,
-      //             )
-      //           );
-      //         }
-      //       },
-      //     ).then((newInventory) {
-      //       // Reload the inventory list
-      //       if (newInventory != null) {
-      //         inventoryProvider.loadInventories();
-      //       }
-      //     });
-      //   },
-      //   child: const Icon(Icons.add),
-      // ),
       floatingActionButton: FloatingActionButton(
         tooltip: 'Novo inventário',
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const AddInventoryScreen()),
-          ).then((newInventory) {
-            // Reload the inventory list
-            if (newInventory != null) {
-              inventoryProvider.loadInventories();
-            }
-          });
+          _showAddInventoryScreen(context);
         },
         child: const Icon(Icons.add_outlined),
       ),

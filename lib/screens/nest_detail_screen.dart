@@ -45,6 +45,76 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
     eggProvider.loadEggForNest(widget.nest.id!);
   }
 
+  void _showAddRevisionScreen(BuildContext context) {
+    if (MediaQuery.sizeOf(context).width > 600) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 400),
+              child: AddNestRevisionScreen(nest: widget.nest),
+            ),
+          );
+        },
+      ).then((newRevision) {
+        // Reload the inventory list
+        if (newRevision != null) {
+          Provider.of<NestRevisionProvider>(context, listen: false).getRevisionForNest(widget.nest.id!);
+        }
+      });
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => AddNestRevisionScreen(nest: widget.nest)),
+      ).then((newRevision) {
+        // Reload the inventory list
+        if (newRevision != null) {
+          Provider.of<NestRevisionProvider>(context, listen: false).getRevisionForNest(widget.nest.id!);
+        }
+      });
+    }
+  }
+
+  void _showAddEggScreen(BuildContext context) {
+    final nextNumber = widget.nest.eggsList!.length + 1;
+    if (MediaQuery.sizeOf(context).width > 600) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 400),
+              child: AddEggScreen(
+                nest: widget.nest,
+                initialFieldNumber: '${widget.nest.fieldNumber}-${nextNumber.toString().padLeft(2, '0')}',
+                initialSpeciesName: widget.nest.speciesName,)
+            ),
+          );
+        },
+      ).then((newEgg) {
+        // Reload the inventory list
+        if (newEgg != null) {
+          Provider.of<EggProvider>(context, listen: false).getEggForNest(widget.nest.id!);
+        }
+      });
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => AddEggScreen(
+          nest: widget.nest,
+          initialFieldNumber: '${widget.nest.fieldNumber}-${nextNumber.toString().padLeft(2, '0')}',
+          initialSpeciesName: widget.nest.speciesName,)
+        ),
+      ).then((newEgg) {
+        // Reload the inventory list
+        if (newEgg != null) {
+          Provider.of<EggProvider>(context, listen: false).getEggForNest(widget.nest.id!);
+        }
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -60,14 +130,7 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
               ),
               tooltip: 'Adicionar revisão de ninho',
               onPressed: () {
-                Navigator.push(context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        AddNestRevisionScreen(
-                          nest: widget.nest,
-                        ),
-                  ),
-                );
+                _showAddRevisionScreen(context);
               },
             ) : const SizedBox.shrink(),
             widget.nest.isActive ? IconButton(
@@ -77,17 +140,7 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
               ),
               tooltip: 'Adicionar ovo',
               onPressed: () {
-                final nextNumber = widget.nest.eggsList!.length + 1;
-                Navigator.push(context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        AddEggScreen(
-                          nest: widget.nest,
-                          initialFieldNumber: '${widget.nest.fieldNumber}-${nextNumber.toString().padLeft(2, '0')}',
-                          initialSpeciesName: widget.nest.speciesName,
-                        ),
-                  ),
-                );
+                _showAddEggScreen(context);
               },
             ) : const SizedBox.shrink(),
           ],

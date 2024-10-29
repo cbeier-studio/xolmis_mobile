@@ -80,6 +80,70 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
     super.dispose();
   }
 
+  void _showAddVegetationScreen(BuildContext context) {
+    if (MediaQuery.sizeOf(context).width > 600) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 400),
+                child: AddVegetationDataScreen(inventory: widget.inventory),
+            ),
+          );
+        },
+      ).then((newVegetation) {
+        // Reload the inventory list
+        if (newVegetation != null) {
+          Provider.of<VegetationProvider>(context, listen: false).getVegetationForInventory(widget.inventory.id);
+        }
+      });
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => AddVegetationDataScreen(inventory: widget.inventory),
+        ),
+      ).then((newVegetation) {
+        // Reload the inventory list
+        if (newVegetation != null) {
+          Provider.of<VegetationProvider>(context, listen: false).getVegetationForInventory(widget.inventory.id);
+        }
+      });
+    }
+  }
+
+  void _showAddWeatherScreen(BuildContext context) {
+    if (MediaQuery.sizeOf(context).width > 600) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 400),
+              child: AddWeatherScreen(inventory: widget.inventory),
+            ),
+          );
+        },
+      ).then((newWeather) {
+        // Reload the inventory list
+        if (newWeather != null) {
+          Provider.of<WeatherProvider>(context, listen: false).getWeatherForInventory(widget.inventory.id);
+        }
+      });
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => AddWeatherScreen(inventory: widget.inventory),
+        ),
+      ).then((newWeather) {
+        // Reload the inventory list
+        if (newWeather != null) {
+          Provider.of<WeatherProvider>(context, listen: false).getWeatherForInventory(widget.inventory.id);
+        }
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -109,28 +173,14 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
             icon: const Icon(Icons.local_florist),
             tooltip: 'Adicionar dados de vegetação',
             onPressed: () {
-              Navigator.push(context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      AddVegetationDataScreen(
-                        inventory: widget.inventory,
-                      ),
-                ),
-              );
+              _showAddVegetationScreen(context);
             },
           ),
           IconButton(
             icon: const Icon(Icons.cloudy_snowing),
             tooltip: 'Adicionar dados do tempo',
             onPressed: () {
-              Navigator.push(context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      AddWeatherScreen(
-                        inventory: widget.inventory,
-                      ),
-                ),
-              );
+              _showAddWeatherScreen(context);
             },
           ),
         ],
