@@ -32,36 +32,15 @@ class _AddSpecimenScreenState extends State<AddSpecimenScreen> {
   }
 
   Future<void> _getCurrentLocation() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    // Verificar se os serviços de localização estão habilitados.
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      // Os serviços de localização não estão habilitados.
-      return Future.error('Os serviços de localização estão desabilitados.');
+    Position? position = await getPosition();
+    if (position != null) {
+      setState(() {
+        _currentPosition = position;
+      });
+    } else {
+      // Mostrar campos de latitude e longitude para preenchimento manual
+      // ...
     }
-
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        // As permissões foram negadas permanentemente, não podemos solicitar permissões.
-        return Future.error(
-            'As permissões de localização foram negadas permanentemente.');
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      // As permissões foram negadas permanentemente, não podemos solicitar permissões.
-      return Future.error(
-          'As permissões de localização foram negadas permanentemente.');
-    }
-
-    // Quando chegamos aqui, as permissões são concedidas e podemos
-    // continuar acessando a posição do usuário.
-    _currentPosition = await Geolocator.getCurrentPosition();
-    setState(() {}); // Atualizar a tela com a localização
   }
 
   void _addSpeciesToSpecimen(String speciesName) async {
@@ -205,8 +184,8 @@ class _AddSpecimenScreenState extends State<AddSpecimenScreen> {
         fieldNumber: _fieldNumberController.text,
         speciesName: _speciesNameController.text,
         locality: _localityNameController.text,
-        longitude: _currentPosition!.longitude,
-        latitude: _currentPosition!.latitude,
+        longitude: _currentPosition?.longitude,
+        latitude: _currentPosition?.latitude,
         notes: _notesController.text,
         type: _selectedType,
         sampleTime: DateTime.now(),

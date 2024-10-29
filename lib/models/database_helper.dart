@@ -3,6 +3,9 @@ import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:geolocator/geolocator.dart';
+
+import '../screens/utils.dart';
+
 import 'inventory.dart';
 import 'nest.dart';
 import 'specimen.dart';
@@ -269,13 +272,11 @@ class DatabaseHelper {
     final db = await database;
     try {
       inventory.startTime = DateTime.now();
-      Position position = await Geolocator.getCurrentPosition(
-        locationSettings: LocationSettings(
-          accuracy: LocationAccuracy.high,
-        ),
-      );
-      inventory.startLatitude = position.latitude;
-      inventory.startLongitude = position.longitude;
+      Position? position = await getPosition();
+      if (position != null) {
+        inventory.startLatitude = position.latitude;
+        inventory.startLongitude = position.longitude;
+      }
 
       int? id = await db?.insert(
         'inventories',

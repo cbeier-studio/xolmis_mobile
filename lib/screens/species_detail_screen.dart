@@ -2,8 +2,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
+
 import '../providers/poi_provider.dart';
 import '../models/inventory.dart';
+
+import 'utils.dart';
 
 class SpeciesDetailScreen extends StatefulWidget {
   final Species species;
@@ -63,47 +66,61 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen>
               });
 
               // Get the current location
-              Position position = await Geolocator.getCurrentPosition(
-                locationSettings: LocationSettings(
-                  accuracy: LocationAccuracy.high,
-                ),
-              );
+              Position? position = await getPosition();
 
-              // Create a new POI
-              final poi = Poi(
-                speciesId: widget.species.id!,
-                longitude: position.longitude,
-                latitude: position.latitude,
-              );
+              if (position != null) {
+                // Create a new POI
+                final poi = Poi(
+                  speciesId: widget.species.id!,
+                  longitude: position!.longitude,
+                  latitude: position!.latitude,
+                );
 
-              // Insert the POI in the database
-              final poiProvider = Provider.of<PoiProvider>(context, listen: false);
-              poiProvider.addPoi(context, widget.species.id!, poi)
-                  .then((_) {
-                // Update the UI after the POI is inserted
-                poiProvider.notifyListeners();
+                // Insert the POI in the database
+                final poiProvider = Provider.of<PoiProvider>(
+                    context, listen: false);
+                poiProvider.addPoi(context, widget.species.id!, poi)
+                    .then((_) {
+                  // Update the UI after the POI is inserted
+                  poiProvider.notifyListeners();
 
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  final poiList = poiProvider.getPoisForSpecies(widget.species.id!);
-                  _listKey.currentState?.insertItem(poiList.length -1, duration: const Duration(milliseconds: 300));
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    final poiList = poiProvider.getPoisForSpecies(widget.species
+                        .id!);
+                    _listKey.currentState?.insertItem(
+                        poiList.length - 1, duration: const Duration(
+                        milliseconds: 300));
+                  });
                 });
-              });
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Row(
+                      children: [
+                        const Icon(Icons.check_circle_outlined, color: Colors.green),
+                        const SizedBox(width: 8),
+                        const Text('POI inserido com sucesso!'),
+                      ],
+                    ),
+                  ),
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Row(
+                      children: [
+                        const Icon(Icons.error_outlined, color: Colors.red),
+                        const SizedBox(width: 8),
+                        const Text('Erro ao obter a localização.'),
+                      ],
+                    ),
+                  ),
+                );
+              }
 
               setState(() {
                 _isAddingPoi = false;
               });
-
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Row(
-                    children: [
-                      const Icon(Icons.check_circle_outlined, color: Colors.green),
-                      const SizedBox(width: 8),
-                      const Text('POI inserido com sucesso!'),
-                    ],
-                  ),
-                ),
-              );
             },
 
           ),

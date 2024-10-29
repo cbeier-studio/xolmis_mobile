@@ -2,8 +2,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
+
 import '../models/inventory.dart';
 import '../providers/vegetation_provider.dart';
+
+import 'utils.dart';
 
 class AddVegetationDataScreen extends StatefulWidget {
   final Inventory inventory;
@@ -173,18 +176,14 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
     });
 
     if (_formKey.currentState!.validate()) {
-      Position position = await Geolocator.getCurrentPosition(
-        locationSettings: LocationSettings(
-          accuracy: LocationAccuracy.high,
-        ),
-      );
+      Position? position = await getPosition();
 
       // Save the vegetation data
       final vegetation = Vegetation(
         inventoryId: widget.inventory.id,
         sampleTime: DateTime.now(),
-        latitude: position.latitude,
-        longitude: position.longitude,
+        latitude: position?.latitude,
+        longitude: position?.longitude,
         herbsProportion: int.tryParse(_herbsProportionController.text) ?? 0,
         herbsDistribution: int.tryParse(_herbsDistributionController.text) ?? 0,
         herbsHeight: int.tryParse(_herbsHeightController.text) ?? 0,

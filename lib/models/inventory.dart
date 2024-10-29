@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
+
+import '../screens/utils.dart';
+
 import 'database_helper.dart';
 
 class Poi {
@@ -630,13 +633,11 @@ class Inventory with ChangeNotifier {
 
     // Define endTime, endLatitude and endLongitude when finishing the inventory
     endTime = DateTime.now();
-    Position position = await Geolocator.getCurrentPosition(
-      locationSettings: LocationSettings(
-        accuracy: LocationAccuracy.high,
-      ),
-    );
-    endLatitude = position.latitude;
-    endLongitude = position.longitude;
+    Position? position = await getPosition();
+    if (position != null) {
+      endLatitude = position.latitude;
+      endLongitude = position.longitude;
+    }
 
     await DatabaseHelper().updateInventory(this);
     notifyListeners();

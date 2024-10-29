@@ -7,6 +7,7 @@ import '../providers/species_provider.dart';
 import '../providers/poi_provider.dart';
 
 import 'species_detail_screen.dart';
+import 'utils.dart';
 
 class SpeciesListItem extends StatefulWidget {
   final Species species;
@@ -88,38 +89,48 @@ class SpeciesListItemState extends State<SpeciesListItem> {
                     });
 
                     // Get the current location
-                    Position position = await Geolocator.getCurrentPosition(
-                      locationSettings: LocationSettings(
-                        accuracy: LocationAccuracy.high,
-                      ),
-                    );
+                    Position? position = await getPosition();
 
-                    // Create a new POI
-                    final poi = Poi(
-                      speciesId: widget.species.id!,
-                      longitude: position.longitude,
-                      latitude: position.latitude,
-                    );
+                    if (position != null) {
+                      // Create a new POI
+                      final poi = Poi(
+                        speciesId: widget.species.id!,
+                        longitude: position.longitude,
+                        latitude: position.latitude,
+                      );
 
-                    // Insert the POI in the database
-                    poiProvider.addPoi(context, widget.species.id!, poi);
-                    poiProvider.notifyListeners();
+                      // Insert the POI in the database
+                      poiProvider.addPoi(context, widget.species.id!, poi);
+                      poiProvider.notifyListeners();
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Row(
+                            children: [
+                              const Icon(Icons.check_circle_outlined, color: Colors.green),
+                              const SizedBox(width: 8),
+                              const Text('POI inserido com sucesso!'),
+                            ],
+                          ),
+                        ),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Row(
+                            children: [
+                              const Icon(Icons.error_outlined, color: Colors.red),
+                              const SizedBox(width: 8),
+                              const Text('Erro ao obter a localização.'),
+                            ],
+                          ),
+                        ),
+                      );
+                    }
 
                     setState(() {
                       _isAddingPoi = false;
                     });
-
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Row(
-                          children: [
-                            const Icon(Icons.check_circle_outlined, color: Colors.green),
-                            const SizedBox(width: 8),
-                            const Text('POI inserido com sucesso!'),
-                          ],
-                        ),
-                      ),
-                    );
                   },
                 );
               },

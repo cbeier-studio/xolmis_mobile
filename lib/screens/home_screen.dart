@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 
 import '../models/inventory.dart';
@@ -25,7 +24,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    _checkLocationPermissions();
     // Load the inventories
     Provider.of<InventoryProvider>(context, listen: false).loadInventories();
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -40,26 +38,6 @@ class _HomeScreenState extends State<HomeScreen> {
       });
       inventoryProvider.inventoryListKey = _listKey;
     });
-  }
-
-  Future<void> _checkLocationPermissions() async {
-    LocationPermission permission = await Geolocator.checkPermission();
-
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        // Permissions permanently denied
-        return Future.error('Location permissions are denied');
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      // Permissions permanently denied
-      return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.');
-    }
-
-    // Permissions granted, you can use the Geolocator here
   }
 
   void _onInventoryPausedOrResumed(Inventory inventory) {
