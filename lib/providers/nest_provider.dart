@@ -21,7 +21,15 @@ class NestProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<bool> nestFieldNumberExists(String fieldNumber) async {
+    return await DatabaseHelper().nestFieldNumberExists(fieldNumber);
+  }
+
   Future<void> addNest(Nest nest) async {
+    if (await nestFieldNumberExists(nest.fieldNumber!)) {
+      throw Exception('Já existe um ninho com este número de campo.');
+    }
+
     await _dbHelper.insertNest(nest);
     await fetchNests();
   }

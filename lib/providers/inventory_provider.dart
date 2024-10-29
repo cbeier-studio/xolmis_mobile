@@ -42,6 +42,7 @@ class InventoryProvider with ChangeNotifier {
       _inventoryMap.clear();
       final inventories = await DatabaseHelper().getInventories();
       _inventories.addAll(inventories);
+      notifyListeners();
       for (var inventory in inventories) {
         _inventoryMap[inventory.id] = inventory; // Populate the inventories map
         await _speciesProvider.loadSpeciesForInventory(inventory.id);

@@ -16,9 +16,11 @@ import 'providers/weather_provider.dart';
 import 'providers/nest_provider.dart';
 import 'providers/nest_revision_provider.dart';
 import 'providers/egg_provider.dart';
+import 'providers/specimen_provider.dart';
 
 import 'screens/home_screen.dart';
 import 'screens/nests_screen.dart';
+import 'screens/specimens_screen.dart';
 import 'screens/utils.dart';
 
 void main() async {
@@ -41,6 +43,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (context) => SpecimenProvider()),
         ChangeNotifierProvider(create: (context) => NestRevisionProvider()),
         ChangeNotifierProvider(create: (context) => EggProvider()),
         ChangeNotifierProvider(create: (context) => PoiProvider()),
@@ -84,6 +87,7 @@ class _MainScreenState extends State<MainScreen> {
   static final List<Widget> _widgetOptions = <Widget>[
     const HomeScreen(),
     const ActiveNestsScreen(),
+    const SpecimensScreen(),
   ];
 
   @override
@@ -93,6 +97,7 @@ class _MainScreenState extends State<MainScreen> {
     initializeBackgroundExecution();
     inventoryCountNotifier.updateCount();
     Provider.of<NestProvider>(context, listen: false).fetchNests();
+    Provider.of<SpecimenProvider>(context, listen: false).fetchSpecimens();
   }
 
   @override
@@ -136,6 +141,10 @@ class _MainScreenState extends State<MainScreen> {
       NavigationRailDestination(
           icon: Icon(Icons.egg_outlined),
           label: Text('Ninhos'),
+      ),
+      NavigationRailDestination(
+        icon: Icon(Icons.label_outlined),
+        label: Text('Espécimes'),
       ),
     ];
 
@@ -188,6 +197,18 @@ class _MainScreenState extends State<MainScreen> {
                 },
               ),
               label: 'Ninhos',
+            ),
+            BottomNavigationBarItem(
+              icon: Consumer<SpecimenProvider>(
+                builder: (context, specimenProvider, child) {
+                  return specimenProvider.specimensCount > 0 ? Badge.count(
+                    count: specimenProvider.specimensCount,
+                    child: const Icon(Icons.label_outlined),
+                  )
+                      : const Icon(Icons.label_outlined);
+                },
+              ),
+              label: 'Espécimes',
             ),
           ],
           currentIndex: _selectedIndex,

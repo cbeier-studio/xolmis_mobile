@@ -1,53 +1,82 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 
-import '../models/nest.dart';
-import '../providers/egg_provider.dart';
+import '../models/specimen.dart';
+import '../providers/specimen_provider.dart';
 import 'utils.dart';
 import 'species_search_delegate.dart';
 
-class AddEggScreen extends StatefulWidget {
-  final Nest nest;
-  final String? initialFieldNumber;
-  final String? initialSpeciesName;
-
-  const AddEggScreen({super.key, required this.nest, this.initialFieldNumber, this.initialSpeciesName});
+class AddSpecimenScreen extends StatefulWidget {
+  const AddSpecimenScreen({super.key});
 
   @override
-  _AddEggScreenState createState() => _AddEggScreenState();
+  _AddSpecimenScreenState createState() => _AddSpecimenScreenState();
 }
 
-class _AddEggScreenState extends State<AddEggScreen> {
+class _AddSpecimenScreenState extends State<AddSpecimenScreen> {
   final _formKey = GlobalKey<FormState>();
   final _fieldNumberController = TextEditingController();
   final _speciesNameController = TextEditingController();
-  EggShapeType _selectedEggShape = EggShapeType.estOval;
-  final _widthController = TextEditingController();
-  final _lengthController = TextEditingController();
-  final _massController = TextEditingController();
+  final _localityNameController = TextEditingController();
+  final _notesController = TextEditingController();
+  SpecimenType _selectedType = SpecimenType.spcFeathers;
   bool _isSubmitting = false;
-
-  void _addSpeciesToEgg(String speciesName) async {
-    // Empty
-  }
-
-  void _updateEgg() async {
-    // Empty
-  }
+  Position? _currentPosition;
 
   @override
   void initState() {
     super.initState();
-    _fieldNumberController.text = widget.initialFieldNumber ?? '';
-    _speciesNameController.text = widget.initialSpeciesName ?? '';
+    _getCurrentLocation();
+  }
+
+  Future<void> _getCurrentLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Verificar se os serviços de localização estão habilitados.
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // Os serviços de localização não estão habilitados.
+      return Future.error('Os serviços de localização estão desabilitados.');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // As permissões foram negadas permanentemente, não podemos solicitar permissões.
+        return Future.error(
+            'As permissões de localização foram negadas permanentemente.');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      // As permissões foram negadas permanentemente, não podemos solicitar permissões.
+      return Future.error(
+          'As permissões de localização foram negadas permanentemente.');
+    }
+
+    // Quando chegamos aqui, as permissões são concedidas e podemos
+    // continuar acessando a posição do usuário.
+    _currentPosition = await Geolocator.getCurrentPosition();
+    setState(() {}); // Atualizar a tela com a localização
+  }
+
+  void _addSpeciesToSpecimen(String speciesName) async {
+    // Empty
+  }
+
+  void _updateSpecimen() async {
+    // Empty
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Adicionar Ovo'),
+          title: const Text('Novo Espécime'),
           actions: [
             _isSubmitting
                 ? CircularProgressIndicator()
@@ -78,6 +107,25 @@ class _AddEggScreenState extends State<AddEggScreen> {
                 },
               ),
               const SizedBox(height: 16.0),
+              DropdownButtonFormField<SpecimenType>(
+                value: _selectedType,
+                decoration: const InputDecoration(
+                  labelText: 'Tipo de Espécime',
+                  border: OutlineInputBorder(),
+                ),
+                items: SpecimenType.values.map((type) {
+                  return DropdownMenuItem(
+                    value: type,
+                    child: Text(specimenTypeFriendlyNames[type]!),
+                  );
+                }).toList(),
+                onChanged: (SpecimenType? newValue) {
+                  setState(() async {
+                    _selectedType = newValue!;
+                  });
+                },
+              ),
+              const SizedBox(height: 16.0),
               TextFormField(
                 controller: _speciesNameController,
                 decoration: const InputDecoration(
@@ -94,7 +142,7 @@ class _AddEggScreenState extends State<AddEggScreen> {
                 onTap: () async {
                   final allSpecies = await loadSpeciesData();
                   allSpecies.sort((a, b) => a.compareTo(b));
-                  final speciesSearchDelegate = SpeciesSearchDelegate(allSpecies, _addSpeciesToEgg, _updateEgg);
+                  final speciesSearchDelegate = SpeciesSearchDelegate(allSpecies, _addSpeciesToSpecimen, _updateSpecimen);
                   final selectedSpecies = await showSearch(
                     context: context,
                     delegate: speciesSearchDelegate,
@@ -108,58 +156,34 @@ class _AddEggScreenState extends State<AddEggScreen> {
                 },
               ),
               const SizedBox(height: 16.0),
-              DropdownButtonFormField<EggShapeType>(
-                  value: _selectedEggShape,
-                  decoration: const InputDecoration(
-                    labelText: 'Forma do ovo',
-                    border: OutlineInputBorder(),
-                  ),
-                  items: EggShapeType.values.map((eggShape) {
-                    return DropdownMenuItem(
-                      value: eggShape,
-                      child: Text(eggShapeTypeFriendlyNames[eggShape]!),
-                    );
-                  }).toList(),
-                  onChanged: (EggShapeType? newValue) {
-                    setState(() {
-                      _selectedEggShape = newValue!;
-                    });
+              TextFormField(
+                controller: _localityNameController,
+                textCapitalization: TextCapitalization.words,
+                decoration: const InputDecoration(
+                  labelText: 'Localidade',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Por favor, insira o nome da localidade';
                   }
+                  return null;
+                },
               ),
               const SizedBox(height: 16.0),
               TextFormField(
-                controller: _widthController,
-                keyboardType: TextInputType.number,
+                controller: _notesController,
+                maxLines: 3,
+                textCapitalization: TextCapitalization.sentences,
                 decoration: const InputDecoration(
-                  labelText: 'Largura',
+                  labelText: 'Observações',
                   border: OutlineInputBorder(),
-                  suffixText: 'mm',
-                ),
-              ),
-              const SizedBox(height: 16.0),
-              TextFormField(
-                controller: _lengthController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  labelText: 'Comprimento',
-                  border: OutlineInputBorder(),
-                  suffixText: 'mm',
-                ),
-              ),
-              const SizedBox(height: 16.0),
-              TextFormField(
-                controller: _massController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  labelText: 'Massa',
-                  border: OutlineInputBorder(),
-                  suffixText: 'g',
                 ),
               ),
               // const SizedBox(height: 16.0),
               // ElevatedButton(
               //   onPressed: () async {
-              //
+              //     _submitForm();
               //   },
               //   child: _isSubmitting
               //       ? const CircularProgressIndicator()
@@ -173,17 +197,18 @@ class _AddEggScreenState extends State<AddEggScreen> {
   }
 
   void _submitForm() async {
-    final eggProvider = Provider.of<EggProvider>(context, listen: false);
+    final specimenProvider = Provider.of<SpecimenProvider>(context, listen: false);
 
     if (_formKey.currentState!.validate()) {
       // Create Nest object with form data
-      final newEgg = Egg(
+      final newSpecimen = Specimen(
         fieldNumber: _fieldNumberController.text,
         speciesName: _speciesNameController.text,
-        eggShape: _selectedEggShape,
-        width: double.tryParse(_widthController.text),
-        length: double.tryParse(_lengthController.text),
-        mass: double.tryParse(_massController.text),
+        locality: _localityNameController.text,
+        longitude: _currentPosition!.longitude,
+        latitude: _currentPosition!.latitude,
+        notes: _notesController.text,
+        type: _selectedType,
         sampleTime: DateTime.now(),
       );
 
@@ -192,30 +217,30 @@ class _AddEggScreenState extends State<AddEggScreen> {
       });
 
       try {
-        await eggProvider.addEgg(context, widget.nest.id!, newEgg);
+        await specimenProvider.addSpecimen(newSpecimen);
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Row(
             children: [
               Icon(Icons.check_circle_outlined, color: Colors.green),
               SizedBox(width: 8),
-              Text('Ovo adicionado!'),
+              Text('Espécime adicionado!'),
             ],
           ),
           ),
         );
       } catch (error) {
         if (kDebugMode) {
-          print('Error adding egg: $error');
+          print('Error adding specimen: $error');
         }
-        if (error.toString().contains('Já existe um ovo com este número de campo.')) {
+        if (error.toString().contains('Já existe um espécime com este número de campo.')) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content:
             Row(
               children: [
                 Icon(Icons.info_outlined, color: Colors.blue),
                 SizedBox(width: 8),
-                Text('Já existe um ovo com este número de campo.'),
+                Text('Já existe um espécime com este número de campo.'),
               ],
             ),
             ),
@@ -227,7 +252,7 @@ class _AddEggScreenState extends State<AddEggScreen> {
               children: [
                 Icon(Icons.error_outlined, color: Colors.red),
                 SizedBox(width: 8),
-                Text('Erro ao salvar o ovo'),
+                Text('Erro ao salvar o espécime'),
               ],
             ),
             ),

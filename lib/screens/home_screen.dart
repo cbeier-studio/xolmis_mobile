@@ -76,6 +76,9 @@ class _HomeScreenState extends State<HomeScreen> {
         context: context,
         builder: (context) {
           return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16.0),
+            ),
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 400),
               child: const AddInventoryScreen(),
@@ -135,13 +138,16 @@ class _HomeScreenState extends State<HomeScreen> {
         onRefresh: () async {
           await inventoryProvider.loadInventories();
         },
-        child: inventoryProvider.isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : Consumer<InventoryProvider>(
-          builder: (context, inventoryProvider, child) {
-            return inventoryProvider.activeInventories.isEmpty
-                ? const Center(child: Text('Nenhum inventário ativo.'))
-                : AnimatedList(
+        child: Selector<InventoryProvider, List<Inventory>>(
+          selector: (context, provider) => provider.activeInventories,
+          shouldRebuild: (previous, next) => previous != next || inventoryProvider.isLoading != inventoryProvider.isLoading, // Adicione a condição para isLoading
+          builder: (context, activeInventories, child) {
+            if (inventoryProvider.isLoading) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (activeInventories.isEmpty) {
+              return const Center(child: Text('Nenhum inventário ativo.'));
+            } else {
+              return AnimatedList(
               key: _listKey,
               initialItemCount: inventoryProvider.activeInventories.length,
               itemBuilder: (context, index, animation) {
@@ -261,6 +267,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
               },
             );
+            }
           },
         ),
       ),
@@ -302,9 +309,9 @@ class InventoryListItem extends StatelessWidget {
             leading: ValueListenableBuilder<double>(
               valueListenable: inventory.elapsedTimeNotifier,
               builder: (context, elapsedTime, child) {
-                if (inventory == null) {
-                  return const Icon(Icons.error_outlined);
-                }
+                // if (inventory == null) {
+                //   return const Icon(Icons.error_outlined);
+                // }
 
                 var progress = (inventory.isPaused || inventory.duration < 0)
                     ? null

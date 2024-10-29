@@ -29,6 +29,9 @@ class _ActiveNestsScreenState extends State<ActiveNestsScreen> {
         context: context,
         builder: (context) {
           return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16.0),
+            ),
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 400),
               child: const AddNestScreen(),

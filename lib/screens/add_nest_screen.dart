@@ -261,16 +261,31 @@ class _AddNestScreenState extends State<AddNestScreen> {
         if (kDebugMode) {
           print('Error adding nest: $error');
         }
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Row(
-            children: [
-              Icon(Icons.error_outlined, color: Colors.red),
-              SizedBox(width: 8),
-              Text('Erro ao salvar o ninho'),
-            ],
-          ),
-          ),
-        );
+        if (error.toString().contains('Já existe um ninho com este número de campo.')) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content:
+            Row(
+              children: [
+                Icon(Icons.info_outlined, color: Colors.blue),
+                SizedBox(width: 8),
+                Text('Já existe um ninho com este número de campo.'),
+              ],
+            ),
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content:
+            Row(
+              children: [
+                Icon(Icons.error_outlined, color: Colors.red),
+                SizedBox(width: 8),
+                Text('Erro ao salvar o ninho'),
+              ],
+            ),
+            ),
+          );
+        }
       }
     }
   }

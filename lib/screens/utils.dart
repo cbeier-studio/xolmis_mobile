@@ -53,7 +53,7 @@ void _showMackinnonDialog(BuildContext context, Inventory inventory) {
               // onInventoryUpdated(inventory);
               Navigator.pop(context, true);
               Navigator.of(context).pop();
-              final nextInventoryId = getNextInventoryId(inventory.id!);
+              final nextInventoryId = getNextInventoryId(inventory.id);
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => AddInventoryScreen(

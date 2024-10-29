@@ -5,6 +5,7 @@ import 'package:path/path.dart';
 import 'package:geolocator/geolocator.dart';
 import 'inventory.dart';
 import 'nest.dart';
+import 'specimen.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper._internal();
@@ -26,7 +27,7 @@ class DatabaseHelper {
     String path = join(await getDatabasesPath(), 'inventory_database.db');
     return await openDatabase(
       path,
-      version: 5, // Increase the version number
+      version: 6, // Increase the version number
       onCreate: (db, version) {
         // Create the tables
         db.execute(
@@ -141,6 +142,19 @@ class DatabaseHelper {
           FOREIGN KEY (nestId) REFERENCES nests(id) ON DELETE CASCADE
         )
       ''');
+        db.execute('''
+        CREATE TABLE specimens (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          sampleTime TEXT,
+          fieldNumber TEXT,
+          type INTEGER,
+          longitude REAL,
+          latitude REAL,
+          locality TEXT,
+          speciesName TEXT,
+          notes TEXT
+        )
+      ''');
       },
       onUpgrade: (db, oldVersion, newVersion) {
         // Add logic to update the database from previous versions
@@ -217,6 +231,21 @@ class DatabaseHelper {
             'ALTER TABLE nests ADD COLUMN isActive INTEGER',
           );
         }
+        if (oldVersion < 6) {
+          db.execute('''
+        CREATE TABLE specimens (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          sampleTime TEXT,
+          fieldNumber TEXT,
+          type INTEGER,
+          longitude REAL,
+          latitude REAL,
+          locality TEXT,
+          speciesName TEXT,
+          notes TEXT
+        )
+      ''');
+        }
       },
     );
   }
@@ -227,8 +256,8 @@ class DatabaseHelper {
     final db = await database;
     final result = await db?.query(
       'inventories',
-      where: 'id = ?',
-      whereArgs: [id],
+      where: 'LOWER(id) = ?',
+      whereArgs: [id.toLowerCase()],
     );
     return result!.isNotEmpty;
   }
@@ -705,6 +734,16 @@ class DatabaseHelper {
     await db?.delete('nests', where: 'id = ?', whereArgs: [nestId]);
   }
 
+  Future<bool> nestFieldNumberExists(String fieldNumber) async {
+    final db = await database;
+    final result = await db?.query(
+      'nests',
+      where: 'LOWER(fieldNumber) = ?',
+      whereArgs: [fieldNumber.toLowerCase()],
+    );
+    return result!.isNotEmpty;
+  }
+
   // Nest revisions
 
   Future<void> insertNestRevision(NestRevision nestRevision) async {
@@ -759,6 +798,66 @@ class DatabaseHelper {
   Future<void> deleteEgg(int eggId) async {
     final db = await database;
     await db?.delete('eggs', where: 'id = ?', whereArgs: [eggId]);
+  }
+
+  Future<bool> eggFieldNumberExists(String fieldNumber) async {
+    final db = await database;
+    final result = await db?.query(
+      'eggs',
+      where: 'LOWER(fieldNumber) = ?',
+      whereArgs: [fieldNumber.toLowerCase()],
+    );
+    return result!.isNotEmpty;
+  }
+
+  // Specimens
+
+  Future<void> insertSpecimen(Specimen specimen) async {
+    final db = await database;
+    await db?.insert(
+      'specimens',
+      specimen.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Future<List<Specimen>> getSpecimens() async {
+    final db = await database;
+    try {
+      final List<Map<String, dynamic>> maps = await db?.query('specimens') ?? [];
+      return List.generate(maps.length, (i) {
+        return Specimen.fromMap(maps[i]);
+      });
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error loading specimens: $e');
+      }
+      // Handle the error, e.g.: return an empty list or rethrow exception
+      return []; // Or rethrow;
+    }
+  }
+
+  Future<int?> updateSpecimen(Specimen specimen) async {
+    final db = await database;
+    return await db?.update(
+      'specimens',
+      specimen.toMap(),
+    );
+  }
+
+  Future<void> deleteSpecimen(int specimenId) async {
+    final db = await database;
+    await db?.delete('specimens', where: 'id = ?', whereArgs: [specimenId]);
+  }
+
+  Future<bool> specimenFieldNumberExists(String fieldNumber) async {
+    final db = await database;
+    final result = await db?.query(
+      'specimens',
+      where: 'LOWER(fieldNumber) = ?',
+      whereArgs: [fieldNumber.toLowerCase()],
+    );
+    return result!.isNotEmpty;
   }
 }
 

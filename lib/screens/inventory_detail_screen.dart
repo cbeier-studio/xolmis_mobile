@@ -86,6 +86,9 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
         context: context,
         builder: (context) {
           return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16.0),
+            ),
             child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 400),
                 child: AddVegetationDataScreen(inventory: widget.inventory),
@@ -118,6 +121,9 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
         context: context,
         builder: (context) {
           return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16.0),
+            ),
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 400),
               child: AddWeatherScreen(inventory: widget.inventory),

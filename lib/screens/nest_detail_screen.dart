@@ -51,6 +51,9 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
         context: context,
         builder: (context) {
           return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16.0),
+            ),
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 400),
               child: AddNestRevisionScreen(nest: widget.nest),
@@ -83,6 +86,9 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
         context: context,
         builder: (context) {
           return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16.0),
+            ),
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 400),
               child: AddEggScreen(

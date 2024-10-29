@@ -25,7 +25,15 @@ class EggProvider with ChangeNotifier {
     return _eggMap[nestId] ?? [];
   }
 
+  Future<bool> eggFieldNumberExists(String fieldNumber) async {
+    return await DatabaseHelper().eggFieldNumberExists(fieldNumber);
+  }
+
   Future<void> addEgg(BuildContext context, int nestId, Egg egg) async {
+    if (await eggFieldNumberExists(egg.fieldNumber!)) {
+      throw Exception('Já existe um ovo com este número de campo.');
+    }
+
     // Insert the egg in the database
     egg.nestId = nestId;
     await DatabaseHelper().insertEgg(egg);
