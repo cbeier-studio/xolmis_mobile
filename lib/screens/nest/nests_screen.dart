@@ -113,8 +113,8 @@ class _ActiveNestsScreenState extends State<ActiveNestsScreen> {
                   padding: const EdgeInsets.only(right: 20.0),
                   child: const Icon(Icons.delete_outlined, color: Colors.white),
                 ),
-                onDismissed: (direction) {
-                  showDialog(
+                confirmDismiss: (direction) {
+                  return showDialog(
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
@@ -125,20 +125,21 @@ class _ActiveNestsScreenState extends State<ActiveNestsScreen> {
                           TextButton(
                             child: const Text('Cancelar'),
                             onPressed: () {
-                              Navigator.of(context).pop();
-                              setState(() {}); // Rebuild the list to restore the item
+                              Navigator.of(context).pop(false);
                             },
                           ),
                           TextButton(child: const Text('Excluir'),
                             onPressed: () {
-                              nestProvider.removeNest(nest);
-                              Navigator.of(context).pop();
+                              Navigator.of(context).pop(true);
                             },
                           ),
                         ],
                       );
                     },
                   );
+                },
+                onDismissed: (direction) {
+                  nestProvider.removeNest(nest);
                 },
                 child: ListTile(
                   title: Text(nest.fieldNumber!),

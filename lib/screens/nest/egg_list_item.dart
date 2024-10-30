@@ -4,13 +4,11 @@ import '../../data/models/nest.dart';
 
 class EggListItem extends StatefulWidget {
   final Egg egg;
-  final Animation<double> animation;
   final VoidCallback onDelete;
 
   const EggListItem({
     super.key,
     required this.egg,
-    required this.animation,
     required this.onDelete,
   });
 
@@ -21,9 +19,7 @@ class EggListItem extends StatefulWidget {
 class EggListItemState extends State<EggListItem> {
   @override
   Widget build(BuildContext context) {
-    return SizeTransition(
-      sizeFactor: widget.animation,
-      child: ListTile(
+    return ListTile(
         leading: const Icon(Icons.egg_outlined),
         title: Text('${widget.egg.fieldNumber}'),
         subtitle: Column(
@@ -37,14 +33,14 @@ class EggListItemState extends State<EggListItem> {
           ],
         ),
         trailing: IconButton(
-          icon: const Icon(Icons.delete_outlined),
+          icon: const Icon(Icons.delete_outlined, color: Colors.red,),
           tooltip: 'Apagar ovo',
           onPressed: widget.onDelete,
         ),
         onTap: () {
 
         },
-      ),
+
     );
   }
 }

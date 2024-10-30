@@ -129,10 +129,13 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen>
       body: Consumer<PoiProvider>(
         builder: (context, poiProvider, child) {
           final pois = poiProvider.getPoisForSpecies(widget.species.id ?? 0);
-          return AnimatedList(
-            key: _listKey,
-            initialItemCount: pois.length,
-            itemBuilder: (context, index, animation) {
+          return RefreshIndicator(
+              onRefresh: () async {
+            await poiProvider.getPoisForSpecies(widget.species.id ?? 0);
+          },
+          child: ListView.builder(
+          itemCount: pois.length,
+          itemBuilder: (context, index) {
               if (pois.isEmpty) {
                 return const SizedBox.shrink();
               } else {
@@ -172,23 +175,14 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen>
                     // Delete the POI from database
                     poiProvider.removePoi(widget.species.id!, poi.id!);
                     // poiProvider.notifyListeners();
-
-                    // Remove the POI from list and update the AnimatedList
-                    _listKey.currentState!.removeItem(
-                      index, (context, animation) =>
-                        PoiListItem(
-                          poi: poi,
-                          animation: animation,
-                        ),
-                    );
                   },
                   child: PoiListItem(
                     poi: poi,
-                    animation: animation,
                   ),
                 );
               }
             },
+          )
           );
         },
       ),
@@ -198,18 +192,15 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen>
 
 class PoiListItem extends StatelessWidget {
   final Poi poi;
-  final Animation<double> animation;
 
-  const PoiListItem({super.key, required this.poi, required this.animation});
+  const PoiListItem({super.key, required this.poi,});
 
   @override
   Widget build(BuildContext context) {
-    return SizeTransition(
-      sizeFactor: animation,
-      child: ListTile(
+    return ListTile(
         title: Text('${poi.latitude}, ${poi.longitude}'),
         leading: const Icon(Icons.location_on_outlined),
-      ),
+
     );
   }
 }

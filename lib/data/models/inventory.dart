@@ -559,20 +559,24 @@ class Inventory with ChangeNotifier {
     if (kDebugMode) {
       print('startTimer called');
     }
+    if (inventory.duration == 0) {
+      inventory.elapsedTime = 0;
+      inventory.notifyListeners();
+      return;
+    }
     if (inventory.duration > 0 && !inventory.isFinished) {
-      if (inventory.duration == 0) {
-        inventory.elapsedTime = 0;
-        inventory.notifyListeners();
-        return;
-      }
       inventory._timer ??= Timer.periodic(const Duration(seconds: 1), (timer) {
         if (!inventory.isPaused && !inventory.isFinished) {
+          if (inventory.elapsedTime == 0) {
+            inventoryRepository.updateInventoryElapsedTime(inventory.id, inventory.elapsedTime);
+          }
+
           inventory.elapsedTime++;
           inventory.elapsedTimeNotifier.value = inventory.elapsedTime;
           inventory.elapsedTimeNotifier.notifyListeners();
 
-          if (inventory.elapsedTime == 0 || inventory.elapsedTime % 15 == 0) {
-            inventoryRepository.updateInventoryElapsedTime(inventory.id, inventory.elapsedTime); // Usar o repositório
+          if (inventory.elapsedTime % 5 == 0) {
+            inventoryRepository.updateInventoryElapsedTime(inventory.id, inventory.elapsedTime);
           }
 
           if (inventory.elapsedTime >= inventory.duration * 60) {
@@ -582,14 +586,18 @@ class Inventory with ChangeNotifier {
               volume: 0.1,
               looping: false,
             );
-            Inventory.stopTimer(inventory, inventoryRepository); // Chamar o método estático
+            if (kDebugMode) {
+              print('stopTimer called automatically: ${inventory.elapsedTime} of ${inventory.duration * 60}');
+            }
+            inventoryRepository.updateInventoryElapsedTime(inventory.id, inventory.elapsedTime);
+            Inventory.stopTimer(inventory, inventoryRepository);
           }
         }
       });
 
       // Restart the Timer if isPaused was true and now is false
       if (!inventory.isPaused && inventory._timer == null) {
-        Inventory.startTimer(inventory, inventoryRepository); // Chamar o método estático
+        Inventory.startTimer(inventory, inventoryRepository);
       }
     }
     inventory.notifyListeners();
@@ -603,7 +611,7 @@ class Inventory with ChangeNotifier {
     inventory.elapsedTimeNotifier.value = inventory.elapsedTime;
     inventory.elapsedTimeNotifier.notifyListeners();
     inventory.notifyListeners();
-    inventoryRepository.updateInventory(inventory); // Usar o repositório
+    inventoryRepository.updateInventory(inventory);
   }
 
   static Future<void> resumeTimer(Inventory inventory, InventoryRepository inventoryRepository) async {
@@ -611,11 +619,11 @@ class Inventory with ChangeNotifier {
       print('resumeTimer called');
     }
     inventory.isPaused = false;
-    Inventory.startTimer(inventory, inventoryRepository); // Chamar o método estático
+    Inventory.startTimer(inventory, inventoryRepository);
     inventory.elapsedTimeNotifier.value = inventory.elapsedTime.toDouble();
     inventory.elapsedTimeNotifier.notifyListeners();
     inventory.notifyListeners();
-    inventoryRepository.updateInventory(inventory); // Usar o repositório
+    inventoryRepository.updateInventory(inventory);
   }
 
   static Future<void> stopTimer(Inventory inventory, InventoryRepository inventoryRepository) async {

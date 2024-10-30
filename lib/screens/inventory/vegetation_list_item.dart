@@ -4,13 +4,11 @@ import '../../data/models/inventory.dart';
 
 class VegetationListItem extends StatefulWidget {
   final Vegetation vegetation;
-  final Animation<double> animation;
   final VoidCallback onDelete;
 
   const VegetationListItem({
     super.key,
     required this.vegetation,
-    required this.animation,
     required this.onDelete,
   });
 
@@ -21,9 +19,7 @@ class VegetationListItem extends StatefulWidget {
 class VegetationListItemState extends State<VegetationListItem> {
   @override
   Widget build(BuildContext context) {
-    return SizeTransition(
-      sizeFactor: widget.animation,
-      child: ListTile(
+    return ListTile(
         leading: const Icon(Icons.local_florist_outlined),
         title: Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(widget.vegetation.sampleTime!)),
         subtitle: Column(
@@ -36,14 +32,14 @@ class VegetationListItemState extends State<VegetationListItem> {
           ],
         ),
         trailing: IconButton(
-          icon: const Icon(Icons.delete_outlined),
+          icon: const Icon(Icons.delete_outlined, color: Colors.red,),
           tooltip: 'Apagar dados de vegetação',
           onPressed: widget.onDelete,
         ),
         onTap: () {
 
         },
-      ),
+
     );
   }
 }

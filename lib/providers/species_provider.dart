@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 
 import '../data/models/inventory.dart';
@@ -15,7 +16,12 @@ class SpeciesProvider with ChangeNotifier {
   SpeciesProvider(this._speciesRepository, this._inventoryRepository);
 
   final Map<String, List<Species>> _speciesMap = {};
-  final speciesCountNotifier = ValueNotifier<int>(0);
+  final ValueNotifier<int> individualsCountNotifier = ValueNotifier<int>(0);
+  final Map<String, List<Species>> _speciesByInventoryId = {};
+
+  List<String> getAllInventoryIds() {
+    return _speciesByInventoryId.keys.toList();
+  }
 
   Future<void> _loadInitialData() async {
     // Load data from database and initialize the _speciesMap
@@ -46,8 +52,9 @@ class SpeciesProvider with ChangeNotifier {
 
   Future<void> addSpecies(BuildContext context, String inventoryId, Species species) async {
     await _speciesRepository.insertSpecies(inventoryId, species);
-    _speciesMap[inventoryId] = _speciesMap[inventoryId] ?? [];
-    _speciesMap[inventoryId]!.add(species);
+    _speciesMap[inventoryId] = await _speciesRepository.getSpeciesByInventory(inventoryId);
+    // _speciesMap[inventoryId] = _speciesMap[inventoryId] ?? [];
+    // _speciesMap[inventoryId]!.add(species);
     Provider.of<InventoryProvider>(context, listen: false).updateSpeciesCount(inventoryId);
     notifyListeners();
   }
@@ -55,25 +62,24 @@ class SpeciesProvider with ChangeNotifier {
   Future<void> updateSpecies(String inventoryId, Species species) async {
     await _speciesRepository.updateSpecies(species);
 
-    final speciesList = _speciesMap[inventoryId];
-    if (speciesList != null) {
-      final index = speciesList.indexWhere((s) => s.id == species.id);
-      if (index != -1) {
-        speciesList[index] = species;
-      }
-    }
+    _speciesMap[inventoryId] = await _speciesRepository.getSpeciesByInventory(inventoryId);
+    // final speciesList = _speciesMap[inventoryId];
+    // if (speciesList != null) {
+    //   final index = speciesList.indexWhere((s) => s.id == species.id);
+    //   if (index != -1) {
+    //     speciesList[index] = species;
+    //   }
+    // }
     notifyListeners();
   }
 
   Future<void> removeSpecies(BuildContext context, String inventoryId, int speciesId) async {
     await _speciesRepository.deleteSpecies(speciesId);
 
-    final speciesList = _speciesMap[inventoryId];
-    Provider.of<InventoryProvider>(context, listen: false).updateSpeciesCount(inventoryId);
-    if (speciesList != null) {
-      speciesList.removeWhere((s) => s.id == speciesId);
-    }
+    _speciesMap[inventoryId] = await _speciesRepository.getSpeciesByInventory(inventoryId);
     notifyListeners();
+
+    Provider.of<InventoryProvider>(context, listen: false).updateSpeciesCount(inventoryId);
   }
 
   // void sortSpeciesForInventory(String inventoryId) {
@@ -84,10 +90,10 @@ class SpeciesProvider with ChangeNotifier {
   //   notifyListeners();
   // }
 
-  Future<void> incrementSpeciesCount(Species species) async {
+  Future<void> incrementIndividualsCount(Species species) async {
     species.count++;
     await _speciesRepository.updateSpecies(species);
-    speciesCountNotifier.value = species.count;
+    individualsCountNotifier.value = species.count;
 
     final speciesList = _speciesMap[species.inventoryId];
     if (speciesList != null) {
@@ -99,11 +105,11 @@ class SpeciesProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> decrementSpeciesCount(Species species) async {
+  Future<void> decrementIndividualsCount(Species species) async {
     if (species.count > 0) {
       species.count--;
       await _speciesRepository.updateSpecies(species);
-      speciesCountNotifier.value = species.count;
+      individualsCountNotifier.value = species.count;
 
       final speciesList = _speciesMap[species.inventoryId];
       if (speciesList != null) {

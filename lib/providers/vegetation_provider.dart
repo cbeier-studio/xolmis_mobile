@@ -10,7 +10,6 @@ class VegetationProvider with ChangeNotifier {
   VegetationProvider(this._vegetationRepository);
 
   final Map<String, List<Vegetation>> _vegetationMap = {};
-  GlobalKey<AnimatedListState>? vegetationListKey;
 
   Future<void> loadVegetationForInventory(String inventoryId) async {
     try {
@@ -37,8 +36,6 @@ class VegetationProvider with ChangeNotifier {
     _vegetationMap[inventoryId] = _vegetationMap[inventoryId] ?? [];
     _vegetationMap[inventoryId]!.add(vegetation);
 
-    vegetationListKey?.currentState?.insertItem(
-        getVegetationForInventory(inventoryId).length - 1);
     notifyListeners();
 
     // (context as Element).markNeedsBuild(); // Force screen to update
@@ -49,7 +46,6 @@ class VegetationProvider with ChangeNotifier {
 
     final vegetationList = _vegetationMap[inventoryId];
     if (vegetationList != null) {
-      // listKey.currentState?.removeItem(index, (context, animation) => Container());
       vegetationList.removeWhere((v) => v.id == vegetationId);
     }
     notifyListeners();

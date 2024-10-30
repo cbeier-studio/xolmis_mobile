@@ -13,7 +13,6 @@ class InventoryProvider with ChangeNotifier {
   final List<Inventory> _inventories = [];
   final Map<String, Inventory> _inventoryMap = {};
   final ValueNotifier<int> speciesCountNotifier = ValueNotifier<int>(0);
-  GlobalKey<AnimatedListState>? inventoryListKey;
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
@@ -80,8 +79,6 @@ class InventoryProvider with ChangeNotifier {
     try {
       await _inventoryRepository.insertInventory(inventory);
       _inventories.add(inventory);
-      // Notify the AnimatedList about adding a item
-      inventoryListKey?.currentState?.insertItem(activeInventories.length - 1);
       startInventoryTimer(inventory, _inventoryRepository);
 
       return true;
@@ -118,6 +115,8 @@ class InventoryProvider with ChangeNotifier {
   void startInventoryTimer(Inventory inventory, InventoryRepository inventoryRepository) {
     if (inventory.duration > 0 && !inventory.isFinished && !inventory.isPaused) {
       Inventory.startTimer(inventory, inventoryRepository);
+      updateInventory(inventory);
+      notifyListeners();
     }
   }
 
@@ -143,6 +142,7 @@ class InventoryProvider with ChangeNotifier {
     final inventory = getInventoryById(inventoryId);
     if (inventory != null) {
       speciesCountNotifier.value = inventory.speciesList.length;
+      speciesCountNotifier.notifyListeners();
     }
   }
 

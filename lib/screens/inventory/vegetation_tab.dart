@@ -6,9 +6,8 @@ import 'vegetation_list_item.dart';
 
 class VegetationTab extends StatefulWidget {
   final Inventory inventory;
-  final GlobalKey<AnimatedListState> vegetationListKey;
 
-  const VegetationTab({super.key, required this.inventory, required this.vegetationListKey});
+  const VegetationTab({super.key, required this.inventory});
 
   @override
   State<VegetationTab> createState() => _VegetationTabState();
@@ -34,14 +33,16 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
             child: Text('Nenhum dado de vegetação registrado.'),
           );
         } else {
-          return AnimatedList(
-            key: widget.vegetationListKey,
-            initialItemCount: vegetationList.length,
-            itemBuilder: (context, index, animation) {
+          return RefreshIndicator(
+              onRefresh: () async {
+            await vegetationProvider.getVegetationForInventory(widget.inventory.id);
+          },
+        child: ListView.builder(
+        itemCount: vegetationList.length,
+        itemBuilder: (context, index) {
               final vegetation = vegetationList[index];
               return VegetationListItem(
                 vegetation: vegetation,
-                animation: animation,
                 onDelete: () {
                   showDialog(
                     context: context,
@@ -58,20 +59,8 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
                           TextButton(
                             onPressed: () {
                               Navigator.of(context).pop(true);
-                              final indexToRemove = vegetationList.indexOf(
-                                  vegetation);
                               vegetationProvider.removeVegetation(
-                                  widget.inventory.id, vegetation.id!).then((
-                                  _) {
-                                widget.vegetationListKey.currentState?.removeItem(
-                                  indexToRemove,
-                                      (context, animation) =>
-                                      VegetationListItem(
-                                          vegetation: vegetation,
-                                          animation: animation,
-                                          onDelete: () {}),
-                                );
-                              });
+                                  widget.inventory.id, vegetation.id!);
                             },
                             child: const Text('Excluir'),
                           ),
@@ -82,6 +71,7 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
                 },
               );
             },
+          )
           );
         }
       },

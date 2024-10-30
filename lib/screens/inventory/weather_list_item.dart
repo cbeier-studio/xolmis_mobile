@@ -4,13 +4,11 @@ import '../../data/models/inventory.dart';
 
 class WeatherListItem extends StatefulWidget {
   final Weather weather;
-  final Animation<double> animation;
   final VoidCallback onDelete;
 
   const WeatherListItem({
     super.key,
     required this.weather,
-    required this.animation,
     required this.onDelete,
   });
 
@@ -21,9 +19,7 @@ class WeatherListItem extends StatefulWidget {
 class WeatherListItemState extends State<WeatherListItem> {
   @override
   Widget build(BuildContext context) {
-    return SizeTransition(
-      sizeFactor: widget.animation,
-      child: ListTile(
+    return ListTile(
         leading: const Icon(Icons.wb_sunny_outlined),
         title: Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(widget.weather.sampleTime!)),
         subtitle: Column(
@@ -36,14 +32,14 @@ class WeatherListItemState extends State<WeatherListItem> {
           ],
         ),
         trailing: IconButton(
-          icon: const Icon(Icons.delete_outlined),
+          icon: const Icon(Icons.delete_outlined, color: Colors.red,),
           tooltip: 'Apagar dados do tempo',
           onPressed: widget.onDelete,
         ),
         onTap: () {
 
         },
-      ),
+
     );
   }
 }

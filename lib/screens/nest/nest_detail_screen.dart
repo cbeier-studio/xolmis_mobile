@@ -21,10 +21,6 @@ class NestDetailScreen extends StatefulWidget {
 }
 
 class _NestDetailScreenState extends State<NestDetailScreen> {
-  final GlobalKey<AnimatedListState> _revisionListKey = GlobalKey<
-      AnimatedListState>();
-  final GlobalKey<AnimatedListState> _eggListKey = GlobalKey<
-      AnimatedListState>();
   bool _isSubmitting = false;
 
   @override
@@ -34,10 +30,8 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
     // Access the providers
     final revisionProvider = Provider.of<NestRevisionProvider>(
         context, listen: false);
-    revisionProvider.revisionListKey = _revisionListKey;
     final eggProvider = Provider.of<EggProvider>(
         context, listen: false);
-    eggProvider.eggListKey = _eggListKey;
 
     // Load the nest revisions for the current nest
     revisionProvider.loadRevisionForNest(widget.nest.id!);
@@ -187,8 +181,8 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
         ),
         body: TabBarView(
           children: [
-            NestRevisionsTab(nest: widget.nest, revisionListKey: _revisionListKey),
-            EggsTab(nest: widget.nest, eggListKey: _eggListKey),
+            NestRevisionsTab(nest: widget.nest),
+            EggsTab(nest: widget.nest),
           ],
         ),
         floatingActionButton: widget.nest.isActive

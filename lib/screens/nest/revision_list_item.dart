@@ -4,13 +4,11 @@ import '../../data/models/nest.dart';
 
 class RevisionListItem extends StatefulWidget {
   final NestRevision nestRevision;
-  final Animation<double> animation;
   final VoidCallback onDelete;
 
   const RevisionListItem({
     super.key,
     required this.nestRevision,
-    required this.animation,
     required this.onDelete,
   });
 
@@ -21,9 +19,7 @@ class RevisionListItem extends StatefulWidget {
 class RevisionListItemState extends State<RevisionListItem> {
   @override
   Widget build(BuildContext context) {
-    return SizeTransition(
-      sizeFactor: widget.animation,
-      child: ListTile(
+    return ListTile(
         leading: const Icon(Icons.beenhere_outlined),
         title: Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(widget.nestRevision.sampleTime!)),
         subtitle: Column(
@@ -35,14 +31,14 @@ class RevisionListItemState extends State<RevisionListItem> {
           ],
         ),
         trailing: IconButton(
-          icon: const Icon(Icons.delete_outlined),
+          icon: const Icon(Icons.delete_outlined, color: Colors.red,),
           tooltip: 'Apagar revisão de ninho',
           onPressed: widget.onDelete,
         ),
         onTap: () {
 
         },
-      ),
+
     );
   }
 }

@@ -6,9 +6,8 @@ import 'weather_list_item.dart';
 
 class WeatherTab extends StatefulWidget {
   final Inventory inventory;
-  final GlobalKey<AnimatedListState> weatherListKey;
 
-  const WeatherTab({super.key, required this.inventory, required this.weatherListKey});
+  const WeatherTab({super.key, required this.inventory});
 
   @override
   State<WeatherTab> createState() => _WeatherTabState();
@@ -34,14 +33,16 @@ class _WeatherTabState extends State<WeatherTab> with AutomaticKeepAliveClientMi
             child: Text('Nenhum dado de tempo registrado.'),
           );
         } else {
-          return AnimatedList(
-            key: widget.weatherListKey,
-            initialItemCount: weatherList.length,
-            itemBuilder: (context, index, animation) {
+          return RefreshIndicator(
+              onRefresh: () async {
+            await weatherProvider.getWeatherForInventory(widget.inventory.id);
+          },
+        child: ListView.builder(
+        itemCount: weatherList.length,
+        itemBuilder: (context, index) {
               final weather = weatherList[index];
               return WeatherListItem(
                 weather: weather,
-                animation: animation,
                 onDelete: () {
                   showDialog(
                     context: context,
@@ -57,20 +58,9 @@ class _WeatherTabState extends State<WeatherTab> with AutomaticKeepAliveClientMi
                           ),
                           TextButton(
                             onPressed: () {
-                              Navigator.of(context).pop(true);
-                              final indexToRemove = weatherList.indexOf(
-                                  weather);
                               weatherProvider.removeWeather(
-                                  widget.inventory.id, weather.id!).then((
-                                  _) {
-                                widget.weatherListKey.currentState?.removeItem(
-                                  indexToRemove,
-                                      (context, animation) =>
-                                      WeatherListItem(weather: weather,
-                                          animation: animation,
-                                          onDelete: () {}),
-                                );
-                              });
+                                  widget.inventory.id, weather.id!);
+                              Navigator.of(context).pop(true);
                             },
                             child: const Text('Excluir'),
                           ),
@@ -81,6 +71,7 @@ class _WeatherTabState extends State<WeatherTab> with AutomaticKeepAliveClientMi
                 },
               );
             },
+          )
           );
         }
       },

@@ -8,10 +8,9 @@ import 'egg_list_item.dart';
 
 class EggsTab extends StatefulWidget {
   final Nest nest;
-  final GlobalKey<AnimatedListState> eggListKey;
 
   const EggsTab(
-      {super.key, required this.nest, required this.eggListKey});
+      {super.key, required this.nest});
 
   @override
   State<EggsTab> createState() => _EggsTabState();
@@ -37,14 +36,16 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
             child: Text('Nenhum ovo registrado.'),
           );
         } else {
-          return AnimatedList(
-            key: widget.eggListKey,
-            initialItemCount: eggList.length,
-            itemBuilder: (context, index, animation) {
+          return RefreshIndicator(
+              onRefresh: () async {
+            await eggProvider.getEggForNest(widget.nest.id ?? 0);
+          },
+        child: ListView.builder(
+        itemCount: eggList.length,
+        itemBuilder: (context, index) {
               final egg = eggList[index];
               return EggListItem(
                 egg: egg,
-                animation: animation,
                 onDelete: () {
                   showDialog(
                     context: context,
@@ -61,20 +62,8 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
                           TextButton(
                             onPressed: () {
                               Navigator.of(context).pop(true);
-                              final indexToRemove = eggList.indexOf(
-                                  egg);
                               eggProvider.removeEgg(
-                                  widget.nest.id!, egg.id!).then((
-                                  _) {
-                                widget.eggListKey.currentState?.removeItem(
-                                  indexToRemove,
-                                      (context, animation) =>
-                                      EggListItem(
-                                          egg: egg,
-                                          animation: animation,
-                                          onDelete: () {}),
-                                );
-                              });
+                                  widget.nest.id!, egg.id!);
                             },
                             child: const Text('Excluir'),
                           ),
@@ -85,6 +74,7 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
                 },
               );
             },
+          )
           );
         }
       },

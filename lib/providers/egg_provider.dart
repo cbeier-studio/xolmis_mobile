@@ -10,7 +10,6 @@ class EggProvider with ChangeNotifier {
   EggProvider(this._eggRepository);
 
   final Map<int, List<Egg>> _eggMap = {};
-  GlobalKey<AnimatedListState>? eggListKey;
 
   Future<void> loadEggForNest(int nestId) async {
     try {
@@ -43,22 +42,21 @@ class EggProvider with ChangeNotifier {
     await _eggRepository.insertEgg(egg); // Usar o repositório
 
     // Add the egg to the list of the provider
-    _eggMap[nestId] = _eggMap[nestId] ?? [];
-    _eggMap[nestId]!.add(egg);
+    _eggMap[nestId] = await _eggRepository.getEggsForNest(nestId);
+    // _eggMap[nestId] = _eggMap[nestId] ?? [];
+    // _eggMap[nestId]!.add(egg);
 
-    eggListKey?.currentState?.insertItem(
-        getEggForNest(nestId).length - 1);
     notifyListeners();
   }
 
   Future<void> removeEgg(int nestId, int eggId) async {
     await _eggRepository.deleteEgg(eggId);
 
-    final eggList = _eggMap[nestId];
-    if (eggList != null) {
-      // listKey.currentState?.removeItem(index, (context, animation) => Container());
-      eggList.removeWhere((e) => e.id == eggId);
-    }
+    _eggMap[nestId] = await _eggRepository.getEggsForNest(nestId);
+    // final eggList = _eggMap[nestId];
+    // if (eggList != null) {
+    //   eggList.removeWhere((e) => e.id == eggId);
+    // }
     notifyListeners();
   }
 }

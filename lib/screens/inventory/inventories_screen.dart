@@ -29,15 +29,18 @@ class InventoriesScreen extends StatefulWidget {
 }
 
 class _InventoriesScreenState extends State<InventoriesScreen> {
-  final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   late InventoryRepository inventoryRepository;
+  // bool _inventoriesLoaded = false;
 
   @override
   void initState() {
     super.initState();
     inventoryRepository = Provider.of<InventoryRepository>(context, listen: false);
     // Load the inventories
-    Provider.of<InventoryProvider>(context, listen: false).fetchInventories();
+    // if (!_inventoriesLoaded) {
+    //   Provider.of<InventoryProvider>(context, listen: false).fetchInventories();
+    //   _inventoriesLoaded = true;
+    // }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
       Future.delayed(Duration.zero, ()
@@ -48,7 +51,6 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
           }
         }
       });
-      inventoryProvider.inventoryListKey = _listKey;
     });
   }
 
@@ -139,19 +141,16 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
         onRefresh: () async {
           await inventoryProvider.fetchInventories();
         },
-        child: Selector<InventoryProvider, List<Inventory>>(
-          selector: (context, provider) => provider.activeInventories,
-          shouldRebuild: (previous, next) => previous != next || inventoryProvider.isLoading != inventoryProvider.isLoading, // Adicione a condição para isLoading
-          builder: (context, activeInventories, child) {
+        child: Consumer<InventoryProvider>(
+          builder: (context, inventoryProvider, child) {
             if (inventoryProvider.isLoading) {
               return const Center(child: CircularProgressIndicator());
-            } else if (activeInventories.isEmpty) {
+            } else if (inventoryProvider.activeInventories.isEmpty) {
               return const Center(child: Text('Nenhum inventário ativo.'));
             } else {
-              return AnimatedList(
-              key: _listKey,
-              initialItemCount: inventoryProvider.activeInventories.length,
-              itemBuilder: (context, index, animation) {
+              return ListView.builder(
+                itemCount: inventoryProvider.activeInventories.length,
+                itemBuilder: (context, index) {
                 final inventory = inventoryProvider.activeInventories[index];
                 return Dismissible(
                     key: ValueKey(inventory.id),
@@ -220,20 +219,8 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                       // Drag to left
                       if (direction == DismissDirection.endToStart) {
                         // Remove the inventory from list
-                        final indexToRemove = inventoryProvider.activeInventories.indexOf(inventory);
                         inventoryProvider.removeInventory(inventory.id);
-                        _listKey.currentState?.removeItem(
-                          indexToRemove,
-                              (context, animation) => InventoryListItem(
-                                inventory: inventory,
-                                animation: animation,
-                                speciesRepository: speciesRepository,
-                                inventoryRepository: inventoryRepository,
-                                poiRepository: poiRepository,
-                                vegetationRepository: vegetationRepository,
-                                weatherRepository: weatherRepository,
-                          ),
-                        );
+
                         // Drag to right
                       } else if (direction == DismissDirection.startToEnd) {
                         // Finish the inventory
@@ -252,7 +239,6 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                         },
                         child: InventoryListItem(
                           inventory: inventory,
-                          animation: animation,
                           speciesRepository: speciesRepository,
                           inventoryRepository: inventoryRepository,
                           poiRepository: poiRepository,
@@ -272,9 +258,9 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                 ),
                               ),
                             ).then((result) {
-                              if (result == true) {
+                              // if (result == true) {
                                 inventoryProvider.fetchInventories();
-                              }
+                              // }
                             });
                           },
                           onInventoryPausedOrResumed: (inventory) => _onInventoryPausedOrResumed(inventory),
@@ -300,7 +286,6 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
 
 class InventoryListItem extends StatelessWidget {
   final Inventory inventory;
-  final Animation<double> animation;
   final InventoryRepository inventoryRepository;
   final SpeciesRepository speciesRepository;
   final PoiRepository poiRepository;
@@ -312,7 +297,6 @@ class InventoryListItem extends StatelessWidget {
   const InventoryListItem({
     super.key,
     required this.inventory,
-    required this.animation,
     required this.inventoryRepository,
     required this.speciesRepository,
     required this.poiRepository,
@@ -324,13 +308,11 @@ class InventoryListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell( // Ou GestureDetector
+    return InkWell( // Or GestureDetector
         onTap: () {
           onTap?.call(inventory);
         },
-        child:SizeTransition(
-          sizeFactor: animation,
-          child: ListTile(
+        child: ListTile(
             // Use ValueListenableBuilder for update the CircularProgressIndicator
             leading: ValueListenableBuilder<double>(
               valueListenable: inventory.elapsedTimeNotifier,
@@ -362,10 +344,11 @@ class InventoryListItem extends StatelessWidget {
               children: [
                 Text('${inventoryTypeFriendlyNames[inventory.type]}'),
                 if (inventory.duration > 0) Text('${inventory.duration} minutos de duração'),
-                Selector<SpeciesProvider, List<Species>>(
-                  selector: (context, speciesProvider) => speciesProvider.getSpeciesForInventory(inventory.id),
-                  builder: (context, speciesList, child) {
-                    return Text('${speciesList.length} espécies');
+                Selector<SpeciesProvider, int>(
+                  selector: (context, speciesProvider) => speciesProvider.getSpeciesForInventory(inventory.id).length,
+                  shouldRebuild: (previous, next) => previous != next,
+                  builder: (context, speciesCount, child) {
+                    return Text('$speciesCount espécies');
                   },
                 ),
               ],
@@ -391,7 +374,7 @@ class InventoryListItem extends StatelessWidget {
               ],
             ),
           ),
-        )
+
     );
   }
 }

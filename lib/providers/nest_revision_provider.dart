@@ -10,7 +10,6 @@ class NestRevisionProvider with ChangeNotifier {
   NestRevisionProvider(this._nestRevisionRepository);
 
   final Map<int, List<NestRevision>> _nestRevisionMap = {};
-  GlobalKey<AnimatedListState>? revisionListKey;
 
   Future<void> loadRevisionForNest(int nestId) async {
     try {
@@ -35,11 +34,10 @@ class NestRevisionProvider with ChangeNotifier {
     await _nestRevisionRepository.insertNestRevision(nestRevision);
 
     // Add the nest revision to the list of the provider
-    _nestRevisionMap[nestId] = _nestRevisionMap[nestId] ?? [];
-    _nestRevisionMap[nestId]!.add(nestRevision);
+    _nestRevisionMap[nestId] = await _nestRevisionRepository.getNestRevisionsForNest(nestId);
+    // _nestRevisionMap[nestId] = _nestRevisionMap[nestId] ?? [];
+    // _nestRevisionMap[nestId]!.add(nestRevision);
 
-    revisionListKey?.currentState?.insertItem(
-        getRevisionForNest(nestId).length - 1);
     notifyListeners();
 
     // (context as Element).markNeedsBuild(); // Force screen to update
@@ -48,11 +46,11 @@ class NestRevisionProvider with ChangeNotifier {
   Future<void> removeNestRevision(int nestId, int nestRevisionId) async {
     await _nestRevisionRepository.deleteNestRevision(nestRevisionId);
 
-    final revisionList = _nestRevisionMap[nestId];
-    if (revisionList != null) {
-      // listKey.currentState?.removeItem(index, (context, animation) => Container());
-      revisionList.removeWhere((r) => r.id == nestRevisionId);
-    }
+    _nestRevisionMap[nestId] = await _nestRevisionRepository.getNestRevisionsForNest(nestId);
+    // final revisionList = _nestRevisionMap[nestId];
+    // if (revisionList != null) {
+    //   revisionList.removeWhere((r) => r.id == nestRevisionId);
+    // }
     notifyListeners();
   }
 }

@@ -8,10 +8,9 @@ import 'revision_list_item.dart';
 
 class NestRevisionsTab extends StatefulWidget {
   final Nest nest;
-  final GlobalKey<AnimatedListState> revisionListKey;
 
   const NestRevisionsTab(
-      {super.key, required this.nest, required this.revisionListKey});
+      {super.key, required this.nest});
 
   @override
   State<NestRevisionsTab> createState() => _NestRevisionsTabState();
@@ -37,14 +36,16 @@ class _NestRevisionsTabState extends State<NestRevisionsTab> with AutomaticKeepA
             child: Text('Nenhuma revisão de ninho registrada.'),
           );
         } else {
-          return AnimatedList(
-            key: widget.revisionListKey,
-            initialItemCount: revisionList.length,
-            itemBuilder: (context, index, animation) {
+          return RefreshIndicator(
+              onRefresh: () async {
+            await nestRevisionProvider.getRevisionForNest(widget.nest.id ?? 0);
+          },
+        child: ListView.builder(
+        itemCount: revisionList.length,
+        itemBuilder: (context, index) {
               final nestRevision = revisionList[index];
               return RevisionListItem(
                 nestRevision: nestRevision,
-                animation: animation,
                 onDelete: () {
                   showDialog(
                     context: context,
@@ -61,20 +62,8 @@ class _NestRevisionsTabState extends State<NestRevisionsTab> with AutomaticKeepA
                           TextButton(
                             onPressed: () {
                               Navigator.of(context).pop(true);
-                              final indexToRemove = revisionList.indexOf(
-                                  nestRevision);
                               nestRevisionProvider.removeNestRevision(
-                                  widget.nest.id!, nestRevision.id!).then((
-                                  _) {
-                                widget.revisionListKey.currentState?.removeItem(
-                                  indexToRemove,
-                                      (context, animation) =>
-                                      RevisionListItem(
-                                          nestRevision: nestRevision,
-                                          animation: animation,
-                                          onDelete: () {}),
-                                );
-                              });
+                                  widget.nest.id!, nestRevision.id!);
                             },
                             child: const Text('Excluir'),
                           ),
@@ -85,6 +74,7 @@ class _NestRevisionsTabState extends State<NestRevisionsTab> with AutomaticKeepA
                 },
               );
             },
+          )
           );
         }
       },

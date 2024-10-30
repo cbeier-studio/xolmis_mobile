@@ -100,8 +100,8 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
                     padding: const EdgeInsets.only(right: 20.0),
                     child: const Icon(Icons.delete_outlined, color: Colors.white),
                   ),
-                  onDismissed: (direction) {
-                    showDialog(
+                  confirmDismiss: (direction) async {
+                    return await showDialog(
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
@@ -112,20 +112,21 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
                             TextButton(
                               child: const Text('Cancelar'),
                               onPressed: () {
-                                Navigator.of(context).pop();
-                                setState(() {}); // Rebuild the list to restore the item
+                                Navigator.of(context).pop(false);
                               },
                             ),
                             TextButton(child: const Text('Excluir'),
                               onPressed: () {
-                                specimenProvider.removeSpecimen(specimen);
-                                Navigator.of(context).pop();
+                                Navigator.of(context).pop(true);
                               },
                             ),
                           ],
                         );
                       },
                     );
+                  },
+                  onDismissed: (direction) async {
+                    specimenProvider.removeSpecimen(specimen);
                   },
                   child: ListTile(
                     title: Text(specimen.fieldNumber),

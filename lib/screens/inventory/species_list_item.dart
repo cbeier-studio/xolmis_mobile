@@ -11,12 +11,12 @@ import '../utils.dart';
 
 class SpeciesListItem extends StatefulWidget {
   final Species species;
-  final Animation<double> animation;
+  final VoidCallback onDelete;
 
   const SpeciesListItem({
     super.key,
     required this.species,
-    required this.animation,
+    required this.onDelete,
   });
 
   @override
@@ -28,9 +28,7 @@ class SpeciesListItemState extends State<SpeciesListItem> {
 
   @override
   Widget build(BuildContext context) {
-    return SizeTransition(
-      sizeFactor: widget.animation,
-      child: ListTile(
+    return ListTile(
         title: Text(
           widget.species.name,
           style: const TextStyle(fontStyle: FontStyle.italic),
@@ -45,12 +43,12 @@ class SpeciesListItemState extends State<SpeciesListItem> {
               onPressed: () {
                 if (mounted && widget.species.count > 0) {
                   final speciesProvider = Provider.of<SpeciesProvider>(context, listen: false);
-                  speciesProvider.decrementSpeciesCount(widget.species);
+                  speciesProvider.decrementIndividualsCount(widget.species);
                 }
               },
             ),
             Selector<SpeciesProvider, int>(
-              selector: (context, speciesProvider) => speciesProvider.speciesCountNotifier.value,
+              selector: (context, speciesProvider) => speciesProvider.individualsCountNotifier.value,
               builder: (context, count, child) {
                 return Text(widget.species.count.toString());
               },
@@ -61,7 +59,7 @@ class SpeciesListItemState extends State<SpeciesListItem> {
               onPressed: () {
                 if (mounted) {
                   final speciesProvider = Provider.of<SpeciesProvider>(context, listen: false);
-                  speciesProvider.incrementSpeciesCount(widget.species);
+                  speciesProvider.incrementIndividualsCount(widget.species);
                 }
               },
             ),
@@ -135,6 +133,11 @@ class SpeciesListItemState extends State<SpeciesListItem> {
                 );
               },
             ),
+            IconButton(
+              icon: const Icon(Icons.delete_outlined, color: Colors.red,),
+              tooltip: 'Apagar espécie',
+              onPressed: widget.onDelete,
+            ),
           ],
         ),
         onTap: () {
@@ -145,7 +148,6 @@ class SpeciesListItemState extends State<SpeciesListItem> {
             ),
           );
         },
-      ),
     );
   }
 }

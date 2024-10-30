@@ -40,7 +40,6 @@ class HistoryScreen extends StatefulWidget {
 }
 
 class _HistoryScreenState extends State<HistoryScreen> {
-  final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
 
   @override
   void initState() {
@@ -84,47 +83,40 @@ class _HistoryScreenState extends State<HistoryScreen> {
   Widget _buildInventoryList(InventoryProvider inventoryProvider) {
     return inventoryProvider.finishedInventories.isEmpty
         ? const Center(child: Text('Nenhum inventário encontrado.'))
-        : AnimatedList(
-      key: _listKey,
-      initialItemCount: inventoryProvider.finishedInventories.length,
-      itemBuilder: (context, index, animation) {
+        : ListView.builder(
+      itemCount: inventoryProvider.finishedInventories.length,
+      itemBuilder: (context, index) {
         final inventory = inventoryProvider.finishedInventories[index];
         return Dismissible(
           key: Key(inventory.id),
           direction: DismissDirection.endToStart,
-          onDismissed: (direction) {
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: const Text('Confirmar Exclusão'),
-                  content: const Text(
-                      'Tem certeza que deseja excluir este inventário?'),
-                  actions: <Widget>[
-                    TextButton(
-                      child: const Text('Cancelar'),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        setState(() {}); // Rebuild the list to restore the item
-                      },
-                    ),
-                    TextButton(child: const Text('Excluir'),
-                      onPressed: () {
-                        final index = inventoryProvider
-                            .finishedInventories.indexOf(
-                            inventory);
-                        inventoryProvider.removeInventory(
-                            inventory.id);
-                        Navigator.of(context).pop();
-                        _listKey.currentState?.removeItem(
-                            index, (context, animation) =>
-                            SizedBox.shrink());
-                      },
-                    ),
-                  ],
-                );
-              },
+          confirmDismiss: (direction) async {
+            return await showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('Confirmar Exclusão'),
+                    content: const Text(
+                        'Tem certeza que deseja excluir este inventário?'),
+                    actions: <Widget>[
+                      TextButton(
+                        child: const Text('Cancelar'),
+                        onPressed: () {
+                          Navigator.of(context).pop(false);
+                        },
+                      ),
+                      TextButton(child: const Text('Excluir'),
+                        onPressed: () {
+                          Navigator.of(context).pop(true);
+                        },
+                      ),
+                    ],
+                  );
+                }
             );
+          },
+          onDismissed: (direction) {
+            inventoryProvider.removeInventory(inventory.id);
           },
           background: Container(
             color: Colors.red,
@@ -134,7 +126,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
           ),
           child: InventoryListItem(
             inventory: inventory,
-            animation: animation,
             onInventoryUpdated: onInventoryUpdated,
             speciesRepository: widget.speciesRepository,
             inventoryRepository: widget.inventoryRepository,
@@ -180,7 +171,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
 class InventoryListItem extends StatelessWidget {
   final Inventory inventory;
-  final Animation<double> animation;
   final void Function(Inventory) onInventoryUpdated;
   final InventoryRepository inventoryRepository;
   final SpeciesRepository speciesRepository;
@@ -191,7 +181,6 @@ class InventoryListItem extends StatelessWidget {
   const InventoryListItem({
     super.key,
     required this.inventory,
-    required this.animation,
     required this.onInventoryUpdated,
     required this.inventoryRepository,
     required this.speciesRepository,
@@ -202,9 +191,7 @@ class InventoryListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizeTransition(
-      sizeFactor: animation,
-      child: ListTile(
+    return ListTile(
         title: Text(inventory.id),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -241,7 +228,6 @@ class InventoryListItem extends StatelessWidget {
             ),
           ).then((_) => onInventoryUpdated(inventory));
         },
-      ),
     );
   }
 

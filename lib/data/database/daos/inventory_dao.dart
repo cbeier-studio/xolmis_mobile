@@ -161,45 +161,5 @@ class InventoryDao {
     }
   }
 
-  // Future<List<Inventory>> getFinishedInventories() async {
-  //   final db = await _dbHelper.database;
-  //   final List<Map<String, dynamic>> maps = await db?.query(
-  //     'inventories',
-  //     where: 'isFinished = ?',
-  //     whereArgs: [1],
-  //   ) ?? [];
-  //   List<Inventory> inventories = [];
-  //
-  //   for (Map<String, dynamic> map in maps) {
-  //     List<Species> speciesList = await _speciesDao.getSpeciesByInventory(map['id']);
-  //     List<Vegetation> vegetationList = await _vegetationDao.getVegetationByInventory(map['id']);
-  //     List<Weather> weatherList = await _weatherDao.getWeatherByInventory(map['id']);
-  //     inventories.add(Inventory.fromMap(map, speciesList, vegetationList, weatherList));
-  //   }
-  //   if (kDebugMode) {
-  //     print('Finished inventories loaded: ${inventories.length}');
-  //   }
-  //   return inventories;
-  // }
-
-  // Future<List<Inventory>> loadActiveInventories() async {
-  //   final db = await _dbHelper.database;
-  //   final List<Map<String, dynamic>> maps = await db?.query(
-  //     'inventories',
-  //     where: 'isFinished = ?',
-  //     whereArgs: [0],
-  //   ) ?? [];
-  //   List<Inventory> inventories = [];
-  //
-  //   for (Map<String, dynamic> map in maps) {
-  //     List<Species> speciesList = await _speciesDao.getSpeciesByInventory(map['id']);
-  //     List<Vegetation> vegetationList = await _vegetationDao.getVegetationByInventory(map['id']);
-  //     List<Weather> weatherList = await _weatherDao.getWeatherByInventory(map['id']);
-  //     inventories.add(Inventory.fromMap(map, speciesList, vegetationList, weatherList));
-  //   }
-  //
-  //   return inventories;
-  // }
-
 
 }

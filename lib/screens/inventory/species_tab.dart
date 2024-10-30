@@ -13,14 +13,12 @@ import 'species_list_item.dart';
 
 class SpeciesTab extends StatefulWidget {
   final Inventory inventory;
-  final GlobalKey<AnimatedListState> speciesListKey;
   final SpeciesRepository speciesRepository;
   final InventoryRepository inventoryRepository;
 
   const SpeciesTab({
     super.key,
     required this.inventory,
-    required this.speciesListKey,
     required this.speciesRepository,
     required this.inventoryRepository
   });
@@ -39,7 +37,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     return _buildSpeciesList(widget.speciesRepository, widget.inventoryRepository);
   }
 
-  void _addSpeciesToInventory(String speciesName, SpeciesRepository speciesRepository, InventoryRepository inventoryRepository) async {
+  Future<void> _addSpeciesToInventory(String speciesName, SpeciesRepository speciesRepository, InventoryRepository inventoryRepository) async {
     final speciesProvider = Provider.of<SpeciesProvider>(context, listen: false);
     final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
 
@@ -59,7 +57,6 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     await inventoryRepository.updateInventory(widget.inventory);
 
     setState(() {
-      _insertSpeciesListItem(newSpecies);
       checkMackinnonCompletion(context, widget.inventory, inventoryRepository);
     });
 
@@ -73,7 +70,8 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
 
     _updateSpeciesList();
 
-    inventoryProvider.notifyListeners();
+    speciesProvider.notifyListeners();
+    // inventoryProvider.notifyListeners();
   }
 
   void _showSpeciesAlreadyExistsMessage() {
@@ -90,18 +88,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     );
   }
 
-  void _insertSpeciesListItem(Species species) {
-    final speciesList = Provider.of<SpeciesProvider>(context, listen: false).getSpeciesForInventory(widget.inventory.id);
-    if (speciesList.isNotEmpty) {
-      widget.speciesListKey.currentState?.insertItem(speciesList.length - 1, duration: const Duration(milliseconds: 300));
-    }
-    // final animatedListState = widget.speciesListKey.currentState;
-    // if (animatedListState != null) {
-    //   animatedListState.insertItem(speciesList.length - 1);
-    // }
-  }
-
-  void _addSpeciesToOtherActiveInventories(String speciesName, SpeciesProvider speciesProvider, InventoryProvider inventoryProvider, SpeciesRepository speciesRepository, InventoryRepository inventoryRepository) {
+  Future<void> _addSpeciesToOtherActiveInventories(String speciesName, SpeciesProvider speciesProvider, InventoryProvider inventoryProvider, SpeciesRepository speciesRepository, InventoryRepository inventoryRepository) async {
     for (final inventory in inventoryProvider.activeInventories) {
       if (inventory.id != widget.inventory.id && !speciesProvider.speciesExistsInInventory(inventory.id, speciesName)) {
         final newSpeciesForOtherInventory = Species(
@@ -110,13 +97,15 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
           isOutOfInventory: inventory.isFinished,
           pois: [],
         );
-        speciesRepository.insertSpecies(newSpeciesForOtherInventory.inventoryId, newSpeciesForOtherInventory);
+        await speciesRepository.insertSpecies(newSpeciesForOtherInventory.inventoryId, newSpeciesForOtherInventory);
       }
       if (inventory.type == InventoryType.invCumulativeTime) {
         _restartInventoryTimer(inventoryProvider, inventory, inventoryRepository);
       } else {
         inventoryProvider.updateInventory(inventory);
       }
+      speciesProvider.notifyListeners();
+      // inventoryProvider.notifyListeners();
     }
   }
 
@@ -124,9 +113,9 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     inventory.elapsedTime = 0;
     inventory.isPaused = false;
     inventory.isFinished = false;
+    await inventoryProvider.updateInventoryElapsedTime(widget.inventory.id, widget.inventory.elapsedTime);
     Inventory.startTimer(inventory, inventoryRepository);
     await inventoryRepository.updateInventory(inventory);
-    // await inventoryProvider.updateInventoryElapsedTime(widget.inventory.id, widget.inventory.elapsedTime);
 
   }
 
@@ -158,8 +147,6 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
   }
 
   Widget _buildSpeciesList(SpeciesRepository speciesRepository, InventoryRepository inventoryRepository) {
-    final speciesList = Provider.of<SpeciesProvider>(context, listen: false).getSpeciesForInventory(
-        widget.inventory.id);
     return Column(
       children: [
         Padding(
@@ -177,34 +164,26 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
           ),
         ),
         Expanded(
-          child: Selector<SpeciesProvider, List<Species>>(
-            selector: (context, speciesProvider) => speciesProvider.getSpeciesForInventory(widget.inventory.id),
+          child: Consumer<SpeciesProvider>(
             builder: (context, speciesProvider, child) {
+              final speciesList = speciesProvider.getSpeciesForInventory(widget.inventory.id);
               if (speciesList.isEmpty) {
                 return const Center(
                   child: Text('Nenhuma espécie registrada.'),
                 );
               } else {
-                return AnimatedList(
-                  key: widget.speciesListKey,
-                  initialItemCount: speciesList.length,
-                  itemBuilder: (context, index, animation) {
+                return ListView.builder(
+                  itemCount: speciesList.length,
+                  itemBuilder: (context, index) {
                     // print('speciesList: ${speciesList.length} ; AnimatedList: $index');
-                    if (index >= speciesList.length) {
-                      return const SizedBox.shrink();
-                    }
+                    // if (index >= speciesList.length) {
+                    //   return const SizedBox.shrink();
+                    // }
                     final species = speciesList[index];
-                    return Dismissible(
-                      key: Key(species.id.toString()),
-                      direction: DismissDirection.endToStart,
-                      background: Container(
-                        color: Colors.red,
-                        alignment: Alignment.centerRight,
-                        padding: const EdgeInsets.only(right: 16.0),
-                        child: const Icon(Icons.delete_outlined, color: Colors.white),
-                      ),
-                      confirmDismiss: (direction) async {
-                        return await showDialog(
+                    return SpeciesListItem(
+                      species: species,
+                      onDelete: () {
+                        showDialog(
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
@@ -213,13 +192,15 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                                   'Tem certeza que deseja excluir esta espécie?'),
                               actions: <Widget>[
                                 TextButton(
-                                  onPressed: () =>
-                                      Navigator.of(context).pop(false),
+                                  onPressed: () => Navigator.of(context).pop(false),
                                   child: const Text('Cancelar'),
                                 ),
                                 TextButton(
-                                  onPressed: () =>
-                                      Navigator.of(context).pop(true),
+                                  onPressed: () {
+                                    Navigator.of(context).pop(true);
+                                    speciesProvider.removeSpecies(
+                                        context, widget.inventory.id, species.id!);
+                                  },
                                   child: const Text('Excluir'),
                                 ),
                               ],
@@ -227,25 +208,9 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                           },
                         );
                       },
-                      onDismissed: (direction) {
-                        final indexToRemove = speciesList.indexOf(species);
-                        Provider.of<SpeciesProvider>(context, listen: false).removeSpecies(context, widget.inventory.id, species.id!);
-                        widget.speciesListKey.currentState?.removeItem(
-                          indexToRemove,
-                              (context, animation) => SpeciesListItem(
-                            species: species,
-                            animation: animation,
-                          ),
-                        );
-                        final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
-                        inventoryProvider.updateInventory(widget.inventory);
-                      },
-                      child: SpeciesListItem(
-                        species: species,
-                        animation: animation,
-                      ),
                     );
                   },
+
                 );
               }
             },

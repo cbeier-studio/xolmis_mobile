@@ -46,12 +46,6 @@ class InventoryDetailScreen extends StatefulWidget {
 class InventoryDetailScreenState extends State<InventoryDetailScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  final GlobalKey<AnimatedListState> _speciesListKey = GlobalKey<
-      AnimatedListState>();
-  final GlobalKey<AnimatedListState> _vegetationListKey = GlobalKey<
-      AnimatedListState>();
-  final GlobalKey<AnimatedListState> _weatherListKey = GlobalKey<
-      AnimatedListState>();
   bool _isSubmitting = false;
 
   @override
@@ -70,10 +64,8 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
     final poiProvider = Provider.of<PoiProvider>(context, listen: false);
     final vegetationProvider = Provider.of<VegetationProvider>(
         context, listen: false);
-    vegetationProvider.vegetationListKey = _vegetationListKey;
     final weatherProvider = Provider.of<WeatherProvider>(
         context, listen: false);
-    weatherProvider.weatherListKey = _weatherListKey;
 
     // Load the species for the current inventory
     speciesProvider.loadSpeciesForInventory(widget.inventory.id);
@@ -283,23 +275,20 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
       ),
       body: TabBarView(
         controller: _tabController,
-        physics: const NeverScrollableScrollPhysics(),
+        // physics: const NeverScrollableScrollPhysics(),
         dragStartBehavior: DragStartBehavior.down,
         children: [
           SpeciesTab(
             inventory: widget.inventory,
-            speciesListKey: _speciesListKey,
             speciesRepository: widget.speciesRepository,
             inventoryRepository: widget.inventoryRepository,
           ),
           VegetationTab(
             inventory: widget.inventory,
-            vegetationListKey: _vegetationListKey,
             // vegetationRepository: widget.vegetationRepository,
           ),
           WeatherTab(
             inventory: widget.inventory,
-            weatherListKey: _weatherListKey,
             // weatherRepository: widget.weatherRepository,
           ),
         ],
