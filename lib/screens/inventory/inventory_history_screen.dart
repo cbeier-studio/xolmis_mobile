@@ -45,13 +45,13 @@ class _HistoryScreenState extends State<HistoryScreen> {
   @override
   void initState() {
     super.initState();
-    Provider.of<InventoryProvider>(context, listen: false).loadInventories();
+    Provider.of<InventoryProvider>(context, listen: false).fetchInventories();
   }
 
   void onInventoryUpdated(Inventory inventory) {
     Provider.of<InventoryProvider>(context, listen: false).updateInventory(
         inventory);
-    Provider.of<InventoryProvider>(context, listen: false).loadInventories();
+    Provider.of<InventoryProvider>(context, listen: false).fetchInventories();
   }
 
   @override
@@ -71,7 +71,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
       ),
       body: RefreshIndicator(
         onRefresh: () async {
-          await inventoryProvider.loadInventories();
+          await inventoryProvider.fetchInventories();
         },
         child: inventoryProvider.isLoading
             ? const Center(child: CircularProgressIndicator())

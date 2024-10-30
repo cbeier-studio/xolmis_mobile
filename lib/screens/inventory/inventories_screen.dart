@@ -37,7 +37,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     super.initState();
     inventoryRepository = Provider.of<InventoryRepository>(context, listen: false);
     // Load the inventories
-    Provider.of<InventoryProvider>(context, listen: false).loadInventories();
+    Provider.of<InventoryProvider>(context, listen: false).fetchInventories();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
       Future.delayed(Duration.zero, ()
@@ -78,7 +78,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
       ).then((newInventory) {
         // Reload the inventory list
         if (newInventory != null) {
-          Provider.of<InventoryProvider>(context, listen: false).loadInventories();
+          Provider.of<InventoryProvider>(context, listen: false).fetchInventories();
         }
       });
     } else {
@@ -88,7 +88,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
       ).then((newInventory) {
         // Reload the inventory list
         if (newInventory != null) {
-          Provider.of<InventoryProvider>(context, listen: false).loadInventories();
+          Provider.of<InventoryProvider>(context, listen: false).fetchInventories();
         }
       });
     }
@@ -137,7 +137,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
       ),
       body: RefreshIndicator(
         onRefresh: () async {
-          await inventoryProvider.loadInventories();
+          await inventoryProvider.fetchInventories();
         },
         child: Selector<InventoryProvider, List<Inventory>>(
           selector: (context, provider) => provider.activeInventories,
@@ -239,14 +239,14 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                         // Finish the inventory
                         Inventory.stopTimer(inventory, inventoryRepository);
                         inventoryProvider.updateInventory(inventory);
-                        inventoryProvider.loadInventories();
+                        inventoryProvider.fetchInventories();
                       }
                     },
                     child: ValueListenableBuilder<bool>(
                         valueListenable: inventory.isFinishedNotifier,
                         builder: (context, isFinished, child) {
                           if (isFinished) {
-                            inventoryProvider.loadInventories();
+                            inventoryProvider.fetchInventories();
                           }
                           return child!;
                         },
@@ -273,7 +273,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                               ),
                             ).then((result) {
                               if (result == true) {
-                                inventoryProvider.loadInventories();
+                                inventoryProvider.fetchInventories();
                               }
                             });
                           },

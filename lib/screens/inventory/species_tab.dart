@@ -144,7 +144,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
   // }
 
   void _showSpeciesSearch(SpeciesRepository speciesRepository, InventoryRepository inventoryRepository) async {
-    final allSpecies = await loadSpeciesData();
+    final allSpecies = await loadSpeciesSearchData();
     allSpecies.sort((a, b) => a.compareTo(b));
     final selectedSpecies = await showSearch(
       context: context,

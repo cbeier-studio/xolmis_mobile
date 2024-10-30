@@ -10,6 +10,9 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:xolmis/main.dart';
 import 'package:xolmis/screens/utils.dart';
+
+import 'package:xolmis/data/database/database_helper.dart';
+
 import 'package:xolmis/data/database/repositories/inventory_repository.dart';
 import 'package:xolmis/data/database/repositories/species_repository.dart';
 import 'package:xolmis/data/database/repositories/poi_repository.dart';
@@ -20,7 +23,64 @@ import 'package:xolmis/data/database/repositories/nest_revision_repository.dart'
 import 'package:xolmis/data/database/repositories/egg_repository.dart';
 import 'package:xolmis/data/database/repositories/specimen_repository.dart';
 
-void main() {
+import 'package:xolmis/data/database/daos/egg_dao.dart';
+import 'package:xolmis/data/database/daos/inventory_dao.dart';
+import 'package:xolmis/data/database/daos/nest_dao.dart';
+import 'package:xolmis/data/database/daos/nest_revision_dao.dart';
+import 'package:xolmis/data/database/daos/poi_dao.dart';
+import 'package:xolmis/data/database/daos/species_dao.dart';
+import 'package:xolmis/data/database/daos/specimen_dao.dart';
+import 'package:xolmis/data/database/daos/vegetation_dao.dart';
+import 'package:xolmis/data/database/daos/weather_dao.dart';
+
+Future<void> main() async {
+  late DatabaseHelper databaseHelper;
+
+  late InventoryDao inventoryDao;
+  late SpeciesDao speciesDao;
+  late PoiDao poiDao;
+  late VegetationDao vegetationDao;
+  late WeatherDao weatherDao;
+  late NestDao nestDao;
+  late NestRevisionDao nestRevisionDao;
+  late EggDao eggDao;
+  late SpecimenDao specimenDao;
+
+  late InventoryRepository inventoryRepository;
+  late SpeciesRepository speciesRepository;
+  late PoiRepository poiRepository;
+  late VegetationRepository vegetationRepository;
+  late WeatherRepository weatherRepository;
+  late NestRepository nestRepository;
+  late NestRevisionRepository nestRevisionRepository;
+  late EggRepository eggRepository;
+  late SpecimenRepository specimenRepository;
+
+  setUp(() async {
+    databaseHelper = DatabaseHelper();
+    await databaseHelper.initDatabase();
+
+    poiDao = PoiDao(databaseHelper);
+    speciesDao = SpeciesDao(databaseHelper, poiDao);
+    vegetationDao = VegetationDao(databaseHelper);
+    weatherDao = WeatherDao(databaseHelper);
+    inventoryDao = InventoryDao(databaseHelper, speciesDao, vegetationDao, weatherDao);
+    eggDao = EggDao(databaseHelper);
+    nestRevisionDao = NestRevisionDao(databaseHelper);
+    nestDao = NestDao(databaseHelper, nestRevisionDao, eggDao);
+    specimenDao = SpecimenDao(databaseHelper);
+
+    poiRepository = PoiRepository(poiDao);
+    speciesRepository = SpeciesRepository(speciesDao);
+    vegetationRepository = VegetationRepository(vegetationDao);
+    weatherRepository = WeatherRepository(weatherDao);
+    inventoryRepository = InventoryRepository(inventoryDao);
+    eggRepository = EggRepository(eggDao);
+    nestRevisionRepository = NestRevisionRepository(nestRevisionDao);
+    nestRepository = NestRepository(nestDao);
+    specimenRepository = SpecimenRepository(specimenDao);
+  });
+
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
     final themeMode = await getThemeMode();

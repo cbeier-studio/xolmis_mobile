@@ -11,7 +11,7 @@ import '../providers/species_provider.dart';
 
 import 'inventory/add_inventory_screen.dart';
 
-Future<List<String>> loadSpeciesData() async {
+Future<List<String>> loadSpeciesSearchData() async {
   final jsonString = await rootBundle.loadString('assets/species_data.json');
   final jsonData = json.decode(jsonString) as List<dynamic>;
   return jsonData.map((species) => species['scientificName'].toString())

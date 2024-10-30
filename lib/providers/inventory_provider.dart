@@ -38,7 +38,7 @@ class InventoryProvider with ChangeNotifier {
   //   _vegetationProvider.addListener(_onVegetationListChanged);
   // }
 
-  Future<void> loadInventories() async {
+  Future<void> fetchInventories() async {
     _isLoading = true;
     // notifyListeners();
     try {
@@ -82,6 +82,7 @@ class InventoryProvider with ChangeNotifier {
       _inventories.add(inventory);
       // Notify the AnimatedList about adding a item
       inventoryListKey?.currentState?.insertItem(activeInventories.length - 1);
+      startInventoryTimer(inventory, _inventoryRepository);
 
       return true;
     } catch (error) {

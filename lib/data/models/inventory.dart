@@ -642,14 +642,3 @@ class Inventory with ChangeNotifier {
   }
 }
 
-// class InventoryCountNotifier extends ChangeNotifier {
-//   int _count = 0;
-//
-//   int get count => _count;
-//
-//   static Future<void> updateCountStatic(InventoryRepository inventoryRepository) async {
-//     _count = await inventoryRepository.getActiveInventoriesCount();
-//     notifyListeners();
-//   }
-// }
-

@@ -180,7 +180,7 @@ class _MainScreenState extends State<MainScreen> {
     WakelockPlus.enable();
     initializeBackgroundExecution();
     // inventoryCountNotifier.updateCount();
-    Provider.of<InventoryProvider>(context, listen: false).loadInventories();
+    Provider.of<InventoryProvider>(context, listen: false).fetchInventories();
     Provider.of<NestProvider>(context, listen: false).fetchNests();
     Provider.of<SpecimenProvider>(context, listen: false).fetchSpecimens();
   }
