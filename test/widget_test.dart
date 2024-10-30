@@ -10,12 +10,34 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:xolmis/main.dart';
 import 'package:xolmis/screens/utils.dart';
+import 'package:xolmis/data/database/repositories/inventory_repository.dart';
+import 'package:xolmis/data/database/repositories/species_repository.dart';
+import 'package:xolmis/data/database/repositories/poi_repository.dart';
+import 'package:xolmis/data/database/repositories/vegetation_repository.dart';
+import 'package:xolmis/data/database/repositories/weather_repository.dart';
+import 'package:xolmis/data/database/repositories/nest_repository.dart';
+import 'package:xolmis/data/database/repositories/nest_revision_repository.dart';
+import 'package:xolmis/data/database/repositories/egg_repository.dart';
+import 'package:xolmis/data/database/repositories/specimen_repository.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
     final themeMode = await getThemeMode();
-    await tester.pumpWidget(MyApp(themeMode: themeMode));
+    await tester.pumpWidget(
+        MyApp(
+          themeMode: themeMode,
+          inventoryRepository: inventoryRepository,
+          speciesRepository: speciesRepository,
+          poiRepository: poiRepository,
+          vegetationRepository: vegetationRepository,
+          weatherRepository: weatherRepository,
+          nestRepository: nestRepository,
+          nestRevisionRepository: nestRevisionRepository,
+          eggRepository: eggRepository,
+          specimenRepository: specimenRepository,
+        )
+    );
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);

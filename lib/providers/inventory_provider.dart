@@ -1,12 +1,15 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../models/inventory.dart';
-import '../models/database_helper.dart';
+
+import '../data/models/inventory.dart';
+import '../data/database/repositories/inventory_repository.dart';
+
 import 'species_provider.dart';
 import 'vegetation_provider.dart';
 import 'weather_provider.dart';
 
 class InventoryProvider with ChangeNotifier {
+  final InventoryRepository _inventoryRepository;
   final List<Inventory> _inventories = [];
   final Map<String, Inventory> _inventoryMap = {};
   final ValueNotifier<int> speciesCountNotifier = ValueNotifier<int>(0);
@@ -29,10 +32,11 @@ class InventoryProvider with ChangeNotifier {
   VegetationProvider get vegetationProvider => _vegetationProvider;
   WeatherProvider get weatherProvider => _weatherProvider;
 
-  InventoryProvider(this._speciesProvider, this._vegetationProvider, this._weatherProvider) {
-    // Add a listener to VegetationProvider
-    _vegetationProvider.addListener(_onVegetationListChanged);
-  }
+  InventoryProvider(this._inventoryRepository, this._speciesProvider, this._vegetationProvider, this._weatherProvider);
+  // {
+  //   // Add a listener to VegetationProvider
+  //   _vegetationProvider.addListener(_onVegetationListChanged);
+  // }
 
   Future<void> loadInventories() async {
     _isLoading = true;
@@ -40,7 +44,7 @@ class InventoryProvider with ChangeNotifier {
     try {
       _inventories.clear();
       _inventoryMap.clear();
-      final inventories = await DatabaseHelper().getInventories();
+      final inventories = await _inventoryRepository.getInventories();
       _inventories.addAll(inventories);
       notifyListeners();
       for (var inventory in inventories) {
@@ -48,6 +52,7 @@ class InventoryProvider with ChangeNotifier {
         await _speciesProvider.loadSpeciesForInventory(inventory.id);
         await _vegetationProvider.loadVegetationForInventory(inventory.id);
         await _weatherProvider.loadWeatherForInventory(inventory.id);
+        startInventoryTimer(inventory, _inventoryRepository);
       }
       if (kDebugMode) {
         print('Inventories loaded');
@@ -68,12 +73,12 @@ class InventoryProvider with ChangeNotifier {
   }
 
   Future<bool> inventoryIdExists(String id) async {
-    return await DatabaseHelper().inventoryIdExists(id);
+    return await _inventoryRepository.inventoryIdExists(id);
   }
 
   Future<bool> addInventory(Inventory inventory) async {
     try {
-      await DatabaseHelper().insertInventory(inventory);
+      await _inventoryRepository.insertInventory(inventory);
       _inventories.add(inventory);
       // Notify the AnimatedList about adding a item
       inventoryListKey?.currentState?.insertItem(activeInventories.length - 1);
@@ -91,14 +96,14 @@ class InventoryProvider with ChangeNotifier {
   }
 
   void updateInventory(Inventory inventory) async {
-    await DatabaseHelper().updateInventory(inventory);
+    await _inventoryRepository.updateInventory(inventory);
 
     _inventoryMap[inventory.id] = inventory;
     notifyListeners();
   }
 
   void removeInventory(String id) async {
-    await DatabaseHelper().deleteInventory(id);
+    await _inventoryRepository.deleteInventory(id);
 
     _inventories.removeWhere((inventory) => inventory.id == id);
     _inventoryMap.remove(id);
@@ -109,20 +114,26 @@ class InventoryProvider with ChangeNotifier {
     return activeInventories.firstWhere((inventory) => inventory.id == id);
   }
 
-  void pauseInventoryTimer(Inventory inventory) {
-    inventory.pauseTimer();
+  void startInventoryTimer(Inventory inventory, InventoryRepository inventoryRepository) {
+    if (inventory.duration > 0 && !inventory.isFinished && !inventory.isPaused) {
+      Inventory.startTimer(inventory, inventoryRepository);
+    }
+  }
+
+  void pauseInventoryTimer(Inventory inventory, InventoryRepository inventoryRepository) {
+    Inventory.pauseTimer(inventory, inventoryRepository);
     updateInventory(inventory);
     notifyListeners();
   }
 
-  void resumeInventoryTimer(Inventory inventory) {
-    inventory.resumeTimer();
+  void resumeInventoryTimer(Inventory inventory, InventoryRepository inventoryRepository) {
+    Inventory.resumeTimer(inventory, inventoryRepository);
     updateInventory(inventory);
     notifyListeners();
   }
 
   Future<void> updateInventoryElapsedTime(String inventoryId, double elapsedTime) async {
-    await DatabaseHelper().updateInventoryElapsedTime(inventoryId, elapsedTime);
+    await _inventoryRepository.updateInventoryElapsedTime(inventoryId, elapsedTime);
 
     notifyListeners();
   }
@@ -134,16 +145,16 @@ class InventoryProvider with ChangeNotifier {
     }
   }
 
-  void _onVegetationListChanged() {
-    // Update the vegetation list when have changes in VegetationProvider
-    for (var inventoryId in _inventoryMap.keys) {
-      final inventoryList = _inventoryMap[inventoryId];
-      if (inventoryList != null) {
-        for (var inventory in _inventories) {
-          inventory.vegetationList = VegetationProvider().getVegetationForInventory(inventory.id);
-        }
-      }
-    }
-    notifyListeners();
-  }
+  // void _onVegetationListChanged() {
+  //   // Update the vegetation list when have changes in VegetationProvider
+  //   for (var inventoryId in _inventoryMap.keys) {
+  //     final inventoryList = _inventoryMap[inventoryId];
+  //     if (inventoryList != null) {
+  //       for (var inventory in _inventories) {
+  //         inventory.vegetationList = VegetationProvider().getVegetationForInventory(inventory.id);
+  //       }
+  //     }
+  //   }
+  //   notifyListeners();
+  // }
 }

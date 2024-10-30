@@ -5,8 +5,27 @@ import 'package:provider/provider.dart';
 import 'package:flutter_background/flutter_background.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
-import 'models/database_helper.dart';
-import 'models/inventory.dart';
+import 'data/database/database_helper.dart';
+
+import 'data/database/daos/inventory_dao.dart';
+import 'data/database/daos/species_dao.dart';
+import 'data/database/daos/poi_dao.dart';
+import 'data/database/daos/vegetation_dao.dart';
+import 'data/database/daos/weather_dao.dart';
+import 'data/database/daos/nest_dao.dart';
+import 'data/database/daos/nest_revision_dao.dart';
+import 'data/database/daos/egg_dao.dart';
+import 'data/database/daos/specimen_dao.dart';
+
+import 'data/database/repositories/inventory_repository.dart';
+import 'data/database/repositories/species_repository.dart';
+import 'data/database/repositories/poi_repository.dart';
+import 'data/database/repositories/vegetation_repository.dart';
+import 'data/database/repositories/weather_repository.dart';
+import 'data/database/repositories/nest_repository.dart';
+import 'data/database/repositories/nest_revision_repository.dart';
+import 'data/database/repositories/egg_repository.dart';
+import 'data/database/repositories/specimen_repository.dart';
 
 import 'providers/inventory_provider.dart';
 import 'providers/species_provider.dart';
@@ -18,9 +37,9 @@ import 'providers/nest_revision_provider.dart';
 import 'providers/egg_provider.dart';
 import 'providers/specimen_provider.dart';
 
-import 'screens/home_screen.dart';
-import 'screens/nests_screen.dart';
-import 'screens/specimens_screen.dart';
+import 'screens/inventory/inventories_screen.dart';
+import 'screens/nest/nests_screen.dart';
+import 'screens/specimen/specimens_screen.dart';
 import 'screens/utils.dart';
 
 void main() async {
@@ -30,34 +49,96 @@ void main() async {
     yield LicenseEntryWithLineBreaks(['xolmis'], license);
   });
   await DatabaseHelper().initDatabase();
+
+  // Create the DAOs
+  final databaseHelper = DatabaseHelper();
+  final poiDao = PoiDao(databaseHelper);
+  final speciesDao = SpeciesDao(databaseHelper, poiDao);
+  final vegetationDao = VegetationDao(databaseHelper);
+  final weatherDao = WeatherDao(databaseHelper);
+  final inventoryDao = InventoryDao(databaseHelper, speciesDao, vegetationDao, weatherDao);
+  final nestRevisionDao = NestRevisionDao(databaseHelper);
+  final eggDao = EggDao(databaseHelper);
+  final nestDao = NestDao(databaseHelper, nestRevisionDao, eggDao);
+  final specimenDao = SpecimenDao(databaseHelper);
+
+  // Create the repositories
+  final inventoryRepository = InventoryRepository(inventoryDao);
+  final speciesRepository = SpeciesRepository(speciesDao);
+  final poiRepository = PoiRepository(poiDao);
+  final vegetationRepository = VegetationRepository(vegetationDao);
+  final weatherRepository = WeatherRepository(weatherDao);
+  final nestRepository = NestRepository(nestDao);
+  final nestRevisionRepository = NestRevisionRepository(nestRevisionDao);
+  final eggRepository = EggRepository(eggDao);
+  final specimenRepository = SpecimenRepository(specimenDao);
+
   final themeMode = await getThemeMode();
-  runApp(MyApp(themeMode: themeMode));
+  runApp(MyApp(
+    themeMode: themeMode,
+    inventoryRepository: inventoryRepository,
+    speciesRepository: speciesRepository,
+    poiRepository: poiRepository,
+    vegetationRepository: vegetationRepository,
+    weatherRepository: weatherRepository,
+    nestRepository: nestRepository,
+    nestRevisionRepository: nestRevisionRepository,
+    eggRepository: eggRepository,
+    specimenRepository: specimenRepository,
+  ));
 }
 
 class MyApp extends StatelessWidget {
   final ThemeMode themeMode;
+  final InventoryRepository inventoryRepository;
+  final SpeciesRepository speciesRepository;
+  final PoiRepository poiRepository;
+  final VegetationRepository vegetationRepository;
+  final WeatherRepository weatherRepository;
+  final NestRepository nestRepository;
+  final NestRevisionRepository nestRevisionRepository;
+  final EggRepository eggRepository;
+  final SpecimenRepository specimenRepository;
 
-  const MyApp({super.key, required this.themeMode});
+  const MyApp({
+    super.key,
+    required this.themeMode,
+    required this.inventoryRepository,
+    required this.speciesRepository,
+    required this.poiRepository,
+    required this.vegetationRepository,
+    required this.weatherRepository,
+    required this.nestRepository,
+    required this.nestRevisionRepository,
+    required this.eggRepository,
+    required this.specimenRepository,
+  });
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => SpecimenProvider()),
-        ChangeNotifierProvider(create: (context) => NestRevisionProvider()),
-        ChangeNotifierProvider(create: (context) => EggProvider()),
-        ChangeNotifierProvider(create: (context) => PoiProvider()),
-        ChangeNotifierProvider(create: (context) => SpeciesProvider()),
-        ChangeNotifierProvider(create: (context) => VegetationProvider()),
-        ChangeNotifierProvider(create: (context) => WeatherProvider()),
+        ChangeNotifierProvider(create: (context) => SpecimenProvider(specimenRepository)),
+        ChangeNotifierProvider(create: (context) => NestRevisionProvider(nestRevisionRepository)),
+        ChangeNotifierProvider(create: (context) => EggProvider(eggRepository)),
+        ChangeNotifierProvider(create: (context) => PoiProvider(poiRepository)),
+        ChangeNotifierProvider(create: (context) => SpeciesProvider(speciesRepository, inventoryRepository)),
+        ChangeNotifierProvider(create: (context) => VegetationProvider(vegetationRepository)),
+        ChangeNotifierProvider(create: (context) => WeatherProvider(weatherRepository)),
         ChangeNotifierProvider(
           create: (context) => InventoryProvider(
+            inventoryRepository,
             context.read<SpeciesProvider>(),
             context.read<VegetationProvider>(),
             context.read<WeatherProvider>(),
           ),
         ),
-        ChangeNotifierProvider(create: (_) => NestProvider()),
+        ChangeNotifierProvider(create: (_) => NestProvider(nestRepository)),
+        Provider(create: (_) => inventoryRepository),
+        Provider(create: (_) => speciesRepository),
+        Provider(create: (_) => poiRepository),
+        Provider(create: (_) => vegetationRepository),
+        Provider(create: (_) => weatherRepository),
       ],
       child: MaterialApp(
         title: 'Xolmis',
@@ -67,14 +148,17 @@ class MyApp extends StatelessWidget {
         // theme: ThemeData(
         //   primarySwatch: Colors.deepPurple,
         // ),
-        home: const MainScreen(),
+        home: MainScreen(),
       ),
     );
   }
 }
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+
+  const MainScreen({
+    super.key,
+  });
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -82,12 +166,12 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
-  final ValueNotifier<int> activeInventoriesCount = ValueNotifier<int>(0);
-  final inventoryCountNotifier = InventoryCountNotifier();
-  static final List<Widget> _widgetOptions = <Widget>[
-    const HomeScreen(),
-    const ActiveNestsScreen(),
-    const SpecimensScreen(),
+  // final ValueNotifier<int> activeInventoriesCount = ValueNotifier<int>(0);
+  // final inventoryCountNotifier = InventoryCountNotifier();
+  static final List<Widget Function(BuildContext)> _widgetOptions = <Widget Function(BuildContext)>[
+        (context) => const InventoriesScreen(),
+        (context) => const ActiveNestsScreen(),
+        (context) => const SpecimensScreen(),
   ];
 
   @override
@@ -95,7 +179,8 @@ class _MainScreenState extends State<MainScreen> {
     super.initState();
     WakelockPlus.enable();
     initializeBackgroundExecution();
-    inventoryCountNotifier.updateCount();
+    // inventoryCountNotifier.updateCount();
+    Provider.of<InventoryProvider>(context, listen: false).loadInventories();
     Provider.of<NestProvider>(context, listen: false).fetchNests();
     Provider.of<SpecimenProvider>(context, listen: false).fetchSpecimens();
   }
@@ -119,10 +204,10 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
-  Future<void> updateActiveInventoriesCount() async {
-    final count = await DatabaseHelper().getActiveInventoriesCount();
-    activeInventoriesCount.value = count;
-  }
+  // Future<void> updateActiveInventoriesCount() async {
+  //   final count = await DatabaseHelper().getActiveInventoriesCount();
+  //   activeInventoriesCount.value = count;
+  // }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -135,12 +220,12 @@ class _MainScreenState extends State<MainScreen> {
     final useSideNavRail = MediaQuery.sizeOf(context).width >= 600;
     const List<NavigationRailDestination> destinations = [
       NavigationRailDestination(
-          icon: Icon(Icons.list_alt_outlined),
-          label: Text('Inventários'),
+        icon: Icon(Icons.list_alt_outlined),
+        label: Text('Inventários'),
       ),
       NavigationRailDestination(
-          icon: Icon(Icons.egg_outlined),
-          label: Text('Ninhos'),
+        icon: Icon(Icons.egg_outlined),
+        label: Text('Ninhos'),
       ),
       NavigationRailDestination(
         icon: Icon(Icons.local_offer_outlined),
@@ -148,9 +233,7 @@ class _MainScreenState extends State<MainScreen> {
       ),
     ];
 
-    return ChangeNotifierProvider.value(
-      value: inventoryCountNotifier,
-      child: Scaffold(
+    return Scaffold(
         // appBar: AppBar(
         //   title: const Text('Xolmis'),
         // ),
@@ -166,7 +249,7 @@ class _MainScreenState extends State<MainScreen> {
               },
             ),
             Expanded(
-              child: _widgetOptions.elementAt(_selectedIndex),
+              child: _widgetOptions.elementAt(_selectedIndex)(context),
             ),
           ],
         ),
@@ -175,10 +258,12 @@ class _MainScreenState extends State<MainScreen> {
           : BottomNavigationBar(
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Consumer<InventoryProvider>(
-                builder: (context, inventoryProvider, child) {
-                  return inventoryProvider.inventoriesCount > 0 ? Badge.count(
-                    count: inventoryProvider.inventoriesCount,
+              icon: Selector<InventoryProvider, int>(
+                selector: (context, provider) => provider.inventoriesCount,
+                builder: (context, inventoriesCount, child) {
+                  return inventoriesCount > 0
+                      ? Badge.count(
+                    count: inventoriesCount,
                     child: const Icon(Icons.list_alt_outlined),
                   )
                       : const Icon(Icons.list_alt_outlined);
@@ -187,10 +272,12 @@ class _MainScreenState extends State<MainScreen> {
               label: 'Inventários',
             ),
             BottomNavigationBarItem(
-              icon: Consumer<NestProvider>(
-                builder: (context, nestProvider, child) {
-                  return nestProvider.nestsCount > 0 ? Badge.count(
-                    count: nestProvider.nestsCount,
+              icon: Selector<NestProvider, int>(
+                selector: (context, provider) => provider.nestsCount,
+                builder: (context, nestsCount, child) {
+                  return nestsCount > 0
+                      ? Badge.count(
+                    count: nestsCount,
                     child: const Icon(Icons.egg_outlined),
                   )
                       : const Icon(Icons.egg_outlined);
@@ -199,10 +286,12 @@ class _MainScreenState extends State<MainScreen> {
               label: 'Ninhos',
             ),
             BottomNavigationBarItem(
-              icon: Consumer<SpecimenProvider>(
-                builder: (context, specimenProvider, child) {
-                  return specimenProvider.specimensCount > 0 ? Badge.count(
-                    count: specimenProvider.specimensCount,
+              icon: Selector<SpecimenProvider, int>(
+                selector: (context, provider) => provider.specimensCount,
+                builder: (context, specimensCount, child) {
+                  return specimensCount > 0
+                      ? Badge.count(
+                    count: specimensCount,
                     child: const Icon(Icons.local_offer_outlined),
                   )
                       : const Icon(Icons.local_offer_outlined);
@@ -215,7 +304,7 @@ class _MainScreenState extends State<MainScreen> {
           selectedItemColor: Colors.deepPurple,
           onTap: _onItemTapped,
         ),
-      ),
+
     );
   }
 }

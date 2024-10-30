@@ -1,16 +1,20 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../models/nest.dart';
-import '../models/database_helper.dart';
+import '../data/models/nest.dart';
+import '../data/database/repositories/egg_repository.dart';
 
 class EggProvider with ChangeNotifier {
+  final EggRepository _eggRepository;
+
+  EggProvider(this._eggRepository);
+
   final Map<int, List<Egg>> _eggMap = {};
   GlobalKey<AnimatedListState>? eggListKey;
 
   Future<void> loadEggForNest(int nestId) async {
     try {
-      final eggList = await DatabaseHelper().getEggsForNest(nestId);
+      final eggList = await _eggRepository.getEggsForNest(nestId);
       _eggMap[nestId] = eggList;
     } catch (e) {
       if (kDebugMode) {
@@ -26,7 +30,7 @@ class EggProvider with ChangeNotifier {
   }
 
   Future<bool> eggFieldNumberExists(String fieldNumber) async {
-    return await DatabaseHelper().eggFieldNumberExists(fieldNumber);
+    return await _eggRepository.eggFieldNumberExists(fieldNumber);
   }
 
   Future<void> addEgg(BuildContext context, int nestId, Egg egg) async {
@@ -36,7 +40,7 @@ class EggProvider with ChangeNotifier {
 
     // Insert the egg in the database
     egg.nestId = nestId;
-    await DatabaseHelper().insertEgg(egg);
+    await _eggRepository.insertEgg(egg); // Usar o repositório
 
     // Add the egg to the list of the provider
     _eggMap[nestId] = _eggMap[nestId] ?? [];
@@ -45,12 +49,10 @@ class EggProvider with ChangeNotifier {
     eggListKey?.currentState?.insertItem(
         getEggForNest(nestId).length - 1);
     notifyListeners();
-
-    // (context as Element).markNeedsBuild(); // Force screen to update
   }
 
   Future<void> removeEgg(int nestId, int eggId) async {
-    await DatabaseHelper().deleteEgg(eggId);
+    await _eggRepository.deleteEgg(eggId);
 
     final eggList = _eggMap[nestId];
     if (eggList != null) {

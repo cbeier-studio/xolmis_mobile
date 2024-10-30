@@ -1,15 +1,20 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../models/inventory.dart';
-import '../models/database_helper.dart';
+
+import '../data/models/inventory.dart';
+import '../data/database/repositories/weather_repository.dart';
 
 class WeatherProvider with ChangeNotifier {
+  final WeatherRepository _weatherRepository;
+
+  WeatherProvider(this._weatherRepository);
+
   final Map<String, List<Weather>> _weatherMap = {};
   GlobalKey<AnimatedListState>? weatherListKey;
 
   Future<void> loadWeatherForInventory(String inventoryId) async {
     try {
-      final weatherList = await DatabaseHelper().getWeatherByInventory(inventoryId);
+      final weatherList = await _weatherRepository.getWeatherByInventory(inventoryId);
       _weatherMap[inventoryId] = weatherList;
     } catch (e) {
       if (kDebugMode) {
@@ -26,7 +31,7 @@ class WeatherProvider with ChangeNotifier {
 
   Future<void> addWeather(BuildContext context, String inventoryId, Weather weather) async {
     // Insert the weather data in the database
-    await DatabaseHelper().insertWeather(weather);
+    await _weatherRepository.insertWeather(weather);
 
     // Add the POI to the list of the provider
     _weatherMap[inventoryId] = _weatherMap[inventoryId] ?? [];
@@ -40,7 +45,7 @@ class WeatherProvider with ChangeNotifier {
   }
 
   Future<void> removeWeather(String inventoryId, int weatherId) async {
-    await DatabaseHelper().deleteWeather(weatherId);
+    await _weatherRepository.deleteWeather(weatherId);
 
     final weatherList = _weatherMap[inventoryId];
     if (weatherList != null) {

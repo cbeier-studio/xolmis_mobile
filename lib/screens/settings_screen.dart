@@ -5,7 +5,7 @@ import 'package:numberpicker/numberpicker.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-import '../models/database_helper.dart';
+import '../data/database/database_helper.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -238,7 +238,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Future<void> _deleteAppData() async {
     // 1. Get the database path
     var databasesPath = await getDatabasesPath();
-    String path = join(databasesPath, 'inventory_database.db');
+    String path = join(databasesPath, 'xolmis_database.db');
 
     // 2. Delete the database file
     await deleteDatabase(path);

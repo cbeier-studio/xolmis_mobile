@@ -1,16 +1,20 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../models/nest.dart';
-import '../models/database_helper.dart';
+import '../data/models/nest.dart';
+import '../data/database/repositories/nest_revision_repository.dart';
 
 class NestRevisionProvider with ChangeNotifier {
+  final NestRevisionRepository _nestRevisionRepository;
+
+  NestRevisionProvider(this._nestRevisionRepository);
+
   final Map<int, List<NestRevision>> _nestRevisionMap = {};
   GlobalKey<AnimatedListState>? revisionListKey;
 
   Future<void> loadRevisionForNest(int nestId) async {
     try {
-      final revisionList = await DatabaseHelper().getNestRevisionsForNest(nestId);
+      final revisionList = await _nestRevisionRepository.getNestRevisionsForNest(nestId);
       _nestRevisionMap[nestId] = revisionList;
     } catch (e) {
       if (kDebugMode) {
@@ -28,7 +32,7 @@ class NestRevisionProvider with ChangeNotifier {
   Future<void> addNestRevision(BuildContext context, int nestId, NestRevision nestRevision) async {
     // Insert the nest revision data in the database
     nestRevision.nestId = nestId;
-    await DatabaseHelper().insertNestRevision(nestRevision);
+    await _nestRevisionRepository.insertNestRevision(nestRevision);
 
     // Add the nest revision to the list of the provider
     _nestRevisionMap[nestId] = _nestRevisionMap[nestId] ?? [];
@@ -42,7 +46,7 @@ class NestRevisionProvider with ChangeNotifier {
   }
 
   Future<void> removeNestRevision(int nestId, int nestRevisionId) async {
-    await DatabaseHelper().deleteNestRevision(nestRevisionId);
+    await _nestRevisionRepository.deleteNestRevision(nestRevisionId);
 
     final revisionList = _nestRevisionMap[nestId];
     if (revisionList != null) {

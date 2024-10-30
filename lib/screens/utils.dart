@@ -5,10 +5,11 @@ import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../models/inventory.dart';
+import '../data/models/inventory.dart';
+import '../data/database/repositories/inventory_repository.dart';
 import '../providers/species_provider.dart';
 
-import 'add_inventory_screen.dart';
+import 'inventory/add_inventory_screen.dart';
 
 Future<List<String>> loadSpeciesData() async {
   final jsonString = await rootBundle.loadString('assets/species_data.json');
@@ -27,17 +28,17 @@ String getNextInventoryId(String currentId) {
   return nextId;
 }
 
-void checkMackinnonCompletion(BuildContext context, Inventory inventory) {
+void checkMackinnonCompletion(BuildContext context, Inventory inventory, InventoryRepository inventoryRepository) {
   final speciesProvider = Provider.of<SpeciesProvider>(context, listen: false);
   final speciesList = speciesProvider.getSpeciesForInventory(inventory.id);
   // print('speciesList: ${speciesList.length} ; maxSpecies: ${inventory.maxSpecies}');
   if (inventory.type == InventoryType.invMackinnon &&
       speciesList.length == inventory.maxSpecies) {
-    _showMackinnonDialog(context, inventory);
+    _showMackinnonDialog(context, inventory, inventoryRepository);
   }
 }
 
-void _showMackinnonDialog(BuildContext context, Inventory inventory) {
+void _showMackinnonDialog(BuildContext context, Inventory inventory, InventoryRepository inventoryRepository) {
   showDialog(
     context: context,
     builder: (context) {
@@ -50,7 +51,7 @@ void _showMackinnonDialog(BuildContext context, Inventory inventory) {
             child: Text('Iniciar Próxima Lista'),
             onPressed: () async {
               // Finish the inventory and open the screen to add inventory
-              await inventory.stopTimer();
+              await Inventory.stopTimer(inventory, inventoryRepository);
               // onInventoryUpdated(inventory);
               Navigator.pop(context, true);
               Navigator.of(context).pop();
@@ -70,7 +71,7 @@ void _showMackinnonDialog(BuildContext context, Inventory inventory) {
             child: Text('Encerrar'),
             onPressed: () async {
               // Finish the inventory and go back to the Home screen
-              await inventory.stopTimer();
+              await Inventory.stopTimer(inventory, inventoryRepository);
               // onInventoryUpdated(inventory);
               Navigator.pop(context, true);
               Navigator.of(context).pop();
@@ -126,7 +127,7 @@ Future<Position> _determinePosition() async {
 
   // When we reach here, permissions are granted and we can
   // continue accessing the position of the device.
-  return await Geolocator.getCurrentPosition(locationSettings: LocationSettings(accuracy: LocationAccuracy.high));
+  return await Geolocator.getCurrentPosition();
 }
 
 Future<Position?> getPosition() async {

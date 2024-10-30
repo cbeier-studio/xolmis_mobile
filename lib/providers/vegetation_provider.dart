@@ -1,15 +1,20 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../models/inventory.dart';
-import '../models/database_helper.dart';
+
+import '../data/models/inventory.dart';
+import '../data/database/repositories/vegetation_repository.dart';
 
 class VegetationProvider with ChangeNotifier {
+  final VegetationRepository _vegetationRepository;
+
+  VegetationProvider(this._vegetationRepository);
+
   final Map<String, List<Vegetation>> _vegetationMap = {};
   GlobalKey<AnimatedListState>? vegetationListKey;
 
   Future<void> loadVegetationForInventory(String inventoryId) async {
     try {
-      final vegetationList = await DatabaseHelper().getVegetationByInventory(inventoryId);
+      final vegetationList = await _vegetationRepository.getVegetationByInventory(inventoryId);
       _vegetationMap[inventoryId] = vegetationList;
     } catch (e) {
       if (kDebugMode) {
@@ -26,7 +31,7 @@ class VegetationProvider with ChangeNotifier {
 
   Future<void> addVegetation(BuildContext context, String inventoryId, Vegetation vegetation) async {
     // Insert the vegetation data in the database
-    await DatabaseHelper().insertVegetation(vegetation);
+    await _vegetationRepository.insertVegetation(vegetation);
 
     // Add the POI to the list of the provider
     _vegetationMap[inventoryId] = _vegetationMap[inventoryId] ?? [];
@@ -40,7 +45,7 @@ class VegetationProvider with ChangeNotifier {
   }
 
   Future<void> removeVegetation(String inventoryId, int vegetationId) async {
-    await DatabaseHelper().deleteVegetation(vegetationId);
+    await _vegetationRepository.deleteVegetation(vegetationId);
 
     final vegetationList = _vegetationMap[inventoryId];
     if (vegetationList != null) {
