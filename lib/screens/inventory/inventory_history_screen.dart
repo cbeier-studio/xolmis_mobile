@@ -55,17 +55,17 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final inventoryProvider = Provider.of<InventoryProvider>(context);
+    final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Inventários encerrados'),
         actions: [
-          IconButton(
+          inventoryProvider.finishedInventories.isNotEmpty ? IconButton(
             icon: const Icon(Icons.file_download_outlined),
             onPressed: () => _exportAllInventoriesToJson(inventoryProvider),
             tooltip: 'Exportar todos os inventários',
-          ),
+          ) : const SizedBox.shrink(),
         ],
       ),
       body: RefreshIndicator(

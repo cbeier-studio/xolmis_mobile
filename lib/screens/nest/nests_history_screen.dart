@@ -33,11 +33,12 @@ class _NestsHistoryScreenState extends State<NestsHistoryScreen> {
       appBar: AppBar(
         title: const Text('Ninhos inativos'),
         actions: [
-          IconButton(
+          Provider.of<NestProvider>(context, listen: false).inactiveNests.isNotEmpty
+              ? IconButton(
             icon: const Icon(Icons.file_download_outlined),
             onPressed: () => _exportAllInactiveNestsToJson(context),
             tooltip: 'Exportar todos os ninhos inativos',
-          ),
+          ) : const SizedBox.shrink(),
         ],
       ),
       body: Consumer<NestProvider>(

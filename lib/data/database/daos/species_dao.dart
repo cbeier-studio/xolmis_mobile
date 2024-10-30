@@ -23,6 +23,25 @@ class SpeciesDao {
     }
   }
 
+  Future<void> updateSpecies(Species species) async {
+    final db = await _dbHelper.database;
+    await db?.update(
+      'species',
+      species.toMap(species.inventoryId),
+      where: 'id = ?',
+      whereArgs: [species.id],
+    );
+  }
+
+  Future<void> deleteSpecies(int? speciesId) async {
+    final db = await _dbHelper.database;
+    await db?.delete(
+      'species',
+      where: 'id = ?',
+      whereArgs: [speciesId],
+    );
+  }
+
   Future<void> deleteSpeciesFromInventory(String inventoryId, String speciesName) async {
     final db = await _dbHelper.database;
     await db?.delete(
@@ -77,39 +96,24 @@ class SpeciesDao {
     }).toList();
   }
 
-  Future<void> deleteSpecies(int? speciesId) async {
-    final db = await _dbHelper.database;
-    await db?.delete(
-      'species',
-      where: 'id = ?',
-      whereArgs: [speciesId],
-    );
-  }
 
-  Future<Species?> getSpeciesByNameAndInventoryId(String name, String inventoryId) async {
-    final db = await _dbHelper.database;
-    final List<Map<String, dynamic>> maps = await db?.query(
-      'species',
-      where: 'name = ? AND inventoryId = ?',
-      whereArgs: [name, inventoryId],
-    ) ?? [];
 
-    if (maps.isNotEmpty) {
-      final speciesId = maps.first['id'] as int;
-      final pois = await _poiDao.getPoisForSpecies(speciesId);
-      return Species.fromMap(maps.first, pois);
-    } else {
-      return null;
-    }
-  }
+  // Future<Species?> getSpeciesByNameAndInventoryId(String name, String inventoryId) async {
+  //   final db = await _dbHelper.database;
+  //   final List<Map<String, dynamic>> maps = await db?.query(
+  //     'species',
+  //     where: 'name = ? AND inventoryId = ?',
+  //     whereArgs: [name, inventoryId],
+  //   ) ?? [];
+  //
+  //   if (maps.isNotEmpty) {
+  //     final speciesId = maps.first['id'] as int;
+  //     final pois = await _poiDao.getPoisForSpecies(speciesId);
+  //     return Species.fromMap(maps.first, pois);
+  //   } else {
+  //     return null;
+  //   }
+  // }
 
-  Future<void> updateSpecies(Species species) async {
-    final db = await _dbHelper.database;
-    await db?.update(
-      'species',
-      species.toMap(species.inventoryId),
-      where: 'id = ?',
-      whereArgs: [species.id],
-    );
-  }
+
 }

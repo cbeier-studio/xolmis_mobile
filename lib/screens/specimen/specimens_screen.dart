@@ -1,6 +1,11 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../providers/specimen_provider.dart';
 
@@ -61,6 +66,12 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
       appBar: AppBar(
         title: const Text('Espécimes coletados'),
         actions: [
+          Provider.of<SpecimenProvider>(context, listen: false).specimens.isNotEmpty
+              ? IconButton(
+            icon: const Icon(Icons.file_download_outlined),
+            onPressed: () => _exportAllSpecimensToJson(context),
+            tooltip: 'Exportar todos os espécimes',
+          ) : const SizedBox.shrink(),
           IconButton(
             icon: const Icon(Icons.settings_outlined),
             tooltip: 'Configurações',
@@ -170,5 +181,34 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
         child: const Icon(Icons.add_outlined),
       ),
     );
+  }
+
+  Future<void> _exportAllSpecimensToJson(BuildContext context) async {
+    try {
+      final specimenProvider = Provider.of<SpecimenProvider>(context, listen: false);
+      final specimenList = specimenProvider.specimens;
+      final jsonData = specimenList.map((specimen) => specimen.toJson()).toList();
+      final jsonString = jsonEncode(jsonData);
+
+      Directory tempDir = await getTemporaryDirectory();
+      final filePath = '${tempDir.path}/specimens.json';
+      final file = File(filePath);
+      await file.writeAsString(jsonString);
+
+      await Share.shareXFiles([
+        XFile(filePath, mimeType: 'application/json'),
+      ], text: 'Espécimes exportados!', subject: 'Dados dos Espécimes');
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Row(
+          children: [
+            Icon(Icons.error_outlined, color: Colors.red),
+            SizedBox(width: 8),
+            Text('Erro ao exportar os espécimes: $error'),
+          ],
+        ),
+        ),
+      );
+    }
   }
 }

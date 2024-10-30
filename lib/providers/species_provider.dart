@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 
 import '../data/models/inventory.dart';
@@ -21,16 +20,6 @@ class SpeciesProvider with ChangeNotifier {
 
   List<String> getAllInventoryIds() {
     return _speciesByInventoryId.keys.toList();
-  }
-
-  Future<void> _loadInitialData() async {
-    // Load data from database and initialize the _speciesMap
-    final inventories = await _inventoryRepository.getInventories();
-    for (var inventory in inventories) {
-      final speciesList = await _speciesRepository.getSpeciesByInventory(inventory.id);
-      _speciesMap[inventory.id] = speciesList;
-    }
-    notifyListeners();
   }
 
   Future<void> loadSpeciesForInventory(String inventoryId) async {
@@ -55,7 +44,10 @@ class SpeciesProvider with ChangeNotifier {
     _speciesMap[inventoryId] = await _speciesRepository.getSpeciesByInventory(inventoryId);
     // _speciesMap[inventoryId] = _speciesMap[inventoryId] ?? [];
     // _speciesMap[inventoryId]!.add(species);
-    Provider.of<InventoryProvider>(context, listen: false).updateSpeciesCount(inventoryId);
+    if (context.mounted) {
+      Provider.of<InventoryProvider>(context, listen: false).updateSpeciesCount(
+          inventoryId);
+    }
     notifyListeners();
   }
 
@@ -79,7 +71,10 @@ class SpeciesProvider with ChangeNotifier {
     _speciesMap[inventoryId] = await _speciesRepository.getSpeciesByInventory(inventoryId);
     notifyListeners();
 
-    Provider.of<InventoryProvider>(context, listen: false).updateSpeciesCount(inventoryId);
+    if (context.mounted) {
+      Provider.of<InventoryProvider>(context, listen: false).updateSpeciesCount(
+          inventoryId);
+    }
   }
 
   // void sortSpeciesForInventory(String inventoryId) {
