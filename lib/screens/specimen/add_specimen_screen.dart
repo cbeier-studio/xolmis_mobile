@@ -163,15 +163,15 @@ class _AddSpecimenScreenState extends State<AddSpecimenScreen> {
                 child: Container(
                     padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 16.0),
                     width: double.infinity,
-                    child: _isSubmitting
-                        ? const SizedBox(
-                      width: 24,
-                      height: 24,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                        : Align(
+                    child: Align(
                       alignment: Alignment.centerRight,
-                      child: FilledButton(
+                      child: _isSubmitting
+                          ? const SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                          : FilledButton(
                         onPressed: _submitForm,
                         child: const Text('Salvar'),
                       ),
