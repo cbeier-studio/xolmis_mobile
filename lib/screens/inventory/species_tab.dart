@@ -99,7 +99,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
         );
         await speciesRepository.insertSpecies(newSpeciesForOtherInventory.inventoryId, newSpeciesForOtherInventory);
       }
-      if (inventory.type == InventoryType.invCumulativeTime) {
+      if (inventory.type == InventoryType.invTimedQualitative) {
         _restartInventoryTimer(inventoryProvider, inventory, inventoryRepository);
       } else {
         inventoryProvider.updateInventory(inventory);

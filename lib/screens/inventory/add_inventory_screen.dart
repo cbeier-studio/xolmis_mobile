@@ -20,7 +20,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
   final _idController = TextEditingController();
   final _durationController = TextEditingController();
   final _maxSpeciesController = TextEditingController();
-  InventoryType _selectedType = InventoryType.invQualitative;
+  InventoryType _selectedType = InventoryType.invFreeQualitative;
   bool _isSubmitting = false;
 
   @override
@@ -57,7 +57,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
               final pointCountsDuration = prefs.getInt('pointCountsDuration') ?? 8;
               final cumulativeTimeDuration = prefs.getInt('cumulativeTimeDuration') ?? 30;
 
-              if (_selectedType == InventoryType.invMackinnon) {
+              if (_selectedType == InventoryType.invMackinnonList) {
                 _maxSpeciesController.text = widget.initialMaxSpecies.toString();
               }
 
@@ -98,11 +98,11 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                       onChanged: (InventoryType? newValue) {
                         setState(() async {
                           _selectedType = newValue!;
-                          if (newValue == InventoryType.invCumulativeTime) {
+                          if (newValue == InventoryType.invTimedQualitative) {
                             _durationController.text =
                             await cumulativeTimeDuration.toString();
                             _maxSpeciesController.text = '';
-                          } else if (newValue == InventoryType.invMackinnon) {
+                          } else if (newValue == InventoryType.invMackinnonList) {
                             _maxSpeciesController.text =
                             await maxSpeciesMackinnon.toString();
                             _durationController.text = '';

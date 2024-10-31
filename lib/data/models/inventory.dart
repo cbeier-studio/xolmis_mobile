@@ -376,21 +376,21 @@ class Weather {
 }
 
 enum InventoryType {
-  invQualitative,
-  invMackinnon,
-  invTransection,
+  invFreeQualitative,
+  invTimedQualitative,
+  invMackinnonList,
+  invTransectionCount,
   invPointCount,
-  invCumulativeTime,
   invBanding,
   invCasual,
 }
 
 const Map<InventoryType, String> inventoryTypeFriendlyNames = {
-  InventoryType.invQualitative: 'Lista Qualitativa Livre',
-  InventoryType.invMackinnon: 'Lista de Mackinnon',
-  InventoryType.invTransection: 'Contagem em Transeção',
+  InventoryType.invFreeQualitative: 'Lista Qualitativa Livre',
+  InventoryType.invTimedQualitative: 'Lista Qualitativa Temporizada',
+  InventoryType.invMackinnonList: 'Lista de Mackinnon',
+  InventoryType.invTransectionCount: 'Contagem em Transecção',
   InventoryType.invPointCount: 'Ponto de Contagem',
-  InventoryType.invCumulativeTime: 'Lista Qualitativa Temporizada',
   InventoryType.invBanding: 'Anilhamento',
   InventoryType.invCasual: 'Observação Casual',
 };

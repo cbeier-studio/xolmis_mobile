@@ -32,7 +32,7 @@ void checkMackinnonCompletion(BuildContext context, Inventory inventory, Invento
   final speciesProvider = Provider.of<SpeciesProvider>(context, listen: false);
   final speciesList = speciesProvider.getSpeciesForInventory(inventory.id);
   // print('speciesList: ${speciesList.length} ; maxSpecies: ${inventory.maxSpecies}');
-  if (inventory.type == InventoryType.invMackinnon &&
+  if (inventory.type == InventoryType.invMackinnonList &&
       speciesList.length == inventory.maxSpecies) {
     _showMackinnonDialog(context, inventory, inventoryRepository);
   }
@@ -60,7 +60,7 @@ void _showMackinnonDialog(BuildContext context, Inventory inventory, InventoryRe
                 context,
                 MaterialPageRoute(builder: (context) => AddInventoryScreen(
                   initialInventoryId: nextInventoryId,
-                  initialInventoryType: InventoryType.invMackinnon,
+                  initialInventoryType: InventoryType.invMackinnonList,
                   initialMaxSpecies: inventory.maxSpecies,
                 )
                 ),
