@@ -178,6 +178,7 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen>
                   },
                   child: PoiListItem(
                     poi: poi,
+                    onLongPress: () => _showBottomSheet(context, poi),
                   ),
                 );
               }
@@ -188,19 +189,83 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen>
       ),
     );
   }
+
+  void _showBottomSheet(BuildContext context, Poi poi) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return BottomSheet(
+          onClosing: () {},
+          builder: (BuildContext context) {
+            return Container(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  // Expanded(
+                  //     child:
+                  ListTile(
+                    leading: const Icon(Icons.delete_outlined, color: Colors.red,),
+                    title: const Text('Apagar POI', style: TextStyle(color: Colors.red),),
+                    onTap: () {
+                      // Ask for user confirmation
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Confirmar exclusão'),
+                            content: const Text('Tem certeza que deseja excluir este POI?'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop(false);
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text('Cancelar'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop(true);
+                                  Navigator.of(context).pop();
+                                  // Call the function to delete species
+                                  Provider.of<PoiProvider>(context, listen: false)
+                                      .removePoi(widget.species.id!, poi.id!);
+                                },
+                                child: const Text('Excluir'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                  )
+                  // )
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
 }
 
 class PoiListItem extends StatelessWidget {
   final Poi poi;
+  final VoidCallback onLongPress;
 
-  const PoiListItem({super.key, required this.poi,});
+  const PoiListItem({
+    super.key,
+    required this.poi,
+    required this.onLongPress,
+  });
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
         title: Text('${poi.latitude}, ${poi.longitude}'),
         leading: const Icon(Icons.location_on_outlined),
-
+        onLongPress: onLongPress,
     );
   }
 }

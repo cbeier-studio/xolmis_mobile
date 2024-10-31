@@ -4,12 +4,12 @@ import '../../data/models/nest.dart';
 
 class EggListItem extends StatefulWidget {
   final Egg egg;
-  final VoidCallback onDelete;
+  final VoidCallback onLongPress;
 
   const EggListItem({
     super.key,
     required this.egg,
-    required this.onDelete,
+    required this.onLongPress,
   });
 
   @override
@@ -32,11 +32,7 @@ class EggListItemState extends State<EggListItem> {
             Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(widget.egg.sampleTime!)),
           ],
         ),
-        trailing: IconButton(
-          icon: const Icon(Icons.delete_outlined, color: Colors.red,),
-          tooltip: 'Apagar ovo',
-          onPressed: widget.onDelete,
-        ),
+        onLongPress: widget.onLongPress,
         onTap: () {
 
         },

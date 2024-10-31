@@ -37,7 +37,11 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
         title: const Text('Novo Inventário'),
         actions: [
           _isSubmitting
-              ? CircularProgressIndicator()
+              ? const SizedBox(
+            width: 24,
+            height: 24,
+            child: CircularProgressIndicator(strokeWidth: 2),
+          )
               : TextButton(
             onPressed: _submitForm,
             child: const Text('Iniciar'),

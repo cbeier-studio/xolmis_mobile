@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../../data/models/specimen.dart';
 import '../../providers/specimen_provider.dart';
 
 import 'add_specimen_screen.dart';
@@ -152,6 +153,7 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
                         Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(specimen.sampleTime!)),
                       ],
                     ),
+                    onLongPress: () => _showBottomSheet(context, specimen),
                     // onTap: () {
                     //   Navigator.push(
                     //     context,
@@ -180,6 +182,65 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
         },
         child: const Icon(Icons.add_outlined),
       ),
+    );
+  }
+
+  void _showBottomSheet(BuildContext context, Specimen specimen) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return BottomSheet(
+          onClosing: () {},
+          builder: (BuildContext context) {
+            return Container(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  // Expanded(
+                  //     child:
+                  ListTile(
+                    leading: const Icon(Icons.delete_outlined, color: Colors.red,),
+                    title: const Text('Apagar espécime', style: TextStyle(color: Colors.red),),
+                    onTap: () {
+                      // Ask for user confirmation
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Confirmar exclusão'),
+                            content: const Text('Tem certeza que deseja excluir este espécime?'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop(false);
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text('Cancelar'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop(true);
+                                  Navigator.of(context).pop();
+                                  // Call the function to delete species
+                                  Provider.of<SpecimenProvider>(context, listen: false)
+                                      .removeSpecimen(specimen);
+                                },
+                                child: const Text('Excluir'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                  )
+                  // )
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
   }
 

@@ -19,14 +19,14 @@ import '../../providers/inventory_provider.dart';
 
 import 'inventory_detail_screen.dart';
 
-class HistoryScreen extends StatefulWidget {
+class InventoryHistoryScreen extends StatefulWidget {
   final InventoryRepository inventoryRepository;
   final SpeciesRepository speciesRepository;
   final PoiRepository poiRepository;
   final VegetationRepository vegetationRepository;
   final WeatherRepository weatherRepository;
 
-  const HistoryScreen({
+  const InventoryHistoryScreen({
     super.key,
     required this.inventoryRepository,
     required this.speciesRepository,
@@ -36,10 +36,10 @@ class HistoryScreen extends StatefulWidget {
   });
 
   @override
-  State<HistoryScreen> createState() => _HistoryScreenState();
+  State<InventoryHistoryScreen> createState() => _InventoryHistoryScreenState();
 }
 
-class _HistoryScreenState extends State<HistoryScreen> {
+class _InventoryHistoryScreenState extends State<InventoryHistoryScreen> {
 
   @override
   void initState() {
@@ -58,81 +58,146 @@ class _HistoryScreenState extends State<HistoryScreen> {
     final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Inventários encerrados'),
-        actions: [
-          inventoryProvider.finishedInventories.isNotEmpty ? IconButton(
-            icon: const Icon(Icons.file_download_outlined),
-            onPressed: () => _exportAllInventoriesToJson(inventoryProvider),
-            tooltip: 'Exportar todos os inventários',
-          ) : const SizedBox.shrink(),
-        ],
-      ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          await inventoryProvider.fetchInventories();
-        },
-        child: inventoryProvider.isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : _buildInventoryList(inventoryProvider),
-      ),
+        appBar: AppBar(
+          title: const Text('Inventários encerrados'),
+          actions: [
+            inventoryProvider.finishedInventories.isNotEmpty ? IconButton(
+              icon: const Icon(Icons.file_download_outlined),
+              onPressed: () => _exportAllInventoriesToJson(inventoryProvider),
+              tooltip: 'Exportar todos os inventários',
+            ) : const SizedBox.shrink(),
+          ],
+        ),
+        body: RefreshIndicator(
+            onRefresh: () async {
+              await inventoryProvider.fetchInventories();
+            },
+            child: Consumer<InventoryProvider>(
+                builder: (context, inventoryProvider, child) {
+                  if (inventoryProvider.isLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (inventoryProvider.finishedInventories.isEmpty) {
+                    return const Center(child: Text('Nenhum inventário encerrado.'));
+                  } else {
+                    return ListView.builder(
+                      itemCount: inventoryProvider.finishedInventories.length,
+                      itemBuilder: (context, index) {
+                        final inventory = inventoryProvider.finishedInventories[index];
+                        return Dismissible(
+                          key: Key(inventory.id),
+                          direction: DismissDirection.endToStart,
+                          confirmDismiss: (direction) async {
+                            return await showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('Confirmar Exclusão'),
+                                    content: const Text(
+                                        'Tem certeza que deseja excluir este inventário?'),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        child: const Text('Cancelar'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop(false);
+                                        },
+                                      ),
+                                      TextButton(child: const Text('Excluir'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop(true);
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                }
+                            );
+                          },
+                          onDismissed: (direction) {
+                            inventoryProvider.removeInventory(inventory.id);
+                          },
+                          background: Container(
+                            color: Colors.red,
+                            alignment: Alignment.centerRight,
+                            padding: const EdgeInsets.only(right: 20.0),
+                            child: const Icon(Icons.delete_outlined, color: Colors.white),
+                          ),
+                          child: InventoryListItem(
+                            inventory: inventory,
+                            onInventoryUpdated: onInventoryUpdated,
+                            onLongPress: () => _showBottomSheet(context, inventory),
+                            speciesRepository: widget.speciesRepository,
+                            inventoryRepository: widget.inventoryRepository,
+                            poiRepository: widget.poiRepository,
+                            vegetationRepository: widget.vegetationRepository,
+                            weatherRepository: widget.weatherRepository,
+                          ),
+                        );
+                      },
+                    );
+                  }
+                }
+            )
+        )
     );
-
   }
 
-  Widget _buildInventoryList(InventoryProvider inventoryProvider) {
-    return inventoryProvider.finishedInventories.isEmpty
-        ? const Center(child: Text('Nenhum inventário encontrado.'))
-        : ListView.builder(
-      itemCount: inventoryProvider.finishedInventories.length,
-      itemBuilder: (context, index) {
-        final inventory = inventoryProvider.finishedInventories[index];
-        return Dismissible(
-          key: Key(inventory.id),
-          direction: DismissDirection.endToStart,
-          confirmDismiss: (direction) async {
-            return await showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: const Text('Confirmar Exclusão'),
-                    content: const Text(
-                        'Tem certeza que deseja excluir este inventário?'),
-                    actions: <Widget>[
-                      TextButton(
-                        child: const Text('Cancelar'),
-                        onPressed: () {
-                          Navigator.of(context).pop(false);
+  void _showBottomSheet(BuildContext context, Inventory inventory) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return BottomSheet(
+          onClosing: () {},
+          builder: (BuildContext context) {
+            return Container(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  ListTile(
+                    leading: const Icon(Icons.file_download_outlined),
+                    title: const Text('Exportar inventário'),
+                    onTap: () {
+                      _exportInventoryToCsv(context, inventory);
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.delete_outlined, color: Colors.red,),
+                    title: const Text('Apagar inventário', style: TextStyle(color: Colors.red),),
+                    onTap: () {
+                      // Ask for user confirmation
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Confirmar exclusão'),
+                            content: const Text('Tem certeza que deseja excluir este inventário?'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop(false);
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text('Cancelar'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop(true);
+                                  Navigator.of(context).pop();
+                                  // Call the function to delete species
+                                  Provider.of<InventoryProvider>(context, listen: false)
+                                      .removeInventory(inventory.id);
+                                },
+                                child: const Text('Excluir'),
+                              ),
+                            ],
+                          );
                         },
-                      ),
-                      TextButton(child: const Text('Excluir'),
-                        onPressed: () {
-                          Navigator.of(context).pop(true);
-                        },
-                      ),
-                    ],
-                  );
-                }
+                      );
+                    },
+                  )
+                ],
+              ),
             );
           },
-          onDismissed: (direction) {
-            inventoryProvider.removeInventory(inventory.id);
-          },
-          background: Container(
-            color: Colors.red,
-            alignment: Alignment.centerRight,
-            padding: const EdgeInsets.only(right: 20.0),
-            child: const Icon(Icons.delete_outlined, color: Colors.white),
-          ),
-          child: InventoryListItem(
-            inventory: inventory,
-            onInventoryUpdated: onInventoryUpdated,
-            speciesRepository: widget.speciesRepository,
-            inventoryRepository: widget.inventoryRepository,
-            poiRepository: widget.poiRepository,
-            vegetationRepository: widget.vegetationRepository,
-            weatherRepository: widget.weatherRepository,
-          ),
         );
       },
     );
@@ -166,69 +231,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
         ),
       );
     }
-  }
-}
-
-class InventoryListItem extends StatelessWidget {
-  final Inventory inventory;
-  final void Function(Inventory) onInventoryUpdated;
-  final InventoryRepository inventoryRepository;
-  final SpeciesRepository speciesRepository;
-  final PoiRepository poiRepository;
-  final VegetationRepository vegetationRepository;
-  final WeatherRepository weatherRepository;
-
-  const InventoryListItem({
-    super.key,
-    required this.inventory,
-    required this.onInventoryUpdated,
-    required this.inventoryRepository,
-    required this.speciesRepository,
-    required this.poiRepository,
-    required this.vegetationRepository,
-    required this.weatherRepository,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-        title: Text(inventory.id),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('${inventoryTypeFriendlyNames[inventory.type]}'),
-            Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(inventory.startTime!)),
-            Text('${inventory.speciesList.length} espécies registradas'),
-          ],
-        ),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children:[
-            IconButton(
-              icon: const Icon(Icons.file_download_outlined),
-              tooltip: 'Exportar inventário',
-              onPressed: () {
-                _exportInventoryToCsv(context, inventory);
-              },
-            ),
-          ],
-        ),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => InventoryDetailScreen(
-                inventory: inventory,
-                speciesRepository: speciesRepository,
-                inventoryRepository: inventoryRepository,
-                poiRepository: poiRepository,
-                vegetationRepository: vegetationRepository,
-                weatherRepository: weatherRepository,
-              ),
-            ),
-          ).then((_) => onInventoryUpdated(inventory));
-        },
-    );
   }
 
   Future<void> _exportInventoryToCsv(BuildContext context, Inventory inventory) async {
@@ -355,5 +357,71 @@ class InventoryListItem extends StatelessWidget {
         ),
       );
     }
+  }
+}
+
+class InventoryListItem extends StatelessWidget {
+  final Inventory inventory;
+  final void Function(Inventory) onInventoryUpdated;
+  final VoidCallback onLongPress;
+  final InventoryRepository inventoryRepository;
+  final SpeciesRepository speciesRepository;
+  final PoiRepository poiRepository;
+  final VegetationRepository vegetationRepository;
+  final WeatherRepository weatherRepository;
+
+  const InventoryListItem({
+    super.key,
+    required this.inventory,
+    required this.onInventoryUpdated,
+    required this.onLongPress,
+    required this.inventoryRepository,
+    required this.speciesRepository,
+    required this.poiRepository,
+    required this.vegetationRepository,
+    required this.weatherRepository,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+        title: Text(inventory.id),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('${inventoryTypeFriendlyNames[inventory.type]}'),
+            Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(inventory.startTime!)),
+            Text('${inventory.speciesList.length} espécies registradas'),
+          ],
+        ),
+        // trailing: Row(
+        //   mainAxisSize: MainAxisSize.min,
+        //   children:[
+        //     IconButton(
+        //       icon: const Icon(Icons.file_download_outlined),
+        //       tooltip: 'Exportar inventário',
+        //       onPressed: () {
+        //         _exportInventoryToCsv(context, inventory);
+        //       },
+        //     ),
+        //   ],
+        // ),
+        onLongPress: onLongPress,
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => InventoryDetailScreen(
+                inventory: inventory,
+                speciesRepository: speciesRepository,
+                inventoryRepository: inventoryRepository,
+                poiRepository: poiRepository,
+                vegetationRepository: vegetationRepository,
+                weatherRepository: weatherRepository,
+              ),
+            ),
+          ).then((_) => onInventoryUpdated(inventory));
+        },
+    );
   }
 }

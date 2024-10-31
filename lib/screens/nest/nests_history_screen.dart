@@ -121,6 +121,7 @@ class _NestsHistoryScreenState extends State<NestsHistoryScreen> {
                       ),
                     ],
                   ),
+                  onLongPress: () => _showBottomSheet(context, nest),
                   onTap: () {
                     Navigator.push(
                       context,
@@ -141,6 +142,65 @@ class _NestsHistoryScreenState extends State<NestsHistoryScreen> {
           );
         },
       ),
+    );
+  }
+
+  void _showBottomSheet(BuildContext context, Nest nest) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return BottomSheet(
+          onClosing: () {},
+          builder: (BuildContext context) {
+            return Container(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  // Expanded(
+                  //     child:
+                  ListTile(
+                    leading: const Icon(Icons.delete_outlined, color: Colors.red,),
+                    title: const Text('Apagar ninho', style: TextStyle(color: Colors.red),),
+                    onTap: () {
+                      // Ask for user confirmation
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Confirmar exclusão'),
+                            content: const Text('Tem certeza que deseja excluir este ninho?'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop(false);
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text('Cancelar'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop(true);
+                                  Navigator.of(context).pop();
+                                  // Call the function to delete species
+                                  Provider.of<NestProvider>(context, listen: false)
+                                      .removeNest(nest);
+                                },
+                                child: const Text('Excluir'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                  )
+                  // )
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
   }
 

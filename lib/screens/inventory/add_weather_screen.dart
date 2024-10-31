@@ -47,7 +47,11 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
         title: const Text('Dados do Tempo'),
           actions: [
             _isSubmitting
-                ? CircularProgressIndicator()
+                ? const SizedBox(
+              width: 24,
+              height: 24,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            )
                 : TextButton(
               onPressed: _submitForm,
               child: const Text('Salvar'),

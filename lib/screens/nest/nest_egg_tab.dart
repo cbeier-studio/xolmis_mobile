@@ -46,37 +46,71 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
               final egg = eggList[index];
               return EggListItem(
                 egg: egg,
-                onDelete: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text('Confirmar exclusão'),
-                        content: const Text(
-                            'Tem certeza que deseja excluir este ovo?'),
-                        actions: <Widget>[
-                          TextButton(
-                            onPressed: () => Navigator.of(context).pop(false),
-                            child: const Text('Cancelar'),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop(true);
-                              eggProvider.removeEgg(
-                                  widget.nest.id!, egg.id!);
-                            },
-                            child: const Text('Excluir'),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                },
+                onLongPress: () => _showBottomSheet(context, egg),
               );
             },
           )
           );
         }
+      },
+    );
+  }
+
+  void _showBottomSheet(BuildContext context, Egg egg) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return BottomSheet(
+          onClosing: () {},
+          builder: (BuildContext context) {
+            return Container(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  // Expanded(
+                  //     child:
+                  ListTile(
+                    leading: const Icon(Icons.delete_outlined, color: Colors.red,),
+                    title: const Text('Apagar ovo', style: TextStyle(color: Colors.red),),
+                    onTap: () {
+                      // Ask for user confirmation
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Confirmar exclusão'),
+                            content: const Text('Tem certeza que deseja excluir este ovo?'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop(false);
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text('Cancelar'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop(true);
+                                  Navigator.of(context).pop();
+                                  // Call the function to delete species
+                                  Provider.of<EggProvider>(context, listen: false)
+                                      .removeEgg(widget.nest.id!, egg.id!);
+                                },
+                                child: const Text('Excluir'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                  )
+                  // )
+                ],
+              ),
+            );
+          },
+        );
       },
     );
   }

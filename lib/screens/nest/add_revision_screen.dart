@@ -41,7 +41,11 @@ class _AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
         title: const Text('Revisão de Ninho'),
           actions: [
             _isSubmitting
-                ? CircularProgressIndicator()
+                ? const SizedBox(
+              width: 24,
+              height: 24,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            )
                 : TextButton(
               onPressed: _submitForm,
               child: const Text('Salvar'),

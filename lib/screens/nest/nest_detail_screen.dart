@@ -74,11 +74,11 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
   }
 
   void _showAddEggScreen(BuildContext context) {
-    final nextNumber = widget.nest.eggsList!.length + 1;
     if (MediaQuery.sizeOf(context).width > 600) {
       showDialog(
         context: context,
         builder: (context) {
+          final nextNumber = widget.nest.eggsList!.length + 1;
           return Dialog(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16.0),
@@ -99,6 +99,7 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
         }
       });
     } else {
+      final nextNumber = widget.nest.eggsList!.length + 1;
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => AddEggScreen(

@@ -11,12 +11,12 @@ import '../utils.dart';
 
 class SpeciesListItem extends StatefulWidget {
   final Species species;
-  final VoidCallback onDelete;
+  final VoidCallback onLongPress;
 
   const SpeciesListItem({
     super.key,
     required this.species,
-    required this.onDelete,
+    required this.onLongPress,
   });
 
   @override
@@ -133,13 +133,9 @@ class SpeciesListItemState extends State<SpeciesListItem> {
                 );
               },
             ),
-            IconButton(
-              icon: const Icon(Icons.delete_outlined, color: Colors.red,),
-              tooltip: 'Apagar espécie',
-              onPressed: widget.onDelete,
-            ),
           ],
         ),
+        onLongPress: widget.onLongPress,
         onTap: () {
           Navigator.push(
             context,

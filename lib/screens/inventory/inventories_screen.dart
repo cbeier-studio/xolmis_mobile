@@ -115,7 +115,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => HistoryScreen(
+                MaterialPageRoute(builder: (context) => InventoryHistoryScreen(
                   inventoryRepository: inventoryRepository,
                   speciesRepository: speciesRepository,
                   poiRepository: poiRepository,
@@ -244,6 +244,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                           poiRepository: poiRepository,
                           vegetationRepository: vegetationRepository,
                           weatherRepository: weatherRepository,
+                          onLongPress: () => _showBottomSheet(context, inventory),
                           onTap: (inventory) {
                             Navigator.push(
                               context,
@@ -282,6 +283,98 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
       ),
     );
   }
+
+  void _showBottomSheet(BuildContext context, Inventory inventory) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return BottomSheet(
+          onClosing: () {},
+          builder: (BuildContext context) {
+            return Container(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  ListTile(
+                    leading: const Icon(Icons.flag_outlined),
+                    title: const Text('Encerrar inventário'),
+                    onTap: () {
+                      // Ask for user confirmation
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Confirmar Encerramento'),
+                            content: const Text('Tem certeza que deseja encerrar este inventário?'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop(false);
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text('Cancelar'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop(true);
+                                  Navigator.of(context).pop();
+                                  // Call the function to delete species
+                                  Inventory.stopTimer(inventory, inventoryRepository);
+                                  Provider.of<InventoryProvider>(context, listen: false).updateInventory(inventory);
+                                  Provider.of<InventoryProvider>(context, listen: false).fetchInventories();
+                                },
+                                child: const Text('Encerrar'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.delete_outlined, color: Colors.red,),
+                    title: const Text('Apagar inventário', style: TextStyle(color: Colors.red),),
+                    onTap: () {
+                      // Ask for user confirmation
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Confirmar exclusão'),
+                            content: const Text('Tem certeza que deseja excluir este inventário?'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop(false);
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text('Cancelar'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop(true);
+                                  Navigator.of(context).pop();
+                                  // Call the function to delete species
+                                  Provider.of<InventoryProvider>(context, listen: false)
+                                      .removeInventory(inventory.id);
+                                },
+                                child: const Text('Excluir'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                  )
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
 }
 
 class InventoryListItem extends StatelessWidget {
@@ -291,6 +384,7 @@ class InventoryListItem extends StatelessWidget {
   final PoiRepository poiRepository;
   final VegetationRepository vegetationRepository;
   final WeatherRepository weatherRepository;
+  final VoidCallback onLongPress;
   final void Function(Inventory)? onTap;
   final void Function(Inventory)? onInventoryPausedOrResumed;
 
@@ -302,6 +396,7 @@ class InventoryListItem extends StatelessWidget {
     required this.poiRepository,
     required this.vegetationRepository,
     required this.weatherRepository,
+    required this.onLongPress,
     this.onTap,
     this.onInventoryPausedOrResumed,
   });
@@ -309,6 +404,7 @@ class InventoryListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell( // Or GestureDetector
+        onLongPress: onLongPress,
         onTap: () {
           onTap?.call(inventory);
         },

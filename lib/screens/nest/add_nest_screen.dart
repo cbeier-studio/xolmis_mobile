@@ -62,7 +62,11 @@ class _AddNestScreenState extends State<AddNestScreen> {
         title: const Text('Novo Ninho'),
           actions: [
             _isSubmitting
-                ? CircularProgressIndicator()
+                ? const SizedBox(
+              width: 24,
+              height: 24,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            )
                 : TextButton(
               onPressed: _submitForm,
               child: const Text('Salvar'),

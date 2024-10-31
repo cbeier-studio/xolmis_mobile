@@ -71,7 +71,11 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
         title: const Text('Dados de Vegetação'),
           actions: [
             _isSubmitting
-                ? CircularProgressIndicator()
+                ? const SizedBox(
+              width: 24,
+              height: 24,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            )
                 : TextButton(
               onPressed: _submitForm,
               child: const Text('Salvar'),

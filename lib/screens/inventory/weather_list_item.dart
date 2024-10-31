@@ -4,12 +4,12 @@ import '../../data/models/inventory.dart';
 
 class WeatherListItem extends StatefulWidget {
   final Weather weather;
-  final VoidCallback onDelete;
+  final VoidCallback onLongPress;
 
   const WeatherListItem({
     super.key,
     required this.weather,
-    required this.onDelete,
+    required this.onLongPress,
   });
 
   @override
@@ -31,11 +31,7 @@ class WeatherListItemState extends State<WeatherListItem> {
             Text('Vento: ${widget.weather.windSpeed} bft'),
           ],
         ),
-        trailing: IconButton(
-          icon: const Icon(Icons.delete_outlined, color: Colors.red,),
-          tooltip: 'Apagar dados do tempo',
-          onPressed: widget.onDelete,
-        ),
+        onLongPress: widget.onLongPress,
         onTap: () {
 
         },

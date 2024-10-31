@@ -26,9 +26,9 @@ class SpeciesRepository {
     return _speciesDao.deleteSpecies(speciesId);
   }
 
-  Future<Species?> getSpeciesByNameAndInventoryId(String name, String inventoryId) {
-    return _speciesDao.getSpeciesByNameAndInventoryId(name, inventoryId);
-  }
+  // Future<Species?> getSpeciesByNameAndInventoryId(String name, String inventoryId) {
+  //   return _speciesDao.getSpeciesByNameAndInventoryId(name, inventoryId);
+  // }
 
   Future<void> updateSpecies(Species species) {
     return _speciesDao.updateSpecies(species);

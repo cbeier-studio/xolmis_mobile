@@ -43,37 +43,71 @@ class _WeatherTabState extends State<WeatherTab> with AutomaticKeepAliveClientMi
               final weather = weatherList[index];
               return WeatherListItem(
                 weather: weather,
-                onDelete: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text('Confirmar exclusão'),
-                        content: const Text(
-                            'Tem certeza que deseja excluir este registro do tempo?'),
-                        actions: <Widget>[
-                          TextButton(
-                            onPressed: () => Navigator.of(context).pop(false),
-                            child: const Text('Cancelar'),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              weatherProvider.removeWeather(
-                                  widget.inventory.id, weather.id!);
-                              Navigator.of(context).pop(true);
-                            },
-                            child: const Text('Excluir'),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                },
+                onLongPress: () => _showBottomSheet(context, weather),
               );
             },
           )
           );
         }
+      },
+    );
+  }
+
+  void _showBottomSheet(BuildContext context, Weather weather) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return BottomSheet(
+          onClosing: () {},
+          builder: (BuildContext context) {
+            return Container(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  // Expanded(
+                  //     child:
+                  ListTile(
+                    leading: const Icon(Icons.delete_outlined, color: Colors.red,),
+                    title: const Text('Apagar registro do tempo', style: TextStyle(color: Colors.red),),
+                    onTap: () {
+                      // Ask for user confirmation
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Confirmar exclusão'),
+                            content: const Text('Tem certeza que deseja excluir este registro do tempo?'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop(false);
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text('Cancelar'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop(true);
+                                  Navigator.of(context).pop();
+                                  // Call the function to delete species
+                                  Provider.of<WeatherProvider>(context, listen: false)
+                                      .removeWeather(widget.inventory.id, weather.id!);
+                                },
+                                child: const Text('Excluir'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                  )
+                  // )
+                ],
+              ),
+            );
+          },
+        );
       },
     );
   }

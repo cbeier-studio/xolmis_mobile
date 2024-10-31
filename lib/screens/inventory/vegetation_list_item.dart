@@ -4,12 +4,12 @@ import '../../data/models/inventory.dart';
 
 class VegetationListItem extends StatefulWidget {
   final Vegetation vegetation;
-  final VoidCallback onDelete;
+  final VoidCallback onLongPress;
 
   const VegetationListItem({
     super.key,
     required this.vegetation,
-    required this.onDelete,
+    required this.onLongPress,
   });
 
   @override
@@ -31,11 +31,7 @@ class VegetationListItemState extends State<VegetationListItem> {
             Text('Árvores: ${widget.vegetation.treesDistribution}; ${widget.vegetation.treesProportion}%; ${widget.vegetation.treesHeight} cm'),
           ],
         ),
-        trailing: IconButton(
-          icon: const Icon(Icons.delete_outlined, color: Colors.red,),
-          tooltip: 'Apagar dados de vegetação',
-          onPressed: widget.onDelete,
-        ),
+        onLongPress: widget.onLongPress,
         onTap: () {
 
         },

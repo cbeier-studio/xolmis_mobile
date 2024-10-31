@@ -182,32 +182,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                     final species = speciesList[index];
                     return SpeciesListItem(
                       species: species,
-                      onDelete: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text('Confirmar exclusão'),
-                              content: const Text(
-                                  'Tem certeza que deseja excluir esta espécie?'),
-                              actions: <Widget>[
-                                TextButton(
-                                  onPressed: () => Navigator.of(context).pop(false),
-                                  child: const Text('Cancelar'),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop(true);
-                                    speciesProvider.removeSpecies(
-                                        context, widget.inventory.id, species.id!);
-                                  },
-                                  child: const Text('Excluir'),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      },
+                      onLongPress: () => _showBottomSheet(context, species),
                     );
                   },
 
@@ -217,6 +192,65 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
           ),
         ),
       ],
+    );
+  }
+
+  void _showBottomSheet(BuildContext context, Species species) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return BottomSheet(
+          onClosing: () {},
+          builder: (BuildContext context) {
+            return Container(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  // Expanded(
+                  //     child:
+                      ListTile(
+                        leading: const Icon(Icons.delete_outlined, color: Colors.red,),
+                        title: const Text('Apagar espécie', style: TextStyle(color: Colors.red),),
+                        onTap: () {
+                          // Ask for user confirmation
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text('Confirmar exclusão'),
+                                content: const Text('Tem certeza que deseja excluir esta espécie?'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop(false);
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('Cancelar'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop(true);
+                                      Navigator.of(context).pop();
+                                      // Call the function to delete species
+                                      Provider.of<SpeciesProvider>(context, listen: false)
+                                          .removeSpecies(context, widget.inventory.id, species.id!);
+                                    },
+                                    child: const Text('Excluir'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                      )
+                  // )
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }

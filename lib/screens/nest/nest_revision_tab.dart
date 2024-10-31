@@ -46,37 +46,71 @@ class _NestRevisionsTabState extends State<NestRevisionsTab> with AutomaticKeepA
               final nestRevision = revisionList[index];
               return RevisionListItem(
                 nestRevision: nestRevision,
-                onDelete: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text('Confirmar exclusão'),
-                        content: const Text(
-                            'Tem certeza que deseja excluir esta revisão de ninho?'),
-                        actions: <Widget>[
-                          TextButton(
-                            onPressed: () => Navigator.of(context).pop(false),
-                            child: const Text('Cancelar'),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop(true);
-                              nestRevisionProvider.removeNestRevision(
-                                  widget.nest.id!, nestRevision.id!);
-                            },
-                            child: const Text('Excluir'),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                },
+                onLongPress: () => _showBottomSheet(context, nestRevision),
               );
             },
           )
           );
         }
+      },
+    );
+  }
+
+  void _showBottomSheet(BuildContext context, NestRevision revision) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return BottomSheet(
+          onClosing: () {},
+          builder: (BuildContext context) {
+            return Container(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  // Expanded(
+                  //     child:
+                  ListTile(
+                    leading: const Icon(Icons.delete_outlined, color: Colors.red,),
+                    title: const Text('Apagar revisão de ninho', style: TextStyle(color: Colors.red),),
+                    onTap: () {
+                      // Ask for user confirmation
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Confirmar exclusão'),
+                            content: const Text('Tem certeza que deseja excluir esta revisão de ninho?'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop(false);
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text('Cancelar'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop(true);
+                                  Navigator.of(context).pop();
+                                  // Call the function to delete species
+                                  Provider.of<NestRevisionProvider>(context, listen: false)
+                                      .removeNestRevision(widget.nest.id!, revision.id!);
+                                },
+                                child: const Text('Excluir'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                  )
+                  // )
+                ],
+              ),
+            );
+          },
+        );
       },
     );
   }

@@ -4,12 +4,12 @@ import '../../data/models/nest.dart';
 
 class RevisionListItem extends StatefulWidget {
   final NestRevision nestRevision;
-  final VoidCallback onDelete;
+  final VoidCallback onLongPress;
 
   const RevisionListItem({
     super.key,
     required this.nestRevision,
-    required this.onDelete,
+    required this.onLongPress,
   });
 
   @override
@@ -30,11 +30,7 @@ class RevisionListItemState extends State<RevisionListItem> {
             Text('Nidoparasita: ${widget.nestRevision.eggsParasite ?? 0} ovo(s), ${widget.nestRevision.nestlingsParasite ?? 0} ninhego(s)'),
           ],
         ),
-        trailing: IconButton(
-          icon: const Icon(Icons.delete_outlined, color: Colors.red,),
-          tooltip: 'Apagar revisão de ninho',
-          onPressed: widget.onDelete,
-        ),
+        onLongPress: widget.onLongPress,
         onTap: () {
 
         },
