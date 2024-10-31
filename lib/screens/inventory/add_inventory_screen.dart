@@ -35,141 +35,154 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Novo Inventário'),
-        actions: [
-          _isSubmitting
-              ? const SizedBox(
-            width: 24,
-            height: 24,
-            child: CircularProgressIndicator(strokeWidth: 2),
-          )
-              : TextButton(
-            onPressed: _submitForm,
-            child: const Text('Iniciar'),
-          ),
-        ]
       ),
-      body: FutureBuilder<SharedPreferences>(
-          future: SharedPreferences.getInstance(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              final prefs = snapshot.data!;
-              final maxSpeciesMackinnon = prefs.getInt('maxSpeciesMackinnon') ?? 10;
-              final pointCountsDuration = prefs.getInt('pointCountsDuration') ?? 8;
-              final cumulativeTimeDuration = prefs.getInt('cumulativeTimeDuration') ?? 30;
+      body: Column(
+        children: [
+          Expanded(
+            child: FutureBuilder<SharedPreferences>(
+              future: SharedPreferences.getInstance(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  final prefs = snapshot.data!;
+                  final maxSpeciesMackinnon = prefs.getInt('maxSpeciesMackinnon') ?? 10;
+                  final pointCountsDuration = prefs.getInt('pointCountsDuration') ?? 8;
+                  final cumulativeTimeDuration = prefs.getInt('cumulativeTimeDuration') ?? 30;
 
-              if (_selectedType == InventoryType.invMackinnonList) {
-                _maxSpeciesController.text = widget.initialMaxSpecies.toString();
-              }
+                  if (_selectedType == InventoryType.invMackinnonList) {
+                    _maxSpeciesController.text = widget.initialMaxSpecies.toString();
+                  }
 
-              return Form(
-                key: _formKey,
-                child: SingleChildScrollView( // Prevent keyboard overflow
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextFormField(
-                      controller: _idController,
-                      textCapitalization: TextCapitalization.words,
-                      decoration: const InputDecoration(
-                        labelText: 'ID do Inventário',
-                        border: OutlineInputBorder(),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Por favor, insira um ID para o inventário';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 16.0),
-                    DropdownButtonFormField<InventoryType>(
-                      value: _selectedType,
-                      decoration: const InputDecoration(
-                        labelText: 'Tipo de Inventário',
-                        border: OutlineInputBorder(),
-                      ),
-                      items: InventoryType.values.map((type) {
-                        return DropdownMenuItem(
-                          value: type,
-                          child: Text(inventoryTypeFriendlyNames[type]!),
-                        );
-                      }).toList(),
-                      onChanged: (InventoryType? newValue) {
-                        setState(() async {
-                          _selectedType = newValue!;
-                          if (newValue == InventoryType.invTimedQualitative) {
-                            _durationController.text =
-                            await cumulativeTimeDuration.toString();
-                            _maxSpeciesController.text = '';
-                          } else if (newValue == InventoryType.invMackinnonList) {
-                            _maxSpeciesController.text =
-                            await maxSpeciesMackinnon.toString();
-                            _durationController.text = '';
-                          } else
-                          if (newValue == InventoryType.invPointCount) {
-                            _durationController.text =
-                            await pointCountsDuration.toString();
-                            _maxSpeciesController.text = '';
-                          } else {
-                            _durationController.text = '';
-                            _maxSpeciesController.text = '';
-                          }
-                        });
-                      },
-                    ),
-                    const SizedBox(height: 16.0),
-                    Row(
+                  return Form(
+                    key: _formKey,
+                    child: SingleChildScrollView( // Prevent keyboard overflow
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Expanded(
-                            child: TextFormField(
-                              controller: _durationController,
-                              keyboardType: TextInputType.number,
-                              decoration: const InputDecoration(
-                                labelText: 'Duração',
-                                border: OutlineInputBorder(),
-                                suffixText: 'minutos',
-                              ),
+                          TextFormField(
+                            controller: _idController,
+                            textCapitalization: TextCapitalization.words,
+                            decoration: const InputDecoration(
+                              labelText: 'ID do Inventário',
+                              border: OutlineInputBorder(),
                             ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Por favor, insira um ID para o inventário';
+                              }
+                              return null;
+                            },
                           ),
-                          const SizedBox(width: 8.0),
-                          Expanded(
-                            child: TextFormField(
-                              controller: _maxSpeciesController,
-                              keyboardType: TextInputType.number,
-                              decoration: const InputDecoration(
-                                labelText: 'Máx. espécies',
-                                border: OutlineInputBorder(),
-                                suffixText: 'spp.',
-                              ),
+                          const SizedBox(height: 16.0),
+                          DropdownButtonFormField<InventoryType>(
+                            value: _selectedType,
+                            decoration: const InputDecoration(
+                              labelText: 'Tipo de Inventário',
+                              border: OutlineInputBorder(),
                             ),
+                            items: InventoryType.values.map((type) {
+                              return DropdownMenuItem(
+                                value: type,
+                                child: Text(inventoryTypeFriendlyNames[type]!),
+                              );
+                            }).toList(),
+                            onChanged: (InventoryType? newValue) {
+                              setState(() async {
+                                _selectedType = newValue!;
+                                if (newValue == InventoryType.invTimedQualitative) {
+                                  _durationController.text =
+                                  await cumulativeTimeDuration.toString();
+                                  _maxSpeciesController.text = '';
+                                } else if (newValue == InventoryType.invMackinnonList) {
+                                  _maxSpeciesController.text =
+                                  await maxSpeciesMackinnon.toString();
+                                  _durationController.text = '';
+                                } else
+                                if (newValue == InventoryType.invPointCount) {
+                                  _durationController.text =
+                                  await pointCountsDuration.toString();
+                                  _maxSpeciesController.text = '';
+                                } else {
+                                  _durationController.text = '';
+                                  _maxSpeciesController.text = '';
+                                }
+                              });
+                            },
                           ),
-                        ]
+                          const SizedBox(height: 16.0),
+                          Row(
+                              children: [
+                                Expanded(
+                                  child: TextFormField(
+                                    controller: _durationController,
+                                    keyboardType: TextInputType.number,
+                                    decoration: const InputDecoration(
+                                      labelText: 'Duração',
+                                      border: OutlineInputBorder(),
+                                      suffixText: 'minutos',
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 8.0),
+                                Expanded(
+                                  child: TextFormField(
+                                    controller: _maxSpeciesController,
+                                    keyboardType: TextInputType.number,
+                                    decoration: const InputDecoration(
+                                      labelText: 'Máx. espécies',
+                                      border: OutlineInputBorder(),
+                                      suffixText: 'spp.',
+                                    ),
+                                  ),
+                                ),
+                              ]
+                          ),
+                          // const SizedBox(height: 32.0),
+                          // Center(
+                          //   child: _isSubmitting
+                          //       ? CircularProgressIndicator()
+                          //       : ElevatedButton(
+                          //     onPressed: _submitForm,
+                          //     child: const Text('Iniciar Inventário'),
+                          //   ),
+                          // ),
+                        ],
+                      ),
                     ),
-                    // const SizedBox(height: 32.0),
-                    // Center(
-                    //   child: _isSubmitting
-                    //       ? CircularProgressIndicator()
-                    //       : ElevatedButton(
-                    //     onPressed: _submitForm,
-                    //     child: const Text('Iniciar Inventário'),
-                    //   ),
-                    // ),
-                  ],
+                  );
+                } else if (snapshot.hasError) {
+                  return Center(
+                    child: Text('Erro ao carregar preferências: ${snapshot.error}'),
+                  );
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              },
+            ),
+          ),
+          SafeArea(
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 16.0),
+              width: double.infinity,
+              child: _isSubmitting
+                  ? const SizedBox(
+                width: 24,
+                height: 24,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              )
+                  : Align(
+                alignment: Alignment.centerRight,
+                child: FilledButton(
+                  onPressed: _submitForm,
+                  child: const Text('Iniciar inventário'),
                 ),
-                ),
-              );
-            } else if (snapshot.hasError) {
-              return Center(
-                child: Text('Erro ao carregar preferências: ${snapshot.error}'),
-              );
-            } else {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          },
-        ),
+              )
+            ),
+          ),
+        ],
+      ),
     );
   }
 

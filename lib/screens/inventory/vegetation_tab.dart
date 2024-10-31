@@ -30,7 +30,7 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
             widget.inventory.id);
         if (vegetationList.isEmpty) {
           return const Center(
-            child: Text('Nenhum dado de vegetação registrado.'),
+            child: Text('Nenhum registro de vegetação.'),
           );
         } else {
           return RefreshIndicator(

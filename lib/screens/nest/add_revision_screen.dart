@@ -37,166 +37,170 @@ class _AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Revisão de Ninho'),
-          actions: [
-            _isSubmitting
-                ? const SizedBox(
-              width: 24,
-              height: 24,
-              child: CircularProgressIndicator(strokeWidth: 2),
-            )
-                : TextButton(
-              onPressed: _submitForm,
-              child: const Text('Salvar'),
-            ),
-          ]
-      ),
-      body: Form(
-        key: _formKey,
-        child: SingleChildScrollView( // Prevent keyboard overflow
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
+        appBar: AppBar(
+          title: const Text('Revisão de Ninho'),
+        ),
+        body: Column(
             children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: const Text('Hospedeiro'),
-              ),
-              const SizedBox(height: 8.0),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      controller: _eggsHostController,
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        labelText: 'Ovos',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8.0),
-                  Expanded(
-                    child: TextFormField(
-                      controller: _nestlingsHostController,
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        labelText: 'Ninhegos',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: const Text('Nidoparasita'),
-              ),
-              const SizedBox(height: 8.0),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      controller: _eggsParasiteController,
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        labelText: 'Ovos',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8.0),
-                  Expanded(
-                    child: TextFormField(
-                      controller: _nestlingsParasiteController,
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        labelText: 'Ninhegos',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20.0),
-              Row(
-                children: [
-                  Expanded(
-                    child: DropdownButtonFormField<NestStatusType>(
-                        value: _selectedNestStatus,
-                        decoration: const InputDecoration(
-                          labelText: 'Status do ninho',
-                          border: OutlineInputBorder(),
+              Expanded(
+                child: Form(
+                  key: _formKey,
+                  child: SingleChildScrollView( // Prevent keyboard overflow
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      children: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: const Text('Hospedeiro'),
                         ),
-                        items: NestStatusType.values.map((nestStatus) {
-                          return DropdownMenuItem(
-                            value: nestStatus,
-                            child: Text(nestStatusTypeFriendlyNames[nestStatus]!),
-                          );
-                        }).toList(),
-                        onChanged: (NestStatusType? newValue) {
-                          setState(() {
-                            _selectedNestStatus = newValue!;
-                          });
-                        }
-                    ),
-                  ),
-                  const SizedBox(width: 8.0),
-                  Expanded(
-                    child: DropdownButtonFormField<NestStageType>(
-                        value: _selectedNestStage,
-                        decoration: const InputDecoration(
-                          labelText: 'Estágio',
-                          border: OutlineInputBorder(),
+                        const SizedBox(height: 8.0),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                controller: _eggsHostController,
+                                keyboardType: TextInputType.number,
+                                decoration: const InputDecoration(
+                                  labelText: 'Ovos',
+                                  border: OutlineInputBorder(),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8.0),
+                            Expanded(
+                              child: TextFormField(
+                                controller: _nestlingsHostController,
+                                keyboardType: TextInputType.number,
+                                decoration: const InputDecoration(
+                                  labelText: 'Ninhegos',
+                                  border: OutlineInputBorder(),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                        items: NestStageType.values.map((nestStage) {
-                          return DropdownMenuItem(
-                            value: nestStage,
-                            child: Text(nestStageTypeFriendlyNames[nestStage]!),
-                          );
-                        }).toList(),
-                        onChanged: (NestStageType? newValue) {
-                          setState(() {
-                            _selectedNestStage = newValue!;
-                          });
-                        }
+                        const SizedBox(height: 8.0),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: const Text('Nidoparasita'),
+                        ),
+                        const SizedBox(height: 8.0),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                controller: _eggsParasiteController,
+                                keyboardType: TextInputType.number,
+                                decoration: const InputDecoration(
+                                  labelText: 'Ovos',
+                                  border: OutlineInputBorder(),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8.0),
+                            Expanded(
+                              child: TextFormField(
+                                controller: _nestlingsParasiteController,
+                                keyboardType: TextInputType.number,
+                                decoration: const InputDecoration(
+                                  labelText: 'Ninhegos',
+                                  border: OutlineInputBorder(),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 20.0),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: DropdownButtonFormField<NestStatusType>(
+                                  value: _selectedNestStatus,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Status do ninho',
+                                    border: OutlineInputBorder(),
+                                  ),
+                                  items: NestStatusType.values.map((nestStatus) {
+                                    return DropdownMenuItem(
+                                      value: nestStatus,
+                                      child: Text(nestStatusTypeFriendlyNames[nestStatus]!),
+                                    );
+                                  }).toList(),
+                                  onChanged: (NestStatusType? newValue) {
+                                    setState(() {
+                                      _selectedNestStatus = newValue!;
+                                    });
+                                  }
+                              ),
+                            ),
+                            const SizedBox(width: 8.0),
+                            Expanded(
+                              child: DropdownButtonFormField<NestStageType>(
+                                  value: _selectedNestStage,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Estágio',
+                                    border: OutlineInputBorder(),
+                                  ),
+                                  items: NestStageType.values.map((nestStage) {
+                                    return DropdownMenuItem(
+                                      value: nestStage,
+                                      child: Text(nestStageTypeFriendlyNames[nestStage]!),
+                                    );
+                                  }).toList(),
+                                  onChanged: (NestStageType? newValue) {
+                                    setState(() {
+                                      _selectedNestStage = newValue!;
+                                    });
+                                  }
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8.0),
+                        CheckboxListTile(
+                          title: const Text('Presença de larvas de Philornis'),
+                          value: _hasPhilornisLarvae,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              _hasPhilornisLarvae = value!;
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 8.0),
+                        TextFormField(
+                          controller: _notesController,
+                          maxLines: 3,
+                          decoration: const InputDecoration(
+                            labelText: 'Observações',
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
-              const SizedBox(height: 8.0),
-              CheckboxListTile(
-                title: const Text('Presença de larvas de Philornis'),
-                value: _hasPhilornisLarvae,
-                onChanged: (bool? value) {
-                  setState(() {
-                    _hasPhilornisLarvae = value!;
-                  });
-                },
-              ),
-              const SizedBox(height: 8.0),
-              TextFormField(
-                controller: _notesController,
-                maxLines: 3,
-                decoration: const InputDecoration(
-                  labelText: 'Observações',
-                  border: OutlineInputBorder(),
                 ),
               ),
-              // const SizedBox(height: 16.0),
-              // ElevatedButton(
-              //   onPressed: () async {
-              //
-              //   },
-              //   child: _isSubmitting
-              //       ? const CircularProgressIndicator()
-              //       : const Text('Salvar'),
-              // ),
-            ],
-          ),
-        ),
-      ),
+              SafeArea(
+                child: Container(
+                    padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 16.0),
+                    width: double.infinity,
+                    child: _isSubmitting
+                        ? const SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                        : Align(
+                      alignment: Alignment.centerRight,
+                      child: FilledButton(
+                        onPressed: _submitForm,
+                        child: const Text('Salvar'),
+                      ),
+                    )
+                ),
+              ),
+            ]
+        )
     );
   }
 

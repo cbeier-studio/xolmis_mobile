@@ -58,148 +58,152 @@ class _AddNestScreenState extends State<AddNestScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Novo Ninho'),
-          actions: [
-            _isSubmitting
-                ? const SizedBox(
-              width: 24,
-              height: 24,
-              child: CircularProgressIndicator(strokeWidth: 2),
-            )
-                : TextButton(
-              onPressed: _submitForm,
-              child: const Text('Salvar'),
-            ),
-          ]
-      ),
-      body: Form(
-        key: _formKey,
-        child: SingleChildScrollView( // Prevent keyboard overflow
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              TextFormField(
-                controller: _fieldNumberController,
-                textCapitalization: TextCapitalization.characters,
-                decoration: const InputDecoration(
-                  labelText: 'Número de Campo',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor, insira o número de campo';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16.0),
-              TextFormField(
-                controller: _speciesNameController,
-                decoration: const InputDecoration(
-                  labelText: 'Espécie',
-                  border: OutlineInputBorder(),
-                ),
-                readOnly: true,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor, selecione uma espécie';
-                  }
-                  return null;
-                },
-                onTap: () async {
-                  final allSpecies = await loadSpeciesSearchData();
-                  allSpecies.sort((a, b) => a.compareTo(b));
-                  final speciesSearchDelegate = SpeciesSearchDelegate(allSpecies, _addSpeciesToNest, _updateNest);
-                  final selectedSpecies = await showSearch(
-                    context: context,
-                    delegate: speciesSearchDelegate,
-                  );
-
-                  if (selectedSpecies != null) {
-                    setState(() {
-                      _speciesNameController.text = selectedSpecies;
-                    });
-                  }
-                },
-              ),
-              const SizedBox(height: 16.0),
-              TextFormField(
-                controller: _localityNameController,
-                textCapitalization: TextCapitalization.words,
-                decoration: const InputDecoration(
-                  labelText: 'Localidade',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor, insira o nome da localidade';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16.0),
-              TextFormField(
-                controller: _supportController,
-                textCapitalization: TextCapitalization.sentences,
-                decoration: const InputDecoration(
-                  labelText: 'Suporte do ninho',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor, insira o suporte do ninho';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16.0),
-              TextFormField(
-                controller: _heightAboveGroundController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  labelText: 'Altura acima do solo',
-                  border: OutlineInputBorder(),
-                  suffixText: 'm',
-                ),
-              ),
-              const SizedBox(height: 16.0),
-              TextFormField(
-                controller: _maleController,
-                decoration: const InputDecoration(
-                  labelText: 'Macho',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 16.0),
-              TextFormField(
-                controller: _femaleController,
-                decoration: const InputDecoration(
-                  labelText: 'Fêmea',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 16.0),
-              TextFormField(
-                controller: _helpersController,
-                decoration: const InputDecoration(
-                  labelText: 'Ajudantes de ninho',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              // const SizedBox(height: 16.0),
-              // ElevatedButton(
-              //   onPressed: () async {
-              //     _submitForm();
-              //   },
-              //   child: _isSubmitting
-              //       ? const CircularProgressIndicator()
-              //       : const Text('Salvar'),
-              // ),
-            ],
-          ),
+        appBar: AppBar(
+          title: const Text('Novo Ninho'),
         ),
-      ),
+        body: Column(
+            children: [
+              Expanded(
+                child: Form(
+                  key: _formKey,
+                  child: SingleChildScrollView( // Prevent keyboard overflow
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      children: [
+                        TextFormField(
+                          controller: _fieldNumberController,
+                          textCapitalization: TextCapitalization.characters,
+                          decoration: const InputDecoration(
+                            labelText: 'Número de Campo',
+                            border: OutlineInputBorder(),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Por favor, insira o número de campo';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 16.0),
+                        TextFormField(
+                          controller: _speciesNameController,
+                          decoration: const InputDecoration(
+                            labelText: 'Espécie',
+                            border: OutlineInputBorder(),
+                          ),
+                          readOnly: true,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Por favor, selecione uma espécie';
+                            }
+                            return null;
+                          },
+                          onTap: () async {
+                            final allSpecies = await loadSpeciesSearchData();
+                            allSpecies.sort((a, b) => a.compareTo(b));
+                            final speciesSearchDelegate = SpeciesSearchDelegate(allSpecies, _addSpeciesToNest, _updateNest);
+                            final selectedSpecies = await showSearch(
+                              context: context,
+                              delegate: speciesSearchDelegate,
+                            );
+
+                            if (selectedSpecies != null) {
+                              setState(() {
+                                _speciesNameController.text = selectedSpecies;
+                              });
+                            }
+                          },
+                        ),
+                        const SizedBox(height: 16.0),
+                        TextFormField(
+                          controller: _localityNameController,
+                          textCapitalization: TextCapitalization.words,
+                          decoration: const InputDecoration(
+                            labelText: 'Localidade',
+                            border: OutlineInputBorder(),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Por favor, insira o nome da localidade';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 16.0),
+                        TextFormField(
+                          controller: _supportController,
+                          textCapitalization: TextCapitalization.sentences,
+                          decoration: const InputDecoration(
+                            labelText: 'Suporte do ninho',
+                            border: OutlineInputBorder(),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Por favor, insira o suporte do ninho';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 16.0),
+                        TextFormField(
+                          controller: _heightAboveGroundController,
+                          keyboardType: TextInputType.number,
+                          decoration: const InputDecoration(
+                            labelText: 'Altura acima do solo',
+                            border: OutlineInputBorder(),
+                            suffixText: 'm',
+                          ),
+                        ),
+                        const SizedBox(height: 16.0),
+                        TextFormField(
+                          controller: _maleController,
+                          decoration: const InputDecoration(
+                            labelText: 'Macho',
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                        const SizedBox(height: 16.0),
+                        TextFormField(
+                          controller: _femaleController,
+                          decoration: const InputDecoration(
+                            labelText: 'Fêmea',
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                        const SizedBox(height: 16.0),
+                        TextFormField(
+                          controller: _helpersController,
+                          decoration: const InputDecoration(
+                            labelText: 'Ajudantes de ninho',
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              SafeArea(
+                child: Container(
+                    padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 16.0),
+                    width: double.infinity,
+                    child: _isSubmitting
+                        ? const SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                        : Align(
+                      alignment: Alignment.centerRight,
+                      child: FilledButton(
+                        onPressed: _submitForm,
+                        child: const Text('Salvar'),
+                      ),
+                    )
+                ),
+              ),
+            ]
+        )
     );
   }
 

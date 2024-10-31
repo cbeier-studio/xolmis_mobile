@@ -22,14 +22,14 @@ class AddVegetationDataScreen extends StatefulWidget {
 
 class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
   final _formKey = GlobalKey<FormState>();
+  DistributionType _selectedHerbsDistribution = DistributionType.disNone;
+  DistributionType _selectedShrubsDistribution = DistributionType.disNone;
+  DistributionType _selectedTreesDistribution = DistributionType.disNone;
   late TextEditingController _herbsProportionController;
-  late TextEditingController _herbsDistributionController;
   late TextEditingController _herbsHeightController;
   late TextEditingController _shrubsProportionController;
-  late TextEditingController _shrubsDistributionController;
   late TextEditingController _shrubsHeightController;
   late TextEditingController _treesProportionController;
-  late TextEditingController _treesDistributionController;
   late TextEditingController _treesHeightController;
   late TextEditingController _notesController;
   bool _isSubmitting = false;
@@ -38,13 +38,10 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
   void initState() {
     super.initState();
     _herbsProportionController = TextEditingController();
-    _herbsDistributionController = TextEditingController();
     _herbsHeightController = TextEditingController();
     _shrubsProportionController = TextEditingController();
-    _shrubsDistributionController = TextEditingController();
     _shrubsHeightController = TextEditingController();
     _treesProportionController = TextEditingController();
-    _treesDistributionController = TextEditingController();
     _treesHeightController = TextEditingController();
     _notesController = TextEditingController();
   }
@@ -52,13 +49,10 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
   @override
   void dispose() {
     _herbsProportionController.dispose();
-    _herbsDistributionController.dispose();
     _herbsHeightController.dispose();
     _shrubsProportionController.dispose();
-    _shrubsDistributionController.dispose();
     _shrubsHeightController.dispose();
     _treesProportionController.dispose();
-    _treesDistributionController.dispose();
     _treesHeightController.dispose();
     _notesController.dispose();
     super.dispose();
@@ -67,73 +61,134 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Dados de Vegetação'),
-          actions: [
-            _isSubmitting
-                ? const SizedBox(
-              width: 24,
-              height: 24,
-              child: CircularProgressIndicator(strokeWidth: 2),
-            )
-                : TextButton(
-              onPressed: _submitForm,
-              child: const Text('Salvar'),
-            ),
-          ]
-      ),
-      body: Form(
-        key: _formKey,
-        child: SingleChildScrollView( // Prevent keyboard overflow
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
+        appBar: AppBar(
+          title: const Text('Dados de Vegetação'),
+        ),
+        body: Column(
             children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: const Text('Herbáceas'),
-              ),
-              const SizedBox(height: 8.0),
-              _buildVegetationRow(_herbsProportionController, _herbsDistributionController, _herbsHeightController),
-              const SizedBox(height: 8.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: const Text('Arbustos'),
-              ),
-              const SizedBox(height: 8.0),
-              _buildVegetationRow(_shrubsProportionController, _shrubsDistributionController, _shrubsHeightController),
-              const SizedBox(height: 8.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: const Text('Árvores'),
-              ),
-              const SizedBox(height: 8.0),
-              _buildVegetationRow(_treesProportionController, _treesDistributionController, _treesHeightController),
-              const SizedBox(height: 16.0),
-              TextFormField(
-                controller: _notesController,
-                textCapitalization: TextCapitalization.sentences,
-                decoration: const InputDecoration(
-                  labelText: 'Observações',
-                  border: OutlineInputBorder(),
+              Expanded(
+                child: Form(
+                  key: _formKey,
+                  child: SingleChildScrollView( // Prevent keyboard overflow
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      children: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: const Text('Herbáceas'),
+                        ),
+                        const SizedBox(height: 8.0),
+                        DropdownButtonFormField<DistributionType>(
+                            value: _selectedHerbsDistribution,
+                            decoration: const InputDecoration(
+                              labelText: 'Distribuição',
+                              border: OutlineInputBorder(),
+                            ),
+                            items: DistributionType.values.map((distribution) {
+                              return DropdownMenuItem(
+                                value: distribution,
+                                child: Text(distributionTypeFriendlyNames[distribution]!),
+                              );
+                            }).toList(),
+                            onChanged: (DistributionType? newValue) {
+                              setState(() {
+                                _selectedHerbsDistribution = newValue!;
+                              });
+                            }
+                        ),
+                        const SizedBox(height: 8.0),
+                        _buildVegetationRow(_herbsProportionController, _herbsHeightController),
+                        const SizedBox(height: 8.0),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: const Text('Arbustos'),
+                        ),
+                        const SizedBox(height: 8.0),
+                        DropdownButtonFormField<DistributionType>(
+                            value: _selectedShrubsDistribution,
+                            decoration: const InputDecoration(
+                              labelText: 'Distribuição',
+                              border: OutlineInputBorder(),
+                            ),
+                            items: DistributionType.values.map((distribution) {
+                              return DropdownMenuItem(
+                                value: distribution,
+                                child: Text(distributionTypeFriendlyNames[distribution]!),
+                              );
+                            }).toList(),
+                            onChanged: (DistributionType? newValue) {
+                              setState(() {
+                                _selectedShrubsDistribution = newValue!;
+                              });
+                            }
+                        ),
+                        const SizedBox(height: 8.0),
+                        _buildVegetationRow(_shrubsProportionController, _shrubsHeightController),
+                        const SizedBox(height: 8.0),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: const Text('Árvores'),
+                        ),
+                        const SizedBox(height: 8.0),
+                        DropdownButtonFormField<DistributionType>(
+                            value: _selectedTreesDistribution,
+                            decoration: const InputDecoration(
+                              labelText: 'Distribuição',
+                              border: OutlineInputBorder(),
+                            ),
+                            items: DistributionType.values.map((distribution) {
+                              return DropdownMenuItem(
+                                value: distribution,
+                                child: Text(distributionTypeFriendlyNames[distribution]!),
+                              );
+                            }).toList(),
+                            onChanged: (DistributionType? newValue) {
+                              setState(() {
+                                _selectedTreesDistribution = newValue!;
+                              });
+                            }
+                        ),
+                        const SizedBox(height: 8.0),
+                        _buildVegetationRow(_treesProportionController, _treesHeightController),
+                        const SizedBox(height: 16.0),
+                        TextFormField(
+                          controller: _notesController,
+                          textCapitalization: TextCapitalization.sentences,
+                          decoration: const InputDecoration(
+                            labelText: 'Observações',
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
-              // const SizedBox(height: 16.0),
-              // ElevatedButton(
-              //   onPressed: _isSubmitting ? null : () async {
-              //
-              //   },
-              //   child: _isSubmitting
-              //       ? const CircularProgressIndicator()
-              //       : const Text('Salvar'),
-              // ),
-            ],
-          ),
-        ),
-      ),
+              SafeArea(
+                child: Container(
+                  padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 16.0),
+                  width: double.infinity,
+                  child: _isSubmitting
+                      ? const SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                      : Align(
+                    alignment: Alignment.centerRight,
+                    child: FilledButton(
+                      onPressed: _submitForm,
+                      child: const Text('Salvar'),
+                    ),
+                  )
+                ),
+              ),
+            ]
+        )
     );
   }
 
-  Widget _buildVegetationRow(TextEditingController proportionController, TextEditingController distributionController, TextEditingController heightController) {
+  Widget _buildVegetationRow(TextEditingController proportionController, TextEditingController heightController) {
     return Row(
       children: [
         Expanded(
@@ -144,17 +199,6 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
               labelText: 'Proporção',
               border: OutlineInputBorder(),
               suffixText: '%',
-            ),
-          ),
-        ),
-        const SizedBox(width: 8.0),
-        Expanded(
-          child: TextFormField(
-            controller: distributionController,
-            keyboardType: TextInputType.number,
-            decoration: const InputDecoration(
-              labelText: 'Distribuição',
-              border: OutlineInputBorder(),
             ),
           ),
         ),
@@ -189,13 +233,13 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
         latitude: position?.latitude,
         longitude: position?.longitude,
         herbsProportion: int.tryParse(_herbsProportionController.text) ?? 0,
-        herbsDistribution: int.tryParse(_herbsDistributionController.text) ?? 0,
+        herbsDistribution: _selectedHerbsDistribution,
         herbsHeight: int.tryParse(_herbsHeightController.text) ?? 0,
         shrubsProportion: int.tryParse(_shrubsProportionController.text) ?? 0,
-        shrubsDistribution: int.tryParse(_shrubsDistributionController.text) ?? 0,
+        shrubsDistribution: _selectedShrubsDistribution,
         shrubsHeight: int.tryParse(_shrubsHeightController.text) ?? 0,
         treesProportion: int.tryParse(_treesProportionController.text) ?? 0,
-        treesDistribution: int.tryParse(_treesDistributionController.text) ?? 0,
+        treesDistribution: _selectedTreesDistribution,
         treesHeight: int.tryParse(_treesHeightController.text) ?? 0,
         notes: _notesController.text,
       );

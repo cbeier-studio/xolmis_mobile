@@ -47,133 +47,137 @@ class _AddEggScreenState extends State<AddEggScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Adicionar Ovo'),
-          actions: [
-            _isSubmitting
-                ? const SizedBox(
-              width: 24,
-              height: 24,
-              child: CircularProgressIndicator(strokeWidth: 2),
-            )
-                : TextButton(
-              onPressed: _submitForm,
-              child: const Text('Salvar'),
-            ),
-          ]
-      ),
-      body: Form(
-        key: _formKey,
-        child: SingleChildScrollView( // Prevent keyboard overflow
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              TextFormField(
-                controller: _fieldNumberController,
-                textCapitalization: TextCapitalization.characters,
-                decoration: const InputDecoration(
-                  labelText: 'Número de Campo',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor, insira o número de campo';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16.0),
-              TextFormField(
-                controller: _speciesNameController,
-                decoration: const InputDecoration(
-                  labelText: 'Espécie',
-                  border: OutlineInputBorder(),
-                ),
-                readOnly: true,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor, selecione uma espécie';
-                  }
-                  return null;
-                },
-                onTap: () async {
-                  final allSpecies = await loadSpeciesSearchData();
-                  allSpecies.sort((a, b) => a.compareTo(b));
-                  final speciesSearchDelegate = SpeciesSearchDelegate(allSpecies, _addSpeciesToEgg, _updateEgg);
-                  final selectedSpecies = await showSearch(
-                    context: context,
-                    delegate: speciesSearchDelegate,
-                  );
-
-                  if (selectedSpecies != null) {
-                    setState(() {
-                      _speciesNameController.text = selectedSpecies;
-                    });
-                  }
-                },
-              ),
-              const SizedBox(height: 16.0),
-              DropdownButtonFormField<EggShapeType>(
-                  value: _selectedEggShape,
-                  decoration: const InputDecoration(
-                    labelText: 'Forma do ovo',
-                    border: OutlineInputBorder(),
-                  ),
-                  items: EggShapeType.values.map((eggShape) {
-                    return DropdownMenuItem(
-                      value: eggShape,
-                      child: Text(eggShapeTypeFriendlyNames[eggShape]!),
-                    );
-                  }).toList(),
-                  onChanged: (EggShapeType? newValue) {
-                    setState(() {
-                      _selectedEggShape = newValue!;
-                    });
-                  }
-              ),
-              const SizedBox(height: 16.0),
-              TextFormField(
-                controller: _widthController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  labelText: 'Largura',
-                  border: OutlineInputBorder(),
-                  suffixText: 'mm',
-                ),
-              ),
-              const SizedBox(height: 16.0),
-              TextFormField(
-                controller: _lengthController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  labelText: 'Comprimento',
-                  border: OutlineInputBorder(),
-                  suffixText: 'mm',
-                ),
-              ),
-              const SizedBox(height: 16.0),
-              TextFormField(
-                controller: _massController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  labelText: 'Massa',
-                  border: OutlineInputBorder(),
-                  suffixText: 'g',
-                ),
-              ),
-              // const SizedBox(height: 16.0),
-              // ElevatedButton(
-              //   onPressed: () async {
-              //
-              //   },
-              //   child: _isSubmitting
-              //       ? const CircularProgressIndicator()
-              //       : const Text('Salvar'),
-              // ),
-            ],
-          ),
+        appBar: AppBar(
+          title: const Text('Adicionar Ovo'),
         ),
-      ),
+        body: Column(
+            children: [
+              Expanded(
+                child: Form(
+                  key: _formKey,
+                  child: SingleChildScrollView( // Prevent keyboard overflow
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      children: [
+                        TextFormField(
+                          controller: _fieldNumberController,
+                          textCapitalization: TextCapitalization.characters,
+                          decoration: const InputDecoration(
+                            labelText: 'Número de Campo',
+                            border: OutlineInputBorder(),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Por favor, insira o número de campo';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 16.0),
+                        TextFormField(
+                          controller: _speciesNameController,
+                          decoration: const InputDecoration(
+                            labelText: 'Espécie',
+                            border: OutlineInputBorder(),
+                          ),
+                          readOnly: true,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Por favor, selecione uma espécie';
+                            }
+                            return null;
+                          },
+                          onTap: () async {
+                            final allSpecies = await loadSpeciesSearchData();
+                            allSpecies.sort((a, b) => a.compareTo(b));
+                            final speciesSearchDelegate = SpeciesSearchDelegate(allSpecies, _addSpeciesToEgg, _updateEgg);
+                            final selectedSpecies = await showSearch(
+                              context: context,
+                              delegate: speciesSearchDelegate,
+                            );
+
+                            if (selectedSpecies != null) {
+                              setState(() {
+                                _speciesNameController.text = selectedSpecies;
+                              });
+                            }
+                          },
+                        ),
+                        const SizedBox(height: 16.0),
+                        DropdownButtonFormField<EggShapeType>(
+                            value: _selectedEggShape,
+                            decoration: const InputDecoration(
+                              labelText: 'Forma do ovo',
+                              border: OutlineInputBorder(),
+                            ),
+                            items: EggShapeType.values.map((eggShape) {
+                              return DropdownMenuItem(
+                                value: eggShape,
+                                child: Text(eggShapeTypeFriendlyNames[eggShape]!),
+                              );
+                            }).toList(),
+                            onChanged: (EggShapeType? newValue) {
+                              setState(() {
+                                _selectedEggShape = newValue!;
+                              });
+                            }
+                        ),
+                        const SizedBox(height: 16.0),
+                        TextFormField(
+                          controller: _widthController,
+                          keyboardType: TextInputType.number,
+                          decoration: const InputDecoration(
+                            labelText: 'Largura',
+                            border: OutlineInputBorder(),
+                            suffixText: 'mm',
+                          ),
+                        ),
+                        const SizedBox(height: 16.0),
+                        TextFormField(
+                          controller: _lengthController,
+                          keyboardType: TextInputType.number,
+                          decoration: const InputDecoration(
+                            labelText: 'Comprimento',
+                            border: OutlineInputBorder(),
+                            suffixText: 'mm',
+                          ),
+                        ),
+                        const SizedBox(height: 16.0),
+                        TextFormField(
+                          controller: _massController,
+                          keyboardType: TextInputType.number,
+                          decoration: const InputDecoration(
+                            labelText: 'Massa',
+                            border: OutlineInputBorder(),
+                            suffixText: 'g',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              SafeArea(
+                child: Container(
+                    padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 16.0),
+                    width: double.infinity,
+                    child: _isSubmitting
+                        ? const SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                        : Align(
+                      alignment: Alignment.centerRight,
+                      child: FilledButton(
+                        onPressed: _submitForm,
+                        child: const Text('Salvar'),
+                      ),
+                    )
+                ),
+              ),
+            ]
+        )
     );
   }
 

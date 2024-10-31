@@ -139,6 +139,42 @@ class Species {
   }
 }
 
+enum DistributionType {
+  disNone,
+  disRare,
+  disFewSparseIndividuals,
+  disOnePatch,
+  disOnePatchFewSparseIndividuals,
+  disManySparseIndividuals,
+  disOnePatchManySparseIndividuals,
+  disFewPatches,
+  disFewPatchesSparseIndividuals,
+  disManyPatches,
+  disManyPatchesSparseIndividuals,
+  disHighDensityIndividuals,
+  disContinuousCoverWithGaps,
+  disContinuousDenseCover,
+  disContinuousDenseCoverWithEdge,
+}
+
+const Map<DistributionType, String> distributionTypeFriendlyNames = {
+  DistributionType.disNone: 'Nada',
+  DistributionType.disRare: 'Rara',
+  DistributionType.disFewSparseIndividuals: 'Poucos indivíduos esparsos',
+  DistributionType.disOnePatch: 'Uma mancha',
+  DistributionType.disOnePatchFewSparseIndividuals: 'Uma mancha e indivíduos isolados',
+  DistributionType.disManySparseIndividuals: 'Vários indivíduos esparsos',
+  DistributionType.disOnePatchManySparseIndividuals: 'Mancha e vários indivíduos isolados',
+  DistributionType.disFewPatches: 'Poucas manchas',
+  DistributionType.disFewPatchesSparseIndividuals: 'Poucas manchas e indivíduos isolados',
+  DistributionType.disManyPatches: 'Várias manchas equidistantes',
+  DistributionType.disManyPatchesSparseIndividuals: 'Várias manchas e indivíduos dispersos',
+  DistributionType.disHighDensityIndividuals: 'Indivíduos isolados em alta densidade',
+  DistributionType.disContinuousCoverWithGaps: 'Contínua com manchas sem cobertura',
+  DistributionType.disContinuousDenseCover: 'Contínua e densa',
+  DistributionType.disContinuousDenseCoverWithEdge: 'Contínua com borda separando estratos',
+};
+
 class Vegetation {
   final int? id;
   final String inventoryId;
@@ -146,13 +182,13 @@ class Vegetation {
   double? longitude;
   double? latitude;
   int? herbsProportion;
-  int? herbsDistribution;
+  DistributionType? herbsDistribution = DistributionType.disNone;
   int? herbsHeight;
   int? shrubsProportion;
-  int? shrubsDistribution;
+  DistributionType? shrubsDistribution = DistributionType.disNone;
   int? shrubsHeight;
   int? treesProportion;
-  int? treesDistribution;
+  DistributionType? treesDistribution = DistributionType.disNone;
   int? treesHeight;
   String? notes;
 
@@ -184,13 +220,13 @@ class Vegetation {
       longitude: map['longitude'],
       latitude: map['latitude'],
       herbsProportion: map['herbsProportion'],
-      herbsDistribution: map['herbsDistribution'],
+      herbsDistribution: DistributionType.values[map['herbsDistribution']],
       herbsHeight: map['herbsHeight'],
       shrubsProportion: map['shrubsProportion'],
-      shrubsDistribution: map['shrubsDistribution'],
+      shrubsDistribution: DistributionType.values[map['shrubsDistribution']],
       shrubsHeight: map['shrubsHeight'],
       treesProportion: map['treesProportion'],
-      treesDistribution: map['treesDistribution'],
+      treesDistribution: DistributionType.values[map['treesDistribution']],
       treesHeight: map['treesHeight'],
       notes: map['notes'],
     );
@@ -224,13 +260,13 @@ class Vegetation {
       'longitude': longitude,
       'latitude': latitude,
       'herbsProportion': herbsProportion,
-      'herbsDistribution': herbsDistribution,
+      'herbsDistribution': herbsDistribution?.index,
       'herbsHeight': herbsHeight,
       'shrubsProportion': shrubsProportion,
-      'shrubsDistribution': shrubsDistribution,
+      'shrubsDistribution': shrubsDistribution?.index,
       'shrubsHeight': shrubsHeight,
       'treesProportion': treesProportion,
-      'treesDistribution': treesDistribution,
+      'treesDistribution': treesDistribution?.index,
       'treesHeight': treesHeight,
       'notes': notes,
     };
@@ -244,13 +280,13 @@ class Vegetation {
       'longitude': longitude,
       'latitude': latitude,
       'herbsProportion': herbsProportion,
-      'herbsDistribution': herbsDistribution,
+      'herbsDistribution': herbsDistribution?.index,
       'herbsHeight': herbsHeight,
       'shrubsProportion': shrubsProportion,
-      'shrubsDistribution': shrubsDistribution,
+      'shrubsDistribution': shrubsDistribution?.index,
       'shrubsHeight': shrubsHeight,
       'treesProportion': treesProportion,
-      'treesDistribution': treesDistribution,
+      'treesDistribution': treesDistribution?.index,
       'treesHeight': treesHeight,
       'notes': notes,
     };

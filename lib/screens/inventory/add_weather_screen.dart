@@ -43,104 +43,108 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Dados do Tempo'),
-          actions: [
-            _isSubmitting
-                ? const SizedBox(
-              width: 24,
-              height: 24,
-              child: CircularProgressIndicator(strokeWidth: 2),
-            )
-                : TextButton(
-              onPressed: _submitForm,
-              child: const Text('Salvar'),
-            ),
-          ]
-      ),
-      body: Form(
-        key: _formKey,
-        child: SingleChildScrollView( // Prevent keyboard overflow
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      controller: _cloudCoverController,
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        labelText: 'Nebulosidade',
-                        border: OutlineInputBorder(),
-                        suffixText: '%',
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8.0),
-                  Expanded(
-                    child: DropdownButtonFormField<PrecipitationType>(
-                        value: _selectedPrecipitation,
-                        decoration: const InputDecoration(
-                          labelText: 'Precipitação',
-                          border: OutlineInputBorder(),
-                        ),
-                        items: PrecipitationType.values.map((precipitation) {
-                          return DropdownMenuItem(
-                            value: precipitation,
-                            child: Text(precipitationTypeFriendlyNames[precipitation]!),
-                          );
-                        }).toList(),
-                        onChanged: (PrecipitationType? newValue) {
-                          setState(() {
-                            _selectedPrecipitation = newValue!;
-                          });
-                        }
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16.0),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      controller: _temperatureController,
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        labelText: 'Temperatura',
-                        border: OutlineInputBorder(),
-                        suffixText: '°C',
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8.0),
-                  Expanded(
-                    child: TextFormField(
-                      controller: _windSpeedController,
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        labelText: 'Vento',
-                        border: OutlineInputBorder(),
-                        suffixText: 'bft',
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              // const SizedBox(height: 16.0),
-              // ElevatedButton(
-              //   onPressed: _isSubmitting ? null : () async {
-              //
-              //   },
-              //   child: _isSubmitting
-              //       ? const CircularProgressIndicator()
-              //       : const Text('Salvar'),
-              // ),
-            ],
-          ),
+        appBar: AppBar(
+          title: const Text('Dados do Tempo'),
         ),
-      ),
+        body: Column(
+            children: [
+              Expanded(
+                child: Form(
+                  key: _formKey,
+                  child: SingleChildScrollView( // Prevent keyboard overflow
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                controller: _cloudCoverController,
+                                keyboardType: TextInputType.number,
+                                decoration: const InputDecoration(
+                                  labelText: 'Nebulosidade',
+                                  border: OutlineInputBorder(),
+                                  suffixText: '%',
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8.0),
+                            Expanded(
+                              child: DropdownButtonFormField<PrecipitationType>(
+                                  value: _selectedPrecipitation,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Precipitação',
+                                    border: OutlineInputBorder(),
+                                  ),
+                                  items: PrecipitationType.values.map((precipitation) {
+                                    return DropdownMenuItem(
+                                      value: precipitation,
+                                      child: Text(precipitationTypeFriendlyNames[precipitation]!),
+                                    );
+                                  }).toList(),
+                                  onChanged: (PrecipitationType? newValue) {
+                                    setState(() {
+                                      _selectedPrecipitation = newValue!;
+                                    });
+                                  }
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16.0),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                controller: _temperatureController,
+                                keyboardType: TextInputType.number,
+                                decoration: const InputDecoration(
+                                  labelText: 'Temperatura',
+                                  border: OutlineInputBorder(),
+                                  suffixText: '°C',
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8.0),
+                            Expanded(
+                              child: TextFormField(
+                                controller: _windSpeedController,
+                                keyboardType: TextInputType.number,
+                                decoration: const InputDecoration(
+                                  labelText: 'Vento',
+                                  border: OutlineInputBorder(),
+                                  suffixText: 'bft',
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              SafeArea(
+                child: Container(
+                    padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 16.0),
+                    width: double.infinity,
+                    child: _isSubmitting
+                        ? const SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                        : Align(
+                      alignment: Alignment.centerRight,
+                      child: FilledButton(
+                        onPressed: _submitForm,
+                        child: const Text('Salvar'),
+                      ),
+                    )
+                ),
+              ),
+            ]
+        )
     );
   }
 

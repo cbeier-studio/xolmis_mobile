@@ -26,9 +26,9 @@ class VegetationListItemState extends State<VegetationListItem> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('${widget.vegetation.latitude}; ${widget.vegetation.longitude}'),
-            Text('Herbáceas: ${widget.vegetation.herbsDistribution}; ${widget.vegetation.herbsProportion}%; ${widget.vegetation.herbsHeight} cm'),
-            Text('Arbustos: ${widget.vegetation.shrubsDistribution}; ${widget.vegetation.shrubsProportion}%; ${widget.vegetation.shrubsHeight} cm'),
-            Text('Árvores: ${widget.vegetation.treesDistribution}; ${widget.vegetation.treesProportion}%; ${widget.vegetation.treesHeight} cm'),
+            Text('Herbáceas: ${widget.vegetation.herbsDistribution?.index ?? 0}; ${widget.vegetation.herbsProportion}%; ${widget.vegetation.herbsHeight} cm'),
+            Text('Arbustos: ${widget.vegetation.shrubsDistribution?.index ?? 0}; ${widget.vegetation.shrubsProportion}%; ${widget.vegetation.shrubsHeight} cm'),
+            Text('Árvores: ${widget.vegetation.treesDistribution?.index ?? 0}; ${widget.vegetation.treesProportion}%; ${widget.vegetation.treesHeight} cm'),
           ],
         ),
         onLongPress: widget.onLongPress,
