@@ -63,7 +63,7 @@ class _AddEggScreenState extends State<AddEggScreen> {
                           controller: _fieldNumberController,
                           textCapitalization: TextCapitalization.characters,
                           decoration: const InputDecoration(
-                            labelText: 'Número de Campo',
+                            labelText: 'Número de Campo *',
                             border: OutlineInputBorder(),
                           ),
                           validator: (value) {
@@ -77,7 +77,7 @@ class _AddEggScreenState extends State<AddEggScreen> {
                         TextFormField(
                           controller: _speciesNameController,
                           decoration: const InputDecoration(
-                            labelText: 'Espécie',
+                            labelText: 'Espécie *',
                             border: OutlineInputBorder(),
                           ),
                           readOnly: true,
@@ -107,7 +107,7 @@ class _AddEggScreenState extends State<AddEggScreen> {
                         DropdownButtonFormField<EggShapeType>(
                             value: _selectedEggShape,
                             decoration: const InputDecoration(
-                              labelText: 'Forma do ovo',
+                              labelText: 'Forma do ovo *',
                               border: OutlineInputBorder(),
                             ),
                             items: EggShapeType.values.map((eggShape) {
@@ -147,7 +147,7 @@ class _AddEggScreenState extends State<AddEggScreen> {
                           controller: _massController,
                           keyboardType: TextInputType.number,
                           decoration: const InputDecoration(
-                            labelText: 'Massa',
+                            labelText: 'Peso',
                             border: OutlineInputBorder(),
                             suffixText: 'g',
                           ),
@@ -243,6 +243,10 @@ class _AddEggScreenState extends State<AddEggScreen> {
           );
         }
       }
+    } else {
+      setState(() {
+        _isSubmitting = false;
+      });
     }
   }
 }

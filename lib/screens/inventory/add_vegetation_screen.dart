@@ -277,6 +277,10 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
           ),
         );
       }
+    } else {
+      setState(() {
+        _isSubmitting = false;
+      });
     }
   }
 }

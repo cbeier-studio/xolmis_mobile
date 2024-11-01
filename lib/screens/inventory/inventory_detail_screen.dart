@@ -182,14 +182,18 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
             },
           ) : const SizedBox.shrink(),
           IconButton(
-            icon: const Icon(Icons.local_florist_outlined),
+            icon: Theme.of(context).brightness == Brightness.light
+                ? const Icon(Icons.local_florist_outlined)
+                : const Icon(Icons.local_florist),
             tooltip: 'Adicionar dados de vegetação',
             onPressed: () {
               _showAddVegetationScreen(context);
             },
           ),
           IconButton(
-            icon: const Icon(Icons.wb_sunny_outlined),
+            icon: Theme.of(context).brightness == Brightness.light
+                ? const Icon(Icons.wb_sunny_outlined)
+                : const Icon(Icons.wb_sunny),
             tooltip: 'Adicionar dados do tempo',
             onPressed: () {
               _showAddWeatherScreen(context);
@@ -200,6 +204,13 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
           preferredSize: const Size.fromHeight(kToolbarHeight + 4.0), // Adjust height as needed
           child: Column(
             children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('${inventoryTypeFriendlyNames[widget.inventory.type]}'),
+                    if (widget.inventory.duration > 0) Text(': ${widget.inventory.duration} minutos'),
+                  ],
+                ),
               widget.inventory.duration > 0 && !widget.inventory.isFinished
                   ? ValueListenableBuilder<double>(
                 valueListenable: widget.inventory.elapsedTimeNotifier,
@@ -208,11 +219,15 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                     value: widget.inventory.isPaused
                         ? null
                         : elapsedTime / (widget.inventory.duration * 60),
-                    backgroundColor: Colors.grey[300],
+                    backgroundColor: Theme.of(context).brightness == Brightness.light
+                        ? Colors.grey[300]
+                        : Colors.grey[800],
                     valueColor: AlwaysStoppedAnimation<Color>(
                       widget.inventory.isPaused
                           ? Colors.amber
-                          : Colors.deepPurple,
+                          : Theme.of(context).brightness == Brightness.light
+                          ? Colors.deepPurple
+                          : Colors.deepPurpleAccent,
                     ),
                   );
                 },
@@ -228,7 +243,8 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                           widget.inventory.id);
                       return speciesList.isNotEmpty
                           ? Badge.count(
-                        backgroundColor: Colors.deepPurple,
+                        backgroundColor: Colors.deepPurple[100],
+                        textColor: Colors.deepPurple[800],
                         alignment: AlignmentDirectional.centerEnd,
                         offset: const Offset(24, -8),
                         count: speciesList.length,
@@ -243,7 +259,8 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                           .getVegetationForInventory(widget.inventory.id);
                       return vegetationList.isNotEmpty
                           ? Badge.count(
-                        backgroundColor: Colors.deepPurple,
+                        backgroundColor: Colors.deepPurple[100],
+                        textColor: Colors.deepPurple[800],
                         alignment: AlignmentDirectional.centerEnd,
                         offset: const Offset(24, -8),
                         count: vegetationList.length,
@@ -258,7 +275,8 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                           .getWeatherForInventory(widget.inventory.id);
                       return weatherList.isNotEmpty
                           ? Badge.count(
-                        backgroundColor: Colors.deepPurple,
+                        backgroundColor: Colors.deepPurple[100],
+                        textColor: Colors.deepPurple[800],
                         alignment: AlignmentDirectional.centerEnd,
                         offset: const Offset(24, -8),
                         count: weatherList.length,

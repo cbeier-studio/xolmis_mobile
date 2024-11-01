@@ -74,7 +74,9 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
             tooltip: 'Exportar todos os espécimes',
           ) : const SizedBox.shrink(),
           IconButton(
-            icon: const Icon(Icons.settings_outlined),
+            icon: Theme.of(context).brightness == Brightness.light
+                ? const Icon(Icons.settings_outlined)
+                : const Icon(Icons.settings),
             tooltip: 'Configurações',
             onPressed: () {
               Navigator.push(

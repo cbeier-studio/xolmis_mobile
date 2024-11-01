@@ -615,7 +615,7 @@ class Inventory with ChangeNotifier {
             inventoryRepository.updateInventoryElapsedTime(inventory.id, inventory.elapsedTime);
           }
 
-          if (inventory.elapsedTime >= inventory.duration * 60) {
+          if (inventory.elapsedTime >= inventory.duration * 60 && !inventory.isFinished) {
             FlutterRingtonePlayer().play(
               android: AndroidSounds.notification,
               ios: IosSounds.glass,

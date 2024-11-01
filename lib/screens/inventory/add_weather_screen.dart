@@ -73,7 +73,7 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
                               child: DropdownButtonFormField<PrecipitationType>(
                                   value: _selectedPrecipitation,
                                   decoration: const InputDecoration(
-                                    labelText: 'Precipitação',
+                                    labelText: 'Precipitação *',
                                     border: OutlineInputBorder(),
                                   ),
                                   items: PrecipitationType.values.map((precipitation) {
@@ -197,6 +197,10 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
           ),
         );
       }
+    } else {
+      setState(() {
+        _isSubmitting = false;
+      });
     }
   }
 }

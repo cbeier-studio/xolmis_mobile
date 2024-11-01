@@ -4,15 +4,13 @@ import 'package:provider/provider.dart';
 
 import '../data/models/inventory.dart';
 import '../data/database/repositories/species_repository.dart';
-import '../data/database/repositories/inventory_repository.dart';
 
 import '../providers/inventory_provider.dart';
 
 class SpeciesProvider with ChangeNotifier {
   final SpeciesRepository _speciesRepository;
-  final InventoryRepository _inventoryRepository;
 
-  SpeciesProvider(this._speciesRepository, this._inventoryRepository);
+  SpeciesProvider(this._speciesRepository);
 
   final Map<String, List<Species>> _speciesMap = {};
   final ValueNotifier<int> individualsCountNotifier = ValueNotifier<int>(0);

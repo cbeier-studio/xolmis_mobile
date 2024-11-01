@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/models/nest.dart';
@@ -122,63 +123,76 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('${widget.nest.fieldNumber}'),
-          actions: [
-            widget.nest.isActive ? IconButton(
-              icon: const Icon(
-                Icons.beenhere_outlined,
-                semanticLabel: 'Adicionar revisão de ninho',
-              ),
-              tooltip: 'Adicionar revisão de ninho',
-              onPressed: () {
-                _showAddRevisionScreen(context);
-              },
-            ) : const SizedBox.shrink(),
-            widget.nest.isActive ? IconButton(
-              icon: const Icon(
-                Icons.egg_outlined,
-                semanticLabel: 'Adicionar ovo',
-              ),
-              tooltip: 'Adicionar ovo',
-              onPressed: () {
-                _showAddEggScreen(context);
-              },
-            ) : const SizedBox.shrink(),
-          ],
-          bottom: TabBar(
-            tabs: [
-              Consumer<NestRevisionProvider>(
-                builder: (context, revisionProvider, child) {
-                  final revisionList = revisionProvider.getRevisionForNest(
-                      widget.nest.id!);
-                  return revisionList.isNotEmpty
-                      ? Badge.count(
-                    backgroundColor: Colors.deepPurple,
-                    alignment: AlignmentDirectional.centerEnd,
-                    offset: const Offset(24, -8),
-                    count: revisionList.length,
-                    child: const Tab(text: 'Revisões'),
-                  )
-                      : const Tab(text: 'Revisões');
+            title: Text('${widget.nest.fieldNumber}'),
+            actions: [
+              widget.nest.isActive ? IconButton(
+                icon: const Icon(
+                  Icons.beenhere_outlined,
+                  semanticLabel: 'Adicionar revisão de ninho',
+                ),
+                tooltip: 'Adicionar revisão de ninho',
+                onPressed: () {
+                  _showAddRevisionScreen(context);
                 },
-              ),
-              Consumer<EggProvider>(
-                builder: (context, eggProvider, child) {
-                  final eggList = eggProvider.getEggForNest(
-                      widget.nest.id!);
-                  return eggList.isNotEmpty
-                      ? Badge.count(
-                    backgroundColor: Colors.deepPurple,
-                    alignment: AlignmentDirectional.centerEnd,
-                    offset: const Offset(24, -8),
-                    count: eggList.length,
-                    child: const Tab(text: 'Ovos'),
-                  )
-                      : const Tab(text: 'Ovos');
+              ) : const SizedBox.shrink(),
+              widget.nest.isActive ? IconButton(
+                icon: const Icon(
+                  Icons.egg_outlined,
+                  semanticLabel: 'Adicionar ovo',
+                ),
+                tooltip: 'Adicionar ovo',
+                onPressed: () {
+                  _showAddEggScreen(context);
                 },
-              ),
+              ) : const SizedBox.shrink(),
             ],
-          ),
+            bottom: PreferredSize( // Wrap TabBar and LinearProgressIndicator in PreferredSize
+              preferredSize: const Size.fromHeight(kToolbarHeight + 4.0), // Adjust height as needed
+              child: Column(
+                  children: [
+                    Text(
+                      widget.nest.speciesName!,
+                      style: const TextStyle(fontStyle: FontStyle.italic),
+                    ),
+                    TabBar(
+                      tabs: [
+                        Consumer<NestRevisionProvider>(
+                          builder: (context, revisionProvider, child) {
+                            final revisionList = revisionProvider.getRevisionForNest(
+                                widget.nest.id!);
+                            return revisionList.isNotEmpty
+                                ? Badge.count(
+                              backgroundColor: Colors.deepPurple[100],
+                              textColor: Colors.deepPurple[800],
+                              alignment: AlignmentDirectional.centerEnd,
+                              offset: const Offset(24, -8),
+                              count: revisionList.length,
+                              child: const Tab(text: 'Revisões'),
+                            )
+                                : const Tab(text: 'Revisões');
+                          },
+                        ),
+                        Consumer<EggProvider>(
+                          builder: (context, eggProvider, child) {
+                            final eggList = eggProvider.getEggForNest(
+                                widget.nest.id!);
+                            return eggList.isNotEmpty
+                                ? Badge.count(
+                              backgroundColor: Colors.deepPurple[100],
+                              textColor: Colors.deepPurple[800],
+                              alignment: AlignmentDirectional.centerEnd,
+                              offset: const Offset(24, -8),
+                              count: eggList.length,
+                              child: const Tab(text: 'Ovos'),
+                            )
+                                : const Tab(text: 'Ovos');
+                          },
+                        ),
+                      ],
+                    ),
+                  ]
+              ),
+            )
         ),
         body: TabBarView(
           children: [
@@ -200,7 +214,7 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
                 content: DropdownButtonFormField<NestFateType>(
                   value: selectedNestFate,
                   decoration: const InputDecoration(
-                    labelText: 'Destino do ninho',
+                    labelText: 'Destino do ninho *',
                     border: OutlineInputBorder(),
                   ),
                   onChanged: (NestFateType? newValue) {

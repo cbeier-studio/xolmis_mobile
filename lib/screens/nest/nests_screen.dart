@@ -66,7 +66,9 @@ class _ActiveNestsScreenState extends State<ActiveNestsScreen> {
         title: const Text('Ninhos ativos'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.history_outlined),
+            icon: Theme.of(context).brightness == Brightness.light
+                ? const Icon(Icons.history_outlined)
+                : const Icon(Icons.history),
             tooltip: 'Ninhos inativos',
             onPressed: () {
               Navigator.push(
@@ -76,7 +78,9 @@ class _ActiveNestsScreenState extends State<ActiveNestsScreen> {
             },
           ),
           IconButton(
-            icon: const Icon(Icons.settings_outlined),
+            icon: Theme.of(context).brightness == Brightness.light
+                ? const Icon(Icons.settings_outlined)
+                : const Icon(Icons.settings),
             tooltip: 'Configurações',
             onPressed: () {
               Navigator.push(

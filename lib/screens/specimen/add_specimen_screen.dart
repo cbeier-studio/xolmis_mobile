@@ -70,7 +70,7 @@ class _AddSpecimenScreenState extends State<AddSpecimenScreen> {
                           controller: _fieldNumberController,
                           textCapitalization: TextCapitalization.characters,
                           decoration: const InputDecoration(
-                            labelText: 'Número de Campo',
+                            labelText: 'Número de Campo *',
                             border: OutlineInputBorder(),
                           ),
                           validator: (value) {
@@ -84,7 +84,7 @@ class _AddSpecimenScreenState extends State<AddSpecimenScreen> {
                         DropdownButtonFormField<SpecimenType>(
                           value: _selectedType,
                           decoration: const InputDecoration(
-                            labelText: 'Tipo de Espécime',
+                            labelText: 'Tipo de Espécime *',
                             border: OutlineInputBorder(),
                           ),
                           items: SpecimenType.values.map((type) {
@@ -103,7 +103,7 @@ class _AddSpecimenScreenState extends State<AddSpecimenScreen> {
                         TextFormField(
                           controller: _speciesNameController,
                           decoration: const InputDecoration(
-                            labelText: 'Espécie',
+                            labelText: 'Espécie *',
                             border: OutlineInputBorder(),
                           ),
                           readOnly: true,
@@ -134,7 +134,7 @@ class _AddSpecimenScreenState extends State<AddSpecimenScreen> {
                           controller: _localityNameController,
                           textCapitalization: TextCapitalization.words,
                           decoration: const InputDecoration(
-                            labelText: 'Localidade',
+                            labelText: 'Localidade *',
                             border: OutlineInputBorder(),
                           ),
                           validator: (value) {
@@ -246,6 +246,10 @@ class _AddSpecimenScreenState extends State<AddSpecimenScreen> {
           );
         }
       }
+    } else {
+      setState(() {
+        _isSubmitting = false;
+      });
     }
   }
 }

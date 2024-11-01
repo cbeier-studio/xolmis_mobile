@@ -110,7 +110,9 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
         title: const Text('Inventários ativos'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.history_outlined),
+            icon: Theme.of(context).brightness == Brightness.light
+                ? const Icon(Icons.history_outlined)
+                : const Icon(Icons.history),
             tooltip: 'Inventários encerrados',
             onPressed: () {
               Navigator.push(
@@ -126,7 +128,9 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
             },
           ),
           IconButton(
-            icon: const Icon(Icons.settings_outlined),
+            icon: Theme.of(context).brightness == Brightness.light
+                ? const Icon(Icons.settings_outlined)
+                : const Icon(Icons.settings),
             tooltip: 'Configurações',
             onPressed: () {
               Navigator.push(
@@ -427,9 +431,13 @@ class InventoryListItem extends StatelessWidget {
 
                 return CircularProgressIndicator(
                   value: progress,
-                  backgroundColor: inventory.duration > 0 ? Colors.grey[200] : null,
+                  backgroundColor: inventory.duration > 0 ? Theme.of(context).brightness == Brightness.light
+                      ? Colors.grey[200]
+                      : Colors.grey[800] : null,
                   valueColor: AlwaysStoppedAnimation<Color>(
-                    inventory.isPaused ? Colors.amber : Theme.of(context).primaryColor,
+                    inventory.isPaused ? Colors.amber : Theme.of(context).brightness == Brightness.light
+                        ? Colors.deepPurple
+                        : Colors.deepPurpleAccent,
                   ),
                 );
               },
@@ -455,7 +463,11 @@ class InventoryListItem extends StatelessWidget {
                 Visibility(
                   visible: inventory.duration > 0,
                   child: IconButton(
-                    icon: Icon(inventory.isPaused ? Icons.play_arrow_outlined : Icons.pause_outlined),
+                    icon: Icon(inventory.isPaused ? Theme.of(context).brightness == Brightness.light
+                        ? Icons.play_arrow_outlined
+                        : Icons.play_arrow : Theme.of(context).brightness == Brightness.light
+                        ? Icons.pause_outlined
+                        : Icons.pause),
                     tooltip: inventory.isPaused ? 'Retomar' : 'Pausa',
                     onPressed: () {
                       if (inventory.isPaused) {

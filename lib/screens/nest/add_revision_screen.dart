@@ -117,7 +117,7 @@ class _AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
                               child: DropdownButtonFormField<NestStatusType>(
                                   value: _selectedNestStatus,
                                   decoration: const InputDecoration(
-                                    labelText: 'Status do ninho',
+                                    labelText: 'Status do ninho *',
                                     border: OutlineInputBorder(),
                                   ),
                                   items: NestStatusType.values.map((nestStatus) {
@@ -138,7 +138,7 @@ class _AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
                               child: DropdownButtonFormField<NestStageType>(
                                   value: _selectedNestStage,
                                   decoration: const InputDecoration(
-                                    labelText: 'Estágio',
+                                    labelText: 'Estágio *',
                                     border: OutlineInputBorder(),
                                   ),
                                   items: NestStageType.values.map((nestStage) {
@@ -253,6 +253,10 @@ class _AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
           ),
         );
       }
+    } else {
+      setState(() {
+        _isSubmitting = false;
+      });
     }
   }
 }

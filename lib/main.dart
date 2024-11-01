@@ -122,7 +122,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => NestRevisionProvider(nestRevisionRepository)),
         ChangeNotifierProvider(create: (context) => EggProvider(eggRepository)),
         ChangeNotifierProvider(create: (context) => PoiProvider(poiRepository)),
-        ChangeNotifierProvider(create: (context) => SpeciesProvider(speciesRepository, inventoryRepository)),
+        ChangeNotifierProvider(create: (context) => SpeciesProvider(speciesRepository)),
         ChangeNotifierProvider(create: (context) => VegetationProvider(vegetationRepository)),
         ChangeNotifierProvider(create: (context) => WeatherProvider(weatherRepository)),
         ChangeNotifierProvider(
@@ -218,17 +218,24 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     final useSideNavRail = MediaQuery.sizeOf(context).width >= 600;
-    const List<NavigationRailDestination> destinations = [
+    final isLightTheme = Theme.of(context).brightness == Brightness.light;
+    List<NavigationRailDestination> destinations = [
       NavigationRailDestination(
-        icon: Icon(Icons.list_alt_outlined),
+        icon: isLightTheme
+            ? Icon(Icons.list_alt_outlined)
+            : Icon(Icons.list_alt),
         label: Text('Inventários'),
       ),
       NavigationRailDestination(
-        icon: Icon(Icons.egg_outlined),
+        icon: isLightTheme
+            ? Icon(Icons.egg_outlined)
+            : Icon(Icons.egg),
         label: Text('Ninhos'),
       ),
       NavigationRailDestination(
-        icon: Icon(Icons.local_offer_outlined),
+        icon: isLightTheme
+            ? Icon(Icons.local_offer_outlined)
+            : Icon(Icons.local_offer),
         label: Text('Espécimes'),
       ),
     ];
@@ -291,6 +298,8 @@ class _MainScreenState extends State<MainScreen> {
                 builder: (context, specimensCount, child) {
                   return specimensCount > 0
                       ? Badge.count(
+                    backgroundColor: Colors.deepPurple[100],
+                    textColor: Colors.deepPurple[800],
                     count: specimensCount,
                     child: const Icon(Icons.local_offer_outlined),
                   )
@@ -301,7 +310,9 @@ class _MainScreenState extends State<MainScreen> {
             ),
           ],
           currentIndex: _selectedIndex,
-          selectedItemColor: Colors.deepPurple,
+          selectedItemColor: Theme.of(context).brightness == Brightness.light
+              ? Colors.deepPurple
+              : Colors.deepPurpleAccent,
           onTap: _onItemTapped,
         ),
 

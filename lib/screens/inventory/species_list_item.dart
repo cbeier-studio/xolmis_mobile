@@ -75,7 +75,8 @@ class SpeciesListItemState extends State<SpeciesListItem> {
                   ) // Exibe o CircularProgressIndicator enquanto _isAddingPoi for true
                       : pois.isNotEmpty
                       ? Badge.count(
-                    backgroundColor: Colors.deepPurple,
+                    backgroundColor: Colors.deepPurple[100],
+                    textColor: Colors.deepPurple[800],
                     count: pois.length,
                     child: const Icon(Icons.add_location_outlined),
                   )

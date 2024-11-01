@@ -74,7 +74,7 @@ class _AddNestScreenState extends State<AddNestScreen> {
                           controller: _fieldNumberController,
                           textCapitalization: TextCapitalization.characters,
                           decoration: const InputDecoration(
-                            labelText: 'Número de Campo',
+                            labelText: 'Número de Campo *',
                             border: OutlineInputBorder(),
                           ),
                           validator: (value) {
@@ -88,7 +88,7 @@ class _AddNestScreenState extends State<AddNestScreen> {
                         TextFormField(
                           controller: _speciesNameController,
                           decoration: const InputDecoration(
-                            labelText: 'Espécie',
+                            labelText: 'Espécie *',
                             border: OutlineInputBorder(),
                           ),
                           readOnly: true,
@@ -119,7 +119,7 @@ class _AddNestScreenState extends State<AddNestScreen> {
                           controller: _localityNameController,
                           textCapitalization: TextCapitalization.words,
                           decoration: const InputDecoration(
-                            labelText: 'Localidade',
+                            labelText: 'Localidade *',
                             border: OutlineInputBorder(),
                           ),
                           validator: (value) {
@@ -134,7 +134,7 @@ class _AddNestScreenState extends State<AddNestScreen> {
                           controller: _supportController,
                           textCapitalization: TextCapitalization.sentences,
                           decoration: const InputDecoration(
-                            labelText: 'Suporte do ninho',
+                            labelText: 'Suporte do ninho *',
                             border: OutlineInputBorder(),
                           ),
                           validator: (value) {
@@ -275,6 +275,10 @@ class _AddNestScreenState extends State<AddNestScreen> {
           );
         }
       }
+    } else {
+      setState(() {
+        _isSubmitting = false;
+      });
     }
   }
 }
