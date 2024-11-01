@@ -86,7 +86,13 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
                                     setState(() {
                                       _selectedPrecipitation = newValue!;
                                     });
+                                  },
+                                validator: (value) {
+                                  if (value == null || value.index < 0) {
+                                    return 'Selecione uma precipitação';
                                   }
+                                  return null;
+                                },
                               ),
                             ),
                           ],

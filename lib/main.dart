@@ -218,24 +218,49 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     final useSideNavRail = MediaQuery.sizeOf(context).width >= 600;
-    final isLightTheme = Theme.of(context).brightness == Brightness.light;
     List<NavigationRailDestination> destinations = [
       NavigationRailDestination(
-        icon: isLightTheme
-            ? Icon(Icons.list_alt_outlined)
-            : Icon(Icons.list_alt),
+        icon: Selector<InventoryProvider, int>(
+          selector: (context, provider) => provider.inventoriesCount,
+          builder: (context, inventoriesCount, child) {
+            return inventoriesCount > 0
+                ? Badge.count(
+              count: inventoriesCount,
+              child: const Icon(Icons.list_alt_outlined),
+            )
+                : const Icon(Icons.list_alt_outlined);
+          },
+        ),
         label: Text('Inventários'),
       ),
       NavigationRailDestination(
-        icon: isLightTheme
-            ? Icon(Icons.egg_outlined)
-            : Icon(Icons.egg),
+        icon: Selector<NestProvider, int>(
+          selector: (context, provider) => provider.nestsCount,
+          builder: (context, nestsCount, child) {
+            return nestsCount > 0
+                ? Badge.count(
+              count: nestsCount,
+              child: const Icon(Icons.egg_outlined),
+            )
+                : const Icon(Icons.egg_outlined);
+          },
+        ),
         label: Text('Ninhos'),
       ),
       NavigationRailDestination(
-        icon: isLightTheme
-            ? Icon(Icons.local_offer_outlined)
-            : Icon(Icons.local_offer),
+        icon: Selector<SpecimenProvider, int>(
+          selector: (context, provider) => provider.specimensCount,
+          builder: (context, specimensCount, child) {
+            return specimensCount > 0
+                ? Badge.count(
+              backgroundColor: Colors.deepPurple[100],
+              textColor: Colors.deepPurple[800],
+              count: specimensCount,
+              child: const Icon(Icons.local_offer_outlined),
+            )
+                : const Icon(Icons.local_offer_outlined);
+          },
+        ),
         label: Text('Espécimes'),
       ),
     ];
@@ -249,6 +274,7 @@ class _MainScreenState extends State<MainScreen> {
             if (useSideNavRail) NavigationRail(
               destinations: destinations,
               selectedIndex: _selectedIndex,
+              labelType: NavigationRailLabelType.all,
               onDestinationSelected: (int index) {
                 setState(() {
                   _selectedIndex = index;

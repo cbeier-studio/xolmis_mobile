@@ -99,7 +99,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                               ),
                               validator: (value) {
                                 if ((_selectedType == InventoryType.invTimedQualitative || _selectedType == InventoryType.invPointCount) && (value == null || value.isEmpty)) {
-                                  return 'Por favor, insira uma duração para o inventário';
+                                  return 'Insira uma duração';
                                 }
                                 return null;
                               },
@@ -117,7 +117,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                               ),
                               validator: (value) {
                                 if ((_selectedType == InventoryType.invMackinnonList) && (value == null || value.isEmpty)) {
-                                  return 'Por favor, insira um máximo de espécies para o inventário';
+                                  return 'Insira o máximo de espécies';
                                 }
                                 return null;
                               },
