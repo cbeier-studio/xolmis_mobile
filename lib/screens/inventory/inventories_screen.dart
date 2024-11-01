@@ -109,40 +109,18 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
-    // final inventoryRepository = Provider.of<InventoryRepository>(context, listen: false);
-    // final speciesRepository = Provider.of<SpeciesRepository>(context, listen: false);
-    // final poiRepository = Provider.of<PoiRepository>(context, listen: false);
-    // final vegetationRepository = Provider.of<VegetationRepository>(context, listen: false);
-    // final weatherRepository = Provider.of<WeatherRepository>(context, listen: false);
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Inventários'),
         actions: [
-          !_showActive && inventoryProvider.finishedInventories.isNotEmpty ? IconButton(
-            icon: const Icon(Icons.file_download_outlined),
-            onPressed: () => exportAllInventoriesToJson(context, inventoryProvider),
-            tooltip: 'Exportar todos os inventários',
-          ) : const SizedBox.shrink(),
-          // IconButton(
-          //   icon: Theme.of(context).brightness == Brightness.light
-          //       ? const Icon(Icons.history_outlined)
-          //       : const Icon(Icons.history),
-          //   tooltip: 'Inventários encerrados',
-          //   onPressed: () {
-          //     Navigator.push(
-          //       context,
-          //       MaterialPageRoute(builder: (context) => InventoryHistoryScreen(
-          //         inventoryRepository: inventoryRepository,
-          //         speciesRepository: speciesRepository,
-          //         poiRepository: poiRepository,
-          //         vegetationRepository: vegetationRepository,
-          //         weatherRepository: weatherRepository,
-          //       )),
-          //     );
-          //   },
-          // ),
+          Visibility(
+            visible: !_showActive && inventoryProvider.finishedInventories.isNotEmpty,
+            child: IconButton(
+              icon: const Icon(Icons.file_download_outlined),
+              onPressed: () => exportAllInventoriesToJson(context, inventoryProvider),
+              tooltip: 'Exportar todos os inventários',
+            ),
+          ),
           IconButton(
             icon: Theme.of(context).brightness == Brightness.light
                 ? const Icon(Icons.settings_outlined)
@@ -190,144 +168,266 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
               await inventoryProvider.fetchInventories();
             },
             child: Consumer<InventoryProvider>(
-              builder: (context, inventoryProvider, child) {
-                if (inventoryProvider.isLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (_showActive && inventoryProvider.activeInventories.isEmpty ||
-                    !_showActive && inventoryProvider.finishedInventories.isEmpty) {
-                  return const Center(child: Text('Nenhum inventário encontrado.'));
-                } else {
-                  final inventories = _showActive
-                      ? inventoryProvider.activeInventories
-                      : inventoryProvider.finishedInventories;
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: inventories.length,
-                    itemBuilder: (context, index) {
-                      final inventory = inventories[index];
-                      return Dismissible(
-                          key: ValueKey(inventory.id),
-                          direction: DismissDirection.horizontal,
-                          background: _showActive ? Container(
-                            color: Colors.green,
-                            alignment: Alignment.centerLeft,
-                            padding: const EdgeInsets.only(left: 20.0),
-                            child: const Icon(Icons.flag_outlined, color: Colors.white),
-                          ) : Container(color: Colors.transparent),
-                          secondaryBackground: Container(
-                            color: Colors.red,
-                            alignment: Alignment.centerRight,
-                            padding: const EdgeInsets.only(right: 20.0),
-                            child: const Icon(Icons.delete_outlined, color: Colors.white),
-                          ),
-                          confirmDismiss: (direction) async {
-                            // Drag to left
-                            if (direction == DismissDirection.endToStart) {
-                              // Show confirmation dialog for deleting
-                              return await showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: const Text('Confirmar exclusão'),
-                                    content: const Text('Tem certeza que deseja excluir este inventário?'),
-                                    actions: <Widget>[
-                                      TextButton(
-                                        onPressed: () => Navigator.of(context).pop(false),
-                                        child: const Text('Cancelar'),
-                                      ),
-                                      TextButton(
-                                        onPressed: () => Navigator.of(context).pop(true),
-                                        child: const Text('Excluir'),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                              // Drag to right
-                            } else if (_showActive && direction == DismissDirection.startToEnd) {
-                              // Show confirmation dialog for finishing
-                              return await showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: const Text('Confirmar Encerramento'),
-                                    content: const Text('Tem certeza que deseja encerrar este inventário?'),
-                                    actions: <Widget>[
-                                      TextButton(
-                                        onPressed: () => Navigator.of(context).pop(false),
-                                        child: const Text('Cancelar'),
-                                      ),
-                                      TextButton(
-                                        onPressed: () => Navigator.of(context).pop(true),
-                                        child: const Text('Encerrar'),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            }
-                            return false; // Default to not dismissing
-                          },
-                          onDismissed: (direction) {
-                            // Drag to left
-                            if (direction == DismissDirection.endToStart) {
-                              // Remove the inventory from list
-                              inventoryProvider.removeInventory(inventory.id);
+                builder: (context, inventoryProvider, child) {
+                  if (inventoryProvider.isLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (_showActive && inventoryProvider.activeInventories.isEmpty ||
+                      !_showActive && inventoryProvider.finishedInventories.isEmpty) {
+                    return const Center(child: Text('Nenhum inventário encontrado.'));
+                  } else {
+                    final inventories = _showActive
+                        ? inventoryProvider.activeInventories
+                        : inventoryProvider.finishedInventories;
+                    return LayoutBuilder(
+                        builder: (BuildContext context, BoxConstraints constraints) {
+                          final screenWidth = constraints.maxWidth;
+                          final isLargeScreen = screenWidth > 600;
 
-                              // Drag to right
-                            } else if (_showActive && direction == DismissDirection.startToEnd) {
-                              // Finish the inventory
-                              Inventory.stopTimer(inventory, inventoryRepository);
-                              inventoryProvider.updateInventory(inventory);
-                              inventoryProvider.fetchInventories();
-                            }
-                          },
-                          child: ValueListenableBuilder<bool>(
-                              valueListenable: inventory.isFinishedNotifier,
-                              builder: (context, isFinished, child) {
-                                if (isFinished) {
-                                  inventoryProvider.fetchInventories();
-                                }
-                                return child!;
-                              },
-                              child: InventoryListItem(
-                                inventory: inventory,
-                                speciesRepository: speciesRepository,
-                                inventoryRepository: inventoryRepository,
-                                poiRepository: poiRepository,
-                                vegetationRepository: vegetationRepository,
-                                weatherRepository: weatherRepository,
-                                onLongPress: () => _showBottomSheet(context, inventory),
-                                onTap: (inventory) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => InventoryDetailScreen(
-                                        inventory: inventory,
-                                        speciesRepository: speciesRepository,
-                                        inventoryRepository: inventoryRepository,
-                                        poiRepository: poiRepository,
-                                        vegetationRepository: vegetationRepository,
-                                        weatherRepository: weatherRepository,
+                          if (isLargeScreen) {
+                            return GridView.builder(
+                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3,
+                                childAspectRatio: 3.0,
+                              ),
+                              shrinkWrap: true,
+                              itemCount: inventories.length,
+                              itemBuilder: (context, index) {
+                                final inventory = inventories[index];
+                                return GridTile(
+                                  child: Card(
+                                    child: InkWell(
+                                      onLongPress: () => _showBottomSheet(context, inventory),
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => InventoryDetailScreen(
+                                              inventory: inventory,
+                                              speciesRepository: speciesRepository,
+                                              inventoryRepository: inventoryRepository,
+                                              poiRepository: poiRepository,
+                                              vegetationRepository: vegetationRepository,
+                                              weatherRepository: weatherRepository,
+                                            ),
+                                          ),
+                                        ).then((result) {
+                                          if (result == true) {
+                                            inventoryProvider.fetchInventories();
+                                          }
+                                        });
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(16.0),
+                                        child: Row(
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
+                                              child: ValueListenableBuilder<double>(
+                                                valueListenable: inventory.elapsedTimeNotifier,
+                                                builder: (context, elapsedTime, child) {
+                                                  // if (inventory == null) {
+                                                  //   return const Icon(Icons.error_outlined);
+                                                  // }
+
+                                                  var progress = (inventory.isPaused || inventory.duration < 0)
+                                                      ? null
+                                                      : (elapsedTime / (inventory.duration * 60)).toDouble();
+
+                                                  if (progress != null && (progress.isNaN || progress.isInfinite || progress < 0 || progress > 1)) {
+                                                    progress = 0;
+                                                  }
+
+                                                  return CircularProgressIndicator(
+                                                    value: progress,
+                                                    backgroundColor: _showActive && inventory.duration > 0 ? Theme.of(context).brightness == Brightness.light
+                                                        ? Colors.grey[200]
+                                                        : Colors.grey[800] : null,
+                                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                                      inventory.isPaused ? Colors.amber : Theme.of(context).brightness == Brightness.light
+                                                          ? Colors.deepPurple
+                                                          : Colors.deepPurpleAccent,
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                            Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  inventory.id,
+                                                  style: const TextStyle(fontWeight: FontWeight.bold),
+                                                ),
+                                                Text('${inventoryTypeFriendlyNames[inventory.type]}'),
+                                                if (_showActive && inventory.duration > 0) Text('${inventory.duration} minutos de duração'),
+                                                Selector<SpeciesProvider, int>(
+                                                  selector: (context, speciesProvider) => speciesProvider.getSpeciesForInventory(inventory.id).length,
+                                                  shouldRebuild: (previous, next) => previous != next,
+                                                  builder: (context, speciesCount, child) {
+                                                    return Text('$speciesCount espécies');
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                            Visibility(
+                                              visible: _showActive && inventory.duration > 0,
+                                              child: IconButton(
+                                                icon: Icon(inventory.isPaused ? Theme.of(context).brightness == Brightness.light
+                                                    ? Icons.play_arrow_outlined
+                                                    : Icons.play_arrow : Theme.of(context).brightness == Brightness.light
+                                                    ? Icons.pause_outlined
+                                                    : Icons.pause),
+                                                tooltip: inventory.isPaused ? 'Retomar' : 'Pausa',
+                                                onPressed: () {
+                                                  if (inventory.isPaused) {
+                                                    inventoryProvider.resumeInventoryTimer(inventory, inventoryRepository);
+                                                  } else {
+                                                    inventoryProvider.pauseInventoryTimer(inventory, inventoryRepository);
+                                                  }
+                                                  inventoryProvider.updateInventory(inventory);
+                                                },
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                  ).then((result) {
-                                    // if (result == true) {
-                                    inventoryProvider.fetchInventories();
-                                    // }
-                                  });
-                                },
-                                onInventoryPausedOrResumed: (inventory) => _onInventoryPausedOrResumed(inventory),
-                                isHistory: !_showActive,
-                              )
-                          )
-                      );
-                    },
-                  );
+                                  ),
+                                );
+                              },
+                            );
+                          } else {
+                            return ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: inventories.length,
+                              itemBuilder: (context, index) {
+                                final inventory = inventories[index];
+                                return Dismissible(
+                                    key: ValueKey(inventory.id),
+                                    direction: DismissDirection.horizontal,
+                                    background: _showActive ? Container(
+                                      color: Colors.green,
+                                      alignment: Alignment.centerLeft,
+                                      padding: const EdgeInsets.only(left: 20.0),
+                                      child: const Icon(Icons.flag_outlined, color: Colors.white),
+                                    ) : Container(color: Colors.transparent),
+                                    secondaryBackground: Container(
+                                      color: Colors.red,
+                                      alignment: Alignment.centerRight,
+                                      padding: const EdgeInsets.only(right: 20.0),
+                                      child: const Icon(Icons.delete_outlined, color: Colors.white),
+                                    ),
+                                    confirmDismiss: (direction) async {
+                                      // Drag to left
+                                      if (direction == DismissDirection.endToStart) {
+                                        // Show confirmation dialog for deleting
+                                        return await showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: const Text('Confirmar exclusão'),
+                                              content: const Text('Tem certeza que deseja excluir este inventário?'),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  onPressed: () => Navigator.of(context).pop(false),
+                                                  child: const Text('Cancelar'),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () => Navigator.of(context).pop(true),
+                                                  child: const Text('Excluir'),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                        // Drag to right
+                                      } else if (_showActive && direction == DismissDirection.startToEnd) {
+                                        // Show confirmation dialog for finishing
+                                        return await showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: const Text('Confirmar Encerramento'),
+                                              content: const Text('Tem certeza que deseja encerrar este inventário?'),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  onPressed: () => Navigator.of(context).pop(false),
+                                                  child: const Text('Cancelar'),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () => Navigator.of(context).pop(true),
+                                                  child: const Text('Encerrar'),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      }
+                                      return false; // Default to not dismissing
+                                    },
+                                    onDismissed: (direction) {
+                                      // Drag to left
+                                      if (direction == DismissDirection.endToStart) {
+                                        // Remove the inventory from list
+                                        inventoryProvider.removeInventory(inventory.id);
+
+                                        // Drag to right
+                                      } else if (_showActive && direction == DismissDirection.startToEnd) {
+                                        // Finish the inventory
+                                        Inventory.stopTimer(inventory, inventoryRepository);
+                                        inventoryProvider.updateInventory(inventory);
+                                        inventoryProvider.fetchInventories();
+                                      }
+                                    },
+                                    child: ValueListenableBuilder<bool>(
+                                        valueListenable: inventory.isFinishedNotifier,
+                                        builder: (context, isFinished, child) {
+                                          if (isFinished) {
+                                            inventoryProvider.fetchInventories();
+                                          }
+                                          return child!;
+                                        },
+                                        child: InventoryListItem(
+                                          inventory: inventory,
+                                          speciesRepository: speciesRepository,
+                                          inventoryRepository: inventoryRepository,
+                                          poiRepository: poiRepository,
+                                          vegetationRepository: vegetationRepository,
+                                          weatherRepository: weatherRepository,
+                                          onLongPress: () => _showBottomSheet(context, inventory),
+                                          onTap: (inventory) {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => InventoryDetailScreen(
+                                                  inventory: inventory,
+                                                  speciesRepository: speciesRepository,
+                                                  inventoryRepository: inventoryRepository,
+                                                  poiRepository: poiRepository,
+                                                  vegetationRepository: vegetationRepository,
+                                                  weatherRepository: weatherRepository,
+                                                ),
+                                              ),
+                                            ).then((result) {
+                                              // if (result == true) {
+                                              inventoryProvider.fetchInventories();
+                                              // }
+                                            });
+                                          },
+                                          onInventoryPausedOrResumed: (inventory) => _onInventoryPausedOrResumed(inventory),
+                                          isHistory: !_showActive,
+                                        )
+                                    )
+                                );
+                              },
+                            );
+                          }
+                        }
+                    );
+                  }
                 }
-              },
             ),
-          ),
+          )
         ],
       ),
       floatingActionButton: FloatingActionButton(

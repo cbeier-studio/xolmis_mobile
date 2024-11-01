@@ -87,95 +87,163 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
           ),
         ],
       ),
-      body: Consumer<SpecimenProvider>(
-        builder: (context, specimenProvider, child) {
-          final specimens = specimenProvider.specimens;
+      body: Column(
+        children: [
+          Consumer<SpecimenProvider>(
+              builder: (context, specimenProvider, child) {
+                final specimens = specimenProvider.specimens;
 
-          if (specimens.isEmpty) {
-            return const Center(
-              child: Text('Nenhum espécime coletado.'),
-            );
-          }
+                if (specimens.isEmpty) {
+                  return const Center(
+                    child: Text('Nenhum espécime coletado.'),
+                  );
+                }
 
-          return RefreshIndicator(
-            onRefresh: () async {
-              await specimenProvider.fetchSpecimens();
-            },
-            child: ListView.builder(
-              itemCount: specimens.length,
-              itemBuilder: (context, index) {
-                final specimen = specimens[index];
-                return Dismissible(
-                  key: Key(specimen.id.toString()),
-                  direction: DismissDirection.endToStart,
-                  background: Container(
-                    color: Colors.red,
-                    alignment: Alignment.centerRight,
-                    padding: const EdgeInsets.only(right: 20.0),
-                    child: const Icon(Icons.delete_outlined, color: Colors.white),
-                  ),
-                  confirmDismiss: (direction) async {
-                    return await showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: const Text('Confirmar Exclusão'),
-                          content: const Text(
-                              'Tem certeza que deseja excluir este espécime?'),
-                          actions: <Widget>[
-                            TextButton(
-                              child: const Text('Cancelar'),
-                              onPressed: () {
-                                Navigator.of(context).pop(false);
-                              },
-                            ),
-                            TextButton(child: const Text('Excluir'),
-                              onPressed: () {
-                                Navigator.of(context).pop(true);
-                              },
-                            ),
-                          ],
-                        );
-                      },
-                    );
+                return RefreshIndicator(
+                  onRefresh: () async {
+                    await specimenProvider.fetchSpecimens();
                   },
-                  onDismissed: (direction) async {
-                    specimenProvider.removeSpecimen(specimen);
-                  },
-                  child: ListTile(
-                    title: Text(specimen.fieldNumber),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          specimen.speciesName!,
-                          style: const TextStyle(fontStyle: FontStyle.italic),
-                        ),
-                        Text(specimen.locality!),
-                        Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(specimen.sampleTime!)),
-                      ],
-                    ),
-                    onLongPress: () => _showBottomSheet(context, specimen),
-                    // onTap: () {
-                    //   Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //       builder: (context) => SpecimenDetailScreen(
-                    //         specimen: specimen,
-                    //       ),
-                    //     ),
-                    //   ).then((result) {
-                    //     if (result == true) {
-                    //       specimenProvider.fetchSpecimens();
-                    //     }
-                    //   });
-                    // },
+                  child: LayoutBuilder(
+                      builder: (BuildContext context, BoxConstraints constraints) {
+                        final screenWidth = constraints.maxWidth;
+                        final isLargeScreen = screenWidth > 600;
+
+                        if (isLargeScreen) {
+                          return GridView.builder(
+                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3,
+                              childAspectRatio: 3.0,
+                            ),
+                            shrinkWrap: true,
+                            itemCount: specimens.length,
+                            itemBuilder: (context, index) {
+                              final specimen = specimens[index];
+                              return GridTile(
+                                child: Card(
+                                  child: InkWell(
+                                    onLongPress: () => _showBottomSheet(context, specimen),
+                                    // onTap: () {
+                                    //   Navigator.push(
+                                    //     context,
+                                    //     MaterialPageRoute(
+                                    //       builder: (context) => NestDetailScreen(
+                                    //         nest: nest,
+                                    //       ),
+                                    //     ),
+                                    //   ).then((result) {
+                                    //     if (result == true) {
+                                    //       nestProvider.fetchNests();
+                                    //     }
+                                    //   });
+                                    // },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(16.0),
+                                      child: Row(
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                specimen.fieldNumber,
+                                                style: const TextStyle(fontWeight: FontWeight.bold),
+                                              ),
+                                              Text(
+                                                specimen.speciesName!,
+                                                style: const TextStyle(fontStyle: FontStyle.italic),
+                                              ),
+                                              Text(specimen.locality!),
+                                              Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(specimen.sampleTime!)),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        } else {
+                          return ListView.builder(
+                            itemCount: specimens.length,
+                            itemBuilder: (context, index) {
+                              final specimen = specimens[index];
+                              return Dismissible(
+                                key: Key(specimen.id.toString()),
+                                direction: DismissDirection.endToStart,
+                                background: Container(
+                                  color: Colors.red,
+                                  alignment: Alignment.centerRight,
+                                  padding: const EdgeInsets.only(right: 20.0),
+                                  child: const Icon(Icons.delete_outlined, color: Colors.white),
+                                ),
+                                confirmDismiss: (direction) async {
+                                  return await showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: const Text('Confirmar Exclusão'),
+                                        content: const Text(
+                                            'Tem certeza que deseja excluir este espécime?'),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            child: const Text('Cancelar'),
+                                            onPressed: () {
+                                              Navigator.of(context).pop(false);
+                                            },
+                                          ),
+                                          TextButton(child: const Text('Excluir'),
+                                            onPressed: () {
+                                              Navigator.of(context).pop(true);
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
+                                onDismissed: (direction) async {
+                                  specimenProvider.removeSpecimen(specimen);
+                                },
+                                child: ListTile(
+                                  title: Text(specimen.fieldNumber),
+                                  subtitle: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        specimen.speciesName!,
+                                        style: const TextStyle(fontStyle: FontStyle.italic),
+                                      ),
+                                      Text(specimen.locality!),
+                                      Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(specimen.sampleTime!)),
+                                    ],
+                                  ),
+                                  onLongPress: () => _showBottomSheet(context, specimen),
+                                  // onTap: () {
+                                  //   Navigator.push(
+                                  //     context,
+                                  //     MaterialPageRoute(
+                                  //       builder: (context) => SpecimenDetailScreen(
+                                  //         specimen: specimen,
+                                  //       ),
+                                  //     ),
+                                  //   ).then((result) {
+                                  //     if (result == true) {
+                                  //       specimenProvider.fetchSpecimens();
+                                  //     }
+                                  //   });
+                                  // },
+                                ),
+                              );
+                            },
+                          );
+                        }
+                      }
                   ),
                 );
-              },
-            ),
-          );
-        },
+              }
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         tooltip: 'Novo espécime',
