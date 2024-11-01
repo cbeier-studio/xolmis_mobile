@@ -1,13 +1,21 @@
 import 'dart:convert';
+import 'dart:io';
+
+import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../data/models/inventory.dart';
+import '../data/models/nest.dart';
 import '../data/database/repositories/inventory_repository.dart';
+import '../providers/inventory_provider.dart';
 import '../providers/species_provider.dart';
+import '../providers/nest_provider.dart';
 
 import 'inventory/add_inventory_screen.dart';
 
@@ -135,6 +143,221 @@ Future<Position?> getPosition() async {
     return await _determinePosition();
   } catch (e) {
     return null;
+  }
+}
+
+Future<void> exportAllInventoriesToJson(BuildContext context, InventoryProvider inventoryProvider) async {
+  try {
+    final finishedInventories = inventoryProvider.finishedInventories;
+    final jsonData = finishedInventories.map((inventory) => inventory.toJson()).toList();
+    final jsonString = jsonEncode(jsonData);
+
+    // Create the file in a temporary folder
+    Directory tempDir = await getTemporaryDirectory();
+    final filePath = '${tempDir.path}/inventories.json';
+    final file = File(filePath);
+    await file.writeAsString(jsonString);
+
+    // Share the file using share_plus
+    await Share.shareXFiles([
+      XFile(filePath, mimeType: 'application/json'),
+    ], text: 'Inventários exportados!', subject: 'Dados dos Inventários');
+  } catch (error) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Row(
+        children: [
+          Icon(Icons.error_outlined, color: Colors.red),
+          SizedBox(width: 8),
+          Text('Erro ao exportar os inventários: $error'),
+        ],
+      ),
+      ),
+    );
+  }
+}
+
+Future<void> exportInventoryToCsv(BuildContext context, Inventory inventory) async {
+  try {
+    // 1. Create a list of data for the CSV
+    List<List<dynamic>> rows = [];
+    rows.add([
+      'ID do Inventário',
+      'Tipo',
+      'Duração',
+      'Pausado',
+      'Finalizado',
+      'Tempo Restante',
+      'Tempo Decorrido'
+    ]);
+    rows.add([
+      inventory.id,
+      inventoryTypeFriendlyNames[inventory.type],
+      inventory.duration,
+      inventory.isPaused,
+      inventory.isFinished,
+      inventory.elapsedTime
+    ]);
+
+    // Add species data
+    rows.add([]); // Empty line to separate the inventory of the species
+    rows.add(['Espécie', 'Contagem', 'Fora da amostra']);
+    for (var species in inventory.speciesList) {
+      rows.add([species.name, species.count, species.isOutOfInventory]);
+    }
+
+    // Add vegetation data
+    rows.add([]); // Empty line to separate vegetation data
+    rows.add(['Vegetação']);
+    rows.add([
+      'Data/Hora',
+      'Latitude',
+      'Longitude',
+      'Proporção de Herbáceas',
+      'Distribuição de Herbáceas',
+      'Altura de Herbáceas',
+      'Proporção de Arbustos',
+      'Distribuição de Arbustos',
+      'Altura de Arbustos',
+      'Proporção de Árvores',
+      'Distribuição de Árvores',
+      'Altura de Árvores',
+      'Observações'
+    ]);
+    for (var vegetation in inventory.vegetationList) {
+      rows.add([
+        vegetation.sampleTime,
+        vegetation.latitude,
+        vegetation.longitude,
+        vegetation.herbsProportion,
+        vegetation.herbsDistribution,
+        vegetation.herbsHeight,
+        vegetation.shrubsProportion,
+        vegetation.shrubsDistribution,
+        vegetation.shrubsHeight,
+        vegetation.treesProportion,
+        vegetation.treesDistribution,
+        vegetation.treesHeight,
+        vegetation.notes
+      ]);
+    }
+
+    // Add weather data
+    rows.add([]); // Empty line to separate weather data
+    rows.add(['Tempo']);
+    rows.add([
+      'Data/Hora',
+      'Nebulosidade',
+      'Precipitação',
+      'Temperatura',
+      'Vento'
+    ]);
+    for (var weather in inventory.weatherList) {
+      rows.add([
+        weather.sampleTime,
+        weather.cloudCover,
+        precipitationTypeFriendlyNames[weather.precipitation],
+        weather.temperature,
+        weather.windSpeed
+      ]);
+    }
+
+    // Add POIs data
+    rows.add([]); // Empty line to separate POI data
+    rows.add(['POIs das Espécies']);
+    for (var species in inventory.speciesList) {
+      if (species.pois.isNotEmpty) {
+        rows.add(['Espécie: ${species.name}']);
+        rows.add(['Latitude', 'Longitude']);
+        for (var poi in species.pois) {
+          rows.add([poi.latitude, poi.longitude]);
+        }
+        rows.add([]); // Empty line to
+      }// separate species POIs
+    }
+
+    // 2. Convert the list of data to CSV
+    String csv = const ListToCsvConverter().convert(rows);
+
+    // 3. Create the file in a temporary directory
+    Directory tempDir = await getTemporaryDirectory();
+    final filePath = '${tempDir.path}/inventory_${inventory.id}.csv';
+    final file = File(filePath);
+    await file.writeAsString(csv);
+
+    // 4. Share the file using share_plus
+    await Share.shareXFiles([
+      XFile(filePath, mimeType: 'text/csv'),
+    ], text: 'Inventário exportado!', subject: 'Dados do Inventário ${inventory.id}');
+  } catch (error) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Row(
+        children: [
+          Icon(Icons.error_outlined, color: Colors.red),
+          SizedBox(width: 8),
+          Text('Erro ao exportar o inventário: $error'),
+        ],
+      ),
+      ),
+    );
+  }
+}
+
+Future<void> exportAllInactiveNestsToJson(BuildContext context) async {
+  try {
+    final nestProvider = Provider.of<NestProvider>(context, listen: false);
+    final inactiveNests = nestProvider.inactiveNests;
+    final jsonData = inactiveNests.map((nest) => nest.toJson()).toList();
+    final jsonString = jsonEncode(jsonData);
+
+    Directory tempDir = await getTemporaryDirectory();
+    final filePath = '${tempDir.path}/inactive_nests.json';
+    final file = File(filePath);
+    await file.writeAsString(jsonString);
+
+    await Share.shareXFiles([
+      XFile(filePath, mimeType: 'application/json'),
+    ], text: 'Ninhos inativos exportados!', subject: 'Dados dos Ninhos Inativos');
+  } catch (error) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Row(
+        children: [
+          Icon(Icons.error_outlined, color: Colors.red),
+          SizedBox(width: 8),
+          Text('Erro ao exportar os ninhos inativos: $error'),
+        ],
+      ),
+      ),
+    );
+  }
+}
+
+Future<void> exportNestToJson(BuildContext context, Nest nest) async {
+  try {
+    // 1. Create a list of data
+    final nestJson = nest.toJson();
+    final jsonString = jsonEncode(nestJson);
+
+    // 2. Create the file in a temporary directory
+    Directory tempDir = await getTemporaryDirectory();
+    final filePath = '${tempDir.path}/nest_${nest.fieldNumber}.json';
+    final file = File(filePath);
+    await file.writeAsString(jsonString);
+
+    // 3. Share the file using share_plus
+    await Share.shareXFiles([
+      XFile(filePath, mimeType: 'text/json'),
+    ], text: 'Ninho exportado!', subject: 'Dados do Ninho ${nest.fieldNumber}');
+  } catch (error) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Row(
+        children: [
+          Icon(Icons.error_outlined, color: Colors.red),
+          SizedBox(width: 8),
+          Text('Erro ao exportar o ninho: $error'),
+        ],
+      ),
+      ),
+    );
   }
 }
 

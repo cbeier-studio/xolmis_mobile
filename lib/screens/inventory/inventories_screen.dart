@@ -11,11 +11,11 @@ import '../../data/database/repositories/weather_repository.dart';
 import '../../providers/inventory_provider.dart';
 import '../../providers/species_provider.dart';
 
-import 'inventory_history_screen.dart';
 import 'add_inventory_screen.dart';
 import 'inventory_detail_screen.dart';
 
 import '../settings_screen.dart';
+import '../utils.dart';
 
 
 class InventoriesScreen extends StatefulWidget {
@@ -29,20 +29,31 @@ class InventoriesScreen extends StatefulWidget {
 }
 
 class _InventoriesScreenState extends State<InventoriesScreen> {
+  late InventoryProvider inventoryProvider;
   late InventoryRepository inventoryRepository;
+  late SpeciesRepository speciesRepository;
+  late PoiRepository poiRepository;
+  late VegetationRepository vegetationRepository;
+  late WeatherRepository weatherRepository;
   // bool _inventoriesLoaded = false;
+  bool _showActive = true;
 
   @override
   void initState() {
     super.initState();
-    inventoryRepository = Provider.of<InventoryRepository>(context, listen: false);
+    inventoryProvider = context.read<InventoryProvider>();
+    inventoryRepository = context.read<InventoryRepository>();
+    speciesRepository = context.read<SpeciesRepository>();
+    poiRepository = context.read<PoiRepository>();
+    vegetationRepository = context.read<VegetationRepository>();
+    weatherRepository = context.read<WeatherRepository>();
     // Load the inventories
     // if (!_inventoriesLoaded) {
     //   Provider.of<InventoryProvider>(context, listen: false).fetchInventories();
     //   _inventoriesLoaded = true;
     // }
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
+      // final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
       Future.delayed(Duration.zero, ()
       {
         for (var inventory in inventoryProvider.activeInventories) {
@@ -55,11 +66,11 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
   }
 
   void _onInventoryPausedOrResumed(Inventory inventory) {
-    Provider.of<InventoryProvider>(context, listen: false).updateInventory(inventory);
+    inventoryProvider.updateInventory(inventory);
   }
 
   void onInventoryUpdated(Inventory inventory) {
-    Provider.of<InventoryProvider>(context, listen: false).updateInventory(inventory);
+    inventoryProvider.updateInventory(inventory);
   }
 
   void _showAddInventoryScreen(BuildContext context) {
@@ -80,7 +91,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
       ).then((newInventory) {
         // Reload the inventory list
         if (newInventory != null) {
-          Provider.of<InventoryProvider>(context, listen: false).fetchInventories();
+          inventoryProvider.fetchInventories();
         }
       });
     } else {
@@ -90,7 +101,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
       ).then((newInventory) {
         // Reload the inventory list
         if (newInventory != null) {
-          Provider.of<InventoryProvider>(context, listen: false).fetchInventories();
+          inventoryProvider.fetchInventories();
         }
       });
     }
@@ -98,35 +109,40 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
-    final inventoryRepository = Provider.of<InventoryRepository>(context, listen: false);
-    final speciesRepository = Provider.of<SpeciesRepository>(context, listen: false);
-    final poiRepository = Provider.of<PoiRepository>(context, listen: false);
-    final vegetationRepository = Provider.of<VegetationRepository>(context, listen: false);
-    final weatherRepository = Provider.of<WeatherRepository>(context, listen: false);
+    // final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
+    // final inventoryRepository = Provider.of<InventoryRepository>(context, listen: false);
+    // final speciesRepository = Provider.of<SpeciesRepository>(context, listen: false);
+    // final poiRepository = Provider.of<PoiRepository>(context, listen: false);
+    // final vegetationRepository = Provider.of<VegetationRepository>(context, listen: false);
+    // final weatherRepository = Provider.of<WeatherRepository>(context, listen: false);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Inventários ativos'),
+        title: const Text('Inventários'),
         actions: [
-          IconButton(
-            icon: Theme.of(context).brightness == Brightness.light
-                ? const Icon(Icons.history_outlined)
-                : const Icon(Icons.history),
-            tooltip: 'Inventários encerrados',
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => InventoryHistoryScreen(
-                  inventoryRepository: inventoryRepository,
-                  speciesRepository: speciesRepository,
-                  poiRepository: poiRepository,
-                  vegetationRepository: vegetationRepository,
-                  weatherRepository: weatherRepository,
-                )),
-              );
-            },
-          ),
+          !_showActive && inventoryProvider.finishedInventories.isNotEmpty ? IconButton(
+            icon: const Icon(Icons.file_download_outlined),
+            onPressed: () => exportAllInventoriesToJson(context, inventoryProvider),
+            tooltip: 'Exportar todos os inventários',
+          ) : const SizedBox.shrink(),
+          // IconButton(
+          //   icon: Theme.of(context).brightness == Brightness.light
+          //       ? const Icon(Icons.history_outlined)
+          //       : const Icon(Icons.history),
+          //   tooltip: 'Inventários encerrados',
+          //   onPressed: () {
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(builder: (context) => InventoryHistoryScreen(
+          //         inventoryRepository: inventoryRepository,
+          //         speciesRepository: speciesRepository,
+          //         poiRepository: poiRepository,
+          //         vegetationRepository: vegetationRepository,
+          //         weatherRepository: weatherRepository,
+          //       )),
+          //     );
+          //   },
+          // ),
           IconButton(
             icon: Theme.of(context).brightness == Brightness.light
                 ? const Icon(Icons.settings_outlined)
@@ -141,142 +157,178 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
           ),
         ],
       ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          await inventoryProvider.fetchInventories();
-        },
-        child: Consumer<InventoryProvider>(
-          builder: (context, inventoryProvider, child) {
-            if (inventoryProvider.isLoading) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (inventoryProvider.activeInventories.isEmpty) {
-              return const Center(child: Text('Nenhum inventário ativo.'));
-            } else {
-              return ListView.builder(
-                itemCount: inventoryProvider.activeInventories.length,
-                itemBuilder: (context, index) {
-                final inventory = inventoryProvider.activeInventories[index];
-                return Dismissible(
-                    key: ValueKey(inventory.id),
-                    direction: DismissDirection.horizontal,
-                    background: Container(
-                      color: Colors.green,
-                      alignment: Alignment.centerLeft,
-                      padding: const EdgeInsets.only(left: 20.0),
-                      child: const Icon(Icons.flag_outlined, color: Colors.white),
-                    ),
-                    secondaryBackground: Container(
-                      color: Colors.red,
-                      alignment: Alignment.centerRight,
-                      padding: const EdgeInsets.only(right: 20.0),
-                      child: const Icon(Icons.delete_outlined, color: Colors.white),
-                    ),
-                    confirmDismiss: (direction) async {
-                      // Drag to left
-                      if (direction == DismissDirection.endToStart) {
-                        // Show confirmation dialog for deleting
-                        return await showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text('Confirmar exclusão'),
-                              content: const Text('Tem certeza que deseja excluir este inventário?'),
-                              actions: <Widget>[
-                                TextButton(
-                                  onPressed: () => Navigator.of(context).pop(false),
-                                  child: const Text('Cancelar'),
-                                ),
-                                TextButton(
-                                  onPressed: () => Navigator.of(context).pop(true),
-                                  child: const Text('Excluir'),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                        // Drag to right
-                      } else if (direction == DismissDirection.startToEnd) {
-                        // Show confirmation dialog for finishing
-                        return await showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text('Confirmar Encerramento'),
-                              content: const Text('Tem certeza que deseja encerrar este inventário?'),
-                              actions: <Widget>[
-                                TextButton(
-                                  onPressed: () => Navigator.of(context).pop(false),
-                                  child: const Text('Cancelar'),
-                                ),
-                                TextButton(
-                                  onPressed: () => Navigator.of(context).pop(true),
-                                  child: const Text('Encerrar'),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      }
-                      return false; // Default to not dismissing
-                    },
-                    onDismissed: (direction) {
-                      // Drag to left
-                      if (direction == DismissDirection.endToStart) {
-                        // Remove the inventory from list
-                        inventoryProvider.removeInventory(inventory.id);
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+                final screenWidth = constraints.maxWidth;
+                final buttonWidth = screenWidth < 600 ? screenWidth : 400.0;
 
-                        // Drag to right
-                      } else if (direction == DismissDirection.startToEnd) {
-                        // Finish the inventory
-                        Inventory.stopTimer(inventory, inventoryRepository);
-                        inventoryProvider.updateInventory(inventory);
-                        inventoryProvider.fetchInventories();
-                      }
+                return SizedBox(
+                  width: buttonWidth,
+                  child: SegmentedButton<bool>(
+                    segments: const [
+                      ButtonSegment(value: true, label: Text('Ativos')),
+                      ButtonSegment(value: false, label: Text('Encerrados')),
+                    ],
+                    selected: {_showActive},
+                    onSelectionChanged: (Set<bool> newSelection) {
+                      setState(() {
+                        _showActive = newSelection.first;
+                      });
+                      inventoryProvider.fetchInventories();
                     },
-                    child: ValueListenableBuilder<bool>(
-                        valueListenable: inventory.isFinishedNotifier,
-                        builder: (context, isFinished, child) {
-                          if (isFinished) {
-                            inventoryProvider.fetchInventories();
-                          }
-                          return child!;
-                        },
-                        child: InventoryListItem(
-                          inventory: inventory,
-                          speciesRepository: speciesRepository,
-                          inventoryRepository: inventoryRepository,
-                          poiRepository: poiRepository,
-                          vegetationRepository: vegetationRepository,
-                          weatherRepository: weatherRepository,
-                          onLongPress: () => _showBottomSheet(context, inventory),
-                          onTap: (inventory) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => InventoryDetailScreen(
-                                  inventory: inventory,
-                                  speciesRepository: speciesRepository,
-                                  inventoryRepository: inventoryRepository,
-                                  poiRepository: poiRepository,
-                                  vegetationRepository: vegetationRepository,
-                                  weatherRepository: weatherRepository,
-                                ),
-                              ),
-                            ).then((result) {
-                              // if (result == true) {
-                                inventoryProvider.fetchInventories();
-                              // }
-                            });
-                          },
-                          onInventoryPausedOrResumed: (inventory) => _onInventoryPausedOrResumed(inventory),
-                        )
-                    )
+                  ),
                 );
               },
-            );
-            }
-          },
-        ),
+            ),
+          ),
+          RefreshIndicator(
+            onRefresh: () async {
+              await inventoryProvider.fetchInventories();
+            },
+            child: Consumer<InventoryProvider>(
+              builder: (context, inventoryProvider, child) {
+                if (inventoryProvider.isLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (_showActive && inventoryProvider.activeInventories.isEmpty ||
+                    !_showActive && inventoryProvider.finishedInventories.isEmpty) {
+                  return const Center(child: Text('Nenhum inventário encontrado.'));
+                } else {
+                  final inventories = _showActive
+                      ? inventoryProvider.activeInventories
+                      : inventoryProvider.finishedInventories;
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: inventories.length,
+                    itemBuilder: (context, index) {
+                      final inventory = inventories[index];
+                      return Dismissible(
+                          key: ValueKey(inventory.id),
+                          direction: DismissDirection.horizontal,
+                          background: _showActive ? Container(
+                            color: Colors.green,
+                            alignment: Alignment.centerLeft,
+                            padding: const EdgeInsets.only(left: 20.0),
+                            child: const Icon(Icons.flag_outlined, color: Colors.white),
+                          ) : Container(color: Colors.transparent),
+                          secondaryBackground: Container(
+                            color: Colors.red,
+                            alignment: Alignment.centerRight,
+                            padding: const EdgeInsets.only(right: 20.0),
+                            child: const Icon(Icons.delete_outlined, color: Colors.white),
+                          ),
+                          confirmDismiss: (direction) async {
+                            // Drag to left
+                            if (direction == DismissDirection.endToStart) {
+                              // Show confirmation dialog for deleting
+                              return await showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('Confirmar exclusão'),
+                                    content: const Text('Tem certeza que deseja excluir este inventário?'),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () => Navigator.of(context).pop(false),
+                                        child: const Text('Cancelar'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () => Navigator.of(context).pop(true),
+                                        child: const Text('Excluir'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                              // Drag to right
+                            } else if (_showActive && direction == DismissDirection.startToEnd) {
+                              // Show confirmation dialog for finishing
+                              return await showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('Confirmar Encerramento'),
+                                    content: const Text('Tem certeza que deseja encerrar este inventário?'),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () => Navigator.of(context).pop(false),
+                                        child: const Text('Cancelar'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () => Navigator.of(context).pop(true),
+                                        child: const Text('Encerrar'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            }
+                            return false; // Default to not dismissing
+                          },
+                          onDismissed: (direction) {
+                            // Drag to left
+                            if (direction == DismissDirection.endToStart) {
+                              // Remove the inventory from list
+                              inventoryProvider.removeInventory(inventory.id);
+
+                              // Drag to right
+                            } else if (_showActive && direction == DismissDirection.startToEnd) {
+                              // Finish the inventory
+                              Inventory.stopTimer(inventory, inventoryRepository);
+                              inventoryProvider.updateInventory(inventory);
+                              inventoryProvider.fetchInventories();
+                            }
+                          },
+                          child: ValueListenableBuilder<bool>(
+                              valueListenable: inventory.isFinishedNotifier,
+                              builder: (context, isFinished, child) {
+                                if (isFinished) {
+                                  inventoryProvider.fetchInventories();
+                                }
+                                return child!;
+                              },
+                              child: InventoryListItem(
+                                inventory: inventory,
+                                speciesRepository: speciesRepository,
+                                inventoryRepository: inventoryRepository,
+                                poiRepository: poiRepository,
+                                vegetationRepository: vegetationRepository,
+                                weatherRepository: weatherRepository,
+                                onLongPress: () => _showBottomSheet(context, inventory),
+                                onTap: (inventory) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => InventoryDetailScreen(
+                                        inventory: inventory,
+                                        speciesRepository: speciesRepository,
+                                        inventoryRepository: inventoryRepository,
+                                        poiRepository: poiRepository,
+                                        vegetationRepository: vegetationRepository,
+                                        weatherRepository: weatherRepository,
+                                      ),
+                                    ),
+                                  ).then((result) {
+                                    // if (result == true) {
+                                    inventoryProvider.fetchInventories();
+                                    // }
+                                  });
+                                },
+                                onInventoryPausedOrResumed: (inventory) => _onInventoryPausedOrResumed(inventory),
+                                isHistory: !_showActive,
+                              )
+                          )
+                      );
+                    },
+                  );
+                }
+              },
+            ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         tooltip: 'Novo inventário',
@@ -300,7 +352,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  ListTile(
+                  _showActive ? ListTile(
                     leading: const Icon(Icons.flag_outlined),
                     title: const Text('Encerrar inventário'),
                     onTap: () {
@@ -325,8 +377,8 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                   Navigator.of(context).pop();
                                   // Call the function to delete species
                                   Inventory.stopTimer(inventory, inventoryRepository);
-                                  Provider.of<InventoryProvider>(context, listen: false).updateInventory(inventory);
-                                  Provider.of<InventoryProvider>(context, listen: false).fetchInventories();
+                                  inventoryProvider.updateInventory(inventory);
+                                  inventoryProvider.fetchInventories();
                                 },
                                 child: const Text('Encerrar'),
                               ),
@@ -335,7 +387,14 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                         },
                       );
                     },
-                  ),
+                  ) : const SizedBox.shrink(),
+                  !_showActive ? ListTile(
+                    leading: const Icon(Icons.file_download_outlined),
+                    title: const Text('Exportar inventário'),
+                    onTap: () {
+                      exportInventoryToCsv(context, inventory);
+                    },
+                  ) : const SizedBox.shrink(),
                   ListTile(
                     leading: const Icon(Icons.delete_outlined, color: Colors.red,),
                     title: const Text('Apagar inventário', style: TextStyle(color: Colors.red),),
@@ -360,8 +419,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                   Navigator.of(context).pop(true);
                                   Navigator.of(context).pop();
                                   // Call the function to delete species
-                                  Provider.of<InventoryProvider>(context, listen: false)
-                                      .removeInventory(inventory.id);
+                                  inventoryProvider.removeInventory(inventory.id);
                                 },
                                 child: const Text('Excluir'),
                               ),
@@ -391,6 +449,7 @@ class InventoryListItem extends StatelessWidget {
   final VoidCallback onLongPress;
   final void Function(Inventory)? onTap;
   final void Function(Inventory)? onInventoryPausedOrResumed;
+  final bool isHistory;
 
   const InventoryListItem({
     super.key,
@@ -403,6 +462,7 @@ class InventoryListItem extends StatelessWidget {
     required this.onLongPress,
     this.onTap,
     this.onInventoryPausedOrResumed,
+    required this.isHistory,
   });
 
   @override
@@ -431,7 +491,7 @@ class InventoryListItem extends StatelessWidget {
 
                 return CircularProgressIndicator(
                   value: progress,
-                  backgroundColor: inventory.duration > 0 ? Theme.of(context).brightness == Brightness.light
+                  backgroundColor: !isHistory && inventory.duration > 0 ? Theme.of(context).brightness == Brightness.light
                       ? Colors.grey[200]
                       : Colors.grey[800] : null,
                   valueColor: AlwaysStoppedAnimation<Color>(
@@ -447,7 +507,7 @@ class InventoryListItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('${inventoryTypeFriendlyNames[inventory.type]}'),
-                if (inventory.duration > 0) Text('${inventory.duration} minutos de duração'),
+                if (!isHistory && inventory.duration > 0) Text('${inventory.duration} minutos de duração'),
                 Selector<SpeciesProvider, int>(
                   selector: (context, speciesProvider) => speciesProvider.getSpeciesForInventory(inventory.id).length,
                   shouldRebuild: (previous, next) => previous != next,
@@ -461,7 +521,7 @@ class InventoryListItem extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Visibility(
-                  visible: inventory.duration > 0,
+                  visible: !isHistory && inventory.duration > 0,
                   child: IconButton(
                     icon: Icon(inventory.isPaused ? Theme.of(context).brightness == Brightness.light
                         ? Icons.play_arrow_outlined

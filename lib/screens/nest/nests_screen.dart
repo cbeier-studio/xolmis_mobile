@@ -5,24 +5,28 @@ import 'package:intl/intl.dart';
 import '../../data/models/nest.dart';
 import '../../providers/nest_provider.dart';
 
-import 'nests_history_screen.dart';
 import 'add_nest_screen.dart';
 import 'nest_detail_screen.dart';
 
 import '../settings_screen.dart';
+import '../utils.dart';
 
-class ActiveNestsScreen extends StatefulWidget {
-  const ActiveNestsScreen({super.key});
+class NestsScreen extends StatefulWidget {
+  const NestsScreen({super.key});
 
   @override
-  _ActiveNestsScreenState createState() => _ActiveNestsScreenState();
+  _NestsScreenState createState() => _NestsScreenState();
 }
 
-class _ActiveNestsScreenState extends State<ActiveNestsScreen> {
+class _NestsScreenState extends State<NestsScreen> {
+  late NestProvider nestProvider;
+  bool _showActive = true;
+
   @override
   void initState() {
     super.initState();
-    Provider.of<NestProvider>(context, listen: false).fetchNests();
+    nestProvider = context.read<NestProvider>();
+    nestProvider.fetchNests();
   }
 
   void _showAddNestScreen(BuildContext context) {
@@ -43,7 +47,7 @@ class _ActiveNestsScreenState extends State<ActiveNestsScreen> {
       ).then((newNest) {
         // Reload the inventory list
         if (newNest != null) {
-          Provider.of<NestProvider>(context, listen: false).fetchNests();
+          nestProvider.fetchNests();
         }
       });
     } else {
@@ -53,7 +57,7 @@ class _ActiveNestsScreenState extends State<ActiveNestsScreen> {
       ).then((newNest) {
         // Reload the inventory list
         if (newNest != null) {
-          Provider.of<NestProvider>(context, listen: false).fetchNests();
+          nestProvider.fetchNests();
         }
       });
     }
@@ -63,20 +67,25 @@ class _ActiveNestsScreenState extends State<ActiveNestsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Ninhos ativos'),
+        title: const Text('Ninhos'),
         actions: [
-          IconButton(
-            icon: Theme.of(context).brightness == Brightness.light
-                ? const Icon(Icons.history_outlined)
-                : const Icon(Icons.history),
-            tooltip: 'Ninhos inativos',
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const NestsHistoryScreen()),
-              );
-            },
-          ),
+          !_showActive && nestProvider.inactiveNests.isNotEmpty ? IconButton(
+            icon: const Icon(Icons.file_download_outlined),
+            onPressed: () => exportAllInactiveNestsToJson(context),
+            tooltip: 'Exportar todos os inventários',
+          ) : const SizedBox.shrink(),
+          // IconButton(
+          //   icon: Theme.of(context).brightness == Brightness.light
+          //       ? const Icon(Icons.history_outlined)
+          //       : const Icon(Icons.history),
+          //   tooltip: 'Ninhos inativos',
+          //   onPressed: () {
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(builder: (context) => const NestsHistoryScreen()),
+          //     );
+          //   },
+          // ),
           IconButton(
             icon: Theme.of(context).brightness == Brightness.light
                 ? const Icon(Icons.settings_outlined)
@@ -91,95 +100,145 @@ class _ActiveNestsScreenState extends State<ActiveNestsScreen> {
           ),
         ],
       ),
-      body: Consumer<NestProvider>(
-        builder: (context, nestProvider, child) {
-          final activeNests = nestProvider.activeNests;
+      body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: LayoutBuilder(
+                builder: (BuildContext context, BoxConstraints constraints) {
+                  final screenWidth = constraints.maxWidth;
+                  final buttonWidth = screenWidth < 600 ? screenWidth : 400.0;
 
-          if (activeNests.isEmpty) {
-            return const Center(
-              child: Text('Nenhum ninho ativo.'),
-            );
-          }
-
-          return RefreshIndicator(
-              onRefresh: () async {
-            await nestProvider.fetchNests();
-          },
-          child: ListView.builder(
-            itemCount: activeNests.length,
-            itemBuilder: (context, index) {
-              final nest = activeNests[index];
-              return Dismissible(
-                key: Key(nest.id.toString()),
-                direction: DismissDirection.endToStart,
-                background: Container(
-                  color: Colors.red,
-                  alignment: Alignment.centerRight,
-                  padding: const EdgeInsets.only(right: 20.0),
-                  child: const Icon(Icons.delete_outlined, color: Colors.white),
-                ),
-                confirmDismiss: (direction) {
-                  return showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text('Confirmar Exclusão'),
-                        content: const Text(
-                            'Tem certeza que deseja excluir este ninho?'),
-                        actions: <Widget>[
-                          TextButton(
-                            child: const Text('Cancelar'),
-                            onPressed: () {
-                              Navigator.of(context).pop(false);
-                            },
-                          ),
-                          TextButton(child: const Text('Excluir'),
-                            onPressed: () {
-                              Navigator.of(context).pop(true);
-                            },
-                          ),
-                        ],
-                      );
-                    },
+                  return SizedBox(
+                    width: buttonWidth,
+                    child: SegmentedButton<bool>(
+                      segments: const [
+                        ButtonSegment(value: true, label: Text('Ativos')),
+                        ButtonSegment(value: false, label: Text('Inativos')),
+                      ],
+                      selected: {_showActive},
+                      onSelectionChanged: (Set<bool> newSelection) {
+                        setState(() {
+                          _showActive = newSelection.first;
+                        });
+                        nestProvider.fetchNests();
+                      },
+                    ),
                   );
                 },
-                onDismissed: (direction) {
-                  nestProvider.removeNest(nest);
-                },
-                child: ListTile(
-                  title: Text(nest.fieldNumber!),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        nest.speciesName!,
-                        style: const TextStyle(fontStyle: FontStyle.italic),
-                      ),
-                      Text(nest.localityName!),
-                      Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(nest.foundTime!)),
-                    ],
-                  ),
-                  onLongPress: () => _showBottomSheet(context, nest),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => NestDetailScreen(
-                          nest: nest,
-                        ),
-                      ),
-                    ).then((result) {
-                      if (result == true) {
-                        nestProvider.fetchNests();
-                      }
-                    });
+              ),
+            ), Consumer<NestProvider>(
+              builder: (context, nestProvider, child) {
+                final nests = _showActive
+                    ? nestProvider.activeNests
+                    : nestProvider.inactiveNests;
+
+                if (_showActive && nestProvider.activeNests.isEmpty ||
+                    !_showActive && nestProvider.inactiveNests.isEmpty) {
+                  return const Center(
+                    child: Text('Nenhum ninho encontrado.'),
+                  );
+                }
+
+                return RefreshIndicator(
+                  onRefresh: () async {
+                    await nestProvider.fetchNests();
                   },
-                ),
-              );
-            },
-          ),
-          );
-        },
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: nests.length,
+                    itemBuilder: (context, index) {
+                      final nest = nests[index];
+                      return Dismissible(
+                        key: Key(nest.id.toString()),
+                        direction: DismissDirection.endToStart,
+                        background: Container(
+                          color: Colors.red,
+                          alignment: Alignment.centerRight,
+                          padding: const EdgeInsets.only(right: 20.0),
+                          child: const Icon(Icons.delete_outlined, color: Colors.white),
+                        ),
+                        confirmDismiss: (direction) {
+                          return showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text('Confirmar Exclusão'),
+                                content: const Text(
+                                    'Tem certeza que deseja excluir este ninho?'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: const Text('Cancelar'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop(false);
+                                    },
+                                  ),
+                                  TextButton(child: const Text('Excluir'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop(true);
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        onDismissed: (direction) {
+                          nestProvider.removeNest(nest);
+                        },
+                        child: ListTile(
+                          title: Text(nest.fieldNumber!),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                nest.speciesName!,
+                                style: const TextStyle(fontStyle: FontStyle.italic),
+                              ),
+                              Text(nest.localityName!),
+                              Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(nest.foundTime!)),
+                            ],
+                          ),
+                          leading: nest.nestFate == NestFateType.fatSuccess
+                              ? const Icon(Icons.check_circle, color: Colors.green)
+                              : nest.nestFate == NestFateType.fatLost
+                              ? const Icon(Icons.cancel, color: Colors.red)
+                              : const Icon(Icons.help, color: Colors.grey),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children:[
+                              IconButton(
+                                icon: const Icon(Icons.file_download_outlined),
+                                tooltip: 'Exportar ninho',
+                                onPressed: () {
+                                  exportNestToJson(context, nest);
+                                },
+                              ),
+                            ],
+                          ),
+                          onLongPress: () => _showBottomSheet(context, nest),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => NestDetailScreen(
+                                  nest: nest,
+                                ),
+                              ),
+                            ).then((result) {
+                              if (result == true) {
+                                nestProvider.fetchNests();
+                              }
+                            });
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                );
+              },
+            ),
+          ]
       ),
       floatingActionButton: FloatingActionButton(
         tooltip: 'Novo ninho',
@@ -203,8 +262,13 @@ class _ActiveNestsScreenState extends State<ActiveNestsScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  // Expanded(
-                  //     child:
+                  !_showActive ? ListTile(
+                    leading: const Icon(Icons.file_download_outlined),
+                    title: const Text('Exportar ninho'),
+                    onTap: () {
+                      exportNestToJson(context, nest);
+                    },
+                  ) : const SizedBox.shrink(),
                   ListTile(
                     leading: const Icon(Icons.delete_outlined, color: Colors.red,),
                     title: const Text('Apagar ninho', style: TextStyle(color: Colors.red),),

@@ -170,7 +170,7 @@ class _MainScreenState extends State<MainScreen> {
   // final inventoryCountNotifier = InventoryCountNotifier();
   static final List<Widget Function(BuildContext)> _widgetOptions = <Widget Function(BuildContext)>[
         (context) => const InventoriesScreen(),
-        (context) => const ActiveNestsScreen(),
+        (context) => const NestsScreen(),
         (context) => const SpecimensScreen(),
   ];
 
