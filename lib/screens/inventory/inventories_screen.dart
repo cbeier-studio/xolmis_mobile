@@ -37,7 +37,9 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
   late VegetationRepository vegetationRepository;
   late WeatherRepository weatherRepository;
   // bool _inventoriesLoaded = false;
+  final _searchController = TextEditingController();
   bool _showActive = true;
+  String _searchQuery = '';
 
   @override
   void initState() {
@@ -72,6 +74,14 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
 
   void onInventoryUpdated(Inventory inventory) {
     inventoryProvider.updateInventory(inventory);
+  }
+
+  List<Inventory> _filterInventories(List<Inventory> inventories) {
+    if (_searchQuery.isEmpty) {
+      return inventories;
+    }
+    return inventories.where((inventory) =>
+        inventory.id.toLowerCase().contains(_searchQuery.toLowerCase())).toList();
   }
 
   void _showAddInventoryScreen(BuildContext context) {
@@ -148,6 +158,30 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
+            child: SearchBar(
+              controller: _searchController,
+              hintText: 'Procurar inventários...',
+              leading: const Icon(Icons.search_outlined),
+              trailing: [
+                IconButton(
+                  icon: const Icon(Icons.clear_outlined),
+                  onPressed: () {
+                    setState(() {
+                      _searchQuery = '';
+                      _searchController.clear();
+                    });
+                  },
+                ),
+              ],
+              onChanged: (query) {
+                setState(() {
+                  _searchQuery = query;
+                });
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
             child: LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
                 final screenWidth = constraints.maxWidth;
@@ -184,9 +218,9 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                       !_showActive && inventoryProvider.finishedInventories.isEmpty) {
                     return const Center(child: Text('Nenhum inventário encontrado.'));
                   } else {
-                    final inventories = _showActive
+                    final filteredInventories = _filterInventories(_showActive
                         ? inventoryProvider.activeInventories
-                        : inventoryProvider.finishedInventories;
+                        : inventoryProvider.finishedInventories);
                     return LayoutBuilder(
                         builder: (BuildContext context, BoxConstraints constraints) {
                           final screenWidth = constraints.maxWidth;
@@ -202,9 +236,9 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                     childAspectRatio: 3.5,
                                   ),
                                   shrinkWrap: true,
-                                  itemCount: inventories.length,
+                                  itemCount: filteredInventories.length,
                                   itemBuilder: (context, index) {
-                                    final inventory = inventories[index];
+                                    final inventory = filteredInventories[index];
                                     return GridTile(
                                       child: InkWell(
                                           onLongPress: () => _showBottomSheet(context, inventory),
@@ -311,9 +345,9 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                           } else {
                             return ListView.builder(
                               shrinkWrap: true,
-                              itemCount: inventories.length,
+                              itemCount: filteredInventories.length,
                               itemBuilder: (context, index) {
-                                final inventory = inventories[index];
+                                final inventory = filteredInventories[index];
                                 return Dismissible(
                                     key: ValueKey(inventory.id),
                                     direction: DismissDirection.horizontal,

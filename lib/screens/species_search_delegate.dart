@@ -38,18 +38,22 @@ class SpeciesSearchDelegate extends SearchDelegate<String> {
         .where((species) => speciesMatchesQuery(species, query))
         .toList();
 
-    return ListView.builder(
-      itemCount: suggestions.length,
-      itemBuilder: (context, index) {
-        final species = suggestions[index];
-        return ListTile(
-          title: Text(species),
-          onTap: () {
-            addSpeciesToInventory(species);
-            close(context, species); // Close the suggestions list and return the selected species
-          },
-        );
-      },
+    return Scrollbar(
+      interactive: true,
+      thickness: 16,
+      child: ListView.builder(
+        itemCount: suggestions.length,
+        itemBuilder: (context, index) {
+          final species = suggestions[index];
+          return ListTile(
+            title: Text(species),
+            onTap: () {
+              addSpeciesToInventory(species);
+              close(context, species); // Close the suggestions list and return the selected species
+            },
+          );
+        },
+      ),
     );
   }
 

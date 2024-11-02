@@ -21,13 +21,25 @@ class NestsScreen extends StatefulWidget {
 
 class _NestsScreenState extends State<NestsScreen> {
   late NestProvider nestProvider;
+  final _searchController = TextEditingController();
   bool _showActive = true;
+  String _searchQuery = '';
 
   @override
   void initState() {
     super.initState();
     nestProvider = context.read<NestProvider>();
     nestProvider.fetchNests();
+  }
+
+  List<Nest> _filterNests(List<Nest> nests) {
+    if (_searchQuery.isEmpty) {
+      return nests;
+    }
+    return nests.where((nest) =>
+        nest.fieldNumber!.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+        nest.speciesName!.toLowerCase().contains(_searchQuery.toLowerCase())
+    ).toList();
   }
 
   void _showAddNestScreen(BuildContext context) {
@@ -113,6 +125,20 @@ class _NestsScreenState extends State<NestsScreen> {
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
+            child: SearchBar(
+              controller: _searchController,
+              hintText: 'Procurar ninhos...',
+              leading: const Icon(Icons.search_outlined),
+              onChanged: (query) {
+                setState(() {
+                  _searchQuery = query;
+                  _searchController.clear();
+                });
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
             child: LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
                 final screenWidth = constraints.maxWidth;
@@ -139,9 +165,9 @@ class _NestsScreenState extends State<NestsScreen> {
           ),
           Consumer<NestProvider>(
               builder: (context, nestProvider, child) {
-                final nests = _showActive
+                final filteredNests = _filterNests(_showActive
                     ? nestProvider.activeNests
-                    : nestProvider.inactiveNests;
+                    : nestProvider.inactiveNests);
 
                 if (_showActive && nestProvider.activeNests.isEmpty ||
                     !_showActive && nestProvider.inactiveNests.isEmpty) {
@@ -169,57 +195,57 @@ class _NestsScreenState extends State<NestsScreen> {
                                   childAspectRatio: 3.5,
                                 ),
                                 shrinkWrap: true,
-                                itemCount: nests.length,
+                                itemCount: filteredNests.length,
                                 itemBuilder: (context, index) {
-                                  final nest = nests[index];
+                                  final nest = filteredNests[index];
                                   return GridTile(
                                     child: InkWell(
-                                        onLongPress: () => _showBottomSheet(context, nest),
-                                        onTap: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => NestDetailScreen(
-                                                nest: nest,
-                                              ),
+                                      onLongPress: () => _showBottomSheet(context, nest),
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => NestDetailScreen(
+                                              nest: nest,
                                             ),
-                                          ).then((result) {
-                                            if (result == true) {
-                                              nestProvider.fetchNests();
-                                            }
-                                          });
-                                        },
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(16.0),
-                                          child: Row(
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
-                                                child: nest.nestFate == NestFateType.fatSuccess
-                                                    ? const Icon(Icons.check_circle, color: Colors.green)
-                                                    : nest.nestFate == NestFateType.fatLost
-                                                    ? const Icon(Icons.cancel, color: Colors.red)
-                                                    : const Icon(Icons.help, color: Colors.grey),
-                                              ),
-                                              Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    nest.fieldNumber!,
-                                                    style: const TextStyle(fontWeight: FontWeight.bold),
-                                                  ),
-                                                  Text(
-                                                    nest.speciesName!,
-                                                    style: const TextStyle(fontStyle: FontStyle.italic),
-                                                  ),
-                                                  Text(nest.localityName!),
-                                                  Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(nest.foundTime!)),
-                                                ],
-                                              ),
-                                            ],
                                           ),
+                                        ).then((result) {
+                                          if (result == true) {
+                                            nestProvider.fetchNests();
+                                          }
+                                        });
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(16.0),
+                                        child: Row(
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
+                                              child: nest.nestFate == NestFateType.fatSuccess
+                                                  ? const Icon(Icons.check_circle, color: Colors.green)
+                                                  : nest.nestFate == NestFateType.fatLost
+                                                  ? const Icon(Icons.cancel, color: Colors.red)
+                                                  : const Icon(Icons.help, color: Colors.grey),
+                                            ),
+                                            Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  nest.fieldNumber!,
+                                                  style: const TextStyle(fontWeight: FontWeight.bold),
+                                                ),
+                                                Text(
+                                                  nest.speciesName!,
+                                                  style: const TextStyle(fontStyle: FontStyle.italic),
+                                                ),
+                                                Text(nest.localityName!),
+                                                Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(nest.foundTime!)),
+                                              ],
+                                            ),
+                                          ],
                                         ),
                                       ),
+                                    ),
                                   );
                                 },
                               ),
@@ -228,9 +254,9 @@ class _NestsScreenState extends State<NestsScreen> {
                         } else {
                           return ListView.builder(
                             shrinkWrap: true,
-                            itemCount: nests.length,
+                            itemCount: filteredNests.length,
                             itemBuilder: (context, index) {
-                              final nest = nests[index];
+                              final nest = filteredNests[index];
                               return Dismissible(
                                 key: Key(nest.id.toString()),
                                 direction: DismissDirection.endToStart,

@@ -19,12 +19,24 @@ class SpecimensScreen extends StatefulWidget {
 
 class _SpecimensScreenState extends State<SpecimensScreen> {
   late SpecimenProvider specimenProvider;
+  final _searchController = TextEditingController();
+  String _searchQuery = '';
 
   @override
   void initState() {
     super.initState();
     specimenProvider = context.read<SpecimenProvider>();
     specimenProvider.fetchSpecimens();
+  }
+
+  List<Specimen> _filterSpecimens(List<Specimen> specimens) {
+    if (_searchQuery.isEmpty) {
+      return specimens;
+    }
+    return specimens.where((specimen) =>
+      specimen.fieldNumber.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+      specimen.speciesName!.toLowerCase().contains(_searchQuery.toLowerCase())
+    ).toList();
   }
 
   void _showAddSpecimenScreen(BuildContext context) {
@@ -97,11 +109,25 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
       ),
       body: Column(
         children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SearchBar(
+              controller: _searchController,
+              hintText: 'Procurar espécimes...',
+              leading: const Icon(Icons.search_outlined),
+              onChanged: (query) {
+                setState(() {
+                  _searchQuery = query;
+                  _searchController.clear();
+                });
+              },
+            ),
+          ),
           Consumer<SpecimenProvider>(
               builder: (context, specimenProvider, child) {
-                final specimens = specimenProvider.specimens;
+                final filteredSpecimens = _filterSpecimens(specimenProvider.specimens);
 
-                if (specimens.isEmpty) {
+                if (filteredSpecimens.isEmpty) {
                   return const Center(
                     child: Text('Nenhum espécime coletado.'),
                   );
@@ -126,9 +152,9 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
                                   childAspectRatio: 3.5,
                                 ),
                                 shrinkWrap: true,
-                                itemCount: specimens.length,
+                                itemCount: filteredSpecimens.length,
                                 itemBuilder: (context, index) {
-                                  final specimen = specimens[index];
+                                  final specimen = filteredSpecimens[index];
                                   return GridTile(
                                     child: InkWell(
                                         onLongPress: () => _showBottomSheet(context, specimen),
@@ -177,9 +203,9 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
                         } else {
                           return ListView.builder(
                             shrinkWrap: true,
-                            itemCount: specimens.length,
+                            itemCount: filteredSpecimens.length,
                             itemBuilder: (context, index) {
-                              final specimen = specimens[index];
+                              final specimen = filteredSpecimens[index];
                               return Dismissible(
                                 key: Key(specimen.id.toString()),
                                 direction: DismissDirection.endToStart,

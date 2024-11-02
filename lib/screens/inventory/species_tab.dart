@@ -185,7 +185,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                     maxWidth: 840),
                 child: TextField(
                   decoration: const InputDecoration(
-                    hintText: 'Buscar espécie...',
+                    hintText: 'Adicionar espécie...',
                     prefixIcon: Icon(Icons.search_outlined),
                     border: OutlineInputBorder(),
                   ),
@@ -204,6 +204,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                         builder: (context, speciesProvider, child) {
                           final speciesList = speciesProvider
                               .getSpeciesForInventory(widget.inventory.id);
+                          speciesList.sort((a, b) => a.name.compareTo(b.name));
                           if (speciesList.isEmpty) {
                             return const Center(
                               child: Text('Nenhuma espécie registrada.'),
