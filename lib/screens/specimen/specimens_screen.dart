@@ -11,7 +11,9 @@ import '../settings_screen.dart';
 import '../utils.dart';
 
 class SpecimensScreen extends StatefulWidget {
-  const SpecimensScreen({super.key});
+  final GlobalKey<ScaffoldState> scaffoldKey;
+
+  const SpecimensScreen({super.key, required this.scaffoldKey});
 
   @override
   _SpecimensScreenState createState() => _SpecimensScreenState();
@@ -77,7 +79,15 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Espécimes coletados'),
+        title: const Text('Espécimes'),
+        leading: MediaQuery.sizeOf(context).width < 600 ? Builder(
+          builder: (context) => IconButton(
+            icon: const Icon(Icons.menu_outlined),
+            onPressed: () {
+              widget.scaffoldKey.currentState?.openDrawer();
+            },
+          ),
+        ) : SizedBox.shrink(),
         actions: [
           specimenProvider.specimens.isNotEmpty
               ? IconButton(
@@ -85,26 +95,6 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
             onPressed: () => exportAllSpecimensToJson(context),
             tooltip: 'Exportar todos os espécimes',
           ) : const SizedBox.shrink(),
-          IconButton(
-            icon: Theme.of(context).brightness == Brightness.light
-                ? const Icon(Icons.settings_outlined)
-                : const Icon(Icons.settings),
-            tooltip: 'Configurações',
-            onPressed: () {
-              if (MediaQuery.sizeOf(context).width > 600) {
-                SideSheet.right(
-                  context: context,
-                  width: 400,
-                  body: const SettingsScreen(),
-                );
-              } else {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const SettingsScreen()),
-                );
-              }
-            },
-          ),
         ],
       ),
       body: Column(

@@ -20,9 +20,11 @@ import '../utils.dart';
 
 
 class InventoriesScreen extends StatefulWidget {
+  final GlobalKey<ScaffoldState> scaffoldKey;
 
   const InventoriesScreen({
     super.key,
+    required this.scaffoldKey,
   });
 
   @override
@@ -123,36 +125,14 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Inventários'),
-        actions: [
-          Visibility(
-            visible: !_showActive && inventoryProvider.finishedInventories.isNotEmpty,
-            child: IconButton(
-              icon: const Icon(Icons.file_download_outlined),
-              onPressed: () => exportAllInventoriesToJson(context, inventoryProvider),
-              tooltip: 'Exportar todos os inventários',
-            ),
-          ),
-          IconButton(
-            icon: Theme.of(context).brightness == Brightness.light
-                ? const Icon(Icons.settings_outlined)
-                : const Icon(Icons.settings),
-            tooltip: 'Configurações',
+        leading: MediaQuery.sizeOf(context).width < 600 ? Builder(
+          builder: (context) => IconButton(
+            icon: const Icon(Icons.menu_outlined),
             onPressed: () {
-              if (MediaQuery.sizeOf(context).width > 600) {
-                SideSheet.right(
-                  context: context,
-                  width: 400,
-                  body: const SettingsScreen(),
-                );
-              } else {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const SettingsScreen()),
-                );
-              }
+              widget.scaffoldKey.currentState?.openDrawer();
             },
           ),
-        ],
+        ) : SizedBox.shrink(),
       ),
       body: Column(
         children: [
@@ -539,6 +519,13 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                     title: const Text('Exportar inventário'),
                     onTap: () {
                       exportInventoryToCsv(context, inventory);
+                    },
+                  ) : const SizedBox.shrink(),
+                  !_showActive ? ListTile(
+                    leading: const Icon(Icons.file_download_outlined),
+                    title: const Text('Exportar todos os inventários'),
+                    onTap: () {
+                      exportAllInventoriesToJson(context, inventoryProvider);
                     },
                   ) : const SizedBox.shrink(),
                   ListTile(

@@ -36,7 +36,10 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
                   widget.nest.id!);
               if (eggList.isEmpty) {
                 return const Center(
-                  child: Text('Nenhum ovo registrado.'),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 16.0),
+                    child: Text('Nenhum ovo registrado.'),
+                  ),
                 );
               } else {
                 return RefreshIndicator(

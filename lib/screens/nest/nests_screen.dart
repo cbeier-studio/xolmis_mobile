@@ -13,7 +13,9 @@ import '../settings_screen.dart';
 import '../utils.dart';
 
 class NestsScreen extends StatefulWidget {
-  const NestsScreen({super.key});
+  final GlobalKey<ScaffoldState> scaffoldKey;
+
+  const NestsScreen({super.key, required this.scaffoldKey,});
 
   @override
   _NestsScreenState createState() => _NestsScreenState();
@@ -81,45 +83,14 @@ class _NestsScreenState extends State<NestsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Ninhos'),
-        actions: [
-          !_showActive && nestProvider.inactiveNests.isNotEmpty ? IconButton(
-            icon: const Icon(Icons.file_download_outlined),
-            onPressed: () => exportAllInactiveNestsToJson(context),
-            tooltip: 'Exportar todos os inventários',
-          ) : const SizedBox.shrink(),
-          // IconButton(
-          //   icon: Theme.of(context).brightness == Brightness.light
-          //       ? const Icon(Icons.history_outlined)
-          //       : const Icon(Icons.history),
-          //   tooltip: 'Ninhos inativos',
-          //   onPressed: () {
-          //     Navigator.push(
-          //       context,
-          //       MaterialPageRoute(builder: (context) => const NestsHistoryScreen()),
-          //     );
-          //   },
-          // ),
-          IconButton(
-            icon: Theme.of(context).brightness == Brightness.light
-                ? const Icon(Icons.settings_outlined)
-                : const Icon(Icons.settings),
-            tooltip: 'Configurações',
+        leading: MediaQuery.sizeOf(context).width < 600 ? Builder(
+          builder: (context) => IconButton(
+            icon: const Icon(Icons.menu_outlined),
             onPressed: () {
-              if (MediaQuery.sizeOf(context).width > 600) {
-                SideSheet.right(
-                  context: context,
-                  width: 400,
-                  body: const SettingsScreen(),
-                );
-              } else {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const SettingsScreen()),
-                );
-              }
+              widget.scaffoldKey.currentState?.openDrawer();
             },
           ),
-        ],
+        ) : SizedBox.shrink(),
       ),
       body: Column(
         children: [
@@ -315,13 +286,13 @@ class _NestsScreenState extends State<NestsScreen> {
                                   trailing: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children:[
-                                      IconButton(
+                                      !_showActive ? IconButton(
                                         icon: const Icon(Icons.file_download_outlined),
                                         tooltip: 'Exportar ninho',
                                         onPressed: () {
                                           exportNestToJson(context, nest);
                                         },
-                                      ),
+                                      ) : const SizedBox.shrink(),
                                     ],
                                   ),
                                   onLongPress: () => _showBottomSheet(context, nest),
@@ -378,6 +349,13 @@ class _NestsScreenState extends State<NestsScreen> {
                     title: const Text('Exportar ninho'),
                     onTap: () {
                       exportNestToJson(context, nest);
+                    },
+                  ) : const SizedBox.shrink(),
+                  !_showActive ? ListTile(
+                    leading: const Icon(Icons.file_download_outlined),
+                    title: const Text('Exportar todos os ninhos'),
+                    onTap: () {
+                      exportAllInactiveNestsToJson(context);
                     },
                   ) : const SizedBox.shrink(),
                   ListTile(

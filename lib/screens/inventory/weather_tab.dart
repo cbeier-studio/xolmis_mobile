@@ -33,7 +33,10 @@ class _WeatherTabState extends State<WeatherTab> with AutomaticKeepAliveClientMi
               widget.inventory.id);
           if (weatherList.isEmpty) {
             return const Center(
-              child: Text('Nenhum registro do tempo.'),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 16.0),
+                child: Text('Nenhum registro do tempo.'),
+              ),
             );
           } else {
             return RefreshIndicator(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_background/flutter_background.dart';
+import 'package:side_sheet/side_sheet.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 import 'data/database/database_helper.dart';
@@ -40,6 +41,7 @@ import 'providers/specimen_provider.dart';
 import 'screens/inventory/inventories_screen.dart';
 import 'screens/nest/nests_screen.dart';
 import 'screens/specimen/specimens_screen.dart';
+import 'screens/settings_screen.dart';
 import 'screens/utils.dart';
 
 void main() async {
@@ -165,13 +167,14 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int _selectedIndex = 0;
   // final ValueNotifier<int> activeInventoriesCount = ValueNotifier<int>(0);
   // final inventoryCountNotifier = InventoryCountNotifier();
-  static final List<Widget Function(BuildContext)> _widgetOptions = <Widget Function(BuildContext)>[
-        (context) => const InventoriesScreen(),
-        (context) => const NestsScreen(),
-        (context) => const SpecimensScreen(),
+  static final List<Widget Function(BuildContext, GlobalKey<ScaffoldState>)> _widgetOptions = <Widget Function(BuildContext, GlobalKey<ScaffoldState>)>[
+        (context, scaffoldKey) => InventoriesScreen(scaffoldKey: scaffoldKey),
+        (context, scaffoldKey) => NestsScreen(scaffoldKey: scaffoldKey),
+        (context, scaffoldKey) => SpecimensScreen(scaffoldKey: scaffoldKey),
   ];
 
   @override
@@ -266,12 +269,85 @@ class _MainScreenState extends State<MainScreen> {
     ];
 
     return Scaffold(
+      key: _scaffoldKey,
         // appBar: AppBar(
         //   title: const Text('Xolmis'),
         // ),
+      drawer: NavigationDrawer(
+        selectedIndex: _selectedIndex,
+        onDestinationSelected: (int index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+          Navigator.pop(context);
+        },
+        children: <Widget>[
+          const DrawerHeader(
+            child: Text('Xolmis', style: TextStyle(fontSize: 24)),
+          ),
+          NavigationDrawerDestination(
+            icon: const Icon(Icons.list_alt_outlined),
+            label: const Text('Inventários'),
+            selectedIcon: const Icon(Icons.list_alt),
+          ),
+          NavigationDrawerDestination(
+            icon: const Icon(Icons.egg_outlined),
+            label: const Text('Ninhos'),
+            selectedIcon: const Icon(Icons.egg),
+          ),
+          NavigationDrawerDestination(
+            icon: const Icon(Icons.local_offer_outlined),
+            label: const Text('Espécimes'),
+            selectedIcon: const Icon(Icons.local_offer),
+          ),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: Divider(),
+          ),
+          ListTile(
+            leading: Theme.of(context).brightness == Brightness.light
+                ? const Icon(Icons.settings_outlined)
+                : const Icon(Icons.settings),
+            title: const Text('Configurações'),
+            onTap: () {
+              if (MediaQuery.sizeOf(context).width > 600) {
+                SideSheet.right(
+                  context: context,
+                  width: 400,
+                  body: const SettingsScreen(),
+                );
+              } else {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const SettingsScreen()),
+                );
+              }
+            },
+          ),
+        ],
+      ),
         body: Row(
           children: [
             if (useSideNavRail) NavigationRail(
+              trailing: IconButton(
+                icon: Theme.of(context).brightness == Brightness.light
+                    ? const Icon(Icons.settings_outlined)
+                    : const Icon(Icons.settings),
+                onPressed: () {
+                  if (MediaQuery.sizeOf(context).width > 600) {
+                    SideSheet.right(
+                      context: context,
+                      width: 400,
+                      body: const SettingsScreen(),
+                    );
+                  } else {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const SettingsScreen()),
+                    );
+                  }
+                },
+              ),
               destinations: destinations,
               selectedIndex: _selectedIndex,
               labelType: NavigationRailLabelType.all,
@@ -282,65 +358,65 @@ class _MainScreenState extends State<MainScreen> {
               },
             ),
             Expanded(
-              child: _widgetOptions.elementAt(_selectedIndex)(context),
+              child: _widgetOptions.elementAt(_selectedIndex).call(context, _scaffoldKey),
             ),
           ],
         ),
-        bottomNavigationBar: useSideNavRail
-          ? null
-          : BottomNavigationBar(
-          items: <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Selector<InventoryProvider, int>(
-                selector: (context, provider) => provider.inventoriesCount,
-                builder: (context, inventoriesCount, child) {
-                  return inventoriesCount > 0
-                      ? Badge.count(
-                    count: inventoriesCount,
-                    child: const Icon(Icons.list_alt_outlined),
-                  )
-                      : const Icon(Icons.list_alt_outlined);
-                },
-              ),
-              label: 'Inventários',
-            ),
-            BottomNavigationBarItem(
-              icon: Selector<NestProvider, int>(
-                selector: (context, provider) => provider.nestsCount,
-                builder: (context, nestsCount, child) {
-                  return nestsCount > 0
-                      ? Badge.count(
-                    count: nestsCount,
-                    child: const Icon(Icons.egg_outlined),
-                  )
-                      : const Icon(Icons.egg_outlined);
-                },
-              ),
-              label: 'Ninhos',
-            ),
-            BottomNavigationBarItem(
-              icon: Selector<SpecimenProvider, int>(
-                selector: (context, provider) => provider.specimensCount,
-                builder: (context, specimensCount, child) {
-                  return specimensCount > 0
-                      ? Badge.count(
-                    backgroundColor: Colors.deepPurple[100],
-                    textColor: Colors.deepPurple[800],
-                    count: specimensCount,
-                    child: const Icon(Icons.local_offer_outlined),
-                  )
-                      : const Icon(Icons.local_offer_outlined);
-                },
-              ),
-              label: 'Espécimes',
-            ),
-          ],
-          currentIndex: _selectedIndex,
-          selectedItemColor: Theme.of(context).brightness == Brightness.light
-              ? Colors.deepPurple
-              : Colors.deepPurpleAccent,
-          onTap: _onItemTapped,
-        ),
+        // bottomNavigationBar: useSideNavRail
+        //   ? null
+        //   : BottomNavigationBar(
+        //   items: <BottomNavigationBarItem>[
+        //     BottomNavigationBarItem(
+        //       icon: Selector<InventoryProvider, int>(
+        //         selector: (context, provider) => provider.inventoriesCount,
+        //         builder: (context, inventoriesCount, child) {
+        //           return inventoriesCount > 0
+        //               ? Badge.count(
+        //             count: inventoriesCount,
+        //             child: const Icon(Icons.list_alt_outlined),
+        //           )
+        //               : const Icon(Icons.list_alt_outlined);
+        //         },
+        //       ),
+        //       label: 'Inventários',
+        //     ),
+        //     BottomNavigationBarItem(
+        //       icon: Selector<NestProvider, int>(
+        //         selector: (context, provider) => provider.nestsCount,
+        //         builder: (context, nestsCount, child) {
+        //           return nestsCount > 0
+        //               ? Badge.count(
+        //             count: nestsCount,
+        //             child: const Icon(Icons.egg_outlined),
+        //           )
+        //               : const Icon(Icons.egg_outlined);
+        //         },
+        //       ),
+        //       label: 'Ninhos',
+        //     ),
+        //     BottomNavigationBarItem(
+        //       icon: Selector<SpecimenProvider, int>(
+        //         selector: (context, provider) => provider.specimensCount,
+        //         builder: (context, specimensCount, child) {
+        //           return specimensCount > 0
+        //               ? Badge.count(
+        //             backgroundColor: Colors.deepPurple[100],
+        //             textColor: Colors.deepPurple[800],
+        //             count: specimensCount,
+        //             child: const Icon(Icons.local_offer_outlined),
+        //           )
+        //               : const Icon(Icons.local_offer_outlined);
+        //         },
+        //       ),
+        //       label: 'Espécimes',
+        //     ),
+        //   ],
+        //   currentIndex: _selectedIndex,
+        //   selectedItemColor: Theme.of(context).brightness == Brightness.light
+        //       ? Colors.deepPurple
+        //       : Colors.deepPurpleAccent,
+        //   onTap: _onItemTapped,
+        // ),
 
     );
   }
