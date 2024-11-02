@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/models/nest.dart';
@@ -27,32 +28,101 @@ class _NestRevisionsTabState extends State<NestRevisionsTab> with AutomaticKeepA
   }
 
   Widget _buildNestRevisionList() {
-    return Consumer<NestRevisionProvider>(
-      builder: (context, nestRevisionProvider, child) {
-        final revisionList = nestRevisionProvider.getRevisionForNest(
-            widget.nest.id!);
-        if (revisionList.isEmpty) {
-          return const Center(
-            child: Text('Nenhuma revisão de ninho registrada.'),
-          );
-        } else {
-          return RefreshIndicator(
-              onRefresh: () async {
-            await nestRevisionProvider.getRevisionForNest(widget.nest.id ?? 0);
-          },
-        child: ListView.builder(
-        itemCount: revisionList.length,
-        itemBuilder: (context, index) {
-              final nestRevision = revisionList[index];
-              return RevisionListItem(
-                nestRevision: nestRevision,
-                onLongPress: () => _showBottomSheet(context, nestRevision),
-              );
-            },
-          )
-          );
-        }
-      },
+    return Column(
+      children: [
+        Consumer<NestRevisionProvider>(
+            builder: (context, nestRevisionProvider, child) {
+              final revisionList = nestRevisionProvider.getRevisionForNest(
+                  widget.nest.id!);
+
+              if (revisionList.isEmpty) {
+                return const Center(
+                  child: Text('Nenhuma revisão de ninho registrada.'),
+                );
+              } else {
+                return RefreshIndicator(
+                  onRefresh: () async {
+                    await nestRevisionProvider.getRevisionForNest(
+                        widget.nest.id ?? 0);
+                  },
+                  child: LayoutBuilder(
+                      builder: (BuildContext context,
+                          BoxConstraints constraints) {
+                        final screenWidth = constraints.maxWidth;
+                        final isLargeScreen = screenWidth > 600;
+
+                        if (isLargeScreen) {
+                          return Center(
+                            child: ConstrainedBox(
+                              constraints: const BoxConstraints(maxWidth: 840),
+                              child: GridView.builder(
+                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  childAspectRatio: 3.5,
+                                ),
+                                shrinkWrap: true,
+                                itemCount: revisionList.length,
+                                itemBuilder: (context, index) {
+                                  final revision = revisionList[index];
+                                  return GridTile(
+                                    child: InkWell(
+                                      onLongPress: () =>
+                                          _showBottomSheet(context, revision),
+                                      // onTap: () {
+                                      //
+                                      // },
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(16.0),
+                                        child: Row(
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
+                                              child: const Icon(Icons.beenhere_outlined),
+                                            ),
+                                            Column(
+                                              crossAxisAlignment: CrossAxisAlignment
+                                                  .start,
+                                              children: [
+                                                Text(
+                                                  DateFormat('dd/MM/yyyy HH:mm:ss').format(revision.sampleTime!),
+                                                  style: const TextStyle(
+                                                      fontWeight: FontWeight.bold),
+                                                ),
+                                                Text('${nestStatusTypeFriendlyNames[revision.nestStatus]}: ${nestStageTypeFriendlyNames[revision.nestStage]}'),
+                                                Text('Hospedeiro: ${revision.eggsHost ?? 0} ovo(s), ${revision.nestlingsHost ?? 0} ninhego(s)'),
+                                                Text('Nidoparasita: ${revision.eggsParasite ?? 0} ovo(s), ${revision.nestlingsParasite ?? 0} ninhego(s)'),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          );
+                        } else {
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: revisionList.length,
+                            itemBuilder: (context, index) {
+                              final nestRevision = revisionList[index];
+                              return RevisionListItem(
+                                nestRevision: nestRevision,
+                                onLongPress: () =>
+                                    _showBottomSheet(context, nestRevision),
+                              );
+                            },
+                          );
+                        }
+                      }
+                  ),
+                );
+              }
+            }
+        ),
+      ],
     );
   }
 

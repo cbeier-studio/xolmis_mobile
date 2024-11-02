@@ -126,67 +126,122 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen>
           ),
         ],
       ),
-      body: Consumer<PoiProvider>(
-        builder: (context, poiProvider, child) {
-          final pois = poiProvider.getPoisForSpecies(widget.species.id ?? 0);
-          return RefreshIndicator(
-              onRefresh: () async {
-            await poiProvider.getPoisForSpecies(widget.species.id ?? 0);
-          },
-          child: ListView.builder(
-          itemCount: pois.length,
-          itemBuilder: (context, index) {
-              if (pois.isEmpty) {
-                return const SizedBox.shrink();
-              } else {
-                final poi = pois[index];
-                return Dismissible(
-                  key: ValueKey(poi),
-                  direction: DismissDirection.endToStart,
-                  background: Container(
-                    color: Colors.red,
-                    alignment: Alignment.centerRight,
-                    padding: const EdgeInsets.only(right: 20.0),
-                    child: const Icon(Icons.delete_outlined, color: Colors.white),
-                  ),
-                  confirmDismiss: (direction) async {
-                    return await showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: const Text('Confirmar exclusão'),
-                          content: const Text(
-                              'Tem certeza que deseja excluir este POI?'),
-                          actions: <Widget>[
-                            TextButton(
-                              onPressed: () => Navigator.of(context).pop(false),
-                              child: const Text('Cancelar'),
-                            ),
-                            TextButton(
-                              onPressed: () => Navigator.of(context).pop(true),
-                              child: const Text('Excluir'),
-                            ),
-                          ],
-                        );
-                      },
-                    );
+      body: Column(
+        children: [
+          Consumer<PoiProvider>(
+              builder: (context, poiProvider, child) {
+                final pois = poiProvider.getPoisForSpecies(widget.species.id ?? 0);
+                return RefreshIndicator(
+                  onRefresh: () async {
+                    await poiProvider.getPoisForSpecies(widget.species.id ?? 0);
                   },
-                  onDismissed: (direction) {
-                    // Delete the POI from database
-                    poiProvider.removePoi(widget.species.id!, poi.id!);
-                    // poiProvider.notifyListeners();
-                  },
-                  child: PoiListItem(
-                    poi: poi,
-                    onLongPress: () => _showBottomSheet(context, poi),
+                  child: LayoutBuilder(
+                      builder: (BuildContext context, BoxConstraints constraints) {
+                        final screenWidth = constraints.maxWidth;
+                        final isLargeScreen = screenWidth > 600;
+
+                        if (isLargeScreen) {
+                          return Center(
+                            child: ConstrainedBox(
+                              constraints: const BoxConstraints(maxWidth: 840),
+                              child: GridView.builder(
+                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  childAspectRatio: 3.5,
+                                ),
+                                shrinkWrap: true,
+                                itemCount: pois.length,
+                                itemBuilder: (context, index) {
+                                  final poi = pois[index];
+                                  return GridTile(
+                                    child: InkWell(
+                                      onLongPress: () => _showBottomSheet(context, poi),
+                                      // onTap: () {
+                                      //
+                                      // },
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(16.0),
+                                        child: Row(
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
+                                              child: const Icon(Icons.location_on_outlined),
+                                            ),
+                                            Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text('${poi.latitude}, ${poi.longitude}'),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          );
+                        } else {
+                          return ListView.builder(
+                            itemCount: pois.length,
+                            itemBuilder: (context, index) {
+                              if (pois.isEmpty) {
+                                return const SizedBox.shrink();
+                              } else {
+                                final poi = pois[index];
+                                return Dismissible(
+                                  key: ValueKey(poi),
+                                  direction: DismissDirection.endToStart,
+                                  background: Container(
+                                    color: Colors.red,
+                                    alignment: Alignment.centerRight,
+                                    padding: const EdgeInsets.only(right: 20.0),
+                                    child: const Icon(Icons.delete_outlined, color: Colors.white),
+                                  ),
+                                  confirmDismiss: (direction) async {
+                                    return await showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: const Text('Confirmar exclusão'),
+                                          content: const Text(
+                                              'Tem certeza que deseja excluir este POI?'),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              onPressed: () => Navigator.of(context).pop(false),
+                                              child: const Text('Cancelar'),
+                                            ),
+                                            TextButton(
+                                              onPressed: () => Navigator.of(context).pop(true),
+                                              child: const Text('Excluir'),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                  onDismissed: (direction) {
+                                    // Delete the POI from database
+                                    poiProvider.removePoi(widget.species.id!, poi.id!);
+                                    // poiProvider.notifyListeners();
+                                  },
+                                  child: PoiListItem(
+                                    poi: poi,
+                                    onLongPress: () => _showBottomSheet(context, poi),
+                                  ),
+                                );
+                              }
+                            },
+                          );
+                        }
+                      }
                   ),
                 );
               }
-            },
-          )
-          );
-        },
-      ),
+          ),
+        ],
+      )
     );
   }
 

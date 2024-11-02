@@ -1,11 +1,6 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:side_sheet/side_sheet.dart';
 
 import '../../data/models/specimen.dart';
@@ -13,6 +8,7 @@ import '../../providers/specimen_provider.dart';
 
 import 'add_specimen_screen.dart';
 import '../settings_screen.dart';
+import '../utils.dart';
 
 class SpecimensScreen extends StatefulWidget {
   const SpecimensScreen({super.key});
@@ -22,10 +18,13 @@ class SpecimensScreen extends StatefulWidget {
 }
 
 class _SpecimensScreenState extends State<SpecimensScreen> {
+  late SpecimenProvider specimenProvider;
+
   @override
   void initState() {
     super.initState();
-    Provider.of<SpecimenProvider>(context, listen: false).fetchSpecimens();
+    specimenProvider = context.read<SpecimenProvider>();
+    specimenProvider.fetchSpecimens();
   }
 
   void _showAddSpecimenScreen(BuildContext context) {
@@ -46,7 +45,7 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
       ).then((newSpecimen) {
         // Reload the inventory list
         if (newSpecimen != null) {
-          Provider.of<SpecimenProvider>(context, listen: false).fetchSpecimens();
+          specimenProvider.fetchSpecimens();
         }
       });
     } else {
@@ -56,7 +55,7 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
       ).then((newSpecimen) {
         // Reload the inventory list
         if (newSpecimen != null) {
-          Provider.of<SpecimenProvider>(context, listen: false).fetchSpecimens();
+          specimenProvider.fetchSpecimens();
         }
       });
     }
@@ -68,10 +67,10 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
       appBar: AppBar(
         title: const Text('Espécimes coletados'),
         actions: [
-          Provider.of<SpecimenProvider>(context, listen: false).specimens.isNotEmpty
+          specimenProvider.specimens.isNotEmpty
               ? IconButton(
             icon: const Icon(Icons.file_download_outlined),
-            onPressed: () => _exportAllSpecimensToJson(context),
+            onPressed: () => exportAllSpecimensToJson(context),
             tooltip: 'Exportar todos os espécimes',
           ) : const SizedBox.shrink(),
           IconButton(
@@ -177,6 +176,7 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
                           );
                         } else {
                           return ListView.builder(
+                            shrinkWrap: true,
                             itemCount: specimens.length,
                             itemBuilder: (context, index) {
                               final specimen = specimens[index];
@@ -305,8 +305,7 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
                                   Navigator.of(context).pop(true);
                                   Navigator.of(context).pop();
                                   // Call the function to delete species
-                                  Provider.of<SpecimenProvider>(context, listen: false)
-                                      .removeSpecimen(specimen);
+                                  specimenProvider.removeSpecimen(specimen);
                                 },
                                 child: const Text('Excluir'),
                               ),
@@ -324,34 +323,5 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
         );
       },
     );
-  }
-
-  Future<void> _exportAllSpecimensToJson(BuildContext context) async {
-    try {
-      final specimenProvider = Provider.of<SpecimenProvider>(context, listen: false);
-      final specimenList = specimenProvider.specimens;
-      final jsonData = specimenList.map((specimen) => specimen.toJson()).toList();
-      final jsonString = jsonEncode(jsonData);
-
-      Directory tempDir = await getTemporaryDirectory();
-      final filePath = '${tempDir.path}/specimens.json';
-      final file = File(filePath);
-      await file.writeAsString(jsonString);
-
-      await Share.shareXFiles([
-        XFile(filePath, mimeType: 'application/json'),
-      ], text: 'Espécimes exportados!', subject: 'Dados dos Espécimes');
-    } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Row(
-          children: [
-            Icon(Icons.error_outlined, color: Colors.red),
-            SizedBox(width: 8),
-            Text('Erro ao exportar os espécimes: $error'),
-          ],
-        ),
-        ),
-      );
-    }
   }
 }

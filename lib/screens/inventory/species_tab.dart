@@ -10,6 +10,7 @@ import '../../providers/species_provider.dart';
 import '../utils.dart';
 import '../species_search_delegate.dart';
 import 'species_list_item.dart';
+import 'species_grid_item.dart';
 
 class SpeciesTab extends StatefulWidget {
   final Inventory inventory;
@@ -34,14 +35,20 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return _buildSpeciesList(widget.speciesRepository, widget.inventoryRepository);
+    return _buildSpeciesList(
+        widget.speciesRepository, widget.inventoryRepository);
   }
 
-  Future<void> _addSpeciesToInventory(String speciesName, SpeciesRepository speciesRepository, InventoryRepository inventoryRepository) async {
-    final speciesProvider = Provider.of<SpeciesProvider>(context, listen: false);
-    final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
+  Future<void> _addSpeciesToInventory(String speciesName,
+      SpeciesRepository speciesRepository,
+      InventoryRepository inventoryRepository) async {
+    final speciesProvider = Provider.of<SpeciesProvider>(
+        context, listen: false);
+    final inventoryProvider = Provider.of<InventoryProvider>(
+        context, listen: false);
 
-    if (speciesProvider.speciesExistsInInventory(widget.inventory.id, speciesName)) {
+    if (speciesProvider.speciesExistsInInventory(
+        widget.inventory.id, speciesName)) {
       _showSpeciesAlreadyExistsMessage();
       return;
     }
@@ -60,8 +67,11 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
       checkMackinnonCompletion(context, widget.inventory, inventoryRepository);
     });
 
-    if (!widget.inventory.isFinished && widget.inventory.type != InventoryType.invBanding) {
-      _addSpeciesToOtherActiveInventories(speciesName, speciesProvider, inventoryProvider, speciesRepository, inventoryRepository);
+    if (!widget.inventory.isFinished &&
+        widget.inventory.type != InventoryType.invBanding) {
+      _addSpeciesToOtherActiveInventories(
+          speciesName, speciesProvider, inventoryProvider, speciesRepository,
+          inventoryRepository);
     }
 
     // if (!widget.inventory.isFinished && widget.inventory.type == InventoryType.invCumulativeTime) {
@@ -88,19 +98,27 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     );
   }
 
-  Future<void> _addSpeciesToOtherActiveInventories(String speciesName, SpeciesProvider speciesProvider, InventoryProvider inventoryProvider, SpeciesRepository speciesRepository, InventoryRepository inventoryRepository) async {
+  Future<void> _addSpeciesToOtherActiveInventories(String speciesName,
+      SpeciesProvider speciesProvider, InventoryProvider inventoryProvider,
+      SpeciesRepository speciesRepository,
+      InventoryRepository inventoryRepository) async {
     for (final inventory in inventoryProvider.activeInventories) {
-      if (inventory.id != widget.inventory.id && !speciesProvider.speciesExistsInInventory(inventory.id, speciesName)) {
+      if (inventory.id != widget.inventory.id &&
+          !speciesProvider.speciesExistsInInventory(
+              inventory.id, speciesName)) {
         final newSpeciesForOtherInventory = Species(
           inventoryId: inventory.id,
           name: speciesName,
           isOutOfInventory: inventory.isFinished,
           pois: [],
         );
-        await speciesRepository.insertSpecies(newSpeciesForOtherInventory.inventoryId, newSpeciesForOtherInventory);
+        await speciesRepository.insertSpecies(
+            newSpeciesForOtherInventory.inventoryId,
+            newSpeciesForOtherInventory);
       }
       if (inventory.type == InventoryType.invTimedQualitative) {
-        _restartInventoryTimer(inventoryProvider, inventory, inventoryRepository);
+        _restartInventoryTimer(
+            inventoryProvider, inventory, inventoryRepository);
       } else {
         inventoryProvider.updateInventory(inventory);
       }
@@ -109,14 +127,15 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     }
   }
 
-  void _restartInventoryTimer(InventoryProvider inventoryProvider, Inventory inventory, InventoryRepository inventoryRepository) async {
+  void _restartInventoryTimer(InventoryProvider inventoryProvider,
+      Inventory inventory, InventoryRepository inventoryRepository) async {
     inventory.elapsedTime = 0;
     inventory.isPaused = false;
     inventory.isFinished = false;
-    await inventoryProvider.updateInventoryElapsedTime(widget.inventory.id, widget.inventory.elapsedTime);
+    await inventoryProvider.updateInventoryElapsedTime(
+        widget.inventory.id, widget.inventory.elapsedTime);
     Inventory.startTimer(inventory, inventoryRepository);
     await inventoryRepository.updateInventory(inventory);
-
   }
 
   void _updateSpeciesList() async {
@@ -132,13 +151,21 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
   //   speciesProvider.sortSpeciesForInventory(widget.inventory.id);
   // }
 
-  void _showSpeciesSearch(SpeciesRepository speciesRepository, InventoryRepository inventoryRepository) async {
+  void _showSpeciesSearch(SpeciesRepository speciesRepository,
+      InventoryRepository inventoryRepository) async {
     final allSpecies = await loadSpeciesSearchData();
     allSpecies.sort((a, b) => a.compareTo(b));
+
+    final isLargeScreen = MediaQuery.of(context).size.width > 600;
+
     final selectedSpecies = await showSearch(
       context: context,
       delegate: SpeciesSearchDelegate(
-          allSpecies, (speciesName) => _addSpeciesToInventory(speciesName, speciesRepository, inventoryRepository), _updateSpeciesList),
+          allSpecies, (speciesName) =>
+          _addSpeciesToInventory(
+              speciesName, speciesRepository, inventoryRepository),
+          _updateSpeciesList),
+      useRootNavigator: !isLargeScreen,
     );
 
     if (selectedSpecies != null) {
@@ -146,52 +173,99 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     }
   }
 
-  Widget _buildSpeciesList(SpeciesRepository speciesRepository, InventoryRepository inventoryRepository) {
+  Widget _buildSpeciesList(SpeciesRepository speciesRepository,
+      InventoryRepository inventoryRepository) {
     return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: TextField(
-            decoration: const InputDecoration(
-              hintText: 'Buscar espécie...',
-              prefixIcon: Icon(Icons.search_outlined),
-              border: OutlineInputBorder(),
-            ),
-            readOnly: true,
-            onTap: () async {
-              _showSpeciesSearch(speciesRepository, inventoryRepository);
-            },
-          ),
-        ),
-        Expanded(
-          child: Consumer<SpeciesProvider>(
-            builder: (context, speciesProvider, child) {
-              final speciesList = speciesProvider.getSpeciesForInventory(widget.inventory.id);
-              if (speciesList.isEmpty) {
-                return const Center(
-                  child: Text('Nenhuma espécie registrada.'),
-                );
-              } else {
-                return ListView.builder(
-                  itemCount: speciesList.length,
-                  itemBuilder: (context, index) {
-                    // print('speciesList: ${speciesList.length} ; AnimatedList: $index');
-                    // if (index >= speciesList.length) {
-                    //   return const SizedBox.shrink();
-                    // }
-                    final species = speciesList[index];
-                    return SpeciesListItem(
-                      species: species,
-                      onLongPress: () => _showBottomSheet(context, species),
-                    );
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(
+                    maxWidth: 840),
+                child: TextField(
+                  decoration: const InputDecoration(
+                    hintText: 'Buscar espécie...',
+                    prefixIcon: Icon(Icons.search_outlined),
+                    border: OutlineInputBorder(),
+                  ),
+                  readOnly: true,
+                  onTap: () async {
+                    _showSpeciesSearch(speciesRepository, inventoryRepository);
                   },
-
-                );
-              }
-            },
+                ),
+              ),
+            ),
           ),
-        ),
-      ],
+          Expanded(
+              child: Column(
+                  children: [
+                    Consumer<SpeciesProvider>(
+                        builder: (context, speciesProvider, child) {
+                          final speciesList = speciesProvider
+                              .getSpeciesForInventory(widget.inventory.id);
+                          if (speciesList.isEmpty) {
+                            return const Center(
+                              child: Text('Nenhuma espécie registrada.'),
+                            );
+                          } else {
+                            return LayoutBuilder(
+                              builder: (BuildContext context,
+                                  BoxConstraints constraints) {
+                                final screenWidth = constraints.maxWidth;
+                                final isLargeScreen = screenWidth > 600;
+
+                                if (isLargeScreen) {
+                                  return Center(
+                                    child: ConstrainedBox(
+                                      constraints: const BoxConstraints(
+                                          maxWidth: 840),
+                                      child: GridView.builder(
+                                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 2,
+                                          childAspectRatio: 6.0,
+                                        ),
+                                        shrinkWrap: true,
+                                        itemCount: speciesList.length,
+                                        itemBuilder: (context, index) {
+                                          final species = speciesList[index];
+                                          return SpeciesGridItem(
+                                            species: species,
+                                            onLongPress: () =>
+                                                _showBottomSheet(
+                                                    context, species),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  );
+                                } else {
+                                  return ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: speciesList.length,
+                                    itemBuilder: (context, index) {
+                                      // print('speciesList: ${speciesList.length} ; AnimatedList: $index');
+                                      // if (index >= speciesList.length) {
+                                      //   return const SizedBox.shrink();
+                                      // }
+                                      final species = speciesList[index];
+                                      return SpeciesListItem(
+                                        species: species,
+                                        onLongPress: () =>
+                                            _showBottomSheet(context, species),
+                                      );
+                                    },
+                                  );
+                                }
+                              },
+                            );
+                          }
+                        }
+                    )
+                  ]
+              )
+          ),
+        ]
     );
   }
 
@@ -209,41 +283,47 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                 children: <Widget>[
                   // Expanded(
                   //     child:
-                      ListTile(
-                        leading: const Icon(Icons.delete_outlined, color: Colors.red,),
-                        title: const Text('Apagar espécie', style: TextStyle(color: Colors.red),),
-                        onTap: () {
-                          // Ask for user confirmation
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: const Text('Confirmar exclusão'),
-                                content: const Text('Tem certeza que deseja excluir esta espécie?'),
-                                actions: <Widget>[
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop(false);
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: const Text('Cancelar'),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop(true);
-                                      Navigator.of(context).pop();
-                                      // Call the function to delete species
-                                      Provider.of<SpeciesProvider>(context, listen: false)
-                                          .removeSpecies(context, widget.inventory.id, species.id!);
-                                    },
-                                    child: const Text('Excluir'),
-                                  ),
-                                ],
-                              );
-                            },
+                  ListTile(
+                    leading: const Icon(
+                      Icons.delete_outlined, color: Colors.red,),
+                    title: const Text(
+                      'Apagar espécie', style: TextStyle(color: Colors.red),),
+                    onTap: () {
+                      // Ask for user confirmation
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Confirmar exclusão'),
+                            content: const Text(
+                                'Tem certeza que deseja excluir esta espécie?'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop(false);
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text('Cancelar'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop(true);
+                                  Navigator.of(context).pop();
+                                  // Call the function to delete species
+                                  Provider.of<SpeciesProvider>(
+                                      context, listen: false)
+                                      .removeSpecies(
+                                      context, widget.inventory.id,
+                                      species.id!);
+                                },
+                                child: const Text('Excluir'),
+                              ),
+                            ],
                           );
                         },
-                      )
+                      );
+                    },
+                  )
                   // )
                 ],
               ),

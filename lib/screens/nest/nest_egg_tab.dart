@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/models/nest.dart';
@@ -27,32 +28,99 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
   }
 
   Widget _buildEggList() {
-    return Consumer<EggProvider>(
-      builder: (context, eggProvider, child) {
-        final eggList = eggProvider.getEggForNest(
-            widget.nest.id!);
-        if (eggList.isEmpty) {
-          return const Center(
-            child: Text('Nenhum ovo registrado.'),
-          );
-        } else {
-          return RefreshIndicator(
-              onRefresh: () async {
-            await eggProvider.getEggForNest(widget.nest.id ?? 0);
-          },
-        child: ListView.builder(
-        itemCount: eggList.length,
-        itemBuilder: (context, index) {
-              final egg = eggList[index];
-              return EggListItem(
-                egg: egg,
-                onLongPress: () => _showBottomSheet(context, egg),
-              );
-            },
-          )
-          );
-        }
-      },
+    return Column(
+      children: [
+        Consumer<EggProvider>(
+            builder: (context, eggProvider, child) {
+              final eggList = eggProvider.getEggForNest(
+                  widget.nest.id!);
+              if (eggList.isEmpty) {
+                return const Center(
+                  child: Text('Nenhum ovo registrado.'),
+                );
+              } else {
+                return RefreshIndicator(
+                  onRefresh: () async {
+                    await eggProvider.getEggForNest(widget.nest.id ?? 0);
+                  },
+                  child: LayoutBuilder(
+                      builder: (BuildContext context, BoxConstraints constraints) {
+                        final screenWidth = constraints.maxWidth;
+                        final isLargeScreen = screenWidth > 600;
+
+                        if (isLargeScreen) {
+                          return Center(
+                            child: ConstrainedBox(
+                              constraints: const BoxConstraints(maxWidth: 840),
+                              child: GridView.builder(
+                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  childAspectRatio: 3.5,
+                                ),
+                                shrinkWrap: true,
+                                itemCount: eggList.length,
+                                itemBuilder: (context, index) {
+                                  final egg = eggList[index];
+                                  return GridTile(
+                                    child: InkWell(
+                                      onLongPress: () =>
+                                          _showBottomSheet(context, egg),
+                                      // onTap: () {
+                                      //
+                                      // },
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(16.0),
+                                        child: Row(
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
+                                              child: const Icon(Icons.egg_outlined),
+                                            ),
+                                            Column(
+                                              crossAxisAlignment: CrossAxisAlignment
+                                                  .start,
+                                              children: [
+                                                Text(
+                                                  egg.fieldNumber!,
+                                                  style: const TextStyle(
+                                                      fontWeight: FontWeight.bold),
+                                                ),
+                                                Text(
+                                                  egg.speciesName!,
+                                                  style: const TextStyle(fontStyle: FontStyle.italic),
+                                                ),
+                                                Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(egg.sampleTime!)),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          );
+                        } else {
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: eggList.length,
+                            itemBuilder: (context, index) {
+                              final egg = eggList[index];
+                              return EggListItem(
+                                egg: egg,
+                                onLongPress: () => _showBottomSheet(context, egg),
+                              );
+                            },
+                          );
+                        }
+                      }
+                  ),
+                );
+              }
+            }
+        ),
+      ],
     );
   }
 

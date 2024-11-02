@@ -16,6 +16,7 @@ import '../data/database/repositories/inventory_repository.dart';
 import '../providers/inventory_provider.dart';
 import '../providers/species_provider.dart';
 import '../providers/nest_provider.dart';
+import '../providers/specimen_provider.dart';
 
 import 'inventory/add_inventory_screen.dart';
 
@@ -361,3 +362,31 @@ Future<void> exportNestToJson(BuildContext context, Nest nest) async {
   }
 }
 
+Future<void> exportAllSpecimensToJson(BuildContext context) async {
+  try {
+    final specimenProvider = Provider.of<SpecimenProvider>(context, listen: false);
+    final specimenList = specimenProvider.specimens;
+    final jsonData = specimenList.map((specimen) => specimen.toJson()).toList();
+    final jsonString = jsonEncode(jsonData);
+
+    Directory tempDir = await getTemporaryDirectory();
+    final filePath = '${tempDir.path}/specimens.json';
+    final file = File(filePath);
+    await file.writeAsString(jsonString);
+
+    await Share.shareXFiles([
+      XFile(filePath, mimeType: 'application/json'),
+    ], text: 'Espécimes exportados!', subject: 'Dados dos Espécimes');
+  } catch (error) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Row(
+        children: [
+          Icon(Icons.error_outlined, color: Colors.red),
+          SizedBox(width: 8),
+          Text('Erro ao exportar os espécimes: $error'),
+        ],
+      ),
+      ),
+    );
+  }
+}

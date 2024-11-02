@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../data/models/inventory.dart';
 import '../../providers/weather_provider.dart';
@@ -24,32 +25,99 @@ class _WeatherTabState extends State<WeatherTab> with AutomaticKeepAliveClientMi
   }
 
   Widget _buildWeatherList() {
-    return Consumer<WeatherProvider>(
-      builder: (context, weatherProvider, child) {
-        final weatherList = weatherProvider.getWeatherForInventory(
-            widget.inventory.id);
-        if (weatherList.isEmpty) {
-          return const Center(
-            child: Text('Nenhum registro do tempo.'),
-          );
-        } else {
-          return RefreshIndicator(
+    return Column(
+        children: [
+          Consumer<WeatherProvider>(
+        builder: (context, weatherProvider, child) {
+          final weatherList = weatherProvider.getWeatherForInventory(
+              widget.inventory.id);
+          if (weatherList.isEmpty) {
+            return const Center(
+              child: Text('Nenhum registro do tempo.'),
+            );
+          } else {
+            return RefreshIndicator(
               onRefresh: () async {
-            await weatherProvider.getWeatherForInventory(widget.inventory.id);
-          },
-        child: ListView.builder(
-        itemCount: weatherList.length,
-        itemBuilder: (context, index) {
-              final weather = weatherList[index];
-              return WeatherListItem(
-                weather: weather,
-                onLongPress: () => _showBottomSheet(context, weather),
-              );
-            },
-          )
-          );
+                await weatherProvider.getWeatherForInventory(
+                    widget.inventory.id);
+              },
+              child: LayoutBuilder(
+                  builder: (BuildContext context, BoxConstraints constraints) {
+                    final screenWidth = constraints.maxWidth;
+                    final isLargeScreen = screenWidth > 600;
+
+                    if (isLargeScreen) {
+                      return Center(
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(maxWidth: 840),
+                          child: GridView.builder(
+                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              childAspectRatio: 3.0,
+                            ),
+                            shrinkWrap: true,
+                            itemCount: weatherList.length,
+                            itemBuilder: (context, index) {
+                              final weather = weatherList[index];
+                              return GridTile(
+                                child: InkWell(
+                                  onLongPress: () =>
+                                      _showBottomSheet(context, weather),
+                                  // onTap: () {
+                                  //
+                                  // },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: Row(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
+                                          child: const Icon(Icons.wb_sunny_outlined),
+                                        ),
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              DateFormat('dd/MM/yyyy HH:mm:ss').format(weather.sampleTime!),
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text('Nebulosidade: ${weather.cloudCover}%'),
+                                            Text('Precipitação: ${precipitationTypeFriendlyNames[weather.precipitation]}'),
+                                            Text('Temperatura: ${weather.temperature} °C'),
+                                            Text('Vento: ${weather.windSpeed} bft'),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      );
+                    } else {
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: weatherList.length,
+                        itemBuilder: (context, index) {
+                          final weather = weatherList[index];
+                          return WeatherListItem(
+                            weather: weather,
+                            onLongPress: () =>
+                                _showBottomSheet(context, weather),
+                          );
+                        },
+                      );
+                    }
+                  }
+              ),
+            );
+          }
         }
-      },
+    )
+    ]
     );
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../data/models/inventory.dart';
 import '../../providers/vegetation_provider.dart';
@@ -24,32 +25,99 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
   }
 
   Widget _buildVegetationList() {
-    return Consumer<VegetationProvider>(
-      builder: (context, vegetationProvider, child) {
-        final vegetationList = vegetationProvider.getVegetationForInventory(
-            widget.inventory.id);
-        if (vegetationList.isEmpty) {
-          return const Center(
-            child: Text('Nenhum registro de vegetação.'),
-          );
-        } else {
-          return RefreshIndicator(
+    return Column(
+        children: [
+          Consumer<VegetationProvider>(
+        builder: (context, vegetationProvider, child) {
+          final vegetationList = vegetationProvider.getVegetationForInventory(
+              widget.inventory.id);
+          if (vegetationList.isEmpty) {
+            return const Center(
+              child: Text('Nenhum registro de vegetação.'),
+            );
+          } else {
+            return RefreshIndicator(
               onRefresh: () async {
-            await vegetationProvider.getVegetationForInventory(widget.inventory.id);
-          },
-        child: ListView.builder(
-        itemCount: vegetationList.length,
-        itemBuilder: (context, index) {
-              final vegetation = vegetationList[index];
-              return VegetationListItem(
-                vegetation: vegetation,
-                onLongPress: () => _showBottomSheet(context, vegetation),
-              );
-            },
-          )
-          );
+                await vegetationProvider.getVegetationForInventory(
+                    widget.inventory.id);
+              },
+              child: LayoutBuilder(
+                  builder: (BuildContext context, BoxConstraints constraints) {
+                    final screenWidth = constraints.maxWidth;
+                    final isLargeScreen = screenWidth > 600;
+
+                    if (isLargeScreen) {
+                      return Center(
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(maxWidth: 840),
+                          child: GridView.builder(
+                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              childAspectRatio: 3.0,
+                            ),
+                            shrinkWrap: true,
+                            itemCount: vegetationList.length,
+                            itemBuilder: (context, index) {
+                              final vegetation = vegetationList[index];
+                              return GridTile(
+                                child: InkWell(
+                                  onLongPress: () =>
+                                      _showBottomSheet(context, vegetation),
+                                  // onTap: () {
+                                  //
+                                  // },
+                                  child: Padding(
+                                    padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
+                                    child: Row(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
+                                          child: const Icon(Icons.local_florist_outlined),
+                                        ),
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              DateFormat('dd/MM/yyyy HH:mm:ss').format(vegetation.sampleTime!),
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text('${vegetation.latitude}; ${vegetation.longitude}'),
+                                            Text('Herbáceas: ${vegetation.herbsDistribution?.index ?? 0}; ${vegetation.herbsProportion}%; ${vegetation.herbsHeight} cm'),
+                                            Text('Arbustos: ${vegetation.shrubsDistribution?.index ?? 0}; ${vegetation.shrubsProportion}%; ${vegetation.shrubsHeight} cm'),
+                                            Text('Árvores: ${vegetation.treesDistribution?.index ?? 0}; ${vegetation.treesProportion}%; ${vegetation.treesHeight} cm'),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      );
+                    } else {
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: vegetationList.length,
+                        itemBuilder: (context, index) {
+                          final vegetation = vegetationList[index];
+                          return VegetationListItem(
+                            vegetation: vegetation,
+                            onLongPress: () =>
+                                _showBottomSheet(context, vegetation),
+                          );
+                        },
+                      );
+                    }
+                  }
+              ),
+            );
+          }
         }
-      },
+    )
+    ]
     );
   }
 
