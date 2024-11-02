@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:side_sheet/side_sheet.dart';
 
 import '../../data/models/nest.dart';
 import '../../providers/nest_provider.dart';
@@ -92,10 +93,18 @@ class _NestsScreenState extends State<NestsScreen> {
                 : const Icon(Icons.settings),
             tooltip: 'Configurações',
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const SettingsScreen()),
-              );
+              if (MediaQuery.sizeOf(context).width > 600) {
+                SideSheet.right(
+                  context: context,
+                  width: 400,
+                  body: const SettingsScreen(),
+                );
+              } else {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const SettingsScreen()),
+                );
+              }
             },
           ),
         ],
@@ -151,67 +160,70 @@ class _NestsScreenState extends State<NestsScreen> {
                         final isLargeScreen = screenWidth > 600;
 
                         if (isLargeScreen) {
-                          return GridView.builder(
-                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3,
-                              childAspectRatio: 3.0,
-                            ),
-                            shrinkWrap: true,
-                            itemCount: nests.length,
-                            itemBuilder: (context, index) {
-                              final nest = nests[index];
-                              return GridTile(
-                                child: Card(
-                                  child: InkWell(
-                                      onLongPress: () => _showBottomSheet(context, nest),
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => NestDetailScreen(
-                                              nest: nest,
+                          return Center(
+                            child: ConstrainedBox(
+                              constraints: const BoxConstraints(maxWidth: 840),
+                              child: GridView.builder(
+                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  childAspectRatio: 3.5,
+                                ),
+                                shrinkWrap: true,
+                                itemCount: nests.length,
+                                itemBuilder: (context, index) {
+                                  final nest = nests[index];
+                                  return GridTile(
+                                    child: InkWell(
+                                        onLongPress: () => _showBottomSheet(context, nest),
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => NestDetailScreen(
+                                                nest: nest,
+                                              ),
                                             ),
-                                          ),
-                                        ).then((result) {
-                                          if (result == true) {
-                                            nestProvider.fetchNests();
-                                          }
-                                        });
-                                      },
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(16.0),
-                                      child: Row(
-                                        children: [
-                                          Padding(
-                                              padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
-                                              child: nest.nestFate == NestFateType.fatSuccess
-                                                  ? const Icon(Icons.check_circle, color: Colors.green)
-                                                  : nest.nestFate == NestFateType.fatLost
-                                                  ? const Icon(Icons.cancel, color: Colors.red)
-                                                  : const Icon(Icons.help, color: Colors.grey),
-                                          ),
-                                          Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                          ).then((result) {
+                                            if (result == true) {
+                                              nestProvider.fetchNests();
+                                            }
+                                          });
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(16.0),
+                                          child: Row(
                                             children: [
-                                              Text(
-                                                nest.fieldNumber!,
-                                                style: const TextStyle(fontWeight: FontWeight.bold),
+                                              Padding(
+                                                padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
+                                                child: nest.nestFate == NestFateType.fatSuccess
+                                                    ? const Icon(Icons.check_circle, color: Colors.green)
+                                                    : nest.nestFate == NestFateType.fatLost
+                                                    ? const Icon(Icons.cancel, color: Colors.red)
+                                                    : const Icon(Icons.help, color: Colors.grey),
                                               ),
-                                              Text(
-                                                nest.speciesName!,
-                                                style: const TextStyle(fontStyle: FontStyle.italic),
+                                              Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    nest.fieldNumber!,
+                                                    style: const TextStyle(fontWeight: FontWeight.bold),
+                                                  ),
+                                                  Text(
+                                                    nest.speciesName!,
+                                                    style: const TextStyle(fontStyle: FontStyle.italic),
+                                                  ),
+                                                  Text(nest.localityName!),
+                                                  Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(nest.foundTime!)),
+                                                ],
                                               ),
-                                              Text(nest.localityName!),
-                                              Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(nest.foundTime!)),
                                             ],
                                           ),
-                                        ],
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
+                                  );
+                                },
+                              ),
+                            ),
                           );
                         } else {
                           return ListView.builder(

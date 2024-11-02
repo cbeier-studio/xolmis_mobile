@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:side_sheet/side_sheet.dart';
 
 import '../../data/models/specimen.dart';
 import '../../providers/specimen_provider.dart';
@@ -79,10 +80,18 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
                 : const Icon(Icons.settings),
             tooltip: 'Configurações',
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const SettingsScreen()),
-              );
+              if (MediaQuery.sizeOf(context).width > 600) {
+                SideSheet.right(
+                  context: context,
+                  width: 400,
+                  body: const SettingsScreen(),
+                );
+              } else {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const SettingsScreen()),
+                );
+              }
             },
           ),
         ],
@@ -109,59 +118,62 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
                         final isLargeScreen = screenWidth > 600;
 
                         if (isLargeScreen) {
-                          return GridView.builder(
-                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3,
-                              childAspectRatio: 3.0,
-                            ),
-                            shrinkWrap: true,
-                            itemCount: specimens.length,
-                            itemBuilder: (context, index) {
-                              final specimen = specimens[index];
-                              return GridTile(
-                                child: Card(
-                                  child: InkWell(
-                                    onLongPress: () => _showBottomSheet(context, specimen),
-                                    // onTap: () {
-                                    //   Navigator.push(
-                                    //     context,
-                                    //     MaterialPageRoute(
-                                    //       builder: (context) => NestDetailScreen(
-                                    //         nest: nest,
-                                    //       ),
-                                    //     ),
-                                    //   ).then((result) {
-                                    //     if (result == true) {
-                                    //       nestProvider.fetchNests();
-                                    //     }
-                                    //   });
-                                    // },
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(16.0),
-                                      child: Row(
-                                        children: [
-                                          Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                          return Center(
+                            child: ConstrainedBox(
+                              constraints: const BoxConstraints(maxWidth: 840),
+                              child: GridView.builder(
+                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  childAspectRatio: 3.5,
+                                ),
+                                shrinkWrap: true,
+                                itemCount: specimens.length,
+                                itemBuilder: (context, index) {
+                                  final specimen = specimens[index];
+                                  return GridTile(
+                                    child: InkWell(
+                                        onLongPress: () => _showBottomSheet(context, specimen),
+                                        // onTap: () {
+                                        //   Navigator.push(
+                                        //     context,
+                                        //     MaterialPageRoute(
+                                        //       builder: (context) => NestDetailScreen(
+                                        //         nest: nest,
+                                        //       ),
+                                        //     ),
+                                        //   ).then((result) {
+                                        //     if (result == true) {
+                                        //       nestProvider.fetchNests();
+                                        //     }
+                                        //   });
+                                        // },
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(16.0),
+                                          child: Row(
                                             children: [
-                                              Text(
-                                                specimen.fieldNumber,
-                                                style: const TextStyle(fontWeight: FontWeight.bold),
+                                              Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    specimen.fieldNumber,
+                                                    style: const TextStyle(fontWeight: FontWeight.bold),
+                                                  ),
+                                                  Text(
+                                                    specimen.speciesName!,
+                                                    style: const TextStyle(fontStyle: FontStyle.italic),
+                                                  ),
+                                                  Text(specimen.locality!),
+                                                  Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(specimen.sampleTime!)),
+                                                ],
                                               ),
-                                              Text(
-                                                specimen.speciesName!,
-                                                style: const TextStyle(fontStyle: FontStyle.italic),
-                                              ),
-                                              Text(specimen.locality!),
-                                              Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(specimen.sampleTime!)),
                                             ],
                                           ),
-                                        ],
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
+                                  );
+                                },
+                              ),
+                            ),
                           );
                         } else {
                           return ListView.builder(
