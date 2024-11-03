@@ -23,7 +23,7 @@ class DatabaseHelper {
     String path = join(await getDatabasesPath(), 'xolmis_database.db');
     return await openDatabase(
       path,
-      version: 6, // Increase the version number
+      version: 7, // Increase the version number
       onCreate: _createTables,
       onUpgrade: _upgradeTables,
       onOpen: (db) {
@@ -47,7 +47,7 @@ class DatabaseHelper {
           'startLongitude REAL, '
           'startLatitude REAL, '
           'endLongitude REAL, '
-          'endLatitude REAL)', // Add the new columns
+          'endLatitude REAL)',
     );
     db.execute(
       'CREATE TABLE species('
@@ -158,6 +158,21 @@ class DatabaseHelper {
           notes TEXT
         )
       ''');
+    db.execute('''
+      CREATE TABLE images (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        imagePath TEXT NOT NULL,
+        notes TEXT,
+        vegetationId INTEGER,
+        eggId INTEGER,
+        specimenId INTEGER,
+        nestRevisionId INTEGER,
+        FOREIGN KEY (vegetationId) REFERENCES vegetation(id) ON DELETE CASCADE,
+        FOREIGN KEY (eggId) REFERENCES eggs(id) ON DELETE CASCADE,
+        FOREIGN KEY (specimenId) REFERENCES specimens(id) ON DELETE CASCADE,
+        FOREIGN KEY (nestRevisionId) REFERENCES nest_revisions(id) ON DELETE CASCADE
+      )
+    ''');
   }
 
   void _upgradeTables(Database db, int oldVersion, int newVersion) {
@@ -248,6 +263,23 @@ class DatabaseHelper {
           notes TEXT
         )
       ''');
+    }
+    if (oldVersion < 7) {
+      db.execute('''
+      CREATE TABLE images (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        imagePath TEXT NOT NULL,
+        notes TEXT,
+        vegetationId INTEGER,
+        eggId INTEGER,
+        specimenId INTEGER,
+        nestRevisionId INTEGER,
+        FOREIGN KEY (vegetationId) REFERENCES vegetation(id) ON DELETE CASCADE,
+        FOREIGN KEY (eggId) REFERENCES eggs(id) ON DELETE CASCADE,
+        FOREIGN KEY (specimenId) REFERENCES specimens(id) ON DELETE CASCADE,
+        FOREIGN KEY (nestRevisionId) REFERENCES nest_revisions(id) ON DELETE CASCADE
+      )
+    ''');
     }
   }
 

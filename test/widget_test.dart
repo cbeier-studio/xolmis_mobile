@@ -22,6 +22,7 @@ import 'package:xolmis/data/database/repositories/nest_repository.dart';
 import 'package:xolmis/data/database/repositories/nest_revision_repository.dart';
 import 'package:xolmis/data/database/repositories/egg_repository.dart';
 import 'package:xolmis/data/database/repositories/specimen_repository.dart';
+import 'package:xolmis/data/database/repositories/app_image_repository.dart';
 
 import 'package:xolmis/data/database/daos/egg_dao.dart';
 import 'package:xolmis/data/database/daos/inventory_dao.dart';
@@ -32,6 +33,7 @@ import 'package:xolmis/data/database/daos/species_dao.dart';
 import 'package:xolmis/data/database/daos/specimen_dao.dart';
 import 'package:xolmis/data/database/daos/vegetation_dao.dart';
 import 'package:xolmis/data/database/daos/weather_dao.dart';
+import 'package:xolmis/data/database/daos/app_image_dao.dart';
 
 Future<void> main() async {
   late DatabaseHelper databaseHelper;
@@ -45,6 +47,7 @@ Future<void> main() async {
   late NestRevisionDao nestRevisionDao;
   late EggDao eggDao;
   late SpecimenDao specimenDao;
+  late AppImageDao appImageDao;
 
   late InventoryRepository inventoryRepository;
   late SpeciesRepository speciesRepository;
@@ -55,6 +58,7 @@ Future<void> main() async {
   late NestRevisionRepository nestRevisionRepository;
   late EggRepository eggRepository;
   late SpecimenRepository specimenRepository;
+  late AppImageRepository appImageRepository;
 
   setUp(() async {
     databaseHelper = DatabaseHelper();
@@ -69,6 +73,7 @@ Future<void> main() async {
     nestRevisionDao = NestRevisionDao(databaseHelper);
     nestDao = NestDao(databaseHelper, nestRevisionDao, eggDao);
     specimenDao = SpecimenDao(databaseHelper);
+    appImageDao = AppImageDao(databaseHelper);
 
     poiRepository = PoiRepository(poiDao);
     speciesRepository = SpeciesRepository(speciesDao);
@@ -79,6 +84,7 @@ Future<void> main() async {
     nestRevisionRepository = NestRevisionRepository(nestRevisionDao);
     nestRepository = NestRepository(nestDao);
     specimenRepository = SpecimenRepository(specimenDao);
+    appImageRepository = AppImageRepository(appImageDao);
   });
 
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
@@ -96,6 +102,7 @@ Future<void> main() async {
           nestRevisionRepository: nestRevisionRepository,
           eggRepository: eggRepository,
           specimenRepository: specimenRepository,
+          appImageRepository: appImageRepository,
         )
     );
 

@@ -4,19 +4,24 @@ import 'dart:io';
 import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:path/path.dart' as path;
 
 import '../data/models/inventory.dart';
 import '../data/models/nest.dart';
+import '../data/models/app_image.dart';
 import '../data/database/repositories/inventory_repository.dart';
 import '../providers/inventory_provider.dart';
 import '../providers/species_provider.dart';
 import '../providers/nest_provider.dart';
 import '../providers/specimen_provider.dart';
+import '../providers/app_image_provider.dart';
 
 import 'inventory/add_inventory_screen.dart';
 
@@ -375,7 +380,7 @@ Future<void> exportAllSpecimensToJson(BuildContext context) async {
     await file.writeAsString(jsonString);
 
     await Share.shareXFiles([
-      XFile(filePath, mimeType: 'application/json'),
+      XFile(filePath, mimeType: 'text/json'),
     ], text: 'Espécimes exportados!', subject: 'Dados dos Espécimes');
   } catch (error) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -390,3 +395,4 @@ Future<void> exportAllSpecimensToJson(BuildContext context) async {
     );
   }
 }
+

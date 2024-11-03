@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import '../../data/models/nest.dart';
 import '../../providers/nest_revision_provider.dart';
 
+import '../app_image_screen.dart';
+
 import 'revision_list_item.dart';
 
 class NestRevisionsTab extends StatefulWidget {
@@ -71,9 +73,16 @@ class _NestRevisionsTabState extends State<NestRevisionsTab> with AutomaticKeepA
                                     child: InkWell(
                                       onLongPress: () =>
                                           _showBottomSheet(context, revision),
-                                      // onTap: () {
-                                      //
-                                      // },
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => AppImageScreen(
+                                              nestRevisionId: revision.id,
+                                            ),
+                                          ),
+                                        );
+                                      },
                                       child: Padding(
                                         padding: const EdgeInsets.all(16.0),
                                         child: Row(

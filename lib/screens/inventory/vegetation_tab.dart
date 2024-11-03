@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../data/models/inventory.dart';
 import '../../providers/vegetation_provider.dart';
+import '../app_image_screen.dart';
 import 'vegetation_list_item.dart';
 
 class VegetationTab extends StatefulWidget {
@@ -66,9 +67,16 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
                                 child: InkWell(
                                   onLongPress: () =>
                                       _showBottomSheet(context, vegetation),
-                                  // onTap: () {
-                                  //
-                                  // },
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => AppImageScreen(
+                                          vegetationId: vegetation.id,
+                                        ),
+                                      ),
+                                    );
+                                  },
                                   child: Padding(
                                     padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
                                     child: Row(

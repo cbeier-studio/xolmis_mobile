@@ -209,6 +209,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                   children: [
                     Text('${inventoryTypeFriendlyNames[widget.inventory.type]}'),
                     if (widget.inventory.duration > 0) Text(': ${widget.inventory.duration} minutos'),
+                    if (widget.inventory.maxSpecies > 0) Text(': ${widget.inventory.maxSpecies} spp.'),
                   ],
                 ),
               widget.inventory.duration > 0 && !widget.inventory.isFinished

@@ -17,6 +17,7 @@ import 'data/database/daos/nest_dao.dart';
 import 'data/database/daos/nest_revision_dao.dart';
 import 'data/database/daos/egg_dao.dart';
 import 'data/database/daos/specimen_dao.dart';
+import 'data/database/daos/app_image_dao.dart';
 
 import 'data/database/repositories/inventory_repository.dart';
 import 'data/database/repositories/species_repository.dart';
@@ -27,6 +28,7 @@ import 'data/database/repositories/nest_repository.dart';
 import 'data/database/repositories/nest_revision_repository.dart';
 import 'data/database/repositories/egg_repository.dart';
 import 'data/database/repositories/specimen_repository.dart';
+import 'data/database/repositories/app_image_repository.dart';
 
 import 'providers/inventory_provider.dart';
 import 'providers/species_provider.dart';
@@ -37,6 +39,7 @@ import 'providers/nest_provider.dart';
 import 'providers/nest_revision_provider.dart';
 import 'providers/egg_provider.dart';
 import 'providers/specimen_provider.dart';
+import 'providers/app_image_provider.dart';
 
 import 'screens/inventory/inventories_screen.dart';
 import 'screens/nest/nests_screen.dart';
@@ -63,6 +66,7 @@ void main() async {
   final eggDao = EggDao(databaseHelper);
   final nestDao = NestDao(databaseHelper, nestRevisionDao, eggDao);
   final specimenDao = SpecimenDao(databaseHelper);
+  final appImageDao = AppImageDao(databaseHelper);
 
   // Create the repositories
   final inventoryRepository = InventoryRepository(inventoryDao);
@@ -74,6 +78,7 @@ void main() async {
   final nestRevisionRepository = NestRevisionRepository(nestRevisionDao);
   final eggRepository = EggRepository(eggDao);
   final specimenRepository = SpecimenRepository(specimenDao);
+  final appImageRepository = AppImageRepository(appImageDao);
 
   final themeMode = await getThemeMode();
   runApp(MyApp(
@@ -87,6 +92,7 @@ void main() async {
     nestRevisionRepository: nestRevisionRepository,
     eggRepository: eggRepository,
     specimenRepository: specimenRepository,
+    appImageRepository: appImageRepository,
   ));
 }
 
@@ -101,6 +107,7 @@ class MyApp extends StatelessWidget {
   final NestRevisionRepository nestRevisionRepository;
   final EggRepository eggRepository;
   final SpecimenRepository specimenRepository;
+  final AppImageRepository appImageRepository;
 
   const MyApp({
     super.key,
@@ -114,12 +121,14 @@ class MyApp extends StatelessWidget {
     required this.nestRevisionRepository,
     required this.eggRepository,
     required this.specimenRepository,
+    required this.appImageRepository,
   });
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (context) => AppImageProvider(appImageRepository)),
         ChangeNotifierProvider(create: (context) => SpecimenProvider(specimenRepository)),
         ChangeNotifierProvider(create: (context) => NestRevisionProvider(nestRevisionRepository)),
         ChangeNotifierProvider(create: (context) => EggProvider(eggRepository)),

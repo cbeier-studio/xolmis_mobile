@@ -1,6 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import '../../data/models/app_image.dart';
+import '../../providers/app_image_provider.dart';
 import '../../data/models/inventory.dart';
+import '../app_image_screen.dart';
 
 class VegetationListItem extends StatefulWidget {
   final Vegetation vegetation;
@@ -20,7 +26,29 @@ class VegetationListItemState extends State<VegetationListItem> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-        leading: const Icon(Icons.local_florist_outlined),
+        leading: FutureBuilder<List<AppImage>>(
+          future: Provider.of<AppImageProvider>(context, listen: false)
+              .fetchImagesForVegetation(widget.vegetation.id!),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const CircularProgressIndicator();
+            } else if (snapshot.hasError) {
+              return const Icon(Icons.error);
+            } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+              return ClipRRect(
+                borderRadius: BorderRadius.circular(0),
+                child: Image.file(
+                  File(snapshot.data!.first.imagePath),
+                  width: 50,
+                  height: 50,
+                  fit: BoxFit.cover,
+                ),
+              );
+            } else {
+              return const Icon(Icons.hide_image_outlined);
+            }
+          },
+        ),
         title: Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(widget.vegetation.sampleTime!)),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -33,9 +61,15 @@ class VegetationListItemState extends State<VegetationListItem> {
         ),
         onLongPress: widget.onLongPress,
         onTap: () {
-
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AppImageScreen(
+                vegetationId: widget.vegetation.id,
+              ),
+            ),
+          );
         },
-
     );
   }
 }

@@ -1,13 +1,16 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
-import 'package:side_sheet/side_sheet.dart';
 
 import '../../data/models/specimen.dart';
+import '../../data/models/app_image.dart';
 import '../../providers/specimen_provider.dart';
+import '../../providers/app_image_provider.dart';
 
 import 'add_specimen_screen.dart';
-import '../settings_screen.dart';
+import '../app_image_screen.dart';
 import '../utils.dart';
 
 class SpecimensScreen extends StatefulWidget {
@@ -151,9 +154,16 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
                                   return GridTile(
                                     child: InkWell(
                                         onLongPress: () => _showBottomSheet(context, specimen),
-                                        // onTap: () {
-                                        //
-                                        // },
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => AppImageScreen(
+                                                specimenId: specimen.id,
+                                              ),
+                                            ),
+                                          );
+                                        },
                                         child: Padding(
                                           padding: const EdgeInsets.all(16.0),
                                           child: Row(
@@ -228,6 +238,29 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
                                   specimenProvider.removeSpecimen(specimen);
                                 },
                                 child: ListTile(
+                                  leading: FutureBuilder<List<AppImage>>(
+                                    future: Provider.of<AppImageProvider>(context, listen: false)
+                                        .fetchImagesForSpecimen(specimen.id!),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState == ConnectionState.waiting) {
+                                        return const CircularProgressIndicator();
+                                      } else if (snapshot.hasError) {
+                                        return const Icon(Icons.error);
+                                      } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                                        return ClipRRect(
+                                          borderRadius: BorderRadius.circular(0),
+                                          child: Image.file(
+                                            File(snapshot.data!.first.imagePath),
+                                            width: 50,
+                                            height: 50,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        );
+                                      } else {
+                                        return const Icon(Icons.hide_image_outlined);
+                                      }
+                                    },
+                                  ),
                                   title: Text(specimen.fieldNumber),
                                   subtitle: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -242,20 +275,16 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
                                     ],
                                   ),
                                   onLongPress: () => _showBottomSheet(context, specimen),
-                                  // onTap: () {
-                                  //   Navigator.push(
-                                  //     context,
-                                  //     MaterialPageRoute(
-                                  //       builder: (context) => SpecimenDetailScreen(
-                                  //         specimen: specimen,
-                                  //       ),
-                                  //     ),
-                                  //   ).then((result) {
-                                  //     if (result == true) {
-                                  //       specimenProvider.fetchSpecimens();
-                                  //     }
-                                  //   });
-                                  // },
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => AppImageScreen(
+                                          specimenId: specimen.id,
+                                        ),
+                                      ),
+                                    );
+                                  },
                                 ),
                               );
                             },

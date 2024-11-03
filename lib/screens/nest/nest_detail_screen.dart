@@ -154,6 +154,13 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
                       widget.nest.speciesName!,
                       style: const TextStyle(fontStyle: FontStyle.italic),
                     ),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.center,
+                    //   children: [
+                    //     Text('${widget.nest.support}'),
+                    //     Text(': ${widget.nest.heightAboveGround} m'),
+                    //   ],
+                    // ),
                     TabBar(
                       tabs: [
                         Consumer<NestRevisionProvider>(
@@ -215,6 +222,7 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
                   value: selectedNestFate,
                   decoration: const InputDecoration(
                     labelText: 'Destino do ninho *',
+                    helperText: '* campo obrigatório',
                     border: OutlineInputBorder(),
                   ),
                   onChanged: (NestFateType? newValue) {

@@ -54,6 +54,7 @@ dependencies:
   package_info_plus: ^8.1.0
   wakelock_plus: ^1.2.8
   side_sheet: ^1.0.4
+  image_picker: ^1.1.2
 
 dev_dependencies:
   flutter_test:

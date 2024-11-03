@@ -1,6 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import '../../data/models/nest.dart';
+import '../../data/models/app_image.dart';
+import '../../providers/app_image_provider.dart';
+import '../app_image_screen.dart';
 
 class RevisionListItem extends StatefulWidget {
   final NestRevision nestRevision;
@@ -20,7 +26,29 @@ class RevisionListItemState extends State<RevisionListItem> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-        leading: const Icon(Icons.beenhere_outlined),
+      leading: FutureBuilder<List<AppImage>>(
+        future: Provider.of<AppImageProvider>(context, listen: false)
+            .fetchImagesForNestRevision(widget.nestRevision.id!),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const CircularProgressIndicator();
+          } else if (snapshot.hasError) {
+            return const Icon(Icons.error);
+          } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+            return ClipRRect(
+              borderRadius: BorderRadius.circular(0),
+              child: Image.file(
+                File(snapshot.data!.first.imagePath),
+                width: 50,
+                height: 50,
+                fit: BoxFit.cover,
+              ),
+            );
+          } else {
+            return const Icon(Icons.hide_image_outlined);
+          }
+        },
+      ),
         title: Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(widget.nestRevision.sampleTime!)),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -32,7 +60,14 @@ class RevisionListItemState extends State<RevisionListItem> {
         ),
         onLongPress: widget.onLongPress,
         onTap: () {
-
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AppImageScreen(
+                nestRevisionId: widget.nestRevision.id,
+              ),
+            ),
+          );
         },
 
     );

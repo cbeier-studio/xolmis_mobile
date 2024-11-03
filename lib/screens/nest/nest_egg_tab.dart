@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import '../../data/models/nest.dart';
 import '../../providers/egg_provider.dart';
 
+import '../app_image_screen.dart';
+
 import 'egg_list_item.dart';
 
 class EggsTab extends StatefulWidget {
@@ -68,9 +70,16 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
                                     child: InkWell(
                                       onLongPress: () =>
                                           _showBottomSheet(context, egg),
-                                      // onTap: () {
-                                      //
-                                      // },
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => AppImageScreen(
+                                              eggId: egg.id,
+                                            ),
+                                          ),
+                                        );
+                                      },
                                       child: Padding(
                                         padding: const EdgeInsets.all(16.0),
                                         child: Row(
