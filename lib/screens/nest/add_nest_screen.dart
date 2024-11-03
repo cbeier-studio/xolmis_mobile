@@ -75,6 +75,7 @@ class _AddNestScreenState extends State<AddNestScreen> {
                           textCapitalization: TextCapitalization.characters,
                           decoration: const InputDecoration(
                             labelText: 'Número de Campo *',
+                            helperText: '* campo obrigatório',
                             border: OutlineInputBorder(),
                           ),
                           validator: (value) {
@@ -89,6 +90,7 @@ class _AddNestScreenState extends State<AddNestScreen> {
                           controller: _speciesNameController,
                           decoration: const InputDecoration(
                             labelText: 'Espécie *',
+                            helperText: '* campo obrigatório',
                             border: OutlineInputBorder(),
                           ),
                           readOnly: true,
@@ -120,6 +122,7 @@ class _AddNestScreenState extends State<AddNestScreen> {
                           textCapitalization: TextCapitalization.words,
                           decoration: const InputDecoration(
                             labelText: 'Localidade *',
+                            helperText: '* campo obrigatório',
                             border: OutlineInputBorder(),
                           ),
                           validator: (value) {
@@ -135,6 +138,7 @@ class _AddNestScreenState extends State<AddNestScreen> {
                           textCapitalization: TextCapitalization.sentences,
                           decoration: const InputDecoration(
                             labelText: 'Suporte do ninho *',
+                            helperText: '* campo obrigatório',
                             border: OutlineInputBorder(),
                           ),
                           validator: (value) {

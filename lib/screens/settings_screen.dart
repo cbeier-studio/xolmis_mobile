@@ -182,7 +182,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               context: context,
               applicationIcon: Image.asset(
                 'assets/xolmis_icon.png',
-                scale: 2,
+                scale: 3,
               ),
               applicationLegalese: '© ${DateTime.now().year} Christian Beier',
               applicationName: _packageInfo?.appName ?? 'Xolmis',

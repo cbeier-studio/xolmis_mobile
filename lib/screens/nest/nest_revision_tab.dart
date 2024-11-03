@@ -28,9 +28,8 @@ class _NestRevisionsTabState extends State<NestRevisionsTab> with AutomaticKeepA
   }
 
   Widget _buildNestRevisionList() {
-    return Column(
-      children: [
-        Consumer<NestRevisionProvider>(
+    return Expanded(
+      child: Consumer<NestRevisionProvider>(
             builder: (context, nestRevisionProvider, child) {
               final revisionList = nestRevisionProvider.getRevisionForNest(
                   widget.nest.id!);
@@ -58,11 +57,12 @@ class _NestRevisionsTabState extends State<NestRevisionsTab> with AutomaticKeepA
                           return Center(
                             child: ConstrainedBox(
                               constraints: const BoxConstraints(maxWidth: 840),
-                              child: GridView.builder(
-                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  childAspectRatio: 3.5,
-                                ),
+                              child: SingleChildScrollView(
+                                child: GridView.builder(
+                                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    childAspectRatio: 3.2,
+                                  ),
                                 shrinkWrap: true,
                                 itemCount: revisionList.length,
                                 itemBuilder: (context, index) {
@@ -103,6 +103,7 @@ class _NestRevisionsTabState extends State<NestRevisionsTab> with AutomaticKeepA
                                   );
                                 },
                               ),
+                              ),
                             ),
                           );
                         } else {
@@ -125,7 +126,6 @@ class _NestRevisionsTabState extends State<NestRevisionsTab> with AutomaticKeepA
               }
             }
         ),
-      ],
     );
   }
 

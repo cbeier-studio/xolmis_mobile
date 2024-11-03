@@ -25,9 +25,8 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
   }
 
   Widget _buildVegetationList() {
-    return Column(
-        children: [
-          Consumer<VegetationProvider>(
+    return Expanded(
+        child: Consumer<VegetationProvider>(
         builder: (context, vegetationProvider, child) {
           final vegetationList = vegetationProvider.getVegetationForInventory(
               widget.inventory.id);
@@ -53,11 +52,12 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
                       return Center(
                         child: ConstrainedBox(
                           constraints: const BoxConstraints(maxWidth: 840),
-                          child: GridView.builder(
-                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              childAspectRatio: 3.0,
-                            ),
+                          child: SingleChildScrollView(
+                            child: GridView.builder(
+                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                childAspectRatio: 3.0,
+                              ),
                             shrinkWrap: true,
                             itemCount: vegetationList.length,
                             itemBuilder: (context, index) {
@@ -98,6 +98,7 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
                               );
                             },
                           ),
+                          ),
                         ),
                       );
                     } else {
@@ -120,7 +121,6 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
           }
         }
     )
-    ]
     );
   }
 

@@ -51,6 +51,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                       textCapitalization: TextCapitalization.words,
                       decoration: const InputDecoration(
                         labelText: 'ID do Inventário *',
+                        helperText: '* campo obrigatório',
                         border: OutlineInputBorder(),
                       ),
                       validator: (value) {
@@ -65,6 +66,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                       value: _selectedType,
                       decoration: const InputDecoration(
                         labelText: 'Tipo de Inventário *',
+                        helperText: '* campo obrigatório',
                         border: OutlineInputBorder(),
                       ),
                       items: InventoryType.values.map((type) {

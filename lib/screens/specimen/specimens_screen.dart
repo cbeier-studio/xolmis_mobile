@@ -88,14 +88,14 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
             },
           ),
         ) : SizedBox.shrink(),
-        actions: [
-          specimenProvider.specimens.isNotEmpty
-              ? IconButton(
-            icon: const Icon(Icons.file_download_outlined),
-            onPressed: () => exportAllSpecimensToJson(context),
-            tooltip: 'Exportar todos os espécimes',
-          ) : const SizedBox.shrink(),
-        ],
+        // actions: [
+        //   specimenProvider.specimens.isNotEmpty
+        //       ? IconButton(
+        //     icon: const Icon(Icons.file_download_outlined),
+        //     onPressed: () => exportAllSpecimensToJson(context),
+        //     tooltip: 'Exportar todos os espécimes',
+        //   ) : const SizedBox.shrink(),
+        // ],
       ),
       body: Column(
         children: [
@@ -113,7 +113,8 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
               },
             ),
           ),
-          Consumer<SpecimenProvider>(
+          Expanded(
+          child: Consumer<SpecimenProvider>(
               builder: (context, specimenProvider, child) {
                 final filteredSpecimens = _filterSpecimens(specimenProvider.specimens);
 
@@ -133,14 +134,16 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
                         final isLargeScreen = screenWidth > 600;
 
                         if (isLargeScreen) {
-                          return Center(
+                          return Align(
+                            alignment: Alignment.topCenter,
                             child: ConstrainedBox(
                               constraints: const BoxConstraints(maxWidth: 840),
-                              child: GridView.builder(
-                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  childAspectRatio: 3.5,
-                                ),
+                              child: SingleChildScrollView(
+                                child: GridView.builder(
+                                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    childAspectRatio: 2.5,
+                                  ),
                                 shrinkWrap: true,
                                 itemCount: filteredSpecimens.length,
                                 itemBuilder: (context, index) {
@@ -149,18 +152,7 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
                                     child: InkWell(
                                         onLongPress: () => _showBottomSheet(context, specimen),
                                         // onTap: () {
-                                        //   Navigator.push(
-                                        //     context,
-                                        //     MaterialPageRoute(
-                                        //       builder: (context) => NestDetailScreen(
-                                        //         nest: nest,
-                                        //       ),
-                                        //     ),
-                                        //   ).then((result) {
-                                        //     if (result == true) {
-                                        //       nestProvider.fetchNests();
-                                        //     }
-                                        //   });
+                                        //
                                         // },
                                         child: Padding(
                                           padding: const EdgeInsets.all(16.0),
@@ -173,6 +165,7 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
                                                     specimen.fieldNumber,
                                                     style: const TextStyle(fontWeight: FontWeight.bold),
                                                   ),
+                                                  Text('${specimenTypeFriendlyNames[specimen.type]}'),
                                                   Text(
                                                     specimen.speciesName!,
                                                     style: const TextStyle(fontStyle: FontStyle.italic),
@@ -187,6 +180,7 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
                                       ),
                                   );
                                 },
+                              ),
                               ),
                             ),
                           );
@@ -238,6 +232,7 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
                                   subtitle: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
+                                      Text('${specimenTypeFriendlyNames[specimen.type]}'),
                                       Text(
                                         specimen.speciesName!,
                                         style: const TextStyle(fontStyle: FontStyle.italic),
@@ -271,6 +266,7 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
                 );
               }
           ),
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -295,8 +291,13 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  // Expanded(
-                  //     child:
+                  ListTile(
+                    leading: const Icon(Icons.file_download_outlined),
+                    title: const Text('Exportar todos os espécimes'),
+                    onTap: () {
+                      exportAllSpecimensToJson(context);
+                    },
+                  ),
                   ListTile(
                     leading: const Icon(Icons.delete_outlined, color: Colors.red,),
                     title: const Text('Apagar espécime', style: TextStyle(color: Colors.red),),

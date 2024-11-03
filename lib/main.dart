@@ -220,7 +220,9 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final useSideNavRail = MediaQuery.sizeOf(context).width >= 600;
+    final useSideNavRail = MediaQuery.sizeOf(context).width >= 600 &&
+        MediaQuery.sizeOf(context).width < 800;
+    final useFixedNavDrawer = MediaQuery.sizeOf(context).width >= 800;
     List<NavigationRailDestination> destinations = [
       NavigationRailDestination(
         icon: Selector<InventoryProvider, int>(
@@ -268,67 +270,25 @@ class _MainScreenState extends State<MainScreen> {
       ),
     ];
 
-    return Scaffold(
+    // if (useFixedNavDrawer) {
+    //   return Row(
+    //     children: [
+    //       _buildNavigationDrawer(context),
+    //       Expanded(
+    //           child: _widgetOptions.elementAt(_selectedIndex).call(context, _scaffoldKey),
+    //       ),
+    //     ],
+    //   );
+    // } else {
+      return Scaffold(
       key: _scaffoldKey,
         // appBar: AppBar(
         //   title: const Text('Xolmis'),
         // ),
-      drawer: NavigationDrawer(
-        selectedIndex: _selectedIndex,
-        onDestinationSelected: (int index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-          Navigator.pop(context);
-        },
-        children: <Widget>[
-          const DrawerHeader(
-            child: Text('Xolmis', style: TextStyle(fontSize: 24)),
-          ),
-          NavigationDrawerDestination(
-            icon: const Icon(Icons.list_alt_outlined),
-            label: const Text('Inventários'),
-            selectedIcon: const Icon(Icons.list_alt),
-          ),
-          NavigationDrawerDestination(
-            icon: const Icon(Icons.egg_outlined),
-            label: const Text('Ninhos'),
-            selectedIcon: const Icon(Icons.egg),
-          ),
-          NavigationDrawerDestination(
-            icon: const Icon(Icons.local_offer_outlined),
-            label: const Text('Espécimes'),
-            selectedIcon: const Icon(Icons.local_offer),
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: Divider(),
-          ),
-          ListTile(
-            leading: Theme.of(context).brightness == Brightness.light
-                ? const Icon(Icons.settings_outlined)
-                : const Icon(Icons.settings),
-            title: const Text('Configurações'),
-            onTap: () {
-              if (MediaQuery.sizeOf(context).width > 600) {
-                SideSheet.right(
-                  context: context,
-                  width: 400,
-                  body: const SettingsScreen(),
-                );
-              } else {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const SettingsScreen()),
-                );
-              }
-            },
-          ),
-        ],
-      ),
+      drawer: _buildNavigationDrawer(context),
         body: Row(
           children: [
-            if (useSideNavRail) NavigationRail(
+            if (useSideNavRail || useFixedNavDrawer) NavigationRail(
               trailing: IconButton(
                 icon: Theme.of(context).brightness == Brightness.light
                     ? const Icon(Icons.settings_outlined)
@@ -418,6 +378,113 @@ class _MainScreenState extends State<MainScreen> {
         //   onTap: _onItemTapped,
         // ),
 
+    );
+      // }
+  }
+
+  NavigationDrawer _buildNavigationDrawer(BuildContext context) {
+    return NavigationDrawer(
+      selectedIndex: _selectedIndex,
+      onDestinationSelected: (int index) {
+        setState(() {
+          _selectedIndex = index;
+        });
+        Navigator.pop(context);
+      },
+      children: <Widget>[
+        DrawerHeader(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Xolmis', style: TextStyle(fontSize: 24)),
+              SizedBox(height: 20),
+              OutlinedButton.icon(
+                icon: Theme.of(context).brightness == Brightness.light
+                    ? const Icon(Icons.settings_outlined)
+                    : const Icon(Icons.settings),
+                label: Text('Configurações'),
+                onPressed: () {
+                  if (MediaQuery.sizeOf(context).width > 600) {
+                    SideSheet.right(
+                      context: context,
+                      width: 400,
+                      body: const SettingsScreen(),
+                    );
+                  } else {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const SettingsScreen()),
+                    );
+                  }
+                },
+              ),
+            ],
+          ),
+        ),
+        NavigationDrawerDestination(
+          icon: const Icon(Icons.list_alt_outlined),
+          label: Selector<InventoryProvider, int>(
+            selector: (context, provider) => provider.inventoriesCount,
+            builder: (context, inventoriesCount, child) {
+              return inventoriesCount > 0
+                  ? Badge.count(
+                count: inventoriesCount,
+                alignment: AlignmentDirectional.centerEnd,
+                offset: const Offset(24, -8),
+                child: const Text('Inventários'),
+              )
+                  : const Text('Inventários');
+            },
+          ),
+          selectedIcon: const Icon(Icons.list_alt),
+        ),
+        NavigationDrawerDestination(
+          icon: const Icon(Icons.egg_outlined),
+          label: Selector<NestProvider, int>(
+            selector: (context, provider) => provider.nestsCount,
+            builder: (context, nestsCount, child) {
+              return nestsCount > 0
+                  ? Badge.count(
+                count: nestsCount,
+                alignment: AlignmentDirectional.centerEnd,
+                offset: const Offset(24, -8),
+                child: const Text('Ninhos'),
+              )
+                  : const Text('Ninhos');
+            },
+          ),
+          selectedIcon: const Icon(Icons.egg),
+        ),
+        NavigationDrawerDestination(
+          icon: const Icon(Icons.local_offer_outlined),
+          label: const Text('Espécimes'),
+          selectedIcon: const Icon(Icons.local_offer),
+        ),
+        // const Padding(
+        //   padding: EdgeInsets.symmetric(horizontal: 16),
+        //   child: Divider(),
+        // ),
+        // ListTile(
+        //   leading: Theme.of(context).brightness == Brightness.light
+        //       ? const Icon(Icons.settings_outlined)
+        //       : const Icon(Icons.settings),
+        //   title: const Text('Configurações'),
+        //   onTap: () {
+        //     if (MediaQuery.sizeOf(context).width > 600) {
+        //       SideSheet.right(
+        //         context: context,
+        //         width: 400,
+        //         body: const SettingsScreen(),
+        //       );
+        //     } else {
+        //       Navigator.push(
+        //         context,
+        //         MaterialPageRoute(builder: (context) => const SettingsScreen()),
+        //       );
+        //     }
+        //   },
+        // ),
+      ],
     );
   }
 }

@@ -25,9 +25,8 @@ class _WeatherTabState extends State<WeatherTab> with AutomaticKeepAliveClientMi
   }
 
   Widget _buildWeatherList() {
-    return Column(
-        children: [
-          Consumer<WeatherProvider>(
+    return Expanded(
+        child: Consumer<WeatherProvider>(
         builder: (context, weatherProvider, child) {
           final weatherList = weatherProvider.getWeatherForInventory(
               widget.inventory.id);
@@ -53,11 +52,12 @@ class _WeatherTabState extends State<WeatherTab> with AutomaticKeepAliveClientMi
                       return Center(
                         child: ConstrainedBox(
                           constraints: const BoxConstraints(maxWidth: 840),
-                          child: GridView.builder(
-                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              childAspectRatio: 3.0,
-                            ),
+                          child: SingleChildScrollView(
+                            child: GridView.builder(
+                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                childAspectRatio: 2.8,
+                              ),
                             shrinkWrap: true,
                             itemCount: weatherList.length,
                             itemBuilder: (context, index) {
@@ -98,6 +98,7 @@ class _WeatherTabState extends State<WeatherTab> with AutomaticKeepAliveClientMi
                               );
                             },
                           ),
+                          ),
                         ),
                       );
                     } else {
@@ -120,7 +121,6 @@ class _WeatherTabState extends State<WeatherTab> with AutomaticKeepAliveClientMi
           }
         }
     )
-    ]
     );
   }
 

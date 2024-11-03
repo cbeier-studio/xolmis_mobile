@@ -118,6 +118,7 @@ class _AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
                                   value: _selectedNestStatus,
                                   decoration: const InputDecoration(
                                     labelText: 'Status do ninho *',
+                                    helperText: '* campo obrigatório',
                                     border: OutlineInputBorder(),
                                   ),
                                   items: NestStatusType.values.map((nestStatus) {
@@ -139,6 +140,7 @@ class _AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
                                   value: _selectedNestStage,
                                   decoration: const InputDecoration(
                                     labelText: 'Estágio *',
+                                    helperText: '* campo obrigatório',
                                     border: OutlineInputBorder(),
                                   ),
                                   items: NestStageType.values.map((nestStage) {

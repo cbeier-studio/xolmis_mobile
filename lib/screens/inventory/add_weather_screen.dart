@@ -63,6 +63,7 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
                                 keyboardType: TextInputType.number,
                                 decoration: const InputDecoration(
                                   labelText: 'Nebulosidade',
+                                  helperText: ' ',
                                   border: OutlineInputBorder(),
                                   suffixText: '%',
                                 ),
@@ -74,6 +75,7 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
                                   value: _selectedPrecipitation,
                                   decoration: const InputDecoration(
                                     labelText: 'Precipitação *',
+                                    helperText: '* campo obrigatório',
                                     border: OutlineInputBorder(),
                                   ),
                                   items: PrecipitationType.values.map((precipitation) {

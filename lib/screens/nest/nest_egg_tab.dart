@@ -28,9 +28,8 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
   }
 
   Widget _buildEggList() {
-    return Column(
-      children: [
-        Consumer<EggProvider>(
+    return Expanded(
+      child: Consumer<EggProvider>(
             builder: (context, eggProvider, child) {
               final eggList = eggProvider.getEggForNest(
                   widget.nest.id!);
@@ -55,11 +54,12 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
                           return Center(
                             child: ConstrainedBox(
                               constraints: const BoxConstraints(maxWidth: 840),
-                              child: GridView.builder(
-                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  childAspectRatio: 3.5,
-                                ),
+                              child: SingleChildScrollView(
+                                child: GridView.builder(
+                                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    childAspectRatio: 3.5,
+                                  ),
                                 shrinkWrap: true,
                                 itemCount: eggList.length,
                                 itemBuilder: (context, index) {
@@ -102,6 +102,7 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
                                   );
                                 },
                               ),
+                              ),
                             ),
                           );
                         } else {
@@ -123,7 +124,6 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
               }
             }
         ),
-      ],
     );
   }
 

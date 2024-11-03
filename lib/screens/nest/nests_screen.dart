@@ -134,7 +134,8 @@ class _NestsScreenState extends State<NestsScreen> {
               },
             ),
           ),
-          Consumer<NestProvider>(
+          Expanded(
+          child: Consumer<NestProvider>(
               builder: (context, nestProvider, child) {
                 final filteredNests = _filterNests(_showActive
                     ? nestProvider.activeNests
@@ -160,11 +161,12 @@ class _NestsScreenState extends State<NestsScreen> {
                           return Center(
                             child: ConstrainedBox(
                               constraints: const BoxConstraints(maxWidth: 840),
-                              child: GridView.builder(
-                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  childAspectRatio: 3.5,
-                                ),
+                              child: SingleChildScrollView(
+                                child: GridView.builder(
+                                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    childAspectRatio: 3.0,
+                                  ),
                                 shrinkWrap: true,
                                 itemCount: filteredNests.length,
                                 itemBuilder: (context, index) {
@@ -219,6 +221,7 @@ class _NestsScreenState extends State<NestsScreen> {
                                     ),
                                   );
                                 },
+                              ),
                               ),
                             ),
                           );
@@ -319,6 +322,7 @@ class _NestsScreenState extends State<NestsScreen> {
                   ),
                 );
               }
+          ),
           ),
         ],
       ),

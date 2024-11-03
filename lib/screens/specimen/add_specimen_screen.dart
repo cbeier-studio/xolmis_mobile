@@ -151,6 +151,7 @@ class _AddSpecimenScreenState extends State<AddSpecimenScreen> {
                           textCapitalization: TextCapitalization.sentences,
                           decoration: const InputDecoration(
                             labelText: 'Observações',
+                            helperText: '* opcional',
                             border: OutlineInputBorder(),
                           ),
                         ),

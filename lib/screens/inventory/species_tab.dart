@@ -198,73 +198,69 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
             ),
           ),
           Expanded(
-              child: Column(
-                  children: [
-                    Consumer<SpeciesProvider>(
-                        builder: (context, speciesProvider, child) {
-                          final speciesList = speciesProvider
-                              .getSpeciesForInventory(widget.inventory.id);
-                          speciesList.sort((a, b) => a.name.compareTo(b.name));
-                          if (speciesList.isEmpty) {
-                            return const Center(
-                              child: Text('Nenhuma espécie registrada.'),
+              child: Consumer<SpeciesProvider>(
+                  builder: (context, speciesProvider, child) {
+                    final speciesList = speciesProvider
+                        .getSpeciesForInventory(widget.inventory.id);
+                    speciesList.sort((a, b) => a.name.compareTo(b.name));
+                    if (speciesList.isEmpty) {
+                      return const Center(
+                        child: Text('Nenhuma espécie registrada.'),
+                      );
+                    } else {
+                      return LayoutBuilder(
+                        builder: (BuildContext context,
+                            BoxConstraints constraints) {
+                          final screenWidth = constraints.maxWidth;
+                          final isLargeScreen = screenWidth > 600;
+
+                          if (isLargeScreen) {
+                            return Center(
+                              child: ConstrainedBox(
+                                constraints: const BoxConstraints(
+                                    maxWidth: 840),
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: speciesList.length,
+                                  itemBuilder: (context, index) {
+                                    // print('speciesList: ${speciesList.length} ; AnimatedList: $index');
+                                    // if (index >= speciesList.length) {
+                                    //   return const SizedBox.shrink();
+                                    // }
+                                    final species = speciesList[index];
+                                    return SpeciesListItem(
+                                      species: species,
+                                      onLongPress: () =>
+                                          _showBottomSheet(context, species),
+                                    );
+                                  },
+                                ),
+                              ),
                             );
                           } else {
-                            return LayoutBuilder(
-                              builder: (BuildContext context,
-                                  BoxConstraints constraints) {
-                                final screenWidth = constraints.maxWidth;
-                                final isLargeScreen = screenWidth > 600;
-
-                                if (isLargeScreen) {
-                                  return Center(
-                                    child: ConstrainedBox(
-                                      constraints: const BoxConstraints(
-                                          maxWidth: 840),
-                                      child: GridView.builder(
-                                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: 2,
-                                          childAspectRatio: 6.0,
-                                        ),
-                                        shrinkWrap: true,
-                                        itemCount: speciesList.length,
-                                        itemBuilder: (context, index) {
-                                          final species = speciesList[index];
-                                          return SpeciesGridItem(
-                                            species: species,
-                                            onLongPress: () =>
-                                                _showBottomSheet(
-                                                    context, species),
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  );
-                                } else {
-                                  return ListView.builder(
-                                    shrinkWrap: true,
-                                    itemCount: speciesList.length,
-                                    itemBuilder: (context, index) {
-                                      // print('speciesList: ${speciesList.length} ; AnimatedList: $index');
-                                      // if (index >= speciesList.length) {
-                                      //   return const SizedBox.shrink();
-                                      // }
-                                      final species = speciesList[index];
-                                      return SpeciesListItem(
-                                        species: species,
-                                        onLongPress: () =>
-                                            _showBottomSheet(context, species),
-                                      );
-                                    },
-                                  );
-                                }
+                            return ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: speciesList.length,
+                              itemBuilder: (context, index) {
+                                // print('speciesList: ${speciesList.length} ; AnimatedList: $index');
+                                // if (index >= speciesList.length) {
+                                //   return const SizedBox.shrink();
+                                // }
+                                final species = speciesList[index];
+                                return SpeciesListItem(
+                                  species: species,
+                                  onLongPress: () =>
+                                      _showBottomSheet(context, species),
+                                );
                               },
                             );
                           }
-                        }
-                    )
-                  ]
+                        },
+                      );
+                    }
+                  }
               )
+
           ),
         ]
     );

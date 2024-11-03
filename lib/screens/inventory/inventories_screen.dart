@@ -186,17 +186,28 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
               },
             ),
           ),
-          RefreshIndicator(
+          Expanded(
+    child: RefreshIndicator(
             onRefresh: () async {
               await inventoryProvider.fetchInventories();
             },
             child: Consumer<InventoryProvider>(
                 builder: (context, inventoryProvider, child) {
                   if (inventoryProvider.isLoading) {
-                    return const Center(child: CircularProgressIndicator());
+                    return const Center(
+                      child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: CircularProgressIndicator()
+                      ),
+                    );
                   } else if (_showActive && inventoryProvider.activeInventories.isEmpty ||
                       !_showActive && inventoryProvider.finishedInventories.isEmpty) {
-                    return const Center(child: Text('Nenhum inventário encontrado.'));
+                    return const Center(
+                      child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text('Nenhum inventário encontrado.')
+                      ),
+                    );
                   } else {
                     final filteredInventories = _filterInventories(_showActive
                         ? inventoryProvider.activeInventories
@@ -210,11 +221,11 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                             return Center(
                               child: ConstrainedBox(
                                 constraints: const BoxConstraints(maxWidth: 840),
-                                child: GridView.builder(
-                                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2,
-                                    childAspectRatio: 3.5,
-                                  ),
+                                  child: GridView.builder(
+                                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2,
+                                      childAspectRatio: 3.5,
+                                    ),
                                   shrinkWrap: true,
                                   itemCount: filteredInventories.length,
                                   itemBuilder: (context, index) {
@@ -320,7 +331,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                     );
                                   },
                                 ),
-                              ),
+                                ),
                             );
                           } else {
                             return ListView.builder(
@@ -453,6 +464,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                   }
                 }
             ),
+          )
           )
         ],
       ),

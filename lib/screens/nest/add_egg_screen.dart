@@ -64,6 +64,7 @@ class _AddEggScreenState extends State<AddEggScreen> {
                           textCapitalization: TextCapitalization.characters,
                           decoration: const InputDecoration(
                             labelText: 'Número de Campo *',
+                            helperText: '* campo obrigatório',
                             border: OutlineInputBorder(),
                           ),
                           validator: (value) {
@@ -78,6 +79,7 @@ class _AddEggScreenState extends State<AddEggScreen> {
                           controller: _speciesNameController,
                           decoration: const InputDecoration(
                             labelText: 'Espécie *',
+                            helperText: '* campo obrigatório',
                             border: OutlineInputBorder(),
                           ),
                           readOnly: true,
@@ -108,6 +110,7 @@ class _AddEggScreenState extends State<AddEggScreen> {
                             value: _selectedEggShape,
                             decoration: const InputDecoration(
                               labelText: 'Forma do ovo *',
+                              helperText: '* campo obrigatório',
                               border: OutlineInputBorder(),
                             ),
                             items: EggShapeType.values.map((eggShape) {
