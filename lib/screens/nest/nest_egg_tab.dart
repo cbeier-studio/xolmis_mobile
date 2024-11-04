@@ -33,6 +33,36 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
     return _buildEggList();
   }
 
+  Future<void> _deleteEgg(Egg egg) async {
+    final confirmed = await _showDeleteConfirmationDialog(context);
+    if (confirmed) {
+      Provider.of<EggProvider>(context, listen: false)
+          .removeEgg(widget.nest.id!, egg.id!);
+    }
+  }
+
+  Future<bool> _showDeleteConfirmationDialog(BuildContext context) async {
+    return await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirmar exclusão'),
+          content: const Text('Tem certeza que deseja excluir este ovo?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text('Excluir'),
+            ),
+          ],
+        );
+      },
+    ) ?? false;
+  }
+
   Widget _buildEggList() {
     return Expanded(
       child: Consumer<EggProvider>(
@@ -57,105 +87,9 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
                         final isLargeScreen = screenWidth > 600;
 
                         if (isLargeScreen) {
-                          return Align(
-                            alignment: Alignment.topCenter,
-                            child: ConstrainedBox(
-                              constraints: const BoxConstraints(maxWidth: 840),
-                              child: SingleChildScrollView(
-                                child: GridView.builder(
-                                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2,
-                                    childAspectRatio: 3.5,
-                                  ),
-                                shrinkWrap: true,
-                                itemCount: eggList.length,
-                                itemBuilder: (context, index) {
-                                  final egg = eggList[index];
-                                  return GridTile(
-                                    child: InkWell(
-                                      onLongPress: () =>
-                                          _showBottomSheet(context, egg),
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => AppImageScreen(
-                                              eggId: egg.id,
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                      child: Card(
-                                  child: Padding(
-                                        padding: const EdgeInsets.all(16.0),
-                                        child: Row(
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
-                                              child: FutureBuilder<List<AppImage>>(
-                                                future: Provider.of<AppImageProvider>(context, listen: false)
-                                                    .fetchImagesForEgg(egg.id!),
-                                                builder: (context, snapshot) {
-                                                  if (snapshot.connectionState == ConnectionState.waiting) {
-                                                    return const CircularProgressIndicator();
-                                                  } else if (snapshot.hasError) {
-                                                    return const Icon(Icons.error);
-                                                  } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                                                    return ClipRRect(
-                                                      borderRadius: BorderRadius.circular(0),
-                                                      child: Image.file(
-                                                        File(snapshot.data!.first.imagePath),
-                                                        width: 50,
-                                                        height: 50,
-                                                        fit: BoxFit.cover,
-                                                      ),
-                                                    );
-                                                  } else {
-                                                    return const Icon(Icons.hide_image_outlined);
-                                                  }
-                                                },
-                                              ),
-                                            ),
-                                            Column(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              crossAxisAlignment: CrossAxisAlignment
-                                                  .start,
-                                              children: [
-                                                Text(
-                                                  egg.fieldNumber!,
-                                                  style: const TextStyle(
-                                                      fontWeight: FontWeight.bold),
-                                                ),
-                                                Text(
-                                                  egg.speciesName!,
-                                                  style: const TextStyle(fontStyle: FontStyle.italic),
-                                                ),
-                                                Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(egg.sampleTime!)),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                              ),
-                            ),
-                          );
+                          return _buildGridView(eggList);
                         } else {
-                          return ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: eggList.length,
-                            itemBuilder: (context, index) {
-                              final egg = eggList[index];
-                              return EggListItem(
-                                egg: egg,
-                                onLongPress: () => _showBottomSheet(context, egg),
-                              );
-                            },
-                          );
+                          return _buildListView(eggList);
                         }
                       }
                   ),
@@ -184,35 +118,8 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
                     leading: const Icon(Icons.delete_outlined, color: Colors.red,),
                     title: const Text('Apagar ovo', style: TextStyle(color: Colors.red),),
                     onTap: () {
-                      // Ask for user confirmation
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: const Text('Confirmar exclusão'),
-                            content: const Text('Tem certeza que deseja excluir este ovo?'),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop(false);
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Text('Cancelar'),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop(true);
-                                  Navigator.of(context).pop();
-                                  // Call the function to delete species
-                                  Provider.of<EggProvider>(context, listen: false)
-                                      .removeEgg(widget.nest.id!, egg.id!);
-                                },
-                                child: const Text('Excluir'),
-                              ),
-                            ],
-                          );
-                        },
-                      );
+                      _deleteEgg(egg);
+                      Navigator.pop(context);
                     },
                   )
                   // )
@@ -220,6 +127,110 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
               ),
             );
           },
+        );
+      },
+    );
+  }
+
+  Widget _buildGridView(List<Egg> eggList) {
+    return Align(
+      alignment: Alignment.topCenter,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 840),
+        child: SingleChildScrollView(
+          child: GridView.builder(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              childAspectRatio: 3.5,
+            ),
+            shrinkWrap: true,
+            itemCount: eggList.length,
+            itemBuilder: (context, index) {
+              final egg = eggList[index];
+              return GridTile(
+                child: InkWell(
+                  onLongPress: () =>
+                      _showBottomSheet(context, egg),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AppImageScreen(
+                          eggId: egg.id,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
+                            child: FutureBuilder<List<AppImage>>(
+                              future: Provider.of<AppImageProvider>(context, listen: false)
+                                  .fetchImagesForEgg(egg.id!),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                  return const CircularProgressIndicator();
+                                } else if (snapshot.hasError) {
+                                  return const Icon(Icons.error);
+                                } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                                  return ClipRRect(
+                                    borderRadius: BorderRadius.circular(0),
+                                    child: Image.file(
+                                      File(snapshot.data!.first.imagePath),
+                                      width: 50,
+                                      height: 50,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  );
+                                } else {
+                                  return const Icon(Icons.hide_image_outlined);
+                                }
+                              },
+                            ),
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment
+                                .start,
+                            children: [
+                              Text(
+                                egg.fieldNumber!,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                egg.speciesName!,
+                                style: const TextStyle(fontStyle: FontStyle.italic),
+                              ),
+                              Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(egg.sampleTime!)),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildListView(List<Egg> eggList) {
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: eggList.length,
+      itemBuilder: (context, index) {
+        final egg = eggList[index];
+        return EggListItem(
+          egg: egg,
+          onLongPress: () => _showBottomSheet(context, egg),
         );
       },
     );

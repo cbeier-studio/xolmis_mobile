@@ -112,6 +112,7 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
                     title: const Text('Apagar registro de vegetação', style: TextStyle(color: Colors.red),),
                     onTap: () {
                       _deleteVegetation(vegetation);
+                      Navigator.pop(context);
                     },
                   )
                   // )

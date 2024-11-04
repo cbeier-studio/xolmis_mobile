@@ -111,6 +111,7 @@ class _WeatherTabState extends State<WeatherTab> with AutomaticKeepAliveClientMi
                     title: const Text('Apagar registro do tempo', style: TextStyle(color: Colors.red),),
                     onTap: () {
                       _deleteWeather(weather);
+                      Navigator.pop(context);
                     },
                   )
                   // )
