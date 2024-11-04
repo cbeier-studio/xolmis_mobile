@@ -214,7 +214,8 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
               speciesName = value;
             },
             decoration: const InputDecoration(
-              hintText: 'Nome da espécie',
+              labelText: 'Nome da espécie',
+              border: OutlineInputBorder(),
             ),
           ),
           actions: <Widget>[
