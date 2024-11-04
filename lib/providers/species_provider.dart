@@ -53,13 +53,7 @@ class SpeciesProvider with ChangeNotifier {
     await _speciesRepository.updateSpecies(species);
 
     _speciesMap[inventoryId] = await _speciesRepository.getSpeciesByInventory(inventoryId);
-    // final speciesList = _speciesMap[inventoryId];
-    // if (speciesList != null) {
-    //   final index = speciesList.indexWhere((s) => s.id == species.id);
-    //   if (index != -1) {
-    //     speciesList[index] = species;
-    //   }
-    // }
+
     notifyListeners();
   }
 
@@ -82,6 +76,21 @@ class SpeciesProvider with ChangeNotifier {
   //   }
   //   notifyListeners();
   // }
+
+  void updateIndividualsCount(Species species) async {
+    // 1. Find the species in the list
+    final speciesList = await _speciesRepository.getSpeciesByInventory(species.inventoryId);
+    final index = speciesList.indexWhere((s) => s.id == species.id);
+
+    if (index != -1) {
+      // 2. Update the species count
+      speciesList[index] = species.copyWith(count: species.count);
+      updateSpecies(species.inventoryId, species);
+
+      // 3. Notify the listeners
+      notifyListeners();
+    }
+  }
 
   Future<void> incrementIndividualsCount(Species species) async {
     species.count++;

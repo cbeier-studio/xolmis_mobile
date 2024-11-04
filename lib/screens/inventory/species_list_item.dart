@@ -47,11 +47,31 @@ class SpeciesListItemState extends State<SpeciesListItem> {
                 }
               },
             ),
-            Selector<SpeciesProvider, int>(
-              selector: (context, speciesProvider) => speciesProvider.individualsCountNotifier.value,
-              builder: (context, count, child) {
-                return Text(widget.species.count.toString());
+            InkWell(
+              onTap: () {
+                _showEditCountDialog(context);
               },
+              child: Selector<SpeciesProvider, int>(
+                selector: (context, speciesProvider) => speciesProvider.individualsCountNotifier.value,
+                builder: (context, count, child) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      // color: Colors.grey[200],
+                      border: Border.all(
+                        color: Colors.grey,
+                        width: 1.0,
+                        style: BorderStyle.solid,
+                      ),
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                    child: Text(
+                      widget.species.count.toString(),
+                      style: const TextStyle(fontSize: 14),
+                    ),
+                  );
+                },
+              ),
             ),
             IconButton(
               icon: const Icon(Icons.add_outlined),
@@ -146,5 +166,60 @@ class SpeciesListItemState extends State<SpeciesListItem> {
           );
         },
     );
+  }
+
+  Future<void> _showEditCountDialog(BuildContext context) async {
+    int? newCount = await showDialog<int>(
+      context: context,
+      builder: (BuildContext context) {
+        int currentCount = widget.species.count;
+        return AlertDialog(
+          title: const Text('Editar contagem'),
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextFormField(
+                    initialValue: currentCount.toString(),
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      setState(() {
+                        currentCount = int.tryParse(value) ?? 0;
+                      });
+                    },
+                    decoration: const InputDecoration(
+                      labelText: 'Contagem de indivíduos',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(currentCount),
+              child: const Text('Salvar'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (newCount != null) {
+      // Update the value of species.count
+      setState(() {
+        widget.species.count = newCount;
+      });
+
+      // Notify the provider
+      Provider.of<SpeciesProvider>(context, listen: false)
+          .updateIndividualsCount(widget.species);
+    }
   }
 }
