@@ -195,16 +195,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ),
           Divider(),
-          const Text('Área perigosa', style: TextStyle(color: Colors.red, fontSize: 16, fontWeight: FontWeight.bold),),
-          ListTile(
-            leading: const Icon(Icons.delete_forever, color: Colors.red,),
-            title: const Text(
-              'Apagar dados do aplicativo',
-              style: TextStyle(color: Colors.red),
-            ),
-            onTap: () {
-              _showDeleteConfirmationDialog(context);
-            },
+          ExpansionTile(
+            leading: const Icon(Icons.warning_outlined, color: Colors.red,),
+            title: const Text('Área perigosa', style: TextStyle(color: Colors.red, fontSize: 16, fontWeight: FontWeight.bold),),
+            children: [
+              ListTile(
+                leading: const Icon(Icons.delete_forever, color: Colors.red,),
+                title: const Text(
+                  'Apagar dados do aplicativo',
+                  style: TextStyle(color: Colors.red),
+                ),
+                onTap: () {
+                  _showDeleteConfirmationDialog(context);
+                },
+              ),
+            ],
           ),
         ],
       ),

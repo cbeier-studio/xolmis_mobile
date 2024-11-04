@@ -33,7 +33,7 @@ class SpeciesListItemState extends State<SpeciesListItem> {
           widget.species.name,
           style: const TextStyle(fontStyle: FontStyle.italic),
         ),
-        tileColor: widget.species.isOutOfInventory ? Colors.grey[200] : null,
+        tileColor: widget.species.isOutOfInventory ? Colors.amber[100] : null,
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [

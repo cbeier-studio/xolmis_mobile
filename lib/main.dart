@@ -211,29 +211,11 @@ class _MainScreenState extends State<MainScreen> {
     super.dispose();
   }
 
-  // Future<void> initializeBackgroundExecution() async {
-  //   final androidConfig = FlutterBackgroundAndroidConfig(
-  //     notificationTitle: 'Xolmis',
-  //     notificationText: 'O Xolmis está rodando em segundo plano',
-  //     notificationImportance: AndroidNotificationImportance.normal,
-  //     notificationIcon: AndroidResource(name: 'background_icon', defType: 'drawable'),
-  //   );
-  //   bool success = await FlutterBackground.initialize(androidConfig: androidConfig);
-  //   if (success) {
-  //     await FlutterBackground.enableBackgroundExecution();
-  //   }
+  // void _onItemTapped(int index) {
+  //   setState(() {
+  //     _selectedIndex = index;
+  //   });
   // }
-
-  // Future<void> updateActiveInventoriesCount() async {
-  //   final count = await DatabaseHelper().getActiveInventoriesCount();
-  //   activeInventoriesCount.value = count;
-  // }
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {

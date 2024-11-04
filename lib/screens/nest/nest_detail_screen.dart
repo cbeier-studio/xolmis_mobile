@@ -201,10 +201,50 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
               ),
             )
         ),
-        body: TabBarView(
+        body: Column(
           children: [
-            NestRevisionsTab(nest: widget.nest),
-            EggsTab(nest: widget.nest),
+            ExpansionTile(
+              leading: const Icon(Icons.info_outlined),
+              title: const Text('Informações do ninho'),
+              children: [
+                ListTile(
+                  title: Text('${widget.nest.foundTime}'),
+                  subtitle: Text('Data e hora de encontro'),
+                ),
+                ListTile(
+                  title: Text('${widget.nest.localityName}'),
+                  subtitle: Text('Localidade'),
+                ),
+                ListTile(
+                  title: Text('${widget.nest.support}'),
+                  subtitle: Text('Suporte do ninho'),
+                ),
+                widget.nest.heightAboveGround != '' ? ListTile(
+                  title: Text('${widget.nest.heightAboveGround} m'),
+                  subtitle: Text('Altura acima do solo'),
+                ) : SizedBox.shrink(),
+                widget.nest.male != '' ? ListTile(
+                  title: Text('${widget.nest.male}'),
+                  subtitle: Text('Macho'),
+                ) : SizedBox.shrink(),
+                widget.nest.female != '' ? ListTile(
+                  title: Text('${widget.nest.female}'),
+                  subtitle: Text('Fêmea'),
+                ) : SizedBox.shrink(),
+                widget.nest.helpers != '' ? ListTile(
+                  title: Text('${widget.nest.helpers}'),
+                  subtitle: Text('Ajudantes de ninho'),
+                ) : SizedBox.shrink(),
+              ],
+            ),
+            Expanded(
+              child: TabBarView(
+                children: [
+                  NestRevisionsTab(nest: widget.nest),
+                  EggsTab(nest: widget.nest),
+                ],
+              ),
+            ),
           ],
         ),
         floatingActionButton: widget.nest.isActive

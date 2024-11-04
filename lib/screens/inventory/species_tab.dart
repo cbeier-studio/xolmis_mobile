@@ -272,7 +272,6 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                               shrinkWrap: true,
                               itemCount: speciesList.length,
                               itemBuilder: (context, index) {
-                                // print('speciesList: ${speciesList.length} ; AnimatedList: $index');
                                 // if (index >= speciesList.length) {
                                 //   return const SizedBox.shrink();
                                 // }
