@@ -51,7 +51,7 @@ class PoiProvider with ChangeNotifier {
     }
   }
 
-  void removePoi(int speciesId, int poiId) async {
+  Future<void> removePoi(int speciesId, int poiId) async {
     await _poiRepository.deletePoi(poiId);
 
     final poiList = _poiMap[speciesId];

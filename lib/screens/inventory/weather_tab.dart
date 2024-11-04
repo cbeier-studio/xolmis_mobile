@@ -24,6 +24,36 @@ class _WeatherTabState extends State<WeatherTab> with AutomaticKeepAliveClientMi
     return _buildWeatherList();
   }
 
+  Future<void> _deleteWeather(Weather weather) async {
+    final confirmed = await _showDeleteConfirmationDialog(context);
+    if (confirmed) {
+      Provider.of<WeatherProvider>(context, listen: false)
+          .removeWeather(widget.inventory.id, weather.id!);
+    }
+  }
+
+  Future<bool> _showDeleteConfirmationDialog(BuildContext context) async {
+    return await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirmar exclusão'),
+          content: const Text('Tem certeza que deseja excluir este registro do tempo?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text('Excluir'),
+            ),
+          ],
+        );
+      },
+    ) ?? false;
+  }
+
   Widget _buildWeatherList() {
     return Expanded(
         child: Consumer<WeatherProvider>(
@@ -49,75 +79,9 @@ class _WeatherTabState extends State<WeatherTab> with AutomaticKeepAliveClientMi
                     final isLargeScreen = screenWidth > 600;
 
                     if (isLargeScreen) {
-                      return Align(
-                        alignment: Alignment.topCenter,
-                        child: ConstrainedBox(
-                          constraints: const BoxConstraints(maxWidth: 840),
-                          child: SingleChildScrollView(
-                            child: GridView.builder(
-                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                childAspectRatio: 2.8,
-                              ),
-                            shrinkWrap: true,
-                            itemCount: weatherList.length,
-                            itemBuilder: (context, index) {
-                              final weather = weatherList[index];
-                              return GridTile(
-                                child: InkWell(
-                                  onLongPress: () =>
-                                      _showBottomSheet(context, weather),
-                                  // onTap: () {
-                                  //
-                                  // },
-                                  child: Card(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(16.0),
-                                    child: Row(
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
-                                          child: const Icon(Icons.wb_sunny_outlined),
-                                        ),
-                                        Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              DateFormat('dd/MM/yyyy HH:mm:ss').format(weather.sampleTime!),
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text('Nebulosidade: ${weather.cloudCover}%'),
-                                            Text('Precipitação: ${precipitationTypeFriendlyNames[weather.precipitation]}'),
-                                            Text('Temperatura: ${weather.temperature} °C'),
-                                            Text('Vento: ${weather.windSpeed} bft'),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                          ),
-                        ),
-                      );
+                      return _buildGridView(weatherList);
                     } else {
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: weatherList.length,
-                        itemBuilder: (context, index) {
-                          final weather = weatherList[index];
-                          return WeatherListItem(
-                            weather: weather,
-                            onLongPress: () =>
-                                _showBottomSheet(context, weather),
-                          );
-                        },
-                      );
+                      return _buildListView(weatherList);
                     }
                   }
               ),
@@ -146,35 +110,7 @@ class _WeatherTabState extends State<WeatherTab> with AutomaticKeepAliveClientMi
                     leading: const Icon(Icons.delete_outlined, color: Colors.red,),
                     title: const Text('Apagar registro do tempo', style: TextStyle(color: Colors.red),),
                     onTap: () {
-                      // Ask for user confirmation
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: const Text('Confirmar exclusão'),
-                            content: const Text('Tem certeza que deseja excluir este registro do tempo?'),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop(false);
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Text('Cancelar'),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop(true);
-                                  Navigator.of(context).pop();
-                                  // Call the function to delete species
-                                  Provider.of<WeatherProvider>(context, listen: false)
-                                      .removeWeather(widget.inventory.id, weather.id!);
-                                },
-                                child: const Text('Excluir'),
-                              ),
-                            ],
-                          );
-                        },
-                      );
+                      _deleteWeather(weather);
                     },
                   )
                   // )
@@ -182,6 +118,80 @@ class _WeatherTabState extends State<WeatherTab> with AutomaticKeepAliveClientMi
               ),
             );
           },
+        );
+      },
+    );
+  }
+
+  Widget _buildGridView(List<Weather> weatherList) {
+    return Align(
+      alignment: Alignment.topCenter,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 840),
+        child: SingleChildScrollView(
+          child: GridView.builder(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              childAspectRatio: 2.8,
+            ),
+            shrinkWrap: true,
+            itemCount: weatherList.length,
+            itemBuilder: (context, index) {
+              final weather = weatherList[index];
+              return GridTile(
+                child: InkWell(
+                  onLongPress: () =>
+                      _showBottomSheet(context, weather),
+                  // onTap: () {
+                  //
+                  // },
+                  child: Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
+                            child: const Icon(Icons.wb_sunny_outlined),
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                DateFormat('dd/MM/yyyy HH:mm:ss').format(weather.sampleTime!),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Text('Nebulosidade: ${weather.cloudCover}%'),
+                              Text('Precipitação: ${precipitationTypeFriendlyNames[weather.precipitation]}'),
+                              Text('Temperatura: ${weather.temperature} °C'),
+                              Text('Vento: ${weather.windSpeed} bft'),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildListView(List<Weather> weatherList) {
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: weatherList.length,
+      itemBuilder: (context, index) {
+        final weather = weatherList[index];
+        return WeatherListItem(
+          weather: weather,
+          onLongPress: () =>
+              _showBottomSheet(context, weather),
         );
       },
     );

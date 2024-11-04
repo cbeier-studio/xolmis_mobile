@@ -60,14 +60,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
         padding: const EdgeInsets.all(16.0),
         children: [
           ListTile(
-            title: const Text('Tema'),
+            leading: const Icon(Icons.dark_mode_outlined),
+            title: const Text('Aparência'),
             subtitle: Text(_themeMode.name),
             onTap: () {
               showDialog(
                 context: context,
                 builder: (context) {
                   return SimpleDialog(
-                    title: const Text('Selecione o tema'),
+                    title: const Text('Selecione o modo'),
                     children: [
                       SimpleDialogOption(
                         child: const Text('Claro'),
@@ -107,8 +108,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           Divider(),
           ListTile(
-            title: const Text('Máximo de espécies (listas de Mackinnon)'),
-            subtitle: Text('$_maxSpeciesMackinnon spp.'),
+            leading: const Icon(Icons.checklist_outlined),
+            title: const Text('Listas de Mackinnon'),
+            subtitle: Text('$_maxSpeciesMackinnon espécies por lista'),
             onTap: () async {
               final newMaxSpecies = await showDialog<int>(
                 context: context,
@@ -117,7 +119,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     minValue: 1,
                     maxValue: 50,
                     initialValue: _maxSpeciesMackinnon,
-                    title: 'Máximo de espécies',
+                    title: 'Espécies por lista',
                   );
                 },
               );
@@ -130,8 +132,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             },
           ),
           ListTile(
-            title: const Text('Duração dos pontos de contagem'),
-            subtitle: Text('$_pointCountsDuration minutos'),
+            leading: const Icon(Icons.timer_outlined),
+            title: const Text('Pontos de contagem'),
+            subtitle: Text('$_pointCountsDuration minutos de duração'),
             onTap: () async {
               final newDuration = await showDialog<int>(
                 context: context,
@@ -153,8 +156,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             },
           ),
           ListTile(
-            title: const Text('Duração das listas qualitativas temporizadas'),
-            subtitle: Text('$_cumulativeTimeDuration minutos'),
+            leading: const Icon(Icons.timer_outlined),
+            title: const Text('Listas qualitativas temporizadas'),
+            subtitle: Text('$_cumulativeTimeDuration minutos de duração'),
             onTap: () async {
               final newDuration = await showDialog<int>(
                 context: context,
@@ -177,6 +181,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           Divider(),
           ListTile(
+            leading: const Icon(Icons.info_outlined),
             title: const Text('Sobre o app'),
             onTap: () => showLicensePage(
               context: context,
@@ -190,7 +195,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ),
           Divider(),
+          const Text('Área perigosa', style: TextStyle(color: Colors.red, fontSize: 16, fontWeight: FontWeight.bold),),
           ListTile(
+            leading: const Icon(Icons.delete_forever, color: Colors.red,),
             title: const Text(
               'Apagar dados do aplicativo',
               style: TextStyle(color: Colors.red),

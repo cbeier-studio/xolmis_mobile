@@ -10,7 +10,6 @@ import '../../providers/species_provider.dart';
 import '../utils.dart';
 import '../species_search_delegate.dart';
 import 'species_list_item.dart';
-import 'species_grid_item.dart';
 
 class SpeciesTab extends StatefulWidget {
   final Inventory inventory;
@@ -173,6 +172,36 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     }
   }
 
+  Future<void> _deleteSpecies(Species species) async {
+    final confirmed = await _showDeleteConfirmationDialog(context);
+    if (confirmed) {
+      Provider.of<SpeciesProvider>(context, listen: false)
+          .removeSpecies(context, widget.inventory.id, species.id!);
+    }
+  }
+
+  Future<bool> _showDeleteConfirmationDialog(BuildContext context) async {
+    return await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirmar exclusão'),
+          content: const Text('Tem certeza que deseja excluir esta espécie?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text('Excluir'),
+            ),
+          ],
+        );
+      },
+    ) ?? false;
+  }
+
   Widget _buildSpeciesList(SpeciesRepository speciesRepository,
       InventoryRepository inventoryRepository) {
     return Column(
@@ -287,39 +316,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                     title: const Text(
                       'Apagar espécie', style: TextStyle(color: Colors.red),),
                     onTap: () {
-                      // Ask for user confirmation
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: const Text('Confirmar exclusão'),
-                            content: const Text(
-                                'Tem certeza que deseja excluir esta espécie?'),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop(false);
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Text('Cancelar'),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop(true);
-                                  Navigator.of(context).pop();
-                                  // Call the function to delete species
-                                  Provider.of<SpeciesProvider>(
-                                      context, listen: false)
-                                      .removeSpecies(
-                                      context, widget.inventory.id,
-                                      species.id!);
-                                },
-                                child: const Text('Excluir'),
-                              ),
-                            ],
-                          );
-                        },
-                      );
+                      _deleteSpecies(species);
                     },
                   )
                   // )
