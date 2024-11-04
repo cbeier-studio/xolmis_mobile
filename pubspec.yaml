@@ -111,9 +111,12 @@ flutter:
   # see https://flutter.dev/to/font-from-package
 
   assets:
-    - assets/
+    - assets/license.txt
+    - assets/species_data.json
+    - assets/xolmis_icon.png
+    - assets/Xolmis-icon-1024.png
 
 flutter_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/Xolmis-icon-1024.png"
+  image_path: "assets/xolmis_icon.png"

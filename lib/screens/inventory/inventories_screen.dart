@@ -141,6 +141,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
             child: SearchBar(
               controller: _searchController,
               hintText: 'Procurar inventários...',
+              backgroundColor: WidgetStateProperty.all<Color>(Colors.deepPurple[50]!),
               leading: const Icon(Icons.search_outlined),
               trailing: [
                 IconButton(

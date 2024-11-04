@@ -107,11 +107,22 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
             child: SearchBar(
               controller: _searchController,
               hintText: 'Procurar espécimes...',
+              backgroundColor: WidgetStateProperty.all<Color>(Colors.deepPurple[50]!),
               leading: const Icon(Icons.search_outlined),
+              trailing: [
+                IconButton(
+                  icon: const Icon(Icons.clear_outlined),
+                  onPressed: () {
+                    setState(() {
+                      _searchQuery = '';
+                      _searchController.clear();
+                    });
+                  },
+                ),
+              ],
               onChanged: (query) {
                 setState(() {
                   _searchQuery = query;
-                  _searchController.clear();
                 });
               },
             ),
