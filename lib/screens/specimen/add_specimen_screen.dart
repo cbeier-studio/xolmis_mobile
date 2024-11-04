@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/models/specimen.dart';
 import '../../providers/specimen_provider.dart';
@@ -24,11 +25,27 @@ class _AddSpecimenScreenState extends State<AddSpecimenScreen> {
   SpecimenType _selectedType = SpecimenType.spcFeathers;
   bool _isSubmitting = false;
   Position? _currentPosition;
+  String _observerAcronym = '';
 
   @override
   void initState() {
     super.initState();
+    _nextFieldNumber();
     _getCurrentLocation();
+  }
+
+  Future<void> _nextFieldNumber() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _observerAcronym = prefs.getString('observerAcronym') ?? '';
+    });
+
+    final ano = DateTime.now().year;
+    final mes = DateTime.now().month;
+    ;
+    final numSeq = Provider.of<SpecimenProvider>(context, listen: false).specimens.length + 1;
+
+    _fieldNumberController.text = "${_observerAcronym}${ano}${mes.toString().padLeft(2, '0')}${numSeq.toString().padLeft(4, '0')}";
   }
 
   Future<void> _getCurrentLocation() async {

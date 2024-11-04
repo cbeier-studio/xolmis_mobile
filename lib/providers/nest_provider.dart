@@ -47,4 +47,8 @@ class NestProvider with ChangeNotifier {
     await fetchNests();
   }
 
+  Future<int> getNextSequentialNumber(String acronym, int ano, int mes) async {
+    return await _nestRepository.getNextSequentialNumber(acronym, ano, mes);
+  }
+
 }

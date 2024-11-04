@@ -92,4 +92,18 @@ class NestDao {
     );
     return result!.isNotEmpty;
   }
+
+  Future<int> getNextSequentialNumber(String acronym, int ano, int mes) async {
+    final db = await _dbHelper.database;
+
+    final prefix = "${acronym}${ano}${mes.toString().padLeft(2, '0')}";
+
+    final resultants = await db?.query(
+      'nests',
+      where: 'fieldNumber LIKE ?',
+      whereArgs: ["$prefix%"],
+    );
+
+    return resultants!.isNotEmpty ? resultants.length + 1 : 1;
+  }
 }

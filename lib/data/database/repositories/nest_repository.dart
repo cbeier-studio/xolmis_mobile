@@ -25,4 +25,8 @@ class NestRepository {
   Future<bool> nestFieldNumberExists(String fieldNumber) {
     return _nestDao.nestFieldNumberExists(fieldNumber);
   }
+
+  Future<int> getNextSequentialNumber(String acronym, int ano, int mes) {
+    return _nestDao.getNextSequentialNumber(acronym, ano, mes);
+  }
 }

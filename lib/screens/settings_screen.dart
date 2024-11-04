@@ -19,6 +19,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   int _maxSpeciesMackinnon = 10;
   int _pointCountsDuration = 8;
   int _cumulativeTimeDuration = 30;
+  String _observerAcronym = '';
   PackageInfo? _packageInfo;
 
   @override
@@ -39,6 +40,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       _maxSpeciesMackinnon = prefs.getInt('maxSpeciesMackinnon') ?? 10;
       _pointCountsDuration = prefs.getInt('pointCountsDuration') ?? 8;
       _cumulativeTimeDuration = prefs.getInt('cumulativeTimeDuration') ?? 30;
+      _observerAcronym = prefs.getString('observerAcronym') ?? '';
     });
   }
 
@@ -48,6 +50,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     await prefs.setInt('maxSpeciesMackinnon', _maxSpeciesMackinnon);
     await prefs.setInt('pointCountsDuration', _pointCountsDuration);
     await prefs.setInt('cumulativeTimeDuration', _cumulativeTimeDuration);
+    await prefs.setString('observerAcronym', _observerAcronym);
   }
 
   @override
@@ -104,6 +107,50 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   );
                 },
               );
+            },
+          ),
+          Divider(),
+          ListTile(
+            leading: const Icon(Icons.person_outlined),
+            title: const Text('Observador (sigla)'),
+            subtitle: Text(_observerAcronym),
+            onTap: () async {
+              String? newObserver = await showDialog<String>(
+                context: context,
+                builder: (BuildContext context) {
+                  String observer = '';
+                  return AlertDialog(
+                    title: const Text('Observador'),
+                    content: TextField(
+                      textCapitalization: TextCapitalization.characters,
+                      onChanged: (value) {
+                        observer = value;
+                      },
+                      decoration: const InputDecoration(
+                        labelText: 'Sigla do observador',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: const Text('Cancelar'),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(observer),
+                        child: const Text('Salvar'),
+                      ),
+                    ],
+                  );
+                },
+              );
+
+              if (newObserver != null && newObserver.isNotEmpty) {
+                setState(() {
+                  _observerAcronym = newObserver;
+                });
+                _saveSettings();
+              }
             },
           ),
           Divider(),
@@ -196,8 +243,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           Divider(),
           ExpansionTile(
-            leading: const Icon(Icons.warning_outlined, color: Colors.red,),
-            title: const Text('Área perigosa', style: TextStyle(color: Colors.red, fontSize: 16, fontWeight: FontWeight.bold),),
+            leading: const Icon(Icons.warning_outlined, color: Colors.amber,),
+            title: const Text('Área perigosa', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
             children: [
               ListTile(
                 leading: const Icon(Icons.delete_forever, color: Colors.red,),
