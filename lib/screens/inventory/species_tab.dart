@@ -202,6 +202,40 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     ) ?? false;
   }
 
+  Future<void> _showAddSpeciesDialog(BuildContext context, SpeciesRepository speciesRepository, InventoryRepository inventoryRepository) async {
+    String? newSpeciesName = await showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        String speciesName = '';
+        return AlertDialog(
+          title: const Text('Adicionar espécie'),
+          content: TextField(
+            onChanged: (value) {
+              speciesName = value;
+            },
+            decoration: const InputDecoration(
+              hintText: 'Nome da espécie',
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(speciesName),
+              child: const Text('Adicionar'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (newSpeciesName != null && newSpeciesName.isNotEmpty) {
+      _addSpeciesToInventory(newSpeciesName, speciesRepository, inventoryRepository);
+    }
+  }
+
   Widget _buildSpeciesList(SpeciesRepository speciesRepository,
       InventoryRepository inventoryRepository) {
     return Column(
@@ -213,10 +247,16 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                 constraints: const BoxConstraints(
                     maxWidth: 840),
                 child: TextField(
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     hintText: 'Adicionar espécie...',
-                    prefixIcon: Icon(Icons.search_outlined),
-                    border: OutlineInputBorder(),
+                    prefixIcon: const Icon(Icons.search_outlined),
+                    border: const OutlineInputBorder(),
+                    suffixIcon: IconButton(
+                      icon: const Icon(Icons.add_box_outlined),
+                      onPressed: () {
+                        _showAddSpeciesDialog(context, widget.speciesRepository, widget.inventoryRepository);
+                      },
+                    ),
                   ),
                   readOnly: true,
                   onTap: () async {
@@ -316,6 +356,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                       'Apagar espécie', style: TextStyle(color: Colors.red),),
                     onTap: () {
                       _deleteSpecies(species);
+                      Navigator.pop(context);
                     },
                   )
                   // )
