@@ -36,16 +36,6 @@ class AppImageDao {
     });
   }
 
-  // Future<void> updateImageOfVegetation(AppImage appImage) async {
-  //   final db = await _dbHelper.database;
-  //   await db?.update(
-  //     'images',
-  //     appImage.toMap(appImage.vegetationId),
-  //     where: 'id = ?',
-  //     whereArgs: [appImage.id],
-  //   );
-  // }
-
   Future<void> insertImageToNestRevision(AppImage appImage, int revisionId) async {
     final db = await _dbHelper.database;
     try {
@@ -116,6 +106,16 @@ class AppImageDao {
     return List.generate(maps.length, (i) {
       return AppImage.fromMap(maps[i]);
     });
+  }
+
+  Future<void> updateImage(AppImage appImage) async {
+    final db = await _dbHelper.database;
+    await db?.update(
+      'images',
+      appImage.toMap(),
+      where: 'id = ?',
+      whereArgs: [appImage.id],
+    );
   }
 
   Future<void> deleteImage(int appImageId) async {

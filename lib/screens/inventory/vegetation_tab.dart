@@ -50,7 +50,8 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
                     final isLargeScreen = screenWidth > 600;
 
                     if (isLargeScreen) {
-                      return Center(
+                      return Align(
+                        alignment: Alignment.topCenter,
                         child: ConstrainedBox(
                           constraints: const BoxConstraints(maxWidth: 840),
                           child: SingleChildScrollView(
@@ -77,7 +78,8 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
                                       ),
                                     );
                                   },
-                                  child: Padding(
+                                  child: Card(
+                              child: Padding(
                                     padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
                                     child: Row(
                                       children: [
@@ -86,6 +88,7 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
                                           child: const Icon(Icons.local_florist_outlined),
                                         ),
                                         Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Text(
@@ -101,6 +104,7 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
                                         ),
                                       ],
                                     ),
+                                  ),
                                   ),
                                 ),
                               );

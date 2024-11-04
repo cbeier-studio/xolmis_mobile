@@ -158,7 +158,8 @@ class _NestsScreenState extends State<NestsScreen> {
                         final isLargeScreen = screenWidth > 600;
 
                         if (isLargeScreen) {
-                          return Center(
+                          return Align(
+                            alignment: Alignment.topCenter,
                             child: ConstrainedBox(
                               constraints: const BoxConstraints(maxWidth: 840),
                               child: SingleChildScrollView(
@@ -188,7 +189,8 @@ class _NestsScreenState extends State<NestsScreen> {
                                           }
                                         });
                                       },
-                                      child: Padding(
+                                      child: Card(
+                                  child: Padding(
                                         padding: const EdgeInsets.all(16.0),
                                         child: Row(
                                           children: [
@@ -201,6 +203,7 @@ class _NestsScreenState extends State<NestsScreen> {
                                                   : const Icon(Icons.help, color: Colors.grey),
                                             ),
                                             Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 Text(
@@ -217,6 +220,7 @@ class _NestsScreenState extends State<NestsScreen> {
                                             ),
                                           ],
                                         ),
+                                      ),
                                       ),
                                     ),
                                   );

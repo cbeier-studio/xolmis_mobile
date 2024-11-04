@@ -94,12 +94,16 @@ class _AppImageScreenState extends State<AppImageScreen> {
           } else {
             return GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
+                crossAxisCount: 2,
+                mainAxisSpacing: 8.0,
+                crossAxisSpacing: 8.0,
               ),
+              padding: const EdgeInsets.all(8.0),
               itemCount: images.length,
               itemBuilder: (context, index) {
                 final image = images[index];
                 return GestureDetector(
+                  onLongPress: () => _showBottomSheet(context, image),
                   onTap: () {
                     Navigator.push(
                       context,
@@ -109,12 +113,17 @@ class _AppImageScreenState extends State<AppImageScreen> {
                       ),
                     );
                   },
-                  onLongPress: () => _showBottomSheet(context, image),
+                  child: GridTile(
+                  footer: GridTileBar(
+                    backgroundColor: Colors.black45,
+                    title: Text(image.notes ?? '', overflow: TextOverflow.ellipsis,),
+                  ),
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(8.0),
-                    child: Image.file(
-                      File(image.imagePath),
-                      fit: BoxFit.cover,
+                      // borderRadius: BorderRadius.circular(0.0),
+                      child: Image.file(
+                        File(image.imagePath),
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 );
@@ -129,43 +138,54 @@ class _AppImageScreenState extends State<AppImageScreen> {
           final photosStatus = await Permission.photos.request();
 
           if (cameraStatus.isGranted && photosStatus.isGranted) {
-            showModalBottomSheet(
+            showDialog(
               context: context,
               builder: (context) {
-                return Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        TextFormField(
-                          controller: _notesController,
-                          maxLines: 3,
-                          decoration: const InputDecoration(
-                            labelText: 'Notas',
-                            border: OutlineInputBorder(),
+                return AlertDialog(
+                  title: const Text('Adicionar Imagem'),
+                  content: SingleChildScrollView(
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          TextFormField(
+                            controller: _notesController,
+                            maxLines: 3,
+                            textCapitalization: TextCapitalization.sentences,
+                            decoration: const InputDecoration(
+                              labelText: 'Notas',
+                              border: OutlineInputBorder(),
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 16.0),
-                        Row(
-                          children: [
-                            OutlinedButton.icon(
+                          const SizedBox(height: 16.0),
+                          Row(
+                            children: [
+                              OutlinedButton.icon(
                                 onPressed: () => _addImage(ImageSource.gallery),
                                 label: const Text('Galeria'),
-                                icon: const Icon(Icons.image_search_outlined)
-                            ),
-                            const SizedBox(width: 8.0),
-                            OutlinedButton.icon(
-                              onPressed: () => _addImage(ImageSource.camera),
-                              label: const Text('Câmera'),
-                              icon: const Icon(Icons.camera_alt_outlined),
-                            ),
-                          ],
-                        ),
-                      ],
+                                icon: const Icon(Icons.image_search_outlined),
+                              ),
+                              const SizedBox(width: 8.0),
+                              OutlinedButton.icon(
+                                onPressed: () => _addImage(ImageSource.camera),
+                                label: const Text('Câmera'),
+                                icon: const Icon(Icons.camera_alt_outlined),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
+                  actions: <Widget>[
+                    TextButton(
+                      child: const Text('Cancelar'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
                 );
               },
             );
@@ -203,6 +223,14 @@ class _AppImageScreenState extends State<AppImageScreen> {
                     onTap: () {
                       Share.shareXFiles([XFile(appImage.imagePath)], text: 'Compartilhando imagem');
                       Navigator.pop(context);
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.edit_outlined),
+                    title: const Text('Editar notas'),
+                    onTap: () {
+                      Navigator.pop(context);
+                      _showEditNotesDialog(context, appImage);
                     },
                   ),
                   ListTile(
@@ -244,6 +272,54 @@ class _AppImageScreenState extends State<AppImageScreen> {
               ),
             );
           },
+        );
+      },
+    );
+  }
+
+  void _showEditNotesDialog(BuildContext context, AppImage appImage) {
+    final _notesController = TextEditingController(text: appImage.notes);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Editar notas'),
+          content: TextField(
+            controller: _notesController,
+            maxLines: 3,
+            textCapitalization: TextCapitalization.sentences,
+            decoration: const InputDecoration(
+              labelText: 'Notas',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancelar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Salvar'),
+              onPressed: () async {
+                appImage.notes = _notesController.text;
+                final updatedImage = AppImage(
+                  id: appImage.id,
+                  imagePath: appImage.imagePath,
+                  notes: _notesController.text,
+                  vegetationId: appImage.vegetationId,
+                  specimenId: appImage.specimenId,
+                  nestRevisionId: appImage.nestRevisionId,
+                  eggId: appImage.eggId,
+                );
+                await appImageProvider.updateImage(updatedImage);
+                Navigator.of(context).pop();
+                setState(() {});
+              },
+            ),
+          ],
         );
       },
     );

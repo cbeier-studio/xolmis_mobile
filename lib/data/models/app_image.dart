@@ -1,7 +1,7 @@
 class AppImage {
   final int? id;
   final String imagePath;
-  final String? notes;
+  String? notes;
   final int? vegetationId;
   final int? eggId;
   final int? specimenId;

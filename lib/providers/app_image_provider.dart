@@ -59,6 +59,11 @@ class AppImageProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> updateImage(AppImage appImage) async {
+    await _appImageRepository.updateImage(appImage);
+    notifyListeners();
+  }
+
   Future<void> deleteImage(int appImageId) async {
     final imagePath = _images.firstWhere((image) => image.id == appImageId).imagePath;
     await _appImageRepository.deleteImage(appImageId);

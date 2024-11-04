@@ -49,7 +49,8 @@ class _WeatherTabState extends State<WeatherTab> with AutomaticKeepAliveClientMi
                     final isLargeScreen = screenWidth > 600;
 
                     if (isLargeScreen) {
-                      return Center(
+                      return Align(
+                        alignment: Alignment.topCenter,
                         child: ConstrainedBox(
                           constraints: const BoxConstraints(maxWidth: 840),
                           child: SingleChildScrollView(
@@ -69,6 +70,7 @@ class _WeatherTabState extends State<WeatherTab> with AutomaticKeepAliveClientMi
                                   // onTap: () {
                                   //
                                   // },
+                                  child: Card(
                                   child: Padding(
                                     padding: const EdgeInsets.all(16.0),
                                     child: Row(
@@ -78,6 +80,7 @@ class _WeatherTabState extends State<WeatherTab> with AutomaticKeepAliveClientMi
                                           child: const Icon(Icons.wb_sunny_outlined),
                                         ),
                                         Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Text(
@@ -93,6 +96,7 @@ class _WeatherTabState extends State<WeatherTab> with AutomaticKeepAliveClientMi
                                         ),
                                       ],
                                     ),
+                                  ),
                                   ),
                                 ),
                               );

@@ -215,7 +215,8 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                           final isLargeScreen = screenWidth > 600;
 
                           if (isLargeScreen) {
-                            return Center(
+                            return Align(
+                              alignment: Alignment.topCenter,
                               child: ConstrainedBox(
                                 constraints: const BoxConstraints(
                                     maxWidth: 840),

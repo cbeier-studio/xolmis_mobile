@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/models/nest.dart';
+import '../../data/models/app_image.dart';
 import '../../providers/egg_provider.dart';
+import '../../providers/app_image_provider.dart';
 
 import '../app_image_screen.dart';
 
@@ -53,7 +57,8 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
                         final isLargeScreen = screenWidth > 600;
 
                         if (isLargeScreen) {
-                          return Center(
+                          return Align(
+                            alignment: Alignment.topCenter,
                             child: ConstrainedBox(
                               constraints: const BoxConstraints(maxWidth: 840),
                               child: SingleChildScrollView(
@@ -80,15 +85,39 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
                                           ),
                                         );
                                       },
-                                      child: Padding(
+                                      child: Card(
+                                  child: Padding(
                                         padding: const EdgeInsets.all(16.0),
                                         child: Row(
                                           children: [
                                             Padding(
                                               padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
-                                              child: const Icon(Icons.egg_outlined),
+                                              child: FutureBuilder<List<AppImage>>(
+                                                future: Provider.of<AppImageProvider>(context, listen: false)
+                                                    .fetchImagesForEgg(egg.id!),
+                                                builder: (context, snapshot) {
+                                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                                    return const CircularProgressIndicator();
+                                                  } else if (snapshot.hasError) {
+                                                    return const Icon(Icons.error);
+                                                  } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                                                    return ClipRRect(
+                                                      borderRadius: BorderRadius.circular(0),
+                                                      child: Image.file(
+                                                        File(snapshot.data!.first.imagePath),
+                                                        width: 50,
+                                                        height: 50,
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                    );
+                                                  } else {
+                                                    return const Icon(Icons.hide_image_outlined);
+                                                  }
+                                                },
+                                              ),
                                             ),
                                             Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
                                               crossAxisAlignment: CrossAxisAlignment
                                                   .start,
                                               children: [
@@ -106,6 +135,7 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
                                             ),
                                           ],
                                         ),
+                                      ),
                                       ),
                                     ),
                                   );

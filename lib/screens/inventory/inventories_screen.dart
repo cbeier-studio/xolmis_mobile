@@ -218,7 +218,8 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                           final isLargeScreen = screenWidth > 600;
 
                           if (isLargeScreen) {
-                            return Center(
+                            return Align(
+                              alignment: Alignment.topCenter,
                               child: ConstrainedBox(
                                 constraints: const BoxConstraints(maxWidth: 840),
                                   child: GridView.builder(
@@ -252,7 +253,8 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                               }
                                             });
                                           },
-                                          child: Padding(
+                                          child: Card(
+                                    child: Padding(
                                             padding: const EdgeInsets.all(16.0),
                                             child: Row(
                                               children: [
@@ -288,6 +290,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                                   ),
                                                 ),
                                                 Column(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
                                                     Text(
@@ -326,6 +329,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                                 ),
                                               ],
                                             ),
+                                          ),
                                           ),
                                         ),
                                     );

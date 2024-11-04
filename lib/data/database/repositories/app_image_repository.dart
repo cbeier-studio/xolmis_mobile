@@ -17,10 +17,6 @@ class AppImageRepository {
     return _appImageDao.getImagesForVegetation(vegetationId);
   }
 
-  // Future<void> updateImage(AppImage appImage) {
-  //   return _appImageDao.updateImage(appImage);
-  // }
-
   Future<void> insertImageToNestRevision(AppImage appImage, int revisionId) {
     return _appImageDao.insertImageToNestRevision(appImage, revisionId);
   }
@@ -43,6 +39,10 @@ class AppImageRepository {
 
   Future<List<AppImage>> getImagesForSpecimen(int specimenId) {
     return _appImageDao.getImagesForSpecimen(specimenId);
+  }
+
+  Future<void> updateImage(AppImage appImage) {
+    return _appImageDao.updateImage(appImage);
   }
 
   Future<void> deleteImage(int appImageId) {

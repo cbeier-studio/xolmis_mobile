@@ -164,11 +164,37 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
                                             ),
                                           );
                                         },
-                                        child: Padding(
+                                        child: Card(
+                                  child: Padding(
                                           padding: const EdgeInsets.all(16.0),
                                           child: Row(
                                             children: [
+                                              FutureBuilder<List<AppImage>>(
+                                                future: Provider.of<AppImageProvider>(context, listen: false)
+                                                    .fetchImagesForSpecimen(specimen.id!),
+                                                builder: (context, snapshot) {
+                                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                                    return const CircularProgressIndicator();
+                                                  } else if (snapshot.hasError) {
+                                                    return const Icon(Icons.error);
+                                                  } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                                                    return ClipRRect(
+                                                      borderRadius: BorderRadius.circular(0),
+                                                      child: Image.file(
+                                                        File(snapshot.data!.first.imagePath),
+                                                        width: 50,
+                                                        height: 50,
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                    );
+                                                  } else {
+                                                    return const Icon(Icons.hide_image_outlined);
+                                                  }
+                                                },
+                                              ),
+                                              const SizedBox(width: 16.0,),
                                               Column(
+                                                mainAxisAlignment: MainAxisAlignment.center,
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
@@ -186,6 +212,7 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
                                               ),
                                             ],
                                           ),
+                                        ),
                                         ),
                                       ),
                                   );

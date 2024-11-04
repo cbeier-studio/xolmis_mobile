@@ -2,9 +2,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_background/flutter_background.dart';
+// import 'package:flutter_background/flutter_background.dart';
 import 'package:side_sheet/side_sheet.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
+// import 'package:flutter_foreground_service/flutter_foreground_service.dart';
 
 import 'data/database/database_helper.dart';
 
@@ -94,7 +95,13 @@ void main() async {
     specimenRepository: specimenRepository,
     appImageRepository: appImageRepository,
   ));
+  // startForegroundService();
 }
+
+// void startForegroundService() async {
+//   ForegroundService().start();
+//   debugPrint("Started service");
+// }
 
 class MyApp extends StatelessWidget {
   final ThemeMode themeMode;
@@ -190,7 +197,7 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
     WakelockPlus.enable();
-    initializeBackgroundExecution();
+    // initializeBackgroundExecution();
     // inventoryCountNotifier.updateCount();
     Provider.of<InventoryProvider>(context, listen: false).fetchInventories();
     Provider.of<NestProvider>(context, listen: false).fetchNests();
@@ -200,21 +207,22 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void dispose() {
     WakelockPlus.disable();
+    // ForegroundService().stop();
     super.dispose();
   }
 
-  Future<void> initializeBackgroundExecution() async {
-    final androidConfig = FlutterBackgroundAndroidConfig(
-      notificationTitle: 'Xolmis',
-      notificationText: 'O Xolmis está rodando em segundo plano',
-      notificationImportance: AndroidNotificationImportance.normal,
-      notificationIcon: AndroidResource(name: 'background_icon', defType: 'drawable'),
-    );
-    bool success = await FlutterBackground.initialize(androidConfig: androidConfig);
-    if (success) {
-      await FlutterBackground.enableBackgroundExecution();
-    }
-  }
+  // Future<void> initializeBackgroundExecution() async {
+  //   final androidConfig = FlutterBackgroundAndroidConfig(
+  //     notificationTitle: 'Xolmis',
+  //     notificationText: 'O Xolmis está rodando em segundo plano',
+  //     notificationImportance: AndroidNotificationImportance.normal,
+  //     notificationIcon: AndroidResource(name: 'background_icon', defType: 'drawable'),
+  //   );
+  //   bool success = await FlutterBackground.initialize(androidConfig: androidConfig);
+  //   if (success) {
+  //     await FlutterBackground.enableBackgroundExecution();
+  //   }
+  // }
 
   // Future<void> updateActiveInventoriesCount() async {
   //   final count = await DatabaseHelper().getActiveInventoriesCount();
