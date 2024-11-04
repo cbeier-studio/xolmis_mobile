@@ -117,6 +117,47 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
     }
   }
 
+  void _showFloatingMenu(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return BottomSheet(
+          onClosing: () {},
+          builder: (BuildContext context) {
+            return Container(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  ListTile(
+                    leading: Theme.of(context).brightness == Brightness.light
+                        ? const Icon(Icons.beenhere_outlined)
+                        : const Icon(Icons.beenhere),
+                    title: const Text('Adicionar revisão de ninho'),
+                    onTap: () {
+                      Navigator.pop(context);
+                      _showAddRevisionScreen(context);
+                    },
+                  ),
+                  ListTile(
+                    leading: Theme.of(context).brightness == Brightness.light
+                        ? const Icon(Icons.egg_outlined)
+                        : const Icon(Icons.egg),
+                    title: const Text('Adicionar ovo'),
+                    onTap: () {
+                      Navigator.pop(context);
+                      _showAddEggScreen(context);
+                    },
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -125,26 +166,112 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
         appBar: AppBar(
             title: Text('${widget.nest.fieldNumber}'),
             actions: [
-              widget.nest.isActive ? IconButton(
-                icon: const Icon(
-                  Icons.beenhere_outlined,
-                  semanticLabel: 'Adicionar revisão de ninho',
+              if (widget.nest.isActive)
+                IconButton(
+                  onPressed: () async {
+                    NestFateType? selectedNestFate;
+
+                    // Show dialog with the DropdownButton
+                    await showDialog<NestFateType>(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text('Confirmar desativação'),
+                        content: DropdownButtonFormField<NestFateType>(
+                          value: selectedNestFate,
+                          decoration: const InputDecoration(
+                            labelText: 'Destino do ninho *',
+                            helperText: '* campo obrigatório',
+                            border: OutlineInputBorder(),
+                          ),
+                          onChanged: (NestFateType? newValue) {
+                            setState(() {
+                              selectedNestFate = newValue;
+                            });
+                          },
+                          items: NestFateType.values.map((NestFateType fate) {
+                            return DropdownMenuItem<NestFateType>(
+                              value: fate,
+                              child: Row(
+                                children: [
+                                  fate == NestFateType.fatSuccess
+                                      ? const Icon(Icons.check_circle, color: Colors.green)
+                                      : fate == NestFateType.fatLost
+                                      ? const Icon(Icons.cancel, color: Colors.red)
+                                      : const Icon(Icons.help, color: Colors.grey),
+                                  const SizedBox(width: 8),
+                                  Text(nestFateTypeFriendlyNames[fate]!),
+                                ],
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text('Cancelar'),
+                          ),
+                          TextButton(
+                            onPressed: () async {
+                              if (selectedNestFate != null) {
+                                setState(() {
+                                  _isSubmitting = true;
+                                });
+
+                                try {
+                                  // Update nest with fate, lastTime and isActive = false
+                                  widget.nest.nestFate = selectedNestFate;
+                                  widget.nest.lastTime = DateTime.now();
+                                  widget.nest.isActive = false;
+
+                                  // Save changes to database using the provider
+                                  await Provider.of<NestProvider>(context, listen: false)
+                                      .updateNest(widget.nest);
+
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('Ninho desativado com sucesso!'),
+                                    ),
+                                  );
+
+                                  // Close screen of nest details
+                                  Navigator.pop(context, selectedNestFate);
+                                  Navigator.pop(context);
+                                } catch (error) {
+                                  // Handle errors
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Erro ao desativar o ninho: $error'),
+                                    ),
+                                  );
+                                } finally {
+                                  setState(() {
+                                    _isSubmitting = false;
+                                  });
+                                }
+                              }
+                            },
+                            child: const Text('Salvar'),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  style: IconButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    foregroundColor: Colors.white,
+                  ),
+                  // color: Colors.deepPurple,
+                  icon: _isSubmitting
+                      ? const SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                  )
+                      : const Icon(Icons.flag_outlined),
                 ),
-                tooltip: 'Adicionar revisão de ninho',
-                onPressed: () {
-                  _showAddRevisionScreen(context);
-                },
-              ) : const SizedBox.shrink(),
-              widget.nest.isActive ? IconButton(
-                icon: const Icon(
-                  Icons.egg_outlined,
-                  semanticLabel: 'Adicionar ovo',
-                ),
-                tooltip: 'Adicionar ovo',
-                onPressed: () {
-                  _showAddEggScreen(context);
-                },
-              ) : const SizedBox.shrink(),
+              const SizedBox(width: 8.0,),
             ],
             bottom: PreferredSize( // Wrap TabBar and LinearProgressIndicator in PreferredSize
               preferredSize: const Size.fromHeight(kToolbarHeight + 4.0), // Adjust height as needed
@@ -249,101 +376,10 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
         ),
         floatingActionButton: widget.nest.isActive
             ? FloatingActionButton(
-          tooltip: 'Desativar ninho',
-          onPressed: () async {
-            NestFateType? selectedNestFate;
-
-            // Show dialog with the DropdownButton
-            await showDialog<NestFateType>(
-              context: context,
-              builder: (context) => AlertDialog(
-                title: const Text('Confirmar Desativação'),
-                content: DropdownButtonFormField<NestFateType>(
-                  value: selectedNestFate,
-                  decoration: const InputDecoration(
-                    labelText: 'Destino do ninho *',
-                    helperText: '* campo obrigatório',
-                    border: OutlineInputBorder(),
-                  ),
-                  onChanged: (NestFateType? newValue) {
-                    setState(() {
-                      selectedNestFate = newValue;
-                    });
-                  },
-                  items: NestFateType.values.map((NestFateType fate) {
-                    return DropdownMenuItem<NestFateType>(
-                      value: fate,
-                      child: Row(
-                        children: [
-                          fate == NestFateType.fatSuccess
-                              ? const Icon(Icons.check_circle, color: Colors.green)
-                              : fate == NestFateType.fatLost
-                              ? const Icon(Icons.cancel, color: Colors.red)
-                              : const Icon(Icons.help, color: Colors.grey),
-                          const SizedBox(width: 8),
-                          Text(nestFateTypeFriendlyNames[fate]!),
-                        ],
-                      ),
-                    );
-                  }).toList(),
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text('Cancelar'),
-                  ),
-                  TextButton(
-                    onPressed: () async {
-                      if (selectedNestFate != null) {
-                        setState(() {
-                          _isSubmitting = true;
-                        });
-
-                        try {
-                          // Update nest with fate, lastTime and isActive = false
-                          widget.nest.nestFate = selectedNestFate;
-                          widget.nest.lastTime = DateTime.now();
-                          widget.nest.isActive = false;
-
-                          // Save changes to database using the provider
-                          await Provider.of<NestProvider>(context, listen: false)
-                              .updateNest(widget.nest);
-
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Ninho desativado com sucesso!'),
-                            ),
-                          );
-
-                          // Close screen of nest details
-                          Navigator.pop(context, selectedNestFate);
-                          Navigator.pop(context);
-                        } catch (error) {
-                          // Handle errors
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Erro ao desativar o ninho: $error'),
-                            ),
-                          );
-                        } finally {
-                          setState(() {
-                            _isSubmitting = false;
-                          });
-                        }
-                      }
-                    },
-                    child: const Text('Salvar'),
-                  ),
-                ],
-              ),
-            );
+          onPressed: () {
+            _showFloatingMenu(context);
           },
-          backgroundColor: Colors.green,
-          child: _isSubmitting
-              ? const CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-          )
-              : const Icon(Icons.flag_outlined, color: Colors.white),
+          child: const Icon(Icons.add_outlined),
         )
             : null,
       ),

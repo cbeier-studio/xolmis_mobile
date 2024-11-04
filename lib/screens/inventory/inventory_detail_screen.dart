@@ -156,6 +156,47 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
     }
   }
 
+  void _showFloatingMenu(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return BottomSheet(
+          onClosing: () {},
+          builder: (BuildContext context) {
+            return Container(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  ListTile(
+                    leading: Theme.of(context).brightness == Brightness.light
+                        ? const Icon(Icons.local_florist_outlined)
+                        : const Icon(Icons.local_florist),
+                    title: const Text('Adicionar dados de vegetação'),
+                    onTap: () {
+                      Navigator.pop(context);
+                      _showAddVegetationScreen(context);
+                    },
+                  ),
+                  ListTile(
+                    leading: Theme.of(context).brightness == Brightness.light
+                        ? const Icon(Icons.wb_sunny_outlined)
+                        : const Icon(Icons.wb_sunny),
+                    title: const Text('Adicionar dados do tempo'),
+                    onTap: () {
+                      Navigator.pop(context);
+                      _showAddWeatherScreen(context);
+                    },
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -181,24 +222,55 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
               );
             },
           ) : const SizedBox.shrink(),
-          IconButton(
-            icon: Theme.of(context).brightness == Brightness.light
-                ? const Icon(Icons.local_florist_outlined)
-                : const Icon(Icons.local_florist),
-            tooltip: 'Adicionar dados de vegetação',
-            onPressed: () {
-              _showAddVegetationScreen(context);
-            },
-          ),
-          IconButton(
-            icon: Theme.of(context).brightness == Brightness.light
-                ? const Icon(Icons.wb_sunny_outlined)
-                : const Icon(Icons.wb_sunny),
-            tooltip: 'Adicionar dados do tempo',
-            onPressed: () {
-              _showAddWeatherScreen(context);
-            },
-          ),
+          if (!widget.inventory.isFinished)
+            IconButton(
+              onPressed: () async {
+                // Show confirmation dialog
+                final confirmed = await showDialog<bool>(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('Confirmar Encerramento'),
+                    content: const Text('Tem certeza que deseja encerrar este inventário?'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, false),
+                        child: const Text('Cancelar'),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, true),
+                        child: const Text('Encerrar'),
+                      ),
+                    ],
+                  ),
+                );
+
+                // If confirmed, finish the inventory
+                if (confirmed == true) {
+                  setState(() {
+                    _isSubmitting = true;
+                  });
+                  await Inventory.stopTimer(widget.inventory, widget.inventoryRepository);
+                  Navigator.pop(context, true);
+                  setState(() {
+                    _isSubmitting = false;
+                  });
+                }
+              },
+              style: IconButton.styleFrom(
+                backgroundColor: Colors.green,
+                foregroundColor: Colors.white,
+              ),
+              icon: _isSubmitting
+                  ? const SizedBox(
+                width: 24,
+                height: 24,
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
+              )
+                  : const Icon(Icons.flag_outlined),
+            ),
+          const SizedBox(width: 8.0,),
         ],
         bottom: PreferredSize( // Wrap TabBar and LinearProgressIndicator in PreferredSize
           preferredSize: const Size.fromHeight(kToolbarHeight + 4.0), // Adjust height as needed
@@ -312,49 +384,12 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
           ),
         ],
       ),
-      floatingActionButton: !widget.inventory.isFinished
-          ? FloatingActionButton(
-        tooltip: 'Encerrar inventário',
-        onPressed: () async {
-          // Show confirmation dialog
-          final confirmed = await showDialog<bool>(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: const Text('Confirmar Encerramento'),
-              content: const Text('Tem certeza que deseja encerrar este inventário?'),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context, false),
-                  child: const Text('Cancelar'),
-                ),
-                TextButton(
-                  onPressed: () => Navigator.pop(context, true),
-                  child: const Text('Encerrar'),
-                ),
-              ],
-            ),
-          );
-
-          // If confirmed, finish the inventory
-          if (confirmed == true) {
-            setState(() {
-              _isSubmitting = true;
-            });
-            await Inventory.stopTimer(widget.inventory, widget.inventoryRepository);
-            Navigator.pop(context, true);
-            setState(() {
-              _isSubmitting = false;
-            });
-          }
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _showFloatingMenu(context);
         },
-        backgroundColor: Colors.green,
-        child: _isSubmitting
-            ? const CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-        )
-            : const Icon(Icons.flag_outlined, color: Colors.white),
-      )
-          : null,
+        child: const Icon(Icons.add_outlined),
+      ),
     );
   }
 }
