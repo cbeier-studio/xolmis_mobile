@@ -66,8 +66,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
       checkMackinnonCompletion(context, widget.inventory, inventoryRepository);
     });
 
-    if (!widget.inventory.isFinished &&
-        widget.inventory.type != InventoryType.invBanding) {
+    if (!widget.inventory.isFinished) {
       _addSpeciesToOtherActiveInventories(
           speciesName, speciesProvider, inventoryProvider, speciesRepository,
           inventoryRepository);
@@ -104,7 +103,8 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     for (final inventory in inventoryProvider.activeInventories) {
       if (inventory.id != widget.inventory.id &&
           !speciesProvider.speciesExistsInInventory(
-              inventory.id, speciesName)) {
+              inventory.id, speciesName) &&
+          widget.inventory.type != InventoryType.invBanding) {
         final newSpeciesForOtherInventory = Species(
           inventoryId: inventory.id,
           name: speciesName,

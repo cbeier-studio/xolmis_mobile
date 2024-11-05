@@ -227,7 +227,7 @@ class _AppImageScreenState extends State<AppImageScreen> {
                   ),
                   ListTile(
                     leading: const Icon(Icons.edit_outlined),
-                    title: const Text('Editar notas'),
+                    title: const Text('Editar notas da imagem'),
                     onTap: () {
                       Navigator.pop(context);
                       _showEditNotesDialog(context, appImage);
