@@ -363,12 +363,25 @@ class _NestsScreenState extends State<NestsScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  !_showActive ? ListTile(
-                    leading: const Icon(Icons.file_download_outlined),
-                    title: const Text('Exportar ninho'),
-                    onTap: () {
-                      exportNestToJson(context, nest);
-                    },
+                  !_showActive ? ExpansionTile(
+                      leading: const Icon(Icons.file_download_outlined),
+                      title: const Text('Exportar ninho'),
+                      children: [
+                        ListTile(
+                          leading: const Icon(Icons.table_chart_outlined),
+                          title: const Text('CSV'),
+                          onTap: () {
+                            exportNestToCsv(context, nest);
+                          },
+                        ),
+                        ListTile(
+                          leading: const Icon(Icons.code_outlined),
+                          title: const Text('JSON'),
+                          onTap: () {
+                            exportNestToJson(context, nest);
+                          },
+                        ),
+                      ]
                   ) : const SizedBox.shrink(),
                   !_showActive ? ListTile(
                     leading: const Icon(Icons.file_download_outlined),

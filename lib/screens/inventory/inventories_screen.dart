@@ -531,12 +531,25 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                       );
                     },
                   ) : const SizedBox.shrink(),
-                  !_showActive ? ListTile(
-                    leading: const Icon(Icons.file_download_outlined),
-                    title: const Text('Exportar inventário'),
-                    onTap: () {
-                      exportInventoryToCsv(context, inventory);
-                    },
+                  !_showActive ? ExpansionTile(
+                      leading: const Icon(Icons.file_download_outlined),
+                      title: const Text('Exportar inventário'),
+                      children: [
+                        ListTile(
+                          leading: const Icon(Icons.table_chart_outlined),
+                          title: const Text('CSV'),
+                          onTap: () {
+                            exportInventoryToCsv(context, inventory);
+                          },
+                        ),
+                        ListTile(
+                          leading: const Icon(Icons.code_outlined),
+                          title: const Text('JSON'),
+                          onTap: () {
+                            exportInventoryToJson(context, inventory);
+                          },
+                        ),
+                      ]
                   ) : const SizedBox.shrink(),
                   !_showActive ? ListTile(
                     leading: const Icon(Icons.file_download_outlined),

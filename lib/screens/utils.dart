@@ -10,18 +10,14 @@ import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:path/path.dart' as path;
 
 import '../data/models/inventory.dart';
 import '../data/models/nest.dart';
-import '../data/models/app_image.dart';
 import '../data/database/repositories/inventory_repository.dart';
 import '../providers/inventory_provider.dart';
 import '../providers/species_provider.dart';
 import '../providers/nest_provider.dart';
 import '../providers/specimen_provider.dart';
-import '../providers/app_image_provider.dart';
 
 import 'inventory/add_inventory_screen.dart';
 
@@ -175,6 +171,35 @@ Future<void> exportAllInventoriesToJson(BuildContext context, InventoryProvider 
           Icon(Icons.error_outlined, color: Colors.red),
           SizedBox(width: 8),
           Text('Erro ao exportar os inventários: $error'),
+        ],
+      ),
+      ),
+    );
+  }
+}
+
+Future<void> exportInventoryToJson(BuildContext context, Inventory inventory) async {
+  try {
+    final jsonData = inventory.toJson();
+    final jsonString = jsonEncode(jsonData);
+
+    // Create the file in a temporary folder
+    Directory tempDir = await getTemporaryDirectory();
+    final filePath = '${tempDir.path}/inventory_${inventory.id}.json';
+    final file = File(filePath);
+    await file.writeAsString(jsonString);
+
+    // Share the file using share_plus
+    await Share.shareXFiles([
+      XFile(filePath, mimeType: 'application/json'),
+    ], text: 'Inventário exportado!', subject: 'Dados do Inventário ${inventory.id}');
+  } catch (error) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Row(
+        children: [
+          Icon(Icons.error_outlined, color: Colors.red),
+          SizedBox(width: 8),
+          Text('Erro ao exportar o inventário: $error'),
         ],
       ),
       ),
@@ -351,8 +376,122 @@ Future<void> exportNestToJson(BuildContext context, Nest nest) async {
 
     // 3. Share the file using share_plus
     await Share.shareXFiles([
-      XFile(filePath, mimeType: 'text/json'),
+      XFile(filePath, mimeType: 'application/json'),
     ], text: 'Ninho exportado!', subject: 'Dados do Ninho ${nest.fieldNumber}');
+  } catch (error) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Row(
+        children: [
+          Icon(Icons.error_outlined, color: Colors.red),
+          SizedBox(width: 8),
+          Text('Erro ao exportar o ninho: $error'),
+        ],
+      ),
+      ),
+    );
+  }
+}
+
+Future<void> exportNestToCsv(BuildContext context, Nest nest) async {
+  try {
+    // 1. Create a list of data for the CSV
+    List<List<dynamic>> rows = [];
+    rows.add([
+      'Nº de campo',
+      'Espécie',
+      'Localidade',
+      'Longitude',
+      'Latitude',
+      'Data de encontro',
+      'Suporte',
+      'Altura acima do solo',
+      'Macho',
+      'Fêmea',
+      'Ajudantes de ninho',
+      'Última data',
+      'Destino do ninho',
+    ]);
+    rows.add([
+      nest.fieldNumber,
+      nest.speciesName,
+      nest.localityName,
+      nest.longitude,
+      nest.latitude,
+      nest.foundTime,
+      nest.support,
+      nest.heightAboveGround,
+      nest.male,
+      nest.female,
+      nest.helpers,
+      nest.lastTime,
+      NestFateType.values[nest.nestFate!.index],
+    ]);
+
+    // Add nest revision data
+    rows.add([]); // Empty line as separator
+    rows.add(['Revisões']);
+    rows.add([
+      'Data/Hora',
+      'Status',
+      'Estágio',
+      'Ovos do hospedeiro',
+      'Ninhegos do hospedeiro',
+      'Ovos do nidoparasita',
+      'Ninhegos do nidoparasita',
+      'Tem larvas de Philornis',
+      'Observações',
+    ]);
+    for (var revision in nest.revisionsList ?? []) {
+      rows.add([
+        revision.sampleTime,
+        revision.nestStatus,
+        revision.nestStage,
+        revision.eggsHost,
+        revision.nestlingsHost,
+        revision.eggsParasite,
+        revision.nestlingsParasite,
+        revision.hasPhilornisLarvae,
+        revision.notes,
+      ]);
+    }
+
+    // Add egg data
+    rows.add([]); // Empty line to separate vegetation data
+    rows.add(['Ovos']);
+    rows.add([
+      'Data/Hora',
+      'Nº de campo',
+      'Espécie',
+      'Forma do ovo',
+      'Largura',
+      'Comprimento',
+      'Peso',
+    ]);
+    for (var egg in nest.eggsList ?? []) {
+      rows.add([
+        egg.sampleTime,
+        egg.fieldNumber,
+        egg.speciesName,
+        egg.eggShape,
+        egg.width,
+        egg.length,
+        egg.mass,
+      ]);
+    }
+
+    // 2. Convert the list of data to CSV
+    String csv = const ListToCsvConverter().convert(rows);
+
+    // 3. Create the file in a temporary directory
+    Directory tempDir = await getTemporaryDirectory();
+    final filePath = '${tempDir.path}/nest_${nest.id}.csv';
+    final file = File(filePath);
+    await file.writeAsString(csv);
+
+    // 4. Share the file using share_plus
+    await Share.shareXFiles([
+      XFile(filePath, mimeType: 'text/csv'),
+    ], text: 'Ninho exportado!', subject: 'Dados do Ninho ${nest.id}');
   } catch (error) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Row(
@@ -380,7 +519,7 @@ Future<void> exportAllSpecimensToJson(BuildContext context) async {
     await file.writeAsString(jsonString);
 
     await Share.shareXFiles([
-      XFile(filePath, mimeType: 'text/json'),
+      XFile(filePath, mimeType: 'application/json'),
     ], text: 'Espécimes exportados!', subject: 'Dados dos Espécimes');
   } catch (error) {
     ScaffoldMessenger.of(context).showSnackBar(
