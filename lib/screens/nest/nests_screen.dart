@@ -301,18 +301,6 @@ class _NestsScreenState extends State<NestsScreen> {
                                       : nest.nestFate == NestFateType.fatLost
                                       ? const Icon(Icons.cancel, color: Colors.red)
                                       : const Icon(Icons.help, color: Colors.grey),
-                                  trailing: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children:[
-                                      !_showActive ? IconButton(
-                                        icon: const Icon(Icons.file_download_outlined),
-                                        tooltip: 'Exportar ninho',
-                                        onPressed: () {
-                                          exportNestToJson(context, nest);
-                                        },
-                                      ) : const SizedBox.shrink(),
-                                    ],
-                                  ),
                                   onLongPress: () => _showBottomSheet(context, nest),
                                   onTap: () {
                                     Navigator.push(

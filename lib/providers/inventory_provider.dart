@@ -146,16 +146,7 @@ class InventoryProvider with ChangeNotifier {
     }
   }
 
-  // void _onVegetationListChanged() {
-  //   // Update the vegetation list when have changes in VegetationProvider
-  //   for (var inventoryId in _inventoryMap.keys) {
-  //     final inventoryList = _inventoryMap[inventoryId];
-  //     if (inventoryList != null) {
-  //       for (var inventory in _inventories) {
-  //         inventory.vegetationList = VegetationProvider().getVegetationForInventory(inventory.id);
-  //       }
-  //     }
-  //   }
-  //   notifyListeners();
-  // }
+  Future<int> getNextSequentialNumber(String? local, String observer, int ano, int mes, int dia, String? typeChar) {
+    return _inventoryRepository.getNextSequentialNumber(local, observer, ano, mes, dia, typeChar);
+  }
 }

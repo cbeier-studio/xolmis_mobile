@@ -37,4 +37,8 @@ class InventoryRepository {
   Future<Inventory> getInventoryById(String id) {
     return _inventoryDao.getInventoryById(id);
   }
+
+  Future<int> getNextSequentialNumber(String? local, String observer, int ano, int mes, int dia, String? typeChar) {
+    return _inventoryDao.getNextSequentialNumber(local, observer, ano, mes, dia, typeChar);
+  }
 }

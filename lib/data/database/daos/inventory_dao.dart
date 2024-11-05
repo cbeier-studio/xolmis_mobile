@@ -161,5 +161,17 @@ class InventoryDao {
     }
   }
 
+  Future<int> getNextSequentialNumber(String? local, String observer, int ano, int mes, int dia, String? typeChar) async {
+    final db = await _dbHelper.database;
 
+    final prefix = "${local != null ? '$local-' : ''}$observer-$ano${mes.toString().padLeft(2, '0')}${dia.toString().padLeft(2, '0')}-${typeChar != null ? '$typeChar' : ''}";
+
+    final results = await db?.query(
+      'inventories',
+      where: 'id LIKE ?',
+      whereArgs: ["$prefix%"],
+    );
+
+    return results!.isNotEmpty ? results.length + 1 : 1;
+  }
 }

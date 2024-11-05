@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
@@ -30,12 +31,35 @@ Future<List<String>> loadSpeciesSearchData() async {
 }
 
 String getNextInventoryId(String currentId) {
+  // 1. Split the string in parts using '-' as delimiter
   final parts = currentId.split('-');
-  final lastPart = parts.last;
-  final prefix = lastPart.substring(0, 1); // Get the letter prefix (e.g., "L")
-  final number = int.parse(lastPart.substring(1)); // Get the numeric part (e.g., "01")
-  final nextNumber = number + 1;
-  final nextId = '${parts[0]}-${prefix}${nextNumber.toString().padLeft(2, '0')}'; // Pad with leading zeros if needed
+
+  // 2. Check if it has at least one part
+  if (parts.isEmpty) {
+    return currentId; // Return the original ID if it has no parts
+  }
+
+  // 3. Get the last part of the string
+  var lastPart = parts.last;
+
+  // 4. Extract the last two digits as integer
+  var numericPart = int.tryParse(lastPart.substring(max(0, lastPart.length - 2)));
+
+  // 5. Check if the extraction was successful
+  if (numericPart == null) {
+    return currentId; // Return the original ID if the extraction was unsuccessful
+  }
+
+  // 6. Increment the number in 1
+  numericPart++;
+
+  // 7. Replace the last two digits by the new formatted number
+  lastPart = lastPart.substring(0, max(0, lastPart.length - 2)) + numericPart.toString().padLeft(2, '0');
+
+  // 8. Rebuild the string with the last part updated
+  parts[parts.length - 1] = lastPart;
+  final nextId = parts.join('-');
+
   return nextId;
 }
 
@@ -590,6 +614,23 @@ Future<void> exportAllSpecimensToCsv(BuildContext context) async {
       ),
       ),
     );
+  }
+}
+
+String? getInventoryTypeLetter(InventoryType inventoryType) {
+  switch (inventoryType) {
+    case InventoryType.invBanding:
+      return 'B';
+    case InventoryType.invCasual:
+      return 'C';
+    case InventoryType.invMackinnonList:
+      return 'L';
+    case InventoryType.invTransectionCount:
+      return 'T';
+    case InventoryType.invPointCount:
+      return 'P';
+    default:
+      return null;
   }
 }
 

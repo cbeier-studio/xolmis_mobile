@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../providers/inventory_provider.dart';
 import '../../data/models/inventory.dart';
+import '../utils.dart';
 
 class AddInventoryScreen extends StatefulWidget {
   final String? initialInventoryId;
@@ -49,10 +50,69 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                     TextFormField(
                       controller: _idController,
                       textCapitalization: TextCapitalization.words,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         labelText: 'ID do Inventário *',
                         helperText: '* campo obrigatório',
-                        border: OutlineInputBorder(),
+                        border: const OutlineInputBorder(),
+                        suffixIcon: IconButton(
+                          icon: const Icon(Icons.auto_mode_outlined),
+                          onPressed: () async {
+                            final result = await showDialog<String>(
+                              context: context,
+                              builder: (BuildContext context) {
+                                String acronym = '';
+                                return AlertDialog(
+                                  title: const Text('Gerar ID'),
+                                  content: TextField(
+                                    maxLength: 10,
+                                    textCapitalization: TextCapitalization.words,
+                                    autofocus: true,
+                                    decoration: const InputDecoration(
+                                      labelText: 'Nome ou sigla do local',
+                                      border: OutlineInputBorder(),
+                                      helperText: '* opcional',
+                                    ),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        acronym = value;
+                                      });
+                                    },
+                                  ),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      child: const Text('Cancelar'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                    TextButton(
+                                      child: const Text('OK'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop(acronym);
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+
+                            if (result != null) {
+                              // Concatenate the inventory ID in the specified format
+                              final prefs = await SharedPreferences.getInstance();
+                              final observerAcronym = prefs.getString('observerAcronym') ?? '';
+                              final now = DateTime.now();
+                              final year = now.year.toString();
+                              final month = now.month.toString().padLeft(2, '0');
+                              final day = now.day.toString().padLeft(2, '0');
+                              final inventoryTypeLetter = getInventoryTypeLetter(_selectedType);
+                              final sequentialNumber = await Provider.of<InventoryProvider>(context, listen: false).getNextSequentialNumber(result, observerAcronym, now.year, now.month, now.day, inventoryTypeLetter);
+
+                              final inventoryId = '${result != null ? '$result-' : ''}$observerAcronym-$year$month$day-${inventoryTypeLetter != null ? '$inventoryTypeLetter' : ''}${sequentialNumber.toString().padLeft(2, '0')}';
+
+                              _idController.text = inventoryId;
+                            }
+                          },
+                        ),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
