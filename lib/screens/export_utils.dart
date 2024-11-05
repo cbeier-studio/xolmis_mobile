@@ -79,13 +79,12 @@ Future<void> exportInventoryToCsv(BuildContext context, Inventory inventory) asy
     // 1. Create a list of data for the CSV
     List<List<dynamic>> rows = [];
     rows.add([
-      'ID do Inventário',
-      'Tipo',
-      'Duração',
-      'Pausado',
-      'Finalizado',
-      'Tempo Restante',
-      'Tempo Decorrido'
+      'ID',
+      'Type',
+      'Duration',
+      'Paused',
+      'Finished',
+      'Elapsed time'
     ]);
     rows.add([
       inventory.id,
@@ -98,28 +97,28 @@ Future<void> exportInventoryToCsv(BuildContext context, Inventory inventory) asy
 
     // Add species data
     rows.add([]); // Empty line to separate the inventory of the species
-    rows.add(['Espécie', 'Contagem', 'Fora da amostra']);
+    rows.add(['SPECIES', 'Count', 'Out of sample']);
     for (var species in inventory.speciesList) {
       rows.add([species.name, species.count, species.isOutOfInventory]);
     }
 
     // Add vegetation data
     rows.add([]); // Empty line to separate vegetation data
-    rows.add(['Vegetação']);
+    rows.add(['VEGETATION']);
     rows.add([
-      'Data/Hora',
+      'Date/Time',
       'Latitude',
       'Longitude',
-      'Proporção de Herbáceas',
-      'Distribuição de Herbáceas',
-      'Altura de Herbáceas',
-      'Proporção de Arbustos',
-      'Distribuição de Arbustos',
-      'Altura de Arbustos',
-      'Proporção de Árvores',
-      'Distribuição de Árvores',
-      'Altura de Árvores',
-      'Observações'
+      'Herbs Proportion',
+      'Herbs Distribution',
+      'Herbs Height',
+      'Shrubs Proportion',
+      'Shrubs Distribution',
+      'Shrubs Height',
+      'Trees Proportion',
+      'Trees Distribution',
+      'Trees Height',
+      'Notes'
     ]);
     for (var vegetation in inventory.vegetationList) {
       rows.add([
@@ -127,13 +126,13 @@ Future<void> exportInventoryToCsv(BuildContext context, Inventory inventory) asy
         vegetation.latitude,
         vegetation.longitude,
         vegetation.herbsProportion,
-        vegetation.herbsDistribution,
+        vegetation.herbsDistribution?.index,
         vegetation.herbsHeight,
         vegetation.shrubsProportion,
-        vegetation.shrubsDistribution,
+        vegetation.shrubsDistribution?.index,
         vegetation.shrubsHeight,
         vegetation.treesProportion,
-        vegetation.treesDistribution,
+        vegetation.treesDistribution?.index,
         vegetation.treesHeight,
         vegetation.notes
       ]);
@@ -141,13 +140,13 @@ Future<void> exportInventoryToCsv(BuildContext context, Inventory inventory) asy
 
     // Add weather data
     rows.add([]); // Empty line to separate weather data
-    rows.add(['Tempo']);
+    rows.add(['WEATHER']);
     rows.add([
-      'Data/Hora',
-      'Nebulosidade',
-      'Precipitação',
-      'Temperatura',
-      'Vento'
+      'Date/Time',
+      'Cloud cover',
+      'Precipitation',
+      'Temperature',
+      'Wind speed'
     ]);
     for (var weather in inventory.weatherList) {
       rows.add([
@@ -161,10 +160,10 @@ Future<void> exportInventoryToCsv(BuildContext context, Inventory inventory) asy
 
     // Add POIs data
     rows.add([]); // Empty line to separate POI data
-    rows.add(['POIs das Espécies']);
+    rows.add(['SPECIES POINTS OF INTEREST']);
     for (var species in inventory.speciesList) {
       if (species.pois.isNotEmpty) {
-        rows.add(['Espécie: ${species.name}']);
+        rows.add(['Species: ${species.name}']);
         rows.add(['Latitude', 'Longitude']);
         for (var poi in species.pois) {
           rows.add([poi.latitude, poi.longitude]);
@@ -174,7 +173,7 @@ Future<void> exportInventoryToCsv(BuildContext context, Inventory inventory) asy
     }
 
     // 2. Convert the list of data to CSV
-    String csv = const ListToCsvConverter().convert(rows);
+    String csv = const ListToCsvConverter().convert(rows, fieldDelimiter: ';');
 
     // 3. Create the file in a temporary directory
     Directory tempDir = await getTemporaryDirectory();
@@ -208,7 +207,7 @@ Future<void> exportAllInactiveNestsToJson(BuildContext context) async {
     final jsonString = jsonEncode(jsonData);
 
     Directory tempDir = await getTemporaryDirectory();
-    final filePath = '${tempDir.path}/inactive_nests.json';
+    final filePath = '${tempDir.path}/nests.json';
     final file = File(filePath);
     await file.writeAsString(jsonString);
 
@@ -264,19 +263,19 @@ Future<void> exportNestToCsv(BuildContext context, Nest nest) async {
     // 1. Create a list of data for the CSV
     List<List<dynamic>> rows = [];
     rows.add([
-      'Nº de campo',
-      'Espécie',
-      'Localidade',
+      'Field number',
+      'Species',
+      'Locality',
       'Longitude',
       'Latitude',
-      'Data de encontro',
-      'Suporte',
-      'Altura acima do solo',
-      'Macho',
-      'Fêmea',
-      'Ajudantes de ninho',
-      'Última data',
-      'Destino do ninho',
+      'Date found',
+      'Support',
+      'Height above ground',
+      'Male',
+      'Female',
+      'Helpers',
+      'Last date',
+      'Fate',
     ]);
     rows.add([
       nest.fieldNumber,
@@ -296,17 +295,17 @@ Future<void> exportNestToCsv(BuildContext context, Nest nest) async {
 
     // Add nest revision data
     rows.add([]); // Empty line as separator
-    rows.add(['Revisões']);
+    rows.add(['REVISIONS']);
     rows.add([
-      'Data/Hora',
+      'Date/Time',
       'Status',
-      'Estágio',
-      'Ovos do hospedeiro',
-      'Ninhegos do hospedeiro',
-      'Ovos do nidoparasita',
-      'Ninhegos do nidoparasita',
-      'Tem larvas de Philornis',
-      'Observações',
+      'Phase',
+      'Host eggs',
+      'Host nestlings',
+      'Nidoparasite eggs',
+      'Nidoparasite nestlings',
+      'Has Philornis larvae',
+      'Notes',
     ]);
     for (var revision in nest.revisionsList ?? []) {
       rows.add([
@@ -323,16 +322,16 @@ Future<void> exportNestToCsv(BuildContext context, Nest nest) async {
     }
 
     // Add egg data
-    rows.add([]); // Empty line to separate vegetation data
-    rows.add(['Ovos']);
+    rows.add([]);
+    rows.add(['EGGS']);
     rows.add([
-      'Data/Hora',
-      'Nº de campo',
-      'Espécie',
-      'Forma do ovo',
-      'Largura',
-      'Comprimento',
-      'Peso',
+      'Date/Time',
+      'Field number',
+      'Species',
+      'Egg shape',
+      'Width',
+      'Length',
+      'Weight',
     ]);
     for (var egg in nest.eggsList ?? []) {
       rows.add([
@@ -347,7 +346,7 @@ Future<void> exportNestToCsv(BuildContext context, Nest nest) async {
     }
 
     // 2. Convert the list of data to CSV
-    String csv = const ListToCsvConverter().convert(rows);
+    String csv = const ListToCsvConverter().convert(rows, fieldDelimiter: ';');
 
     // 3. Create the file in a temporary directory
     Directory tempDir = await getTemporaryDirectory();
@@ -410,14 +409,14 @@ Future<void> exportAllSpecimensToCsv(BuildContext context) async {
     // 1. Create a list of data for the CSV
     List<List<dynamic>> rows = [];
     rows.add([
-      'Data/Hora',
-      'Nº de campo',
-      'Espécie',
-      'Tipo',
-      'Localidade',
+      'Date/Time',
+      'Field number',
+      'Species',
+      'Type',
+      'Locality',
       'Longitude',
       'Latitude',
-      'Observações',
+      'Notes',
     ]);
     for (var specimen in specimenList ?? []) {
       rows.add([
@@ -433,7 +432,7 @@ Future<void> exportAllSpecimensToCsv(BuildContext context) async {
     }
 
     // 2. Convert the list of data to CSV
-    String csv = const ListToCsvConverter().convert(rows);
+    String csv = const ListToCsvConverter().convert(rows, fieldDelimiter: ';');
 
     // 3. Create the file in a temporary directory
     Directory tempDir = await getTemporaryDirectory();

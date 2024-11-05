@@ -537,6 +537,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                           leading: const Icon(Icons.table_chart_outlined),
                           title: const Text('CSV'),
                           onTap: () {
+                            Navigator.of(context).pop();
                             exportInventoryToCsv(context, inventory);
                           },
                         ),
@@ -544,6 +545,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                           leading: const Icon(Icons.code_outlined),
                           title: const Text('JSON'),
                           onTap: () {
+                            Navigator.of(context).pop();
                             exportInventoryToJson(context, inventory);
                           },
                         ),
@@ -553,6 +555,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                     leading: const Icon(Icons.file_download_outlined),
                     title: const Text('Exportar todos os inventários'),
                     onTap: () {
+                      Navigator.of(context).pop();
                       exportAllInventoriesToJson(context, inventoryProvider);
                     },
                   ) : const SizedBox.shrink(),

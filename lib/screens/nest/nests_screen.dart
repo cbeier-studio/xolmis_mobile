@@ -357,6 +357,7 @@ class _NestsScreenState extends State<NestsScreen> {
                           leading: const Icon(Icons.table_chart_outlined),
                           title: const Text('CSV'),
                           onTap: () {
+                            Navigator.of(context).pop();
                             exportNestToCsv(context, nest);
                           },
                         ),
@@ -364,6 +365,7 @@ class _NestsScreenState extends State<NestsScreen> {
                           leading: const Icon(Icons.code_outlined),
                           title: const Text('JSON'),
                           onTap: () {
+                            Navigator.of(context).pop();
                             exportNestToJson(context, nest);
                           },
                         ),
@@ -373,6 +375,7 @@ class _NestsScreenState extends State<NestsScreen> {
                     leading: const Icon(Icons.file_download_outlined),
                     title: const Text('Exportar todos os ninhos'),
                     onTap: () {
+                      Navigator.of(context).pop();
                       exportAllInactiveNestsToJson(context);
                     },
                   ) : const SizedBox.shrink(),
