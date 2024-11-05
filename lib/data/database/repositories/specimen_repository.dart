@@ -25,4 +25,8 @@ class SpecimenRepository {
   Future<bool> specimenFieldNumberExists(String fieldNumber) {
     return _specimenDao.specimenFieldNumberExists(fieldNumber);
   }
+
+  Future<List<String>> getDistinctLocalities() {
+    return _specimenDao.getDistinctLocalities();
+  }
 }

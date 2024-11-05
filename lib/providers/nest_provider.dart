@@ -51,4 +51,12 @@ class NestProvider with ChangeNotifier {
     return await _nestRepository.getNextSequentialNumber(acronym, ano, mes);
   }
 
+  Future<List<String>> getDistinctLocalities() {
+    return _nestRepository.getDistinctLocalities();
+  }
+
+  Future<List<String>> getDistinctSupports() {
+    return _nestRepository.getDistinctSupports();
+  }
+
 }

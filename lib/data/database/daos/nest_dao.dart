@@ -106,4 +106,28 @@ class NestDao {
 
     return resultants!.isNotEmpty ? resultants.length + 1 : 1;
   }
+
+  Future<List<String>> getDistinctLocalities() async {
+    final db = await _dbHelper.database;
+
+    final results = await db?.rawQuery('SELECT DISTINCT localityName FROM nests');
+
+    if (results!.isNotEmpty) {
+      return results.map((row) => row['localityName'] as String).toList();
+    } else {
+      return [];
+    }
+  }
+
+  Future<List<String>> getDistinctSupports() async {
+    final db = await _dbHelper.database;
+
+    final results = await db?.rawQuery('SELECT DISTINCT support FROM nests');
+
+    if (results!.isNotEmpty) {
+      return results.map((row) => row['support'] as String).toList();
+    } else {
+      return [];
+    }
+  }
 }

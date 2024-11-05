@@ -82,6 +82,18 @@ class SpecimenDao {
     );
     return result!.isNotEmpty;
   }
+
+  Future<List<String>> getDistinctLocalities() async {
+    final db = await _dbHelper.database;
+
+    final results = await db?.rawQuery('SELECT DISTINCT locality FROM specimens');
+
+    if (results!.isNotEmpty) {
+      return results.map((row) => row['locality'] as String).toList();
+    } else {
+      return [];
+    }
+  }
 }
 
 class DatabaseInsertException implements Exception {

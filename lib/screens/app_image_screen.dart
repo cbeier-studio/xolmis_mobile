@@ -200,7 +200,7 @@ class _AppImageScreenState extends State<AppImageScreen> {
             openAppSettings();
           }
         },
-        child: const Icon(Icons.add_outlined),
+        child: const Icon(Icons.add_a_photo_outlined),
       ),
     );
   }

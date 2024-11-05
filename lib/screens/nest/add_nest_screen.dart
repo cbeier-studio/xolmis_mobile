@@ -133,35 +133,77 @@ class _AddNestScreenState extends State<AddNestScreen> {
                           },
                         ),
                         const SizedBox(height: 16.0),
-                        TextFormField(
-                          controller: _localityNameController,
-                          textCapitalization: TextCapitalization.words,
-                          decoration: const InputDecoration(
-                            labelText: 'Localidade *',
-                            helperText: '* campo obrigatório',
-                            border: OutlineInputBorder(),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Por favor, insira o nome da localidade';
+                        Autocomplete<String>(
+                          optionsBuilder: (TextEditingValue textEditingValue) async {
+                            if (textEditingValue.text == '') {
+                              return const Iterable<String>.empty();
                             }
-                            return null;
+
+                            final options = await Provider.of<NestProvider>(context, listen: false).getDistinctLocalities();
+                            return options.where((String option) {
+                              return option.toLowerCase().contains(textEditingValue.text.toLowerCase());
+                            });
+                          },
+                          onSelected: (String selection) {
+                            _localityNameController.text = selection;
+                          },
+                          fieldViewBuilder: (BuildContext context, TextEditingController fieldTextEditingController, FocusNode fieldFocusNode, VoidCallback onFieldSubmitted) {
+                            return TextFormField(
+                              controller: fieldTextEditingController,
+                              focusNode: fieldFocusNode,
+                              textCapitalization: TextCapitalization.words,
+                              decoration: const InputDecoration(
+                                labelText: 'Localidade *',
+                                helperText: '* campo obrigatório',
+                                border: OutlineInputBorder(),
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Por favor, insira o nome da localidade';
+                                }
+                                return null;
+                              },
+                              onFieldSubmitted: (String value) {
+                                onFieldSubmitted();
+                              },
+                            );
                           },
                         ),
                         const SizedBox(height: 16.0),
-                        TextFormField(
-                          controller: _supportController,
-                          textCapitalization: TextCapitalization.sentences,
-                          decoration: const InputDecoration(
-                            labelText: 'Suporte do ninho *',
-                            helperText: '* campo obrigatório',
-                            border: OutlineInputBorder(),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Por favor, insira o suporte do ninho';
+                        Autocomplete<String>(
+                          optionsBuilder: (TextEditingValue textEditingValue) async {
+                            if (textEditingValue.text == '') {
+                              return const Iterable<String>.empty();
                             }
-                            return null;
+
+                            final options = await Provider.of<NestProvider>(context, listen: false).getDistinctSupports();
+                            return options.where((String option) {
+                              return option.toLowerCase().contains(textEditingValue.text.toLowerCase());
+                            });
+                          },
+                          onSelected: (String selection) {
+                            _supportController.text = selection;
+                          },
+                          fieldViewBuilder: (BuildContext context, TextEditingController fieldTextEditingController, FocusNode fieldFocusNode, VoidCallback onFieldSubmitted) {
+                            return TextFormField(
+                              controller: fieldTextEditingController,
+                              focusNode: fieldFocusNode,
+                              textCapitalization: TextCapitalization.sentences,
+                              decoration: const InputDecoration(
+                                labelText: 'Suporte do ninho *',
+                                helperText: '* campo obrigatório',
+                                border: OutlineInputBorder(),
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Por favor, insira o suporte do ninho';
+                                }
+                                return null;
+                              },
+                              onFieldSubmitted: (String value) {
+                                onFieldSubmitted();
+                              },
+                            );
                           },
                         ),
                         const SizedBox(height: 16.0),

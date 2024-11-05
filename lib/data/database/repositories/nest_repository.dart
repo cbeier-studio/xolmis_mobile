@@ -29,4 +29,12 @@ class NestRepository {
   Future<int> getNextSequentialNumber(String acronym, int ano, int mes) {
     return _nestDao.getNextSequentialNumber(acronym, ano, mes);
   }
+
+  Future<List<String>> getDistinctLocalities() {
+    return _nestDao.getDistinctLocalities();
+  }
+
+  Future<List<String>> getDistinctSupports() {
+    return _nestDao.getDistinctSupports();
+  }
 }

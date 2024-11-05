@@ -210,6 +210,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
         return AlertDialog(
           title: const Text('Adicionar espécie'),
           content: TextField(
+            textCapitalization: TextCapitalization.sentences,
             onChanged: (value) {
               speciesName = value;
             },

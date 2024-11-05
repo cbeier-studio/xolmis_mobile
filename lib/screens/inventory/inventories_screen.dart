@@ -137,7 +137,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
             child: SearchBar(
               controller: _searchController,
               hintText: 'Procurar inventários...',
@@ -162,7 +162,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
             child: LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
                 final screenWidth = constraints.maxWidth;

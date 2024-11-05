@@ -43,4 +43,7 @@ class SpecimenProvider with ChangeNotifier {
     await fetchSpecimens();
   }
 
+  Future<List<String>> getDistinctLocalities() {
+    return _specimenRepository.getDistinctLocalities();
+  }
 }
