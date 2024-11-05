@@ -85,52 +85,35 @@ class _AppImageScreenState extends State<AppImageScreen> {
         title: const Text('Imagens'),
       ),
       body: Consumer<AppImageProvider>(
-        builder: (context, appImageProvider, child) {
-          final images = appImageProvider.images;
-          if (images.isEmpty) {
-            return const Center(
-              child: Text('Nenhuma imagem encontrada.'),
-            );
-          } else {
-            return GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: 8.0,
-                crossAxisSpacing: 8.0,
-              ),
-              padding: const EdgeInsets.all(8.0),
-              itemCount: images.length,
-              itemBuilder: (context, index) {
-                final image = images[index];
-                return GestureDetector(
-                  onLongPress: () => _showBottomSheet(context, image),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            ImageDetailsScreen(imagePath: image.imagePath),
+          builder: (context, appImageProvider, child) {
+            final images = appImageProvider.images;
+            if (images.isEmpty) {
+              return const Center(
+                child: Text('Nenhuma imagem encontrada.'),
+              );
+            } else {
+              return LayoutBuilder(
+                builder: (BuildContext context, BoxConstraints constraints) {
+                  final screenWidth = constraints.maxWidth;
+                  final isLargeScreen = screenWidth > 600;
+
+                  if (isLargeScreen) {
+                    return Align(
+                      alignment: Alignment.topCenter,
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 840),
+                        child: SingleChildScrollView(
+                          child: _buildGridView(images),
+                        ),
                       ),
                     );
-                  },
-                  child: GridTile(
-                  footer: GridTileBar(
-                    backgroundColor: Colors.black45,
-                    title: Text(image.notes ?? '', overflow: TextOverflow.ellipsis,),
-                  ),
-                  child: ClipRRect(
-                      // borderRadius: BorderRadius.circular(0.0),
-                      child: Image.file(
-                        File(image.imagePath),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                );
-              },
-            );
+                  } else {
+                    return _buildGridView(images);
+                  }
+                },
+              );
+            }
           }
-        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
@@ -324,4 +307,46 @@ class _AppImageScreenState extends State<AppImageScreen> {
       },
     );
   }
+
+  Widget _buildGridView(List<AppImage> images) {
+    return GridView.builder(
+      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: 250,
+        mainAxisSpacing: 8.0,
+        crossAxisSpacing: 8.0,
+      ),
+      padding: const EdgeInsets.all(8.0),
+      shrinkWrap: true,
+      itemCount: images.length,
+      itemBuilder: (context, index) {
+        final image = images[index];
+        return GestureDetector(
+          onLongPress: () => _showBottomSheet(context, image),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    ImageDetailsScreen(imagePath: image.imagePath),
+              ),
+            );
+          },
+          child: GridTile(
+            footer: GridTileBar(
+              backgroundColor: Colors.black45,
+              title: Text(image.notes ?? '', overflow: TextOverflow.ellipsis,),
+            ),
+            child: ClipRRect(
+              // borderRadius: BorderRadius.circular(0.0),
+              child: Image.file(
+                File(image.imagePath),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
 }
+

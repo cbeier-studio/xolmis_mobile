@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
-import 'package:side_sheet/side_sheet.dart';
 
 import '../../data/models/nest.dart';
 import '../../providers/nest_provider.dart';
@@ -9,8 +8,7 @@ import '../../providers/nest_provider.dart';
 import 'add_nest_screen.dart';
 import 'nest_detail_screen.dart';
 
-import '../settings_screen.dart';
-import '../utils.dart';
+import '../export_utils.dart';
 
 class NestsScreen extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
@@ -200,7 +198,7 @@ class _NestsScreenState extends State<NestsScreen> {
                                           }
                                         });
                                       },
-                                      child: Card(
+                                      child: Card.filled(
                                   child: Padding(
                                         padding: const EdgeInsets.all(16.0),
                                         child: Row(

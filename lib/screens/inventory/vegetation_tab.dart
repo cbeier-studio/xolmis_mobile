@@ -154,7 +154,7 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
                       ),
                     );
                   },
-                  child: Card(
+                  child: Card.filled(
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
                       child: Row(

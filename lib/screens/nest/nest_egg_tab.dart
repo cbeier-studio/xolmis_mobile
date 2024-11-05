@@ -161,7 +161,7 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
                       ),
                     );
                   },
-                  child: Card(
+                  child: Card.filled(
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Row(

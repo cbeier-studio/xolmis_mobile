@@ -11,7 +11,7 @@ import '../../providers/app_image_provider.dart';
 
 import 'add_specimen_screen.dart';
 import '../app_image_screen.dart';
-import '../utils.dart';
+import '../export_utils.dart';
 
 class SpecimensScreen extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
@@ -103,7 +103,7 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
+            padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 16.0),
             child: SearchBar(
               controller: _searchController,
               hintText: 'Procurar espécimes...',
@@ -175,7 +175,7 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
                                             ),
                                           );
                                         },
-                                        child: Card(
+                                        child: Card.filled(
                                   child: Padding(
                                           padding: const EdgeInsets.all(16.0),
                                           child: Row(

@@ -146,7 +146,7 @@ class _WeatherTabState extends State<WeatherTab> with AutomaticKeepAliveClientMi
                   // onTap: () {
                   //
                   // },
-                  child: Card(
+                  child: Card.filled(
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Row(

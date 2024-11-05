@@ -208,10 +208,15 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
   }
 
   Widget _buildGridView(List<Poi> pois) {
-    return Center(
+    return Align(
+      alignment: Alignment.topCenter,
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 840),
-        child: GridView.builder(
+        child: pois.isEmpty
+            ? const Center(
+          child: Text('Nenhum POI encontrado.'),
+        )
+            : GridView.builder(
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             childAspectRatio: 3.5,
@@ -220,17 +225,13 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
           itemCount: pois.length,
           itemBuilder: (context, index) {
             final poi = pois[index];
-            return pois.isEmpty
-                ? const Center(
-              child: Text('Nenhum POI encontrado.'),
-            )
-                : GridTile(
+            return GridTile(
               child: InkWell(
                 onLongPress: () => _showBottomSheet(context, poi),
                 // onTap: () {
                 //
                 // },
-                child: Card(
+                child: Card.filled(
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Row(
@@ -259,15 +260,15 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
   }
 
   Widget _buildListView(List<Poi> pois, PoiProvider poiProvider) {
-    return ListView.builder(
+    return pois.isEmpty
+        ? const Center(
+      child: Text('Nenhum POI encontrado.'),
+    )
+        : ListView.builder(
       itemCount: pois.length,
       itemBuilder: (context, index) {
         final poi = pois[index];
-        return pois.isEmpty
-            ? const Center(
-          child: Text('Nenhum POI encontrado.'),
-        )
-            : Dismissible(
+        return Dismissible(
           key: ValueKey(poi),
           direction: DismissDirection.endToStart,
           background: Container(

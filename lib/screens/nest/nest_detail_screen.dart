@@ -168,7 +168,7 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
             title: Text('${widget.nest.fieldNumber}'),
             actions: [
               if (widget.nest.isActive)
-                IconButton(
+                IconButton.filled(
                   onPressed: () async {
                     NestFateType? selectedNestFate;
 
@@ -258,7 +258,7 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
                     );
                   },
                   style: IconButton.styleFrom(
-                    backgroundColor: Colors.green,
+                    // backgroundColor: Colors.green,
                     foregroundColor: Colors.white,
                   ),
                   // color: Colors.deepPurple,

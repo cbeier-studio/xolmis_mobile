@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:side_sheet/side_sheet.dart';
 
 import '../../data/models/inventory.dart';
 import '../../data/database/repositories/inventory_repository.dart';
@@ -15,8 +14,7 @@ import '../../providers/species_provider.dart';
 import 'add_inventory_screen.dart';
 import 'inventory_detail_screen.dart';
 
-import '../settings_screen.dart';
-import '../utils.dart';
+import '../export_utils.dart';
 
 
 class InventoriesScreen extends StatefulWidget {
@@ -254,7 +252,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                               }
                                             });
                                           },
-                                          child: Card(
+                                          child: Card.filled(
                                     child: Padding(
                                             padding: const EdgeInsets.all(16.0),
                                             child: Row(

@@ -223,7 +223,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
             },
           ) : const SizedBox.shrink(),
           if (!widget.inventory.isFinished)
-            IconButton(
+            IconButton.filled(
               onPressed: () async {
                 // Show confirmation dialog
                 final confirmed = await showDialog<bool>(
@@ -257,7 +257,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                 }
               },
               style: IconButton.styleFrom(
-                backgroundColor: Colors.green,
+                // backgroundColor: Colors.green,
                 foregroundColor: Colors.white,
               ),
               icon: _isSubmitting
