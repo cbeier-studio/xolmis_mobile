@@ -13,6 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../data/models/inventory.dart';
 import '../data/models/nest.dart';
+import '../data/models/specimen.dart';
 import '../data/database/repositories/inventory_repository.dart';
 import '../providers/inventory_provider.dart';
 import '../providers/species_provider.dart';
@@ -424,7 +425,7 @@ Future<void> exportNestToCsv(BuildContext context, Nest nest) async {
       nest.female,
       nest.helpers,
       nest.lastTime,
-      NestFateType.values[nest.nestFate!.index],
+      nestFateTypeFriendlyNames[nest.nestFate],
     ]);
 
     // Add nest revision data
@@ -444,8 +445,8 @@ Future<void> exportNestToCsv(BuildContext context, Nest nest) async {
     for (var revision in nest.revisionsList ?? []) {
       rows.add([
         revision.sampleTime,
-        revision.nestStatus,
-        revision.nestStage,
+        nestStatusTypeFriendlyNames[revision.nestStatus],
+        nestStageTypeFriendlyNames[revision.nestStage],
         revision.eggsHost,
         revision.nestlingsHost,
         revision.eggsParasite,
@@ -472,7 +473,7 @@ Future<void> exportNestToCsv(BuildContext context, Nest nest) async {
         egg.sampleTime,
         egg.fieldNumber,
         egg.speciesName,
-        egg.eggShape,
+        eggShapeTypeFriendlyNames[egg.eggShape],
         egg.width,
         egg.length,
         egg.mass,
@@ -520,6 +521,63 @@ Future<void> exportAllSpecimensToJson(BuildContext context) async {
 
     await Share.shareXFiles([
       XFile(filePath, mimeType: 'application/json'),
+    ], text: 'Espécimes exportados!', subject: 'Dados dos Espécimes');
+  } catch (error) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Row(
+        children: [
+          Icon(Icons.error_outlined, color: Colors.red),
+          SizedBox(width: 8),
+          Text('Erro ao exportar os espécimes: $error'),
+        ],
+      ),
+      ),
+    );
+  }
+}
+
+Future<void> exportAllSpecimensToCsv(BuildContext context) async {
+  try {
+    final specimenProvider = Provider.of<SpecimenProvider>(context, listen: false);
+    final specimenList = specimenProvider.specimens;
+
+    // 1. Create a list of data for the CSV
+    List<List<dynamic>> rows = [];
+    rows.add([
+      'Data/Hora',
+      'Nº de campo',
+      'Espécie',
+      'Tipo',
+      'Localidade',
+      'Longitude',
+      'Latitude',
+      'Observações',
+    ]);
+    for (var specimen in specimenList ?? []) {
+      rows.add([
+        specimen.sampleTime,
+        specimen.fieldNumber,
+        specimen.speciesName,
+        specimenTypeFriendlyNames[specimen.type],
+        specimen.locality,
+        specimen.longitude,
+        specimen.latitude,
+        specimen.notes,
+      ]);
+    }
+
+    // 2. Convert the list of data to CSV
+    String csv = const ListToCsvConverter().convert(rows);
+
+    // 3. Create the file in a temporary directory
+    Directory tempDir = await getTemporaryDirectory();
+    final filePath = '${tempDir.path}/specimens.csv';
+    final file = File(filePath);
+    await file.writeAsString(csv);
+
+    // 4. Share the file using share_plus
+    await Share.shareXFiles([
+      XFile(filePath, mimeType: 'text/csv'),
     ], text: 'Espécimes exportados!', subject: 'Dados dos Espécimes');
   } catch (error) {
     ScaffoldMessenger.of(context).showSnackBar(

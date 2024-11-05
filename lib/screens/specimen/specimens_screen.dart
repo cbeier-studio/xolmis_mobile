@@ -358,12 +358,25 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  ListTile(
-                    leading: const Icon(Icons.file_download_outlined),
-                    title: const Text('Exportar todos os espécimes'),
-                    onTap: () {
-                      exportAllSpecimensToJson(context);
-                    },
+                  ExpansionTile(
+                      leading: const Icon(Icons.file_download_outlined),
+                      title: const Text('Exportar todos os espécimes'),
+                      children: [
+                        ListTile(
+                          leading: const Icon(Icons.table_chart_outlined),
+                          title: const Text('CSV'),
+                          onTap: () {
+                            exportAllSpecimensToCsv(context);
+                          },
+                        ),
+                        ListTile(
+                          leading: const Icon(Icons.code_outlined),
+                          title: const Text('JSON'),
+                          onTap: () {
+                            exportAllSpecimensToJson(context);
+                          },
+                        ),
+                      ]
                   ),
                   ListTile(
                     leading: const Icon(Icons.delete_outlined, color: Colors.red,),
