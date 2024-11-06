@@ -142,17 +142,42 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
                   onRefresh: () async {
                     await poiProvider.getPoisForSpecies(widget.species.id ?? 0);
                   },
-                  child: LayoutBuilder(
-                      builder: (BuildContext context, BoxConstraints constraints) {
-                        final screenWidth = constraints.maxWidth;
-                        final isLargeScreen = screenWidth > 600;
+                  child: Column(
+                      children: [
+                        ExpansionTile(
+                          backgroundColor: Colors.deepPurple[50],
+                          collapsedBackgroundColor: Colors.deepPurple[50],
+                          leading: const Icon(Icons.info_outlined),
+                          title: const Text('Informações da espécie'),
+                          children: [
+                            ListTile(
+                              title: Text('${widget.species.count} ${widget.species.count > 1 ? 'indivíduos' : 'indivíduo'}'),
+                              subtitle: Text('Contagem'),
+                            ),
+                            ListTile(
+                              title: Text('${widget.species.isOutOfInventory ? 'Fora da amostra' : 'Dentro da amostra'}'),
+                            ),
+                          ],
+                        ),
+                        Expanded(
+                          child: pois.isEmpty
+                              ? const Center(
+                            child: Text('Nenhum POI encontrado.'),
+                          )
+                              : LayoutBuilder(
+                              builder: (BuildContext context, BoxConstraints constraints) {
+                                final screenWidth = constraints.maxWidth;
+                                final isLargeScreen = screenWidth > 600;
 
-                        if (isLargeScreen) {
-                          return _buildGridView(pois);
-                        } else {
-                          return _buildListView(pois, poiProvider);
-                        }
-                      }
+                                if (isLargeScreen) {
+                                  return _buildGridView(pois);
+                                } else {
+                                  return _buildListView(pois, poiProvider);
+                                }
+                              }
+                          ),
+                        ),
+                      ]
                   ),
                 );
               }
@@ -212,11 +237,7 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
       alignment: Alignment.topCenter,
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 840),
-        child: pois.isEmpty
-            ? const Center(
-          child: Text('Nenhum POI encontrado.'),
-        )
-            : GridView.builder(
+        child: GridView.builder(
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             childAspectRatio: 3.5,
@@ -260,11 +281,7 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
   }
 
   Widget _buildListView(List<Poi> pois, PoiProvider poiProvider) {
-    return pois.isEmpty
-        ? const Center(
-      child: Text('Nenhum POI encontrado.'),
-    )
-        : ListView.builder(
+    return ListView.builder(
       itemCount: pois.length,
       itemBuilder: (context, index) {
         final poi = pois[index];

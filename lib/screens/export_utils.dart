@@ -160,7 +160,7 @@ Future<void> exportInventoryToCsv(BuildContext context, Inventory inventory) asy
 
     // Add POIs data
     rows.add([]); // Empty line to separate POI data
-    rows.add(['SPECIES POINTS OF INTEREST']);
+    rows.add(['POINTS OF INTEREST']);
     for (var species in inventory.speciesList) {
       if (species.pois.isNotEmpty) {
         rows.add(['Species: ${species.name}']);

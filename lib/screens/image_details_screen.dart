@@ -13,8 +13,12 @@ class ImageDetailsScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Detalhes da Imagem'),
       ),
-      body: Center(
-        child: Image.file(File(imagePath)),
+      body: InteractiveViewer(
+        minScale: 0.5,
+        maxScale: 5.0,
+        child: Center(
+          child:  Image.file(File(imagePath)),
+        ),
       ),
     );
   }

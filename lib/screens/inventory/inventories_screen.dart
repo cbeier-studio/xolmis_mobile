@@ -676,7 +676,7 @@ class InventoryListItem extends StatelessWidget {
                   selector: (context, speciesProvider) => speciesProvider.getSpeciesForInventory(inventory.id).length,
                   shouldRebuild: (previous, next) => previous != next,
                   builder: (context, speciesCount, child) {
-                    return Text('$speciesCount espécies');
+                    return Text('$speciesCount ${speciesCount > 1 ? 'espécies' : 'espécie'}');
                   },
                 ),
               ],
