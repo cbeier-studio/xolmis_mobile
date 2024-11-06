@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -149,7 +150,7 @@ class _AddNestScreenState extends State<AddNestScreen> {
                           },
                           fieldViewBuilder: (BuildContext context, TextEditingController fieldTextEditingController, FocusNode fieldFocusNode, VoidCallback onFieldSubmitted) {
                             return TextFormField(
-                              controller: fieldTextEditingController,
+                              controller: _localityNameController,
                               focusNode: fieldFocusNode,
                               textCapitalization: TextCapitalization.words,
                               decoration: const InputDecoration(
@@ -186,7 +187,7 @@ class _AddNestScreenState extends State<AddNestScreen> {
                           },
                           fieldViewBuilder: (BuildContext context, TextEditingController fieldTextEditingController, FocusNode fieldFocusNode, VoidCallback onFieldSubmitted) {
                             return TextFormField(
-                              controller: fieldTextEditingController,
+                              controller: _supportController,
                               focusNode: fieldFocusNode,
                               textCapitalization: TextCapitalization.sentences,
                               decoration: const InputDecoration(
@@ -215,6 +216,11 @@ class _AddNestScreenState extends State<AddNestScreen> {
                             border: OutlineInputBorder(),
                             suffixText: 'm',
                           ),
+                          inputFormatters: [
+                            CommaToDotTextInputFormatter(),
+                            // Allow only numbers and decimal separator with 2 decimal places
+                            FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
+                          ],
                         ),
                         const SizedBox(height: 16.0),
                         TextFormField(

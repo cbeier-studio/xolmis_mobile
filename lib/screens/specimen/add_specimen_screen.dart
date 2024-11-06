@@ -163,7 +163,7 @@ class _AddSpecimenScreenState extends State<AddSpecimenScreen> {
                           },
                           fieldViewBuilder: (BuildContext context, TextEditingController fieldTextEditingController, FocusNode fieldFocusNode, VoidCallback onFieldSubmitted) {
                             return TextFormField(
-                              controller: fieldTextEditingController,
+                              controller: _localityNameController,
                               focusNode: fieldFocusNode,
                               textCapitalization: TextCapitalization.words,
                               decoration: const InputDecoration(
