@@ -332,8 +332,8 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
         body: Column(
           children: [
             ExpansionTile(
-              backgroundColor: Colors.deepPurple[50],
-              collapsedBackgroundColor: Colors.deepPurple[50],
+              // backgroundColor: Colors.deepPurple[50],
+              // collapsedBackgroundColor: Colors.deepPurple[50],
               leading: const Icon(Icons.info_outlined),
               title: const Text('Informações do ninho'),
               children: [

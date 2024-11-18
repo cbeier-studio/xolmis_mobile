@@ -120,8 +120,8 @@ class _NestRevisionsTabState extends State<NestRevisionsTab> with AutomaticKeepA
                   ListTile(
                     leading: const Icon(Icons.delete_outlined, color: Colors.red,),
                     title: const Text('Apagar revisão de ninho', style: TextStyle(color: Colors.red),),
-                    onTap: () {
-                      _deleteNestRevision(revision);
+                    onTap: () async {
+                      await _deleteNestRevision(revision);
                       Navigator.pop(context);
                     },
                   )

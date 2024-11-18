@@ -107,10 +107,11 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
             child: SearchBar(
               controller: _searchController,
               hintText: 'Procurar espécimes...',
-              backgroundColor: WidgetStateProperty.all<Color>(Colors.deepPurple[50]!),
+              // backgroundColor: WidgetStateProperty.all<Color>(Colors.deepPurple[50]!),
               leading: const Icon(Icons.search_outlined),
               trailing: [
-                IconButton(
+                _searchController.text.isNotEmpty
+                    ? IconButton(
                   icon: const Icon(Icons.clear_outlined),
                   onPressed: () {
                     setState(() {
@@ -118,7 +119,8 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
                       _searchController.clear();
                     });
                   },
-                ),
+                )
+                    : SizedBox.shrink(),
               ],
               onChanged: (query) {
                 setState(() {
@@ -278,7 +280,7 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
                                 child: ListTile(
                                   leading: FutureBuilder<List<AppImage>>(
                                     future: Provider.of<AppImageProvider>(context, listen: false)
-                                        .fetchImagesForSpecimen(specimen.id!),
+                                        .fetchImagesForSpecimen(specimen.id ?? 0),
                                     builder: (context, snapshot) {
                                       if (snapshot.connectionState == ConnectionState.waiting) {
                                         return const CircularProgressIndicator();

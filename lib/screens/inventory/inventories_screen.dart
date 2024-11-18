@@ -139,10 +139,13 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
             child: SearchBar(
               controller: _searchController,
               hintText: 'Procurar inventários...',
-              backgroundColor: WidgetStateProperty.all<Color>(Colors.deepPurple[50]!),
+              // backgroundColor: Theme.of(context).brightness == Brightness.light
+              //     ? WidgetStateProperty.all<Color>(Colors.deepPurple[50]!)
+              //     : WidgetStateProperty.all<Color>(Colors.grey[800]!),
               leading: const Icon(Icons.search_outlined),
               trailing: [
-                IconButton(
+                _searchController.text.isNotEmpty
+                    ? IconButton(
                   icon: const Icon(Icons.clear_outlined),
                   onPressed: () {
                     setState(() {
@@ -150,7 +153,8 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                       _searchController.clear();
                     });
                   },
-                ),
+                )
+                    : SizedBox.shrink(),
               ],
               onChanged: (query) {
                 setState(() {

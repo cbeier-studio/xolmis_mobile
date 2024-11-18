@@ -28,7 +28,7 @@ class RevisionListItemState extends State<RevisionListItem> {
     return ListTile(
       leading: FutureBuilder<List<AppImage>>(
         future: Provider.of<AppImageProvider>(context, listen: false)
-            .fetchImagesForNestRevision(widget.nestRevision.id!),
+            .fetchImagesForNestRevision(widget.nestRevision.id ?? 0),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const CircularProgressIndicator();

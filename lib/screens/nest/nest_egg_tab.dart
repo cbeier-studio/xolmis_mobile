@@ -117,8 +117,8 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
                   ListTile(
                     leading: const Icon(Icons.delete_outlined, color: Colors.red,),
                     title: const Text('Apagar ovo', style: TextStyle(color: Colors.red),),
-                    onTap: () {
-                      _deleteEgg(egg);
+                    onTap: () async {
+                      await _deleteEgg(egg);
                       Navigator.pop(context);
                     },
                   )

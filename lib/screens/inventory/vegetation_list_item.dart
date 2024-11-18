@@ -28,7 +28,7 @@ class VegetationListItemState extends State<VegetationListItem> {
     return ListTile(
         leading: FutureBuilder<List<AppImage>>(
           future: Provider.of<AppImageProvider>(context, listen: false)
-              .fetchImagesForVegetation(widget.vegetation.id!),
+              .fetchImagesForVegetation(widget.vegetation.id ?? 0),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const CircularProgressIndicator();

@@ -28,7 +28,7 @@ class EggListItemState extends State<EggListItem> {
     return ListTile(
       leading: FutureBuilder<List<AppImage>>(
         future: Provider.of<AppImageProvider>(context, listen: false)
-            .fetchImagesForEgg(widget.egg.id!),
+            .fetchImagesForEgg(widget.egg.id ?? 0),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const CircularProgressIndicator();

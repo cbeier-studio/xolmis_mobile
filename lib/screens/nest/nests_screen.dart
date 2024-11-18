@@ -97,10 +97,11 @@ class _NestsScreenState extends State<NestsScreen> {
             child: SearchBar(
               controller: _searchController,
               hintText: 'Procurar ninhos...',
-              backgroundColor: WidgetStateProperty.all<Color>(Colors.deepPurple[50]!),
+              // backgroundColor: WidgetStateProperty.all<Color>(Colors.deepPurple[50]!),
               leading: const Icon(Icons.search_outlined),
               trailing: [
-                IconButton(
+                _searchController.text.isNotEmpty
+                    ? IconButton(
                   icon: const Icon(Icons.clear_outlined),
                   onPressed: () {
                     setState(() {
@@ -108,7 +109,8 @@ class _NestsScreenState extends State<NestsScreen> {
                       _searchController.clear();
                     });
                   },
-                ),
+                )
+                    : SizedBox.shrink(),
               ],
               onChanged: (query) {
                 setState(() {

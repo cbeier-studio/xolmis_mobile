@@ -145,8 +145,8 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
                   child: Column(
                       children: [
                         ExpansionTile(
-                          backgroundColor: Colors.deepPurple[50],
-                          collapsedBackgroundColor: Colors.deepPurple[50],
+                          // backgroundColor: Colors.deepPurple[50],
+                          // collapsedBackgroundColor: Colors.deepPurple[50],
                           leading: const Icon(Icons.info_outlined),
                           title: const Text('Informações da espécie'),
                           children: [

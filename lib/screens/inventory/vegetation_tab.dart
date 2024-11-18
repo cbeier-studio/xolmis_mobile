@@ -110,8 +110,8 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
                   ListTile(
                     leading: const Icon(Icons.delete_outlined, color: Colors.red,),
                     title: const Text('Apagar registro de vegetação', style: TextStyle(color: Colors.red),),
-                    onTap: () {
-                      _deleteVegetation(vegetation);
+                    onTap: () async {
+                      await _deleteVegetation(vegetation);
                       Navigator.pop(context);
                     },
                   )
