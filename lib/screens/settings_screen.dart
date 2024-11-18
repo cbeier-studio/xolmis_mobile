@@ -243,8 +243,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           Divider(),
           ExpansionTile(
-            leading: const Icon(Icons.warning_outlined, color: Colors.amber,),
-            title: const Text('Área perigosa', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
+            title: const Text('Área perigosa', style: TextStyle(fontSize: 16,),),
             children: [
               ListTile(
                 leading: const Icon(Icons.delete_forever, color: Colors.red,),
