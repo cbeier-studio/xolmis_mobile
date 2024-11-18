@@ -259,7 +259,9 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
                   },
                   style: IconButton.styleFrom(
                     // backgroundColor: Colors.green,
-                    foregroundColor: Colors.white,
+                    foregroundColor: Theme.of(context).brightness == Brightness.light
+                        ? Colors.white
+                        : Colors.deepPurple,
                   ),
                   // color: Colors.deepPurple,
                   icon: _isSubmitting

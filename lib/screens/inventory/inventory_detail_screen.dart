@@ -258,7 +258,9 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
               },
               style: IconButton.styleFrom(
                 // backgroundColor: Colors.green,
-                foregroundColor: Colors.white,
+                foregroundColor: Theme.of(context).brightness == Brightness.light
+                    ? Colors.white
+                    : Colors.deepPurple,
               ),
               icon: _isSubmitting
                   ? const SizedBox(
