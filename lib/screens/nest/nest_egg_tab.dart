@@ -64,39 +64,43 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
   }
 
   Widget _buildEggList() {
-    return Expanded(
-      child: Consumer<EggProvider>(
-            builder: (context, eggProvider, child) {
-              final eggList = eggProvider.getEggForNest(
-                  widget.nest.id!);
-              if (eggList.isEmpty) {
-                return const Center(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 16.0),
-                    child: Text('Nenhum ovo registrado.'),
-                  ),
-                );
-              } else {
-                return RefreshIndicator(
-                  onRefresh: () async {
-                    await eggProvider.getEggForNest(widget.nest.id ?? 0);
-                  },
-                  child: LayoutBuilder(
-                      builder: (BuildContext context, BoxConstraints constraints) {
-                        final screenWidth = constraints.maxWidth;
-                        final isLargeScreen = screenWidth > 600;
+    return Column(
+        children: [
+          Expanded(
+            child: Consumer<EggProvider>(
+                builder: (context, eggProvider, child) {
+                  final eggList = eggProvider.getEggForNest(
+                      widget.nest.id!);
+                  if (eggList.isEmpty) {
+                    return const Center(
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 16.0),
+                        child: Text('Nenhum ovo registrado.'),
+                      ),
+                    );
+                  } else {
+                    return RefreshIndicator(
+                      onRefresh: () async {
+                        await eggProvider.getEggForNest(widget.nest.id ?? 0);
+                      },
+                      child: LayoutBuilder(
+                          builder: (BuildContext context, BoxConstraints constraints) {
+                            final screenWidth = constraints.maxWidth;
+                            final isLargeScreen = screenWidth > 600;
 
-                        if (isLargeScreen) {
-                          return _buildGridView(eggList);
-                        } else {
-                          return _buildListView(eggList);
-                        }
-                      }
-                  ),
-                );
-              }
-            }
-        ),
+                            if (isLargeScreen) {
+                              return _buildGridView(eggList);
+                            } else {
+                              return _buildListView(eggList);
+                            }
+                          }
+                      ),
+                    );
+                  }
+                }
+            ),
+          )
+        ]
     );
   }
 

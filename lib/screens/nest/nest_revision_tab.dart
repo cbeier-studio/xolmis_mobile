@@ -64,42 +64,46 @@ class _NestRevisionsTabState extends State<NestRevisionsTab> with AutomaticKeepA
   }
 
   Widget _buildNestRevisionList() {
-    return Expanded(
-      child: Consumer<NestRevisionProvider>(
-            builder: (context, nestRevisionProvider, child) {
-              final revisionList = nestRevisionProvider.getRevisionForNest(
-                  widget.nest.id!);
+    return Column(
+      children: [
+        Expanded(
+          child: Consumer<NestRevisionProvider>(
+              builder: (context, nestRevisionProvider, child) {
+                final revisionList = nestRevisionProvider.getRevisionForNest(
+                    widget.nest.id!);
 
-              if (revisionList.isEmpty) {
-                return const Center(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 16.0),
-                    child: Text('Nenhuma revisão de ninho registrada.'),
-                  ),
-                );
-              } else {
-                return RefreshIndicator(
-                  onRefresh: () async {
-                    await nestRevisionProvider.getRevisionForNest(
-                        widget.nest.id ?? 0);
-                  },
-                  child: LayoutBuilder(
-                      builder: (BuildContext context,
-                          BoxConstraints constraints) {
-                        final screenWidth = constraints.maxWidth;
-                        final isLargeScreen = screenWidth > 600;
+                if (revisionList.isEmpty) {
+                  return const Center(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 16.0),
+                      child: Text('Nenhuma revisão de ninho registrada.'),
+                    ),
+                  );
+                } else {
+                  return RefreshIndicator(
+                    onRefresh: () async {
+                      await nestRevisionProvider.getRevisionForNest(
+                          widget.nest.id ?? 0);
+                    },
+                    child: LayoutBuilder(
+                        builder: (BuildContext context,
+                            BoxConstraints constraints) {
+                          final screenWidth = constraints.maxWidth;
+                          final isLargeScreen = screenWidth > 600;
 
-                        if (isLargeScreen) {
-                          return _buildGridView(revisionList);
-                        } else {
-                          return _buildListView(revisionList);
+                          if (isLargeScreen) {
+                            return _buildGridView(revisionList);
+                          } else {
+                            return _buildListView(revisionList);
+                          }
                         }
-                      }
-                  ),
-                );
+                    ),
+                  );
+                }
               }
-            }
-        ),
+          ),
+        )
+      ],
     );
   }
 

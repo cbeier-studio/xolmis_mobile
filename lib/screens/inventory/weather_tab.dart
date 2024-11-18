@@ -55,40 +55,44 @@ class _WeatherTabState extends State<WeatherTab> with AutomaticKeepAliveClientMi
   }
 
   Widget _buildWeatherList() {
-    return Expanded(
-        child: Consumer<WeatherProvider>(
-        builder: (context, weatherProvider, child) {
-          final weatherList = weatherProvider.getWeatherForInventory(
-              widget.inventory.id);
-          if (weatherList.isEmpty) {
-            return const Center(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 16.0),
-                child: Text('Nenhum registro do tempo.'),
-              ),
-            );
-          } else {
-            return RefreshIndicator(
-              onRefresh: () async {
-                await weatherProvider.getWeatherForInventory(
-                    widget.inventory.id);
-              },
-              child: LayoutBuilder(
-                  builder: (BuildContext context, BoxConstraints constraints) {
-                    final screenWidth = constraints.maxWidth;
-                    final isLargeScreen = screenWidth > 600;
+    return Column(
+      children: [
+        Expanded(
+            child: Consumer<WeatherProvider>(
+                builder: (context, weatherProvider, child) {
+                  final weatherList = weatherProvider.getWeatherForInventory(
+                      widget.inventory.id);
+                  if (weatherList.isEmpty) {
+                    return const Center(
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 16.0),
+                        child: Text('Nenhum registro do tempo.'),
+                      ),
+                    );
+                  } else {
+                    return RefreshIndicator(
+                      onRefresh: () async {
+                        await weatherProvider.getWeatherForInventory(
+                            widget.inventory.id);
+                      },
+                      child: LayoutBuilder(
+                          builder: (BuildContext context, BoxConstraints constraints) {
+                            final screenWidth = constraints.maxWidth;
+                            final isLargeScreen = screenWidth > 600;
 
-                    if (isLargeScreen) {
-                      return _buildGridView(weatherList);
-                    } else {
-                      return _buildListView(weatherList);
-                    }
+                            if (isLargeScreen) {
+                              return _buildGridView(weatherList);
+                            } else {
+                              return _buildListView(weatherList);
+                            }
+                          }
+                      ),
+                    );
                   }
-              ),
-            );
-          }
-        }
-    )
+                }
+            )
+        )
+      ],
     );
   }
 
