@@ -182,6 +182,9 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                                 if ((_selectedType == InventoryType.invMackinnonList) && (value == null || value.isEmpty)) {
                                   return 'Insira o máximo de espécies';
                                 }
+                                if ((value != null && value.isNotEmpty) && int.tryParse(value)! < 5) {
+                                  return 'Deve ser maior ou igual a 5';
+                                }
                                 return null;
                               },
                             ),

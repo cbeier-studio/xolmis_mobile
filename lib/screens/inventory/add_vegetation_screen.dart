@@ -97,7 +97,7 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
                             }
                         ),
                         const SizedBox(height: 8.0),
-                        _buildVegetationRow(_herbsProportionController, _herbsHeightController),
+                        _buildVegetationRow(_selectedHerbsDistribution, _herbsProportionController, _herbsHeightController),
                         const SizedBox(height: 8.0),
                         Align(
                           alignment: Alignment.centerLeft,
@@ -123,7 +123,7 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
                             }
                         ),
                         const SizedBox(height: 8.0),
-                        _buildVegetationRow(_shrubsProportionController, _shrubsHeightController),
+                        _buildVegetationRow(_selectedShrubsDistribution, _shrubsProportionController, _shrubsHeightController),
                         const SizedBox(height: 8.0),
                         Align(
                           alignment: Alignment.centerLeft,
@@ -149,7 +149,7 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
                             }
                         ),
                         const SizedBox(height: 8.0),
-                        _buildVegetationRow(_treesProportionController, _treesHeightController),
+                        _buildVegetationRow(_selectedTreesDistribution, _treesProportionController, _treesHeightController),
                         const SizedBox(height: 16.0),
                         TextFormField(
                           controller: _notesController,
@@ -188,7 +188,7 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
     );
   }
 
-  Widget _buildVegetationRow(TextEditingController proportionController, TextEditingController heightController) {
+  Widget _buildVegetationRow(DistributionType selectedDistribution, TextEditingController proportionController, TextEditingController heightController) {
     return Row(
       children: [
         Expanded(
@@ -200,6 +200,12 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
               border: OutlineInputBorder(),
               suffixText: '%',
             ),
+            validator: (value) {
+              if (selectedDistribution != DistributionType.disNone && (value == null || value.isEmpty)) {
+                return 'Insira a proporção';
+              }
+              return null;
+            },
           ),
         ),
         const SizedBox(width: 8.0),
@@ -212,6 +218,12 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
               border: OutlineInputBorder(),
               suffixText: 'cm',
             ),
+            validator: (value) {
+              if (selectedDistribution != DistributionType.disNone && (value == null || value.isEmpty)) {
+                return 'Insira a altura';
+              }
+              return null;
+            },
           ),
         ),
       ],
