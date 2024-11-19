@@ -29,6 +29,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
     super.initState();
     _idController.text = widget.initialInventoryId ?? '';
     _selectedType = widget.initialInventoryType ?? _selectedType;
+    _maxSpeciesController.text = widget.initialMaxSpecies?.toString() ?? '';
   }
 
   @override
@@ -47,6 +48,32 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    DropdownButtonFormField<InventoryType>(
+                      value: _selectedType,
+                      decoration: const InputDecoration(
+                        labelText: 'Tipo de Inventário *',
+                        helperText: '* campo obrigatório',
+                        border: OutlineInputBorder(),
+                      ),
+                      items: InventoryType.values.map((type) {
+                        return DropdownMenuItem(
+                          value: type,
+                          child: Text(inventoryTypeFriendlyNames[type]!),
+                        );
+                      }).toList(),
+                      onChanged: (InventoryType? newValue) {
+                        if (newValue != null) {
+                          _updateFormFields(newValue);
+                        }
+                      },
+                      validator: (value) {
+                        if (value == null || value.index < 0) {
+                          return 'Por favor, selecione um tipo de inventário';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16.0),
                     TextFormField(
                       controller: _idController,
                       textCapitalization: TextCapitalization.words,
@@ -117,32 +144,6 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Por favor, insira um ID para o inventário';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 16.0),
-                    DropdownButtonFormField<InventoryType>(
-                      value: _selectedType,
-                      decoration: const InputDecoration(
-                        labelText: 'Tipo de Inventário *',
-                        helperText: '* campo obrigatório',
-                        border: OutlineInputBorder(),
-                      ),
-                      items: InventoryType.values.map((type) {
-                        return DropdownMenuItem(
-                          value: type,
-                          child: Text(inventoryTypeFriendlyNames[type]!),
-                        );
-                      }).toList(),
-                      onChanged: (InventoryType? newValue) {
-                        if (newValue != null) {
-                          _updateFormFields(newValue);
-                        }
-                      },
-                      validator: (value) {
-                        if (value == null || value.index < 0) {
-                          return 'Por favor, selecione um tipo de inventário';
                         }
                         return null;
                       },

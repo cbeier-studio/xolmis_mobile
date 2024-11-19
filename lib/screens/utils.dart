@@ -58,7 +58,7 @@ void checkMackinnonCompletion(BuildContext context, Inventory inventory, Invento
   final speciesList = speciesProvider.getSpeciesForInventory(inventory.id);
   // print('speciesList: ${speciesList.length} ; maxSpecies: ${inventory.maxSpecies}');
   if (inventory.type == InventoryType.invMackinnonList &&
-      speciesList.length == inventory.maxSpecies) {
+      speciesList.length == inventory.maxSpecies - 1) {
     _showMackinnonDialog(context, inventory, inventoryRepository);
   }
 }
@@ -76,6 +76,7 @@ void _showMackinnonDialog(BuildContext context, Inventory inventory, InventoryRe
             child: Text('Iniciar Próxima Lista'),
             onPressed: () async {
               // Finish the inventory and open the screen to add inventory
+              var maxSpecies = inventory.maxSpecies;
               await Inventory.stopTimer(inventory, inventoryRepository);
               // onInventoryUpdated(inventory);
               Navigator.pop(context, true);
@@ -86,7 +87,7 @@ void _showMackinnonDialog(BuildContext context, Inventory inventory, InventoryRe
                 MaterialPageRoute(builder: (context) => AddInventoryScreen(
                   initialInventoryId: nextInventoryId,
                   initialInventoryType: InventoryType.invMackinnonList,
-                  initialMaxSpecies: inventory.maxSpecies,
+                  initialMaxSpecies: maxSpecies,
                 )
                 ),
               );
