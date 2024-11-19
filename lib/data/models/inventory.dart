@@ -73,6 +73,7 @@ class Species {
   final String name;
   bool isOutOfInventory;
   int count;
+  String? notes;
   List<Poi> pois;
 
   Species({
@@ -81,6 +82,7 @@ class Species {
     required this.name,
     required this.isOutOfInventory,
     this.count = 0,
+    this.notes,
     this.pois = const [],
   });
 
@@ -90,6 +92,7 @@ class Species {
       inventoryId: map['inventoryId'],
       name: map['name'],
       count: map['count'],
+      notes: map['notes'],
       isOutOfInventory: map['isOutOfInventory'] == 1, // Convert int to boolean
       pois: pois,
     );
@@ -102,6 +105,7 @@ class Species {
       name: name ?? this.name,
       isOutOfInventory: isOutOfInventory ?? this.isOutOfInventory,
       count: count ?? this.count,
+      notes: notes ?? this.notes,
       pois: pois ?? this.pois,
     );
   }
@@ -113,6 +117,7 @@ class Species {
       'name': name,
       'isOutOfInventory': isOutOfInventory ? 1 : 0,
       'count': count,
+      'notes': notes,
     };
   }
 
@@ -123,6 +128,7 @@ class Species {
       'name': name,
       'isOutOfInventory': isOutOfInventory ? 1 : 0,
       'count': count,
+      'notes': notes,
       'pois': pois.map((poi) => poi.toJson()).toList(),
     };
   }
@@ -134,7 +140,8 @@ class Species {
         'inventoryId: $inventoryId, '
         'name: $name, '
         'isOutOfInventory: $isOutOfInventory, '
-        'count: $count}';
+        'count: $count, '
+        'notes: $notes}';
   }
 }
 

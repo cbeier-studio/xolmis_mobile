@@ -23,7 +23,7 @@ class DatabaseHelper {
     String path = join(await getDatabasesPath(), 'xolmis_database.db');
     return await openDatabase(
       path,
-      version: 7, // Increase the version number
+      version: 8, // Increase the version number
       onCreate: _createTables,
       onUpgrade: _upgradeTables,
       onOpen: (db) {
@@ -33,69 +33,75 @@ class DatabaseHelper {
   }
 
   void _createTables(Database db, int version) {
-    db.execute(
-      'CREATE TABLE inventories('
-          'id TEXT PRIMARY KEY, '
-          'type INTEGER, '
-          'duration INTEGER, '
-          'maxSpecies INTEGER, '
-          'isPaused INTEGER, '
-          'isFinished INTEGER, '
-          'elapsedTime REAL, '
-          'startTime TEXT, '
-          'endTime TEXT, '
-          'startLongitude REAL, '
-          'startLatitude REAL, '
-          'endLongitude REAL, '
-          'endLatitude REAL)',
-    );
-    db.execute(
-      'CREATE TABLE species('
-          'id INTEGER PRIMARY KEY AUTOINCREMENT, '
-          'inventoryId TEXT NOT NULL, '
-          'name TEXT, '
-          'isOutOfInventory INTEGER, '
-          'count INTEGER, '
-          'FOREIGN KEY (inventoryId) REFERENCES inventories(id) ON DELETE CASCADE )',
-    );
-    db.execute(
-        'CREATE TABLE vegetation ('
-            'id INTEGER PRIMARY KEY AUTOINCREMENT, '
-            'inventoryId TEXT NOT NULL, '
-            'sampleTime TEXT NOT NULL, '
-            'longitude REAL, '
-            'latitude REAL, '
-            'herbsProportion INTEGER, '
-            'herbsDistribution INTEGER, '
-            'herbsHeight INTEGER, '
-            'shrubsProportion INTEGER, '
-            'shrubsDistribution INTEGER, '
-            'shrubsHeight INTEGER, '
-            'treesProportion INTEGER, '
-            'treesDistribution INTEGER, '
-            'treesHeight INTEGER, '
-            'notes TEXT, '
-            'FOREIGN KEY (inventoryId) REFERENCES inventories(id) ON DELETE CASCADE )'
-    );
-    db.execute(
-        'CREATE TABLE pois ('
-            'id INTEGER PRIMARY KEY AUTOINCREMENT, '
-            'speciesId INTEGER NOT NULL, '
-            'longitude REAL NOT NULL, '
-            'latitude REAL NOT NULL, '
-            'FOREIGN KEY (speciesId) REFERENCES species(id) ON DELETE CASCADE )'
-    );
-    db.execute(
-        'CREATE TABLE weather ('
-            'id INTEGER PRIMARY KEY AUTOINCREMENT, '
-            'inventoryId INTEGER NOT NULL, '
-            'sampleTime TEXT NOT NULL, '
-            'cloudCover INTEGER, '
-            'precipitation INTEGER, '
-            'temperature REAL, '
-            'windSpeed INTEGER, '
-            'FOREIGN KEY (inventoryId) REFERENCES inventories(id) ON DELETE CASCADE )'
-    );
+    db.execute('''
+        CREATE TABLE inventories(
+          id TEXT PRIMARY KEY, 
+          type INTEGER, 
+          duration INTEGER, 
+          maxSpecies INTEGER, 
+          isPaused INTEGER, 
+          isFinished INTEGER, 
+          elapsedTime REAL, 
+          startTime TEXT, 
+          endTime TEXT, 
+          startLongitude REAL, 
+          startLatitude REAL, 
+          endLongitude REAL, 
+          endLatitude REAL
+        )
+      ''');
+    db.execute('''
+        CREATE TABLE species(
+          id INTEGER PRIMARY KEY AUTOINCREMENT, 
+          inventoryId TEXT NOT NULL, 
+          name TEXT, 
+          isOutOfInventory INTEGER, 
+          count INTEGER, 
+          notes TEXT, 
+          FOREIGN KEY (inventoryId) REFERENCES inventories(id) ON DELETE CASCADE 
+        )
+      ''');
+    db.execute('''
+        CREATE TABLE vegetation (
+            id INTEGER PRIMARY KEY AUTOINCREMENT, 
+            inventoryId TEXT NOT NULL, 
+            sampleTime TEXT NOT NULL, 
+            longitude REAL, 
+            latitude REAL, 
+            herbsProportion INTEGER, 
+            herbsDistribution INTEGER, 
+            herbsHeight INTEGER, 
+            shrubsProportion INTEGER, 
+            shrubsDistribution INTEGER, 
+            shrubsHeight INTEGER, 
+            treesProportion INTEGER, 
+            treesDistribution INTEGER, 
+            treesHeight INTEGER, 
+            notes TEXT, 
+            FOREIGN KEY (inventoryId) REFERENCES inventories(id) ON DELETE CASCADE 
+        )
+      ''');
+    db.execute('''
+        CREATE TABLE pois (
+            id INTEGER PRIMARY KEY AUTOINCREMENT, 
+            speciesId INTEGER NOT NULL, 
+            longitude REAL NOT NULL, 
+            latitude REAL NOT NULL, 
+            FOREIGN KEY (speciesId) REFERENCES species(id) ON DELETE CASCADE '
+        )
+      ''');
+    db.execute('''
+        CREATE TABLE weather (
+            id INTEGER PRIMARY KEY AUTOINCREMENT, 
+            inventoryId INTEGER NOT NULL, 
+            sampleTime TEXT NOT NULL, 
+            cloudCover INTEGER, 
+            precipitation INTEGER, 
+            temperature REAL, 
+            windSpeed INTEGER, 
+            FOREIGN KEY (inventoryId) REFERENCES inventories(id) ON DELETE CASCADE 
+        )
+      ''');
     db.execute('''
         CREATE TABLE nests (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -182,17 +188,18 @@ class DatabaseHelper {
       );
     }
     if (oldVersion < 3) {
-      db.execute(
-          'CREATE TABLE weather ('
-              'id INTEGER PRIMARY KEY AUTOINCREMENT, '
-              'inventoryId INTEGER NOT NULL, '
-              'sampleTime TEXT NOT NULL, '
-              'cloudCover INTEGER, '
-              'precipitation INTEGER, '
-              'temperature REAL, '
-              'windSpeed INTEGER, '
-              'FOREIGN KEY (inventoryId) REFERENCES inventories(id) ON DELETE CASCADE)'
-      );
+      db.execute('''
+          CREATE TABLE weather (
+              id INTEGER PRIMARY KEY AUTOINCREMENT, 
+              inventoryId INTEGER NOT NULL, 
+              sampleTime TEXT NOT NULL, 
+              cloudCover INTEGER, 
+              precipitation INTEGER, 
+              temperature REAL, 
+              windSpeed INTEGER, 
+              FOREIGN KEY (inventoryId) REFERENCES inventories(id) ON DELETE CASCADE
+          )
+      ''');
     }
     if (oldVersion < 4) {
       db.execute('''
@@ -280,6 +287,11 @@ class DatabaseHelper {
         FOREIGN KEY (nestRevisionId) REFERENCES nest_revisions(id) ON DELETE CASCADE
       )
     ''');
+    }
+    if (oldVersion < 8) {
+      db.execute(
+        'ALTER TABLE species ADD COLUMN notes TEXT',
+      );
     }
   }
 

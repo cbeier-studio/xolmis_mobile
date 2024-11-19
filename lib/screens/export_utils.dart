@@ -82,24 +82,32 @@ Future<void> exportInventoryToCsv(BuildContext context, Inventory inventory) asy
       'ID',
       'Type',
       'Duration',
-      'Paused',
-      'Finished',
-      'Elapsed time'
+      'Max of species',
+      'Start time',
+      'End time',
+      'Start longitude',
+      'Start latitude',
+      'End longitude',
+      'End latitude'
     ]);
     rows.add([
       inventory.id,
       inventoryTypeFriendlyNames[inventory.type],
       inventory.duration,
-      inventory.isPaused,
-      inventory.isFinished,
-      inventory.elapsedTime
+      inventory.maxSpecies,
+      inventory.startTime,
+      inventory.endTime,
+      inventory.startLongitude,
+      inventory.startLatitude,
+      inventory.endLongitude,
+      inventory.endLatitude
     ]);
 
     // Add species data
     rows.add([]); // Empty line to separate the inventory of the species
-    rows.add(['SPECIES', 'Count', 'Out of sample']);
+    rows.add(['SPECIES', 'Count', 'Out of sample', 'Notes']);
     for (var species in inventory.speciesList) {
-      rows.add([species.name, species.count, species.isOutOfInventory]);
+      rows.add([species.name, species.count, species.isOutOfInventory, species.notes]);
     }
 
     // Add vegetation data

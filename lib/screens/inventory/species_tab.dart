@@ -28,6 +28,8 @@ class SpeciesTab extends StatefulWidget {
 }
 
 class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMixin {
+  final _notesController = TextEditingController();
+
   @override
   bool get wantKeepAlive => true;
 
@@ -349,8 +351,14 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  // Expanded(
-                  //     child:
+                  ListTile(
+                    leading: const Icon(Icons.edit_outlined),
+                    title: const Text('Anotações da espécie'),
+                    onTap: () {
+                      Navigator.pop(context);
+                      _showEditNotesDialog(context, species);
+                    },
+                  ),
                   ListTile(
                     leading: const Icon(
                       Icons.delete_outlined, color: Colors.red,),
@@ -361,11 +369,59 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                       Navigator.pop(context);
                     },
                   )
-                  // )
                 ],
               ),
             );
           },
+        );
+      },
+    );
+  }
+
+  void _showEditNotesDialog(BuildContext context, Species species) {
+    final _notesController = TextEditingController(text: species.notes);
+    final speciesProvider = Provider.of<SpeciesProvider>(
+        context, listen: false);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Editar notas'),
+          content: TextField(
+            controller: _notesController,
+            maxLines: 3,
+            textCapitalization: TextCapitalization.sentences,
+            decoration: const InputDecoration(
+              labelText: 'Notas',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancelar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Salvar'),
+              onPressed: () async {
+                species.notes = _notesController.text;
+                final updatedSpecies = Species(
+                  id: species.id,
+                  inventoryId: species.inventoryId,
+                  notes: _notesController.text,
+                  isOutOfInventory: species.isOutOfInventory,
+                  count: species.count,
+                  name: species.name,
+                );
+                await speciesProvider.updateSpecies(species.inventoryId, updatedSpecies);
+                Navigator.of(context).pop();
+                setState(() {});
+              },
+            ),
+          ],
         );
       },
     );
