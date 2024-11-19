@@ -28,8 +28,8 @@ Here is a list of the main features:
 - [x] Record specimens collected with option to export the list.
 - [ ] Create a list of birds banded.
 - [ ] Collect quali-quantitative data of captured birds.
-- [ ] Attach images and/or sounds to the data.
-- [ ] Integration with Xolmis desktop app.
+- [x] Attach images to the data.
+- [x] Integration with Xolmis desktop app (via text files).
 
 ## How to contribute
 
