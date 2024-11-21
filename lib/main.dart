@@ -4,7 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 // import 'package:flutter_background/flutter_background.dart';
 import 'package:side_sheet/side_sheet.dart';
-import 'package:wakelock_plus/wakelock_plus.dart';
+import 'package:workmanager/workmanager.dart';
+// import 'package:wakelock_plus/wakelock_plus.dart';
 // import 'package:flutter_foreground_service/flutter_foreground_service.dart';
 
 import 'data/database/database_helper.dart';
@@ -48,12 +49,24 @@ import 'screens/specimen/specimens_screen.dart';
 import 'screens/settings_screen.dart';
 import 'screens/utils.dart';
 
+void callbackDispatcher() {
+  Workmanager().executeTask((task, inputData) {
+    // Realize uma operação mínima, como registrar um log
+    print('Xolmis acordado pelo WorkManager');
+    return Future.value(true);
+  });
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   LicenseRegistry.addLicense(() async* {
     final license = await rootBundle.loadString('assets/license.txt');
     yield LicenseEntryWithLineBreaks(['xolmis'], license);
   });
+  Workmanager().initialize(
+    callbackDispatcher,
+    isInDebugMode: false,
+  );
   await DatabaseHelper().initDatabase();
 
   // Create the DAOs
@@ -196,7 +209,8 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
-    WakelockPlus.enable();
+    scheduleWakeupTask();
+    // WakelockPlus.enable();
     // initializeBackgroundExecution();
     // inventoryCountNotifier.updateCount();
     Provider.of<InventoryProvider>(context, listen: false).fetchInventories();
@@ -206,9 +220,21 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   void dispose() {
-    WakelockPlus.disable();
+    // WakelockPlus.disable();
     // ForegroundService().stop();
     super.dispose();
+  }
+
+  void scheduleWakeupTask() {
+    Workmanager().registerPeriodicTask(
+      "wakeupTask",
+      "wakeup",
+      frequency: Duration(minutes: 5),
+      constraints: Constraints(
+        networkType: NetworkType.not_required,
+        requiresBatteryNotLow: false,
+      ),
+    );
   }
 
   // void _onItemTapped(int index) {
