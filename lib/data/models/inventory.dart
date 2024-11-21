@@ -597,31 +597,31 @@ class Inventory with ChangeNotifier {
     };
   }
 
-  static Future<void> startTimer(Inventory inventory, InventoryRepository inventoryRepository) async {
+  Future<void> startTimer(InventoryRepository inventoryRepository) async {
     if (kDebugMode) {
       print('startTimer called');
     }
-    if (inventory.duration == 0) {
-      inventory.elapsedTime = 0;
-      inventory.notifyListeners();
+    if (duration == 0) {
+      elapsedTime = 0;
+      notifyListeners();
       return;
     }
-    if (inventory.duration > 0 && !inventory.isFinished) {
-      inventory._timer ??= Timer.periodic(const Duration(seconds: 1), (timer) {
-        if (!inventory.isPaused && !inventory.isFinished) {
-          if (inventory.elapsedTime == 0) {
-            inventoryRepository.updateInventoryElapsedTime(inventory.id, inventory.elapsedTime);
+    if (duration > 0 && !isFinished) {
+      _timer ??= Timer.periodic(const Duration(seconds: 1), (timer) {
+        if (!isPaused && !isFinished) {
+          if (elapsedTime == 0) {
+            inventoryRepository.updateInventoryElapsedTime(id, elapsedTime);
           }
 
-          inventory.elapsedTime++;
-          inventory.elapsedTimeNotifier.value = inventory.elapsedTime;
-          inventory.elapsedTimeNotifier.notifyListeners();
+          elapsedTime++;
+          elapsedTimeNotifier.value = elapsedTime;
+          elapsedTimeNotifier.notifyListeners();
 
-          if (inventory.elapsedTime % 5 == 0) {
-            inventoryRepository.updateInventoryElapsedTime(inventory.id, inventory.elapsedTime);
+          if (elapsedTime % 5 == 0) {
+            inventoryRepository.updateInventoryElapsedTime(id, elapsedTime);
           }
 
-          if (inventory.elapsedTime >= inventory.duration * 60 && !inventory.isFinished) {
+          if (elapsedTime >= duration * 60 && !isFinished) {
             FlutterRingtonePlayer().play(
               android: AndroidSounds.notification,
               ios: IosSounds.glass,
@@ -629,66 +629,66 @@ class Inventory with ChangeNotifier {
               looping: false,
             );
             if (kDebugMode) {
-              print('stopTimer called automatically: ${inventory.elapsedTime} of ${inventory.duration * 60}');
+              print('stopTimer called automatically: ${elapsedTime} of ${duration * 60}');
             }
-            inventoryRepository.updateInventoryElapsedTime(inventory.id, inventory.elapsedTime);
-            Inventory.stopTimer(inventory, inventoryRepository);
+            inventoryRepository.updateInventoryElapsedTime(id, elapsedTime);
+            stopTimer(inventoryRepository);
           }
         }
       });
 
       // Restart the Timer if isPaused was true and now is false
-      if (!inventory.isPaused && inventory._timer == null) {
-        Inventory.startTimer(inventory, inventoryRepository);
+      if (!isPaused && _timer == null) {
+        startTimer(inventoryRepository);
       }
     }
-    inventory.notifyListeners();
+    notifyListeners();
   }
 
-  static Future<void> pauseTimer(Inventory inventory, InventoryRepository inventoryRepository) async {
+  Future<void> pauseTimer(InventoryRepository inventoryRepository) async {
     if (kDebugMode) {
       print('pauseTimer called');
     }
-    inventory.isPaused = true;
-    inventory.elapsedTimeNotifier.value = inventory.elapsedTime;
-    inventory.elapsedTimeNotifier.notifyListeners();
-    inventory.notifyListeners();
-    inventoryRepository.updateInventory(inventory);
+    isPaused = true;
+    elapsedTimeNotifier.value = elapsedTime;
+    elapsedTimeNotifier.notifyListeners();
+    notifyListeners();
+    inventoryRepository.updateInventory(this);
   }
 
-  static Future<void> resumeTimer(Inventory inventory, InventoryRepository inventoryRepository) async {
+  Future<void> resumeTimer(InventoryRepository inventoryRepository) async {
     if (kDebugMode) {
       print('resumeTimer called');
     }
-    inventory.isPaused = false;
-    Inventory.startTimer(inventory, inventoryRepository);
-    inventory.elapsedTimeNotifier.value = inventory.elapsedTime.toDouble();
-    inventory.elapsedTimeNotifier.notifyListeners();
-    inventory.notifyListeners();
-    inventoryRepository.updateInventory(inventory);
+    isPaused = false;
+    startTimer(inventoryRepository);
+    elapsedTimeNotifier.value = elapsedTime.toDouble();
+    elapsedTimeNotifier.notifyListeners();
+    notifyListeners();
+    inventoryRepository.updateInventory(this);
   }
 
-  static Future<void> stopTimer(Inventory inventory, InventoryRepository inventoryRepository) async {
+  Future<void> stopTimer(InventoryRepository inventoryRepository) async {
     if (kDebugMode) {
       print('stopTimer called');
     }
-    inventory.isFinished = true;
-    inventory.isFinishedNotifier.value = inventory.isFinished;
-    inventory.isPaused = false;
-    inventory.elapsedTimeNotifier.value = inventory.elapsedTime;
-    inventory._timer?.cancel();
-    inventory._timer = null;
+    isFinished = true;
+    isFinishedNotifier.value = isFinished;
+    isPaused = false;
+    elapsedTimeNotifier.value = elapsedTime;
+    _timer?.cancel();
+    _timer = null;
 
     // Define endTime, endLatitude and endLongitude when finishing the inventory
-    inventory.endTime = DateTime.now();
+    endTime = DateTime.now();
     Position? position = await getPosition();
     if (position != null) {
-      inventory.endLatitude = position.latitude;
-      inventory.endLongitude = position.longitude;
+      endLatitude = position.latitude;
+      endLongitude = position.longitude;
     }
 
-    await inventoryRepository.updateInventory(inventory);
-    inventory.notifyListeners();
+    await inventoryRepository.updateInventory(this);
+    notifyListeners();
   }
 }
 

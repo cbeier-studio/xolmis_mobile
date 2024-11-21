@@ -61,7 +61,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
       {
         for (var inventory in inventoryProvider.activeInventories) {
           if (inventory.duration != 0 && !inventory.isPaused) {
-            Inventory.startTimer(inventory, inventoryRepository);
+            inventory.startTimer(inventoryRepository);
           }
         }
       });
@@ -418,7 +418,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                         // Drag to right
                                       } else if (_showActive && direction == DismissDirection.startToEnd) {
                                         // Finish the inventory
-                                        Inventory.stopTimer(inventory, inventoryRepository);
+                                        inventory.stopTimer(inventoryRepository);
                                         inventoryProvider.updateInventory(inventory);
                                         inventoryProvider.fetchInventories();
                                       }
@@ -521,7 +521,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                   Navigator.of(context).pop(true);
                                   Navigator.of(context).pop();
                                   // Call the function to delete species
-                                  Inventory.stopTimer(inventory, inventoryRepository);
+                                  inventory.stopTimer(inventoryRepository);
                                   inventoryProvider.updateInventory(inventory);
                                   inventoryProvider.fetchInventories();
                                 },

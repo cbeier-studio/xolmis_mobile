@@ -77,7 +77,7 @@ void _showMackinnonDialog(BuildContext context, Inventory inventory, InventoryRe
             onPressed: () async {
               // Finish the inventory and open the screen to add inventory
               var maxSpecies = inventory.maxSpecies;
-              await Inventory.stopTimer(inventory, inventoryRepository);
+              await inventory.stopTimer(inventoryRepository);
               // onInventoryUpdated(inventory);
               Navigator.pop(context, true);
               Navigator.of(context).pop();
@@ -97,7 +97,7 @@ void _showMackinnonDialog(BuildContext context, Inventory inventory, InventoryRe
             child: Text('Encerrar'),
             onPressed: () async {
               // Finish the inventory and go back to the Home screen
-              await Inventory.stopTimer(inventory, inventoryRepository);
+              await inventory.stopTimer(inventoryRepository);
               // onInventoryUpdated(inventory);
               Navigator.pop(context, true);
               Navigator.of(context).pop();

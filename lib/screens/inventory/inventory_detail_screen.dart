@@ -249,7 +249,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                   setState(() {
                     _isSubmitting = true;
                   });
-                  await Inventory.stopTimer(widget.inventory, widget.inventoryRepository);
+                  await widget.inventory.stopTimer(widget.inventoryRepository);
                   Navigator.pop(context, true);
                   setState(() {
                     _isSubmitting = false;

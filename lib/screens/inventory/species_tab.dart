@@ -118,8 +118,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
             newSpeciesForOtherInventory);
       }
       if (inventory.type == InventoryType.invTimedQualitative) {
-        _restartInventoryTimer(
-            inventoryProvider, inventory, inventoryRepository);
+        _restartInventoryTimer(inventoryProvider, inventory, inventoryRepository);
       } else {
         inventoryProvider.updateInventory(inventory);
       }
@@ -134,9 +133,9 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     inventory.isPaused = false;
     inventory.isFinished = false;
     await inventoryProvider.updateInventoryElapsedTime(
-        widget.inventory.id, widget.inventory.elapsedTime);
-    Inventory.startTimer(inventory, inventoryRepository);
+        inventory.id, inventory.elapsedTime);
     await inventoryRepository.updateInventory(inventory);
+    inventory.startTimer(inventoryRepository);
   }
 
   void _updateSpeciesList() async {

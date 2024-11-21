@@ -114,27 +114,27 @@ class InventoryProvider with ChangeNotifier {
 
   void startInventoryTimer(Inventory inventory, InventoryRepository inventoryRepository) {
     if (inventory.duration > 0 && !inventory.isFinished && !inventory.isPaused) {
-      Inventory.startTimer(inventory, inventoryRepository);
+      inventory.startTimer(inventoryRepository);
       updateInventory(inventory);
       notifyListeners();
     }
   }
 
   void pauseInventoryTimer(Inventory inventory, InventoryRepository inventoryRepository) {
-    Inventory.pauseTimer(inventory, inventoryRepository);
+    inventory.pauseTimer(inventoryRepository);
     updateInventory(inventory);
     notifyListeners();
   }
 
   void resumeInventoryTimer(Inventory inventory, InventoryRepository inventoryRepository) {
-    Inventory.resumeTimer(inventory, inventoryRepository);
+    inventory.resumeTimer(inventoryRepository);
     updateInventory(inventory);
     notifyListeners();
   }
 
   Future<void> updateInventoryElapsedTime(String inventoryId, double elapsedTime) async {
     await _inventoryRepository.updateInventoryElapsedTime(inventoryId, elapsedTime);
-
+    _inventoryMap[inventoryId]?.elapsedTime = elapsedTime;
     notifyListeners();
   }
 
