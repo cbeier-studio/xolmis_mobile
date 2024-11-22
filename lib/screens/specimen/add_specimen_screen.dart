@@ -42,10 +42,10 @@ class _AddSpecimenScreenState extends State<AddSpecimenScreen> {
 
     final ano = DateTime.now().year;
     final mes = DateTime.now().month;
-    ;
+
     final numSeq = Provider.of<SpecimenProvider>(context, listen: false).specimens.length + 1;
 
-    _fieldNumberController.text = "${_observerAcronym}${ano}${mes.toString().padLeft(2, '0')}${numSeq.toString().padLeft(4, '0')}";
+    _fieldNumberController.text = "$_observerAcronym$ano${mes.toString().padLeft(2, '0')}${numSeq.toString().padLeft(4, '0')}";
   }
 
   Future<void> _getCurrentLocation() async {

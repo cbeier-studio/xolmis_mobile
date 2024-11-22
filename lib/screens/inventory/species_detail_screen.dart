@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/poi_provider.dart';
@@ -151,11 +152,11 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
                           title: const Text('Informações da espécie'),
                           children: [
                             ListTile(
-                              title: Text('${widget.species.count} ${widget.species.count > 1 ? 'indivíduos' : 'indivíduo'}'),
+                              title: Text('${widget.species.count} ${Intl.plural(widget.species.count, one: 'indivíduo', other: 'indivíduos')}'),
                               subtitle: Text('Contagem'),
                             ),
                             ListTile(
-                              title: Text('${widget.species.isOutOfInventory ? 'Fora da amostra' : 'Dentro da amostra'}'),
+                              title: Text(widget.species.isOutOfInventory ? 'Fora da amostra' : 'Dentro da amostra'),
                             ),
                           ],
                         ),

@@ -426,7 +426,7 @@ Future<void> exportAllSpecimensToCsv(BuildContext context) async {
       'Latitude',
       'Notes',
     ]);
-    for (var specimen in specimenList ?? []) {
+    for (var specimen in specimenList) {
       rows.add([
         specimen.sampleTime,
         specimen.fieldNumber,

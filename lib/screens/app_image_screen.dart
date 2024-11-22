@@ -261,7 +261,7 @@ class _AppImageScreenState extends State<AppImageScreen> {
   }
 
   void _showEditNotesDialog(BuildContext context, AppImage appImage) {
-    final _notesController = TextEditingController(text: appImage.notes);
+    final notesController = TextEditingController(text: appImage.notes);
 
     showDialog(
       context: context,
@@ -269,7 +269,7 @@ class _AppImageScreenState extends State<AppImageScreen> {
         return AlertDialog(
           title: const Text('Editar notas'),
           content: TextField(
-            controller: _notesController,
+            controller: notesController,
             maxLines: 3,
             textCapitalization: TextCapitalization.sentences,
             decoration: const InputDecoration(
@@ -287,11 +287,11 @@ class _AppImageScreenState extends State<AppImageScreen> {
             TextButton(
               child: const Text('Salvar'),
               onPressed: () async {
-                appImage.notes = _notesController.text;
+                appImage.notes = notesController.text;
                 final updatedImage = AppImage(
                   id: appImage.id,
                   imagePath: appImage.imagePath,
-                  notes: _notesController.text,
+                  notes: notesController.text,
                   vegetationId: appImage.vegetationId,
                   specimenId: appImage.specimenId,
                   nestRevisionId: appImage.nestRevisionId,

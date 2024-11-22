@@ -49,7 +49,7 @@ class _AddNestScreenState extends State<AddNestScreen> {
     final mes = DateTime.now().month;
     final numSeq = await Provider.of<NestProvider>(context, listen: false).getNextSequentialNumber(_observerAcronym, ano, mes);
 
-    _fieldNumberController.text = "${_observerAcronym}${ano}${mes.toString().padLeft(2, '0')}${numSeq.toString().padLeft(3, '0')}";
+    _fieldNumberController.text = "$_observerAcronym$ano${mes.toString().padLeft(2, '0')}${numSeq.toString().padLeft(3, '0')}";
   }
 
   Future<void> _getCurrentLocation() async {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/models/inventory.dart';
@@ -209,7 +210,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                   if (inventoryProvider.isLoading) {
                     return const Center(
                       child: Padding(
-                          padding: const EdgeInsets.all(16.0),
+                          padding: EdgeInsets.all(16.0),
                           child: CircularProgressIndicator()
                       ),
                     );
@@ -217,7 +218,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                       !_showActive && inventoryProvider.finishedInventories.isEmpty) {
                     return const Center(
                       child: Padding(
-                          padding: const EdgeInsets.all(16.0),
+                          padding: EdgeInsets.all(16.0),
                           child: Text('Nenhum inventário encontrado.')
                       ),
                     );
@@ -685,12 +686,12 @@ class InventoryListItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('${inventoryTypeFriendlyNames[inventory.type]}'),
-                if (!isHistory && inventory.duration > 0) Text('${inventory.duration} minutos de duração'),
+                if (!isHistory && inventory.duration > 0) Text('${inventory.duration} ${Intl.plural(inventory.duration, one: 'minuto', other: 'minutos')} de duração'),
                 Selector<SpeciesProvider, int>(
                   selector: (context, speciesProvider) => speciesProvider.getSpeciesForInventory(inventory.id).length,
                   shouldRebuild: (previous, next) => previous != next,
                   builder: (context, speciesCount, child) {
-                    return Text('$speciesCount ${speciesCount > 1 ? 'espécies' : 'espécie'}');
+                    return Text('$speciesCount ${Intl.plural(speciesCount, one: 'espécie', other: 'espécies')}');
                   },
                 ),
               ],

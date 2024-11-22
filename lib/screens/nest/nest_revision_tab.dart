@@ -75,7 +75,7 @@ class _NestRevisionsTabState extends State<NestRevisionsTab> with AutomaticKeepA
                 if (revisionList.isEmpty) {
                   return const Center(
                     child: Padding(
-                      padding: const EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 16.0),
+                      padding: EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 16.0),
                       child: Text('Nenhuma revisão de ninho registrada.'),
                     ),
                   );

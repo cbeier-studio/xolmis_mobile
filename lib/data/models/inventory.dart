@@ -460,6 +460,7 @@ class Inventory with ChangeNotifier {
   final ValueNotifier<double> _elapsedTimeNotifier = ValueNotifier<double>(0);
   ValueNotifier<double> get elapsedTimeNotifier => _elapsedTimeNotifier;
   final ValueNotifier<bool> isFinishedNotifier = ValueNotifier<bool>(false);
+  bool _autoFinished = false;
 
   Inventory({
     required this.id,
@@ -622,27 +623,31 @@ class Inventory with ChangeNotifier {
       return;
     }
     if (duration > 0 && !isFinished) {
-      _timer ??= Timer.periodic(const Duration(seconds: 1), (timer) async {
+      _autoFinished = false;
+      _timer ??= Timer.periodic(const Duration(seconds: 10), (timer) async {
         if (!isPaused && !isFinished) {
           if (elapsedTime == 0) {
             inventoryRepository.updateInventoryElapsedTime(id, elapsedTime);
           }
 
-          elapsedTime++;
+          elapsedTime += 10;
           elapsedTimeNotifier.value = elapsedTime;
           elapsedTimeNotifier.notifyListeners();
 
-          if (elapsedTime % 5 == 0) {
-            inventoryRepository.updateInventoryElapsedTime(id, elapsedTime);
-          }
+          // if (elapsedTime % 5 == 0) {
+          inventoryRepository.updateInventoryElapsedTime(id, elapsedTime);
+          // }
 
           if (elapsedTime == duration * 60 && !isFinished) {
+            _autoFinished = true;
             inventoryRepository.updateInventoryElapsedTime(id, elapsedTime);
             await stopTimer(inventoryRepository);
 
-            await showNotification(flutterLocalNotificationsPlugin);
-            if (kDebugMode) {
-              print('stopTimer called automatically: ${elapsedTime} of ${duration * 60}');
+            if (_autoFinished) {
+              await showNotification(flutterLocalNotificationsPlugin);
+              if (kDebugMode) {
+                print('stopTimer called automatically: $elapsedTime of ${duration * 60}');
+              }
             }
           }
         }
@@ -722,7 +727,7 @@ class Inventory with ChangeNotifier {
     await flutterLocalNotificationsPlugin.show(
         0,
         'Inventário Encerrado',
-        'O inventário ${id} foi encerrado automaticamente.',
+        'O inventário $id foi encerrado automaticamente.',
         platformChannelSpecifics,
         payload: 'item x');
   }

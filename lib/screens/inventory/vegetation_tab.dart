@@ -73,7 +73,7 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
                   if (vegetationList.isEmpty) {
                     return const Center(
                       child: Padding(
-                        padding: const EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 16.0),
+                        padding: EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 16.0),
                         child: Text('Nenhum registro de vegetação.'),
                       ),
                     );

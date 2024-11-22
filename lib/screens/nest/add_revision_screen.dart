@@ -26,14 +26,6 @@ class _AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
   bool _hasPhilornisLarvae = false;
   bool _isSubmitting = false;
 
-  void _addSpeciesToRevision(String speciesName) async {
-    // Empty
-  }
-
-  void _updateRevision() async {
-    // Empty
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

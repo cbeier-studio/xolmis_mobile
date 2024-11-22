@@ -28,7 +28,6 @@ class SpeciesTab extends StatefulWidget {
 }
 
 class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMixin {
-  final _notesController = TextEditingController();
 
   @override
   bool get wantKeepAlive => true;
@@ -379,7 +378,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
   }
 
   void _showEditNotesDialog(BuildContext context, Species species) {
-    final _notesController = TextEditingController(text: species.notes);
+    final notesController = TextEditingController(text: species.notes);
     final speciesProvider = Provider.of<SpeciesProvider>(
         context, listen: false);
 
@@ -389,7 +388,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
         return AlertDialog(
           title: const Text('Editar notas'),
           content: TextField(
-            controller: _notesController,
+            controller: notesController,
             maxLines: 3,
             textCapitalization: TextCapitalization.sentences,
             decoration: const InputDecoration(
@@ -407,11 +406,11 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
             TextButton(
               child: const Text('Salvar'),
               onPressed: () async {
-                species.notes = _notesController.text;
+                species.notes = notesController.text;
                 final updatedSpecies = Species(
                   id: species.id,
                   inventoryId: species.inventoryId,
-                  notes: _notesController.text,
+                  notes: notesController.text,
                   isOutOfInventory: species.isOutOfInventory,
                   count: species.count,
                   name: species.name,

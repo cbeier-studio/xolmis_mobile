@@ -74,7 +74,7 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
                   if (eggList.isEmpty) {
                     return const Center(
                       child: Padding(
-                        padding: const EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 16.0),
+                        padding: EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 16.0),
                         child: Text('Nenhum ovo registrado.'),
                       ),
                     );

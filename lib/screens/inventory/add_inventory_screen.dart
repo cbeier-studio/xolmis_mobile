@@ -123,7 +123,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                               },
                             );
 
-                            if (result != null) {
+                            if (result != null || result != '') {
                               // Concatenate the inventory ID in the specified format
                               final prefs = await SharedPreferences.getInstance();
                               final observerAcronym = prefs.getString('observerAcronym') ?? '';
@@ -134,7 +134,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                               final inventoryTypeLetter = getInventoryTypeLetter(_selectedType);
                               final sequentialNumber = await Provider.of<InventoryProvider>(context, listen: false).getNextSequentialNumber(result, observerAcronym, now.year, now.month, now.day, inventoryTypeLetter);
 
-                              final inventoryId = '${result != null ? '$result-' : ''}$observerAcronym-$year$month$day-${inventoryTypeLetter != null ? '$inventoryTypeLetter' : ''}${sequentialNumber.toString().padLeft(2, '0')}';
+                              final inventoryId = '$result-$observerAcronym-$year$month$day-${inventoryTypeLetter ?? ''}${sequentialNumber.toString().padLeft(2, '0')}';
 
                               _idController.text = inventoryId;
                             }

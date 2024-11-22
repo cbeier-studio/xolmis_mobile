@@ -54,7 +54,7 @@ import 'screens/utils.dart';
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) {
     // Realize uma operação mínima, como registrar um log
-    print('Xolmis acordado pelo WorkManager');
+    debugPrint('Xolmis acordado pelo WorkManager');
     return Future.value(true);
   });
 }
@@ -73,7 +73,7 @@ void main() async {
     isInDebugMode: false,
   );
   const AndroidInitializationSettings initializationSettingsAndroid =
-    AndroidInitializationSettings('ic_stat_xolmis_icon');
+    AndroidInitializationSettings('ic_launcher_monochrome');
   const DarwinInitializationSettings initializationSettingsIOS =
     DarwinInitializationSettings();
   const InitializationSettings initializationSettings = InitializationSettings(

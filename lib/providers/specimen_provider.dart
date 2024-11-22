@@ -24,7 +24,7 @@ class SpecimenProvider with ChangeNotifier {
   }
 
   Future<void> addSpecimen(Specimen specimen) async {
-    if (await specimenFieldNumberExists(specimen.fieldNumber!)) {
+    if (await specimenFieldNumberExists(specimen.fieldNumber)) {
       throw Exception('Já existe um espécime com este número de campo.');
     }
 

@@ -351,7 +351,7 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
                   title: Text('${widget.nest.support}'),
                   subtitle: Text('Suporte do ninho'),
                 ),
-                widget.nest.heightAboveGround != '' ? ListTile(
+                widget.nest.heightAboveGround != null ? ListTile(
                   title: Text('${widget.nest.heightAboveGround} m'),
                   subtitle: Text('Altura acima do solo'),
                 ) : SizedBox.shrink(),
