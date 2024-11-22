@@ -2,11 +2,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import '../../screens/utils.dart';
 
 import '../database/repositories/inventory_repository.dart';
+
+import '../../main.dart';
 
 class Poi {
   final int? id;
@@ -597,17 +599,30 @@ class Inventory with ChangeNotifier {
     };
   }
 
+  void updateElapsedTime(double newElapsedTime) {
+    elapsedTime = newElapsedTime;
+    elapsedTimeNotifier.value = elapsedTime;
+    elapsedTimeNotifier.notifyListeners();
+    notifyListeners();
+  }
+
+  void updateIsFinished(bool newIsFinished) {
+    isFinished = newIsFinished;
+    isFinishedNotifier.value = isFinished;
+    isFinishedNotifier.notifyListeners();
+    notifyListeners();
+  }
+
   Future<void> startTimer(InventoryRepository inventoryRepository) async {
     if (kDebugMode) {
       print('startTimer called');
     }
     if (duration == 0) {
-      elapsedTime = 0;
-      notifyListeners();
+      updateElapsedTime(0.0);
       return;
     }
     if (duration > 0 && !isFinished) {
-      _timer ??= Timer.periodic(const Duration(seconds: 1), (timer) {
+      _timer ??= Timer.periodic(const Duration(seconds: 1), (timer) async {
         if (!isPaused && !isFinished) {
           if (elapsedTime == 0) {
             inventoryRepository.updateInventoryElapsedTime(id, elapsedTime);
@@ -621,26 +636,22 @@ class Inventory with ChangeNotifier {
             inventoryRepository.updateInventoryElapsedTime(id, elapsedTime);
           }
 
-          if (elapsedTime >= duration * 60 && !isFinished) {
-            FlutterRingtonePlayer().play(
-              android: AndroidSounds.notification,
-              ios: IosSounds.glass,
-              volume: 0.1,
-              looping: false,
-            );
+          if (elapsedTime == duration * 60 && !isFinished) {
+            inventoryRepository.updateInventoryElapsedTime(id, elapsedTime);
+            await stopTimer(inventoryRepository);
+
+            await showNotification(flutterLocalNotificationsPlugin);
             if (kDebugMode) {
               print('stopTimer called automatically: ${elapsedTime} of ${duration * 60}');
             }
-            inventoryRepository.updateInventoryElapsedTime(id, elapsedTime);
-            stopTimer(inventoryRepository);
           }
         }
       });
 
       // Restart the Timer if isPaused was true and now is false
-      if (!isPaused && _timer == null) {
-        startTimer(inventoryRepository);
-      }
+      // if (!isPaused && _timer == null) {
+      //   startTimer(inventoryRepository);
+      // }
     }
     notifyListeners();
   }
@@ -672,12 +683,14 @@ class Inventory with ChangeNotifier {
     if (kDebugMode) {
       print('stopTimer called');
     }
+
+    _timer?.cancel();
+    _timer = null;
+
     isFinished = true;
     isFinishedNotifier.value = isFinished;
     isPaused = false;
     elapsedTimeNotifier.value = elapsedTime;
-    _timer?.cancel();
-    _timer = null;
 
     // Define endTime, endLatitude and endLongitude when finishing the inventory
     endTime = DateTime.now();
@@ -688,7 +701,30 @@ class Inventory with ChangeNotifier {
     }
 
     await inventoryRepository.updateInventory(this);
+    onInventoryStopped?.call(id);
     notifyListeners();
+  }
+
+  Future<void> showNotification(
+      FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin) async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+    AndroidNotificationDetails(
+      'studio.cbeier.xolmis',
+      'Xolmis',
+      channelDescription: 'Xolmis notifications',
+      importance: Importance.max,
+      priority: Priority.high,
+      playSound: true,
+      ticker: 'ticker',
+    );
+    const NotificationDetails platformChannelSpecifics =
+    NotificationDetails(android: androidPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(
+        0,
+        'Inventário Encerrado',
+        'O inventário ${id} foi encerrado automaticamente.',
+        platformChannelSpecifics,
+        payload: 'item x');
   }
 }
 

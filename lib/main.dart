@@ -1,10 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 // import 'package:flutter_background/flutter_background.dart';
 import 'package:side_sheet/side_sheet.dart';
 import 'package:workmanager/workmanager.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 // import 'package:wakelock_plus/wakelock_plus.dart';
 // import 'package:flutter_foreground_service/flutter_foreground_service.dart';
 
@@ -57,6 +59,9 @@ void callbackDispatcher() {
   });
 }
 
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+  FlutterLocalNotificationsPlugin();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   LicenseRegistry.addLicense(() async* {
@@ -67,6 +72,14 @@ void main() async {
     callbackDispatcher,
     isInDebugMode: false,
   );
+  const AndroidInitializationSettings initializationSettingsAndroid =
+    AndroidInitializationSettings('ic_stat_xolmis_icon');
+  const DarwinInitializationSettings initializationSettingsIOS =
+    DarwinInitializationSettings();
+  const InitializationSettings initializationSettings = InitializationSettings(
+      android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
   await DatabaseHelper().initDatabase();
 
   // Create the DAOs
@@ -95,6 +108,7 @@ void main() async {
   final appImageRepository = AppImageRepository(appImageDao);
 
   final themeMode = await getThemeMode();
+
   runApp(MyApp(
     themeMode: themeMode,
     inventoryRepository: inventoryRepository,
@@ -210,6 +224,7 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
     scheduleWakeupTask();
+    _requestNotificationPermission();
     // WakelockPlus.enable();
     // initializeBackgroundExecution();
     // inventoryCountNotifier.updateCount();
@@ -235,6 +250,17 @@ class _MainScreenState extends State<MainScreen> {
         requiresBatteryNotLow: false,
       ),
     );
+  }
+
+  Future<void> _requestNotificationPermission() async {
+    final status = await Permission.notification.request();
+    if (status.isGranted) {
+      // A permissão foi concedida
+    } else if (status.isDenied) {
+      // A permissão foi negada
+    } else if (status.isPermanentlyDenied) {
+      // A permissão foi negada permanentemente
+    }
   }
 
   // void _onItemTapped(int index) {

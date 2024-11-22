@@ -13,6 +13,8 @@ import '../providers/species_provider.dart';
 
 import 'inventory/add_inventory_screen.dart';
 
+void Function(String)? onInventoryStopped;
+
 Future<List<String>> loadSpeciesSearchData() async {
   final jsonString = await rootBundle.loadString('assets/species_data.json');
   final jsonData = json.decode(jsonString) as List<dynamic>;

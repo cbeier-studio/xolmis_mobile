@@ -14,6 +14,7 @@ import '../../providers/species_provider.dart';
 import 'add_inventory_screen.dart';
 import 'inventory_detail_screen.dart';
 
+import '../utils.dart';
 import '../export_utils.dart';
 
 
@@ -66,6 +67,15 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
         }
       });
     });
+    onInventoryStopped = (inventoryId) {
+      inventoryProvider.fetchInventories();
+    };
+  }
+
+  @override
+  void dispose() {
+    onInventoryStopped = null;
+    super.dispose();
   }
 
   void _onInventoryPausedOrResumed(Inventory inventory) {
@@ -102,7 +112,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
       ).then((newInventory) {
         // Reload the inventory list
         if (newInventory != null) {
-          inventoryProvider.fetchInventories();
+          inventoryProvider.notifyListeners();
         }
       });
     } else {
@@ -112,7 +122,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
       ).then((newInventory) {
         // Reload the inventory list
         if (newInventory != null) {
-          inventoryProvider.fetchInventories();
+          inventoryProvider.notifyListeners();
         }
       });
     }
@@ -182,7 +192,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                       setState(() {
                         _showActive = newSelection.first;
                       });
-                      inventoryProvider.fetchInventories();
+                      inventoryProvider.notifyListeners();
                     },
                   ),
                 );
@@ -420,7 +430,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                         // Finish the inventory
                                         inventory.stopTimer(inventoryRepository);
                                         inventoryProvider.updateInventory(inventory);
-                                        inventoryProvider.fetchInventories();
+                                        inventoryProvider.notifyListeners();
                                       }
                                     },
                                     child: ValueListenableBuilder<bool>(
@@ -453,9 +463,9 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                                 ),
                                               ),
                                             ).then((result) {
-                                              // if (result == true) {
-                                              inventoryProvider.fetchInventories();
-                                              // }
+                                              if (result == true) {
+                                                inventoryProvider.fetchInventories();
+                                              }
                                             });
                                           },
                                           onInventoryPausedOrResumed: (inventory) => _onInventoryPausedOrResumed(inventory),

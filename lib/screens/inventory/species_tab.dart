@@ -122,6 +122,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
       } else {
         inventoryProvider.updateInventory(inventory);
       }
+      speciesProvider.loadSpeciesForInventory(inventory.id);
       speciesProvider.notifyListeners();
       // inventoryProvider.notifyListeners();
     }
@@ -129,12 +130,12 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
 
   void _restartInventoryTimer(InventoryProvider inventoryProvider,
       Inventory inventory, InventoryRepository inventoryRepository) async {
-    inventory.elapsedTime = 0;
+    inventory.updateElapsedTime(0);
     inventory.isPaused = false;
-    inventory.isFinished = false;
+    inventory.updateIsFinished(false);
     await inventoryProvider.updateInventoryElapsedTime(
         inventory.id, inventory.elapsedTime);
-    await inventoryRepository.updateInventory(inventory);
+    // await inventoryProvider.fetchInventories();
     inventory.startTimer(inventoryRepository);
   }
 
