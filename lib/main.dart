@@ -73,7 +73,7 @@ void main() async {
     isInDebugMode: false,
   );
   const AndroidInitializationSettings initializationSettingsAndroid =
-    AndroidInitializationSettings('ic_launcher_monochrome');
+    AndroidInitializationSettings('@drawable/ic_notification');
   const DarwinInitializationSettings initializationSettingsIOS =
     DarwinInitializationSettings();
   const InitializationSettings initializationSettings = InitializationSettings(
