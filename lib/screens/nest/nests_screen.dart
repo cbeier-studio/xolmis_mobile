@@ -60,7 +60,7 @@ class _NestsScreenState extends State<NestsScreen> {
       ).then((newNest) {
         // Reload the inventory list
         if (newNest != null) {
-          nestProvider.fetchNests();
+          nestProvider.notifyListeners();
         }
       });
     } else {
@@ -70,7 +70,7 @@ class _NestsScreenState extends State<NestsScreen> {
       ).then((newNest) {
         // Reload the inventory list
         if (newNest != null) {
-          nestProvider.fetchNests();
+          nestProvider.notifyListeners();
         }
       });
     }
@@ -138,7 +138,7 @@ class _NestsScreenState extends State<NestsScreen> {
                       setState(() {
                         _showActive = newSelection.first;
                       });
-                      nestProvider.fetchNests();
+                      nestProvider.notifyListeners();
                     },
                   ),
                 );
@@ -196,7 +196,7 @@ class _NestsScreenState extends State<NestsScreen> {
                                           ),
                                         ).then((result) {
                                           if (result == true) {
-                                            nestProvider.fetchNests();
+                                            nestProvider.notifyListeners();
                                           }
                                         });
                                       },
@@ -312,7 +312,7 @@ class _NestsScreenState extends State<NestsScreen> {
                                       ),
                                     ).then((result) {
                                       if (result == true) {
-                                        nestProvider.fetchNests();
+                                        nestProvider.notifyListeners();
                                       }
                                     });
                                   },

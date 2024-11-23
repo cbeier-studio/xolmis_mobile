@@ -62,7 +62,7 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
       ).then((newSpecimen) {
         // Reload the inventory list
         if (newSpecimen != null) {
-          specimenProvider.fetchSpecimens();
+          specimenProvider.notifyListeners();
         }
       });
     } else {
@@ -72,7 +72,7 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
       ).then((newSpecimen) {
         // Reload the inventory list
         if (newSpecimen != null) {
-          specimenProvider.fetchSpecimens();
+          specimenProvider.notifyListeners();
         }
       });
     }

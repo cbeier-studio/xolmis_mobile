@@ -18,6 +18,7 @@ class SpecimenDao {
       if (id == null) {
         throw DatabaseInsertException('Failed to insert specimen: ID is null');
       }
+      specimen.id = id;
       return id;
     } on DatabaseException catch (e) {
       // Trate a exceção específica do banco de dados

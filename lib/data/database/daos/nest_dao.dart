@@ -16,11 +16,16 @@ class NestDao {
 
   Future<void> insertNest(Nest nest) async {
     final db = await _dbHelper.database;
-    await db?.insert(
+    int? id = await db?.insert(
       'nests',
       nest.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
+    if (id == null) {
+      print('Failed to insert nest: ID is null');
+      return;
+    }
+    nest.id = id;
   }
 
   Future<List<Nest>> getNests() async {
@@ -31,7 +36,7 @@ class NestDao {
       List<Nest> nests = await Future.wait(maps.map((map) async {
         List<NestRevision> revisionsList = await _nestRevisionDao.getNestRevisionsForNest(map['id']);
         List<Egg> eggsList = await _eggDao.getEggsForNest(map['id']);
-        // Create Inventory instance using the main constructor
+        // Create Nest instance using the main constructor
         Nest nest = Nest(
           id: map['id']?.toInt(),
           fieldNumber: map['fieldNumber'],

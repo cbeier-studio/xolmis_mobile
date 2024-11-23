@@ -11,11 +11,16 @@ class EggDao {
 
   Future<void> insertEgg(Egg egg) async {
     final db = await _dbHelper.database;
-    await db?.insert(
+    int? id = await db?.insert(
       'eggs',
       egg.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
+    if (id == null) {
+      print('Failed to insert egg: ID is null');
+      return;
+    }
+    egg.id = id;
   }
 
   Future<List<Egg>> getEggsForNest(int nestId) async {

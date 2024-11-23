@@ -33,18 +33,30 @@ class NestProvider with ChangeNotifier {
     }
 
     await _nestRepository.insertNest(nest);
-    await fetchNests();
+    _nests.add(nest);
+    notifyListeners();
   }
 
   Future<void> updateNest(Nest nest) async {
     await _nestRepository.updateNest(nest);
-    await fetchNests();
-    notifyListeners();
+
+    final index = _nests.indexWhere((n) => n.id == nest.id);
+    if (index != -1) {
+      _nests[index] = nest;
+      notifyListeners();
+    } else {
+      print('Nest not found in the list');
+    }
   }
 
   Future<void> removeNest(Nest nest) async {
+    if (nest.id == null || nest.id! <= 0) {
+      throw ArgumentError('Invalid nest ID: ${nest.id}');
+    }
+
     await _nestRepository.deleteNest(nest.id!);
-    await fetchNests();
+    _nests.remove(nest);
+    notifyListeners();
   }
 
   Future<int> getNextSequentialNumber(String acronym, int ano, int mes) async {

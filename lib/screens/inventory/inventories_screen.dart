@@ -263,7 +263,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                               ),
                                             ).then((result) {
                                               if (result == true) {
-                                                inventoryProvider.fetchInventories();
+                                                inventoryProvider.notifyListeners();
                                               }
                                             });
                                           },
@@ -465,7 +465,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                               ),
                                             ).then((result) {
                                               if (result == true) {
-                                                inventoryProvider.fetchInventories();
+                                                inventoryProvider.notifyListeners();
                                               }
                                             });
                                           },
@@ -534,7 +534,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                   // Call the function to delete species
                                   inventory.stopTimer(inventoryRepository);
                                   inventoryProvider.updateInventory(inventory);
-                                  inventoryProvider.fetchInventories();
+                                  inventoryProvider.notifyListeners();
                                 },
                                 child: const Text('Encerrar'),
                               ),

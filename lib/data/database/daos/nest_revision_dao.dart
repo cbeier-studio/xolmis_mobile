@@ -11,11 +11,16 @@ class NestRevisionDao {
 
   Future<void> insertNestRevision(NestRevision nestRevision) async {
     final db = await _dbHelper.database;
-    await db?.insert(
+    int? id = await db?.insert(
       'nest_revisions',
       nestRevision.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
+    if (id == null) {
+      print('Failed to insert nest revision: ID is null');
+      return;
+    }
+    nestRevision.id = id;
   }
 
   Future<List<NestRevision>> getNestRevisionsForNest(int nestId) async {

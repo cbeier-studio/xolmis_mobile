@@ -29,18 +29,30 @@ class SpecimenProvider with ChangeNotifier {
     }
 
     await _specimenRepository.insertSpecimen(specimen);
-    await fetchSpecimens();
+    _specimens.add(specimen);
+    notifyListeners();
   }
 
   Future<void> updateSpecimen(Specimen specimen) async {
     await _specimenRepository.updateSpecimen(specimen);
-    await fetchSpecimens();
-    notifyListeners();
+
+    final index = _specimens.indexWhere((n) => n.id == specimen.id);
+    if (index != -1) {
+      _specimens[index] = specimen;
+      notifyListeners();
+    } else {
+      print('Specimen not found in the list');
+    }
   }
 
   Future<void> removeSpecimen(Specimen specimen) async {
+    if (specimen.id == null || specimen.id! <= 0) {
+      throw ArgumentError('Invalid specimen ID: ${specimen.id}');
+    }
+
     await _specimenRepository.deleteSpecimen(specimen.id!);
-    await fetchSpecimens();
+    _specimens.remove(specimen);
+    notifyListeners();
   }
 
   Future<List<String>> getDistinctLocalities() {
