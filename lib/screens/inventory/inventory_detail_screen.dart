@@ -297,7 +297,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                         : elapsedTime / (widget.inventory.duration * 60),
                     backgroundColor: Theme.of(context).brightness == Brightness.light
                         ? Colors.grey[300]
-                        : Colors.grey[800],
+                        : Colors.black,
                     valueColor: AlwaysStoppedAnimation<Color>(
                       widget.inventory.isPaused
                           ? Colors.amber

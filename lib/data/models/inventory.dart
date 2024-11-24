@@ -640,7 +640,7 @@ class Inventory with ChangeNotifier {
 
           if (elapsedTime == duration * 60 && !isFinished) {
             _autoFinished = true;
-            inventoryRepository.updateInventoryElapsedTime(id, elapsedTime);
+            // inventoryRepository.updateInventoryElapsedTime(id, elapsedTime);
             await stopTimer(inventoryRepository);
 
             if (_autoFinished) {

@@ -74,7 +74,7 @@ void _showMackinnonDialog(BuildContext context, Inventory inventory, InventoryRe
       return AlertDialog(
         title: Text('Inventário Concluído'),
         content: Text(
-            'O inventário atingiu o número máximo de espécies. Deseja iniciar a próxima lista ou encerrar as listas?'),
+            'A lista atingiu o número máximo de espécies. Deseja iniciar a próxima lista ou encerrar?'),
         actions: [
           TextButton(
             child: Text('Iniciar Próxima Lista'),

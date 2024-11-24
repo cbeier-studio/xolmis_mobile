@@ -298,11 +298,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
     var databasesPath = await getDatabasesPath();
     String path = join(databasesPath, 'xolmis_database.db');
 
+    DatabaseHelper databaseHelper = DatabaseHelper();
+    await databaseHelper.closeDatabase();
+
     // 2. Delete the database file
     await deleteDatabase(path);
 
     // 3. Recreate the database
-    DatabaseHelper databaseHelper = DatabaseHelper();
+
     await databaseHelper.initDatabase();
 
     // 4. Clear other app data, if necessary (ex: SharedPreferences)

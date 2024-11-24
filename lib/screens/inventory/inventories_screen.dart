@@ -293,7 +293,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                                         value: progress,
                                                         backgroundColor: _showActive && inventory.duration > 0 ? Theme.of(context).brightness == Brightness.light
                                                             ? Colors.grey[200]
-                                                            : Colors.grey[800] : null,
+                                                            : Colors.black : null,
                                                         valueColor: AlwaysStoppedAnimation<Color>(
                                                           inventory.isPaused ? Colors.amber : Theme.of(context).brightness == Brightness.light
                                                               ? Colors.deepPurple
@@ -672,7 +672,7 @@ class InventoryListItem extends StatelessWidget {
                   value: progress,
                   backgroundColor: !isHistory && inventory.duration > 0 ? Theme.of(context).brightness == Brightness.light
                       ? Colors.grey[200]
-                      : Colors.grey[800] : null,
+                      : Colors.black : null,
                   valueColor: AlwaysStoppedAnimation<Color>(
                     inventory.isPaused ? Colors.amber : Theme.of(context).brightness == Brightness.light
                         ? Colors.deepPurple

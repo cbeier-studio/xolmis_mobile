@@ -247,7 +247,7 @@ class _MainScreenState extends State<MainScreen> {
     Workmanager().registerPeriodicTask(
       "wakeupTask",
       "wakeup",
-      frequency: Duration(minutes: 5),
+      frequency: Duration(minutes: 15),
       constraints: Constraints(
         networkType: NetworkType.not_required,
         requiresBatteryNotLow: false,
