@@ -118,9 +118,9 @@ class _AddNestScreenState extends State<AddNestScreen> {
                             return null;
                           },
                           onTap: () async {
-                            final allSpecies = await loadSpeciesSearchData();
-                            allSpecies.sort((a, b) => a.compareTo(b));
-                            final speciesSearchDelegate = SpeciesSearchDelegate(allSpecies, _addSpeciesToNest, _updateNest);
+                            // final allSpecies = await loadSpeciesSearchData();
+                            // allSpecies.sort((a, b) => a.compareTo(b));
+                            final speciesSearchDelegate = SpeciesSearchDelegate(allSpeciesNames, _addSpeciesToNest, _updateNest);
                             final selectedSpecies = await showSearch(
                               context: context,
                               delegate: speciesSearchDelegate,

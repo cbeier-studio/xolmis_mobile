@@ -13,6 +13,8 @@ import '../providers/species_provider.dart';
 
 import 'inventory/add_inventory_screen.dart';
 
+List<String> allSpeciesNames = [];
+
 void Function(String)? onInventoryStopped;
 
 Future<List<String>> loadSpeciesSearchData() async {

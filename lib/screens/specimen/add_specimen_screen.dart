@@ -131,9 +131,9 @@ class _AddSpecimenScreenState extends State<AddSpecimenScreen> {
                             return null;
                           },
                           onTap: () async {
-                            final allSpecies = await loadSpeciesSearchData();
-                            allSpecies.sort((a, b) => a.compareTo(b));
-                            final speciesSearchDelegate = SpeciesSearchDelegate(allSpecies, _addSpeciesToSpecimen, _updateSpecimen);
+                            // final allSpecies = await loadSpeciesSearchData();
+                            // allSpecies.sort((a, b) => a.compareTo(b));
+                            final speciesSearchDelegate = SpeciesSearchDelegate(allSpeciesNames, _addSpeciesToSpecimen, _updateSpecimen);
                             final selectedSpecies = await showSearch(
                               context: context,
                               delegate: speciesSearchDelegate,

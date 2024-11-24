@@ -153,15 +153,15 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
 
   void _showSpeciesSearch(SpeciesRepository speciesRepository,
       InventoryRepository inventoryRepository) async {
-    final allSpecies = await loadSpeciesSearchData();
-    allSpecies.sort((a, b) => a.compareTo(b));
+    // final allSpecies = await loadSpeciesSearchData();
+    // allSpecies.sort((a, b) => a.compareTo(b));
 
     final isLargeScreen = MediaQuery.of(context).size.width > 600;
 
     final selectedSpecies = await showSearch(
       context: context,
       delegate: SpeciesSearchDelegate(
-          allSpecies, (speciesName) =>
+          allSpeciesNames, (speciesName) =>
           _addSpeciesToInventory(
               speciesName, speciesRepository, inventoryRepository),
           _updateSpeciesList),

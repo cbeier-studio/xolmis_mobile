@@ -109,6 +109,9 @@ void main() async {
 
   final themeMode = await getThemeMode();
 
+  allSpeciesNames = await loadSpeciesSearchData();
+  allSpeciesNames.sort((a, b) => a.compareTo(b));
+
   runApp(MyApp(
     themeMode: themeMode,
     inventoryRepository: inventoryRepository,
