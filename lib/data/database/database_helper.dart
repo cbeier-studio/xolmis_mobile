@@ -82,15 +82,6 @@ class DatabaseHelper {
         )
       ''');
     db.execute('''
-        CREATE TABLE pois (
-            id INTEGER PRIMARY KEY AUTOINCREMENT, 
-            speciesId INTEGER NOT NULL, 
-            longitude REAL NOT NULL, 
-            latitude REAL NOT NULL, 
-            FOREIGN KEY (speciesId) REFERENCES species(id) ON DELETE CASCADE '
-        )
-      ''');
-    db.execute('''
         CREATE TABLE weather (
             id INTEGER PRIMARY KEY AUTOINCREMENT, 
             inventoryId INTEGER NOT NULL, 
@@ -162,6 +153,15 @@ class DatabaseHelper {
           locality TEXT,
           speciesName TEXT,
           notes TEXT
+        )
+      ''');
+    db.execute('''
+        CREATE TABLE pois (
+            id INTEGER PRIMARY KEY AUTOINCREMENT, 
+            speciesId INTEGER NOT NULL, 
+            longitude REAL NOT NULL, 
+            latitude REAL NOT NULL, 
+            FOREIGN KEY (speciesId) REFERENCES species(id) ON DELETE CASCADE 
         )
       ''');
     db.execute('''
