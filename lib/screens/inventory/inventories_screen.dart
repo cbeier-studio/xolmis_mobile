@@ -38,9 +38,8 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
   late PoiRepository poiRepository;
   late VegetationRepository vegetationRepository;
   late WeatherRepository weatherRepository;
-  // bool _inventoriesLoaded = false;
   final _searchController = TextEditingController();
-  bool _showActive = true;
+  bool _isShowingActiveInventories = true;
   String _searchQuery = '';
 
   @override
@@ -52,13 +51,8 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     poiRepository = context.read<PoiRepository>();
     vegetationRepository = context.read<VegetationRepository>();
     weatherRepository = context.read<WeatherRepository>();
-    // Load the inventories
-    // if (!_inventoriesLoaded) {
-    //   Provider.of<InventoryProvider>(context, listen: false).fetchInventories();
-    //   _inventoriesLoaded = true;
-    // }
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
       Future.delayed(Duration.zero, ()
       {
         for (var inventory in inventoryProvider.activeInventories) {
@@ -111,7 +105,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
           );
         },
       ).then((newInventory) {
-        // Reload the inventory list
+        // Update the inventory list
         if (newInventory != null) {
           inventoryProvider.notifyListeners();
         }
@@ -121,7 +115,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
         context,
         MaterialPageRoute(builder: (context) => const AddInventoryScreen()),
       ).then((newInventory) {
-        // Reload the inventory list
+        // Update the inventory list
         if (newInventory != null) {
           inventoryProvider.notifyListeners();
         }
@@ -150,9 +144,6 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
             child: SearchBar(
               controller: _searchController,
               hintText: 'Procurar inventários...',
-              // backgroundColor: Theme.of(context).brightness == Brightness.light
-              //     ? WidgetStateProperty.all<Color>(Colors.deepPurple[50]!)
-              //     : WidgetStateProperty.all<Color>(Colors.grey[800]!),
               leading: const Icon(Icons.search_outlined),
               trailing: [
                 _searchController.text.isNotEmpty
@@ -188,10 +179,10 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                       ButtonSegment(value: true, label: Text('Ativos')),
                       ButtonSegment(value: false, label: Text('Encerrados')),
                     ],
-                    selected: {_showActive},
+                    selected: {_isShowingActiveInventories},
                     onSelectionChanged: (Set<bool> newSelection) {
                       setState(() {
-                        _showActive = newSelection.first;
+                        _isShowingActiveInventories = newSelection.first;
                       });
                       inventoryProvider.notifyListeners();
                     },
@@ -214,8 +205,8 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                           child: CircularProgressIndicator()
                       ),
                     );
-                  } else if (_showActive && inventoryProvider.activeInventories.isEmpty ||
-                      !_showActive && inventoryProvider.finishedInventories.isEmpty) {
+                  } else if (_isShowingActiveInventories && inventoryProvider.activeInventories.isEmpty ||
+                      !_isShowingActiveInventories && inventoryProvider.finishedInventories.isEmpty) {
                     return const Center(
                       child: Padding(
                           padding: EdgeInsets.all(16.0),
@@ -223,7 +214,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                       ),
                     );
                   } else {
-                    final filteredInventories = _filterInventories(_showActive
+                    final filteredInventories = _filterInventories(_isShowingActiveInventories
                         ? inventoryProvider.activeInventories
                         : inventoryProvider.finishedInventories);
                     return LayoutBuilder(
@@ -291,7 +282,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
 
                                                       return CircularProgressIndicator(
                                                         value: progress,
-                                                        backgroundColor: _showActive && inventory.duration > 0 ? Theme.of(context).brightness == Brightness.light
+                                                        backgroundColor: _isShowingActiveInventories && inventory.duration > 0 ? Theme.of(context).brightness == Brightness.light
                                                             ? Colors.grey[200]
                                                             : Colors.black : null,
                                                         valueColor: AlwaysStoppedAnimation<Color>(
@@ -312,7 +303,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                                       style: const TextStyle(fontWeight: FontWeight.bold),
                                                     ),
                                                     Text('${inventoryTypeFriendlyNames[inventory.type]}'),
-                                                    if (_showActive && inventory.duration > 0) Text('${inventory.duration} minutos de duração'),
+                                                    if (_isShowingActiveInventories && inventory.duration > 0) Text('${inventory.duration} minutos de duração'),
                                                     Selector<SpeciesProvider, int>(
                                                       selector: (context, speciesProvider) => speciesProvider.getSpeciesForInventory(inventory.id).length,
                                                       shouldRebuild: (previous, next) => previous != next,
@@ -323,7 +314,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                                   ],
                                                 ),
                                                 Visibility(
-                                                  visible: _showActive && inventory.duration > 0,
+                                                  visible: _isShowingActiveInventories && inventory.duration > 0,
                                                   child: IconButton(
                                                     icon: Icon(inventory.isPaused ? Theme.of(context).brightness == Brightness.light
                                                         ? Icons.play_arrow_outlined
@@ -360,7 +351,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                 return Dismissible(
                                     key: ValueKey(inventory.id),
                                     direction: DismissDirection.horizontal,
-                                    background: _showActive ? Container(
+                                    background: _isShowingActiveInventories ? Container(
                                       color: Colors.green,
                                       alignment: Alignment.centerLeft,
                                       padding: const EdgeInsets.only(left: 20.0),
@@ -396,7 +387,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                           },
                                         );
                                         // Drag to right
-                                      } else if (_showActive && direction == DismissDirection.startToEnd) {
+                                      } else if (_isShowingActiveInventories && direction == DismissDirection.startToEnd) {
                                         // Show confirmation dialog for finishing
                                         return await showDialog(
                                           context: context,
@@ -427,7 +418,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                         inventoryProvider.removeInventory(inventory.id);
 
                                         // Drag to right
-                                      } else if (_showActive && direction == DismissDirection.startToEnd) {
+                                      } else if (_isShowingActiveInventories && direction == DismissDirection.startToEnd) {
                                         // Finish the inventory
                                         inventory.stopTimer(inventoryRepository);
                                         inventoryProvider.updateInventory(inventory);
@@ -470,7 +461,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                             });
                                           },
                                           onInventoryPausedOrResumed: (inventory) => _onInventoryPausedOrResumed(inventory),
-                                          isHistory: !_showActive,
+                                          isHistory: !_isShowingActiveInventories,
                                         )
                                     )
                                 );
@@ -508,7 +499,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  _showActive ? ListTile(
+                  _isShowingActiveInventories ? ListTile(
                     leading: const Icon(Icons.flag_outlined),
                     title: const Text('Encerrar inventário'),
                     onTap: () {
@@ -544,7 +535,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                       );
                     },
                   ) : const SizedBox.shrink(),
-                  !_showActive ? ExpansionTile(
+                  !_isShowingActiveInventories ? ExpansionTile(
                       leading: const Icon(Icons.file_download_outlined),
                       title: const Text('Exportar inventário'),
                       children: [
@@ -566,7 +557,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                         ),
                       ]
                   ) : const SizedBox.shrink(),
-                  !_showActive ? ListTile(
+                  !_isShowingActiveInventories ? ListTile(
                     leading: const Icon(Icons.file_download_outlined),
                     title: const Text('Exportar todos os inventários'),
                     onTap: () {
@@ -656,10 +647,6 @@ class InventoryListItem extends StatelessWidget {
             leading: ValueListenableBuilder<double>(
               valueListenable: inventory.elapsedTimeNotifier,
               builder: (context, elapsedTime, child) {
-                // if (inventory == null) {
-                //   return const Icon(Icons.error_outlined);
-                // }
-
                 var progress = (inventory.isPaused || inventory.duration < 0)
                     ? null
                     : (elapsedTime / (inventory.duration * 60)).toDouble();

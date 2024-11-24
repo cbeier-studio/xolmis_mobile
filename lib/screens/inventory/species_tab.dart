@@ -73,14 +73,9 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
           inventoryRepository);
     }
 
-    // if (!widget.inventory.isFinished && widget.inventory.type == InventoryType.invCumulativeTime) {
-    //   _restartInventoryTimer(inventoryProvider);
-    // }
-
     _updateSpeciesList();
 
     speciesProvider.notifyListeners();
-    // inventoryProvider.notifyListeners();
   }
 
   void _showSpeciesAlreadyExistsMessage() {
@@ -123,7 +118,6 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
       }
       speciesProvider.loadSpeciesForInventory(inventory.id);
       speciesProvider.notifyListeners();
-      // inventoryProvider.notifyListeners();
     }
   }
 
@@ -134,7 +128,6 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     inventory.updateIsFinished(false);
     await inventoryProvider.updateInventoryElapsedTime(
         inventory.id, inventory.elapsedTime);
-    // await inventoryProvider.fetchInventories();
     inventory.startTimer(inventoryRepository);
   }
 
@@ -144,17 +137,8 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     speciesProvider.loadSpeciesForInventory(widget.inventory.id);
   }
 
-  // void _sortSpeciesList() {
-  //   // widget.inventory.speciesList.sort((a, b) => a.name.compareTo(b.name));
-  //   final speciesProvider = Provider.of<SpeciesProvider>(
-  //       context, listen: false);
-  //   speciesProvider.sortSpeciesForInventory(widget.inventory.id);
-  // }
-
   void _showSpeciesSearch(SpeciesRepository speciesRepository,
       InventoryRepository inventoryRepository) async {
-    // final allSpecies = await loadSpeciesSearchData();
-    // allSpecies.sort((a, b) => a.compareTo(b));
 
     final isLargeScreen = MediaQuery.of(context).size.width > 600;
 
@@ -296,10 +280,6 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                                   shrinkWrap: true,
                                   itemCount: speciesList.length,
                                   itemBuilder: (context, index) {
-                                    // print('speciesList: ${speciesList.length} ; AnimatedList: $index');
-                                    // if (index >= speciesList.length) {
-                                    //   return const SizedBox.shrink();
-                                    // }
                                     final species = speciesList[index];
                                     return SpeciesListItem(
                                       species: species,
@@ -315,9 +295,6 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                               shrinkWrap: true,
                               itemCount: speciesList.length,
                               itemBuilder: (context, index) {
-                                // if (index >= speciesList.length) {
-                                //   return const SizedBox.shrink();
-                                // }
                                 final species = speciesList[index];
                                 return SpeciesListItem(
                                   species: species,

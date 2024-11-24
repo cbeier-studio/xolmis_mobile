@@ -54,7 +54,6 @@ import 'screens/themes.dart';
 
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) {
-    // Realize uma operação mínima, como registrar um log
     debugPrint('Xolmis acordado pelo WorkManager');
     return Future.value(true);
   });
@@ -128,13 +127,7 @@ void main() async {
       ),
     ),
   );
-  // startForegroundService();
 }
-
-// void startForegroundService() async {
-//   ForegroundService().start();
-//   debugPrint("Started service");
-// }
 
 class MyApp extends StatelessWidget {
   final InventoryRepository inventoryRepository;
@@ -196,9 +189,6 @@ class MyApp extends StatelessWidget {
             theme: ThemeData.light(),
             darkTheme: ThemeData.dark(),
             themeMode: themeModel.themeMode,
-            // theme: ThemeData(
-            //   primarySwatch: Colors.deepPurple,
-            // ),
             home: MainScreen(),
           );
         },
@@ -220,8 +210,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int _selectedIndex = 0;
-  // final ValueNotifier<int> activeInventoriesCount = ValueNotifier<int>(0);
-  // final inventoryCountNotifier = InventoryCountNotifier();
+
   static final List<Widget Function(BuildContext, GlobalKey<ScaffoldState>)> _widgetOptions = <Widget Function(BuildContext, GlobalKey<ScaffoldState>)>[
         (context, scaffoldKey) => InventoriesScreen(scaffoldKey: scaffoldKey),
         (context, scaffoldKey) => NestsScreen(scaffoldKey: scaffoldKey),
@@ -233,9 +222,7 @@ class _MainScreenState extends State<MainScreen> {
     super.initState();
     scheduleWakeupTask();
     _requestNotificationPermission();
-    // WakelockPlus.enable();
-    // initializeBackgroundExecution();
-    // inventoryCountNotifier.updateCount();
+
     Provider.of<InventoryProvider>(context, listen: false).fetchInventories();
     Provider.of<NestProvider>(context, listen: false).fetchNests();
     Provider.of<SpecimenProvider>(context, listen: false).fetchSpecimens();
@@ -243,8 +230,6 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   void dispose() {
-    // WakelockPlus.disable();
-    // ForegroundService().stop();
     super.dispose();
   }
 
@@ -263,19 +248,13 @@ class _MainScreenState extends State<MainScreen> {
   Future<void> _requestNotificationPermission() async {
     final status = await Permission.notification.request();
     if (status.isGranted) {
-      // A permissão foi concedida
+      // Granted permission
     } else if (status.isDenied) {
-      // A permissão foi negada
+      // Denied permission
     } else if (status.isPermanentlyDenied) {
-      // A permissão foi negada permanentemente
+      // Permanently denied permission
     }
   }
-
-  // void _onItemTapped(int index) {
-  //   setState(() {
-  //     _selectedIndex = index;
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -329,21 +308,8 @@ class _MainScreenState extends State<MainScreen> {
       ),
     ];
 
-    // if (useFixedNavDrawer) {
-    //   return Row(
-    //     children: [
-    //       _buildNavigationDrawer(context),
-    //       Expanded(
-    //           child: _widgetOptions.elementAt(_selectedIndex).call(context, _scaffoldKey),
-    //       ),
-    //     ],
-    //   );
-    // } else {
       return Scaffold(
       key: _scaffoldKey,
-        // appBar: AppBar(
-        //   title: const Text('Xolmis'),
-        // ),
       drawer: _buildNavigationDrawer(context),
         body: Row(
           children: [
@@ -381,64 +347,7 @@ class _MainScreenState extends State<MainScreen> {
             ),
           ],
         ),
-        // bottomNavigationBar: useSideNavRail
-        //   ? null
-        //   : BottomNavigationBar(
-        //   items: <BottomNavigationBarItem>[
-        //     BottomNavigationBarItem(
-        //       icon: Selector<InventoryProvider, int>(
-        //         selector: (context, provider) => provider.inventoriesCount,
-        //         builder: (context, inventoriesCount, child) {
-        //           return inventoriesCount > 0
-        //               ? Badge.count(
-        //             count: inventoriesCount,
-        //             child: const Icon(Icons.list_alt_outlined),
-        //           )
-        //               : const Icon(Icons.list_alt_outlined);
-        //         },
-        //       ),
-        //       label: 'Inventários',
-        //     ),
-        //     BottomNavigationBarItem(
-        //       icon: Selector<NestProvider, int>(
-        //         selector: (context, provider) => provider.nestsCount,
-        //         builder: (context, nestsCount, child) {
-        //           return nestsCount > 0
-        //               ? Badge.count(
-        //             count: nestsCount,
-        //             child: const Icon(Icons.egg_outlined),
-        //           )
-        //               : const Icon(Icons.egg_outlined);
-        //         },
-        //       ),
-        //       label: 'Ninhos',
-        //     ),
-        //     BottomNavigationBarItem(
-        //       icon: Selector<SpecimenProvider, int>(
-        //         selector: (context, provider) => provider.specimensCount,
-        //         builder: (context, specimensCount, child) {
-        //           return specimensCount > 0
-        //               ? Badge.count(
-        //             backgroundColor: Colors.deepPurple[100],
-        //             textColor: Colors.deepPurple[800],
-        //             count: specimensCount,
-        //             child: const Icon(Icons.local_offer_outlined),
-        //           )
-        //               : const Icon(Icons.local_offer_outlined);
-        //         },
-        //       ),
-        //       label: 'Espécimes',
-        //     ),
-        //   ],
-        //   currentIndex: _selectedIndex,
-        //   selectedItemColor: Theme.of(context).brightness == Brightness.light
-        //       ? Colors.deepPurple
-        //       : Colors.deepPurpleAccent,
-        //   onTap: _onItemTapped,
-        // ),
-
     );
-      // }
   }
 
   NavigationDrawer _buildNavigationDrawer(BuildContext context) {
@@ -519,30 +428,6 @@ class _MainScreenState extends State<MainScreen> {
           label: const Text('Espécimes'),
           selectedIcon: const Icon(Icons.local_offer),
         ),
-        // const Padding(
-        //   padding: EdgeInsets.symmetric(horizontal: 16),
-        //   child: Divider(),
-        // ),
-        // ListTile(
-        //   leading: Theme.of(context).brightness == Brightness.light
-        //       ? const Icon(Icons.settings_outlined)
-        //       : const Icon(Icons.settings),
-        //   title: const Text('Configurações'),
-        //   onTap: () {
-        //     if (MediaQuery.sizeOf(context).width > 600) {
-        //       SideSheet.right(
-        //         context: context,
-        //         width: 400,
-        //         body: const SettingsScreen(),
-        //       );
-        //     } else {
-        //       Navigator.push(
-        //         context,
-        //         MaterialPageRoute(builder: (context) => const SettingsScreen()),
-        //       );
-        //     }
-        //   },
-        // ),
       ],
     );
   }

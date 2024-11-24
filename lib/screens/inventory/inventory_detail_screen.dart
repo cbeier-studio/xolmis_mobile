@@ -102,7 +102,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
           );
         },
       ).then((newVegetation) {
-        // Reload the inventory list
+        // Reload the vegetation list
         if (newVegetation != null) {
           Provider.of<VegetationProvider>(context, listen: false).getVegetationForInventory(widget.inventory.id);
         }
@@ -113,7 +113,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
         MaterialPageRoute(builder: (context) => AddVegetationDataScreen(inventory: widget.inventory),
         ),
       ).then((newVegetation) {
-        // Reload the inventory list
+        // Reload the vegetation list
         if (newVegetation != null) {
           Provider.of<VegetationProvider>(context, listen: false).getVegetationForInventory(widget.inventory.id);
         }
@@ -137,7 +137,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
           );
         },
       ).then((newWeather) {
-        // Reload the inventory list
+        // Reload the weather list
         if (newWeather != null) {
           Provider.of<WeatherProvider>(context, listen: false).getWeatherForInventory(widget.inventory.id);
         }
@@ -148,7 +148,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
         MaterialPageRoute(builder: (context) => AddWeatherScreen(inventory: widget.inventory),
         ),
       ).then((newWeather) {
-        // Reload the inventory list
+        // Reload the weather list
         if (newWeather != null) {
           Provider.of<WeatherProvider>(context, listen: false).getWeatherForInventory(widget.inventory.id);
         }
@@ -258,7 +258,6 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                 }
               },
               style: IconButton.styleFrom(
-                // backgroundColor: Colors.green,
                 foregroundColor: Theme.of(context).brightness == Brightness.light
                     ? Colors.white
                     : Colors.deepPurple,
@@ -311,7 +310,6 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                   : const SizedBox.shrink(),
               TabBar(
                 controller: _tabController,
-                // physics: const NeverScrollableScrollPhysics(),
                 tabs: [
                   Consumer<SpeciesProvider>(
                     builder: (context, speciesProvider, child) {
@@ -369,7 +367,6 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
       ),
       body: TabBarView(
         controller: _tabController,
-        // physics: const NeverScrollableScrollPhysics(),
         dragStartBehavior: DragStartBehavior.down,
         children: [
           SpeciesTab(
@@ -379,11 +376,9 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
           ),
           VegetationTab(
             inventory: widget.inventory,
-            // vegetationRepository: widget.vegetationRepository,
           ),
           WeatherTab(
             inventory: widget.inventory,
-            // weatherRepository: widget.weatherRepository,
           ),
         ],
       ),

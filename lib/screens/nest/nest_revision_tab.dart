@@ -119,8 +119,6 @@ class _NestRevisionsTabState extends State<NestRevisionsTab> with AutomaticKeepA
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  // Expanded(
-                  //     child:
                   ListTile(
                     leading: const Icon(Icons.delete_outlined, color: Colors.red,),
                     title: const Text('Apagar revisão de ninho', style: TextStyle(color: Colors.red),),
@@ -129,7 +127,6 @@ class _NestRevisionsTabState extends State<NestRevisionsTab> with AutomaticKeepA
                       Navigator.pop(context);
                     },
                   )
-                  // )
                 ],
               ),
             );

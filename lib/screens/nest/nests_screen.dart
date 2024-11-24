@@ -58,7 +58,7 @@ class _NestsScreenState extends State<NestsScreen> {
           );
         },
       ).then((newNest) {
-        // Reload the inventory list
+        // Reload the nest list
         if (newNest != null) {
           nestProvider.notifyListeners();
         }
@@ -68,7 +68,7 @@ class _NestsScreenState extends State<NestsScreen> {
         context,
         MaterialPageRoute(builder: (context) => const AddNestScreen()),
       ).then((newNest) {
-        // Reload the inventory list
+        // Reload the nest list
         if (newNest != null) {
           nestProvider.notifyListeners();
         }
@@ -97,7 +97,6 @@ class _NestsScreenState extends State<NestsScreen> {
             child: SearchBar(
               controller: _searchController,
               hintText: 'Procurar ninhos...',
-              // backgroundColor: WidgetStateProperty.all<Color>(Colors.deepPurple[50]!),
               leading: const Icon(Icons.search_outlined),
               trailing: [
                 _searchController.text.isNotEmpty

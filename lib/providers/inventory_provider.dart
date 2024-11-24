@@ -32,20 +32,15 @@ class InventoryProvider with ChangeNotifier {
   WeatherProvider get weatherProvider => _weatherProvider;
 
   InventoryProvider(this._inventoryRepository, this._speciesProvider, this._vegetationProvider, this._weatherProvider);
-  // {
-  //   // Add a listener to VegetationProvider
-  //   _vegetationProvider.addListener(_onVegetationListChanged);
-  // }
 
   Future<void> fetchInventories() async {
     _isLoading = true;
-    // notifyListeners();
     try {
       _inventories.clear();
       _inventoryMap.clear();
       final inventories = await _inventoryRepository.getInventories();
       _inventories.addAll(inventories);
-      notifyListeners();
+      // notifyListeners();
       for (var inventory in inventories) {
         _inventoryMap[inventory.id] = inventory; // Populate the inventories map
         await _speciesProvider.loadSpeciesForInventory(inventory.id);

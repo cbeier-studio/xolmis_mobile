@@ -56,7 +56,7 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
           );
         },
       ).then((newRevision) {
-        // Reload the inventory list
+        // Reload the nest revision list
         if (newRevision != null) {
           Provider.of<NestRevisionProvider>(context, listen: false).getRevisionForNest(widget.nest.id!);
         }
@@ -66,7 +66,7 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
         context,
         MaterialPageRoute(builder: (context) => AddNestRevisionScreen(nest: widget.nest)),
       ).then((newRevision) {
-        // Reload the inventory list
+        // Reload the nest revision list
         if (newRevision != null) {
           Provider.of<NestRevisionProvider>(context, listen: false).getRevisionForNest(widget.nest.id!);
         }
@@ -95,7 +95,7 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
           );
         },
       ).then((newEgg) {
-        // Reload the inventory list
+        // Reload the egg list
         if (newEgg != null) {
           Provider.of<EggProvider>(context, listen: false).getEggForNest(widget.nest.id!);
         }
@@ -110,7 +110,7 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
           initialSpeciesName: widget.nest.speciesName,)
         ),
       ).then((newEgg) {
-        // Reload the inventory list
+        // Reload the egg list
         if (newEgg != null) {
           Provider.of<EggProvider>(context, listen: false).getEggForNest(widget.nest.id!);
         }
@@ -176,7 +176,7 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
                     await showDialog<NestFateType>(
                       context: context,
                       builder: (context) => AlertDialog(
-                        title: const Text('Confirmar desativação'),
+                        title: const Text('Confirmar destino'),
                         content: DropdownButtonFormField<NestFateType>(
                           value: selectedNestFate,
                           decoration: const InputDecoration(
@@ -228,11 +228,11 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
                                   await Provider.of<NestProvider>(context, listen: false)
                                       .updateNest(widget.nest);
 
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text('Ninho desativado com sucesso!'),
-                                    ),
-                                  );
+                                  // ScaffoldMessenger.of(context).showSnackBar(
+                                  //   const SnackBar(
+                                  //     content: Text('Ninho desativado com sucesso!'),
+                                  //   ),
+                                  // );
 
                                   // Close screen of nest details
                                   Navigator.pop(context, selectedNestFate);
@@ -258,12 +258,10 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
                     );
                   },
                   style: IconButton.styleFrom(
-                    // backgroundColor: Colors.green,
                     foregroundColor: Theme.of(context).brightness == Brightness.light
                         ? Colors.white
                         : Colors.deepPurple,
                   ),
-                  // color: Colors.deepPurple,
                   icon: _isSubmitting
                       ? const SizedBox(
                     width: 24,
@@ -284,13 +282,6 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
                       widget.nest.speciesName!,
                       style: const TextStyle(fontStyle: FontStyle.italic),
                     ),
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.center,
-                    //   children: [
-                    //     Text('${widget.nest.support}'),
-                    //     Text(': ${widget.nest.heightAboveGround} m'),
-                    //   ],
-                    // ),
                     TabBar(
                       tabs: [
                         Consumer<NestRevisionProvider>(
@@ -334,8 +325,6 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
         body: Column(
           children: [
             ExpansionTile(
-              // backgroundColor: Colors.deepPurple[50],
-              // collapsedBackgroundColor: Colors.deepPurple[50],
               leading: const Icon(Icons.info_outlined),
               title: const Text('Informações do ninho'),
               children: [

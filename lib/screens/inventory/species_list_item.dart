@@ -58,7 +58,6 @@ class SpeciesListItemState extends State<SpeciesListItem> {
                 builder: (context, count, child) {
                   return Container(
                     decoration: BoxDecoration(
-                      // color: Colors.grey[200],
                       border: Border.all(
                         color: Colors.grey,
                         width: 1.0,
@@ -94,7 +93,7 @@ class SpeciesListItemState extends State<SpeciesListItem> {
                     width: 24,
                     height: 24,
                     child: CircularProgressIndicator(strokeWidth: 2),
-                  ) // Exibe o CircularProgressIndicator enquanto _isAddingPoi for true
+                  ) // Show a CircularProgressIndicator while _isAddingPoi is true
                       : pois.isNotEmpty
                       ? Badge.count(
                     backgroundColor: Colors.deepPurple[100],
@@ -124,17 +123,17 @@ class SpeciesListItemState extends State<SpeciesListItem> {
                       poiProvider.addPoi(context, widget.species.id!, poi);
                       poiProvider.notifyListeners();
 
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Row(
-                            children: [
-                              const Icon(Icons.check_circle_outlined, color: Colors.green),
-                              const SizedBox(width: 8),
-                              const Text('POI inserido com sucesso!'),
-                            ],
-                          ),
-                        ),
-                      );
+                      // ScaffoldMessenger.of(context).showSnackBar(
+                      //   SnackBar(
+                      //     content: Row(
+                      //       children: [
+                      //         const Icon(Icons.check_circle_outlined, color: Colors.green),
+                      //         const SizedBox(width: 8),
+                      //         const Text('POI inserido com sucesso!'),
+                      //       ],
+                      //     ),
+                      //   ),
+                      // );
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(

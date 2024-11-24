@@ -310,29 +310,3 @@ class Nest {
     );
   }
 }
-
-// extension NestExport on Nest {
-//   String toJson() {
-//     final data = {
-//       'id': id,
-//       'fieldNumber': fieldNumber,
-//       'speciesName': speciesName,
-//       'localityName': localityName,
-//       'longitude': longitude,
-//       'latitude': latitude,
-//       'support': support,
-//       'heightAboveGround': heightAboveGround,
-//       'foundTime': foundTime?.toIso8601String(),
-//       'lastTime': lastTime?.toIso8601String(),
-//       'nestFate': nestFate?.index,
-//       'male': male,
-//       'female': female,
-//       'helpers': helpers,
-//       'isActive': isActive,
-//       'revisionsList': revisionsList?.map((revision) => revision.toMap())
-//           .toList(),
-//       'eggsList': eggsList?.map((egg) => egg.toMap()).toList(),
-//     };
-//     return jsonEncode(data);
-//   }
-// }

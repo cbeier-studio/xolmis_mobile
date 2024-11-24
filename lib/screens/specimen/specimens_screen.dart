@@ -70,7 +70,7 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
         context,
         MaterialPageRoute(builder: (context) => const AddSpecimenScreen()),
       ).then((newSpecimen) {
-        // Reload the inventory list
+        // Reload the specimen list
         if (newSpecimen != null) {
           specimenProvider.notifyListeners();
         }
@@ -91,14 +91,6 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
             },
           ),
         ) : SizedBox.shrink(),
-        // actions: [
-        //   specimenProvider.specimens.isNotEmpty
-        //       ? IconButton(
-        //     icon: const Icon(Icons.file_download_outlined),
-        //     onPressed: () => exportAllSpecimensToJson(context),
-        //     tooltip: 'Exportar todos os espécimes',
-        //   ) : const SizedBox.shrink(),
-        // ],
       ),
       body: Column(
         children: [
@@ -107,7 +99,6 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
             child: SearchBar(
               controller: _searchController,
               hintText: 'Procurar espécimes...',
-              // backgroundColor: WidgetStateProperty.all<Color>(Colors.deepPurple[50]!),
               leading: const Icon(Icons.search_outlined),
               trailing: [
                 _searchController.text.isNotEmpty

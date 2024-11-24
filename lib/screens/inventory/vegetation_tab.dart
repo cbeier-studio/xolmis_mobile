@@ -116,8 +116,6 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  // Expanded(
-                  //     child:
                   ListTile(
                     leading: const Icon(Icons.delete_outlined, color: Colors.red,),
                     title: const Text('Apagar registro de vegetação', style: TextStyle(color: Colors.red),),
@@ -126,7 +124,6 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
                       Navigator.pop(context);
                     },
                   )
-                  // )
                 ],
               ),
             );

@@ -108,8 +108,6 @@ class _WeatherTabState extends State<WeatherTab> with AutomaticKeepAliveClientMi
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  // Expanded(
-                  //     child:
                   ListTile(
                     leading: const Icon(Icons.delete_outlined, color: Colors.red,),
                     title: const Text('Apagar registro do tempo', style: TextStyle(color: Colors.red),),
@@ -118,7 +116,6 @@ class _WeatherTabState extends State<WeatherTab> with AutomaticKeepAliveClientMi
                       Navigator.pop(context);
                     },
                   )
-                  // )
                 ],
               ),
             );

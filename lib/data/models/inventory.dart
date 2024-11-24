@@ -614,10 +614,12 @@ class Inventory with ChangeNotifier {
     notifyListeners();
   }
 
+  // Start the inventory timer
   Future<void> startTimer(InventoryRepository inventoryRepository) async {
     if (kDebugMode) {
       print('startTimer called');
     }
+    // If duration was not defined, do not start the timer
     if (duration == 0) {
       updateElapsedTime(0.0);
       return;
@@ -630,14 +632,15 @@ class Inventory with ChangeNotifier {
             inventoryRepository.updateInventoryElapsedTime(id, elapsedTime);
           }
 
+          // Update the elapsed time every 10 seconds
           elapsedTime += 10;
           elapsedTimeNotifier.value = elapsedTime;
           elapsedTimeNotifier.notifyListeners();
-
-          // if (elapsedTime % 5 == 0) {
           inventoryRepository.updateInventoryElapsedTime(id, elapsedTime);
-          // }
 
+          // if (elapsedTime % 5 == 0) {}
+
+          // If the inventory timer reach the goal, finish it automatically
           if (elapsedTime == duration * 60 && !isFinished) {
             _autoFinished = true;
             // inventoryRepository.updateInventoryElapsedTime(id, elapsedTime);
@@ -661,6 +664,7 @@ class Inventory with ChangeNotifier {
     notifyListeners();
   }
 
+  // Pause the inventory timer
   Future<void> pauseTimer(InventoryRepository inventoryRepository) async {
     if (kDebugMode) {
       print('pauseTimer called');
@@ -672,6 +676,7 @@ class Inventory with ChangeNotifier {
     inventoryRepository.updateInventory(this);
   }
 
+  // Resume the inventory timer
   Future<void> resumeTimer(InventoryRepository inventoryRepository) async {
     if (kDebugMode) {
       print('resumeTimer called');
@@ -684,6 +689,7 @@ class Inventory with ChangeNotifier {
     inventoryRepository.updateInventory(this);
   }
 
+  // Stop the timer and finish the inventory
   Future<void> stopTimer(InventoryRepository inventoryRepository) async {
     if (kDebugMode) {
       print('stopTimer called');
@@ -710,6 +716,7 @@ class Inventory with ChangeNotifier {
     notifyListeners();
   }
 
+  // Show notification when inventory was finished automatically
   Future<void> showNotification(
       FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin) async {
     const AndroidNotificationDetails androidPlatformChannelSpecifics =

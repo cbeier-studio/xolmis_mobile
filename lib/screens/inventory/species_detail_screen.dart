@@ -146,8 +146,6 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
                   child: Column(
                       children: [
                         ExpansionTile(
-                          // backgroundColor: Colors.deepPurple[50],
-                          // collapsedBackgroundColor: Colors.deepPurple[50],
                           leading: const Icon(Icons.info_outlined),
                           title: const Text('Informações da espécie'),
                           children: [
@@ -301,7 +299,6 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
           onDismissed: (direction) {
             // Delete the POI from database
             poiProvider.removePoi(widget.species.id!, poi.id!);
-            // poiProvider.notifyListeners();
           },
           child: PoiListItem(
             poi: poi,
