@@ -206,16 +206,16 @@ class _AddEggScreenState extends State<AddEggScreen> {
       try {
         await eggProvider.addEgg(context, widget.nest.id!, newEgg);
         Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Row(
-            children: [
-              Icon(Icons.check_circle_outlined, color: Colors.green),
-              SizedBox(width: 8),
-              Text('Ovo adicionado!'),
-            ],
-          ),
-          ),
-        );
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   const SnackBar(content: Row(
+        //     children: [
+        //       Icon(Icons.check_circle_outlined, color: Colors.green),
+        //       SizedBox(width: 8),
+        //       Text('Ovo adicionado!'),
+        //     ],
+        //   ),
+        //   ),
+        // );
       } catch (error) {
         if (kDebugMode) {
           print('Error adding egg: $error');

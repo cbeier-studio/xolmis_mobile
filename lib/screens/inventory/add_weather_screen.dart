@@ -180,16 +180,16 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
       try {
         await weatherProvider.addWeather(context, widget.inventory.id, weather);
         Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Row(
-            children: [
-              Icon(Icons.check_circle_outlined, color: Colors.green),
-              SizedBox(width: 8),
-              Text('Dados do tempo adicionados!'),
-            ],
-          ),
-          ),
-        );
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   const SnackBar(content: Row(
+        //     children: [
+        //       Icon(Icons.check_circle_outlined, color: Colors.green),
+        //       SizedBox(width: 8),
+        //       Text('Dados do tempo adicionados!'),
+        //     ],
+        //   ),
+        //   ),
+        // );
       } catch (error) {
         if (kDebugMode) {
           print('Error adding weather: $error');

@@ -246,16 +246,16 @@ class _AddSpecimenScreenState extends State<AddSpecimenScreen> {
       try {
         await specimenProvider.addSpecimen(newSpecimen);
         Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Row(
-            children: [
-              Icon(Icons.check_circle_outlined, color: Colors.green),
-              SizedBox(width: 8),
-              Text('Espécime adicionado!'),
-            ],
-          ),
-          ),
-        );
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   const SnackBar(content: Row(
+        //     children: [
+        //       Icon(Icons.check_circle_outlined, color: Colors.green),
+        //       SizedBox(width: 8),
+        //       Text('Espécime adicionado!'),
+        //     ],
+        //   ),
+        //   ),
+        // );
       } catch (error) {
         if (kDebugMode) {
           print('Error adding specimen: $error');

@@ -303,16 +303,16 @@ class _AddNestScreenState extends State<AddNestScreen> {
       try {
         await nestProvider.addNest(newNest);
         Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Row(
-            children: [
-              Icon(Icons.check_circle_outlined, color: Colors.green),
-              SizedBox(width: 8),
-              Text('Ninho adicionado!'),
-            ],
-          ),
-          ),
-        );
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   const SnackBar(content: Row(
+        //     children: [
+        //       Icon(Icons.check_circle_outlined, color: Colors.green),
+        //       SizedBox(width: 8),
+        //       Text('Ninho adicionado!'),
+        //     ],
+        //   ),
+        //   ),
+        // );
       } catch (error) {
         if (kDebugMode) {
           print('Error adding nest: $error');

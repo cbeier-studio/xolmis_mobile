@@ -222,16 +222,16 @@ class _AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
       try {
         await revisionProvider.addNestRevision(context, widget.nest.id!, newRevision);
         Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Row(
-            children: [
-              Icon(Icons.check_circle_outlined, color: Colors.green),
-              SizedBox(width: 8),
-              Text('Revisão de ninho adicionada!'),
-            ],
-          ),
-          ),
-        );
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   const SnackBar(content: Row(
+        //     children: [
+        //       Icon(Icons.check_circle_outlined, color: Colors.green),
+        //       SizedBox(width: 8),
+        //       Text('Revisão de ninho adicionada!'),
+        //     ],
+        //   ),
+        //   ),
+        // );
       } catch (error) {
         if (kDebugMode) {
           print('Error adding nest revision: $error');

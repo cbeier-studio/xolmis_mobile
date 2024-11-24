@@ -317,7 +317,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                                       selector: (context, speciesProvider) => speciesProvider.getSpeciesForInventory(inventory.id).length,
                                                       shouldRebuild: (previous, next) => previous != next,
                                                       builder: (context, speciesCount, child) {
-                                                        return Text('$speciesCount espécies');
+                                                        return Text('$speciesCount ${Intl.plural(speciesCount, one: 'espécie', other: 'espécies')}');
                                                       },
                                                     ),
                                                   ],

@@ -293,17 +293,17 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
 
       if (success) {
         // Inventory inserted successfully
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Row(
-              children: [
-                Icon(Icons.check_circle_outlined, color: Colors.green),
-                SizedBox(width: 8),
-                Text('Inventário inserido com sucesso.'),
-              ],
-            ),
-          ),
-        );
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   const SnackBar(
+        //     content: Row(
+        //       children: [
+        //         Icon(Icons.check_circle_outlined, color: Colors.green),
+        //         SizedBox(width: 8),
+        //         Text('Inventário inserido com sucesso.'),
+        //       ],
+        //     ),
+        //   ),
+        // );
         Navigator.pop(context); // Return to the previous screen
       } else {
         // Handle insertion error
