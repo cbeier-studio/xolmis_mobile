@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../data/models/inventory.dart';
 import '../data/database/repositories/inventory_repository.dart';
@@ -111,12 +110,6 @@ void _showMackinnonDialog(BuildContext context, Inventory inventory, InventoryRe
       );
     },
   );
-}
-
-Future<ThemeMode> getThemeMode() async {
-  final prefs = await SharedPreferences.getInstance();
-  final themeModeIndex = prefs.getInt('themeMode') ?? 0; // 0 is the default value for ThemeMode.system
-  return ThemeMode.values[themeModeIndex];
 }
 
 /// Determine the current position of the device.

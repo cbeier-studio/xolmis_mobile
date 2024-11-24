@@ -89,10 +89,8 @@ Future<void> main() async {
 
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    final themeMode = await getThemeMode();
     await tester.pumpWidget(
         MyApp(
-          themeMode: themeMode,
           inventoryRepository: inventoryRepository,
           speciesRepository: speciesRepository,
           poiRepository: poiRepository,

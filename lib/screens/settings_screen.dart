@@ -1,11 +1,13 @@
 import 'dart:core';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import '../data/database/database_helper.dart';
+import 'themes.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -80,6 +82,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             _themeMode = ThemeMode.light;
                           });
                           _saveSettings();
+                          Provider.of<ThemeModel>(context, listen: false).getThemeMode();
                           Navigator.pop(context);
                         },
                       ),
@@ -90,6 +93,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             _themeMode = ThemeMode.dark;
                           });
                           _saveSettings();
+                          Provider.of<ThemeModel>(context, listen: false).getThemeMode();
                           Navigator.pop(context);
                         },
                       ),
@@ -100,6 +104,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             _themeMode = ThemeMode.system;
                           });
                           _saveSettings();
+                          Provider.of<ThemeModel>(context, listen: false).getThemeMode();
                           Navigator.pop(context);
                         },
                       ),

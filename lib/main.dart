@@ -50,6 +50,7 @@ import 'screens/nest/nests_screen.dart';
 import 'screens/specimen/specimens_screen.dart';
 import 'screens/settings_screen.dart';
 import 'screens/utils.dart';
+import 'screens/themes.dart';
 
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) {
@@ -107,24 +108,26 @@ void main() async {
   final specimenRepository = SpecimenRepository(specimenDao);
   final appImageRepository = AppImageRepository(appImageDao);
 
-  final themeMode = await getThemeMode();
-
   allSpeciesNames = await loadSpeciesSearchData();
   allSpeciesNames.sort((a, b) => a.compareTo(b));
 
-  runApp(MyApp(
-    themeMode: themeMode,
-    inventoryRepository: inventoryRepository,
-    speciesRepository: speciesRepository,
-    poiRepository: poiRepository,
-    vegetationRepository: vegetationRepository,
-    weatherRepository: weatherRepository,
-    nestRepository: nestRepository,
-    nestRevisionRepository: nestRevisionRepository,
-    eggRepository: eggRepository,
-    specimenRepository: specimenRepository,
-    appImageRepository: appImageRepository,
-  ));
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => ThemeModel(),
+      child: MyApp(
+        inventoryRepository: inventoryRepository,
+        speciesRepository: speciesRepository,
+        poiRepository: poiRepository,
+        vegetationRepository: vegetationRepository,
+        weatherRepository: weatherRepository,
+        nestRepository: nestRepository,
+        nestRevisionRepository: nestRevisionRepository,
+        eggRepository: eggRepository,
+        specimenRepository: specimenRepository,
+        appImageRepository: appImageRepository,
+      ),
+    ),
+  );
   // startForegroundService();
 }
 
@@ -134,7 +137,6 @@ void main() async {
 // }
 
 class MyApp extends StatelessWidget {
-  final ThemeMode themeMode;
   final InventoryRepository inventoryRepository;
   final SpeciesRepository speciesRepository;
   final PoiRepository poiRepository;
@@ -148,7 +150,6 @@ class MyApp extends StatelessWidget {
 
   const MyApp({
     super.key,
-    required this.themeMode,
     required this.inventoryRepository,
     required this.speciesRepository,
     required this.poiRepository,
@@ -188,15 +189,19 @@ class MyApp extends StatelessWidget {
         Provider(create: (_) => vegetationRepository),
         Provider(create: (_) => weatherRepository),
       ],
-      child: MaterialApp(
-        title: 'Xolmis',
-        theme: ThemeData.light(),
-        darkTheme: ThemeData.dark(),
-        themeMode: themeMode,
-        // theme: ThemeData(
-        //   primarySwatch: Colors.deepPurple,
-        // ),
-        home: MainScreen(),
+      child: Consumer<ThemeModel>(
+        builder: (context, themeModel, child) {
+          return MaterialApp(
+            title: 'Xolmis',
+            theme: ThemeData.light(),
+            darkTheme: ThemeData.dark(),
+            themeMode: themeModel.themeMode,
+            // theme: ThemeData(
+            //   primarySwatch: Colors.deepPurple,
+            // ),
+            home: MainScreen(),
+          );
+        },
       ),
     );
   }
