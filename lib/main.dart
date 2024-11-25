@@ -3,12 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-// import 'package:flutter_background/flutter_background.dart';
 import 'package:side_sheet/side_sheet.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-// import 'package:wakelock_plus/wakelock_plus.dart';
-// import 'package:flutter_foreground_service/flutter_foreground_service.dart';
 
 import 'data/database/database_helper.dart';
 
@@ -52,6 +49,7 @@ import 'screens/settings_screen.dart';
 import 'screens/utils.dart';
 import 'screens/themes.dart';
 
+// Run an empty task just to maintain Xolmis awake
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) {
     debugPrint('Xolmis acordado pelo WorkManager');
@@ -64,14 +62,17 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Register the Xolmis license
   LicenseRegistry.addLicense(() async* {
     final license = await rootBundle.loadString('assets/license.txt');
     yield LicenseEntryWithLineBreaks(['xolmis'], license);
   });
+  // Start the work manager
   Workmanager().initialize(
     callbackDispatcher,
     isInDebugMode: false,
   );
+  // Start the notification service
   const AndroidInitializationSettings initializationSettingsAndroid =
     AndroidInitializationSettings('@drawable/ic_notification');
   const DarwinInitializationSettings initializationSettingsIOS =
@@ -80,6 +81,7 @@ void main() async {
       android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
+  // Initialize the database
   await DatabaseHelper().initDatabase();
 
   // Create the DAOs
@@ -107,6 +109,7 @@ void main() async {
   final specimenRepository = SpecimenRepository(specimenDao);
   final appImageRepository = AppImageRepository(appImageDao);
 
+  // Preload the species names list
   allSpeciesNames = await loadSpeciesSearchData();
   allSpeciesNames.sort((a, b) => a.compareTo(b));
 

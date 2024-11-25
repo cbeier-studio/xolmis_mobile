@@ -123,6 +123,7 @@ flutter_icons:
   ios: true
   image_path_android: "assets/xolmis_icon.png"
   image_path_ios: "assets/xolmis_icon.png"
+  adaptive_icon_background: "#ffffff"
   adaptive_icon_foreground: "assets/xolmis_icon.png"
   adaptive_icon_foreground_inset: 16
   adaptive_icon_monochrome: "assets/xolmis_icon_monochrome.png"
