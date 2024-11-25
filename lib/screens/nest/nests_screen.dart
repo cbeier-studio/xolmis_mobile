@@ -145,186 +145,155 @@ class _NestsScreenState extends State<NestsScreen> {
             ),
           ),
           Expanded(
-          child: Consumer<NestProvider>(
-              builder: (context, nestProvider, child) {
-                final filteredNests = _filterNests(_showActive
-                    ? nestProvider.activeNests
-                    : nestProvider.inactiveNests);
+            child: Consumer<NestProvider>(
+                builder: (context, nestProvider, child) {
+                  final filteredNests = _filterNests(_showActive
+                      ? nestProvider.activeNests
+                      : nestProvider.inactiveNests);
 
-                if (_showActive && nestProvider.activeNests.isEmpty ||
-                    !_showActive && nestProvider.inactiveNests.isEmpty) {
-                  return const Center(
-                    child: Text('Nenhum ninho encontrado.'),
-                  );
-                }
+                  if (_showActive && nestProvider.activeNests.isEmpty ||
+                      !_showActive && nestProvider.inactiveNests.isEmpty) {
+                    return const Center(
+                      child: Text('Nenhum ninho encontrado.'),
+                    );
+                  }
 
-                return RefreshIndicator(
-                  onRefresh: () async {
-                    await nestProvider.fetchNests();
-                  },
-                  child: LayoutBuilder(
-                      builder: (BuildContext context, BoxConstraints constraints) {
-                        final screenWidth = constraints.maxWidth;
-                        final isLargeScreen = screenWidth > 600;
+                  return RefreshIndicator(
+                    onRefresh: () async {
+                      await nestProvider.fetchNests();
+                    },
+                    child: LayoutBuilder(
+                        builder: (BuildContext context, BoxConstraints constraints) {
+                          final screenWidth = constraints.maxWidth;
+                          final isLargeScreen = screenWidth > 600;
 
-                        if (isLargeScreen) {
-                          return Align(
-                            alignment: Alignment.topCenter,
-                            child: ConstrainedBox(
-                              constraints: const BoxConstraints(maxWidth: 840),
-                              child: SingleChildScrollView(
-                                child: GridView.builder(
-                                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2,
-                                    childAspectRatio: 3.0,
-                                  ),
-                                shrinkWrap: true,
-                                itemCount: filteredNests.length,
-                                itemBuilder: (context, index) {
-                                  final nest = filteredNests[index];
-                                  return GridTile(
-                                    child: InkWell(
-                                      onLongPress: () => _showBottomSheet(context, nest),
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => NestDetailScreen(
-                                              nest: nest,
-                                            ),
-                                          ),
-                                        ).then((result) {
-                                          if (result == true) {
-                                            nestProvider.notifyListeners();
-                                          }
-                                        });
-                                      },
-                                      child: Card.filled(
-                                  child: Padding(
-                                        padding: const EdgeInsets.all(16.0),
-                                        child: Row(
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
-                                              child: nest.nestFate == NestFateType.fatSuccess
-                                                  ? const Icon(Icons.check_circle, color: Colors.green)
-                                                  : nest.nestFate == NestFateType.fatLost
-                                                  ? const Icon(Icons.cancel, color: Colors.red)
-                                                  : const Icon(Icons.help, color: Colors.grey),
-                                            ),
-                                            Column(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  nest.fieldNumber!,
-                                                  style: const TextStyle(fontWeight: FontWeight.bold),
-                                                ),
-                                                Text(
-                                                  nest.speciesName!,
-                                                  style: const TextStyle(fontStyle: FontStyle.italic),
-                                                ),
-                                                Text(nest.localityName!),
-                                                Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(nest.foundTime!)),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      ),
+                          if (isLargeScreen) {
+                            return SingleChildScrollView(
+                              child: Align(
+                                alignment: Alignment.topCenter,
+                                child: ConstrainedBox(
+                                  constraints: const BoxConstraints(maxWidth: 840),
+                                  child: GridView.builder(
+                                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2,
+                                      childAspectRatio: 3.0,
                                     ),
-                                  );
-                                },
-                              ),
-                              ),
-                            ),
-                          );
-                        } else {
-                          return ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: filteredNests.length,
-                            itemBuilder: (context, index) {
-                              final nest = filteredNests[index];
-                              return Dismissible(
-                                key: Key(nest.id.toString()),
-                                direction: DismissDirection.endToStart,
-                                background: Container(
-                                  color: Colors.red,
-                                  alignment: Alignment.centerRight,
-                                  padding: const EdgeInsets.only(right: 20.0),
-                                  child: const Icon(Icons.delete_outlined, color: Colors.white),
-                                ),
-                                confirmDismiss: (direction) {
-                                  return showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title: const Text('Confirmar Exclusão'),
-                                        content: const Text(
-                                            'Tem certeza que deseja excluir este ninho?'),
-                                        actions: <Widget>[
-                                          TextButton(
-                                            child: const Text('Cancelar'),
-                                            onPressed: () {
-                                              Navigator.of(context).pop(false);
-                                            },
-                                          ),
-                                          TextButton(child: const Text('Excluir'),
-                                            onPressed: () {
-                                              Navigator.of(context).pop(true);
-                                            },
-                                          ),
-                                        ],
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemCount: filteredNests.length,
+                                    itemBuilder: (context, index) {
+                                      final nest = filteredNests[index];
+                                      return GridTile(
+                                        child: InkWell(
+                                          onLongPress: () => _showBottomSheet(context, nest),
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => NestDetailScreen(
+                                                  nest: nest,
+                                                ),
+                                              ),
+                                            ).then((result) {
+                                              if (result == true) {
+                                                nestProvider.notifyListeners();
+                                              }
+                                            });
+                                          },
+                                          child: NestGridItem(nest: nest),
+                                        ),
                                       );
                                     },
-                                  );
-                                },
-                                onDismissed: (direction) {
-                                  nestProvider.removeNest(nest);
-                                },
-                                child: ListTile(
-                                  title: Text(nest.fieldNumber!),
-                                  subtitle: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        nest.speciesName!,
-                                        style: const TextStyle(fontStyle: FontStyle.italic),
-                                      ),
-                                      Text(nest.localityName!),
-                                      Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(nest.foundTime!)),
-                                    ],
                                   ),
-                                  leading: nest.nestFate == NestFateType.fatSuccess
-                                      ? const Icon(Icons.check_circle, color: Colors.green)
-                                      : nest.nestFate == NestFateType.fatLost
-                                      ? const Icon(Icons.cancel, color: Colors.red)
-                                      : const Icon(Icons.help, color: Colors.grey),
-                                  onLongPress: () => _showBottomSheet(context, nest),
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => NestDetailScreen(
-                                          nest: nest,
-                                        ),
-                                      ),
-                                    ).then((result) {
-                                      if (result == true) {
-                                        nestProvider.notifyListeners();
-                                      }
-                                    });
-                                  },
                                 ),
-                              );
-                            },
-                          );
+                              ),
+                            );
+                          } else {
+                            return ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: filteredNests.length,
+                              itemBuilder: (context, index) {
+                                final nest = filteredNests[index];
+                                return Dismissible(
+                                  key: Key(nest.id.toString()),
+                                  direction: DismissDirection.endToStart,
+                                  background: Container(
+                                    color: Colors.red,
+                                    alignment: Alignment.centerRight,
+                                    padding: const EdgeInsets.only(right: 20.0),
+                                    child: const Icon(Icons.delete_outlined, color: Colors.white),
+                                  ),
+                                  confirmDismiss: (direction) {
+                                    return showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: const Text('Confirmar Exclusão'),
+                                          content: const Text(
+                                              'Tem certeza que deseja excluir este ninho?'),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              child: const Text('Cancelar'),
+                                              onPressed: () {
+                                                Navigator.of(context).pop(false);
+                                              },
+                                            ),
+                                            TextButton(child: const Text('Excluir'),
+                                              onPressed: () {
+                                                Navigator.of(context).pop(true);
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                  onDismissed: (direction) {
+                                    nestProvider.removeNest(nest);
+                                  },
+                                  child: ListTile(
+                                    title: Text(nest.fieldNumber!),
+                                    subtitle: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          nest.speciesName!,
+                                          style: const TextStyle(fontStyle: FontStyle.italic),
+                                        ),
+                                        Text(nest.localityName!),
+                                        Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(nest.foundTime!)),
+                                      ],
+                                    ),
+                                    leading: nest.nestFate == NestFateType.fatSuccess
+                                        ? const Icon(Icons.check_circle, color: Colors.green)
+                                        : nest.nestFate == NestFateType.fatLost
+                                        ? const Icon(Icons.cancel, color: Colors.red)
+                                        : const Icon(Icons.help, color: Colors.grey),
+                                    onLongPress: () => _showBottomSheet(context, nest),
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => NestDetailScreen(
+                                            nest: nest,
+                                          ),
+                                        ),
+                                      ).then((result) {
+                                        if (result == true) {
+                                          nestProvider.notifyListeners();
+                                        }
+                                      });
+                                    },
+                                  ),
+                                );
+                              },
+                            );
+                          }
                         }
-                      }
-                  ),
-                );
-              }
-          ),
+                    ),
+                  );
+                }
+            ),
           ),
         ],
       ),
@@ -422,6 +391,56 @@ class _NestsScreenState extends State<NestsScreen> {
           },
         );
       },
+    );
+  }
+}
+
+class NestGridItem extends StatelessWidget {
+  const NestGridItem({
+    super.key,
+    required this.nest,
+  });
+
+  final Nest nest;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card.filled(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Wrap (
+          children: [
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
+                  child: nest.nestFate == NestFateType.fatSuccess
+                      ? const Icon(Icons.check_circle, color: Colors.green)
+                      : nest.nestFate == NestFateType.fatLost
+                      ? const Icon(Icons.cancel, color: Colors.red)
+                      : const Icon(Icons.help, color: Colors.grey),
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      nest.fieldNumber!,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      nest.speciesName!,
+                      style: const TextStyle(fontStyle: FontStyle.italic),
+                    ),
+                    Text(nest.localityName!),
+                    Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(nest.foundTime!)),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

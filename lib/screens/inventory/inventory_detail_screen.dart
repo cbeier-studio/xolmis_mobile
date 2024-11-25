@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import '../../data/models/inventory.dart';
 import '../../data/database/repositories/inventory_repository.dart';
@@ -154,47 +155,6 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
         }
       });
     }
-  }
-
-  void _showFloatingMenu(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return BottomSheet(
-          onClosing: () {},
-          builder: (BuildContext context) {
-            return Container(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  ListTile(
-                    leading: Theme.of(context).brightness == Brightness.light
-                        ? const Icon(Icons.local_florist_outlined)
-                        : const Icon(Icons.local_florist),
-                    title: const Text('Adicionar dados de vegetação'),
-                    onTap: () {
-                      Navigator.pop(context);
-                      _showAddVegetationScreen(context);
-                    },
-                  ),
-                  ListTile(
-                    leading: Theme.of(context).brightness == Brightness.light
-                        ? const Icon(Icons.wb_sunny_outlined)
-                        : const Icon(Icons.wb_sunny),
-                    title: const Text('Adicionar dados do tempo'),
-                    onTap: () {
-                      Navigator.pop(context);
-                      _showAddWeatherScreen(context);
-                    },
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
   }
 
   @override
@@ -382,11 +342,30 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _showFloatingMenu(context);
-        },
-        child: const Icon(Icons.add_outlined),
+      floatingActionButton: SpeedDial(
+        icon: Icons.add_outlined,
+        activeIcon: Icons.close_outlined,
+        spaceBetweenChildren: 8.0,
+        children: [
+          SpeedDialChild(
+            child: Theme.of(context).brightness == Brightness.light
+                ? const Icon(Icons.local_florist_outlined)
+                : const Icon(Icons.local_florist),
+            label: 'Dados de vegetação',
+            onTap: () {
+              _showAddVegetationScreen(context);
+            },
+          ),
+          SpeedDialChild(
+            child: Theme.of(context).brightness == Brightness.light
+                ? const Icon(Icons.wb_sunny_outlined)
+                : const Icon(Icons.wb_sunny),
+            label: 'Dados do tempo',
+            onTap: () {
+              _showAddWeatherScreen(context);
+            },
+          ),
+        ],
       ),
     );
   }

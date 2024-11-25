@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import '../../data/models/nest.dart';
 import '../../providers/nest_provider.dart';
@@ -116,47 +117,6 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
         }
       });
     }
-  }
-
-  void _showFloatingMenu(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return BottomSheet(
-          onClosing: () {},
-          builder: (BuildContext context) {
-            return Container(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  ListTile(
-                    leading: Theme.of(context).brightness == Brightness.light
-                        ? const Icon(Icons.beenhere_outlined)
-                        : const Icon(Icons.beenhere),
-                    title: const Text('Adicionar revisão de ninho'),
-                    onTap: () {
-                      Navigator.pop(context);
-                      _showAddRevisionScreen(context);
-                    },
-                  ),
-                  ListTile(
-                    leading: Theme.of(context).brightness == Brightness.light
-                        ? const Icon(Icons.egg_outlined)
-                        : const Icon(Icons.egg),
-                    title: const Text('Adicionar ovo'),
-                    onTap: () {
-                      Navigator.pop(context);
-                      _showAddEggScreen(context);
-                    },
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
   }
 
   @override
@@ -369,11 +329,30 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
           ],
         ),
         floatingActionButton: widget.nest.isActive
-            ? FloatingActionButton(
-          onPressed: () {
-            _showFloatingMenu(context);
-          },
-          child: const Icon(Icons.add_outlined),
+            ? SpeedDial(
+          icon: Icons.add_outlined,
+          activeIcon: Icons.close_outlined,
+          spaceBetweenChildren: 8.0,
+          children: [
+            SpeedDialChild(
+              child: Theme.of(context).brightness == Brightness.light
+                  ? const Icon(Icons.beenhere_outlined)
+                  : const Icon(Icons.beenhere),
+              label: 'Revisão',
+              onTap: () {
+                _showAddRevisionScreen(context);
+              },
+            ),
+            SpeedDialChild(
+              child: Theme.of(context).brightness == Brightness.light
+                  ? const Icon(Icons.egg_outlined)
+                  : const Icon(Icons.egg),
+              label: 'Ovo',
+              onTap: () {
+                _showAddEggScreen(context);
+              },
+            ),
+          ],
         )
             : null,
       ),

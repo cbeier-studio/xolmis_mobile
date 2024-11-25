@@ -269,12 +269,27 @@ class _MainScreenState extends State<MainScreen> {
         icon: Selector<InventoryProvider, int>(
           selector: (context, provider) => provider.inventoriesCount,
           builder: (context, inventoriesCount, child) {
-            return inventoriesCount > 0
-                ? Badge.count(
-              count: inventoriesCount,
-              child: const Icon(Icons.list_alt_outlined),
-            )
-                : const Icon(Icons.list_alt_outlined);
+            return Visibility(
+              visible: inventoriesCount > 0,
+              replacement: const Icon(Icons.list_alt_outlined),
+              child: Badge.count(
+                count: inventoriesCount,
+                child: const Icon(Icons.list_alt_outlined),
+              ),
+            );
+          },
+        ),
+        selectedIcon: Selector<InventoryProvider, int>(
+          selector: (context, provider) => provider.inventoriesCount,
+          builder: (context, inventoriesCount, child) {
+            return Visibility(
+              visible: inventoriesCount > 0,
+              replacement: const Icon(Icons.list_alt),
+              child: Badge.count(
+                count: inventoriesCount,
+                child: const Icon(Icons.list_alt),
+              ),
+            );
           },
         ),
         label: Text('Inventários'),
@@ -283,12 +298,27 @@ class _MainScreenState extends State<MainScreen> {
         icon: Selector<NestProvider, int>(
           selector: (context, provider) => provider.nestsCount,
           builder: (context, nestsCount, child) {
-            return nestsCount > 0
-                ? Badge.count(
-              count: nestsCount,
-              child: const Icon(Icons.egg_outlined),
-            )
-                : const Icon(Icons.egg_outlined);
+            return Visibility(
+              visible: nestsCount > 0,
+              replacement: const Icon(Icons.egg_outlined),
+              child: Badge.count(
+                count: nestsCount,
+                child: const Icon(Icons.egg_outlined),
+              ),
+            );
+          },
+        ),
+        selectedIcon: Selector<NestProvider, int>(
+          selector: (context, provider) => provider.nestsCount,
+          builder: (context, nestsCount, child) {
+            return Visibility(
+              visible: nestsCount > 0,
+              replacement: const Icon(Icons.egg),
+              child: Badge.count(
+                count: nestsCount,
+                child: const Icon(Icons.egg),
+              ),
+            );
           },
         ),
         label: Text('Ninhos'),
@@ -297,14 +327,31 @@ class _MainScreenState extends State<MainScreen> {
         icon: Selector<SpecimenProvider, int>(
           selector: (context, provider) => provider.specimensCount,
           builder: (context, specimensCount, child) {
-            return specimensCount > 0
-                ? Badge.count(
-              backgroundColor: Colors.deepPurple[100],
-              textColor: Colors.deepPurple[800],
-              count: specimensCount,
-              child: const Icon(Icons.local_offer_outlined),
-            )
-                : const Icon(Icons.local_offer_outlined);
+            return Visibility(
+              visible: specimensCount > 0,
+              replacement: const Icon(Icons.local_offer_outlined),
+              child: Badge.count(
+                backgroundColor: Colors.deepPurple[100],
+                textColor: Colors.deepPurple[800],
+                count: specimensCount,
+                child: const Icon(Icons.local_offer_outlined),
+              ),
+            );
+          },
+        ),
+        selectedIcon: Selector<SpecimenProvider, int>(
+          selector: (context, provider) => provider.specimensCount,
+          builder: (context, specimensCount, child) {
+            return Visibility(
+              visible: specimensCount > 0,
+              replacement: const Icon(Icons.local_offer),
+              child: Badge.count(
+                backgroundColor: Colors.deepPurple[100],
+                textColor: Colors.deepPurple[800],
+                count: specimensCount,
+                child: const Icon(Icons.local_offer),
+              ),
+            );
           },
         ),
         label: Text('Espécimes'),

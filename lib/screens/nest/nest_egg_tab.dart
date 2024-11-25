@@ -11,8 +11,6 @@ import '../../providers/app_image_provider.dart';
 
 import '../app_image_screen.dart';
 
-import 'egg_list_item.dart';
-
 class EggsTab extends StatefulWidget {
   final Nest nest;
 
@@ -134,16 +132,17 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
   }
 
   Widget _buildGridView(List<Egg> eggList) {
-    return Align(
+    return SingleChildScrollView(
+      child: Align(
       alignment: Alignment.topCenter,
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 840),
-        child: SingleChildScrollView(
-          child: GridView.builder(
+        child: GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               childAspectRatio: 3.5,
             ),
+            physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: eggList.length,
             itemBuilder: (context, index) {
@@ -162,58 +161,7 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
                       ),
                     );
                   },
-                  child: Card.filled(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
-                            child: FutureBuilder<List<AppImage>>(
-                              future: Provider.of<AppImageProvider>(context, listen: false)
-                                  .fetchImagesForEgg(egg.id!),
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState == ConnectionState.waiting) {
-                                  return const CircularProgressIndicator();
-                                } else if (snapshot.hasError) {
-                                  return const Icon(Icons.error);
-                                } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                                  return ClipRRect(
-                                    borderRadius: BorderRadius.circular(0),
-                                    child: Image.file(
-                                      File(snapshot.data!.first.imagePath),
-                                      width: 50,
-                                      height: 50,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  );
-                                } else {
-                                  return const Icon(Icons.hide_image_outlined);
-                                }
-                              },
-                            ),
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment
-                                .start,
-                            children: [
-                              Text(
-                                egg.fieldNumber!,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                egg.speciesName!,
-                                style: const TextStyle(fontStyle: FontStyle.italic),
-                              ),
-                              Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(egg.sampleTime!)),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                  child: EggGridItem(egg: egg),
                 ),
               );
             },
@@ -234,6 +182,139 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
           onLongPress: () => _showBottomSheet(context, egg),
         );
       },
+    );
+  }
+}
+
+class EggGridItem extends StatelessWidget {
+  const EggGridItem({
+    super.key,
+    required this.egg,
+  });
+
+  final Egg egg;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card.filled(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
+              child: FutureBuilder<List<AppImage>>(
+                future: Provider.of<AppImageProvider>(context, listen: false)
+                    .fetchImagesForEgg(egg.id!),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return const Icon(Icons.error);
+                  } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                    return ClipRRect(
+                      borderRadius: BorderRadius.circular(0),
+                      child: Image.file(
+                        File(snapshot.data!.first.imagePath),
+                        width: 50,
+                        height: 50,
+                        fit: BoxFit.cover,
+                      ),
+                    );
+                  } else {
+                    return const Icon(Icons.hide_image_outlined);
+                  }
+                },
+              ),
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment
+                  .start,
+              children: [
+                Text(
+                  egg.fieldNumber!,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  egg.speciesName!,
+                  style: const TextStyle(fontStyle: FontStyle.italic),
+                ),
+                Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(egg.sampleTime!)),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class EggListItem extends StatefulWidget {
+  final Egg egg;
+  final VoidCallback onLongPress;
+
+  const EggListItem({
+    super.key,
+    required this.egg,
+    required this.onLongPress,
+  });
+
+  @override
+  EggListItemState createState() => EggListItemState();
+}
+
+class EggListItemState extends State<EggListItem> {
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: FutureBuilder<List<AppImage>>(
+        future: Provider.of<AppImageProvider>(context, listen: false)
+            .fetchImagesForEgg(widget.egg.id ?? 0),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const CircularProgressIndicator();
+          } else if (snapshot.hasError) {
+            return const Icon(Icons.error);
+          } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+            return ClipRRect(
+              borderRadius: BorderRadius.circular(0),
+              child: Image.file(
+                File(snapshot.data!.first.imagePath),
+                width: 50,
+                height: 50,
+                fit: BoxFit.cover,
+              ),
+            );
+          } else {
+            return const Icon(Icons.hide_image_outlined);
+          }
+        },
+      ),
+      title: Text('${widget.egg.fieldNumber}'),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            widget.egg.speciesName!,
+            style: const TextStyle(fontStyle: FontStyle.italic),
+          ),
+          Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(widget.egg.sampleTime!)),
+        ],
+      ),
+      onLongPress: widget.onLongPress,
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AppImageScreen(
+              eggId: widget.egg.id,
+            ),
+          ),
+        );
+      },
+
     );
   }
 }

@@ -134,7 +134,8 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
   }
 
   Widget _buildGridView(List<Vegetation> vegetationList) {
-    return Align(
+    return SingleChildScrollView(
+        child: Align(
       alignment: Alignment.topCenter,
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 840),
@@ -142,8 +143,9 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
           child: GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              childAspectRatio: 3.0,
+              childAspectRatio: 2.8,
             ),
+            physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: vegetationList.length,
             itemBuilder: (context, index) {
@@ -162,40 +164,14 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
                       ),
                     );
                   },
-                  child: Card.filled(
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
-                            child: const Icon(Icons.local_florist_outlined),
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                DateFormat('dd/MM/yyyy HH:mm:ss').format(vegetation.sampleTime!),
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              Text('${vegetation.latitude}; ${vegetation.longitude}'),
-                              Text('Herbáceas: ${vegetation.herbsDistribution?.index ?? 0}; ${vegetation.herbsProportion}%; ${vegetation.herbsHeight} cm'),
-                              Text('Arbustos: ${vegetation.shrubsDistribution?.index ?? 0}; ${vegetation.shrubsProportion}%; ${vegetation.shrubsHeight} cm'),
-                              Text('Árvores: ${vegetation.treesDistribution?.index ?? 0}; ${vegetation.treesProportion}%; ${vegetation.treesHeight} cm'),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                  child: VegetationGridItem(vegetation: vegetation),
                 ),
               );
             },
           ),
         ),
       ),
+        ),
     );
   }
 
@@ -211,6 +187,51 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
               _showBottomSheet(context, vegetation),
         );
       },
+    );
+  }
+}
+
+class VegetationGridItem extends StatelessWidget {
+  const VegetationGridItem({
+    super.key,
+    required this.vegetation,
+  });
+
+  final Vegetation vegetation;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card.filled(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
+        child: Wrap (
+          children: [
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
+                  child: const Icon(Icons.local_florist_outlined),
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      DateFormat('dd/MM/yyyy HH:mm:ss').format(vegetation.sampleTime!),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Text('${vegetation.latitude}; ${vegetation.longitude}'),
+                    Text('Herbáceas: ${vegetation.herbsDistribution?.index ?? 0}; ${vegetation.herbsProportion}%; ${vegetation.herbsHeight} cm'),
+                    Text('Arbustos: ${vegetation.shrubsDistribution?.index ?? 0}; ${vegetation.shrubsProportion}%; ${vegetation.shrubsHeight} cm'),
+                    Text('Árvores: ${vegetation.treesDistribution?.index ?? 0}; ${vegetation.treesProportion}%; ${vegetation.treesHeight} cm'),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

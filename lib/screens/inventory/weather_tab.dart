@@ -3,7 +3,6 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../data/models/inventory.dart';
 import '../../providers/weather_provider.dart';
-import 'weather_list_item.dart';
 
 class WeatherTab extends StatefulWidget {
   final Inventory inventory;
@@ -126,16 +125,17 @@ class _WeatherTabState extends State<WeatherTab> with AutomaticKeepAliveClientMi
   }
 
   Widget _buildGridView(List<Weather> weatherList) {
-    return Align(
+    return SingleChildScrollView(
+        child: Align(
       alignment: Alignment.topCenter,
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 840),
-        child: SingleChildScrollView(
-          child: GridView.builder(
+        child: GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              childAspectRatio: 2.8,
+              childAspectRatio: 3.8,
             ),
+            physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: weatherList.length,
             itemBuilder: (context, index) {
@@ -147,40 +147,13 @@ class _WeatherTabState extends State<WeatherTab> with AutomaticKeepAliveClientMi
                   // onTap: () {
                   //
                   // },
-                  child: Card.filled(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
-                            child: const Icon(Icons.wb_sunny_outlined),
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                DateFormat('dd/MM/yyyy HH:mm:ss').format(weather.sampleTime!),
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              Text('Nebulosidade: ${weather.cloudCover}%'),
-                              Text('Precipitação: ${precipitationTypeFriendlyNames[weather.precipitation]}'),
-                              Text('Temperatura: ${weather.temperature} °C'),
-                              Text('Vento: ${weather.windSpeed} bft'),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                  child: WeatherGridItem(weather: weather),
                 ),
               );
             },
-          ),
         ),
       ),
+    ),
     );
   }
 
@@ -196,6 +169,100 @@ class _WeatherTabState extends State<WeatherTab> with AutomaticKeepAliveClientMi
               _showBottomSheet(context, weather),
         );
       },
+    );
+  }
+}
+
+class WeatherGridItem extends StatelessWidget {
+  const WeatherGridItem({
+    super.key,
+    required this.weather,
+  });
+
+  final Weather weather;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card.filled(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Wrap(
+          children: [
+            Text(
+              DateFormat('dd/MM/yyyy HH:mm:ss').format(weather.sampleTime!),
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold),
+            ),
+            Row(
+              children: [
+                Icon(Icons.cloud_outlined),
+                SizedBox(width: 4,),
+                Text('${weather.cloudCover}%'),
+                SizedBox(width: 8,),
+                Icon(Icons.water_drop_outlined),
+                SizedBox(width: 4,),
+                Text('${precipitationTypeFriendlyNames[weather.precipitation]}'),
+                SizedBox(width: 8,),
+                Icon(Icons.thermostat_outlined),
+                SizedBox(width: 4,),
+                Text('${weather.temperature} °C'),
+                SizedBox(width: 8,),
+                Icon(Icons.wind_power_outlined),
+                SizedBox(width: 4,),
+                Text('${weather.windSpeed} bft'),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class WeatherListItem extends StatefulWidget {
+  final Weather weather;
+  final VoidCallback onLongPress;
+
+  const WeatherListItem({
+    super.key,
+    required this.weather,
+    required this.onLongPress,
+  });
+
+  @override
+  WeatherListItemState createState() => WeatherListItemState();
+}
+
+class WeatherListItemState extends State<WeatherListItem> {
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      // leading: const Icon(Icons.wb_sunny_outlined),
+      title: Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(widget.weather.sampleTime!)),
+      subtitle: Row(
+        children: [
+          Icon(Icons.cloud_outlined),
+          SizedBox(width: 4,),
+          Text('${widget.weather.cloudCover}%'),
+          SizedBox(width: 8,),
+          Icon(Icons.water_drop_outlined),
+          SizedBox(width: 4,),
+          Text('${precipitationTypeFriendlyNames[widget.weather.precipitation]}'),
+          SizedBox(width: 8,),
+          Icon(Icons.thermostat_outlined),
+          SizedBox(width: 4,),
+          Text('${widget.weather.temperature} °C'),
+          SizedBox(width: 8,),
+          Icon(Icons.wind_power_outlined),
+          SizedBox(width: 4,),
+          Text('${widget.weather.windSpeed} bft'),
+        ],
+      ),
+      onLongPress: widget.onLongPress,
+      // onTap: () {
+      //
+      // },
+
     );
   }
 }

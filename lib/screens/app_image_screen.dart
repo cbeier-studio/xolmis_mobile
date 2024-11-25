@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 
 import '../data/models/app_image.dart';
 import '../providers/app_image_provider.dart';
@@ -118,7 +119,16 @@ class _AppImageScreenState extends State<AppImageScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           final cameraStatus = await Permission.camera.request();
-          final photosStatus = await Permission.photos.request();
+          late PermissionStatus photosStatus = PermissionStatus.denied;
+
+          if (Platform.isAndroid) {
+            final androidInfo = await DeviceInfoPlugin().androidInfo;
+            if (androidInfo.version.sdkInt <= 32) {
+              photosStatus = await Permission.storage.request();
+            }  else {
+              photosStatus = await Permission.photos.request();
+            }
+          }
 
           if (cameraStatus.isGranted && photosStatus.isGranted) {
             showDialog(

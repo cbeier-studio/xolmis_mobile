@@ -156,6 +156,10 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
                             ListTile(
                               title: Text(widget.species.isOutOfInventory ? 'Fora da amostra' : 'Dentro da amostra'),
                             ),
+                            ListTile(
+                              title: Text(widget.species.notes ?? ''),
+                              subtitle: Text('Anotações'),
+                            ),
                           ],
                         ),
                         Expanded(

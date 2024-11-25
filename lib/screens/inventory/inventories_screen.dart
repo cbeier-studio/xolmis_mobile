@@ -223,21 +223,23 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                           final isLargeScreen = screenWidth > 600;
 
                           if (isLargeScreen) {
-                            return Align(
-                              alignment: Alignment.topCenter,
-                              child: ConstrainedBox(
-                                constraints: const BoxConstraints(maxWidth: 840),
+                            return SingleChildScrollView(
+                              child: Align(
+                                alignment: Alignment.topCenter,
+                                child: ConstrainedBox(
+                                  constraints: const BoxConstraints(maxWidth: 840),
                                   child: GridView.builder(
                                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                                       crossAxisCount: 2,
-                                      childAspectRatio: 3.5,
+                                      childAspectRatio: 3.2,
                                     ),
-                                  shrinkWrap: true,
-                                  itemCount: filteredInventories.length,
-                                  itemBuilder: (context, index) {
-                                    final inventory = filteredInventories[index];
-                                    return GridTile(
-                                      child: InkWell(
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemCount: filteredInventories.length,
+                                    itemBuilder: (context, index) {
+                                      final inventory = filteredInventories[index];
+                                      return GridTile(
+                                        child: InkWell(
                                           onLongPress: () => _showBottomSheet(context, inventory),
                                           onTap: () {
                                             Navigator.push(
@@ -258,89 +260,17 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                               }
                                             });
                                           },
-                                          child: Card.filled(
-                                    child: Padding(
-                                            padding: const EdgeInsets.all(16.0),
-                                            child: Row(
-                                              children: [
-                                                Padding(
-                                                  padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
-                                                  child: ValueListenableBuilder<double>(
-                                                    valueListenable: inventory.elapsedTimeNotifier,
-                                                    builder: (context, elapsedTime, child) {
-                                                      // if (inventory == null) {
-                                                      //   return const Icon(Icons.error_outlined);
-                                                      // }
-
-                                                      var progress = (inventory.isPaused || inventory.duration < 0)
-                                                          ? null
-                                                          : (elapsedTime / (inventory.duration * 60)).toDouble();
-
-                                                      if (progress != null && (progress.isNaN || progress.isInfinite || progress < 0 || progress > 1)) {
-                                                        progress = 0;
-                                                      }
-
-                                                      return CircularProgressIndicator(
-                                                        value: progress,
-                                                        backgroundColor: _isShowingActiveInventories && inventory.duration > 0 ? Theme.of(context).brightness == Brightness.light
-                                                            ? Colors.grey[200]
-                                                            : Colors.black : null,
-                                                        valueColor: AlwaysStoppedAnimation<Color>(
-                                                          inventory.isPaused ? Colors.amber : Theme.of(context).brightness == Brightness.light
-                                                              ? Colors.deepPurple
-                                                              : Colors.deepPurpleAccent,
-                                                        ),
-                                                      );
-                                                    },
-                                                  ),
-                                                ),
-                                                Column(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      inventory.id,
-                                                      style: const TextStyle(fontWeight: FontWeight.bold),
-                                                    ),
-                                                    Text('${inventoryTypeFriendlyNames[inventory.type]}'),
-                                                    if (_isShowingActiveInventories && inventory.duration > 0) Text('${inventory.duration} minutos de duração'),
-                                                    Selector<SpeciesProvider, int>(
-                                                      selector: (context, speciesProvider) => speciesProvider.getSpeciesForInventory(inventory.id).length,
-                                                      shouldRebuild: (previous, next) => previous != next,
-                                                      builder: (context, speciesCount, child) {
-                                                        return Text('$speciesCount ${Intl.plural(speciesCount, one: 'espécie', other: 'espécies')}');
-                                                      },
-                                                    ),
-                                                  ],
-                                                ),
-                                                Visibility(
-                                                  visible: _isShowingActiveInventories && inventory.duration > 0,
-                                                  child: IconButton(
-                                                    icon: Icon(inventory.isPaused ? Theme.of(context).brightness == Brightness.light
-                                                        ? Icons.play_arrow_outlined
-                                                        : Icons.play_arrow : Theme.of(context).brightness == Brightness.light
-                                                        ? Icons.pause_outlined
-                                                        : Icons.pause),
-                                                    tooltip: inventory.isPaused ? 'Retomar' : 'Pausa',
-                                                    onPressed: () {
-                                                      if (inventory.isPaused) {
-                                                        inventoryProvider.resumeInventoryTimer(inventory, inventoryRepository);
-                                                      } else {
-                                                        inventoryProvider.pauseInventoryTimer(inventory, inventoryRepository);
-                                                      }
-                                                      inventoryProvider.updateInventory(inventory);
-                                                    },
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
+                                          child: InventoryGridItem(
+                                              inventory: inventory,
+                                              isShowingActiveInventories: _isShowingActiveInventories,
+                                              inventoryRepository: inventoryRepository
                                           ),
                                         ),
-                                    );
-                                  },
+                                      );
+                                    },
+                                  ),
                                 ),
-                                ),
+                              ),
                             );
                           } else {
                             return ListView.builder(
@@ -605,6 +535,105 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
           },
         );
       },
+    );
+  }
+}
+
+class InventoryGridItem extends StatelessWidget {
+  const InventoryGridItem({
+    super.key,
+    required this.inventory,
+    required bool isShowingActiveInventories,
+    required this.inventoryRepository,
+  }) : _isShowingActiveInventories = isShowingActiveInventories;
+
+  final Inventory inventory;
+  final bool _isShowingActiveInventories;
+  final InventoryRepository inventoryRepository;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card.filled(
+      child: Wrap(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
+                  child: ValueListenableBuilder<double>(
+                    valueListenable: inventory.elapsedTimeNotifier,
+                    builder: (context, elapsedTime, child) {
+                      // if (inventory == null) {
+                      //   return const Icon(Icons.error_outlined);
+                      // }
+
+                      var progress = (inventory.isPaused || inventory.duration < 0)
+                          ? null
+                          : (elapsedTime / (inventory.duration * 60)).toDouble();
+
+                      if (progress != null && (progress.isNaN || progress.isInfinite || progress < 0 || progress > 1)) {
+                        progress = 0;
+                      }
+
+                      return CircularProgressIndicator(
+                        value: progress,
+                        backgroundColor: _isShowingActiveInventories && inventory.duration > 0 ? Theme.of(context).brightness == Brightness.light
+                            ? Colors.grey[200]
+                            : Colors.black : null,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          inventory.isPaused ? Colors.amber : Theme.of(context).brightness == Brightness.light
+                              ? Colors.deepPurple
+                              : Colors.deepPurpleAccent,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      inventory.id,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Text('${inventoryTypeFriendlyNames[inventory.type]}'),
+                    if (_isShowingActiveInventories && inventory.duration > 0) Text('${inventory.duration} ${Intl.plural(inventory.duration, one: 'minuto', other: 'minutos')} de duração'),
+                    Selector<SpeciesProvider, int>(
+                      selector: (context, speciesProvider) => speciesProvider.getSpeciesForInventory(inventory.id).length,
+                      shouldRebuild: (previous, next) => previous != next,
+                      builder: (context, speciesCount, child) {
+                        return Text('$speciesCount ${Intl.plural(speciesCount, one: 'espécie', other: 'espécies')}');
+                      },
+                    ),
+                  ],
+                ),
+                Visibility(
+                  visible: _isShowingActiveInventories && inventory.duration > 0,
+                  child: IconButton(
+                    icon: Icon(inventory.isPaused ? Theme.of(context).brightness == Brightness.light
+                        ? Icons.play_arrow_outlined
+                        : Icons.play_arrow : Theme.of(context).brightness == Brightness.light
+                        ? Icons.pause_outlined
+                        : Icons.pause),
+                    tooltip: inventory.isPaused ? 'Retomar' : 'Pausa',
+                    onPressed: () {
+                      if (inventory.isPaused) {
+                        Provider.of<InventoryProvider>(context, listen: false).resumeInventoryTimer(inventory, inventoryRepository);
+                      } else {
+                        Provider.of<InventoryProvider>(context, listen: false).pauseInventoryTimer(inventory, inventoryRepository);
+                      }
+                      Provider.of<InventoryProvider>(context, listen: false).updateInventory(inventory);
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -141,16 +141,17 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
                         final isLargeScreen = screenWidth > 600;
 
                         if (isLargeScreen) {
-                          return Align(
+                          return SingleChildScrollView(
+                            child: Align(
                             alignment: Alignment.topCenter,
                             child: ConstrainedBox(
                               constraints: const BoxConstraints(maxWidth: 840),
-                              child: SingleChildScrollView(
-                                child: GridView.builder(
+                              child: GridView.builder(
                                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                                     crossAxisCount: 2,
                                     childAspectRatio: 2.5,
                                   ),
+                                physics: const NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,
                                 itemCount: filteredSpecimens.length,
                                 itemBuilder: (context, index) {

@@ -11,8 +11,6 @@ import '../../providers/app_image_provider.dart';
 
 import '../app_image_screen.dart';
 
-import 'revision_list_item.dart';
-
 class NestRevisionsTab extends StatefulWidget {
   final Nest nest;
 
@@ -137,16 +135,17 @@ class _NestRevisionsTabState extends State<NestRevisionsTab> with AutomaticKeepA
   }
 
   Widget _buildGridView(List<NestRevision> revisionList) {
-    return Align(
+    return SingleChildScrollView(
+      child: Align(
       alignment: Alignment.topCenter,
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 840),
-        child: SingleChildScrollView(
-          child: GridView.builder(
+        child: GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               childAspectRatio: 3.2,
             ),
+            physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: revisionList.length,
             itemBuilder: (context, index) {
@@ -165,55 +164,7 @@ class _NestRevisionsTabState extends State<NestRevisionsTab> with AutomaticKeepA
                       ),
                     );
                   },
-                  child: Card.filled(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
-                            child: FutureBuilder<List<AppImage>>(
-                              future: Provider.of<AppImageProvider>(context, listen: false)
-                                  .fetchImagesForNestRevision(revision.id!),
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState == ConnectionState.waiting) {
-                                  return const CircularProgressIndicator();
-                                } else if (snapshot.hasError) {
-                                  return const Icon(Icons.error);
-                                } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                                  return ClipRRect(
-                                    borderRadius: BorderRadius.circular(0),
-                                    child: Image.file(
-                                      File(snapshot.data!.first.imagePath),
-                                      width: 50,
-                                      height: 50,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  );
-                                } else {
-                                  return const Icon(Icons.hide_image_outlined);
-                                }
-                              },
-                            ),
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                DateFormat('dd/MM/yyyy HH:mm:ss').format(revision.sampleTime!),
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              Text('${nestStatusTypeFriendlyNames[revision.nestStatus]}: ${nestStageTypeFriendlyNames[revision.nestStage]}'),
-                              Text('Hospedeiro: ${revision.eggsHost ?? 0} ovo(s), ${revision.nestlingsHost ?? 0} ninhego(s)'),
-                              Text('Nidoparasita: ${revision.eggsParasite ?? 0} ovo(s), ${revision.nestlingsParasite ?? 0} ninhego(s)'),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                  child: NestRevisionGridItem(revision: revision),
                 ),
               );
             },
@@ -235,6 +186,143 @@ class _NestRevisionsTabState extends State<NestRevisionsTab> with AutomaticKeepA
               _showBottomSheet(context, nestRevision),
         );
       },
+    );
+  }
+}
+
+class NestRevisionGridItem extends StatelessWidget {
+  const NestRevisionGridItem({
+    super.key,
+    required this.revision,
+  });
+
+  final NestRevision revision;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card.filled(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
+              child: FutureBuilder<List<AppImage>>(
+                future: Provider.of<AppImageProvider>(context, listen: false)
+                    .fetchImagesForNestRevision(revision.id!),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return const Icon(Icons.error);
+                  } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                    return ClipRRect(
+                      borderRadius: BorderRadius.circular(0),
+                      child: Image.file(
+                        File(snapshot.data!.first.imagePath),
+                        width: 50,
+                        height: 50,
+                        fit: BoxFit.cover,
+                      ),
+                    );
+                  } else {
+                    return const Icon(Icons.hide_image_outlined);
+                  }
+                },
+              ),
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  DateFormat('dd/MM/yyyy HH:mm:ss').format(revision.sampleTime!),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold),
+                ),
+                Text('${nestStatusTypeFriendlyNames[revision.nestStatus]}: ${nestStageTypeFriendlyNames[revision.nestStage]}'),
+                Text('Hospedeiro: ${revision.eggsHost ?? 0} ${Intl.plural(revision.eggsHost ?? 0, one: 'ovo', other: 'ovos')}, ${revision.nestlingsHost ?? 0} ${Intl.plural(revision.nestlingsHost ?? 0, one: 'ninhego', other: 'ninhegos')}'),
+                Text('Nidoparasita: ${revision.eggsParasite ?? 0} ${Intl.plural(revision.eggsParasite ?? 0, one: 'ovo', other: 'ovos')}, ${revision.nestlingsParasite ?? 0} ${Intl.plural(revision.nestlingsParasite ?? 0, one: 'ninhego', other: 'ninhegos')}'),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class RevisionListItem extends StatefulWidget {
+  final NestRevision nestRevision;
+  final VoidCallback onLongPress;
+
+  const RevisionListItem({
+    super.key,
+    required this.nestRevision,
+    required this.onLongPress,
+  });
+
+  @override
+  RevisionListItemState createState() => RevisionListItemState();
+}
+
+class RevisionListItemState extends State<RevisionListItem> {
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: FutureBuilder<List<AppImage>>(
+        future: Provider.of<AppImageProvider>(context, listen: false)
+            .fetchImagesForNestRevision(widget.nestRevision.id ?? 0),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const CircularProgressIndicator();
+          } else if (snapshot.hasError) {
+            return const Icon(Icons.error);
+          } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+            return ClipRRect(
+              borderRadius: BorderRadius.circular(0),
+              child: Image.file(
+                File(snapshot.data!.first.imagePath),
+                width: 50,
+                height: 50,
+                fit: BoxFit.cover,
+              ),
+            );
+          } else {
+            return const Icon(Icons.hide_image_outlined);
+          }
+        },
+      ),
+      title: Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(widget.nestRevision.sampleTime!)),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '${nestStatusTypeFriendlyNames[widget.nestRevision.nestStatus]}: ${nestStageTypeFriendlyNames[widget.nestRevision.nestStage]}',
+            style: TextStyle(
+              color: widget.nestRevision.nestStatus == NestStatusType.nstActive
+                  ? Colors.blue
+                  : widget.nestRevision.nestStatus == NestStatusType.nstInactive
+                  ? Colors.red
+                  : null,
+            ),
+          ),
+          Text('Hospedeiro: ${widget.nestRevision.eggsHost ?? 0} ${Intl.plural(widget.nestRevision.eggsHost ?? 0, one: 'ovo', other: 'ovos')}, ${widget.nestRevision.nestlingsHost ?? 0} ${Intl.plural(widget.nestRevision.nestlingsHost ?? 0, one: 'ninhego', other: 'ninhegos')}'),
+          Text('Nidoparasita: ${widget.nestRevision.eggsParasite ?? 0} ${Intl.plural(widget.nestRevision.eggsParasite ?? 0, one: 'ovo', other: 'ovos')}, ${widget.nestRevision.nestlingsParasite ?? 0} ${Intl.plural(widget.nestRevision.nestlingsParasite ?? 0, one: 'ninhego', other: 'ninhegos')}'),
+        ],
+      ),
+      onLongPress: widget.onLongPress,
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AppImageScreen(
+              nestRevisionId: widget.nestRevision.id,
+            ),
+          ),
+        );
+      },
+
     );
   }
 }
