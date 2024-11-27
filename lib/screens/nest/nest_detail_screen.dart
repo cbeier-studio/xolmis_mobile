@@ -12,6 +12,7 @@ import 'nest_revision_tab.dart';
 import 'nest_egg_tab.dart';
 import 'add_egg_screen.dart';
 import 'add_revision_screen.dart';
+import '../export_utils.dart';
 
 class NestDetailScreen extends StatefulWidget {
   final Nest nest;
@@ -231,6 +232,32 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
                     ),
                   )
                       : const Icon(Icons.flag_outlined),
+                ),
+              if (widget.nest.isActive != false)
+                PopupMenuButton<String>(
+                  onSelected: (String item) {
+                    switch (item) {
+                      case 'csv':
+                        exportNestToCsv(context, widget.nest);
+                        break;
+                      case 'json':
+                        exportNestToJson(context, widget.nest);
+                        break;
+                    }
+                  },
+                  itemBuilder: (BuildContext context) {
+                    return [
+                      const PopupMenuItem<String>(
+                        value: 'csv',
+                        child: Text('CSV'),
+                      ),
+                      const PopupMenuItem<String>(
+                        value: 'json',
+                        child: Text('JSON'),
+                      ),
+                    ];
+                  },
+                  icon: const Icon(Icons.file_download_outlined),
                 ),
               const SizedBox(width: 8.0,),
             ],

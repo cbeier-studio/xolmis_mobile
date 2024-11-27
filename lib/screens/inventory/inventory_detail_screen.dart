@@ -21,6 +21,7 @@ import 'add_weather_screen.dart';
 import 'species_tab.dart';
 import 'vegetation_tab.dart';
 import 'weather_tab.dart';
+import '../export_utils.dart';
 
 class InventoryDetailScreen extends StatefulWidget {
   final Inventory inventory;
@@ -231,6 +232,32 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                 ),
               )
                   : const Icon(Icons.flag_outlined),
+            ),
+          if (widget.inventory.isFinished)
+            PopupMenuButton<String>(
+              onSelected: (String item) {
+                switch (item) {
+                  case 'csv':
+                    exportInventoryToCsv(context, widget.inventory);
+                    break;
+                  case 'json':
+                    exportInventoryToJson(context, widget.inventory);
+                    break;
+                }
+              },
+              itemBuilder: (BuildContext context) {
+                return [
+                  const PopupMenuItem<String>(
+                    value: 'csv',
+                    child: Text('CSV'),
+                  ),
+                  const PopupMenuItem<String>(
+                    value: 'json',
+                    child: Text('JSON'),
+                  ),
+                ];
+              },
+              icon: const Icon(Icons.file_download_outlined),
             ),
           const SizedBox(width: 8.0,),
         ],
