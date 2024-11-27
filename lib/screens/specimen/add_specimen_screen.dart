@@ -22,7 +22,7 @@ class _AddSpecimenScreenState extends State<AddSpecimenScreen> {
   final _speciesNameController = TextEditingController();
   final _localityNameController = TextEditingController();
   final _notesController = TextEditingController();
-  late var _fieldTextEditingController = TextEditingController();
+  late var _fieldLocalityEditingController = TextEditingController();
   SpecimenType _selectedType = SpecimenType.spcFeathers;
   bool _isSubmitting = false;
   Position? _currentPosition;
@@ -161,12 +161,12 @@ class _AddSpecimenScreenState extends State<AddSpecimenScreen> {
                           },
                           onSelected: (String selection) {
                             _localityNameController.text = selection;
-                            _fieldTextEditingController.text = selection;
+                            _fieldLocalityEditingController.text = selection;
                           },
                           fieldViewBuilder: (BuildContext context, TextEditingController fieldTextEditingController, FocusNode fieldFocusNode, VoidCallback onFieldSubmitted) {
-                            _fieldTextEditingController = fieldTextEditingController;
+                            _fieldLocalityEditingController = fieldTextEditingController;
                             return TextFormField(
-                              controller: _fieldTextEditingController,
+                              controller: _fieldLocalityEditingController,
                               focusNode: fieldFocusNode,
                               textCapitalization: TextCapitalization.words,
                               decoration: const InputDecoration(
@@ -234,7 +234,7 @@ class _AddSpecimenScreenState extends State<AddSpecimenScreen> {
       final newSpecimen = Specimen(
         fieldNumber: _fieldNumberController.text,
         speciesName: _speciesNameController.text,
-        locality: _localityNameController.text,
+        locality: _fieldLocalityEditingController.text,
         longitude: _currentPosition?.longitude,
         latitude: _currentPosition?.latitude,
         notes: _notesController.text,

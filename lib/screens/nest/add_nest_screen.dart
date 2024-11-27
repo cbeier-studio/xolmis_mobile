@@ -28,7 +28,7 @@ class _AddNestScreenState extends State<AddNestScreen> {
   final _maleController = TextEditingController();
   final _femaleController = TextEditingController();
   final _helpersController = TextEditingController();
-  late var _fieldTextEditingController = TextEditingController();
+  late var _fieldLocalityEditingController = TextEditingController();
   late var _fieldSupportEditingController = TextEditingController();
   bool _isSubmitting = false;
   Position? _currentPosition;
@@ -149,12 +149,12 @@ class _AddNestScreenState extends State<AddNestScreen> {
                           },
                           onSelected: (String selection) {
                             _localityNameController.text = selection;
-                            _fieldTextEditingController.text = selection;
+                            _fieldLocalityEditingController.text = selection;
                           },
                           fieldViewBuilder: (BuildContext context, TextEditingController fieldTextEditingController, FocusNode fieldFocusNode, VoidCallback onFieldSubmitted) {
-                            _fieldTextEditingController = fieldTextEditingController;
+                            _fieldLocalityEditingController = fieldTextEditingController;
                             return TextFormField(
-                              controller: _fieldTextEditingController,
+                              controller: _fieldLocalityEditingController,
                               focusNode: fieldFocusNode,
                               textCapitalization: TextCapitalization.words,
                               decoration: const InputDecoration(
@@ -289,10 +289,10 @@ class _AddNestScreenState extends State<AddNestScreen> {
       final newNest = Nest(
         fieldNumber: _fieldNumberController.text,
         speciesName: _speciesNameController.text,
-        localityName: _localityNameController.text,
+        localityName: _fieldLocalityEditingController.text,
         longitude: _currentPosition?.longitude,
         latitude: _currentPosition?.latitude,
-        support: _supportController.text,
+        support: _fieldSupportEditingController.text,
         heightAboveGround: double.tryParse(_heightAboveGroundController.text),
         male: _maleController.text,
         female: _femaleController.text,
