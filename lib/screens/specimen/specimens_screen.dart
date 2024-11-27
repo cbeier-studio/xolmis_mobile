@@ -303,6 +303,7 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
                                         style: const TextStyle(fontStyle: FontStyle.italic),
                                       ),
                                       Text(specimen.locality!),
+                                      Text('${specimen.longitude}; ${specimen.latitude}'),
                                       Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(specimen.sampleTime!)),
                                     ],
                                   ),

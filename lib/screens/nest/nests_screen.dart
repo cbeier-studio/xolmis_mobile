@@ -261,6 +261,7 @@ class _NestsScreenState extends State<NestsScreen> {
                                           style: const TextStyle(fontStyle: FontStyle.italic),
                                         ),
                                         Text(nest.localityName!),
+                                        Text('${nest.longitude}; ${nest.latitude}'),
                                         Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(nest.foundTime!)),
                                       ],
                                     ),
