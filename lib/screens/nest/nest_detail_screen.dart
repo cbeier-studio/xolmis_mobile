@@ -233,7 +233,7 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
                   )
                       : const Icon(Icons.flag_outlined),
                 ),
-              if (widget.nest.isActive != false)
+              if (widget.nest.isActive == false)
                 PopupMenuButton<String>(
                   position: PopupMenuPosition.under,
                   onSelected: (String item) {

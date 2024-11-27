@@ -1,5 +1,6 @@
 import 'dart:core';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:numberpicker/numberpicker.dart';
@@ -18,6 +19,7 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   ThemeMode _themeMode = ThemeMode.system;
+  int _maxSimultaneousInventories = 2;
   int _maxSpeciesMackinnon = 10;
   int _pointCountsDuration = 8;
   int _cumulativeTimeDuration = 30;
@@ -39,6 +41,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       _themeMode = ThemeMode.values[prefs.getInt('themeMode') ?? 0];
+      _maxSimultaneousInventories = prefs.getInt('maxSimultaneousInventories') ?? 2;
       _maxSpeciesMackinnon = prefs.getInt('maxSpeciesMackinnon') ?? 10;
       _pointCountsDuration = prefs.getInt('pointCountsDuration') ?? 8;
       _cumulativeTimeDuration = prefs.getInt('cumulativeTimeDuration') ?? 30;
@@ -49,6 +52,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Future<void> _saveSettings() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt('themeMode', _themeMode.index);
+    await prefs.setInt('maxSimultaneousInventories', _maxSimultaneousInventories);
     await prefs.setInt('maxSpeciesMackinnon', _maxSpeciesMackinnon);
     await prefs.setInt('pointCountsDuration', _pointCountsDuration);
     await prefs.setInt('cumulativeTimeDuration', _cumulativeTimeDuration);
@@ -160,6 +164,30 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           Divider(),
           ListTile(
+            leading: const Icon(Icons.list_alt_outlined),
+            title: const Text('Inventários simultâneos'),
+            subtitle: Text('$_maxSimultaneousInventories ${Intl.plural(_maxSimultaneousInventories, one: 'inventário', other: 'inventários')}'),
+            onTap: () async {
+              final newMaxInventories = await showDialog<int>(
+                context: context,
+                builder: (context) {
+                  return NumberPickerDialog(
+                    minValue: 1,
+                    maxValue: 10,
+                    initialValue: _maxSimultaneousInventories,
+                    title: 'Inventários simultâneos',
+                  );
+                },
+              );
+              if (newMaxInventories != null) {
+                setState(() {
+                  _maxSimultaneousInventories = newMaxInventories;
+                });
+                _saveSettings();
+              }
+            },
+          ),
+          ListTile(
             leading: const Icon(Icons.checklist_outlined),
             title: const Text('Listas de Mackinnon'),
             subtitle: Text('$_maxSpeciesMackinnon espécies por lista'),
@@ -169,7 +197,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 builder: (context) {
                   return NumberPickerDialog(
                     minValue: 1,
-                    maxValue: 50,
+                    maxValue: 30,
                     initialValue: _maxSpeciesMackinnon,
                     title: 'Espécies por lista',
                   );
@@ -186,7 +214,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ListTile(
             leading: const Icon(Icons.timer_outlined),
             title: const Text('Pontos de contagem'),
-            subtitle: Text('$_pointCountsDuration minutos de duração'),
+            subtitle: Text('$_pointCountsDuration ${Intl.plural(_pointCountsDuration, one: 'minuto', other: 'minutos')} de duração'),
             onTap: () async {
               final newDuration = await showDialog<int>(
                 context: context,
@@ -210,7 +238,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ListTile(
             leading: const Icon(Icons.timer_outlined),
             title: const Text('Listas qualitativas temporizadas'),
-            subtitle: Text('$_cumulativeTimeDuration minutos de duração'),
+            subtitle: Text('$_cumulativeTimeDuration ${Intl.plural(_pointCountsDuration, one: 'minuto', other: 'minutos')} de duração'),
             onTap: () async {
               final newDuration = await showDialog<int>(
                 context: context,

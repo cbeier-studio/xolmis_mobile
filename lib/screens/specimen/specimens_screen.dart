@@ -293,11 +293,10 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
                                       }
                                     },
                                   ),
-                                  title: Text(specimen.fieldNumber),
+                                  title: Text('${specimen.fieldNumber} - ${specimenTypeFriendlyNames[specimen.type]}'),
                                   subtitle: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text('${specimenTypeFriendlyNames[specimen.type]}'),
                                       Text(
                                         specimen.speciesName!,
                                         style: const TextStyle(fontStyle: FontStyle.italic),

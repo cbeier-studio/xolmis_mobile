@@ -112,7 +112,7 @@ class _AddSpecimenScreenState extends State<AddSpecimenScreen> {
                             );
                           }).toList(),
                           onChanged: (SpecimenType? newValue) {
-                            setState(() async {
+                            setState(() {
                               _selectedType = newValue!;
                             });
                           },

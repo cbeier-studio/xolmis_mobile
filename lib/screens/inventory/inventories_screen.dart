@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/models/inventory.dart';
 import '../../data/database/repositories/inventory_repository.dart';
@@ -89,7 +90,22 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
         inventory.id.toLowerCase().contains(_searchQuery.toLowerCase())).toList();
   }
 
-  void _showAddInventoryScreen(BuildContext context) {
+  Future<void> _showAddInventoryScreen(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    if (inventoryProvider.activeInventories.length == (prefs.getInt('maxSimultaneousInventories') ?? 2)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Row(
+          children: [
+            Icon(Icons.info_outlined, color: Colors.blue),
+            SizedBox(width: 8),
+            Text('Limite de inventários simultâneos atingido.'),
+          ],
+        ),
+        ),
+      );
+      return;
+    }
+
     if (MediaQuery.sizeOf(context).width > 600) {
       showDialog(
         context: context,
