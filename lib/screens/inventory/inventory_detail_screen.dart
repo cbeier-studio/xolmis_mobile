@@ -235,6 +235,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
             ),
           if (widget.inventory.isFinished)
             PopupMenuButton<String>(
+              position: PopupMenuPosition.under,
               onSelected: (String item) {
                 switch (item) {
                   case 'csv':

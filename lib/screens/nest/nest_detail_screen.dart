@@ -235,6 +235,7 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
                 ),
               if (widget.nest.isActive != false)
                 PopupMenuButton<String>(
+                  position: PopupMenuPosition.under,
                   onSelected: (String item) {
                     switch (item) {
                       case 'csv':
