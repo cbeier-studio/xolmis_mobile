@@ -22,6 +22,7 @@ class _AddSpecimenScreenState extends State<AddSpecimenScreen> {
   final _speciesNameController = TextEditingController();
   final _localityNameController = TextEditingController();
   final _notesController = TextEditingController();
+  late var _fieldTextEditingController = TextEditingController();
   SpecimenType _selectedType = SpecimenType.spcFeathers;
   bool _isSubmitting = false;
   Position? _currentPosition;
@@ -160,10 +161,12 @@ class _AddSpecimenScreenState extends State<AddSpecimenScreen> {
                           },
                           onSelected: (String selection) {
                             _localityNameController.text = selection;
+                            _fieldTextEditingController.text = selection;
                           },
                           fieldViewBuilder: (BuildContext context, TextEditingController fieldTextEditingController, FocusNode fieldFocusNode, VoidCallback onFieldSubmitted) {
+                            _fieldTextEditingController = fieldTextEditingController;
                             return TextFormField(
-                              controller: _localityNameController,
+                              controller: _fieldTextEditingController,
                               focusNode: fieldFocusNode,
                               textCapitalization: TextCapitalization.words,
                               decoration: const InputDecoration(

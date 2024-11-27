@@ -28,6 +28,8 @@ class _AddNestScreenState extends State<AddNestScreen> {
   final _maleController = TextEditingController();
   final _femaleController = TextEditingController();
   final _helpersController = TextEditingController();
+  late var _fieldTextEditingController = TextEditingController();
+  late var _fieldSupportEditingController = TextEditingController();
   bool _isSubmitting = false;
   Position? _currentPosition;
   String _observerAcronym = '';
@@ -147,10 +149,12 @@ class _AddNestScreenState extends State<AddNestScreen> {
                           },
                           onSelected: (String selection) {
                             _localityNameController.text = selection;
+                            _fieldTextEditingController.text = selection;
                           },
                           fieldViewBuilder: (BuildContext context, TextEditingController fieldTextEditingController, FocusNode fieldFocusNode, VoidCallback onFieldSubmitted) {
+                            _fieldTextEditingController = fieldTextEditingController;
                             return TextFormField(
-                              controller: _localityNameController,
+                              controller: _fieldTextEditingController,
                               focusNode: fieldFocusNode,
                               textCapitalization: TextCapitalization.words,
                               decoration: const InputDecoration(
@@ -184,10 +188,12 @@ class _AddNestScreenState extends State<AddNestScreen> {
                           },
                           onSelected: (String selection) {
                             _supportController.text = selection;
+                            _fieldSupportEditingController.text = selection;
                           },
                           fieldViewBuilder: (BuildContext context, TextEditingController fieldTextEditingController, FocusNode fieldFocusNode, VoidCallback onFieldSubmitted) {
+                            _fieldSupportEditingController = fieldTextEditingController;
                             return TextFormField(
-                              controller: _supportController,
+                              controller: _fieldSupportEditingController,
                               focusNode: fieldFocusNode,
                               textCapitalization: TextCapitalization.sentences,
                               decoration: const InputDecoration(
