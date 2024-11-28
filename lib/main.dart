@@ -46,8 +46,8 @@ import 'screens/inventory/inventories_screen.dart';
 import 'screens/nest/nests_screen.dart';
 import 'screens/specimen/specimens_screen.dart';
 import 'screens/settings_screen.dart';
-import 'screens/utils.dart';
-import 'screens/themes.dart';
+import 'utils/utils.dart';
+import 'utils/themes.dart';
 
 // Run an empty task just to maintain Xolmis awake
 void callbackDispatcher() {

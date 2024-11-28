@@ -16,8 +16,8 @@ import '../../providers/species_provider.dart';
 import 'add_inventory_screen.dart';
 import 'inventory_detail_screen.dart';
 
-import '../utils.dart';
-import '../export_utils.dart';
+import '../../utils/utils.dart';
+import '../../utils/export_utils.dart';
 
 
 class InventoriesScreen extends StatefulWidget {

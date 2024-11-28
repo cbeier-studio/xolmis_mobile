@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import '../../data/models/inventory.dart';
 import '../../providers/vegetation_provider.dart';
 
-import '../utils.dart';
+import '../../utils/utils.dart';
 
 class AddVegetationDataScreen extends StatefulWidget {
   final Inventory inventory;

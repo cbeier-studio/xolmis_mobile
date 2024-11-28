@@ -10,7 +10,7 @@ import '../data/models/inventory.dart';
 import '../data/database/repositories/inventory_repository.dart';
 import '../providers/species_provider.dart';
 
-import 'inventory/add_inventory_screen.dart';
+import '../screens/inventory/add_inventory_screen.dart';
 
 List<String> allSpeciesNames = [];
 

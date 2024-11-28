@@ -7,8 +7,8 @@ import '../../data/database/repositories/species_repository.dart';
 import '../../providers/inventory_provider.dart';
 import '../../providers/species_provider.dart';
 
-import '../utils.dart';
-import '../species_search_delegate.dart';
+import '../../utils/utils.dart';
+import '../../utils/species_search_delegate.dart';
 import 'species_list_item.dart';
 
 class SpeciesTab extends StatefulWidget {

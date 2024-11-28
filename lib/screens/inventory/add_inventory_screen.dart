@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../providers/inventory_provider.dart';
 import '../../data/models/inventory.dart';
-import '../utils.dart';
+import '../../utils/utils.dart';
 
 class AddInventoryScreen extends StatefulWidget {
   final String? initialInventoryId;

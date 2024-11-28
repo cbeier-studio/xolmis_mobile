@@ -7,7 +7,7 @@ import '../../providers/species_provider.dart';
 import '../../providers/poi_provider.dart';
 
 import 'species_detail_screen.dart';
-import '../utils.dart';
+import '../../utils/utils.dart';
 
 class SpeciesListItem extends StatefulWidget {
   final Species species;

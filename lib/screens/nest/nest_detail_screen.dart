@@ -12,7 +12,7 @@ import 'nest_revision_tab.dart';
 import 'nest_egg_tab.dart';
 import 'add_egg_screen.dart';
 import 'add_revision_screen.dart';
-import '../export_utils.dart';
+import '../../utils/export_utils.dart';
 
 class NestDetailScreen extends StatefulWidget {
   final Nest nest;

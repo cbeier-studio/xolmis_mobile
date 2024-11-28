@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-import '../../screens/utils.dart';
+import '../../utils/utils.dart';
 
 import '../database/repositories/inventory_repository.dart';
 

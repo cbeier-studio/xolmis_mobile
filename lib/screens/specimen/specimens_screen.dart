@@ -11,7 +11,7 @@ import '../../providers/app_image_provider.dart';
 
 import 'add_specimen_screen.dart';
 import '../app_image_screen.dart';
-import '../export_utils.dart';
+import '../../utils/export_utils.dart';
 
 class SpecimensScreen extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;

@@ -8,7 +8,7 @@ import '../daos/species_dao.dart';
 import '../daos/vegetation_dao.dart';
 import '../daos/weather_dao.dart';
 
-import '../../../screens/utils.dart';
+import '../../../utils/utils.dart';
 
 class InventoryDao {
   final DatabaseHelper _dbHelper;

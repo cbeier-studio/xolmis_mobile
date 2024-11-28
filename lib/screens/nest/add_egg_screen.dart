@@ -5,8 +5,8 @@ import 'package:provider/provider.dart';
 import '../../data/models/nest.dart';
 import '../../providers/egg_provider.dart';
 
-import '../utils.dart';
-import '../species_search_delegate.dart';
+import '../../utils/utils.dart';
+import '../../utils/species_search_delegate.dart';
 
 class AddEggScreen extends StatefulWidget {
   final Nest nest;

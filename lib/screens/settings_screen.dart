@@ -8,7 +8,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import '../data/database/database_helper.dart';
-import 'themes.dart';
+import '../utils/themes.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});

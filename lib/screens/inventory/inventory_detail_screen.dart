@@ -21,7 +21,7 @@ import 'add_weather_screen.dart';
 import 'species_tab.dart';
 import 'vegetation_tab.dart';
 import 'weather_tab.dart';
-import '../export_utils.dart';
+import '../../utils/export_utils.dart';
 
 class InventoryDetailScreen extends StatefulWidget {
   final Inventory inventory;

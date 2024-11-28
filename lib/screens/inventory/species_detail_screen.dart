@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import '../../providers/poi_provider.dart';
 import '../../data/models/inventory.dart';
 
-import '../utils.dart';
+import '../../utils/utils.dart';
 
 class SpeciesDetailScreen extends StatefulWidget {
   final Species species;

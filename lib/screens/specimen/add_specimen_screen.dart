@@ -6,8 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/models/specimen.dart';
 import '../../providers/specimen_provider.dart';
-import '../utils.dart';
-import '../species_search_delegate.dart';
+import '../../utils/utils.dart';
+import '../../utils/species_search_delegate.dart';
 
 class AddSpecimenScreen extends StatefulWidget {
   const AddSpecimenScreen({super.key});
