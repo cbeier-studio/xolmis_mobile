@@ -13,6 +13,7 @@ import 'nest_egg_tab.dart';
 import 'add_egg_screen.dart';
 import 'add_revision_screen.dart';
 import '../../utils/export_utils.dart';
+import '../../generated/l10n.dart';
 
 class NestDetailScreen extends StatefulWidget {
   final Nest nest;
@@ -137,12 +138,12 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
                     await showDialog<NestFateType>(
                       context: context,
                       builder: (context) => AlertDialog(
-                        title: const Text('Confirmar destino'),
+                        title: Text(S.of(context).confirmFate),
                         content: DropdownButtonFormField<NestFateType>(
                           value: selectedNestFate,
-                          decoration: const InputDecoration(
-                            labelText: 'Destino do ninho *',
-                            helperText: '* campo obrigatório',
+                          decoration: InputDecoration(
+                            labelText: S.of(context).nestFate,
+                            helperText: S.of(context).requiredField,
                             border: OutlineInputBorder(),
                           ),
                           onChanged: (NestFateType? newValue) {
@@ -170,7 +171,7 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.pop(context),
-                            child: const Text('Cancelar'),
+                            child: Text(S.of(context).cancel),
                           ),
                           TextButton(
                             onPressed: () async {
@@ -202,7 +203,7 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
                                   // Handle errors
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
-                                      content: Text('Erro ao desativar o ninho: $error'),
+                                      content: Text(S.of(context).errorInactivatingNest(error.toString())),
                                     ),
                                   );
                                 } finally {
@@ -212,7 +213,7 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
                                 }
                               }
                             },
-                            child: const Text('Salvar'),
+                            child: Text(S.of(context).save),
                           ),
                         ],
                       ),
@@ -283,9 +284,9 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
                               alignment: AlignmentDirectional.centerEnd,
                               offset: const Offset(24, -8),
                               count: revisionList.length,
-                              child: const Tab(text: 'Revisões'),
+                              child: Tab(text: S.of(context).revision(2)),
                             )
-                                : const Tab(text: 'Revisões');
+                                : Tab(text: S.of(context).revision(2));
                           },
                         ),
                         Consumer<EggProvider>(
@@ -299,9 +300,9 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
                               alignment: AlignmentDirectional.centerEnd,
                               offset: const Offset(24, -8),
                               count: eggList.length,
-                              child: const Tab(text: 'Ovos'),
+                              child: Tab(text: S.of(context).egg(2)),
                             )
-                                : const Tab(text: 'Ovos');
+                                : Tab(text: S.of(context).egg(2));
                           },
                         ),
                       ],
@@ -314,35 +315,35 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
           children: [
             ExpansionTile(
               leading: const Icon(Icons.info_outlined),
-              title: const Text('Informações do ninho'),
+              title: Text(S.of(context).nestInfo),
               children: [
                 ListTile(
                   title: Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(widget.nest.foundTime!)),
-                  subtitle: Text('Data e hora de encontro'),
+                  subtitle: Text(S.of(context).timeFound),
                 ),
                 ListTile(
                   title: Text('${widget.nest.localityName}'),
-                  subtitle: Text('Localidade'),
+                  subtitle: Text(S.of(context).locality),
                 ),
                 ListTile(
                   title: Text('${widget.nest.support}'),
-                  subtitle: Text('Suporte do ninho'),
+                  subtitle: Text(S.of(context).nestSupport),
                 ),
                 widget.nest.heightAboveGround != null ? ListTile(
                   title: Text('${widget.nest.heightAboveGround} m'),
-                  subtitle: Text('Altura acima do solo'),
+                  subtitle: Text(S.of(context).heightAboveGround),
                 ) : SizedBox.shrink(),
                 widget.nest.male != '' ? ListTile(
                   title: Text('${widget.nest.male}'),
-                  subtitle: Text('Macho'),
+                  subtitle: Text(S.of(context).male),
                 ) : SizedBox.shrink(),
                 widget.nest.female != '' ? ListTile(
                   title: Text('${widget.nest.female}'),
-                  subtitle: Text('Fêmea'),
+                  subtitle: Text(S.of(context).female),
                 ) : SizedBox.shrink(),
                 widget.nest.helpers != '' ? ListTile(
                   title: Text('${widget.nest.helpers}'),
-                  subtitle: Text('Ajudantes de ninho'),
+                  subtitle: Text(S.of(context).helpers),
                 ) : SizedBox.shrink(),
               ],
             ),
@@ -366,7 +367,7 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
               child: Theme.of(context).brightness == Brightness.light
                   ? const Icon(Icons.beenhere_outlined)
                   : const Icon(Icons.beenhere),
-              label: 'Revisão',
+              label: S.of(context).revision(1),
               onTap: () {
                 _showAddRevisionScreen(context);
               },
@@ -375,7 +376,7 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
               child: Theme.of(context).brightness == Brightness.light
                   ? const Icon(Icons.egg_outlined)
                   : const Icon(Icons.egg),
-              label: 'Ovo',
+              label: S.of(context).egg(1),
               onTap: () {
                 _showAddEggScreen(context);
               },

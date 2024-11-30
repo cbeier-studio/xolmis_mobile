@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../data/models/nest.dart';
 import '../../providers/nest_revision_provider.dart';
+import '../../generated/l10n.dart';
 
 class AddNestRevisionScreen extends StatefulWidget {
   final Nest nest;
@@ -30,7 +31,7 @@ class _AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Revisão de Ninho'),
+          title: Text(S.of(context).nestRevision),
         ),
         body: Column(
             children: [
@@ -43,7 +44,7 @@ class _AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
                       children: [
                         Align(
                           alignment: Alignment.centerLeft,
-                          child: const Text('Hospedeiro'),
+                          child: Text(S.of(context).host),
                         ),
                         const SizedBox(height: 8.0),
                         Row(
@@ -52,8 +53,8 @@ class _AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
                               child: TextFormField(
                                 controller: _eggsHostController,
                                 keyboardType: TextInputType.number,
-                                decoration: const InputDecoration(
-                                  labelText: 'Ovos',
+                                decoration: InputDecoration(
+                                  labelText: S.of(context).egg(2),
                                   border: OutlineInputBorder(),
                                 ),
                               ),
@@ -63,8 +64,8 @@ class _AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
                               child: TextFormField(
                                 controller: _nestlingsHostController,
                                 keyboardType: TextInputType.number,
-                                decoration: const InputDecoration(
-                                  labelText: 'Ninhegos',
+                                decoration: InputDecoration(
+                                  labelText: S.of(context).nestling(2),
                                   border: OutlineInputBorder(),
                                 ),
                               ),
@@ -74,7 +75,7 @@ class _AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
                         const SizedBox(height: 8.0),
                         Align(
                           alignment: Alignment.centerLeft,
-                          child: const Text('Nidoparasita'),
+                          child: Text(S.of(context).nidoparasite),
                         ),
                         const SizedBox(height: 8.0),
                         Row(
@@ -83,8 +84,8 @@ class _AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
                               child: TextFormField(
                                 controller: _eggsParasiteController,
                                 keyboardType: TextInputType.number,
-                                decoration: const InputDecoration(
-                                  labelText: 'Ovos',
+                                decoration: InputDecoration(
+                                  labelText: S.of(context).egg(2),
                                   border: OutlineInputBorder(),
                                 ),
                               ),
@@ -94,8 +95,8 @@ class _AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
                               child: TextFormField(
                                 controller: _nestlingsParasiteController,
                                 keyboardType: TextInputType.number,
-                                decoration: const InputDecoration(
-                                  labelText: 'Ninhegos',
+                                decoration: InputDecoration(
+                                  labelText: S.of(context).nestling(2),
                                   border: OutlineInputBorder(),
                                 ),
                               ),
@@ -108,9 +109,9 @@ class _AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
                             Expanded(
                               child: DropdownButtonFormField<NestStatusType>(
                                   value: _selectedNestStatus,
-                                  decoration: const InputDecoration(
-                                    labelText: 'Status do ninho *',
-                                    helperText: '* campo obrigatório',
+                                  decoration: InputDecoration(
+                                    labelText: '${S.of(context).nestStatus} *',
+                                    helperText: S.of(context).requiredField,
                                     border: OutlineInputBorder(),
                                   ),
                                   items: NestStatusType.values.map((nestStatus) {
@@ -130,9 +131,9 @@ class _AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
                             Expanded(
                               child: DropdownButtonFormField<NestStageType>(
                                   value: _selectedNestStage,
-                                  decoration: const InputDecoration(
-                                    labelText: 'Estágio *',
-                                    helperText: '* campo obrigatório',
+                                  decoration: InputDecoration(
+                                    labelText: '${S.of(context).nestPhase} *',
+                                    helperText: S.of(context).requiredField,
                                     border: OutlineInputBorder(),
                                   ),
                                   items: NestStageType.values.map((nestStage) {
@@ -152,7 +153,7 @@ class _AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
                         ),
                         const SizedBox(height: 8.0),
                         CheckboxListTile(
-                          title: const Text('Presença de larvas de Philornis'),
+                          title: Text(S.of(context).philornisLarvaePresent),
                           value: _hasPhilornisLarvae,
                           onChanged: (bool? value) {
                             setState(() {
@@ -164,8 +165,8 @@ class _AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
                         TextFormField(
                           controller: _notesController,
                           maxLines: 3,
-                          decoration: const InputDecoration(
-                            labelText: 'Observações',
+                          decoration: InputDecoration(
+                            labelText: S.of(context).notes,
                             border: OutlineInputBorder(),
                           ),
                         ),
@@ -188,7 +189,7 @@ class _AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
                       )
                           : FilledButton(
                         onPressed: _submitForm,
-                        child: const Text('Salvar'),
+                        child: Text(S.of(context).save),
                       ),
                     )
                 ),
@@ -237,11 +238,11 @@ class _AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
           print('Error adding nest revision: $error');
         }
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Row(
+          SnackBar(content: Row(
             children: [
               Icon(Icons.error_outlined, color: Colors.red),
               SizedBox(width: 8),
-              Text('Erro ao salvar a revisão de ninho.'),
+              Text(S.current.errorSavingRevision),
             ],
           ),
           ),

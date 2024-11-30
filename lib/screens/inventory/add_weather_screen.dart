@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../data/models/inventory.dart';
 import '../../providers/weather_provider.dart';
+import '../../generated/l10n.dart';
 
 class AddWeatherScreen extends StatefulWidget {
   final Inventory inventory;
@@ -44,7 +45,7 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Dados do Tempo'),
+          title: Text(S.of(context).weatherData),
         ),
         body: Column(
             children: [
@@ -61,8 +62,8 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
                               child: TextFormField(
                                 controller: _cloudCoverController,
                                 keyboardType: TextInputType.number,
-                                decoration: const InputDecoration(
-                                  labelText: 'Nebulosidade',
+                                decoration: InputDecoration(
+                                  labelText: S.of(context).cloudCover,
                                   helperText: ' ',
                                   border: OutlineInputBorder(),
                                   suffixText: '%',
@@ -73,9 +74,9 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
                             Expanded(
                               child: DropdownButtonFormField<PrecipitationType>(
                                   value: _selectedPrecipitation,
-                                  decoration: const InputDecoration(
-                                    labelText: 'Precipitação *',
-                                    helperText: '* campo obrigatório',
+                                  decoration: InputDecoration(
+                                    labelText: S.of(context).precipitation,
+                                    helperText: S.of(context).requiredField,
                                     border: OutlineInputBorder(),
                                   ),
                                   items: PrecipitationType.values.map((precipitation) {
@@ -91,7 +92,7 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
                                   },
                                 validator: (value) {
                                   if (value == null || value.index < 0) {
-                                    return 'Selecione uma precipitação';
+                                    return S.of(context).selectPrecipitation;
                                   }
                                   return null;
                                 },
@@ -106,8 +107,8 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
                               child: TextFormField(
                                 controller: _temperatureController,
                                 keyboardType: TextInputType.number,
-                                decoration: const InputDecoration(
-                                  labelText: 'Temperatura',
+                                decoration: InputDecoration(
+                                  labelText: S.of(context).temperature,
                                   border: OutlineInputBorder(),
                                   suffixText: '°C',
                                 ),
@@ -118,8 +119,8 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
                               child: TextFormField(
                                 controller: _windSpeedController,
                                 keyboardType: TextInputType.number,
-                                decoration: const InputDecoration(
-                                  labelText: 'Vento',
+                                decoration: InputDecoration(
+                                  labelText: S.of(context).windSpeed,
                                   border: OutlineInputBorder(),
                                   suffixText: 'bft',
                                 ),
@@ -146,7 +147,7 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
                       )
                           : FilledButton(
                         onPressed: _submitForm,
-                        child: const Text('Salvar'),
+                        child: Text(S.of(context).save),
                       ),
                     )
                 ),
@@ -195,11 +196,11 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
           print('Error adding weather: $error');
         }
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Row(
+          SnackBar(content: Row(
             children: [
               Icon(Icons.error_outlined, color: Colors.red),
               SizedBox(width: 8),
-              Text('Erro ao salvar os dados do tempo'),
+              Text(S.of(context).errorInsertingWeather),
             ],
           ),
           ),

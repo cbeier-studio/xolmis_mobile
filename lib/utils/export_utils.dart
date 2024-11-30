@@ -15,6 +15,8 @@ import '../providers/inventory_provider.dart';
 import '../providers/nest_provider.dart';
 import '../providers/specimen_provider.dart';
 
+import '../generated/l10n.dart';
+
 Future<void> exportAllInventoriesToJson(BuildContext context, InventoryProvider inventoryProvider) async {
   try {
     final finishedInventories = inventoryProvider.finishedInventories;
@@ -30,14 +32,14 @@ Future<void> exportAllInventoriesToJson(BuildContext context, InventoryProvider 
     // Share the file using share_plus
     await Share.shareXFiles([
       XFile(filePath, mimeType: 'application/json'),
-    ], text: 'Inventários exportados!', subject: 'Dados dos Inventários');
+    ], text: S.current.inventoryExported(2), subject: S.current.inventoryData(2));
   } catch (error) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Row(
         children: [
           Icon(Icons.error_outlined, color: Colors.red),
           SizedBox(width: 8),
-          Text('Erro ao exportar os inventários: $error'),
+          Text(S.current.errorExportingInventory(2, error.toString())),
         ],
       ),
       ),
@@ -59,14 +61,14 @@ Future<void> exportInventoryToJson(BuildContext context, Inventory inventory) as
     // Share the file using share_plus
     await Share.shareXFiles([
       XFile(filePath, mimeType: 'application/json'),
-    ], text: 'Inventário exportado!', subject: 'Dados do Inventário ${inventory.id}');
+    ], text: S.current.inventoryExported(1), subject: '${S.current.inventoryExported(1)} ${inventory.id}');
   } catch (error) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Row(
         children: [
           Icon(Icons.error_outlined, color: Colors.red),
           SizedBox(width: 8),
-          Text('Erro ao exportar o inventário: $error'),
+          Text(S.current.errorExportingInventory(1, error.toString())),
         ],
       ),
       ),
@@ -192,14 +194,14 @@ Future<void> exportInventoryToCsv(BuildContext context, Inventory inventory) asy
     // 4. Share the file using share_plus
     await Share.shareXFiles([
       XFile(filePath, mimeType: 'text/csv'),
-    ], text: 'Inventário exportado!', subject: 'Dados do Inventário ${inventory.id}');
+    ], text: S.current.inventoryExported(1), subject: '${S.current.inventoryExported(1)} ${inventory.id}');
   } catch (error) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Row(
         children: [
           Icon(Icons.error_outlined, color: Colors.red),
           SizedBox(width: 8),
-          Text('Erro ao exportar o inventário: $error'),
+          Text(S.current.errorExportingInventory(1, error.toString())),
         ],
       ),
       ),
@@ -221,14 +223,14 @@ Future<void> exportAllInactiveNestsToJson(BuildContext context) async {
 
     await Share.shareXFiles([
       XFile(filePath, mimeType: 'application/json'),
-    ], text: 'Ninhos inativos exportados!', subject: 'Dados dos Ninhos Inativos');
+    ], text: S.current.nestExported(2), subject: S.current.nestData(2));
   } catch (error) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Row(
         children: [
           Icon(Icons.error_outlined, color: Colors.red),
           SizedBox(width: 8),
-          Text('Erro ao exportar os ninhos inativos: $error'),
+          Text(S.current.errorExportingNest(2, error.toString())),
         ],
       ),
       ),
@@ -251,14 +253,14 @@ Future<void> exportNestToJson(BuildContext context, Nest nest) async {
     // 3. Share the file using share_plus
     await Share.shareXFiles([
       XFile(filePath, mimeType: 'application/json'),
-    ], text: 'Ninho exportado!', subject: 'Dados do Ninho ${nest.fieldNumber}');
+    ], text: S.current.nestExported(1), subject: '${S.current.nestData(1)} ${nest.fieldNumber}');
   } catch (error) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Row(
         children: [
           Icon(Icons.error_outlined, color: Colors.red),
           SizedBox(width: 8),
-          Text('Erro ao exportar o ninho: $error'),
+          Text(S.current.errorExportingNest(1, error.toString())),
         ],
       ),
       ),
@@ -365,14 +367,14 @@ Future<void> exportNestToCsv(BuildContext context, Nest nest) async {
     // 4. Share the file using share_plus
     await Share.shareXFiles([
       XFile(filePath, mimeType: 'text/csv'),
-    ], text: 'Ninho exportado!', subject: 'Dados do Ninho ${nest.id}');
+    ], text: S.current.nestExported(1), subject: '${S.current.nestData(1)} ${nest.id}');
   } catch (error) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Row(
         children: [
           Icon(Icons.error_outlined, color: Colors.red),
           SizedBox(width: 8),
-          Text('Erro ao exportar o ninho: $error'),
+          Text(S.current.errorExportingNest(1, error.toString())),
         ],
       ),
       ),
@@ -394,14 +396,14 @@ Future<void> exportAllSpecimensToJson(BuildContext context) async {
 
     await Share.shareXFiles([
       XFile(filePath, mimeType: 'application/json'),
-    ], text: 'Espécimes exportados!', subject: 'Dados dos Espécimes');
+    ], text: S.current.specimenExported(2), subject: S.current.specimenData(2));
   } catch (error) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Row(
         children: [
           Icon(Icons.error_outlined, color: Colors.red),
           SizedBox(width: 8),
-          Text('Erro ao exportar os espécimes: $error'),
+          Text(S.current.errorExportingSpecimen(2, error.toString())),
         ],
       ),
       ),
@@ -451,14 +453,14 @@ Future<void> exportAllSpecimensToCsv(BuildContext context) async {
     // 4. Share the file using share_plus
     await Share.shareXFiles([
       XFile(filePath, mimeType: 'text/csv'),
-    ], text: 'Espécimes exportados!', subject: 'Dados dos Espécimes');
+    ], text: S.current.specimenExported(2), subject: S.current.specimenData(2));
   } catch (error) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Row(
         children: [
           Icon(Icons.error_outlined, color: Colors.red),
           SizedBox(width: 8),
-          Text('Erro ao exportar os espécimes: $error'),
+          Text(S.current.errorExportingSpecimen(2, error.toString())),
         ],
       ),
       ),

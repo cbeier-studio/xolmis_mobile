@@ -12,6 +12,7 @@ import '../../providers/app_image_provider.dart';
 import 'add_specimen_screen.dart';
 import '../app_image_screen.dart';
 import '../../utils/export_utils.dart';
+import '../../generated/l10n.dart';
 
 class SpecimensScreen extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
@@ -82,7 +83,7 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Espécimes'),
+        title: Text(S.of(context).specimens(2)),
         leading: MediaQuery.sizeOf(context).width < 600 ? Builder(
           builder: (context) => IconButton(
             icon: const Icon(Icons.menu_outlined),
@@ -98,7 +99,7 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
             padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 16.0),
             child: SearchBar(
               controller: _searchController,
-              hintText: 'Procurar espécimes...',
+              hintText: S.of(context).findSpecimens,
               leading: const Icon(Icons.search_outlined),
               trailing: [
                 _searchController.text.isNotEmpty
@@ -126,8 +127,8 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
                 final filteredSpecimens = _filterSpecimens(specimenProvider.specimens);
 
                 if (filteredSpecimens.isEmpty) {
-                  return const Center(
-                    child: Text('Nenhum espécime coletado.'),
+                  return Center(
+                    child: Text(S.of(context).noSpecimenCollected),
                   );
                 }
 
@@ -246,17 +247,17 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
                                     context: context,
                                     builder: (BuildContext context) {
                                       return AlertDialog(
-                                        title: const Text('Confirmar Exclusão'),
-                                        content: const Text(
-                                            'Tem certeza que deseja excluir este espécime?'),
+                                        title: Text(S.of(context).confirmDelete),
+                                        content: Text(S.of(context).confirmDeleteMessage(1, "male", S.of(context).specimens(1))),
                                         actions: <Widget>[
                                           TextButton(
-                                            child: const Text('Cancelar'),
+                                            child: Text(S.of(context).cancel),
                                             onPressed: () {
                                               Navigator.of(context).pop(false);
                                             },
                                           ),
-                                          TextButton(child: const Text('Excluir'),
+                                          TextButton(
+                                            child: Text(S.of(context).delete),
                                             onPressed: () {
                                               Navigator.of(context).pop(true);
                                             },
@@ -331,7 +332,7 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        tooltip: 'Novo espécime',
+        tooltip: S.of(context).newSpecimen,
         onPressed: () {
           _showAddSpecimenScreen(context);
         },
@@ -354,7 +355,7 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
                 children: <Widget>[
                   ExpansionTile(
                       leading: const Icon(Icons.file_download_outlined),
-                      title: const Text('Exportar todos os espécimes'),
+                      title: Text(S.of(context).exportAll(S.of(context).specimens(2))),
                       children: [
                         ListTile(
                           leading: const Icon(Icons.table_chart_outlined),
@@ -376,22 +377,22 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
                   ),
                   ListTile(
                     leading: const Icon(Icons.delete_outlined, color: Colors.red,),
-                    title: const Text('Apagar espécime', style: TextStyle(color: Colors.red),),
+                    title: Text(S.of(context).deleteSpecimen, style: TextStyle(color: Colors.red),),
                     onTap: () {
                       // Ask for user confirmation
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                            title: const Text('Confirmar exclusão'),
-                            content: const Text('Tem certeza que deseja excluir este espécime?'),
+                            title: Text(S.of(context).confirmDelete),
+                            content: Text(S.of(context).confirmDeleteMessage(1, "male", S.of(context).specimens(1))),
                             actions: <Widget>[
                               TextButton(
                                 onPressed: () {
                                   Navigator.of(context).pop(false);
                                   Navigator.of(context).pop();
                                 },
-                                child: const Text('Cancelar'),
+                                child: Text(S.of(context).cancel),
                               ),
                               TextButton(
                                 onPressed: () {
@@ -400,7 +401,7 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
                                   // Call the function to delete species
                                   specimenProvider.removeSpecimen(specimen);
                                 },
-                                child: const Text('Excluir'),
+                                child: Text(S.of(context).delete),
                               ),
                             ],
                           );

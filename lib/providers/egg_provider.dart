@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../data/models/nest.dart';
 import '../data/database/repositories/egg_repository.dart';
+import '../generated/l10n.dart';
 
 class EggProvider with ChangeNotifier {
   final EggRepository _eggRepository;
@@ -34,7 +35,7 @@ class EggProvider with ChangeNotifier {
 
   Future<void> addEgg(BuildContext context, int nestId, Egg egg) async {
     if (await eggFieldNumberExists(egg.fieldNumber!)) {
-      throw Exception('Já existe um ovo com este número de campo.');
+      throw Exception(S.current.errorEggAlreadyExists);
     }
 
     // Insert the egg in the database

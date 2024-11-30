@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
+import '../generated/l10n.dart';
+
 class ImageDetailsScreen extends StatelessWidget {
   final String imagePath;
 
@@ -11,7 +13,7 @@ class ImageDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Detalhes da Imagem'),
+        title: Text(S.of(context).imageDetails),
       ),
       body: InteractiveViewer(
         minScale: 0.5,

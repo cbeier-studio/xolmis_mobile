@@ -1,0 +1,505 @@
+{
+    "@@locale": "en",
+    "inventories": "Inventories",
+    "nests": "Nests",
+    "specimens": "{howMany, plural, one{Specimen} other{Specimens}}",
+    "@specimens": {
+        "type": "text",
+        "description": "Specimens display label",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
+    "settings": "Settings",
+    "appearance": "Appearance",
+    "selectMode": "Select the mode",
+    "lightMode": "Light",
+    "darkMode": "Dark",
+    "systemMode": "System theme",
+    "observerSetting": "Observer (acronym)",
+    "observer": "Observer",
+    "observerAcronym": "Observador acronym",
+    "cancel": "Cancel",
+    "save": "Save",
+    "simultaneousInventories": "Simultaneous inventories",
+    "inventory": "{howMany, plural, one{inventory} other{inventories}}",
+    "@inventory": {
+        "type": "text",
+        "description": "Number of inventories",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
+    "mackinnonLists": "Mackinnon lists",
+    "speciesPerList": "{howMany, plural, one{1 species} other{{howMany} species}} per list",
+    "@speciesPerList": {
+        "type": "text",
+        "description": "Number of species per list",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
+    "speciesPerListTitle": "Species per list",
+    "pointCounts": "Count points",
+    "durationMin": "Duration (min)",
+    "inventoryDuration": "{howMany, plural, one{1 minute} other{{howMany} minutes}} of duration",
+    "@inventoryDuration": {
+        "type": "text",
+        "description": "Time duration in minutes",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
+    "timedQualitativeLists": "Timed qualitative lists",
+    "about": "About the app",
+    "dangerZone": "Danger zone",
+    "deleteAppData": "Delete the app data",
+    "deleteData": "Delete data",
+    "deleteDataMessage": "Are you sure you want to delete all app data? This action cannot be undone.",
+    "delete": "Delete",
+    "dataDeleted": "App data deleted successfully!",
+    "ok": "OK",
+    "simultaneousLimitReached": "Limit of simultaneous inventories reached.",
+    "findInventories": "Find inventories...",
+    "active": "Active",
+    "finished": "Finished",
+    "noInventoriesFound": "No inventories found.",
+    "deleteInventory": "Delete inventory",
+    "confirmDelete": "Confirm delete",
+    "confirmDeleteMessage": "Are you sure you want to delete {howMany, plural, one{{gender, select, male{this} female{this} other{this}}} other{{gender, select, male{these} female{these} other{these}}}} {what}?",
+    "@confirmDeleteMessage": {
+        "type": "text",
+        "description": "What will be deleted",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            },
+            "gender": {
+                "type": "String"
+            },
+            "what": {
+                "type": "String"
+            }
+        }
+    },
+    "confirmFinish": "Confirm finish",
+    "confirmFinishMessage": "Are you sure you want to finish this inventory?",
+    "finish": "Finish",
+    "newInventory": "New inventory",
+    "speciesCount": "{howMany, plural, one{1 species} other{{howMany} species}}",
+    "@speciesCount": {
+        "type": "text",
+        "description": "How many species",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
+    "pause": "Pause",
+    "resume": "Resume",
+    "export": "Export {what}",
+    "@export": {
+        "type": "text",
+        "description": "What will be exported",
+        "placeholders": {
+            "what": {
+                "type": "String"
+            }
+        }
+    },
+    "exportAll": "Export all {what}",
+    "@exportAll": {
+        "type": "text",
+        "description": "What will be exported",
+        "placeholders": {
+            "what": {
+                "type": "String"
+            }
+        }
+    },
+    "finishInventory": "Finish inventory",
+    "requiredField": "* required",
+    "inventoryType": "Inventory type *",
+    "selectInventoryType": "Please, select an inventory type",
+    "inventoryId": "Inventory ID *",
+    "generateId": "Generate ID",
+    "siteAcronym": "Site name or acronym",
+    "optional": "* optional",
+    "insertInventoryId": "Please, insert an ID for the inventory",
+    "duration": "Duration",
+    "minutes": "{howMany, plural, one{minute} other{minutes}}",
+    "@minutes": {
+        "type": "text",
+        "description": "Time in minutes",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
+    "insertDuration": "Insert a duration",
+    "maxSpecies": "Max species",
+    "insertMaxSpecies": "Insert the max of species",
+    "mustBeBiggerThanFive": "Must be equal or higher than 5",
+    "startInventory": "Start inventory",
+    "inventoryIdAlreadyExists": "This inventory ID already exists.",
+    "errorInsertingInventory": "Error inserting inventory",
+    "vegetationData": "Vegetation data",
+    "herbs": "Herbs",
+    "distribution": "Distribution",
+    "proportion": "Proportion",
+    "height": "Height",
+    "shrubs": "Shrubs",
+    "trees": "Trees",
+    "notes": "Notes",
+    "insertProportion": "Insert proportion",
+    "insertHeight": "Insert height",
+    "errorInsertingVegetation": "Error inserting vegetation data",
+    "weatherData": "Weather data",
+    "cloudCover": "Cloud cover",
+    "precipitation": "Precipitation *",
+    "selectPrecipitation": "Select precipitation",
+    "temperature": "Temperature",
+    "windSpeed": "Wind speed",
+    "errorInsertingWeather": "Error inserting weather data",
+    "species": "{howMany, plural, one{Species} other{Species}}",
+    "@species": {
+        "type": "text",
+        "description": "Species display label",
+        "placeholders": {
+            "howMany": {
+                "type": "int",
+                "description": "How many species"
+            }
+        }
+    },
+    "speciesAcronym": "{howMany, plural, one{sp.} other{spp.}}",
+    "@speciesAcronym": {
+        "type": "text",
+        "description": "How many species",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
+    "vegetation": "Vegetation",
+    "weather": "Weather",
+    "errorGettingLocation": "Error getting location.",
+    "poi": "POI",
+    "speciesInfo": "Species information",
+    "count": "Count",
+    "individual": "{howMany, plural, one{individual} other{individuals}}",
+    "@individual": {
+        "type": "text",
+        "description": "How many individuals",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
+    "outOfSample": "Out of the sample",
+    "withinSample": "Within the sample",
+    "noPoiFound": "No POI found.",
+    "newPoi": "New POI",
+    "deletePoi": "Delete POI",
+    "decreaseIndividuals": "Decrease individuals count",
+    "increaseIndividuals": "Increase individuals count",
+    "addPoi": "Add POI",
+    "editCount": "Edit count",
+    "individualsCount": "Individuals count",
+    "deleteVegetation": "Delete vegetation record",
+    "noVegetationFound": "No vegetation records.",
+    "weatherRecord": "weather record",
+    "noWeatherFound": "No weather records.",
+    "deleteWeather": "Delete weather record",
+    "findNests": "Find nests...",
+    "inactive": "Inactive",
+    "noNestsFound": "No nests found.",
+    "nest": "{howMany, plural, one{nest} other{nests}}",
+    "@nest": {
+        "type": "text",
+        "description": "How many nests",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
+    "newNest": "New nest",
+    "deleteNest": "Delete nest",
+    "confirmFate": "Confirm fate",
+    "nestFate": "Nest fate *",
+    "errorInactivatingNest": "Error inactivating nest: {errorMessage}",
+    "@errorInactivatingNest": {
+        "type": "text",
+        "description": "Error message returned",
+        "placeholders": {
+            "errorMessage": {
+                "type": "String"
+            }
+        }
+    },
+    "revision": "{howMany, plural, one{Revision} other{Revisions}}",
+    "@revision": {
+        "type": "text",
+        "description": "How many nests",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
+    "egg": "{howMany, plural, one{Egg} other{Eggs}}",
+    "@egg": {
+        "type": "text",
+        "description": "How many nests",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
+    "nestInfo": "Nest information",
+    "timeFound": "Date and time found",
+    "locality": "Locality",
+    "nestSupport": "Nest support",
+    "heightAboveGround": "Height above ground",
+    "male": "Male",
+    "female": "Female",
+    "helpers": "Nest helpers",
+    "noEggsFound": "No eggs recorded.",
+    "deleteEgg": "Delete egg",
+    "noRevisionsFound": "No revisions recorded.",
+    "deleteRevision": "Delete nest revision",
+    "host": "Host",
+    "nidoparasite": "Nidoparasite",
+    "nestling": "{howMany, plural, one{Nestling} other{Nestlings}}",
+    "@nestling": {
+        "type": "text",
+        "description": "How many nestlings",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
+    "addEgg": "Add egg",
+    "fieldNumber": "Field number",
+    "insertFieldNumber": "Please, insert the field number",
+    "selectSpecies": "Please, select a species",
+    "eggShape": "Egg shape",
+    "width": "Width",
+    "length": "Length",
+    "weight": "Weight",
+    "errorEggAlreadyExists": "An egg with this field number already exists.",
+    "errorSavingEgg": "Error saving egg.",
+    "insertLocality": "Please, insert locality name",
+    "insertNestSupport": "Please, insert nest support",
+    "errorNestAlreadyExists": "A nest with this field number already exists.",
+    "errorSavingNest": "Error saving nest.",
+    "nestRevision": "Nest revision",
+    "nestStatus": "Nest status",
+    "nestPhase": "Nest phase",
+    "philornisLarvaePresent": "Philornis larvae present",
+    "errorSavingRevision": "Error saving nest revision.",
+    "findSpecimens": "Find specimens...",
+    "noSpecimenCollected": "No specimen collected.",
+    "newSpecimen": "New specimen",
+    "deleteSpecimen": "Delete specimen",
+    "specimenType": "Specimen type",
+    "errorSpecimenAlreadyExists": "A specimen with this field number already exists.",
+    "errorSavingSpecimen": "Error saving specimen.",
+    "images": "{howMany, plural, one{Image} other{Images}}",
+    "@images": {
+        "type": "text",
+        "description": "How many images",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
+    "noImagesFound": "No images found.",
+    "addImage": "Add image",
+    "gallery": "Gallery",
+    "camera": "Camera",
+    "permissionDenied": "Permission denied.",
+    "permissionDeniedPermanently": "Permission denied permanently.",
+    "shareImage": "Share image",
+    "editImageNotes": "Edit image notes",
+    "deleteImage": "Delete image",
+    "editNotes": "Edit notes",
+    "imageDetails": "Image details",
+    "inventoryExported": "{howMany, plural, one{Inventory exported!} other{Inventories exported!}}",
+    "@inventoryExported": {
+        "type": "text",
+        "description": "How many inventories",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
+    "inventoryData": "{howMany, plural, one{Inventory data} other{Inventories data}}",
+    "@inventoryData": {
+        "type": "text",
+        "description": "How many inventories",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
+    "errorExportingInventory": "Error exporting {howMany, plural, one{inventory} other{inventories}}: {errorMessage}",
+    "@errorExportingInventory": {
+        "type": "text",
+        "description": "Error message when exporting inventories",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            },
+            "errorMessage": {
+                "type": "String"
+            }
+        }
+    },
+    "nestExported": "{howMany, plural, one{Nest exported!} other{Nests exported!}}",
+    "@nestExported": {
+        "type": "text",
+        "description": "How many nests",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
+    "nestData": "{howMany, plural, one{Nest data} other{Nests data}}",
+    "@nestData": {
+        "type": "text",
+        "description": "How many nests",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
+    "errorExportingNest": "Error exporting {howMany, plural, one{nest} other{nests}}: {errorMessage}",
+    "@errorExportingNest": {
+        "type": "text",
+        "description": "Error message when exporting nests",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            },
+            "errorMessage": {
+                "type": "String"
+            }
+        }
+    },
+    "specimenExported": "{howMany, plural, one{Specimen exported!} other{Specimens exported!}}",
+    "@specimenExported": {
+        "type": "text",
+        "description": "How many specimens",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
+    "specimenData": "{howMany, plural, one{Specimen data} other{Specimens data}}",
+    "@specimenData": {
+        "type": "text",
+        "description": "How many specimens",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
+    "errorExportingSpecimen": "Error exporting {howMany, plural, one{specimen} other{specimens}}: {errorMessage}",
+    "@errorExportingSpecimen": {
+        "type": "text",
+        "description": "Error message when exporting specimens",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            },
+            "errorMessage": {
+                "type": "String"
+            }
+        }
+    },
+    "findSpecies": "Find species",
+    "listFinished": "List finished",
+    "listFinishedMessage": "The list reached the maximum of species. Do you want to start the next list or finish now?",
+    "startNextList": "Start next list",
+    "precipitationNone": "None",
+    "precipitationFog": "Fog",
+    "precipitationMist": "Mist",
+    "precipitationDrizzle": "Drizzle",
+    "precipitationRain": "Rain",
+    "distributionNone": "None",
+    "distributionRare": "Rare",
+    "distributionFewSparseIndividuals": "Few sparse individuals",
+    "distributionOnePatch": "One patch",
+    "distributionOnePatchFewSparseIndividuals": "One patch and isolated individuals",
+    "distributionManySparseIndividuals": "Many sparse individuals",
+    "distributionOnePatchManySparseIndividuals": "Patch and many isolated individuals",
+    "distributionFewPatches": "Few patches",
+    "distributionFewPatchesSparseIndividuals": "Few patches and isolated individuals",
+    "distributionManyPatches": "Many equidistant patches",
+    "distributionManyPatchesSparseIndividuals": "Many patches and scattered individuals",
+    "distributionHighDensityIndividuals": "Isolated individuals in high density",
+    "distributionContinuousCoverWithGaps": "Continuous with gaps",
+    "distributionContinuousDenseCover": "Continuous and dense",
+    "distributionContinuousDenseCoverWithEdge": "Continuous with edge between strata",
+    "inventoryFreeQualitative": "Free Qualitative List",
+    "inventoryTimedQualitative": "Timed Qualitative List",
+    "inventoryMackinnonList": "Mackinnon List",
+    "inventoryTransectionCount": "Transection Count",
+    "inventoryPointCount": "Point Count",
+    "inventoryBanding": "Banding",
+    "inventoryCasual": "Casual Observation",
+    "eggShapeSpherical": "Spherical",
+    "eggShapeElliptical": "Elliptical",
+    "eggShapeOval": "Oval",
+    "eggShapePyriform": "Pyriform",
+    "eggShapeConical": "Conical",
+    "eggShapeBiconical": "Biconical",
+    "eggShapeCylindrical": "Cylindrical",
+    "eggShapeLongitudinal": "Longitudinal",
+    "nestStageUnknown": "Unknown",
+    "nestStageBuilding": "Building",
+    "nestStageLaying": "Laying",
+    "nestStageIncubating": "Incubating",
+    "nestStageHatching": "Hatching",
+    "nestStageNestling": "Nestling",
+    "nestStageInactive": "Inactive",
+    "nestStatusUnknown": "Unknown",
+    "nestStatusActive": "Active",
+    "nestStatusInactive": "Inactive",
+    "specimenWholeCarcass": "Whole carcass",
+    "specimenPartialCarcass": "Partial carcass",
+    "specimenNest": "Nest",
+    "specimenBones": "Bones",
+    "specimenEgg": "Egg",
+    "specimenParasites": "Parasites",
+    "specimenFeathers": "Feathers",
+    "specimenBlood": "Blood",
+    "specimenClaw": "Claw",
+    "specimenSwab": "Swab",
+    "specimenTissues": "Tissues",
+    "specimenFeces": "Feces",
+    "specimenRegurgite": "Regurgite"
+}

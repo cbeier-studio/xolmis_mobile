@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../data/models/nest.dart';
 import '../data/database/repositories/nest_repository.dart';
+import '../generated/l10n.dart';
 
 class NestProvider with ChangeNotifier {
   final NestRepository _nestRepository;
@@ -29,7 +30,7 @@ class NestProvider with ChangeNotifier {
 
   Future<void> addNest(Nest nest) async {
     if (await nestFieldNumberExists(nest.fieldNumber!)) {
-      throw Exception('Já existe um ninho com este número de campo.');
+      throw Exception(S.current.errorNestAlreadyExists);
     }
 
     await _nestRepository.insertNest(nest);

@@ -22,6 +22,7 @@ import 'species_tab.dart';
 import 'vegetation_tab.dart';
 import 'weather_tab.dart';
 import '../../utils/export_utils.dart';
+import '../../generated/l10n.dart';
 
 class InventoryDetailScreen extends StatefulWidget {
   final Inventory inventory;
@@ -170,7 +171,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
               final inventory = widget.inventory;
               return IconButton(
                 icon: Icon(inventory.isPaused ? Icons.play_arrow_outlined : Icons.pause_outlined),
-                tooltip: inventory.isPaused ? 'Retomar' : 'Pausa',
+                tooltip: inventory.isPaused ? S.of(context).resume : S.of(context).pause,
                 onPressed: () {
                   if (inventory.isPaused) {
                     inventoryProvider.resumeInventoryTimer(inventory, widget.inventoryRepository);
@@ -190,16 +191,16 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                 final confirmed = await showDialog<bool>(
                   context: context,
                   builder: (context) => AlertDialog(
-                    title: const Text('Confirmar Encerramento'),
-                    content: const Text('Tem certeza que deseja encerrar este inventário?'),
+                    title: Text(S.of(context).confirmFinish),
+                    content: Text(S.of(context).confirmFinishMessage),
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.pop(context, false),
-                        child: const Text('Cancelar'),
+                        child: Text(S.of(context).cancel),
                       ),
                       TextButton(
                         onPressed: () => Navigator.pop(context, true),
-                        child: const Text('Encerrar'),
+                        child: Text(S.of(context).finish),
                       ),
                     ],
                   ),
@@ -259,6 +260,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                 ];
               },
               icon: const Icon(Icons.file_download_outlined),
+              tooltip: S.of(context).export(S.of(context).inventory(1)),
             ),
           const SizedBox(width: 8.0,),
         ],
@@ -270,8 +272,8 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                 mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text('${inventoryTypeFriendlyNames[widget.inventory.type]}'),
-                    if (widget.inventory.duration > 0) Text(': ${widget.inventory.duration} minutos'),
-                    if (widget.inventory.maxSpecies > 0) Text(': ${widget.inventory.maxSpecies} spp.'),
+                    if (widget.inventory.duration > 0) Text(': ${widget.inventory.duration} ${S.of(context).minutes(widget.inventory.duration)}'),
+                    if (widget.inventory.maxSpecies > 0) Text(': ${widget.inventory.maxSpecies} ${S.of(context).speciesAcronym(widget.inventory.maxSpecies)}'),
                   ],
                 ),
               widget.inventory.duration > 0 && !widget.inventory.isFinished
@@ -310,9 +312,9 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                         alignment: AlignmentDirectional.centerEnd,
                         offset: const Offset(24, -8),
                         count: speciesList.length,
-                        child: const Tab(text: 'Espécies'),
+                        child: Tab(text: S.of(context).species(2)),
                       )
-                          : const Tab(text: 'Espécies');
+                          : Tab(text: S.of(context).species(2));
                     },
                   ),
                   Consumer<VegetationProvider>(
@@ -326,9 +328,9 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                         alignment: AlignmentDirectional.centerEnd,
                         offset: const Offset(24, -8),
                         count: vegetationList.length,
-                        child: const Tab(text: 'Vegetação'),
+                        child: Tab(text: S.of(context).vegetation),
                       )
-                          : const Tab(text: 'Vegetação');
+                          : Tab(text: S.of(context).vegetation);
                     },
                   ),
                   Consumer<WeatherProvider>(
@@ -342,9 +344,9 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                         alignment: AlignmentDirectional.centerEnd,
                         offset: const Offset(24, -8),
                         count: weatherList.length,
-                        child: const Tab(text: 'Tempo'),
+                        child: Tab(text: S.of(context).weather),
                       )
-                          : const Tab(text: 'Tempo');
+                          : Tab(text: S.of(context).weather);
                     },
                   ),
                 ],
@@ -379,7 +381,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
             child: Theme.of(context).brightness == Brightness.light
                 ? const Icon(Icons.local_florist_outlined)
                 : const Icon(Icons.local_florist),
-            label: 'Dados de vegetação',
+            label: S.of(context).vegetationData,
             onTap: () {
               _showAddVegetationScreen(context);
             },
@@ -388,7 +390,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
             child: Theme.of(context).brightness == Brightness.light
                 ? const Icon(Icons.wb_sunny_outlined)
                 : const Icon(Icons.wb_sunny),
-            label: 'Dados do tempo',
+            label: S.of(context).weatherData,
             onTap: () {
               _showAddWeatherScreen(context);
             },

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../data/models/specimen.dart';
 import '../data/database/repositories/specimen_repository.dart';
+import '../generated/l10n.dart';
 
 class SpecimenProvider with ChangeNotifier {
   final SpecimenRepository _specimenRepository;
@@ -25,7 +26,7 @@ class SpecimenProvider with ChangeNotifier {
 
   Future<void> addSpecimen(Specimen specimen) async {
     if (await specimenFieldNumberExists(specimen.fieldNumber)) {
-      throw Exception('Já existe um espécime com este número de campo.');
+      throw Exception(S.current.errorSpecimenAlreadyExists);
     }
 
     await _specimenRepository.insertSpecimen(specimen);

@@ -8,6 +8,7 @@ import '../../providers/poi_provider.dart';
 
 import 'species_detail_screen.dart';
 import '../../utils/utils.dart';
+import '../../generated/l10n.dart';
 
 class SpeciesListItem extends StatefulWidget {
   final Species species;
@@ -41,7 +42,7 @@ class SpeciesListItemState extends State<SpeciesListItem> {
           children: [
             IconButton(
               icon: const Icon(Icons.remove_outlined),
-              tooltip: 'Diminuir contagem de indivíduos',
+              tooltip: S.of(context).decreaseIndividuals,
               onPressed: () {
                 if (mounted && widget.species.count > 0) {
                   final speciesProvider = Provider.of<SpeciesProvider>(context, listen: false);
@@ -76,7 +77,7 @@ class SpeciesListItemState extends State<SpeciesListItem> {
             ),
             IconButton(
               icon: const Icon(Icons.add_outlined),
-              tooltip: 'Aumentar contagem de indivíduos',
+              tooltip: S.of(context).increaseIndividuals,
               onPressed: () {
                 if (mounted) {
                   final speciesProvider = Provider.of<SpeciesProvider>(context, listen: false);
@@ -102,7 +103,7 @@ class SpeciesListItemState extends State<SpeciesListItem> {
                     child: const Icon(Icons.add_location_outlined),
                   )
                       : const Icon(Icons.add_location_outlined),
-                  tooltip: 'Adicionar POI',
+                  tooltip: S.of(context).addPoi,
                   onPressed: _isAddingPoi ? null : () async {
                     setState(() {
                       _isAddingPoi = true;
@@ -141,7 +142,7 @@ class SpeciesListItemState extends State<SpeciesListItem> {
                             children: [
                               const Icon(Icons.error_outlined, color: Colors.red),
                               const SizedBox(width: 8),
-                              const Text('Erro ao obter a localização.'),
+                              Text(S.of(context).errorGettingLocation),
                             ],
                           ),
                         ),
@@ -175,7 +176,7 @@ class SpeciesListItemState extends State<SpeciesListItem> {
       builder: (BuildContext context) {
         int currentCount = widget.species.count;
         return AlertDialog(
-          title: const Text('Editar contagem'),
+          title: Text(S.of(context).editCount),
           content: StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
               return Column(
@@ -189,8 +190,8 @@ class SpeciesListItemState extends State<SpeciesListItem> {
                         currentCount = int.tryParse(value) ?? 0;
                       });
                     },
-                    decoration: const InputDecoration(
-                      labelText: 'Contagem de indivíduos',
+                    decoration: InputDecoration(
+                      labelText: S.of(context).individualsCount,
                       border: OutlineInputBorder(),
                     ),
                   ),
@@ -201,11 +202,11 @@ class SpeciesListItemState extends State<SpeciesListItem> {
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Cancelar'),
+              child: Text(S.of(context).cancel),
             ),
             TextButton(
               onPressed: () => Navigator.of(context).pop(currentCount),
-              child: const Text('Salvar'),
+              child: Text(S.of(context).save),
             ),
           ],
         );

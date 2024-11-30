@@ -10,6 +10,7 @@ import '../../providers/nest_revision_provider.dart';
 import '../../providers/app_image_provider.dart';
 
 import '../app_image_screen.dart';
+import '../../generated/l10n.dart';
 
 class NestRevisionsTab extends StatefulWidget {
   final Nest nest;
@@ -44,16 +45,16 @@ class _NestRevisionsTabState extends State<NestRevisionsTab> with AutomaticKeepA
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Confirmar exclusão'),
-          content: const Text('Tem certeza que deseja excluir esta revisão de ninho?'),
+          title: Text(S.of(context).confirmDelete),
+          content: Text(S.of(context).confirmDeleteMessage(1, "female", S.of(context).revision(1).toLowerCase())),
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Cancelar'),
+              child: Text(S.of(context).cancel),
             ),
             TextButton(
               onPressed: () => Navigator.of(context).pop(true),
-              child: const Text('Excluir'),
+              child: Text(S.of(context).delete),
             ),
           ],
         );
@@ -71,10 +72,10 @@ class _NestRevisionsTabState extends State<NestRevisionsTab> with AutomaticKeepA
                     widget.nest.id!);
 
                 if (revisionList.isEmpty) {
-                  return const Center(
+                  return Center(
                     child: Padding(
                       padding: EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 16.0),
-                      child: Text('Nenhuma revisão de ninho registrada.'),
+                      child: Text(S.of(context).noRevisionsFound),
                     ),
                   );
                 } else {
@@ -119,7 +120,7 @@ class _NestRevisionsTabState extends State<NestRevisionsTab> with AutomaticKeepA
                 children: <Widget>[
                   ListTile(
                     leading: const Icon(Icons.delete_outlined, color: Colors.red,),
-                    title: const Text('Apagar revisão de ninho', style: TextStyle(color: Colors.red),),
+                    title: Text(S.of(context).deleteRevision, style: TextStyle(color: Colors.red),),
                     onTap: () async {
                       await _deleteNestRevision(revision);
                       Navigator.pop(context);
@@ -241,8 +242,8 @@ class NestRevisionGridItem extends StatelessWidget {
                       fontWeight: FontWeight.bold),
                 ),
                 Text('${nestStatusTypeFriendlyNames[revision.nestStatus]}: ${nestStageTypeFriendlyNames[revision.nestStage]}'),
-                Text('Hospedeiro: ${revision.eggsHost ?? 0} ${Intl.plural(revision.eggsHost ?? 0, one: 'ovo', other: 'ovos')}, ${revision.nestlingsHost ?? 0} ${Intl.plural(revision.nestlingsHost ?? 0, one: 'ninhego', other: 'ninhegos')}'),
-                Text('Nidoparasita: ${revision.eggsParasite ?? 0} ${Intl.plural(revision.eggsParasite ?? 0, one: 'ovo', other: 'ovos')}, ${revision.nestlingsParasite ?? 0} ${Intl.plural(revision.nestlingsParasite ?? 0, one: 'ninhego', other: 'ninhegos')}'),
+                Text('${S.of(context).host}: ${revision.eggsHost ?? 0} ${S.of(context).egg(revision.eggsHost ?? 0)}, ${revision.nestlingsHost ?? 0} ${S.of(context).nestling(revision.nestlingsHost ?? 0).toLowerCase()}'),
+                Text('${S.of(context).nidoparasite}: ${revision.eggsParasite ?? 0} ${S.of(context).egg(revision.eggsParasite ?? 0)}, ${revision.nestlingsParasite ?? 0} ${S.of(context).nestling(revision.nestlingsParasite ?? 0).toLowerCase()}'),
               ],
             ),
           ],
@@ -307,8 +308,8 @@ class RevisionListItemState extends State<RevisionListItem> {
                   : null,
             ),
           ),
-          Text('Hospedeiro: ${widget.nestRevision.eggsHost ?? 0} ${Intl.plural(widget.nestRevision.eggsHost ?? 0, one: 'ovo', other: 'ovos')}, ${widget.nestRevision.nestlingsHost ?? 0} ${Intl.plural(widget.nestRevision.nestlingsHost ?? 0, one: 'ninhego', other: 'ninhegos')}'),
-          Text('Nidoparasita: ${widget.nestRevision.eggsParasite ?? 0} ${Intl.plural(widget.nestRevision.eggsParasite ?? 0, one: 'ovo', other: 'ovos')}, ${widget.nestRevision.nestlingsParasite ?? 0} ${Intl.plural(widget.nestRevision.nestlingsParasite ?? 0, one: 'ninhego', other: 'ninhegos')}'),
+          Text('${S.of(context).host}: ${widget.nestRevision.eggsHost ?? 0} ${S.of(context).egg(widget.nestRevision.eggsHost ?? 0)}, ${widget.nestRevision.nestlingsHost ?? 0} ${S.of(context).nestling(widget.nestRevision.nestlingsHost ?? 0).toLowerCase()}'),
+          Text('${S.of(context).nidoparasite}: ${widget.nestRevision.eggsParasite ?? 0} ${S.of(context).egg(widget.nestRevision.eggsParasite ?? 0)}, ${widget.nestRevision.nestlingsParasite ?? 0} ${S.of(context).nestling(widget.nestRevision.nestlingsParasite ?? 0).toLowerCase()}'),
         ],
       ),
       onLongPress: widget.onLongPress,

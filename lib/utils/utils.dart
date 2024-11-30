@@ -11,6 +11,7 @@ import '../data/database/repositories/inventory_repository.dart';
 import '../providers/species_provider.dart';
 
 import '../screens/inventory/add_inventory_screen.dart';
+import '../generated/l10n.dart';
 
 List<String> allSpeciesNames = [];
 
@@ -71,12 +72,11 @@ void _showMackinnonDialog(BuildContext context, Inventory inventory, InventoryRe
     context: context,
     builder: (context) {
       return AlertDialog(
-        title: Text('Inventário Concluído'),
-        content: Text(
-            'A lista atingiu o número máximo de espécies. Deseja iniciar a próxima lista ou encerrar?'),
+        title: Text(S.current.listFinished),
+        content: Text(S.current.listFinishedMessage),
         actions: [
           TextButton(
-            child: Text('Iniciar Próxima Lista'),
+            child: Text(S.current.startNextList),
             onPressed: () async {
               // Finish the inventory and open the screen to add inventory
               var maxSpecies = inventory.maxSpecies;
@@ -97,7 +97,7 @@ void _showMackinnonDialog(BuildContext context, Inventory inventory, InventoryRe
             },
           ),
           TextButton(
-            child: Text('Encerrar'),
+            child: Text(S.current.finish),
             onPressed: () async {
               // Finish the inventory and go back to the Home screen
               await inventory.stopTimer(inventoryRepository);

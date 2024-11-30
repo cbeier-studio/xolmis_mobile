@@ -7,6 +7,7 @@ import '../../data/models/inventory.dart';
 import '../../providers/vegetation_provider.dart';
 
 import '../../utils/utils.dart';
+import '../../generated/l10n.dart';
 
 class AddVegetationDataScreen extends StatefulWidget {
   final Inventory inventory;
@@ -62,7 +63,7 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Dados de Vegetação'),
+          title: Text(S.of(context).vegetationData),
         ),
         body: Column(
             children: [
@@ -75,13 +76,13 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
                       children: [
                         Align(
                           alignment: Alignment.centerLeft,
-                          child: const Text('Herbáceas'),
+                          child: Text(S.of(context).herbs),
                         ),
                         const SizedBox(height: 8.0),
                         DropdownButtonFormField<DistributionType>(
                             value: _selectedHerbsDistribution,
-                            decoration: const InputDecoration(
-                              labelText: 'Distribuição',
+                            decoration: InputDecoration(
+                              labelText: S.of(context).distribution,
                               border: OutlineInputBorder(),
                             ),
                             items: DistributionType.values.map((distribution) {
@@ -101,13 +102,13 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
                         const SizedBox(height: 8.0),
                         Align(
                           alignment: Alignment.centerLeft,
-                          child: const Text('Arbustos'),
+                          child: Text(S.of(context).shrubs),
                         ),
                         const SizedBox(height: 8.0),
                         DropdownButtonFormField<DistributionType>(
                             value: _selectedShrubsDistribution,
-                            decoration: const InputDecoration(
-                              labelText: 'Distribuição',
+                            decoration: InputDecoration(
+                              labelText: S.of(context).distribution,
                               border: OutlineInputBorder(),
                             ),
                             items: DistributionType.values.map((distribution) {
@@ -127,13 +128,13 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
                         const SizedBox(height: 8.0),
                         Align(
                           alignment: Alignment.centerLeft,
-                          child: const Text('Árvores'),
+                          child: Text(S.of(context).trees),
                         ),
                         const SizedBox(height: 8.0),
                         DropdownButtonFormField<DistributionType>(
                             value: _selectedTreesDistribution,
-                            decoration: const InputDecoration(
-                              labelText: 'Distribuição',
+                            decoration: InputDecoration(
+                              labelText: S.of(context).distribution,
                               border: OutlineInputBorder(),
                             ),
                             items: DistributionType.values.map((distribution) {
@@ -154,8 +155,8 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
                         TextFormField(
                           controller: _notesController,
                           textCapitalization: TextCapitalization.sentences,
-                          decoration: const InputDecoration(
-                            labelText: 'Observações',
+                          decoration: InputDecoration(
+                            labelText: S.of(context).notes,
                             border: OutlineInputBorder(),
                           ),
                         ),
@@ -178,7 +179,7 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
                     )
                         : FilledButton(
                       onPressed: _submitForm,
-                      child: const Text('Salvar'),
+                      child: Text(S.of(context).save),
                     ),
                   )
                 ),
@@ -195,14 +196,14 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
           child: TextFormField(
             controller: proportionController,
             keyboardType: TextInputType.number,
-            decoration: const InputDecoration(
-              labelText: 'Proporção',
+            decoration: InputDecoration(
+              labelText: S.of(context).proportion,
               border: OutlineInputBorder(),
               suffixText: '%',
             ),
             validator: (value) {
               if (selectedDistribution != DistributionType.disNone && (value == null || value.isEmpty)) {
-                return 'Insira a proporção';
+                return S.of(context).insertProportion;
               }
               return null;
             },
@@ -213,14 +214,14 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
           child: TextFormField(
             controller: heightController,
             keyboardType: TextInputType.number,
-            decoration: const InputDecoration(
-              labelText: 'Altura',
+            decoration: InputDecoration(
+              labelText: S.of(context).height,
               border: OutlineInputBorder(),
               suffixText: 'cm',
             ),
             validator: (value) {
               if (selectedDistribution != DistributionType.disNone && (value == null || value.isEmpty)) {
-                return 'Insira a altura';
+                return S.of(context).insertHeight;
               }
               return null;
             },
@@ -279,11 +280,11 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
           print('Error adding vegetation: $error');
         }
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Row(
+          SnackBar(content: Row(
             children: [
               Icon(Icons.error_outlined, color: Colors.red),
               SizedBox(width: 8),
-              Text('Erro ao salvar os dados de vegetação'),
+              Text(S.of(context).errorInsertingVegetation),
             ],
           ),
           ),

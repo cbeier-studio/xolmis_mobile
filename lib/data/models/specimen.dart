@@ -1,3 +1,4 @@
+import '../../generated/l10n.dart';
 
 enum SpecimenType {
   spcWholeCarcass,
@@ -15,20 +16,20 @@ enum SpecimenType {
   spcRegurgite,
 }
 
-const Map<SpecimenType, String> specimenTypeFriendlyNames = {
-  SpecimenType.spcWholeCarcass: 'Carcaça inteira',
-  SpecimenType.spcPartialCarcass: 'Carcaça parcial',
-  SpecimenType.spcNest: 'Ninho',
-  SpecimenType.spcBones: 'Ossos',
-  SpecimenType.spcEgg: 'Ovo',
-  SpecimenType.spcParasites: 'Parasitas',
-  SpecimenType.spcFeathers: 'Penas',
-  SpecimenType.spcBlood: 'Sangue',
-  SpecimenType.spcClaw: 'Garra',
-  SpecimenType.spcSwab: 'Swab',
-  SpecimenType.spcTissues: 'Tecidos',
-  SpecimenType.spcFeces: 'Fezes',
-  SpecimenType.spcRegurgite: 'Regurgito',
+Map<SpecimenType, String> specimenTypeFriendlyNames = {
+  SpecimenType.spcWholeCarcass: S.current.specimenWholeCarcass,
+  SpecimenType.spcPartialCarcass: S.current.specimenPartialCarcass,
+  SpecimenType.spcNest: S.current.specimenNest,
+  SpecimenType.spcBones: S.current.specimenBones,
+  SpecimenType.spcEgg: S.current.specimenEgg,
+  SpecimenType.spcParasites: S.current.specimenParasites,
+  SpecimenType.spcFeathers: S.current.specimenFeathers,
+  SpecimenType.spcBlood: S.current.specimenBlood,
+  SpecimenType.spcClaw: S.current.specimenClaw,
+  SpecimenType.spcSwab: S.current.specimenSwab,
+  SpecimenType.spcTissues: S.current.specimenTissues,
+  SpecimenType.spcFeces: S.current.specimenFeces,
+  SpecimenType.spcRegurgite: S.current.specimenRegurgite,
 };
 
 class Specimen {

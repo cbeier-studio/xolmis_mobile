@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../providers/inventory_provider.dart';
 import '../../data/models/inventory.dart';
 import '../../utils/utils.dart';
+import '../../generated/l10n.dart';
 
 class AddInventoryScreen extends StatefulWidget {
   final String? initialInventoryId;
@@ -36,7 +37,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Novo Inventário'),
+        title: Text(S.of(context).newInventory),
       ),
       body: Column(
         children: [
@@ -50,9 +51,9 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                   children: [
                     DropdownButtonFormField<InventoryType>(
                       value: _selectedType,
-                      decoration: const InputDecoration(
-                        labelText: 'Tipo de Inventário *',
-                        helperText: '* campo obrigatório',
+                      decoration: InputDecoration(
+                        labelText: S.of(context).inventoryType,
+                        helperText: S.of(context).requiredField,
                         border: OutlineInputBorder(),
                       ),
                       items: InventoryType.values.map((type) {
@@ -68,7 +69,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                       },
                       validator: (value) {
                         if (value == null || value.index < 0) {
-                          return 'Por favor, selecione um tipo de inventário';
+                          return S.of(context).selectInventoryType;
                         }
                         return null;
                       },
@@ -78,8 +79,8 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                       controller: _idController,
                       textCapitalization: TextCapitalization.words,
                       decoration: InputDecoration(
-                        labelText: 'ID do Inventário *',
-                        helperText: '* campo obrigatório',
+                        labelText: S.of(context).inventoryId,
+                        helperText: S.of(context).requiredField,
                         border: const OutlineInputBorder(),
                         suffixIcon: IconButton(
                           icon: const Icon(Icons.auto_mode_outlined),
@@ -89,15 +90,15 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                               builder: (BuildContext context) {
                                 String acronym = '';
                                 return AlertDialog(
-                                  title: const Text('Gerar ID'),
+                                  title: Text(S.of(context).generateId),
                                   content: TextField(
                                     maxLength: 10,
                                     textCapitalization: TextCapitalization.words,
                                     autofocus: true,
-                                    decoration: const InputDecoration(
-                                      labelText: 'Nome ou sigla do local',
+                                    decoration: InputDecoration(
+                                      labelText: S.of(context).siteAcronym,
                                       border: OutlineInputBorder(),
-                                      helperText: '* opcional',
+                                      helperText: S.of(context).optional,
                                     ),
                                     onChanged: (value) {
                                       setState(() {
@@ -107,13 +108,13 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                                   ),
                                   actions: <Widget>[
                                     TextButton(
-                                      child: const Text('Cancelar'),
+                                      child: Text(S.of(context).cancel),
                                       onPressed: () {
                                         Navigator.of(context).pop();
                                       },
                                     ),
                                     TextButton(
-                                      child: const Text('OK'),
+                                      child: Text(S.of(context).ok),
                                       onPressed: () {
                                         Navigator.of(context).pop(acronym);
                                       },
@@ -143,7 +144,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Por favor, insira um ID para o inventário';
+                          return S.of(context).insertInventoryId;
                         }
                         return null;
                       },
@@ -155,14 +156,14 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                             child: TextFormField(
                               controller: _durationController,
                               keyboardType: TextInputType.number,
-                              decoration: const InputDecoration(
-                                labelText: 'Duração',
+                              decoration: InputDecoration(
+                                labelText: S.of(context).duration,
                                 border: OutlineInputBorder(),
-                                suffixText: 'minutos',
+                                suffixText: S.of(context).minutes(2),
                               ),
                               validator: (value) {
                                 if ((_selectedType == InventoryType.invTimedQualitative || _selectedType == InventoryType.invPointCount) && (value == null || value.isEmpty)) {
-                                  return 'Insira uma duração';
+                                  return S.of(context).insertDuration;
                                 }
                                 return null;
                               },
@@ -173,17 +174,17 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                             child: TextFormField(
                               controller: _maxSpeciesController,
                               keyboardType: TextInputType.number,
-                              decoration: const InputDecoration(
-                                labelText: 'Máx. espécies',
+                              decoration: InputDecoration(
+                                labelText: S.of(context).maxSpecies,
                                 border: OutlineInputBorder(),
                                 suffixText: 'spp.',
                               ),
                               validator: (value) {
                                 if ((_selectedType == InventoryType.invMackinnonList) && (value == null || value.isEmpty)) {
-                                  return 'Insira o máximo de espécies';
+                                  return S.of(context).insertMaxSpecies;
                                 }
                                 if ((value != null && value.isNotEmpty) && int.tryParse(value)! < 5) {
-                                  return 'Deve ser maior ou igual a 5';
+                                  return S.of(context).mustBeBiggerThanFive;
                                 }
                                 return null;
                               },
@@ -210,7 +211,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                 )
                     : FilledButton(
                   onPressed: _submitForm,
-                  child: const Text('Iniciar inventário'),
+                  child: Text(S.of(context).startInventory),
                 ),
               )
             ),
@@ -272,11 +273,11 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
         });
         // ID already exists, show a SnackBar
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Row(
+          SnackBar(content: Row(
             children: [
               Icon(Icons.info_outlined, color: Colors.blue),
               SizedBox(width: 8),
-              Text('Já existe um inventário com esta ID.'),
+              Text(S.of(context).inventoryIdAlreadyExists),
             ],
           ),
           ),
@@ -308,11 +309,11 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
       } else {
         // Handle insertion error
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Row(
+          SnackBar(content: Row(
             children: [
               Icon(Icons.error_outlined, color: Colors.red),
               SizedBox(width: 8),
-              Text('Erro ao inserir inventário.'),
+              Text(S.of(context).errorInsertingInventory),
             ],
           ),
           ),

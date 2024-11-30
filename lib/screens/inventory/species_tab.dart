@@ -160,8 +160,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
   Future<void> _deleteSpecies(Species species) async {
     final confirmed = await _showDeleteConfirmationDialog(context);
     if (confirmed) {
-      Provider.of<SpeciesProvider>(context, listen: false)
-          .removeSpecies(context, widget.inventory.id, species.id!);
+      Provider.of<SpeciesProvider>(context, listen: false).removeSpecies(context, widget.inventory.id, species.id!);
     }
   }
 

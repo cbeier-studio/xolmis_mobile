@@ -10,6 +10,7 @@ import '../../providers/egg_provider.dart';
 import '../../providers/app_image_provider.dart';
 
 import '../app_image_screen.dart';
+import '../../generated/l10n.dart';
 
 class EggsTab extends StatefulWidget {
   final Nest nest;
@@ -44,16 +45,16 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Confirmar exclusão'),
-          content: const Text('Tem certeza que deseja excluir este ovo?'),
+          title: Text(S.of(context).confirmDelete),
+          content: Text(S.of(context).confirmDeleteMessage(1, "male", S.of(context).egg(1))),
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Cancelar'),
+              child: Text(S.of(context).cancel),
             ),
             TextButton(
               onPressed: () => Navigator.of(context).pop(true),
-              child: const Text('Excluir'),
+              child: Text(S.of(context).delete),
             ),
           ],
         );
@@ -70,10 +71,10 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
                   final eggList = eggProvider.getEggForNest(
                       widget.nest.id!);
                   if (eggList.isEmpty) {
-                    return const Center(
+                    return Center(
                       child: Padding(
                         padding: EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 16.0),
-                        child: Text('Nenhum ovo registrado.'),
+                        child: Text(S.of(context).noEggsFound),
                       ),
                     );
                   } else {
@@ -116,7 +117,7 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
                 children: <Widget>[
                   ListTile(
                     leading: const Icon(Icons.delete_outlined, color: Colors.red,),
-                    title: const Text('Apagar ovo', style: TextStyle(color: Colors.red),),
+                    title: Text(S.of(context).deleteEgg, style: TextStyle(color: Colors.red),),
                     onTap: () async {
                       await _deleteEgg(egg);
                       Navigator.pop(context);

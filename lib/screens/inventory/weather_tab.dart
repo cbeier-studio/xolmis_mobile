@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../data/models/inventory.dart';
 import '../../providers/weather_provider.dart';
+import '../../generated/l10n.dart';
 
 class WeatherTab extends StatefulWidget {
   final Inventory inventory;
@@ -36,16 +37,16 @@ class _WeatherTabState extends State<WeatherTab> with AutomaticKeepAliveClientMi
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Confirmar exclusão'),
-          content: const Text('Tem certeza que deseja excluir este registro do tempo?'),
+          title: Text(S.of(context).confirmDelete),
+          content: Text(S.of(context).confirmDeleteMessage(1, "male", S.of(context).weatherRecord)),
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Cancelar'),
+              child: Text(S.of(context).cancel),
             ),
             TextButton(
               onPressed: () => Navigator.of(context).pop(true),
-              child: const Text('Excluir'),
+              child: Text(S.of(context).delete),
             ),
           ],
         );
@@ -62,10 +63,10 @@ class _WeatherTabState extends State<WeatherTab> with AutomaticKeepAliveClientMi
                   final weatherList = weatherProvider.getWeatherForInventory(
                       widget.inventory.id);
                   if (weatherList.isEmpty) {
-                    return const Center(
+                    return Center(
                       child: Padding(
                         padding: EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 16.0),
-                        child: Text('Nenhum registro do tempo.'),
+                        child: Text(S.of(context).noWeatherFound),
                       ),
                     );
                   } else {
@@ -109,7 +110,7 @@ class _WeatherTabState extends State<WeatherTab> with AutomaticKeepAliveClientMi
                 children: <Widget>[
                   ListTile(
                     leading: const Icon(Icons.delete_outlined, color: Colors.red,),
-                    title: const Text('Apagar registro do tempo', style: TextStyle(color: Colors.red),),
+                    title: Text(S.of(context).deleteWeather, style: TextStyle(color: Colors.red),),
                     onTap: () async {
                       await _deleteWeather(weather);
                       Navigator.pop(context);

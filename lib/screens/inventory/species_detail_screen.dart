@@ -8,6 +8,7 @@ import '../../providers/poi_provider.dart';
 import '../../data/models/inventory.dart';
 
 import '../../utils/utils.dart';
+import '../../generated/l10n.dart';
 
 class SpeciesDetailScreen extends StatefulWidget {
   final Species species;
@@ -63,21 +64,21 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
       poiProvider.notifyListeners();
 
       // Show success message
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Row(
-            children: [
-              Icon(Icons.check_circle_outlined, color: Colors.green),
-              SizedBox(width: 8),
-              Text('POI inserido com sucesso!'),
-            ],
-          ),
-        ),
-      );
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(
+      //     content: Row(
+      //       children: [
+      //         Icon(Icons.check_circle_outlined, color: Colors.green),
+      //         SizedBox(width: 8),
+      //         Text('POI inserido com sucesso!'),
+      //       ],
+      //     ),
+      //   ),
+      // );
     } else {
       // Show error message
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Row(
             children: [
               Icon(Icons.error_outlined, color: Colors.red),
@@ -113,16 +114,16 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Confirmar exclusão'),
-          content: const Text('Tem certeza que deseja excluir este POI?'),
+          title: Text(S.of(context).confirmDelete),
+          content: Text(S.of(context).confirmDeleteMessage(1, "male", S.of(context).poi)),
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Cancelar'),
+              child: Text(S.of(context).cancel),
             ),
             TextButton(
               onPressed: () => Navigator.of(context).pop(true),
-              child: const Text('Excluir'),
+              child: Text(S.of(context).delete),
             ),
           ],
         );
@@ -147,25 +148,25 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
                       children: [
                         ExpansionTile(
                           leading: const Icon(Icons.info_outlined),
-                          title: const Text('Informações da espécie'),
+                          title: Text(S.of(context).speciesInfo),
                           children: [
                             ListTile(
-                              title: Text('${widget.species.count} ${Intl.plural(widget.species.count, one: 'indivíduo', other: 'indivíduos')}'),
-                              subtitle: Text('Contagem'),
+                              title: Text('${widget.species.count} ${S.of(context).individual(widget.species.count)}'),
+                              subtitle: Text(S.of(context).count),
                             ),
                             ListTile(
-                              title: Text(widget.species.isOutOfInventory ? 'Fora da amostra' : 'Dentro da amostra'),
+                              title: Text(widget.species.isOutOfInventory ? S.of(context).outOfSample : S.of(context).withinSample),
                             ),
                             ListTile(
                               title: Text(widget.species.notes ?? ''),
-                              subtitle: Text('Anotações'),
+                              subtitle: Text(S.of(context).notes),
                             ),
                           ],
                         ),
                         Expanded(
                           child: pois.isEmpty
-                              ? const Center(
-                            child: Text('Nenhum POI encontrado.'),
+                              ?  Center(
+                            child: Text(S.of(context).noPoiFound),
                           )
                               : LayoutBuilder(
                               builder: (BuildContext context, BoxConstraints constraints) {
@@ -186,7 +187,7 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
               }
           ),
       floatingActionButton: FloatingActionButton(
-        tooltip: 'Novo POI',
+        tooltip: S.of(context).newPoi,
         onPressed: () {
           _addPoi();
         },
@@ -217,7 +218,7 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
                   //     child:
                   ListTile(
                     leading: const Icon(Icons.delete_outlined, color: Colors.red,),
-                    title: const Text('Apagar POI', style: TextStyle(color: Colors.red),),
+                    title: Text(S.of(context).deletePoi, style: TextStyle(color: Colors.red),),
                     onTap: () async {
                       final confirmed = await _showDeleteConfirmationDialog(context);
                       if (confirmed) {

@@ -9,6 +9,7 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import '../data/database/database_helper.dart';
 import '../utils/themes.dart';
+import '../generated/l10n.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -63,24 +64,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Configurações'),
+        title: Text(S.of(context).settings),
       ),
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
           ListTile(
             leading: const Icon(Icons.dark_mode_outlined),
-            title: const Text('Aparência'),
+            title: Text(S.of(context).appearance),
             subtitle: Text(_themeMode.name),
             onTap: () {
               showDialog(
                 context: context,
                 builder: (context) {
                   return SimpleDialog(
-                    title: const Text('Selecione o modo'),
+                    title: Text(S.of(context).selectMode),
                     children: [
                       SimpleDialogOption(
-                        child: const Text('Claro'),
+                        child: Text(S.of(context).lightMode),
                         onPressed: () {
                           setState(() {
                             _themeMode = ThemeMode.light;
@@ -91,7 +92,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         },
                       ),
                       SimpleDialogOption(
-                        child: const Text('Escuro'),
+                        child: Text(S.of(context).darkMode),
                         onPressed: () {
                           setState(() {
                             _themeMode = ThemeMode.dark;
@@ -102,7 +103,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         },
                       ),
                       SimpleDialogOption(
-                        child: const Text('Tema do sistema'),
+                        child: Text(S.of(context).systemMode),
                         onPressed: () {
                           setState(() {
                             _themeMode = ThemeMode.system;
@@ -121,7 +122,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Divider(),
           ListTile(
             leading: const Icon(Icons.person_outlined),
-            title: const Text('Observador (sigla)'),
+            title: Text(S.of(context).observerSetting),
             subtitle: Text(_observerAcronym),
             onTap: () async {
               String? newObserver = await showDialog<String>(
@@ -129,25 +130,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 builder: (BuildContext context) {
                   String observer = '';
                   return AlertDialog(
-                    title: const Text('Observador'),
+                    title: Text(S.of(context).observer),
                     content: TextField(
                       textCapitalization: TextCapitalization.characters,
                       onChanged: (value) {
                         observer = value;
                       },
-                      decoration: const InputDecoration(
-                        labelText: 'Sigla do observador',
+                      decoration: InputDecoration(
+                        labelText: S.of(context).observerAcronym,
                         border: OutlineInputBorder(),
                       ),
                     ),
                     actions: <Widget>[
                       TextButton(
                         onPressed: () => Navigator.of(context).pop(),
-                        child: const Text('Cancelar'),
+                        child: Text(S.of(context).cancel),
                       ),
                       TextButton(
                         onPressed: () => Navigator.of(context).pop(observer),
-                        child: const Text('Salvar'),
+                        child: Text(S.of(context).save),
                       ),
                     ],
                   );
@@ -165,8 +166,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Divider(),
           ListTile(
             leading: const Icon(Icons.list_alt_outlined),
-            title: const Text('Inventários simultâneos'),
-            subtitle: Text('$_maxSimultaneousInventories ${Intl.plural(_maxSimultaneousInventories, one: 'inventário', other: 'inventários')}'),
+            title: Text(S.of(context).simultaneousInventories),
+            subtitle: Text('$_maxSimultaneousInventories ${S.of(context).inventory(_maxSimultaneousInventories)}'),
             onTap: () async {
               final newMaxInventories = await showDialog<int>(
                 context: context,
@@ -175,7 +176,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     minValue: 1,
                     maxValue: 10,
                     initialValue: _maxSimultaneousInventories,
-                    title: 'Inventários simultâneos',
+                    title: S.of(context).simultaneousInventories,
                   );
                 },
               );
@@ -189,8 +190,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           ListTile(
             leading: const Icon(Icons.checklist_outlined),
-            title: const Text('Listas de Mackinnon'),
-            subtitle: Text('$_maxSpeciesMackinnon espécies por lista'),
+            title: Text(S.of(context).mackinnonLists),
+            subtitle: Text('$_maxSpeciesMackinnon ${S.of(context).speciesPerList(_maxSpeciesMackinnon)}'),
             onTap: () async {
               final newMaxSpecies = await showDialog<int>(
                 context: context,
@@ -199,7 +200,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     minValue: 1,
                     maxValue: 30,
                     initialValue: _maxSpeciesMackinnon,
-                    title: 'Espécies por lista',
+                    title: S.of(context).speciesPerListTitle,
                   );
                 },
               );
@@ -213,8 +214,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           ListTile(
             leading: const Icon(Icons.timer_outlined),
-            title: const Text('Pontos de contagem'),
-            subtitle: Text('$_pointCountsDuration ${Intl.plural(_pointCountsDuration, one: 'minuto', other: 'minutos')} de duração'),
+            title: Text(S.of(context).pointCounts),
+            subtitle: Text(S.of(context).inventoryDuration(_pointCountsDuration)),
             onTap: () async {
               final newDuration = await showDialog<int>(
                 context: context,
@@ -223,7 +224,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     minValue: 1,
                     maxValue: 60,
                     initialValue: _pointCountsDuration,
-                    title: 'Duração (min)',
+                    title: S.of(context).durationMin,
                   );
                 },
               );
@@ -237,8 +238,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           ListTile(
             leading: const Icon(Icons.timer_outlined),
-            title: const Text('Listas qualitativas temporizadas'),
-            subtitle: Text('$_cumulativeTimeDuration ${Intl.plural(_pointCountsDuration, one: 'minuto', other: 'minutos')} de duração'),
+            title: Text(S.of(context).timedQualitativeLists),
+            subtitle: Text(S.of(context).inventoryDuration(_cumulativeTimeDuration)),
             onTap: () async {
               final newDuration = await showDialog<int>(
                 context: context,
@@ -247,7 +248,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     minValue: 1,
                     maxValue: 120,
                     initialValue: _cumulativeTimeDuration,
-                    title: 'Duração (min)',
+                    title: S.of(context).durationMin,
                   );
                 },
               );
@@ -262,7 +263,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Divider(),
           ListTile(
             leading: const Icon(Icons.info_outlined),
-            title: const Text('Sobre o app'),
+            title: Text(S.of(context).about),
             onTap: () => showLicensePage(
               context: context,
               applicationIcon: Image.asset(
@@ -276,12 +277,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           Divider(),
           ExpansionTile(
-            title: const Text('Área perigosa', style: TextStyle(fontSize: 16,),),
+            title: Text(S.of(context).dangerZone, style: TextStyle(fontSize: 16,),),
             children: [
               ListTile(
                 leading: const Icon(Icons.delete_forever, color: Colors.red,),
-                title: const Text(
-                  'Apagar dados do aplicativo',
+                title: Text(
+                  S.of(context).deleteAppData,
                   style: TextStyle(color: Colors.red),
                 ),
                 onTap: () {
@@ -300,23 +301,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Apagar dados'),
-          content: const Text('Tem certeza que deseja apagar todos os dados do aplicativo? Esta ação não poderá ser desfeita.'),
+          title: Text(S.of(context).deleteData),
+          content: Text(S.of(context).deleteDataMessage),
           actions: <Widget>[
             TextButton(
-              child: const Text('Cancelar'),
+              child: Text(S.of(context).cancel),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: const Text('Apagar'),
+              child: Text(S.of(context).delete),
               onPressed: () async {
                 // Delete the app data
                 await _deleteAppData();
                 Navigator.of(context).pop();
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Dados do aplicativo apagados com sucesso!')),
+                  SnackBar(content: Text(S.of(context).dataDeleted)),
                 );
               },
             ),
@@ -390,13 +391,13 @@ class _NumberPickerDialogState extends State<NumberPickerDialog> {
       ),
       actions: [
         TextButton(
-          child: const Text('Cancelar'),
+          child: Text(S.of(context).cancel),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
         TextButton(
-          child: const Text('OK'),
+          child: Text(S.of(context).ok),
           onPressed: () {
             Navigator.pop(context, _currentValue);
           },

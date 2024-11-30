@@ -11,6 +11,7 @@ import '../../providers/vegetation_provider.dart';
 import '../../providers/app_image_provider.dart';
 
 import '../app_image_screen.dart';
+import '../../generated/l10n.dart';
 
 
 class VegetationTab extends StatefulWidget {
@@ -35,8 +36,7 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
   Future<void> _deleteVegetation(Vegetation vegetation) async {
     final confirmed = await _showDeleteConfirmationDialog(context);
     if (confirmed) {
-      Provider.of<VegetationProvider>(context, listen: false)
-          .removeVegetation(widget.inventory.id, vegetation.id!);
+      Provider.of<VegetationProvider>(context, listen: false).removeVegetation(widget.inventory.id, vegetation.id!);
     }
   }
 
@@ -45,16 +45,16 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Confirmar exclusão'),
-          content: const Text('Tem certeza que deseja excluir estes dados de vegetação?'),
+          title: Text(S.of(context).confirmDelete),
+          content: Text(S.of(context).confirmDeleteMessage(2, "male", S.of(context).vegetationData.toLowerCase())),
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Cancelar'),
+              child: Text(S.of(context).cancel),
             ),
             TextButton(
               onPressed: () => Navigator.of(context).pop(true),
-              child: const Text('Excluir'),
+              child: Text(S.of(context).delete),
             ),
           ],
         );
@@ -71,10 +71,10 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
                   final vegetationList = vegetationProvider.getVegetationForInventory(
                       widget.inventory.id);
                   if (vegetationList.isEmpty) {
-                    return const Center(
+                    return Center(
                       child: Padding(
                         padding: EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 16.0),
-                        child: Text('Nenhum registro de vegetação.'),
+                        child: Text(S.of(context).noVegetationFound),
                       ),
                     );
                   } else {
@@ -118,7 +118,7 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
                 children: <Widget>[
                   ListTile(
                     leading: const Icon(Icons.delete_outlined, color: Colors.red,),
-                    title: const Text('Apagar registro de vegetação', style: TextStyle(color: Colors.red),),
+                    title: Text(S.of(context).deleteVegetation, style: TextStyle(color: Colors.red),),
                     onTap: () async {
                       await _deleteVegetation(vegetation);
                       Navigator.pop(context);
@@ -222,9 +222,9 @@ class VegetationGridItem extends StatelessWidget {
                           fontWeight: FontWeight.bold),
                     ),
                     Text('${vegetation.latitude}; ${vegetation.longitude}'),
-                    Text('Herbáceas: ${vegetation.herbsDistribution?.index ?? 0}; ${vegetation.herbsProportion}%; ${vegetation.herbsHeight} cm'),
-                    Text('Arbustos: ${vegetation.shrubsDistribution?.index ?? 0}; ${vegetation.shrubsProportion}%; ${vegetation.shrubsHeight} cm'),
-                    Text('Árvores: ${vegetation.treesDistribution?.index ?? 0}; ${vegetation.treesProportion}%; ${vegetation.treesHeight} cm'),
+                    Text('${S.of(context).herbs}: ${vegetation.herbsDistribution?.index ?? 0}; ${vegetation.herbsProportion}%; ${vegetation.herbsHeight} cm'),
+                    Text('${S.of(context).shrubs}: ${vegetation.shrubsDistribution?.index ?? 0}; ${vegetation.shrubsProportion}%; ${vegetation.shrubsHeight} cm'),
+                    Text('${S.of(context).trees}: ${vegetation.treesDistribution?.index ?? 0}; ${vegetation.treesProportion}%; ${vegetation.treesHeight} cm'),
                   ],
                 ),
               ],
@@ -282,9 +282,9 @@ class VegetationListItemState extends State<VegetationListItem> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('${widget.vegetation.latitude}; ${widget.vegetation.longitude}'),
-          Text('Herbáceas: ${widget.vegetation.herbsDistribution?.index ?? 0}; ${widget.vegetation.herbsProportion}%; ${widget.vegetation.herbsHeight} cm'),
-          Text('Arbustos: ${widget.vegetation.shrubsDistribution?.index ?? 0}; ${widget.vegetation.shrubsProportion}%; ${widget.vegetation.shrubsHeight} cm'),
-          Text('Árvores: ${widget.vegetation.treesDistribution?.index ?? 0}; ${widget.vegetation.treesProportion}%; ${widget.vegetation.treesHeight} cm'),
+          Text('${S.of(context).herbs}: ${widget.vegetation.herbsDistribution?.index ?? 0}; ${widget.vegetation.herbsProportion}%; ${widget.vegetation.herbsHeight} cm'),
+          Text('${S.of(context).shrubs}: ${widget.vegetation.shrubsDistribution?.index ?? 0}; ${widget.vegetation.shrubsProportion}%; ${widget.vegetation.shrubsHeight} cm'),
+          Text('${S.of(context).trees}: ${widget.vegetation.treesDistribution?.index ?? 0}; ${widget.vegetation.treesProportion}%; ${widget.vegetation.treesHeight} cm'),
         ],
       ),
       onLongPress: widget.onLongPress,

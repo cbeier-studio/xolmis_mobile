@@ -1,3 +1,4 @@
+import '../../generated/l10n.dart';
 
 enum EggShapeType {
   estSpherical,
@@ -10,15 +11,15 @@ enum EggShapeType {
   estLongitudinal,
 }
 
-const Map<EggShapeType, String> eggShapeTypeFriendlyNames = {
-  EggShapeType.estSpherical: 'Esférico',
-  EggShapeType.estElliptical: 'Elíptico',
-  EggShapeType.estOval: 'Oval',
-  EggShapeType.estPyriform: 'Piriforme',
-  EggShapeType.estConical: 'Cônico',
-  EggShapeType.estBiconical: 'Bicônico',
-  EggShapeType.estCylindrical: 'Cilíndrico',
-  EggShapeType.estLongitudinal: 'Longitudinal',
+Map<EggShapeType, String> eggShapeTypeFriendlyNames = {
+  EggShapeType.estSpherical: S.current.eggShapeSpherical,
+  EggShapeType.estElliptical: S.current.eggShapeElliptical,
+  EggShapeType.estOval: S.current.eggShapeOval,
+  EggShapeType.estPyriform: S.current.eggShapePyriform,
+  EggShapeType.estConical: S.current.eggShapeConical,
+  EggShapeType.estBiconical: S.current.eggShapeBiconical,
+  EggShapeType.estCylindrical: S.current.eggShapeCylindrical,
+  EggShapeType.estLongitudinal: S.current.eggShapeLongitudinal,
 };
 
 class Egg {
@@ -97,14 +98,14 @@ enum NestStageType {
   stgInactive,
 }
 
-const Map<NestStageType, String> nestStageTypeFriendlyNames = {
-  NestStageType.stgUnknown: 'Indeterminado',
-  NestStageType.stgBuilding: 'Construção',
-  NestStageType.stgLaying: 'Postura',
-  NestStageType.stgIncubating: 'Incubação',
-  NestStageType.stgHatching: 'Eclosão',
-  NestStageType.stgNestling: 'Ninhego',
-  NestStageType.stgInactive: 'Inativo',
+Map<NestStageType, String> nestStageTypeFriendlyNames = {
+  NestStageType.stgUnknown: S.current.nestStageUnknown,
+  NestStageType.stgBuilding: S.current.nestStageBuilding,
+  NestStageType.stgLaying: S.current.nestStageLaying,
+  NestStageType.stgIncubating: S.current.nestStageIncubating,
+  NestStageType.stgHatching: S.current.nestStageHatching,
+  NestStageType.stgNestling: S.current.nestStageNestling,
+  NestStageType.stgInactive: S.current.nestStageInactive,
 };
 
 enum NestStatusType {
@@ -113,10 +114,10 @@ enum NestStatusType {
   nstInactive,
 }
 
-const Map<NestStatusType, String> nestStatusTypeFriendlyNames = {
-  NestStatusType.nstUnknown: 'Indeterminado',
-  NestStatusType.nstActive: 'Ativo',
-  NestStatusType.nstInactive: 'Inativo',
+Map<NestStatusType, String> nestStatusTypeFriendlyNames = {
+  NestStatusType.nstUnknown: S.current.nestStatusUnknown,
+  NestStatusType.nstActive: S.current.nestStatusActive,
+  NestStatusType.nstInactive: S.current.nestStatusInactive,
 };
 
 class NestRevision {

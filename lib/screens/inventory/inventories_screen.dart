@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,6 +17,7 @@ import 'inventory_detail_screen.dart';
 
 import '../../utils/utils.dart';
 import '../../utils/export_utils.dart';
+import '../../generated/l10n.dart';
 
 
 class InventoriesScreen extends StatefulWidget {
@@ -94,11 +94,11 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     final prefs = await SharedPreferences.getInstance();
     if (inventoryProvider.activeInventories.length == (prefs.getInt('maxSimultaneousInventories') ?? 2)) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Row(
+        SnackBar(content: Row(
           children: [
             Icon(Icons.info_outlined, color: Colors.blue),
             SizedBox(width: 8),
-            Text('Limite de inventários simultâneos atingido.'),
+            Text(S.of(context).simultaneousLimitReached),
           ],
         ),
         ),
@@ -143,7 +143,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Inventários'),
+        title: Text(S.of(context).inventories),
         leading: MediaQuery.sizeOf(context).width < 600 ? Builder(
           builder: (context) => IconButton(
             icon: const Icon(Icons.menu_outlined),
@@ -159,7 +159,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
             padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
             child: SearchBar(
               controller: _searchController,
-              hintText: 'Procurar inventários...',
+              hintText: S.of(context).findInventories,
               leading: const Icon(Icons.search_outlined),
               trailing: [
                 _searchController.text.isNotEmpty
@@ -191,9 +191,9 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                 return SizedBox(
                   width: buttonWidth,
                   child: SegmentedButton<bool>(
-                    segments: const [
-                      ButtonSegment(value: true, label: Text('Ativos')),
-                      ButtonSegment(value: false, label: Text('Encerrados')),
+                    segments: [
+                      ButtonSegment(value: true, label: Text(S.of(context).active)),
+                      ButtonSegment(value: false, label: Text(S.of(context).finished)),
                     ],
                     selected: {_isShowingActiveInventories},
                     onSelectionChanged: (Set<bool> newSelection) {
@@ -223,10 +223,10 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                     );
                   } else if (_isShowingActiveInventories && inventoryProvider.activeInventories.isEmpty ||
                       !_isShowingActiveInventories && inventoryProvider.finishedInventories.isEmpty) {
-                    return const Center(
+                    return Center(
                       child: Padding(
                           padding: EdgeInsets.all(16.0),
-                          child: Text('Nenhum inventário encontrado.')
+                          child: Text(S.of(context).noInventoriesFound)
                       ),
                     );
                   } else {
@@ -317,16 +317,16 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                           context: context,
                                           builder: (BuildContext context) {
                                             return AlertDialog(
-                                              title: const Text('Confirmar exclusão'),
-                                              content: const Text('Tem certeza que deseja excluir este inventário?'),
+                                              title: Text(S.of(context).confirmDelete),
+                                              content: Text(S.of(context).confirmDeleteMessage(1, "male", S.of(context).inventory(1))),
                                               actions: <Widget>[
                                                 TextButton(
                                                   onPressed: () => Navigator.of(context).pop(false),
-                                                  child: const Text('Cancelar'),
+                                                  child: Text(S.of(context).cancel),
                                                 ),
                                                 TextButton(
                                                   onPressed: () => Navigator.of(context).pop(true),
-                                                  child: const Text('Excluir'),
+                                                  child: Text(S.of(context).delete),
                                                 ),
                                               ],
                                             );
@@ -339,16 +339,16 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                           context: context,
                                           builder: (BuildContext context) {
                                             return AlertDialog(
-                                              title: const Text('Confirmar Encerramento'),
-                                              content: const Text('Tem certeza que deseja encerrar este inventário?'),
+                                              title: Text(S.of(context).confirmFinish),
+                                              content: Text(S.of(context).confirmFinishMessage),
                                               actions: <Widget>[
                                                 TextButton(
                                                   onPressed: () => Navigator.of(context).pop(false),
-                                                  child: const Text('Cancelar'),
+                                                  child: Text(S.of(context).cancel),
                                                 ),
                                                 TextButton(
                                                   onPressed: () => Navigator.of(context).pop(true),
-                                                  child: const Text('Encerrar'),
+                                                  child: Text(S.of(context).finish),
                                                 ),
                                               ],
                                             );
@@ -424,7 +424,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        tooltip: 'Novo inventário',
+        tooltip: S.of(context).newInventory,
         onPressed: () {
           _showAddInventoryScreen(context);
         },
@@ -447,43 +447,15 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                 children: <Widget>[
                   _isShowingActiveInventories ? ListTile(
                     leading: const Icon(Icons.flag_outlined),
-                    title: const Text('Encerrar inventário'),
+                    title: Text(S.of(context).finishInventory),
                     onTap: () {
                       // Ask for user confirmation
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: const Text('Confirmar Encerramento'),
-                            content: const Text('Tem certeza que deseja encerrar este inventário?'),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop(false);
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Text('Cancelar'),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop(true);
-                                  Navigator.of(context).pop();
-                                  // Call the function to delete species
-                                  inventory.stopTimer(inventoryRepository);
-                                  inventoryProvider.updateInventory(inventory);
-                                  inventoryProvider.notifyListeners();
-                                },
-                                child: const Text('Encerrar'),
-                              ),
-                            ],
-                          );
-                        },
-                      );
+                      showFinishDialog(context, inventory);
                     },
                   ) : const SizedBox.shrink(),
                   !_isShowingActiveInventories ? ExpansionTile(
                       leading: const Icon(Icons.file_download_outlined),
-                      title: const Text('Exportar inventário'),
+                      title: Text(S.of(context).export(S.of(context).inventory(1))),
                       children: [
                         ListTile(
                           leading: const Icon(Icons.table_chart_outlined),
@@ -505,7 +477,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                   ) : const SizedBox.shrink(),
                   !_isShowingActiveInventories ? ListTile(
                     leading: const Icon(Icons.file_download_outlined),
-                    title: const Text('Exportar todos os inventários'),
+                    title: Text(S.of(context).exportAll(S.of(context).inventory(2))),
                     onTap: () {
                       Navigator.of(context).pop();
                       exportAllInventoriesToJson(context, inventoryProvider);
@@ -513,22 +485,22 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                   ) : const SizedBox.shrink(),
                   ListTile(
                     leading: const Icon(Icons.delete_outlined, color: Colors.red,),
-                    title: const Text('Apagar inventário', style: TextStyle(color: Colors.red),),
+                    title: Text(S.of(context).deleteInventory, style: TextStyle(color: Colors.red),),
                     onTap: () {
                       // Ask for user confirmation
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                            title: const Text('Confirmar exclusão'),
-                            content: const Text('Tem certeza que deseja excluir este inventário?'),
+                            title: Text(S.of(context).confirmDelete),
+                            content: Text(S.of(context).confirmDeleteMessage(1, "male", S.of(context).inventory(1))),
                             actions: <Widget>[
                               TextButton(
                                 onPressed: () {
                                   Navigator.of(context).pop(false);
                                   Navigator.of(context).pop();
                                 },
-                                child: const Text('Cancelar'),
+                                child: Text(S.of(context).cancel),
                               ),
                               TextButton(
                                 onPressed: () {
@@ -537,7 +509,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                   // Call the function to delete species
                                   inventoryProvider.removeInventory(inventory.id);
                                 },
-                                child: const Text('Excluir'),
+                                child: Text(S.of(context).delete),
                               ),
                             ],
                           );
@@ -552,6 +524,38 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
         );
       },
     );
+  }
+
+  Future<dynamic> showFinishDialog(BuildContext context, Inventory inventory) {
+    return showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text(S.of(context).confirmFinish),
+                          content: Text(S.of(context).confirmFinishMessage),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop(false);
+                                Navigator.of(context).pop();
+                              },
+                              child: Text(S.of(context).cancel),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop(true);
+                                Navigator.of(context).pop();
+                                // Call the function to delete species
+                                inventory.stopTimer(inventoryRepository);
+                                inventoryProvider.updateInventory(inventory);
+                                inventoryProvider.notifyListeners();
+                              },
+                              child: Text(S.of(context).finish),
+                            ),
+                          ],
+                        );
+                      },
+                    );
   }
 }
 
@@ -616,12 +620,13 @@ class InventoryGridItem extends StatelessWidget {
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     Text('${inventoryTypeFriendlyNames[inventory.type]}'),
-                    if (_isShowingActiveInventories && inventory.duration > 0) Text('${inventory.duration} ${Intl.plural(inventory.duration, one: 'minuto', other: 'minutos')} de duração'),
+                    if (_isShowingActiveInventories && inventory.duration > 0) 
+                      Text(S.of(context).inventoryDuration(inventory.duration)),
                     Selector<SpeciesProvider, int>(
                       selector: (context, speciesProvider) => speciesProvider.getSpeciesForInventory(inventory.id).length,
                       shouldRebuild: (previous, next) => previous != next,
                       builder: (context, speciesCount, child) {
-                        return Text('$speciesCount ${Intl.plural(speciesCount, one: 'espécie', other: 'espécies')}');
+                        return Text(S.of(context).speciesCount(speciesCount));
                       },
                     ),
                   ],
@@ -634,7 +639,7 @@ class InventoryGridItem extends StatelessWidget {
                         : Icons.play_arrow : Theme.of(context).brightness == Brightness.light
                         ? Icons.pause_outlined
                         : Icons.pause),
-                    tooltip: inventory.isPaused ? 'Retomar' : 'Pausa',
+                    tooltip: inventory.isPaused ? S.of(context).resume : S.of(context).pause,
                     onPressed: () {
                       if (inventory.isPaused) {
                         Provider.of<InventoryProvider>(context, listen: false).resumeInventoryTimer(inventory, inventoryRepository);
@@ -718,12 +723,12 @@ class InventoryListItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('${inventoryTypeFriendlyNames[inventory.type]}'),
-                if (!isHistory && inventory.duration > 0) Text('${inventory.duration} ${Intl.plural(inventory.duration, one: 'minuto', other: 'minutos')} de duração'),
+                if (!isHistory && inventory.duration > 0) Text(S.of(context).inventoryDuration(inventory.duration)),
                 Selector<SpeciesProvider, int>(
                   selector: (context, speciesProvider) => speciesProvider.getSpeciesForInventory(inventory.id).length,
                   shouldRebuild: (previous, next) => previous != next,
                   builder: (context, speciesCount, child) {
-                    return Text('$speciesCount ${Intl.plural(speciesCount, one: 'espécie', other: 'espécies')}');
+                    return Text(S.of(context).speciesCount(speciesCount));
                   },
                 ),
               ],
@@ -739,7 +744,7 @@ class InventoryListItem extends StatelessWidget {
                         : Icons.play_arrow : Theme.of(context).brightness == Brightness.light
                         ? Icons.pause_outlined
                         : Icons.pause),
-                    tooltip: inventory.isPaused ? 'Retomar' : 'Pausa',
+                    tooltip: inventory.isPaused ? S.of(context).resume : S.of(context).pause,
                     onPressed: () {
                       if (inventory.isPaused) {
                         Provider.of<InventoryProvider>(context, listen: false).resumeInventoryTimer(inventory, inventoryRepository);

@@ -8,6 +8,7 @@ import '../../data/models/specimen.dart';
 import '../../providers/specimen_provider.dart';
 import '../../utils/utils.dart';
 import '../../utils/species_search_delegate.dart';
+import '../../generated/l10n.dart';
 
 class AddSpecimenScreen extends StatefulWidget {
   const AddSpecimenScreen({super.key});
@@ -73,7 +74,7 @@ class _AddSpecimenScreenState extends State<AddSpecimenScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Novo Espécime'),
+          title: Text(S.of(context).newSpecimen),
         ),
         body: Column(
             children: [
@@ -87,13 +88,13 @@ class _AddSpecimenScreenState extends State<AddSpecimenScreen> {
                         TextFormField(
                           controller: _fieldNumberController,
                           textCapitalization: TextCapitalization.characters,
-                          decoration: const InputDecoration(
-                            labelText: 'Número de Campo *',
+                          decoration: InputDecoration(
+                            labelText: '${S.of(context).fieldNumber} *',
                             border: OutlineInputBorder(),
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Por favor, insira o número de campo';
+                              return S.of(context).insertFieldNumber;
                             }
                             return null;
                           },
@@ -101,8 +102,8 @@ class _AddSpecimenScreenState extends State<AddSpecimenScreen> {
                         const SizedBox(height: 16.0),
                         DropdownButtonFormField<SpecimenType>(
                           value: _selectedType,
-                          decoration: const InputDecoration(
-                            labelText: 'Tipo de Espécime *',
+                          decoration: InputDecoration(
+                            labelText: '${S.of(context).specimenType} *',
                             border: OutlineInputBorder(),
                           ),
                           items: SpecimenType.values.map((type) {
@@ -120,14 +121,14 @@ class _AddSpecimenScreenState extends State<AddSpecimenScreen> {
                         const SizedBox(height: 16.0),
                         TextFormField(
                           controller: _speciesNameController,
-                          decoration: const InputDecoration(
-                            labelText: 'Espécie *',
+                          decoration: InputDecoration(
+                            labelText: '${S.of(context).species(1)} *',
                             border: OutlineInputBorder(),
                           ),
                           readOnly: true,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Por favor, selecione uma espécie';
+                              return S.of(context).selectSpecies;
                             }
                             return null;
                           },
@@ -169,14 +170,14 @@ class _AddSpecimenScreenState extends State<AddSpecimenScreen> {
                               controller: _fieldLocalityEditingController,
                               focusNode: fieldFocusNode,
                               textCapitalization: TextCapitalization.words,
-                              decoration: const InputDecoration(
-                                labelText: 'Localidade *',
-                                helperText: '* campo obrigatório',
+                              decoration: InputDecoration(
+                                labelText: '${S.of(context).locality} *',
+                                helperText: S.of(context).requiredField,
                                 border: OutlineInputBorder(),
                               ),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Por favor, insira o nome da localidade';
+                                  return S.of(context).insertLocality;
                                 }
                                 return null;
                               },
@@ -191,9 +192,8 @@ class _AddSpecimenScreenState extends State<AddSpecimenScreen> {
                           controller: _notesController,
                           maxLines: 3,
                           textCapitalization: TextCapitalization.sentences,
-                          decoration: const InputDecoration(
-                            labelText: 'Observações',
-                            helperText: '* opcional',
+                          decoration: InputDecoration(
+                            labelText: S.of(context).notes,
                             border: OutlineInputBorder(),
                           ),
                         ),
@@ -216,7 +216,7 @@ class _AddSpecimenScreenState extends State<AddSpecimenScreen> {
                       )
                           : FilledButton(
                         onPressed: _submitForm,
-                        child: const Text('Salvar'),
+                        child: Text(S.of(context).save),
                       ),
                     )
                 ),
@@ -263,26 +263,26 @@ class _AddSpecimenScreenState extends State<AddSpecimenScreen> {
         if (kDebugMode) {
           print('Error adding specimen: $error');
         }
-        if (error.toString().contains('Já existe um espécime com este número de campo.')) {
+        if (error.toString().contains(S.current.errorSpecimenAlreadyExists)) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content:
+            SnackBar(content:
             Row(
               children: [
                 Icon(Icons.info_outlined, color: Colors.blue),
                 SizedBox(width: 8),
-                Text('Já existe um espécime com este número de campo.'),
+                Text(S.current.errorSpecimenAlreadyExists),
               ],
             ),
             ),
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content:
+            SnackBar(content:
             Row(
               children: [
                 Icon(Icons.error_outlined, color: Colors.red),
                 SizedBox(width: 8),
-                Text('Erro ao salvar o espécime'),
+                Text(S.current.errorSavingSpecimen),
               ],
             ),
             ),

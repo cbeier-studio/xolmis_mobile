@@ -9,6 +9,7 @@ import 'add_nest_screen.dart';
 import 'nest_detail_screen.dart';
 
 import '../../utils/export_utils.dart';
+import '../../generated/l10n.dart';
 
 class NestsScreen extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
@@ -80,7 +81,7 @@ class _NestsScreenState extends State<NestsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Ninhos'),
+        title: Text(S.of(context).nests),
         leading: MediaQuery.sizeOf(context).width < 600 ? Builder(
           builder: (context) => IconButton(
             icon: const Icon(Icons.menu_outlined),
@@ -96,7 +97,7 @@ class _NestsScreenState extends State<NestsScreen> {
             padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
             child: SearchBar(
               controller: _searchController,
-              hintText: 'Procurar ninhos...',
+              hintText: S.of(context).findNests,
               leading: const Icon(Icons.search_outlined),
               trailing: [
                 _searchController.text.isNotEmpty
@@ -128,9 +129,9 @@ class _NestsScreenState extends State<NestsScreen> {
                 return SizedBox(
                   width: buttonWidth,
                   child: SegmentedButton<bool>(
-                    segments: const [
-                      ButtonSegment(value: true, label: Text('Ativos')),
-                      ButtonSegment(value: false, label: Text('Inativos')),
+                    segments: [
+                      ButtonSegment(value: true, label: Text(S.of(context).active)),
+                      ButtonSegment(value: false, label: Text(S.of(context).inactive)),
                     ],
                     selected: {_showActive},
                     onSelectionChanged: (Set<bool> newSelection) {
@@ -153,8 +154,8 @@ class _NestsScreenState extends State<NestsScreen> {
 
                   if (_showActive && nestProvider.activeNests.isEmpty ||
                       !_showActive && nestProvider.inactiveNests.isEmpty) {
-                    return const Center(
-                      child: Text('Nenhum ninho encontrado.'),
+                    return Center(
+                      child: Text(S.of(context).noNestsFound),
                     );
                   }
 
@@ -228,17 +229,16 @@ class _NestsScreenState extends State<NestsScreen> {
                                       context: context,
                                       builder: (BuildContext context) {
                                         return AlertDialog(
-                                          title: const Text('Confirmar Exclusão'),
-                                          content: const Text(
-                                              'Tem certeza que deseja excluir este ninho?'),
+                                          title: Text(S.of(context).confirmDelete),
+                                          content: Text(S.of(context).confirmDeleteMessage(1, "male", S.of(context).nest(1))),
                                           actions: <Widget>[
                                             TextButton(
-                                              child: const Text('Cancelar'),
+                                              child: Text(S.of(context).cancel),
                                               onPressed: () {
                                                 Navigator.of(context).pop(false);
                                               },
                                             ),
-                                            TextButton(child: const Text('Excluir'),
+                                            TextButton(child: Text(S.of(context).delete),
                                               onPressed: () {
                                                 Navigator.of(context).pop(true);
                                               },
@@ -299,7 +299,7 @@ class _NestsScreenState extends State<NestsScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        tooltip: 'Novo ninho',
+        tooltip: S.of(context).newNest,
         onPressed: () {
           _showAddNestScreen(context);
         },
@@ -322,7 +322,7 @@ class _NestsScreenState extends State<NestsScreen> {
                 children: <Widget>[
                   !_showActive ? ExpansionTile(
                       leading: const Icon(Icons.file_download_outlined),
-                      title: const Text('Exportar ninho'),
+                      title: Text(S.of(context).export(S.of(context).nest(1))),
                       children: [
                         ListTile(
                           leading: const Icon(Icons.table_chart_outlined),
@@ -344,7 +344,7 @@ class _NestsScreenState extends State<NestsScreen> {
                   ) : const SizedBox.shrink(),
                   !_showActive ? ListTile(
                     leading: const Icon(Icons.file_download_outlined),
-                    title: const Text('Exportar todos os ninhos'),
+                    title: Text(S.of(context).exportAll(S.of(context).nests.toLowerCase())),
                     onTap: () {
                       Navigator.of(context).pop();
                       exportAllInactiveNestsToJson(context);
@@ -352,22 +352,22 @@ class _NestsScreenState extends State<NestsScreen> {
                   ) : const SizedBox.shrink(),
                   ListTile(
                     leading: const Icon(Icons.delete_outlined, color: Colors.red,),
-                    title: const Text('Apagar ninho', style: TextStyle(color: Colors.red),),
+                    title: Text(S.of(context).deleteNest, style: TextStyle(color: Colors.red),),
                     onTap: () {
                       // Ask for user confirmation
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                            title: const Text('Confirmar exclusão'),
-                            content: const Text('Tem certeza que deseja excluir este ninho?'),
+                            title: Text(S.of(context).confirmDelete),
+                            content: Text(S.of(context).confirmDeleteMessage(1, "male", S.of(context).nest(1))),
                             actions: <Widget>[
                               TextButton(
                                 onPressed: () {
                                   Navigator.of(context).pop(false);
                                   Navigator.of(context).pop();
                                 },
-                                child: const Text('Cancelar'),
+                                child: Text(S.of(context).cancel),
                               ),
                               TextButton(
                                 onPressed: () {
@@ -377,7 +377,7 @@ class _NestsScreenState extends State<NestsScreen> {
                                   Provider.of<NestProvider>(context, listen: false)
                                       .removeNest(nest);
                                 },
-                                child: const Text('Excluir'),
+                                child: Text(S.of(context).delete),
                               ),
                             ],
                           );

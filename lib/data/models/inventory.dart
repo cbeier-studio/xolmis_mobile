@@ -10,6 +10,8 @@ import '../database/repositories/inventory_repository.dart';
 
 import '../../main.dart';
 
+import '../../generated/l10n.dart';
+
 class Poi {
   final int? id;
   final int speciesId;
@@ -165,22 +167,22 @@ enum DistributionType {
   disContinuousDenseCoverWithEdge,
 }
 
-const Map<DistributionType, String> distributionTypeFriendlyNames = {
-  DistributionType.disNone: 'Nada',
-  DistributionType.disRare: 'Rara',
-  DistributionType.disFewSparseIndividuals: 'Poucos indivíduos esparsos',
-  DistributionType.disOnePatch: 'Uma mancha',
-  DistributionType.disOnePatchFewSparseIndividuals: 'Uma mancha e indivíduos isolados',
-  DistributionType.disManySparseIndividuals: 'Vários indivíduos esparsos',
-  DistributionType.disOnePatchManySparseIndividuals: 'Mancha e vários indivíduos isolados',
-  DistributionType.disFewPatches: 'Poucas manchas',
-  DistributionType.disFewPatchesSparseIndividuals: 'Poucas manchas e indivíduos isolados',
-  DistributionType.disManyPatches: 'Várias manchas equidistantes',
-  DistributionType.disManyPatchesSparseIndividuals: 'Várias manchas e indivíduos dispersos',
-  DistributionType.disHighDensityIndividuals: 'Indivíduos isolados em alta densidade',
-  DistributionType.disContinuousCoverWithGaps: 'Contínua com manchas sem cobertura',
-  DistributionType.disContinuousDenseCover: 'Contínua e densa',
-  DistributionType.disContinuousDenseCoverWithEdge: 'Contínua com borda separando estratos',
+Map<DistributionType, String> distributionTypeFriendlyNames = {
+  DistributionType.disNone: S.current.distributionNone,
+  DistributionType.disRare: S.current.distributionRare,
+  DistributionType.disFewSparseIndividuals: S.current.distributionFewSparseIndividuals,
+  DistributionType.disOnePatch: S.current.distributionOnePatch,
+  DistributionType.disOnePatchFewSparseIndividuals: S.current.distributionOnePatchFewSparseIndividuals,
+  DistributionType.disManySparseIndividuals: S.current.distributionManySparseIndividuals,
+  DistributionType.disOnePatchManySparseIndividuals: S.current.distributionOnePatchManySparseIndividuals,
+  DistributionType.disFewPatches: S.current.distributionFewPatches,
+  DistributionType.disFewPatchesSparseIndividuals: S.current.distributionFewPatchesSparseIndividuals,
+  DistributionType.disManyPatches: S.current.distributionManyPatches,
+  DistributionType.disManyPatchesSparseIndividuals: S.current.distributionManyPatchesSparseIndividuals,
+  DistributionType.disHighDensityIndividuals: S.current.distributionHighDensityIndividuals,
+  DistributionType.disContinuousCoverWithGaps: S.current.distributionContinuousCoverWithGaps,
+  DistributionType.disContinuousDenseCover: S.current.distributionContinuousDenseCover,
+  DistributionType.disContinuousDenseCoverWithEdge: S.current.distributionContinuousDenseCoverWithEdge,
 };
 
 class Vegetation {
@@ -329,12 +331,12 @@ enum PrecipitationType {
   preRain,
 }
 
-const Map<PrecipitationType, String> precipitationTypeFriendlyNames = {
-  PrecipitationType.preNone: 'Nenhuma',
-  PrecipitationType.preFog: 'Névoa',
-  PrecipitationType.preMist: 'Neblina',
-  PrecipitationType.preDrizzle: 'Garoa',
-  PrecipitationType.preRain: 'Chuva',
+Map<PrecipitationType, String> precipitationTypeFriendlyNames = {
+  PrecipitationType.preNone: S.current.precipitationNone,
+  PrecipitationType.preFog: S.current.precipitationFog,
+  PrecipitationType.preMist: S.current.precipitationMist,
+  PrecipitationType.preDrizzle: S.current.precipitationDrizzle,
+  PrecipitationType.preRain: S.current.precipitationRain,
 };
 
 class Weather {
@@ -429,14 +431,14 @@ enum InventoryType {
   invCasual,
 }
 
-const Map<InventoryType, String> inventoryTypeFriendlyNames = {
-  InventoryType.invFreeQualitative: 'Lista Qualitativa Livre',
-  InventoryType.invTimedQualitative: 'Lista Qualitativa Temporizada',
-  InventoryType.invMackinnonList: 'Lista de Mackinnon',
-  InventoryType.invTransectionCount: 'Contagem em Transecção',
-  InventoryType.invPointCount: 'Ponto de Contagem',
-  InventoryType.invBanding: 'Anilhamento',
-  InventoryType.invCasual: 'Observação Casual',
+Map<InventoryType, String> inventoryTypeFriendlyNames = {
+  InventoryType.invFreeQualitative: S.current.inventoryFreeQualitative,
+  InventoryType.invTimedQualitative: S.current.inventoryTimedQualitative,
+  InventoryType.invMackinnonList: S.current.inventoryMackinnonList,
+  InventoryType.invTransectionCount: S.current.inventoryTransectionCount,
+  InventoryType.invPointCount: S.current.inventoryPointCount,
+  InventoryType.invBanding: S.current.inventoryBanding,
+  InventoryType.invCasual: S.current.inventoryCasual,
 };
 
 class Inventory with ChangeNotifier {

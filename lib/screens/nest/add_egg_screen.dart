@@ -7,6 +7,7 @@ import '../../providers/egg_provider.dart';
 
 import '../../utils/utils.dart';
 import '../../utils/species_search_delegate.dart';
+import '../../generated/l10n.dart';
 
 class AddEggScreen extends StatefulWidget {
   final Nest nest;
@@ -48,7 +49,7 @@ class _AddEggScreenState extends State<AddEggScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Adicionar Ovo'),
+          title: Text(S.of(context).addEgg),
         ),
         body: Column(
             children: [
@@ -62,14 +63,14 @@ class _AddEggScreenState extends State<AddEggScreen> {
                         TextFormField(
                           controller: _fieldNumberController,
                           textCapitalization: TextCapitalization.characters,
-                          decoration: const InputDecoration(
-                            labelText: 'Número de Campo *',
-                            helperText: '* campo obrigatório',
+                          decoration: InputDecoration(
+                            labelText: '${S.of(context).fieldNumber} *',
+                            helperText: S.of(context).requiredField,
                             border: OutlineInputBorder(),
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Por favor, insira o número de campo';
+                              return S.of(context).insertFieldNumber;
                             }
                             return null;
                           },
@@ -77,15 +78,15 @@ class _AddEggScreenState extends State<AddEggScreen> {
                         const SizedBox(height: 16.0),
                         TextFormField(
                           controller: _speciesNameController,
-                          decoration: const InputDecoration(
-                            labelText: 'Espécie *',
-                            helperText: '* campo obrigatório',
+                          decoration: InputDecoration(
+                            labelText: '${S.of(context).species(1)} *',
+                            helperText: S.of(context).requiredField,
                             border: OutlineInputBorder(),
                           ),
                           readOnly: true,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Por favor, selecione uma espécie';
+                              return S.of(context).selectSpecies;
                             }
                             return null;
                           },
@@ -108,9 +109,9 @@ class _AddEggScreenState extends State<AddEggScreen> {
                         const SizedBox(height: 16.0),
                         DropdownButtonFormField<EggShapeType>(
                             value: _selectedEggShape,
-                            decoration: const InputDecoration(
-                              labelText: 'Forma do ovo *',
-                              helperText: '* campo obrigatório',
+                            decoration: InputDecoration(
+                              labelText: '${S.of(context).eggShape} *',
+                              helperText: S.of(context).requiredField,
                               border: OutlineInputBorder(),
                             ),
                             items: EggShapeType.values.map((eggShape) {
@@ -129,8 +130,8 @@ class _AddEggScreenState extends State<AddEggScreen> {
                         TextFormField(
                           controller: _widthController,
                           keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(
-                            labelText: 'Largura',
+                          decoration: InputDecoration(
+                            labelText: S.of(context).width,
                             border: OutlineInputBorder(),
                             suffixText: 'mm',
                           ),
@@ -139,8 +140,8 @@ class _AddEggScreenState extends State<AddEggScreen> {
                         TextFormField(
                           controller: _lengthController,
                           keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(
-                            labelText: 'Comprimento',
+                          decoration: InputDecoration(
+                            labelText: S.of(context).length,
                             border: OutlineInputBorder(),
                             suffixText: 'mm',
                           ),
@@ -149,8 +150,8 @@ class _AddEggScreenState extends State<AddEggScreen> {
                         TextFormField(
                           controller: _massController,
                           keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(
-                            labelText: 'Peso',
+                          decoration: InputDecoration(
+                            labelText: S.of(context).weight,
                             border: OutlineInputBorder(),
                             suffixText: 'g',
                           ),
@@ -174,7 +175,7 @@ class _AddEggScreenState extends State<AddEggScreen> {
                       )
                           : FilledButton(
                         onPressed: _submitForm,
-                        child: const Text('Salvar'),
+                        child: Text(S.of(context).save),
                       ),
                     )
                 ),
@@ -220,26 +221,26 @@ class _AddEggScreenState extends State<AddEggScreen> {
         if (kDebugMode) {
           print('Error adding egg: $error');
         }
-        if (error.toString().contains('Já existe um ovo com este número de campo.')) {
+        if (error.toString().contains(S.current.errorEggAlreadyExists)) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content:
+            SnackBar(content:
             Row(
               children: [
                 Icon(Icons.info_outlined, color: Colors.blue),
                 SizedBox(width: 8),
-                Text('Já existe um ovo com este número de campo.'),
+                Text(S.current.errorEggAlreadyExists),
               ],
             ),
             ),
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content:
+            SnackBar(content:
             Row(
               children: [
                 Icon(Icons.error_outlined, color: Colors.red),
                 SizedBox(width: 8),
-                Text('Erro ao salvar o ovo'),
+                Text(S.current.errorSavingEgg),
               ],
             ),
             ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../generated/l10n.dart';
 
 class SpeciesSearchDelegate extends SearchDelegate<String> {
   final List<String> allSpecies;
@@ -8,7 +9,7 @@ class SpeciesSearchDelegate extends SearchDelegate<String> {
   SpeciesSearchDelegate(this.allSpecies, this.addSpeciesToInventory, this.updateSpeciesList);
 
   @override
-  String? get searchFieldLabel => 'Buscar espécie';
+  String? get searchFieldLabel => S.current.findSpecies;
 
   @override
   List<Widget>? buildActions(BuildContext context) {

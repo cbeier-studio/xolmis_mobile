@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:side_sheet/side_sheet.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'data/database/database_helper.dart';
 
@@ -48,6 +49,7 @@ import 'screens/specimen/specimens_screen.dart';
 import 'screens/settings_screen.dart';
 import 'utils/utils.dart';
 import 'utils/themes.dart';
+import 'generated/l10n.dart';
 
 // Run an empty task just to maintain Xolmis awake
 void callbackDispatcher() {
@@ -188,6 +190,26 @@ class MyApp extends StatelessWidget {
       child: Consumer<ThemeModel>(
         builder: (context, themeModel, child) {
           return MaterialApp(
+            localizationsDelegates: [
+                S.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: S.delegate.supportedLocales,
+            localeResolutionCallback: (Locale? locale, Iterable<Locale> supportedLocales) { 
+              if (locale == null) { 
+                return supportedLocales.first;  
+              } 
+              for (var supportedLocale in supportedLocales) { 
+                if (supportedLocale.languageCode == locale.languageCode && supportedLocale.countryCode == locale.countryCode) {
+                  return supportedLocale; 
+                } else if (supportedLocale.languageCode == locale.languageCode) { 
+                  return supportedLocale; 
+                } 
+              } 
+              return Locale('en', '');  
+            },
             title: 'Xolmis',
             theme: ThemeData.light(),
             darkTheme: ThemeData.dark(),
@@ -292,7 +314,7 @@ class _MainScreenState extends State<MainScreen> {
             );
           },
         ),
-        label: Text('Inventários'),
+        label: Text(S.of(context).inventories),
       ),
       NavigationRailDestination(
         icon: Selector<NestProvider, int>(
@@ -321,7 +343,7 @@ class _MainScreenState extends State<MainScreen> {
             );
           },
         ),
-        label: Text('Ninhos'),
+        label: Text(S.of(context).nests),
       ),
       NavigationRailDestination(
         icon: Selector<SpecimenProvider, int>(
@@ -354,7 +376,7 @@ class _MainScreenState extends State<MainScreen> {
             );
           },
         ),
-        label: Text('Espécimes'),
+        label: Text(S.of(context).specimens(2)),
       ),
     ];
 
@@ -420,7 +442,7 @@ class _MainScreenState extends State<MainScreen> {
                 icon: Theme.of(context).brightness == Brightness.light
                     ? const Icon(Icons.settings_outlined)
                     : const Icon(Icons.settings),
-                label: Text('Configurações'),
+                label: Text(S.of(context).settings),
                 onPressed: () {
                   if (MediaQuery.sizeOf(context).width > 600) {
                     SideSheet.right(
@@ -449,9 +471,9 @@ class _MainScreenState extends State<MainScreen> {
                 count: inventoriesCount,
                 alignment: AlignmentDirectional.centerEnd,
                 offset: const Offset(24, -8),
-                child: const Text('Inventários'),
+                child: Text(S.of(context).inventories),
               )
-                  : const Text('Inventários');
+                  : Text(S.of(context).inventories);
             },
           ),
           selectedIcon: const Icon(Icons.list_alt),
@@ -466,16 +488,16 @@ class _MainScreenState extends State<MainScreen> {
                 count: nestsCount,
                 alignment: AlignmentDirectional.centerEnd,
                 offset: const Offset(24, -8),
-                child: const Text('Ninhos'),
+                child: Text(S.of(context).nests),
               )
-                  : const Text('Ninhos');
+                  : Text(S.of(context).nests);
             },
           ),
           selectedIcon: const Icon(Icons.egg),
         ),
         NavigationDrawerDestination(
           icon: const Icon(Icons.local_offer_outlined),
-          label: const Text('Espécimes'),
+          label: Text(S.of(context).specimens(2)),
           selectedIcon: const Icon(Icons.local_offer),
         ),
       ],

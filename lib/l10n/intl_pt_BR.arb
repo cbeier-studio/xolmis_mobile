@@ -1,0 +1,505 @@
+{
+    "@@locale": "pt_BR",
+    "inventories": "Inventários",
+    "nests": "Ninhos",
+    "specimens": "{howMany, plural, one{Espécime} other{Espécimes}}",
+    "@specimens": {
+        "type": "text",
+        "description": "Specimens display label",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
+    "settings": "Configurações",
+    "appearance": "Aparência",
+    "selectMode": "Selecione o modo",
+    "lightMode": "Claro",
+    "darkMode": "Escuro",
+    "systemMode": "Tema do sistema",
+    "observerSetting": "Observador (sigla)",
+    "observer": "Observador",
+    "observerAcronym": "Sigla do observador",
+    "cancel": "Cancelar",
+    "save": "Salvar",
+    "simultaneousInventories": "Inventários simultâneos",
+    "inventory": "{howMany, plural, one{inventário} other{inventários}}",
+    "@inventory": {
+        "type": "text",
+        "description": "Number of inventories",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
+    "mackinnonLists": "Listas de Mackinnon",
+    "speciesPerList": "{howMany, plural, one{1 espécie} other{{howMany} espécies}} por lista",
+    "@speciesPerList": {
+        "type": "text",
+        "description": "Number of species per list",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
+    "speciesPerListTitle": "Espécies por lista",
+    "pointCounts": "Pontos de contagem",
+    "durationMin": "Duração (min)",
+    "inventoryDuration": "{howMany, plural, one{1 minuto} other{{howMany} minutos}} de duração",
+    "@inventoryDuration": {
+        "type": "text",
+        "description": "Time duration in minutes",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
+    "timedQualitativeLists": "Listas qualitativas temporizadas",
+    "about": "Sobre o app",
+    "dangerZone": "Área perigosa",
+    "deleteAppData": "Apagar dados do aplicativo",
+    "deleteData": "Apagar dados",
+    "deleteDataMessage": "Tem certeza que deseja apagar todos os dados do aplicativo? Esta ação não poderá ser desfeita.",
+    "delete": "Apagar",
+    "dataDeleted": "Dados do aplicativo apagados com sucesso!",
+    "ok": "OK",
+    "simultaneousLimitReached": "Limite de inventários simultâneos atingido.",
+    "findInventories": "Procurar inventários...",
+    "active": "Ativos",
+    "finished": "Encerrados",
+    "noInventoriesFound": "Nenhum inventário encontrado.",
+    "deleteInventory": "Apagar inventário",
+    "confirmDelete": "Confirmar exclusão",
+    "confirmDeleteMessage": "Tem certeza que deseja excluir {howMany, plural, one{{gender, select, male{este} female{esta} other{este(a)}}} other{{gender, select, male{estes} female{estas} other{estes(as)}}}} {what}?",
+    "@confirmDeleteMessage": {
+        "type": "text",
+        "description": "What will be deleted",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            },
+            "gender": {
+                "type": "String"
+            },
+            "what": {
+                "type": "String"
+            }
+        }
+    },
+    "confirmFinish": "Confirmar encerramento",
+    "confirmFinishMessage": "Tem certeza que deseja encerrar este inventário?",
+    "finish": "Encerrar",
+    "newInventory": "Novo inventário",
+    "speciesCount": "{howMany, plural, one{1 espécie} other{{howMany} espécies}}",
+    "@speciesCount": {
+        "type": "text",
+        "description": "How many species",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
+    "pause": "Pausa",
+    "resume": "Retomar",
+    "export": "Exportar {what}",
+    "@export": {
+        "type": "text",
+        "description": "What will be exported",
+        "placeholders": {
+            "what": {
+                "type": "String"
+            }
+        }
+    },
+    "exportAll": "Exportar todos os {what}",
+    "@exportAll": {
+        "type": "text",
+        "description": "What will be exported",
+        "placeholders": {
+            "what": {
+                "type": "String"
+            }
+        }
+    },
+    "finishInventory": "Encerrar inventário",
+    "requiredField": "* obrigatório",
+    "inventoryType": "Tipo de inventário *",
+    "selectInventoryType": "Por favor, selecione um tipo de inventário",
+    "inventoryId": "ID do Inventário *",
+    "generateId": "Gerar ID",
+    "siteAcronym": "Nome ou sigla do local",
+    "optional": "* opcional",
+    "insertInventoryId": "Por favor, insira uma ID para o inventário",
+    "duration": "Duração",
+    "minutes": "{howMany, plural, one{minuto} other{minutos}}",
+    "@minutes": {
+        "type": "text",
+        "description": "Time in minutes",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
+    "insertDuration": "Insira uma duração",
+    "maxSpecies": "Máx. espécies",
+    "insertMaxSpecies": "Insira o máximo de espécies",
+    "mustBeBiggerThanFive": "Deve ser maior ou igual a 5",
+    "startInventory": "Iniciar inventário",
+    "inventoryIdAlreadyExists": "Já existe um inventário com esta ID.",
+    "errorInsertingInventory": "Erro ao inserir inventário.",
+    "vegetationData": "Dados de vegetação",
+    "herbs": "Herbáceas",
+    "distribution": "Distribuição",
+    "proportion": "Proporção",
+    "height": "Altura",
+    "shrubs": "Arbustos",
+    "trees": "Árvores",
+    "notes": "Observações",
+    "insertProportion": "Insira a proporção",
+    "insertHeight": "Insira a altura",
+    "errorInsertingVegetation": "Erro ao salvar os dados de vegetação",
+    "weatherData": "Dados do tempo",
+    "cloudCover": "Nebulosidade",
+    "precipitation": "Precipitação *",
+    "selectPrecipitation": "Selecione uma precipitação",
+    "temperature": "Temperatura",
+    "windSpeed": "Vento",
+    "errorInsertingWeather": "Erro ao salvar os dados do tempo",
+    "species": "{howMany, plural, one{Espécie} other{Espécies}}",
+    "@species": {
+        "type": "text",
+        "description": "Species display label",
+        "placeholders": {
+            "howMany": {
+                "type": "int",
+                "description": "How many species"
+            }
+        }
+    },
+    "speciesAcronym": "{howMany, plural, one{sp.} other{spp.}}",
+    "@speciesAcronym": {
+        "type": "text",
+        "description": "How many species",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
+    "vegetation": "Vegetação",
+    "weather": "Tempo",
+    "errorGettingLocation": "Erro ao obter a localização.",
+    "poi": "POI",
+    "speciesInfo": "Informações da espécie",
+    "count": "Contagem",
+    "individual": "{howMany, plural, one{indivíduo} other{indivíduos}}",
+    "@individual": {
+        "type": "text",
+        "description": "How many individuals",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
+    "outOfSample": "Fora da amostra",
+    "withinSample": "Dentro da amostra",
+    "noPoiFound": "Nenhum POI encontrado.",
+    "newPoi": "Novo POI",
+    "deletePoi": "Apagar POI",
+    "decreaseIndividuals": "Diminuir contagem de indivíduos",
+    "increaseIndividuals": "Aumentar contagem de indivíduos",
+    "addPoi": "Adicionar POI",
+    "editCount": "Editar contagem",
+    "individualsCount": "Contagem de indivíduos",
+    "deleteVegetation": "Apagar registro de vegetação",
+    "noVegetationFound": "Nenhum registro de vegetação",
+    "weatherRecord": "registro do tempo",
+    "noWeatherFound": "Nenhum registro do tempo",
+    "deleteWeather": "Apagar registro do tempo",
+    "findNests": "Procurar ninhos...",
+    "inactive": "Inativos",
+    "noNestsFound": "Nenhum ninho encontrado.",
+    "nest": "{howMany, plural, one{ninho} other{ninhos}}",
+    "@nest": {
+        "type": "text",
+        "description": "How many nests",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
+    "newNest": "Novo ninho",
+    "deleteNest": "Apagar ninho",
+    "confirmFate": "Confirmar destino",
+    "nestFate": "Destino do ninho *",
+    "errorInactivatingNest": "Erro ao desativar o ninho: {errorMessage}",
+    "@errorInactivatingNest": {
+        "type": "text",
+        "description": "Error message returned",
+        "placeholders": {
+            "errorMessage": {
+                "type": "String"
+            }
+        }
+    },
+    "revision": "{howMany, plural, one{Revisão} other{Revisões}}",
+    "@revision": {
+        "type": "text",
+        "description": "How many nests",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
+    "egg": "{howMany, plural, one{Ovo} other{Ovos}}",
+    "@egg": {
+        "type": "text",
+        "description": "How many nests",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
+    "nestInfo": "Informações do ninho",
+    "timeFound": "Data e hora de encontro",
+    "locality": "Localidade",
+    "nestSupport": "Suporte do ninho",
+    "heightAboveGround": "Altura acima do solo",
+    "male": "Macho",
+    "female": "Fêmea",
+    "helpers": "Ajudantes de ninho",
+    "noEggsFound": "Nenhum ovo registrado.",
+    "deleteEgg": "Apagar ovo",
+    "noRevisionsFound": "Nenhuma revisão registrada.",
+    "deleteRevision": "Apagar revisão de ninho",
+    "host": "Hospedeiro",
+    "nidoparasite": "Nidoparasita",
+    "nestling": "{howMany, plural, one{Ninhego} other{Ninhegos}}",
+    "@nestling": {
+        "type": "text",
+        "description": "How many nestlings",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
+    "addEgg": "Adicionar ovo",
+    "fieldNumber": "Número de campo",
+    "insertFieldNumber": "Por favor, insira o número de campo",
+    "selectSpecies": "Por favor, selecione uma espécie",
+    "eggShape": "Forma do ovo",
+    "width": "Largura",
+    "length": "Comprimento",
+    "weight": "Peso",
+    "errorEggAlreadyExists": "Já existe um ovo com este número de campo.",
+    "errorSavingEgg": "Erro ao salvar o ovo.",
+    "insertLocality": "Por favor, insira o nome da localidade",
+    "insertNestSupport": "Por favor, insira o suporte do ninho",
+    "errorNestAlreadyExists": "Já existe um ninho com este número de campo.",
+    "errorSavingNest": "Erro ao salvar o ninho.",
+    "nestRevision": "Revisão de ninho",
+    "nestStatus": "Status do ninho",
+    "nestPhase": "Estágio",
+    "philornisLarvaePresent": "Presença de larvas de Philornis",
+    "errorSavingRevision": "Erro ao salvar a revisão de ninho.",
+    "findSpecimens": "Procurar espécimes...",
+    "noSpecimenCollected": "Nenhum espécime coletado.",
+    "newSpecimen": "Novo espécime",
+    "deleteSpecimen": "Apagar espécime",
+    "specimenType": "Tipo de espécime",
+    "errorSpecimenAlreadyExists": "Já existe um espécime com este número de campo.",
+    "errorSavingSpecimen": "Erro ao salvar o espécime.",
+    "images": "{howMany, plural, one{Imagem} other{Imagens}}",
+    "@images": {
+        "type": "text",
+        "description": "How many images",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
+    "noImagesFound": "Nenhuma imagem encontrada.",
+    "addImage": "Adicionar imagem",
+    "gallery": "Galeria",
+    "camera": "Câmera",
+    "permissionDenied": "Permissão negada.",
+    "permissionDeniedPermanently": "Permissão negada permanentemente.",
+    "shareImage": "Compartilhar imagem",
+    "editImageNotes": "Editar notas da imagem",
+    "deleteImage": "Apagar imagem",
+    "editNotes": "Editar notas",
+    "imageDetails": "Detalhes da imagem",
+    "inventoryExported": "{howMany, plural, one{Inventário exportado!} other{Inventários exportados!}}",
+    "@inventoryExported": {
+        "type": "text",
+        "description": "How many inventories",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
+    "inventoryData": "{howMany, plural, one{Dados do inventário} other{Dados dos inventários}}",
+    "@inventoryData": {
+        "type": "text",
+        "description": "How many inventories",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
+    "errorExportingInventory": "Erro ao exportar {howMany, plural, one{o inventário} other{os inventários}}: {errorMessage}",
+    "@errorExportingInventory": {
+        "type": "text",
+        "description": "Error message when exporting inventories",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            },
+            "errorMessage": {
+                "type": "String"
+            }
+        }
+    },
+    "nestExported": "{howMany, plural, one{Ninho exportado!} other{Ninhos exportados!}}",
+    "@nestExported": {
+        "type": "text",
+        "description": "How many nests",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
+    "nestData": "{howMany, plural, one{Dados do ninho} other{Dados dos ninhos}}",
+    "@nestData": {
+        "type": "text",
+        "description": "How many nests",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
+    "errorExportingNest": "Erro ao exportar {howMany, plural, one{o ninho} other{os ninhos}}: {errorMessage}",
+    "@errorExportingNest": {
+        "type": "text",
+        "description": "Error message when exporting nests",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            },
+            "errorMessage": {
+                "type": "String"
+            }
+        }
+    },
+    "specimenExported": "{howMany, plural, one{Espécime exportado!} other{Espécimes exportados!}}",
+    "@specimenExported": {
+        "type": "text",
+        "description": "How many specimens",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
+    "specimenData": "{howMany, plural, one{Dados do espécime} other{Dados dos espécimes}}",
+    "@specimenData": {
+        "type": "text",
+        "description": "How many specimens",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
+    "errorExportingSpecimen": "Erro ao exportar {howMany, plural, one{o espécime} other{os espécimes}}: {errorMessage}",
+    "@errorExportingSpecimen": {
+        "type": "text",
+        "description": "Error message when exporting specimens",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            },
+            "errorMessage": {
+                "type": "String"
+            }
+        }
+    },
+    "findSpecies": "Buscar espécie",
+    "listFinished": "Lista concluída",
+    "listFinishedMessage": "A lista atingiu o número máximo de espécies. Deseja iniciar a próxima lista ou encerrar?",
+    "startNextList": "Iniciar próxima lista",
+    "precipitationNone": "Nenhuma",
+    "precipitationFog": "Névoa",
+    "precipitationMist": "Neblina",
+    "precipitationDrizzle": "Garoa",
+    "precipitationRain": "Chuva",
+    "distributionNone": "Nada",
+    "distributionRare": "Rara",
+    "distributionFewSparseIndividuals": "Poucos indivíduos esparsos",
+    "distributionOnePatch": "Uma mancha",
+    "distributionOnePatchFewSparseIndividuals": "Uma mancha e indivíduos isolados",
+    "distributionManySparseIndividuals": "Vários indivíduos esparsos",
+    "distributionOnePatchManySparseIndividuals": "Mancha e vários indivíduos isolados",
+    "distributionFewPatches": "Poucas manchas",
+    "distributionFewPatchesSparseIndividuals": "Poucas manchas e indivíduos isolados",
+    "distributionManyPatches": "Várias manchas equidistantes",
+    "distributionManyPatchesSparseIndividuals": "Várias manchas e indivíduos dispersos",
+    "distributionHighDensityIndividuals": "Indivíduos isolados em alta densidade",
+    "distributionContinuousCoverWithGaps": "Contínua com manchas sem cobertura",
+    "distributionContinuousDenseCover": "Contínua e densa",
+    "distributionContinuousDenseCoverWithEdge": "Contínua com borda separando estratos",
+    "inventoryFreeQualitative": "Lista Qualitativa Livre",
+    "inventoryTimedQualitative": "Lista Qualitativa Temporizada",
+    "inventoryMackinnonList": "Lista de Mackinnon",
+    "inventoryTransectionCount": "Contagem em Transecção",
+    "inventoryPointCount": "Ponto de Contagem",
+    "inventoryBanding": "Anilhamento",
+    "inventoryCasual": "Observação Casual",
+    "eggShapeSpherical": "Esférico",
+    "eggShapeElliptical": "Elíptico",
+    "eggShapeOval": "Oval",
+    "eggShapePyriform": "Piriforme",
+    "eggShapeConical": "Cônico",
+    "eggShapeBiconical": "Bicônico",
+    "eggShapeCylindrical": "Cilíndrico",
+    "eggShapeLongitudinal": "Longitudinal",
+    "nestStageUnknown": "Indeterminado",
+    "nestStageBuilding": "Construção",
+    "nestStageLaying": "Postura",
+    "nestStageIncubating": "Incubação",
+    "nestStageHatching": "Eclosão",
+    "nestStageNestling": "Ninhego",
+    "nestStageInactive": "Inativo",
+    "nestStatusUnknown": "Indeterminado",
+    "nestStatusActive": "Ativo",
+    "nestStatusInactive": "Inativo",
+    "specimenWholeCarcass": "Carcaça inteira",
+    "specimenPartialCarcass": "Carcaça parcial",
+    "specimenNest": "Ninho",
+    "specimenBones": "Ossos",
+    "specimenEgg": "Ovo",
+    "specimenParasites": "Parasitas",
+    "specimenFeathers": "Penas",
+    "specimenBlood": "Sangue",
+    "specimenClaw": "Garra",
+    "specimenSwab": "Swab",
+    "specimenTissues": "Tecidos",
+    "specimenFeces": "Fezes",
+    "specimenRegurgite": "Regurgito"
+}

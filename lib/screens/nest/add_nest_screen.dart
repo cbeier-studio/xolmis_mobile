@@ -10,6 +10,7 @@ import '../../providers/nest_provider.dart';
 
 import '../../utils/utils.dart';
 import '../../utils/species_search_delegate.dart';
+import '../../generated/l10n.dart';
 
 class AddNestScreen extends StatefulWidget {
   const AddNestScreen({super.key});
@@ -61,7 +62,7 @@ class _AddNestScreenState extends State<AddNestScreen> {
         _currentPosition = position;
       });
     } else {
-      // Mostrar campos de latitude e longitude para preenchimento manual
+      // Show latitude and longitude fields to fill manually
       // ...
     }
   }
@@ -78,7 +79,7 @@ class _AddNestScreenState extends State<AddNestScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Novo Ninho'),
+          title: Text(S.of(context).newNest),
         ),
         body: Column(
             children: [
@@ -92,14 +93,14 @@ class _AddNestScreenState extends State<AddNestScreen> {
                         TextFormField(
                           controller: _fieldNumberController,
                           textCapitalization: TextCapitalization.characters,
-                          decoration: const InputDecoration(
-                            labelText: 'Número de Campo *',
-                            helperText: '* campo obrigatório',
+                          decoration: InputDecoration(
+                            labelText: '${S.of(context).fieldNumber} *',
+                            helperText: S.of(context).requiredField,
                             border: OutlineInputBorder(),
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Por favor, insira o número de campo';
+                              return S.of(context).insertFieldNumber;
                             }
                             return null;
                           },
@@ -107,15 +108,15 @@ class _AddNestScreenState extends State<AddNestScreen> {
                         const SizedBox(height: 16.0),
                         TextFormField(
                           controller: _speciesNameController,
-                          decoration: const InputDecoration(
-                            labelText: 'Espécie *',
-                            helperText: '* campo obrigatório',
+                          decoration: InputDecoration(
+                            labelText: '${S.of(context).species(1)} *',
+                            helperText: S.of(context).requiredField,
                             border: OutlineInputBorder(),
                           ),
                           readOnly: true,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Por favor, selecione uma espécie';
+                              return S.of(context).selectSpecies;
                             }
                             return null;
                           },
@@ -157,14 +158,14 @@ class _AddNestScreenState extends State<AddNestScreen> {
                               controller: _fieldLocalityEditingController,
                               focusNode: fieldFocusNode,
                               textCapitalization: TextCapitalization.words,
-                              decoration: const InputDecoration(
-                                labelText: 'Localidade *',
-                                helperText: '* campo obrigatório',
+                              decoration: InputDecoration(
+                                labelText: '${S.of(context).locality} *',
+                                helperText: S.of(context).requiredField,
                                 border: OutlineInputBorder(),
                               ),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Por favor, insira o nome da localidade';
+                                  return S.of(context).insertLocality;
                                 }
                                 return null;
                               },
@@ -196,14 +197,14 @@ class _AddNestScreenState extends State<AddNestScreen> {
                               controller: _fieldSupportEditingController,
                               focusNode: fieldFocusNode,
                               textCapitalization: TextCapitalization.sentences,
-                              decoration: const InputDecoration(
-                                labelText: 'Suporte do ninho *',
-                                helperText: '* campo obrigatório',
+                              decoration: InputDecoration(
+                                labelText: '${S.of(context).nestSupport} *',
+                                helperText: S.of(context).requiredField,
                                 border: OutlineInputBorder(),
                               ),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Por favor, insira o suporte do ninho';
+                                  return S.of(context).insertNestSupport;
                                 }
                                 return null;
                               },
@@ -217,8 +218,8 @@ class _AddNestScreenState extends State<AddNestScreen> {
                         TextFormField(
                           controller: _heightAboveGroundController,
                           keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(
-                            labelText: 'Altura acima do solo',
+                          decoration: InputDecoration(
+                            labelText: S.of(context).heightAboveGround,
                             border: OutlineInputBorder(),
                             suffixText: 'm',
                           ),
@@ -231,24 +232,24 @@ class _AddNestScreenState extends State<AddNestScreen> {
                         const SizedBox(height: 16.0),
                         TextFormField(
                           controller: _maleController,
-                          decoration: const InputDecoration(
-                            labelText: 'Macho',
+                          decoration: InputDecoration(
+                            labelText: S.of(context).male,
                             border: OutlineInputBorder(),
                           ),
                         ),
                         const SizedBox(height: 16.0),
                         TextFormField(
                           controller: _femaleController,
-                          decoration: const InputDecoration(
-                            labelText: 'Fêmea',
+                          decoration: InputDecoration(
+                            labelText: S.of(context).female,
                             border: OutlineInputBorder(),
                           ),
                         ),
                         const SizedBox(height: 16.0),
                         TextFormField(
                           controller: _helpersController,
-                          decoration: const InputDecoration(
-                            labelText: 'Ajudantes de ninho',
+                          decoration: InputDecoration(
+                            labelText: S.of(context).helpers,
                             border: OutlineInputBorder(),
                           ),
                         ),
@@ -271,7 +272,7 @@ class _AddNestScreenState extends State<AddNestScreen> {
                       )
                           : FilledButton(
                         onPressed: _submitForm,
-                        child: const Text('Salvar'),
+                        child: Text(S.of(context).save),
                       ),
                     )
                 ),
@@ -323,26 +324,26 @@ class _AddNestScreenState extends State<AddNestScreen> {
         if (kDebugMode) {
           print('Error adding nest: $error');
         }
-        if (error.toString().contains('Já existe um ninho com este número de campo.')) {
+        if (error.toString().contains(S.of(context).errorNestAlreadyExists)) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content:
+            SnackBar(content:
             Row(
               children: [
                 Icon(Icons.info_outlined, color: Colors.blue),
                 SizedBox(width: 8),
-                Text('Já existe um ninho com este número de campo.'),
+                Text(S.of(context).errorNestAlreadyExists),
               ],
             ),
             ),
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content:
+            SnackBar(content:
             Row(
               children: [
                 Icon(Icons.error_outlined, color: Colors.red),
                 SizedBox(width: 8),
-                Text('Erro ao salvar o ninho'),
+                Text(S.current.errorSavingNest),
               ],
             ),
             ),

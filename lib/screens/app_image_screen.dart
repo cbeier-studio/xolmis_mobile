@@ -11,6 +11,7 @@ import '../data/models/app_image.dart';
 import '../providers/app_image_provider.dart';
 
 import 'image_details_screen.dart';
+import '../generated/l10n.dart';
 
 class AppImageScreen extends StatefulWidget {
   final int? vegetationId;
@@ -83,14 +84,14 @@ class _AppImageScreenState extends State<AppImageScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Imagens'),
+        title: Text(S.of(context).images(2)),
       ),
       body: Consumer<AppImageProvider>(
           builder: (context, appImageProvider, child) {
             final images = appImageProvider.images;
             if (images.isEmpty) {
-              return const Center(
-                child: Text('Nenhuma imagem encontrada.'),
+              return Center(
+                child: Text(S.of(context).noImagesFound),
               );
             } else {
               return LayoutBuilder(
@@ -135,7 +136,7 @@ class _AppImageScreenState extends State<AppImageScreen> {
               context: context,
               builder: (context) {
                 return AlertDialog(
-                  title: const Text('Adicionar Imagem'),
+                  title: Text(S.of(context).addImage),
                   content: SingleChildScrollView(
                     child: Form(
                       key: _formKey,
@@ -146,8 +147,8 @@ class _AppImageScreenState extends State<AppImageScreen> {
                             controller: _notesController,
                             maxLines: 3,
                             textCapitalization: TextCapitalization.sentences,
-                            decoration: const InputDecoration(
-                              labelText: 'Notas',
+                            decoration: InputDecoration(
+                              labelText: S.of(context).notes,
                               border: OutlineInputBorder(),
                             ),
                           ),
@@ -156,13 +157,13 @@ class _AppImageScreenState extends State<AppImageScreen> {
                             children: [
                               OutlinedButton.icon(
                                 onPressed: () => _addImage(ImageSource.gallery),
-                                label: const Text('Galeria'),
+                                label: Text(S.of(context).gallery),
                                 icon: const Icon(Icons.image_search_outlined),
                               ),
                               const SizedBox(width: 8.0),
                               OutlinedButton.icon(
                                 onPressed: () => _addImage(ImageSource.camera),
-                                label: const Text('Câmera'),
+                                label: Text(S.of(context).camera),
                                 icon: const Icon(Icons.camera_alt_outlined),
                               ),
                             ],
@@ -173,7 +174,7 @@ class _AppImageScreenState extends State<AppImageScreen> {
                   ),
                   actions: <Widget>[
                     TextButton(
-                      child: const Text('Cancelar'),
+                      child: Text(S.of(context).cancel),
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
@@ -184,11 +185,11 @@ class _AppImageScreenState extends State<AppImageScreen> {
             );
           } else if (cameraStatus.isDenied || photosStatus.isDenied) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Permissão negada.')),
+              SnackBar(content: Text(S.current.permissionDenied)),
             );
           } else if (cameraStatus.isPermanentlyDenied || photosStatus.isPermanentlyDenied) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Permissão negada permanentemente.')),
+              SnackBar(content: Text(S.current.permissionDeniedPermanently)),
             );
             openAppSettings();
           }
@@ -212,7 +213,7 @@ class _AppImageScreenState extends State<AppImageScreen> {
                 children: <Widget>[
                   ListTile(
                     leading: const Icon(Icons.share_outlined),
-                    title: const Text('Compartilhar imagem'),
+                    title: Text(S.of(context).shareImage),
                     onTap: () {
                       Share.shareXFiles([XFile(appImage.imagePath)], text: 'Compartilhando imagem');
                       Navigator.pop(context);
@@ -220,7 +221,7 @@ class _AppImageScreenState extends State<AppImageScreen> {
                   ),
                   ListTile(
                     leading: const Icon(Icons.edit_outlined),
-                    title: const Text('Editar notas da imagem'),
+                    title: Text(S.of(context).editImageNotes),
                     onTap: () {
                       Navigator.pop(context);
                       _showEditNotesDialog(context, appImage);
@@ -228,22 +229,22 @@ class _AppImageScreenState extends State<AppImageScreen> {
                   ),
                   ListTile(
                     leading: const Icon(Icons.delete_outlined, color: Colors.red,),
-                    title: const Text('Apagar imagem', style: TextStyle(color: Colors.red),),
+                    title: Text(S.of(context).deleteImage, style: TextStyle(color: Colors.red),),
                     onTap: () {
                       // Ask for user confirmation
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                            title: const Text('Confirmar exclusão'),
-                            content: const Text('Tem certeza que deseja excluir esta imagem?'),
+                            title: Text(S.of(context).confirmDelete),
+                            content: Text(S.of(context).confirmDeleteMessage(1, "female", S.of(context).images(1).toLowerCase())),
                             actions: <Widget>[
                               TextButton(
                                 onPressed: () {
                                   Navigator.of(context).pop(false);
                                   Navigator.of(context).pop();
                                 },
-                                child: const Text('Cancelar'),
+                                child: Text(S.of(context).cancel),
                               ),
                               TextButton(
                                 onPressed: () {
@@ -252,7 +253,7 @@ class _AppImageScreenState extends State<AppImageScreen> {
                                   // Call the function to delete image
                                   appImageProvider.deleteImage(appImage.id!);
                                 },
-                                child: const Text('Excluir'),
+                                child: Text(S.of(context).delete),
                               ),
                             ],
                           );
@@ -277,25 +278,25 @@ class _AppImageScreenState extends State<AppImageScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Editar notas'),
+          title: Text(S.of(context).editNotes),
           content: TextField(
             controller: notesController,
             maxLines: 3,
             textCapitalization: TextCapitalization.sentences,
-            decoration: const InputDecoration(
-              labelText: 'Notas',
+            decoration: InputDecoration(
+              labelText: S.of(context).notes,
               border: OutlineInputBorder(),
             ),
           ),
           actions: <Widget>[
             TextButton(
-              child: const Text('Cancelar'),
+              child: Text(S.of(context).cancel),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: const Text('Salvar'),
+              child: Text(S.of(context).save),
               onPressed: () async {
                 appImage.notes = notesController.text;
                 final updatedImage = AppImage(
