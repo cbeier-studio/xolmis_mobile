@@ -5,10 +5,11 @@
     "specimens": "{howMany, plural, one{Specimen} other{Specimens}}",
     "@specimens": {
         "type": "text",
-        "description": "Specimens display label",
+        "description": "Titles and messages about specimens",
         "placeholders": {
             "howMany": {
-                "type": "int"
+                "type": "int",
+                "description": "How many specimens it is refering to"
             }
         }
     },
@@ -27,7 +28,7 @@
     "inventory": "{howMany, plural, one{inventory} other{inventories}}",
     "@inventory": {
         "type": "text",
-        "description": "Number of inventories",
+        "description": "Titles and messages about inventories",
         "placeholders": {
             "howMany": {
                 "type": "int"
@@ -38,7 +39,7 @@
     "speciesPerList": "{howMany, plural, one{1 species} other{{howMany} species}} per list",
     "@speciesPerList": {
         "type": "text",
-        "description": "Number of species per list",
+        "description": "How many species per list in settings screen",
         "placeholders": {
             "howMany": {
                 "type": "int"
@@ -51,7 +52,7 @@
     "inventoryDuration": "{howMany, plural, one{1 minute} other{{howMany} minutes}} of duration",
     "@inventoryDuration": {
         "type": "text",
-        "description": "Time duration in minutes",
+        "description": "Time duration in minutes in settings screen",
         "placeholders": {
             "howMany": {
                 "type": "int"
@@ -77,16 +78,19 @@
     "confirmDeleteMessage": "Are you sure you want to delete {howMany, plural, one{{gender, select, male{this} female{this} other{this}}} other{{gender, select, male{these} female{these} other{these}}}} {what}?",
     "@confirmDeleteMessage": {
         "type": "text",
-        "description": "What will be deleted",
+        "description": "Message asking user confirmation to delete record",
         "placeholders": {
             "howMany": {
-                "type": "int"
+                "type": "int",
+                "description": "Number of items to delete"
             },
             "gender": {
-                "type": "String"
+                "type": "String",
+                "description": "Gender of what will be deleted"
             },
             "what": {
-                "type": "String"
+                "type": "String",
+                "description": "Type of item that will be deleted"
             }
         }
     },
@@ -97,7 +101,7 @@
     "speciesCount": "{howMany, plural, one{1 species} other{{howMany} species}}",
     "@speciesCount": {
         "type": "text",
-        "description": "How many species",
+        "description": "How many species the inventory have",
         "placeholders": {
             "howMany": {
                 "type": "int"
@@ -109,7 +113,7 @@
     "export": "Export {what}",
     "@export": {
         "type": "text",
-        "description": "What will be exported",
+        "description": "Menu option to export one record",
         "placeholders": {
             "what": {
                 "type": "String"
@@ -119,7 +123,7 @@
     "exportAll": "Export all {what}",
     "@exportAll": {
         "type": "text",
-        "description": "What will be exported",
+        "description": "Menu option to export all records",
         "placeholders": {
             "what": {
                 "type": "String"
@@ -139,7 +143,7 @@
     "minutes": "{howMany, plural, one{minute} other{minutes}}",
     "@minutes": {
         "type": "text",
-        "description": "Time in minutes",
+        "description": "Field suffix and messages containing duration of time",
         "placeholders": {
             "howMany": {
                 "type": "int"
@@ -174,7 +178,7 @@
     "species": "{howMany, plural, one{Species} other{Species}}",
     "@species": {
         "type": "text",
-        "description": "Species display label",
+        "description": "Tabs and messages about species",
         "placeholders": {
             "howMany": {
                 "type": "int",
@@ -185,7 +189,7 @@
     "speciesAcronym": "{howMany, plural, one{sp.} other{spp.}}",
     "@speciesAcronym": {
         "type": "text",
-        "description": "How many species",
+        "description": "Abbreviation of species in labels and edits",
         "placeholders": {
             "howMany": {
                 "type": "int"
@@ -201,7 +205,7 @@
     "individual": "{howMany, plural, one{individual} other{individuals}}",
     "@individual": {
         "type": "text",
-        "description": "How many individuals",
+        "description": "Messages and labels about individuals",
         "placeholders": {
             "howMany": {
                 "type": "int"
@@ -229,7 +233,7 @@
     "nest": "{howMany, plural, one{nest} other{nests}}",
     "@nest": {
         "type": "text",
-        "description": "How many nests",
+        "description": "Messages and labels about nests",
         "placeholders": {
             "howMany": {
                 "type": "int"
@@ -243,7 +247,7 @@
     "errorInactivatingNest": "Error inactivating nest: {errorMessage}",
     "@errorInactivatingNest": {
         "type": "text",
-        "description": "Error message returned",
+        "description": "Error message when inactivating nest",
         "placeholders": {
             "errorMessage": {
                 "type": "String"
@@ -253,7 +257,7 @@
     "revision": "{howMany, plural, one{Revision} other{Revisions}}",
     "@revision": {
         "type": "text",
-        "description": "How many nests",
+        "description": "Nest revision messages, tabs and labels",
         "placeholders": {
             "howMany": {
                 "type": "int"
@@ -263,7 +267,7 @@
     "egg": "{howMany, plural, one{Egg} other{Eggs}}",
     "@egg": {
         "type": "text",
-        "description": "How many nests",
+        "description": "Egg messages, tabs and labels",
         "placeholders": {
             "howMany": {
                 "type": "int"
@@ -287,7 +291,7 @@
     "nestling": "{howMany, plural, one{Nestling} other{Nestlings}}",
     "@nestling": {
         "type": "text",
-        "description": "How many nestlings",
+        "description": "Nestling messages and labels",
         "placeholders": {
             "howMany": {
                 "type": "int"
@@ -323,7 +327,7 @@
     "images": "{howMany, plural, one{Image} other{Images}}",
     "@images": {
         "type": "text",
-        "description": "How many images",
+        "description": "Images titles, messages and labels",
         "placeholders": {
             "howMany": {
                 "type": "int"
@@ -344,7 +348,7 @@
     "inventoryExported": "{howMany, plural, one{Inventory exported!} other{Inventories exported!}}",
     "@inventoryExported": {
         "type": "text",
-        "description": "How many inventories",
+        "description": "Message when inventory was exported",
         "placeholders": {
             "howMany": {
                 "type": "int"
@@ -354,7 +358,7 @@
     "inventoryData": "{howMany, plural, one{Inventory data} other{Inventories data}}",
     "@inventoryData": {
         "type": "text",
-        "description": "How many inventories",
+        "description": "Subject when exporting inventories",
         "placeholders": {
             "howMany": {
                 "type": "int"
@@ -377,7 +381,7 @@
     "nestExported": "{howMany, plural, one{Nest exported!} other{Nests exported!}}",
     "@nestExported": {
         "type": "text",
-        "description": "How many nests",
+        "description": "Message when nest was exported",
         "placeholders": {
             "howMany": {
                 "type": "int"
@@ -387,7 +391,7 @@
     "nestData": "{howMany, plural, one{Nest data} other{Nests data}}",
     "@nestData": {
         "type": "text",
-        "description": "How many nests",
+        "description": "Subject when exporting nest",
         "placeholders": {
             "howMany": {
                 "type": "int"
@@ -410,7 +414,7 @@
     "specimenExported": "{howMany, plural, one{Specimen exported!} other{Specimens exported!}}",
     "@specimenExported": {
         "type": "text",
-        "description": "How many specimens",
+        "description": "Message when specimen was exported",
         "placeholders": {
             "howMany": {
                 "type": "int"
@@ -420,7 +424,7 @@
     "specimenData": "{howMany, plural, one{Specimen data} other{Specimens data}}",
     "@specimenData": {
         "type": "text",
-        "description": "How many specimens",
+        "description": "Subject when exporting specimen",
         "placeholders": {
             "howMany": {
                 "type": "int"
@@ -441,9 +445,25 @@
         }
     },
     "findSpecies": "Find species",
+    "@findSpecies": {
+        "type": "text",
+        "description": "Hint in the species' search field"
+    },
     "listFinished": "List finished",
+    "@listFinished": {
+        "type": "text",
+        "description": "Dialog title when a Mackinnon list was finished"
+    },
     "listFinishedMessage": "The list reached the maximum of species. Do you want to start the next list or finish now?",
+    "@listFinishedMessage": {
+        "type": "text",
+        "description": "Message asking user to take action when a Mackinnon list was finished"
+    },
     "startNextList": "Start next list",
+    "@startNextList": {
+        "type": "text",
+        "description": "Button caption to start the next Mackinnon list"
+    },
     "precipitationNone": "None",
     "precipitationFog": "Fog",
     "precipitationMist": "Mist",

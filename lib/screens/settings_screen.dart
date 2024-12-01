@@ -1,6 +1,5 @@
 import 'dart:core';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:numberpicker/numberpicker.dart';
@@ -191,7 +190,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ListTile(
             leading: const Icon(Icons.checklist_outlined),
             title: Text(S.of(context).mackinnonLists),
-            subtitle: Text('$_maxSpeciesMackinnon ${S.of(context).speciesPerList(_maxSpeciesMackinnon)}'),
+            subtitle: Text(S.of(context).speciesPerList(_maxSpeciesMackinnon)),
             onTap: () async {
               final newMaxSpecies = await showDialog<int>(
                 context: context,

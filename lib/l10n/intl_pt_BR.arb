@@ -27,7 +27,7 @@
     "inventory": "{howMany, plural, one{inventário} other{inventários}}",
     "@inventory": {
         "type": "text",
-        "description": "Number of inventories",
+        "description": "Inventory messages, titles and labels",
         "placeholders": {
             "howMany": {
                 "type": "int"
@@ -77,16 +77,19 @@
     "confirmDeleteMessage": "Tem certeza que deseja excluir {howMany, plural, one{{gender, select, male{este} female{esta} other{este(a)}}} other{{gender, select, male{estes} female{estas} other{estes(as)}}}} {what}?",
     "@confirmDeleteMessage": {
         "type": "text",
-        "description": "What will be deleted",
+        "description": "Message when asking user confirmation to delete data",
         "placeholders": {
             "howMany": {
-                "type": "int"
+                "type": "int",
+                "description": "Number of items to delete"
             },
             "gender": {
-                "type": "String"
+                "type": "String",
+                "description": "Gender of what will be deleted"
             },
             "what": {
-                "type": "String"
+                "type": "String",
+                "description": "Type of item that will be deleted"
             }
         }
     },
@@ -97,7 +100,7 @@
     "speciesCount": "{howMany, plural, one{1 espécie} other{{howMany} espécies}}",
     "@speciesCount": {
         "type": "text",
-        "description": "How many species",
+        "description": "How many species the inventory have",
         "placeholders": {
             "howMany": {
                 "type": "int"
@@ -109,7 +112,7 @@
     "export": "Exportar {what}",
     "@export": {
         "type": "text",
-        "description": "What will be exported",
+        "description": "Menu item to export an item",
         "placeholders": {
             "what": {
                 "type": "String"
@@ -119,7 +122,7 @@
     "exportAll": "Exportar todos os {what}",
     "@exportAll": {
         "type": "text",
-        "description": "What will be exported",
+        "description": "Menu item to export all items",
         "placeholders": {
             "what": {
                 "type": "String"
@@ -139,7 +142,7 @@
     "minutes": "{howMany, plural, one{minuto} other{minutos}}",
     "@minutes": {
         "type": "text",
-        "description": "Time in minutes",
+        "description": "Field suffix and messages containing duration of time",
         "placeholders": {
             "howMany": {
                 "type": "int"
@@ -174,7 +177,7 @@
     "species": "{howMany, plural, one{Espécie} other{Espécies}}",
     "@species": {
         "type": "text",
-        "description": "Species display label",
+        "description": "Tabs and messages about species",
         "placeholders": {
             "howMany": {
                 "type": "int",
@@ -185,7 +188,7 @@
     "speciesAcronym": "{howMany, plural, one{sp.} other{spp.}}",
     "@speciesAcronym": {
         "type": "text",
-        "description": "How many species",
+        "description": "Abbreviation of species in labels and edits",
         "placeholders": {
             "howMany": {
                 "type": "int"
@@ -201,7 +204,7 @@
     "individual": "{howMany, plural, one{indivíduo} other{indivíduos}}",
     "@individual": {
         "type": "text",
-        "description": "How many individuals",
+        "description": "Messages and labels about individuals",
         "placeholders": {
             "howMany": {
                 "type": "int"
@@ -229,7 +232,7 @@
     "nest": "{howMany, plural, one{ninho} other{ninhos}}",
     "@nest": {
         "type": "text",
-        "description": "How many nests",
+        "description": "Messages and labels about nests",
         "placeholders": {
             "howMany": {
                 "type": "int"
@@ -243,7 +246,7 @@
     "errorInactivatingNest": "Erro ao desativar o ninho: {errorMessage}",
     "@errorInactivatingNest": {
         "type": "text",
-        "description": "Error message returned",
+        "description": "Error message when inactivating nest",
         "placeholders": {
             "errorMessage": {
                 "type": "String"
@@ -253,7 +256,7 @@
     "revision": "{howMany, plural, one{Revisão} other{Revisões}}",
     "@revision": {
         "type": "text",
-        "description": "How many nests",
+        "description": "Nest revision messages, tabs and labels",
         "placeholders": {
             "howMany": {
                 "type": "int"
@@ -263,7 +266,7 @@
     "egg": "{howMany, plural, one{Ovo} other{Ovos}}",
     "@egg": {
         "type": "text",
-        "description": "How many nests",
+        "description": "Egg messages, tabs and labels",
         "placeholders": {
             "howMany": {
                 "type": "int"
@@ -287,7 +290,7 @@
     "nestling": "{howMany, plural, one{Ninhego} other{Ninhegos}}",
     "@nestling": {
         "type": "text",
-        "description": "How many nestlings",
+        "description": "Nestling messages and labels",
         "placeholders": {
             "howMany": {
                 "type": "int"
@@ -323,7 +326,7 @@
     "images": "{howMany, plural, one{Imagem} other{Imagens}}",
     "@images": {
         "type": "text",
-        "description": "How many images",
+        "description": "Images titles, messages and labels",
         "placeholders": {
             "howMany": {
                 "type": "int"
@@ -344,7 +347,7 @@
     "inventoryExported": "{howMany, plural, one{Inventário exportado!} other{Inventários exportados!}}",
     "@inventoryExported": {
         "type": "text",
-        "description": "How many inventories",
+        "description": "Message when inventory was exported",
         "placeholders": {
             "howMany": {
                 "type": "int"
@@ -354,7 +357,7 @@
     "inventoryData": "{howMany, plural, one{Dados do inventário} other{Dados dos inventários}}",
     "@inventoryData": {
         "type": "text",
-        "description": "How many inventories",
+        "description": "Subject when exporting inventories",
         "placeholders": {
             "howMany": {
                 "type": "int"
@@ -377,7 +380,7 @@
     "nestExported": "{howMany, plural, one{Ninho exportado!} other{Ninhos exportados!}}",
     "@nestExported": {
         "type": "text",
-        "description": "How many nests",
+        "description": "Message when nest was exported",
         "placeholders": {
             "howMany": {
                 "type": "int"
@@ -387,7 +390,7 @@
     "nestData": "{howMany, plural, one{Dados do ninho} other{Dados dos ninhos}}",
     "@nestData": {
         "type": "text",
-        "description": "How many nests",
+        "description": "Subject when exporting nest",
         "placeholders": {
             "howMany": {
                 "type": "int"
@@ -410,7 +413,7 @@
     "specimenExported": "{howMany, plural, one{Espécime exportado!} other{Espécimes exportados!}}",
     "@specimenExported": {
         "type": "text",
-        "description": "How many specimens",
+        "description": "Message when specimen was exported",
         "placeholders": {
             "howMany": {
                 "type": "int"
@@ -420,7 +423,7 @@
     "specimenData": "{howMany, plural, one{Dados do espécime} other{Dados dos espécimes}}",
     "@specimenData": {
         "type": "text",
-        "description": "How many specimens",
+        "description": "Subject when exporting specimen",
         "placeholders": {
             "howMany": {
                 "type": "int"

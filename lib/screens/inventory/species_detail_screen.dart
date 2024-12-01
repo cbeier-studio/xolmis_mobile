@@ -1,7 +1,5 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/poi_provider.dart';
@@ -83,7 +81,7 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
             children: [
               Icon(Icons.error_outlined, color: Colors.red),
               SizedBox(width: 8),
-              Text('Erro ao obter a localização.'),
+              Text(S.of(context).errorGettingLocation),
             ],
           ),
         ),

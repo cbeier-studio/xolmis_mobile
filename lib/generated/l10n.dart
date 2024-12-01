@@ -77,7 +77,7 @@ class S {
       one: 'Specimen',
       other: 'Specimens',
       name: 'specimens',
-      desc: 'Specimens display label',
+      desc: 'Titles and messages about specimens',
       args: [howMany],
     );
   }
@@ -209,7 +209,7 @@ class S {
       one: 'inventory',
       other: 'inventories',
       name: 'inventory',
-      desc: 'Number of inventories',
+      desc: 'Titles and messages about inventories',
       args: [howMany],
     );
   }
@@ -229,7 +229,7 @@ class S {
     return Intl.message(
       '${Intl.plural(howMany, one: '1 species', other: '$howMany species')} per list',
       name: 'speciesPerList',
-      desc: 'Number of species per list',
+      desc: 'How many species per list in settings screen',
       args: [howMany],
     );
   }
@@ -269,7 +269,7 @@ class S {
     return Intl.message(
       '${Intl.plural(howMany, one: '1 minute', other: '$howMany minutes')} of duration',
       name: 'inventoryDuration',
-      desc: 'Time duration in minutes',
+      desc: 'Time duration in minutes in settings screen',
       args: [howMany],
     );
   }
@@ -439,7 +439,7 @@ class S {
     return Intl.message(
       'Are you sure you want to delete ${Intl.plural(howMany, one: '{gender, select, male{this} female{this} other{this}}', other: '{gender, select, male{these} female{these} other{these}}')} $what?',
       name: 'confirmDeleteMessage',
-      desc: 'What will be deleted',
+      desc: 'Message asking user confirmation to delete record',
       args: [howMany, gender, what],
     );
   }
@@ -491,7 +491,7 @@ class S {
       one: '1 species',
       other: '$howMany species',
       name: 'speciesCount',
-      desc: 'How many species',
+      desc: 'How many species the inventory have',
       args: [howMany],
     );
   }
@@ -521,7 +521,7 @@ class S {
     return Intl.message(
       'Export $what',
       name: 'export',
-      desc: 'What will be exported',
+      desc: 'Menu option to export one record',
       args: [what],
     );
   }
@@ -531,7 +531,7 @@ class S {
     return Intl.message(
       'Export all $what',
       name: 'exportAll',
-      desc: 'What will be exported',
+      desc: 'Menu option to export all records',
       args: [what],
     );
   }
@@ -643,7 +643,7 @@ class S {
       one: 'minute',
       other: 'minutes',
       name: 'minutes',
-      desc: 'Time in minutes',
+      desc: 'Field suffix and messages containing duration of time',
       args: [howMany],
     );
   }
@@ -905,7 +905,7 @@ class S {
       one: 'Species',
       other: 'Species',
       name: 'species',
-      desc: 'Species display label',
+      desc: 'Tabs and messages about species',
       args: [howMany],
     );
   }
@@ -917,7 +917,7 @@ class S {
       one: 'sp.',
       other: 'spp.',
       name: 'speciesAcronym',
-      desc: 'How many species',
+      desc: 'Abbreviation of species in labels and edits',
       args: [howMany],
     );
   }
@@ -989,7 +989,7 @@ class S {
       one: 'individual',
       other: 'individuals',
       name: 'individual',
-      desc: 'How many individuals',
+      desc: 'Messages and labels about individuals',
       args: [howMany],
     );
   }
@@ -1181,7 +1181,7 @@ class S {
       one: 'nest',
       other: 'nests',
       name: 'nest',
-      desc: 'How many nests',
+      desc: 'Messages and labels about nests',
       args: [howMany],
     );
   }
@@ -1231,7 +1231,7 @@ class S {
     return Intl.message(
       'Error inactivating nest: $errorMessage',
       name: 'errorInactivatingNest',
-      desc: 'Error message returned',
+      desc: 'Error message when inactivating nest',
       args: [errorMessage],
     );
   }
@@ -1243,7 +1243,7 @@ class S {
       one: 'Revision',
       other: 'Revisions',
       name: 'revision',
-      desc: 'How many nests',
+      desc: 'Nest revision messages, tabs and labels',
       args: [howMany],
     );
   }
@@ -1255,7 +1255,7 @@ class S {
       one: 'Egg',
       other: 'Eggs',
       name: 'egg',
-      desc: 'How many nests',
+      desc: 'Egg messages, tabs and labels',
       args: [howMany],
     );
   }
@@ -1407,7 +1407,7 @@ class S {
       one: 'Nestling',
       other: 'Nestlings',
       name: 'nestling',
-      desc: 'How many nestlings',
+      desc: 'Nestling messages and labels',
       args: [howMany],
     );
   }
@@ -1679,7 +1679,7 @@ class S {
       one: 'Image',
       other: 'Images',
       name: 'images',
-      desc: 'How many images',
+      desc: 'Images titles, messages and labels',
       args: [howMany],
     );
   }
@@ -1801,7 +1801,7 @@ class S {
       one: 'Inventory exported!',
       other: 'Inventories exported!',
       name: 'inventoryExported',
-      desc: 'How many inventories',
+      desc: 'Message when inventory was exported',
       args: [howMany],
     );
   }
@@ -1813,7 +1813,7 @@ class S {
       one: 'Inventory data',
       other: 'Inventories data',
       name: 'inventoryData',
-      desc: 'How many inventories',
+      desc: 'Subject when exporting inventories',
       args: [howMany],
     );
   }
@@ -1835,7 +1835,7 @@ class S {
       one: 'Nest exported!',
       other: 'Nests exported!',
       name: 'nestExported',
-      desc: 'How many nests',
+      desc: 'Message when nest was exported',
       args: [howMany],
     );
   }
@@ -1847,7 +1847,7 @@ class S {
       one: 'Nest data',
       other: 'Nests data',
       name: 'nestData',
-      desc: 'How many nests',
+      desc: 'Subject when exporting nest',
       args: [howMany],
     );
   }
@@ -1869,7 +1869,7 @@ class S {
       one: 'Specimen exported!',
       other: 'Specimens exported!',
       name: 'specimenExported',
-      desc: 'How many specimens',
+      desc: 'Message when specimen was exported',
       args: [howMany],
     );
   }
@@ -1881,7 +1881,7 @@ class S {
       one: 'Specimen data',
       other: 'Specimens data',
       name: 'specimenData',
-      desc: 'How many specimens',
+      desc: 'Subject when exporting specimen',
       args: [howMany],
     );
   }
@@ -1901,7 +1901,7 @@ class S {
     return Intl.message(
       'Find species',
       name: 'findSpecies',
-      desc: '',
+      desc: 'Hint in the species\' search field',
       args: [],
     );
   }
@@ -1911,7 +1911,7 @@ class S {
     return Intl.message(
       'List finished',
       name: 'listFinished',
-      desc: '',
+      desc: 'Dialog title when a Mackinnon list was finished',
       args: [],
     );
   }
@@ -1921,7 +1921,8 @@ class S {
     return Intl.message(
       'The list reached the maximum of species. Do you want to start the next list or finish now?',
       name: 'listFinishedMessage',
-      desc: '',
+      desc:
+          'Message asking user to take action when a Mackinnon list was finished',
       args: [],
     );
   }
@@ -1931,7 +1932,7 @@ class S {
     return Intl.message(
       'Start next list',
       name: 'startNextList',
-      desc: '',
+      desc: 'Button caption to start the next Mackinnon list',
       args: [],
     );
   }
