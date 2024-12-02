@@ -11,6 +11,7 @@ class VegetationProvider with ChangeNotifier {
 
   final Map<String, List<Vegetation>> _vegetationMap = {};
 
+  // Load vegetation records for an inventory ID
   Future<void> loadVegetationForInventory(String inventoryId) async {
     try {
       final vegetationList = await _vegetationRepository.getVegetationByInventory(inventoryId);
@@ -24,10 +25,12 @@ class VegetationProvider with ChangeNotifier {
     }
   }
 
+  // Get list of vegetation record for an inventory ID
   List<Vegetation> getVegetationForInventory(String inventoryId) {
     return _vegetationMap[inventoryId] ?? [];
   }
 
+  // Add vegeetation record to the database and the list
   Future<void> addVegetation(BuildContext context, String inventoryId, Vegetation vegetation) async {
     // Insert the vegetation data in the database
     await _vegetationRepository.insertVegetation(vegetation);
@@ -37,10 +40,9 @@ class VegetationProvider with ChangeNotifier {
     _vegetationMap[inventoryId]!.add(vegetation);
 
     notifyListeners();
-
-    // (context as Element).markNeedsBuild(); // Force screen to update
   }
 
+  // Remove vegetation record from database and from list
   Future<void> removeVegetation(String inventoryId, int vegetationId) async {
     await _vegetationRepository.deleteVegetation(vegetationId);
 

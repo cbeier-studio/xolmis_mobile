@@ -626,7 +626,7 @@ class InventoryGridItem extends StatelessWidget {
                       selector: (context, speciesProvider) => speciesProvider.getSpeciesForInventory(inventory.id).length,
                       shouldRebuild: (previous, next) => previous != next,
                       builder: (context, speciesCount, child) {
-                        return Text(S.of(context).speciesCount(speciesCount));
+                        return Text('$speciesCount ${S.of(context).speciesCount(speciesCount)}');
                       },
                     ),
                   ],
@@ -728,7 +728,7 @@ class InventoryListItem extends StatelessWidget {
                   selector: (context, speciesProvider) => speciesProvider.getSpeciesForInventory(inventory.id).length,
                   shouldRebuild: (previous, next) => previous != next,
                   builder: (context, speciesCount, child) {
-                    return Text(S.of(context).speciesCount(speciesCount));
+                    return Text('$speciesCount ${S.of(context).speciesCount(speciesCount)}');
                   },
                 ),
               ],

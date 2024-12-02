@@ -1,5 +1,7 @@
 import '../../generated/l10n.dart';
 
+// Specimen class
+
 enum SpecimenType {
   spcWholeCarcass,
   spcPartialCarcass,

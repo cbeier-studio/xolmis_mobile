@@ -49,10 +49,11 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Inventory type
                     DropdownButtonFormField<InventoryType>(
                       value: _selectedType,
                       decoration: InputDecoration(
-                        labelText: S.of(context).inventoryType,
+                        labelText: '${S.of(context).inventoryType} *',
                         helperText: S.of(context).requiredField,
                         border: OutlineInputBorder(),
                       ),
@@ -75,13 +76,15 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                       },
                     ),
                     const SizedBox(height: 16.0),
+                    // Inventory ID
                     TextFormField(
                       controller: _idController,
                       textCapitalization: TextCapitalization.words,
                       decoration: InputDecoration(
-                        labelText: S.of(context).inventoryId,
+                        labelText: '${S.of(context).inventoryId} *',
                         helperText: S.of(context).requiredField,
                         border: const OutlineInputBorder(),
+                        // Button to generate ID
                         suffixIcon: IconButton(
                           icon: const Icon(Icons.auto_mode_outlined),
                           onPressed: () async {
@@ -96,7 +99,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                                     textCapitalization: TextCapitalization.words,
                                     autofocus: true,
                                     decoration: InputDecoration(
-                                      labelText: S.of(context).siteAcronym,
+                                      labelText: S.of(context).siteAbbreviation,
                                       border: OutlineInputBorder(),
                                       helperText: S.of(context).optional,
                                     ),
@@ -153,6 +156,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                     Row(
                         children: [
                           Expanded(
+                            // Inventory duration
                             child: TextFormField(
                               controller: _durationController,
                               keyboardType: TextInputType.number,
@@ -171,6 +175,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                           ),
                           const SizedBox(width: 8.0),
                           Expanded(
+                             // Inventory max of species
                             child: TextFormField(
                               controller: _maxSpeciesController,
                               keyboardType: TextInputType.number,
@@ -221,6 +226,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
     );
   }
 
+  // Load default values from settings
   Future<void> _updateFormFields(InventoryType newValue) async {
     final prefs = await SharedPreferences.getInstance();
     final maxSpeciesMackinnon = prefs.getInt('maxSpeciesMackinnon') ?? 10;
@@ -245,6 +251,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
     });
   }
 
+  // Handle form submission
   void _submitForm() async {
     setState(() {
       _isSubmitting = true;
@@ -262,26 +269,27 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
       );
 
       // Check if the ID already exists in the database
-      final inventoryProvider = Provider.of<InventoryProvider>(
-          context, listen: false);
-      final idExists = await inventoryProvider.inventoryIdExists(
-          newInventory.id);
+      final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
+      final idExists = await inventoryProvider.inventoryIdExists(newInventory.id);
 
       if (idExists) {
         setState(() {
           _isSubmitting = false;
         });
         // ID already exists, show a SnackBar
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Row(
-            children: [
-              Icon(Icons.info_outlined, color: Colors.blue),
-              SizedBox(width: 8),
-              Text(S.of(context).inventoryIdAlreadyExists),
-            ],
-          ),
-          ),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  Icon(Icons.info_outlined, color: Colors.blue),
+                  SizedBox(width: 8),
+                  Text(S.of(context).inventoryIdAlreadyExists),
+                ],
+              ),
+            ),
+          );
+        }
         return; // Prevent adding inventory
       }
 
@@ -293,6 +301,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
       });
 
       if (success) {
+        if (mounted) {
         // Inventory inserted successfully
         // ScaffoldMessenger.of(context).showSnackBar(
         //   const SnackBar(
@@ -305,19 +314,23 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
         //     ),
         //   ),
         // );
-        Navigator.pop(context); // Return to the previous screen
+          Navigator.pop(context); // Return to the previous screen
+        }
       } else {
         // Handle insertion error
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Row(
-            children: [
-              Icon(Icons.error_outlined, color: Colors.red),
-              SizedBox(width: 8),
-              Text(S.of(context).errorInsertingInventory),
-            ],
-          ),
-          ),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  Icon(Icons.error_outlined, color: Colors.red),
+                  SizedBox(width: 8),
+                  Text(S.of(context).errorInsertingInventory),
+                ],
+              ),
+            ),
+          );
+        }
       }
     } else {
       setState(() {

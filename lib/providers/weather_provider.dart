@@ -11,6 +11,7 @@ class WeatherProvider with ChangeNotifier {
 
   final Map<String, List<Weather>> _weatherMap = {};
 
+  // Load weather records for an inventory ID
   Future<void> loadWeatherForInventory(String inventoryId) async {
     try {
       final weatherList = await _weatherRepository.getWeatherByInventory(inventoryId);
@@ -24,10 +25,12 @@ class WeatherProvider with ChangeNotifier {
     }
   }
 
+  // Get weather records for an inventory ID from list
   List<Weather> getWeatherForInventory(String inventoryId) {
     return _weatherMap[inventoryId] ?? [];
   }
 
+  // Add weather record to the database and the list
   Future<void> addWeather(BuildContext context, String inventoryId, Weather weather) async {
     // Insert the weather data in the database
     await _weatherRepository.insertWeather(weather);
@@ -40,6 +43,7 @@ class WeatherProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  // Remove weather record from database and from list
   Future<void> removeWeather(String inventoryId, int weatherId) async {
     await _weatherRepository.deleteWeather(weatherId);
 

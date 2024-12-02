@@ -1,5 +1,7 @@
 import '../../generated/l10n.dart';
 
+// Egg class
+
 enum EggShapeType {
   estSpherical,
   estElliptical,
@@ -87,6 +89,8 @@ class Egg {
     );
   }
 }
+
+// Nest revision class
 
 enum NestStageType {
   stgUnknown,
@@ -195,6 +199,8 @@ class NestRevision {
     );
   }
 }
+
+// Nest class
 
 enum NestFateType {
   fatUnknown,

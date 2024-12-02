@@ -75,7 +75,7 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
                               child: DropdownButtonFormField<PrecipitationType>(
                                   value: _selectedPrecipitation,
                                   decoration: InputDecoration(
-                                    labelText: S.of(context).precipitation,
+                                    labelText: '${S.of(context).precipitation} *',
                                     helperText: S.of(context).requiredField,
                                     border: OutlineInputBorder(),
                                   ),

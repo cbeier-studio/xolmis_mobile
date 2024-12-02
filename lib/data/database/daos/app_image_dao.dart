@@ -9,6 +9,7 @@ class AppImageDao {
 
   AppImageDao(this._dbHelper);
 
+  // Insert image into database linked to a vegetation record
   Future<void> insertImageToVegetation(AppImage appImage, int vegetationId) async {
     final db = await _dbHelper.database;
     try {
@@ -21,6 +22,7 @@ class AppImageDao {
     }
   }
 
+  // Get list of images linked to a vegetation record
   Future<List<AppImage>> getImagesForVegetation(int vegetationId) async {
     final db = await _dbHelper.database;
     final List<Map<String, dynamic>> maps = await db?.query(
@@ -33,6 +35,7 @@ class AppImageDao {
     });
   }
 
+  // Insert image into database linked to a nest revision
   Future<void> insertImageToNestRevision(AppImage appImage, int revisionId) async {
     final db = await _dbHelper.database;
     try {
@@ -45,6 +48,7 @@ class AppImageDao {
     }
   }
 
+  // Get list of images linked to a nest revision
   Future<List<AppImage>> getImagesForNestRevision(int revisionId) async {
     final db = await _dbHelper.database;
     final List<Map<String, dynamic>> maps = await db?.query(
@@ -57,6 +61,7 @@ class AppImageDao {
     });
   }
 
+  // Insert image into database linked to an egg
   Future<void> insertImageToEgg(AppImage appImage, int eggId) async {
     final db = await _dbHelper.database;
     try {
@@ -69,6 +74,7 @@ class AppImageDao {
     }
   }
 
+  // Get list of images linked to an egg
   Future<List<AppImage>> getImagesForEgg(int eggId) async {
     final db = await _dbHelper.database;
     final List<Map<String, dynamic>> maps = await db?.query(
@@ -81,6 +87,7 @@ class AppImageDao {
     });
   }
 
+  // Insert image into database linked to a specimen
   Future<void> insertImageToSpecimen(AppImage appImage, int specimenId) async {
     final db = await _dbHelper.database;
     try {
@@ -93,6 +100,7 @@ class AppImageDao {
     }
   }
 
+  // Get list of images linked to a specimen
   Future<List<AppImage>> getImagesForSpecimen(int specimenId) async {
     final db = await _dbHelper.database;
     final List<Map<String, dynamic>> maps = await db?.query(
@@ -105,6 +113,7 @@ class AppImageDao {
     });
   }
 
+  // Update image data in the database
   Future<void> updateImage(AppImage appImage) async {
     final db = await _dbHelper.database;
     await db?.update(
@@ -115,6 +124,7 @@ class AppImageDao {
     );
   }
 
+  // Delete image from database
   Future<void> deleteImage(int appImageId) async {
     final db = await _dbHelper.database;
     await db?.delete('images', where: 'id = ?', whereArgs: [appImageId]);

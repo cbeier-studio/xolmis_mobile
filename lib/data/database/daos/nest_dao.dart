@@ -14,6 +14,7 @@ class NestDao {
 
   NestDao(this._dbHelper, this._nestRevisionDao, this._eggDao);
 
+  // Insert nest into database
   Future<void> insertNest(Nest nest) async {
     final db = await _dbHelper.database;
     int? id = await db?.insert(
@@ -22,12 +23,15 @@ class NestDao {
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
     if (id == null) {
-      print('Failed to insert nest: ID is null');
+      if (kDebugMode) {
+        print('Failed to insert nest: ID is null');
+      }
       return;
     }
     nest.id = id;
   }
 
+  // Get list of all nests
   Future<List<Nest>> getNests() async {
     final db = await _dbHelper.database;
     try {
@@ -73,6 +77,7 @@ class NestDao {
     }
   }
 
+  // Update nest data in the database
   Future<int?> updateNest(Nest nest) async {
     final db = await _dbHelper.database;
     return await db?.update(
@@ -83,11 +88,13 @@ class NestDao {
     );
   }
 
+  // Delete nest from database
   Future<void> deleteNest(int nestId) async {
     final db = await _dbHelper.database;
     await db?.delete('nests', where: 'id = ?', whereArgs: [nestId]);
   }
 
+  // Check if the nest field number already exists
   Future<bool> nestFieldNumberExists(String fieldNumber) async {
     final db = await _dbHelper.database;
     final result = await db?.query(
@@ -98,6 +105,7 @@ class NestDao {
     return result!.isNotEmpty;
   }
 
+  // Get the next field number for new nest
   Future<int> getNextSequentialNumber(String acronym, int ano, int mes) async {
     final db = await _dbHelper.database;
 
@@ -112,6 +120,7 @@ class NestDao {
     return resultants!.isNotEmpty ? resultants.length + 1 : 1;
   }
 
+  // Get list of distinct localities for autocomplete
   Future<List<String>> getDistinctLocalities() async {
     final db = await _dbHelper.database;
 
@@ -124,6 +133,7 @@ class NestDao {
     }
   }
 
+  // Get list of distinct nest supports for autocomplete
   Future<List<String>> getDistinctSupports() async {
     final db = await _dbHelper.database;
 

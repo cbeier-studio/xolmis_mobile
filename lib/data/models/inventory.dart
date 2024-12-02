@@ -12,6 +12,9 @@ import '../../main.dart';
 
 import '../../generated/l10n.dart';
 
+
+// POI class
+
 class Poi {
   final int? id;
   final int speciesId;
@@ -70,6 +73,8 @@ class Poi {
         'latitude: $latitude}';
   }
 }
+
+// Species class
 
 class Species {
   final int? id;
@@ -148,6 +153,8 @@ class Species {
         'notes: $notes}';
   }
 }
+
+// Vegetation class
 
 enum DistributionType {
   disNone,
@@ -323,6 +330,8 @@ class Vegetation {
   }
 }
 
+// Weather class
+
 enum PrecipitationType {
   preNone,
   preFog,
@@ -420,6 +429,8 @@ class Weather {
         'windSpeed: $windSpeed }';
   }
 }
+
+// Inventory class
 
 enum InventoryType {
   invFreeQualitative,
@@ -602,6 +613,7 @@ class Inventory with ChangeNotifier {
     };
   }
 
+  // Update elapsed time values
   void updateElapsedTime(double newElapsedTime) {
     elapsedTime = newElapsedTime;
     elapsedTimeNotifier.value = elapsedTime;
@@ -609,6 +621,7 @@ class Inventory with ChangeNotifier {
     notifyListeners();
   }
 
+  // Update if inventory is finished
   void updateIsFinished(bool newIsFinished) {
     isFinished = newIsFinished;
     isFinishedNotifier.value = isFinished;
@@ -626,11 +639,13 @@ class Inventory with ChangeNotifier {
       updateElapsedTime(0.0);
       return;
     }
+    // If duration is defined and the inventory is not finished, start the timer
     if (duration > 0 && !isFinished) {
       _autoFinished = false;
       _timer ??= Timer.periodic(const Duration(seconds: 10), (timer) async {
         if (!isPaused && !isFinished) {
           if (elapsedTime == 0) {
+            // If elapsed time is zero, update it in the database
             inventoryRepository.updateInventoryElapsedTime(id, elapsedTime);
           }
 
@@ -649,6 +664,7 @@ class Inventory with ChangeNotifier {
             await stopTimer(inventoryRepository);
 
             if (_autoFinished) {
+              // If finished automatically, show a notification
               await showNotification(flutterLocalNotificationsPlugin);
               if (kDebugMode) {
                 print('stopTimer called automatically: $elapsedTime of ${duration * 60}');

@@ -9,6 +9,7 @@ class PoiDao {
 
   PoiDao(this._dbHelper);
 
+  // Insert POI to database
   Future<void> insertPoi(Poi poi) async {
     final db = await _dbHelper.database;
     try {
@@ -20,6 +21,7 @@ class PoiDao {
     }
   }
 
+  // Get list of POIs for a species ID
   Future<List<Poi>> getPoisForSpecies(int speciesId) async {
     final db = await _dbHelper.database;
     final List<Map<String, dynamic>> maps = await db?.query(
@@ -32,6 +34,7 @@ class PoiDao {
     });
   }
 
+  // Update POI data in the database
   Future<void> updatePoi(Poi poi) async {
     final db = await _dbHelper.database;
     await db?.update(
@@ -42,6 +45,7 @@ class PoiDao {
     );
   }
 
+  // Delete POI from database
   Future<void> deletePoi(int poiId) async {
     final db = await _dbHelper.database;
     await db?.delete('pois', where: 'id = ?', whereArgs: [poiId]);

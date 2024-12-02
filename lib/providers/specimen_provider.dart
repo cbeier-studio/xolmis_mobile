@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 import '../data/models/specimen.dart';
 import '../data/database/repositories/specimen_repository.dart';
@@ -10,20 +10,22 @@ class SpecimenProvider with ChangeNotifier {
   SpecimenProvider(this._specimenRepository);
 
   List<Specimen> _specimens = [];
-
   List<Specimen> get specimens => _specimens;
 
   int get specimensCount => specimens.length;
 
+  // Load list of all specimens
   Future<void> fetchSpecimens() async {
     _specimens = await _specimenRepository.getSpecimens();
     notifyListeners();
   }
 
+  // Check if the specimen field number already exists
   Future<bool> specimenFieldNumberExists(String fieldNumber) async {
     return await _specimenRepository.specimenFieldNumberExists(fieldNumber);
   }
 
+  // Add specimen to the database and the list
   Future<void> addSpecimen(Specimen specimen) async {
     if (await specimenFieldNumberExists(specimen.fieldNumber)) {
       throw Exception(S.current.errorSpecimenAlreadyExists);
@@ -34,6 +36,7 @@ class SpecimenProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  // Update specimen in the database and the list
   Future<void> updateSpecimen(Specimen specimen) async {
     await _specimenRepository.updateSpecimen(specimen);
 
@@ -42,10 +45,13 @@ class SpecimenProvider with ChangeNotifier {
       _specimens[index] = specimen;
       notifyListeners();
     } else {
-      print('Specimen not found in the list');
+      if (kDebugMode) {
+        print('Specimen not found in the list');
+      }
     }
   }
 
+  // Remove specimen from database and from list
   Future<void> removeSpecimen(Specimen specimen) async {
     if (specimen.id == null || specimen.id! <= 0) {
       throw ArgumentError('Invalid specimen ID: ${specimen.id}');
@@ -56,6 +62,7 @@ class SpecimenProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  // Get list of distinct localities for autocomplete
   Future<List<String>> getDistinctLocalities() {
     return _specimenRepository.getDistinctLocalities();
   }

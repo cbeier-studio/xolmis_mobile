@@ -20,12 +20,12 @@ class AppImageScreen extends StatefulWidget {
   final int? nestRevisionId;
 
   const AppImageScreen({
-    Key? key,
+    super.key,
     this.vegetationId,
     this.eggId,
     this.specimenId,
     this.nestRevisionId,
-  }) : super(key: key);
+  });
 
   @override
   State<AppImageScreen> createState() => _AppImageScreenState();

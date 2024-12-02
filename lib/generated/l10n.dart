@@ -87,7 +87,7 @@ class S {
     return Intl.message(
       'Settings',
       name: 'settings',
-      desc: '',
+      desc: 'Settings title and button label',
       args: [],
     );
   }
@@ -97,7 +97,7 @@ class S {
     return Intl.message(
       'Appearance',
       name: 'appearance',
-      desc: '',
+      desc: 'Appearance option in settings',
       args: [],
     );
   }
@@ -107,7 +107,7 @@ class S {
     return Intl.message(
       'Select the mode',
       name: 'selectMode',
-      desc: '',
+      desc: 'Title of dialog to select the app mode',
       args: [],
     );
   }
@@ -117,7 +117,7 @@ class S {
     return Intl.message(
       'Light',
       name: 'lightMode',
-      desc: '',
+      desc: 'Light mode name',
       args: [],
     );
   }
@@ -127,7 +127,7 @@ class S {
     return Intl.message(
       'Dark',
       name: 'darkMode',
-      desc: '',
+      desc: 'Dark mode name',
       args: [],
     );
   }
@@ -137,17 +137,17 @@ class S {
     return Intl.message(
       'System theme',
       name: 'systemMode',
-      desc: '',
+      desc: 'System them name',
       args: [],
     );
   }
 
-  /// `Observer (acronym)`
+  /// `Observer (abbreviation)`
   String get observerSetting {
     return Intl.message(
-      'Observer (acronym)',
+      'Observer (abbreviation)',
       name: 'observerSetting',
-      desc: '',
+      desc: 'Observer option in settings',
       args: [],
     );
   }
@@ -157,17 +157,17 @@ class S {
     return Intl.message(
       'Observer',
       name: 'observer',
-      desc: '',
+      desc: 'Title of dialog to inform observer abbreviation',
       args: [],
     );
   }
 
-  /// `Observador acronym`
-  String get observerAcronym {
+  /// `Observer abbreviation`
+  String get observerAbbreviation {
     return Intl.message(
-      'Observador acronym',
-      name: 'observerAcronym',
-      desc: '',
+      'Observer abbreviation',
+      name: 'observerAbbreviation',
+      desc: 'Label of text field to inform observer abbreviation',
       args: [],
     );
   }
@@ -177,7 +177,7 @@ class S {
     return Intl.message(
       'Cancel',
       name: 'cancel',
-      desc: '',
+      desc: 'Cancel button label',
       args: [],
     );
   }
@@ -187,7 +187,7 @@ class S {
     return Intl.message(
       'Save',
       name: 'save',
-      desc: '',
+      desc: 'Save button label',
       args: [],
     );
   }
@@ -197,7 +197,7 @@ class S {
     return Intl.message(
       'Simultaneous inventories',
       name: 'simultaneousInventories',
-      desc: '',
+      desc: 'Simultaneous inventories option in settings',
       args: [],
     );
   }
@@ -219,7 +219,7 @@ class S {
     return Intl.message(
       'Mackinnon lists',
       name: 'mackinnonLists',
-      desc: '',
+      desc: 'Mackinnon lists option in settings',
       args: [],
     );
   }
@@ -239,7 +239,8 @@ class S {
     return Intl.message(
       'Species per list',
       name: 'speciesPerListTitle',
-      desc: '',
+      desc:
+          'Title of dialog to inform the number of species per Mackinnon list',
       args: [],
     );
   }
@@ -249,7 +250,7 @@ class S {
     return Intl.message(
       'Count points',
       name: 'pointCounts',
-      desc: '',
+      desc: 'Point counts option in settings',
       args: [],
     );
   }
@@ -259,7 +260,7 @@ class S {
     return Intl.message(
       'Duration (min)',
       name: 'durationMin',
-      desc: '',
+      desc: 'Title of dialog to inform inventory duration in minutes',
       args: [],
     );
   }
@@ -279,7 +280,7 @@ class S {
     return Intl.message(
       'Timed qualitative lists',
       name: 'timedQualitativeLists',
-      desc: '',
+      desc: 'Timed qualitative lists option in settings',
       args: [],
     );
   }
@@ -289,7 +290,7 @@ class S {
     return Intl.message(
       'About the app',
       name: 'about',
-      desc: '',
+      desc: 'About the app option in settings',
       args: [],
     );
   }
@@ -299,7 +300,7 @@ class S {
     return Intl.message(
       'Danger zone',
       name: 'dangerZone',
-      desc: '',
+      desc: 'Danger zone in settings',
       args: [],
     );
   }
@@ -309,7 +310,7 @@ class S {
     return Intl.message(
       'Delete the app data',
       name: 'deleteAppData',
-      desc: '',
+      desc: 'Delete app data option in settings',
       args: [],
     );
   }
@@ -319,7 +320,7 @@ class S {
     return Intl.message(
       'Delete data',
       name: 'deleteData',
-      desc: '',
+      desc: 'Title of dialog to confirm app data deletion',
       args: [],
     );
   }
@@ -329,7 +330,7 @@ class S {
     return Intl.message(
       'Are you sure you want to delete all app data? This action cannot be undone.',
       name: 'deleteDataMessage',
-      desc: '',
+      desc: 'Message asking user for confirmation before delete all app data',
       args: [],
     );
   }
@@ -339,7 +340,7 @@ class S {
     return Intl.message(
       'Delete',
       name: 'delete',
-      desc: '',
+      desc: 'Delete button label',
       args: [],
     );
   }
@@ -349,7 +350,7 @@ class S {
     return Intl.message(
       'App data deleted successfully!',
       name: 'dataDeleted',
-      desc: '',
+      desc: 'Message informing user that the data was successfully deleted',
       args: [],
     );
   }
@@ -359,7 +360,7 @@ class S {
     return Intl.message(
       'OK',
       name: 'ok',
-      desc: '',
+      desc: 'OK button label',
       args: [],
     );
   }
@@ -369,7 +370,8 @@ class S {
     return Intl.message(
       'Limit of simultaneous inventories reached.',
       name: 'simultaneousLimitReached',
-      desc: '',
+      desc:
+          'Message shown when the limit of simultaneous inventories defined in settings is reached',
       args: [],
     );
   }
@@ -379,7 +381,7 @@ class S {
     return Intl.message(
       'Find inventories...',
       name: 'findInventories',
-      desc: '',
+      desc: 'Hint text in inventories search field',
       args: [],
     );
   }
@@ -389,7 +391,7 @@ class S {
     return Intl.message(
       'Active',
       name: 'active',
-      desc: '',
+      desc: 'Segmented button label to filter for active inventories or nests',
       args: [],
     );
   }
@@ -399,7 +401,7 @@ class S {
     return Intl.message(
       'Finished',
       name: 'finished',
-      desc: '',
+      desc: 'Segmented button label to filter for finished inventories',
       args: [],
     );
   }
@@ -409,7 +411,7 @@ class S {
     return Intl.message(
       'No inventories found.',
       name: 'noInventoriesFound',
-      desc: '',
+      desc: 'Text shown when no inventories found',
       args: [],
     );
   }
@@ -419,7 +421,7 @@ class S {
     return Intl.message(
       'Delete inventory',
       name: 'deleteInventory',
-      desc: '',
+      desc: 'Delete inventory option in bottom sheet',
       args: [],
     );
   }
@@ -429,7 +431,7 @@ class S {
     return Intl.message(
       'Confirm delete',
       name: 'confirmDelete',
-      desc: '',
+      desc: 'Title of dialog for confirm record deletion',
       args: [],
     );
   }
@@ -449,7 +451,7 @@ class S {
     return Intl.message(
       'Confirm finish',
       name: 'confirmFinish',
-      desc: '',
+      desc: 'Title of dialog to confirm finishing an inventory',
       args: [],
     );
   }
@@ -459,7 +461,7 @@ class S {
     return Intl.message(
       'Are you sure you want to finish this inventory?',
       name: 'confirmFinishMessage',
-      desc: '',
+      desc: 'Message asking confirmation to finish an inventory',
       args: [],
     );
   }
@@ -469,7 +471,7 @@ class S {
     return Intl.message(
       'Finish',
       name: 'finish',
-      desc: '',
+      desc: 'Finish button label',
       args: [],
     );
   }
@@ -479,17 +481,18 @@ class S {
     return Intl.message(
       'New inventory',
       name: 'newInventory',
-      desc: '',
+      desc: 'Title of dialog when adding new inventory',
       args: [],
     );
   }
 
-  /// `{howMany, plural, one{1 species} other{{howMany} species}}`
+  /// `{howMany, plural, zero{species} one{species} other{species}}`
   String speciesCount(int howMany) {
     return Intl.plural(
       howMany,
-      one: '1 species',
-      other: '$howMany species',
+      zero: 'species',
+      one: 'species',
+      other: 'species',
       name: 'speciesCount',
       desc: 'How many species the inventory have',
       args: [howMany],
@@ -501,7 +504,7 @@ class S {
     return Intl.message(
       'Pause',
       name: 'pause',
-      desc: '',
+      desc: 'Pause button hint',
       args: [],
     );
   }
@@ -511,7 +514,7 @@ class S {
     return Intl.message(
       'Resume',
       name: 'resume',
-      desc: '',
+      desc: 'Resume button hint',
       args: [],
     );
   }
@@ -541,7 +544,7 @@ class S {
     return Intl.message(
       'Finish inventory',
       name: 'finishInventory',
-      desc: '',
+      desc: 'Menu option to finish the inventory',
       args: [],
     );
   }
@@ -551,17 +554,17 @@ class S {
     return Intl.message(
       '* required',
       name: 'requiredField',
-      desc: '',
+      desc: 'Auxiliary label informing that the field is required',
       args: [],
     );
   }
 
-  /// `Inventory type *`
+  /// `Inventory type`
   String get inventoryType {
     return Intl.message(
-      'Inventory type *',
+      'Inventory type',
       name: 'inventoryType',
-      desc: '',
+      desc: 'Inventory type field label',
       args: [],
     );
   }
@@ -571,17 +574,17 @@ class S {
     return Intl.message(
       'Please, select an inventory type',
       name: 'selectInventoryType',
-      desc: '',
+      desc: 'Validation message shown when the inventory type field is empty',
       args: [],
     );
   }
 
-  /// `Inventory ID *`
+  /// `Inventory ID`
   String get inventoryId {
     return Intl.message(
-      'Inventory ID *',
+      'Inventory ID',
       name: 'inventoryId',
-      desc: '',
+      desc: 'Inventory ID field label',
       args: [],
     );
   }
@@ -591,17 +594,18 @@ class S {
     return Intl.message(
       'Generate ID',
       name: 'generateId',
-      desc: '',
+      desc: 'Title of dialog to generate an inventory ID',
       args: [],
     );
   }
 
-  /// `Site name or acronym`
-  String get siteAcronym {
+  /// `Site name or abbreviation`
+  String get siteAbbreviation {
     return Intl.message(
-      'Site name or acronym',
-      name: 'siteAcronym',
-      desc: '',
+      'Site name or abbreviation',
+      name: 'siteAbbreviation',
+      desc:
+          'Field label asking the inventory site name or abbreviation to generate the ID',
       args: [],
     );
   }
@@ -611,7 +615,7 @@ class S {
     return Intl.message(
       '* optional',
       name: 'optional',
-      desc: '',
+      desc: 'Auxiliary label informing that the field is optional',
       args: [],
     );
   }
@@ -621,7 +625,7 @@ class S {
     return Intl.message(
       'Please, insert an ID for the inventory',
       name: 'insertInventoryId',
-      desc: '',
+      desc: 'Validation message shown when the inventory ID is empty',
       args: [],
     );
   }
@@ -631,7 +635,7 @@ class S {
     return Intl.message(
       'Duration',
       name: 'duration',
-      desc: '',
+      desc: 'Time duration field label',
       args: [],
     );
   }
@@ -653,7 +657,7 @@ class S {
     return Intl.message(
       'Insert a duration',
       name: 'insertDuration',
-      desc: '',
+      desc: 'Validation message shown when duration is empty',
       args: [],
     );
   }
@@ -663,7 +667,7 @@ class S {
     return Intl.message(
       'Max species',
       name: 'maxSpecies',
-      desc: '',
+      desc: 'Max number of species field label',
       args: [],
     );
   }
@@ -673,7 +677,7 @@ class S {
     return Intl.message(
       'Insert the max of species',
       name: 'insertMaxSpecies',
-      desc: '',
+      desc: 'Validation message shown when the max of species field is empty',
       args: [],
     );
   }
@@ -683,7 +687,8 @@ class S {
     return Intl.message(
       'Must be equal or higher than 5',
       name: 'mustBeBiggerThanFive',
-      desc: '',
+      desc:
+          'Validation message shown when the max of species is lower than five',
       args: [],
     );
   }
@@ -693,7 +698,7 @@ class S {
     return Intl.message(
       'Start inventory',
       name: 'startInventory',
-      desc: '',
+      desc: 'Start inventory button label',
       args: [],
     );
   }
@@ -703,7 +708,7 @@ class S {
     return Intl.message(
       'This inventory ID already exists.',
       name: 'inventoryIdAlreadyExists',
-      desc: '',
+      desc: 'Message shown when the informed inventory ID already exists',
       args: [],
     );
   }
@@ -713,7 +718,7 @@ class S {
     return Intl.message(
       'Error inserting inventory',
       name: 'errorInsertingInventory',
-      desc: '',
+      desc: 'Message shown if an error occurred while inserting an inventory',
       args: [],
     );
   }
@@ -723,7 +728,7 @@ class S {
     return Intl.message(
       'Vegetation data',
       name: 'vegetationData',
-      desc: '',
+      desc: 'Vegetation data title or label',
       args: [],
     );
   }
@@ -733,7 +738,7 @@ class S {
     return Intl.message(
       'Herbs',
       name: 'herbs',
-      desc: '',
+      desc: 'Herbs section label in vegetation data',
       args: [],
     );
   }
@@ -743,7 +748,7 @@ class S {
     return Intl.message(
       'Distribution',
       name: 'distribution',
-      desc: '',
+      desc: 'Distribution field label',
       args: [],
     );
   }
@@ -753,7 +758,7 @@ class S {
     return Intl.message(
       'Proportion',
       name: 'proportion',
-      desc: '',
+      desc: 'Proportion field label',
       args: [],
     );
   }
@@ -763,7 +768,7 @@ class S {
     return Intl.message(
       'Height',
       name: 'height',
-      desc: '',
+      desc: 'Average height field label',
       args: [],
     );
   }
@@ -773,7 +778,7 @@ class S {
     return Intl.message(
       'Shrubs',
       name: 'shrubs',
-      desc: '',
+      desc: 'Shrubs section label in vegetation data',
       args: [],
     );
   }
@@ -783,7 +788,7 @@ class S {
     return Intl.message(
       'Trees',
       name: 'trees',
-      desc: '',
+      desc: 'Trees section label in vegetation data',
       args: [],
     );
   }
@@ -793,7 +798,7 @@ class S {
     return Intl.message(
       'Notes',
       name: 'notes',
-      desc: '',
+      desc: 'Notes field label',
       args: [],
     );
   }
@@ -803,7 +808,7 @@ class S {
     return Intl.message(
       'Insert proportion',
       name: 'insertProportion',
-      desc: '',
+      desc: 'Validation message shown when proportion field is empty',
       args: [],
     );
   }
@@ -813,7 +818,7 @@ class S {
     return Intl.message(
       'Insert height',
       name: 'insertHeight',
-      desc: '',
+      desc: 'Validation message shown when height field is empty',
       args: [],
     );
   }
@@ -823,7 +828,8 @@ class S {
     return Intl.message(
       'Error inserting vegetation data',
       name: 'errorInsertingVegetation',
-      desc: '',
+      desc:
+          'Message shown when an error occurred while inserting a vegetation record',
       args: [],
     );
   }
@@ -833,7 +839,7 @@ class S {
     return Intl.message(
       'Weather data',
       name: 'weatherData',
-      desc: '',
+      desc: 'Weather data title or label',
       args: [],
     );
   }
@@ -843,17 +849,17 @@ class S {
     return Intl.message(
       'Cloud cover',
       name: 'cloudCover',
-      desc: '',
+      desc: 'Cloud cover field label',
       args: [],
     );
   }
 
-  /// `Precipitation *`
+  /// `Precipitation`
   String get precipitation {
     return Intl.message(
-      'Precipitation *',
+      'Precipitation',
       name: 'precipitation',
-      desc: '',
+      desc: 'Precipitation field label',
       args: [],
     );
   }
@@ -863,7 +869,7 @@ class S {
     return Intl.message(
       'Select precipitation',
       name: 'selectPrecipitation',
-      desc: '',
+      desc: 'Validation message shown when the precipitation field is empty',
       args: [],
     );
   }
@@ -873,7 +879,7 @@ class S {
     return Intl.message(
       'Temperature',
       name: 'temperature',
-      desc: '',
+      desc: 'Temperature field label',
       args: [],
     );
   }
@@ -883,7 +889,7 @@ class S {
     return Intl.message(
       'Wind speed',
       name: 'windSpeed',
-      desc: '',
+      desc: 'Wind speed field label',
       args: [],
     );
   }
@@ -893,7 +899,8 @@ class S {
     return Intl.message(
       'Error inserting weather data',
       name: 'errorInsertingWeather',
-      desc: '',
+      desc:
+          'Message shown when an error occurred while inserting a weather record',
       args: [],
     );
   }
@@ -927,7 +934,7 @@ class S {
     return Intl.message(
       'Vegetation',
       name: 'vegetation',
-      desc: '',
+      desc: 'Vegetation tab',
       args: [],
     );
   }
@@ -937,7 +944,7 @@ class S {
     return Intl.message(
       'Weather',
       name: 'weather',
-      desc: '',
+      desc: 'Weather tab',
       args: [],
     );
   }
@@ -947,7 +954,8 @@ class S {
     return Intl.message(
       'Error getting location.',
       name: 'errorGettingLocation',
-      desc: '',
+      desc:
+          'Message shown when an error occurred while getting the GPS location',
       args: [],
     );
   }
@@ -957,7 +965,7 @@ class S {
     return Intl.message(
       'POI',
       name: 'poi',
-      desc: '',
+      desc: 'Point of interest abbreviation in labels',
       args: [],
     );
   }
@@ -967,7 +975,7 @@ class S {
     return Intl.message(
       'Species information',
       name: 'speciesInfo',
-      desc: '',
+      desc: 'Species information expandable list title',
       args: [],
     );
   }
@@ -977,7 +985,8 @@ class S {
     return Intl.message(
       'Count',
       name: 'count',
-      desc: '',
+      desc:
+          'Species info showing individuals count for the species in the actual list',
       args: [],
     );
   }
@@ -999,7 +1008,8 @@ class S {
     return Intl.message(
       'Out of the sample',
       name: 'outOfSample',
-      desc: '',
+      desc:
+          'Species info for when the species was added after the inventory was finished',
       args: [],
     );
   }
@@ -1009,7 +1019,8 @@ class S {
     return Intl.message(
       'Within the sample',
       name: 'withinSample',
-      desc: '',
+      desc:
+          'Species info for when the species was added while the inventory was active',
       args: [],
     );
   }
@@ -1019,7 +1030,7 @@ class S {
     return Intl.message(
       'No POI found.',
       name: 'noPoiFound',
-      desc: '',
+      desc: 'Message shown when no POI was found',
       args: [],
     );
   }
@@ -1029,7 +1040,7 @@ class S {
     return Intl.message(
       'New POI',
       name: 'newPoi',
-      desc: '',
+      desc: 'New POI button hint',
       args: [],
     );
   }
@@ -1039,7 +1050,7 @@ class S {
     return Intl.message(
       'Delete POI',
       name: 'deletePoi',
-      desc: '',
+      desc: 'Menu option to delete POI',
       args: [],
     );
   }
@@ -1049,7 +1060,7 @@ class S {
     return Intl.message(
       'Decrease individuals count',
       name: 'decreaseIndividuals',
-      desc: '',
+      desc: 'Decrease individuals count button hint',
       args: [],
     );
   }
@@ -1059,7 +1070,7 @@ class S {
     return Intl.message(
       'Increase individuals count',
       name: 'increaseIndividuals',
-      desc: '',
+      desc: 'Increase individuals count button hint',
       args: [],
     );
   }
@@ -1069,7 +1080,7 @@ class S {
     return Intl.message(
       'Add POI',
       name: 'addPoi',
-      desc: '',
+      desc: 'Add POI button hint',
       args: [],
     );
   }
@@ -1079,7 +1090,7 @@ class S {
     return Intl.message(
       'Edit count',
       name: 'editCount',
-      desc: '',
+      desc: 'Title of dialog to edit the number of individuals of a species',
       args: [],
     );
   }
@@ -1089,7 +1100,7 @@ class S {
     return Intl.message(
       'Individuals count',
       name: 'individualsCount',
-      desc: '',
+      desc: 'Individuals count field label',
       args: [],
     );
   }
@@ -1099,7 +1110,7 @@ class S {
     return Intl.message(
       'Delete vegetation record',
       name: 'deleteVegetation',
-      desc: '',
+      desc: 'Menu option to delete a vegetation record',
       args: [],
     );
   }
@@ -1109,7 +1120,7 @@ class S {
     return Intl.message(
       'No vegetation records.',
       name: 'noVegetationFound',
-      desc: '',
+      desc: 'Message shown when the vegetation list is empty',
       args: [],
     );
   }
@@ -1119,7 +1130,7 @@ class S {
     return Intl.message(
       'weather record',
       name: 'weatherRecord',
-      desc: '',
+      desc: 'Weather record label used in messages',
       args: [],
     );
   }
@@ -1129,7 +1140,7 @@ class S {
     return Intl.message(
       'No weather records.',
       name: 'noWeatherFound',
-      desc: '',
+      desc: 'Message shown when the weather list is empty',
       args: [],
     );
   }
@@ -1139,7 +1150,7 @@ class S {
     return Intl.message(
       'Delete weather record',
       name: 'deleteWeather',
-      desc: '',
+      desc: 'Menu option to delete a weather record',
       args: [],
     );
   }
@@ -1149,7 +1160,7 @@ class S {
     return Intl.message(
       'Find nests...',
       name: 'findNests',
-      desc: '',
+      desc: 'Text hint in the nest search field',
       args: [],
     );
   }
@@ -1159,7 +1170,7 @@ class S {
     return Intl.message(
       'Inactive',
       name: 'inactive',
-      desc: '',
+      desc: 'Segmented button label for filter of inactive nests',
       args: [],
     );
   }
@@ -1169,7 +1180,7 @@ class S {
     return Intl.message(
       'No nests found.',
       name: 'noNestsFound',
-      desc: '',
+      desc: 'Message shown when the nests list is empty',
       args: [],
     );
   }
@@ -1191,7 +1202,7 @@ class S {
     return Intl.message(
       'New nest',
       name: 'newNest',
-      desc: '',
+      desc: 'New nest dialog title',
       args: [],
     );
   }
@@ -1201,7 +1212,7 @@ class S {
     return Intl.message(
       'Delete nest',
       name: 'deleteNest',
-      desc: '',
+      desc: 'Menu option to delete a nest',
       args: [],
     );
   }
@@ -1211,7 +1222,7 @@ class S {
     return Intl.message(
       'Confirm fate',
       name: 'confirmFate',
-      desc: '',
+      desc: 'Title of dialog to confirm nest fate',
       args: [],
     );
   }
@@ -1221,7 +1232,7 @@ class S {
     return Intl.message(
       'Nest fate *',
       name: 'nestFate',
-      desc: '',
+      desc: 'Nest fate field label',
       args: [],
     );
   }
@@ -1265,7 +1276,7 @@ class S {
     return Intl.message(
       'Nest information',
       name: 'nestInfo',
-      desc: '',
+      desc: 'Nest information expandable list title',
       args: [],
     );
   }
@@ -1275,7 +1286,7 @@ class S {
     return Intl.message(
       'Date and time found',
       name: 'timeFound',
-      desc: '',
+      desc: 'Time found field label',
       args: [],
     );
   }
@@ -1285,7 +1296,7 @@ class S {
     return Intl.message(
       'Locality',
       name: 'locality',
-      desc: '',
+      desc: 'Locality field label',
       args: [],
     );
   }
@@ -1295,7 +1306,7 @@ class S {
     return Intl.message(
       'Nest support',
       name: 'nestSupport',
-      desc: '',
+      desc: 'Nest support field label',
       args: [],
     );
   }
@@ -1305,7 +1316,7 @@ class S {
     return Intl.message(
       'Height above ground',
       name: 'heightAboveGround',
-      desc: '',
+      desc: 'Height above ground field label',
       args: [],
     );
   }
@@ -1315,7 +1326,7 @@ class S {
     return Intl.message(
       'Male',
       name: 'male',
-      desc: '',
+      desc: 'Male field label',
       args: [],
     );
   }
@@ -1325,7 +1336,7 @@ class S {
     return Intl.message(
       'Female',
       name: 'female',
-      desc: '',
+      desc: 'Female field label',
       args: [],
     );
   }
@@ -1335,7 +1346,7 @@ class S {
     return Intl.message(
       'Nest helpers',
       name: 'helpers',
-      desc: '',
+      desc: 'Nest helpers field label',
       args: [],
     );
   }
@@ -1345,7 +1356,7 @@ class S {
     return Intl.message(
       'No eggs recorded.',
       name: 'noEggsFound',
-      desc: '',
+      desc: 'Message shown when the eggs list is empty',
       args: [],
     );
   }
@@ -1355,7 +1366,7 @@ class S {
     return Intl.message(
       'Delete egg',
       name: 'deleteEgg',
-      desc: '',
+      desc: 'Menu option to delete an egg',
       args: [],
     );
   }
@@ -1365,7 +1376,7 @@ class S {
     return Intl.message(
       'No revisions recorded.',
       name: 'noRevisionsFound',
-      desc: '',
+      desc: 'Message shown when the nest revision list is empty',
       args: [],
     );
   }
@@ -1375,7 +1386,7 @@ class S {
     return Intl.message(
       'Delete nest revision',
       name: 'deleteRevision',
-      desc: '',
+      desc: 'Menu option to delete a nest revision',
       args: [],
     );
   }
@@ -1385,7 +1396,7 @@ class S {
     return Intl.message(
       'Host',
       name: 'host',
-      desc: '',
+      desc: 'Nest owner section label',
       args: [],
     );
   }
@@ -1395,7 +1406,7 @@ class S {
     return Intl.message(
       'Nidoparasite',
       name: 'nidoparasite',
-      desc: '',
+      desc: 'Nidoparasite section label',
       args: [],
     );
   }
@@ -1417,7 +1428,7 @@ class S {
     return Intl.message(
       'Add egg',
       name: 'addEgg',
-      desc: '',
+      desc: 'Add egg dialog title',
       args: [],
     );
   }
@@ -1427,7 +1438,7 @@ class S {
     return Intl.message(
       'Field number',
       name: 'fieldNumber',
-      desc: '',
+      desc: 'Field number field label',
       args: [],
     );
   }
@@ -1437,7 +1448,7 @@ class S {
     return Intl.message(
       'Please, insert the field number',
       name: 'insertFieldNumber',
-      desc: '',
+      desc: 'Validation message shown when the field number is empty',
       args: [],
     );
   }
@@ -1447,7 +1458,7 @@ class S {
     return Intl.message(
       'Please, select a species',
       name: 'selectSpecies',
-      desc: '',
+      desc: 'Validation message shown when the species is empty',
       args: [],
     );
   }
@@ -1457,7 +1468,7 @@ class S {
     return Intl.message(
       'Egg shape',
       name: 'eggShape',
-      desc: '',
+      desc: 'Egg shape field label',
       args: [],
     );
   }
@@ -1467,7 +1478,7 @@ class S {
     return Intl.message(
       'Width',
       name: 'width',
-      desc: '',
+      desc: 'Width field label',
       args: [],
     );
   }
@@ -1477,7 +1488,7 @@ class S {
     return Intl.message(
       'Length',
       name: 'length',
-      desc: '',
+      desc: 'Length field label',
       args: [],
     );
   }
@@ -1487,7 +1498,7 @@ class S {
     return Intl.message(
       'Weight',
       name: 'weight',
-      desc: '',
+      desc: 'Weight field label',
       args: [],
     );
   }
@@ -1497,7 +1508,8 @@ class S {
     return Intl.message(
       'An egg with this field number already exists.',
       name: 'errorEggAlreadyExists',
-      desc: '',
+      desc:
+          'Message shown when an egg already exists with the same field number',
       args: [],
     );
   }
@@ -1507,7 +1519,7 @@ class S {
     return Intl.message(
       'Error saving egg.',
       name: 'errorSavingEgg',
-      desc: '',
+      desc: 'Message shown when an error occurred while saving an egg',
       args: [],
     );
   }
@@ -1517,7 +1529,7 @@ class S {
     return Intl.message(
       'Please, insert locality name',
       name: 'insertLocality',
-      desc: '',
+      desc: 'Validation message shown when locality name is empty',
       args: [],
     );
   }
@@ -1527,7 +1539,7 @@ class S {
     return Intl.message(
       'Please, insert nest support',
       name: 'insertNestSupport',
-      desc: '',
+      desc: 'Validation message shown when nest support is empty',
       args: [],
     );
   }
@@ -1537,7 +1549,8 @@ class S {
     return Intl.message(
       'A nest with this field number already exists.',
       name: 'errorNestAlreadyExists',
-      desc: '',
+      desc:
+          'Message shown when a nest already exists with the same field number',
       args: [],
     );
   }
@@ -1547,7 +1560,7 @@ class S {
     return Intl.message(
       'Error saving nest.',
       name: 'errorSavingNest',
-      desc: '',
+      desc: 'Message shown when an error occurred while saving a nest',
       args: [],
     );
   }
@@ -1557,7 +1570,7 @@ class S {
     return Intl.message(
       'Nest revision',
       name: 'nestRevision',
-      desc: '',
+      desc: 'New nest revision dialog title',
       args: [],
     );
   }
@@ -1567,7 +1580,7 @@ class S {
     return Intl.message(
       'Nest status',
       name: 'nestStatus',
-      desc: '',
+      desc: 'Nest status field label',
       args: [],
     );
   }
@@ -1577,7 +1590,7 @@ class S {
     return Intl.message(
       'Nest phase',
       name: 'nestPhase',
-      desc: '',
+      desc: 'Nest phase field label',
       args: [],
     );
   }
@@ -1587,7 +1600,7 @@ class S {
     return Intl.message(
       'Philornis larvae present',
       name: 'philornisLarvaePresent',
-      desc: '',
+      desc: 'Philornis larvae present field label',
       args: [],
     );
   }
@@ -1597,7 +1610,7 @@ class S {
     return Intl.message(
       'Error saving nest revision.',
       name: 'errorSavingRevision',
-      desc: '',
+      desc: 'Message shown when an error occurred while saving a nest revision',
       args: [],
     );
   }
@@ -1607,7 +1620,7 @@ class S {
     return Intl.message(
       'Find specimens...',
       name: 'findSpecimens',
-      desc: '',
+      desc: 'Text hint in the specimen search field',
       args: [],
     );
   }
@@ -1617,7 +1630,7 @@ class S {
     return Intl.message(
       'No specimen collected.',
       name: 'noSpecimenCollected',
-      desc: '',
+      desc: 'Message shown when the specimens list is empty',
       args: [],
     );
   }
@@ -1627,7 +1640,7 @@ class S {
     return Intl.message(
       'New specimen',
       name: 'newSpecimen',
-      desc: '',
+      desc: 'New specimen dialog title',
       args: [],
     );
   }
@@ -1637,7 +1650,7 @@ class S {
     return Intl.message(
       'Delete specimen',
       name: 'deleteSpecimen',
-      desc: '',
+      desc: 'Menu option to delete a specimen',
       args: [],
     );
   }
@@ -1647,7 +1660,7 @@ class S {
     return Intl.message(
       'Specimen type',
       name: 'specimenType',
-      desc: '',
+      desc: 'Specimen type field label',
       args: [],
     );
   }
@@ -1657,7 +1670,8 @@ class S {
     return Intl.message(
       'A specimen with this field number already exists.',
       name: 'errorSpecimenAlreadyExists',
-      desc: '',
+      desc:
+          'Message shown when a specimen already exists with the same field number',
       args: [],
     );
   }
@@ -1667,7 +1681,7 @@ class S {
     return Intl.message(
       'Error saving specimen.',
       name: 'errorSavingSpecimen',
-      desc: '',
+      desc: 'Message shown when an error occurred while saving a specimen',
       args: [],
     );
   }
@@ -1689,7 +1703,7 @@ class S {
     return Intl.message(
       'No images found.',
       name: 'noImagesFound',
-      desc: '',
+      desc: 'Message shown when the images list is empty',
       args: [],
     );
   }
@@ -1699,7 +1713,7 @@ class S {
     return Intl.message(
       'Add image',
       name: 'addImage',
-      desc: '',
+      desc: 'Add image dialog title',
       args: [],
     );
   }
@@ -1709,7 +1723,7 @@ class S {
     return Intl.message(
       'Gallery',
       name: 'gallery',
-      desc: '',
+      desc: 'Gallery button label',
       args: [],
     );
   }
@@ -1719,7 +1733,7 @@ class S {
     return Intl.message(
       'Camera',
       name: 'camera',
-      desc: '',
+      desc: 'Camera button label',
       args: [],
     );
   }
@@ -1729,7 +1743,7 @@ class S {
     return Intl.message(
       'Permission denied.',
       name: 'permissionDenied',
-      desc: '',
+      desc: 'Message shown when the permission was denied',
       args: [],
     );
   }
@@ -1739,7 +1753,7 @@ class S {
     return Intl.message(
       'Permission denied permanently.',
       name: 'permissionDeniedPermanently',
-      desc: '',
+      desc: 'Message shown when the permission was denied permanently',
       args: [],
     );
   }
@@ -1749,7 +1763,7 @@ class S {
     return Intl.message(
       'Share image',
       name: 'shareImage',
-      desc: '',
+      desc: 'Menu option to share an image',
       args: [],
     );
   }
@@ -1759,7 +1773,7 @@ class S {
     return Intl.message(
       'Edit image notes',
       name: 'editImageNotes',
-      desc: '',
+      desc: 'Menu option to edit the image notes',
       args: [],
     );
   }
@@ -1769,7 +1783,7 @@ class S {
     return Intl.message(
       'Delete image',
       name: 'deleteImage',
-      desc: '',
+      desc: 'Menu option to delete an image',
       args: [],
     );
   }
@@ -1779,7 +1793,7 @@ class S {
     return Intl.message(
       'Edit notes',
       name: 'editNotes',
-      desc: '',
+      desc: 'Edit notes dialog title',
       args: [],
     );
   }
@@ -1789,7 +1803,7 @@ class S {
     return Intl.message(
       'Image details',
       name: 'imageDetails',
-      desc: '',
+      desc: 'Image details dialog title',
       args: [],
     );
   }

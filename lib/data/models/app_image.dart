@@ -1,3 +1,6 @@
+
+// Image class
+
 class AppImage {
   final int? id;
   final String imagePath;

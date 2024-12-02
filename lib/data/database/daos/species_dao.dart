@@ -10,6 +10,7 @@ class SpeciesDao {
 
   SpeciesDao(this._dbHelper, this._poiDao);
 
+  // Insert species to inventory in the database
   Future<int?> insertSpecies(String inventoryId, Species species) async {
     final db = await _dbHelper.database;
     try {
@@ -23,6 +24,7 @@ class SpeciesDao {
     }
   }
 
+  // Update species data in the database
   Future<void> updateSpecies(Species species) async {
     final db = await _dbHelper.database;
     await db?.update(
@@ -33,6 +35,7 @@ class SpeciesDao {
     );
   }
 
+  // Delete species from database finding by ID
   Future<void> deleteSpecies(int? speciesId) async {
     final db = await _dbHelper.database;
     await db?.delete(
@@ -42,6 +45,7 @@ class SpeciesDao {
     );
   }
 
+  // Delete species from database finding by inventory and name
   Future<void> deleteSpeciesFromInventory(String inventoryId, String speciesName) async {
     final db = await _dbHelper.database;
     await db?.delete(
@@ -51,6 +55,7 @@ class SpeciesDao {
     );
   }
 
+  // Get species data by ID
   Future<Species> getSpeciesById(int id) async {
     final db = await _dbHelper.database;
     final List<Map<String, dynamic>> maps = await db?.query(
@@ -66,6 +71,7 @@ class SpeciesDao {
     }
   }
 
+  // Get list of species from inventory
   Future<List<Species>> getSpeciesByInventory(String inventoryId) async {
     final db = await _dbHelper.database;
     final speciesMaps = await db?.query(
@@ -82,6 +88,7 @@ class SpeciesDao {
       where: 'speciesId IN (${speciesIds.join(',')})',
     ) ?? [];
 
+    // Get the species POIs 
     final poisBySpeciesId = <int, List<Poi>>{};
     for (final poiMap in poisMaps) {
       final speciesId = poiMap['speciesId'] as int;
@@ -95,25 +102,5 @@ class SpeciesDao {
       return Species.fromMap(map, pois);
     }).toList();
   }
-
-
-
-  // Future<Species?> getSpeciesByNameAndInventoryId(String name, String inventoryId) async {
-  //   final db = await _dbHelper.database;
-  //   final List<Map<String, dynamic>> maps = await db?.query(
-  //     'species',
-  //     where: 'name = ? AND inventoryId = ?',
-  //     whereArgs: [name, inventoryId],
-  //   ) ?? [];
-  //
-  //   if (maps.isNotEmpty) {
-  //     final speciesId = maps.first['id'] as int;
-  //     final pois = await _poiDao.getPoisForSpecies(speciesId);
-  //     return Species.fromMap(maps.first, pois);
-  //   } else {
-  //     return null;
-  //   }
-  // }
-
 
 }

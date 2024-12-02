@@ -11,6 +11,7 @@ class PoiProvider with ChangeNotifier {
 
   final Map<int, List<Poi>> _poiMap = {};
 
+  // Load list of POIs for a species ID
   Future<void> loadPoisForSpecies(int speciesId) async {
     try {
       final poiList = await _poiRepository.getPoisForSpecies(speciesId);
@@ -23,10 +24,12 @@ class PoiProvider with ChangeNotifier {
     }
   }
 
+  // Get a POI list for a species
   List<Poi> getPoisForSpecies(int speciesId) {
     return _poiMap[speciesId] ?? [];
   }
 
+  // Add POI to the database and the list
   Future<void> addPoi(BuildContext context, int speciesId, Poi poi) async {
     // Insert the POI in the database
     await _poiRepository.insertPoi(poi);
@@ -34,10 +37,9 @@ class PoiProvider with ChangeNotifier {
     _poiMap[speciesId] = _poiMap[speciesId] ?? [];
     _poiMap[speciesId]!.add(poi);
     notifyListeners();
-
-    // (context as Element).markNeedsBuild(); // Force screen to update
   }
 
+  // Update POI in the database and the list
   void updatePoi(int speciesId, Poi poi) async {
     await _poiRepository.updatePoi(poi);
 
@@ -51,6 +53,7 @@ class PoiProvider with ChangeNotifier {
     }
   }
 
+  // Remove POI from database and from list
   Future<void> removePoi(int speciesId, int poiId) async {
     await _poiRepository.deletePoi(poiId);
 

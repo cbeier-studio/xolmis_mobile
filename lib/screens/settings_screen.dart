@@ -136,7 +136,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         observer = value;
                       },
                       decoration: InputDecoration(
-                        labelText: S.of(context).observerAcronym,
+                        labelText: S.of(context).observerAbbreviation,
                         border: OutlineInputBorder(),
                       ),
                     ),
@@ -354,12 +354,12 @@ class NumberPickerDialog extends StatefulWidget {
   final String title;
 
   const NumberPickerDialog({
-    Key? key,
+    super.key,
     required this.minValue,
     required this.maxValue,
     required this.initialValue,
     required this.title,
-  }) : super(key: key);
+  });
 
   @override
   State<NumberPickerDialog> createState() => _NumberPickerDialogState();

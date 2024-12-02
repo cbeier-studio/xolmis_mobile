@@ -84,7 +84,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "${Intl.plural(howMany, one: 'sp.', other: 'spp.')}";
 
   static String m22(howMany) =>
-      "${Intl.plural(howMany, one: '1 species', other: '${howMany} species')}";
+      "${Intl.plural(howMany, zero: 'species', one: 'species', other: 'species')}";
 
   static String m23(howMany) =>
       "${Intl.plural(howMany, one: '1 species', other: '${howMany} species')} per list";
@@ -277,7 +277,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "inventoryExported": m13,
         "inventoryFreeQualitative":
             MessageLookupByLibrary.simpleMessage("Free Qualitative List"),
-        "inventoryId": MessageLookupByLibrary.simpleMessage("Inventory ID *"),
+        "inventoryId": MessageLookupByLibrary.simpleMessage("Inventory ID"),
         "inventoryIdAlreadyExists": MessageLookupByLibrary.simpleMessage(
             "This inventory ID already exists."),
         "inventoryMackinnonList":
@@ -288,8 +288,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Timed Qualitative List"),
         "inventoryTransectionCount":
             MessageLookupByLibrary.simpleMessage("Transection Count"),
-        "inventoryType":
-            MessageLookupByLibrary.simpleMessage("Inventory type *"),
+        "inventoryType": MessageLookupByLibrary.simpleMessage("Inventory type"),
         "length": MessageLookupByLibrary.simpleMessage("Length"),
         "lightMode": MessageLookupByLibrary.simpleMessage("Light"),
         "listFinished": MessageLookupByLibrary.simpleMessage("List finished"),
@@ -348,10 +347,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("No weather records."),
         "notes": MessageLookupByLibrary.simpleMessage("Notes"),
         "observer": MessageLookupByLibrary.simpleMessage("Observer"),
-        "observerAcronym":
-            MessageLookupByLibrary.simpleMessage("Observador acronym"),
+        "observerAbbreviation":
+            MessageLookupByLibrary.simpleMessage("Observer abbreviation"),
         "observerSetting":
-            MessageLookupByLibrary.simpleMessage("Observer (acronym)"),
+            MessageLookupByLibrary.simpleMessage("Observer (abbreviation)"),
         "ok": MessageLookupByLibrary.simpleMessage("OK"),
         "optional": MessageLookupByLibrary.simpleMessage("* optional"),
         "outOfSample":
@@ -365,8 +364,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Philornis larvae present"),
         "poi": MessageLookupByLibrary.simpleMessage("POI"),
         "pointCounts": MessageLookupByLibrary.simpleMessage("Count points"),
-        "precipitation":
-            MessageLookupByLibrary.simpleMessage("Precipitation *"),
+        "precipitation": MessageLookupByLibrary.simpleMessage("Precipitation"),
         "precipitationDrizzle": MessageLookupByLibrary.simpleMessage("Drizzle"),
         "precipitationFog": MessageLookupByLibrary.simpleMessage("Fog"),
         "precipitationMist": MessageLookupByLibrary.simpleMessage("Mist"),
@@ -391,8 +389,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Simultaneous inventories"),
         "simultaneousLimitReached": MessageLookupByLibrary.simpleMessage(
             "Limit of simultaneous inventories reached."),
-        "siteAcronym":
-            MessageLookupByLibrary.simpleMessage("Site name or acronym"),
+        "siteAbbreviation":
+            MessageLookupByLibrary.simpleMessage("Site name or abbreviation"),
         "species": m20,
         "speciesAcronym": m21,
         "speciesCount": m22,

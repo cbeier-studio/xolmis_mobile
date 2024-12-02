@@ -85,7 +85,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "${Intl.plural(howMany, one: 'sp.', other: 'spp.')}";
 
   static String m22(howMany) =>
-      "${Intl.plural(howMany, one: '1 espécie', other: '${howMany} espécies')}";
+      "${Intl.plural(howMany, zero: 'espécies', one: 'espécie', other: 'espécies')}";
 
   static String m23(howMany) =>
       "${Intl.plural(howMany, one: '1 espécie', other: '${howMany} espécies')} por lista";
@@ -360,8 +360,6 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Nenhum registro do tempo"),
         "notes": MessageLookupByLibrary.simpleMessage("Observações"),
         "observer": MessageLookupByLibrary.simpleMessage("Observador"),
-        "observerAcronym":
-            MessageLookupByLibrary.simpleMessage("Sigla do observador"),
         "observerSetting":
             MessageLookupByLibrary.simpleMessage("Observador (sigla)"),
         "ok": MessageLookupByLibrary.simpleMessage("OK"),
@@ -403,8 +401,6 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Inventários simultâneos"),
         "simultaneousLimitReached": MessageLookupByLibrary.simpleMessage(
             "Limite de inventários simultâneos atingido."),
-        "siteAcronym":
-            MessageLookupByLibrary.simpleMessage("Nome ou sigla do local"),
         "species": m20,
         "speciesAcronym": m21,
         "speciesCount": m22,

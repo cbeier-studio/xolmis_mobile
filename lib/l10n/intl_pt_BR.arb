@@ -97,7 +97,7 @@
     "confirmFinishMessage": "Tem certeza que deseja encerrar este inventário?",
     "finish": "Encerrar",
     "newInventory": "Novo inventário",
-    "speciesCount": "{howMany, plural, one{1 espécie} other{{howMany} espécies}}",
+    "speciesCount": "{howMany, plural, zero{espécies} one{espécie} other{espécies}}",
     "@speciesCount": {
         "type": "text",
         "description": "How many species the inventory have",

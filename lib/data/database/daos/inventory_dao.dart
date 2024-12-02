@@ -18,6 +18,7 @@ class InventoryDao {
 
   InventoryDao(this._dbHelper, this._speciesDao, this._vegetationDao, this._weatherDao);
 
+  // Insert new inventory to database
   Future<bool> insertInventory(Inventory inventory) async {
     final db = await _dbHelper.database;
     try {
@@ -53,6 +54,7 @@ class InventoryDao {
     }
   }
 
+  // Delete the inventory from database
   Future<void> deleteInventory(String? inventoryId) async {
     final db = await _dbHelper.database;
     await db?.delete(
@@ -62,6 +64,7 @@ class InventoryDao {
     );
   }
 
+  // Update inventory data in the database
   Future<void> updateInventory(Inventory inventory) async {
     final db = await _dbHelper.database;
     await db?.update(
@@ -71,6 +74,7 @@ class InventoryDao {
     );
   }
 
+  // Update the elapsed time of the inventory in the database
   Future<void> updateInventoryElapsedTime(String inventoryId, double elapsedTime) async {
     final db = await _dbHelper.database;
     await db?.update(
@@ -81,6 +85,7 @@ class InventoryDao {
     );
   }
 
+  // Check if the ID already exists
   Future<bool> inventoryIdExists(String id) async {
     final db = await _dbHelper.database;
     final result = await db?.query(
@@ -91,12 +96,14 @@ class InventoryDao {
     return result!.isNotEmpty;
   }
 
+  // Get the number of active inventories
   Future<int> getActiveInventoriesCount() async {
     final db = await _dbHelper.database;
     final result = await db?.rawQuery('SELECT COUNT(*) FROM inventories WHERE isFinished = 0');
     return Sqflite.firstIntValue(result!) ?? 0;
   }
 
+  // Get list of all inventories
   Future<List<Inventory>> getInventories() async {
     final db = await _dbHelper.database;
     try {
@@ -143,6 +150,7 @@ class InventoryDao {
     }
   }
 
+  // Find and get inventory by ID
   Future<Inventory> getInventoryById(String id) async {
     final db = await _dbHelper.database;
     final List<Map<String, dynamic>> maps = await db?.query(
@@ -161,6 +169,7 @@ class InventoryDao {
     }
   }
 
+  // Concatenate the next inventory ID
   Future<int> getNextSequentialNumber(String? local, String observer, int ano, int mes, int dia, String? typeChar) async {
     final db = await _dbHelper.database;
 

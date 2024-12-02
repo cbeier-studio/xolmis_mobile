@@ -27,11 +27,13 @@ class DatabaseHelper {
       onCreate: _createTables,
       onUpgrade: _upgradeTables,
       onOpen: (db) {
+        // Turn on SQLite foreign keys (disabled by default)
         db.execute('PRAGMA foreign_keys = ON;');
       }
     );
   }
 
+  // Create SQLite database file and structure
   void _createTables(Database db, int version) {
     db.execute('''
         CREATE TABLE inventories(
@@ -181,6 +183,7 @@ class DatabaseHelper {
     ''');
   }
 
+  // Update SQLite database structure based on DB version
   void _upgradeTables(Database db, int oldVersion, int newVersion) {
     if (oldVersion < 2) {
       db.execute(

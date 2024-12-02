@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../models/nest.dart';
@@ -9,6 +10,7 @@ class EggDao {
 
   EggDao(this._dbHelper);
 
+  // Insert egg data into database
   Future<void> insertEgg(Egg egg) async {
     final db = await _dbHelper.database;
     int? id = await db?.insert(
@@ -17,12 +19,15 @@ class EggDao {
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
     if (id == null) {
-      print('Failed to insert egg: ID is null');
+      if (kDebugMode) {
+        print('Failed to insert egg: ID is null');
+      }
       return;
     }
     egg.id = id;
   }
 
+  // Get list of eggs for a nest ID
   Future<List<Egg>> getEggsForNest(int nestId) async {
     final db = await _dbHelper.database;
     final List<Map<String, dynamic>> maps = await db?.query(
@@ -35,11 +40,13 @@ class EggDao {
     });
   }
 
+  // Delete egg from database
   Future<void> deleteEgg(int eggId) async {
     final db = await _dbHelper.database;
     await db?.delete('eggs', where: 'id = ?', whereArgs: [eggId]);
   }
 
+  // Check if an egg field number already exists
   Future<bool> eggFieldNumberExists(String fieldNumber) async {
     final db = await _dbHelper.database;
     final result = await db?.query(

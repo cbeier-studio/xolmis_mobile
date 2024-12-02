@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../models/nest.dart';
@@ -9,6 +10,7 @@ class NestRevisionDao {
 
   NestRevisionDao(this._dbHelper);
 
+  // Insert nest revision into database
   Future<void> insertNestRevision(NestRevision nestRevision) async {
     final db = await _dbHelper.database;
     int? id = await db?.insert(
@@ -17,12 +19,15 @@ class NestRevisionDao {
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
     if (id == null) {
-      print('Failed to insert nest revision: ID is null');
+      if (kDebugMode) {
+        print('Failed to insert nest revision: ID is null');
+      }
       return;
     }
     nestRevision.id = id;
   }
 
+  // Get list of nest revisions for a nest ID
   Future<List<NestRevision>> getNestRevisionsForNest(int nestId) async {
     final db = await _dbHelper.database;
     final List<Map<String, dynamic>> maps = await db?.query(
@@ -35,6 +40,7 @@ class NestRevisionDao {
     });
   }
 
+  // Delete nest revision from database
   Future<void> deleteNestRevision(int nestRevisionId) async {
     final db = await _dbHelper.database;
     await db?.delete('nest_revisions', where: 'id = ?', whereArgs: [nestRevisionId]);

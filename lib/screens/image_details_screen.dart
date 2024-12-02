@@ -7,7 +7,7 @@ import '../generated/l10n.dart';
 class ImageDetailsScreen extends StatelessWidget {
   final String imagePath;
 
-  const ImageDetailsScreen({Key? key, required this.imagePath}) : super(key: key);
+  const ImageDetailsScreen({super.key, required this.imagePath});
 
   @override
   Widget build(BuildContext context) {

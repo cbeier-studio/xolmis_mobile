@@ -10,6 +10,7 @@ class VegetationDao {
 
   VegetationDao(this._dbHelper);
 
+  // Insert vegetation record in the database
   Future<int?> insertVegetation(Vegetation vegetation) async {
     final db = await _dbHelper.database;
     try {
@@ -27,6 +28,7 @@ class VegetationDao {
     }
   }
 
+  // Delete vegetation record from database
   Future<void> deleteVegetation(int? vegetationId) async {
     final db = await _dbHelper.database;
     await db?.delete(
@@ -36,6 +38,7 @@ class VegetationDao {
     );
   }
 
+  // Get list of vegetation record for inventory ID
   Future<List<Vegetation>> getVegetationByInventory(String inventoryId) async {
     final db = await _dbHelper.database;
     final List<Map<String, dynamic>> maps = await db?.query(

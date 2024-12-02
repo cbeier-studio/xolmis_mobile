@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 
 import '../data/models/inventory.dart';
 import '../data/database/repositories/inventory_repository.dart';
@@ -13,15 +12,19 @@ class InventoryProvider with ChangeNotifier {
   final List<Inventory> _inventories = [];
   final Map<String, Inventory> _inventoryMap = {};
   final ValueNotifier<int> speciesCountNotifier = ValueNotifier<int>(0);
+  // Flag to indicate that data is loading
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
+  // Get list of active inventories
   List<Inventory> get activeInventories =>
       _inventories.where((inventory) => !inventory.isFinished).toList();
 
+  // Get list of finished inventories
   List<Inventory> get finishedInventories =>
       _inventories.where((inventory) => inventory.isFinished).toList();
 
+  // Get the number of active inventories
   int get inventoriesCount => activeInventories.length;
 
   final SpeciesProvider _speciesProvider;
@@ -33,6 +36,7 @@ class InventoryProvider with ChangeNotifier {
 
   InventoryProvider(this._inventoryRepository, this._speciesProvider, this._vegetationProvider, this._weatherProvider);
 
+  // Load all inventories from the database
   Future<void> fetchInventories() async {
     _isLoading = true;
     try {
@@ -62,14 +66,17 @@ class InventoryProvider with ChangeNotifier {
     }
   }
 
+  // Get inventory data by ID
   Inventory? getInventoryById(String id) {
     return _inventoryMap[id]; // Get the inventory from map
   }
 
+  // Check if an inventory ID already exists
   Future<bool> inventoryIdExists(String id) async {
     return await _inventoryRepository.inventoryIdExists(id);
   }
 
+  // Add inventory to the database and the list
   Future<bool> addInventory(Inventory inventory) async {
     try {
       await _inventoryRepository.insertInventory(inventory);
@@ -88,6 +95,7 @@ class InventoryProvider with ChangeNotifier {
     }
   }
 
+  // Update inventory in the database and the list
   void updateInventory(Inventory inventory) async {
     await _inventoryRepository.updateInventory(inventory);
 
@@ -95,6 +103,7 @@ class InventoryProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  // Remove inventory from the database and the list
   void removeInventory(String id) async {
     await _inventoryRepository.deleteInventory(id);
 
@@ -103,10 +112,12 @@ class InventoryProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  // Get an active inventory by ID
   Inventory getActiveInventoryById(String id) {
     return activeInventories.firstWhere((inventory) => inventory.id == id);
   }
 
+  // Start inventory timer
   void startInventoryTimer(Inventory inventory, InventoryRepository inventoryRepository) {
     if (inventory.duration > 0 && !inventory.isFinished && !inventory.isPaused) {
       inventory.startTimer(inventoryRepository);
@@ -115,24 +126,28 @@ class InventoryProvider with ChangeNotifier {
     }
   }
 
+  // Pause inventory timer
   void pauseInventoryTimer(Inventory inventory, InventoryRepository inventoryRepository) {
     inventory.pauseTimer(inventoryRepository);
     updateInventory(inventory);
     notifyListeners();
   }
 
+  // Resume inventory timer
   void resumeInventoryTimer(Inventory inventory, InventoryRepository inventoryRepository) {
     inventory.resumeTimer(inventoryRepository);
     updateInventory(inventory);
     notifyListeners();
   }
 
+  // Update the elapsed time in the database and the list
   Future<void> updateInventoryElapsedTime(String inventoryId, double elapsedTime) async {
     await _inventoryRepository.updateInventoryElapsedTime(inventoryId, elapsedTime);
     _inventoryMap[inventoryId]?.elapsedTime = elapsedTime;
     notifyListeners();
   }
 
+  // Update the species list count
   void updateSpeciesCount(String inventoryId) {
     final inventory = getInventoryById(inventoryId);
     if (inventory != null) {
@@ -141,6 +156,7 @@ class InventoryProvider with ChangeNotifier {
     }
   }
 
+  // Concatenate the next inventory ID
   Future<int> getNextSequentialNumber(String? local, String observer, int ano, int mes, int dia, String? typeChar) {
     return _inventoryRepository.getNextSequentialNumber(local, observer, ano, mes, dia, typeChar);
   }

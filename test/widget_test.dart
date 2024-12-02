@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:xolmis/main.dart';
-import 'package:xolmis/utils/utils.dart';
 
 import 'package:xolmis/data/database/database_helper.dart';
 

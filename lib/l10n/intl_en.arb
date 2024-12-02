@@ -14,17 +14,65 @@
         }
     },
     "settings": "Settings",
+    "@settings": {
+        "type": "text",
+        "description": "Settings title and button label"
+    },
     "appearance": "Appearance",
+    "@appearance": {
+        "type": "text",
+        "description": "Appearance option in settings"
+    },
     "selectMode": "Select the mode",
+    "@selectMode": {
+        "type": "text",
+        "description": "Title of dialog to select the app mode"
+    },
     "lightMode": "Light",
+    "@lightMode": {
+        "type": "text",
+        "description": "Light mode name"
+    },
     "darkMode": "Dark",
+    "@darkMode": {
+        "type": "text",
+        "description": "Dark mode name"
+    },
     "systemMode": "System theme",
-    "observerSetting": "Observer (acronym)",
+    "@systemMode": {
+        "type": "text",
+        "description": "System them name"
+    },
+    "observerSetting": "Observer (abbreviation)",
+    "@observerSetting": {
+        "type": "text",
+        "description": "Observer option in settings"
+    },
     "observer": "Observer",
-    "observerAcronym": "Observador acronym",
+    "@observer": {
+        "type": "text",
+        "description": "Title of dialog to inform observer abbreviation"
+    },
+    "observerAbbreviation": "Observer abbreviation",
+    "@observerAbbreviation": {
+        "type": "text",
+        "description": "Label of text field to inform observer abbreviation"
+    },
     "cancel": "Cancel",
+    "@cancel": {
+        "type": "text",
+        "description": "Cancel button label"
+    },
     "save": "Save",
+    "@save": {
+        "type": "text",
+        "description": "Save button label"
+    },
     "simultaneousInventories": "Simultaneous inventories",
+    "@simultaneousInventories": {
+        "type": "text",
+        "description": "Simultaneous inventories option in settings"
+    },
     "inventory": "{howMany, plural, one{inventory} other{inventories}}",
     "@inventory": {
         "type": "text",
@@ -36,6 +84,10 @@
         }
     },
     "mackinnonLists": "Mackinnon lists",
+    "@mackinnonLists": {
+        "type": "text",
+        "description": "Mackinnon lists option in settings"
+    },
     "speciesPerList": "{howMany, plural, one{1 species} other{{howMany} species}} per list",
     "@speciesPerList": {
         "type": "text",
@@ -47,8 +99,20 @@
         }
     },
     "speciesPerListTitle": "Species per list",
+    "@speciesPerListTitle": {
+        "type": "text",
+        "description": "Title of dialog to inform the number of species per Mackinnon list"
+    },
     "pointCounts": "Count points",
+    "@pointCounts": {
+        "type": "text",
+        "description": "Point counts option in settings"
+    },
     "durationMin": "Duration (min)",
+    "@durationMin": {
+        "type": "text",
+        "description": "Title of dialog to inform inventory duration in minutes"
+    },
     "inventoryDuration": "{howMany, plural, one{1 minute} other{{howMany} minutes}} of duration",
     "@inventoryDuration": {
         "type": "text",
@@ -60,21 +124,85 @@
         }
     },
     "timedQualitativeLists": "Timed qualitative lists",
+    "@timedQualitativeLists": {
+        "type": "text",
+        "description": "Timed qualitative lists option in settings"
+    },
     "about": "About the app",
+    "@about": {
+        "type": "text",
+        "description": "About the app option in settings"
+    },
     "dangerZone": "Danger zone",
+    "@dangerZone": {
+        "type": "text",
+        "description": "Danger zone in settings"
+    },
     "deleteAppData": "Delete the app data",
+    "@deleteAppData": {
+        "type": "text",
+        "description": "Delete app data option in settings"
+    },
     "deleteData": "Delete data",
+    "@deleteData": {
+        "type": "text",
+        "description": "Title of dialog to confirm app data deletion"
+    },
     "deleteDataMessage": "Are you sure you want to delete all app data? This action cannot be undone.",
+    "@deleteDataMessage": {
+        "type": "text",
+        "description": "Message asking user for confirmation before delete all app data"
+    },
     "delete": "Delete",
+    "@delete": {
+        "type": "text",
+        "description": "Delete button label"
+    },
     "dataDeleted": "App data deleted successfully!",
+    "@dataDeleted": {
+        "type": "text",
+        "description": "Message informing user that the data was successfully deleted"
+    },
     "ok": "OK",
+    "@ok": {
+        "type": "text",
+        "description": "OK button label"
+    },
     "simultaneousLimitReached": "Limit of simultaneous inventories reached.",
+    "@simultaneousLimitReached": {
+        "type": "text",
+        "description": "Message shown when the limit of simultaneous inventories defined in settings is reached"
+    },
     "findInventories": "Find inventories...",
+    "@findInventories": {
+        "type": "text",
+        "description": "Hint text in inventories search field"
+    },
     "active": "Active",
+    "@active": {
+        "type": "text",
+        "description": "Segmented button label to filter for active inventories or nests"
+    },
     "finished": "Finished",
+    "@finished": {
+        "type": "text",
+        "description": "Segmented button label to filter for finished inventories"
+    },
     "noInventoriesFound": "No inventories found.",
+    "@noInventoriesFound": {
+        "type": "text",
+        "description": "Text shown when no inventories found"
+    },
     "deleteInventory": "Delete inventory",
+    "@deleteInventory": {
+        "type": "text",
+        "description": "Delete inventory option in bottom sheet"
+    },
     "confirmDelete": "Confirm delete",
+    "@confirmDelete": {
+        "type": "text",
+        "description": "Title of dialog for confirm record deletion"
+    },
     "confirmDeleteMessage": "Are you sure you want to delete {howMany, plural, one{{gender, select, male{this} female{this} other{this}}} other{{gender, select, male{these} female{these} other{these}}}} {what}?",
     "@confirmDeleteMessage": {
         "type": "text",
@@ -95,10 +223,26 @@
         }
     },
     "confirmFinish": "Confirm finish",
+    "@confirmFinish": {
+        "type": "text",
+        "description": "Title of dialog to confirm finishing an inventory"
+    },
     "confirmFinishMessage": "Are you sure you want to finish this inventory?",
+    "@confirmFinishMessage": {
+        "type": "text",
+        "description": "Message asking confirmation to finish an inventory"
+    },
     "finish": "Finish",
+    "@finish": {
+        "type": "text",
+        "description": "Finish button label"
+    },
     "newInventory": "New inventory",
-    "speciesCount": "{howMany, plural, one{1 species} other{{howMany} species}}",
+    "@newInventory": {
+        "type": "text",
+        "description": "Title of dialog when adding new inventory"
+    },
+    "speciesCount": "{howMany, plural, zero{species} one{species} other{species}}",
     "@speciesCount": {
         "type": "text",
         "description": "How many species the inventory have",
@@ -109,7 +253,15 @@
         }
     },
     "pause": "Pause",
+    "@pause": {
+        "type": "text",
+        "description": "Pause button hint"
+    },
     "resume": "Resume",
+    "@resume": {
+        "type": "text",
+        "description": "Resume button hint"
+    },
     "export": "Export {what}",
     "@export": {
         "type": "text",
@@ -131,15 +283,55 @@
         }
     },
     "finishInventory": "Finish inventory",
+    "@finishInventory": {
+        "type": "text",
+        "description": "Menu option to finish the inventory"
+    },
     "requiredField": "* required",
-    "inventoryType": "Inventory type *",
+    "@requiredField": {
+        "type": "text",
+        "description": "Auxiliary label informing that the field is required"
+    },
+    "inventoryType": "Inventory type",
+    "@inventoryType": {
+        "type": "text",
+        "description": "Inventory type field label"
+    },
     "selectInventoryType": "Please, select an inventory type",
-    "inventoryId": "Inventory ID *",
+    "@selectInventoryType": {
+        "type": "text",
+        "description": "Validation message shown when the inventory type field is empty"
+    },
+    "inventoryId": "Inventory ID",
+    "@inventoryId": {
+        "type": "text",
+        "description": "Inventory ID field label"
+    },
     "generateId": "Generate ID",
-    "siteAcronym": "Site name or acronym",
+    "@generateId": {
+        "type": "text",
+        "description": "Title of dialog to generate an inventory ID"
+    },
+    "siteAbbreviation": "Site name or abbreviation",
+    "@siteAbbreviation": {
+        "type": "text",
+        "description": "Field label asking the inventory site name or abbreviation to generate the ID"
+    },
     "optional": "* optional",
+    "@optional": {
+        "type": "text",
+        "description": "Auxiliary label informing that the field is optional"
+    },
     "insertInventoryId": "Please, insert an ID for the inventory",
+    "@insertInventoryId": {
+        "type": "text",
+        "description": "Validation message shown when the inventory ID is empty"
+    },
     "duration": "Duration",
+    "@duration": {
+        "type": "text",
+        "description": "Time duration field label"
+    },
     "minutes": "{howMany, plural, one{minute} other{minutes}}",
     "@minutes": {
         "type": "text",
@@ -151,30 +343,130 @@
         }
     },
     "insertDuration": "Insert a duration",
+    "@insertDuration": {
+        "type": "text",
+        "description": "Validation message shown when duration is empty"
+    },
     "maxSpecies": "Max species",
+    "@maxSpecies": {
+        "type": "text",
+        "description": "Max number of species field label"
+    },
     "insertMaxSpecies": "Insert the max of species",
+    "@insertMaxSpecies": {
+        "type": "text",
+        "description": "Validation message shown when the max of species field is empty"
+    },
     "mustBeBiggerThanFive": "Must be equal or higher than 5",
+    "@mustBeBiggerThanFive": {
+        "type": "text",
+        "description": "Validation message shown when the max of species is lower than five"
+    },
     "startInventory": "Start inventory",
+    "@startInventory": {
+        "type": "text",
+        "description": "Start inventory button label"
+    },
     "inventoryIdAlreadyExists": "This inventory ID already exists.",
+    "@inventoryIdAlreadyExists": {
+        "type": "text",
+        "description": "Message shown when the informed inventory ID already exists"
+    },
     "errorInsertingInventory": "Error inserting inventory",
+    "@errorInsertingInventory": {
+        "type": "text",
+        "description": "Message shown if an error occurred while inserting an inventory"
+    },
     "vegetationData": "Vegetation data",
+    "@vegetationData": {
+        "type": "text",
+        "description": "Vegetation data title or label"
+    },
     "herbs": "Herbs",
+    "@herbs": {
+        "type": "text",
+        "description": "Herbs section label in vegetation data"
+    },
     "distribution": "Distribution",
+    "@distribution": {
+        "type": "text",
+        "description": "Distribution field label"
+    },
     "proportion": "Proportion",
+    "@proportion": {
+        "type": "text",
+        "description": "Proportion field label"
+    },
     "height": "Height",
+    "@height": {
+        "type": "text",
+        "description": "Average height field label"
+    },
     "shrubs": "Shrubs",
+    "@shrubs": {
+        "type": "text",
+        "description": "Shrubs section label in vegetation data"
+    },
     "trees": "Trees",
+    "@trees": {
+        "type": "text",
+        "description": "Trees section label in vegetation data"
+    },
     "notes": "Notes",
+    "@notes": {
+        "type": "text",
+        "description": "Notes field label"
+    },
     "insertProportion": "Insert proportion",
+    "@insertProportion": {
+        "type": "text",
+        "description": "Validation message shown when proportion field is empty"
+    },
     "insertHeight": "Insert height",
+    "@insertHeight": {
+        "type": "text",
+        "description": "Validation message shown when height field is empty"
+    },
     "errorInsertingVegetation": "Error inserting vegetation data",
+    "@errorInsertingVegetation": {
+        "type": "text",
+        "description": "Message shown when an error occurred while inserting a vegetation record"
+    },
     "weatherData": "Weather data",
+    "@weatherData": {
+        "type": "text",
+        "description": "Weather data title or label"
+    },
     "cloudCover": "Cloud cover",
-    "precipitation": "Precipitation *",
+    "@cloudCover": {
+        "type": "text",
+        "description": "Cloud cover field label"
+    },
+    "precipitation": "Precipitation",
+    "@precipitation": {
+        "type": "text",
+        "description": "Precipitation field label"
+    },
     "selectPrecipitation": "Select precipitation",
+    "@selectPrecipitation": {
+        "type": "text",
+        "description": "Validation message shown when the precipitation field is empty"
+    },
     "temperature": "Temperature",
+    "@temperature": {
+        "type": "text",
+        "description": "Temperature field label"
+    },
     "windSpeed": "Wind speed",
+    "@windSpeed": {
+        "type": "text",
+        "description": "Wind speed field label"
+    },
     "errorInsertingWeather": "Error inserting weather data",
+    "@errorInsertingWeather": {
+        "type": "text",
+        "description": "Message shown when an error occurred while inserting a weather record"
+    },
     "species": "{howMany, plural, one{Species} other{Species}}",
     "@species": {
         "type": "text",
@@ -197,11 +489,35 @@
         }
     },
     "vegetation": "Vegetation",
+    "@vegetation": {
+        "type": "text",
+        "description": "Vegetation tab"
+    },
     "weather": "Weather",
+    "@weather": {
+        "type": "text",
+        "description": "Weather tab"
+    },
     "errorGettingLocation": "Error getting location.",
+    "@errorGettingLocation": {
+        "type": "text",
+        "description": "Message shown when an error occurred while getting the GPS location"
+    },
     "poi": "POI",
+    "@poi": {
+        "type": "text",
+        "description": "Point of interest abbreviation in labels"
+    },
     "speciesInfo": "Species information",
+    "@speciesInfo": {
+        "type": "text",
+        "description": "Species information expandable list title"
+    },
     "count": "Count",
+    "@count": {
+        "type": "text",
+        "description": "Species info showing individuals count for the species in the actual list"
+    },
     "individual": "{howMany, plural, one{individual} other{individuals}}",
     "@individual": {
         "type": "text",
@@ -213,23 +529,95 @@
         }
     },
     "outOfSample": "Out of the sample",
+    "@outOfSample": {
+        "type": "text",
+        "description": "Species info for when the species was added after the inventory was finished"
+    },
     "withinSample": "Within the sample",
+    "@withinSample": {
+        "type": "text",
+        "description": "Species info for when the species was added while the inventory was active"
+    },
     "noPoiFound": "No POI found.",
+    "@noPoiFound": {
+        "type": "text",
+        "description": "Message shown when no POI was found"
+    },
     "newPoi": "New POI",
+    "@newPoi": {
+        "type": "text",
+        "description": "New POI button hint"
+    },
     "deletePoi": "Delete POI",
+    "@deletePoi": {
+        "type": "text",
+        "description": "Menu option to delete POI"
+    },
     "decreaseIndividuals": "Decrease individuals count",
+    "@decreaseIndividuals": {
+        "type": "text",
+        "description": "Decrease individuals count button hint"
+    },
     "increaseIndividuals": "Increase individuals count",
+    "@increaseIndividuals": {
+        "type": "text",
+        "description": "Increase individuals count button hint"
+    },
     "addPoi": "Add POI",
+    "@addPoi": {
+        "type": "text",
+        "description": "Add POI button hint"
+    },
     "editCount": "Edit count",
+    "@editCount": {
+        "type": "text",
+        "description": "Title of dialog to edit the number of individuals of a species"
+    },
     "individualsCount": "Individuals count",
+    "@individualsCount": {
+        "type": "text",
+        "description": "Individuals count field label"
+    },
     "deleteVegetation": "Delete vegetation record",
+    "@deleteVegetation": {
+        "type": "text",
+        "description": "Menu option to delete a vegetation record"
+    },
     "noVegetationFound": "No vegetation records.",
+    "@noVegetationFound": {
+        "type": "text",
+        "description": "Message shown when the vegetation list is empty"
+    },
     "weatherRecord": "weather record",
+    "@weatherRecord": {
+        "type": "text",
+        "description": "Weather record label used in messages"
+    },
     "noWeatherFound": "No weather records.",
+    "@noWeatherFound": {
+        "type": "text",
+        "description": "Message shown when the weather list is empty"
+    },
     "deleteWeather": "Delete weather record",
+    "@deleteWeather": {
+        "type": "text",
+        "description": "Menu option to delete a weather record"
+    },
     "findNests": "Find nests...",
+    "@findNests": {
+        "type": "text",
+        "description": "Text hint in the nest search field"
+    },
     "inactive": "Inactive",
+    "@inactive": {
+        "type": "text",
+        "description": "Segmented button label for filter of inactive nests"
+    },
     "noNestsFound": "No nests found.",
+    "@noNestsFound": {
+        "type": "text",
+        "description": "Message shown when the nests list is empty"
+    },
     "nest": "{howMany, plural, one{nest} other{nests}}",
     "@nest": {
         "type": "text",
@@ -241,9 +629,25 @@
         }
     },
     "newNest": "New nest",
+    "@newNest": {
+        "type": "text",
+        "description": "New nest dialog title"
+    },
     "deleteNest": "Delete nest",
+    "@deleteNest": {
+        "type": "text",
+        "description": "Menu option to delete a nest"
+    },
     "confirmFate": "Confirm fate",
+    "@confirmFate": {
+        "type": "text",
+        "description": "Title of dialog to confirm nest fate"
+    },
     "nestFate": "Nest fate *",
+    "@nestFate": {
+        "type": "text",
+        "description": "Nest fate field label"
+    },
     "errorInactivatingNest": "Error inactivating nest: {errorMessage}",
     "@errorInactivatingNest": {
         "type": "text",
@@ -275,19 +679,75 @@
         }
     },
     "nestInfo": "Nest information",
+    "@nestInfo": {
+        "type": "text",
+        "description": "Nest information expandable list title"
+    },
     "timeFound": "Date and time found",
+    "@timeFound": {
+        "type": "text",
+        "description": "Time found field label"
+    },
     "locality": "Locality",
+    "@locality": {
+        "type": "text",
+        "description": "Locality field label"
+    },
     "nestSupport": "Nest support",
+    "@nestSupport": {
+        "type": "text",
+        "description": "Nest support field label"
+    },
     "heightAboveGround": "Height above ground",
+    "@heightAboveGround": {
+        "type": "text",
+        "description": "Height above ground field label"
+    },
     "male": "Male",
+    "@male": {
+        "type": "text",
+        "description": "Male field label"
+    },
     "female": "Female",
+    "@female": {
+        "type": "text",
+        "description": "Female field label"
+    },
     "helpers": "Nest helpers",
+    "@helpers": {
+        "type": "text",
+        "description": "Nest helpers field label"
+    },
     "noEggsFound": "No eggs recorded.",
+    "@noEggsFound": {
+        "type": "text",
+        "description": "Message shown when the eggs list is empty"
+    },
     "deleteEgg": "Delete egg",
+    "@deleteEgg": {
+        "type": "text",
+        "description": "Menu option to delete an egg"
+    },
     "noRevisionsFound": "No revisions recorded.",
+    "@noRevisionsFound": {
+        "type": "text",
+        "description": "Message shown when the nest revision list is empty"
+    },
     "deleteRevision": "Delete nest revision",
+    "@deleteRevision": {
+        "type": "text",
+        "description": "Menu option to delete a nest revision"
+    },
     "host": "Host",
+    "@host": {
+        "type": "text",
+        "description": "Nest owner section label"
+    },
     "nidoparasite": "Nidoparasite",
+    "@nidoparasite": {
+        "type": "text",
+        "description": "Nidoparasite section label"
+    },
     "nestling": "{howMany, plural, one{Nestling} other{Nestlings}}",
     "@nestling": {
         "type": "text",
@@ -299,31 +759,135 @@
         }
     },
     "addEgg": "Add egg",
+    "@addEgg": {
+        "type": "text",
+        "description": "Add egg dialog title"
+    },
     "fieldNumber": "Field number",
+    "@fieldNumber": {
+        "type": "text",
+        "description": "Field number field label"
+    },
     "insertFieldNumber": "Please, insert the field number",
+    "@insertFieldNumber": {
+        "type": "text",
+        "description": "Validation message shown when the field number is empty"
+    },
     "selectSpecies": "Please, select a species",
+    "@selectSpecies": {
+        "type": "text",
+        "description": "Validation message shown when the species is empty"
+    },
     "eggShape": "Egg shape",
+    "@eggShape": {
+        "type": "text",
+        "description": "Egg shape field label"
+    },
     "width": "Width",
+    "@width": {
+        "type": "text",
+        "description": "Width field label"
+    },
     "length": "Length",
+    "@length": {
+        "type": "text",
+        "description": "Length field label"
+    },
     "weight": "Weight",
+    "@weight": {
+        "type": "text",
+        "description": "Weight field label"
+    },
     "errorEggAlreadyExists": "An egg with this field number already exists.",
+    "@errorEggAlreadyExists": {
+        "type": "text",
+        "description": "Message shown when an egg already exists with the same field number"
+    },
     "errorSavingEgg": "Error saving egg.",
+    "@errorSavingEgg": {
+        "type": "text",
+        "description": "Message shown when an error occurred while saving an egg"
+    },
     "insertLocality": "Please, insert locality name",
+    "@insertLocality": {
+        "type": "text",
+        "description": "Validation message shown when locality name is empty"
+    },
     "insertNestSupport": "Please, insert nest support",
+    "@insertNestSupport": {
+        "type": "text",
+        "description": "Validation message shown when nest support is empty"
+    },
     "errorNestAlreadyExists": "A nest with this field number already exists.",
+    "@errorNestAlreadyExists": {
+        "type": "text",
+        "description": "Message shown when a nest already exists with the same field number"
+    },
     "errorSavingNest": "Error saving nest.",
+    "@errorSavingNest": {
+        "type": "text",
+        "description": "Message shown when an error occurred while saving a nest"
+    },
     "nestRevision": "Nest revision",
+    "@nestRevision": {
+        "type": "text",
+        "description": "New nest revision dialog title"
+    },
     "nestStatus": "Nest status",
+    "@nestStatus": {
+        "type": "text",
+        "description": "Nest status field label"
+    },
     "nestPhase": "Nest phase",
+    "@nestPhase": {
+        "type": "text",
+        "description": "Nest phase field label"
+    },
     "philornisLarvaePresent": "Philornis larvae present",
+    "@philornisLarvaePresent": {
+        "type": "text",
+        "description": "Philornis larvae present field label"
+    },
     "errorSavingRevision": "Error saving nest revision.",
+    "@errorSavingRevision": {
+        "type": "text",
+        "description": "Message shown when an error occurred while saving a nest revision"
+    },
     "findSpecimens": "Find specimens...",
+    "@findSpecimens": {
+        "type": "text",
+        "description": "Text hint in the specimen search field"
+    },
     "noSpecimenCollected": "No specimen collected.",
+    "@noSpecimenCollected": {
+        "type": "text",
+        "description": "Message shown when the specimens list is empty"
+    },
     "newSpecimen": "New specimen",
+    "@newSpecimen": {
+        "type": "text",
+        "description": "New specimen dialog title"
+    },
     "deleteSpecimen": "Delete specimen",
+    "@deleteSpecimen": {
+        "type": "text",
+        "description": "Menu option to delete a specimen"
+    },
     "specimenType": "Specimen type",
+    "@specimenType": {
+        "type": "text",
+        "description": "Specimen type field label"
+    },
     "errorSpecimenAlreadyExists": "A specimen with this field number already exists.",
+    "@errorSpecimenAlreadyExists": {
+        "type": "text",
+        "description": "Message shown when a specimen already exists with the same field number"
+    },
     "errorSavingSpecimen": "Error saving specimen.",
+    "@errorSavingSpecimen": {
+        "type": "text",
+        "description": "Message shown when an error occurred while saving a specimen"
+    },
     "images": "{howMany, plural, one{Image} other{Images}}",
     "@images": {
         "type": "text",
@@ -335,16 +899,60 @@
         }
     },
     "noImagesFound": "No images found.",
+    "@noImagesFound": {
+        "type": "text",
+        "description": "Message shown when the images list is empty"
+    },
     "addImage": "Add image",
+    "@addImage": {
+        "type": "text",
+        "description": "Add image dialog title"
+    },
     "gallery": "Gallery",
+    "@gallery": {
+        "type": "text",
+        "description": "Gallery button label"
+    },
     "camera": "Camera",
+    "@camera": {
+        "type": "text",
+        "description": "Camera button label"
+    },
     "permissionDenied": "Permission denied.",
+    "@permissionDenied": {
+        "type": "text",
+        "description": "Message shown when the permission was denied"
+    },
     "permissionDeniedPermanently": "Permission denied permanently.",
+    "@permissionDeniedPermanently": {
+        "type": "text",
+        "description": "Message shown when the permission was denied permanently"
+    },
     "shareImage": "Share image",
+    "@shareImage": {
+        "type": "text",
+        "description": "Menu option to share an image"
+    },
     "editImageNotes": "Edit image notes",
+    "@editImageNotes": {
+        "type": "text",
+        "description": "Menu option to edit the image notes"
+    },
     "deleteImage": "Delete image",
+    "@deleteImage": {
+        "type": "text",
+        "description": "Menu option to delete an image"
+    },
     "editNotes": "Edit notes",
+    "@editNotes": {
+        "type": "text",
+        "description": "Edit notes dialog title"
+    },
     "imageDetails": "Image details",
+    "@imageDetails": {
+        "type": "text",
+        "description": "Image details dialog title"
+    },
     "inventoryExported": "{howMany, plural, one{Inventory exported!} other{Inventories exported!}}",
     "@inventoryExported": {
         "type": "text",

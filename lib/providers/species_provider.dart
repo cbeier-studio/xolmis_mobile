@@ -16,10 +16,12 @@ class SpeciesProvider with ChangeNotifier {
   final ValueNotifier<int> individualsCountNotifier = ValueNotifier<int>(0);
   final Map<String, List<Species>> _speciesByInventoryId = {};
 
+  // Get list of all inventory IDs
   List<String> getAllInventoryIds() {
     return _speciesByInventoryId.keys.toList();
   }
 
+  // Load list of species for an inventory ID
   Future<void> loadSpeciesForInventory(String inventoryId) async {
     try {
       final speciesList = await _speciesRepository.getSpeciesByInventory(inventoryId);
@@ -33,22 +35,24 @@ class SpeciesProvider with ChangeNotifier {
     }
   }
 
+  // Get list of species for an inventory
   List<Species> getSpeciesForInventory(String inventoryId) {
     return _speciesMap[inventoryId] ?? [];
   }
 
+  // Add species to the database and the list
   Future<void> addSpecies(BuildContext context, String inventoryId, Species species) async {
     await _speciesRepository.insertSpecies(inventoryId, species);
     _speciesMap[inventoryId] = await _speciesRepository.getSpeciesByInventory(inventoryId);
     // _speciesMap[inventoryId] = _speciesMap[inventoryId] ?? [];
     // _speciesMap[inventoryId]!.add(species);
     if (context.mounted) {
-      Provider.of<InventoryProvider>(context, listen: false).updateSpeciesCount(
-          inventoryId);
+      Provider.of<InventoryProvider>(context, listen: false).updateSpeciesCount(inventoryId);
     }
     notifyListeners();
   }
 
+  // Update species in the database and the list
   Future<void> updateSpecies(String inventoryId, Species species) async {
     await _speciesRepository.updateSpecies(species);
 
@@ -57,6 +61,7 @@ class SpeciesProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  // Remove species from database and from list
   Future<void> removeSpecies(BuildContext context, String inventoryId, int speciesId) async {
     await _speciesRepository.deleteSpecies(speciesId);
 
@@ -64,19 +69,11 @@ class SpeciesProvider with ChangeNotifier {
     notifyListeners();
 
     if (context.mounted) {
-      Provider.of<InventoryProvider>(context, listen: false).updateSpeciesCount(
-          inventoryId);
+      Provider.of<InventoryProvider>(context, listen: false).updateSpeciesCount(inventoryId);
     }
   }
 
-  // void sortSpeciesForInventory(String inventoryId) {
-  //   final speciesList = _speciesMap[inventoryId];
-  //   if (speciesList != null) {
-  //     speciesList.sort((a, b) => a.name.compareTo(b.name));
-  //   }
-  //   notifyListeners();
-  // }
-
+  // Update number of individuals for a species
   void updateIndividualsCount(Species species) async {
     // 1. Find the species in the list
     final speciesList = await _speciesRepository.getSpeciesByInventory(species.inventoryId);
@@ -92,6 +89,7 @@ class SpeciesProvider with ChangeNotifier {
     }
   }
 
+  // Increase number of individuals for a species
   Future<void> incrementIndividualsCount(Species species) async {
     species.count++;
     await _speciesRepository.updateSpecies(species);
@@ -107,6 +105,7 @@ class SpeciesProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  // Decrease number of individuals for a species
   Future<void> decrementIndividualsCount(Species species) async {
     if (species.count > 0) {
       species.count--;
@@ -124,6 +123,7 @@ class SpeciesProvider with ChangeNotifier {
     }
   }
 
+  // Check if a species is already in the list
   bool speciesExistsInInventory(String inventoryId, String speciesName) {
     final speciesList = getSpeciesForInventory(inventoryId);
     return speciesList.any((species) => species.name == speciesName);

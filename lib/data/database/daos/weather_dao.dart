@@ -10,6 +10,7 @@ class WeatherDao {
 
   WeatherDao(this._dbHelper);
 
+  // Insert weather record into database
   Future<int?> insertWeather(Weather weather) async {
     final db = await _dbHelper.database;
     try {
@@ -27,6 +28,7 @@ class WeatherDao {
     }
   }
 
+  // Delete weather record from database
   Future<void> deleteWeather(int? weatherId) async {
     final db = await _dbHelper.database;
     await db?.delete(
@@ -36,6 +38,7 @@ class WeatherDao {
     );
   }
 
+  // Get list of weather records for inventory ID
   Future<List<Weather>> getWeatherByInventory(String inventoryId) async {
     final db = await _dbHelper.database;
     final List<Map<String, dynamic>> maps = await db?.query(

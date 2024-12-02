@@ -12,6 +12,7 @@ class EggProvider with ChangeNotifier {
 
   final Map<int, List<Egg>> _eggMap = {};
 
+  // Load list of eggs for a nest ID
   Future<void> loadEggForNest(int nestId) async {
     try {
       final eggList = await _eggRepository.getEggsForNest(nestId);
@@ -25,14 +26,17 @@ class EggProvider with ChangeNotifier {
     }
   }
 
+  // Get an egg for a nest from the list
   List<Egg> getEggForNest(int nestId) {
     return _eggMap[nestId] ?? [];
   }
 
+  // Check if the egg field number already exists
   Future<bool> eggFieldNumberExists(String fieldNumber) async {
     return await _eggRepository.eggFieldNumberExists(fieldNumber);
   }
 
+  // Insert egg into database and to the list
   Future<void> addEgg(BuildContext context, int nestId, Egg egg) async {
     if (await eggFieldNumberExists(egg.fieldNumber!)) {
       throw Exception(S.current.errorEggAlreadyExists);
@@ -50,6 +54,7 @@ class EggProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  // Remove egg from database and from list
   Future<void> removeEgg(int nestId, int eggId) async {
     await _eggRepository.deleteEgg(eggId);
 
