@@ -23,6 +23,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   int _maxSpeciesMackinnon = 10;
   int _pointCountsDuration = 8;
   int _cumulativeTimeDuration = 30;
+  int _intervalsDuration = 10;
   String _observerAcronym = '';
   PackageInfo? _packageInfo;
 
@@ -45,6 +46,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       _maxSpeciesMackinnon = prefs.getInt('maxSpeciesMackinnon') ?? 10;
       _pointCountsDuration = prefs.getInt('pointCountsDuration') ?? 8;
       _cumulativeTimeDuration = prefs.getInt('cumulativeTimeDuration') ?? 30;
+      _intervalsDuration = prefs.getInt('intervalsDuration') ?? 10;
       _observerAcronym = prefs.getString('observerAcronym') ?? '';
     });
   }
@@ -56,6 +58,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     await prefs.setInt('maxSpeciesMackinnon', _maxSpeciesMackinnon);
     await prefs.setInt('pointCountsDuration', _pointCountsDuration);
     await prefs.setInt('cumulativeTimeDuration', _cumulativeTimeDuration);
+    await prefs.setInt('intervalsDuration', _intervalsDuration);
     await prefs.setString('observerAcronym', _observerAcronym);
   }
 
@@ -254,6 +257,30 @@ class _SettingsScreenState extends State<SettingsScreen> {
               if (newDuration != null) {
                 setState(() {
                   _cumulativeTimeDuration = newDuration;
+                });
+                _saveSettings();
+              }
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.timer_outlined),
+            title: Text(S.of(context).intervaledQualitativeLists),
+            subtitle: Text(S.of(context).inventoryDuration(_intervalsDuration)),
+            onTap: () async {
+              final newDuration = await showDialog<int>(
+                context: context,
+                builder: (context) {
+                  return NumberPickerDialog(
+                    minValue: 1,
+                    maxValue: 120,
+                    initialValue: _intervalsDuration,
+                    title: S.of(context).durationMin,
+                  );
+                },
+              );
+              if (newDuration != null) {
+                setState(() {
+                  _intervalsDuration = newDuration;
                 });
                 _saveSettings();
               }

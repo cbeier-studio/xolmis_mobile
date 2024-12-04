@@ -272,6 +272,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Por favor, insira o suporte do ninho"),
         "insertProportion":
             MessageLookupByLibrary.simpleMessage("Insira a proporção"),
+        "intervaledQualitativeLists": MessageLookupByLibrary.simpleMessage(
+            "Listas qualitativas de intervalo fixo"),
         "inventories": MessageLookupByLibrary.simpleMessage("Inventários"),
         "inventory": m10,
         "inventoryBanding": MessageLookupByLibrary.simpleMessage("Anilhamento"),
@@ -282,10 +284,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "inventoryExported": m13,
         "inventoryFreeQualitative":
             MessageLookupByLibrary.simpleMessage("Lista Qualitativa Livre"),
-        "inventoryId":
-            MessageLookupByLibrary.simpleMessage("ID do Inventário *"),
+        "inventoryId": MessageLookupByLibrary.simpleMessage("ID do Inventário"),
         "inventoryIdAlreadyExists": MessageLookupByLibrary.simpleMessage(
             "Já existe um inventário com esta ID."),
+        "inventoryIntervaledQualitative": MessageLookupByLibrary.simpleMessage(
+            "Lista Qualitativa Intervalada"),
         "inventoryMackinnonList":
             MessageLookupByLibrary.simpleMessage("Lista de Mackinnon"),
         "inventoryPointCount":
@@ -295,7 +298,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "inventoryTransectionCount":
             MessageLookupByLibrary.simpleMessage("Contagem em Transecção"),
         "inventoryType":
-            MessageLookupByLibrary.simpleMessage("Tipo de inventário *"),
+            MessageLookupByLibrary.simpleMessage("Tipo de inventário"),
         "length": MessageLookupByLibrary.simpleMessage("Comprimento"),
         "lightMode": MessageLookupByLibrary.simpleMessage("Claro"),
         "listFinished": MessageLookupByLibrary.simpleMessage("Lista concluída"),
@@ -312,7 +315,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "nest": m15,
         "nestData": m16,
         "nestExported": m17,
-        "nestFate": MessageLookupByLibrary.simpleMessage("Destino do ninho *"),
+        "nestFate": MessageLookupByLibrary.simpleMessage("Destino do ninho"),
         "nestInfo":
             MessageLookupByLibrary.simpleMessage("Informações do ninho"),
         "nestPhase": MessageLookupByLibrary.simpleMessage("Estágio"),
@@ -375,7 +378,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "poi": MessageLookupByLibrary.simpleMessage("POI"),
         "pointCounts":
             MessageLookupByLibrary.simpleMessage("Pontos de contagem"),
-        "precipitation": MessageLookupByLibrary.simpleMessage("Precipitação *"),
+        "precipitation": MessageLookupByLibrary.simpleMessage("Precipitação"),
         "precipitationDrizzle": MessageLookupByLibrary.simpleMessage("Garoa"),
         "precipitationFog": MessageLookupByLibrary.simpleMessage("Névoa"),
         "precipitationMist": MessageLookupByLibrary.simpleMessage("Neblina"),

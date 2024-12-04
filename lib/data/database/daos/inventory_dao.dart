@@ -85,6 +85,17 @@ class InventoryDao {
     );
   }
 
+  // Update the current interval of the inventory in the database
+  Future<void> updateInventoryCurrentInterval(String inventoryId, int currentInterval) async {
+    final db = await _dbHelper.database;
+    await db?.update(
+      'inventories',
+      {'currentInterval': currentInterval},
+      where: 'id = ?',
+      whereArgs: [inventoryId],
+    );
+  }
+
   // Check if the ID already exists
   Future<bool> inventoryIdExists(String id) async {
     final db = await _dbHelper.database;

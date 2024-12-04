@@ -89,7 +89,8 @@ Future<void> exportInventoryToCsv(BuildContext context, Inventory inventory) asy
       'Start longitude',
       'Start latitude',
       'End longitude',
-      'End latitude'
+      'End latitude',
+      'Intervals'
     ]);
     rows.add([
       inventory.id,
@@ -101,7 +102,8 @@ Future<void> exportInventoryToCsv(BuildContext context, Inventory inventory) asy
       inventory.startLongitude,
       inventory.startLatitude,
       inventory.endLongitude,
-      inventory.endLatitude
+      inventory.endLatitude,
+      inventory.currentInterval
     ]);
 
     // Add species data

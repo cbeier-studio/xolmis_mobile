@@ -435,6 +435,7 @@ class Weather {
 enum InventoryType {
   invFreeQualitative,
   invTimedQualitative,
+  invIntervaledQualitative,
   invMackinnonList,
   invTransectionCount,
   invPointCount,
@@ -445,6 +446,7 @@ enum InventoryType {
 Map<InventoryType, String> inventoryTypeFriendlyNames = {
   InventoryType.invFreeQualitative: S.current.inventoryFreeQualitative,
   InventoryType.invTimedQualitative: S.current.inventoryTimedQualitative,
+  InventoryType.invIntervaledQualitative: S.current.inventoryIntervaledQualitative,
   InventoryType.invMackinnonList: S.current.inventoryMackinnonList,
   InventoryType.invTransectionCount: S.current.inventoryTransectionCount,
   InventoryType.invPointCount: S.current.inventoryPointCount,
@@ -474,6 +476,10 @@ class Inventory with ChangeNotifier {
   ValueNotifier<double> get elapsedTimeNotifier => _elapsedTimeNotifier;
   final ValueNotifier<bool> isFinishedNotifier = ValueNotifier<bool>(false);
   bool _autoFinished = false;
+  int currentInterval = 1;
+  final ValueNotifier<int> currentIntervalNotifier = ValueNotifier<int>(1);
+  int intervalsWithoutNewSpecies = 0;
+  List<String> currentIntervalList = [];
 
   Inventory({
     required this.id,
@@ -492,6 +498,7 @@ class Inventory with ChangeNotifier {
     this.speciesList = const [],
     this.vegetationList = const [],
     this.weatherList = const [],
+    this.currentInterval = 1,
   }) {
     if (duration == 0) {
       elapsedTime = 0;
@@ -517,6 +524,7 @@ class Inventory with ChangeNotifier {
         startLatitude = map['startLatitude'],
         endLongitude = map['endLongitude'],
         endLatitude = map['endLatitude'],
+        currentInterval = map['currentInterval'],
         this.speciesList = speciesList,
         this.vegetationList = vegetationList,
         this.weatherList = weatherList;
@@ -535,6 +543,7 @@ class Inventory with ChangeNotifier {
     double? startLatitude,
     double? endLongitude,
     double? endLatitude,
+    int? currentInterval,
     List<Species>? speciesList,
     List<Vegetation>? vegetationList,
     List<Weather>? weatherList,
@@ -553,6 +562,7 @@ class Inventory with ChangeNotifier {
       startLatitude: startLatitude ?? this.startLatitude,
       endLongitude: endLongitude ?? this.endLongitude,
       endLatitude: endLatitude ?? this.endLatitude,
+      currentInterval: currentInterval ?? this.currentInterval,
       speciesList: speciesList ?? this.speciesList,
       vegetationList: vegetationList ?? this.vegetationList,
       weatherList: weatherList ?? this.weatherList,
@@ -574,6 +584,7 @@ class Inventory with ChangeNotifier {
       'startLatitude': startLatitude,
       'endLongitude': endLongitude,
       'endLatitude': endLatitude,
+      'currentInterval': currentInterval,
     };
   }
 
@@ -592,7 +603,8 @@ class Inventory with ChangeNotifier {
         'startLongitude: $startLongitude, '
         'startLatitude: $startLatitude, '
         'endLongitude: $endLongitude, '
-        'endLatitude: $endLatitude}';
+        'endLatitude: $endLatitude, '
+        'currentInterval: $currentInterval}';
   }
 
   Map<String, dynamic> toJson() {
@@ -607,6 +619,7 @@ class Inventory with ChangeNotifier {
       'startLatitude': startLatitude,
       'endLongitude': endLongitude,
       'endLatitude': endLatitude,
+      'currentInterval': currentInterval,
       'speciesList': speciesList.map((species) => species.toJson()).toList(),
       'vegetationList': vegetationList.map((vegetation) => vegetation.toJson()).toList(),
       'weatherList': weatherList.map((weather) => weather.toJson()).toList(),
@@ -655,14 +668,30 @@ class Inventory with ChangeNotifier {
           elapsedTimeNotifier.notifyListeners();
           inventoryRepository.updateInventoryElapsedTime(id, elapsedTime);
 
-          // if (elapsedTime % 5 == 0) {}
-
           // If the inventory timer reach the goal, finish it automatically
           if (elapsedTime == duration * 60 && !isFinished) {
-            _autoFinished = true;
-            // inventoryRepository.updateInventoryElapsedTime(id, elapsedTime);
-            await stopTimer(inventoryRepository);
+            if (type == InventoryType.invIntervaledQualitative) {
+              currentInterval++;
+              currentIntervalNotifier.value = currentInterval;
+              currentIntervalNotifier.notifyListeners();
 
+              if (currentIntervalList.isEmpty) {
+                intervalsWithoutNewSpecies++;
+              } else {
+                intervalsWithoutNewSpecies = 0;
+              }
+              currentIntervalList = [];
+
+              if (intervalsWithoutNewSpecies >= 3) {
+                _autoFinished = true;
+                await stopTimer(inventoryRepository);
+              } else {
+                updateElapsedTime(0.0);
+              }
+            } else {
+              _autoFinished = true;
+              await stopTimer(inventoryRepository);
+            }
             if (_autoFinished) {
               // If finished automatically, show a notification
               await showNotification(flutterLocalNotificationsPlugin);

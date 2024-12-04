@@ -285,6 +285,16 @@ class S {
     );
   }
 
+  /// `Intervaled qualitative lists`
+  String get intervaledQualitativeLists {
+    return Intl.message(
+      'Intervaled qualitative lists',
+      name: 'intervaledQualitativeLists',
+      desc: 'Intervaled qualitative lists option in settings',
+      args: [],
+    );
+  }
+
   /// `About the app`
   String get about {
     return Intl.message(
@@ -2166,6 +2176,16 @@ class S {
     return Intl.message(
       'Timed Qualitative List',
       name: 'inventoryTimedQualitative',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Intervaled Qualitative List`
+  String get inventoryIntervaledQualitative {
+    return Intl.message(
+      'Intervaled Qualitative List',
+      name: 'inventoryIntervaledQualitative',
       desc: '',
       args: [],
     );

@@ -267,6 +267,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Please, insert nest support"),
         "insertProportion":
             MessageLookupByLibrary.simpleMessage("Insert proportion"),
+        "intervaledQualitativeLists": MessageLookupByLibrary.simpleMessage(
+            "Intervaled qualitative lists"),
         "inventories": MessageLookupByLibrary.simpleMessage("Inventories"),
         "inventory": m10,
         "inventoryBanding": MessageLookupByLibrary.simpleMessage("Banding"),
@@ -280,6 +282,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "inventoryId": MessageLookupByLibrary.simpleMessage("Inventory ID"),
         "inventoryIdAlreadyExists": MessageLookupByLibrary.simpleMessage(
             "This inventory ID already exists."),
+        "inventoryIntervaledQualitative":
+            MessageLookupByLibrary.simpleMessage("Intervaled Qualitative List"),
         "inventoryMackinnonList":
             MessageLookupByLibrary.simpleMessage("Mackinnon List"),
         "inventoryPointCount":

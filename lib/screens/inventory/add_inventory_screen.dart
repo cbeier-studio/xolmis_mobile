@@ -166,7 +166,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                                 suffixText: S.of(context).minutes(2),
                               ),
                               validator: (value) {
-                                if ((_selectedType == InventoryType.invTimedQualitative || _selectedType == InventoryType.invPointCount) && (value == null || value.isEmpty)) {
+                                if ((_selectedType == InventoryType.invTimedQualitative || _selectedType == InventoryType.invIntervaledQualitative || _selectedType == InventoryType.invPointCount) && (value == null || value.isEmpty)) {
                                   return S.of(context).insertDuration;
                                 }
                                 return null;
@@ -232,11 +232,15 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
     final maxSpeciesMackinnon = prefs.getInt('maxSpeciesMackinnon') ?? 10;
     final pointCountsDuration = prefs.getInt('pointCountsDuration') ?? 8;
     final cumulativeTimeDuration = prefs.getInt('cumulativeTimeDuration') ?? 30;
+    final intervalsDuration = prefs.getInt('intervalsDuration') ?? 10;
 
     setState(() {
       _selectedType = newValue;
       if (newValue == InventoryType.invTimedQualitative) {
         _durationController.text = cumulativeTimeDuration.toString();
+        _maxSpeciesController.text = '';
+      } else if (newValue == InventoryType.invIntervaledQualitative) {
+        _durationController.text = intervalsDuration.toString();
         _maxSpeciesController.text = '';
       } else if (newValue == InventoryType.invMackinnonList) {
         _maxSpeciesController.text = maxSpeciesMackinnon.toString();

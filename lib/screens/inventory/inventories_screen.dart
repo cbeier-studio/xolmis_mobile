@@ -688,77 +688,88 @@ class InventoryListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell( // Or GestureDetector
-        onLongPress: onLongPress,
-        onTap: () {
-          onTap?.call(inventory);
-        },
-        child: ListTile(
-            // Use ValueListenableBuilder for update the CircularProgressIndicator
-            leading: ValueListenableBuilder<double>(
-              valueListenable: inventory.elapsedTimeNotifier,
-              builder: (context, elapsedTime, child) {
-                var progress = (inventory.isPaused || inventory.duration < 0)
-                    ? null
-                    : (elapsedTime / (inventory.duration * 60)).toDouble();
+      onLongPress: onLongPress,
+      onTap: () {
+        onTap?.call(inventory);
+      },
+      child: ListTile(
+        // Use ValueListenableBuilder for update the CircularProgressIndicator
+        leading: Stack(
+            alignment: Alignment.center,
+            children: [
+              ValueListenableBuilder<double>(
+                valueListenable: inventory.elapsedTimeNotifier,
+                builder: (context, elapsedTime, child) {
+                  var progress = (inventory.isPaused || inventory.duration < 0)
+                      ? null
+                      : (elapsedTime / (inventory.duration * 60)).toDouble();
 
-                if (progress != null && (progress.isNaN || progress.isInfinite || progress < 0 || progress > 1)) {
-                  progress = 0;
-                }
+                  if (progress != null && (progress.isNaN || progress.isInfinite || progress < 0 || progress > 1)) {
+                    progress = 0;
+                  }
 
-                return CircularProgressIndicator(
-                  value: progress,
-                  backgroundColor: !isHistory && inventory.duration > 0 ? Theme.of(context).brightness == Brightness.light
-                      ? Colors.grey[200]
-                      : Colors.black : null,
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    inventory.isPaused ? Colors.amber : Theme.of(context).brightness == Brightness.light
-                        ? Colors.deepPurple
-                        : Colors.deepPurpleAccent,
-                  ),
-                );
+                  return CircularProgressIndicator(
+                    value: progress,
+                    backgroundColor: !isHistory && inventory.duration > 0 ? Theme.of(context).brightness == Brightness.light
+                        ? Colors.grey[200]
+                        : Colors.black : null,
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      inventory.isPaused ? Colors.amber : Theme.of(context).brightness == Brightness.light
+                          ? Colors.deepPurple
+                          : Colors.deepPurpleAccent,
+                    ),
+                  );
+                },
+              ),
+              if (!isHistory && inventory.type == InventoryType.invIntervaledQualitative)
+                ValueListenableBuilder<int>(
+                    valueListenable: inventory.currentIntervalNotifier,
+                    builder: (context, currentInterval, child) {
+                      return Text(currentInterval.toString());
+                    }
+                )
+            ]
+        ),
+        title: Text(inventory.id),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('${inventoryTypeFriendlyNames[inventory.type]}'),
+            if (!isHistory && inventory.duration > 0) Text(S.of(context).inventoryDuration(inventory.duration)),
+            Selector<SpeciesProvider, int>(
+              selector: (context, speciesProvider) => speciesProvider.getSpeciesForInventory(inventory.id).length,
+              shouldRebuild: (previous, next) => previous != next,
+              builder: (context, speciesCount, child) {
+                return Text('$speciesCount ${S.of(context).speciesCount(speciesCount)}');
               },
             ),
-            title: Text(inventory.id),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('${inventoryTypeFriendlyNames[inventory.type]}'),
-                if (!isHistory && inventory.duration > 0) Text(S.of(context).inventoryDuration(inventory.duration)),
-                Selector<SpeciesProvider, int>(
-                  selector: (context, speciesProvider) => speciesProvider.getSpeciesForInventory(inventory.id).length,
-                  shouldRebuild: (previous, next) => previous != next,
-                  builder: (context, speciesCount, child) {
-                    return Text('$speciesCount ${S.of(context).speciesCount(speciesCount)}');
-                  },
-                ),
-              ],
+          ],
+        ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Visibility(
+              visible: !isHistory && inventory.duration > 0,
+              child: IconButton(
+                icon: Icon(inventory.isPaused ? Theme.of(context).brightness == Brightness.light
+                    ? Icons.play_arrow_outlined
+                    : Icons.play_arrow : Theme.of(context).brightness == Brightness.light
+                    ? Icons.pause_outlined
+                    : Icons.pause),
+                tooltip: inventory.isPaused ? S.of(context).resume : S.of(context).pause,
+                onPressed: () {
+                  if (inventory.isPaused) {
+                    Provider.of<InventoryProvider>(context, listen: false).resumeInventoryTimer(inventory, inventoryRepository);
+                  } else {
+                    Provider.of<InventoryProvider>(context, listen: false).pauseInventoryTimer(inventory, inventoryRepository);
+                  }
+                  onInventoryPausedOrResumed?.call(inventory);
+                },
+              ),
             ),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Visibility(
-                  visible: !isHistory && inventory.duration > 0,
-                  child: IconButton(
-                    icon: Icon(inventory.isPaused ? Theme.of(context).brightness == Brightness.light
-                        ? Icons.play_arrow_outlined
-                        : Icons.play_arrow : Theme.of(context).brightness == Brightness.light
-                        ? Icons.pause_outlined
-                        : Icons.pause),
-                    tooltip: inventory.isPaused ? S.of(context).resume : S.of(context).pause,
-                    onPressed: () {
-                      if (inventory.isPaused) {
-                        Provider.of<InventoryProvider>(context, listen: false).resumeInventoryTimer(inventory, inventoryRepository);
-                      } else {
-                        Provider.of<InventoryProvider>(context, listen: false).pauseInventoryTimer(inventory, inventoryRepository);
-                      }
-                      onInventoryPausedOrResumed?.call(inventory);
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-
+          ],
+        ),
+      ),
     );
   }
 }

@@ -147,6 +147,13 @@ class InventoryProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  // Update the current interval in the database and the list
+  Future<void> updateInventoryCurrentInterval(String inventoryId, int currentInterval) async {
+    await _inventoryRepository.updateInventoryCurrentInterval(inventoryId, currentInterval);
+    _inventoryMap[inventoryId]?.currentInterval = currentInterval;
+    notifyListeners();
+  }
+
   // Update the species list count
   void updateSpeciesCount(String inventoryId) {
     final inventory = getInventoryById(inventoryId);

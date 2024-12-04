@@ -128,6 +128,11 @@
         "type": "text",
         "description": "Timed qualitative lists option in settings"
     },
+    "intervaledQualitativeLists": "Intervaled qualitative lists",
+    "@intervaledQualitativeLists": {
+        "type": "text",
+        "description": "Intervaled qualitative lists option in settings"
+    },
     "about": "About the app",
     "@about": {
         "type": "text",
@@ -1094,6 +1099,7 @@
     "distributionContinuousDenseCoverWithEdge": "Continuous with edge between strata",
     "inventoryFreeQualitative": "Free Qualitative List",
     "inventoryTimedQualitative": "Timed Qualitative List",
+    "inventoryIntervaledQualitative": "Intervaled Qualitative List",
     "inventoryMackinnonList": "Mackinnon List",
     "inventoryTransectionCount": "Transection Count",
     "inventoryPointCount": "Point Count",

@@ -22,6 +22,10 @@ class InventoryRepository {
     return _inventoryDao.updateInventoryElapsedTime(inventoryId, elapsedTime);
   }
 
+  Future<void> updateInventoryCurrentInterval(String inventoryId, int currentInterval) {
+    return _inventoryDao.updateInventoryCurrentInterval(inventoryId, currentInterval);
+  }
+
   Future<bool> inventoryIdExists(String id) {
     return _inventoryDao.inventoryIdExists(id);
   }
