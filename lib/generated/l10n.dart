@@ -1930,6 +1930,66 @@ class S {
     );
   }
 
+  /// `Add species`
+  String get addSpecies {
+    return Intl.message(
+      'Add species',
+      name: 'addSpecies',
+      desc: 'Add species dialog title and text hint in find species field',
+      args: [],
+    );
+  }
+
+  /// `Delete species`
+  String get deleteSpecies {
+    return Intl.message(
+      'Delete species',
+      name: 'deleteSpecies',
+      desc: 'Menu option to delete a species',
+      args: [],
+    );
+  }
+
+  /// `Species notes`
+  String get speciesNotes {
+    return Intl.message(
+      'Species notes',
+      name: 'speciesNotes',
+      desc: 'Menu option to add notes to a species',
+      args: [],
+    );
+  }
+
+  /// `No species recorded`
+  String get noSpeciesFound {
+    return Intl.message(
+      'No species recorded',
+      name: 'noSpeciesFound',
+      desc: 'Message shown when the species list is empty',
+      args: [],
+    );
+  }
+
+  /// `Species name`
+  String get speciesName {
+    return Intl.message(
+      'Species name',
+      name: 'speciesName',
+      desc: 'Species name field label',
+      args: [],
+    );
+  }
+
+  /// `Species already added to the list`
+  String get errorSpeciesAlreadyExists {
+    return Intl.message(
+      'Species already added to the list',
+      name: 'errorSpeciesAlreadyExists',
+      desc: 'Message shown when a species is already in the list',
+      args: [],
+    );
+  }
+
   /// `List finished`
   String get listFinished {
     return Intl.message(

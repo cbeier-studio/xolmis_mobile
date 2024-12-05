@@ -89,7 +89,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
           children: [
             Icon(Icons.info_outlined, color: Colors.blue),
             SizedBox(width: 8),
-            Text('Espécie já adicionada à lista.'),
+            Text(S.of(context).errorSpeciesAlreadyExists),
           ],
         ),
       ),
@@ -178,16 +178,16 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Confirmar exclusão'),
-          content: Text('Tem certeza que deseja excluir esta espécie?'),
+          title: Text(S.of(context).confirmDelete),
+          content: Text(S.of(context).confirmDeleteMessage(1, 'female', S.of(context).species(1).toLowerCase())),
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: Text('Cancelar'),
+              child: Text(S.of(context).cancel),
             ),
             TextButton(
               onPressed: () => Navigator.of(context).pop(true),
-              child: Text('Excluir'),
+              child: Text(S.of(context).delete),
             ),
           ],
         );
@@ -201,25 +201,25 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
       builder: (BuildContext context) {
         String speciesName = '';
         return AlertDialog(
-          title: Text('Adicionar espécie'),
+          title: Text(S.of(context).addSpecies),
           content: TextField(
             textCapitalization: TextCapitalization.sentences,
             onChanged: (value) {
               speciesName = value;
             },
             decoration: InputDecoration(
-              labelText: 'Nome da espécie',
+              labelText: S.of(context).speciesName,
               border: OutlineInputBorder(),
             ),
           ),
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text('Cancelar'),
+              child: Text(S.of(context).cancel),
             ),
             TextButton(
               onPressed: () => Navigator.of(context).pop(speciesName),
-              child: Text('Adicionar'),
+              child: Text(S.of(context).save),
             ),
           ],
         );
@@ -243,7 +243,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                     maxWidth: 840),
                 child: TextField(
                   decoration: InputDecoration(
-                    hintText: 'Adicionar espécie...',
+                    hintText: '${S.of(context).addSpecies}...',
                     prefixIcon: const Icon(Icons.search_outlined),
                     border: const OutlineInputBorder(),
                     suffixIcon: IconButton(
@@ -269,7 +269,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                     speciesList.sort((a, b) => a.name.compareTo(b.name));
                     if (speciesList.isEmpty) {
                       return Center(
-                        child: Text('Nenhuma espécie registrada.'),
+                        child: Text(S.of(context).noSpeciesFound),
                       );
                     } else {
                       return LayoutBuilder(
@@ -337,7 +337,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                 children: <Widget>[
                   ListTile(
                     leading: const Icon(Icons.edit_outlined),
-                    title: Text('Anotações da espécie'),
+                    title: Text(S.of(context).speciesNotes),
                     onTap: () {
                       Navigator.pop(context);
                       _showEditNotesDialog(context, species);
@@ -347,7 +347,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                     leading: const Icon(
                       Icons.delete_outlined, color: Colors.red,),
                     title: Text(
-                      'Apagar espécie', style: TextStyle(color: Colors.red),),
+                      S.of(context).deleteSpecies, style: TextStyle(color: Colors.red),),
                     onTap: () async {
                       await _deleteSpecies(species);
                       Navigator.pop(context);
@@ -371,25 +371,25 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Editar notas'),
+          title: Text(S.of(context).editNotes),
           content: TextField(
             controller: notesController,
             maxLines: 3,
             textCapitalization: TextCapitalization.sentences,
             decoration: InputDecoration(
-              labelText: 'Notas',
+              labelText: S.of(context).notes,
               border: OutlineInputBorder(),
             ),
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Cancelar'),
+              child: Text(S.of(context).cancel),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: Text('Salvar'),
+              child: Text(S.of(context).save),
               onPressed: () async {
                 species.notes = notesController.text;
                 final updatedSpecies = Species(

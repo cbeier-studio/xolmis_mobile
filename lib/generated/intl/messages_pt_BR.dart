@@ -106,6 +106,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "addEgg": MessageLookupByLibrary.simpleMessage("Adicionar ovo"),
         "addImage": MessageLookupByLibrary.simpleMessage("Adicionar imagem"),
         "addPoi": MessageLookupByLibrary.simpleMessage("Adicionar POI"),
+        "addSpecies": MessageLookupByLibrary.simpleMessage("Adicionar espécie"),
         "appearance": MessageLookupByLibrary.simpleMessage("Aparência"),
         "camera": MessageLookupByLibrary.simpleMessage("Câmera"),
         "cancel": MessageLookupByLibrary.simpleMessage("Cancelar"),
@@ -140,6 +141,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "deletePoi": MessageLookupByLibrary.simpleMessage("Apagar POI"),
         "deleteRevision":
             MessageLookupByLibrary.simpleMessage("Apagar revisão de ninho"),
+        "deleteSpecies": MessageLookupByLibrary.simpleMessage("Apagar espécie"),
         "deleteSpecimen":
             MessageLookupByLibrary.simpleMessage("Apagar espécime"),
         "deleteVegetation": MessageLookupByLibrary.simpleMessage(
@@ -224,6 +226,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Erro ao salvar a revisão de ninho."),
         "errorSavingSpecimen":
             MessageLookupByLibrary.simpleMessage("Erro ao salvar o espécime."),
+        "errorSpeciesAlreadyExists": MessageLookupByLibrary.simpleMessage(
+            "Espécie já adicionada à lista"),
         "errorSpecimenAlreadyExists": MessageLookupByLibrary.simpleMessage(
             "Já existe um espécime com este número de campo."),
         "export": m6,
@@ -355,6 +359,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Nenhum POI encontrado."),
         "noRevisionsFound":
             MessageLookupByLibrary.simpleMessage("Nenhuma revisão registrada."),
+        "noSpeciesFound":
+            MessageLookupByLibrary.simpleMessage("Nenhuma espécie registrada"),
         "noSpecimenCollected":
             MessageLookupByLibrary.simpleMessage("Nenhum espécime coletado."),
         "noVegetationFound": MessageLookupByLibrary.simpleMessage(
@@ -409,6 +415,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "speciesCount": m22,
         "speciesInfo":
             MessageLookupByLibrary.simpleMessage("Informações da espécie"),
+        "speciesName": MessageLookupByLibrary.simpleMessage("Nome da espécie"),
+        "speciesNotes":
+            MessageLookupByLibrary.simpleMessage("Anotações da espécie"),
         "speciesPerList": m23,
         "speciesPerListTitle":
             MessageLookupByLibrary.simpleMessage("Espécies por lista"),

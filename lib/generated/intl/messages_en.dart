@@ -105,6 +105,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "addEgg": MessageLookupByLibrary.simpleMessage("Add egg"),
         "addImage": MessageLookupByLibrary.simpleMessage("Add image"),
         "addPoi": MessageLookupByLibrary.simpleMessage("Add POI"),
+        "addSpecies": MessageLookupByLibrary.simpleMessage("Add species"),
         "appearance": MessageLookupByLibrary.simpleMessage("Appearance"),
         "camera": MessageLookupByLibrary.simpleMessage("Camera"),
         "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
@@ -136,6 +137,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "deletePoi": MessageLookupByLibrary.simpleMessage("Delete POI"),
         "deleteRevision":
             MessageLookupByLibrary.simpleMessage("Delete nest revision"),
+        "deleteSpecies": MessageLookupByLibrary.simpleMessage("Delete species"),
         "deleteSpecimen":
             MessageLookupByLibrary.simpleMessage("Delete specimen"),
         "deleteVegetation":
@@ -220,6 +222,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Error saving nest revision."),
         "errorSavingSpecimen":
             MessageLookupByLibrary.simpleMessage("Error saving specimen."),
+        "errorSpeciesAlreadyExists": MessageLookupByLibrary.simpleMessage(
+            "Species already added to the list"),
         "errorSpecimenAlreadyExists": MessageLookupByLibrary.simpleMessage(
             "A specimen with this field number already exists."),
         "export": m6,
@@ -343,6 +347,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "noPoiFound": MessageLookupByLibrary.simpleMessage("No POI found."),
         "noRevisionsFound":
             MessageLookupByLibrary.simpleMessage("No revisions recorded."),
+        "noSpeciesFound":
+            MessageLookupByLibrary.simpleMessage("No species recorded"),
         "noSpecimenCollected":
             MessageLookupByLibrary.simpleMessage("No specimen collected."),
         "noVegetationFound":
@@ -400,6 +406,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "speciesCount": m22,
         "speciesInfo":
             MessageLookupByLibrary.simpleMessage("Species information"),
+        "speciesName": MessageLookupByLibrary.simpleMessage("Species name"),
+        "speciesNotes": MessageLookupByLibrary.simpleMessage("Species notes"),
         "speciesPerList": m23,
         "speciesPerListTitle":
             MessageLookupByLibrary.simpleMessage("Species per list"),
