@@ -11,10 +11,14 @@ import '../../generated/l10n.dart';
 
 class AddVegetationDataScreen extends StatefulWidget {
   final Inventory inventory;
+  final Vegetation? vegetation;
+  final bool isEditing;
 
   const AddVegetationDataScreen({
     super.key,
     required this.inventory,
+    this.vegetation,
+    this.isEditing = false,
   });
 
   @override
@@ -45,6 +49,19 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
     _treesProportionController = TextEditingController();
     _treesHeightController = TextEditingController();
     _notesController = TextEditingController();
+
+    if (widget.isEditing) {
+      _selectedHerbsDistribution = widget.vegetation!.herbsDistribution!;
+      _selectedShrubsDistribution = widget.vegetation!.shrubsDistribution!;
+      _selectedTreesDistribution = widget.vegetation!.treesDistribution!;
+      _herbsProportionController.text = widget.vegetation!.herbsProportion.toString();
+      _herbsHeightController.text = widget.vegetation!.herbsHeight.toString();
+      _shrubsProportionController.text = widget.vegetation!.shrubsProportion.toString();
+      _shrubsHeightController.text = widget.vegetation!.shrubsHeight.toString();
+      _treesProportionController.text = widget.vegetation!.treesProportion.toString();
+      _treesHeightController.text = widget.vegetation!.treesHeight.toString();
+      _notesController.text = widget.vegetation!.notes!;
+    }
   }
 
   @override
@@ -232,64 +249,95 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
   }
 
   void _submitForm() async {
+
+
     setState(() {
       _isSubmitting = true;
     });
 
     if (_formKey.currentState!.validate()) {
-      Position? position = await getPosition();
+      if (widget.isEditing) {
+        final updatedVegetation = widget.vegetation!.copyWith(
+          herbsProportion: int.tryParse(_herbsProportionController.text) ?? 0,
+          herbsDistribution: _selectedHerbsDistribution,
+          herbsHeight: int.tryParse(_herbsHeightController.text) ?? 0,
+          shrubsProportion: int.tryParse(_shrubsProportionController.text) ?? 0,
+          shrubsDistribution: _selectedShrubsDistribution,
+          shrubsHeight: int.tryParse(_shrubsHeightController.text) ?? 0,
+          treesProportion: int.tryParse(_treesProportionController.text) ?? 0,
+          treesDistribution: _selectedTreesDistribution,
+          treesHeight: int.tryParse(_treesHeightController.text) ?? 0,
+          notes: _notesController.text,
+        );
 
-      // Save the vegetation data
-      final vegetation = Vegetation(
-        inventoryId: widget.inventory.id,
-        sampleTime: DateTime.now(),
-        latitude: position?.latitude,
-        longitude: position?.longitude,
-        herbsProportion: int.tryParse(_herbsProportionController.text) ?? 0,
-        herbsDistribution: _selectedHerbsDistribution,
-        herbsHeight: int.tryParse(_herbsHeightController.text) ?? 0,
-        shrubsProportion: int.tryParse(_shrubsProportionController.text) ?? 0,
-        shrubsDistribution: _selectedShrubsDistribution,
-        shrubsHeight: int.tryParse(_shrubsHeightController.text) ?? 0,
-        treesProportion: int.tryParse(_treesProportionController.text) ?? 0,
-        treesDistribution: _selectedTreesDistribution,
-        treesHeight: int.tryParse(_treesHeightController.text) ?? 0,
-        notes: _notesController.text,
-      );
+        try {
+          final vegetationProvider = Provider.of<VegetationProvider>(context, listen: false);
+          await vegetationProvider.updateVegetation(widget.inventory.id, updatedVegetation);
+
+          Navigator.pop(context);
+        } catch (error) {
+          if (kDebugMode) {
+            print('Error saving vegetation: $error');
+          }
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Row(
+              children: [
+                Icon(Icons.error_outlined, color: Colors.red),
+                SizedBox(width: 8),
+                Text(S.of(context).errorInsertingVegetation),
+              ],
+            ),
+            ),
+          );
+        }
+      } else {
+        Position? position = await getPosition();
+
+        // Save the vegetation data
+        final vegetation = Vegetation(
+          inventoryId: widget.inventory.id,
+          sampleTime: DateTime.now(),
+          latitude: position?.latitude,
+          longitude: position?.longitude,
+          herbsProportion: int.tryParse(_herbsProportionController.text) ?? 0,
+          herbsDistribution: _selectedHerbsDistribution,
+          herbsHeight: int.tryParse(_herbsHeightController.text) ?? 0,
+          shrubsProportion: int.tryParse(_shrubsProportionController.text) ?? 0,
+          shrubsDistribution: _selectedShrubsDistribution,
+          shrubsHeight: int.tryParse(_shrubsHeightController.text) ?? 0,
+          treesProportion: int.tryParse(_treesProportionController.text) ?? 0,
+          treesDistribution: _selectedTreesDistribution,
+          treesHeight: int.tryParse(_treesHeightController.text) ?? 0,
+          notes: _notesController.text,
+        );
+
+        try {
+          final vegetationProvider = Provider.of<VegetationProvider>(context, listen: false);
+          await vegetationProvider.addVegetation(
+                context, widget.inventory.id, vegetation);
+
+          Navigator.pop(context);
+        } catch (error) {
+          if (kDebugMode) {
+            print('Error adding vegetation: $error');
+          }
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Row(
+              children: [
+                Icon(Icons.error_outlined, color: Colors.red),
+                SizedBox(width: 8),
+                Text(S.of(context).errorInsertingVegetation),
+              ],
+            ),
+            ),
+          );
+        }
+      }
 
       setState(() {
         _isSubmitting = false;
       });
 
-      final vegetationProvider = Provider.of<VegetationProvider>(context, listen: false);
-      try {
-        await vegetationProvider.addVegetation(context, widget.inventory.id, vegetation);
-        Navigator.pop(context);
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   const SnackBar(content: Row(
-        //     children: [
-        //       Icon(Icons.check_circle_outlined, color: Colors.green),
-        //       SizedBox(width: 8),
-        //       Text('Dados de vegetação adicionados!'),
-        //     ],
-        //   ),
-        //   ),
-        // );
-      } catch (error) {
-        if (kDebugMode) {
-          print('Error adding vegetation: $error');
-        }
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Row(
-            children: [
-              Icon(Icons.error_outlined, color: Colors.red),
-              SizedBox(width: 8),
-              Text(S.of(context).errorInsertingVegetation),
-            ],
-          ),
-          ),
-        );
-      }
     } else {
       setState(() {
         _isSubmitting = false;

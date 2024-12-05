@@ -12,6 +12,7 @@ import '../../providers/app_image_provider.dart';
 
 import '../app_image_screen.dart';
 import '../../generated/l10n.dart';
+import 'add_vegetation_screen.dart';
 
 
 class VegetationTab extends StatefulWidget {
@@ -116,6 +117,23 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
+                  ListTile(
+                    leading: const Icon(Icons.edit_outlined),
+                    title: Text('Editar vegetação'),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AddVegetationDataScreen(
+                            inventory: widget.inventory,
+                            vegetation: vegetation, // Passe o objeto Vegetation
+                            isEditing: true, // Defina isEditing como true
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                   ListTile(
                     leading: const Icon(Icons.delete_outlined, color: Colors.red,),
                     title: Text(S.of(context).deleteVegetation, style: TextStyle(color: Colors.red),),

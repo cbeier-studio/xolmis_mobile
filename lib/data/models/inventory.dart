@@ -249,23 +249,39 @@ class Vegetation {
     );
   }
 
-  Vegetation copyWith({int? id, String? inventoryId, DateTime? sampleTime}) {
+  Vegetation copyWith({
+    int? id,
+    String? inventoryId,
+    DateTime? sampleTime,
+    double? longitude,
+    double? latitude,
+    int? herbsProportion,
+    DistributionType? herbsDistribution,
+    int? herbsHeight,
+    int? shrubsProportion,
+    DistributionType? shrubsDistribution,
+    int? shrubsHeight,
+    int? treesProportion,
+    DistributionType? treesDistribution,
+    int? treesHeight,
+    String? notes,
+  }) {
     return Vegetation(
       id: id ?? this.id,
       inventoryId: inventoryId ?? this.inventoryId,
       sampleTime: sampleTime ?? this.sampleTime,
-      longitude: longitude,
-      latitude: latitude,
-      herbsProportion: herbsProportion,
-      herbsDistribution: herbsDistribution,
-      herbsHeight: herbsHeight,
-      shrubsProportion: shrubsProportion,
-      shrubsDistribution: shrubsDistribution,
-      shrubsHeight: shrubsHeight,
-      treesProportion: treesProportion,
-      treesDistribution: treesDistribution,
-      treesHeight: treesHeight,
-      notes: notes,
+      longitude: longitude ?? this.longitude,
+      latitude: latitude ?? this.latitude,
+      herbsProportion: herbsProportion ?? this.herbsProportion,
+      herbsDistribution: herbsDistribution ?? this.herbsDistribution,
+      herbsHeight: herbsHeight ?? this.herbsHeight,
+      shrubsProportion: shrubsProportion ?? this.shrubsProportion,
+      shrubsDistribution: shrubsDistribution ?? this.shrubsDistribution,
+      shrubsHeight: shrubsHeight ?? this.shrubsHeight,
+      treesProportion: treesProportion ?? this.treesProportion,
+      treesDistribution: treesDistribution ?? this.treesDistribution,
+      treesHeight: treesHeight ?? this.treesHeight,
+      notes: notes ?? this.notes,
     );
   }
 
@@ -474,11 +490,16 @@ class Inventory with ChangeNotifier {
   Timer? _timer;
   final ValueNotifier<double> _elapsedTimeNotifier = ValueNotifier<double>(0);
   ValueNotifier<double> get elapsedTimeNotifier => _elapsedTimeNotifier;
-  final ValueNotifier<bool> isFinishedNotifier = ValueNotifier<bool>(false);
+  final ValueNotifier<bool> _isFinishedNotifier = ValueNotifier<bool>(false);
+  ValueNotifier<bool> get isFinishedNotifier => _isFinishedNotifier;
   bool _autoFinished = false;
+  bool isAutoFinished() => _autoFinished;
   int currentInterval = 1;
-  final ValueNotifier<int> currentIntervalNotifier = ValueNotifier<int>(1);
+  final ValueNotifier<int> _currentIntervalNotifier = ValueNotifier<int>(1);
+  ValueNotifier<int> get currentIntervalNotifier => _currentIntervalNotifier;
   int intervalsWithoutNewSpecies = 0;
+  final ValueNotifier<int> _intervalWithoutSpeciesNotifier = ValueNotifier<int>(0);
+  ValueNotifier<int> get intervalWithoutSpeciesNotifier => _intervalWithoutSpeciesNotifier;
   List<String> currentIntervalList = [];
 
   Inventory({
@@ -634,6 +655,14 @@ class Inventory with ChangeNotifier {
     notifyListeners();
   }
 
+  // Update current interval values
+  void updateCurrentInterval(int newInterval) {
+    currentInterval = newInterval;
+    currentIntervalNotifier.value = currentInterval;
+    currentIntervalNotifier.notifyListeners();
+    notifyListeners();
+  }
+
   // Update if inventory is finished
   void updateIsFinished(bool newIsFinished) {
     isFinished = newIsFinished;
@@ -655,34 +684,36 @@ class Inventory with ChangeNotifier {
     // If duration is defined and the inventory is not finished, start the timer
     if (duration > 0 && !isFinished) {
       _autoFinished = false;
-      _timer ??= Timer.periodic(const Duration(seconds: 10), (timer) async {
+      updateCurrentInterval(currentInterval);
+      _timer ??= Timer.periodic(const Duration(seconds: 5), (timer) async {
         if (!isPaused && !isFinished) {
           if (elapsedTime == 0) {
+            updateElapsedTime(0);
             // If elapsed time is zero, update it in the database
             inventoryRepository.updateInventoryElapsedTime(id, elapsedTime);
           }
 
-          // Update the elapsed time every 10 seconds
-          elapsedTime += 10;
-          elapsedTimeNotifier.value = elapsedTime;
-          elapsedTimeNotifier.notifyListeners();
+          // Update the elapsed time every 5 seconds
+          updateElapsedTime(elapsedTime += 5);
           inventoryRepository.updateInventoryElapsedTime(id, elapsedTime);
 
           // If the inventory timer reach the goal, finish it automatically
           if (elapsedTime == duration * 60 && !isFinished) {
             if (type == InventoryType.invIntervaledQualitative) {
               currentInterval++;
-              currentIntervalNotifier.value = currentInterval;
-              currentIntervalNotifier.notifyListeners();
+              updateCurrentInterval(currentInterval);
+              inventoryRepository.updateInventoryCurrentInterval(id, currentInterval);
 
               if (currentIntervalList.isEmpty) {
                 intervalsWithoutNewSpecies++;
               } else {
                 intervalsWithoutNewSpecies = 0;
               }
+              intervalWithoutSpeciesNotifier.value = intervalsWithoutNewSpecies;
+              intervalWithoutSpeciesNotifier.notifyListeners();
               currentIntervalList = [];
 
-              if (intervalsWithoutNewSpecies >= 3) {
+              if (intervalsWithoutNewSpecies == 3) {
                 _autoFinished = true;
                 await stopTimer(inventoryRepository);
               } else {

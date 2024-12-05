@@ -10,6 +10,10 @@ class VegetationRepository {
     return _vegetationDao.insertVegetation(vegetation);
   }
 
+  Future<void> updateVegetation(Vegetation vegetation) {
+    return _vegetationDao.updateVegetation(vegetation);
+  }
+
   Future<void> deleteVegetation(int? vegetationId) {
     return _vegetationDao.deleteVegetation(vegetationId);
   }

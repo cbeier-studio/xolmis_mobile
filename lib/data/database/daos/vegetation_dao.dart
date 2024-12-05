@@ -28,6 +28,17 @@ class VegetationDao {
     }
   }
 
+  // Update vegetation record in the database
+  Future<void> updateVegetation(Vegetation vegetation) async {
+    final db = await _dbHelper.database;
+    await db?.update(
+      'vegetation',
+      vegetation.toMap(vegetation.inventoryId),
+      where: 'id = ?',
+      whereArgs: [vegetation.id],
+    );
+  }
+
   // Delete vegetation record from database
   Future<void> deleteVegetation(int? vegetationId) async {
     final db = await _dbHelper.database;

@@ -42,6 +42,15 @@ class VegetationProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  // Update vegetation in the database and the list
+  Future<void> updateVegetation(String inventoryId, Vegetation vegetation) async {
+    await _vegetationRepository.updateVegetation(vegetation);
+
+    _vegetationMap[inventoryId] = await _vegetationRepository.getVegetationByInventory(inventoryId);
+
+    notifyListeners();
+  }
+
   // Remove vegetation record from database and from list
   Future<void> removeVegetation(String inventoryId, int vegetationId) async {
     await _vegetationRepository.deleteVegetation(vegetationId);

@@ -140,6 +140,7 @@ class InventoryDao {
           startLatitude: map['startLatitude'],
           endLongitude: map['endLongitude'],
           endLatitude: map['endLatitude'],
+          currentInterval: map['currentInterval'] != null ? map['currentInterval'] : 1,
           speciesList: speciesList,
           vegetationList: vegetationList,
           weatherList: weatherList,

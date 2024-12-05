@@ -445,44 +445,60 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  _isShowingActiveInventories ? ListTile(
-                    leading: const Icon(Icons.flag_outlined),
-                    title: Text(S.of(context).finishInventory),
-                    onTap: () {
-                      // Ask for user confirmation
-                      showFinishDialog(context, inventory);
-                    },
-                  ) : const SizedBox.shrink(),
-                  !_isShowingActiveInventories ? ExpansionTile(
+                  if (_isShowingActiveInventories)
+                    ListTile(
+                      leading: const Icon(Icons.flag_outlined),
+                      title: Text(S.of(context).finishInventory),
+                      onTap: () {
+                        // Ask for user confirmation
+                        showFinishDialog(context, inventory);
+                      },
+                    ),
+                  if (!_isShowingActiveInventories)
+                    ListTile(
+                      leading: const Icon(Icons.undo_outlined),
+                      title: Text('Reativar inventário'),
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        inventory.updateElapsedTime(0);
+                        inventory.updateIsFinished(false);
+                        inventoryProvider.updateInventory(inventory);
+                        inventoryProvider.startInventoryTimer(inventory, inventoryRepository);
+                        inventoryProvider.notifyListeners();
+                      },
+                    ),
+                  if (!_isShowingActiveInventories)
+                    ExpansionTile(
+                        leading: const Icon(Icons.file_download_outlined),
+                        title: Text(S.of(context).export(S.of(context).inventory(1))),
+                        children: [
+                          ListTile(
+                            leading: const Icon(Icons.table_chart_outlined),
+                            title: const Text('CSV'),
+                            onTap: () {
+                              Navigator.of(context).pop();
+                              exportInventoryToCsv(context, inventory);
+                            },
+                          ),
+                          ListTile(
+                            leading: const Icon(Icons.code_outlined),
+                            title: const Text('JSON'),
+                            onTap: () {
+                              Navigator.of(context).pop();
+                              exportInventoryToJson(context, inventory);
+                            },
+                          ),
+                        ]
+                    ),
+                  if (!_isShowingActiveInventories)
+                    ListTile(
                       leading: const Icon(Icons.file_download_outlined),
-                      title: Text(S.of(context).export(S.of(context).inventory(1))),
-                      children: [
-                        ListTile(
-                          leading: const Icon(Icons.table_chart_outlined),
-                          title: const Text('CSV'),
-                          onTap: () {
-                            Navigator.of(context).pop();
-                            exportInventoryToCsv(context, inventory);
-                          },
-                        ),
-                        ListTile(
-                          leading: const Icon(Icons.code_outlined),
-                          title: const Text('JSON'),
-                          onTap: () {
-                            Navigator.of(context).pop();
-                            exportInventoryToJson(context, inventory);
-                          },
-                        ),
-                      ]
-                  ) : const SizedBox.shrink(),
-                  !_isShowingActiveInventories ? ListTile(
-                    leading: const Icon(Icons.file_download_outlined),
-                    title: Text(S.of(context).exportAll(S.of(context).inventory(2))),
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      exportAllInventoriesToJson(context, inventoryProvider);
-                    },
-                  ) : const SizedBox.shrink(),
+                      title: Text(S.of(context).exportAll(S.of(context).inventory(2))),
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        exportAllInventoriesToJson(context, inventoryProvider);
+                      },
+                    ),
                   ListTile(
                     leading: const Icon(Icons.delete_outlined, color: Colors.red,),
                     title: Text(S.of(context).deleteInventory, style: TextStyle(color: Colors.red),),
@@ -528,34 +544,34 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
 
   Future<dynamic> showFinishDialog(BuildContext context, Inventory inventory) {
     return showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text(S.of(context).confirmFinish),
-                          content: Text(S.of(context).confirmFinishMessage),
-                          actions: <Widget>[
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop(false);
-                                Navigator.of(context).pop();
-                              },
-                              child: Text(S.of(context).cancel),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop(true);
-                                Navigator.of(context).pop();
-                                // Call the function to delete species
-                                inventory.stopTimer(inventoryRepository);
-                                inventoryProvider.updateInventory(inventory);
-                                inventoryProvider.notifyListeners();
-                              },
-                              child: Text(S.of(context).finish),
-                            ),
-                          ],
-                        );
-                      },
-                    );
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(S.of(context).confirmFinish),
+          content: Text(S.of(context).confirmFinishMessage),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false);
+                Navigator.of(context).pop();
+              },
+              child: Text(S.of(context).cancel),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true);
+                Navigator.of(context).pop();
+                // Call the function to delete species
+                inventory.stopTimer(inventoryRepository);
+                inventoryProvider.updateInventory(inventory);
+                inventoryProvider.notifyListeners();
+              },
+              child: Text(S.of(context).finish),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
 
@@ -748,6 +764,15 @@ class InventoryListItem extends StatelessWidget {
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
+            Visibility(
+              visible: inventory.type == InventoryType.invIntervaledQualitative,
+                child: ValueListenableBuilder<int>(
+                    valueListenable: inventory.intervalWithoutSpeciesNotifier,
+                    builder: (context, intervalWithoutSpecies, child) {
+                      return Badge.count(count: intervalWithoutSpecies);
+                    }
+                ),
+            ),
             Visibility(
               visible: !isHistory && inventory.duration > 0,
               child: IconButton(
