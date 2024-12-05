@@ -23,7 +23,7 @@ class DatabaseHelper {
     String path = join(await getDatabasesPath(), 'xolmis_database.db');
     return await openDatabase(
       path,
-      version: 9, // Increase the version number
+      version: 10, // Increase the version number
       onCreate: _createTables,
       onUpgrade: _upgradeTables,
       onOpen: (db) {
@@ -50,7 +50,9 @@ class DatabaseHelper {
           startLatitude REAL, 
           endLongitude REAL, 
           endLatitude REAL,
-          currentInterval INTEGER
+          currentInterval INTEGER,
+          intervalsWithoutNewSpecies INTEGER,
+          currentIntervalSpeciesCount INTEGER
         )
       ''');
     db.execute('''
@@ -300,6 +302,14 @@ class DatabaseHelper {
     if (oldVersion < 9) {
       db.execute(
         'ALTER TABLE inventories ADD COLUMN currentInterval INTEGER',
+      );
+    }
+    if (oldVersion < 10) {
+      db.execute(
+        'ALTER TABLE inventories ADD COLUMN intervalsWithoutNewSpecies INTEGER',
+      );
+      db.execute(
+        'ALTER TABLE inventories ADD COLUMN currentIntervalSpeciesCount INTEGER',
       );
     }
   }

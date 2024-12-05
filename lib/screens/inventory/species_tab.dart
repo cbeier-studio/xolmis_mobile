@@ -75,7 +75,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     }
 
     if (widget.inventory.type == InventoryType.invIntervaledQualitative) {
-      widget.inventory.currentIntervalList.add(speciesName);
+      widget.inventory.currentIntervalSpeciesCount++;
     }
     _updateSpeciesList();
 
@@ -114,16 +114,19 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
         await speciesRepository.insertSpecies(
             newSpeciesForOtherInventory.inventoryId,
             newSpeciesForOtherInventory);
+
+        if (inventory.type == InventoryType.invIntervaledQualitative) {
+          inventory.currentIntervalSpeciesCount++;
+          inventoryRepository.updateInventoryCurrentIntervalSpeciesCount(inventory.id, inventory.currentIntervalSpeciesCount);
+        } else if (inventory.type == InventoryType.invTimedQualitative) {
+          _restartInventoryTimer(inventoryProvider, inventory, inventoryRepository);
+        } else {
+          inventoryProvider.updateInventory(inventory);
+        }
+        speciesProvider.loadSpeciesForInventory(inventory.id);
+        speciesProvider.notifyListeners();
       }
-      if (inventory.type == InventoryType.invIntervaledQualitative) {
-        inventory.currentIntervalList.add(speciesName);
-      } else if (inventory.type == InventoryType.invTimedQualitative) {
-        _restartInventoryTimer(inventoryProvider, inventory, inventoryRepository);
-      } else {
-        inventoryProvider.updateInventory(inventory);
-      }
-      speciesProvider.loadSpeciesForInventory(inventory.id);
-      speciesProvider.notifyListeners();
+
     }
   }
 

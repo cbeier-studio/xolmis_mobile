@@ -500,7 +500,7 @@ class Inventory with ChangeNotifier {
   int intervalsWithoutNewSpecies = 0;
   final ValueNotifier<int> _intervalWithoutSpeciesNotifier = ValueNotifier<int>(0);
   ValueNotifier<int> get intervalWithoutSpeciesNotifier => _intervalWithoutSpeciesNotifier;
-  List<String> currentIntervalList = [];
+  int currentIntervalSpeciesCount = 0;
 
   Inventory({
     required this.id,
@@ -520,6 +520,8 @@ class Inventory with ChangeNotifier {
     this.vegetationList = const [],
     this.weatherList = const [],
     this.currentInterval = 1,
+    this.intervalsWithoutNewSpecies = 0,
+    this.currentIntervalSpeciesCount = 0,
   }) {
     if (duration == 0) {
       elapsedTime = 0;
@@ -546,6 +548,8 @@ class Inventory with ChangeNotifier {
         endLongitude = map['endLongitude'],
         endLatitude = map['endLatitude'],
         currentInterval = map['currentInterval'],
+        intervalsWithoutNewSpecies = map['intervalsWithoutNewSpecies'],
+        currentIntervalSpeciesCount = map['currentIntervalSpeciesCount'],
         this.speciesList = speciesList,
         this.vegetationList = vegetationList,
         this.weatherList = weatherList;
@@ -565,6 +569,8 @@ class Inventory with ChangeNotifier {
     double? endLongitude,
     double? endLatitude,
     int? currentInterval,
+    int? intervalsWithoutNewSpecies,
+    int? currentIntervalSpeciesCount,
     List<Species>? speciesList,
     List<Vegetation>? vegetationList,
     List<Weather>? weatherList,
@@ -584,6 +590,8 @@ class Inventory with ChangeNotifier {
       endLongitude: endLongitude ?? this.endLongitude,
       endLatitude: endLatitude ?? this.endLatitude,
       currentInterval: currentInterval ?? this.currentInterval,
+      intervalsWithoutNewSpecies: intervalsWithoutNewSpecies ?? this.intervalsWithoutNewSpecies,
+      currentIntervalSpeciesCount: currentIntervalSpeciesCount ?? this.currentIntervalSpeciesCount,
       speciesList: speciesList ?? this.speciesList,
       vegetationList: vegetationList ?? this.vegetationList,
       weatherList: weatherList ?? this.weatherList,
@@ -606,6 +614,8 @@ class Inventory with ChangeNotifier {
       'endLongitude': endLongitude,
       'endLatitude': endLatitude,
       'currentInterval': currentInterval,
+      'intervalsWithoutNewSpecies': intervalsWithoutNewSpecies,
+      'currentIntervalSpeciesCount': currentIntervalSpeciesCount,
     };
   }
 
@@ -625,7 +635,9 @@ class Inventory with ChangeNotifier {
         'startLatitude: $startLatitude, '
         'endLongitude: $endLongitude, '
         'endLatitude: $endLatitude, '
-        'currentInterval: $currentInterval}';
+        'currentInterval: $currentInterval, '
+        'intervalsWithoutNewSpecies: $intervalsWithoutNewSpecies, '
+        'currentIntervalSpeciesCount: $currentIntervalSpeciesCount}';
   }
 
   Map<String, dynamic> toJson() {
@@ -641,6 +653,8 @@ class Inventory with ChangeNotifier {
       'endLongitude': endLongitude,
       'endLatitude': endLatitude,
       'currentInterval': currentInterval,
+      'intervalsWithoutNewSpecies': intervalsWithoutNewSpecies,
+      'currentIntervalSpeciesCount': currentIntervalSpeciesCount,
       'speciesList': speciesList.map((species) => species.toJson()).toList(),
       'vegetationList': vegetationList.map((vegetation) => vegetation.toJson()).toList(),
       'weatherList': weatherList.map((weather) => weather.toJson()).toList(),
@@ -704,16 +718,17 @@ class Inventory with ChangeNotifier {
               updateCurrentInterval(currentInterval);
               inventoryRepository.updateInventoryCurrentInterval(id, currentInterval);
 
-              if (currentIntervalList.isEmpty) {
+              if (currentIntervalSpeciesCount == 0) {
                 intervalsWithoutNewSpecies++;
               } else {
                 intervalsWithoutNewSpecies = 0;
               }
+              inventoryRepository.updateInventoryIntervalsWithoutSpecies(id, intervalsWithoutNewSpecies);
               intervalWithoutSpeciesNotifier.value = intervalsWithoutNewSpecies;
               intervalWithoutSpeciesNotifier.notifyListeners();
-              currentIntervalList = [];
+              currentIntervalSpeciesCount = 0;
 
-              if (intervalsWithoutNewSpecies == 3) {
+              if (intervalsWithoutNewSpecies == 4) {
                 _autoFinished = true;
                 await stopTimer(inventoryRepository);
               } else {
@@ -723,6 +738,7 @@ class Inventory with ChangeNotifier {
               _autoFinished = true;
               await stopTimer(inventoryRepository);
             }
+
             if (_autoFinished) {
               // If finished automatically, show a notification
               await showNotification(flutterLocalNotificationsPlugin);

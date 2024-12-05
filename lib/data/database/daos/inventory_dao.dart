@@ -96,6 +96,28 @@ class InventoryDao {
     );
   }
 
+  // Update the number of intervals without new species of the inventory in the database
+  Future<void> updateInventoryIntervalsWithoutSpecies(String inventoryId, int intervalsWithoutSpecies) async {
+    final db = await _dbHelper.database;
+    await db?.update(
+      'inventories',
+      {'intervalsWithoutNewSpecies': intervalsWithoutSpecies},
+      where: 'id = ?',
+      whereArgs: [inventoryId],
+    );
+  }
+
+  // Update the current interval species count of the inventory in the database
+  Future<void> updateInventoryCurrentIntervalSpeciesCount(String inventoryId, int speciesCount) async {
+    final db = await _dbHelper.database;
+    await db?.update(
+      'inventories',
+      {'currentIntervalSpeciesCount': speciesCount},
+      where: 'id = ?',
+      whereArgs: [inventoryId],
+    );
+  }
+
   // Check if the ID already exists
   Future<bool> inventoryIdExists(String id) async {
     final db = await _dbHelper.database;

@@ -765,7 +765,8 @@ class InventoryListItem extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Visibility(
-              visible: inventory.type == InventoryType.invIntervaledQualitative,
+              visible: inventory.type == InventoryType.invIntervaledQualitative &&
+                  inventory.intervalWithoutSpeciesNotifier.value > 0,
                 child: ValueListenableBuilder<int>(
                     valueListenable: inventory.intervalWithoutSpeciesNotifier,
                     builder: (context, intervalWithoutSpecies, child) {

@@ -26,6 +26,14 @@ class InventoryRepository {
     return _inventoryDao.updateInventoryCurrentInterval(inventoryId, currentInterval);
   }
 
+  Future<void> updateInventoryIntervalsWithoutSpecies(String inventoryId, int intervalsWithoutSpecies) {
+    return _inventoryDao.updateInventoryIntervalsWithoutSpecies(inventoryId, intervalsWithoutSpecies);
+  }
+
+  Future<void> updateInventoryCurrentIntervalSpeciesCount(String inventoryId, int speciesCount) {
+    return _inventoryDao.updateInventoryCurrentIntervalSpeciesCount(inventoryId, speciesCount);
+  }
+
   Future<bool> inventoryIdExists(String id) {
     return _inventoryDao.inventoryIdExists(id);
   }
