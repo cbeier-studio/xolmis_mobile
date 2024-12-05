@@ -62,8 +62,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     );
 
     await speciesRepository.insertSpecies(widget.inventory.id, newSpecies);
-    await inventoryRepository.updateInventory(widget.inventory);
-
+    
     setState(() {
       checkMackinnonCompletion(context, widget.inventory, inventoryRepository);
     });
@@ -72,11 +71,13 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
       _addSpeciesToOtherActiveInventories(
           speciesName, speciesProvider, inventoryProvider, speciesRepository,
           inventoryRepository);
+
+      if (widget.inventory.type == InventoryType.invIntervaledQualitative) {
+        widget.inventory.currentIntervalSpeciesCount++;
+      }
     }
 
-    if (widget.inventory.type == InventoryType.invIntervaledQualitative) {
-      widget.inventory.currentIntervalSpeciesCount++;
-    }
+    await inventoryRepository.updateInventory(widget.inventory);
     _updateSpeciesList();
 
     speciesProvider.notifyListeners();
@@ -102,8 +103,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
       InventoryRepository inventoryRepository) async {
     for (final inventory in inventoryProvider.activeInventories) {
       if (inventory.id != widget.inventory.id &&
-          !speciesProvider.speciesExistsInInventory(
-              inventory.id, speciesName) &&
+          !speciesProvider.speciesExistsInInventory(inventory.id, speciesName) &&
           widget.inventory.type != InventoryType.invBanding) {
         final newSpeciesForOtherInventory = Species(
           inventoryId: inventory.id,
@@ -133,10 +133,11 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
   void _restartInventoryTimer(InventoryProvider inventoryProvider,
       Inventory inventory, InventoryRepository inventoryRepository) async {
     inventory.updateElapsedTime(0);
+    await inventoryProvider.updateInventoryElapsedTime(inventory.id, inventory.elapsedTime);
     inventory.isPaused = false;
     inventory.updateIsFinished(false);
-    await inventoryProvider.updateInventoryElapsedTime(
-        inventory.id, inventory.elapsedTime);
+    inventoryProvider.updateInventory(inventory);
+    
     inventory.startTimer(inventoryRepository);
   }
 
@@ -335,6 +336,15 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
+                  if (species.isOutOfInventory)
+                    ListTile(
+                      leading: const Icon(Icons.inventory_outlined),
+                      title: Text(S.of(context).addSpeciesToSample),
+                      onTap: () {
+                        Navigator.pop(context);
+                        _addSpeciesToSample(context, species);
+                      },
+                    ),
                   ListTile(
                     leading: const Icon(Icons.edit_outlined),
                     title: Text(S.of(context).speciesNotes),
@@ -360,6 +370,13 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
         );
       },
     );
+  }
+
+  void _addSpeciesToSample(BuildContext context, Species species) {
+    final speciesProvider = Provider.of<SpeciesProvider>(context, listen: false);
+
+    species.isOutOfInventory = false;
+    speciesProvider.updateSpecies(species.inventoryId, species);
   }
 
   void _showEditNotesDialog(BuildContext context, Species species) {

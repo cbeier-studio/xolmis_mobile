@@ -765,12 +765,11 @@ class InventoryListItem extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Visibility(
-              visible: inventory.type == InventoryType.invIntervaledQualitative &&
-                  inventory.intervalWithoutSpeciesNotifier.value > 0,
+              visible: inventory.type == InventoryType.invIntervaledQualitative,
                 child: ValueListenableBuilder<int>(
                     valueListenable: inventory.intervalWithoutSpeciesNotifier,
                     builder: (context, intervalWithoutSpecies, child) {
-                      return Badge.count(count: intervalWithoutSpecies);
+                      return intervalWithoutSpecies > 0 ? Badge.count(count: intervalWithoutSpecies) : SizedBox.shrink();
                     }
                 ),
             ),

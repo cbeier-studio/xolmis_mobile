@@ -1990,6 +1990,16 @@ class S {
     );
   }
 
+  /// `Add to the sample`
+  String get addSpeciesToSample {
+    return Intl.message(
+      'Add to the sample',
+      name: 'addSpeciesToSample',
+      desc: 'Menu option to add species to the sample',
+      args: [],
+    );
+  }
+
   /// `List finished`
   String get listFinished {
     return Intl.message(

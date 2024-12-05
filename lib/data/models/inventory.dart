@@ -728,7 +728,7 @@ class Inventory with ChangeNotifier {
               intervalWithoutSpeciesNotifier.notifyListeners();
               currentIntervalSpeciesCount = 0;
 
-              if (intervalsWithoutNewSpecies == 4) {
+              if (intervalsWithoutNewSpecies == 3) {
                 _autoFinished = true;
                 await stopTimer(inventoryRepository);
               } else {

@@ -107,6 +107,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "addImage": MessageLookupByLibrary.simpleMessage("Adicionar imagem"),
         "addPoi": MessageLookupByLibrary.simpleMessage("Adicionar POI"),
         "addSpecies": MessageLookupByLibrary.simpleMessage("Adicionar espécie"),
+        "addSpeciesToSample":
+            MessageLookupByLibrary.simpleMessage("Incluir na amostra"),
         "appearance": MessageLookupByLibrary.simpleMessage("Aparência"),
         "camera": MessageLookupByLibrary.simpleMessage("Câmera"),
         "cancel": MessageLookupByLibrary.simpleMessage("Cancelar"),

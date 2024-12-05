@@ -1092,6 +1092,11 @@
         "type": "text",
         "description": "Message shown when a species is already in the list"
     },
+    "addSpeciesToSample": "Add to the sample",
+    "@addSpeciesToSample": {
+        "type": "text",
+        "description": "Menu option to add species to the sample"
+    },
     "listFinished": "List finished",
     "@listFinished": {
         "type": "text",
