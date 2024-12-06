@@ -140,6 +140,13 @@ class InventoryProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  // Update the ID in the database and the list
+  Future<void> changeInventoryId(String oldId, String newId) async {
+    await _inventoryRepository.changeInventoryId(oldId, newId);
+    fetchInventories();
+    notifyListeners();
+  }
+
   // Update the elapsed time in the database and the list
   Future<void> updateInventoryElapsedTime(String inventoryId, double elapsedTime) async {
     await _inventoryRepository.updateInventoryElapsedTime(inventoryId, elapsedTime);

@@ -107,7 +107,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
       ).then((newVegetation) {
         // Reload the vegetation list
         if (newVegetation != null) {
-          Provider.of<VegetationProvider>(context, listen: false).getVegetationForInventory(widget.inventory.id);
+          Provider.of<VegetationProvider>(context, listen: false).loadVegetationForInventory(widget.inventory.id);
         }
       });
     } else {
@@ -118,7 +118,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
       ).then((newVegetation) {
         // Reload the vegetation list
         if (newVegetation != null) {
-          Provider.of<VegetationProvider>(context, listen: false).getVegetationForInventory(widget.inventory.id);
+          Provider.of<VegetationProvider>(context, listen: false).loadVegetationForInventory(widget.inventory.id);
         }
       });
     }

@@ -118,6 +118,37 @@ class InventoryDao {
     );
   }
 
+  // Update the ID of the inventory in the database
+  Future<void> changeInventoryId(String oldId, String newId) async {
+    final db = await _dbHelper.database;
+    db?.execute('PRAGMA foreign_keys = OFF;');
+    await db?.update(
+      'inventories',
+      {'id': newId},
+      where: 'id = ?',
+      whereArgs: [oldId],
+    );
+    await db?.update(
+      'species',
+      {'inventoryId': newId},
+      where: 'inventoryId = ?',
+      whereArgs: [oldId],
+    );
+    await db?.update(
+      'vegetation',
+      {'inventoryId': newId},
+      where: 'inventoryId = ?',
+      whereArgs: [oldId],
+    );
+    await db?.update(
+      'weather',
+      {'inventoryId': newId},
+      where: 'inventoryId = ?',
+      whereArgs: [oldId],
+    );
+    db?.execute('PRAGMA foreign_keys = ON;');
+  }
+
   // Check if the ID already exists
   Future<bool> inventoryIdExists(String id) async {
     final db = await _dbHelper.database;

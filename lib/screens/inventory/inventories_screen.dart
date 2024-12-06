@@ -445,6 +445,14 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
+                  ListTile(
+                      leading: const Icon(Icons.edit_outlined),
+                      title: Text('Editar ID'),
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        _showEditIdDialog(context, inventory);
+                      },
+                    ),
                   if (_isShowingActiveInventories)
                     ListTile(
                       leading: const Icon(Icons.flag_outlined),
@@ -537,6 +545,46 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
               ),
             );
           },
+        );
+      },
+    );
+  }
+
+  void _showEditIdDialog(BuildContext context, Inventory inventory) {
+    final idController = TextEditingController(text: inventory.id);
+    final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
+    final oldId = inventory.id;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Editar ID'),
+          content: TextField(
+            controller: idController,
+            textCapitalization: TextCapitalization.sentences,
+            decoration: InputDecoration(
+              labelText: 'ID',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text(S.of(context).cancel),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text(S.of(context).save),
+              onPressed: () async {
+                var newId = idController.text;                
+                inventoryProvider.changeInventoryId(oldId, newId);
+                Navigator.of(context).pop();
+                setState(() {});
+              },
+            ),
+          ],
         );
       },
     );

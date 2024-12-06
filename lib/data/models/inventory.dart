@@ -471,7 +471,7 @@ Map<InventoryType, String> inventoryTypeFriendlyNames = {
 };
 
 class Inventory with ChangeNotifier {
-  final String id;
+  String id;
   final InventoryType type;
   int duration;
   int maxSpecies;
@@ -739,7 +739,7 @@ class Inventory with ChangeNotifier {
               await stopTimer(inventoryRepository);
             }
 
-            if (_autoFinished) {
+            if (isAutoFinished()) {
               // If finished automatically, show a notification
               await showNotification(flutterLocalNotificationsPlugin);
               if (kDebugMode) {
