@@ -54,6 +54,15 @@ class EggProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  // Update egg in the database and the list
+  Future<void> updateEgg(Egg egg) async {
+    await _eggRepository.updateEgg(egg);
+
+    _eggMap[egg.nestId!] = await _eggRepository.getEggsForNest(egg.nestId!);
+
+    notifyListeners();
+  }
+
   // Remove egg from database and from list
   Future<void> removeEgg(int nestId, int eggId) async {
     await _eggRepository.deleteEgg(eggId);

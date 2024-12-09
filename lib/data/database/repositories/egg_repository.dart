@@ -14,6 +14,10 @@ class EggRepository {
     return _eggDao.getEggsForNest(nestId);
   }
 
+  Future<void> updateEgg(Egg egg) {
+    return _eggDao.updateEgg(egg);
+  }
+
   Future<void> deleteEgg(int eggId) {
     return _eggDao.deleteEgg(eggId);
   }

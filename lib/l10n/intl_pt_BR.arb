@@ -171,14 +171,18 @@
     "notes": "Observações",
     "insertProportion": "Insira a proporção",
     "insertHeight": "Insira a altura",
-    "errorInsertingVegetation": "Erro ao salvar os dados de vegetação",
+    "errorSavingVegetation": "Erro ao salvar os dados de vegetação",
     "weatherData": "Dados do tempo",
     "cloudCover": "Nebulosidade",
     "precipitation": "Precipitação",
     "selectPrecipitation": "Selecione uma precipitação",
     "temperature": "Temperatura",
     "windSpeed": "Vento",
-    "errorInsertingWeather": "Erro ao salvar os dados do tempo",
+    "errorSavingWeather": "Erro ao salvar os dados do tempo",
+    "@errorSavingWeather": {
+        "type": "text",
+        "description": "Message shown when an error occurred while editing a weather record"
+    },
     "species": "{howMany, plural, one{Espécie} other{Espécies}}",
     "@species": {
         "type": "text",
@@ -483,6 +487,16 @@
     "@addSpeciesToSample": {
         "type": "text",
         "description": "Menu option to add species to the sample"
+    },
+    "removeSpeciesFromSample": "Remover da amostra",
+    "@removeSpeciesFromSample": {
+        "type": "text",
+        "description": "Menu option to remove species from the sample"
+    },
+    "reactivateInventory": "Reativar inventário",
+    "@reactivateInventory": {
+        "type": "text",
+        "description": "Menu option to reactivate a finished inventory"
     },
     "listFinished": "Lista concluída",
     "listFinishedMessage": "A lista atingiu o número máximo de espécies. Deseja iniciar a próxima lista ou encerrar?",

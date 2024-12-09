@@ -231,7 +231,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
     final prefs = await SharedPreferences.getInstance();
     final maxSpeciesMackinnon = prefs.getInt('maxSpeciesMackinnon') ?? 10;
     final pointCountsDuration = prefs.getInt('pointCountsDuration') ?? 8;
-    final cumulativeTimeDuration = prefs.getInt('cumulativeTimeDuration') ?? 30;
+    final cumulativeTimeDuration = prefs.getInt('cumulativeTimeDuration') ?? 45;
     final intervalsDuration = prefs.getInt('intervalsDuration') ?? 10;
 
     setState(() {

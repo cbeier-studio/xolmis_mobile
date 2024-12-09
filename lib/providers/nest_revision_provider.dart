@@ -42,6 +42,15 @@ class NestRevisionProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  // Update nestRevision in the database and the list
+  Future<void> updateNestRevision(NestRevision nestRevision) async {
+    await _nestRevisionRepository.updateNestRevision(nestRevision);
+
+    _nestRevisionMap[nestRevision.nestId!] = await _nestRevisionRepository.getNestRevisionsForNest(nestRevision.nestId!);
+
+    notifyListeners();
+  }
+
   // Remove nest revision from database and from list
   Future<void> removeNestRevision(int nestId, int nestRevisionId) async {
     await _nestRevisionRepository.deleteNestRevision(nestRevisionId);

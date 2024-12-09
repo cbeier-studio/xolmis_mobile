@@ -214,10 +214,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "errorInactivatingNest": m5,
         "errorInsertingInventory":
             MessageLookupByLibrary.simpleMessage("Erro ao inserir inventário."),
-        "errorInsertingVegetation": MessageLookupByLibrary.simpleMessage(
-            "Erro ao salvar os dados de vegetação"),
-        "errorInsertingWeather": MessageLookupByLibrary.simpleMessage(
-            "Erro ao salvar os dados do tempo"),
         "errorNestAlreadyExists": MessageLookupByLibrary.simpleMessage(
             "Já existe um ninho com este número de campo."),
         "errorSavingEgg":
@@ -228,6 +224,10 @@ class MessageLookup extends MessageLookupByLibrary {
             "Erro ao salvar a revisão de ninho."),
         "errorSavingSpecimen":
             MessageLookupByLibrary.simpleMessage("Erro ao salvar o espécime."),
+        "errorSavingVegetation": MessageLookupByLibrary.simpleMessage(
+            "Erro ao salvar os dados de vegetação"),
+        "errorSavingWeather": MessageLookupByLibrary.simpleMessage(
+            "Erro ao salvar os dados do tempo"),
         "errorSpeciesAlreadyExists": MessageLookupByLibrary.simpleMessage(
             "Espécie já adicionada à lista"),
         "errorSpecimenAlreadyExists": MessageLookupByLibrary.simpleMessage(
@@ -393,6 +393,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "precipitationNone": MessageLookupByLibrary.simpleMessage("Nenhuma"),
         "precipitationRain": MessageLookupByLibrary.simpleMessage("Chuva"),
         "proportion": MessageLookupByLibrary.simpleMessage("Proporção"),
+        "reactivateInventory":
+            MessageLookupByLibrary.simpleMessage("Reativar inventário"),
+        "removeSpeciesFromSample":
+            MessageLookupByLibrary.simpleMessage("Remover da amostra"),
         "requiredField": MessageLookupByLibrary.simpleMessage("* obrigatório"),
         "resume": MessageLookupByLibrary.simpleMessage("Retomar"),
         "revision": m19,

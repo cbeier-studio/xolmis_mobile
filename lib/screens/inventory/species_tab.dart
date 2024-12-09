@@ -345,6 +345,15 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                         _addSpeciesToSample(context, species);
                       },
                     ),
+                  if (!species.isOutOfInventory)
+                    ListTile(
+                      leading: const Icon(Icons.content_paste_go_outlined),
+                      title: Text(S.of(context).removeSpeciesFromSample),
+                      onTap: () {
+                        Navigator.pop(context);
+                        _removeSpeciesToSample(context, species);
+                      },
+                    ),
                   ListTile(
                     leading: const Icon(Icons.edit_outlined),
                     title: Text(S.of(context).speciesNotes),
@@ -353,6 +362,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                       _showEditNotesDialog(context, species);
                     },
                   ),
+                  Divider(),
                   ListTile(
                     leading: const Icon(
                       Icons.delete_outlined, color: Colors.red,),
@@ -376,6 +386,13 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     final speciesProvider = Provider.of<SpeciesProvider>(context, listen: false);
 
     species.isOutOfInventory = false;
+    speciesProvider.updateSpecies(species.inventoryId, species);
+  }
+
+  void _removeSpeciesToSample(BuildContext context, Species species) {
+    final speciesProvider = Provider.of<SpeciesProvider>(context, listen: false);
+
+    species.isOutOfInventory = true;
     speciesProvider.updateSpecies(species.inventoryId, species);
   }
 

@@ -11,23 +11,32 @@ import '../../generated/l10n.dart';
 
 class AddEggScreen extends StatefulWidget {
   final Nest nest;
+  final Egg? egg;
+  final bool isEditing;
   final String? initialFieldNumber;
   final String? initialSpeciesName;
 
-  const AddEggScreen({super.key, required this.nest, this.initialFieldNumber, this.initialSpeciesName});
+  const AddEggScreen({
+    super.key,
+    required this.nest,
+    this.egg,
+    this.isEditing = false,
+    this.initialFieldNumber,
+    this.initialSpeciesName
+  });
 
   @override
-  _AddEggScreenState createState() => _AddEggScreenState();
+  AddEggScreenState createState() => AddEggScreenState();
 }
 
-class _AddEggScreenState extends State<AddEggScreen> {
+class AddEggScreenState extends State<AddEggScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _fieldNumberController = TextEditingController();
-  final _speciesNameController = TextEditingController();
+  late TextEditingController _fieldNumberController;
+  late TextEditingController _speciesNameController;
   EggShapeType _selectedEggShape = EggShapeType.estOval;
-  final _widthController = TextEditingController();
-  final _lengthController = TextEditingController();
-  final _massController = TextEditingController();
+  late TextEditingController _widthController;
+  late TextEditingController _lengthController;
+  late TextEditingController _massController;
   bool _isSubmitting = false;
 
   void _addSpeciesToEgg(String speciesName) async {
@@ -41,8 +50,23 @@ class _AddEggScreenState extends State<AddEggScreen> {
   @override
   void initState() {
     super.initState();
-    _fieldNumberController.text = widget.initialFieldNumber ?? '';
-    _speciesNameController.text = widget.initialSpeciesName ?? '';
+    _fieldNumberController = TextEditingController();
+    _speciesNameController = TextEditingController();
+    _widthController = TextEditingController();
+    _lengthController = TextEditingController();
+    _massController = TextEditingController();
+
+    if (widget.isEditing) {
+      _fieldNumberController.text = widget.egg!.fieldNumber!;
+      _speciesNameController.text = widget.egg!.speciesName!;
+      _selectedEggShape = widget.egg!.eggShape;
+      _widthController.text = widget.egg!.width != null ? widget.egg!.width.toString() : '';
+      _lengthController.text = widget.egg!.length != null ? widget.egg!.length.toString() : '';
+      _massController.text = widget.egg!.mass != null ? widget.egg!.mass.toString() : '';
+    } else {
+      _fieldNumberController.text = widget.initialFieldNumber ?? '';
+      _speciesNameController.text = widget.initialSpeciesName ?? '';
+    }
   }
 
   @override
@@ -189,62 +213,84 @@ class _AddEggScreenState extends State<AddEggScreen> {
     final eggProvider = Provider.of<EggProvider>(context, listen: false);
 
     if (_formKey.currentState!.validate()) {
-      // Create Nest object with form data
-      final newEgg = Egg(
-        fieldNumber: _fieldNumberController.text,
-        speciesName: _speciesNameController.text,
-        eggShape: _selectedEggShape,
-        width: double.tryParse(_widthController.text),
-        length: double.tryParse(_lengthController.text),
-        mass: double.tryParse(_massController.text),
-        sampleTime: DateTime.now(),
-      );
+      if (widget.isEditing) {
+        final updatedEgg = widget.egg!.copyWith(
+          fieldNumber: _fieldNumberController.text,
+          speciesName: _speciesNameController.text,
+          eggShape: _selectedEggShape,
+          width: double.tryParse(_widthController.text),
+          length: double.tryParse(_lengthController.text),
+          mass: double.tryParse(_massController.text),
+        );
 
-      setState(() {
-        _isSubmitting = false;
-      });
+        try {        
+          await eggProvider.updateEgg(updatedEgg);
 
-      try {
-        await eggProvider.addEgg(context, widget.nest.id!, newEgg);
-        Navigator.pop(context);
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   const SnackBar(content: Row(
-        //     children: [
-        //       Icon(Icons.check_circle_outlined, color: Colors.green),
-        //       SizedBox(width: 8),
-        //       Text('Ovo adicionado!'),
-        //     ],
-        //   ),
-        //   ),
-        // );
-      } catch (error) {
-        if (kDebugMode) {
-          print('Error adding egg: $error');
+          Navigator.pop(context);
+        } catch (error) {
+          if (kDebugMode) {
+            print('Error saving egg: $error');
+          }
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  Icon(Icons.error_outlined, color: Colors.red),
+                  SizedBox(width: 8),
+                  Text(S.current.errorSavingEgg),
+                ],
+              ),
+            ),
+          );
         }
-        if (error.toString().contains(S.current.errorEggAlreadyExists)) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content:
-            Row(
-              children: [
-                Icon(Icons.info_outlined, color: Colors.blue),
-                SizedBox(width: 8),
-                Text(S.current.errorEggAlreadyExists),
-              ],
-            ),
-            ),
-          );
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content:
-            Row(
-              children: [
-                Icon(Icons.error_outlined, color: Colors.red),
-                SizedBox(width: 8),
-                Text(S.current.errorSavingEgg),
-              ],
-            ),
-            ),
-          );
+      } else {
+        // Create Nest object with form data
+        final newEgg = Egg(
+          fieldNumber: _fieldNumberController.text,
+          speciesName: _speciesNameController.text,
+          eggShape: _selectedEggShape,
+          width: double.tryParse(_widthController.text),
+          length: double.tryParse(_lengthController.text),
+          mass: double.tryParse(_massController.text),
+          sampleTime: DateTime.now(),
+        );
+
+        setState(() {
+          _isSubmitting = false;
+        });
+
+        try {
+          await eggProvider.addEgg(context, widget.nest.id!, newEgg);
+          Navigator.pop(context);          
+        } catch (error) {
+          if (kDebugMode) {
+            print('Error adding egg: $error');
+          }
+          if (error.toString().contains(S.current.errorEggAlreadyExists)) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Row(
+                  children: [
+                    Icon(Icons.info_outlined, color: Colors.blue),
+                    SizedBox(width: 8),
+                    Text(S.current.errorEggAlreadyExists),
+                  ],
+                ),
+              ),
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Row(
+                  children: [
+                    Icon(Icons.error_outlined, color: Colors.red),
+                    SizedBox(width: 8),
+                    Text(S.current.errorSavingEgg),
+                  ],
+                ),
+              ),
+            );
+          }
         }
       }
     } else {

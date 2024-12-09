@@ -249,8 +249,6 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
   }
 
   void _submitForm() async {
-
-
     setState(() {
       _isSubmitting = true;
     });
@@ -284,7 +282,7 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
               children: [
                 Icon(Icons.error_outlined, color: Colors.red),
                 SizedBox(width: 8),
-                Text(S.of(context).errorInsertingVegetation),
+                Text(S.current.errorSavingVegetation),
               ],
             ),
             ),
@@ -326,7 +324,7 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
               children: [
                 Icon(Icons.error_outlined, color: Colors.red),
                 SizedBox(width: 8),
-                Text(S.of(context).errorInsertingVegetation),
+                Text(S.current.errorSavingVegetation),
               ],
             ),
             ),

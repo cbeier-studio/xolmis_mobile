@@ -43,6 +43,15 @@ class WeatherProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  // Update weather in the database and the list
+  Future<void> updateWeather(Weather weather) async {
+    await _weatherRepository.updateWeather(weather);
+
+    _weatherMap[weather.inventoryId!] = await _weatherRepository.getWeatherByInventory(weather.inventoryId!);
+
+    notifyListeners();
+  }
+
   // Remove weather record from database and from list
   Future<void> removeWeather(String inventoryId, int weatherId) async {
     await _weatherRepository.deleteWeather(weatherId);

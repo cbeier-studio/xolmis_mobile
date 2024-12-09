@@ -10,6 +10,10 @@ class WeatherRepository {
     return _weatherDao.insertWeather(weather);
   }
 
+  Future<void> updateWeather(Weather weather) {
+    return _weatherDao.updateWeather(weather);
+  }
+
   Future<void> deleteWeather(int? weatherId) {
     return _weatherDao.deleteWeather(weatherId);
   }

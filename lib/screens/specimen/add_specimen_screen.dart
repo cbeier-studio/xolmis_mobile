@@ -11,19 +11,26 @@ import '../../utils/species_search_delegate.dart';
 import '../../generated/l10n.dart';
 
 class AddSpecimenScreen extends StatefulWidget {
-  const AddSpecimenScreen({super.key});
+  final Specimen? specimen;
+  final bool isEditing;
+
+  const AddSpecimenScreen({
+    super.key,
+    this.specimen,
+    this.isEditing = false,
+  });
 
   @override
-  _AddSpecimenScreenState createState() => _AddSpecimenScreenState();
+  AddSpecimenScreenState createState() => AddSpecimenScreenState();
 }
 
-class _AddSpecimenScreenState extends State<AddSpecimenScreen> {
+class AddSpecimenScreenState extends State<AddSpecimenScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _fieldNumberController = TextEditingController();
-  final _speciesNameController = TextEditingController();
-  final _localityNameController = TextEditingController();
-  final _notesController = TextEditingController();
-  late var _fieldLocalityEditingController = TextEditingController();
+  late TextEditingController _fieldNumberController;
+  late TextEditingController _speciesNameController;
+  late TextEditingController _localityNameController;
+  late TextEditingController _notesController;
+  late TextEditingController _fieldLocalityEditingController;
   SpecimenType _selectedType = SpecimenType.spcFeathers;
   bool _isSubmitting = false;
   Position? _currentPosition;
@@ -32,11 +39,27 @@ class _AddSpecimenScreenState extends State<AddSpecimenScreen> {
   @override
   void initState() {
     super.initState();
-    _nextFieldNumber();
-    _getCurrentLocation();
+    _fieldNumberController = TextEditingController();
+    _speciesNameController = TextEditingController();
+    _localityNameController = TextEditingController(text: widget.specimen?.locality ?? '');
+    _fieldLocalityEditingController = TextEditingController(text: widget.specimen?.locality ?? '');
+    _notesController = TextEditingController();
+    
+    if (widget.isEditing) {
+      _selectedType = widget.specimen!.type;
+      _fieldNumberController.text = widget.specimen!.fieldNumber;
+      _speciesNameController.text = widget.specimen!.speciesName ?? '';
+      _localityNameController.text = widget.specimen!.locality ?? '';
+      _fieldLocalityEditingController.text = widget.specimen!.locality ?? '';
+      _notesController.text = widget.specimen!.notes ?? '';
+    } else {
+      _nextFieldNumber();
+      _getCurrentLocation();
+    }
   }
 
   Future<void> _nextFieldNumber() async {
+    final specimenProvider = Provider.of<SpecimenProvider>(context, listen: false);
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       _observerAcronym = prefs.getString('observerAcronym') ?? '';
@@ -45,7 +68,7 @@ class _AddSpecimenScreenState extends State<AddSpecimenScreen> {
     final ano = DateTime.now().year;
     final mes = DateTime.now().month;
 
-    final numSeq = Provider.of<SpecimenProvider>(context, listen: false).specimens.length + 1;
+    final numSeq = specimenProvider.specimens.length + 1;
 
     _fieldNumberController.text = "$_observerAcronym$ano${mes.toString().padLeft(2, '0')}${numSeq.toString().padLeft(4, '0')}";
   }
@@ -165,7 +188,10 @@ class _AddSpecimenScreenState extends State<AddSpecimenScreen> {
                             _fieldLocalityEditingController.text = selection;
                           },
                           fieldViewBuilder: (BuildContext context, TextEditingController fieldTextEditingController, FocusNode fieldFocusNode, VoidCallback onFieldSubmitted) {
-                            _fieldLocalityEditingController = fieldTextEditingController;
+                            // _fieldLocalityEditingController = fieldTextEditingController;
+                            if (widget.isEditing && !_isSubmitting) {                              
+                              _fieldLocalityEditingController.text = widget.specimen?.locality ?? '';
+                            }                            
                             return TextFormField(
                               controller: _fieldLocalityEditingController,
                               focusNode: fieldFocusNode,
@@ -185,7 +211,7 @@ class _AddSpecimenScreenState extends State<AddSpecimenScreen> {
                                 onFieldSubmitted();
                               },
                             );
-                          },
+                          },                          
                         ),
                         const SizedBox(height: 16.0),
                         TextFormField(
@@ -228,65 +254,89 @@ class _AddSpecimenScreenState extends State<AddSpecimenScreen> {
 
   void _submitForm() async {
     final specimenProvider = Provider.of<SpecimenProvider>(context, listen: false);
+    setState(() {
+      _isSubmitting = true;
+    });
 
     if (_formKey.currentState!.validate()) {
-      // Create Nest object with form data
-      final newSpecimen = Specimen(
-        fieldNumber: _fieldNumberController.text,
-        speciesName: _speciesNameController.text,
-        locality: _fieldLocalityEditingController.text,
-        longitude: _currentPosition?.longitude,
-        latitude: _currentPosition?.latitude,
-        notes: _notesController.text,
-        type: _selectedType,
-        sampleTime: DateTime.now(),
-      );
+      if (widget.isEditing) {
+        final updatedSpecimen = widget.specimen!.copyWith(
+          fieldNumber: _fieldNumberController.text,
+          speciesName: _speciesNameController.text,
+          locality: _fieldLocalityEditingController.text,
+          notes: _notesController.text,
+          type: _selectedType,
+        );
 
-      setState(() {
-        _isSubmitting = false;
-      });
+        try {
+          await specimenProvider.updateSpecimen(updatedSpecimen);
 
-      try {
-        await specimenProvider.addSpecimen(newSpecimen);
-        Navigator.pop(context);
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   const SnackBar(content: Row(
-        //     children: [
-        //       Icon(Icons.check_circle_outlined, color: Colors.green),
-        //       SizedBox(width: 8),
-        //       Text('Espécime adicionado!'),
-        //     ],
-        //   ),
-        //   ),
-        // );
-      } catch (error) {
-        if (kDebugMode) {
-          print('Error adding specimen: $error');
+          Navigator.pop(context);
+        } catch (error) {
+          if (kDebugMode) {
+            print('Error saving specimen: $error');
+          }
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  Icon(Icons.error_outlined, color: Colors.red),
+                  SizedBox(width: 8),
+                  Text(S.current.errorSavingSpecimen),
+                ],
+              ),
+            ),
+          );
         }
-        if (error.toString().contains(S.current.errorSpecimenAlreadyExists)) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content:
-            Row(
-              children: [
-                Icon(Icons.info_outlined, color: Colors.blue),
-                SizedBox(width: 8),
-                Text(S.current.errorSpecimenAlreadyExists),
-              ],
-            ),
-            ),
-          );
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content:
-            Row(
-              children: [
-                Icon(Icons.error_outlined, color: Colors.red),
-                SizedBox(width: 8),
-                Text(S.current.errorSavingSpecimen),
-              ],
-            ),
-            ),
-          );
+      } else {
+        // Create Nest object with form data
+        final newSpecimen = Specimen(
+          fieldNumber: _fieldNumberController.text,
+          speciesName: _speciesNameController.text,
+          locality: _fieldLocalityEditingController.text,
+          longitude: _currentPosition?.longitude,
+          latitude: _currentPosition?.latitude,
+          notes: _notesController.text,
+          type: _selectedType,
+          sampleTime: DateTime.now(),
+        );
+
+        setState(() {
+          _isSubmitting = false;
+        });
+
+        try {
+          await specimenProvider.addSpecimen(newSpecimen);
+          Navigator.pop(context);
+        } catch (error) {
+          if (kDebugMode) {
+            print('Error adding specimen: $error');
+          }
+          if (error.toString().contains(S.current.errorSpecimenAlreadyExists)) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Row(
+                  children: [
+                    Icon(Icons.info_outlined, color: Colors.blue),
+                    SizedBox(width: 8),
+                    Text(S.current.errorSpecimenAlreadyExists),
+                  ],
+                ),
+              ),
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Row(
+                  children: [
+                    Icon(Icons.error_outlined, color: Colors.red),
+                    SizedBox(width: 8),
+                    Text(S.current.errorSavingSpecimen),
+                  ],
+                ),
+              ),
+            );
+          }
         }
       }
     } else {

@@ -134,6 +134,7 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
                       );
                     },
                   ),
+                  Divider(),
                   ListTile(
                     leading: const Icon(Icons.delete_outlined, color: Colors.red,),
                     title: Text(S.of(context).deleteVegetation, style: TextStyle(color: Colors.red),),

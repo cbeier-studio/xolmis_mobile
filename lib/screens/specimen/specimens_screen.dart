@@ -353,6 +353,23 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
+                  ListTile(
+                    leading: const Icon(Icons.edit_outlined),
+                    title: Text('Editar espécime'),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AddSpecimenScreen(
+                            specimen: specimen, 
+                            isEditing: true, 
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  Divider(),
                   ExpansionTile(
                       leading: const Icon(Icons.file_download_outlined),
                       title: Text(S.of(context).exportAll(S.of(context).specimens(2))),
@@ -375,6 +392,7 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
                         ),
                       ]
                   ),
+                  Divider(),
                   ListTile(
                     leading: const Icon(Icons.delete_outlined, color: Colors.red,),
                     title: Text(S.of(context).deleteSpecimen, style: TextStyle(color: Colors.red),),

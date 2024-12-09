@@ -465,7 +465,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                   if (!_isShowingActiveInventories)
                     ListTile(
                       leading: const Icon(Icons.undo_outlined),
-                      title: Text('Reativar inventário'),
+                      title: Text(S.of(context).reactivateInventory),
                       onTap: () {
                         Navigator.of(context).pop();
                         inventory.updateElapsedTime(0);
@@ -475,6 +475,8 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                         inventoryProvider.notifyListeners();
                       },
                     ),
+                  if (!_isShowingActiveInventories) 
+                    Divider(),
                   if (!_isShowingActiveInventories)
                     ExpansionTile(
                         leading: const Icon(Icons.file_download_outlined),
@@ -507,6 +509,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                         exportAllInventoriesToJson(context, inventoryProvider);
                       },
                     ),
+                  Divider(),
                   ListTile(
                     leading: const Icon(Icons.delete_outlined, color: Colors.red,),
                     title: Text(S.of(context).deleteInventory, style: TextStyle(color: Colors.red),),

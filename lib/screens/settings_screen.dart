@@ -22,7 +22,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   int _maxSimultaneousInventories = 2;
   int _maxSpeciesMackinnon = 10;
   int _pointCountsDuration = 8;
-  int _cumulativeTimeDuration = 40;
+  int _cumulativeTimeDuration = 45;
   int _intervalsDuration = 10;
   String _observerAcronym = '';
   PackageInfo? _packageInfo;
@@ -45,7 +45,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       _maxSimultaneousInventories = prefs.getInt('maxSimultaneousInventories') ?? 2;
       _maxSpeciesMackinnon = prefs.getInt('maxSpeciesMackinnon') ?? 10;
       _pointCountsDuration = prefs.getInt('pointCountsDuration') ?? 8;
-      _cumulativeTimeDuration = prefs.getInt('cumulativeTimeDuration') ?? 40;
+      _cumulativeTimeDuration = prefs.getInt('cumulativeTimeDuration') ?? 45;
       _intervalsDuration = prefs.getInt('intervalsDuration') ?? 10;
       _observerAcronym = prefs.getString('observerAcronym') ?? '';
     });

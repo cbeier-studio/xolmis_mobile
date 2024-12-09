@@ -397,15 +397,23 @@ class Weather {
     );
   }
 
-  Weather copyWith({int? id, String? inventoryId, DateTime? sampleTime, int? cloudCover, int? precipitation, double? temperature, int? windSpeed}) {
+  Weather copyWith({
+      int? id,
+      String? inventoryId,
+      DateTime? sampleTime,
+      int? cloudCover,
+      PrecipitationType? precipitation,
+      double? temperature,
+      int? windSpeed
+  }) {
     return Weather(
       id: id ?? this.id,
-      inventoryId: this.inventoryId,
+      inventoryId: inventoryId ?? this.inventoryId,
       sampleTime: sampleTime ?? this.sampleTime,
-      cloudCover: this.cloudCover,
-      precipitation: this.precipitation,
-      temperature: this.temperature,
-      windSpeed: this.windSpeed,
+      cloudCover: cloudCover ?? this.cloudCover,
+      precipitation: precipitation ?? this.precipitation,
+      temperature: temperature ?? this.temperature,
+      windSpeed: windSpeed ?? this.windSpeed,
     );
   }
 

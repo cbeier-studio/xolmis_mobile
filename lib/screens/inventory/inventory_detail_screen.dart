@@ -90,6 +90,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
   }
 
   void _showAddVegetationScreen(BuildContext context) {
+    final vegetationProvider = Provider.of<VegetationProvider>(context, listen: false);
     if (MediaQuery.sizeOf(context).width > 600) {
       showDialog(
         context: context,
@@ -104,10 +105,10 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
             ),
           );
         },
-      ).then((newVegetation) {
+      ).then((newVegetation) async {
         // Reload the vegetation list
         if (newVegetation != null) {
-          Provider.of<VegetationProvider>(context, listen: false).loadVegetationForInventory(widget.inventory.id);
+          await vegetationProvider.loadVegetationForInventory(widget.inventory.id);
         }
       });
     } else {
@@ -115,16 +116,17 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
         context,
         MaterialPageRoute(builder: (context) => AddVegetationDataScreen(inventory: widget.inventory),
         ),
-      ).then((newVegetation) {
+      ).then((newVegetation) async {
         // Reload the vegetation list
         if (newVegetation != null) {
-          Provider.of<VegetationProvider>(context, listen: false).loadVegetationForInventory(widget.inventory.id);
+          await vegetationProvider.loadVegetationForInventory(widget.inventory.id);
         }
       });
     }
   }
 
   void _showAddWeatherScreen(BuildContext context) {
+    final weatherProvider = Provider.of<WeatherProvider>(context, listen: false);
     if (MediaQuery.sizeOf(context).width > 600) {
       showDialog(
         context: context,
@@ -142,7 +144,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
       ).then((newWeather) {
         // Reload the weather list
         if (newWeather != null) {
-          Provider.of<WeatherProvider>(context, listen: false).getWeatherForInventory(widget.inventory.id);
+          weatherProvider.getWeatherForInventory(widget.inventory.id);
         }
       });
     } else {
@@ -153,7 +155,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
       ).then((newWeather) {
         // Reload the weather list
         if (newWeather != null) {
-          Provider.of<WeatherProvider>(context, listen: false).getWeatherForInventory(widget.inventory.id);
+          weatherProvider.getWeatherForInventory(widget.inventory.id);
         }
       });
     }

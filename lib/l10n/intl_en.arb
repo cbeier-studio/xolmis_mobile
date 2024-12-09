@@ -432,10 +432,10 @@
         "type": "text",
         "description": "Validation message shown when height field is empty"
     },
-    "errorInsertingVegetation": "Error inserting vegetation data",
-    "@errorInsertingVegetation": {
+    "errorSavingVegetation": "Error saving vegetation data",
+    "@errorSavingVegetation": {
         "type": "text",
-        "description": "Message shown when an error occurred while inserting a vegetation record"
+        "description": "Message shown when an error occurred while saving a vegetation record"
     },
     "weatherData": "Weather data",
     "@weatherData": {
@@ -467,10 +467,10 @@
         "type": "text",
         "description": "Wind speed field label"
     },
-    "errorInsertingWeather": "Error inserting weather data",
-    "@errorInsertingWeather": {
+    "errorSavingWeather": "Error saving weather data",
+    "@errorSavingWeather": {
         "type": "text",
-        "description": "Message shown when an error occurred while inserting a weather record"
+        "description": "Message shown when an error occurred while saving a weather record"
     },
     "species": "{howMany, plural, one{Species} other{Species}}",
     "@species": {
@@ -1096,6 +1096,16 @@
     "@addSpeciesToSample": {
         "type": "text",
         "description": "Menu option to add species to the sample"
+    },
+    "removeSpeciesFromSample": "Remove from the sample",
+    "@removeSpeciesFromSample": {
+        "type": "text",
+        "description": "Menu option to remove species from the sample"
+    },
+    "reactivateInventory": "Reactivate inventory",
+    "@reactivateInventory": {
+        "type": "text",
+        "description": "Menu option to reactivate a finished inventory"
     },
     "listFinished": "List finished",
     "@listFinished": {

@@ -833,13 +833,13 @@ class S {
     );
   }
 
-  /// `Error inserting vegetation data`
-  String get errorInsertingVegetation {
+  /// `Error saving vegetation data`
+  String get errorSavingVegetation {
     return Intl.message(
-      'Error inserting vegetation data',
-      name: 'errorInsertingVegetation',
+      'Error saving vegetation data',
+      name: 'errorSavingVegetation',
       desc:
-          'Message shown when an error occurred while inserting a vegetation record',
+          'Message shown when an error occurred while saving a vegetation record',
       args: [],
     );
   }
@@ -904,13 +904,13 @@ class S {
     );
   }
 
-  /// `Error inserting weather data`
-  String get errorInsertingWeather {
+  /// `Error saving weather data`
+  String get errorSavingWeather {
     return Intl.message(
-      'Error inserting weather data',
-      name: 'errorInsertingWeather',
+      'Error saving weather data',
+      name: 'errorSavingWeather',
       desc:
-          'Message shown when an error occurred while inserting a weather record',
+          'Message shown when an error occurred while saving a weather record',
       args: [],
     );
   }
@@ -1996,6 +1996,26 @@ class S {
       'Add to the sample',
       name: 'addSpeciesToSample',
       desc: 'Menu option to add species to the sample',
+      args: [],
+    );
+  }
+
+  /// `Remove from the sample`
+  String get removeSpeciesFromSample {
+    return Intl.message(
+      'Remove from the sample',
+      name: 'removeSpeciesFromSample',
+      desc: 'Menu option to remove species from the sample',
+      args: [],
+    );
+  }
+
+  /// `Reactivate inventory`
+  String get reactivateInventory {
+    return Intl.message(
+      'Reactivate inventory',
+      name: 'reactivateInventory',
+      desc: 'Menu option to reactivate a finished inventory',
       args: [],
     );
   }

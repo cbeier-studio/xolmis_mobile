@@ -8,24 +8,52 @@ import '../../generated/l10n.dart';
 
 class AddNestRevisionScreen extends StatefulWidget {
   final Nest nest;
+  final NestRevision? nestRevision;
+  final bool isEditing;
 
-  const AddNestRevisionScreen({super.key, required this.nest});
+  const AddNestRevisionScreen({
+    super.key, 
+    required this.nest,
+    this.nestRevision,
+    this.isEditing = false,
+  });
 
   @override
-  _AddNestRevisionScreenState createState() => _AddNestRevisionScreenState();
+  AddNestRevisionScreenState createState() => AddNestRevisionScreenState();
 }
 
-class _AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
+class AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _eggsHostController = TextEditingController();
-  final _nestlingsHostController = TextEditingController();
-  final _eggsParasiteController = TextEditingController();
-  final _nestlingsParasiteController = TextEditingController();
+  late TextEditingController _eggsHostController;
+  late TextEditingController _nestlingsHostController;
+  late TextEditingController _eggsParasiteController;
+  late TextEditingController _nestlingsParasiteController;
   NestStatusType _selectedNestStatus = NestStatusType.nstActive;
   NestStageType _selectedNestStage = NestStageType.stgUnknown;
-  final _notesController = TextEditingController();
+  late TextEditingController _notesController;
   bool _hasPhilornisLarvae = false;
   bool _isSubmitting = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _eggsHostController = TextEditingController();
+    _nestlingsHostController = TextEditingController();
+    _eggsParasiteController = TextEditingController();
+    _nestlingsParasiteController = TextEditingController();
+    _notesController = TextEditingController();
+
+    if (widget.isEditing) {
+      _notesController.text = widget.nestRevision!.notes!;
+      _selectedNestStatus = widget.nestRevision!.nestStatus;
+      _selectedNestStage = widget.nestRevision!.nestStage;
+      _hasPhilornisLarvae = widget.nestRevision!.hasPhilornisLarvae ?? false;
+      _eggsHostController.text = widget.nestRevision!.eggsHost != null ? widget.nestRevision!.eggsHost.toString() : '';
+      _nestlingsHostController.text = widget.nestRevision!.nestlingsHost != null ? widget.nestRevision!.nestlingsHost.toString() : '';
+      _eggsParasiteController.text = widget.nestRevision!.eggsParasite != null ? widget.nestRevision!.eggsParasite.toString() : '';
+      _nestlingsParasiteController.text = widget.nestRevision!.nestlingsParasite != null ? widget.nestRevision!.nestlingsParasite.toString() : '';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -203,50 +231,76 @@ class _AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
     final revisionProvider = Provider.of<NestRevisionProvider>(context, listen: false);
 
     if (_formKey.currentState!.validate()) {
-      // Create Nest object with form data
-      final newRevision = NestRevision(
-        eggsHost: int.tryParse(_eggsHostController.text),
-        nestlingsHost: int.tryParse(_nestlingsHostController.text),
-        eggsParasite: int.tryParse(_eggsParasiteController.text),
-        nestlingsParasite: int.tryParse(_nestlingsParasiteController.text),
-        nestStatus: _selectedNestStatus,
-        nestStage: _selectedNestStage,
-        notes: _notesController.text,
-        sampleTime: DateTime.now(),
-        hasPhilornisLarvae: _hasPhilornisLarvae,
-      );
-
-      setState(() {
-        _isSubmitting = false;
-      });
-
-      try {
-        await revisionProvider.addNestRevision(context, widget.nest.id!, newRevision);
-        Navigator.pop(context);
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   const SnackBar(content: Row(
-        //     children: [
-        //       Icon(Icons.check_circle_outlined, color: Colors.green),
-        //       SizedBox(width: 8),
-        //       Text('Revisão de ninho adicionada!'),
-        //     ],
-        //   ),
-        //   ),
-        // );
-      } catch (error) {
-        if (kDebugMode) {
-          print('Error adding nest revision: $error');
-        }
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Row(
-            children: [
-              Icon(Icons.error_outlined, color: Colors.red),
-              SizedBox(width: 8),
-              Text(S.current.errorSavingRevision),
-            ],
-          ),
-          ),
+      if (widget.isEditing) {
+        final updatedRevision = widget.nestRevision!.copyWith(
+          eggsHost: int.tryParse(_eggsHostController.text),
+          nestlingsHost: int.tryParse(_nestlingsHostController.text),
+          eggsParasite: int.tryParse(_eggsParasiteController.text),
+          nestlingsParasite: int.tryParse(_nestlingsParasiteController.text),
+          nestStatus: _selectedNestStatus,
+          nestStage: _selectedNestStage,
+          notes: _notesController.text,
+          hasPhilornisLarvae: _hasPhilornisLarvae,
         );
+
+        try {
+          await revisionProvider.updateNestRevision(updatedRevision);
+
+          Navigator.pop(context);
+        } catch (error) {
+          if (kDebugMode) {
+            print('Error saving nest revision: $error');
+          }
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  Icon(Icons.error_outlined, color: Colors.red),
+                  SizedBox(width: 8),
+                  Text(S.current.errorSavingRevision),
+                ],
+              ),
+            ),
+          );
+        }
+      } else {
+        // Create Nest object with form data
+        final newRevision = NestRevision(
+          eggsHost: int.tryParse(_eggsHostController.text),
+          nestlingsHost: int.tryParse(_nestlingsHostController.text),
+          eggsParasite: int.tryParse(_eggsParasiteController.text),
+          nestlingsParasite: int.tryParse(_nestlingsParasiteController.text),
+          nestStatus: _selectedNestStatus,
+          nestStage: _selectedNestStage,
+          notes: _notesController.text,
+          sampleTime: DateTime.now(),
+          hasPhilornisLarvae: _hasPhilornisLarvae,
+        );
+
+        setState(() {
+          _isSubmitting = false;
+        });
+
+        try {
+          await revisionProvider.addNestRevision(
+              context, widget.nest.id!, newRevision);
+          Navigator.pop(context);
+        } catch (error) {
+          if (kDebugMode) {
+            print('Error adding nest revision: $error');
+          }
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  Icon(Icons.error_outlined, color: Colors.red),
+                  SizedBox(width: 8),
+                  Text(S.current.errorSavingRevision),
+                ],
+              ),
+            ),
+          );
+        }
       }
     } else {
       setState(() {

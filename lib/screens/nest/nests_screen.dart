@@ -320,6 +320,23 @@ class _NestsScreenState extends State<NestsScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
+                  ListTile(
+                    leading: const Icon(Icons.edit_outlined),
+                    title: Text('Editar ninho'),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AddNestScreen(
+                            nest: nest, 
+                            isEditing: true, 
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  Divider(),
                   !_showActive ? ExpansionTile(
                       leading: const Icon(Icons.file_download_outlined),
                       title: Text(S.of(context).export(S.of(context).nest(1))),
@@ -350,6 +367,8 @@ class _NestsScreenState extends State<NestsScreen> {
                       exportAllInactiveNestsToJson(context);
                     },
                   ) : const SizedBox.shrink(),
+                  if (!_showActive) 
+                    Divider(),
                   ListTile(
                     leading: const Icon(Icons.delete_outlined, color: Colors.red,),
                     title: Text(S.of(context).deleteNest, style: TextStyle(color: Colors.red),),

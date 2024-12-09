@@ -28,6 +28,17 @@ class WeatherDao {
     }
   }
 
+  // Update weather record in the database
+  Future<void> updateWeather(Weather weather) async {
+    final db = await _dbHelper.database;
+    await db?.update(
+      'weather',
+      weather.toMap(weather.inventoryId),
+      where: 'id = ?',
+      whereArgs: [weather.id],
+    );
+  }
+
   // Delete weather record from database
   Future<void> deleteWeather(int? weatherId) async {
     final db = await _dbHelper.database;

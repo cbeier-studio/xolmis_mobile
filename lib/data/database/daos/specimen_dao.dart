@@ -69,6 +69,8 @@ class SpecimenDao {
     return await db?.update(
       'specimens',
       specimen.toMap(),
+      where: 'id = ?',
+      whereArgs: [specimen.id],
     );
   }
 

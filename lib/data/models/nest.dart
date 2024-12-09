@@ -88,6 +88,30 @@ class Egg {
       speciesName: map['speciesName'],
     );
   }
+
+  Egg copyWith({
+    int? id,
+    int? nestId,
+    DateTime? sampleTime,
+    String? fieldNumber,
+    EggShapeType? eggShape,
+    double? width,
+    double? length,
+    double? mass,
+    String? speciesName,
+  }) {
+    return Egg(
+      id: id ?? this.id,
+      nestId: nestId ?? this.nestId,
+      sampleTime: sampleTime ?? this.sampleTime,
+      fieldNumber: fieldNumber ?? this.fieldNumber,
+      eggShape: eggShape ?? this.eggShape,
+      width: width ?? this.width,
+      length: length ?? this.length,
+      mass: mass ?? this.mass,
+      speciesName: speciesName ?? this.speciesName,
+    );
+  }
 }
 
 // Nest revision class
@@ -196,6 +220,34 @@ class NestRevision {
       nestlingsParasite: map['nestlingsParasite']?.toInt(),
       hasPhilornisLarvae: map['hasPhilornisLarvae'] == 1, // Convert int to bool
       notes: map['notes'],
+    );
+  }
+
+  NestRevision copyWith({
+    int? id,
+    int? nestId,
+    DateTime? sampleTime,
+    NestStatusType? nestStatus,
+    NestStageType? nestStage,
+    int? eggsHost,
+    int? nestlingsHost,
+    int? eggsParasite,
+    int? nestlingsParasite,
+    bool? hasPhilornisLarvae,
+    String? notes,
+  }) {
+    return NestRevision(
+      id: id ?? this.id,
+      nestId: nestId ?? this.nestId,
+      sampleTime: sampleTime ?? this.sampleTime,
+      nestStatus: nestStatus ?? this.nestStatus,
+      nestStage: nestStage ?? this.nestStage,
+      eggsHost: eggsHost ?? this.eggsHost,
+      nestlingsHost: nestlingsHost ?? this.nestlingsHost,
+      eggsParasite: eggsParasite ?? this.eggsParasite,
+      nestlingsParasite: nestlingsParasite ?? this.nestlingsParasite,
+      hasPhilornisLarvae: hasPhilornisLarvae ?? this.hasPhilornisLarvae,
+      notes: notes ?? this.notes,
     );
   }
 }
@@ -314,6 +366,46 @@ class Nest {
       isActive: map['isActive'] == 1,
       revisionsList: revisionsList,
       eggsList: eggsList,
+    );
+  }
+
+  Nest copyWith({
+    int? id,
+    String? fieldNumber,
+    String? speciesName,
+    String? localityName,
+    double? longitude,
+    double? latitude,
+    String? support,
+    double? heightAboveGround,
+    DateTime? foundTime,
+    DateTime? lastTime,
+    NestFateType? nestFate,
+    String? male,
+    String? female,
+    String? helpers,
+    bool? isActive,
+    List<NestRevision>? revisionsList,
+    List<Egg>? eggsList,
+  }) {
+    return Nest(
+      id: id ?? this.id,
+      fieldNumber: fieldNumber ?? this.fieldNumber,
+      speciesName: speciesName ?? this.speciesName,
+      localityName: localityName ?? this.localityName,
+      longitude: longitude ?? this.longitude,
+      latitude: latitude ?? this.latitude,
+      support: support ?? this.support,
+      heightAboveGround: heightAboveGround ?? this.heightAboveGround,
+      foundTime: foundTime ?? this.foundTime,
+      lastTime: lastTime ?? this.lastTime,
+      nestFate: nestFate ?? this.nestFate,
+      male: male ?? this.male,
+      female: female ?? this.female,
+      helpers: helpers ?? this.helpers,
+      isActive: isActive ?? this.isActive,
+      revisionsList: revisionsList ?? this.revisionsList,
+      eggsList: eggsList ?? this.eggsList,
     );
   }
 }

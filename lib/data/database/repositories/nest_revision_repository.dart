@@ -14,6 +14,10 @@ class NestRevisionRepository {
     return _nestRevisionDao.getNestRevisionsForNest(nestId);
   }
 
+  Future<void> updateNestRevision(NestRevision nestRevision) {
+    return _nestRevisionDao.updateNestRevision(nestRevision);
+  }
+
   Future<void> deleteNestRevision(int nestRevisionId) {
     return _nestRevisionDao.deleteNestRevision(nestRevisionId);
   }

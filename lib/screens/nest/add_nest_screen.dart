@@ -13,24 +13,31 @@ import '../../utils/species_search_delegate.dart';
 import '../../generated/l10n.dart';
 
 class AddNestScreen extends StatefulWidget {
-  const AddNestScreen({super.key});
+  final Nest? nest;
+  final bool isEditing;
+
+  const AddNestScreen({
+    super.key,
+    this.nest,
+    this.isEditing = false,
+  });
 
   @override
-  _AddNestScreenState createState() => _AddNestScreenState();
+  AddNestScreenState createState() => AddNestScreenState();
 }
 
-class _AddNestScreenState extends State<AddNestScreen> {
+class AddNestScreenState extends State<AddNestScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _fieldNumberController = TextEditingController();
-  final _speciesNameController = TextEditingController();
-  final _localityNameController = TextEditingController();
-  final _supportController = TextEditingController();
-  final _heightAboveGroundController = TextEditingController();
-  final _maleController = TextEditingController();
-  final _femaleController = TextEditingController();
-  final _helpersController = TextEditingController();
-  late var _fieldLocalityEditingController = TextEditingController();
-  late var _fieldSupportEditingController = TextEditingController();
+  late TextEditingController _fieldNumberController;
+  late TextEditingController _speciesNameController;
+  late TextEditingController _localityNameController;
+  late TextEditingController _supportController;
+  late TextEditingController _heightAboveGroundController;
+  late TextEditingController _maleController;
+  late TextEditingController _femaleController;
+  late TextEditingController _helpersController;
+  late TextEditingController _fieldLocalityEditingController;
+  late TextEditingController _fieldSupportEditingController;
   bool _isSubmitting = false;
   Position? _currentPosition;
   String _observerAcronym = '';
@@ -38,8 +45,32 @@ class _AddNestScreenState extends State<AddNestScreen> {
   @override
   void initState() {
     super.initState();
-    _nextFieldNumber();
-    _getCurrentLocation();
+    _fieldNumberController = TextEditingController();
+    _speciesNameController = TextEditingController();
+    _localityNameController = TextEditingController();
+    _supportController = TextEditingController();
+    _heightAboveGroundController = TextEditingController();
+    _maleController = TextEditingController();
+    _femaleController = TextEditingController();
+    _helpersController = TextEditingController();
+    _fieldLocalityEditingController = TextEditingController();
+    _fieldSupportEditingController = TextEditingController();
+
+  if (widget.isEditing) {
+      _fieldNumberController.text = widget.nest!.fieldNumber!;
+      _speciesNameController.text = widget.nest!.speciesName!;
+      _localityNameController.text = widget.nest!.localityName!;
+      _supportController.text = widget.nest!.support!;
+      _heightAboveGroundController.text = widget.nest!.heightAboveGround != null
+          ? widget.nest!.heightAboveGround.toString()
+          : '';
+      _maleController.text = widget.nest!.male!;
+      _femaleController.text = widget.nest!.female!;
+      _helpersController.text = widget.nest!.helpers!;
+    } else {
+      _nextFieldNumber();
+      _getCurrentLocation();
+    }
   }
 
   Future<void> _nextFieldNumber() async {
@@ -153,7 +184,10 @@ class _AddNestScreenState extends State<AddNestScreen> {
                             _fieldLocalityEditingController.text = selection;
                           },
                           fieldViewBuilder: (BuildContext context, TextEditingController fieldTextEditingController, FocusNode fieldFocusNode, VoidCallback onFieldSubmitted) {
-                            _fieldLocalityEditingController = fieldTextEditingController;
+                            // _fieldLocalityEditingController = fieldTextEditingController;
+                            if (widget.isEditing && !_isSubmitting) {                              
+                              _fieldLocalityEditingController.text = widget.nest?.localityName ?? '';
+                            }                        
                             return TextFormField(
                               controller: _fieldLocalityEditingController,
                               focusNode: fieldFocusNode,
@@ -192,7 +226,10 @@ class _AddNestScreenState extends State<AddNestScreen> {
                             _fieldSupportEditingController.text = selection;
                           },
                           fieldViewBuilder: (BuildContext context, TextEditingController fieldTextEditingController, FocusNode fieldFocusNode, VoidCallback onFieldSubmitted) {
-                            _fieldSupportEditingController = fieldTextEditingController;
+                            // _fieldSupportEditingController = fieldTextEditingController;
+                            if (widget.isEditing && !_isSubmitting) {                              
+                              _fieldSupportEditingController.text = widget.nest?.support ?? '';
+                            }
                             return TextFormField(
                               controller: _fieldSupportEditingController,
                               focusNode: fieldFocusNode,
@@ -286,68 +323,92 @@ class _AddNestScreenState extends State<AddNestScreen> {
     final nestProvider = Provider.of<NestProvider>(context, listen: false);
 
     if (_formKey.currentState!.validate()) {
-      // Create Nest object with form data
-      final newNest = Nest(
-        fieldNumber: _fieldNumberController.text,
-        speciesName: _speciesNameController.text,
-        localityName: _fieldLocalityEditingController.text,
-        longitude: _currentPosition?.longitude,
-        latitude: _currentPosition?.latitude,
-        support: _fieldSupportEditingController.text,
-        heightAboveGround: double.tryParse(_heightAboveGroundController.text),
-        male: _maleController.text,
-        female: _femaleController.text,
-        helpers: _helpersController.text,
-        foundTime: DateTime.now(),
-        isActive: true,
-        nestFate: NestFateType.fatUnknown,
-      );
+      if (widget.isEditing) {
+        final updatedNest = widget.nest!.copyWith(
+          fieldNumber: _fieldNumberController.text,
+          speciesName: _speciesNameController.text,
+          localityName: _fieldLocalityEditingController.text,
+          support: _fieldSupportEditingController.text,
+          heightAboveGround: double.tryParse(_heightAboveGroundController.text),
+          male: _maleController.text,
+          female: _femaleController.text,
+          helpers: _helpersController.text,
+        );
 
-      setState(() {
-        _isSubmitting = false;
-      });
+        try {
+          await nestProvider.updateNest(updatedNest);
 
-      try {
-        await nestProvider.addNest(newNest);
-        Navigator.pop(context);
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   const SnackBar(content: Row(
-        //     children: [
-        //       Icon(Icons.check_circle_outlined, color: Colors.green),
-        //       SizedBox(width: 8),
-        //       Text('Ninho adicionado!'),
-        //     ],
-        //   ),
-        //   ),
-        // );
-      } catch (error) {
-        if (kDebugMode) {
-          print('Error adding nest: $error');
+          Navigator.pop(context);
+        } catch (error) {
+          if (kDebugMode) {
+            print('Error saving nest: $error');
+          }
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  Icon(Icons.error_outlined, color: Colors.red),
+                  SizedBox(width: 8),
+                  Text(S.current.errorSavingNest),
+                ],
+              ),
+            ),
+          );
         }
-        if (error.toString().contains(S.of(context).errorNestAlreadyExists)) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content:
-            Row(
-              children: [
-                Icon(Icons.info_outlined, color: Colors.blue),
-                SizedBox(width: 8),
-                Text(S.of(context).errorNestAlreadyExists),
-              ],
-            ),
-            ),
-          );
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content:
-            Row(
-              children: [
-                Icon(Icons.error_outlined, color: Colors.red),
-                SizedBox(width: 8),
-                Text(S.current.errorSavingNest),
-              ],
-            ),
-            ),
-          );
+      } else {
+        // Create Nest object with form data
+        final newNest = Nest(
+          fieldNumber: _fieldNumberController.text,
+          speciesName: _speciesNameController.text,
+          localityName: _fieldLocalityEditingController.text,
+          longitude: _currentPosition?.longitude,
+          latitude: _currentPosition?.latitude,
+          support: _fieldSupportEditingController.text,
+          heightAboveGround: double.tryParse(_heightAboveGroundController.text),
+          male: _maleController.text,
+          female: _femaleController.text,
+          helpers: _helpersController.text,
+          foundTime: DateTime.now(),
+          isActive: true,
+          nestFate: NestFateType.fatUnknown,
+        );
+
+        setState(() {
+          _isSubmitting = false;
+        });
+
+        try {
+          await nestProvider.addNest(newNest);
+          Navigator.pop(context);
+        } catch (error) {
+          if (kDebugMode) {
+            print('Error adding nest: $error');
+          }
+          if (error.toString().contains(S.of(context).errorNestAlreadyExists)) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Row(
+                  children: [
+                    Icon(Icons.info_outlined, color: Colors.blue),
+                    SizedBox(width: 8),
+                    Text(S.of(context).errorNestAlreadyExists),
+                  ],
+                ),
+              ),
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Row(
+                  children: [
+                    Icon(Icons.error_outlined, color: Colors.red),
+                    SizedBox(width: 8),
+                    Text(S.current.errorSavingNest),
+                  ],
+                ),
+              ),
+            );
+          }
         }
       }
     } else {

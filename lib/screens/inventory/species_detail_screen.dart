@@ -220,7 +220,7 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
                     onTap: () async {
                       final confirmed = await _showDeleteConfirmationDialog(context);
                       if (confirmed) {
-                        _deletePoi(poi);
+                        await _deletePoi(poi);
                       }
                     },
                   )
@@ -299,9 +299,9 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
           confirmDismiss: (direction) async {
             return await _showDeleteConfirmationDialog(context);
           },
-          onDismissed: (direction) {
+          onDismissed: (direction) async {
             // Delete the POI from database
-            poiProvider.removePoi(widget.species.id!, poi.id!);
+            await poiProvider.removePoi(widget.species.id!, poi.id!);
           },
           child: PoiListItem(
             poi: poi,

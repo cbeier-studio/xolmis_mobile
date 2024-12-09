@@ -40,6 +40,17 @@ class EggDao {
     });
   }
 
+  // Update vegetation record in the database
+  Future<void> updateEgg(Egg egg) async {
+    final db = await _dbHelper.database;
+    await db?.update(
+      'eggs',
+      egg.toMap(),
+      where: 'id = ?',
+      whereArgs: [egg.id],
+    );
+  }
+
   // Delete egg from database
   Future<void> deleteEgg(int eggId) async {
     final db = await _dbHelper.database;

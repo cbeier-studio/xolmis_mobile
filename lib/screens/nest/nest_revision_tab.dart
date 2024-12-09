@@ -12,6 +12,8 @@ import '../../providers/app_image_provider.dart';
 import '../app_image_screen.dart';
 import '../../generated/l10n.dart';
 
+import 'add_revision_screen.dart';
+
 class NestRevisionsTab extends StatefulWidget {
   final Nest nest;
 
@@ -118,6 +120,24 @@ class _NestRevisionsTabState extends State<NestRevisionsTab> with AutomaticKeepA
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
+                  ListTile(
+                    leading: const Icon(Icons.edit_outlined),
+                    title: Text('Editar revisão do ninho'),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AddNestRevisionScreen(
+                            nest: widget.nest,
+                            nestRevision: revision, 
+                            isEditing: true, 
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  Divider(),
                   ListTile(
                     leading: const Icon(Icons.delete_outlined, color: Colors.red,),
                     title: Text(S.of(context).deleteRevision, style: TextStyle(color: Colors.red),),

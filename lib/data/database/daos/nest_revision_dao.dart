@@ -40,6 +40,17 @@ class NestRevisionDao {
     });
   }
 
+  // Update nest revision record in the database
+  Future<void> updateNestRevision(NestRevision nestRevision) async {
+    final db = await _dbHelper.database;
+    await db?.update(
+      'nest_revisions',
+      nestRevision.toMap(),
+      where: 'id = ?',
+      whereArgs: [nestRevision.id],
+    );
+  }
+
   // Delete nest revision from database
   Future<void> deleteNestRevision(int nestRevisionId) async {
     final db = await _dbHelper.database;

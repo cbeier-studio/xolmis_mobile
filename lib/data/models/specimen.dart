@@ -98,4 +98,28 @@ class Specimen {
       notes: map['notes'],
     );
   }
+
+  Specimen copyWith({
+    int? id,
+    DateTime? sampleTime,
+    String? fieldNumber,
+    SpecimenType? type,
+    double? longitude,
+    double? latitude,
+    String? locality,
+    String? speciesName,
+    String? notes,
+  }) {
+    return Specimen(
+      id: id ?? this.id,
+      sampleTime: sampleTime ?? this.sampleTime,
+      fieldNumber: fieldNumber ?? this.fieldNumber,
+      type: type ?? this.type,
+      longitude: longitude ?? this.longitude,
+      latitude: latitude ?? this.latitude,
+      locality: locality ?? this.locality,
+      speciesName: speciesName ?? this.speciesName,
+      notes: notes ?? this.notes,
+    );
+  }
 }

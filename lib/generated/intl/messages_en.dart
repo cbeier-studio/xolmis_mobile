@@ -210,10 +210,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "errorInactivatingNest": m5,
         "errorInsertingInventory":
             MessageLookupByLibrary.simpleMessage("Error inserting inventory"),
-        "errorInsertingVegetation": MessageLookupByLibrary.simpleMessage(
-            "Error inserting vegetation data"),
-        "errorInsertingWeather": MessageLookupByLibrary.simpleMessage(
-            "Error inserting weather data"),
         "errorNestAlreadyExists": MessageLookupByLibrary.simpleMessage(
             "A nest with this field number already exists."),
         "errorSavingEgg":
@@ -224,6 +220,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Error saving nest revision."),
         "errorSavingSpecimen":
             MessageLookupByLibrary.simpleMessage("Error saving specimen."),
+        "errorSavingVegetation": MessageLookupByLibrary.simpleMessage(
+            "Error saving vegetation data"),
+        "errorSavingWeather":
+            MessageLookupByLibrary.simpleMessage("Error saving weather data"),
         "errorSpeciesAlreadyExists": MessageLookupByLibrary.simpleMessage(
             "Species already added to the list"),
         "errorSpecimenAlreadyExists": MessageLookupByLibrary.simpleMessage(
@@ -383,6 +383,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "precipitationNone": MessageLookupByLibrary.simpleMessage("None"),
         "precipitationRain": MessageLookupByLibrary.simpleMessage("Rain"),
         "proportion": MessageLookupByLibrary.simpleMessage("Proportion"),
+        "reactivateInventory":
+            MessageLookupByLibrary.simpleMessage("Reactivate inventory"),
+        "removeSpeciesFromSample":
+            MessageLookupByLibrary.simpleMessage("Remove from the sample"),
         "requiredField": MessageLookupByLibrary.simpleMessage("* required"),
         "resume": MessageLookupByLibrary.simpleMessage("Resume"),
         "revision": m19,

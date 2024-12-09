@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../data/models/inventory.dart';
 import '../../providers/weather_provider.dart';
 import '../../generated/l10n.dart';
+import 'add_weather_screen.dart';
 
 class WeatherTab extends StatefulWidget {
   final Inventory inventory;
@@ -108,6 +109,24 @@ class _WeatherTabState extends State<WeatherTab> with AutomaticKeepAliveClientMi
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
+                  ListTile(
+                    leading: const Icon(Icons.edit_outlined),
+                    title: Text('Editar dados do tempo'),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AddWeatherScreen(
+                            inventory: widget.inventory,
+                            weather: weather, // Passe o objeto Vegetation
+                            isEditing: true, // Defina isEditing como true
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  Divider(),
                   ListTile(
                     leading: const Icon(Icons.delete_outlined, color: Colors.red,),
                     title: Text(S.of(context).deleteWeather, style: TextStyle(color: Colors.red),),

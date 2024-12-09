@@ -12,6 +12,8 @@ import '../../providers/app_image_provider.dart';
 import '../app_image_screen.dart';
 import '../../generated/l10n.dart';
 
+import 'add_egg_screen.dart';
+
 class EggsTab extends StatefulWidget {
   final Nest nest;
 
@@ -115,6 +117,24 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
+                  ListTile(
+                    leading: const Icon(Icons.edit_outlined),
+                    title: Text('Editar ovo'),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AddEggScreen(
+                            nest: widget.nest,
+                            egg: egg, 
+                            isEditing: true, 
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  Divider(),
                   ListTile(
                     leading: const Icon(Icons.delete_outlined, color: Colors.red,),
                     title: Text(S.of(context).deleteEgg, style: TextStyle(color: Colors.red),),
