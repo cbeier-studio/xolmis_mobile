@@ -168,9 +168,39 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
   }
 
   Future<void> _deleteSpecies(Species species) async {
+    final speciesProvider = Provider.of<SpeciesProvider>(context, listen: false);
     final confirmed = await _showDeleteConfirmationDialog(context);
     if (confirmed) {
-      Provider.of<SpeciesProvider>(context, listen: false).removeSpecies(context, widget.inventory.id, species.id!);
+      await speciesProvider.removeSpecies(context, widget.inventory.id, species.id!);
+    }
+
+    if (!widget.inventory.isFinished) {
+      bool confirm = await _showDeleteFromOtherListsConfirmationDialog(context, species.name);
+      if (confirm) {
+        await _deleteSpeciesFromOtherActiveInventories(species, speciesProvider); 
+      }     
+    }
+  }
+
+  Future<void> _deleteSpeciesFromOtherActiveInventories(Species species,
+      SpeciesProvider speciesProvider) async {
+    final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
+    for (final inventory in inventoryProvider.activeInventories) {
+      if (inventory.id != species.inventoryId &&
+          speciesProvider.speciesExistsInInventory(inventory.id, species.name) &&
+          inventory.type != InventoryType.invBanding) {
+        
+        await speciesProvider.removeSpeciesFromInventory(
+          context,
+          inventory.id,
+          species.name);
+        
+        inventoryProvider.updateInventory(inventory);
+        
+        speciesProvider.loadSpeciesForInventory(inventory.id);
+        speciesProvider.notifyListeners();
+      }
+
     }
   }
 
@@ -194,6 +224,34 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
         );
       },
     ) ?? false;
+  }
+
+  Future<bool> _showDeleteFromOtherListsConfirmationDialog(
+      BuildContext context, String speciesName) async {
+    return await showDialog<bool>(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Remover espécie'),
+              content: Text(
+                  'Deseja remover a espécie "$speciesName" dos outros inventários ativos?'),
+              actions: <Widget>[
+                TextButton(
+                  child: Text('Não'),
+                  onPressed: () {
+                    Navigator.of(context).pop(false); 
+                  },
+                ),
+                TextButton(
+                  child: Text('Sim'),
+                  onPressed: () {
+                    Navigator.of(context).pop(true); 
+                  },
+                ),
+              ],
+            );
+          },
+        ) ?? false; // Retorna false por padrão se o diálogo for fechado sem uma resposta
   }
 
   Future<void> _showAddSpeciesDialog(BuildContext context, SpeciesRepository speciesRepository, InventoryRepository inventoryRepository) async {

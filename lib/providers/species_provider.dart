@@ -73,6 +73,17 @@ class SpeciesProvider with ChangeNotifier {
     }
   }
 
+  Future<void> removeSpeciesFromInventory(BuildContext context, String inventoryId, String speciesName) async {
+    await _speciesRepository.deleteSpeciesFromInventory(inventoryId, speciesName);
+
+    _speciesMap[inventoryId] = await _speciesRepository.getSpeciesByInventory(inventoryId);
+    notifyListeners();
+
+    if (context.mounted) {
+      Provider.of<InventoryProvider>(context, listen: false).updateSpeciesCount(inventoryId);
+    }
+  }
+
   // Update number of individuals for a species
   void updateIndividualsCount(Species species) async {
     // 1. Find the species in the list
