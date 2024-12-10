@@ -36,6 +36,10 @@ class EggProvider with ChangeNotifier {
     return await _eggRepository.eggFieldNumberExists(fieldNumber);
   }
 
+  Future<int> getNextSequentialNumber(String nestFieldNumber) async {
+    return await _eggRepository.getNextSequentialNumber(nestFieldNumber);
+  }
+
   // Insert egg into database and to the list
   Future<void> addEgg(BuildContext context, int nestId, Egg egg) async {
     if (await eggFieldNumberExists(egg.fieldNumber!)) {

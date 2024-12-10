@@ -24,6 +24,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
   final _maxSpeciesController = TextEditingController();
   InventoryType _selectedType = InventoryType.invFreeQualitative;
   bool _isSubmitting = false;
+  bool _idExists = false;
 
   @override
   void initState() {
@@ -31,6 +32,18 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
     _idController.text = widget.initialInventoryId ?? '';
     _selectedType = widget.initialInventoryType ?? _selectedType;
     _maxSpeciesController.text = widget.initialMaxSpecies?.toString() ?? '';
+  }
+
+  _checkIdExists(String? inventoryId) async {
+    final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
+
+    if (inventoryId != null && inventoryId.isNotEmpty) {
+      _idExists = await inventoryProvider.inventoryIdExists(inventoryId);
+    } else {
+      setState(() {
+        _idExists = true;
+      });
+    }
   }
 
   @override
@@ -275,7 +288,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
       // Check if the ID already exists in the database
       final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
       final idExists = await inventoryProvider.inventoryIdExists(newInventory.id);
-
+      
       if (idExists) {
         setState(() {
           _isSubmitting = false;
@@ -306,18 +319,6 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
 
       if (success) {
         if (mounted) {
-        // Inventory inserted successfully
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   const SnackBar(
-        //     content: Row(
-        //       children: [
-        //         Icon(Icons.check_circle_outlined, color: Colors.green),
-        //         SizedBox(width: 8),
-        //         Text('Inventário inserido com sucesso.'),
-        //       ],
-        //     ),
-        //   ),
-        // );
           Navigator.pop(context); // Return to the previous screen
         }
       } else {

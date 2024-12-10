@@ -25,4 +25,8 @@ class EggRepository {
   Future<bool> eggFieldNumberExists(String fieldNumber) {
     return _eggDao.eggFieldNumberExists(fieldNumber);
   }
+
+  Future<int> getNextSequentialNumber(String nestFieldNumber) {
+    return _eggDao.getNextSequentialNumber(nestFieldNumber);
+  }
 }

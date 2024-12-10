@@ -74,6 +74,7 @@ class AddNestScreenState extends State<AddNestScreen> {
   }
 
   Future<void> _nextFieldNumber() async {
+    final nestProvider = Provider.of<NestProvider>(context, listen: false);
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       _observerAcronym = prefs.getString('observerAcronym') ?? '';
@@ -81,7 +82,7 @@ class AddNestScreenState extends State<AddNestScreen> {
 
     final ano = DateTime.now().year;
     final mes = DateTime.now().month;
-    final numSeq = await Provider.of<NestProvider>(context, listen: false).getNextSequentialNumber(_observerAcronym, ano, mes);
+    final numSeq = await nestProvider.getNextSequentialNumber(_observerAcronym, ano, mes);
 
     _fieldNumberController.text = "$_observerAcronym$ano${mes.toString().padLeft(2, '0')}${numSeq.toString().padLeft(3, '0')}";
   }

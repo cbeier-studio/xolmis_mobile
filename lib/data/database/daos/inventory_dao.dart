@@ -244,8 +244,17 @@ class InventoryDao {
       'inventories',
       where: 'id LIKE ?',
       whereArgs: ["$prefix%"],
+      orderBy: 'id DESC',
+      limit: 1,
     );
 
-    return results!.isNotEmpty ? results.length + 1 : 1;
+    if (results!.isNotEmpty) {
+      final lastInventoryId = results.first['id'] as String;
+      final sequentialNumberString = lastInventoryId.replaceFirst(prefix, '');
+      final sequentialNumber = int.tryParse(sequentialNumberString) ?? 0;
+      return sequentialNumber + 1;
+    } else {
+      return 1;
+    }
   }
 }

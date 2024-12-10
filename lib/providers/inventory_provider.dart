@@ -174,4 +174,5 @@ class InventoryProvider with ChangeNotifier {
   Future<int> getNextSequentialNumber(String? local, String observer, int ano, int mes, int dia, String? typeChar) {
     return _inventoryRepository.getNextSequentialNumber(local, observer, ano, mes, dia, typeChar);
   }
+
 }

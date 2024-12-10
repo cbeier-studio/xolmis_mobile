@@ -26,6 +26,10 @@ class SpecimenRepository {
     return _specimenDao.specimenFieldNumberExists(fieldNumber);
   }
 
+  Future<int> getNextSequentialNumber(String acronym, int ano, int mes) {
+    return _specimenDao.getNextSequentialNumber(acronym, ano, mes);
+  }
+
   Future<List<String>> getDistinctLocalities() {
     return _specimenDao.getDistinctLocalities();
   }

@@ -21,10 +21,10 @@ class NestDetailScreen extends StatefulWidget {
   const NestDetailScreen({super.key, required this.nest});
 
   @override
-  _NestDetailScreenState createState() => _NestDetailScreenState();
+  NestDetailScreenState createState() => NestDetailScreenState();
 }
 
-class _NestDetailScreenState extends State<NestDetailScreen> {
+class NestDetailScreenState extends State<NestDetailScreen> {
   bool _isSubmitting = false;
 
   @override
@@ -44,6 +44,7 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
   }
 
   void _showAddRevisionScreen(BuildContext context) {
+    final revisionProvider = Provider.of<NestRevisionProvider>(context, listen: false);
     if (MediaQuery.sizeOf(context).width > 600) {
       showDialog(
         context: context,
@@ -61,7 +62,7 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
       ).then((newRevision) {
         // Reload the nest revision list
         if (newRevision != null) {
-          Provider.of<NestRevisionProvider>(context, listen: false).getRevisionForNest(widget.nest.id!);
+          revisionProvider.getRevisionForNest(widget.nest.id!);
         }
       });
     } else {
@@ -71,19 +72,19 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
       ).then((newRevision) {
         // Reload the nest revision list
         if (newRevision != null) {
-          Provider.of<NestRevisionProvider>(context, listen: false).getRevisionForNest(widget.nest.id!);
+          revisionProvider.getRevisionForNest(widget.nest.id!);
         }
       });
     }
   }
 
-  void _showAddEggScreen(BuildContext context) {
-    final eggs = Provider.of<EggProvider>(context, listen: false).getEggForNest(widget.nest.id!);
+  Future<void> _showAddEggScreen(BuildContext context) async {
+    final eggProvider = Provider.of<EggProvider>(context, listen: false);
+    int nextNumber = await eggProvider.getNextSequentialNumber(widget.nest.fieldNumber!);
     if (MediaQuery.sizeOf(context).width > 600) {
       showDialog(
         context: context,
         builder: (context) {
-          final nextNumber = eggs.length + 1;
           return Dialog(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16.0),
@@ -100,11 +101,10 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
       ).then((newEgg) {
         // Reload the egg list
         if (newEgg != null) {
-          Provider.of<EggProvider>(context, listen: false).getEggForNest(widget.nest.id!);
+          eggProvider.getEggForNest(widget.nest.id!);
         }
       });
     } else {
-      final nextNumber = eggs.length + 1;
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => AddEggScreen(
@@ -115,7 +115,7 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
       ).then((newEgg) {
         // Reload the egg list
         if (newEgg != null) {
-          Provider.of<EggProvider>(context, listen: false).getEggForNest(widget.nest.id!);
+          eggProvider.getEggForNest(widget.nest.id!);
         }
       });
     }
@@ -263,7 +263,7 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
                 ),
               const SizedBox(width: 8.0,),
             ],
-            bottom: PreferredSize( // Wrap TabBar and LinearProgressIndicator in PreferredSize
+            bottom: PreferredSize(
               preferredSize: const Size.fromHeight(kToolbarHeight + 4.0), // Adjust height as needed
               child: Column(
                   children: [
@@ -377,8 +377,8 @@ class _NestDetailScreenState extends State<NestDetailScreen> {
                   ? const Icon(Icons.egg_outlined)
                   : const Icon(Icons.egg),
               label: S.of(context).egg(1),
-              onTap: () {
-                _showAddEggScreen(context);
+              onTap: () async {
+                await _showAddEggScreen(context);
               },
             ),
           ],

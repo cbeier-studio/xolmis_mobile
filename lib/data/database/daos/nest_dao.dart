@@ -111,13 +111,22 @@ class NestDao {
 
     final prefix = "$acronym$ano${mes.toString().padLeft(2, '0')}";
 
-    final resultants = await db?.query(
+    final results = await db?.query(
       'nests',
       where: 'fieldNumber LIKE ?',
       whereArgs: ["$prefix%"],
+      orderBy: 'fieldNumber DESC',
+      limit: 1,
     );
 
-    return resultants!.isNotEmpty ? resultants.length + 1 : 1;
+    if (results!.isNotEmpty) {
+      final lastNestId = results.first['fieldNumber'] as String;
+      final sequentialNumberString = lastNestId.replaceFirst(prefix, '');
+      final sequentialNumber = int.tryParse(sequentialNumberString) ?? 0;
+      return sequentialNumber + 1;
+    } else {
+      return 1;
+    }
   }
 
   // Get list of distinct localities for autocomplete

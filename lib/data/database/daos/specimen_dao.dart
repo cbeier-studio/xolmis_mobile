@@ -91,6 +91,30 @@ class SpecimenDao {
     return result!.isNotEmpty;
   }
 
+  // Get the next field number for new specimen
+  Future<int> getNextSequentialNumber(String acronym, int ano, int mes) async {
+    final db = await _dbHelper.database;
+
+    final prefix = "$acronym$ano${mes.toString().padLeft(2, '0')}";
+
+    final results = await db?.query(
+      'specimens',
+      where: 'fieldNumber LIKE ?',
+      whereArgs: ["$prefix%"],
+      orderBy: 'fieldNumber DESC',
+      limit: 1,
+    );
+
+    if (results!.isNotEmpty) {
+      final lastSpecimenId = results.first['fieldNumber'] as String;
+      final sequentialNumberString = lastSpecimenId.replaceFirst(prefix, '');
+      final sequentialNumber = int.tryParse(sequentialNumberString) ?? 0;
+      return sequentialNumber + 1;
+    } else {
+      return 1;
+    }
+  }
+
   // Get list of distinct localities for autocomplete
   Future<List<String>> getDistinctLocalities() async {
     final db = await _dbHelper.database;

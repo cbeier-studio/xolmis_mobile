@@ -581,7 +581,28 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
             TextButton(
               child: Text(S.of(context).save),
               onPressed: () async {
-                var newId = idController.text;                
+                var newId = idController.text;
+                // Check if the ID already exists in the database
+                // final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
+                final idExists = await inventoryProvider.inventoryIdExists(newId);
+
+                if (idExists) {
+                  // ID already exists, show a SnackBar
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Row(
+                          children: [
+                            Icon(Icons.info_outlined, color: Colors.blue),
+                            SizedBox(width: 8),
+                            Text(S.of(context).inventoryIdAlreadyExists),
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+                  return; // Prevent adding inventory
+                }
                 inventoryProvider.changeInventoryId(oldId, newId);
                 Navigator.of(context).pop();
                 setState(() {});

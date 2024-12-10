@@ -68,7 +68,7 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
     final ano = DateTime.now().year;
     final mes = DateTime.now().month;
 
-    final numSeq = specimenProvider.specimens.length + 1;
+    final numSeq = await specimenProvider.getNextSequentialNumber(_observerAcronym, ano, mes);
 
     _fieldNumberController.text = "$_observerAcronym$ano${mes.toString().padLeft(2, '0')}${numSeq.toString().padLeft(4, '0')}";
   }

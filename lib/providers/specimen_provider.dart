@@ -25,6 +25,10 @@ class SpecimenProvider with ChangeNotifier {
     return await _specimenRepository.specimenFieldNumberExists(fieldNumber);
   }
 
+  Future<int> getNextSequentialNumber(String acronym, int ano, int mes) async {
+    return await _specimenRepository.getNextSequentialNumber(acronym, ano, mes);
+  }
+
   // Add specimen to the database and the list
   Future<void> addSpecimen(Specimen specimen) async {
     if (await specimenFieldNumberExists(specimen.fieldNumber)) {
