@@ -1122,6 +1122,67 @@
         "type": "text",
         "description": "Button caption to start the next Mackinnon list"
     },
+    "editSpecimen": "Edit specimen",
+    "@editSpecimen": {
+        "type": "text",
+        "description": "Menu option to edit a specimen"
+    },
+    "editNest": "Edit nest",
+    "@editNest": {
+        "type": "text",
+        "description": "Menu option to edit a nest"
+    },
+    "editNestRevision": "Edit nest revision",
+    "@editNestRevision": {
+        "type": "text",
+        "description": "Menu option to edit a nest revision"
+    },
+    "editEgg": "Edit egg",
+    "@editEgg": {
+        "type": "text",
+        "description": "Menu option to edit an egg"
+    },
+    "editWeather": "Edit weather",
+    "@editWeather": {
+        "type": "text",
+        "description": "Menu option to edit a weather record"
+    },
+    "editVegetation": "Edit vegetation",
+    "@editVegetation": {
+        "type": "text",
+        "description": "Menu option to edit a vegetation record"
+    },
+    "editInventoryId": "Edit ID",
+    "@editInventoryId": {
+        "type": "text",
+        "description": "Menu option to edit an inventory ID"
+    },
+    "confirmDeleteSpecies": "Delete species",
+    "@confirmDeleteSpecies": {
+        "type": "text",
+        "description": "Title of dialog to confirm deletion of species in other inventories"
+    },
+    "confirmDeleteSpeciesMessage": "Do you want to delete {speciesName} from other active inventories?",
+    "@confirmDeleteSpeciesMessage": {
+        "type": "text",
+        "description": "Message of dialog to confirm deletion of species in other inventories",
+        "placeholders": {
+            "speciesName": {
+                "type": "String",
+                "description": "Species that will be deleted"
+            }
+        }
+    },
+    "yes": "Yes",
+    "@yes": {
+        "type": "text",
+        "description": "Affirmative button label"
+    },
+    "no": "No",
+    "@no": {
+        "type": "text",
+        "description": "Negative button label"
+    },
     "precipitationNone": "None",
     "precipitationFog": "Fog",
     "precipitationMist": "Mist",
@@ -1144,7 +1205,7 @@
     "distributionContinuousDenseCoverWithEdge": "Continuous with edge between strata",
     "inventoryFreeQualitative": "Free Qualitative List",
     "inventoryTimedQualitative": "Timed Qualitative List",
-    "inventoryIntervaledQualitative": "Intervaled Qualitative List",
+    "inventoryIntervalQualitative": "Interval Qualitative List",
     "inventoryMackinnonList": "Mackinnon List",
     "inventoryTransectionCount": "Transection Count",
     "inventoryPointCount": "Point Count",

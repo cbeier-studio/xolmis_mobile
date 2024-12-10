@@ -355,7 +355,7 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
                 children: <Widget>[
                   ListTile(
                     leading: const Icon(Icons.edit_outlined),
-                    title: Text('Editar espécime'),
+                    title: Text(S.of(context).editSpecimen),
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.push(

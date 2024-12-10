@@ -111,7 +111,7 @@ class _WeatherTabState extends State<WeatherTab> with AutomaticKeepAliveClientMi
                 children: <Widget>[
                   ListTile(
                     leading: const Icon(Icons.edit_outlined),
-                    title: Text('Editar dados do tempo'),
+                    title: Text(S.of(context).editWeather),
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.push(

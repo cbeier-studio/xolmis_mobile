@@ -72,7 +72,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
           speciesName, speciesProvider, inventoryProvider, speciesRepository,
           inventoryRepository);
 
-      if (widget.inventory.type == InventoryType.invIntervaledQualitative) {
+      if (widget.inventory.type == InventoryType.invIntervalQualitative) {
         widget.inventory.currentIntervalSpeciesCount++;
       }
     }
@@ -115,7 +115,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
             newSpeciesForOtherInventory.inventoryId,
             newSpeciesForOtherInventory);
 
-        if (inventory.type == InventoryType.invIntervaledQualitative) {
+        if (inventory.type == InventoryType.invIntervalQualitative) {
           inventory.currentIntervalSpeciesCount++;
           inventoryRepository.updateInventoryCurrentIntervalSpeciesCount(inventory.id, inventory.currentIntervalSpeciesCount);
         } else if (inventory.type == InventoryType.invTimedQualitative) {
@@ -232,18 +232,17 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Text('Remover espécie'),
-              content: Text(
-                  'Deseja remover a espécie "$speciesName" dos outros inventários ativos?'),
+              title: Text(S.of(context).confirmDeleteSpecies),
+              content: Text(S.of(context).confirmDeleteSpeciesMessage(speciesName)),
               actions: <Widget>[
                 TextButton(
-                  child: Text('Não'),
+                  child: Text(S.of(context).no),
                   onPressed: () {
                     Navigator.of(context).pop(false); 
                   },
                 ),
                 TextButton(
-                  child: Text('Sim'),
+                  child: Text(S.of(context).yes),
                   onPressed: () {
                     Navigator.of(context).pop(true); 
                   },

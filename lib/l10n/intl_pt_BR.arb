@@ -343,16 +343,60 @@
         }
     },
     "noImagesFound": "Nenhuma imagem encontrada.",
+    "@noImagesFound": {
+        "type": "text",
+        "description": "Message shown when the images list is empty"
+    },
     "addImage": "Adicionar imagem",
+    "@addImage": {
+        "type": "text",
+        "description": "Add image dialog title"
+    },
     "gallery": "Galeria",
+    "@gallery": {
+        "type": "text",
+        "description": "Gallery button label"
+    },
     "camera": "Câmera",
+    "@camera": {
+        "type": "text",
+        "description": "Camera button label"
+    },
     "permissionDenied": "Permissão negada.",
+    "@permissionDenied": {
+        "type": "text",
+        "description": "Message shown when the permission was denied"
+    },
     "permissionDeniedPermanently": "Permissão negada permanentemente.",
+    "@permissionDeniedPermanently": {
+        "type": "text",
+        "description": "Message shown when the permission was denied permanently"
+    },
     "shareImage": "Compartilhar imagem",
+    "@shareImage": {
+        "type": "text",
+        "description": "Menu option to share an image"
+    },
     "editImageNotes": "Editar notas da imagem",
+    "@editImageNotes": {
+        "type": "text",
+        "description": "Menu option to edit the image notes"
+    },
     "deleteImage": "Apagar imagem",
+    "@deleteImage": {
+        "type": "text",
+        "description": "Menu option to delete an image"
+    },
     "editNotes": "Editar notas",
+    "@editNotes": {
+        "type": "text",
+        "description": "Edit notes dialog title"
+    },
     "imageDetails": "Detalhes da imagem",
+    "@imageDetails": {
+        "type": "text",
+        "description": "Image details dialog title"
+    },
     "inventoryExported": "{howMany, plural, one{Inventário exportado!} other{Inventários exportados!}}",
     "@inventoryExported": {
         "type": "text",
@@ -453,6 +497,10 @@
         }
     },
     "findSpecies": "Buscar espécie",
+    "@findSpecies": {
+        "type": "text",
+        "description": "Hint in the species' search field"
+    },
     "addSpecies": "Adicionar espécie",
     "@addSpecies": {
         "type": "text",
@@ -499,8 +547,81 @@
         "description": "Menu option to reactivate a finished inventory"
     },
     "listFinished": "Lista concluída",
+    "@listFinished": {
+        "type": "text",
+        "description": "Dialog title when a Mackinnon list was finished"
+    },
     "listFinishedMessage": "A lista atingiu o número máximo de espécies. Deseja iniciar a próxima lista ou encerrar?",
+    "@listFinishedMessage": {
+        "type": "text",
+        "description": "Message asking user to take action when a Mackinnon list was finished"
+    },
     "startNextList": "Iniciar próxima lista",
+    "@startNextList": {
+        "type": "text",
+        "description": "Button caption to start the next Mackinnon list"
+    },
+    "editSpecimen": "Editar espécime",
+    "@editSpecimen": {
+        "type": "text",
+        "description": "Menu option to edit a specimen"
+    },
+    "editNest": "Editar ninho",
+    "@editNest": {
+        "type": "text",
+        "description": "Menu option to edit a nest"
+    },
+    "editNestRevision": "Editar revisão de ninho",
+    "@editNestRevision": {
+        "type": "text",
+        "description": "Menu option to edit a nest revision"
+    },
+    "editEgg": "Editar ovo",
+    "@editEgg": {
+        "type": "text",
+        "description": "Menu option to edit an egg"
+    },
+    "editWeather": "Editar dados do tempo",
+    "@editWeather": {
+        "type": "text",
+        "description": "Menu option to edit a weather record"
+    },
+    "editVegetation": "Editar dados de vegetação",
+    "@editVegetation": {
+        "type": "text",
+        "description": "Menu option to edit a vegetation record"
+    },
+    "editInventoryId": "Editar ID",
+    "@editInventoryId": {
+        "type": "text",
+        "description": "Menu option to edit an inventory ID"
+    },
+    "confirmDeleteSpecies": "Remover espécie",
+    "@confirmDeleteSpecies": {
+        "type": "text",
+        "description": "Title of dialog to confirm deletion of species in other inventories"
+    },
+    "confirmDeleteSpeciesMessage": "Deseja remover a espécie {speciesName} dos outros inventários ativos?",
+    "@confirmDeleteSpeciesMessage": {
+        "type": "text",
+        "description": "Message of dialog to confirm deletion of species in other inventories",
+        "placeholders": {
+            "speciesName": {
+                "type": "String",
+                "description": "Species that will be deleted"
+            }
+        }
+    },
+    "yes": "Sim",
+    "@yes": {
+        "type": "text",
+        "description": "Affirmative button label"
+    },
+    "no": "Não",
+    "@no": {
+        "type": "text",
+        "description": "Negative button label"
+    },
     "precipitationNone": "Nenhuma",
     "precipitationFog": "Névoa",
     "precipitationMist": "Neblina",
@@ -523,7 +644,7 @@
     "distributionContinuousDenseCoverWithEdge": "Contínua com borda separando estratos",
     "inventoryFreeQualitative": "Lista Qualitativa Livre",
     "inventoryTimedQualitative": "Lista Qualitativa Temporizada",
-    "inventoryIntervaledQualitative": "Lista Qualitativa Intervalada",
+    "inventoryIntervalQualitative": "Lista Qualitativa por Intervalos",
     "inventoryMackinnonList": "Lista de Mackinnon",
     "inventoryTransectionCount": "Contagem em Transecção",
     "inventoryPointCount": "Ponto de Contagem",

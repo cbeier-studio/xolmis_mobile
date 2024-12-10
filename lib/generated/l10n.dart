@@ -2051,6 +2051,118 @@ class S {
     );
   }
 
+  /// `Edit specimen`
+  String get editSpecimen {
+    return Intl.message(
+      'Edit specimen',
+      name: 'editSpecimen',
+      desc: 'Menu option to edit a specimen',
+      args: [],
+    );
+  }
+
+  /// `Edit nest`
+  String get editNest {
+    return Intl.message(
+      'Edit nest',
+      name: 'editNest',
+      desc: 'Menu option to edit a nest',
+      args: [],
+    );
+  }
+
+  /// `Edit nest revision`
+  String get editNestRevision {
+    return Intl.message(
+      'Edit nest revision',
+      name: 'editNestRevision',
+      desc: 'Menu option to edit a nest revision',
+      args: [],
+    );
+  }
+
+  /// `Edit egg`
+  String get editEgg {
+    return Intl.message(
+      'Edit egg',
+      name: 'editEgg',
+      desc: 'Menu option to edit an egg',
+      args: [],
+    );
+  }
+
+  /// `Edit weather`
+  String get editWeather {
+    return Intl.message(
+      'Edit weather',
+      name: 'editWeather',
+      desc: 'Menu option to edit a weather record',
+      args: [],
+    );
+  }
+
+  /// `Edit vegetation`
+  String get editVegetation {
+    return Intl.message(
+      'Edit vegetation',
+      name: 'editVegetation',
+      desc: 'Menu option to edit a vegetation record',
+      args: [],
+    );
+  }
+
+  /// `Edit ID`
+  String get editInventoryId {
+    return Intl.message(
+      'Edit ID',
+      name: 'editInventoryId',
+      desc: 'Menu option to edit an inventory ID',
+      args: [],
+    );
+  }
+
+  /// `Delete species`
+  String get confirmDeleteSpecies {
+    return Intl.message(
+      'Delete species',
+      name: 'confirmDeleteSpecies',
+      desc:
+          'Title of dialog to confirm deletion of species in other inventories',
+      args: [],
+    );
+  }
+
+  /// `Do you want to delete {speciesName} from other active inventories?`
+  String confirmDeleteSpeciesMessage(String speciesName) {
+    return Intl.message(
+      'Do you want to delete $speciesName from other active inventories?',
+      name: 'confirmDeleteSpeciesMessage',
+      desc:
+          'Message of dialog to confirm deletion of species in other inventories',
+      args: [speciesName],
+    );
+  }
+
+  /// `Yes`
+  String get yes {
+    return Intl.message(
+      'Yes',
+      name: 'yes',
+      desc: 'Affirmative button label',
+      args: [],
+    );
+  }
+
+  /// `No`
+  String get no {
+    return Intl.message(
+      'No',
+      name: 'no',
+      desc: 'Negative button label',
+      args: [],
+    );
+  }
+
   /// `None`
   String get precipitationNone {
     return Intl.message(
@@ -2271,11 +2383,11 @@ class S {
     );
   }
 
-  /// `Intervaled Qualitative List`
-  String get inventoryIntervaledQualitative {
+  /// `Interval Qualitative List`
+  String get inventoryIntervalQualitative {
     return Intl.message(
-      'Intervaled Qualitative List',
-      name: 'inventoryIntervaledQualitative',
+      'Interval Qualitative List',
+      name: 'inventoryIntervalQualitative',
       desc: '',
       args: [],
     );

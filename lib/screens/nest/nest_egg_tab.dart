@@ -119,7 +119,7 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
                 children: <Widget>[
                   ListTile(
                     leading: const Icon(Icons.edit_outlined),
-                    title: Text('Editar ovo'),
+                    title: Text(S.of(context).editEgg),
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.push(

@@ -179,7 +179,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                                 suffixText: S.of(context).minutes(2),
                               ),
                               validator: (value) {
-                                if ((_selectedType == InventoryType.invTimedQualitative || _selectedType == InventoryType.invIntervaledQualitative || _selectedType == InventoryType.invPointCount) && (value == null || value.isEmpty)) {
+                                if ((_selectedType == InventoryType.invTimedQualitative || _selectedType == InventoryType.invIntervalQualitative || _selectedType == InventoryType.invPointCount) && (value == null || value.isEmpty)) {
                                   return S.of(context).insertDuration;
                                 }
                                 return null;
@@ -252,7 +252,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
       if (newValue == InventoryType.invTimedQualitative) {
         _durationController.text = cumulativeTimeDuration.toString();
         _maxSpeciesController.text = '';
-      } else if (newValue == InventoryType.invIntervaledQualitative) {
+      } else if (newValue == InventoryType.invIntervalQualitative) {
         _durationController.text = intervalsDuration.toString();
         _maxSpeciesController.text = '';
       } else if (newValue == InventoryType.invMackinnonList) {

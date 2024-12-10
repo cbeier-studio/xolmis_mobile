@@ -447,7 +447,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                 children: <Widget>[
                   ListTile(
                       leading: const Icon(Icons.edit_outlined),
-                      title: Text('Editar ID'),
+                      title: Text(S.of(context).editInventoryId),
                       onTap: () {
                         Navigator.of(context).pop();
                         _showEditIdDialog(context, inventory);
@@ -809,7 +809,7 @@ class InventoryListItem extends StatelessWidget {
                   );
                 },
               ),
-              if (!isHistory && inventory.type == InventoryType.invIntervaledQualitative)
+              if (!isHistory && inventory.type == InventoryType.invIntervalQualitative)
                 ValueListenableBuilder<int>(
                     valueListenable: inventory.currentIntervalNotifier,
                     builder: (context, currentInterval, child) {
@@ -837,7 +837,7 @@ class InventoryListItem extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Visibility(
-              visible: inventory.type == InventoryType.invIntervaledQualitative,
+              visible: inventory.type == InventoryType.invIntervalQualitative,
                 child: ValueListenableBuilder<int>(
                     valueListenable: inventory.intervalWithoutSpeciesNotifier,
                     builder: (context, intervalWithoutSpecies, child) {

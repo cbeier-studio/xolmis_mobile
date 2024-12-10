@@ -459,7 +459,7 @@ class Weather {
 enum InventoryType {
   invFreeQualitative,
   invTimedQualitative,
-  invIntervaledQualitative,
+  invIntervalQualitative,
   invMackinnonList,
   invTransectionCount,
   invPointCount,
@@ -470,7 +470,7 @@ enum InventoryType {
 Map<InventoryType, String> inventoryTypeFriendlyNames = {
   InventoryType.invFreeQualitative: S.current.inventoryFreeQualitative,
   InventoryType.invTimedQualitative: S.current.inventoryTimedQualitative,
-  InventoryType.invIntervaledQualitative: S.current.inventoryIntervaledQualitative,
+  InventoryType.invIntervalQualitative: S.current.inventoryIntervalQualitative,
   InventoryType.invMackinnonList: S.current.inventoryMackinnonList,
   InventoryType.invTransectionCount: S.current.inventoryTransectionCount,
   InventoryType.invPointCount: S.current.inventoryPointCount,
@@ -708,6 +708,7 @@ class Inventory with ChangeNotifier {
       _autoFinished = false;
       updateCurrentInterval(currentInterval);
       _timer ??= Timer.periodic(const Duration(seconds: 5), (timer) async {
+        // Only process things if inventory is not paused or finished
         if (!isPaused && !isFinished) {
           if (elapsedTime == 0) {
             updateElapsedTime(0);
@@ -719,30 +720,38 @@ class Inventory with ChangeNotifier {
           updateElapsedTime(elapsedTime += 5);
           inventoryRepository.updateInventoryElapsedTime(id, elapsedTime);
 
-          // If the inventory timer reach the goal, finish it automatically
+          // Elapsed time reach the defined duration
           if (elapsedTime == duration * 60 && !isFinished) {
-            if (type == InventoryType.invIntervaledQualitative) {
+            // If inventory type is intervaled
+            if (type == InventoryType.invIntervalQualitative) {
+              // Increment the currentInterval counter
               currentInterval++;
               updateCurrentInterval(currentInterval);
               inventoryRepository.updateInventoryCurrentInterval(id, currentInterval);
 
               if (currentIntervalSpeciesCount == 0) {
+                // If no new species on interval, increment counter
                 intervalsWithoutNewSpecies++;
               } else {
+                // If has new species on interval, reset counter
                 intervalsWithoutNewSpecies = 0;
               }
               inventoryRepository.updateInventoryIntervalsWithoutSpecies(id, intervalsWithoutNewSpecies);
               intervalWithoutSpeciesNotifier.value = intervalsWithoutNewSpecies;
               intervalWithoutSpeciesNotifier.notifyListeners();
+              // Every interval, reset species counter
               currentIntervalSpeciesCount = 0;
 
               if (intervalsWithoutNewSpecies == 3) {
+                // If 3 intervals without species is reached, finish inventory
                 _autoFinished = true;
                 await stopTimer(inventoryRepository);
               } else {
+                // Else, reset elapsed time for new interval
                 updateElapsedTime(0.0);
               }
             } else {
+              // If other type of timed inventory, finish inventory if duration is reached
               _autoFinished = true;
               await stopTimer(inventoryRepository);
             }

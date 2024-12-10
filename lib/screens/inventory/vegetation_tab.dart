@@ -119,7 +119,7 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
                 children: <Widget>[
                   ListTile(
                     leading: const Icon(Icons.edit_outlined),
-                    title: Text('Editar vegetação'),
+                    title: Text(S.of(context).editVegetation),
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.push(

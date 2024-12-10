@@ -322,7 +322,7 @@ class _NestsScreenState extends State<NestsScreen> {
                 children: <Widget>[
                   ListTile(
                     leading: const Icon(Icons.edit_outlined),
-                    title: Text('Editar ninho'),
+                    title: Text(S.of(context).editNest),
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.push(

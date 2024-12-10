@@ -122,7 +122,7 @@ class _NestRevisionsTabState extends State<NestRevisionsTab> with AutomaticKeepA
                 children: <Widget>[
                   ListTile(
                     leading: const Icon(Icons.edit_outlined),
-                    title: Text('Editar revisão do ninho'),
+                    title: Text(S.of(context).editNestRevision),
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.push(
