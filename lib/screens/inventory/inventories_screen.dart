@@ -92,50 +92,56 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
 
   Future<void> _showAddInventoryScreen(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
-    if (inventoryProvider.activeInventories.length == (prefs.getInt('maxSimultaneousInventories') ?? 2)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Row(
-          children: [
-            Icon(Icons.info_outlined, color: Colors.blue),
-            SizedBox(width: 8),
-            Text(S.of(context).simultaneousLimitReached),
-          ],
-        ),
-        ),
-      );
+    if (inventoryProvider.activeInventories.length ==
+        (prefs.getInt('maxSimultaneousInventories') ?? 2)) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                Icon(Icons.info_outlined, color: Colors.blue),
+                SizedBox(width: 8),
+                Text(S.of(context).simultaneousLimitReached),
+              ],
+            ),
+          ),
+        );
+      }
       return;
     }
 
-    if (MediaQuery.sizeOf(context).width > 600) {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return Dialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16.0),
-            ),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 400),
-              child: const AddInventoryScreen(),
-            ),
-          );
-        },
-      ).then((newInventory) {
-        // Update the inventory list
-        if (newInventory != null) {
-          inventoryProvider.notifyListeners();
-        }
-      });
-    } else {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const AddInventoryScreen()),
-      ).then((newInventory) {
-        // Update the inventory list
-        if (newInventory != null) {
-          inventoryProvider.notifyListeners();
-        }
-      });
+    if (context.mounted) {
+      if (MediaQuery.sizeOf(context).width > 600) {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16.0),
+              ),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 400),
+                child: const AddInventoryScreen(),
+              ),
+            );
+          },
+        ).then((newInventory) {
+          // Update the inventory list
+          if (newInventory != null) {
+            inventoryProvider.notifyListeners();
+          }
+        });
+      } else {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const AddInventoryScreen()),
+        ).then((newInventory) {
+          // Update the inventory list
+          if (newInventory != null) {
+            inventoryProvider.notifyListeners();
+          }
+        });
+      }
     }
   }
 
@@ -200,7 +206,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                       setState(() {
                         _isShowingActiveInventories = newSelection.first;
                       });
-                      inventoryProvider.notifyListeners();
+                      // inventoryProvider.notifyListeners();
                     },
                   ),
                 );
@@ -368,7 +374,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                         // Finish the inventory
                                         inventory.stopTimer(inventoryRepository);
                                         inventoryProvider.updateInventory(inventory);
-                                        inventoryProvider.notifyListeners();
+                                        // inventoryProvider.notifyListeners();
                                       }
                                     },
                                     child: ValueListenableBuilder<bool>(
@@ -476,7 +482,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                         inventory.updateIsFinished(false);
                         inventoryProvider.updateInventory(inventory);
                         inventoryProvider.startInventoryTimer(inventory, inventoryRepository);
-                        inventoryProvider.notifyListeners();
+                        // inventoryProvider.notifyListeners();
                       },
                     ),
                   if (!_isShowingActiveInventories) 
@@ -592,13 +598,13 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
 
                 if (idExists) {
                   // ID already exists, show a SnackBar
-                  if (mounted) {
+                  if (context.mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Row(
                           children: [
-                            Icon(Icons.info_outlined, color: Colors.blue),
-                            SizedBox(width: 8),
+                            const Icon(Icons.info_outlined, color: Colors.blue),
+                            const SizedBox(width: 8),
                             Text(S.of(context).inventoryIdAlreadyExists),
                           ],
                         ),
@@ -608,7 +614,9 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                   return; // Prevent adding inventory
                 }
                 inventoryProvider.changeInventoryId(oldId, newId);
-                Navigator.of(context).pop();
+                if (context.mounted) {
+                  Navigator.of(context).pop();
+                }
                 setState(() {});
               },
             ),
@@ -640,7 +648,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                 // Call the function to delete species
                 inventory.stopTimer(inventoryRepository);
                 inventoryProvider.updateInventory(inventory);
-                inventoryProvider.notifyListeners();
+                // inventoryProvider.notifyListeners();
               },
               child: Text(S.of(context).finish),
             ),

@@ -121,8 +121,10 @@ class SpeciesListItemState extends State<SpeciesListItem> {
                       );
 
                       // Insert the POI in the database
-                      poiProvider.addPoi(context, widget.species.id!, poi);
-                      poiProvider.notifyListeners();
+                      if (context.mounted) {
+                        poiProvider.addPoi(context, widget.species.id!, poi);
+                        // poiProvider.notifyListeners();
+                      }
 
                       // ScaffoldMessenger.of(context).showSnackBar(
                       //   SnackBar(
@@ -136,17 +138,19 @@ class SpeciesListItemState extends State<SpeciesListItem> {
                       //   ),
                       // );
                     } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Row(
-                            children: [
-                              const Icon(Icons.error_outlined, color: Colors.red),
-                              const SizedBox(width: 8),
-                              Text(S.of(context).errorGettingLocation),
-                            ],
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Row(
+                              children: [
+                                const Icon(Icons.error_outlined, color: Colors.red),
+                                const SizedBox(width: 8),
+                                Text(S.of(context).errorGettingLocation),
+                              ],
+                            ),
                           ),
-                        ),
-                      );
+                        );
+                      }
                     }
 
                     setState(() {

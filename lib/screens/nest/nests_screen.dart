@@ -17,10 +17,10 @@ class NestsScreen extends StatefulWidget {
   const NestsScreen({super.key, required this.scaffoldKey,});
 
   @override
-  _NestsScreenState createState() => _NestsScreenState();
+  NestsScreenState createState() => NestsScreenState();
 }
 
-class _NestsScreenState extends State<NestsScreen> {
+class NestsScreenState extends State<NestsScreen> {
   late NestProvider nestProvider;
   final _searchController = TextEditingController();
   bool _showActive = true;
@@ -61,7 +61,7 @@ class _NestsScreenState extends State<NestsScreen> {
       ).then((newNest) {
         // Reload the nest list
         if (newNest != null) {
-          nestProvider.notifyListeners();
+          nestProvider.fetchNests();
         }
       });
     } else {
@@ -71,7 +71,7 @@ class _NestsScreenState extends State<NestsScreen> {
       ).then((newNest) {
         // Reload the nest list
         if (newNest != null) {
-          nestProvider.notifyListeners();
+          nestProvider.fetchNests();
         }
       });
     }
@@ -138,7 +138,7 @@ class _NestsScreenState extends State<NestsScreen> {
                       setState(() {
                         _showActive = newSelection.first;
                       });
-                      nestProvider.notifyListeners();
+                      // nestProvider.notifyListeners();
                     },
                   ),
                 );
@@ -197,7 +197,7 @@ class _NestsScreenState extends State<NestsScreen> {
                                               ),
                                             ).then((result) {
                                               if (result == true) {
-                                                nestProvider.notifyListeners();
+                                                nestProvider.fetchNests();
                                               }
                                             });
                                           },
@@ -281,7 +281,7 @@ class _NestsScreenState extends State<NestsScreen> {
                                         ),
                                       ).then((result) {
                                         if (result == true) {
-                                          nestProvider.notifyListeners();
+                                          nestProvider.fetchNests();
                                         }
                                       });
                                     },

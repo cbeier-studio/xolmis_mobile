@@ -80,7 +80,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     await inventoryRepository.updateInventory(widget.inventory);
     _updateSpeciesList();
 
-    speciesProvider.notifyListeners();
+    // speciesProvider.notifyListeners();
   }
 
   void _showSpeciesAlreadyExistsMessage() {
@@ -124,7 +124,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
           inventoryProvider.updateInventory(inventory);
         }
         speciesProvider.loadSpeciesForInventory(inventory.id);
-        speciesProvider.notifyListeners();
+        // speciesProvider.notifyListeners();
       }
 
     }
@@ -171,14 +171,18 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     final speciesProvider = Provider.of<SpeciesProvider>(context, listen: false);
     final confirmed = await _showDeleteConfirmationDialog(context);
     if (confirmed) {
-      await speciesProvider.removeSpecies(context, widget.inventory.id, species.id!);
+      if (mounted) {
+        await speciesProvider.removeSpecies(context, widget.inventory.id, species.id!);
+      }
     }
 
     if (!widget.inventory.isFinished) {
-      bool confirm = await _showDeleteFromOtherListsConfirmationDialog(context, species.name);
-      if (confirm) {
-        await _deleteSpeciesFromOtherActiveInventories(species, speciesProvider); 
-      }     
+      if (mounted) {
+        bool confirm = await _showDeleteFromOtherListsConfirmationDialog(context, species.name);
+        if (confirm) {
+          await _deleteSpeciesFromOtherActiveInventories(species, speciesProvider); 
+        } 
+      }          
     }
   }
 
@@ -198,7 +202,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
         inventoryProvider.updateInventory(inventory);
         
         speciesProvider.loadSpeciesForInventory(inventory.id);
-        speciesProvider.notifyListeners();
+        // speciesProvider.notifyListeners();
       }
 
     }
@@ -427,7 +431,9 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                       S.of(context).deleteSpecies, style: TextStyle(color: Colors.red),),
                     onTap: () async {
                       await _deleteSpecies(species);
-                      Navigator.pop(context);
+                      if (context.mounted) {
+                        Navigator.pop(context);
+                      }
                     },
                   )
                 ],
@@ -492,7 +498,9 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                   name: species.name,
                 );
                 await speciesProvider.updateSpecies(species.inventoryId, updatedSpecies);
-                Navigator.of(context).pop();
+                if (context.mounted) {
+                  Navigator.of(context).pop();
+                }
                 setState(() {});
               },
             ),

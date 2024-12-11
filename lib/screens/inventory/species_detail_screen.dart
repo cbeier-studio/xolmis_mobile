@@ -55,11 +55,13 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
       );
 
       // Insert the POI in the database
-      final poiProvider = Provider.of<PoiProvider>(context, listen: false);
-      await poiProvider.addPoi(context, widget.species.id!, poi);
+      if (mounted) {
+        final poiProvider = Provider.of<PoiProvider>(context, listen: false);
+        await poiProvider.addPoi(context, widget.species.id!, poi);
+      }
 
       // Update the UI
-      poiProvider.notifyListeners();
+      // poiProvider.notifyListeners();
 
       // Show success message
       // ScaffoldMessenger.of(context).showSnackBar(
@@ -74,18 +76,20 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
       //   ),
       // );
     } else {
-      // Show error message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              Icon(Icons.error_outlined, color: Colors.red),
-              SizedBox(width: 8),
-              Text(S.of(context).errorGettingLocation),
-            ],
+      if (mounted) {
+        // Show error message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                const Icon(Icons.error_outlined, color: Colors.red),
+                const SizedBox(width: 8),
+                Text(S.of(context).errorGettingLocation),
+              ],
+            ),
           ),
-        ),
-      );
+        );
+      }
     }
 
     setState(() {
@@ -99,11 +103,13 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
 
     if (confirmed == true) {
       // Delete the POI from database
-      final poiProvider = Provider.of<PoiProvider>(context, listen: false);
-      await poiProvider.removePoi(widget.species.id!, poi.id!);
+      if (mounted) {
+        final poiProvider = Provider.of<PoiProvider>(context, listen: false);
+        await poiProvider.removePoi(widget.species.id!, poi.id!);
+      }
 
       // Update the UI
-      poiProvider.notifyListeners();
+      // poiProvider.notifyListeners();
     }
   }
 
@@ -140,7 +146,7 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
                 final pois = poiProvider.getPoisForSpecies(widget.species.id ?? 0);
                 return RefreshIndicator(
                   onRefresh: () async {
-                    await poiProvider.getPoisForSpecies(widget.species.id ?? 0);
+                    poiProvider.getPoisForSpecies(widget.species.id ?? 0);
                   },
                   child: Column(
                       children: [
@@ -219,7 +225,9 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
                     title: Text(S.of(context).deletePoi, style: TextStyle(color: Colors.red),),
                     onTap: () async {                      
                       await _deletePoi(poi);
-                      Navigator.pop(context);
+                      if (context.mounted) {
+                        Navigator.pop(context);
+                      }
                     },
                   )
                   // )

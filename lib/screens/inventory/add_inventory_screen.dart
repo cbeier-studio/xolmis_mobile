@@ -24,7 +24,6 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
   final _maxSpeciesController = TextEditingController();
   InventoryType _selectedType = InventoryType.invFreeQualitative;
   bool _isSubmitting = false;
-  bool _idExists = false;
 
   @override
   void initState() {
@@ -32,18 +31,6 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
     _idController.text = widget.initialInventoryId ?? '';
     _selectedType = widget.initialInventoryType ?? _selectedType;
     _maxSpeciesController.text = widget.initialMaxSpecies?.toString() ?? '';
-  }
-
-  _checkIdExists(String? inventoryId) async {
-    final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
-
-    if (inventoryId != null && inventoryId.isNotEmpty) {
-      _idExists = await inventoryProvider.inventoryIdExists(inventoryId);
-    } else {
-      setState(() {
-        _idExists = true;
-      });
-    }
   }
 
   @override
@@ -101,6 +88,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                         suffixIcon: IconButton(
                           icon: const Icon(Icons.auto_mode_outlined),
                           onPressed: () async {
+                            final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
                             final result = await showDialog<String>(
                               context: context,
                               builder: (BuildContext context) {
@@ -149,7 +137,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                               final month = now.month.toString().padLeft(2, '0');
                               final day = now.day.toString().padLeft(2, '0');
                               final inventoryTypeLetter = getInventoryTypeLetter(_selectedType);
-                              final sequentialNumber = await Provider.of<InventoryProvider>(context, listen: false).getNextSequentialNumber(result, observerAcronym, now.year, now.month, now.day, inventoryTypeLetter);
+                              final sequentialNumber = await inventoryProvider.getNextSequentialNumber(result, observerAcronym, now.year, now.month, now.day, inventoryTypeLetter);
 
                               final inventoryId = '$result-$observerAcronym-$year$month$day-${inventoryTypeLetter ?? ''}${sequentialNumber.toString().padLeft(2, '0')}';
 

@@ -47,7 +47,7 @@ class WeatherProvider with ChangeNotifier {
   Future<void> updateWeather(Weather weather) async {
     await _weatherRepository.updateWeather(weather);
 
-    _weatherMap[weather.inventoryId!] = await _weatherRepository.getWeatherByInventory(weather.inventoryId!);
+    _weatherMap[weather.inventoryId] = await _weatherRepository.getWeatherByInventory(weather.inventoryId);
 
     notifyListeners();
   }

@@ -20,10 +20,10 @@ class SpecimensScreen extends StatefulWidget {
   const SpecimensScreen({super.key, required this.scaffoldKey});
 
   @override
-  _SpecimensScreenState createState() => _SpecimensScreenState();
+  SpecimensScreenState createState() => SpecimensScreenState();
 }
 
-class _SpecimensScreenState extends State<SpecimensScreen> {
+class SpecimensScreenState extends State<SpecimensScreen> {
   late SpecimenProvider specimenProvider;
   final _searchController = TextEditingController();
   String _searchQuery = '';
@@ -63,7 +63,7 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
       ).then((newSpecimen) {
         // Reload the inventory list
         if (newSpecimen != null) {
-          specimenProvider.notifyListeners();
+          specimenProvider.fetchSpecimens();
         }
       });
     } else {
@@ -73,7 +73,7 @@ class _SpecimensScreenState extends State<SpecimensScreen> {
       ).then((newSpecimen) {
         // Reload the specimen list
         if (newSpecimen != null) {
-          specimenProvider.notifyListeners();
+          specimenProvider.fetchSpecimens();
         }
       });
     }
