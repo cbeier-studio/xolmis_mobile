@@ -15,20 +15,22 @@ class NestDao {
   NestDao(this._dbHelper, this._nestRevisionDao, this._eggDao);
 
   // Insert nest into database
-  Future<void> insertNest(Nest nest) async {
+  Future<int?> insertNest(Nest nest) async {
     final db = await _dbHelper.database;
-    int? id = await db?.insert(
-      'nests',
-      nest.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
-    if (id == null) {
+    try {
+      int? id = await db?.insert(
+        'nests',
+        nest.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+      nest.id = id;
+      return id;
+    } catch (e) {
       if (kDebugMode) {
-        print('Failed to insert nest: ID is null');
+        print('Error inserting nest: $e');
       }
-      return;
+      return 0;
     }
-    nest.id = id;
   }
 
   // Get list of all nests

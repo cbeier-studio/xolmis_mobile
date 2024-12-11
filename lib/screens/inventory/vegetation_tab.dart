@@ -81,7 +81,7 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
                   } else {
                     return RefreshIndicator(
                       onRefresh: () async {
-                        await vegetationProvider.getVegetationForInventory(
+                        await vegetationProvider.loadVegetationForInventory(
                             widget.inventory.id);
                       },
                       child: LayoutBuilder(

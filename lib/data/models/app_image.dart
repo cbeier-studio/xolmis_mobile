@@ -2,7 +2,7 @@
 // Image class
 
 class AppImage {
-  final int? id;
+  late int? id;
   final String imagePath;
   String? notes;
   final int? vegetationId;

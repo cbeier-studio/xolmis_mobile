@@ -10,15 +10,18 @@ class AppImageDao {
   AppImageDao(this._dbHelper);
 
   // Insert image into database linked to a vegetation record
-  Future<void> insertImageToVegetation(AppImage appImage, int vegetationId) async {
+  Future<int?> insertImageToVegetation(AppImage appImage, int vegetationId) async {
     final db = await _dbHelper.database;
     try {
       final imageWithVegetationId = appImage.copyWith(vegetationId: vegetationId);
-      await db?.insert('images', imageWithVegetationId.toMap());
+      int? id = await db?.insert('images', imageWithVegetationId.toMap());
+      appImage.id = id;
+      return id;
     } catch (e) {
       if (kDebugMode) {
         print('Error inserting image to vegetation: $e');
       }
+      return 0;
     }
   }
 

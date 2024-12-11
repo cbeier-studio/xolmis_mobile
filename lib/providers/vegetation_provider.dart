@@ -30,12 +30,12 @@ class VegetationProvider with ChangeNotifier {
     return _vegetationMap[inventoryId] ?? [];
   }
 
-  // Add vegeetation record to the database and the list
+  // Add vegetation record to the database and the list
   Future<void> addVegetation(BuildContext context, String inventoryId, Vegetation vegetation) async {
     // Insert the vegetation data in the database
     await _vegetationRepository.insertVegetation(vegetation);
-
-    // Add the POI to the list of the provider
+    
+    // Add the vegetation to the list of the provider
     _vegetationMap[inventoryId] = _vegetationMap[inventoryId] ?? [];
     _vegetationMap[inventoryId]!.add(vegetation);
 

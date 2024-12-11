@@ -10,14 +10,17 @@ class PoiDao {
   PoiDao(this._dbHelper);
 
   // Insert POI to database
-  Future<void> insertPoi(Poi poi) async {
+  Future<int?> insertPoi(Poi poi) async {
     final db = await _dbHelper.database;
     try {
-      await db?.insert('pois', poi.toMap(poi.speciesId));
+      int? id = await db?.insert('pois', poi.toMap(poi.speciesId));
+      poi.id = id;
+      return id;
     } catch (e) {
       if (kDebugMode) {
         print('Error inserting POI: $e');
       }
+      return 0;
     }
   }
 

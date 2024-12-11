@@ -16,7 +16,7 @@ import '../../generated/l10n.dart';
 // POI class
 
 class Poi {
-  final int? id;
+  late int? id;
   final int speciesId;
   double longitude;
   double latitude;
@@ -77,7 +77,7 @@ class Poi {
 // Species class
 
 class Species {
-  final int? id;
+  late int? id;
   final String inventoryId;
   final String name;
   bool isOutOfInventory;
@@ -193,7 +193,7 @@ Map<DistributionType, String> distributionTypeFriendlyNames = {
 };
 
 class Vegetation {
-  final int? id;
+  late int? id;
   final String inventoryId;
   final DateTime? sampleTime;
   double? longitude;
@@ -365,7 +365,7 @@ Map<PrecipitationType, String> precipitationTypeFriendlyNames = {
 };
 
 class Weather {
-  final int? id;
+  late int? id;
   final String inventoryId;
   final DateTime? sampleTime;
   int? cloudCover;

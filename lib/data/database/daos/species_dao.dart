@@ -15,6 +15,7 @@ class SpeciesDao {
     final db = await _dbHelper.database;
     try {
       int? id = await db?.insert('species', species.toMap(inventoryId));
+      species.id = id;
       return id;
     } catch (e) {
       if (kDebugMode) {

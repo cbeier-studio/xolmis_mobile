@@ -469,6 +469,10 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                       onTap: () {
                         Navigator.of(context).pop();
                         inventory.updateElapsedTime(0);
+                        inventory.updateCurrentInterval(inventory.currentInterval + 1);
+                        inventory.currentIntervalSpeciesCount = 0;
+                        inventory.intervalsWithoutNewSpecies = 0;
+                        inventory.intervalWithoutSpeciesNotifier.value = inventory.intervalsWithoutNewSpecies;
                         inventory.updateIsFinished(false);
                         inventoryProvider.updateInventory(inventory);
                         inventoryProvider.startInventoryTimer(inventory, inventoryRepository);

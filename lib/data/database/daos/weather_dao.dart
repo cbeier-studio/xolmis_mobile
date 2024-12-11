@@ -19,6 +19,7 @@ class WeatherDao {
         weather.toMap(weather.inventoryId),
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
+      weather.id = id;
       return id;
     } catch (e) {
       if (kDebugMode) {

@@ -19,6 +19,7 @@ class VegetationDao {
         vegetation.toMap(vegetation.inventoryId),
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
+      vegetation.id = id;
       return id;
     } catch (e) {
       if (kDebugMode) {

@@ -217,11 +217,9 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
                   ListTile(
                     leading: const Icon(Icons.delete_outlined, color: Colors.red,),
                     title: Text(S.of(context).deletePoi, style: TextStyle(color: Colors.red),),
-                    onTap: () async {
-                      final confirmed = await _showDeleteConfirmationDialog(context);
-                      if (confirmed) {
-                        await _deletePoi(poi);
-                      }
+                    onTap: () async {                      
+                      await _deletePoi(poi);
+                      Navigator.pop(context);
                     },
                   )
                   // )
