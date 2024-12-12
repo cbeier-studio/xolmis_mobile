@@ -59,10 +59,10 @@
         }
     },
     "timedQualitativeLists": "Listas qualitativas temporizadas",
-    "intervaledQualitativeLists": "Listas qualitativas de intervalo fixo",
+    "intervaledQualitativeLists": "Listas qualitativas por intervalo",
     "@intervaledQualitativeLists": {
         "type": "text",
-        "description": "Intervaled qualitative lists option in settings"
+        "description": "Interval qualitative lists option in settings"
     },
     "about": "Sobre o app",
     "dangerZone": "Área perigosa",

@@ -397,6 +397,14 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
+                  ListTile(
+                    leading: const Icon(Icons.edit_outlined),
+                    title: Text(S.of(context).speciesNotes),
+                    onTap: () {
+                      Navigator.pop(context);
+                      _showEditNotesDialog(context, species);
+                    },
+                  ),
                   if (species.isOutOfInventory)
                     ListTile(
                       leading: const Icon(Icons.inventory_outlined),
@@ -415,14 +423,6 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                         _removeSpeciesToSample(context, species);
                       },
                     ),
-                  ListTile(
-                    leading: const Icon(Icons.edit_outlined),
-                    title: Text(S.of(context).speciesNotes),
-                    onTap: () {
-                      Navigator.pop(context);
-                      _showEditNotesDialog(context, species);
-                    },
-                  ),
                   Divider(),
                   ListTile(
                     leading: const Icon(

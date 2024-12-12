@@ -372,7 +372,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                   Divider(),
                   ExpansionTile(
                       leading: const Icon(Icons.file_download_outlined),
-                      title: Text(S.of(context).exportAll(S.of(context).specimens(2))),
+                      title: Text(S.of(context).exportAll(S.of(context).specimens(2).toLowerCase())),
                       children: [
                         ListTile(
                           leading: const Icon(Icons.table_chart_outlined),

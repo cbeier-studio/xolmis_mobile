@@ -227,6 +227,7 @@ class _AppImageScreenState extends State<AppImageScreen> {
                       _showEditNotesDialog(context, appImage);
                     },
                   ),
+                  Divider(),
                   ListTile(
                     leading: const Icon(Icons.delete_outlined, color: Colors.red,),
                     title: Text(S.of(context).deleteImage, style: TextStyle(color: Colors.red),),

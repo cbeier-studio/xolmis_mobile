@@ -137,7 +137,7 @@ class S {
     return Intl.message(
       'System theme',
       name: 'systemMode',
-      desc: 'System them name',
+      desc: 'System theme name',
       args: [],
     );
   }
@@ -245,10 +245,10 @@ class S {
     );
   }
 
-  /// `Count points`
+  /// `Point counts`
   String get pointCounts {
     return Intl.message(
-      'Count points',
+      'Point counts',
       name: 'pointCounts',
       desc: 'Point counts option in settings',
       args: [],
@@ -285,12 +285,12 @@ class S {
     );
   }
 
-  /// `Intervaled qualitative lists`
+  /// `Interval qualitative lists`
   String get intervaledQualitativeLists {
     return Intl.message(
-      'Intervaled qualitative lists',
+      'Interval qualitative lists',
       name: 'intervaledQualitativeLists',
-      desc: 'Intervaled qualitative lists option in settings',
+      desc: 'Interval qualitative lists option in settings',
       args: [],
     );
   }

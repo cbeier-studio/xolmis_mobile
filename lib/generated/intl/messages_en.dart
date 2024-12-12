@@ -288,8 +288,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Please, insert nest support"),
         "insertProportion":
             MessageLookupByLibrary.simpleMessage("Insert proportion"),
-        "intervaledQualitativeLists": MessageLookupByLibrary.simpleMessage(
-            "Intervaled qualitative lists"),
+        "intervaledQualitativeLists":
+            MessageLookupByLibrary.simpleMessage("Interval qualitative lists"),
         "inventories": MessageLookupByLibrary.simpleMessage("Inventories"),
         "inventory": m11,
         "inventoryBanding": MessageLookupByLibrary.simpleMessage("Banding"),
@@ -391,7 +391,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "philornisLarvaePresent":
             MessageLookupByLibrary.simpleMessage("Philornis larvae present"),
         "poi": MessageLookupByLibrary.simpleMessage("POI"),
-        "pointCounts": MessageLookupByLibrary.simpleMessage("Count points"),
+        "pointCounts": MessageLookupByLibrary.simpleMessage("Point counts"),
         "precipitation": MessageLookupByLibrary.simpleMessage("Precipitation"),
         "precipitationDrizzle": MessageLookupByLibrary.simpleMessage("Drizzle"),
         "precipitationFog": MessageLookupByLibrary.simpleMessage("Fog"),

@@ -295,7 +295,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "insertProportion":
             MessageLookupByLibrary.simpleMessage("Insira a proporção"),
         "intervaledQualitativeLists": MessageLookupByLibrary.simpleMessage(
-            "Listas qualitativas de intervalo fixo"),
+            "Listas qualitativas por intervalo"),
         "inventories": MessageLookupByLibrary.simpleMessage("Inventários"),
         "inventory": m11,
         "inventoryBanding": MessageLookupByLibrary.simpleMessage("Anilhamento"),

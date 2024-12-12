@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -836,6 +837,7 @@ class InventoryListItem extends StatelessWidget {
           children: [
             Text('${inventoryTypeFriendlyNames[inventory.type]}'),
             if (!isHistory && inventory.duration > 0) Text(S.of(context).inventoryDuration(inventory.duration)),
+            if (isHistory) Text('${DateFormat('dd/MM/yyyy HH:mm:ss').format(inventory.startTime!)} - ${DateFormat('HH:mm:ss').format(inventory.endTime!)}'),
             Selector<SpeciesProvider, int>(
               selector: (context, speciesProvider) => speciesProvider.getSpeciesForInventory(inventory.id).length,
               shouldRebuild: (previous, next) => previous != next,

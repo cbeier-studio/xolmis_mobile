@@ -41,7 +41,7 @@
     "systemMode": "System theme",
     "@systemMode": {
         "type": "text",
-        "description": "System them name"
+        "description": "System theme name"
     },
     "observerSetting": "Observer (abbreviation)",
     "@observerSetting": {
@@ -103,7 +103,7 @@
         "type": "text",
         "description": "Title of dialog to inform the number of species per Mackinnon list"
     },
-    "pointCounts": "Count points",
+    "pointCounts": "Point counts",
     "@pointCounts": {
         "type": "text",
         "description": "Point counts option in settings"
@@ -128,10 +128,10 @@
         "type": "text",
         "description": "Timed qualitative lists option in settings"
     },
-    "intervaledQualitativeLists": "Intervaled qualitative lists",
+    "intervaledQualitativeLists": "Interval qualitative lists",
     "@intervaledQualitativeLists": {
         "type": "text",
-        "description": "Intervaled qualitative lists option in settings"
+        "description": "Interval qualitative lists option in settings"
     },
     "about": "About the app",
     "@about": {
