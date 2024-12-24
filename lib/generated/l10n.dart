@@ -92,6 +92,16 @@ class S {
     );
   }
 
+  /// `General`
+  String get general {
+    return Intl.message(
+      'General',
+      name: 'general',
+      desc: 'General section in settings',
+      args: [],
+    );
+  }
+
   /// `Appearance`
   String get appearance {
     return Intl.message(

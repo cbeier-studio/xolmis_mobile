@@ -7,6 +7,7 @@ import 'package:side_sheet/side_sheet.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import 'data/database/database_helper.dart';
 
@@ -235,6 +236,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int _selectedIndex = 0;
+  String _appVersion = '';
 
   static final List<Widget Function(BuildContext, GlobalKey<ScaffoldState>)> _widgetOptions = <Widget Function(BuildContext, GlobalKey<ScaffoldState>)>[
         (context, scaffoldKey) => InventoriesScreen(scaffoldKey: scaffoldKey),
@@ -247,6 +249,7 @@ class _MainScreenState extends State<MainScreen> {
     super.initState();
     scheduleWakeupTask();
     _requestNotificationPermission();
+    _fetchAppVersion();
 
     Provider.of<InventoryProvider>(context, listen: false).fetchInventories();
     Provider.of<NestProvider>(context, listen: false).fetchNests();
@@ -279,6 +282,13 @@ class _MainScreenState extends State<MainScreen> {
     } else if (status.isPermanentlyDenied) {
       // Permanently denied permission
     }
+  }
+
+  Future<void> _fetchAppVersion() async { 
+    final packageInfo = await PackageInfo.fromPlatform(); 
+    setState(() { 
+      _appVersion = packageInfo.version; 
+    }); 
   }
 
   @override
@@ -423,6 +433,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   NavigationDrawer _buildNavigationDrawer(BuildContext context) {
+    final packageInfo = PackageInfo.fromPlatform();
     return NavigationDrawer(
       selectedIndex: _selectedIndex,
       onDestinationSelected: (int index) {
@@ -432,17 +443,16 @@ class _MainScreenState extends State<MainScreen> {
         Navigator.pop(context);
       },
       children: <Widget>[
-        DrawerHeader(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Xolmis', style: TextStyle(fontSize: 24)),
-              SizedBox(height: 20),
-              OutlinedButton.icon(
+        UserAccountsDrawerHeader(
+          accountName: Text('Xolmis', style: TextStyle(fontSize: 30)), 
+          accountEmail: Text(_appVersion),          
+          otherAccountsPictures: [
+            IconButton(
                 icon: Theme.of(context).brightness == Brightness.light
                     ? const Icon(Icons.settings_outlined)
                     : const Icon(Icons.settings),
-                label: Text(S.of(context).settings),
+                tooltip: S.of(context).settings,
+                color: Colors.white,
                 onPressed: () {
                   if (MediaQuery.sizeOf(context).width > 600) {
                     SideSheet.right(
@@ -458,8 +468,7 @@ class _MainScreenState extends State<MainScreen> {
                   }
                 },
               ),
-            ],
-          ),
+          ],
         ),
         NavigationDrawerDestination(
           icon: const Icon(Icons.list_alt_outlined),

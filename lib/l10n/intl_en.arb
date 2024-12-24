@@ -18,6 +18,11 @@
         "type": "text",
         "description": "Settings title and button label"
     },
+    "general": "General",
+    "@general": {
+        "type": "text",
+        "description": "General section in settings"
+    },
     "appearance": "Appearance",
     "@appearance": {
         "type": "text",

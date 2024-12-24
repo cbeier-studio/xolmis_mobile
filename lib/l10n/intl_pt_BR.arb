@@ -13,6 +13,11 @@
         }
     },
     "settings": "Configurações",
+    "general": "Geral",
+    "@general": {
+        "type": "text",
+        "description": "General section in settings"
+    },
     "appearance": "Aparência",
     "selectMode": "Selecione o modo",
     "lightMode": "Claro",
