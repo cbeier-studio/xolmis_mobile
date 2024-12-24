@@ -433,7 +433,6 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   NavigationDrawer _buildNavigationDrawer(BuildContext context) {
-    final packageInfo = PackageInfo.fromPlatform();
     return NavigationDrawer(
       selectedIndex: _selectedIndex,
       onDestinationSelected: (int index) {

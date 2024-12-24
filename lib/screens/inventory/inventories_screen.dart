@@ -42,6 +42,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
   late WeatherRepository weatherRepository;
   final _searchController = TextEditingController();
   bool _isShowingActiveInventories = true;
+  bool _isAscendingOrder = false;
   String _searchQuery = '';
 
   @override
@@ -83,12 +84,30 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     inventoryProvider.updateInventory(inventory);
   }
 
+  void _toggleSortOrder() {
+    setState(() {
+      _isAscendingOrder = !_isAscendingOrder;
+    });
+  }
+
+  List<Inventory> _sortInventories(List<Inventory> inventories) {
+  inventories.sort((a, b) {
+    if (_isAscendingOrder) {
+      return a.startTime!.compareTo(b.startTime!);
+    } else {
+      return b.startTime!.compareTo(a.startTime!);
+    }
+  });
+  return inventories;
+}
+
   List<Inventory> _filterInventories(List<Inventory> inventories) {
     if (_searchQuery.isEmpty) {
-      return inventories;
-    }
-    return inventories.where((inventory) =>
-        inventory.id.toLowerCase().contains(_searchQuery.toLowerCase())).toList();
+    return _sortInventories(inventories);
+  }
+  List<Inventory> filteredInventories = inventories.where((inventory) =>
+      inventory.id.toLowerCase().contains(_searchQuery.toLowerCase())).toList();
+  return _sortInventories(filteredInventories);
   }
 
   Future<void> _showAddInventoryScreen(BuildContext context) async {
@@ -159,6 +178,12 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
             },
           ),
         ) : SizedBox.shrink(),
+        actions: [
+          IconButton(
+            icon: Icon(_isAscendingOrder ? Icons.south_outlined : Icons.north_outlined),
+            onPressed: _toggleSortOrder,
+          ),
+        ],
       ),
       body: Column(
         children: [

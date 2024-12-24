@@ -24,6 +24,7 @@ class NestsScreenState extends State<NestsScreen> {
   late NestProvider nestProvider;
   final _searchController = TextEditingController();
   bool _showActive = true;
+  bool _isAscendingOrder = false;
   String _searchQuery = '';
 
   @override
@@ -33,14 +34,32 @@ class NestsScreenState extends State<NestsScreen> {
     nestProvider.fetchNests();
   }
 
+  void _toggleSortOrder() {
+    setState(() {
+      _isAscendingOrder = !_isAscendingOrder;
+    });
+  }
+
+  List<Nest> _sortNests(List<Nest> nests) {
+    nests.sort((a, b) {
+      if (_isAscendingOrder) {
+        return a.foundTime!.compareTo(b.foundTime!);
+      } else {
+        return b.foundTime!.compareTo(a.foundTime!);
+      }
+    });
+    return nests;
+  }
+
   List<Nest> _filterNests(List<Nest> nests) {
     if (_searchQuery.isEmpty) {
-      return nests;
+      return _sortNests(nests);
     }
-    return nests.where((nest) =>
+    List<Nest> filteredNests = nests.where((nest) =>
         nest.fieldNumber!.toLowerCase().contains(_searchQuery.toLowerCase()) ||
         nest.speciesName!.toLowerCase().contains(_searchQuery.toLowerCase())
     ).toList();
+    return _sortNests(filteredNests);
   }
 
   void _showAddNestScreen(BuildContext context) {
@@ -90,6 +109,12 @@ class NestsScreenState extends State<NestsScreen> {
             },
           ),
         ) : SizedBox.shrink(),
+        actions: [
+          IconButton(
+            icon: Icon(_isAscendingOrder ? Icons.south_outlined : Icons.north_outlined),
+            onPressed: _toggleSortOrder,
+          ),
+        ],
       ),
       body: Column(
         children: [

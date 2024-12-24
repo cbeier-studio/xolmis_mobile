@@ -27,6 +27,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
   late SpecimenProvider specimenProvider;
   final _searchController = TextEditingController();
   String _searchQuery = '';
+  bool _isAscendingOrder = false;
 
   @override
   void initState() {
@@ -35,14 +36,32 @@ class SpecimensScreenState extends State<SpecimensScreen> {
     specimenProvider.fetchSpecimens();
   }
 
+  void _toggleSortOrder() {
+    setState(() {
+      _isAscendingOrder = !_isAscendingOrder;
+    });
+  }
+
+  List<Specimen> _sortSpecimens(List<Specimen> specimens) {
+    specimens.sort((a, b) {
+      if (_isAscendingOrder) {
+        return a.sampleTime!.compareTo(b.sampleTime!);
+      } else {
+        return b.sampleTime!.compareTo(a.sampleTime!);
+      }
+    });
+    return specimens;
+  }
+
   List<Specimen> _filterSpecimens(List<Specimen> specimens) {
     if (_searchQuery.isEmpty) {
       return specimens;
     }
-    return specimens.where((specimen) =>
+    List<Specimen> filteredSpecimens = specimens.where((specimen) =>
       specimen.fieldNumber.toLowerCase().contains(_searchQuery.toLowerCase()) ||
       specimen.speciesName!.toLowerCase().contains(_searchQuery.toLowerCase())
     ).toList();
+    return _sortSpecimens(filteredSpecimens);
   }
 
   void _showAddSpecimenScreen(BuildContext context) {
@@ -92,6 +111,12 @@ class SpecimensScreenState extends State<SpecimensScreen> {
             },
           ),
         ) : SizedBox.shrink(),
+        actions: [
+          IconButton(
+            icon: Icon(_isAscendingOrder ? Icons.south_outlined : Icons.north_outlined),
+            onPressed: _toggleSortOrder,
+          ),
+        ],
       ),
       body: Column(
         children: [
