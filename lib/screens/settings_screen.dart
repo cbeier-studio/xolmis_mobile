@@ -304,7 +304,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
                 applicationLegalese: '© ${DateTime.now().year} Christian Beier',
                 applicationName: _packageInfo?.appName ?? 'Xolmis',
-                applicationVersion: _packageInfo?.version ?? '',
+                applicationVersion: '${_packageInfo?.version ?? ''}+${_packageInfo?.buildNumber ?? ''}',
               ),
             ),
           ]
@@ -320,6 +320,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
                 title: Text(S.of(context).deleteAppData,
                     style: TextStyle(color: Colors.red)),
+                description: Text(S.of(context).deleteAppDataDescription),
                 onPressed: (context) {
                   _showDeleteConfirmationDialog(context);
                 }),

@@ -138,6 +138,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "delete": MessageLookupByLibrary.simpleMessage("Apagar"),
         "deleteAppData":
             MessageLookupByLibrary.simpleMessage("Apagar dados do aplicativo"),
+        "deleteAppDataDescription": MessageLookupByLibrary.simpleMessage(
+            "Todos os dados serão apagados. Use com cautela! Esta ação não poderá ser desfeita."),
         "deleteData": MessageLookupByLibrary.simpleMessage("Apagar dados"),
         "deleteDataMessage": MessageLookupByLibrary.simpleMessage(
             "Tem certeza que deseja apagar todos os dados do aplicativo? Esta ação não poderá ser desfeita."),

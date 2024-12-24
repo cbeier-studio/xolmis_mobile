@@ -153,6 +153,11 @@
         "type": "text",
         "description": "Delete app data option in settings"
     },
+    "deleteAppDataDescription": "All data will be erased. Use with caution! This action cannot be undone.",
+    "@deleteAppDataDescription": {
+        "type": "text",
+        "description": "Description of the action to delete all app data"
+    },
     "deleteData": "Delete data",
     "@deleteData": {
         "type": "text",

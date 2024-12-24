@@ -134,6 +134,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "delete": MessageLookupByLibrary.simpleMessage("Delete"),
         "deleteAppData":
             MessageLookupByLibrary.simpleMessage("Delete the app data"),
+        "deleteAppDataDescription": MessageLookupByLibrary.simpleMessage(
+            "All data will be erased. Use with caution! This action cannot be undone."),
         "deleteData": MessageLookupByLibrary.simpleMessage("Delete data"),
         "deleteDataMessage": MessageLookupByLibrary.simpleMessage(
             "Are you sure you want to delete all app data? This action cannot be undone."),

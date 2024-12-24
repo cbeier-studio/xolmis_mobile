@@ -72,6 +72,11 @@
     "about": "Sobre o app",
     "dangerZone": "Área perigosa",
     "deleteAppData": "Apagar dados do aplicativo",
+    "deleteAppDataDescription": "Todos os dados serão apagados. Use com cautela! Esta ação não poderá ser desfeita.",
+    "@deleteAppDataDescription": {
+        "type": "text",
+        "description": "Description of the action to delete all app data"
+    },
     "deleteData": "Apagar dados",
     "deleteDataMessage": "Tem certeza que deseja apagar todos os dados do aplicativo? Esta ação não poderá ser desfeita.",
     "delete": "Apagar",

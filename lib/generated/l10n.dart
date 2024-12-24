@@ -335,6 +335,16 @@ class S {
     );
   }
 
+  /// `All data will be erased. Use with caution! This action cannot be undone.`
+  String get deleteAppDataDescription {
+    return Intl.message(
+      'All data will be erased. Use with caution! This action cannot be undone.',
+      name: 'deleteAppDataDescription',
+      desc: 'Description of the action to delete all app data',
+      args: [],
+    );
+  }
+
   /// `Delete data`
   String get deleteData {
     return Intl.message(
