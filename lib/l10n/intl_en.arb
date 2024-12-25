@@ -188,6 +188,16 @@
         "type": "text",
         "description": "Message shown when the limit of simultaneous inventories defined in settings is reached"
     },
+    "sortByTime": "Sort by Time",
+    "@sortByTime": {
+        "type": "text",
+        "description": "Sort by time option in inventories list"
+    },
+    "sortByName": "Sort by Name",
+    "@sortByName": {
+        "type": "text",
+        "description": "Sort by name option in inventories list"
+    },
     "findInventories": "Find inventories...",
     "@findInventories": {
         "type": "text",

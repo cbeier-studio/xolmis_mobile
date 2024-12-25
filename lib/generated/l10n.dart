@@ -406,6 +406,26 @@ class S {
     );
   }
 
+  /// `Sort by Time`
+  String get sortByTime {
+    return Intl.message(
+      'Sort by Time',
+      name: 'sortByTime',
+      desc: 'Sort by time option in inventories list',
+      args: [],
+    );
+  }
+
+  /// `Sort by Name`
+  String get sortByName {
+    return Intl.message(
+      'Sort by Name',
+      name: 'sortByName',
+      desc: 'Sort by name option in inventories list',
+      args: [],
+    );
+  }
+
   /// `Find inventories...`
   String get findInventories {
     return Intl.message(

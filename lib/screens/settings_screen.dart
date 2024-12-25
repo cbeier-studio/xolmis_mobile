@@ -70,6 +70,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
         title: Text(S.of(context).settings),
       ),
       body: SettingsList(
+        lightTheme: SettingsThemeData(
+          settingsListBackground: ThemeData.light().scaffoldBackgroundColor,
+          titleTextColor: Colors.deepPurple,
+        ),
         sections: [
           SettingsSection(title: Text(S.of(context).observer), tiles: [
             SettingsTile.navigation(

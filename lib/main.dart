@@ -396,24 +396,30 @@ class _MainScreenState extends State<MainScreen> {
         body: Row(
           children: [
             if (useSideNavRail || useFixedNavDrawer) NavigationRail(
-              trailing: IconButton(
-                icon: Theme.of(context).brightness == Brightness.light
-                    ? const Icon(Icons.settings_outlined)
-                    : const Icon(Icons.settings),
-                onPressed: () {
-                  if (MediaQuery.sizeOf(context).width > 600) {
-                    SideSheet.right(
-                      context: context,
-                      width: 400,
-                      body: const SettingsScreen(),
-                    );
-                  } else {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const SettingsScreen()),
-                    );
-                  }
-                },
+              trailing: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  IconButton(
+                    icon: Theme.of(context).brightness == Brightness.light
+                        ? const Icon(Icons.settings_outlined)
+                        : const Icon(Icons.settings),
+                    onPressed: () {
+                      if (MediaQuery.sizeOf(context).width > 600) {
+                        SideSheet.right(
+                          context: context,
+                          width: 400,
+                          body: const SettingsScreen(),
+                        );
+                      } else {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const SettingsScreen()),
+                        );
+                      }
+                    },
+                  ),
+                ],
               ),
               destinations: destinations,
               selectedIndex: _selectedIndex,

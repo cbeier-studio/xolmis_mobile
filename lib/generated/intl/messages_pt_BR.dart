@@ -436,6 +436,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Inventários simultâneos"),
         "simultaneousLimitReached": MessageLookupByLibrary.simpleMessage(
             "Limite de inventários simultâneos atingido."),
+        "sortByName": MessageLookupByLibrary.simpleMessage("Ordenar por nome"),
+        "sortByTime": MessageLookupByLibrary.simpleMessage("Ordenar por tempo"),
         "species": m21,
         "speciesAcronym": m22,
         "speciesCount": m23,

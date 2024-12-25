@@ -43,6 +43,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
   final _searchController = TextEditingController();
   bool _isShowingActiveInventories = true;
   bool _isAscendingOrder = false;
+  String _sortField = 'startTime';
   String _searchQuery = '';
 
   @override
@@ -90,24 +91,32 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     });
   }
 
+  void _changeSortField(String field) {
+    setState(() {
+      _sortField = field;
+    });
+  }
+
   List<Inventory> _sortInventories(List<Inventory> inventories) {
   inventories.sort((a, b) {
-    if (_isAscendingOrder) {
-      return a.startTime!.compareTo(b.startTime!);
+    int comparison;
+    if (_sortField == 'id') {
+      comparison = a.id.compareTo(b.id);
     } else {
-      return b.startTime!.compareTo(a.startTime!);
+      comparison = a.startTime!.compareTo(b.startTime!);
     }
+    return _isAscendingOrder ? comparison : -comparison;
   });
   return inventories;
 }
 
   List<Inventory> _filterInventories(List<Inventory> inventories) {
     if (_searchQuery.isEmpty) {
-    return _sortInventories(inventories);
-  }
-  List<Inventory> filteredInventories = inventories.where((inventory) =>
+      return _sortInventories(inventories);
+    }
+    List<Inventory> filteredInventories = inventories.where((inventory) =>
       inventory.id.toLowerCase().contains(_searchQuery.toLowerCase())).toList();
-  return _sortInventories(filteredInventories);
+    return _sortInventories(filteredInventories);
   }
 
   Future<void> _showAddInventoryScreen(BuildContext context) async {
@@ -182,6 +191,23 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
           IconButton(
             icon: Icon(_isAscendingOrder ? Icons.south_outlined : Icons.north_outlined),
             onPressed: _toggleSortOrder,
+          ),
+          PopupMenuButton<String>(
+            icon: Icon(_sortField == 'startTime' ? Icons.access_time_outlined : Icons.sort_by_alpha_outlined),
+            position: PopupMenuPosition.under,
+            onSelected: _changeSortField,
+            itemBuilder: (BuildContext context) {
+              return [
+                PopupMenuItem(
+                  value: 'startTime',
+                  child: Text(S.of(context).sortByTime),
+                ),
+                PopupMenuItem(
+                  value: 'id',
+                  child: Text(S.of(context).sortByName),
+                ),
+              ];
+            },
           ),
         ],
       ),

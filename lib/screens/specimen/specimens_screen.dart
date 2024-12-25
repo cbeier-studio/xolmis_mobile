@@ -28,6 +28,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
   final _searchController = TextEditingController();
   String _searchQuery = '';
   bool _isAscendingOrder = false;
+  String _sortField = 'sampleTime';
 
   @override
   void initState() {
@@ -42,13 +43,21 @@ class SpecimensScreenState extends State<SpecimensScreen> {
     });
   }
 
+  void _changeSortField(String field) {
+    setState(() {
+      _sortField = field;
+    });
+  }
+
   List<Specimen> _sortSpecimens(List<Specimen> specimens) {
     specimens.sort((a, b) {
-      if (_isAscendingOrder) {
-        return a.sampleTime!.compareTo(b.sampleTime!);
+      int comparison;
+      if (_sortField == 'fieldNumber') {
+        comparison = a.fieldNumber.compareTo(b.fieldNumber);
       } else {
-        return b.sampleTime!.compareTo(a.sampleTime!);
+        comparison = a.sampleTime!.compareTo(b.sampleTime!);
       }
+      return _isAscendingOrder ? comparison : -comparison;
     });
     return specimens;
   }
@@ -115,6 +124,23 @@ class SpecimensScreenState extends State<SpecimensScreen> {
           IconButton(
             icon: Icon(_isAscendingOrder ? Icons.south_outlined : Icons.north_outlined),
             onPressed: _toggleSortOrder,
+          ),
+          PopupMenuButton<String>(
+            icon: Icon(_sortField == 'sampleTime' ? Icons.access_time_outlined : Icons.sort_by_alpha_outlined),
+            position: PopupMenuPosition.under,
+            onSelected: _changeSortField,
+            itemBuilder: (BuildContext context) {
+              return [
+                PopupMenuItem(
+                  value: 'sampleTime',
+                  child: Text(S.of(context).sortByTime),
+                ),
+                PopupMenuItem(
+                  value: 'fieldNumber',
+                  child: Text(S.of(context).sortByName),
+                ),
+              ];
+            },
           ),
         ],
       ),

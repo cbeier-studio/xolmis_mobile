@@ -83,6 +83,16 @@
     "dataDeleted": "Dados do aplicativo apagados com sucesso!",
     "ok": "OK",
     "simultaneousLimitReached": "Limite de inventários simultâneos atingido.",
+    "sortByTime": "Ordenar por tempo",
+    "@sortByTime": {
+        "type": "text",
+        "description": "Sort by time option in inventories list"
+    },
+    "sortByName": "Ordenar por nome",
+    "@sortByName": {
+        "type": "text",
+        "description": "Sort by name option in inventories list"
+    },
     "findInventories": "Procurar inventários...",
     "active": "Ativos",
     "finished": "Encerrados",

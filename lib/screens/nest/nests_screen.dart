@@ -25,6 +25,7 @@ class NestsScreenState extends State<NestsScreen> {
   final _searchController = TextEditingController();
   bool _showActive = true;
   bool _isAscendingOrder = false;
+  String _sortField = 'foundTime';
   String _searchQuery = '';
 
   @override
@@ -40,13 +41,21 @@ class NestsScreenState extends State<NestsScreen> {
     });
   }
 
+  void _changeSortField(String field) {
+    setState(() {
+      _sortField = field;
+    });
+  }
+
   List<Nest> _sortNests(List<Nest> nests) {
     nests.sort((a, b) {
-      if (_isAscendingOrder) {
-        return a.foundTime!.compareTo(b.foundTime!);
+      int comparison;
+      if (_sortField == 'fieldNumber') {
+        comparison = a.fieldNumber!.compareTo(b.fieldNumber!);
       } else {
-        return b.foundTime!.compareTo(a.foundTime!);
+        comparison = a.foundTime!.compareTo(b.foundTime!);
       }
+      return _isAscendingOrder ? comparison : -comparison;
     });
     return nests;
   }
@@ -113,6 +122,23 @@ class NestsScreenState extends State<NestsScreen> {
           IconButton(
             icon: Icon(_isAscendingOrder ? Icons.south_outlined : Icons.north_outlined),
             onPressed: _toggleSortOrder,
+          ),
+          PopupMenuButton<String>(
+            icon: Icon(_sortField == 'foundTime' ? Icons.access_time_outlined : Icons.sort_by_alpha_outlined),
+            position: PopupMenuPosition.under,
+            onSelected: _changeSortField,
+            itemBuilder: (BuildContext context) {
+              return [
+                PopupMenuItem(
+                  value: 'foundTime',
+                  child: Text(S.of(context).sortByTime),
+                ),
+                PopupMenuItem(
+                  value: 'fieldNumber',
+                  child: Text(S.of(context).sortByName),
+                ),
+              ];
+            },
           ),
         ],
       ),
