@@ -44,6 +44,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
   bool _isShowingActiveInventories = true;
   bool _isAscendingOrder = false;
   String _sortField = 'startTime';
+  bool _isSearchBarVisible = false;
   String _searchQuery = '';
 
   @override
@@ -83,6 +84,12 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
 
   void onInventoryUpdated(Inventory inventory) {
     inventoryProvider.updateInventory(inventory);
+  }
+
+  void _toggleSearchBarVisibility() {
+    setState(() {
+      _isSearchBarVisible = !_isSearchBarVisible;
+    });
   }
 
   void _toggleSortOrder(String order) {
@@ -188,6 +195,10 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
           ),
         ) : SizedBox.shrink(),
         actions: [
+          IconButton(
+            icon: Icon(Icons.search_outlined),
+            onPressed: _toggleSearchBarVisibility,
+          ),
           PopupMenuButton<String>(
             icon: Icon(Icons.sort_outlined),
             position: PopupMenuPosition.under,
@@ -248,7 +259,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
       ),
       body: Column(
         children: [
-          Padding(
+          if (_isSearchBarVisible) Padding(
             padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
             child: SearchBar(
               controller: _searchController,

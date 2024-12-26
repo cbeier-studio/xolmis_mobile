@@ -26,6 +26,7 @@ class NestsScreenState extends State<NestsScreen> {
   bool _showActive = true;
   bool _isAscendingOrder = false;
   String _sortField = 'foundTime';
+  bool _isSearchBarVisible = false;
   String _searchQuery = '';
 
   @override
@@ -33,6 +34,12 @@ class NestsScreenState extends State<NestsScreen> {
     super.initState();
     nestProvider = context.read<NestProvider>();
     nestProvider.fetchNests();
+  }
+
+  void _toggleSearchBarVisibility() {
+    setState(() {
+      _isSearchBarVisible = !_isSearchBarVisible;
+    });
   }
 
   void _toggleSortOrder(String order) {
@@ -119,6 +126,10 @@ class NestsScreenState extends State<NestsScreen> {
           ),
         ) : SizedBox.shrink(),
         actions: [
+          IconButton(
+            icon: Icon(Icons.search_outlined),
+            onPressed: _toggleSearchBarVisibility,
+          ),
           PopupMenuButton<String>(
             icon: Icon(Icons.sort_outlined),
             position: PopupMenuPosition.under,
@@ -179,7 +190,7 @@ class NestsScreenState extends State<NestsScreen> {
       ),
       body: Column(
         children: [
-          Padding(
+          if (_isSearchBarVisible) Padding(
             padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
             child: SearchBar(
               controller: _searchController,

@@ -26,6 +26,7 @@ class SpecimensScreen extends StatefulWidget {
 class SpecimensScreenState extends State<SpecimensScreen> {
   late SpecimenProvider specimenProvider;
   final _searchController = TextEditingController();
+  bool _isSearchBarVisible = false;
   String _searchQuery = '';
   bool _isAscendingOrder = false;
   String _sortField = 'sampleTime';
@@ -35,6 +36,12 @@ class SpecimensScreenState extends State<SpecimensScreen> {
     super.initState();
     specimenProvider = context.read<SpecimenProvider>();
     specimenProvider.fetchSpecimens();
+  }
+
+  void _toggleSearchBarVisibility() {
+    setState(() {
+      _isSearchBarVisible = !_isSearchBarVisible;
+    });
   }
 
   void _toggleSortOrder(String order) {
@@ -121,6 +128,10 @@ class SpecimensScreenState extends State<SpecimensScreen> {
           ),
         ) : SizedBox.shrink(),
         actions: [
+          IconButton(
+            icon: Icon(Icons.search_outlined),
+            onPressed: _toggleSearchBarVisibility,
+          ),
           PopupMenuButton<String>(
             icon: Icon(Icons.sort_outlined),
             position: PopupMenuPosition.under,
@@ -181,7 +192,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
       ),
       body: Column(
         children: [
-          Padding(
+          if (_isSearchBarVisible) Padding(
             padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 16.0),
             child: SearchBar(
               controller: _searchController,
