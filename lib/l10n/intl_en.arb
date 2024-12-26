@@ -198,6 +198,16 @@
         "type": "text",
         "description": "Sort by name option in inventories list"
     },
+    "sortAscending": "Sort ascending",
+    "@sortAscending": {
+        "type": "text",
+        "description": "Sort ascending option in inventories list"
+    },
+    "sortDescending": "Sort descending",
+    "@sortDescending": {
+        "type": "text",
+        "description": "Sort descending option in inventories list"
+    },
     "findInventories": "Find inventories...",
     "@findInventories": {
         "type": "text",

@@ -426,8 +426,11 @@ class MessageLookup extends MessageLookupByLibrary {
             "Limit of simultaneous inventories reached."),
         "siteAbbreviation":
             MessageLookupByLibrary.simpleMessage("Site name or abbreviation"),
+        "sortAscending": MessageLookupByLibrary.simpleMessage("Sort ascending"),
         "sortByName": MessageLookupByLibrary.simpleMessage("Sort by Name"),
         "sortByTime": MessageLookupByLibrary.simpleMessage("Sort by Time"),
+        "sortDescending":
+            MessageLookupByLibrary.simpleMessage("Sort descending"),
         "species": m21,
         "speciesAcronym": m22,
         "speciesCount": m23,

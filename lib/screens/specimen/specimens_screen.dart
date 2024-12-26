@@ -37,9 +37,9 @@ class SpecimensScreenState extends State<SpecimensScreen> {
     specimenProvider.fetchSpecimens();
   }
 
-  void _toggleSortOrder() {
+  void _toggleSortOrder(String order) {
     setState(() {
-      _isAscendingOrder = !_isAscendingOrder;
+      _isAscendingOrder = order == 'ascending';
     });
   }
 
@@ -121,23 +121,58 @@ class SpecimensScreenState extends State<SpecimensScreen> {
           ),
         ) : SizedBox.shrink(),
         actions: [
-          IconButton(
-            icon: Icon(_isAscendingOrder ? Icons.south_outlined : Icons.north_outlined),
-            onPressed: _toggleSortOrder,
-          ),
           PopupMenuButton<String>(
-            icon: Icon(_sortField == 'sampleTime' ? Icons.access_time_outlined : Icons.sort_by_alpha_outlined),
+            icon: Icon(Icons.sort_outlined),
             position: PopupMenuPosition.under,
-            onSelected: _changeSortField,
+            onSelected: (value) {
+              if (value == 'ascending' || value == 'descending') {
+                _toggleSortOrder(value);
+              } else {
+                _changeSortField(value);
+              }
+            },
             itemBuilder: (BuildContext context) {
               return [
                 PopupMenuItem(
                   value: 'sampleTime',
-                  child: Text(S.of(context).sortByTime),
+                  child: Row(
+                    children: [
+                      Icon(Icons.schedule_outlined),
+                      SizedBox(width: 8),
+                      Text(S.of(context).sortByTime),
+                    ],
+                  ),
                 ),
                 PopupMenuItem(
                   value: 'fieldNumber',
-                  child: Text(S.of(context).sortByName),
+                  child: Row(
+                    children: [
+                      Icon(Icons.sort_by_alpha_outlined),
+                      SizedBox(width: 8),
+                      Text(S.of(context).sortByName),
+                    ],
+                  ),
+                ),
+                PopupMenuDivider(),
+                PopupMenuItem(
+                  value: 'ascending',
+                  child: Row(
+                    children: [
+                      Icon(Icons.south_outlined),
+                      SizedBox(width: 8),
+                      Text(S.of(context).sortAscending),
+                    ],
+                  ),
+                ),
+                PopupMenuItem(
+                  value: 'descending',
+                  child: Row(
+                    children: [
+                      Icon(Icons.north_outlined),
+                      SizedBox(width: 8),
+                      Text(S.of(context).sortDescending),
+                    ],
+                  ),
                 ),
               ];
             },

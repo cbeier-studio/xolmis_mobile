@@ -85,9 +85,9 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     inventoryProvider.updateInventory(inventory);
   }
 
-  void _toggleSortOrder() {
+  void _toggleSortOrder(String order) {
     setState(() {
-      _isAscendingOrder = !_isAscendingOrder;
+      _isAscendingOrder = order == 'ascending';
     });
   }
 
@@ -188,23 +188,58 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
           ),
         ) : SizedBox.shrink(),
         actions: [
-          IconButton(
-            icon: Icon(_isAscendingOrder ? Icons.south_outlined : Icons.north_outlined),
-            onPressed: _toggleSortOrder,
-          ),
           PopupMenuButton<String>(
-            icon: Icon(_sortField == 'startTime' ? Icons.access_time_outlined : Icons.sort_by_alpha_outlined),
+            icon: Icon(Icons.sort_outlined),
             position: PopupMenuPosition.under,
-            onSelected: _changeSortField,
+            onSelected: (value) {
+              if (value == 'ascending' || value == 'descending') {
+                _toggleSortOrder(value);
+              } else {
+                _changeSortField(value);
+              }
+            },
             itemBuilder: (BuildContext context) {
               return [
                 PopupMenuItem(
                   value: 'startTime',
-                  child: Text(S.of(context).sortByTime),
+                  child: Row(
+                    children: [
+                      Icon(Icons.schedule_outlined),
+                      SizedBox(width: 8),
+                      Text(S.of(context).sortByTime),
+                    ],
+                  ),
                 ),
                 PopupMenuItem(
                   value: 'id',
-                  child: Text(S.of(context).sortByName),
+                  child: Row(
+                    children: [
+                      Icon(Icons.sort_by_alpha_outlined),
+                      SizedBox(width: 8),
+                      Text(S.of(context).sortByName),
+                    ],
+                  ),
+                ),
+                PopupMenuDivider(),
+                PopupMenuItem(
+                  value: 'ascending',
+                  child: Row(
+                    children: [
+                      Icon(Icons.south_outlined),
+                      SizedBox(width: 8),
+                      Text(S.of(context).sortAscending),
+                    ],
+                  ),
+                ),
+                PopupMenuItem(
+                  value: 'descending',
+                  child: Row(
+                    children: [
+                      Icon(Icons.north_outlined),
+                      SizedBox(width: 8),
+                      Text(S.of(context).sortDescending),
+                    ],
+                  ),
                 ),
               ];
             },
@@ -731,38 +766,67 @@ class InventoryGridItem extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
-                  child: ValueListenableBuilder<double>(
-                    valueListenable: inventory.elapsedTimeNotifier,
-                    builder: (context, elapsedTime, child) {
-                      // if (inventory == null) {
-                      //   return const Icon(Icons.error_outlined);
-                      // }
+                // Padding(
+                //   padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
+                //   child: 
+                  if (_isShowingActiveInventories &&
+                    inventory.duration > 0) Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      ValueListenableBuilder<double>(
+                        valueListenable: inventory.elapsedTimeNotifier,
+                        builder: (context, elapsedTime, child) {
+                          // if (inventory == null) {
+                          //   return const Icon(Icons.error_outlined);
+                          // }
 
-                      var progress = (inventory.isPaused || inventory.duration < 0)
-                          ? null
-                          : (elapsedTime / (inventory.duration * 60)).toDouble();
+                          var progress =
+                              (inventory.isPaused || inventory.duration < 0)
+                                  ? null
+                                  : (elapsedTime / (inventory.duration * 60))
+                                      .toDouble();
 
-                      if (progress != null && (progress.isNaN || progress.isInfinite || progress < 0 || progress > 1)) {
-                        progress = 0;
-                      }
+                          if (progress != null &&
+                              (progress.isNaN ||
+                                  progress.isInfinite ||
+                                  progress < 0 ||
+                                  progress > 1)) {
+                            progress = 0;
+                          }
 
-                      return CircularProgressIndicator(
-                        value: progress,
-                        backgroundColor: _isShowingActiveInventories && inventory.duration > 0 ? Theme.of(context).brightness == Brightness.light
-                            ? Colors.grey[200]
-                            : Colors.black : null,
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          inventory.isPaused ? Colors.amber : Theme.of(context).brightness == Brightness.light
-                              ? Colors.deepPurple
-                              : Colors.deepPurpleAccent,
-                        ),
-                      );
-                    },
+                          return CircularProgressIndicator(
+                            value: progress,
+                            backgroundColor: _isShowingActiveInventories &&
+                                    inventory.duration > 0
+                                ? Theme.of(context).brightness ==
+                                        Brightness.light
+                                    ? Colors.grey[200]
+                                    : Colors.black
+                                : null,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              inventory.isPaused
+                                  ? Colors.amber
+                                  : Theme.of(context).brightness ==
+                                          Brightness.light
+                                      ? Colors.deepPurple
+                                      : Colors.deepPurpleAccent,
+                            ),
+                          );
+                        },
+                      ),
+                      if (_isShowingActiveInventories &&
+                          inventory.type ==
+                              InventoryType.invIntervalQualitative)
+                        ValueListenableBuilder<int>(
+                            valueListenable: inventory.currentIntervalNotifier,
+                            builder: (context, currentInterval, child) {
+                              return Text(currentInterval.toString());
+                            }),
+                    ],
                   ),
-                ),
+                // ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -772,36 +836,69 @@ class InventoryGridItem extends StatelessWidget {
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     Text('${inventoryTypeFriendlyNames[inventory.type]}'),
-                    if (_isShowingActiveInventories && inventory.duration > 0) 
+                    if (_isShowingActiveInventories && inventory.duration > 0)
                       Text(S.of(context).inventoryDuration(inventory.duration)),
                     Selector<SpeciesProvider, int>(
-                      selector: (context, speciesProvider) => speciesProvider.getSpeciesForInventory(inventory.id).length,
+                      selector: (context, speciesProvider) => speciesProvider
+                          .getSpeciesForInventory(inventory.id)
+                          .length,
                       shouldRebuild: (previous, next) => previous != next,
                       builder: (context, speciesCount, child) {
-                        return Text('$speciesCount ${S.of(context).speciesCount(speciesCount)}');
+                        return Text(
+                            '$speciesCount ${S.of(context).speciesCount(speciesCount)}');
                       },
                     ),
                   ],
                 ),
-                Visibility(
-                  visible: _isShowingActiveInventories && inventory.duration > 0,
-                  child: IconButton(
-                    icon: Icon(inventory.isPaused ? Theme.of(context).brightness == Brightness.light
-                        ? Icons.play_arrow_outlined
-                        : Icons.play_arrow : Theme.of(context).brightness == Brightness.light
-                        ? Icons.pause_outlined
-                        : Icons.pause),
-                    tooltip: inventory.isPaused ? S.of(context).resume : S.of(context).pause,
-                    onPressed: () {
-                      if (inventory.isPaused) {
-                        Provider.of<InventoryProvider>(context, listen: false).resumeInventoryTimer(inventory, inventoryRepository);
-                      } else {
-                        Provider.of<InventoryProvider>(context, listen: false).pauseInventoryTimer(inventory, inventoryRepository);
-                      }
-                      Provider.of<InventoryProvider>(context, listen: false).updateInventory(inventory);
-                    },
-                  ),
-                ),
+                // Padding(
+                //   padding: const EdgeInsets.fromLTRB(0.16, 16.0, 0.0, 16.0),
+                //   child: 
+                  Row(children: [
+                    Visibility(
+                      visible: inventory.type ==
+                          InventoryType.invIntervalQualitative,
+                      child: ValueListenableBuilder<int>(
+                          valueListenable:
+                              inventory.intervalWithoutSpeciesNotifier,
+                          builder: (context, intervalWithoutSpecies, child) {
+                            return intervalWithoutSpecies > 0
+                                ? Badge.count(count: intervalWithoutSpecies)
+                                : SizedBox.shrink();
+                          }),
+                    ),
+                    Visibility(
+                      visible:
+                          _isShowingActiveInventories && inventory.duration > 0,
+                      child: IconButton(
+                        icon: Icon(inventory.isPaused
+                            ? Theme.of(context).brightness == Brightness.light
+                                ? Icons.play_arrow_outlined
+                                : Icons.play_arrow
+                            : Theme.of(context).brightness == Brightness.light
+                                ? Icons.pause_outlined
+                                : Icons.pause),
+                        tooltip: inventory.isPaused
+                            ? S.of(context).resume
+                            : S.of(context).pause,
+                        onPressed: () {
+                          if (inventory.isPaused) {
+                            Provider.of<InventoryProvider>(context,
+                                    listen: false)
+                                .resumeInventoryTimer(
+                                    inventory, inventoryRepository);
+                          } else {
+                            Provider.of<InventoryProvider>(context,
+                                    listen: false)
+                                .pauseInventoryTimer(
+                                    inventory, inventoryRepository);
+                          }
+                          Provider.of<InventoryProvider>(context, listen: false)
+                              .updateInventory(inventory);
+                        },
+                      ),
+                    ),
+                  ]),
+                // ),
               ],
             ),
           ),

@@ -426,6 +426,26 @@ class S {
     );
   }
 
+  /// `Sort ascending`
+  String get sortAscending {
+    return Intl.message(
+      'Sort ascending',
+      name: 'sortAscending',
+      desc: 'Sort ascending option in inventories list',
+      args: [],
+    );
+  }
+
+  /// `Sort descending`
+  String get sortDescending {
+    return Intl.message(
+      'Sort descending',
+      name: 'sortDescending',
+      desc: 'Sort descending option in inventories list',
+      args: [],
+    );
+  }
+
   /// `Find inventories...`
   String get findInventories {
     return Intl.message(

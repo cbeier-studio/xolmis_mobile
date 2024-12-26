@@ -93,6 +93,16 @@
         "type": "text",
         "description": "Sort by name option in inventories list"
     },
+    "sortAscending": "Ordem crescente",
+    "@sortAscending": {
+        "type": "text",
+        "description": "Sort ascending option in inventories list"
+    },
+    "sortDescending": "Ordem decrescente",
+    "@sortDescending": {
+        "type": "text",
+        "description": "Sort descending option in inventories list"
+    },
     "findInventories": "Procurar inventários...",
     "active": "Ativos",
     "finished": "Encerrados",
