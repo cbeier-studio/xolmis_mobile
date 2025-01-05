@@ -688,6 +688,9 @@ class Inventory with ChangeNotifier {
   // Update if inventory is finished
   void updateIsFinished(bool newIsFinished) {
     isFinished = newIsFinished;
+    if (newIsFinished == false) {
+      _autoFinished = false;
+    }
     isFinishedNotifier.value = isFinished;
     isFinishedNotifier.notifyListeners();
     notifyListeners();
@@ -713,12 +716,12 @@ class Inventory with ChangeNotifier {
           if (elapsedTime == 0) {
             updateElapsedTime(0);
             // If elapsed time is zero, update it in the database
-            inventoryRepository.updateInventoryElapsedTime(id, elapsedTime);
+            await inventoryRepository.updateInventoryElapsedTime(id, elapsedTime);
           }
 
           // Update the elapsed time every 5 seconds
           updateElapsedTime(elapsedTime += 5);
-          inventoryRepository.updateInventoryElapsedTime(id, elapsedTime);
+          await inventoryRepository.updateInventoryElapsedTime(id, elapsedTime);
 
           // Elapsed time reach the defined duration
           if (elapsedTime == duration * 60 && !isFinished) {
@@ -727,7 +730,7 @@ class Inventory with ChangeNotifier {
               // Increment the currentInterval counter
               currentInterval++;
               updateCurrentInterval(currentInterval);
-              inventoryRepository.updateInventoryCurrentInterval(id, currentInterval);
+              await inventoryRepository.updateInventoryCurrentInterval(id, currentInterval);
 
               if (currentIntervalSpeciesCount == 0) {
                 // If no new species on interval, increment counter
@@ -736,7 +739,7 @@ class Inventory with ChangeNotifier {
                 // If has new species on interval, reset counter
                 intervalsWithoutNewSpecies = 0;
               }
-              inventoryRepository.updateInventoryIntervalsWithoutSpecies(id, intervalsWithoutNewSpecies);
+              await inventoryRepository.updateInventoryIntervalsWithoutSpecies(id, intervalsWithoutNewSpecies);
               intervalWithoutSpeciesNotifier.value = intervalsWithoutNewSpecies;
               intervalWithoutSpeciesNotifier.notifyListeners();
               // Every interval, reset species counter
@@ -749,6 +752,7 @@ class Inventory with ChangeNotifier {
               } else {
                 // Else, reset elapsed time for new interval
                 updateElapsedTime(0.0);
+                await inventoryRepository.updateInventoryElapsedTime(id, elapsedTime);
               }
             } else {
               // If other type of timed inventory, finish inventory if duration is reached
@@ -784,7 +788,7 @@ class Inventory with ChangeNotifier {
     elapsedTimeNotifier.value = elapsedTime;
     elapsedTimeNotifier.notifyListeners();
     notifyListeners();
-    inventoryRepository.updateInventory(this);
+    await inventoryRepository.updateInventory(this);
   }
 
   // Resume the inventory timer
@@ -797,7 +801,7 @@ class Inventory with ChangeNotifier {
     elapsedTimeNotifier.value = elapsedTime.toDouble();
     elapsedTimeNotifier.notifyListeners();
     notifyListeners();
-    inventoryRepository.updateInventory(this);
+    await inventoryRepository.updateInventory(this);
   }
 
   // Stop the timer and finish the inventory

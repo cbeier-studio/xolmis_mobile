@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:geolocator/geolocator.dart';
 
 import '../../data/models/inventory.dart';
 import '../../data/database/repositories/inventory_repository.dart';
 import '../../data/database/repositories/species_repository.dart';
 import '../../providers/inventory_provider.dart';
 import '../../providers/species_provider.dart';
+import '../../providers/poi_provider.dart';
 
 import '../../utils/utils.dart';
 import '../../utils/species_search_delegate.dart';
@@ -43,10 +45,8 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
   Future<void> _addSpeciesToInventory(String speciesName,
       SpeciesRepository speciesRepository,
       InventoryRepository inventoryRepository) async {
-    final speciesProvider = Provider.of<SpeciesProvider>(
-        context, listen: false);
-    final inventoryProvider = Provider.of<InventoryProvider>(
-        context, listen: false);
+    final speciesProvider = Provider.of<SpeciesProvider>(context, listen: false);
+    final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
 
     if (speciesProvider.speciesExistsInInventory(
         widget.inventory.id, speciesName)) {
@@ -74,6 +74,9 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
 
       if (widget.inventory.type == InventoryType.invIntervalQualitative) {
         widget.inventory.currentIntervalSpeciesCount++;
+        await inventoryRepository.updateInventoryCurrentIntervalSpeciesCount(widget.inventory.id, widget.inventory.currentIntervalSpeciesCount);
+      } else if (widget.inventory.type == InventoryType.invTimedQualitative) {
+        _restartInventoryTimer(inventoryProvider, widget.inventory, inventoryRepository);
       }
     }
 
@@ -117,13 +120,13 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
 
         if (inventory.type == InventoryType.invIntervalQualitative) {
           inventory.currentIntervalSpeciesCount++;
-          inventoryRepository.updateInventoryCurrentIntervalSpeciesCount(inventory.id, inventory.currentIntervalSpeciesCount);
+          await inventoryRepository.updateInventoryCurrentIntervalSpeciesCount(inventory.id, inventory.currentIntervalSpeciesCount);
         } else if (inventory.type == InventoryType.invTimedQualitative) {
           _restartInventoryTimer(inventoryProvider, inventory, inventoryRepository);
         } else {
           inventoryProvider.updateInventory(inventory);
         }
-        speciesProvider.loadSpeciesForInventory(inventory.id);
+        await speciesProvider.loadSpeciesForInventory(inventory.id);
         // speciesProvider.notifyListeners();
       }
 
@@ -144,7 +147,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
   void _updateSpeciesList() async {
     final speciesProvider = Provider.of<SpeciesProvider>(
         context, listen: false);
-    speciesProvider.loadSpeciesForInventory(widget.inventory.id);
+    await speciesProvider.loadSpeciesForInventory(widget.inventory.id);
   }
 
   void _showSpeciesSearch(SpeciesRepository speciesRepository,
@@ -423,6 +426,47 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                         _removeSpeciesToSample(context, species);
                       },
                     ),
+                  Divider(),
+                  ListTile(
+                    leading: const Icon(Icons.add_location_outlined),
+                    title: Text(S.of(context).addPoi),
+                    onTap: () async {
+                      final poiProvider =
+                          Provider.of<PoiProvider>(context, listen: false);
+                      // Get the current location
+                      Position? position = await getPosition();
+
+                      if (position != null) {
+                        // Create a new POI
+                        final poi = Poi(
+                          speciesId: species.id!,
+                          longitude: position.longitude,
+                          latitude: position.latitude,
+                        );
+
+                        // Insert the POI in the database
+                        if (context.mounted) {
+                          poiProvider.addPoi(context, species.id!, poi);
+                          // poiProvider.notifyListeners();
+                        }                        
+                      } else {
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Row(
+                                children: [
+                                  const Icon(Icons.error_outlined,
+                                      color: Colors.red),
+                                  const SizedBox(width: 8),
+                                  Text(S.of(context).errorGettingLocation),
+                                ],
+                              ),
+                            ),
+                          );
+                        }
+                      }
+                    },
+                  ),
                   Divider(),
                   ListTile(
                     leading: const Icon(
