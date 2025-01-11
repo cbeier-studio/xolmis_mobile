@@ -14,6 +14,10 @@ class NestRepository {
     return _nestDao.getNests();
   }
 
+  Future<Nest> getNestById(int nestId) {
+    return _nestDao.getNestById(nestId);
+  }
+
   Future<int?> updateNest(Nest nest) {
     return _nestDao.updateNest(nest);
   }

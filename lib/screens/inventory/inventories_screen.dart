@@ -645,118 +645,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                               itemBuilder: (context, index) {
                                 final inventory = filteredInventories[index];
                                 final isSelected = selectedInventories.contains(inventory.id);
-                                return Dismissible(
-                                    key: ValueKey(inventory.id),
-                                    direction: DismissDirection.horizontal,
-                                    background: _isShowingActiveInventories ? Container(
-                                      color: Colors.green,
-                                      alignment: Alignment.centerLeft,
-                                      padding: const EdgeInsets.only(left: 20.0),
-                                      child: const Icon(Icons.flag_outlined, color: Colors.white),
-                                    ) : Container(color: Colors.transparent),
-                                    secondaryBackground: Container(
-                                      color: Colors.red,
-                                      alignment: Alignment.centerRight,
-                                      padding: const EdgeInsets.only(right: 20.0),
-                                      child: const Icon(Icons.delete_outlined, color: Colors.white),
-                                    ),
-                                    confirmDismiss: (direction) async {
-                                      // Drag to left
-                                      if (direction == DismissDirection.endToStart) {
-                                        // Show confirmation dialog for deleting
-                                        return await showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return AlertDialog(
-                                              title: Text(S.of(context).confirmDelete),
-                                              content: Text(S.of(context).confirmDeleteMessage(1, "male", S.of(context).inventory(1))),
-                                              actions: <Widget>[
-                                                TextButton(
-                                                  onPressed: () => Navigator.of(context).pop(false),
-                                                  child: Text(S.of(context).cancel),
-                                                ),
-                                                TextButton(
-                                                  onPressed: () => Navigator.of(context).pop(true),
-                                                  child: Text(S.of(context).delete),
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        );
-                                        // Drag to right
-                                      } else if (_isShowingActiveInventories && direction == DismissDirection.startToEnd) {
-                                        // Show confirmation dialog for finishing
-                                        return await showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return AlertDialog(
-                                              title: Text(S.of(context).confirmFinish),
-                                              content: Text(S.of(context).confirmFinishMessage),
-                                              actions: <Widget>[
-                                                TextButton(
-                                                  onPressed: () => Navigator.of(context).pop(false),
-                                                  child: Text(S.of(context).cancel),
-                                                ),
-                                                TextButton(
-                                                  onPressed: () => Navigator.of(context).pop(true),
-                                                  child: Text(S.of(context).finish),
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        );
-                                      }
-                                      return false; // Default to not dismissing
-                                    },
-                                    onDismissed: (direction) {
-                                      // Drag to left
-                                      if (direction == DismissDirection.endToStart) {
-                                        // Remove the inventory from list
-                                        inventoryProvider.removeInventory(inventory.id);
-
-                                        // Drag to right
-                                      } else if (_isShowingActiveInventories && direction == DismissDirection.startToEnd) {
-                                        // Finish the inventory
-                                        inventory.stopTimer(inventoryRepository);
-                                        inventoryProvider.updateInventory(inventory);
-                                        // inventoryProvider.notifyListeners();
-                                      }
-                                    },
-                                    child: ValueListenableBuilder<bool>(
-                                        valueListenable: inventory.isFinishedNotifier,
-                                        builder: (context, isFinished, child) {
-                                          if (isFinished) {
-                                            inventoryProvider.fetchInventories();
-                                          }
-                                          return child!;
-                                        },
-                                        child: InkWell(
-                                // Or GestureDetector
-                                onLongPress: () =>
-                                    _showBottomSheet(context, inventory),
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          InventoryDetailScreen(
-                                        inventory: inventory,
-                                        speciesRepository: speciesRepository,
-                                        inventoryRepository:
-                                            inventoryRepository,
-                                        poiRepository: poiRepository,
-                                        vegetationRepository:
-                                            vegetationRepository,
-                                        weatherRepository: weatherRepository,
-                                      ),
-                                    ),
-                                  ).then((result) {
-                                    if (result == true) {
-                                      inventoryProvider.notifyListeners();
-                                    }
-                                  });
-                                },
-                                child: ListTile(
+                                return ListTile(
                                   // Use ValueListenableBuilder for update the CircularProgressIndicator
                                   leading: Stack(
                                       alignment: Alignment.center,
@@ -923,8 +812,8 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                       ),
                                     ],
                                   ),
-                                ),
-                              ),
+                                );
+                            
                                         
                                         // InventoryListItem(
                                         //   inventory: inventory,
@@ -956,8 +845,8 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                         //   onInventoryPausedOrResumed: (inventory) => _onInventoryPausedOrResumed(inventory),
                                         //   isHistory: !_isShowingActiveInventories,
                                         // )
-                                    )
-                                );
+                                    
+                                
                               },
                             );
                           }

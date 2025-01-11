@@ -1,6 +1,12 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../data/models/nest.dart';
 import '../../providers/nest_provider.dart';
@@ -28,6 +34,7 @@ class NestsScreenState extends State<NestsScreen> {
   String _sortField = 'foundTime';
   bool _isSearchBarVisible = false;
   String _searchQuery = '';
+  Set<int> selectedNests = {};
 
   @override
   void initState() {
@@ -109,6 +116,211 @@ class NestsScreenState extends State<NestsScreen> {
           nestProvider.fetchNests();
         }
       });
+    }
+  }
+
+  void _deleteSelectedNests() async {
+    final nestProvider = Provider.of<NestProvider>(context, listen: false);
+    final nests = selectedNests.map((id) => nestProvider.getNestById(id)).toList();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(S.of(context).confirmDelete),
+          content: Text(S
+              .of(context)
+              .confirmDeleteMessage(selectedNests.length, "male", S.of(context).nest(selectedNests.length))),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false);
+                // Navigator.of(context).pop();
+              },
+              child: Text(S.of(context).cancel),
+            ),
+            TextButton(
+              onPressed: () async {
+                // Call the function to delete species
+                for (final id in selectedNests) {
+                  final nest = await nestProvider.getNestById(id);
+                  nestProvider.removeNest(nest);
+                }
+                setState(() {
+                  selectedNests.clear();
+                });
+                Navigator.of(context).pop(true);
+                // Navigator.of(context).pop();
+              },
+              child: Text(S.of(context).delete),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _exportSelectedNestsToJson() async {
+    try {
+      final nestProvider = Provider.of<NestProvider>(context, listen: false);
+      final nests = await Future.wait(selectedNests.map((id) => nestProvider.getNestById(id)));
+
+      final jsonString = jsonEncode(nests.map((nest) => nest.toJson()).toList());
+
+      final now = DateTime.now();
+      final formatter = DateFormat('yyyyMMdd_HHmmss');
+      final formattedDate = formatter.format(now);
+
+      final directory = await getApplicationDocumentsDirectory();
+      final filePath = '${directory.path}/selected_nests_$formattedDate.json';
+      final file = File(filePath);
+      await file.writeAsString(jsonString);
+
+      // Share the file using share_plus
+      await Share.shareXFiles([
+        XFile(filePath, mimeType: 'application/json'),
+      ], text: S.current.nestExported(2), subject: S.current.nestData(2));
+
+      setState(() {
+        selectedNests.clear();
+      });
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              Icon(Icons.error_outlined, color: Colors.red),
+              SizedBox(width: 8),
+              Text(S.current.errorExportingNest(2, error.toString())),
+            ],
+          ),
+        ),
+      );
+    }
+  }
+
+  void _exportSelectedNestsToCsv() async {
+    try {
+      final nestProvider = Provider.of<NestProvider>(context, listen: false);
+      final nests = await Future.wait(selectedNests.map((id) => nestProvider.getNestById(id)));
+      List<XFile> csvFiles = [];
+
+      for (final nest in nests) {
+        // 1. Create a list of data for the CSV
+        List<List<dynamic>> rows = [];
+        rows.add([
+          'Field number',
+          'Species',
+          'Locality',
+          'Longitude',
+          'Latitude',
+          'Date found',
+          'Support',
+          'Height above ground',
+          'Male',
+          'Female',
+          'Helpers',
+          'Last date',
+          'Fate',
+        ]);
+        rows.add([
+          nest.fieldNumber,
+          nest.speciesName,
+          nest.localityName,
+          nest.longitude,
+          nest.latitude,
+          nest.foundTime,
+          nest.support,
+          nest.heightAboveGround,
+          nest.male,
+          nest.female,
+          nest.helpers,
+          nest.lastTime,
+          nestFateTypeFriendlyNames[nest.nestFate],
+        ]);
+
+        // Add nest revision data
+        rows.add([]); // Empty line as separator
+        rows.add(['REVISIONS']);
+        rows.add([
+          'Date/Time',
+          'Status',
+          'Phase',
+          'Host eggs',
+          'Host nestlings',
+          'Nidoparasite eggs',
+          'Nidoparasite nestlings',
+          'Has Philornis larvae',
+          'Notes',
+        ]);
+        for (var revision in nest.revisionsList ?? []) {
+          rows.add([
+            revision.sampleTime,
+            nestStatusTypeFriendlyNames[revision.nestStatus],
+            nestStageTypeFriendlyNames[revision.nestStage],
+            revision.eggsHost,
+            revision.nestlingsHost,
+            revision.eggsParasite,
+            revision.nestlingsParasite,
+            revision.hasPhilornisLarvae,
+            revision.notes,
+          ]);
+        }
+
+        // Add egg data
+        rows.add([]);
+        rows.add(['EGGS']);
+        rows.add([
+          'Date/Time',
+          'Field number',
+          'Species',
+          'Egg shape',
+          'Width',
+          'Length',
+          'Weight',
+        ]);
+        for (var egg in nest.eggsList ?? []) {
+          rows.add([
+            egg.sampleTime,
+            egg.fieldNumber,
+            egg.speciesName,
+            eggShapeTypeFriendlyNames[egg.eggShape],
+            egg.width,
+            egg.length,
+            egg.mass,
+          ]);
+        }
+
+        // 2. Convert the list of data to CSV
+        String csv = const ListToCsvConverter().convert(rows, fieldDelimiter: ';');
+
+        // 3. Create the file in a temporary directory
+        Directory tempDir = await getApplicationDocumentsDirectory();
+        final filePath = '${tempDir.path}/nest_${nest.fieldNumber}.csv';
+        final file = File(filePath);
+        await file.writeAsString(csv);
+
+        csvFiles.add(XFile(filePath, mimeType: 'text/csv'));
+      }
+
+      // Share the file using share_plus
+      await Share.shareXFiles(csvFiles, text: S.current.nestExported(2), subject: S.current.nestData(2));
+
+      setState(() {
+        selectedNests.clear();
+      });
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              Icon(Icons.error_outlined, color: Colors.red),
+              SizedBox(width: 8),
+              Text(S.current.errorExportingNest(2, error.toString())),
+            ],
+          ),
+        ),
+      );
     }
   }
 
@@ -312,43 +524,8 @@ class NestsScreenState extends State<NestsScreen> {
                               itemCount: filteredNests.length,
                               itemBuilder: (context, index) {
                                 final nest = filteredNests[index];
-                                return Dismissible(
-                                  key: Key(nest.id.toString()),
-                                  direction: DismissDirection.endToStart,
-                                  background: Container(
-                                    color: Colors.red,
-                                    alignment: Alignment.centerRight,
-                                    padding: const EdgeInsets.only(right: 20.0),
-                                    child: const Icon(Icons.delete_outlined, color: Colors.white),
-                                  ),
-                                  confirmDismiss: (direction) {
-                                    return showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          title: Text(S.of(context).confirmDelete),
-                                          content: Text(S.of(context).confirmDeleteMessage(1, "male", S.of(context).nest(1))),
-                                          actions: <Widget>[
-                                            TextButton(
-                                              child: Text(S.of(context).cancel),
-                                              onPressed: () {
-                                                Navigator.of(context).pop(false);
-                                              },
-                                            ),
-                                            TextButton(child: Text(S.of(context).delete),
-                                              onPressed: () {
-                                                Navigator.of(context).pop(true);
-                                              },
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    );
-                                  },
-                                  onDismissed: (direction) {
-                                    nestProvider.removeNest(nest);
-                                  },
-                                  child: ListTile(
+                                final isSelected = selectedNests.contains(nest.id);
+                                return ListTile(
                                     title: Text(nest.fieldNumber!),
                                     subtitle: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -362,11 +539,30 @@ class NestsScreenState extends State<NestsScreen> {
                                         Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(nest.foundTime!)),
                                       ],
                                     ),
-                                    leading: nest.nestFate == NestFateType.fatSuccess
-                                        ? const Icon(Icons.check_circle, color: Colors.green)
-                                        : nest.nestFate == NestFateType.fatLost
-                                        ? const Icon(Icons.cancel, color: Colors.red)
-                                        : const Icon(Icons.help, color: Colors.grey),
+                                    leading: Row(
+                                      children: [
+                                        Visibility(
+                                          visible: !_showActive,
+                                          child: Checkbox(
+                                            value: isSelected,
+                                            onChanged: (bool? value) {
+                                              setState(() {
+                                                if (value == true) {
+                                                  selectedNests.add(nest.id!);
+                                                } else {
+                                                  selectedNests.remove(nest.id);
+                                                }
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                        nest.nestFate == NestFateType.fatSuccess
+                                          ? const Icon(Icons.check_circle, color: Colors.green)
+                                          : nest.nestFate == NestFateType.fatLost
+                                          ? const Icon(Icons.cancel, color: Colors.red)
+                                          : const Icon(Icons.help, color: Colors.grey),
+                                      ],
+                                    ),
                                     onLongPress: () => _showBottomSheet(context, nest),
                                     onTap: () {
                                       Navigator.push(
@@ -382,8 +578,7 @@ class NestsScreenState extends State<NestsScreen> {
                                         }
                                       });
                                     },
-                                  ),
-                                );
+                                  );                                
                               },
                             );
                           }
@@ -395,6 +590,9 @@ class NestsScreenState extends State<NestsScreen> {
           ),
         ],
       ),
+      floatingActionButtonLocation: selectedNests.isNotEmpty 
+        ? FloatingActionButtonLocation.endContained 
+        : FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
         tooltip: S.of(context).newNest,
         onPressed: () {
@@ -402,6 +600,32 @@ class NestsScreenState extends State<NestsScreen> {
         },
         child: const Icon(Icons.add_outlined),
       ),
+      bottomNavigationBar: selectedNests.isNotEmpty
+          ? BottomAppBar(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.delete_outlined),
+                    tooltip: S.of(context).delete,
+                    color: Colors.red,
+                    onPressed: _deleteSelectedNests,
+                  ),
+                  VerticalDivider(),
+                  IconButton(
+                    icon: Icon(Icons.table_view_outlined),
+                    tooltip: 'CSV',
+                    onPressed: _exportSelectedNestsToCsv,
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.data_object_outlined),
+                    tooltip: 'JSON',
+                    onPressed: _exportSelectedNestsToJson,
+                  ),
+                ],
+              ),
+            )
+          : null,
     );
   }
 

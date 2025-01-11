@@ -79,6 +79,24 @@ class NestDao {
     }
   }
 
+  // Find and get a nest by ID
+  Future<Nest> getNestById(int nestId) async {
+    final db = await _dbHelper.database;
+    final List<Map<String, dynamic>> maps = await db?.query(
+        'nests',
+        where: 'id = ?',
+        whereArgs: [nestId]
+    ) ?? [];
+    if (maps.isNotEmpty) {
+      final map = maps.first;
+      List<NestRevision> revisionsList = await _nestRevisionDao.getNestRevisionsForNest(map['id']);
+      List<Egg> eggsList = await _eggDao.getEggsForNest(map['id']);
+      return Nest.fromMap(map, revisionsList, eggsList);
+    } else {
+      throw Exception('Nest not found with ID $nestId');
+    }
+  }
+
   // Update nest data in the database
   Future<int?> updateNest(Nest nest) async {
     final db = await _dbHelper.database;
@@ -133,26 +151,48 @@ class NestDao {
 
   // Get list of distinct localities for autocomplete
   Future<List<String>> getDistinctLocalities() async {
-    final db = await _dbHelper.database;
+    try {
+      final db = await _dbHelper.database;
 
-    final results = await db?.rawQuery('SELECT DISTINCT localityName FROM nests');
+      if (db == null) {
+        throw Exception('Database is not available');
+      }
 
-    if (results!.isNotEmpty) {
-      return results.map((row) => row['localityName'] as String).toList();
-    } else {
+      final results = await db.rawQuery('SELECT DISTINCT localityName FROM nests');
+
+      if (results.isNotEmpty) {
+        final localities = results.map((row) => row['localityName'] as String).toList();
+        debugPrint('Distinct localities: $localities');
+        return localities;
+      } else {
+        return [];
+      }
+    } catch (e) {
+      debugPrint('Error fetching distinct localities: $e');
       return [];
     }
   }
 
   // Get list of distinct nest supports for autocomplete
   Future<List<String>> getDistinctSupports() async {
-    final db = await _dbHelper.database;
+    try {
+      final db = await _dbHelper.database;
 
-    final results = await db?.rawQuery('SELECT DISTINCT support FROM nests');
+      if (db == null) {
+        throw Exception('Database is not available');
+      }
 
-    if (results!.isNotEmpty) {
-      return results.map((row) => row['support'] as String).toList();
-    } else {
+      final results = await db.rawQuery('SELECT DISTINCT support FROM nests');
+
+      if (results.isNotEmpty) {
+        final supports = results.map((row) => row['support'] as String).toList();
+        debugPrint('Distinct supports: $supports');
+        return supports;
+      } else {
+        return [];
+      }
+    } catch (e) {
+      debugPrint('Error fetching distinct supports: $e');
       return [];
     }
   }

@@ -63,6 +63,22 @@ class SpecimenDao {
     });
   }
 
+  // Find and get a specimen by ID
+  Future<Specimen> getSpecimenById(int specimenId) async {
+    final db = await _dbHelper.database;
+    final List<Map<String, dynamic>> maps = await db?.query(
+        'specimens',
+        where: 'id = ?',
+        whereArgs: [specimenId]
+    ) ?? [];
+    if (maps.isNotEmpty) {
+      final map = maps.first;
+      return Specimen.fromMap(map);
+    } else {
+      throw Exception('Nest not found with ID $specimenId');
+    }
+  }
+
   // Update specimen data in the database
   Future<int?> updateSpecimen(Specimen specimen) async {
     final db = await _dbHelper.database;

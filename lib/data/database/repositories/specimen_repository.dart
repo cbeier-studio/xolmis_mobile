@@ -14,6 +14,10 @@ class SpecimenRepository {
     return _specimenDao.getSpecimens();
   }
 
+  Future<Specimen> getSpecimenById(int specimenId) {
+    return _specimenDao.getSpecimenById(specimenId);
+  }
+
   Future<int?> updateSpecimen(Specimen specimen) {
     return _specimenDao.updateSpecimen(specimen);
   }

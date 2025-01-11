@@ -24,6 +24,11 @@ class NestProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  // Get nest data by ID
+  Future<Nest> getNestById(int nestId) async {
+    return await _nestRepository.getNestById(nestId);
+  }
+
   // Check if nest field number already exists
   Future<bool> nestFieldNumberExists(String fieldNumber) async {
     return await _nestRepository.nestFieldNumberExists(fieldNumber);

@@ -1,8 +1,12 @@
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../data/models/specimen.dart';
 import '../../data/models/app_image.dart';
@@ -30,6 +34,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
   String _searchQuery = '';
   bool _isAscendingOrder = false;
   String _sortField = 'sampleTime';
+  Set<int> selectedSpecimens = {};
 
   @override
   void initState() {
@@ -111,6 +116,149 @@ class SpecimensScreenState extends State<SpecimensScreen> {
           specimenProvider.fetchSpecimens();
         }
       });
+    }
+  }
+
+  void _deleteSelectedSpecimens() async {
+    final specimenProvider = Provider.of<SpecimenProvider>(context, listen: false);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(S.of(context).confirmDelete),
+          content: Text(S
+              .of(context)
+              .confirmDeleteMessage(selectedSpecimens.length, "male", S.of(context).inventory(selectedSpecimens.length))),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false);
+                // Navigator.of(context).pop();
+              },
+              child: Text(S.of(context).cancel),
+            ),
+            TextButton(
+              onPressed: () async {
+                // Call the function to delete species
+                for (final id in selectedSpecimens) {
+                  final specimen = await specimenProvider.getSpecimenById(id);
+                  specimenProvider.removeSpecimen(specimen);
+                }
+                setState(() {
+                  selectedSpecimens.clear();
+                });
+                Navigator.of(context).pop(true);
+                // Navigator.of(context).pop();
+              },
+              child: Text(S.of(context).delete),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _exportSelectedSpecimensToJson() async {
+    try {
+      final specimenProvider = Provider.of<SpecimenProvider>(context, listen: false);
+      final specimens = await Future.wait(selectedSpecimens.map((id) => specimenProvider.getSpecimenById(id)));
+
+      final jsonString = jsonEncode(specimens.map((specimen) => specimen.toJson()).toList());
+
+      final now = DateTime.now();
+      final formatter = DateFormat('yyyyMMdd_HHmmss');
+      final formattedDate = formatter.format(now);
+
+      final directory = await getApplicationDocumentsDirectory();
+      final filePath = '${directory.path}/selected_specimens_$formattedDate.json';
+      final file = File(filePath);
+      await file.writeAsString(jsonString);
+
+      // Share the file using share_plus
+      await Share.shareXFiles([
+        XFile(filePath, mimeType: 'application/json'),
+      ], text: S.current.specimenExported(2), subject: S.current.specimenData(2));
+
+      setState(() {
+        selectedSpecimens.clear();
+      });
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              Icon(Icons.error_outlined, color: Colors.red),
+              SizedBox(width: 8),
+              Text(S.current.errorExportingSpecimen(2, error.toString())),
+            ],
+          ),
+        ),
+      );
+    }
+  }
+
+  void _exportSelectedSpecimensToCsv() async {
+    try {
+      final specimenProvider = Provider.of<SpecimenProvider>(context, listen: false);
+      final specimens = await Future.wait(selectedSpecimens.map((id) => specimenProvider.getSpecimenById(id)));
+            
+        // 1. Create a list of data for the CSV
+        List<List<dynamic>> rows = [];
+    rows.add([
+      'Date/Time',
+      'Field number',
+      'Species',
+      'Type',
+      'Locality',
+      'Longitude',
+      'Latitude',
+      'Notes',
+    ]);
+    for (var specimen in specimens) {
+      rows.add([
+        specimen.sampleTime,
+        specimen.fieldNumber,
+        specimen.speciesName,
+        specimenTypeFriendlyNames[specimen.type],
+        specimen.locality,
+        specimen.longitude,
+        specimen.latitude,
+        specimen.notes,
+      ]);
+    }
+
+        // 2. Convert the list of data to CSV
+        String csv = const ListToCsvConverter().convert(rows, fieldDelimiter: ';');
+
+        final now = DateTime.now();
+      final formatter = DateFormat('yyyyMMdd_HHmmss');
+      final formattedDate = formatter.format(now);
+
+        // 3. Create the file in a temporary directory
+        Directory tempDir = await getApplicationDocumentsDirectory();
+        final filePath = '${tempDir.path}/selected_specimens_$formattedDate.csv';
+        final file = File(filePath);
+        await file.writeAsString(csv);
+
+      // Share the file using share_plus
+      await Share.shareXFiles([XFile(filePath, mimeType: 'text/csv')], text: S.current.specimenExported(2), subject: S.current.specimenData(2));
+
+      setState(() {
+        selectedSpecimens.clear();
+      });
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              Icon(Icons.error_outlined, color: Colors.red),
+              SizedBox(width: 8),
+              Text(S.current.errorExportingSpecimen(2, error.toString())),
+            ],
+          ),
+        ),
+      );
     }
   }
 
@@ -330,67 +478,51 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                             itemCount: filteredSpecimens.length,
                             itemBuilder: (context, index) {
                               final specimen = filteredSpecimens[index];
-                              return Dismissible(
-                                key: Key(specimen.id.toString()),
-                                direction: DismissDirection.endToStart,
-                                background: Container(
-                                  color: Colors.red,
-                                  alignment: Alignment.centerRight,
-                                  padding: const EdgeInsets.only(right: 20.0),
-                                  child: const Icon(Icons.delete_outlined, color: Colors.white),
-                                ),
-                                confirmDismiss: (direction) async {
-                                  return await showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title: Text(S.of(context).confirmDelete),
-                                        content: Text(S.of(context).confirmDeleteMessage(1, "male", S.of(context).specimens(1))),
-                                        actions: <Widget>[
-                                          TextButton(
-                                            child: Text(S.of(context).cancel),
-                                            onPressed: () {
-                                              Navigator.of(context).pop(false);
-                                            },
-                                          ),
-                                          TextButton(
-                                            child: Text(S.of(context).delete),
-                                            onPressed: () {
-                                              Navigator.of(context).pop(true);
-                                            },
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                },
-                                onDismissed: (direction) async {
-                                  specimenProvider.removeSpecimen(specimen);
-                                },
-                                child: ListTile(
-                                  leading: FutureBuilder<List<AppImage>>(
-                                    future: Provider.of<AppImageProvider>(context, listen: false)
-                                        .fetchImagesForSpecimen(specimen.id ?? 0),
-                                    builder: (context, snapshot) {
-                                      if (snapshot.connectionState == ConnectionState.waiting) {
-                                        return const CircularProgressIndicator();
-                                      } else if (snapshot.hasError) {
-                                        return const Icon(Icons.error);
-                                      } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                                        return ClipRRect(
-                                          borderRadius: BorderRadius.circular(0),
-                                          child: Image.file(
-                                            File(snapshot.data!.first.imagePath),
-                                            width: 50,
-                                            height: 50,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        );
+                              final isSelected = selectedSpecimens.contains(specimen.id);
+                              return ListTile(
+                                  leading: Row(
+                            children: [
+                              Checkbox(
+                                  value: isSelected,
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      if (value == true) {
+                                        selectedSpecimens.add(specimen.id!);
                                       } else {
-                                        return const Icon(Icons.hide_image_outlined);
+                                        selectedSpecimens.remove(specimen.id);
                                       }
-                                    },
-                                  ),
+                                    });
+                                  },
+                                ),                              
+                              FutureBuilder<List<AppImage>>(
+                                future: Provider.of<AppImageProvider>(context,
+                                        listen: false)
+                                    .fetchImagesForSpecimen(specimen.id ?? 0),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const CircularProgressIndicator();
+                                  } else if (snapshot.hasError) {
+                                    return const Icon(Icons.error);
+                                  } else if (snapshot.hasData &&
+                                      snapshot.data!.isNotEmpty) {
+                                    return ClipRRect(
+                                      borderRadius: BorderRadius.circular(0),
+                                      child: Image.file(
+                                        File(snapshot.data!.first.imagePath),
+                                        width: 50,
+                                        height: 50,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    );
+                                  } else {
+                                    return const Icon(
+                                        Icons.hide_image_outlined);
+                                  }
+                                },
+                              ),
+                            ],
+                          ),                                  
                                   title: Text('${specimen.fieldNumber} - ${specimenTypeFriendlyNames[specimen.type]}'),
                                   subtitle: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -415,8 +547,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                                       ),
                                     );
                                   },
-                                ),
-                              );
+                                );
                             },
                           );
                         }
@@ -428,6 +559,9 @@ class SpecimensScreenState extends State<SpecimensScreen> {
           ),
         ],
       ),
+      floatingActionButtonLocation: selectedSpecimens.isNotEmpty 
+        ? FloatingActionButtonLocation.endContained 
+        : FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
         tooltip: S.of(context).newSpecimen,
         onPressed: () {
@@ -435,6 +569,32 @@ class SpecimensScreenState extends State<SpecimensScreen> {
         },
         child: const Icon(Icons.add_outlined),
       ),
+      bottomNavigationBar: selectedSpecimens.isNotEmpty
+          ? BottomAppBar(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.delete_outlined),
+                    tooltip: S.of(context).delete,
+                    color: Colors.red,
+                    onPressed: _deleteSelectedSpecimens,
+                  ),
+                  VerticalDivider(),
+                  IconButton(
+                    icon: Icon(Icons.table_view_outlined),
+                    tooltip: 'CSV',
+                    onPressed: _exportSelectedSpecimensToCsv,
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.data_object_outlined),
+                    tooltip: 'JSON',
+                    onPressed: _exportSelectedSpecimensToJson,
+                  ),
+                ],
+              ),
+            )
+          : null,
     );
   }
 

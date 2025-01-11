@@ -20,6 +20,11 @@ class SpecimenProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  // Get specimen data by ID
+  Future<Specimen> getSpecimenById(int specimenId) async {
+    return await _specimenRepository.getSpecimenById(specimenId);
+  }
+
   // Check if the specimen field number already exists
   Future<bool> specimenFieldNumberExists(String fieldNumber) async {
     return await _specimenRepository.specimenFieldNumberExists(fieldNumber);

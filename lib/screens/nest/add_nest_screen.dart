@@ -170,88 +170,162 @@ class AddNestScreenState extends State<AddNestScreen> {
                         ),
                         const SizedBox(height: 16.0),
                         Autocomplete<String>(
-                          optionsBuilder: (TextEditingValue textEditingValue) async {
-                            if (textEditingValue.text == '') {
-                              return const Iterable<String>.empty();
-                            }
+                      optionsBuilder:
+                          (TextEditingValue textEditingValue) async {
+                        if (textEditingValue.text == '') {
+                          return const Iterable<String>.empty();
+                        }
 
-                            final options = await Provider.of<NestProvider>(context, listen: false).getDistinctLocalities();
-                            return options.where((String option) {
-                              return option.toLowerCase().contains(textEditingValue.text.toLowerCase());
-                            });
-                          },
-                          onSelected: (String selection) {
-                            _localityNameController.text = selection;
-                            _fieldLocalityEditingController.text = selection;
-                          },
-                          fieldViewBuilder: (BuildContext context, TextEditingController fieldTextEditingController, FocusNode fieldFocusNode, VoidCallback onFieldSubmitted) {
-                            // _fieldLocalityEditingController = fieldTextEditingController;
-                            if (widget.isEditing && !_isSubmitting) {                              
-                              _fieldLocalityEditingController.text = widget.nest?.localityName ?? '';
-                            }                        
-                            return TextFormField(
-                              controller: _fieldLocalityEditingController,
-                              focusNode: fieldFocusNode,
-                              textCapitalization: TextCapitalization.words,
-                              decoration: InputDecoration(
-                                labelText: '${S.of(context).locality} *',
-                                helperText: S.of(context).requiredField,
-                                border: OutlineInputBorder(),
-                              ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return S.of(context).insertLocality;
-                                }
-                                return null;
-                              },
-                              onFieldSubmitted: (String value) {
-                                onFieldSubmitted();
-                              },
-                            );
-                          },
-                        ),
-                        const SizedBox(height: 16.0),
-                        Autocomplete<String>(
-                          optionsBuilder: (TextEditingValue textEditingValue) async {
-                            if (textEditingValue.text == '') {
-                              return const Iterable<String>.empty();
+                        final options = await Provider.of<NestProvider>(context,
+                                listen: false)
+                            .getDistinctLocalities();
+                        return options.where((String option) {
+                          return option
+                              .toLowerCase()
+                              .contains(textEditingValue.text.toLowerCase());
+                        });
+                      },
+                      onSelected: (String selection) {
+                        _localityNameController.text = selection;
+                        _fieldLocalityEditingController.text = selection;
+                      },
+                      fieldViewBuilder: (BuildContext context,
+                          TextEditingController fieldTextEditingController,
+                          FocusNode fieldFocusNode,
+                          VoidCallback onFieldSubmitted) {
+                        // _fieldLocalityEditingController = fieldTextEditingController;
+                        if (widget.isEditing && !_isSubmitting) {
+                          _fieldLocalityEditingController.text =
+                              widget.nest?.localityName ?? '';
+                        }
+                        return TextFormField(
+                          controller: _fieldLocalityEditingController,
+                          focusNode: fieldFocusNode,
+                          textCapitalization: TextCapitalization.words,
+                          decoration: InputDecoration(
+                            labelText: '${S.of(context).locality} *',
+                            helperText: S.of(context).requiredField,
+                            border: OutlineInputBorder(),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return S.of(context).insertLocality;
                             }
+                            return null;
+                          },
+                          onFieldSubmitted: (String value) {
+                            onFieldSubmitted();
+                          },
+                        );
+                      },
+                      optionsViewBuilder: (BuildContext context,
+                          AutocompleteOnSelected<String> onSelected,
+                          Iterable<String> options) {
+                        return Align(
+                          alignment: Alignment.topLeft,
+                          child: Material(
+                            child: Container(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              child: ListView.builder(
+                                padding: EdgeInsets.all(8.0),
+                                itemCount: options.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  final String option =
+                                      options.elementAt(index);
+                                  return GestureDetector(
+                                    onTap: () {
+                                      onSelected(option);
+                                    },
+                                    child: ListTile(
+                                      title: Text(option),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 16.0),
+                    Autocomplete<String>(
+                      optionsBuilder:
+                          (TextEditingValue textEditingValue) async {
+                        if (textEditingValue.text == '') {
+                          return const Iterable<String>.empty();
+                        }
 
-                            final options = await Provider.of<NestProvider>(context, listen: false).getDistinctSupports();
-                            return options.where((String option) {
-                              return option.toLowerCase().contains(textEditingValue.text.toLowerCase());
-                            });
-                          },
-                          onSelected: (String selection) {
-                            _supportController.text = selection;
-                            _fieldSupportEditingController.text = selection;
-                          },
-                          fieldViewBuilder: (BuildContext context, TextEditingController fieldTextEditingController, FocusNode fieldFocusNode, VoidCallback onFieldSubmitted) {
-                            // _fieldSupportEditingController = fieldTextEditingController;
-                            if (widget.isEditing && !_isSubmitting) {                              
-                              _fieldSupportEditingController.text = widget.nest?.support ?? '';
+                        final options = await Provider.of<NestProvider>(context,
+                                listen: false)
+                            .getDistinctSupports();
+                        return options.where((String option) {
+                          return option
+                              .toLowerCase()
+                              .contains(textEditingValue.text.toLowerCase());
+                        });
+                      },
+                      onSelected: (String selection) {
+                        _supportController.text = selection;
+                        _fieldSupportEditingController.text = selection;
+                      },
+                      fieldViewBuilder: (BuildContext context,
+                          TextEditingController fieldTextEditingController,
+                          FocusNode fieldFocusNode,
+                          VoidCallback onFieldSubmitted) {
+                        // _fieldSupportEditingController = fieldTextEditingController;
+                        if (widget.isEditing && !_isSubmitting) {
+                          _fieldSupportEditingController.text =
+                              widget.nest?.support ?? '';
+                        }
+                        return TextFormField(
+                          controller: _fieldSupportEditingController,
+                          focusNode: fieldFocusNode,
+                          textCapitalization: TextCapitalization.sentences,
+                          decoration: InputDecoration(
+                            labelText: '${S.of(context).nestSupport} *',
+                            helperText: S.of(context).requiredField,
+                            border: OutlineInputBorder(),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return S.of(context).insertNestSupport;
                             }
-                            return TextFormField(
-                              controller: _fieldSupportEditingController,
-                              focusNode: fieldFocusNode,
-                              textCapitalization: TextCapitalization.sentences,
-                              decoration: InputDecoration(
-                                labelText: '${S.of(context).nestSupport} *',
-                                helperText: S.of(context).requiredField,
-                                border: OutlineInputBorder(),
-                              ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return S.of(context).insertNestSupport;
-                                }
-                                return null;
-                              },
-                              onFieldSubmitted: (String value) {
-                                onFieldSubmitted();
-                              },
-                            );
+                            return null;
                           },
-                        ),
+                          onFieldSubmitted: (String value) {
+                            onFieldSubmitted();
+                          },
+                        );
+                      },
+                      optionsViewBuilder: (BuildContext context,
+                          AutocompleteOnSelected<String> onSelected,
+                          Iterable<String> options) {
+                        return Align(
+                          alignment: Alignment.topLeft,
+                          child: Material(
+                            child: Container(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              child: ListView.builder(
+                                padding: EdgeInsets.all(8.0),
+                                itemCount: options.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  final String option =
+                                      options.elementAt(index);
+                                  return GestureDetector(
+                                    onTap: () {
+                                      onSelected(option);
+                                    },
+                                    child: ListTile(
+                                      title: Text(option),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
                         const SizedBox(height: 16.0),
                         TextFormField(
                           controller: _heightAboveGroundController,
