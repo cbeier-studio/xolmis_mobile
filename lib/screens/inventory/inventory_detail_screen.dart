@@ -242,10 +242,10 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
               onSelected: (String item) {
                 switch (item) {
                   case 'csv':
-                    exportInventoryToCsv(context, widget.inventory);
+                    exportInventoryToCsv(context, widget.inventory, true);
                     break;
                   case 'json':
-                    exportInventoryToJson(context, widget.inventory);
+                    exportInventoryToJson(context, widget.inventory, true);
                     break;
                 }
               },

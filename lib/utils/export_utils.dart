@@ -3,9 +3,11 @@ import 'dart:io';
 
 import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../data/models/inventory.dart';
 import '../data/models/nest.dart';
@@ -16,15 +18,30 @@ import '../providers/specimen_provider.dart';
 
 import '../generated/l10n.dart';
 
+Future<bool> requestStoragePermission() async {
+  var status = await Permission.storage.status;
+  if (!status.isGranted) {
+    status = await Permission.storage.request();
+  }
+  return status.isGranted;
+}
+
 Future<void> exportAllInventoriesToJson(BuildContext context, InventoryProvider inventoryProvider) async {
   try {
     final finishedInventories = inventoryProvider.finishedInventories;
     final jsonData = finishedInventories.map((inventory) => inventory.toJson()).toList();
-    final jsonString = jsonEncode(jsonData);
+    var encoder = JsonEncoder.withIndent("  ");
+    final jsonString = encoder.convert(jsonData);
+    // final jsonString = jsonEncode(jsonData);
+
+    // Get the current date and time
+    final now = DateTime.now();
+    final formatter = DateFormat('yyyyMMdd_HHmmss');
+    final formattedDate = formatter.format(now);
 
     // Create the file in a temporary folder
     Directory tempDir = await getTemporaryDirectory();
-    final filePath = '${tempDir.path}/inventories.json';
+    final filePath = '${tempDir.path}/inventories_$formattedDate.json';
     final file = File(filePath);
     await file.writeAsString(jsonString);
 
@@ -46,11 +63,13 @@ Future<void> exportAllInventoriesToJson(BuildContext context, InventoryProvider 
   }
 }
 
-Future<void> exportInventoryToJson(BuildContext context, Inventory inventory) async {
+Future<void> exportInventoryToJson(BuildContext context, Inventory inventory, bool shareIt) async {
   try {
     final jsonData = inventory.toJson();
-    final jsonString = jsonEncode(jsonData);
-
+    var encoder = JsonEncoder.withIndent("  ");
+    final jsonString = encoder.convert(jsonData);
+    // final jsonString = jsonEncode(jsonData);
+    
     // Create the file in a temporary folder
     Directory tempDir = await getTemporaryDirectory();
     final filePath = '${tempDir.path}/inventory_${inventory.id}.json';
@@ -58,9 +77,13 @@ Future<void> exportInventoryToJson(BuildContext context, Inventory inventory) as
     await file.writeAsString(jsonString);
 
     // Share the file using share_plus
-    await Share.shareXFiles([
-      XFile(filePath, mimeType: 'application/json'),
-    ], text: S.current.inventoryExported(1), subject: '${S.current.inventoryExported(1)} ${inventory.id}');
+    if (shareIt) {
+      await Share.shareXFiles([
+        XFile(filePath, mimeType: 'application/json'),
+      ],
+          text: S.current.inventoryExported(1),
+          subject: '${S.current.inventoryExported(1)} ${inventory.id}');
+    }
   } catch (error) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Row(
@@ -75,8 +98,23 @@ Future<void> exportInventoryToJson(BuildContext context, Inventory inventory) as
   }
 }
 
-Future<void> exportInventoryToCsv(BuildContext context, Inventory inventory) async {
+Future<void> exportInventoryToCsv(BuildContext context, Inventory inventory, bool shareIt) async {
   try {
+    // Request storage permission
+    // bool permissionGranted = await requestStoragePermission();
+    // if (!permissionGranted) {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     SnackBar(content: Row(
+    //       children: [
+    //         Icon(Icons.error_outlined, color: Colors.red),
+    //         SizedBox(width: 8),
+    //         Text(S.current.storagePermissionDenied),
+    //       ],
+    //     )),
+    //   );
+    //   return;
+    // }
+
     // 1. Create a list of data for the CSV
     List<List<dynamic>> rows = [];
     rows.add([
@@ -193,9 +231,20 @@ Future<void> exportInventoryToCsv(BuildContext context, Inventory inventory) asy
     await file.writeAsString(csv);
 
     // 4. Share the file using share_plus
-    await Share.shareXFiles([
-      XFile(filePath, mimeType: 'text/csv'),
-    ], text: S.current.inventoryExported(1), subject: '${S.current.inventoryExported(1)} ${inventory.id}');
+    if (shareIt) {
+      await Share.shareXFiles([
+        XFile(filePath, mimeType: 'text/csv'),
+      ],
+          text: S.current.inventoryExported(1),
+          subject: '${S.current.inventoryExported(1)} ${inventory.id}');
+    } 
+    // else {
+    //   Directory? directory = await getExternalStorageDirectory();
+    //   if (directory != null) {
+    //     final newPath = '${directory.path}/inventory_${inventory.id}.csv';
+    //     File newFile = await file.copy(newPath);
+    //   }
+    // }
   } catch (error) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Row(
