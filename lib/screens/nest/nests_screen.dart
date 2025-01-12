@@ -539,8 +539,7 @@ class NestsScreenState extends State<NestsScreen> {
                                         Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(nest.foundTime!)),
                                       ],
                                     ),
-                                    leading: Row(
-                                      children: [
+                                    leading: 
                                         Visibility(
                                           visible: !_showActive,
                                           child: Checkbox(
@@ -556,13 +555,11 @@ class NestsScreenState extends State<NestsScreen> {
                                             },
                                           ),
                                         ),
-                                        nest.nestFate == NestFateType.fatSuccess
+                                    trailing: nest.nestFate == NestFateType.fatSuccess
                                           ? const Icon(Icons.check_circle, color: Colors.green)
                                           : nest.nestFate == NestFateType.fatLost
                                           ? const Icon(Icons.cancel, color: Colors.red)
                                           : const Icon(Icons.help, color: Colors.grey),
-                                      ],
-                                    ),
                                     onLongPress: () => _showBottomSheet(context, nest),
                                     onTap: () {
                                       Navigator.push(

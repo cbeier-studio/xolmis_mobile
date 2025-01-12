@@ -480,9 +480,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                               final specimen = filteredSpecimens[index];
                               final isSelected = selectedSpecimens.contains(specimen.id);
                               return ListTile(
-                                  leading: Row(
-                            children: [
-                              Checkbox(
+                                  leading: Checkbox(
                                   value: isSelected,
                                   onChanged: (bool? value) {
                                     setState(() {
@@ -493,8 +491,8 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                                       }
                                     });
                                   },
-                                ),                              
-                              FutureBuilder<List<AppImage>>(
+                                ),
+                                trailing: FutureBuilder<List<AppImage>>(
                                 future: Provider.of<AppImageProvider>(context,
                                         listen: false)
                                     .fetchImagesForSpecimen(specimen.id ?? 0),
@@ -520,9 +518,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                                         Icons.hide_image_outlined);
                                   }
                                 },
-                              ),
-                            ],
-                          ),                                  
+                              ),                                                            
                                   title: Text('${specimen.fieldNumber} - ${specimenTypeFriendlyNames[specimen.type]}'),
                                   subtitle: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
