@@ -115,6 +115,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "camera": MessageLookupByLibrary.simpleMessage("Camera"),
         "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
         "cloudCover": MessageLookupByLibrary.simpleMessage("Cloud cover"),
+        "confirmAutoFinishMessage": MessageLookupByLibrary.simpleMessage(
+            "Inventory automatically finished. Do you want to keep active or finish this inventory?"),
         "confirmDelete": MessageLookupByLibrary.simpleMessage("Confirm delete"),
         "confirmDeleteMessage": m0,
         "confirmDeleteSpecies":
@@ -317,6 +319,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "inventoryTransectionCount":
             MessageLookupByLibrary.simpleMessage("Transection Count"),
         "inventoryType": MessageLookupByLibrary.simpleMessage("Inventory type"),
+        "keepRunning": MessageLookupByLibrary.simpleMessage("Keep active"),
         "length": MessageLookupByLibrary.simpleMessage("Length"),
         "lightMode": MessageLookupByLibrary.simpleMessage("Light"),
         "listFinished": MessageLookupByLibrary.simpleMessage("List finished"),

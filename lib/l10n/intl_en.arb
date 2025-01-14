@@ -267,10 +267,20 @@
         "type": "text",
         "description": "Message asking confirmation to finish an inventory"
     },
+    "confirmAutoFinishMessage": "Inventory automatically finished. Do you want to keep active or finish this inventory?",
+    "@confirmAutoFinishMessage": {
+        "type": "text",
+        "description": "Message asking confirmation to finish an inventory automatically"
+    },
     "finish": "Finish",
     "@finish": {
         "type": "text",
         "description": "Finish button label"
+    },
+    "keepRunning": "Keep active",
+    "@keepRunning": {
+        "type": "text",
+        "description": "Keep running button label"
     },
     "newInventory": "New inventory",
     "@newInventory": {

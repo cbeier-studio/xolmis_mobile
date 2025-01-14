@@ -812,6 +812,28 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                       ),
                                     ],
                                   ),
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            InventoryDetailScreen(
+                                          inventory: inventory,
+                                          speciesRepository: speciesRepository,
+                                          inventoryRepository: inventoryRepository,
+                                          poiRepository: poiRepository,
+                                          vegetationRepository: vegetationRepository,
+                                          weatherRepository: weatherRepository,
+                                        ),
+                                      ),
+                                    ).then((result) {
+                                      if (result == true) {
+                                        inventoryProvider.notifyListeners();
+                                      }
+                                    });
+                                  },
+                                  onLongPress: () =>
+                                      _showBottomSheet(context, inventory),
                                 );
                             
                                         
@@ -1415,6 +1437,25 @@ class InventoryListItem extends StatelessWidget {
             // ),
           ],
         ),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => InventoryDetailScreen(
+                inventory: inventory,
+                speciesRepository: speciesRepository,
+                inventoryRepository: inventoryRepository,
+                poiRepository: poiRepository,
+                vegetationRepository: vegetationRepository,
+                weatherRepository: weatherRepository,
+              ),
+            ),
+          ).then((result) {
+            if (result == true) {
+              Provider.of<InventoryProvider>(context, listen: false).notifyListeners();
+            }
+          });
+        },
       ),
     );
   }

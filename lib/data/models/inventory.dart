@@ -495,7 +495,7 @@ class Inventory with ChangeNotifier {
   List<Species> speciesList;
   List<Vegetation> vegetationList;
   List<Weather> weatherList;
-  Timer? _timer;
+  StreamSubscription<void>? _timer;
   final ValueNotifier<double> _elapsedTimeNotifier = ValueNotifier<double>(0);
   ValueNotifier<double> get elapsedTimeNotifier => _elapsedTimeNotifier;
   final ValueNotifier<bool> _isFinishedNotifier = ValueNotifier<bool>(false);
@@ -710,7 +710,7 @@ class Inventory with ChangeNotifier {
     if (duration > 0 && !isFinished) {
       _autoFinished = false;
       updateCurrentInterval(currentInterval);
-      _timer ??= Timer.periodic(const Duration(seconds: 5), (timer) async {
+      _timer ??= Stream<void>.periodic(const Duration(seconds: 5)).listen((_) async {
         // Only process things if inventory is not paused or finished
         if (!isPaused && !isFinished) {
           if (elapsedTime == 0) {
@@ -724,7 +724,7 @@ class Inventory with ChangeNotifier {
           await inventoryRepository.updateInventoryElapsedTime(id, elapsedTime);
 
           // Elapsed time reach the defined duration
-          if (elapsedTime == duration * 60 && !isFinished) {
+          if (elapsedTime >= duration * 60 && !isFinished) {
             // If inventory type is intervaled
             if (type == InventoryType.invIntervalQualitative) {
               // Increment the currentInterval counter
@@ -748,7 +748,18 @@ class Inventory with ChangeNotifier {
               if (intervalsWithoutNewSpecies == 3) {
                 // If 3 intervals without species is reached, finish inventory
                 _autoFinished = true;
-                await stopTimer(inventoryRepository);
+                // if (_autoFinished) {
+                //   await stopTimer(inventoryRepository);
+                // } else {
+                //   // Reset intervalsWithoutNewSpecies if user chooses to continue
+                //   intervalsWithoutNewSpecies = 0;
+                //   await inventoryRepository.updateInventoryIntervalsWithoutSpecies(id, intervalsWithoutNewSpecies);
+                //   intervalWithoutSpeciesNotifier.value = intervalsWithoutNewSpecies;
+                //   intervalWithoutSpeciesNotifier.notifyListeners();
+                //   // Reset elapsed time for new interval
+                //   updateElapsedTime(0.0);
+                //   await inventoryRepository.updateInventoryElapsedTime(id, elapsedTime);
+                // }
               } else {
                 // Else, reset elapsed time for new interval
                 updateElapsedTime(0.0);
@@ -757,10 +768,18 @@ class Inventory with ChangeNotifier {
             } else {
               // If other type of timed inventory, finish inventory if duration is reached
               _autoFinished = true;
-              await stopTimer(inventoryRepository);
+              // if (_autoFinished) {
+              //   await stopTimer(inventoryRepository);
+              // } else {
+              //   // Reset elapsedTime if user chooses to continue
+              //   elapsedTime = 0;
+              //   updateElapsedTime(elapsedTime);
+              //   await inventoryRepository.updateInventoryElapsedTime(id, elapsedTime);
+              // }
             }
 
             if (isAutoFinished()) {
+              await stopTimer(inventoryRepository);
               // If finished automatically, show a notification
               await showNotification(flutterLocalNotificationsPlugin);
               if (kDebugMode) {
@@ -770,11 +789,6 @@ class Inventory with ChangeNotifier {
           }
         }
       });
-
-      // Restart the Timer if isPaused was true and now is false
-      // if (!isPaused && _timer == null) {
-      //   startTimer(inventoryRepository);
-      // }
     }
     notifyListeners();
   }
@@ -784,6 +798,8 @@ class Inventory with ChangeNotifier {
     if (kDebugMode) {
       print('pauseTimer called');
     }
+    _timer?.pause();
+    // _timer = null;
     isPaused = true;
     elapsedTimeNotifier.value = elapsedTime;
     elapsedTimeNotifier.notifyListeners();
@@ -796,6 +812,7 @@ class Inventory with ChangeNotifier {
     if (kDebugMode) {
       print('resumeTimer called');
     }
+    _timer?.resume();
     isPaused = false;
     startTimer(inventoryRepository);
     elapsedTimeNotifier.value = elapsedTime.toDouble();
@@ -830,6 +847,32 @@ class Inventory with ChangeNotifier {
     onInventoryStopped?.call(id);
     notifyListeners();
   }
+
+  // Future<bool> _showAutoFinishConfirmationDialog(BuildContext context) async {
+  //   return await showDialog<bool>(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: Text(S.of(context).confirmFinish),
+  //         content: Text(S.of(context).confirmFinishMessage),
+  //         actions: <Widget>[
+  //           TextButton(
+  //             child: Text(S.of(context).keepRunning),
+  //             onPressed: () {
+  //               Navigator.of(context).pop(false);
+  //             },
+  //           ),
+  //           TextButton(
+  //             child: Text(S.of(context).finish),
+  //             onPressed: () {
+  //               Navigator.of(context).pop(true);
+  //             },
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   ) ?? false;
+  // }
 
   // Show notification when inventory was finished automatically
   Future<void> showNotification(

@@ -130,7 +130,17 @@
     },
     "confirmFinish": "Confirmar encerramento",
     "confirmFinishMessage": "Tem certeza que deseja encerrar este inventário?",
+    "confirmAutoFinishMessage": "Inventário automaticamente encerrado. Você deseja mantê-lo ativo ou finalizar este inventário?",
+    "@confirmAutoFinishMessage": {
+        "type": "text",
+        "description": "Message asking confirmation to finish an inventory automatically"
+    },
     "finish": "Encerrar",
+    "keepRunning": "Manter ativo",
+    "@keepRunning": {
+        "type": "text",
+        "description": "Keep running button label"
+    },
     "newInventory": "Novo inventário",
     "speciesCount": "{howMany, plural, zero{espécies} one{espécie} other{espécies}}",
     "@speciesCount": {

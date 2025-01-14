@@ -536,12 +536,32 @@ class S {
     );
   }
 
+  /// `Inventory automatically finished. Do you want to keep active or finish this inventory?`
+  String get confirmAutoFinishMessage {
+    return Intl.message(
+      'Inventory automatically finished. Do you want to keep active or finish this inventory?',
+      name: 'confirmAutoFinishMessage',
+      desc: 'Message asking confirmation to finish an inventory automatically',
+      args: [],
+    );
+  }
+
   /// `Finish`
   String get finish {
     return Intl.message(
       'Finish',
       name: 'finish',
       desc: 'Finish button label',
+      args: [],
+    );
+  }
+
+  /// `Keep active`
+  String get keepRunning {
+    return Intl.message(
+      'Keep active',
+      name: 'keepRunning',
+      desc: 'Keep running button label',
       args: [],
     );
   }
