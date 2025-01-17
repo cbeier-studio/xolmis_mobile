@@ -188,7 +188,7 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
                             _fieldLocalityEditingController.text = selection;
                           },
                           fieldViewBuilder: (BuildContext context, TextEditingController fieldTextEditingController, FocusNode fieldFocusNode, VoidCallback onFieldSubmitted) {
-                            // _fieldLocalityEditingController = fieldTextEditingController;
+                            _fieldLocalityEditingController = fieldTextEditingController;
                             if (widget.isEditing && !_isSubmitting) {                              
                               _fieldLocalityEditingController.text = widget.specimen?.locality ?? '';
                             }                            

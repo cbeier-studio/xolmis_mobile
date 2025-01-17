@@ -172,18 +172,19 @@ class AddNestScreenState extends State<AddNestScreen> {
                         Autocomplete<String>(
                       optionsBuilder:
                           (TextEditingValue textEditingValue) async {
-                        if (textEditingValue.text == '') {
+                        if (textEditingValue.text.isEmpty) {
                           return const Iterable<String>.empty();
                         }
 
-                        final options = await Provider.of<NestProvider>(context,
-                                listen: false)
-                            .getDistinctLocalities();
-                        return options.where((String option) {
-                          return option
-                              .toLowerCase()
-                              .contains(textEditingValue.text.toLowerCase());
-                        });
+                        try {
+                          final localityOptions = await Provider.of<NestProvider>(context, listen: false).getDistinctLocalities();
+                          return localityOptions.where((String option) {
+                            return option.toLowerCase().contains(textEditingValue.text.toLowerCase());
+                          });
+                        } catch (e) {
+                          debugPrint('Error fetching locality options: $e');
+                          return const Iterable<String>.empty();
+                        }
                       },
                       onSelected: (String selection) {
                         _localityNameController.text = selection;
@@ -193,10 +194,9 @@ class AddNestScreenState extends State<AddNestScreen> {
                           TextEditingController fieldTextEditingController,
                           FocusNode fieldFocusNode,
                           VoidCallback onFieldSubmitted) {
-                        // _fieldLocalityEditingController = fieldTextEditingController;
+                        _fieldLocalityEditingController = fieldTextEditingController;
                         if (widget.isEditing && !_isSubmitting) {
-                          _fieldLocalityEditingController.text =
-                              widget.nest?.localityName ?? '';
+                          _fieldLocalityEditingController.text = widget.nest?.localityName ?? '';
                         }
                         return TextFormField(
                           controller: _fieldLocalityEditingController,
@@ -224,14 +224,13 @@ class AddNestScreenState extends State<AddNestScreen> {
                         return Align(
                           alignment: Alignment.topLeft,
                           child: Material(
-                            child: Container(
+                            child: SizedBox(
                               width: MediaQuery.of(context).size.width * 0.9,
                               child: ListView.builder(
                                 padding: EdgeInsets.all(8.0),
                                 itemCount: options.length,
                                 itemBuilder: (BuildContext context, int index) {
-                                  final String option =
-                                      options.elementAt(index);
+                                  final String option = options.elementAt(index);
                                   return GestureDetector(
                                     onTap: () {
                                       onSelected(option);
@@ -251,18 +250,19 @@ class AddNestScreenState extends State<AddNestScreen> {
                     Autocomplete<String>(
                       optionsBuilder:
                           (TextEditingValue textEditingValue) async {
-                        if (textEditingValue.text == '') {
+                        if (textEditingValue.text.isEmpty) {
                           return const Iterable<String>.empty();
                         }
 
-                        final options = await Provider.of<NestProvider>(context,
-                                listen: false)
-                            .getDistinctSupports();
-                        return options.where((String option) {
-                          return option
-                              .toLowerCase()
-                              .contains(textEditingValue.text.toLowerCase());
-                        });
+                        try {
+                          final supportOptions = await Provider.of<NestProvider>(context, listen: false).getDistinctSupports();
+                          return supportOptions.where((String option) {
+                            return option.toLowerCase().contains(textEditingValue.text.toLowerCase());
+                          });
+                        } catch (e) {
+                          debugPrint('Error fetching support options: $e');
+                          return const Iterable<String>.empty();
+                        }
                       },
                       onSelected: (String selection) {
                         _supportController.text = selection;
@@ -272,10 +272,9 @@ class AddNestScreenState extends State<AddNestScreen> {
                           TextEditingController fieldTextEditingController,
                           FocusNode fieldFocusNode,
                           VoidCallback onFieldSubmitted) {
-                        // _fieldSupportEditingController = fieldTextEditingController;
+                        _fieldSupportEditingController = fieldTextEditingController;
                         if (widget.isEditing && !_isSubmitting) {
-                          _fieldSupportEditingController.text =
-                              widget.nest?.support ?? '';
+                          _fieldSupportEditingController.text = widget.nest?.support ?? '';
                         }
                         return TextFormField(
                           controller: _fieldSupportEditingController,
@@ -303,14 +302,13 @@ class AddNestScreenState extends State<AddNestScreen> {
                         return Align(
                           alignment: Alignment.topLeft,
                           child: Material(
-                            child: Container(
+                            child: SizedBox(
                               width: MediaQuery.of(context).size.width * 0.9,
                               child: ListView.builder(
                                 padding: EdgeInsets.all(8.0),
                                 itemCount: options.length,
                                 itemBuilder: (BuildContext context, int index) {
-                                  final String option =
-                                      options.elementAt(index);
+                                  final String option = options.elementAt(index);
                                   return GestureDetector(
                                     onTap: () {
                                       onSelected(option);

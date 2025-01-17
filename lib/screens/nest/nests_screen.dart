@@ -121,7 +121,7 @@ class NestsScreenState extends State<NestsScreen> {
 
   void _deleteSelectedNests() async {
     final nestProvider = Provider.of<NestProvider>(context, listen: false);
-    final nests = selectedNests.map((id) => nestProvider.getNestById(id)).toList();
+    // final nests = selectedNests.map((id) => nestProvider.getNestById(id)).toList();
 
     showDialog(
       context: context,
