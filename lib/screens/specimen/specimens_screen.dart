@@ -577,15 +577,32 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                     onPressed: _deleteSelectedSpecimens,
                   ),
                   VerticalDivider(),
-                  IconButton(
-                    icon: Icon(Icons.table_view_outlined),
-                    tooltip: 'CSV',
-                    onPressed: _exportSelectedSpecimensToCsv,
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.data_object_outlined),
-                    tooltip: 'JSON',
-                    onPressed: _exportSelectedSpecimensToJson,
+                  PopupMenuButton<String>(
+                    position: PopupMenuPosition.over,
+                    onSelected: (String item) {
+                      switch (item) {
+                        case 'csv':
+                          _exportSelectedSpecimensToCsv();
+                          break;
+                        case 'json':
+                          _exportSelectedSpecimensToJson();
+                          break;
+                      }
+                    },
+                    itemBuilder: (BuildContext context) {
+                      return [
+                        const PopupMenuItem<String>(
+                          value: 'csv',
+                          child: Text('CSV'),
+                        ),
+                        const PopupMenuItem<String>(
+                          value: 'json',
+                          child: Text('JSON'),
+                        ),
+                      ];
+                    },
+                    icon: const Icon(Icons.file_download_outlined),
+                    tooltip: S.of(context).export(S.of(context).specimens(2).toLowerCase()),
                   ),
                 ],
               ),

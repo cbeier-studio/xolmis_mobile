@@ -304,11 +304,12 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
 
         // Add species data
         rows.add([]); // Empty line to separate the inventory of the species
-        rows.add(['SPECIES', 'Count', 'Out of sample', 'Notes']);
+        rows.add(['SPECIES', 'Count', 'Time', 'Out of sample', 'Notes']);
         for (var species in inventory.speciesList) {
           rows.add([
             species.name,
             species.count,
+            species.sampleTime,
             species.isOutOfInventory,
             species.notes
           ]);
@@ -881,7 +882,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
           )
         ],
       ),
-      floatingActionButtonLocation: selectedInventories.isNotEmpty 
+      floatingActionButtonLocation: selectedInventories.isNotEmpty && !_isShowingActiveInventories 
         ? FloatingActionButtonLocation.endContained 
         : FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
@@ -891,7 +892,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
         },
         child: const Icon(Icons.add_outlined),
       ),
-      bottomNavigationBar: selectedInventories.isNotEmpty
+      bottomNavigationBar: selectedInventories.isNotEmpty && !_isShowingActiveInventories
           ? BottomAppBar(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -903,15 +904,32 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                     onPressed: _deleteSelectedInventories,
                   ),
                   VerticalDivider(),
-                  IconButton(
-                    icon: Icon(Icons.table_view_outlined),
-                    tooltip: 'CSV',
-                    onPressed: _exportSelectedInventoriesToCsv,
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.data_object_outlined),
-                    tooltip: 'JSON',
-                    onPressed: _exportSelectedInventoriesToJson,
+                  PopupMenuButton<String>(
+                    position: PopupMenuPosition.over,
+                    onSelected: (String item) {
+                      switch (item) {
+                        case 'csv':
+                          _exportSelectedInventoriesToCsv();
+                          break;
+                        case 'json':
+                          _exportSelectedInventoriesToJson();
+                          break;
+                      }
+                    },
+                    itemBuilder: (BuildContext context) {
+                      return [
+                        const PopupMenuItem<String>(
+                          value: 'csv',
+                          child: Text('CSV'),
+                        ),
+                        const PopupMenuItem<String>(
+                          value: 'json',
+                          child: Text('JSON'),
+                        ),
+                      ];
+                    },
+                    icon: const Icon(Icons.file_download_outlined),
+                    tooltip: S.of(context).export(S.of(context).inventory(2)),
                   ),
                 ],
               ),

@@ -587,7 +587,7 @@ class NestsScreenState extends State<NestsScreen> {
           ),
         ],
       ),
-      floatingActionButtonLocation: selectedNests.isNotEmpty 
+      floatingActionButtonLocation: selectedNests.isNotEmpty && !_showActive
         ? FloatingActionButtonLocation.endContained 
         : FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
@@ -597,7 +597,7 @@ class NestsScreenState extends State<NestsScreen> {
         },
         child: const Icon(Icons.add_outlined),
       ),
-      bottomNavigationBar: selectedNests.isNotEmpty
+      bottomNavigationBar: selectedNests.isNotEmpty && !_showActive
           ? BottomAppBar(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -609,16 +609,33 @@ class NestsScreenState extends State<NestsScreen> {
                     onPressed: _deleteSelectedNests,
                   ),
                   VerticalDivider(),
-                  IconButton(
-                    icon: Icon(Icons.table_view_outlined),
-                    tooltip: 'CSV',
-                    onPressed: _exportSelectedNestsToCsv,
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.data_object_outlined),
-                    tooltip: 'JSON',
-                    onPressed: _exportSelectedNestsToJson,
-                  ),
+                  PopupMenuButton<String>(
+                    position: PopupMenuPosition.over,
+                    onSelected: (String item) {
+                      switch (item) {
+                        case 'csv':
+                          _exportSelectedNestsToCsv();
+                          break;
+                        case 'json':
+                          _exportSelectedNestsToJson();
+                          break;
+                      }
+                    },
+                    itemBuilder: (BuildContext context) {
+                      return [
+                        const PopupMenuItem<String>(
+                          value: 'csv',
+                          child: Text('CSV'),
+                        ),
+                        const PopupMenuItem<String>(
+                          value: 'json',
+                          child: Text('JSON'),
+                        ),
+                      ];
+                    },
+                    icon: const Icon(Icons.file_download_outlined),
+                    tooltip: S.of(context).export(S.of(context).nest(2)),
+                  ),                  
                 ],
               ),
             )
