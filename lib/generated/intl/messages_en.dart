@@ -407,6 +407,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "proportion": MessageLookupByLibrary.simpleMessage("Proportion"),
         "reactivateInventory":
             MessageLookupByLibrary.simpleMessage("Reactivate inventory"),
+        "recordTime": MessageLookupByLibrary.simpleMessage("Record time"),
         "removeSpeciesFromSample":
             MessageLookupByLibrary.simpleMessage("Remove from the sample"),
         "requiredField": MessageLookupByLibrary.simpleMessage("* required"),

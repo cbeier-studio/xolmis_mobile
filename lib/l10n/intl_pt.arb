@@ -250,6 +250,11 @@
     "poi": "POI",
     "speciesInfo": "Informações da espécie",
     "count": "Contagem",
+    "recordTime": "Hora do registro",
+    "@recordTime": {
+        "type": "text",
+        "description": "Species info showing the record time for the species in the actual list"
+    },
     "individual": "{howMany, plural, one{indivíduo} other{indivíduos}}",
     "@individual": {
         "type": "text",

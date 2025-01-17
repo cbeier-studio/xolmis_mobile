@@ -563,6 +563,11 @@
         "type": "text",
         "description": "Species info showing individuals count for the species in the actual list"
     },
+    "recordTime": "Record time",
+    "@recordTime": {
+        "type": "text",
+        "description": "Species info showing the record time for the species in the actual list"
+    },
     "individual": "{howMany, plural, one{individual} other{individuals}}",
     "@individual": {
         "type": "text",

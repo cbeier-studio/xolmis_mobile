@@ -57,6 +57,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     final newSpecies = Species(
       inventoryId: widget.inventory.id,
       name: speciesName,
+      sampleTime: DateTime.now(),
       isOutOfInventory: widget.inventory.isFinished,
       pois: [],
     );
@@ -111,6 +112,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
         final newSpeciesForOtherInventory = Species(
           inventoryId: inventory.id,
           name: speciesName,
+          sampleTime: DateTime.now(),
           isOutOfInventory: inventory.isFinished,
           pois: [],
         );

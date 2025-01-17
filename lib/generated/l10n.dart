@@ -1081,6 +1081,17 @@ class S {
     );
   }
 
+  /// `Record time`
+  String get recordTime {
+    return Intl.message(
+      'Record time',
+      name: 'recordTime',
+      desc:
+          'Species info showing the record time for the species in the actual list',
+      args: [],
+    );
+  }
+
   /// `{howMany, plural, one{individual} other{individuals}}`
   String individual(int howMany) {
     return Intl.plural(

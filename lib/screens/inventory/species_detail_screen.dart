@@ -159,6 +159,10 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
                               subtitle: Text(S.of(context).count),
                             ),
                             ListTile(
+                              title: Text('${widget.species.sampleTime}'),
+                              subtitle: Text(S.of(context).recordTime),
+                            ),
+                            ListTile(
                               title: Text(widget.species.isOutOfInventory ? S.of(context).outOfSample : S.of(context).withinSample),
                             ),
                             ListTile(

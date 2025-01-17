@@ -83,6 +83,7 @@ class Species {
   bool isOutOfInventory;
   int count;
   String? notes;
+  DateTime? sampleTime;
   List<Poi> pois;
 
   Species({
@@ -92,6 +93,7 @@ class Species {
     required this.isOutOfInventory,
     this.count = 0,
     this.notes,
+    this.sampleTime,
     this.pois = const [],
   });
 
@@ -102,6 +104,9 @@ class Species {
       name: map['name'],
       count: map['count'],
       notes: map['notes'],
+      sampleTime: map['sampleTime'] != null
+          ? DateTime.parse(map['sampleTime'])
+          : null,
       isOutOfInventory: map['isOutOfInventory'] == 1, // Convert int to boolean
       pois: pois,
     );
@@ -115,6 +120,7 @@ class Species {
       isOutOfInventory: isOutOfInventory ?? this.isOutOfInventory,
       count: count ?? this.count,
       notes: notes ?? this.notes,
+      sampleTime: sampleTime ?? this.sampleTime,
       pois: pois ?? this.pois,
     );
   }
@@ -127,6 +133,7 @@ class Species {
       'isOutOfInventory': isOutOfInventory ? 1 : 0,
       'count': count,
       'notes': notes,
+      'sampleTime': sampleTime?.toIso8601String(),
     };
   }
 
@@ -138,6 +145,7 @@ class Species {
       'isOutOfInventory': isOutOfInventory ? 1 : 0,
       'count': count,
       'notes': notes,
+      'sampleTime': sampleTime?.toIso8601String(),
       'pois': pois.map((poi) => poi.toJson()).toList(),
     };
   }
@@ -150,6 +158,7 @@ class Species {
         'name: $name, '
         'isOutOfInventory: $isOutOfInventory, '
         'count: $count, '
+        'sampleTime: $sampleTime, '
         'notes: $notes}';
   }
 }

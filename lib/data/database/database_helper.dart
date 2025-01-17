@@ -23,7 +23,7 @@ class DatabaseHelper {
     String path = join(await getDatabasesPath(), 'xolmis_database.db');
     return await openDatabase(
       path,
-      version: 10, // Increase the version number
+      version: 11, // Increase the version number
       onCreate: _createTables,
       onUpgrade: _upgradeTables,
       onOpen: (db) {
@@ -63,6 +63,7 @@ class DatabaseHelper {
           isOutOfInventory INTEGER, 
           count INTEGER, 
           notes TEXT, 
+          sampleTime TEXT,
           FOREIGN KEY (inventoryId) REFERENCES inventories(id) ON DELETE CASCADE 
         )
       ''');
@@ -310,6 +311,11 @@ class DatabaseHelper {
       );
       db.execute(
         'ALTER TABLE inventories ADD COLUMN currentIntervalSpeciesCount INTEGER',
+      );
+    }
+    if (oldVersion < 11) {
+      db.execute(
+        'ALTER TABLE species ADD COLUMN sampleTime TEXT',
       );
     }
   }

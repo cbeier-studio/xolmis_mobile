@@ -146,9 +146,9 @@ Future<void> exportInventoryToCsv(BuildContext context, Inventory inventory, boo
 
     // Add species data
     rows.add([]); // Empty line to separate the inventory of the species
-    rows.add(['SPECIES', 'Count', 'Out of sample', 'Notes']);
+    rows.add(['SPECIES', 'Count', 'Time', 'Out of sample', 'Notes']);
     for (var species in inventory.speciesList) {
-      rows.add([species.name, species.count, species.isOutOfInventory, species.notes]);
+      rows.add([species.name, species.count, species.sampleTime, species.isOutOfInventory, species.notes]);
     }
 
     // Add vegetation data
