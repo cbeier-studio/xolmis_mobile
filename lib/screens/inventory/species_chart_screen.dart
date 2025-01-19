@@ -28,14 +28,16 @@ class SpeciesChartScreen extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: LineChart(          
+        child: speciesAccumulationData.isEmpty
+            ? Center(child: Text(S.current.noDataAvailable))
+            : LineChart(          
           LineChartData(
             minX: minX,
             maxX: maxX,
             maxY: maxY,
             titlesData: FlTitlesData(
               bottomTitles: AxisTitles(
-                axisNameWidget: Text('Time (min)'),
+                axisNameWidget: Text(S.current.timeMinutes),
                 sideTitles: SideTitles(
                   showTitles: true,
                   getTitlesWidget: (value, meta) {
@@ -45,7 +47,7 @@ class SpeciesChartScreen extends StatelessWidget {
                 ),
               ),
               leftTitles: AxisTitles(
-                axisNameWidget: Text('Species accumulation'),
+                axisNameWidget: Text(S.current.speciesAccumulated),
                 sideTitles: SideTitles(
                   showTitles: true,
                   getTitlesWidget: (value, meta) {

@@ -221,6 +221,21 @@
         "type": "text",
         "description": "Title of report option to show species accumulation curve"
     },
+    "speciesAccumulated": "Acumulado de espécies",
+    "@speciesAccumulated": {
+        "type": "text",
+        "description": "Species accumulated field label"
+    },
+    "timeMinutes": "Tempo (minutos)",
+    "@timeMinutes": {
+        "type": "text",
+        "description": "Time in minutes field label"
+    },
+    "noDataAvailable": "Dados não disponíveis.",
+    "@noDataAvailable": {
+        "type": "text",
+        "description": "Message shown when there is no data to show"
+    },
     "vegetationData": "Dados de vegetação",
     "herbs": "Herbáceas",
     "distribution": "Distribuição",

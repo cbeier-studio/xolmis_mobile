@@ -372,6 +372,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "newSpecimen": MessageLookupByLibrary.simpleMessage("Novo espécime"),
         "nidoparasite": MessageLookupByLibrary.simpleMessage("Nidoparasita"),
         "no": MessageLookupByLibrary.simpleMessage("Não"),
+        "noDataAvailable":
+            MessageLookupByLibrary.simpleMessage("Dados não disponíveis."),
         "noEggsFound":
             MessageLookupByLibrary.simpleMessage("Nenhum ovo registrado."),
         "noImagesFound":
@@ -449,6 +451,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "sortDescending":
             MessageLookupByLibrary.simpleMessage("Ordem decrescente"),
         "species": m21,
+        "speciesAccumulated":
+            MessageLookupByLibrary.simpleMessage("Acumulado de espécies"),
         "speciesAccumulationCurve": MessageLookupByLibrary.simpleMessage(
             "Curva de acumulação de espécies"),
         "speciesAcronym": m22,
@@ -489,6 +493,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "temperature": MessageLookupByLibrary.simpleMessage("Temperatura"),
         "timeFound":
             MessageLookupByLibrary.simpleMessage("Data e hora de encontro"),
+        "timeMinutes": MessageLookupByLibrary.simpleMessage("Tempo (minutos)"),
         "timedQualitativeLists": MessageLookupByLibrary.simpleMessage(
             "Listas qualitativas temporizadas"),
         "totalIndividuals":

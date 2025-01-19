@@ -853,6 +853,36 @@ class S {
     );
   }
 
+  /// `Species accumulated`
+  String get speciesAccumulated {
+    return Intl.message(
+      'Species accumulated',
+      name: 'speciesAccumulated',
+      desc: 'Species accumulated field label',
+      args: [],
+    );
+  }
+
+  /// `Time (minutes)`
+  String get timeMinutes {
+    return Intl.message(
+      'Time (minutes)',
+      name: 'timeMinutes',
+      desc: 'Time in minutes field label',
+      args: [],
+    );
+  }
+
+  /// `No data available.`
+  String get noDataAvailable {
+    return Intl.message(
+      'No data available.',
+      name: 'noDataAvailable',
+      desc: 'Message shown when there is no data to show',
+      args: [],
+    );
+  }
+
   /// `Vegetation data`
   String get vegetationData {
     return Intl.message(
