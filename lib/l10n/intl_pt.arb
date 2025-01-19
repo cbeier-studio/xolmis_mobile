@@ -201,6 +201,21 @@
     "startInventory": "Iniciar inventário",
     "inventoryIdAlreadyExists": "Já existe um inventário com esta ID.",
     "errorInsertingInventory": "Erro ao inserir inventário.",
+    "reportSpeciesByInventory": "Espécies por inventário",
+    "@reportSpeciesByInventory": {
+        "type": "text",
+        "description": "Title of report option to show species by inventory"
+    },	
+    "totalSpecies": "Total de espécies",
+    "@totalSpecies": {
+        "type": "text",
+        "description": "Total species field label"
+    },	
+    "totalIndividuals": "Total de indivíduos",
+    "@totalIndividuals": {
+        "type": "text",
+        "description": "Total individuals field label"
+    },
     "vegetationData": "Dados de vegetação",
     "herbs": "Herbáceas",
     "distribution": "Distribuição",

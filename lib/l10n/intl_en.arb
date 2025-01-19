@@ -422,6 +422,21 @@
         "type": "text",
         "description": "Message shown if an error occurred while inserting an inventory"
     },
+    "reportSpeciesByInventory": "Species by inventory",
+    "@reportSpeciesByInventory": {
+        "type": "text",
+        "description": "Title of report option to show species by inventory"
+    },	
+    "totalSpecies": "Total Species",
+    "@totalSpecies": {
+        "type": "text",
+        "description": "Total species field label"
+    },	
+    "totalIndividuals": "Total Individuals",
+    "@totalIndividuals": {
+        "type": "text",
+        "description": "Total individuals field label"
+    },
     "vegetationData": "Vegetation data",
     "@vegetationData": {
         "type": "text",

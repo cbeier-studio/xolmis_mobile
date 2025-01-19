@@ -421,6 +421,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "recordTime": MessageLookupByLibrary.simpleMessage("Hora do registro"),
         "removeSpeciesFromSample":
             MessageLookupByLibrary.simpleMessage("Remover da amostra"),
+        "reportSpeciesByInventory":
+            MessageLookupByLibrary.simpleMessage("Espécies por inventário"),
         "requiredField": MessageLookupByLibrary.simpleMessage("* obrigatório"),
         "resume": MessageLookupByLibrary.simpleMessage("Retomar"),
         "revision": m20,
@@ -487,6 +489,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Data e hora de encontro"),
         "timedQualitativeLists": MessageLookupByLibrary.simpleMessage(
             "Listas qualitativas temporizadas"),
+        "totalIndividuals":
+            MessageLookupByLibrary.simpleMessage("Total de indivíduos"),
+        "totalSpecies":
+            MessageLookupByLibrary.simpleMessage("Total de espécies"),
         "trees": MessageLookupByLibrary.simpleMessage("Árvores"),
         "vegetation": MessageLookupByLibrary.simpleMessage("Vegetação"),
         "vegetationData":

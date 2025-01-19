@@ -237,13 +237,13 @@ class VegetationGridItem extends StatelessWidget {
                   children: [
                     Text(
                       DateFormat('dd/MM/yyyy HH:mm:ss').format(vegetation.sampleTime!),
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     Text('${vegetation.latitude}; ${vegetation.longitude}'),
                     Text('${S.of(context).herbs}: ${vegetation.herbsDistribution?.index ?? 0}; ${vegetation.herbsProportion}%; ${vegetation.herbsHeight} cm'),
                     Text('${S.of(context).shrubs}: ${vegetation.shrubsDistribution?.index ?? 0}; ${vegetation.shrubsProportion}%; ${vegetation.shrubsHeight} cm'),
                     Text('${S.of(context).trees}: ${vegetation.treesDistribution?.index ?? 0}; ${vegetation.treesProportion}%; ${vegetation.treesHeight} cm'),
+                    Text('${vegetation.notes}'),
                   ],
                 ),
               ],
@@ -304,6 +304,7 @@ class VegetationListItemState extends State<VegetationListItem> {
           Text('${S.of(context).herbs}: ${widget.vegetation.herbsDistribution?.index ?? 0}; ${widget.vegetation.herbsProportion}%; ${widget.vegetation.herbsHeight} cm'),
           Text('${S.of(context).shrubs}: ${widget.vegetation.shrubsDistribution?.index ?? 0}; ${widget.vegetation.shrubsProportion}%; ${widget.vegetation.shrubsHeight} cm'),
           Text('${S.of(context).trees}: ${widget.vegetation.treesDistribution?.index ?? 0}; ${widget.vegetation.treesProportion}%; ${widget.vegetation.treesHeight} cm'),
+          Text('${widget.vegetation.notes}'),
         ],
       ),
       onLongPress: widget.onLongPress,

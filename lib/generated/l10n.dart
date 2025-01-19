@@ -813,6 +813,36 @@ class S {
     );
   }
 
+  /// `Species by inventory`
+  String get reportSpeciesByInventory {
+    return Intl.message(
+      'Species by inventory',
+      name: 'reportSpeciesByInventory',
+      desc: 'Title of report option to show species by inventory',
+      args: [],
+    );
+  }
+
+  /// `Total Species`
+  String get totalSpecies {
+    return Intl.message(
+      'Total Species',
+      name: 'totalSpecies',
+      desc: 'Total species field label',
+      args: [],
+    );
+  }
+
+  /// `Total Individuals`
+  String get totalIndividuals {
+    return Intl.message(
+      'Total Individuals',
+      name: 'totalIndividuals',
+      desc: 'Total individuals field label',
+      args: [],
+    );
+  }
+
   /// `Vegetation data`
   String get vegetationData {
     return Intl.message(
