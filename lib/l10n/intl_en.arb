@@ -437,6 +437,11 @@
         "type": "text",
         "description": "Total individuals field label"
     },
+    "speciesAccumulationCurve": "Species accumulation curve",
+    "@speciesAccumulationCurve": {
+        "type": "text",
+        "description": "Title of report option to show species accumulation curve"
+    },
     "vegetationData": "Vegetation data",
     "@vegetationData": {
         "type": "text",

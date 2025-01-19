@@ -438,6 +438,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "sortDescending":
             MessageLookupByLibrary.simpleMessage("Sort descending"),
         "species": m21,
+        "speciesAccumulationCurve":
+            MessageLookupByLibrary.simpleMessage("Species accumulation curve"),
         "speciesAcronym": m22,
         "speciesCount": m23,
         "speciesInfo":

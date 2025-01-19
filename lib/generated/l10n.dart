@@ -843,6 +843,16 @@ class S {
     );
   }
 
+  /// `Species accumulation curve`
+  String get speciesAccumulationCurve {
+    return Intl.message(
+      'Species accumulation curve',
+      name: 'speciesAccumulationCurve',
+      desc: 'Title of report option to show species accumulation curve',
+      args: [],
+    );
+  }
+
   /// `Vegetation data`
   String get vegetationData {
     return Intl.message(

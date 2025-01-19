@@ -58,6 +58,7 @@ dependencies:
   device_info_plus: ^11.2.0
   settings_ui: ^2.0.2
   intl_utils: ^2.8.7
+  fl_chart: ^0.70.2
 
 dev_dependencies:
   flutter_test:

@@ -11,6 +11,7 @@ import '../../providers/poi_provider.dart';
 
 import '../../utils/utils.dart';
 import '../../utils/species_search_delegate.dart';
+import 'species_chart_screen.dart';
 import 'species_list_item.dart';
 import '../../generated/l10n.dart';
 
@@ -313,6 +314,18 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                     hintText: '${S.of(context).addSpecies}...',
                     prefixIcon: const Icon(Icons.search_outlined),
                     border: const OutlineInputBorder(),
+                    icon: IconButton(
+                      icon: const Icon(Icons.show_chart_outlined),
+                      onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SpeciesChartScreen(
+                            inventory: widget.inventory),
+                      ),
+                    );
+                  },
+                    ),
                     suffixIcon: IconButton(
                       icon: const Icon(Icons.add_box_outlined),
                       onPressed: () {

@@ -216,6 +216,11 @@
         "type": "text",
         "description": "Total individuals field label"
     },
+    "speciesAccumulationCurve": "Curva de acumulação de espécies",
+    "@speciesAccumulationCurve": {
+        "type": "text",
+        "description": "Title of report option to show species accumulation curve"
+    },
     "vegetationData": "Dados de vegetação",
     "herbs": "Herbáceas",
     "distribution": "Distribuição",
