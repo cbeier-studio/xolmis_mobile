@@ -12,7 +12,6 @@ class SpeciesChartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final speciesAccumulationData = _prepareSpeciesAccumulationData(inventory);
-    final trendLineData = _calculateTrendLine(speciesAccumulationData);
 
     final minX = 0.0;
     final maxX = speciesAccumulationData.isNotEmpty
@@ -68,15 +67,9 @@ class SpeciesChartScreen extends StatelessWidget {
                     .toList(),
                 isCurved: false,
                 barWidth: 2,
-                color: Colors.deepPurple,
-                belowBarData: BarAreaData(show: false),
-              ),
-              LineChartBarData(
-                spots: trendLineData,
-                show: false,
-                isCurved: false,
-                barWidth: 2,
-                color: Colors.red,
+                color: Theme.of(context).brightness == Brightness.light
+                    ? Colors.deepPurple
+                    : Colors.deepPurple[200],
                 belowBarData: BarAreaData(show: false),
               ),
             ],
@@ -91,6 +84,9 @@ class SpeciesChartScreen extends StatelessWidget {
     final speciesByInterval = <int, Set<String>>{};
 
     final startTime = inventory.startTime!;
+    final currentTime = inventory.isFinished ? inventory.endTime! : DateTime.now();
+    final totalElapsedMinutes = currentTime.difference(startTime).inMinutes;
+    final totalIntervals = (totalElapsedMinutes / 5).ceil();
 
     for (final species in inventory.speciesList) {
       final sampleTime = species.sampleTime;
@@ -112,7 +108,7 @@ class SpeciesChartScreen extends StatelessWidget {
     int cumulativeSpeciesCount = 0;
     final seenSpecies = <String>{};
 
-    for (int i = 0; i <= speciesByInterval.keys.reduce((a, b) => a > b ? a : b); i++) {
+    for (int i = 0; i <= totalIntervals; i++) {
       if (speciesByInterval.containsKey(i)) {
         for (final species in speciesByInterval[i]!) {
           if (!seenSpecies.contains(species)) {
@@ -125,33 +121,6 @@ class SpeciesChartScreen extends StatelessWidget {
     }
 
     return speciesAccumulationData;
-  }
-
-  List<FlSpot> _calculateTrendLine(List<SpeciesAccumulationData> data) {
-    final n = data.length;
-    if (n == 0) return [];
-
-    double sumX = 0;
-    double sumY = 0;
-    double sumXY = 0;
-    double sumX2 = 0;
-
-    for (final point in data) {
-      sumX += point.interval;
-      sumY += point.speciesCount;
-      sumXY += point.interval * point.speciesCount;
-      sumX2 += point.interval * point.interval;
-    }
-
-    final slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
-    final intercept = (sumY - slope * sumX) / n;
-
-    final trendLineData = data.map((point) {
-      final y = slope * point.interval + intercept;
-      return FlSpot(point.interval.toDouble(), y);
-    }).toList();
-
-    return trendLineData;
   }
 }
 
