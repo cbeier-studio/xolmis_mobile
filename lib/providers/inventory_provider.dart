@@ -96,6 +96,24 @@ class InventoryProvider with ChangeNotifier {
     }
   }
 
+  // Add imported inventory to the database and the list
+  Future<bool> importInventory(Inventory inventory) async {
+    try {
+      await _inventoryRepository.importInventory(inventory);
+      _inventories.add(inventory);
+
+      return true;
+    } catch (error) {
+      // Handle insertion error
+      if (kDebugMode) {
+        print('Error importing inventory: $error');
+      }
+      return false;
+    } finally {
+      notifyListeners();
+    }
+  }
+
   // Update inventory in the database and the list
   void updateInventory(Inventory inventory) async {
     await _inventoryRepository.updateInventory(inventory);

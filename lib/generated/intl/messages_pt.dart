@@ -115,6 +115,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "appearance": MessageLookupByLibrary.simpleMessage("Aparência"),
         "camera": MessageLookupByLibrary.simpleMessage("Câmera"),
         "cancel": MessageLookupByLibrary.simpleMessage("Cancelar"),
+        "clearSelection":
+            MessageLookupByLibrary.simpleMessage("Limpar seleção"),
         "cloudCover": MessageLookupByLibrary.simpleMessage("Nebulosidade"),
         "confirmAutoFinishMessage": MessageLookupByLibrary.simpleMessage(
             "Inventário automaticamente encerrado. Você deseja mantê-lo ativo ou finalizar este inventário?"),
@@ -231,6 +233,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "errorExportingSpecimen": m5,
         "errorGettingLocation": MessageLookupByLibrary.simpleMessage(
             "Erro ao obter a localização."),
+        "errorImportingInventory": MessageLookupByLibrary.simpleMessage(
+            "Erro ao importar inventário."),
         "errorInactivatingNest": m6,
         "errorInsertingInventory":
             MessageLookupByLibrary.simpleMessage("Erro ao inserir inventário."),
@@ -314,6 +318,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "inventoryId": MessageLookupByLibrary.simpleMessage("ID do Inventário"),
         "inventoryIdAlreadyExists": MessageLookupByLibrary.simpleMessage(
             "Já existe um inventário com esta ID."),
+        "inventoryImportedSuccessfully": MessageLookupByLibrary.simpleMessage(
+            "Inventário importado com sucesso!"),
         "inventoryIntervalQualitative": MessageLookupByLibrary.simpleMessage(
             "Lista Qualitativa por Intervalos"),
         "inventoryMackinnonList":
@@ -376,6 +382,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Dados não disponíveis."),
         "noEggsFound":
             MessageLookupByLibrary.simpleMessage("Nenhum ovo registrado."),
+        "noFileSelected":
+            MessageLookupByLibrary.simpleMessage("Nenhum arquivo selecionado."),
         "noImagesFound":
             MessageLookupByLibrary.simpleMessage("Nenhuma imagem encontrada."),
         "noInventoriesFound": MessageLookupByLibrary.simpleMessage(

@@ -114,6 +114,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "appearance": MessageLookupByLibrary.simpleMessage("Appearance"),
         "camera": MessageLookupByLibrary.simpleMessage("Camera"),
         "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+        "clearSelection":
+            MessageLookupByLibrary.simpleMessage("Clear selection"),
         "cloudCover": MessageLookupByLibrary.simpleMessage("Cloud cover"),
         "confirmAutoFinishMessage": MessageLookupByLibrary.simpleMessage(
             "Inventory automatically finished. Do you want to keep active or finish this inventory?"),
@@ -226,6 +228,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "errorExportingSpecimen": m5,
         "errorGettingLocation":
             MessageLookupByLibrary.simpleMessage("Error getting location."),
+        "errorImportingInventory":
+            MessageLookupByLibrary.simpleMessage("Error importing inventory."),
         "errorInactivatingNest": m6,
         "errorInsertingInventory":
             MessageLookupByLibrary.simpleMessage("Error inserting inventory"),
@@ -308,6 +312,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "inventoryId": MessageLookupByLibrary.simpleMessage("Inventory ID"),
         "inventoryIdAlreadyExists": MessageLookupByLibrary.simpleMessage(
             "This inventory ID already exists."),
+        "inventoryImportedSuccessfully": MessageLookupByLibrary.simpleMessage(
+            "Inventory imported successfully!"),
         "inventoryIntervalQualitative":
             MessageLookupByLibrary.simpleMessage("Interval Qualitative List"),
         "inventoryMackinnonList":
@@ -365,6 +371,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("No data available."),
         "noEggsFound":
             MessageLookupByLibrary.simpleMessage("No eggs recorded."),
+        "noFileSelected":
+            MessageLookupByLibrary.simpleMessage("No file selected."),
         "noImagesFound":
             MessageLookupByLibrary.simpleMessage("No images found."),
         "noInventoriesFound":

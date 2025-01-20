@@ -492,6 +492,10 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
               ];
             },
           ),
+          // IconButton(
+          //   icon: Icon(Icons.import_export_outlined),
+          //   onPressed: importInventoryFromJson(context),
+          // ),
         ],
       ),
       body: Column(
@@ -1097,6 +1101,16 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                             selectedInventories: inventories.whereType<Inventory>().toList()),
                       ),
                     );
+                    },
+                  ),
+                  VerticalDivider(),
+                  IconButton(
+                    icon: Icon(Icons.clear_outlined),
+                    tooltip: S.current.clearSelection,
+                    onPressed: () {
+                      setState(() {
+                        selectedInventories.clear();
+                      });
                     },
                   ),
                 ],

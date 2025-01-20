@@ -236,6 +236,26 @@
         "type": "text",
         "description": "Message shown when there is no data to show"
     },
+    "clearSelection": "Limpar seleção",
+    "@clearSelection": {
+        "type": "text",
+        "description": "Button label to clear the selection"
+    },
+    "inventoryImportedSuccessfully": "Inventário importado com sucesso!",
+    "@inventoryImportedSuccessfully": {
+        "type": "text",
+        "description": "Message shown when an inventory is imported successfully"
+    },
+    "noFileSelected": "Nenhum arquivo selecionado.",
+    "@noFileSelected": {
+        "type": "text",
+        "description": "Message shown when no file is selected to import"
+    },
+    "errorImportingInventory": "Erro ao importar inventário.",
+    "@errorImportingInventory": {
+        "type": "text",
+        "description": "Message shown when an error occurred while importing an inventory"
+    },
     "vegetationData": "Dados de vegetação",
     "herbs": "Herbáceas",
     "distribution": "Distribuição",

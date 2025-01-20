@@ -10,6 +10,10 @@ class InventoryRepository {
     return _inventoryDao.insertInventory(inventory);
   }
 
+  Future<bool> importInventory(Inventory inventory) {
+    return _inventoryDao.importInventory(inventory);
+  }
+
   Future<void> deleteInventory(String? inventoryId) {
     return _inventoryDao.deleteInventory(inventoryId);
   }

@@ -457,6 +457,26 @@
         "type": "text",
         "description": "Message shown when there is no data to show"
     },
+    "clearSelection": "Clear selection",
+    "@clearSelection": {
+        "type": "text",
+        "description": "Button label to clear the selection"
+    },
+    "inventoryImportedSuccessfully": "Inventory imported successfully!",
+    "@inventoryImportedSuccessfully": {
+        "type": "text",
+        "description": "Message shown when an inventory is imported successfully"
+    },
+    "noFileSelected": "No file selected.",
+    "@noFileSelected": {
+        "type": "text",
+        "description": "Message shown when no file is selected to import"
+    },
+    "errorImportingInventory": "Error importing inventory.",
+    "@errorImportingInventory": {
+        "type": "text",
+        "description": "Message shown when an error occurred while importing an inventory"
+    },
     "vegetationData": "Vegetation data",
     "@vegetationData": {
         "type": "text",

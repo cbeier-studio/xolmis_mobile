@@ -68,7 +68,7 @@ class InventoryReportScreen extends StatelessWidget {
 
         if (speciesInInventory.name.isNotEmpty) {
           final speciesCount = speciesInInventory.count;
-          row.add(speciesCount > 0 ? speciesCount : 'X');
+          row.add(speciesCount > 0 ? speciesCount : !speciesInInventory.isOutOfInventory ? 'X' : 'O');
           totalIndividuals += speciesCount;
         } else {
           row.add('');
@@ -113,7 +113,9 @@ class InventoryReportScreen extends StatelessWidget {
   }
 
   Future<void> _exportReportToCsv(List<List<dynamic>> reportData) async {
-    final csv = const ListToCsvConverter().convert(reportData);
+    final headers = _buildColumns(selectedInventories).map((column) => column.label.toString()).toList();
+    final csvData = [headers, ...reportData];
+    final csv = const ListToCsvConverter().convert(csvData);
     final directory = await getExternalStorageDirectory();
     final path = '${directory?.path}/inventory_report_${DateTime.now().toIso8601String()}.csv';
     final file = File(path);

@@ -29,12 +29,83 @@ class InventoryDao {
         inventory.startLongitude = position.longitude;
       }
 
-      int? id = await db?.insert(
+      int? recordId = await db?.insert(
         'inventories',
         inventory.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
-      return id != null && id > 0;
+      return recordId != null && recordId > 0;
+    } on DatabaseException catch (e) {
+      if (kDebugMode) {
+        print('Database error: $e');
+        print('Exception type: ${e.runtimeType}');
+        print('Detailed message: ${e.toString()}');
+      }
+      return false;
+      // Handle the database error
+    } catch (e) {
+      if (kDebugMode) {
+        print('Generic error: $e');
+        print('Exception type: ${e.runtimeType}');
+        print('Detailed message: ${e.toString()}');
+      }
+      // Handle other errors
+      return false;
+    }
+  }
+
+  // Insert an imported inventory to database
+  Future<bool> importInventory(Inventory inventory) async {
+    final db = await _dbHelper.database;
+    try {
+      int? recordId = await db?.insert(
+        'inventories',
+        inventory.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+
+      for (final species in inventory.speciesList) {
+        species.id = null;
+        int? speciesId = await db?.insert(
+          'species',
+          species.toMap(inventory.id),
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+        species.id = speciesId;
+
+        for (final poi in species.pois) {
+          poi.id = null;
+          int? poiId = await db?.insert(
+            'pois',
+            poi.toMap(speciesId!),
+            conflictAlgorithm: ConflictAlgorithm.replace,
+          );
+          poi.id = poiId;
+        }
+      }
+
+      for (final vegetation in inventory.vegetationList) {
+        vegetation.id = null;
+        int? vegetationId = await db?.insert(
+          'vegetation',
+          vegetation.toMap(inventory.id),
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+        vegetation.id = vegetationId;
+      }
+
+      for (final weather in inventory.weatherList) {
+        weather.id = null;
+        int? weatherId = await db?.insert(
+          'weather',
+          weather.toMap(inventory.id),
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+        weather.id = weatherId;
+      }
+
+      return recordId != null && recordId > 0;
+
     } on DatabaseException catch (e) {
       if (kDebugMode) {
         print('Database error: $e');

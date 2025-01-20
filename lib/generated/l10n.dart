@@ -883,6 +883,46 @@ class S {
     );
   }
 
+  /// `Clear selection`
+  String get clearSelection {
+    return Intl.message(
+      'Clear selection',
+      name: 'clearSelection',
+      desc: 'Button label to clear the selection',
+      args: [],
+    );
+  }
+
+  /// `Inventory imported successfully!`
+  String get inventoryImportedSuccessfully {
+    return Intl.message(
+      'Inventory imported successfully!',
+      name: 'inventoryImportedSuccessfully',
+      desc: 'Message shown when an inventory is imported successfully',
+      args: [],
+    );
+  }
+
+  /// `No file selected.`
+  String get noFileSelected {
+    return Intl.message(
+      'No file selected.',
+      name: 'noFileSelected',
+      desc: 'Message shown when no file is selected to import',
+      args: [],
+    );
+  }
+
+  /// `Error importing inventory.`
+  String get errorImportingInventory {
+    return Intl.message(
+      'Error importing inventory.',
+      name: 'errorImportingInventory',
+      desc: 'Message shown when an error occurred while importing an inventory',
+      args: [],
+    );
+  }
+
   /// `Vegetation data`
   String get vegetationData {
     return Intl.message(

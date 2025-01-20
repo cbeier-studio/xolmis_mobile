@@ -64,6 +64,15 @@ class Poi {
     };
   }
 
+  factory Poi.fromJson(Map<String, dynamic> json) {
+    return Poi(
+      id: json['id'],
+      speciesId: json['speciesId'],
+      longitude: json['longitude'],
+      latitude: json['latitude'],
+    );
+  }
+
   @override
   String toString() {
     return 'Poi{'
@@ -148,6 +157,19 @@ class Species {
       'sampleTime': sampleTime?.toIso8601String(),
       'pois': pois.map((poi) => poi.toJson()).toList(),
     };
+  }
+
+  factory Species.fromJson(Map<String, dynamic> json) {
+    return Species(
+      id: json['id'],
+      inventoryId: json['inventoryId'],
+      name: json['name'],
+      isOutOfInventory: json['isOutOfInventory'] == 1,
+      count: json['count'],
+      notes: json['notes'],
+      sampleTime: json['sampleTime'] != null ? DateTime.parse(json['sampleTime']) : null,
+      pois: (json['pois'] as List).map((item) => Poi.fromJson(item)).toList(),
+    );
   }
 
   @override
@@ -334,6 +356,26 @@ class Vegetation {
     };
   }
 
+  factory Vegetation.fromJson(Map<String, dynamic> json) {
+    return Vegetation(
+      id: json['id'],
+      inventoryId: json['inventoryId'],
+      sampleTime: json['sampleTime'] != null ? DateTime.parse(json['sampleTime']) : null,
+      longitude: json['longitude'],
+      latitude: json['latitude'],
+      herbsProportion: json['herbsProportion'],
+      herbsDistribution: json['herbsDistribution'] != null ? DistributionType.values[json['herbsDistribution']] : DistributionType.disNone,
+      herbsHeight: json['herbsHeight'],
+      shrubsProportion: json['shrubsProportion'],
+      shrubsDistribution: json['shrubsDistribution'] != null ? DistributionType.values[json['shrubsDistribution']] : DistributionType.disNone,
+      shrubsHeight: json['shrubsHeight'],
+      treesProportion: json['treesProportion'],
+      treesDistribution: json['treesDistribution'] != null ? DistributionType.values[json['treesDistribution']] : DistributionType.disNone,
+      treesHeight: json['treesHeight'],
+      notes: json['notes'],
+    );
+  }
+
   @override
   String toString() {
     return 'Vegetation{'
@@ -449,6 +491,17 @@ class Weather {
       'windSpeed': windSpeed,
     };
   }
+
+  factory Weather.fromJson(Map<String, dynamic> json) {
+    return Weather(
+      inventoryId: json['inventoryId'],
+      sampleTime: DateTime.parse(json['sampleTime']), 
+      cloudCover: json['cloudCover'],
+      precipitation: json['precipitation'],
+      temperature: json['temperature'],
+      windSpeed: json['windSpeed'],
+    );
+  } 
 
   @override
   String toString() {
@@ -676,6 +729,27 @@ class Inventory with ChangeNotifier {
       'vegetationList': vegetationList.map((vegetation) => vegetation.toJson()).toList(),
       'weatherList': weatherList.map((weather) => weather.toJson()).toList(),
     };
+  }
+
+  factory Inventory.fromJson(Map<String, dynamic> json) {
+    return Inventory(
+      id: json['id'],
+      type: InventoryType.values[json['type']],
+      duration: json['duration'],
+      maxSpecies: json['maxSpecies'],
+      startTime: json['startTime'] != null ? DateTime.parse(json['startTime']) : null,
+      endTime: json['endTime'] != null ? DateTime.parse(json['endTime']) : null,
+      startLongitude: json['startLongitude'],
+      startLatitude: json['startLatitude'],
+      endLongitude: json['endLongitude'],
+      endLatitude: json['endLatitude'],
+      currentInterval: json['currentInterval'],
+      intervalsWithoutNewSpecies: json['intervalsWithoutNewSpecies'],
+      currentIntervalSpeciesCount: json['currentIntervalSpeciesCount'],
+      speciesList: (json['speciesList'] as List).map((item) => Species.fromJson(item)).toList(),
+      vegetationList: (json['vegetationList'] as List).map((item) => Vegetation.fromJson(item)).toList(),
+      weatherList: (json['weatherList'] as List).map((item) => Weather.fromJson(item)).toList(),
+    );
   }
 
   // Update elapsed time values

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:xolmis/generated/l10n.dart';
@@ -40,7 +42,7 @@ class SpeciesChartScreen extends StatelessWidget {
                 sideTitles: SideTitles(
                   showTitles: true,
                   getTitlesWidget: (value, meta) {
-                    final minutes = value.toInt() * 5;
+                    final minutes = value.toInt();
                     return Text('$minutes');
                   },
                 ),
@@ -54,6 +56,8 @@ class SpeciesChartScreen extends StatelessWidget {
                   },
                 ),
               ),
+              rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+              topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
             ),
             gridData: FlGridData(show: false, horizontalInterval: 1, verticalInterval: 1),
             borderData: FlBorderData(
