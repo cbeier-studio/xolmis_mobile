@@ -315,7 +315,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                     prefixIcon: const Icon(Icons.search_outlined),
                     border: const OutlineInputBorder(),
                     icon: IconButton(
-                      icon: const Icon(Icons.show_chart_outlined),
+                      icon: const Icon(Icons.insights_outlined),
                       onPressed: () {
                     Navigator.push(
                       context,

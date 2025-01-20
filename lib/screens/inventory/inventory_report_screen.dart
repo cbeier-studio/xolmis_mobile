@@ -32,9 +32,12 @@ class InventoryReportScreen extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
-        child: DataTable(
-          columns: _buildColumns(selectedInventories),
-          rows: _buildRows(speciesList, reportData),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: DataTable(
+            columns: _buildColumns(selectedInventories),
+            rows: _buildRows(speciesList, reportData),
+          ),
         ),
       ),
     );
