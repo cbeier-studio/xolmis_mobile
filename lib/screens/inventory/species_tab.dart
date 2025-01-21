@@ -55,11 +55,14 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
       return;
     }
 
+    final initialCount = widget.inventory.type == InventoryType.invTransectionCount || widget.inventory.type == InventoryType.invPointCount ? 1 : 0;
+
     final newSpecies = Species(
       inventoryId: widget.inventory.id,
       name: speciesName,
       sampleTime: DateTime.now(),
       isOutOfInventory: widget.inventory.isFinished,
+      count: initialCount,
       pois: [],
     );
 
@@ -110,11 +113,13 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
       if (inventory.id != widget.inventory.id &&
           !speciesProvider.speciesExistsInInventory(inventory.id, speciesName) &&
           widget.inventory.type != InventoryType.invBanding) {
+        final initialCount = inventory.type == InventoryType.invTransectionCount || inventory.type == InventoryType.invPointCount ? 1 : 0;
         final newSpeciesForOtherInventory = Species(
           inventoryId: inventory.id,
           name: speciesName,
           sampleTime: DateTime.now(),
           isOutOfInventory: inventory.isFinished,
+          count: initialCount,
           pois: [],
         );
         await speciesRepository.insertSpecies(
