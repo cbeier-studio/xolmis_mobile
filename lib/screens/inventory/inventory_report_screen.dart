@@ -15,8 +15,8 @@ class InventoryReportScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final speciesList = _getSpeciesList(selectedInventories);
-    final reportData = _generateReportData(speciesList, selectedInventories);
+    final speciesSet = _getSpeciesList(selectedInventories);
+    final reportData = _generateReportData(speciesSet, selectedInventories);
 
     return Scaffold(
       appBar: AppBar(
@@ -36,7 +36,7 @@ class InventoryReportScreen extends StatelessWidget {
           scrollDirection: Axis.vertical,
           child: DataTable(
             columns: _buildColumns(selectedInventories),
-            rows: _buildRows(speciesList, reportData),
+            rows: _buildRows(speciesSet, reportData),
           ),
         ),
       ),
@@ -53,10 +53,10 @@ class InventoryReportScreen extends StatelessWidget {
     return speciesSet.toList()..sort();
   }
 
-  List<List<dynamic>> _generateReportData(List<String> speciesList, List<Inventory> inventories) {
+  List<List<dynamic>> _generateReportData(List<String> speciesSet, List<Inventory> inventories) {
     final reportData = <List<dynamic>>[];
 
-    for (final species in speciesList) {
+    for (final species in speciesSet) {
       final row = <dynamic>[species];
       int totalIndividuals = 0;
 
@@ -79,7 +79,7 @@ class InventoryReportScreen extends StatelessWidget {
       reportData.add(row);
     }
 
-    final totalSpeciesRow = [S.current.totalSpecies];
+    final totalSpeciesRow = ['${S.current.totalSpecies}: ${speciesSet.length}'];
     for (final inventory in inventories) {
       totalSpeciesRow.add(inventory.speciesList.length.toString());
     }
