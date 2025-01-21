@@ -435,7 +435,10 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
         actions: [
           IconButton(
             icon: Icon(Icons.file_open_outlined),
-            onPressed: () => importInventoryFromJson(context),
+            onPressed: () async {
+              await importInventoryFromJson(context);
+              await inventoryProvider.fetchInventories();
+            },
           ),
           IconButton(
             icon: Icon(Icons.search_outlined),
