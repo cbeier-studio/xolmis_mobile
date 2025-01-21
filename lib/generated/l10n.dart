@@ -893,6 +893,16 @@ class S {
     );
   }
 
+  /// `Importing inventory...`
+  String get importingInventory {
+    return Intl.message(
+      'Importing inventory...',
+      name: 'importingInventory',
+      desc: 'Message shown when importing an inventory',
+      args: [],
+    );
+  }
+
   /// `Inventory imported successfully!`
   String get inventoryImportedSuccessfully {
     return Intl.message(

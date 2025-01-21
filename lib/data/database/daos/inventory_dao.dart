@@ -58,6 +58,7 @@ class InventoryDao {
   Future<bool> importInventory(Inventory inventory) async {
     final db = await _dbHelper.database;
     try {
+      inventory.isFinished = true;
       int? recordId = await db?.insert(
         'inventories',
         inventory.toMap(),

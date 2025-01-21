@@ -633,7 +633,7 @@ class NestsScreenState extends State<NestsScreen> {
                         ),
                       ];
                     },
-                    icon: const Icon(Icons.file_download_outlined),
+                    icon: const Icon(Icons.file_upload_outlined),
                     tooltip: S.of(context).export(S.of(context).nest(2)),
                   ),                  
                 ],
@@ -673,7 +673,7 @@ class NestsScreenState extends State<NestsScreen> {
                   ),
                   Divider(),
                   !_showActive ? ExpansionTile(
-                      leading: const Icon(Icons.file_download_outlined),
+                      leading: const Icon(Icons.file_upload_outlined),
                       title: Text(S.of(context).export(S.of(context).nest(1))),
                       children: [
                         ListTile(
@@ -685,7 +685,7 @@ class NestsScreenState extends State<NestsScreen> {
                           },
                         ),
                         ListTile(
-                          leading: const Icon(Icons.code_outlined),
+                          leading: const Icon(Icons.data_object_outlined),
                           title: const Text('JSON'),
                           onTap: () {
                             Navigator.of(context).pop();
@@ -695,7 +695,7 @@ class NestsScreenState extends State<NestsScreen> {
                       ]
                   ) : const SizedBox.shrink(),
                   !_showActive ? ListTile(
-                    leading: const Icon(Icons.file_download_outlined),
+                    leading: const Icon(Icons.file_upload_outlined),
                     title: Text(S.of(context).exportAll(S.of(context).nests.toLowerCase())),
                     onTap: () {
                       Navigator.of(context).pop();

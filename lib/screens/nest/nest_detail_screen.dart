@@ -259,7 +259,7 @@ class NestDetailScreenState extends State<NestDetailScreen> {
                       ),
                     ];
                   },
-                  icon: const Icon(Icons.file_download_outlined),
+                  icon: const Icon(Icons.file_upload_outlined),
                 ),
               const SizedBox(width: 8.0,),
             ],

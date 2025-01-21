@@ -241,6 +241,11 @@
         "type": "text",
         "description": "Button label to clear the selection"
     },
+    "importingInventory": "Importando inventário...",
+    "@importingInventory": {
+        "type": "text",
+        "description": "Message shown when importing an inventory"
+    },
     "inventoryImportedSuccessfully": "Inventário importado com sucesso!",
     "@inventoryImportedSuccessfully": {
         "type": "text",

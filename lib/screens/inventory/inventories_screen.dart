@@ -25,6 +25,7 @@ import 'inventory_report_screen.dart';
 
 import '../../utils/utils.dart';
 import '../../utils/export_utils.dart';
+import '../../utils/import_utils.dart';
 import '../../generated/l10n.dart';
 
 class InventoriesScreen extends StatefulWidget {
@@ -433,6 +434,10 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
         ) : SizedBox.shrink(),
         actions: [
           IconButton(
+            icon: Icon(Icons.file_open_outlined),
+            onPressed: () => importInventoryFromJson(context),
+          ),
+          IconButton(
             icon: Icon(Icons.search_outlined),
             onPressed: _toggleSearchBarVisibility,
           ),
@@ -492,10 +497,6 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
               ];
             },
           ),
-          // IconButton(
-          //   icon: Icon(Icons.import_export_outlined),
-          //   onPressed: importInventoryFromJson(context),
-          // ),
         ],
       ),
       body: Column(
@@ -1086,7 +1087,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                         ),
                       ];
                     },
-                    icon: const Icon(Icons.file_download_outlined),
+                    icon: const Icon(Icons.file_upload_outlined),
                     tooltip: S.of(context).export(S.of(context).inventory(2)),
                   ),
                   IconButton(
@@ -1170,7 +1171,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                     Divider(),
                   if (!_isShowingActiveInventories)
                     ExpansionTile(
-                        leading: const Icon(Icons.file_download_outlined),
+                        leading: const Icon(Icons.file_upload_outlined),
                         title: Text(S.of(context).export(S.of(context).inventory(1))),
                         children: [
                           ListTile(
@@ -1193,7 +1194,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                     ),
                   if (!_isShowingActiveInventories)
                     ListTile(
-                      leading: const Icon(Icons.file_download_outlined),
+                      leading: const Icon(Icons.file_upload_outlined),
                       title: Text(S.of(context).exportAll(S.of(context).inventory(2))),
                       onTap: () {
                         Navigator.of(context).pop();

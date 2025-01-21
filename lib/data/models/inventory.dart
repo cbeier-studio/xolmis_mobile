@@ -497,7 +497,7 @@ class Weather {
       inventoryId: json['inventoryId'],
       sampleTime: DateTime.parse(json['sampleTime']), 
       cloudCover: json['cloudCover'],
-      precipitation: json['precipitation'],
+      precipitation: json['precipitation'] != null ? PrecipitationType.values[json['precipitation']] : PrecipitationType.preNone,
       temperature: json['temperature'],
       windSpeed: json['windSpeed'],
     );

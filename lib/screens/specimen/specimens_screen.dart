@@ -601,7 +601,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                         ),
                       ];
                     },
-                    icon: const Icon(Icons.file_download_outlined),
+                    icon: const Icon(Icons.file_upload_outlined),
                     tooltip: S.of(context).export(S.of(context).specimens(2).toLowerCase()),
                   ),
                 ],

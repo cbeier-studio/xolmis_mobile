@@ -276,6 +276,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "host": MessageLookupByLibrary.simpleMessage("Host"),
         "imageDetails": MessageLookupByLibrary.simpleMessage("Image details"),
         "images": m9,
+        "importingInventory":
+            MessageLookupByLibrary.simpleMessage("Importing inventory..."),
         "inactive": MessageLookupByLibrary.simpleMessage("Inactive"),
         "increaseIndividuals":
             MessageLookupByLibrary.simpleMessage("Increase individuals count"),

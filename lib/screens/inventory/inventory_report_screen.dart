@@ -23,7 +23,7 @@ class InventoryReportScreen extends StatelessWidget {
         title: Text(S.current.reportSpeciesByInventory),
         actions: [
           IconButton(
-            icon: Icon(Icons.file_download_outlined),
+            icon: Icon(Icons.file_upload_outlined),
             onPressed: () async {
               await _exportReportToCsv(reportData);
             },
@@ -97,7 +97,7 @@ class InventoryReportScreen extends StatelessWidget {
 
     for (final inventory in inventories) {
       final parts = inventory.id.split('-');
-      final displayId = parts.length > 1 ? '${parts.first}-${parts.last}' : inventory.id;
+      final displayId = parts.length > 1 ? '${parts.first}-${parts[1]}-${parts.last}' : inventory.id;
       columns.add(DataColumn(label: Text(displayId)));
     }
 

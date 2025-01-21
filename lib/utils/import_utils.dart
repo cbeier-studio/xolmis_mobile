@@ -15,13 +15,34 @@ Future<void> importInventoryFromJson(BuildContext context) async {
   try {
     // Pick a JSON file
     FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['json'],
+      type: FileType.any,
+      // allowedExtensions: ['json'],
     );
 
     if (result != null && result.files.single.path != null) {
       final filePath = result.files.single.path!;
       final file = File(filePath);
+
+      // Show a loading dialog
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Dialog(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(width: 16),
+                  Text(S.current.importingInventory),
+                ],
+              ),
+            ),
+          );
+        },
+      );
 
       // Read the JSON file
       final jsonString = await file.readAsString();
@@ -33,6 +54,9 @@ Future<void> importInventoryFromJson(BuildContext context) async {
       final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
       // Save the inventory to the database
       final success = await inventoryProvider.importInventory(inventory);
+
+      // Close the loading dialog
+      Navigator.of(context).pop();
 
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
