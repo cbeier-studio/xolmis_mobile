@@ -43,20 +43,24 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
         widget.speciesRepository, widget.inventoryRepository);
   }
 
+  // Add a species to the inventory
   Future<void> _addSpeciesToInventory(String speciesName,
       SpeciesRepository speciesRepository,
       InventoryRepository inventoryRepository) async {
     final speciesProvider = Provider.of<SpeciesProvider>(context, listen: false);
     final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
 
+    // If the species is already in the inventory, show a message and return
     if (speciesProvider.speciesExistsInInventory(
         widget.inventory.id, speciesName)) {
       _showSpeciesAlreadyExistsMessage();
       return;
     }
 
+    // Set the initial count to 1 for transect and point count inventories
     final initialCount = widget.inventory.type == InventoryType.invTransectionCount || widget.inventory.type == InventoryType.invPointCount ? 1 : 0;
 
+    // Create the new species
     final newSpecies = Species(
       inventoryId: widget.inventory.id,
       name: speciesName,
@@ -66,26 +70,33 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
       pois: [],
     );
 
+    // Insert the new species in the database
     await speciesRepository.insertSpecies(widget.inventory.id, newSpecies);
     
+    // Check is Mackinnon list was completed and ask to start the next list
     setState(() {
       checkMackinnonCompletion(context, widget.inventory, inventoryRepository);
     });
 
     if (!widget.inventory.isFinished) {
+      // If the inventory is not finished, add the species to other active inventories
       _addSpeciesToOtherActiveInventories(
           speciesName, speciesProvider, inventoryProvider, speciesRepository,
           inventoryRepository);
 
       if (widget.inventory.type == InventoryType.invIntervalQualitative) {
+        // Increment the current interval species count for interval qualitative inventories
         widget.inventory.currentIntervalSpeciesCount++;
         await inventoryRepository.updateInventoryCurrentIntervalSpeciesCount(widget.inventory.id, widget.inventory.currentIntervalSpeciesCount);
       } else if (widget.inventory.type == InventoryType.invTimedQualitative) {
+        // Restart the inventory timer for timed qualitative inventories
         _restartInventoryTimer(inventoryProvider, widget.inventory, inventoryRepository);
       }
     }
 
+    // Update the inventory in the database
     await inventoryRepository.updateInventory(widget.inventory);
+    // Reload the species list for the current inventory
     _updateSpeciesList();
 
     // speciesProvider.notifyListeners();
@@ -105,6 +116,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     );
   }
 
+  // Add species to other active inventories
   Future<void> _addSpeciesToOtherActiveInventories(String speciesName,
       SpeciesProvider speciesProvider, InventoryProvider inventoryProvider,
       SpeciesRepository speciesRepository,
@@ -113,7 +125,9 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
       if (inventory.id != widget.inventory.id &&
           !speciesProvider.speciesExistsInInventory(inventory.id, speciesName) &&
           widget.inventory.type != InventoryType.invBanding) {
+        // Set the initial count to 1 for transect and point count inventories
         final initialCount = inventory.type == InventoryType.invTransectionCount || inventory.type == InventoryType.invPointCount ? 1 : 0;
+        // Create the new species
         final newSpeciesForOtherInventory = Species(
           inventoryId: inventory.id,
           name: speciesName,
@@ -122,18 +136,23 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
           count: initialCount,
           pois: [],
         );
+        // Insert the new species in the database
         await speciesRepository.insertSpecies(
             newSpeciesForOtherInventory.inventoryId,
             newSpeciesForOtherInventory);
 
         if (inventory.type == InventoryType.invIntervalQualitative) {
+          // Increment the current interval species count for interval qualitative inventories
           inventory.currentIntervalSpeciesCount++;
           await inventoryRepository.updateInventoryCurrentIntervalSpeciesCount(inventory.id, inventory.currentIntervalSpeciesCount);
         } else if (inventory.type == InventoryType.invTimedQualitative) {
+          // Restart the inventory timer for timed qualitative inventories
           _restartInventoryTimer(inventoryProvider, inventory, inventoryRepository);
         } else {
+          // Or just update the inventory in the database
           inventoryProvider.updateInventory(inventory);
         }
+        // Reload the species list for the other inventory
         await speciesProvider.loadSpeciesForInventory(inventory.id);
         // speciesProvider.notifyListeners();
       }
@@ -141,23 +160,30 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     }
   }
 
+  // Restart the inventory timer
   void _restartInventoryTimer(InventoryProvider inventoryProvider,
       Inventory inventory, InventoryRepository inventoryRepository) async {
+    // Update the elapsed time to 0 and save it in the database
     inventory.updateElapsedTime(0);
     await inventoryProvider.updateInventoryElapsedTime(inventory.id, inventory.elapsedTime);
+    // Update the paused state to false
     inventory.isPaused = false;
+    // Update the isFinished state to false and save it in the database
     inventory.updateIsFinished(false);
     inventoryProvider.updateInventory(inventory);
     
+    // Start the timer if it is not already running
     inventory.startTimer(inventoryRepository);
   }
 
+  // Reload the species list for the current inventory
   void _updateSpeciesList() async {
     final speciesProvider = Provider.of<SpeciesProvider>(
         context, listen: false);
     await speciesProvider.loadSpeciesForInventory(widget.inventory.id);
   }
 
+  // Show the species search dialog
   void _showSpeciesSearch(SpeciesRepository speciesRepository,
       InventoryRepository inventoryRepository) async {
 
@@ -174,10 +200,12 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     );
 
     if (selectedSpecies != null) {
+      // Reload the species list after adding a new species
       _updateSpeciesList();
     }
   }
 
+  // Delete the selected species from the list
   Future<void> _deleteSpecies(Species species) async {
     final speciesProvider = Provider.of<SpeciesProvider>(context, listen: false);
     final confirmed = await _showDeleteConfirmationDialog(context);
@@ -187,6 +215,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
       }
     }
 
+    // Ask to delete the species from other active inventories
     if (!widget.inventory.isFinished) {
       if (mounted) {
         bool confirm = await _showDeleteFromOtherListsConfirmationDialog(context, species.name);
@@ -197,6 +226,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     }
   }
 
+  // Delete species from other active inventories
   Future<void> _deleteSpeciesFromOtherActiveInventories(Species species,
       SpeciesProvider speciesProvider) async {
     final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
@@ -265,9 +295,10 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
               ],
             );
           },
-        ) ?? false; // Retorna false por padrão se o diálogo for fechado sem uma resposta
+        ) ?? false; // Return false if the dialog was closed without a selection
   }
 
+  // Show dialog to add a personalized species name
   Future<void> _showAddSpeciesDialog(BuildContext context, SpeciesRepository speciesRepository, InventoryRepository inventoryRepository) async {
     String? newSpeciesName = await showDialog<String>(
       context: context,
@@ -304,6 +335,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     }
   }
 
+  // Build the species list
   Widget _buildSpeciesList(SpeciesRepository speciesRepository,
       InventoryRepository inventoryRepository) {
     return Column(
@@ -420,6 +452,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
+                  // Option to edit the species notes
                   ListTile(
                     leading: const Icon(Icons.edit_outlined),
                     title: Text(S.of(context).speciesNotes),
@@ -428,6 +461,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                       _showEditNotesDialog(context, species);
                     },
                   ),
+                  // Option to add the species to the sample
                   if (species.isOutOfInventory)
                     ListTile(
                       leading: const Icon(Icons.inventory_outlined),
@@ -437,6 +471,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                         _addSpeciesToSample(context, species);
                       },
                     ),
+                  // Option to remove the species from the sample                  
                   if (!species.isOutOfInventory)
                     ListTile(
                       leading: const Icon(Icons.content_paste_go_outlined),
@@ -447,6 +482,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                       },
                     ),
                   Divider(),
+                  // Option to add a POI
                   ListTile(
                     leading: const Icon(Icons.add_location_outlined),
                     title: Text(S.of(context).addPoi),
@@ -488,6 +524,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                     },
                   ),
                   Divider(),
+                  // Option to delete the species
                   ListTile(
                     leading: const Icon(
                       Icons.delete_outlined, color: Colors.red,),
@@ -509,6 +546,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     );
   }
 
+  // Add the species to the sample
   void _addSpeciesToSample(BuildContext context, Species species) {
     final speciesProvider = Provider.of<SpeciesProvider>(context, listen: false);
 
@@ -516,6 +554,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     speciesProvider.updateSpecies(species.inventoryId, species);
   }
 
+  // Remove the species from the sample
   void _removeSpeciesToSample(BuildContext context, Species species) {
     final speciesProvider = Provider.of<SpeciesProvider>(context, listen: false);
 
@@ -523,6 +562,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     speciesProvider.updateSpecies(species.inventoryId, species);
   }
 
+  // Show the dialog to edit species notes
   void _showEditNotesDialog(BuildContext context, Species species) {
     final notesController = TextEditingController(text: species.notes);
     final speciesProvider = Provider.of<SpeciesProvider>(

@@ -15,6 +15,7 @@ class InventoryReportScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Load the species list and generate the report data
     final speciesSet = _getSpeciesList(selectedInventories);
     final reportData = _generateReportData(speciesSet, selectedInventories);
 
@@ -22,6 +23,7 @@ class InventoryReportScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(S.current.reportSpeciesByInventory),
         actions: [
+          // Option to export the report to a CSV file
           IconButton(
             icon: Icon(Icons.file_upload_outlined),
             onPressed: () async {
@@ -34,6 +36,7 @@ class InventoryReportScreen extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
+          // Build table with the report data
           child: DataTable(
             columns: _buildColumns(selectedInventories),
             rows: _buildRows(speciesSet, reportData),
@@ -43,6 +46,7 @@ class InventoryReportScreen extends StatelessWidget {
     );
   }
 
+  // Load the species list from the selected inventories
   List<String> _getSpeciesList(List<Inventory> inventories) {
     final speciesSet = <String>{};
     for (final inventory in inventories) {
@@ -53,6 +57,7 @@ class InventoryReportScreen extends StatelessWidget {
     return speciesSet.toList()..sort();
   }
 
+  // Generate the report data
   List<List<dynamic>> _generateReportData(List<String> speciesSet, List<Inventory> inventories) {
     final reportData = <List<dynamic>>[];
 
@@ -61,14 +66,18 @@ class InventoryReportScreen extends StatelessWidget {
       int totalIndividuals = 0;
 
       for (final inventory in inventories) {
+        // Find the species in the inventory
         final speciesInInventory = inventory.speciesList.firstWhere(
           (s) => s.name == species,
           orElse: () => Species(name: '', count: 0, inventoryId: inventory.id, isOutOfInventory: false),
         );
 
         if (speciesInInventory.name.isNotEmpty) {
+          // Add the species count to the row
           final speciesCount = speciesInInventory.count;
+          // Add 'X' if the species is in the inventory, 'O' if it is out of inventory, if count is 0
           row.add(speciesCount > 0 ? speciesCount : !speciesInInventory.isOutOfInventory ? 'X' : 'O');
+          // Add the species count to the total
           totalIndividuals += speciesCount;
         } else {
           row.add('');
@@ -79,6 +88,7 @@ class InventoryReportScreen extends StatelessWidget {
       reportData.add(row);
     }
 
+    // Add the total species row
     final totalSpeciesRow = ['${S.current.totalSpecies}: ${speciesSet.length}'];
     for (final inventory in inventories) {
       totalSpeciesRow.add(inventory.speciesList.length.toString());
@@ -90,12 +100,14 @@ class InventoryReportScreen extends StatelessWidget {
     return reportData;
   }
 
+  // Build the columns for the DataTable
   List<DataColumn> _buildColumns(List<Inventory> inventories) {
     final columns = <DataColumn>[
       DataColumn(label: Text(S.current.species(2))),
     ];
 
     for (final inventory in inventories) {
+      // Remove the date from the inventory ID
       final parts = inventory.id.split('-');
       final displayId = parts.length > 1 ? '${parts.first}-${parts[1]}-${parts.last}' : inventory.id;
       columns.add(DataColumn(label: Text(displayId)));
@@ -106,12 +118,14 @@ class InventoryReportScreen extends StatelessWidget {
     return columns;
   }
 
+  // Build the rows for the DataTable
   List<DataRow> _buildRows(List<String> speciesList, List<List<dynamic>> reportData) {
     return reportData.map((row) {
       return DataRow(cells: row.map((cell) => DataCell(Text(cell.toString()))).toList());
     }).toList();
   }
 
+  // Export the report data to a CSV file
   Future<void> _exportReportToCsv(List<List<dynamic>> reportData) async {
     final headers = _buildColumns(selectedInventories).map((column) => column.label.toString()).toList();
     final csvData = [headers, ...reportData];

@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:xolmis/generated/l10n.dart';
@@ -13,8 +11,10 @@ class SpeciesChartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Prepare the data for the species accumulation curve
     final speciesAccumulationData = _prepareSpeciesAccumulationData(inventory);
 
+    // Set the chart bounds
     final minX = 0.0;
     final maxX = speciesAccumulationData.isNotEmpty
         ? speciesAccumulationData.map((data) => data.interval.toDouble()).reduce((a, b) => a > b ? a : b)
@@ -30,6 +30,7 @@ class SpeciesChartScreen extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: speciesAccumulationData.isEmpty
+          // Show a message if there is no data
             ? Center(child: Text(S.current.noDataAvailable))
             : LineChart(          
           LineChartData(
@@ -83,10 +84,12 @@ class SpeciesChartScreen extends StatelessWidget {
     );
   }
 
+  // Prepare the data for the species accumulation curve
   List<SpeciesAccumulationData> _prepareSpeciesAccumulationData(Inventory inventory) {
     final speciesAccumulationData = <SpeciesAccumulationData>[];
     final speciesByInterval = <int, Set<String>>{};
 
+    // Calculate the total elapsed minutes and the total intervals
     final startTime = inventory.startTime!;
     final currentTime = inventory.isFinished ? inventory.endTime! : DateTime.now();
     final totalElapsedMinutes = currentTime.difference(startTime).inMinutes;
@@ -95,10 +98,12 @@ class SpeciesChartScreen extends StatelessWidget {
     for (final species in inventory.speciesList) {
       final sampleTime = species.sampleTime;
 
+      // Skip species without sample time
       if (sampleTime == null) {
         continue;
       }
 
+      // Calculate the interval for the species
       final elapsedMinutes = sampleTime.difference(startTime).inMinutes;
       final interval = elapsedMinutes ~/ 5; // Intervalo de 5 minutos
 
@@ -106,12 +111,14 @@ class SpeciesChartScreen extends StatelessWidget {
         speciesByInterval[interval] = <String>{};
       }
 
+      // Add the species to the interval
       speciesByInterval[interval]!.add(species.name);
     }
 
     int cumulativeSpeciesCount = 0;
     final seenSpecies = <String>{};
 
+    // Calculate the cumulative species count for each interval
     for (int i = 0; i <= totalIntervals; i++) {
       if (speciesByInterval.containsKey(i)) {
         for (final species in speciesByInterval[i]!) {
@@ -128,6 +135,7 @@ class SpeciesChartScreen extends StatelessWidget {
   }
 }
 
+// Data class for the species accumulation curve
 class SpeciesAccumulationData {
   final int interval;
   final int speciesCount;
