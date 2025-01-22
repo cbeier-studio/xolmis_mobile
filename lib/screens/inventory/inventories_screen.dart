@@ -959,11 +959,11 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
             }
           });
         },
-        child: Card.filled(
+        child: Card.outlined(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
@@ -1072,18 +1072,18 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                       );
                     },
                   ),
-                SizedBox(height: 8),                                            
+                Expanded(child: SizedBox.shrink()),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                   // Show the inventory ID
-                  Text(inventory.id, style: const TextStyle(fontSize: 16,),),
+                  Text(inventory.id, style: const TextStyle(fontSize: 16,), overflow: TextOverflow.ellipsis,),
                   // Show the inventory type
-                  Text('${inventoryTypeFriendlyNames[inventory.type]}'),
+                  Text('${inventoryTypeFriendlyNames[inventory.type]}', overflow: TextOverflow.ellipsis,),
                   // Show the inventory timer duration if active
                   if (_isShowingActiveInventories && inventory.duration > 0)
-                    Text(S.of(context).inventoryDuration(inventory.duration)),
+                    Text(S.of(context).inventoryDuration(inventory.duration), overflow: TextOverflow.ellipsis,),
                   // Show the species count
                   Selector<SpeciesProvider, int>(
                     selector: (context, speciesProvider) =>
@@ -1092,7 +1092,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                       previous != next,
                     builder: (context, speciesCount, child) {
                       return Text(
-                        '$speciesCount ${S.of(context).speciesCount(speciesCount)}');
+                        '$speciesCount ${S.of(context).speciesCount(speciesCount)}', overflow: TextOverflow.ellipsis,);
                       },
                     ),
                   ],
@@ -1105,10 +1105,31 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                   alignment: Alignment.bottomRight,
                   child: FilledButton.icon(
                       icon: const Icon(Icons.flag_outlined),
-                      label: Text(S.of(context).finishInventory),
+                      label: Text(S.of(context).finish),
                       onPressed: () {
                         // Ask for user confirmation
                         showFinishDialog(context, inventory);
+                      },
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: !_isShowingActiveInventories,
+                  child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: TextButton(
+                      child: Text(S.of(context).reactivateInventory),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        inventory.updateElapsedTime(0);
+                        inventory.updateCurrentInterval(inventory.currentInterval + 1);
+                        inventory.currentIntervalSpeciesCount = 0;
+                        inventory.intervalsWithoutNewSpecies = 0;
+                        inventory.intervalWithoutSpeciesNotifier.value = inventory.intervalsWithoutNewSpecies;
+                        inventory.updateIsFinished(false);
+                        inventoryProvider.updateInventory(inventory);
+                        inventoryProvider.startInventoryTimer(inventory, inventoryRepository);
+                        // inventoryProvider.notifyListeners();
                       },
                     ),
                   ),
