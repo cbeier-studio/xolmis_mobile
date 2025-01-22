@@ -653,6 +653,8 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
 
                   // Show the inventories in a grid on large screens
                   if (isLargeScreen) {
+                    final double minWidth = 220.0;
+                    int crossAxisCount = (constraints.maxWidth / minWidth).floor();
                     return SingleChildScrollView(
                       child: Align(
                         alignment: Alignment.topCenter,
@@ -660,8 +662,8 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                           constraints: const BoxConstraints(maxWidth: 840),
                           child: GridView.builder(
                             gridDelegate:
-                                SliverGridDelegateWithMaxCrossAxisExtent(
-                              maxCrossAxisExtent: screenWidth / 3,
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: crossAxisCount,
                               childAspectRatio: 1,
                             ),
                             physics: const NeverScrollableScrollPhysics(),
@@ -1078,12 +1080,16 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                   // Show the inventory ID
-                  Text(inventory.id, style: const TextStyle(fontSize: 16,), overflow: TextOverflow.ellipsis,),
+                  Text(inventory.id, style: const TextStyle(fontSize: 20,), overflow: TextOverflow.ellipsis,),
                   // Show the inventory type
                   Text('${inventoryTypeFriendlyNames[inventory.type]}', overflow: TextOverflow.ellipsis,),
                   // Show the inventory timer duration if active
                   if (_isShowingActiveInventories && inventory.duration > 0)
                     Text(S.of(context).inventoryDuration(inventory.duration), overflow: TextOverflow.ellipsis,),
+                  // Show the date and time of the inventory
+                  if (!_isShowingActiveInventories)
+                    Text('${DateFormat('dd/MM/yyyy HH:mm:ss').format(inventory.startTime!)} - ${DateFormat('HH:mm:ss').format(inventory.endTime!)}',
+                      overflow: TextOverflow.ellipsis,),
                   // Show the species count
                   Selector<SpeciesProvider, int>(
                     selector: (context, speciesProvider) =>

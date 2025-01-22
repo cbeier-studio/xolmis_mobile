@@ -31,6 +31,7 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
     super.dispose();
   }
 
+  // Load the POIs for the species
   Future<void> _loadSpeciesData() async {
     final poiProvider = Provider.of<PoiProvider>(context, listen: false);
     setState(() {
@@ -38,6 +39,7 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
     });
   }
 
+  // Add a new POI
   Future<void> _addPoi() async {
     setState(() {
       _isAddingPoi = true;
@@ -97,6 +99,7 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
     });
   }
 
+  // Delete a POI
   Future<void> _deletePoi(Poi poi) async {
     // Ask for user confirmation
     final confirmed = await _showDeleteConfirmationDialog(context);
@@ -113,6 +116,7 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
     }
   }
 
+  // Show a dialog to confirm the deletion of a POI
   Future<bool> _showDeleteConfirmationDialog(BuildContext context) async {
     return await showDialog<bool>(
       context: context,
@@ -143,13 +147,16 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
       ),
       body: Consumer<PoiProvider>(
               builder: (context, poiProvider, child) {
+                // Get the POIs for the species
                 final pois = poiProvider.getPoisForSpecies(widget.species.id ?? 0);
                 return RefreshIndicator(
                   onRefresh: () async {
+                    // Refresh the POIs
                     poiProvider.getPoisForSpecies(widget.species.id ?? 0);
                   },
                   child: Column(
                       children: [
+                        // Show species information
                         ExpansionTile(
                           leading: const Icon(Icons.info_outlined),
                           title: Text(S.of(context).speciesInfo),
@@ -173,17 +180,18 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
                         ),
                         Expanded(
                           child: pois.isEmpty
-                              ?  Center(
-                            child: Text(S.of(context).noPoiFound),
-                          )
+                            // Show message when there are no POIs
+                              ? Center(child: Text(S.of(context).noPoiFound),)
                               : LayoutBuilder(
                               builder: (BuildContext context, BoxConstraints constraints) {
                                 final screenWidth = constraints.maxWidth;
                                 final isLargeScreen = screenWidth > 600;
 
                                 if (isLargeScreen) {
+                                  // Show grid view for large screens
                                   return _buildGridView(pois);
                                 } else {
+                                  // Show list view for small screens
                                   return _buildListView(pois, poiProvider);
                                 }
                               }
@@ -194,6 +202,7 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
                 );
               }
           ),
+      // FAB to add a new POI
       floatingActionButton: FloatingActionButton(
         tooltip: S.of(context).newPoi,
         onPressed: () {
@@ -222,8 +231,7 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  // Expanded(
-                  //     child:
+                  // Option to delete the POI
                   ListTile(
                     leading: const Icon(Icons.delete_outlined, color: Colors.red,),
                     title: Text(S.of(context).deletePoi, style: TextStyle(color: Colors.red),),
@@ -233,8 +241,7 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
                         Navigator.pop(context);
                       }
                     },
-                  )
-                  // )
+                  ),                  
                 ],
               ),
             );
@@ -244,15 +251,18 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
     );
   }
 
+  // Build a grid view for large screens
   Widget _buildGridView(List<Poi> pois) {
     return Align(
       alignment: Alignment.topCenter,
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 840),
         child: GridView.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            childAspectRatio: 3.5,
+          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+            maxCrossAxisExtent: 200,
+            // mainAxisSpacing: 16,
+            // crossAxisSpacing: 16,
+            childAspectRatio: 1,
           ),
           shrinkWrap: true,
           itemCount: pois.length,
@@ -261,23 +271,19 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
             return GridTile(
               child: InkWell(
                 onLongPress: () => _showBottomSheet(context, poi),
-                // onTap: () {
-                //
-                // },
-                child: Card.filled(
+                child: Card.outlined(
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: Row(
+                    child: Column(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
-                          child: const Icon(Icons.location_on_outlined),
-                        ),
+                        const Icon(Icons.location_on_outlined),
+                        Expanded(child: SizedBox.shrink()),
                         Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.end,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('${poi.latitude}, ${poi.longitude}'),
+                            Text('${poi.latitude}'),
+                            Text('${poi.longitude}'),
                           ],
                         ),
                       ],
@@ -292,6 +298,7 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
     );
   }
 
+  // Build a list view for small screens
   Widget _buildListView(List<Poi> pois, PoiProvider poiProvider) {
     return ListView.builder(
       itemCount: pois.length,
@@ -323,6 +330,7 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
   }
 }
 
+// POI list item
 class PoiListItem extends StatelessWidget {
   final Poi poi;
   final VoidCallback onLongPress;

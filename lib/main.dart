@@ -287,7 +287,7 @@ class _MainScreenState extends State<MainScreen> {
   Future<void> _fetchAppVersion() async { 
     final packageInfo = await PackageInfo.fromPlatform(); 
     setState(() { 
-      _appVersion = packageInfo.version; 
+      _appVersion = '${packageInfo.version}+${packageInfo.buildNumber}'; 
     }); 
   }
 

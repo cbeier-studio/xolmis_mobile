@@ -35,10 +35,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _loadSettings();
   }
 
+  // Set the package info
   Future<void> _setPackageInfo() async => PackageInfo.fromPlatform().then(
         (PackageInfo packageInfo) => setState(() => _packageInfo = packageInfo),
   );
 
+  // Load the settings from SharedPreferences
   Future<void> _loadSettings() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -52,6 +54,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     });
   }
 
+  // Save the settings to SharedPreferences
   Future<void> _saveSettings() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt('themeMode', _themeMode.index);
@@ -76,6 +79,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
         sections: [
           SettingsSection(title: Text(S.of(context).observer), tiles: [
+            // Observer abbreviation
             SettingsTile.navigation(
               leading: Icon(Icons.person_outlined),
               title: Text(S.of(context).observerSetting),
@@ -121,6 +125,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ]),
           SettingsSection(title: Text(S.of(context).inventories), tiles: [
+            // Maximum number of simultaneous inventories
             SettingsTile.navigation(
               leading: Icon(Icons.list_alt_outlined),
               title: Text(S.of(context).simultaneousInventories),
@@ -146,6 +151,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 }
               },
             ),
+            // Mackinnon lists default number of species
             SettingsTile.navigation(
               leading: Icon(Icons.checklist_outlined),
               title: Text(S.of(context).mackinnonLists),
@@ -170,6 +176,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 }
               },
             ),
+            // Point counts default duration
             SettingsTile.navigation(
               leading: Icon(Icons.timer_outlined),
               title: Text(S.of(context).pointCounts),
@@ -195,6 +202,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 }
               },
             ),
+            // Timed qualitative list default duration
             SettingsTile.navigation(
               leading: Icon(Icons.timer_outlined),
               title: Text(S.of(context).timedQualitativeLists),
@@ -220,6 +228,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 }
               },
             ),
+            // Interval qualitative list default duration
             SettingsTile.navigation(
               leading: Icon(Icons.timer_outlined),
               title: Text(S.of(context).intervaledQualitativeLists),
@@ -247,6 +256,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ]),
           SettingsSection(title: Text(S.of(context).general), 
             tiles: [
+              // Option to select the theme mode
               SettingsTile.navigation(
                 leading: Icon(Icons.dark_mode_outlined),
                 title: Text(S.of(context).appearance),
@@ -297,6 +307,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   );
                 },
               ),
+            // About the app
             SettingsTile.navigation(
               leading: Icon(Icons.info_outlined),
               title: Text(S.of(context).about),
@@ -317,6 +328,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             title: Text(S.of(context).dangerZone,
                     style: TextStyle(color: Colors.red)), 
             tiles: [
+            // Option to delete app data
             SettingsTile(
                 leading: Icon(
                   Icons.delete_forever,
