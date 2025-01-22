@@ -673,6 +673,17 @@ class NestsScreenState extends State<NestsScreen> {
                     },
                     icon: const Icon(Icons.file_upload_outlined),
                     tooltip: S.of(context).exportWhat(S.of(context).nest(2)),
+                  ),
+                  VerticalDivider(),
+                  // Option to clear the selected nests
+                  IconButton(
+                    icon: Icon(Icons.clear_outlined),
+                    tooltip: S.current.clearSelection,
+                    onPressed: () {
+                      setState(() {
+                        selectedNests.clear();
+                      });
+                    },
                   ),                  
                 ],
               ),

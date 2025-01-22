@@ -654,6 +654,17 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                     icon: const Icon(Icons.file_upload_outlined),
                     tooltip: S.of(context).exportWhat(S.of(context).specimens(2).toLowerCase()),
                   ),
+                  VerticalDivider(),
+                  // Option to clear the selected specimens
+                  IconButton(
+                    icon: Icon(Icons.clear_outlined),
+                    tooltip: S.current.clearSelection,
+                    onPressed: () {
+                      setState(() {
+                        selectedSpecimens.clear();
+                      });
+                    },
+                  ),
                 ],
               ),
             )
