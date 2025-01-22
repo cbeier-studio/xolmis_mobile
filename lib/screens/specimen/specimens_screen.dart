@@ -278,6 +278,8 @@ class SpecimensScreenState extends State<SpecimensScreen> {
         actions: [
           IconButton(
             icon: Icon(Icons.search_outlined),
+            selectedIcon: Icon(Icons.search_off_outlined),
+            isSelected: _isSearchBarVisible,
             onPressed: _toggleSearchBarVisibility,
           ),
           PopupMenuButton<String>(

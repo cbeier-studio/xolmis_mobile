@@ -29,12 +29,12 @@ class NestsScreen extends StatefulWidget {
 class NestsScreenState extends State<NestsScreen> {
   late NestProvider nestProvider;
   final _searchController = TextEditingController();
-  bool _showActive = true;
-  bool _isAscendingOrder = false;
-  String _sortField = 'foundTime';
-  bool _isSearchBarVisible = false;
-  String _searchQuery = '';
-  Set<int> selectedNests = {};
+  bool _showActive = true; // Show active nests by default
+  bool _isAscendingOrder = false; // Sort descending by default
+  String _sortField = 'foundTime'; // Sort by found time by default
+  bool _isSearchBarVisible = false; // Hide search bar by default
+  String _searchQuery = ''; // Empty search query by default
+  Set<int> selectedNests = {}; // Set of selected nests
 
   @override
   void initState() {
@@ -43,24 +43,28 @@ class NestsScreenState extends State<NestsScreen> {
     nestProvider.fetchNests();
   }
 
+  // Toggle the visibility of the search bar
   void _toggleSearchBarVisibility() {
     setState(() {
       _isSearchBarVisible = !_isSearchBarVisible;
     });
   }
 
+  // Toggle the sort order
   void _toggleSortOrder(String order) {
     setState(() {
       _isAscendingOrder = order == 'ascending';
     });
   }
 
+  // Change the sort field
   void _changeSortField(String field) {
     setState(() {
       _sortField = field;
     });
   }
 
+  // Sort the nests by the selected field
   List<Nest> _sortNests(List<Nest> nests) {
     nests.sort((a, b) {
       int comparison;
@@ -74,6 +78,7 @@ class NestsScreenState extends State<NestsScreen> {
     return nests;
   }
 
+  // Filter the nests based on the search query
   List<Nest> _filterNests(List<Nest> nests) {
     if (_searchQuery.isEmpty) {
       return _sortNests(nests);
@@ -85,8 +90,10 @@ class NestsScreenState extends State<NestsScreen> {
     return _sortNests(filteredNests);
   }
 
+  // Show the add nest screen
   void _showAddNestScreen(BuildContext context) {
     if (MediaQuery.sizeOf(context).width > 600) {
+      // Show the dialog on large screens
       showDialog(
         context: context,
         builder: (context) {
@@ -107,6 +114,7 @@ class NestsScreenState extends State<NestsScreen> {
         }
       });
     } else {
+      // Show the screen on small screens
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const AddNestScreen()),
@@ -119,10 +127,12 @@ class NestsScreenState extends State<NestsScreen> {
     }
   }
 
+  // Delete all the selected nests
   void _deleteSelectedNests() async {
     final nestProvider = Provider.of<NestProvider>(context, listen: false);
     // final nests = selectedNests.map((id) => nestProvider.getNestById(id)).toList();
 
+    // Ask for user confirmation
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -160,6 +170,7 @@ class NestsScreenState extends State<NestsScreen> {
     );
   }
 
+  // Export all the selected nests to JSON
   Future<void> _exportSelectedNestsToJson() async {
     try {
       final nestProvider = Provider.of<NestProvider>(context, listen: false);
@@ -199,6 +210,7 @@ class NestsScreenState extends State<NestsScreen> {
     }
   }
 
+  // Export all the selected nests to CSV
   void _exportSelectedNestsToCsv() async {
     try {
       final nestProvider = Provider.of<NestProvider>(context, listen: false);
@@ -338,10 +350,14 @@ class NestsScreenState extends State<NestsScreen> {
           ),
         ) : SizedBox.shrink(),
         actions: [
+          // Action to toggle the visibility of the search bar
           IconButton(
             icon: Icon(Icons.search_outlined),
+            selectedIcon: Icon(Icons.search_off_outlined),
+            isSelected: _isSearchBarVisible,
             onPressed: _toggleSearchBarVisibility,
           ),
+          // Action to sort the nests
           PopupMenuButton<String>(
             icon: Icon(Icons.sort_outlined),
             position: PopupMenuPosition.under,
@@ -415,6 +431,7 @@ class NestsScreenState extends State<NestsScreen> {
                   //     ],
                   //   ),
                   // ),
+                  // Action to export all the inactive nests to JSON
                   PopupMenuItem(
                     value: 'export',
                     child: Row(
@@ -440,6 +457,7 @@ class NestsScreenState extends State<NestsScreen> {
       ),
       body: Column(
         children: [
+          // Show the search bar
           if (_isSearchBarVisible) Padding(
             padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
             child: SearchBar(
@@ -473,6 +491,7 @@ class NestsScreenState extends State<NestsScreen> {
                 final screenWidth = constraints.maxWidth;
                 final buttonWidth = screenWidth < 600 ? screenWidth : 400.0;
 
+                // Show the segmented button to toggle between active and inactive nests
                 return SizedBox(
                   width: buttonWidth,
                   child: SegmentedButton<bool>(
@@ -495,10 +514,12 @@ class NestsScreenState extends State<NestsScreen> {
           Expanded(
             child: Consumer<NestProvider>(
                 builder: (context, nestProvider, child) {
+                  // Filter the nests based on the active/inactive status
                   final filteredNests = _filterNests(_showActive
                       ? nestProvider.activeNests
                       : nestProvider.inactiveNests);
 
+                  // Show a message if no nests are found
                   if (_showActive && nestProvider.activeNests.isEmpty ||
                       !_showActive && nestProvider.inactiveNests.isEmpty) {
                     return Center(
@@ -508,6 +529,7 @@ class NestsScreenState extends State<NestsScreen> {
 
                   return RefreshIndicator(
                     onRefresh: () async {
+                      // Refresh the nests
                       await nestProvider.fetchNests();
                     },
                     child: LayoutBuilder(
@@ -516,6 +538,7 @@ class NestsScreenState extends State<NestsScreen> {
                           final isLargeScreen = screenWidth > 600;
 
                           if (isLargeScreen) {
+                            // Show the nests in a grid view on large screens
                             return SingleChildScrollView(
                               child: Align(
                                 alignment: Alignment.topCenter,
@@ -557,6 +580,7 @@ class NestsScreenState extends State<NestsScreen> {
                               ),
                             );
                           } else {
+                            // Show the nests in a list view on small screens
                             return ListView.builder(
                               shrinkWrap: true,
                               itemCount: filteredNests.length,
@@ -578,6 +602,7 @@ class NestsScreenState extends State<NestsScreen> {
                                       ],
                                     ),
                                     leading: 
+                                      // Show checkbox if showing inactive nests
                                         Visibility(
                                           visible: !_showActive,
                                           child: Checkbox(
@@ -593,6 +618,7 @@ class NestsScreenState extends State<NestsScreen> {
                                             },
                                           ),
                                         ),
+                                    // Show icon based on the nest fate
                                     trailing: nest.nestFate == NestFateType.fatSuccess
                                           ? const Icon(Icons.check_circle, color: Colors.green)
                                           : nest.nestFate == NestFateType.fatLost
@@ -625,9 +651,11 @@ class NestsScreenState extends State<NestsScreen> {
           ),
         ],
       ),
+      // Show the FAB at the end of the screen
       floatingActionButtonLocation: selectedNests.isNotEmpty && !_showActive
         ? FloatingActionButtonLocation.endContained 
         : FloatingActionButtonLocation.endFloat,
+      // FAB to add a new nest
       floatingActionButton: FloatingActionButton(
         tooltip: S.of(context).newNest,
         onPressed: () {
@@ -635,11 +663,13 @@ class NestsScreenState extends State<NestsScreen> {
         },
         child: const Icon(Icons.add_outlined),
       ),
+      // Show the bottom app bar if there are selected nests
       bottomNavigationBar: selectedNests.isNotEmpty && !_showActive
           ? BottomAppBar(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
+                  // Option to delete the selected nests
                   IconButton(
                     icon: Icon(Icons.delete_outlined),
                     tooltip: S.of(context).delete,
@@ -647,6 +677,7 @@ class NestsScreenState extends State<NestsScreen> {
                     onPressed: _deleteSelectedNests,
                   ),
                   VerticalDivider(),
+                  // Option to export the selected nests
                   PopupMenuButton<String>(
                     position: PopupMenuPosition.over,
                     onSelected: (String item) {
@@ -692,6 +723,7 @@ class NestsScreenState extends State<NestsScreen> {
     );
   }
 
+  // Show the bottom sheet with options to edit, delete, and export the nest
   void _showBottomSheet(BuildContext context, Nest nest) {
     showModalBottomSheet(
       context: context,
@@ -704,10 +736,12 @@ class NestsScreenState extends State<NestsScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
+                  // Show the field number of the nest
                   ListTile(
                     title: Text(nest.fieldNumber!),
                   ),
                   Divider(),
+                  // Option to edit the nest
                   ListTile(
                     leading: const Icon(Icons.edit_outlined),
                     title: Text(S.of(context).editNest),
@@ -725,6 +759,7 @@ class NestsScreenState extends State<NestsScreen> {
                     },
                   ),
                   Divider(),
+                  // Option to export the nest to CSV or JSON
                   if (!_showActive) 
                     ListTile(
                       leading: const Icon(Icons.file_upload_outlined),
@@ -753,6 +788,7 @@ class NestsScreenState extends State<NestsScreen> {
                     ),
                   if (!_showActive) 
                     Divider(),
+                  // Option to delete the nest
                   ListTile(
                     leading: const Icon(Icons.delete_outlined, color: Colors.red,),
                     title: Text(S.of(context).deleteNest, style: TextStyle(color: Colors.red),),
@@ -799,6 +835,7 @@ class NestsScreenState extends State<NestsScreen> {
   }
 }
 
+// Widget to show a nest in a grid view
 class NestGridItem extends StatelessWidget {
   const NestGridItem({
     super.key,

@@ -452,17 +452,11 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
               )
             : SizedBox.shrink(),
         actions: [
-          //Action to import inventories from JSON
-          // IconButton(
-          //   icon: Icon(Icons.file_open_outlined),
-          //   onPressed: () async {
-          //     await importInventoryFromJson(context);
-          //     await inventoryProvider.fetchInventories();
-          //   },
-          // ),
           // Action to show or hide the search bar
           IconButton(
             icon: Icon(Icons.search_outlined),
+            selectedIcon: Icon(Icons.search_off_outlined),
+            isSelected: _isSearchBarVisible,
             onPressed: _toggleSearchBarVisibility,
           ),
           // Action to show the sort options
@@ -529,6 +523,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                 context: context,
                 position: RelativeRect.fromLTRB(100, 80, 0, 0),
                 items: [
+                  //Action to import inventories from JSON
                   PopupMenuItem(
                     value: 'import',
                     child: Row(
@@ -539,6 +534,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                       ],
                     ),
                   ),
+                  //Action to export all finished inventories to JSON
                   PopupMenuItem(
                     value: 'export',
                     child: Row(
