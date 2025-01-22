@@ -398,6 +398,44 @@ class NestsScreenState extends State<NestsScreen> {
               ];
             },
           ),
+          IconButton(
+            icon: Icon(Icons.more_vert_outlined),
+            onPressed: () {
+              showMenu(
+                context: context,
+                position: RelativeRect.fromLTRB(100, 80, 0, 0),
+                items: [
+                  // PopupMenuItem(
+                  //   value: 'import',
+                  //   child: Row(
+                  //     children: [
+                  //       Icon(Icons.file_open_outlined),
+                  //       SizedBox(width: 8),
+                  //       Text(S.of(context).import),
+                  //     ],
+                  //   ),
+                  // ),
+                  PopupMenuItem(
+                    value: 'export',
+                    child: Row(
+                      children: [
+                        Icon(Icons.file_upload_outlined),
+                        SizedBox(width: 8),
+                        Text(S.of(context).exportAll),
+                      ],
+                    ),
+                  ),
+                ],
+              ).then((value) async {
+                if (value == 'import') {
+                  // await importInventoryFromJson(context);
+                  // await inventoryProvider.fetchInventories();
+                } else if (value == 'export') {
+                  await exportAllInactiveNestsToJson(context);
+                }
+              });
+            },
+          ),
         ],
       ),
       body: Column(
@@ -634,7 +672,7 @@ class NestsScreenState extends State<NestsScreen> {
                       ];
                     },
                     icon: const Icon(Icons.file_upload_outlined),
-                    tooltip: S.of(context).export(S.of(context).nest(2)),
+                    tooltip: S.of(context).exportWhat(S.of(context).nest(2)),
                   ),                  
                 ],
               ),
@@ -656,6 +694,10 @@ class NestsScreenState extends State<NestsScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   ListTile(
+                    title: Text(nest.fieldNumber!),
+                  ),
+                  Divider(),
+                  ListTile(
                     leading: const Icon(Icons.edit_outlined),
                     title: Text(S.of(context).editNest),
                     onTap: () {
@@ -672,36 +714,32 @@ class NestsScreenState extends State<NestsScreen> {
                     },
                   ),
                   Divider(),
-                  !_showActive ? ExpansionTile(
+                  if (!_showActive) 
+                    ListTile(
                       leading: const Icon(Icons.file_upload_outlined),
-                      title: Text(S.of(context).export(S.of(context).nest(1))),
-                      children: [
-                        ListTile(
-                          leading: const Icon(Icons.table_chart_outlined),
-                          title: const Text('CSV'),
-                          onTap: () {
-                            Navigator.of(context).pop();
-                            exportNestToCsv(context, nest);
-                          },
-                        ),
-                        ListTile(
-                          leading: const Icon(Icons.data_object_outlined),
-                          title: const Text('JSON'),
-                          onTap: () {
-                            Navigator.of(context).pop();
-                            exportNestToJson(context, nest);
-                          },
-                        ),
-                      ]
-                  ) : const SizedBox.shrink(),
-                  !_showActive ? ListTile(
-                    leading: const Icon(Icons.file_upload_outlined),
-                    title: Text(S.of(context).exportAll(S.of(context).nests.toLowerCase())),
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      exportAllInactiveNestsToJson(context);
-                    },
-                  ) : const SizedBox.shrink(),
+                      title: Text(S.of(context).export), 
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,                       
+                        children: [
+                          // Option to export the selected nest to CSV
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                              exportNestToCsv(context, nest);
+                            },
+                            child: Text('CSV'),
+                          ),
+                          // Option to export the selected nest to JSON
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                              exportNestToJson(context, nest);
+                            },
+                            child: Text('JSON'),
+                          ),
+                        ]
+                      ),
+                    ),
                   if (!_showActive) 
                     Divider(),
                   ListTile(

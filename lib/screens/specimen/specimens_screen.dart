@@ -336,6 +336,56 @@ class SpecimensScreenState extends State<SpecimensScreen> {
               ];
             },
           ),
+          IconButton(
+            icon: Icon(Icons.more_vert_outlined),
+            onPressed: () {
+              showMenu(
+                context: context,
+                position: RelativeRect.fromLTRB(100, 80, 0, 0),
+                items: [
+                  // PopupMenuItem(
+                  //   value: 'import',
+                  //   child: Row(
+                  //     children: [
+                  //       Icon(Icons.file_open_outlined),
+                  //       SizedBox(width: 8),
+                  //       Text(S.of(context).import),
+                  //     ],
+                  //   ),
+                  // ),
+                  PopupMenuItem(
+                    value: 'exportCsv',
+                    child: Row(
+                      children: [
+                        Icon(Icons.file_upload_outlined),
+                        SizedBox(width: 8),
+                        Text('${S.of(context).exportAll} (CSV)'),
+                      ],
+                    ),
+                  ),
+                  PopupMenuItem(
+                    value: 'exportJson',
+                    child: Row(
+                      children: [
+                        Icon(Icons.file_upload_outlined),
+                        SizedBox(width: 8),
+                        Text('${S.of(context).exportAll} (JSON)'),
+                      ],
+                    ),
+                  ),
+                ],
+              ).then((value) async {
+                if (value == 'import') {
+                  // await importInventoryFromJson(context);
+                  // await inventoryProvider.fetchInventories();
+                } else if (value == 'exportCsv') {
+                  await exportAllSpecimensToCsv(context);
+                } else if (value == 'exportJson') {
+                  await exportAllSpecimensToJson(context);
+                }
+              });
+            },
+          )
         ],
       ),
       body: Column(
@@ -602,7 +652,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                       ];
                     },
                     icon: const Icon(Icons.file_upload_outlined),
-                    tooltip: S.of(context).export(S.of(context).specimens(2).toLowerCase()),
+                    tooltip: S.of(context).exportWhat(S.of(context).specimens(2).toLowerCase()),
                   ),
                 ],
               ),
@@ -624,6 +674,10 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   ListTile(
+                    title: Text(specimen.fieldNumber),
+                  ),
+                  Divider(),
+                  ListTile(
                     leading: const Icon(Icons.edit_outlined),
                     title: Text(S.of(context).editSpecimen),
                     onTap: () {
@@ -638,29 +692,6 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                         ),
                       );
                     },
-                  ),
-                  Divider(),
-                  ExpansionTile(
-                      leading: const Icon(Icons.file_download_outlined),
-                      title: Text(S.of(context).exportAll(S.of(context).specimens(2).toLowerCase())),
-                      children: [
-                        ListTile(
-                          leading: const Icon(Icons.table_chart_outlined),
-                          title: const Text('CSV'),
-                          onTap: () {
-                            Navigator.of(context).pop();
-                            exportAllSpecimensToCsv(context);
-                          },
-                        ),
-                        ListTile(
-                          leading: const Icon(Icons.code_outlined),
-                          title: const Text('JSON'),
-                          onTap: () {
-                            Navigator.of(context).pop();
-                            exportAllSpecimensToJson(context);
-                          },
-                        ),
-                      ]
                   ),
                   Divider(),
                   ListTile(

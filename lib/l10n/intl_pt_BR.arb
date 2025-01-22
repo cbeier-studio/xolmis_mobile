@@ -154,8 +154,13 @@
     },
     "pause": "Pausa",
     "resume": "Retomar",
-    "export": "Exportar {what}",
+    "export": "Exportar",
     "@export": {
+        "type": "text",
+        "description": "Export button hint"
+    },
+    "exportWhat": "Exportar {what}",
+    "@exportWhat": {
         "type": "text",
         "description": "Menu item to export an item",
         "placeholders": {
@@ -164,8 +169,13 @@
             }
         }
     },
-    "exportAll": "Exportar todos os {what}",
+    "exportAll": "Exportar todos",
     "@exportAll": {
+        "type": "text",
+        "description": "Export all button hint"
+    },
+    "exportAllWhat": "Exportar todos os {what}",
+    "@exportAllWhat": {
         "type": "text",
         "description": "Menu item to export all items",
         "placeholders": {
@@ -260,6 +270,11 @@
     "@errorImportingInventory": {
         "type": "text",
         "description": "Message shown when an error occurred while importing an inventory"
+    },
+    "import": "Importar",
+    "@import": {
+        "type": "text",
+        "description": "Import button label"
     },
     "vegetationData": "Dados de vegetação",
     "herbs": "Herbáceas",

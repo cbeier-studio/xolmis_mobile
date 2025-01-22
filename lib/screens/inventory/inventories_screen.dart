@@ -453,13 +453,13 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
             : SizedBox.shrink(),
         actions: [
           //Action to import inventories from JSON
-          IconButton(
-            icon: Icon(Icons.file_open_outlined),
-            onPressed: () async {
-              await importInventoryFromJson(context);
-              await inventoryProvider.fetchInventories();
-            },
-          ),
+          // IconButton(
+          //   icon: Icon(Icons.file_open_outlined),
+          //   onPressed: () async {
+          //     await importInventoryFromJson(context);
+          //     await inventoryProvider.fetchInventories();
+          //   },
+          // ),
           // Action to show or hide the search bar
           IconButton(
             icon: Icon(Icons.search_outlined),
@@ -520,6 +520,44 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                   ),
                 ),
               ];
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.more_vert_outlined),
+            onPressed: () {
+              showMenu(
+                context: context,
+                position: RelativeRect.fromLTRB(100, 80, 0, 0),
+                items: [
+                  PopupMenuItem(
+                    value: 'import',
+                    child: Row(
+                      children: [
+                        Icon(Icons.file_open_outlined),
+                        SizedBox(width: 8),
+                        Text(S.of(context).import),
+                      ],
+                    ),
+                  ),
+                  PopupMenuItem(
+                    value: 'export',
+                    child: Row(
+                      children: [
+                        Icon(Icons.file_upload_outlined),
+                        SizedBox(width: 8),
+                        Text(S.of(context).exportAll),
+                      ],
+                    ),
+                  ),
+                ],
+              ).then((value) async {
+                if (value == 'import') {
+                  await importInventoryFromJson(context);
+                  await inventoryProvider.fetchInventories();
+                } else if (value == 'export') {
+                  await exportAllInventoriesToJson(context, inventoryProvider);
+                }
+              });
             },
           ),
         ],
@@ -710,7 +748,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                   ];
                 },
                 icon: const Icon(Icons.file_upload_outlined),
-                tooltip: S.of(context).export(S.of(context).inventory(2)),
+                tooltip: S.of(context).exportWhat(S.of(context).inventory(2)),
               ),
               // Option to show report species by inventory
               IconButton(
@@ -1099,6 +1137,13 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
+                  // Show the inventory ID
+                  ListTile(
+                    // leading: const Icon(Icons.info_outlined),
+                    title: Text(inventory.id),
+                    // subtitle: Text(S.of(context).inventoryId),
+                  ),
+                  Divider(),
                   // Option to edit the inventory ID
                   ListTile(
                       leading: const Icon(Icons.edit_outlined),
@@ -1139,39 +1184,30 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                   if (!_isShowingActiveInventories) 
                     Divider(),
                   if (!_isShowingActiveInventories)
-                    ExpansionTile(
-                        leading: const Icon(Icons.file_upload_outlined),
-                        title: Text(S.of(context).export(S.of(context).inventory(1))),
+                    ListTile(
+                      leading: const Icon(Icons.file_upload_outlined),
+                      title: Text(S.of(context).export), 
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,                       
                         children: [
                           // Option to export the selected inventory to CSV
-                          ListTile(
-                            leading: const Icon(Icons.table_chart_outlined),
-                            title: const Text('CSV'),
-                            onTap: () {
+                          TextButton(
+                            onPressed: () {
                               Navigator.of(context).pop();
                               exportInventoryToCsv(context, inventory, true);
                             },
+                            child: Text('CSV'),
                           ),
                           // Option to export the selected inventory to JSON
-                          ListTile(
-                            leading: const Icon(Icons.data_object_outlined),
-                            title: const Text('JSON'),
-                            onTap: () {
+                          TextButton(
+                            onPressed: () {
                               Navigator.of(context).pop();
                               exportInventoryToJson(context, inventory, true);
                             },
+                            child: Text('JSON'),
                           ),
                         ]
-                    ),
-                  // Option to export all inventories to a JSON file
-                  if (!_isShowingActiveInventories)
-                    ListTile(
-                      leading: const Icon(Icons.file_upload_outlined),
-                      title: Text(S.of(context).exportAll(S.of(context).inventory(2))),
-                      onTap: () {
-                        Navigator.of(context).pop();
-                        exportAllInventoriesToJson(context, inventoryProvider);
-                      },
+                      ),
                     ),
                   Divider(),
                   // Option to delete the inventory

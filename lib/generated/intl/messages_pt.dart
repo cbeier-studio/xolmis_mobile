@@ -41,9 +41,9 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m6(errorMessage) =>
       "Erro ao desativar o ninho: ${errorMessage}";
 
-  static String m7(what) => "Exportar ${what}";
+  static String m7(what) => "Exportar todos os ${what}";
 
-  static String m8(what) => "Exportar todos os ${what}";
+  static String m8(what) => "Exportar ${what}";
 
   static String m9(howMany) =>
       "${Intl.plural(howMany, one: 'Imagem', other: 'Imagens')}";
@@ -256,8 +256,10 @@ class MessageLookup extends MessageLookupByLibrary {
             "Espécie já adicionada à lista"),
         "errorSpecimenAlreadyExists": MessageLookupByLibrary.simpleMessage(
             "Já existe um espécime com este número de campo."),
-        "export": m7,
-        "exportAll": m8,
+        "export": MessageLookupByLibrary.simpleMessage("Exportar"),
+        "exportAll": MessageLookupByLibrary.simpleMessage("Exportar todos"),
+        "exportAllWhat": m7,
+        "exportWhat": m8,
         "female": MessageLookupByLibrary.simpleMessage("Fêmea"),
         "fieldNumber": MessageLookupByLibrary.simpleMessage("Número de campo"),
         "findInventories":
@@ -282,6 +284,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "imageDetails":
             MessageLookupByLibrary.simpleMessage("Detalhes da imagem"),
         "images": m9,
+        "import": MessageLookupByLibrary.simpleMessage("Importar"),
         "importingInventory":
             MessageLookupByLibrary.simpleMessage("Importando inventário..."),
         "inactive": MessageLookupByLibrary.simpleMessage("Inativos"),

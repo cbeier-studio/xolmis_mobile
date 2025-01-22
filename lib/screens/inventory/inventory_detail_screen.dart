@@ -262,7 +262,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                 ];
               },
               icon: const Icon(Icons.file_upload_outlined),
-              tooltip: S.of(context).export(S.of(context).inventory(1)),
+              tooltip: S.of(context).exportWhat(S.of(context).inventory(1)),
             ),
           const SizedBox(width: 8.0,),
         ],

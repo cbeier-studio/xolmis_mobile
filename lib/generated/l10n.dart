@@ -609,21 +609,41 @@ class S {
     );
   }
 
+  /// `Export`
+  String get export {
+    return Intl.message(
+      'Export',
+      name: 'export',
+      desc: 'Export button hint',
+      args: [],
+    );
+  }
+
   /// `Export {what}`
-  String export(String what) {
+  String exportWhat(String what) {
     return Intl.message(
       'Export $what',
-      name: 'export',
+      name: 'exportWhat',
       desc: 'Menu option to export one record',
       args: [what],
     );
   }
 
+  /// `Export all`
+  String get exportAll {
+    return Intl.message(
+      'Export all',
+      name: 'exportAll',
+      desc: 'Export all button hint',
+      args: [],
+    );
+  }
+
   /// `Export all {what}`
-  String exportAll(String what) {
+  String exportAllWhat(String what) {
     return Intl.message(
       'Export all $what',
-      name: 'exportAll',
+      name: 'exportAllWhat',
       desc: 'Menu option to export all records',
       args: [what],
     );
@@ -919,6 +939,16 @@ class S {
       'No file selected.',
       name: 'noFileSelected',
       desc: 'Message shown when no file is selected to import',
+      args: [],
+    );
+  }
+
+  /// `Import`
+  String get import {
+    return Intl.message(
+      'Import',
+      name: 'import',
+      desc: 'Import button label',
       args: [],
     );
   }

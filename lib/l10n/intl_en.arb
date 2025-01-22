@@ -307,8 +307,13 @@
         "type": "text",
         "description": "Resume button hint"
     },
-    "export": "Export {what}",
+    "export": "Export",
     "@export": {
+        "type": "text",
+        "description": "Export button hint"
+    },
+    "exportWhat": "Export {what}",
+    "@exportWhat": {
         "type": "text",
         "description": "Menu option to export one record",
         "placeholders": {
@@ -317,8 +322,13 @@
             }
         }
     },
-    "exportAll": "Export all {what}",
+    "exportAll": "Export all",
     "@exportAll": {
+        "type": "text",
+        "description": "Export all button hint"
+    },
+    "exportAllWhat": "Export all {what}",
+    "@exportAllWhat": {
         "type": "text",
         "description": "Menu option to export all records",
         "placeholders": {
@@ -476,6 +486,11 @@
     "@noFileSelected": {
         "type": "text",
         "description": "Message shown when no file is selected to import"
+    },
+    "import": "Import",
+    "@import": {
+        "type": "text",
+        "description": "Import button label"
     },
     "errorImportingInventory": "Error importing inventory.",
     "@errorImportingInventory": {
