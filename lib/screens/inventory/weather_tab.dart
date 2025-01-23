@@ -82,7 +82,71 @@ class _WeatherTabState extends State<WeatherTab> with AutomaticKeepAliveClientMi
                             final isLargeScreen = screenWidth > 600;
 
                             if (isLargeScreen) {
-                              return _buildGridView(weatherList);
+                              final double minWidth = 340;
+                              int crossAxisCountCalculated = (constraints.maxWidth / minWidth).floor();
+                              return SingleChildScrollView(
+        child: Align(
+      alignment: Alignment.topCenter,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 840),
+        child: GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: crossAxisCountCalculated,
+              childAspectRatio: 1,
+            ),
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: weatherList.length,
+            itemBuilder: (context, index) {
+              final weather = weatherList[index];
+              return GridTile(
+                child: InkWell(
+                  onLongPress: () =>
+                      _showBottomSheet(context, weather),
+                  // onTap: () {
+                  //
+                  // },
+                  child: Card.outlined(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              DateFormat('dd/MM/yyyy HH:mm:ss').format(weather.sampleTime!),
+              style: const TextStyle(
+                  fontSize: 20,),
+            ),
+            
+                // Icon(Icons.cloud_outlined),
+                // SizedBox(width: 4,),
+                Text('${S.current.cloudCover}: ${weather.cloudCover}%'),
+                // SizedBox(width: 8,),
+                // Icon(Icons.water_drop_outlined),
+                // SizedBox(width: 4,),
+                Text('${S.current.precipitation}: ${precipitationTypeFriendlyNames[weather.precipitation]}'),
+                // SizedBox(width: 8,),
+                // Icon(Icons.thermostat_outlined),
+                // SizedBox(width: 4,),
+                Text('${S.current.temperature}: ${weather.temperature} °C'),
+                // SizedBox(width: 8,),
+                // Icon(Icons.wind_power_outlined),
+                // SizedBox(width: 4,),
+                Text('${S.current.windSpeed}: ${weather.windSpeed} bft'),
+              ],
+            ),
+          
+        
+      ),
+    ),
+                ),
+              );
+            },
+        ),
+      ),
+    ),
+    );
                             } else {
                               return _buildListView(weatherList);
                             }

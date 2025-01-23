@@ -90,7 +90,122 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
                             final isLargeScreen = screenWidth > 600;
 
                             if (isLargeScreen) {
-                              return _buildGridView(vegetationList);
+                              final double minWidth = 340;
+                              int crossAxisCountCalculated = (constraints.maxWidth / minWidth).floor();
+                              return SingleChildScrollView(
+        child: Align(
+      alignment: Alignment.topCenter,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 840),
+        child: SingleChildScrollView(
+          child: GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: crossAxisCountCalculated,
+              childAspectRatio: 1,
+            ),
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: vegetationList.length,
+            itemBuilder: (context, index) {
+              final vegetation = vegetationList[index];
+              return GridTile(
+                child: InkWell(
+                  onLongPress: () =>
+                      _showBottomSheet(context, vegetation),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AppImageScreen(
+                          vegetationId: vegetation.id,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Card.outlined(
+      child: Column(
+                mainAxisAlignment:
+                    MainAxisAlignment.end,
+                crossAxisAlignment:
+                    CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child:
+                        FutureBuilder<List<AppImage>>(
+                      future: Provider.of<
+                                  AppImageProvider>(
+                              context,
+                              listen: false)
+                          .fetchImagesForVegetation(
+                              vegetation.id!),
+                      builder: (context, snapshot) {
+                        if (snapshot
+                                .connectionState ==
+                            ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        } else if (snapshot
+                            .hasError) {
+                          return const Icon(
+                              Icons.error);
+                        } else if (snapshot.hasData &&
+                            snapshot
+                                .data!.isNotEmpty) {
+                          return ClipRRect(
+                            borderRadius:
+                                BorderRadius.vertical(
+                                    top: Radius
+                                        .circular(
+                                            12.0)),
+                            child: Image.file(
+                              File(snapshot.data!
+                                  .first.imagePath),
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                            ),
+                          );
+                        } else {
+                          return const Center(
+                              child: Icon(Icons
+                                  .hide_image_outlined));
+                        }
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.all(16.0),
+                    child: Column(
+                      mainAxisAlignment:
+                          MainAxisAlignment.end,
+                      crossAxisAlignment:
+                          CrossAxisAlignment.start,
+                      children: [
+                        
+                        Text(
+                      DateFormat('dd/MM/yyyy HH:mm:ss').format(vegetation.sampleTime!),
+                      style: const TextStyle(
+                              fontSize: 20),
+                    ),
+                    Text('${vegetation.latitude}; ${vegetation.longitude}'),
+                    Text('${S.of(context).herbs}: ${vegetation.herbsDistribution?.index ?? 0}; ${vegetation.herbsProportion}%; ${vegetation.herbsHeight} cm'),
+                    Text('${S.of(context).shrubs}: ${vegetation.shrubsDistribution?.index ?? 0}; ${vegetation.shrubsProportion}%; ${vegetation.shrubsHeight} cm'),
+                    Text('${S.of(context).trees}: ${vegetation.treesDistribution?.index ?? 0}; ${vegetation.treesProportion}%; ${vegetation.treesHeight} cm'),
+                    if (vegetation.notes!.isNotEmpty) Text('${vegetation.notes}'),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+      
+    ),
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+        ),
+    );
                             } else {
                               return _buildListView(vegetationList);
                             }

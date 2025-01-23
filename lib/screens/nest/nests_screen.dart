@@ -538,7 +538,7 @@ class NestsScreenState extends State<NestsScreen> {
                   final isLargeScreen = screenWidth > 600;
 
                   if (isLargeScreen) {
-                    final double minWidth = 180;
+                    final double minWidth = 300;
                     int crossAxisCountCalculated = (constraints.maxWidth / minWidth).floor();
                     // Show the nests in a grid view on large screens
                     return SingleChildScrollView(
@@ -767,6 +767,103 @@ class NestsScreenState extends State<NestsScreen> {
                 Text(nest.speciesName!, style: const TextStyle(fontStyle: FontStyle.italic), overflow: TextOverflow.ellipsis,),
                 Text(nest.localityName!, overflow: TextOverflow.ellipsis,),
                 Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(nest.foundTime!), overflow: TextOverflow.ellipsis,),
+                Text('${nest.latitude}, ${nest.longitude}', overflow: TextOverflow.ellipsis,),
+                Padding(
+                  padding: EdgeInsets.only(top: 8),
+                  child: Row(mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Visibility(
+                        visible: _showActive,
+                        child:FilledButton.icon(
+                        onPressed: () async {
+                    NestFateType? selectedNestFate;
+
+                    // Show dialog with the DropdownButton
+                    await showDialog<NestFateType>(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: Text(S.of(context).confirmFate),
+                        content: DropdownButtonFormField<NestFateType>(
+                          value: selectedNestFate,
+                          decoration: InputDecoration(
+                            labelText: S.of(context).nestFate,
+                            helperText: S.of(context).requiredField,
+                            border: OutlineInputBorder(),
+                          ),
+                          onChanged: (NestFateType? newValue) {
+                            setState(() {
+                              selectedNestFate = newValue;
+                            });
+                          },
+                          items: NestFateType.values.map((NestFateType fate) {
+                            return DropdownMenuItem<NestFateType>(
+                              value: fate,
+                              child: Row(
+                                children: [
+                                  fate == NestFateType.fatSuccess
+                                      ? const Icon(Icons.check_circle, color: Colors.green)
+                                      : fate == NestFateType.fatLost
+                                      ? const Icon(Icons.cancel, color: Colors.red)
+                                      : const Icon(Icons.help, color: Colors.grey),
+                                  const SizedBox(width: 8),
+                                  Text(nestFateTypeFriendlyNames[fate]!),
+                                ],
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: Text(S.of(context).cancel),
+                          ),
+                          TextButton(
+                            onPressed: () async {
+                              if (selectedNestFate != null) {
+                                // setState(() {
+                                //   _isSubmitting = true;
+                                // });
+
+                                try {
+                                  // Update nest with fate, lastTime and isActive = false
+                                  nest.nestFate = selectedNestFate;
+                                  nest.lastTime = DateTime.now();
+                                  nest.isActive = false;
+
+                                  // Save changes to database using the provider
+                                  await Provider.of<NestProvider>(context, listen: false)
+                                      .updateNest(nest);
+
+                                  // Close screen of nest details
+                                  Navigator.pop(context, selectedNestFate);
+                                  // Navigator.pop(context);
+                                } catch (error) {
+                                  // Handle errors
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(S.of(context).errorInactivatingNest(error.toString())),
+                                    ),
+                                  );
+                                } finally {
+                                  // setState(() {
+                                  //   _isSubmitting = false;
+                                  // });
+                                }
+                              }
+                            },
+                            child: Text(S.of(context).save),
+                          ),
+                        ],
+                      ),
+                    );
+                        }, 
+                        label: Text(S.current.finish),
+                        icon: Icon(Icons.flag_outlined),
+                      ),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),

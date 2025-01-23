@@ -449,8 +449,8 @@ class _MainScreenState extends State<MainScreen> {
       },
       children: <Widget>[
         UserAccountsDrawerHeader(
-          accountName: Text('Xolmis', style: TextStyle(fontSize: 30)), 
-          accountEmail: Text(_appVersion),          
+          accountName: Text('Xolmis', style: TextStyle(fontSize: 30, color: Brightness.dark == Theme.of(context).brightness ? Colors.black : Colors.white)), 
+          accountEmail: Text(_appVersion, style: TextStyle(color: Brightness.dark == Theme.of(context).brightness ? Colors.black : Colors.white)),          
           otherAccountsPictures: [
             IconButton(
                 icon: Theme.of(context).brightness == Brightness.light

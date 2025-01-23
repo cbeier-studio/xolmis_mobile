@@ -653,7 +653,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
 
                   // Show the inventories in a grid on large screens
                   if (isLargeScreen) {
-                    final double minWidth = 220;
+                    final double minWidth = 300;
                     int crossAxisCount = (constraints.maxWidth / minWidth).floor();
                     return SingleChildScrollView(
                       child: Align(
@@ -993,6 +993,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                         }
                       ),
                     ),
+                    Expanded(child: SizedBox.shrink()),
                     // Show the pause/resume button for active inventories
                     Visibility(
                       visible: _isShowingActiveInventories && inventory.duration > 0,
@@ -1102,41 +1103,48 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                     ),
                   ],
                 ),
-                SizedBox(height: 8),
-                // Option to finish the inventory
-                Visibility(
-                  visible: _isShowingActiveInventories,
-                  child: Align(
-                  alignment: Alignment.bottomRight,
-                  child: FilledButton.icon(
-                      icon: const Icon(Icons.flag_outlined),
-                      label: Text(S.of(context).finish),
-                      onPressed: () {
-                        // Ask for user confirmation
-                        showFinishDialog(context, inventory);
-                      },
-                    ),
-                  ),
-                ),
-                Visibility(
-                  visible: !_isShowingActiveInventories,
-                  child: Align(
-                  alignment: Alignment.bottomRight,
-                  child: TextButton(
-                      child: Text(S.of(context).reactivateInventory),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        inventory.updateElapsedTime(0);
-                        inventory.updateCurrentInterval(inventory.currentInterval + 1);
-                        inventory.currentIntervalSpeciesCount = 0;
-                        inventory.intervalsWithoutNewSpecies = 0;
-                        inventory.intervalWithoutSpeciesNotifier.value = inventory.intervalsWithoutNewSpecies;
-                        inventory.updateIsFinished(false);
-                        inventoryProvider.updateInventory(inventory);
-                        inventoryProvider.startInventoryTimer(inventory, inventoryRepository);
-                        // inventoryProvider.notifyListeners();
-                      },
-                    ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      // Option to finish the inventory
+                      Visibility(
+                        visible: _isShowingActiveInventories,
+                        child: Align(
+                          alignment: Alignment.bottomRight,
+                          child: FilledButton.icon(
+                            icon: const Icon(Icons.flag_outlined),
+                            label: Text(S.of(context).finish),
+                            onPressed: () {
+                              // Ask for user confirmation
+                              showFinishDialog(context, inventory);
+                            },
+                          ),
+                        ),
+                      ),
+                // Visibility(
+                //   visible: !_isShowingActiveInventories,
+                //   child: Align(
+                //   alignment: Alignment.bottomRight,
+                //   child: TextButton(
+                //       child: Text(S.of(context).reactivateInventory),
+                //       onPressed: () {
+                //         Navigator.of(context).pop();
+                //         inventory.updateElapsedTime(0);
+                //         inventory.updateCurrentInterval(inventory.currentInterval + 1);
+                //         inventory.currentIntervalSpeciesCount = 0;
+                //         inventory.intervalsWithoutNewSpecies = 0;
+                //         inventory.intervalWithoutSpeciesNotifier.value = inventory.intervalsWithoutNewSpecies;
+                //         inventory.updateIsFinished(false);
+                //         inventoryProvider.updateInventory(inventory);
+                //         inventoryProvider.startInventoryTimer(inventory, inventoryRepository);
+                //         // inventoryProvider.notifyListeners();
+                //       },
+                //     ),
+                //   ),
+                // ),
+                    ],
                   ),
                 ),
               ],

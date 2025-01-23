@@ -90,7 +90,143 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
                             final isLargeScreen = screenWidth > 600;
 
                             if (isLargeScreen) {
-                              return _buildGridView(eggList);
+                              final double minWidth = 340;
+                              int crossAxisCountCalculated = (constraints.maxWidth / minWidth).floor();
+                              return SingleChildScrollView(
+      child: Align(
+      alignment: Alignment.topCenter,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 840),
+        child: GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: crossAxisCountCalculated,
+              childAspectRatio: 1,
+            ),
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: eggList.length,
+            itemBuilder: (context, index) {
+              final egg = eggList[index];
+              // final isSelected = selectedEggs.contains(egg.id);
+        return GridTile(
+          child: InkWell(
+            onLongPress: () =>
+                _showBottomSheet(context, egg),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AppImageScreen(
+                    specimenId: egg.id,
+                  ),
+                ),
+              );
+            },
+            child: Card.outlined(
+              child: Stack(
+                children: [
+                  Column(
+                    mainAxisAlignment:
+                        MainAxisAlignment.end,
+                    crossAxisAlignment:
+                        CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child:
+                            FutureBuilder<List<AppImage>>(
+                          future: Provider.of<
+          AppImageProvider>(
+      context,
+      listen: false)
+                              .fetchImagesForEgg(
+      egg.id!),
+                          builder: (context, snapshot) {
+                            if (snapshot
+        .connectionState ==
+    ConnectionState.waiting) {
+                              return const CircularProgressIndicator();
+                            } else if (snapshot
+    .hasError) {
+                              return const Icon(
+      Icons.error);
+                            } else if (snapshot.hasData &&
+    snapshot
+        .data!.isNotEmpty) {
+                              return ClipRRect(
+    borderRadius:
+        BorderRadius.vertical(
+            top: Radius
+                .circular(
+                    12.0)),
+    child: Image.file(
+      File(snapshot.data!
+          .first.imagePath),
+      width: double.infinity,
+      fit: BoxFit.cover,
+    ),
+                              );
+                            } else {
+                              return const Center(
+      child: Icon(Icons
+          .hide_image_outlined));
+                            }
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding:
+                            const EdgeInsets.all(16.0),
+                        child: Column(
+                          mainAxisAlignment:
+                              MainAxisAlignment.end,
+                          crossAxisAlignment:
+                              CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                  egg.fieldNumber!,
+                  style: const TextStyle(
+      fontSize: 20),
+                ),
+                Text(
+                  egg.speciesName!,
+                  style: const TextStyle(fontStyle: FontStyle.italic),
+                ),
+                Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(egg.sampleTime!)),
+                            
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  // Positioned(
+                  //   top: 8,
+                  //   right: 8,
+                  //   child: Checkbox(
+                  //     value: isSelected,
+                  //     onChanged: (bool? value) {
+                  //       setState(() {
+                  //         if (value == true) {
+                  //           selectedSpecimens
+                  //               .add(specimen.id!);
+                  //         } else {
+                  //           selectedSpecimens
+                  //               .remove(specimen.id);
+                  //         }
+                  //       });
+                  //     },
+                  //   ),
+                  // ),
+                ],
+              ),
+            ),
+          ),
+        );
+              
+            },
+          ),
+        ),
+      ),
+    );
                             } else {
                               return _buildListView(eggList);
                             }

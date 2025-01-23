@@ -11,6 +11,7 @@ import '../../providers/poi_provider.dart';
 
 import '../../utils/utils.dart';
 import '../../utils/species_search_delegate.dart';
+import '../../utils/species_search_dialog.dart';
 import 'species_chart_screen.dart';
 import 'species_list_item.dart';
 import '../../generated/l10n.dart';
@@ -189,13 +190,35 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
 
     final isLargeScreen = MediaQuery.of(context).size.width > 600;
 
+  //   if (isLargeScreen) {
+  //   final selectedSpecies = await showDialog<String>(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return SpeciesSearchDialog(
+  //         allSpeciesNames: allSpeciesNames,
+  //         onSelected: (speciesName) {
+  //           // Navigator.pop(context, speciesName);
+  //           _addSpeciesToInventory(
+  //               speciesName, speciesRepository, inventoryRepository);
+  //         },
+  //         updateSpeciesList: _updateSpeciesList,
+  //       );
+  //     },
+  //   );
+
+  //   if (selectedSpecies != null) {
+  //     // Reload the species list after adding a new species
+  //     _updateSpeciesList();
+  //   }
+  // } else {
     final selectedSpecies = await showSearch(
       context: context,
       delegate: SpeciesSearchDelegate(
-          allSpeciesNames, (speciesName) =>
-          _addSpeciesToInventory(
-              speciesName, speciesRepository, inventoryRepository),
-          _updateSpeciesList),
+        allSpeciesNames,
+        (speciesName) => _addSpeciesToInventory(
+            speciesName, speciesRepository, inventoryRepository),
+        _updateSpeciesList,
+      ),
       useRootNavigator: !isLargeScreen,
     );
 
@@ -204,6 +227,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
       _updateSpeciesList();
     }
   }
+  // }
 
   // Delete the selected species from the list
   Future<void> _deleteSpecies(Species species) async {

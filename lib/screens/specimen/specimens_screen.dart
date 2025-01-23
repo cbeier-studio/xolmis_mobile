@@ -441,7 +441,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                   final isLargeScreen = screenWidth > 600;
 
                   if (isLargeScreen) {
-                    final double minWidth = 220;
+                    final double minWidth = 300;
                     int crossAxisCountCalculated =
                         (constraints.maxWidth / minWidth).floor();
                     return SingleChildScrollView(
