@@ -653,7 +653,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
 
                   // Show the inventories in a grid on large screens
                   if (isLargeScreen) {
-                    final double minWidth = 220.0;
+                    final double minWidth = 220;
                     int crossAxisCount = (constraints.maxWidth / minWidth).floor();
                     return SingleChildScrollView(
                       child: Align(
@@ -1021,22 +1021,21 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                       ),
                     ),
                     // Show checkbox to select inventories if not active
-                    if (!_isShowingActiveInventories)
-                      Visibility(
-                        visible: !_isShowingActiveInventories,
-                        child: Checkbox(
-                          value: isSelected,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              if (value == true) {
-                                selectedInventories.add(inventory.id);
-                              } else {
-                                selectedInventories.remove(inventory.id);
-                              }
-                            });
-                          },
-                        ),
+                    Visibility(
+                      visible: !_isShowingActiveInventories,
+                      child: Checkbox(
+                        value: isSelected,
+                        onChanged: (bool? value) {
+                          setState(() {
+                            if (value == true) {
+                              selectedInventories.add(inventory.id);
+                            } else {
+                              selectedInventories.remove(inventory.id);
+                            }
+                          });
+                        },
                       ),
+                    ),
                   ],
                 ),
                 SizedBox(height: 8),

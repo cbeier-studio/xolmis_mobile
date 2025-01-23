@@ -275,6 +275,7 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,                       
                       children: [
                         const Icon(Icons.location_on_outlined),
                         Expanded(child: SizedBox.shrink()),

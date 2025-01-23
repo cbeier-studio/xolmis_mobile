@@ -392,218 +392,91 @@ class SpecimensScreenState extends State<SpecimensScreen> {
       ),
       body: Column(
         children: [
-          if (_isSearchBarVisible) Padding(
-            padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 16.0),
-            child: SearchBar(
-              controller: _searchController,
-              hintText: S.of(context).findSpecimens,
-              leading: const Icon(Icons.search_outlined),
-              trailing: [
-                _searchController.text.isNotEmpty
-                    ? IconButton(
-                  icon: const Icon(Icons.clear_outlined),
-                  onPressed: () {
-                    setState(() {
-                      _searchQuery = '';
-                      _searchController.clear();
-                    });
-                  },
-                )
-                    : SizedBox.shrink(),
-              ],
-              onChanged: (query) {
-                setState(() {
-                  _searchQuery = query;
-                });
-              },
+          if (_isSearchBarVisible)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 16.0),
+              child: SearchBar(
+                controller: _searchController,
+                hintText: S.of(context).findSpecimens,
+                leading: const Icon(Icons.search_outlined),
+                trailing: [
+                  _searchController.text.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(Icons.clear_outlined),
+                          onPressed: () {
+                            setState(() {
+                              _searchQuery = '';
+                              _searchController.clear();
+                            });
+                          },
+                        )
+                      : SizedBox.shrink(),
+                ],
+                onChanged: (query) {
+                  setState(() {
+                    _searchQuery = query;
+                  });
+                },
+              ),
             ),
-          ),
           Expanded(
-          child: Consumer<SpecimenProvider>(
-              builder: (context, specimenProvider, child) {
-                final filteredSpecimens = _filterSpecimens(specimenProvider.specimens);
+            child: Consumer<SpecimenProvider>(
+                builder: (context, specimenProvider, child) {
+              final filteredSpecimens =
+                  _filterSpecimens(specimenProvider.specimens);
 
-                if (filteredSpecimens.isEmpty) {
-                  return Center(
-                    child: Text(S.of(context).noSpecimenCollected),
-                  );
-                }
+              if (filteredSpecimens.isEmpty) {
+                return Center(
+                  child: Text(S.of(context).noSpecimenCollected),
+                );
+              }
 
-                return RefreshIndicator(
-                  onRefresh: () async {
-                    await specimenProvider.fetchSpecimens();
-                  },
-                  child: LayoutBuilder(
-                      builder: (BuildContext context, BoxConstraints constraints) {
-                        final screenWidth = constraints.maxWidth;
-                        final isLargeScreen = screenWidth > 600;
+              return RefreshIndicator(
+                onRefresh: () async {
+                  await specimenProvider.fetchSpecimens();
+                },
+                child: LayoutBuilder(builder:
+                    (BuildContext context, BoxConstraints constraints) {
+                  final screenWidth = constraints.maxWidth;
+                  final isLargeScreen = screenWidth > 600;
 
-                        if (isLargeScreen) {
-                          return SingleChildScrollView(
-                            child: Align(
-                            alignment: Alignment.topCenter,
-                            child: ConstrainedBox(
-                              constraints: const BoxConstraints(maxWidth: 840),
-                              child: GridView.builder(
-                                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2,
-                                    childAspectRatio: 2.5,
-                                  ),
-                                physics: const NeverScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                itemCount: filteredSpecimens.length,
-                                itemBuilder: (context, index) {
-                                  final specimen = filteredSpecimens[index];
-                                  return GridTile(
-                                    child: InkWell(
-                                        onLongPress: () => _showBottomSheet(context, specimen),
-                                        onTap: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => AppImageScreen(
-                                                specimenId: specimen.id,
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                        child: Card.filled(
-                                  child: Padding(
-                                          padding: const EdgeInsets.all(16.0),
-                                          child: Row(
-                                            children: [
-                                              FutureBuilder<List<AppImage>>(
-                                                future: Provider.of<AppImageProvider>(context, listen: false)
-                                                    .fetchImagesForSpecimen(specimen.id!),
-                                                builder: (context, snapshot) {
-                                                  if (snapshot.connectionState == ConnectionState.waiting) {
-                                                    return const CircularProgressIndicator();
-                                                  } else if (snapshot.hasError) {
-                                                    return const Icon(Icons.error);
-                                                  } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                                                    return ClipRRect(
-                                                      borderRadius: BorderRadius.circular(0),
-                                                      child: Image.file(
-                                                        File(snapshot.data!.first.imagePath),
-                                                        width: 50,
-                                                        height: 50,
-                                                        fit: BoxFit.cover,
-                                                      ),
-                                                    );
-                                                  } else {
-                                                    return const Icon(Icons.hide_image_outlined);
-                                                  }
-                                                },
-                                              ),
-                                              const SizedBox(width: 16.0,),
-                                              Column(
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    specimen.fieldNumber,
-                                                    style: const TextStyle(fontWeight: FontWeight.bold),
-                                                  ),
-                                                  Text('${specimenTypeFriendlyNames[specimen.type]}'),
-                                                  Text(
-                                                    specimen.speciesName!,
-                                                    style: const TextStyle(fontStyle: FontStyle.italic),
-                                                  ),
-                                                  Text(specimen.locality!),
-                                                  Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(specimen.sampleTime!)),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        ),
-                                      ),
-                                  );
-                                },
-                              ),
-                              ),
+                  if (isLargeScreen) {
+                    final double minWidth = 220;
+                    int crossAxisCountCalculated =
+                        (constraints.maxWidth / minWidth).floor();
+                    return SingleChildScrollView(
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(maxWidth: 840),
+                          child: GridView.builder(
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: crossAxisCountCalculated,
+                              childAspectRatio: 1,
                             ),
-                          );
-                        } else {
-                          return ListView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
                             itemCount: filteredSpecimens.length,
                             itemBuilder: (context, index) {
-                              final specimen = filteredSpecimens[index];
-                              final isSelected = selectedSpecimens.contains(specimen.id);
-                              return ListTile(
-                                  leading: Checkbox(
-                                  value: isSelected,
-                                  onChanged: (bool? value) {
-                                    setState(() {
-                                      if (value == true) {
-                                        selectedSpecimens.add(specimen.id!);
-                                      } else {
-                                        selectedSpecimens.remove(specimen.id);
-                                      }
-                                    });
-                                  },
-                                ),
-                                trailing: FutureBuilder<List<AppImage>>(
-                                future: Provider.of<AppImageProvider>(context,
-                                        listen: false)
-                                    .fetchImagesForSpecimen(specimen.id ?? 0),
-                                builder: (context, snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return const CircularProgressIndicator();
-                                  } else if (snapshot.hasError) {
-                                    return const Icon(Icons.error);
-                                  } else if (snapshot.hasData &&
-                                      snapshot.data!.isNotEmpty) {
-                                    return ClipRRect(
-                                      borderRadius: BorderRadius.circular(0),
-                                      child: Image.file(
-                                        File(snapshot.data!.first.imagePath),
-                                        width: 50,
-                                        height: 50,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    );
-                                  } else {
-                                    return const Icon(
-                                        Icons.hide_image_outlined);
-                                  }
-                                },
-                              ),                                                            
-                                  title: Text('${specimen.fieldNumber} - ${specimenTypeFriendlyNames[specimen.type]}'),
-                                  subtitle: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        specimen.speciesName!,
-                                        style: const TextStyle(fontStyle: FontStyle.italic),
-                                      ),
-                                      Text(specimen.locality!),
-                                      Text('${specimen.longitude}; ${specimen.latitude}'),
-                                      Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(specimen.sampleTime!)),
-                                    ],
-                                  ),
-                                  onLongPress: () => _showBottomSheet(context, specimen),
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => AppImageScreen(
-                                          specimenId: specimen.id,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                );
+                              return specimenGridTileItem(filteredSpecimens, index, context);
                             },
-                          );
-                        }
-                      }
-                  ),
-                );
-              }
-          ),
+                          ),
+                        ),
+                      ),
+                    );
+                  } else {
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: filteredSpecimens.length,
+                      itemBuilder: (context, index) {
+                        return specimenListTileItem(filteredSpecimens, index, context);
+                      },
+                    );
+                  }
+                }),
+              );
+            }),
           ),
         ],
       ),
@@ -671,6 +544,207 @@ class SpecimensScreenState extends State<SpecimensScreen> {
               ),
             )
           : null,
+    );
+  }
+
+  GridTile specimenGridTileItem(List<Specimen> filteredSpecimens, int index, BuildContext context) {
+    final specimen = filteredSpecimens[index];
+    final isSelected =
+        selectedSpecimens.contains(specimen.id);
+    return GridTile(
+      child: InkWell(
+        onLongPress: () =>
+            _showBottomSheet(context, specimen),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AppImageScreen(
+                specimenId: specimen.id,
+              ),
+            ),
+          );
+        },
+        child: Card.outlined(
+          child: Stack(
+            children: [
+              Column(
+                mainAxisAlignment:
+                    MainAxisAlignment.end,
+                crossAxisAlignment:
+                    CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child:
+                        FutureBuilder<List<AppImage>>(
+                      future: Provider.of<
+                                  AppImageProvider>(
+                              context,
+                              listen: false)
+                          .fetchImagesForSpecimen(
+                              specimen.id!),
+                      builder: (context, snapshot) {
+                        if (snapshot
+                                .connectionState ==
+                            ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        } else if (snapshot
+                            .hasError) {
+                          return const Icon(
+                              Icons.error);
+                        } else if (snapshot.hasData &&
+                            snapshot
+                                .data!.isNotEmpty) {
+                          return ClipRRect(
+                            borderRadius:
+                                BorderRadius.vertical(
+                                    top: Radius
+                                        .circular(
+                                            12.0)),
+                            child: Image.file(
+                              File(snapshot.data!
+                                  .first.imagePath),
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                            ),
+                          );
+                        } else {
+                          return const Center(
+                              child: Icon(Icons
+                                  .hide_image_outlined));
+                        }
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.all(16.0),
+                    child: Column(
+                      mainAxisAlignment:
+                          MainAxisAlignment.end,
+                      crossAxisAlignment:
+                          CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          specimen.fieldNumber,
+                          style: const TextStyle(
+                              fontSize: 20),
+                        ),
+                        Text(
+                            '${specimenTypeFriendlyNames[specimen.type]}'),
+                        Text(
+                          specimen.speciesName!,
+                          style: const TextStyle(
+                              fontStyle:
+                                  FontStyle.italic),
+                        ),
+                        Text(specimen.locality!),
+                        Text(DateFormat(
+                                'dd/MM/yyyy HH:mm:ss')
+                            .format(specimen
+                                .sampleTime!)),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              Positioned(
+                top: 8,
+                right: 8,
+                child: Checkbox(
+                  value: isSelected,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      if (value == true) {
+                        selectedSpecimens
+                            .add(specimen.id!);
+                      } else {
+                        selectedSpecimens
+                            .remove(specimen.id);
+                      }
+                    });
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  ListTile specimenListTileItem(List<Specimen> filteredSpecimens, int index, BuildContext context) {
+    final specimen = filteredSpecimens[index];
+    final isSelected =
+        selectedSpecimens.contains(specimen.id);
+    return ListTile(
+      leading: Checkbox(
+        value: isSelected,
+        onChanged: (bool? value) {
+          setState(() {
+            if (value == true) {
+              selectedSpecimens.add(specimen.id!);
+            } else {
+              selectedSpecimens.remove(specimen.id);
+            }
+          });
+        },
+      ),
+      trailing: FutureBuilder<List<AppImage>>(
+        future: Provider.of<AppImageProvider>(context,
+                listen: false)
+            .fetchImagesForSpecimen(specimen.id ?? 0),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState ==
+              ConnectionState.waiting) {
+            return const CircularProgressIndicator();
+          } else if (snapshot.hasError) {
+            return const Icon(Icons.error);
+          } else if (snapshot.hasData &&
+              snapshot.data!.isNotEmpty) {
+            return ClipRRect(
+              borderRadius: BorderRadius.circular(0),
+              child: Image.file(
+                File(snapshot.data!.first.imagePath),
+                width: 50,
+                height: 50,
+                fit: BoxFit.cover,
+              ),
+            );
+          } else {
+            return const Icon(Icons.hide_image_outlined);
+          }
+        },
+      ),
+      title: Text(
+          '${specimen.fieldNumber} - ${specimenTypeFriendlyNames[specimen.type]}'),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            specimen.speciesName!,
+            style: const TextStyle(
+                fontStyle: FontStyle.italic),
+          ),
+          Text(specimen.locality!),
+          Text(
+              '${specimen.longitude}; ${specimen.latitude}'),
+          Text(DateFormat('dd/MM/yyyy HH:mm:ss')
+              .format(specimen.sampleTime!)),
+        ],
+      ),
+      onLongPress: () =>
+          _showBottomSheet(context, specimen),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AppImageScreen(
+              specimenId: specimen.id,
+            ),
+          ),
+        );
+      },
     );
   }
 

@@ -512,142 +512,68 @@ class NestsScreenState extends State<NestsScreen> {
             ),
           ),
           Expanded(
-            child: Consumer<NestProvider>(
-                builder: (context, nestProvider, child) {
-                  // Filter the nests based on the active/inactive status
-                  final filteredNests = _filterNests(_showActive
-                      ? nestProvider.activeNests
-                      : nestProvider.inactiveNests);
+            child:
+                Consumer<NestProvider>(builder: (context, nestProvider, child) {
+              // Filter the nests based on the active/inactive status
+              final filteredNests = _filterNests(_showActive
+                  ? nestProvider.activeNests
+                  : nestProvider.inactiveNests);
 
-                  // Show a message if no nests are found
-                  if (_showActive && nestProvider.activeNests.isEmpty ||
-                      !_showActive && nestProvider.inactiveNests.isEmpty) {
-                    return Center(
-                      child: Text(S.of(context).noNestsFound),
+              // Show a message if no nests are found
+              if (_showActive && nestProvider.activeNests.isEmpty ||
+                  !_showActive && nestProvider.inactiveNests.isEmpty) {
+                return Center(
+                  child: Text(S.of(context).noNestsFound),
+                );
+              }
+
+              return RefreshIndicator(
+                onRefresh: () async {
+                  // Refresh the nests
+                  await nestProvider.fetchNests();
+                },
+                child: LayoutBuilder(builder:
+                    (BuildContext context, BoxConstraints constraints) {
+                  final screenWidth = constraints.maxWidth;
+                  final isLargeScreen = screenWidth > 600;
+
+                  if (isLargeScreen) {
+                    final double minWidth = 180;
+                    int crossAxisCountCalculated = (constraints.maxWidth / minWidth).floor();
+                    // Show the nests in a grid view on large screens
+                    return SingleChildScrollView(
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(maxWidth: 840),
+                          child: GridView.builder(
+                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: crossAxisCountCalculated,
+                              childAspectRatio: 1,
+                            ),
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: filteredNests.length,
+                            itemBuilder: (context, index) {
+                              return nestGridTileItem(filteredNests, index, context, nestProvider);
+                            },
+                          ),
+                        ),
+                      ),
+                    );
+                  } else {
+                    // Show the nests in a list view on small screens
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: filteredNests.length,
+                      itemBuilder: (context, index) {
+                        return nestListTileItem(filteredNests, index, context, nestProvider);
+                      },
                     );
                   }
-
-                  return RefreshIndicator(
-                    onRefresh: () async {
-                      // Refresh the nests
-                      await nestProvider.fetchNests();
-                    },
-                    child: LayoutBuilder(
-                        builder: (BuildContext context, BoxConstraints constraints) {
-                          final screenWidth = constraints.maxWidth;
-                          final isLargeScreen = screenWidth > 600;
-
-                          if (isLargeScreen) {
-                            // Show the nests in a grid view on large screens
-                            return SingleChildScrollView(
-                              child: Align(
-                                alignment: Alignment.topCenter,
-                                child: ConstrainedBox(
-                                  constraints: const BoxConstraints(maxWidth: 840),
-                                  child: GridView.builder(
-                                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 2,
-                                      childAspectRatio: 3.0,
-                                    ),
-                                    physics: const NeverScrollableScrollPhysics(),
-                                    shrinkWrap: true,
-                                    itemCount: filteredNests.length,
-                                    itemBuilder: (context, index) {
-                                      final nest = filteredNests[index];
-                                      return GridTile(
-                                        child: InkWell(
-                                          onLongPress: () => _showBottomSheet(context, nest),
-                                          onTap: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) => NestDetailScreen(
-                                                  nest: nest,
-                                                ),
-                                              ),
-                                            ).then((result) {
-                                              if (result == true) {
-                                                nestProvider.fetchNests();
-                                              }
-                                            });
-                                          },
-                                          child: NestGridItem(nest: nest),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ),
-                            );
-                          } else {
-                            // Show the nests in a list view on small screens
-                            return ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: filteredNests.length,
-                              itemBuilder: (context, index) {
-                                final nest = filteredNests[index];
-                                final isSelected = selectedNests.contains(nest.id);
-                                return ListTile(
-                                    title: Text(nest.fieldNumber!),
-                                    subtitle: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          nest.speciesName!,
-                                          style: const TextStyle(fontStyle: FontStyle.italic),
-                                        ),
-                                        Text(nest.localityName!),
-                                        Text('${nest.longitude}; ${nest.latitude}'),
-                                        Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(nest.foundTime!)),
-                                      ],
-                                    ),
-                                    leading: 
-                                      // Show checkbox if showing inactive nests
-                                        Visibility(
-                                          visible: !_showActive,
-                                          child: Checkbox(
-                                            value: isSelected,
-                                            onChanged: (bool? value) {
-                                              setState(() {
-                                                if (value == true) {
-                                                  selectedNests.add(nest.id!);
-                                                } else {
-                                                  selectedNests.remove(nest.id);
-                                                }
-                                              });
-                                            },
-                                          ),
-                                        ),
-                                    // Show icon based on the nest fate
-                                    trailing: nest.nestFate == NestFateType.fatSuccess
-                                          ? const Icon(Icons.check_circle, color: Colors.green)
-                                          : nest.nestFate == NestFateType.fatLost
-                                          ? const Icon(Icons.cancel, color: Colors.red)
-                                          : const Icon(Icons.help, color: Colors.grey),
-                                    onLongPress: () => _showBottomSheet(context, nest),
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => NestDetailScreen(
-                                            nest: nest,
-                                          ),
-                                        ),
-                                      ).then((result) {
-                                        if (result == true) {
-                                          nestProvider.fetchNests();
-                                        }
-                                      });
-                                    },
-                                  );                                
-                              },
-                            );
-                          }
-                        }
-                    ),
-                  );
-                }
-            ),
+                }),
+              );
+            }),
           ),
         ],
       ),
@@ -720,6 +646,132 @@ class NestsScreenState extends State<NestsScreen> {
               ),
             )
           : null,
+    );
+  }
+
+  ListTile nestListTileItem(List<Nest> filteredNests, int index, BuildContext context, NestProvider nestProvider) {
+    final nest = filteredNests[index];
+    final isSelected = selectedNests.contains(nest.id);
+    return ListTile(
+      title: Text(nest.fieldNumber!),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            nest.speciesName!,
+            style: const TextStyle(
+                fontStyle: FontStyle.italic),
+          ),
+          Text(nest.localityName!),
+          Text('${nest.longitude}; ${nest.latitude}'),
+          Text(DateFormat('dd/MM/yyyy HH:mm:ss')
+              .format(nest.foundTime!)),
+        ],
+      ),
+      leading:
+          // Show checkbox if showing inactive nests
+          Visibility(
+        visible: !_showActive,
+        child: Checkbox(
+          value: isSelected,
+          onChanged: (bool? value) {
+            setState(() {
+              if (value == true) {
+                selectedNests.add(nest.id!);
+              } else {
+                selectedNests.remove(nest.id);
+              }
+            });
+          },
+        ),
+      ),
+      // Show icon based on the nest fate
+      trailing: nest.nestFate == NestFateType.fatSuccess
+          ? const Icon(Icons.check_circle,
+              color: Colors.green)
+          : nest.nestFate == NestFateType.fatLost
+              ? const Icon(Icons.cancel, color: Colors.red)
+              : const Icon(Icons.help, color: Colors.grey),
+      onLongPress: () => _showBottomSheet(context, nest),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => NestDetailScreen(
+              nest: nest,
+            ),
+          ),
+        ).then((result) {
+          if (result == true) {
+            nestProvider.fetchNests();
+          }
+        });
+      },
+    );
+  }
+
+  GridTile nestGridTileItem(List<Nest> filteredNests, int index, BuildContext context, NestProvider nestProvider) {
+    final nest = filteredNests[index];
+    final isSelected = selectedNests.contains(nest.id);
+    return GridTile(
+      child: InkWell(
+        onLongPress: () => _showBottomSheet(context, nest),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => NestDetailScreen(
+                nest: nest,
+              ),
+            ),
+          ).then((result) {
+            if (result == true) {
+              nestProvider.fetchNests();
+            }
+          });
+        },
+        child: Card.outlined(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    nest.nestFate == NestFateType.fatSuccess
+                        ? const Icon(Icons.check_circle, color: Colors.green)
+                        : nest.nestFate == NestFateType.fatLost
+                            ? const Icon(Icons.cancel, color: Colors.red)
+                            : const Icon(Icons.help, color: Colors.grey),
+                    Expanded(child: SizedBox.shrink(),),
+                    // Show checkbox to select inventories if not active
+                    Visibility(
+                      visible: !_showActive,
+                      child: Checkbox(
+                        value: isSelected,
+                        onChanged: (bool? value) {
+                          setState(() {
+                            if (value == true) {
+                              selectedNests.add(nest.id!);
+                            } else {
+                              selectedNests.remove(nest.id);
+                            }
+                          });
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                Expanded(child: SizedBox.shrink()),
+                Text(nest.fieldNumber!, style: const TextStyle(fontSize: 20),),
+                Text(nest.speciesName!, style: const TextStyle(fontStyle: FontStyle.italic), overflow: TextOverflow.ellipsis,),
+                Text(nest.localityName!, overflow: TextOverflow.ellipsis,),
+                Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(nest.foundTime!), overflow: TextOverflow.ellipsis,),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -831,57 +883,6 @@ class NestsScreenState extends State<NestsScreen> {
           },
         );
       },
-    );
-  }
-}
-
-// Widget to show a nest in a grid view
-class NestGridItem extends StatelessWidget {
-  const NestGridItem({
-    super.key,
-    required this.nest,
-  });
-
-  final Nest nest;
-
-  @override
-  Widget build(BuildContext context) {
-    return Card.filled(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Wrap (
-          children: [
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
-                  child: nest.nestFate == NestFateType.fatSuccess
-                      ? const Icon(Icons.check_circle, color: Colors.green)
-                      : nest.nestFate == NestFateType.fatLost
-                      ? const Icon(Icons.cancel, color: Colors.red)
-                      : const Icon(Icons.help, color: Colors.grey),
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      nest.fieldNumber!,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      nest.speciesName!,
-                      style: const TextStyle(fontStyle: FontStyle.italic),
-                    ),
-                    Text(nest.localityName!),
-                    Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(nest.foundTime!)),
-                  ],
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
