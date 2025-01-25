@@ -27,6 +27,7 @@ import '../../utils/utils.dart';
 import '../../utils/export_utils.dart';
 import '../../utils/import_utils.dart';
 import '../../generated/l10n.dart';
+import 'mackinnon_chart_screen.dart';
 
 class InventoriesScreen extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
@@ -771,6 +772,23 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => InventoryReportScreen(
+                        selectedInventories: inventories.whereType<Inventory>().toList()
+                      ),
+                    ),
+                  );
+                },
+              ),
+              // Option to show species accumulation chart for selected inventories
+              IconButton(
+                icon: Icon(Icons.show_chart_outlined),
+                tooltip: S.current.speciesAccumulationCurve,
+                onPressed: () {
+                  final inventories = selectedInventories.map((id) => 
+                    inventoryProvider.getInventoryById(id)).toList();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MackinnonChartScreen(
                         selectedInventories: inventories.whereType<Inventory>().toList()
                       ),
                     ),

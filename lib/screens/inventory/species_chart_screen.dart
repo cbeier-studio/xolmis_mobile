@@ -66,6 +66,8 @@ class SpeciesChartScreen extends StatelessWidget {
                 axisNameWidget: Text(S.current.speciesAccumulated),
                 sideTitles: SideTitles(
                   showTitles: true,
+                  interval: 5,
+                  reservedSize: 40,
                   getTitlesWidget: (value, meta) {
                     return Text(value.toInt().toString());
                   },
