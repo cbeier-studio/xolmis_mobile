@@ -545,6 +545,16 @@ class NestsScreenState extends State<NestsScreen> {
                   // Refresh the nests
                   await nestProvider.fetchNests();
                 },
+                child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
+                child: Text(
+                  '${filteredNests.length} ${S.of(context).nest(filteredNests.length)}',
+                  // style: TextStyle(fontSize: 16,),
+                ),
+              ),
+              Expanded(
                 child: LayoutBuilder(builder:
                     (BuildContext context, BoxConstraints constraints) {
                   final screenWidth = constraints.maxWidth;
@@ -585,6 +595,9 @@ class NestsScreenState extends State<NestsScreen> {
                     );
                   }
                 }),
+              ),
+            ],
+                ),
               );
             }),
           ),

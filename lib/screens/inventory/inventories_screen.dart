@@ -658,7 +658,17 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                     _isShowingActiveInventories
                         ? inventoryProvider.activeInventories
                         : inventoryProvider.finishedInventories);
-                return LayoutBuilder(builder:
+                return Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
+                child: Text(
+                  '${filteredInventories.length} ${S.of(context).inventory(filteredInventories.length)}',
+                  // style: TextStyle(fontSize: 16,),
+                ),
+              ),
+              Expanded(
+                child: LayoutBuilder(builder:
                     (BuildContext context, BoxConstraints constraints) {
                   final screenWidth = constraints.maxWidth;
                   final isLargeScreen = screenWidth > 600;
@@ -701,7 +711,10 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                       },
                     );
                   }
-                });
+                }),
+              ),
+            ],
+                );
               }
             }),
           ))

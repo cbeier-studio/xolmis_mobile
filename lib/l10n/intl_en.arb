@@ -88,6 +88,16 @@
             }
         }
     },
+    "inventoryFound": "{howMany, plural, one{inventory found} other{inventories found}}",
+    "@inventoryFound": {
+        "type": "text",
+        "description": "Message showing how many inventories were found",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
     "mackinnonLists": "Mackinnon lists",
     "@mackinnonLists": {
         "type": "text",

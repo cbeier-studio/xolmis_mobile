@@ -224,6 +224,18 @@ class S {
     );
   }
 
+  /// `{howMany, plural, one{inventory found} other{inventories found}}`
+  String inventoryFound(int howMany) {
+    return Intl.plural(
+      howMany,
+      one: 'inventory found',
+      other: 'inventories found',
+      name: 'inventoryFound',
+      desc: 'Message showing how many inventories were found',
+      args: [howMany],
+    );
+  }
+
   /// `Mackinnon lists`
   String get mackinnonLists {
     return Intl.message(
@@ -883,12 +895,22 @@ class S {
     );
   }
 
-  /// `Time (minutes)`
+  /// `Time (5 minutes intervals)`
   String get timeMinutes {
     return Intl.message(
-      'Time (minutes)',
+      'Time (5 minutes intervals)',
       name: 'timeMinutes',
       desc: 'Time in minutes field label',
+      args: [],
+    );
+  }
+
+  /// `Refresh`
+  String get refreshList {
+    return Intl.message(
+      'Refresh',
+      name: 'refreshList',
+      desc: 'Refresh button hint',
       args: [],
     );
   }

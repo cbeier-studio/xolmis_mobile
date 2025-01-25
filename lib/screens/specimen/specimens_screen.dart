@@ -448,6 +448,16 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                 onRefresh: () async {
                   await specimenProvider.fetchSpecimens();
                 },
+                child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
+                child: Text(
+                  '${filteredSpecimens.length} ${S.of(context).specimens(filteredSpecimens.length)}',
+                  // style: TextStyle(fontSize: 16,),
+                ),
+              ),
+              Expanded(
                 child: LayoutBuilder(builder:
                     (BuildContext context, BoxConstraints constraints) {
                   final screenWidth = constraints.maxWidth;
@@ -488,6 +498,9 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                     );
                   }
                 }),
+              ),
+            ],
+                ),
               );
             }),
           ),

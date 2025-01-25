@@ -39,6 +39,16 @@
             }
         }
     },
+    "inventoryFound": "{howMany, plural, one{inventário encontrado} other{inventários encontrados}}",
+    "@inventoryFound": {
+        "type": "text",
+        "description": "Message showing how many inventories were found",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
     "mackinnonLists": "Listas de Mackinnon",
     "speciesPerList": "{howMany, plural, one{1 espécie} other{{howMany} espécies}} por lista",
     "@speciesPerList": {
