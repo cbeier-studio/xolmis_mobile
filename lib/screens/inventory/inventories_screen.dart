@@ -761,40 +761,52 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                 icon: const Icon(Icons.file_upload_outlined),
                 tooltip: S.of(context).exportWhat(S.of(context).inventory(2)),
               ),
-              // Option to show report species by inventory
-              IconButton(
-                icon: Icon(Icons.table_view_outlined),
-                tooltip: S.current.reportSpeciesByInventory,
-                onPressed: () {
-                  final inventories = selectedInventories.map((id) => 
-                    inventoryProvider.getInventoryById(id)).toList();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => InventoryReportScreen(
-                        selectedInventories: inventories.whereType<Inventory>().toList()
-                      ),
-                    ),
-                  );
-                },
-              ),
-              // Option to show species accumulation chart for selected inventories
-              IconButton(
-                icon: Icon(Icons.show_chart_outlined),
-                tooltip: S.current.speciesAccumulationCurve,
-                onPressed: () {
-                  final inventories = selectedInventories.map((id) => 
-                    inventoryProvider.getInventoryById(id)).toList();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => MackinnonChartScreen(
-                        selectedInventories: inventories.whereType<Inventory>().toList()
-                      ),
-                    ),
-                  );
-                },
-              ),
+              PopupMenuButton<String>(
+                    position: PopupMenuPosition.over,
+                    onSelected: (String item) {
+                      if (item == 'report') {
+                        final inventories = selectedInventories
+                            .map((id) => inventoryProvider.getInventoryById(id))
+                            .toList();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => InventoryReportScreen(
+                                selectedInventories: inventories
+                                    .whereType<Inventory>()
+                                    .toList()),
+                          ),
+                        );
+                      } else if (item == 'mackinnonChart') {
+                        final inventories = selectedInventories
+                            .map((id) => inventoryProvider.getInventoryById(id))
+                            .toList();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MackinnonChartScreen(
+                                selectedInventories: inventories
+                                    .whereType<Inventory>()
+                                    .toList()),
+                          ),
+                        );
+                      }
+                    },
+                    itemBuilder: (BuildContext context) {
+                      return [
+                        PopupMenuItem<String>(
+                          value: 'report',
+                          child: Text(S.current.reportSpeciesByInventory),
+                        ),
+                        PopupMenuItem<String>(
+                          value: 'mackinnonChart',
+                          child: Text(S.current.speciesAccumulationCurve),
+                        ),
+                      ];
+                    },
+                    icon: const Icon(Icons.more_vert_outlined),
+                    // tooltip: S.of(context).exportWhat(S.of(context).inventory(2)),
+                  ),
               VerticalDivider(),
               // Option to clear the selected inventories
               IconButton(
