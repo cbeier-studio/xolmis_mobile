@@ -187,32 +187,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
   // Show the species search dialog
   void _showSpeciesSearch(SpeciesRepository speciesRepository,
       InventoryRepository inventoryRepository) async {
-
-    final isLargeScreen = MediaQuery.of(context).size.width > 600;
     
-    // Species search dialog is not working yet
-  //   if (isLargeScreen) {
-  //   final selectedSpecies = await showDialog<String>(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return SpeciesSearchDialog(
-  //         allSpeciesNames: allSpeciesNames,
-  //         onSelected: (speciesName) {
-  //           // Navigator.pop(context, speciesName);
-  //           _addSpeciesToInventory(
-  //               speciesName, speciesRepository, inventoryRepository);
-  //         },
-  //         updateSpeciesList: _updateSpeciesList,
-  //       );
-  //     },
-  //   );
-
-  //   if (selectedSpecies != null) {
-  //     // Reload the species list after adding a new species
-  //     _updateSpeciesList();
-  //   }
-  // } else {
-    // Show species search delegate in full screen on small screens
     final selectedSpecies = await showSearch(
       context: context,
       delegate: SpeciesSearchDelegate(
@@ -221,7 +196,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
             speciesName, speciesRepository, inventoryRepository),
         _updateSpeciesList,
       ),
-      useRootNavigator: !isLargeScreen,
+      useRootNavigator: true,
     );
 
     if (selectedSpecies != null) {
@@ -374,14 +349,43 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
               child: ConstrainedBox(
                 constraints: const BoxConstraints(
                     maxWidth: 840),
-                child: TextField(
+                child: SearchAnchor(
+              builder: (context, controller) {
+                return TextField(
+                  controller: controller,
                   decoration: InputDecoration(
                     hintText: '${S.of(context).addSpecies}...',
                     prefixIcon: const Icon(Icons.search_outlined),
                     border: const OutlineInputBorder(),
-                    icon: IconButton(
-                      icon: const Icon(Icons.show_chart_outlined),
-                      onPressed: () {
+                  //   icon: IconButton(
+                  //     icon: const Icon(Icons.show_chart_outlined),
+                  //     onPressed: () {
+                  //   Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //       builder: (context) => SpeciesChartScreen(
+                  //           inventory: widget.inventory),
+                  //     ),
+                  //   );
+                  // },
+                  //   ),
+                    suffixIcon: MenuAnchor(
+              builder: (context, controller, child) {
+                return IconButton(
+                  icon: Icon(Icons.more_vert_outlined),
+                  // tooltip: S.of(context).exportWhat(S.of(context).inventory(1)),
+                  onPressed: () {
+                    if (controller.isOpen) {
+                      controller.close();
+                    } else {
+                      controller.open();
+                    }
+                  },
+                );
+              },
+              menuChildren: [
+                MenuItemButton(
+                  onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -390,19 +394,146 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                       ),
                     );
                   },
-                    ),
-                    suffixIcon: IconButton(
-                      icon: const Icon(Icons.add_box_outlined),
-                      onPressed: () {
-                        _showAddSpeciesDialog(context, widget.speciesRepository, widget.inventoryRepository);
-                      },
-                    ),
+                  leadingIcon: const Icon(Icons.show_chart_outlined),
+                  child: Text(S.current.speciesAccumulationCurve, overflow: TextOverflow.ellipsis,),
+                ),
+                MenuItemButton(
+                  onPressed: () {
+                    _showAddSpeciesDialog(context, widget.speciesRepository, widget.inventoryRepository);
+                  },
+                  leadingIcon: const Icon(Icons.add_box_outlined),
+                  child: Text(S.current.addSpecies),
+                ),
+              ],
+            ),
+                    // IconButton(
+                    //   icon: const Icon(Icons.add_box_outlined),
+                    //   onPressed: () {
+                    //     _showAddSpeciesDialog(context, widget.speciesRepository, widget.inventoryRepository);
+                    //   },
+                    // ),
                   ),
                   readOnly: true,
-                  onTap: () async {
-                    _showSpeciesSearch(speciesRepository, inventoryRepository);
+                  onTap: () {
+                    controller.openView();
                   },
-                ),
+                );
+                // SearchBar(
+                //   controller: controller,
+                //   hintText: S.of(context).addSpecies,
+                //   leading: const Icon(Icons.search_outlined),
+                //   trailing: [
+                //     IconButton(
+                //       icon: const Icon(Icons.add_box_outlined),
+                //       onPressed: () {
+                //         _showAddSpeciesDialog(
+                //             context, speciesRepository, inventoryRepository);
+                //       },
+                //     ),
+                //     IconButton(
+                //       icon: const Icon(Icons.show_chart_outlined),
+                //       onPressed: () {
+                //         Navigator.push(
+                //           context,
+                //           MaterialPageRoute(
+                //             builder: (context) => SpeciesChartScreen(
+                //               inventory: widget.inventory,
+                //             ),
+                //           ),
+                //         );
+                //       },
+                //     ),
+                //   ],
+                //   onTap: () {
+                //     controller.openView();
+                //   },
+                //   onChanged: (_) {
+                //     controller.openView();
+                //   },
+                // );
+              },
+              suggestionsBuilder: (context, controller) {
+                bool speciesMatchesQuery(String speciesName, String query) {
+                  if (query.length == 4 || query.length == 6) {
+                    final words = speciesName.split(' ');
+                    if (words.length >= 2) {
+                      final firstWord = words[0];
+                      final secondWord = words[1];
+                      final firstPartLength = query.length == 4 ? 2 : 3;
+                      final firstPart = query.substring(0, firstPartLength);
+                      final secondPart = query.substring(firstPartLength);
+
+                      // Check if the parts of query match the parts of the species name
+                      if (firstWord
+                              .toLowerCase()
+                              .startsWith(firstPart.toLowerCase()) &&
+                          secondWord
+                              .toLowerCase()
+                              .startsWith(secondPart.toLowerCase())) {
+                        return true;
+                      }
+                    }
+
+                    if (speciesName
+                        .toLowerCase()
+                        .contains(query.toLowerCase())) {
+                      return true;
+                    }
+                  }
+                  // If que query do not have 4 or 6 characters, or if the species name do not have two words,
+                  // use the previous search logic (e.g.: contains)
+                  return speciesName
+                      .toLowerCase()
+                      .contains(query.toLowerCase());
+                }
+
+                return List<String>.from(allSpeciesNames)
+                    .where((species) => speciesMatchesQuery(
+                        species, controller.text.toLowerCase()))
+                    .map((species) {
+                  return ListTile(
+                    title: Text(species),
+                    onTap: () {
+                      _addSpeciesToInventory(
+                          species, speciesRepository, inventoryRepository);
+                      controller.closeView(species);
+                      controller.clear();
+                    },
+                  );
+                }).toList();
+              },
+            ),
+            
+            // Old search bar
+                // TextField(
+                //   decoration: InputDecoration(
+                //     hintText: '${S.of(context).addSpecies}...',
+                //     prefixIcon: const Icon(Icons.search_outlined),
+                //     border: const OutlineInputBorder(),
+                //     icon: IconButton(
+                //       icon: const Icon(Icons.show_chart_outlined),
+                //       onPressed: () {
+                //     Navigator.push(
+                //       context,
+                //       MaterialPageRoute(
+                //         builder: (context) => SpeciesChartScreen(
+                //             inventory: widget.inventory),
+                //       ),
+                //     );
+                //   },
+                //     ),
+                //     suffixIcon: IconButton(
+                //       icon: const Icon(Icons.add_box_outlined),
+                //       onPressed: () {
+                //         _showAddSpeciesDialog(context, widget.speciesRepository, widget.inventoryRepository);
+                //       },
+                //     ),
+                //   ),
+                //   readOnly: true,
+                //   onTap: () async {
+                //     _showSpeciesSearch(speciesRepository, inventoryRepository);
+                //   },
+                // ),
               ),
             ),
           ),

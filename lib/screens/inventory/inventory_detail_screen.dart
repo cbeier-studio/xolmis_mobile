@@ -254,14 +254,12 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
               menuChildren: [
                 MenuItemButton(
                   onPressed: () {
-                    Navigator.pop(context); // Close the menu
                     exportInventoryToCsv(context, widget.inventory, true);
                   },
                   child: Text('CSV'),
                 ),
                 MenuItemButton(
                   onPressed: () {
-                    Navigator.pop(context); // Close the menu
                     exportInventoryToJson(context, widget.inventory, true);
                   },
                   child: Text('JSON'),
