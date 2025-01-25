@@ -462,6 +462,11 @@
         "type": "text",
         "description": "Time in minutes field label"
     },
+    "refreshList": "Refresh",
+    "@refreshList": {
+        "type": "text",
+        "description": "Refresh button hint"
+    },
     "noDataAvailable": "No data available.",
     "@noDataAvailable": {
         "type": "text",

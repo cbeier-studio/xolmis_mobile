@@ -241,6 +241,11 @@
         "type": "text",
         "description": "Time in minutes field label"
     },
+    "refreshList": "Atualizar",
+    "@refreshList": {
+        "type": "text",
+        "description": "Refresh button hint"
+    },
     "noDataAvailable": "Dados não disponíveis.",
     "@noDataAvailable": {
         "type": "text",

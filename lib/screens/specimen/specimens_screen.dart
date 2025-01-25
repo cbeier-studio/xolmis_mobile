@@ -427,7 +427,20 @@ class SpecimensScreenState extends State<SpecimensScreen> {
 
               if (filteredSpecimens.isEmpty) {
                 return Center(
-                  child: Text(S.of(context).noSpecimenCollected),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(S.of(context).noSpecimenCollected),
+                      SizedBox(height: 8),
+                      IconButton.filled(
+                        icon: Icon(Icons.refresh_outlined),
+                        onPressed: () async {
+                          await specimenProvider.fetchSpecimens();
+                        }, 
+                      )
+                    ],
+                  ),
                 );
               }
 

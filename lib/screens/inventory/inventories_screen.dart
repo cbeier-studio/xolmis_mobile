@@ -637,9 +637,20 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                   !_isShowingActiveInventories &&
                       inventoryProvider.finishedInventories.isEmpty) {
                 return Center(
-                  child: Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: Text(S.of(context).noInventoriesFound)),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(S.of(context).noInventoriesFound),
+                      SizedBox(height: 8),
+                      IconButton.filled(
+                        icon: Icon(Icons.refresh_outlined),
+                        onPressed: () async {
+                          await inventoryProvider.fetchInventories();
+                        }, 
+                      )
+                    ],
+                  ),
                 );
               } else {
                 final filteredInventories = _filterInventories(
@@ -653,8 +664,9 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
 
                   // Show the inventories in a grid on large screens
                   if (isLargeScreen) {
-                    final double minWidth = 300;
+                    final double minWidth = 300; // Minimum width for each grid tile
                     int crossAxisCount = (constraints.maxWidth / minWidth).floor();
+
                     return SingleChildScrollView(
                       child: Align(
                         alignment: Alignment.topCenter,

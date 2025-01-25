@@ -189,7 +189,8 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
       InventoryRepository inventoryRepository) async {
 
     final isLargeScreen = MediaQuery.of(context).size.width > 600;
-
+    
+    // Species search dialog is not working yet
   //   if (isLargeScreen) {
   //   final selectedSpecies = await showDialog<String>(
   //     context: context,
@@ -211,6 +212,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
   //     _updateSpeciesList();
   //   }
   // } else {
+    // Show species search delegate in full screen on small screens
     final selectedSpecies = await showSearch(
       context: context,
       delegate: SpeciesSearchDelegate(
@@ -273,6 +275,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     }
   }
 
+  // Show dialog to confirm species deletion
   Future<bool> _showDeleteConfirmationDialog(BuildContext context) async {
     return await showDialog<bool>(
       context: context,
@@ -295,6 +298,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     ) ?? false;
   }
 
+  // Show dialog to confirm deletion of species from other active inventories
   Future<bool> _showDeleteFromOtherListsConfirmationDialog(
       BuildContext context, String speciesName) async {
     return await showDialog<bool>(
