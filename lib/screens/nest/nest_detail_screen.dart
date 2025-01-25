@@ -235,33 +235,35 @@ class NestDetailScreenState extends State<NestDetailScreen> {
                       : const Icon(Icons.flag_outlined),
                 ),
               if (widget.nest.isActive == false)
-                PopupMenuButton<String>(
-                  position: PopupMenuPosition.under,
-                  onSelected: (String item) {
-                    switch (item) {
-                      case 'csv':
+                MenuAnchor(
+                  builder: (context, controller, child) {
+                    return IconButton(
+                      icon: Icon(Icons.file_upload_outlined),
+                      onPressed: () {
+                        if (controller.isOpen) {
+                          controller.close();
+                        } else {
+                          controller.open();
+                        }
+                      },
+                    );
+                  },
+                  menuChildren: [
+                    MenuItemButton(
+                      onPressed: () {
                         exportNestToCsv(context, widget.nest);
-                        break;
-                      case 'json':
+                      },
+                      child: Text('CSV'),
+                    ),
+                    MenuItemButton(
+                      onPressed: () {
                         exportNestToJson(context, widget.nest);
-                        break;
-                    }
-                  },
-                  itemBuilder: (BuildContext context) {
-                    return [
-                      const PopupMenuItem<String>(
-                        value: 'csv',
-                        child: Text('CSV'),
-                      ),
-                      const PopupMenuItem<String>(
-                        value: 'json',
-                        child: Text('JSON'),
-                      ),
-                    ];
-                  },
-                  icon: const Icon(Icons.file_upload_outlined),
+                      },
+                      child: Text('JSON'),
+                    ),
+                  ],
                 ),
-              const SizedBox(width: 8.0,),
+              // const SizedBox(width: 8.0,),
             ],
             bottom: PreferredSize(
               preferredSize: const Size.fromHeight(kToolbarHeight + 4.0), // Adjust height as needed

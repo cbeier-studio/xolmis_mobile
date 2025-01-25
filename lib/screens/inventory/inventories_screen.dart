@@ -461,101 +461,113 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
             onPressed: _toggleSearchBarVisibility,
           ),
           // Action to show the sort options
-          PopupMenuButton<String>(
-            icon: Icon(Icons.sort_outlined),
-            position: PopupMenuPosition.under,
-            onSelected: (value) {
-              if (value == 'ascending' || value == 'descending') {
-                _toggleSortOrder(value);
-              } else {
-                _changeSortField(value);
-              }
+          MenuAnchor(
+            builder: (context, controller, child) {
+              return IconButton(
+                icon: Icon(Icons.sort_outlined),
+                onPressed: () {
+                  if (controller.isOpen) {
+                    controller.close();
+                  } else {
+                    controller.open();
+                  }
+                },
+              );
             },
-            itemBuilder: (BuildContext context) {
-              return [
-                PopupMenuItem(
-                  value: 'startTime',
-                  child: Row(
-                    children: [
-                      Icon(Icons.schedule_outlined),
-                      SizedBox(width: 8),
-                      Text(S.of(context).sortByTime),
-                    ],
-                  ),
+            menuChildren: [
+              MenuItemButton(
+                onPressed: () {
+                  _changeSortField('startTime');
+                },
+                child: Row(
+                  children: [
+                    Icon(Icons.schedule_outlined),
+                    SizedBox(width: 8),
+                    Text(S.of(context).sortByTime),
+                  ],
                 ),
-                PopupMenuItem(
-                  value: 'id',
-                  child: Row(
-                    children: [
-                      Icon(Icons.sort_by_alpha_outlined),
-                      SizedBox(width: 8),
-                      Text(S.of(context).sortByName),
-                    ],
-                  ),
+              ),
+              MenuItemButton(
+                onPressed: () {
+                  _changeSortField('id');
+                },
+                child: Row(
+                  children: [
+                    Icon(Icons.sort_by_alpha_outlined),
+                    SizedBox(width: 8),
+                    Text(S.of(context).sortByName),
+                  ],
                 ),
-                PopupMenuDivider(),
-                PopupMenuItem(
-                  value: 'ascending',
-                  child: Row(
-                    children: [
-                      Icon(Icons.south_outlined),
-                      SizedBox(width: 8),
-                      Text(S.of(context).sortAscending),
-                    ],
-                  ),
+              ),
+              Divider(),
+              MenuItemButton(
+                onPressed: () {
+                  _toggleSortOrder('ascending');
+                },
+                child: Row(
+                  children: [
+                    Icon(Icons.south_outlined),
+                    SizedBox(width: 8),
+                    Text(S.of(context).sortAscending),
+                  ],
                 ),
-                PopupMenuItem(
-                  value: 'descending',
-                  child: Row(
-                    children: [
-                      Icon(Icons.north_outlined),
-                      SizedBox(width: 8),
-                      Text(S.of(context).sortDescending),
-                    ],
-                  ),
+              ),
+              MenuItemButton(
+                onPressed: () {
+                  _toggleSortOrder('descending');
+                },
+                child: Row(
+                  children: [
+                    Icon(Icons.north_outlined),
+                    SizedBox(width: 8),
+                    Text(S.of(context).sortDescending),
+                  ],
                 ),
-              ];
-            },
+              ),
+            ],
           ),
-          IconButton(
-            icon: Icon(Icons.more_vert_outlined),
-            onPressed: () {
-              showMenu(
-                context: context,
-                position: RelativeRect.fromLTRB(100, 80, 0, 0),
-                items: [
-                  //Action to import inventories from JSON
-                  PopupMenuItem(
-                    value: 'import',
-                    child: Row(
-                      children: [
-                        Icon(Icons.file_open_outlined),
-                        SizedBox(width: 8),
-                        Text(S.of(context).import),
-                      ],
-                    ),
-                  ),
-                  //Action to export all finished inventories to JSON
-                  PopupMenuItem(
-                    value: 'export',
-                    child: Row(
-                      children: [
-                        Icon(Icons.file_upload_outlined),
-                        SizedBox(width: 8),
-                        Text(S.of(context).exportAll),
-                      ],
-                    ),
-                  ),
-                ],
-              ).then((value) async {
-                if (value == 'import') {
+          MenuAnchor(
+            builder: (context, controller, child) {
+              return IconButton(
+                icon: Icon(Icons.more_vert_outlined),
+                onPressed: () {
+                  if (controller.isOpen) {
+                    controller.close();
+                  } else {
+                    controller.open();
+                  }
+                },
+              );
+            },
+            menuChildren: [
+              // Action to import inventories from JSON
+              MenuItemButton(
+                onPressed: () async {
                   await importInventoryFromJson(context);
                   await inventoryProvider.fetchInventories();
-                } else if (value == 'export') {
+                },
+                child: Row(
+                  children: [
+                    Icon(Icons.file_open_outlined),
+                    SizedBox(width: 8),
+                    Text(S.of(context).import),
+                  ],
+                ),
+              ),
+              // Action to export all finished inventories to JSON
+              MenuItemButton(
+                onPressed: () async {
                   await exportAllInventoriesToJson(context, inventoryProvider);
-                }
-              });
-            },
+                },
+                child: Row(
+                  children: [
+                    Icon(Icons.file_upload_outlined),
+                    SizedBox(width: 8),
+                    Text(S.of(context).exportAll),
+                  ],
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -735,105 +747,115 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
       // Bottom app bar with actions for selected inventories
       bottomNavigationBar: selectedInventories.isNotEmpty && !_isShowingActiveInventories
         ? BottomAppBar(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              // Option to delete all selected inventories
-              IconButton(
-                icon: Icon(Icons.delete_outlined),
-                tooltip: S.of(context).delete,
-                color: Colors.red,
-                onPressed: _deleteSelectedInventories,
-              ),
-              VerticalDivider(),
-              // Option to export all selected inventories to CSV or JSON
-              PopupMenuButton<String>(
-                position: PopupMenuPosition.over,
-                onSelected: (String item) {
-                  switch (item) {
-                    case 'csv':
-                      _exportSelectedInventoriesToCsv();
-                      break;
-                    case 'json':
-                      _exportSelectedInventoriesToJson();
-                      break;
-                  }
-                },
-                itemBuilder: (BuildContext context) {
-                  return [
-                    const PopupMenuItem<String>(
-                      value: 'csv',
-                      child: Text('CSV'),
-                    ),
-                    const PopupMenuItem<String>(
-                      value: 'json',
-                      child: Text('JSON'),
-                    ),
-                  ];
-                },
-                icon: const Icon(Icons.file_upload_outlined),
-                tooltip: S.of(context).exportWhat(S.of(context).inventory(2)),
-              ),
-              PopupMenuButton<String>(
-                    position: PopupMenuPosition.over,
-                    onSelected: (String item) {
-                      if (item == 'report') {
-                        final inventories = selectedInventories
-                            .map((id) => inventoryProvider.getInventoryById(id))
-                            .toList();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => InventoryReportScreen(
-                                selectedInventories: inventories
-                                    .whereType<Inventory>()
-                                    .toList()),
-                          ),
-                        );
-                      } else if (item == 'mackinnonChart') {
-                        final inventories = selectedInventories
-                            .map((id) => inventoryProvider.getInventoryById(id))
-                            .toList();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MackinnonChartScreen(
-                                selectedInventories: inventories
-                                    .whereType<Inventory>()
-                                    .toList()),
-                          ),
-                        );
-                      }
-                    },
-                    itemBuilder: (BuildContext context) {
-                      return [
-                        PopupMenuItem<String>(
-                          value: 'report',
-                          child: Text(S.current.reportSpeciesByInventory),
-                        ),
-                        PopupMenuItem<String>(
-                          value: 'mackinnonChart',
-                          child: Text(S.current.speciesAccumulationCurve),
-                        ),
-                      ];
-                    },
-                    icon: const Icon(Icons.more_vert_outlined),
-                    // tooltip: S.of(context).exportWhat(S.of(context).inventory(2)),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  // Option to delete all selected inventories
+                  IconButton(
+                    icon: Icon(Icons.delete_outlined),
+                    tooltip: S.of(context).delete,
+                    color: Colors.red,
+                    onPressed: _deleteSelectedInventories,
                   ),
-              VerticalDivider(),
-              // Option to clear the selected inventories
-              IconButton(
-                icon: Icon(Icons.clear_outlined),
-                tooltip: S.current.clearSelection,
-                onPressed: () {
-                  setState(() {
-                    selectedInventories.clear();
-                  });
-                },
+                  VerticalDivider(),
+                  // Option to export all selected inventories to CSV or JSON
+                  MenuAnchor(
+                    builder: (context, controller, child) {
+                      return IconButton(
+                        icon: Icon(Icons.file_upload_outlined),
+                        tooltip: S
+                            .of(context)
+                            .exportWhat(S.of(context).inventory(2)),
+                        onPressed: () {
+                          if (controller.isOpen) {
+                            controller.close();
+                          } else {
+                            controller.open();
+                          }
+                        },
+                      );
+                    },
+                    menuChildren: [
+                      MenuItemButton(
+                        onPressed: () {
+                          _exportSelectedInventoriesToCsv();
+                        },
+                        child: Text('CSV'),
+                      ),
+                      MenuItemButton(
+                        onPressed: () {
+                          _exportSelectedInventoriesToJson();
+                        },
+                        child: Text('JSON'),
+                      ),
+                    ],
+                  ),
+                  MenuAnchor(
+                    builder: (context, controller, child) {
+                      return IconButton(
+                        icon: Icon(Icons.more_vert_outlined),
+                        onPressed: () {
+                          if (controller.isOpen) {
+                            controller.close();
+                          } else {
+                            controller.open();
+                          }
+                        },
+                      );
+                    },
+                    menuChildren: [
+                      MenuItemButton(
+                        onPressed: () {
+                          final inventories = selectedInventories
+                              .map((id) =>
+                                  inventoryProvider.getInventoryById(id))
+                              .toList();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => InventoryReportScreen(
+                                selectedInventories:
+                                    inventories.whereType<Inventory>().toList(),
+                              ),
+                            ),
+                          );
+                        },
+                        child: Text(S.current.reportSpeciesByInventory),
+                      ),
+                      MenuItemButton(
+                        onPressed: () {
+                          final inventories = selectedInventories
+                              .map((id) =>
+                                  inventoryProvider.getInventoryById(id))
+                              .toList();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MackinnonChartScreen(
+                                selectedInventories:
+                                    inventories.whereType<Inventory>().toList(),
+                              ),
+                            ),
+                          );
+                        },
+                        child: Text(S.current.speciesAccumulationCurve),
+                      ),
+                    ],
+                  ),
+                  VerticalDivider(),
+                  // Option to clear the selected inventories
+                  IconButton(
+                    icon: Icon(Icons.clear_outlined),
+                    tooltip: S.current.clearSelection,
+                    onPressed: () {
+                      setState(() {
+                        selectedInventories.clear();
+                      });
+                    },
+                  ),
+                ],
               ),
-            ],
-          ),
-        )
+            )
         : null,
     );
   }

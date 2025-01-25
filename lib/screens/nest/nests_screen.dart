@@ -358,100 +358,98 @@ class NestsScreenState extends State<NestsScreen> {
             onPressed: _toggleSearchBarVisibility,
           ),
           // Action to sort the nests
-          PopupMenuButton<String>(
-            icon: Icon(Icons.sort_outlined),
-            position: PopupMenuPosition.under,
-            onSelected: (value) {
-              if (value == 'ascending' || value == 'descending') {
-                _toggleSortOrder(value);
-              } else {
-                _changeSortField(value);
-              }
+          MenuAnchor(
+            builder: (context, controller, child) {
+              return IconButton(
+                icon: Icon(Icons.sort_outlined),
+                onPressed: () {
+                  if (controller.isOpen) {
+                    controller.close();
+                  } else {
+                    controller.open();
+                  }
+                },
+              );
             },
-            itemBuilder: (BuildContext context) {
-              return [
-                PopupMenuItem(
-                  value: 'foundTime',
-                  child: Row(
-                    children: [
-                      Icon(Icons.schedule_outlined),
-                      SizedBox(width: 8),
-                      Text(S.of(context).sortByTime),
-                    ],
-                  ),
+            menuChildren: [
+              MenuItemButton(
+                onPressed: () {
+                  _changeSortField('foundTime');
+                },
+                child: Row(
+                  children: [
+                    Icon(Icons.schedule_outlined),
+                    SizedBox(width: 8),
+                    Text(S.of(context).sortByTime),
+                  ],
                 ),
-                PopupMenuItem(
-                  value: 'fieldNumber',
-                  child: Row(
-                    children: [
-                      Icon(Icons.sort_by_alpha_outlined),
-                      SizedBox(width: 8),
-                      Text(S.of(context).sortByName),
-                    ],
-                  ),
+              ),
+              MenuItemButton(
+                onPressed: () {
+                  _changeSortField('fieldNumber');
+                },
+                child: Row(
+                  children: [
+                    Icon(Icons.sort_by_alpha_outlined),
+                    SizedBox(width: 8),
+                    Text(S.of(context).sortByName),
+                  ],
                 ),
-                PopupMenuDivider(),
-                PopupMenuItem(
-                  value: 'ascending',
-                  child: Row(
-                    children: [
-                      Icon(Icons.south_outlined),
-                      SizedBox(width: 8),
-                      Text(S.of(context).sortAscending),
-                    ],
-                  ),
+              ),
+              Divider(),
+              MenuItemButton(
+                onPressed: () {
+                  _toggleSortOrder('ascending');
+                },
+                child: Row(
+                  children: [
+                    Icon(Icons.south_outlined),
+                    SizedBox(width: 8),
+                    Text(S.of(context).sortAscending),
+                  ],
                 ),
-                PopupMenuItem(
-                  value: 'descending',
-                  child: Row(
-                    children: [
-                      Icon(Icons.north_outlined),
-                      SizedBox(width: 8),
-                      Text(S.of(context).sortDescending),
-                    ],
-                  ),
+              ),
+              MenuItemButton(
+                onPressed: () {
+                  _toggleSortOrder('descending');
+                },
+                child: Row(
+                  children: [
+                    Icon(Icons.north_outlined),
+                    SizedBox(width: 8),
+                    Text(S.of(context).sortDescending),
+                  ],
                 ),
-              ];
-            },
+              ),
+            ],
           ),
-          IconButton(
-            icon: Icon(Icons.more_vert_outlined),
-            onPressed: () {
-              showMenu(
-                context: context,
-                position: RelativeRect.fromLTRB(100, 80, 0, 0),
-                items: [
-                  // PopupMenuItem(
-                  //   value: 'import',
-                  //   child: Row(
-                  //     children: [
-                  //       Icon(Icons.file_open_outlined),
-                  //       SizedBox(width: 8),
-                  //       Text(S.of(context).import),
-                  //     ],
-                  //   ),
-                  // ),
-                  // Action to export all the inactive nests to JSON
-                  PopupMenuItem(
-                    value: 'export',
-                    child: Row(
-                      children: [
-                        Icon(Icons.file_upload_outlined),
-                        SizedBox(width: 8),
-                        Text(S.of(context).exportAll),
-                      ],
-                    ),
-                  ),
-                ],
-              ).then((value) async {
-                if (value == 'import') {
-                  // await importInventoryFromJson(context);
-                  // await inventoryProvider.fetchInventories();
-                } else if (value == 'export') {
-                  await exportAllInactiveNestsToJson(context);
-                }
-              });
+          MenuAnchor(
+            builder: (context, controller, child) {
+              return IconButton(
+                icon: Icon(Icons.more_vert_outlined),
+                onPressed: () {
+                  if (controller.isOpen) {
+                    controller.close();
+                  } else {
+                    controller.open();
+                  }
+                },
+              );
             },
+            menuChildren: [
+              MenuItemButton(
+                onPressed: () async {
+                  await exportAllInactiveNestsToJson(context);
+                },
+                child: Row(
+                  children: [
+                    Icon(Icons.file_upload_outlined),
+                    SizedBox(width: 8),
+                    Text(S.of(context).exportAll),
+                  ],
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -630,32 +628,35 @@ class NestsScreenState extends State<NestsScreen> {
                   ),
                   VerticalDivider(),
                   // Option to export the selected nests
-                  PopupMenuButton<String>(
-                    position: PopupMenuPosition.over,
-                    onSelected: (String item) {
-                      switch (item) {
-                        case 'csv':
+                  MenuAnchor(
+                    builder: (context, controller, child) {
+                      return IconButton(
+                        icon: Icon(Icons.file_upload_outlined),
+                        tooltip:
+                            S.of(context).exportWhat(S.of(context).nest(2)),
+                        onPressed: () {
+                          if (controller.isOpen) {
+                            controller.close();
+                          } else {
+                            controller.open();
+                          }
+                        },
+                      );
+                    },
+                    menuChildren: [
+                      MenuItemButton(
+                        onPressed: () {
                           _exportSelectedNestsToCsv();
-                          break;
-                        case 'json':
+                        },
+                        child: Text('CSV'),
+                      ),
+                      MenuItemButton(
+                        onPressed: () {
                           _exportSelectedNestsToJson();
-                          break;
-                      }
-                    },
-                    itemBuilder: (BuildContext context) {
-                      return [
-                        const PopupMenuItem<String>(
-                          value: 'csv',
-                          child: Text('CSV'),
-                        ),
-                        const PopupMenuItem<String>(
-                          value: 'json',
-                          child: Text('JSON'),
-                        ),
-                      ];
-                    },
-                    icon: const Icon(Icons.file_upload_outlined),
-                    tooltip: S.of(context).exportWhat(S.of(context).nest(2)),
+                        },
+                        child: Text('JSON'),
+                      ),
+                    ],
                   ),
                   VerticalDivider(),
                   // Option to clear the selected nests

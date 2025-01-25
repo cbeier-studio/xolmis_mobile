@@ -237,34 +237,38 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                   : const Icon(Icons.flag_outlined),
             ),
           if (widget.inventory.isFinished)
-            PopupMenuButton<String>(
-              position: PopupMenuPosition.under,
-              onSelected: (String item) {
-                switch (item) {
-                  case 'csv':
+            MenuAnchor(
+              builder: (context, controller, child) {
+                return IconButton(
+                  icon: Icon(Icons.file_upload_outlined),
+                  tooltip: S.of(context).exportWhat(S.of(context).inventory(1)),
+                  onPressed: () {
+                    if (controller.isOpen) {
+                      controller.close();
+                    } else {
+                      controller.open();
+                    }
+                  },
+                );
+              },
+              menuChildren: [
+                MenuItemButton(
+                  onPressed: () {
+                    Navigator.pop(context); // Close the menu
                     exportInventoryToCsv(context, widget.inventory, true);
-                    break;
-                  case 'json':
+                  },
+                  child: Text('CSV'),
+                ),
+                MenuItemButton(
+                  onPressed: () {
+                    Navigator.pop(context); // Close the menu
                     exportInventoryToJson(context, widget.inventory, true);
-                    break;
-                }
-              },
-              itemBuilder: (BuildContext context) {
-                return [
-                  const PopupMenuItem<String>(
-                    value: 'csv',
-                    child: Text('CSV'),
-                  ),
-                  const PopupMenuItem<String>(
-                    value: 'json',
-                    child: Text('JSON'),
-                  ),
-                ];
-              },
-              icon: const Icon(Icons.file_upload_outlined),
-              tooltip: S.of(context).exportWhat(S.of(context).inventory(1)),
+                  },
+                  child: Text('JSON'),
+                ),
+              ],
             ),
-          const SizedBox(width: 8.0,),
+          // const SizedBox(width: 8.0,),
         ],
         bottom: PreferredSize( // Wrap TabBar and LinearProgressIndicator in PreferredSize
           preferredSize: const Size.fromHeight(kToolbarHeight + 4.0), // Adjust height as needed
