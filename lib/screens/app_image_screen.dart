@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -43,6 +45,7 @@ class _AppImageScreenState extends State<AppImageScreen> {
     _loadImages();
   }
 
+  // Load images from the database
   Future<void> _loadImages() async {
     if (widget.vegetationId != null) {
       await appImageProvider.fetchImagesForVegetation(widget.vegetationId!);
@@ -55,13 +58,21 @@ class _AppImageScreenState extends State<AppImageScreen> {
     }
   }
 
+  // Add an image to the database
   Future<void> _addImage(ImageSource source) async {
     final imagePicker = ImagePicker();
+    // Get the image from camera or gallery
     final pickedFile = await imagePicker.pickImage(source: source);
 
     if (pickedFile != null) {
+      // Save the image to the app's documents directory
+      final directory = await getApplicationDocumentsDirectory();
+      final fileName = path.basename(pickedFile.path);
+      final savedImage = await File(pickedFile.path).copy('${directory.path}/$fileName');
+
+      // Create an AppImage object and save it to the database
       final appImage = AppImage(
-        imagePath: pickedFile.path,
+        imagePath: savedImage.path,
         notes: _notesController.text,
       );
 
@@ -76,6 +87,7 @@ class _AppImageScreenState extends State<AppImageScreen> {
         await appImageProvider.addImageToNestRevision(appImage, widget.nestRevisionId!);
       }
 
+      // Close the dialog
       Navigator.pop(context);
     }
   }
@@ -100,6 +112,7 @@ class _AppImageScreenState extends State<AppImageScreen> {
                   final isLargeScreen = screenWidth > 600;
 
                   if (isLargeScreen) {
+                    // If the screen is large, show a constrained box
                     return Align(
                       alignment: Alignment.topCenter,
                       child: ConstrainedBox(
@@ -119,6 +132,7 @@ class _AppImageScreenState extends State<AppImageScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
+          // Request permission to access the camera and photos
           final cameraStatus = await Permission.camera.request();
           late PermissionStatus photosStatus = PermissionStatus.denied;
 
@@ -131,6 +145,7 @@ class _AppImageScreenState extends State<AppImageScreen> {
             }
           }
 
+          // If permission is granted, show the dialog to add an image
           if (cameraStatus.isGranted && photosStatus.isGranted) {
             showDialog(
               context: context,
@@ -155,12 +170,14 @@ class _AppImageScreenState extends State<AppImageScreen> {
                           const SizedBox(height: 16.0),
                           Row(
                             children: [
+                              // Option to select image from gallery
                               OutlinedButton.icon(
                                 onPressed: () => _addImage(ImageSource.gallery),
                                 label: Text(S.of(context).gallery),
                                 icon: const Icon(Icons.image_search_outlined),
                               ),
                               const SizedBox(width: 8.0),
+                              // Option to take a picture with the camera
                               OutlinedButton.icon(
                                 onPressed: () => _addImage(ImageSource.camera),
                                 label: Text(S.of(context).camera),
@@ -211,6 +228,7 @@ class _AppImageScreenState extends State<AppImageScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
+                  // Option to share the image
                   ListTile(
                     leading: const Icon(Icons.share_outlined),
                     title: Text(S.of(context).shareImage),
@@ -219,6 +237,7 @@ class _AppImageScreenState extends State<AppImageScreen> {
                       Navigator.pop(context);
                     },
                   ),
+                  // Option to edit the notes
                   ListTile(
                     leading: const Icon(Icons.edit_outlined),
                     title: Text(S.of(context).editImageNotes),
@@ -228,6 +247,7 @@ class _AppImageScreenState extends State<AppImageScreen> {
                     },
                   ),
                   Divider(),
+                  // Option to delete the image
                   ListTile(
                     leading: const Icon(Icons.delete_outlined, color: Colors.red,),
                     title: Text(S.of(context).deleteImage, style: TextStyle(color: Colors.red),),
@@ -272,6 +292,7 @@ class _AppImageScreenState extends State<AppImageScreen> {
     );
   }
 
+  // Show a dialog to edit the notes of an image
   void _showEditNotesDialog(BuildContext context, AppImage appImage) {
     final notesController = TextEditingController(text: appImage.notes);
 
@@ -320,6 +341,7 @@ class _AppImageScreenState extends State<AppImageScreen> {
     );
   }
 
+  // Build a GridView with the images
   Widget _buildGridView(List<AppImage> images) {
     return GridView.builder(
       gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
