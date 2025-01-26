@@ -10,8 +10,8 @@ import '../../providers/species_provider.dart';
 import '../../providers/poi_provider.dart';
 
 import '../../utils/utils.dart';
-import '../../utils/species_search_delegate.dart';
-import '../../utils/species_search_dialog.dart';
+// import '../../utils/species_search_delegate.dart';
+// import '../../utils/species_search_dialog.dart';
 import 'species_chart_screen.dart';
 import 'species_list_item.dart';
 import '../../generated/l10n.dart';
@@ -81,7 +81,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
 
     if (!widget.inventory.isFinished) {
       // If the inventory is not finished, add the species to other active inventories
-      _addSpeciesToOtherActiveInventories(
+      await _addSpeciesToOtherActiveInventories(
           speciesName, speciesProvider, inventoryProvider, speciesRepository,
           inventoryRepository);
 
@@ -96,9 +96,9 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     }
 
     // Update the inventory in the database
-    await inventoryRepository.updateInventory(widget.inventory);
+    // await inventoryRepository.updateInventory(widget.inventory);
     // Reload the species list for the current inventory
-    _updateSpeciesList();
+    await _updateSpeciesList(widget.inventory.id);
 
     // speciesProvider.notifyListeners();
   }
@@ -155,6 +155,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
         }
         // Reload the species list for the other inventory
         await speciesProvider.loadSpeciesForInventory(inventory.id);
+        inventory.speciesList = speciesProvider.getSpeciesForInventory(inventory.id);
         // speciesProvider.notifyListeners();
       }
 
@@ -178,32 +179,31 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
   }
 
   // Reload the species list for the current inventory
-  void _updateSpeciesList() async {
-    final speciesProvider = Provider.of<SpeciesProvider>(
-        context, listen: false);
-    await speciesProvider.loadSpeciesForInventory(widget.inventory.id);
+  Future<void> _updateSpeciesList(String inventoryId) async {
+    final speciesProvider = Provider.of<SpeciesProvider>(context, listen: false);
+    await speciesProvider.loadSpeciesForInventory(inventoryId);
+    widget.inventory.speciesList = speciesProvider.getSpeciesForInventory(inventoryId);
   }
 
   // Show the species search dialog
-  void _showSpeciesSearch(SpeciesRepository speciesRepository,
-      InventoryRepository inventoryRepository) async {
+  // void _showSpeciesSearch(SpeciesRepository speciesRepository,
+  //     InventoryRepository inventoryRepository) async {
     
-    final selectedSpecies = await showSearch(
-      context: context,
-      delegate: SpeciesSearchDelegate(
-        allSpeciesNames,
-        (speciesName) => _addSpeciesToInventory(
-            speciesName, speciesRepository, inventoryRepository),
-        _updateSpeciesList,
-      ),
-      useRootNavigator: true,
-    );
+  //   final selectedSpecies = await showSearch(
+  //     context: context,
+  //     delegate: SpeciesSearchDelegate(
+  //       allSpeciesNames,
+  //       (speciesName) => _addSpeciesToInventory(
+  //           speciesName, speciesRepository, inventoryRepository),
+  //       _updateSpeciesList(widget.inventory.id),
+  //     ),
+  //     useRootNavigator: true,
+  //   );
 
-    if (selectedSpecies != null) {
-      // Reload the species list after adding a new species
-      _updateSpeciesList();
-    }
-  }
+  //   if (selectedSpecies != null) {
+  //     // Reload the species list after adding a new species
+  //     _updateSpeciesList(widget.inventory.id);
+  //   }
   // }
 
   // Delete the selected species from the list
@@ -213,6 +213,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     if (confirmed) {
       if (mounted) {
         await speciesProvider.removeSpecies(context, widget.inventory.id, species.id!);
+        widget.inventory.speciesList.remove(species);
       }
     }
 
@@ -244,6 +245,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
         inventoryProvider.updateInventory(inventory);
         
         speciesProvider.loadSpeciesForInventory(inventory.id);
+        inventory.speciesList = speciesProvider.getSpeciesForInventory(inventory.id);
         // speciesProvider.notifyListeners();
       }
 
@@ -334,22 +336,20 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     );
 
     if (newSpeciesName != null && newSpeciesName.isNotEmpty) {
-      _addSpeciesToInventory(newSpeciesName, speciesRepository, inventoryRepository);
+      await _addSpeciesToInventory(newSpeciesName, speciesRepository, inventoryRepository);
     }
   }
 
   // Build the species list
   Widget _buildSpeciesList(SpeciesRepository speciesRepository,
       InventoryRepository inventoryRepository) {
-    return Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                    maxWidth: 840),
-                child: SearchAnchor(
+    return Column(children: [
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 840),
+            child: SearchAnchor(
               builder: (context, controller) {
                 return TextField(
                   controller: controller,
@@ -357,55 +357,61 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                     hintText: '${S.of(context).addSpecies}...',
                     prefixIcon: const Icon(Icons.search_outlined),
                     border: const OutlineInputBorder(),
-                  //   icon: IconButton(
-                  //     icon: const Icon(Icons.show_chart_outlined),
-                  //     onPressed: () {
-                  //   Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //       builder: (context) => SpeciesChartScreen(
-                  //           inventory: widget.inventory),
-                  //     ),
-                  //   );
-                  // },
-                  //   ),
+                    //   icon: IconButton(
+                    //     icon: const Icon(Icons.show_chart_outlined),
+                    //     onPressed: () {
+                    //   Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //       builder: (context) => SpeciesChartScreen(
+                    //           inventory: widget.inventory),
+                    //     ),
+                    //   );
+                    // },
+                    //   ),
                     suffixIcon: MenuAnchor(
-              builder: (context, controller, child) {
-                return IconButton(
-                  icon: Icon(Icons.more_vert_outlined),
-                  // tooltip: S.of(context).exportWhat(S.of(context).inventory(1)),
-                  onPressed: () {
-                    if (controller.isOpen) {
-                      controller.close();
-                    } else {
-                      controller.open();
-                    }
-                  },
-                );
-              },
-              menuChildren: [
-                MenuItemButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SpeciesChartScreen(
-                            inventory: widget.inventory),
-                      ),
-                    );
-                  },
-                  leadingIcon: const Icon(Icons.show_chart_outlined),
-                  child: Text(S.current.speciesAccumulationCurve, overflow: TextOverflow.ellipsis,),
-                ),
-                MenuItemButton(
-                  onPressed: () {
-                    _showAddSpeciesDialog(context, widget.speciesRepository, widget.inventoryRepository);
-                  },
-                  leadingIcon: const Icon(Icons.add_box_outlined),
-                  child: Text(S.current.addSpecies),
-                ),
-              ],
-            ),
+                      builder: (context, controller, child) {
+                        return IconButton(
+                          icon: Icon(Icons.more_vert_outlined),
+                          // tooltip: S.of(context).exportWhat(S.of(context).inventory(1)),
+                          onPressed: () {
+                            if (controller.isOpen) {
+                              controller.close();
+                            } else {
+                              controller.open();
+                            }
+                          },
+                        );
+                      },
+                      menuChildren: [
+                        MenuItemButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SpeciesChartScreen(
+                                    inventory: widget.inventory),
+                              ),
+                            );
+                          },
+                          leadingIcon: const Icon(Icons.show_chart_outlined),
+                          child: Text(
+                            S.current.speciesAccumulationCurve,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        MenuItemButton(
+                          onPressed: () {
+                            _showAddSpeciesDialog(
+                                context,
+                                widget.speciesRepository,
+                                widget.inventoryRepository);
+                          },
+                          leadingIcon: const Icon(Icons.add_box_outlined),
+                          child: Text(S.current.addSpecies),
+                        ),
+                      ],
+                    ),
                     // IconButton(
                     //   icon: const Icon(Icons.add_box_outlined),
                     //   onPressed: () {
@@ -474,17 +480,13 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                       }
                     }
 
-                    if (speciesName
-                        .toLowerCase()
-                        .contains(query.toLowerCase())) {
+                    if (speciesName.toLowerCase().contains(query.toLowerCase())) {
                       return true;
                     }
                   }
                   // If que query do not have 4 or 6 characters, or if the species name do not have two words,
                   // use the previous search logic (e.g.: contains)
-                  return speciesName
-                      .toLowerCase()
-                      .contains(query.toLowerCase());
+                  return speciesName.toLowerCase().contains(query.toLowerCase());
                 }
 
                 return List<String>.from(allSpeciesNames)
@@ -493,9 +495,8 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                     .map((species) {
                   return ListTile(
                     title: Text(species),
-                    onTap: () {
-                      _addSpeciesToInventory(
-                          species, speciesRepository, inventoryRepository);
+                    onTap: () async {
+                      await _addSpeciesToInventory(species, speciesRepository, inventoryRepository);
                       controller.closeView(species);
                       controller.clear();
                     },
@@ -503,100 +504,92 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                 }).toList();
               },
             ),
-            
+
             // Old search bar
-                // TextField(
-                //   decoration: InputDecoration(
-                //     hintText: '${S.of(context).addSpecies}...',
-                //     prefixIcon: const Icon(Icons.search_outlined),
-                //     border: const OutlineInputBorder(),
-                //     icon: IconButton(
-                //       icon: const Icon(Icons.show_chart_outlined),
-                //       onPressed: () {
-                //     Navigator.push(
-                //       context,
-                //       MaterialPageRoute(
-                //         builder: (context) => SpeciesChartScreen(
-                //             inventory: widget.inventory),
-                //       ),
-                //     );
-                //   },
-                //     ),
-                //     suffixIcon: IconButton(
-                //       icon: const Icon(Icons.add_box_outlined),
-                //       onPressed: () {
-                //         _showAddSpeciesDialog(context, widget.speciesRepository, widget.inventoryRepository);
-                //       },
-                //     ),
-                //   ),
-                //   readOnly: true,
-                //   onTap: () async {
-                //     _showSpeciesSearch(speciesRepository, inventoryRepository);
-                //   },
-                // ),
-              ),
-            ),
+            // TextField(
+            //   decoration: InputDecoration(
+            //     hintText: '${S.of(context).addSpecies}...',
+            //     prefixIcon: const Icon(Icons.search_outlined),
+            //     border: const OutlineInputBorder(),
+            //     icon: IconButton(
+            //       icon: const Icon(Icons.show_chart_outlined),
+            //       onPressed: () {
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(
+            //         builder: (context) => SpeciesChartScreen(
+            //             inventory: widget.inventory),
+            //       ),
+            //     );
+            //   },
+            //     ),
+            //     suffixIcon: IconButton(
+            //       icon: const Icon(Icons.add_box_outlined),
+            //       onPressed: () {
+            //         _showAddSpeciesDialog(context, widget.speciesRepository, widget.inventoryRepository);
+            //       },
+            //     ),
+            //   ),
+            //   readOnly: true,
+            //   onTap: () async {
+            //     _showSpeciesSearch(speciesRepository, inventoryRepository);
+            //   },
+            // ),
           ),
-          Expanded(
-              child: Consumer<SpeciesProvider>(
-                  builder: (context, speciesProvider, child) {
-                    final speciesList = speciesProvider
-                        .getSpeciesForInventory(widget.inventory.id);
-                    speciesList.sort((a, b) => a.name.compareTo(b.name));
-                    if (speciesList.isEmpty) {
-                      return Center(
-                        child: Text(S.of(context).noSpeciesFound),
-                      );
-                    } else {
-                      return LayoutBuilder(
-                        builder: (BuildContext context,
-                            BoxConstraints constraints) {
-                          final screenWidth = constraints.maxWidth;
-                          final isLargeScreen = screenWidth > 600;
+        ),
+      ),
+      Expanded(child: Consumer<SpeciesProvider>(builder: (context, speciesProvider, child) {
+        final speciesList = speciesProvider.getSpeciesForInventory(widget.inventory.id);
+        speciesList.sort((a, b) => a.name.compareTo(b.name));
 
-                          if (isLargeScreen) {
-                            return Align(
-                              alignment: Alignment.topCenter,
-                              child: ConstrainedBox(
-                                constraints: const BoxConstraints(
-                                    maxWidth: 840),
-                                child: ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: speciesList.length,
-                                  itemBuilder: (context, index) {
-                                    final species = speciesList[index];
-                                    return SpeciesListItem(
-                                      species: species,
-                                      onLongPress: () =>
-                                          _showBottomSheet(context, species),
-                                    );
-                                  },
-                                ),
-                              ),
-                            );
-                          } else {
-                            return ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: speciesList.length,
-                              itemBuilder: (context, index) {
-                                final species = speciesList[index];
-                                return SpeciesListItem(
-                                  species: species,
-                                  onLongPress: () =>
-                                      _showBottomSheet(context, species),
-                                );
-                              },
-                            );
-                          }
-                        },
-                      );
-                    }
-                  }
-              )
+        if (speciesList.isEmpty) {
+          return Center(
+            child: Text(S.of(context).noSpeciesFound),
+          );
+        } else {
+          return LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+              final screenWidth = constraints.maxWidth;
+              final isLargeScreen = screenWidth > 600;
 
-          ),
-        ]
-    );
+              if (isLargeScreen) {
+                // If the screen is large, use a ListView with a maximum width
+                return Align(
+                  alignment: Alignment.topCenter,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 840),
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: speciesList.length,
+                      itemBuilder: (context, index) {
+                        final species = speciesList[index];
+                        return SpeciesListItem(
+                          species: species,
+                          onLongPress: () => _showBottomSheet(context, species),
+                        );
+                      },
+                    ),
+                  ),
+                );
+              } else {
+                // If the screen is small, use a ListView with no maximum width
+                return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: speciesList.length,
+                  itemBuilder: (context, index) {
+                    final species = speciesList[index];
+                    return SpeciesListItem(
+                      species: species,
+                      onLongPress: () => _showBottomSheet(context, species),
+                    );
+                  },
+                );
+              }
+            },
+          );
+        }
+      })),
+    ]);
   }
 
   void _showBottomSheet(BuildContext context, Species species) {

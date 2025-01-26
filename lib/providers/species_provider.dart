@@ -23,9 +23,16 @@ class SpeciesProvider with ChangeNotifier {
 
   // Load list of species for an inventory ID
   Future<void> loadSpeciesForInventory(String inventoryId) async {
+    if (inventoryId == null || inventoryId.isEmpty) {
+      if (kDebugMode) {
+        print('Invalid inventoryId: empty or null');
+      }
+      return;
+    }
     try {
       final speciesList = await _speciesRepository.getSpeciesByInventory(inventoryId);
       _speciesMap[inventoryId] = speciesList;
+      _speciesByInventoryId[inventoryId] = speciesList;
     } catch (e) {
       if (kDebugMode) {
         print('Error loading species for inventory $inventoryId: $e');
