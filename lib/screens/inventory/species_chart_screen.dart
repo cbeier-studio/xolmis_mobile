@@ -56,6 +56,8 @@ class SpeciesChartScreen extends StatelessWidget {
                 axisNameWidget: Text(S.current.timeMinutes),
                 sideTitles: SideTitles(
                   showTitles: true,
+                  // interval: 3,
+                  reservedSize: 40,
                   getTitlesWidget: (value, meta) {
                     final minutes = value.toInt();
                     return Text('$minutes');
@@ -91,7 +93,10 @@ class SpeciesChartScreen extends StatelessWidget {
                 color: Theme.of(context).brightness == Brightness.light
                     ? Colors.deepPurple
                     : Colors.deepPurple[200],
-                belowBarData: BarAreaData(show: true),
+                belowBarData: BarAreaData(
+                  show: true,
+                  color: Colors.deepPurpleAccent.withAlpha(30),
+                ),
               ),
               LineChartBarData(
                 show: false,
@@ -118,7 +123,7 @@ class SpeciesChartScreen extends StatelessWidget {
     final startTime = inventory.startTime!;
     final currentTime = inventory.isFinished ? inventory.endTime! : DateTime.now();
     final totalElapsedMinutes = currentTime.difference(startTime).inMinutes;
-    final totalIntervals = (totalElapsedMinutes / 5).ceil();
+    final totalIntervals = (totalElapsedMinutes / 10).ceil();
 
     for (final species in inventory.speciesList) {
       final sampleTime = species.sampleTime;
@@ -130,7 +135,7 @@ class SpeciesChartScreen extends StatelessWidget {
 
       // Calculate the interval for the species
       final elapsedMinutes = sampleTime.difference(startTime).inMinutes;
-      final interval = elapsedMinutes ~/ 5; // Intervalo de 5 minutos
+      final interval = elapsedMinutes ~/ 10;
 
       if (!speciesByInterval.containsKey(interval)) {
         speciesByInterval[interval] = <String>{};
@@ -153,7 +158,7 @@ class SpeciesChartScreen extends StatelessWidget {
           }
         }
       }
-      speciesAccumulationData.add(SpeciesAccumulationData(i * 5, cumulativeSpeciesCount));
+      speciesAccumulationData.add(SpeciesAccumulationData(i * 10, cumulativeSpeciesCount));
     }
 
     return speciesAccumulationData;

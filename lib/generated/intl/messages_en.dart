@@ -504,7 +504,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "timeFound":
             MessageLookupByLibrary.simpleMessage("Date and time found"),
         "timeMinutes":
-            MessageLookupByLibrary.simpleMessage("Time (5 minutes intervals)"),
+            MessageLookupByLibrary.simpleMessage("Time (10 minutes intervals)"),
         "timedQualitativeLists":
             MessageLookupByLibrary.simpleMessage("Timed qualitative lists"),
         "totalIndividuals":

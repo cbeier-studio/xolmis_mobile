@@ -246,7 +246,7 @@
         "type": "text",
         "description": "Species accumulated field label"
     },
-    "timeMinutes": "Tempo (intervalos de 5 minutos)",
+    "timeMinutes": "Tempo (intervalos de 10 minutos)",
     "@timeMinutes": {
         "type": "text",
         "description": "Time in minutes field label"

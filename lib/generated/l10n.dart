@@ -895,10 +895,10 @@ class S {
     );
   }
 
-  /// `Time (5 minutes intervals)`
+  /// `Time (10 minutes intervals)`
   String get timeMinutes {
     return Intl.message(
-      'Time (5 minutes intervals)',
+      'Time (10 minutes intervals)',
       name: 'timeMinutes',
       desc: 'Time in minutes field label',
       args: [],
