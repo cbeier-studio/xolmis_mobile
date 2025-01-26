@@ -129,6 +129,12 @@ class NestDetailScreenState extends State<NestDetailScreen> {
         appBar: AppBar(
             title: Text('${widget.nest.fieldNumber}'),
             actions: [
+              IconButton(
+                icon: const Icon(Icons.info_outline),
+                onPressed: () {
+                  _showNestInfoDialog(context, widget.nest);
+                },
+              ),
               if (widget.nest.isActive)
                 IconButton.filled(
                   onPressed: () async {
@@ -313,52 +319,14 @@ class NestDetailScreenState extends State<NestDetailScreen> {
               ),
             )
         ),
-        body: Column(
-          children: [
-            ExpansionTile(
-              leading: const Icon(Icons.info_outlined),
-              title: Text(S.of(context).nestInfo),
-              children: [
-                ListTile(
-                  title: Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(widget.nest.foundTime!)),
-                  subtitle: Text(S.of(context).timeFound),
-                ),
-                ListTile(
-                  title: Text('${widget.nest.localityName}'),
-                  subtitle: Text(S.of(context).locality),
-                ),
-                ListTile(
-                  title: Text('${widget.nest.support}'),
-                  subtitle: Text(S.of(context).nestSupport),
-                ),
-                widget.nest.heightAboveGround != null ? ListTile(
-                  title: Text('${widget.nest.heightAboveGround} m'),
-                  subtitle: Text(S.of(context).heightAboveGround),
-                ) : SizedBox.shrink(),
-                widget.nest.male != '' ? ListTile(
-                  title: Text('${widget.nest.male}'),
-                  subtitle: Text(S.of(context).male),
-                ) : SizedBox.shrink(),
-                widget.nest.female != '' ? ListTile(
-                  title: Text('${widget.nest.female}'),
-                  subtitle: Text(S.of(context).female),
-                ) : SizedBox.shrink(),
-                widget.nest.helpers != '' ? ListTile(
-                  title: Text('${widget.nest.helpers}'),
-                  subtitle: Text(S.of(context).helpers),
-                ) : SizedBox.shrink(),
-              ],
-            ),
-            Expanded(
+        body: Expanded(
               child: TabBarView(
                 children: [
                   NestRevisionsTab(nest: widget.nest),
                   EggsTab(nest: widget.nest),
                 ],
               ),
-            ),
-          ],
-        ),
+            ),          
         floatingActionButton: widget.nest.isActive
             ? SpeedDial(
           icon: Icons.add_outlined,
@@ -387,6 +355,63 @@ class NestDetailScreenState extends State<NestDetailScreen> {
         )
             : null,
       ),
+    );
+  }
+
+  void _showNestInfoDialog(BuildContext context, Nest nest) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(S.of(context).nestInfo),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: [
+                ListTile(
+                  title: Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(nest.foundTime!)),
+                  subtitle: Text(S.of(context).timeFound),
+                ),
+                ListTile(
+                  title: Text('${nest.localityName}'),
+                  subtitle: Text(S.of(context).locality),
+                ),
+                ListTile(
+                  title: Text('${nest.support}'),
+                  subtitle: Text(S.of(context).nestSupport),
+                ),
+                if (nest.heightAboveGround != null) 
+                  ListTile(
+                    title: Text('${nest.heightAboveGround} m'),
+                    subtitle: Text(S.of(context).heightAboveGround),
+                  ),
+                if (nest.male != '') 
+                  ListTile(
+                    title: Text('${nest.male}'),
+                    subtitle: Text(S.of(context).male),
+                  ),
+                if (nest.female != '') 
+                  ListTile(
+                    title: Text('${nest.female}'),
+                    subtitle: Text(S.of(context).female),
+                  ),
+                if (nest.helpers != '')
+                  ListTile(
+                    title: Text('${nest.helpers}'),
+                    subtitle: Text(S.of(context).helpers),
+                  ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(S.of(context).close),
+            ),
+          ],
+        );
+      },
     );
   }
 }

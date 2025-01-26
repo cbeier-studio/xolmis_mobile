@@ -120,6 +120,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "cancel": MessageLookupByLibrary.simpleMessage("Cancelar"),
         "clearSelection":
             MessageLookupByLibrary.simpleMessage("Limpar seleção"),
+        "close": MessageLookupByLibrary.simpleMessage("Fechar"),
         "cloudCover": MessageLookupByLibrary.simpleMessage("Nebulosidade"),
         "confirmAutoFinishMessage": MessageLookupByLibrary.simpleMessage(
             "Inventário automaticamente encerrado. Você deseja mantê-lo ativo ou finalizar este inventário?"),

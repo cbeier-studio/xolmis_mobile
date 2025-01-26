@@ -482,6 +482,11 @@
         "type": "text",
         "description": "Individuals counted field label"
     },
+    "close": "Close",
+    "@close": {
+        "type": "text",
+        "description": "Close button label"
+    },
     "refreshList": "Refresh",
     "@refreshList": {
         "type": "text",

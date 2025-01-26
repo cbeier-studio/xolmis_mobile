@@ -144,6 +144,15 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.species.name),
+        actions: [
+          // Option to view species info
+          IconButton(
+            icon: const Icon(Icons.info_outlined),
+            onPressed: () {
+              _showSpeciesInfoDialog(context, widget.species);
+            },
+          ),
+        ],
       ),
       body: Consumer<PoiProvider>(
               builder: (context, poiProvider, child) {
@@ -154,31 +163,7 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
                     // Refresh the POIs
                     poiProvider.getPoisForSpecies(widget.species.id ?? 0);
                   },
-                  child: Column(
-                      children: [
-                        // Show species information
-                        ExpansionTile(
-                          leading: const Icon(Icons.info_outlined),
-                          title: Text(S.of(context).speciesInfo),
-                          children: [
-                            ListTile(
-                              title: Text('${widget.species.count} ${S.of(context).individual(widget.species.count)}'),
-                              subtitle: Text(S.of(context).count),
-                            ),
-                            ListTile(
-                              title: Text('${widget.species.sampleTime}'),
-                              subtitle: Text(S.of(context).recordTime),
-                            ),
-                            ListTile(
-                              title: Text(widget.species.isOutOfInventory ? S.of(context).outOfSample : S.of(context).withinSample),
-                            ),
-                            ListTile(
-                              title: Text(widget.species.notes ?? ''),
-                              subtitle: Text(S.of(context).notes),
-                            ),
-                          ],
-                        ),
-                        Expanded(
+                  child: Expanded(
                           child: pois.isEmpty
                             // Show message when there are no POIs
                               ? Center(child: Text(S.of(context).noPoiFound),)
@@ -196,9 +181,7 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
                                 }
                               }
                           ),
-                        ),
-                      ]
-                  ),
+                        ),                      
                 );
               }
           ),
@@ -325,6 +308,47 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
             poi: poi,
             onLongPress: () => _showBottomSheet(context, poi),
           ),
+        );
+      },
+    );
+  }
+
+  void _showSpeciesInfoDialog(BuildContext context, Species species) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(S.of(context).speciesInfo),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: [
+                ListTile(
+                  title: Text('${species.count} ${S.of(context).individual(species.count)}'),
+                  subtitle: Text(S.of(context).count),
+                ),
+                ListTile(
+                  title: Text('${species.sampleTime}'),
+                  subtitle: Text(S.of(context).recordTime),
+                ),
+                ListTile(
+                  title: Text(species.isOutOfInventory ? S.of(context).outOfSample : S.of(context).withinSample),
+                ),
+                if (species.notes != null && species.notes!.isNotEmpty)
+                  ListTile(
+                    title: Text(species.notes ?? ''),
+                    subtitle: Text(S.of(context).notes),
+                  ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(S.of(context).close),
+            ),
+          ],
         );
       },
     );

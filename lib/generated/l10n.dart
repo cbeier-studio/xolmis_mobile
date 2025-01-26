@@ -925,6 +925,16 @@ class S {
     );
   }
 
+  /// `Close`
+  String get close {
+    return Intl.message(
+      'Close',
+      name: 'close',
+      desc: 'Close button label',
+      args: [],
+    );
+  }
+
   /// `Refresh`
   String get refreshList {
     return Intl.message(
