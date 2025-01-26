@@ -163,7 +163,9 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
                     // Refresh the POIs
                     poiProvider.getPoisForSpecies(widget.species.id ?? 0);
                   },
-                  child: Expanded(
+                  child: Column(
+                    children: [
+                      Expanded(
                           child: pois.isEmpty
                             // Show message when there are no POIs
                               ? Center(child: Text(S.of(context).noPoiFound),)
@@ -181,7 +183,9 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
                                 }
                               }
                           ),
-                        ),                      
+                        ), 
+                    ],
+                  ),                     
                 );
               }
           ),

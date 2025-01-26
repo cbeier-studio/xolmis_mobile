@@ -129,9 +129,9 @@ class IndividualsCountChartScreen extends StatelessWidget {
     final colors = [
       Colors.blue,
       Colors.red,
-      Colors.green,
       Colors.orange,
       Colors.purple,
+      Colors.green,
       Colors.yellow,
       Colors.cyan,
       Colors.pink,
@@ -143,12 +143,14 @@ class IndividualsCountChartScreen extends StatelessWidget {
       if (index < inventoryCounts[j].length) {
         return BarChartRodData(
           toY: inventoryCounts[j][index].toDouble(),
+          borderRadius: BorderRadius.circular(4),
           color: colors[j % colors.length],
           // width: 15,
         );
       } else {
         return BarChartRodData(
           toY: 0.0,
+          borderRadius: BorderRadius.circular(4),
           color: colors[j % colors.length],
           // width: 15,
         );

@@ -23,7 +23,20 @@ class SpeciesCountChartScreen extends StatelessWidget {
             BarChartData(
               alignment: BarChartAlignment.spaceAround,
               maxY: (selectedInventories.map((inventory) => inventory.speciesList.length).reduce((a, b) => a > b ? a : b) / 10).ceil() * 10.0,
-              barTouchData: BarTouchData(enabled: true),
+              barTouchData: BarTouchData(
+                enabled: true,
+                touchTooltipData: BarTouchTooltipData(
+                  getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                    return BarTooltipItem(
+                      rod.toY.toString(),
+                      TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    );
+                  },
+                ),
+              ),
               titlesData: FlTitlesData(
                 show: true,
                 bottomTitles: AxisTitles(
@@ -70,6 +83,8 @@ class SpeciesCountChartScreen extends StatelessWidget {
                           barRods: [
                             BarChartRodData(
                               toY: inventory.speciesList.length.toDouble(),
+                              width: 16,
+                              borderRadius: BorderRadius.circular(4),
                               color: Theme.of(context).brightness == Brightness.light
                                   ? Colors.deepPurple
                                   : Colors.deepPurple[200],
