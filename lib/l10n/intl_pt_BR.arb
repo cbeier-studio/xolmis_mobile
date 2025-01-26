@@ -251,6 +251,16 @@
         "type": "text",
         "description": "Time in minutes field label"
     },
+    "speciesCounted": "Número de espécies",
+    "@speciesCounted": {
+        "type": "text",
+        "description": "Species counted field label"
+    },
+    "individualsCounted": "Número de indivíduos",	
+    "@individualsCounted": {
+        "type": "text",
+        "description": "Individuals counted field label"
+    },
     "refreshList": "Atualizar",
     "@refreshList": {
         "type": "text",

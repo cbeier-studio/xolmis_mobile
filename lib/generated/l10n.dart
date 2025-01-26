@@ -905,6 +905,26 @@ class S {
     );
   }
 
+  /// `Species counted`
+  String get speciesCounted {
+    return Intl.message(
+      'Species counted',
+      name: 'speciesCounted',
+      desc: 'Species counted field label',
+      args: [],
+    );
+  }
+
+  /// `Individuals counted`
+  String get individualsCounted {
+    return Intl.message(
+      'Individuals counted',
+      name: 'individualsCounted',
+      desc: 'Individuals counted field label',
+      args: [],
+    );
+  }
+
   /// `Refresh`
   String get refreshList {
     return Intl.message(

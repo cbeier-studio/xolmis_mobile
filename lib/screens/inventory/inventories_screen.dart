@@ -20,6 +20,7 @@ import '../../providers/inventory_provider.dart';
 import '../../providers/species_provider.dart';
 
 import 'add_inventory_screen.dart';
+import 'individuals_count_chart_screen.dart';
 import 'inventory_detail_screen.dart';
 import 'inventory_report_screen.dart';
 
@@ -28,6 +29,7 @@ import '../../utils/export_utils.dart';
 import '../../utils/import_utils.dart';
 import '../../generated/l10n.dart';
 import 'mackinnon_chart_screen.dart';
+import 'species_count_chart_screen.dart';
 
 class InventoriesScreen extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
@@ -820,6 +822,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                             ),
                           );
                         },
+                        leadingIcon: const Icon(Icons.table_view_outlined),
                         child: Text(S.current.reportSpeciesByInventory),
                       ),
                       MenuItemButton(
@@ -838,7 +841,46 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                             ),
                           );
                         },
+                        leadingIcon: const Icon(Icons.show_chart_outlined),
                         child: Text(S.current.speciesAccumulationCurve),
+                      ),
+                      MenuItemButton(
+                        onPressed: () {
+                          final inventories = selectedInventories
+                              .map((id) =>
+                                  inventoryProvider.getInventoryById(id))
+                              .toList();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SpeciesCountChartScreen(
+                                selectedInventories:
+                                    inventories.whereType<Inventory>().toList(),
+                              ),
+                            ),
+                          );
+                        },
+                        leadingIcon: const Icon(Icons.bar_chart_outlined),
+                        child: Text(S.current.speciesCounted),
+                      ),
+                      MenuItemButton(
+                        onPressed: () {
+                          final inventories = selectedInventories
+                              .map((id) =>
+                                  inventoryProvider.getInventoryById(id))
+                              .toList();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => IndividualsCountChartScreen(
+                                selectedInventories:
+                                    inventories.whereType<Inventory>().toList(),
+                              ),
+                            ),
+                          );
+                        },
+                        leadingIcon: const Icon(Icons.bar_chart_outlined),
+                        child: Text(S.current.individualsCounted),
                       ),
                     ],
                   ),

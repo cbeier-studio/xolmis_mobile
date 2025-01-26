@@ -296,6 +296,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "individual": m10,
         "individualsCount":
             MessageLookupByLibrary.simpleMessage("Contagem de indivíduos"),
+        "individualsCounted":
+            MessageLookupByLibrary.simpleMessage("Número de indivíduos"),
         "insertDuration":
             MessageLookupByLibrary.simpleMessage("Insira uma duração"),
         "insertFieldNumber": MessageLookupByLibrary.simpleMessage(
@@ -475,6 +477,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Curva de acumulação de espécies"),
         "speciesAcronym": m23,
         "speciesCount": m24,
+        "speciesCounted":
+            MessageLookupByLibrary.simpleMessage("Número de espécies"),
         "speciesInfo":
             MessageLookupByLibrary.simpleMessage("Informações da espécie"),
         "speciesName": MessageLookupByLibrary.simpleMessage("Nome da espécie"),
