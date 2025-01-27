@@ -142,6 +142,7 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
                         ),
                         const SizedBox(height: 16.0),
                         SearchAnchor(
+                          isFullScreen: MediaQuery.of(context).size.width < 600,
                       builder: (context, controller) {
                         return TextFormField(
                           controller: _speciesNameController,
