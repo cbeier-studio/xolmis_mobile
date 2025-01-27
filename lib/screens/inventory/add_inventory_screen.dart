@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../providers/inventory_provider.dart';
@@ -161,6 +162,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                             child: TextFormField(
                               controller: _durationController,
                               keyboardType: TextInputType.number,
+                              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                               decoration: InputDecoration(
                                 labelText: S.of(context).duration,
                                 border: OutlineInputBorder(),
@@ -180,6 +182,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                             child: TextFormField(
                               controller: _maxSpeciesController,
                               keyboardType: TextInputType.number,
+                              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                               decoration: InputDecoration(
                                 labelText: S.of(context).maxSpecies,
                                 border: OutlineInputBorder(),

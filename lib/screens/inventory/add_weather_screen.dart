@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../../data/models/inventory.dart';
 import '../../providers/weather_provider.dart';
@@ -73,6 +74,7 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
                               child: TextFormField(
                                 controller: _cloudCoverController,
                                 keyboardType: TextInputType.number,
+                                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                                 decoration: InputDecoration(
                                   labelText: S.of(context).cloudCover,
                                   helperText: ' ',
@@ -118,6 +120,7 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
                               child: TextFormField(
                                 controller: _temperatureController,
                                 keyboardType: TextInputType.number,
+                                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,1}$'))],
                                 decoration: InputDecoration(
                                   labelText: S.of(context).temperature,
                                   border: OutlineInputBorder(),
@@ -130,11 +133,18 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
                               child: TextFormField(
                                 controller: _windSpeedController,
                                 keyboardType: TextInputType.number,
+                                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                                 decoration: InputDecoration(
                                   labelText: S.of(context).windSpeed,
                                   border: OutlineInputBorder(),
                                   suffixText: 'bft',
                                 ),
+                                validator: (value) {
+                                  if (value != null && (int.tryParse(value)! < 0 || int.tryParse(value)! > 12)) {
+                                    return S.of(context).windSpeedRangeError;
+                                  }
+                                  return null;
+                                },
                               ),
                             ),
                           ],

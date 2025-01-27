@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 
@@ -213,6 +214,7 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
           child: TextFormField(
             controller: proportionController,
             keyboardType: TextInputType.number,
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             decoration: InputDecoration(
               labelText: S.of(context).proportion,
               border: OutlineInputBorder(),
@@ -231,6 +233,7 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
           child: TextFormField(
             controller: heightController,
             keyboardType: TextInputType.number,
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             decoration: InputDecoration(
               labelText: S.of(context).height,
               border: OutlineInputBorder(),

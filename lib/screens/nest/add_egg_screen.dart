@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/models/nest.dart';
@@ -154,6 +155,7 @@ class AddEggScreenState extends State<AddEggScreen> {
                         TextFormField(
                           controller: _widthController,
                           keyboardType: TextInputType.number,
+                          inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,1}$'))],
                           decoration: InputDecoration(
                             labelText: S.of(context).width,
                             border: OutlineInputBorder(),
@@ -164,6 +166,7 @@ class AddEggScreenState extends State<AddEggScreen> {
                         TextFormField(
                           controller: _lengthController,
                           keyboardType: TextInputType.number,
+                          inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,1}$'))],
                           decoration: InputDecoration(
                             labelText: S.of(context).length,
                             border: OutlineInputBorder(),
@@ -174,6 +177,7 @@ class AddEggScreenState extends State<AddEggScreen> {
                         TextFormField(
                           controller: _massController,
                           keyboardType: TextInputType.number,
+                          inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$'))],
                           decoration: InputDecoration(
                             labelText: S.of(context).weight,
                             border: OutlineInputBorder(),

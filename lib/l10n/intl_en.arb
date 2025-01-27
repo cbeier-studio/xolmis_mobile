@@ -612,6 +612,11 @@
         "type": "text",
         "description": "Wind speed field label"
     },
+    "windSpeedRangeError": "Must be between 0 and 12 bft",
+    "@windSpeedRangeError": {
+        "type": "text",
+        "description": "Validation message shown when the wind speed is out of range"
+    },
     "errorSavingWeather": "Error saving weather data",
     "@errorSavingWeather": {
         "type": "text",

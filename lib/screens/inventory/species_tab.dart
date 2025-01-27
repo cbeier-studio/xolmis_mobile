@@ -350,6 +350,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 840),
             child: SearchAnchor(
+              isFullScreen: MediaQuery.of(context).size.width < 600,
               builder: (context, controller) {
                 return TextField(
                   controller: controller,

@@ -535,6 +535,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "weight": MessageLookupByLibrary.simpleMessage("Peso"),
         "width": MessageLookupByLibrary.simpleMessage("Largura"),
         "windSpeed": MessageLookupByLibrary.simpleMessage("Vento"),
+        "windSpeedRangeError":
+            MessageLookupByLibrary.simpleMessage("Deve estar entre 0 e 12 bft"),
         "withinSample":
             MessageLookupByLibrary.simpleMessage("Dentro da amostra"),
         "yes": MessageLookupByLibrary.simpleMessage("Sim")

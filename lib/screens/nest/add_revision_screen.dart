@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/models/nest.dart';
@@ -81,6 +82,7 @@ class AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
                               child: TextFormField(
                                 controller: _eggsHostController,
                                 keyboardType: TextInputType.number,
+                                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                                 decoration: InputDecoration(
                                   labelText: S.of(context).egg(2),
                                   border: OutlineInputBorder(),
@@ -92,6 +94,7 @@ class AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
                               child: TextFormField(
                                 controller: _nestlingsHostController,
                                 keyboardType: TextInputType.number,
+                                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                                 decoration: InputDecoration(
                                   labelText: S.of(context).nestling(2),
                                   border: OutlineInputBorder(),
@@ -112,6 +115,7 @@ class AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
                               child: TextFormField(
                                 controller: _eggsParasiteController,
                                 keyboardType: TextInputType.number,
+                                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                                 decoration: InputDecoration(
                                   labelText: S.of(context).egg(2),
                                   border: OutlineInputBorder(),
@@ -123,6 +127,7 @@ class AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
                               child: TextFormField(
                                 controller: _nestlingsParasiteController,
                                 keyboardType: TextInputType.number,
+                                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                                 decoration: InputDecoration(
                                   labelText: S.of(context).nestling(2),
                                   border: OutlineInputBorder(),

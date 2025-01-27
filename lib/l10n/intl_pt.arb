@@ -323,6 +323,11 @@
     "selectPrecipitation": "Selecione uma precipitação",
     "temperature": "Temperatura",
     "windSpeed": "Vento",
+    "windSpeedRangeError": "Deve estar entre 0 e 12 bft",
+    "@windSpeedRangeError": {
+        "type": "text",
+        "description": "Validation message shown when the wind speed is out of range"
+    },
     "errorSavingWeather": "Erro ao salvar os dados do tempo",
     "@errorSavingWeather": {
         "type": "text",

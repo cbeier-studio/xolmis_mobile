@@ -1186,6 +1186,16 @@ class S {
     );
   }
 
+  /// `Must be between 0 and 12 bft`
+  String get windSpeedRangeError {
+    return Intl.message(
+      'Must be between 0 and 12 bft',
+      name: 'windSpeedRangeError',
+      desc: 'Validation message shown when the wind speed is out of range',
+      args: [],
+    );
+  }
+
   /// `Error saving weather data`
   String get errorSavingWeather {
     return Intl.message(
