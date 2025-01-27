@@ -164,7 +164,11 @@ class AddEggScreenState extends State<AddEggScreen> {
                         TextFormField(
                           controller: _widthController,
                           keyboardType: TextInputType.number,
-                          inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,1}$'))],
+                          inputFormatters: [
+                            CommaToDotTextInputFormatter(),
+                            // Allow only numbers and decimal separator with 1 decimal place
+                            FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,1}')),
+                          ],
                           decoration: InputDecoration(
                             labelText: S.of(context).width,
                             border: OutlineInputBorder(),
@@ -175,7 +179,11 @@ class AddEggScreenState extends State<AddEggScreen> {
                         TextFormField(
                           controller: _lengthController,
                           keyboardType: TextInputType.number,
-                          inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,1}$'))],
+                          inputFormatters: [
+                            CommaToDotTextInputFormatter(),
+                            // Allow only numbers and decimal separator with 1 decimal place
+                            FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,1}')),
+                          ],
                           decoration: InputDecoration(
                             labelText: S.of(context).length,
                             border: OutlineInputBorder(),
@@ -186,7 +194,11 @@ class AddEggScreenState extends State<AddEggScreen> {
                         TextFormField(
                           controller: _massController,
                           keyboardType: TextInputType.number,
-                          inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$'))],
+                          inputFormatters: [
+                            CommaToDotTextInputFormatter(),
+                            // Allow only numbers and decimal separator with 2 decimal places
+                            FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
+                          ],
                           decoration: InputDecoration(
                             labelText: S.of(context).weight,
                             border: OutlineInputBorder(),

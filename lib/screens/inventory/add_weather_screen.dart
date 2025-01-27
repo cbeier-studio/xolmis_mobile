@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../data/models/inventory.dart';
 import '../../providers/weather_provider.dart';
 import '../../generated/l10n.dart';
+import '../../utils/utils.dart';
 
 class AddWeatherScreen extends StatefulWidget {
   final Inventory inventory;
@@ -120,7 +121,11 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
                               child: TextFormField(
                                 controller: _temperatureController,
                                 keyboardType: TextInputType.number,
-                                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,1}$'))],
+                                inputFormatters: [
+                                  CommaToDotTextInputFormatter(),
+                                  // Allow only numbers and decimal separator with 1 decimal place
+                                  FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,1}')),
+                                ],
                                 decoration: InputDecoration(
                                   labelText: S.of(context).temperature,
                                   border: OutlineInputBorder(),
