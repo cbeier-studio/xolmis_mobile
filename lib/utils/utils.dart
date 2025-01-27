@@ -24,6 +24,32 @@ Future<List<String>> loadSpeciesSearchData() async {
       .toList();
 }
 
+bool speciesMatchesQuery(String speciesName, String query) {
+  if (query.length == 4 || query.length == 6) {
+    final words = speciesName.split(' ');
+    if (words.length >= 2) {
+      final firstWord = words[0];
+      final secondWord = words[1];
+      final firstPartLength = query.length == 4 ? 2 : 3;
+      final firstPart = query.substring(0, firstPartLength);
+      final secondPart = query.substring(firstPartLength);
+
+      // Check if the parts of query match the parts of the species name
+      if (firstWord.toLowerCase().startsWith(firstPart.toLowerCase()) &&
+          secondWord.toLowerCase().startsWith(secondPart.toLowerCase())) {
+        return true;
+      }
+    }
+
+    if (speciesName.toLowerCase().contains(query.toLowerCase())) {
+      return true;
+    }
+  }
+  // If que query do not have 4 or 6 characters, or if the species name do not have two words,
+  // use the previous search logic (e.g.: contains)
+  return speciesName.toLowerCase().contains(query.toLowerCase());
+}
+
 String getNextInventoryId(String currentId) {
   // 1. Split the string in parts using '-' as delimiter
   final parts = currentId.split('-');

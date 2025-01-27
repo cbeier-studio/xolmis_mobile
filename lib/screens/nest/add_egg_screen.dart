@@ -101,7 +101,9 @@ class AddEggScreenState extends State<AddEggScreen> {
                           },
                         ),
                         const SizedBox(height: 16.0),
-                        TextFormField(
+                        SearchAnchor(
+                      builder: (context, controller) {
+                        return TextFormField(
                           controller: _speciesNameController,
                           decoration: InputDecoration(
                             labelText: '${S.of(context).species(1)} *',
@@ -115,22 +117,29 @@ class AddEggScreenState extends State<AddEggScreen> {
                             }
                             return null;
                           },
-                          onTap: () async {
-                            // final allSpecies = await loadSpeciesSearchData();
-                            // allSpecies.sort((a, b) => a.compareTo(b));
-                            final speciesSearchDelegate = SpeciesSearchDelegate(allSpeciesNames, _addSpeciesToEgg, _updateEgg);
-                            final selectedSpecies = await showSearch(
-                              context: context,
-                              delegate: speciesSearchDelegate,
-                            );
-
-                            if (selectedSpecies != null) {
-                              setState(() {
-                                _speciesNameController.text = selectedSpecies;
-                              });
-                            }
+                          onTap: () {
+                            controller.openView();
                           },
-                        ),
+                        );
+                      },
+                      suggestionsBuilder: (context, controller) {
+                        return List<String>.from(allSpeciesNames)
+                            .where((species) => speciesMatchesQuery(
+                                species, controller.text.toLowerCase()))
+                            .map((species) {
+                          return ListTile(
+                            title: Text(species),
+                            onTap: () async {
+                              setState(() {
+                                _speciesNameController.text = species;
+                              });
+                              controller.closeView(species);
+                              controller.clear();
+                            },
+                          );
+                        }).toList();
+                      }
+                        ),                        
                         const SizedBox(height: 16.0),
                         DropdownButtonFormField<EggShapeType>(
                             value: _selectedEggShape,
