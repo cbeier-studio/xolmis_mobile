@@ -326,16 +326,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           SettingsSection(
             title: Text(S.of(context).dangerZone,
-                    style: TextStyle(color: Colors.red)), 
+                    style: TextStyle(color: Theme.of(context).brightness == Brightness.light
+                        ? Colors.red
+                        : Colors.redAccent,)), 
             tiles: [
             // Option to delete app data
             SettingsTile(
                 leading: Icon(
                   Icons.delete_forever,
-                  color: Colors.red,
+                  color: Theme.of(context).brightness == Brightness.light
+                        ? Colors.red
+                        : Colors.redAccent,
                 ),
                 title: Text(S.of(context).deleteAppData,
-                    style: TextStyle(color: Colors.red)),
+                    style: TextStyle(color: Theme.of(context).brightness == Brightness.light
+                        ? Colors.red
+                        : Colors.redAccent,)),
                 description: Text(S.of(context).deleteAppDataDescription),
                 onPressed: (context) {
                   _showDeleteConfirmationDialog(context);

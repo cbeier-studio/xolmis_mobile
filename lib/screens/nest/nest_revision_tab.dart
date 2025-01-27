@@ -257,6 +257,10 @@ class _NestRevisionsTabState extends State<NestRevisionsTab> with AutomaticKeepA
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   ListTile(
+                    title: Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(revision.sampleTime!),),
+                  ),
+                  Divider(),
+                  ListTile(
                     leading: const Icon(Icons.edit_outlined),
                     title: Text(S.of(context).editNestRevision),
                     onTap: () {
@@ -273,10 +277,14 @@ class _NestRevisionsTabState extends State<NestRevisionsTab> with AutomaticKeepA
                       );
                     },
                   ),
-                  Divider(),
+                  // Divider(),
                   ListTile(
-                    leading: const Icon(Icons.delete_outlined, color: Colors.red,),
-                    title: Text(S.of(context).deleteRevision, style: TextStyle(color: Colors.red),),
+                    leading: Icon(Icons.delete_outlined, color: Theme.of(context).brightness == Brightness.light
+                        ? Colors.red
+                        : Colors.redAccent,),
+                    title: Text(S.of(context).deleteRevision, style: TextStyle(color: Theme.of(context).brightness == Brightness.light
+                        ? Colors.red
+                        : Colors.redAccent,),),
                     onTap: () async {
                       await _deleteNestRevision(revision);
                       Navigator.pop(context);

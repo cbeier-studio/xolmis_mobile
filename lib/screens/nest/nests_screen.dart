@@ -623,7 +623,9 @@ class NestsScreenState extends State<NestsScreen> {
                   IconButton(
                     icon: Icon(Icons.delete_outlined),
                     tooltip: S.of(context).delete,
-                    color: Colors.red,
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? Colors.red
+                        : Colors.redAccent,
                     onPressed: _deleteSelectedNests,
                   ),
                   VerticalDivider(),
@@ -934,7 +936,7 @@ class NestsScreenState extends State<NestsScreen> {
                       );
                     },
                   ),
-                  Divider(),
+                  // Divider(),
                   // Option to export the nest to CSV or JSON
                   if (!_showActive) 
                     ListTile(
@@ -962,12 +964,16 @@ class NestsScreenState extends State<NestsScreen> {
                         ]
                       ),
                     ),
-                  if (!_showActive) 
-                    Divider(),
+                  // if (!_showActive) 
+                  //   Divider(),
                   // Option to delete the nest
                   ListTile(
-                    leading: const Icon(Icons.delete_outlined, color: Colors.red,),
-                    title: Text(S.of(context).deleteNest, style: TextStyle(color: Colors.red),),
+                    leading: Icon(Icons.delete_outlined, color: Theme.of(context).brightness == Brightness.light
+                        ? Colors.red
+                        : Colors.redAccent,),
+                    title: Text(S.of(context).deleteNest, style: TextStyle(color: Theme.of(context).brightness == Brightness.light
+                        ? Colors.red
+                        : Colors.redAccent,),),
                     onTap: () {
                       // Ask for user confirmation
                       showDialog(

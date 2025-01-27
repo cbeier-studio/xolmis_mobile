@@ -575,6 +575,10 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
+                  ListTile(
+                    title: Text(species.name, style: TextStyle(fontStyle: FontStyle.italic),),
+                  ),
+                  Divider(),
                   // Option to edit the species notes
                   ListTile(
                     leading: const Icon(Icons.edit_outlined),
@@ -604,7 +608,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                         _removeSpeciesToSample(context, species);
                       },
                     ),
-                  Divider(),
+                  // Divider(),
                   // Option to add a POI
                   ListTile(
                     leading: const Icon(Icons.add_location_outlined),
@@ -646,13 +650,17 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                       }
                     },
                   ),
-                  Divider(),
+                  // Divider(),
                   // Option to delete the species
                   ListTile(
-                    leading: const Icon(
-                      Icons.delete_outlined, color: Colors.red,),
+                    leading: Icon(
+                      Icons.delete_outlined, color: Theme.of(context).brightness == Brightness.light
+                        ? Colors.red
+                        : Colors.redAccent,),
                     title: Text(
-                      S.of(context).deleteSpecies, style: TextStyle(color: Colors.red),),
+                      S.of(context).deleteSpecies, style: TextStyle(color: Theme.of(context).brightness == Brightness.light
+                        ? Colors.red
+                        : Colors.redAccent,),),
                     onTap: () async {
                       await _deleteSpecies(species);
                       if (context.mounted) {

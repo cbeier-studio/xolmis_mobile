@@ -1330,8 +1330,8 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                         // inventoryProvider.notifyListeners();
                       },
                     ),
-                  if (!_isShowingActiveInventories) 
-                    Divider(),
+                  // if (!_isShowingActiveInventories) 
+                  //   Divider(),
                   if (!_isShowingActiveInventories)
                     ListTile(
                       leading: const Icon(Icons.file_upload_outlined),
@@ -1358,11 +1358,15 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                         ]
                       ),
                     ),
-                  Divider(),
+                  // Divider(),
                   // Option to delete the inventory
                   ListTile(
-                    leading: const Icon(Icons.delete_outlined, color: Colors.red,),
-                    title: Text(S.of(context).deleteInventory, style: TextStyle(color: Colors.red),),
+                    leading: Icon(Icons.delete_outlined, color: Theme.of(context).brightness == Brightness.light
+                        ? Colors.red
+                        : Colors.redAccent,),
+                    title: Text(S.of(context).deleteInventory, style: TextStyle(color: Theme.of(context).brightness == Brightness.light
+                        ? Colors.red
+                        : Colors.redAccent,),),
                     onTap: () {
                       // Ask for user confirmation
                       showDialog(

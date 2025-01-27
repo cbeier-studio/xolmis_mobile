@@ -246,11 +246,16 @@ class _AppImageScreenState extends State<AppImageScreen> {
                       _showEditNotesDialog(context, appImage);
                     },
                   ),
-                  Divider(),
+                  // Divider(),
                   // Option to delete the image
                   ListTile(
-                    leading: const Icon(Icons.delete_outlined, color: Colors.red,),
-                    title: Text(S.of(context).deleteImage, style: TextStyle(color: Colors.red),),
+                    leading: Icon(Icons.delete_outlined, 
+                      color: Theme.of(context).brightness == Brightness.light
+                        ? Colors.red
+                        : Colors.redAccent,),
+                    title: Text(S.of(context).deleteImage, style: TextStyle(color: Theme.of(context).brightness == Brightness.light
+                        ? Colors.red
+                        : Colors.redAccent,),),
                     onTap: () {
                       // Ask for user confirmation
                       showDialog(
@@ -368,16 +373,30 @@ class _AppImageScreenState extends State<AppImageScreen> {
           child: GridTile(
             footer: GridTileBar(
               backgroundColor: Colors.black45,
-              title: Text(image.notes ?? '', overflow: TextOverflow.ellipsis,),
-            ),
-            child: ClipRRect(
-              // borderRadius: BorderRadius.circular(0.0),
-              child: Image.file(
-                File(image.imagePath),
-                fit: BoxFit.cover,
+              title: Text(
+                image.notes ?? '',
+                overflow: TextOverflow.ellipsis,
               ),
+              trailing: IconButton(
+                      icon: Icon(Icons.edit_outlined),
+                      onPressed: () {
+                        _showEditNotesDialog(context, image);
+                      }),
+            ),
+            child: Stack(
+              children: [
+                ClipRRect(
+                  // borderRadius: BorderRadius.circular(0.0),
+                  child: Image.file(
+                    File(image.imagePath),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                
+              ],
             ),
           ),
+            
         );
       },
     );

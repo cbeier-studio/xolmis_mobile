@@ -254,6 +254,10 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   ListTile(
+                    title: Text(egg.fieldNumber!),
+                  ),
+                  Divider(),
+                  ListTile(
                     leading: const Icon(Icons.edit_outlined),
                     title: Text(S.of(context).editEgg),
                     onTap: () {
@@ -270,10 +274,14 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
                       );
                     },
                   ),
-                  Divider(),
+                  // Divider(),
                   ListTile(
-                    leading: const Icon(Icons.delete_outlined, color: Colors.red,),
-                    title: Text(S.of(context).deleteEgg, style: TextStyle(color: Colors.red),),
+                    leading: Icon(Icons.delete_outlined, color: Theme.of(context).brightness == Brightness.light
+                        ? Colors.red
+                        : Colors.redAccent,),
+                    title: Text(S.of(context).deleteEgg, style: TextStyle(color: Theme.of(context).brightness == Brightness.light
+                        ? Colors.red
+                        : Colors.redAccent,),),
                     onTap: () async {
                       await _deleteEgg(egg);
                       Navigator.pop(context);

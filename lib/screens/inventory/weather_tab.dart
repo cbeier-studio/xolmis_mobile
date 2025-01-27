@@ -174,6 +174,10 @@ class _WeatherTabState extends State<WeatherTab> with AutomaticKeepAliveClientMi
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   ListTile(
+                    title: Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(weather.sampleTime!),),
+                  ),
+                  Divider(),
+                  ListTile(
                     leading: const Icon(Icons.edit_outlined),
                     title: Text(S.of(context).editWeather),
                     onTap: () {
@@ -190,10 +194,14 @@ class _WeatherTabState extends State<WeatherTab> with AutomaticKeepAliveClientMi
                       );
                     },
                   ),
-                  Divider(),
+                  // Divider(),
                   ListTile(
-                    leading: const Icon(Icons.delete_outlined, color: Colors.red,),
-                    title: Text(S.of(context).deleteWeather, style: TextStyle(color: Colors.red),),
+                    leading: Icon(Icons.delete_outlined, color: Theme.of(context).brightness == Brightness.light
+                        ? Colors.red
+                        : Colors.redAccent,),
+                    title: Text(S.of(context).deleteWeather, style: TextStyle(color: Theme.of(context).brightness == Brightness.light
+                        ? Colors.red
+                        : Colors.redAccent,),),
                     onTap: () async {
                       await _deleteWeather(weather);
                       Navigator.pop(context);
