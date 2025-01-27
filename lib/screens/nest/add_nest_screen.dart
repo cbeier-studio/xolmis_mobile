@@ -9,7 +9,6 @@ import '../../data/models/nest.dart';
 import '../../providers/nest_provider.dart';
 
 import '../../utils/utils.dart';
-import '../../utils/species_search_delegate.dart';
 import '../../generated/l10n.dart';
 
 class AddNestScreen extends StatefulWidget {
