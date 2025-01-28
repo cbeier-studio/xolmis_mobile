@@ -14,6 +14,7 @@ Here is a list of the main features:
 - [x] Creation of bird lists, optionally counting the number os individuals per species. Types of lists:
   - [x] Free Qualitative List.
   - [x] Timed Qualitative List.
+  - [x] Interval Qualitative List.
   - [x] Mackinnon List.
   - [x] Transection Count.
   - [x] Point Count.
@@ -22,21 +23,15 @@ Here is a list of the main features:
 - [x] Use the location services of the device to collect points of interest for species.
 - [x] Collect vegetation data (Alianza del Pastizal protocols) within a list.
 - [x] Collect weather data within a list.
-- [x] History of finished lists with options to export data.
 - [x] Record nests and eggs monitoring.
-- [x] History of inactive nests with options to export data.
-- [x] Record specimens collected with option to export the list.
-- [ ] Create a list of birds banded.
+- [x] Record specimens collected.
+- [x] Export data to CSV or JSON files.
+- [ ] Field journal and notes.
 - [ ] Collect quali-quantitative data of captured birds.
-- [x] Attach images to the data.
-- [x] Integration with Xolmis desktop app (via text files).
+- [x] Attach images to the data (vegetation, nests, and specimens).
+- [ ] Task lists.
+- [x] Integration with Xolmis desktop (via text files).
 
 ## How to contribute
 
-### Giving feedback
-
 You can create [pull requests](https://github.com/cbeier-studio/xolmis_mobile/pulls) directly and give feedback using the [GitHub Issues](https://github.com/cbeier-studio/xolmis_mobile/issues). All suggestions, bugs reported and general issues are much appreciated.
-
-### Coding
-
-If you want to help in Xolmis development, please send me a message to [hello@christianbeier.studio](mailto://hello@christianbeier.studio).
