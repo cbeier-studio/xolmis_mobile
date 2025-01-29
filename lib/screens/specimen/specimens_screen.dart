@@ -129,7 +129,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
           title: Text(S.of(context).confirmDelete),
           content: Text(S
               .of(context)
-              .confirmDeleteMessage(selectedSpecimens.length, "male", S.of(context).inventory(selectedSpecimens.length))),
+              .confirmDeleteMessage(selectedSpecimens.length, "male", S.of(context).specimens(selectedSpecimens.length))),
           actions: <Widget>[
             TextButton(
               onPressed: () {

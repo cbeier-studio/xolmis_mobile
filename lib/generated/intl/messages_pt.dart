@@ -67,42 +67,45 @@ class MessageLookup extends MessageLookupByLibrary {
       "${Intl.plural(howMany, one: 'inventário encontrado', other: 'inventários encontrados')}";
 
   static String m16(howMany) =>
-      "${Intl.plural(howMany, one: 'minuto', other: 'minutos')}";
+      "${Intl.plural(howMany, one: 'Nota do diário', other: 'Notas do diário')}";
 
   static String m17(howMany) =>
-      "${Intl.plural(howMany, one: 'ninho', other: 'ninhos')}";
+      "${Intl.plural(howMany, one: 'minuto', other: 'minutos')}";
 
   static String m18(howMany) =>
-      "${Intl.plural(howMany, one: 'Dados do ninho', other: 'Dados dos ninhos')}";
+      "${Intl.plural(howMany, one: 'ninho', other: 'ninhos')}";
 
   static String m19(howMany) =>
-      "${Intl.plural(howMany, one: 'Ninho exportado!', other: 'Ninhos exportados!')}";
+      "${Intl.plural(howMany, one: 'Dados do ninho', other: 'Dados dos ninhos')}";
 
   static String m20(howMany) =>
-      "${Intl.plural(howMany, one: 'Ninhego', other: 'Ninhegos')}";
+      "${Intl.plural(howMany, one: 'Ninho exportado!', other: 'Ninhos exportados!')}";
 
   static String m21(howMany) =>
-      "${Intl.plural(howMany, one: 'Revisão', other: 'Revisões')}";
+      "${Intl.plural(howMany, one: 'Ninhego', other: 'Ninhegos')}";
 
   static String m22(howMany) =>
-      "${Intl.plural(howMany, one: 'Espécie', other: 'Espécies')}";
+      "${Intl.plural(howMany, one: 'Revisão', other: 'Revisões')}";
 
   static String m23(howMany) =>
-      "${Intl.plural(howMany, one: 'sp.', other: 'spp.')}";
+      "${Intl.plural(howMany, one: 'Espécie', other: 'Espécies')}";
 
   static String m24(howMany) =>
-      "${Intl.plural(howMany, zero: 'espécies', one: 'espécie', other: 'espécies')}";
+      "${Intl.plural(howMany, one: 'sp.', other: 'spp.')}";
 
   static String m25(howMany) =>
-      "${Intl.plural(howMany, one: '1 espécie', other: '${howMany} espécies')} por lista";
+      "${Intl.plural(howMany, zero: 'espécies', one: 'espécie', other: 'espécies')}";
 
   static String m26(howMany) =>
-      "${Intl.plural(howMany, one: 'Dados do espécime', other: 'Dados dos espécimes')}";
+      "${Intl.plural(howMany, one: '1 espécie', other: '${howMany} espécies')} por lista";
 
   static String m27(howMany) =>
-      "${Intl.plural(howMany, one: 'Espécime exportado!', other: 'Espécimes exportados!')}";
+      "${Intl.plural(howMany, one: 'Dados do espécime', other: 'Dados dos espécimes')}";
 
   static String m28(howMany) =>
+      "${Intl.plural(howMany, one: 'Espécime exportado!', other: 'Espécimes exportados!')}";
+
+  static String m29(howMany) =>
       "${Intl.plural(howMany, one: 'Espécime', other: 'Espécimes')}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
@@ -155,6 +158,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "deleteImage": MessageLookupByLibrary.simpleMessage("Apagar imagem"),
         "deleteInventory":
             MessageLookupByLibrary.simpleMessage("Apagar inventário"),
+        "deleteJournalEntry":
+            MessageLookupByLibrary.simpleMessage("Apagar nota"),
         "deleteNest": MessageLookupByLibrary.simpleMessage("Apagar ninho"),
         "deletePoi": MessageLookupByLibrary.simpleMessage("Apagar POI"),
         "deleteRevision":
@@ -209,6 +214,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "editImageNotes":
             MessageLookupByLibrary.simpleMessage("Editar notas da imagem"),
         "editInventoryId": MessageLookupByLibrary.simpleMessage("Editar ID"),
+        "editJournalEntry": MessageLookupByLibrary.simpleMessage("Editar nota"),
         "editNest": MessageLookupByLibrary.simpleMessage("Editar ninho"),
         "editNestRevision":
             MessageLookupByLibrary.simpleMessage("Editar revisão de ninho"),
@@ -246,6 +252,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Já existe um ninho com este número de campo."),
         "errorSavingEgg":
             MessageLookupByLibrary.simpleMessage("Erro ao salvar o ovo."),
+        "errorSavingJournalEntry": MessageLookupByLibrary.simpleMessage(
+            "Erro ao salvar a nota do diário de campo"),
         "errorSavingNest":
             MessageLookupByLibrary.simpleMessage("Erro ao salvar o ninho."),
         "errorSavingRevision": MessageLookupByLibrary.simpleMessage(
@@ -265,9 +273,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "exportAllWhat": m7,
         "exportWhat": m8,
         "female": MessageLookupByLibrary.simpleMessage("Fêmea"),
+        "fieldJournal": MessageLookupByLibrary.simpleMessage("Diário de campo"),
         "fieldNumber": MessageLookupByLibrary.simpleMessage("Número de campo"),
         "findInventories":
             MessageLookupByLibrary.simpleMessage("Procurar inventários..."),
+        "findJournalEntries":
+            MessageLookupByLibrary.simpleMessage("Procurar notas"),
         "findNests": MessageLookupByLibrary.simpleMessage("Procurar ninhos..."),
         "findSpecies": MessageLookupByLibrary.simpleMessage("Buscar espécie"),
         "findSpecimens":
@@ -314,6 +325,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Por favor, insira o suporte do ninho"),
         "insertProportion":
             MessageLookupByLibrary.simpleMessage("Insira a proporção"),
+        "insertTitle": MessageLookupByLibrary.simpleMessage(
+            "Insira um título para a nota"),
         "intervaledQualitativeLists": MessageLookupByLibrary.simpleMessage(
             "Listas qualitativas por intervalo"),
         "inventories": MessageLookupByLibrary.simpleMessage("Inventários"),
@@ -344,6 +357,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Contagem em Transecção"),
         "inventoryType":
             MessageLookupByLibrary.simpleMessage("Tipo de inventário"),
+        "journalEntries": m16,
         "keepRunning": MessageLookupByLibrary.simpleMessage("Manter ativo"),
         "length": MessageLookupByLibrary.simpleMessage("Comprimento"),
         "lightMode": MessageLookupByLibrary.simpleMessage("Claro"),
@@ -355,12 +369,12 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Listas de Mackinnon"),
         "male": MessageLookupByLibrary.simpleMessage("Macho"),
         "maxSpecies": MessageLookupByLibrary.simpleMessage("Máx. espécies"),
-        "minutes": m16,
+        "minutes": m17,
         "mustBeBiggerThanFive":
             MessageLookupByLibrary.simpleMessage("Deve ser maior ou igual a 5"),
-        "nest": m17,
-        "nestData": m18,
-        "nestExported": m19,
+        "nest": m18,
+        "nestData": m19,
+        "nestExported": m20,
         "nestFate": MessageLookupByLibrary.simpleMessage("Destino do ninho"),
         "nestInfo":
             MessageLookupByLibrary.simpleMessage("Informações do ninho"),
@@ -382,9 +396,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "nestStatusUnknown":
             MessageLookupByLibrary.simpleMessage("Indeterminado"),
         "nestSupport": MessageLookupByLibrary.simpleMessage("Suporte do ninho"),
-        "nestling": m20,
+        "nestling": m21,
         "nests": MessageLookupByLibrary.simpleMessage("Ninhos"),
         "newInventory": MessageLookupByLibrary.simpleMessage("Novo inventário"),
+        "newJournalEntry": MessageLookupByLibrary.simpleMessage("Nova nota"),
         "newNest": MessageLookupByLibrary.simpleMessage("Novo ninho"),
         "newPoi": MessageLookupByLibrary.simpleMessage("Novo POI"),
         "newSpecimen": MessageLookupByLibrary.simpleMessage("Novo espécime"),
@@ -400,6 +415,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Nenhuma imagem encontrada."),
         "noInventoriesFound": MessageLookupByLibrary.simpleMessage(
             "Nenhum inventário encontrado."),
+        "noJournalEntriesFound":
+            MessageLookupByLibrary.simpleMessage("Nenhuma nota encontrada"),
         "noNestsFound":
             MessageLookupByLibrary.simpleMessage("Nenhum ninho encontrado."),
         "noPoiFound":
@@ -448,7 +465,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Espécies por inventário"),
         "requiredField": MessageLookupByLibrary.simpleMessage("* obrigatório"),
         "resume": MessageLookupByLibrary.simpleMessage("Retomar"),
-        "revision": m21,
+        "revision": m22,
         "save": MessageLookupByLibrary.simpleMessage("Salvar"),
         "selectInventoryType": MessageLookupByLibrary.simpleMessage(
             "Por favor, selecione um tipo de inventário"),
@@ -467,17 +484,21 @@ class MessageLookup extends MessageLookupByLibrary {
             "Limite de inventários simultâneos atingido."),
         "sortAscending":
             MessageLookupByLibrary.simpleMessage("Ordem crescente"),
+        "sortByLastModified": MessageLookupByLibrary.simpleMessage(
+            "Ordenar por última modificação"),
         "sortByName": MessageLookupByLibrary.simpleMessage("Ordenar por nome"),
         "sortByTime": MessageLookupByLibrary.simpleMessage("Ordenar por tempo"),
+        "sortByTitle":
+            MessageLookupByLibrary.simpleMessage("Ordenar por título"),
         "sortDescending":
             MessageLookupByLibrary.simpleMessage("Ordem decrescente"),
-        "species": m22,
+        "species": m23,
         "speciesAccumulated":
             MessageLookupByLibrary.simpleMessage("Acumulado de espécies"),
         "speciesAccumulationCurve": MessageLookupByLibrary.simpleMessage(
             "Curva de acumulação de espécies"),
-        "speciesAcronym": m23,
-        "speciesCount": m24,
+        "speciesAcronym": m24,
+        "speciesCount": m25,
         "speciesCounted":
             MessageLookupByLibrary.simpleMessage("Número de espécies"),
         "speciesInfo":
@@ -485,15 +506,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "speciesName": MessageLookupByLibrary.simpleMessage("Nome da espécie"),
         "speciesNotes":
             MessageLookupByLibrary.simpleMessage("Anotações da espécie"),
-        "speciesPerList": m25,
+        "speciesPerList": m26,
         "speciesPerListTitle":
             MessageLookupByLibrary.simpleMessage("Espécies por lista"),
         "specimenBlood": MessageLookupByLibrary.simpleMessage("Sangue"),
         "specimenBones": MessageLookupByLibrary.simpleMessage("Ossos"),
         "specimenClaw": MessageLookupByLibrary.simpleMessage("Garra"),
-        "specimenData": m26,
+        "specimenData": m27,
         "specimenEgg": MessageLookupByLibrary.simpleMessage("Ovo"),
-        "specimenExported": m27,
+        "specimenExported": m28,
         "specimenFeathers": MessageLookupByLibrary.simpleMessage("Penas"),
         "specimenFeces": MessageLookupByLibrary.simpleMessage("Fezes"),
         "specimenNest": MessageLookupByLibrary.simpleMessage("Ninho"),
@@ -507,7 +528,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Tipo de espécime"),
         "specimenWholeCarcass":
             MessageLookupByLibrary.simpleMessage("Carcaça inteira"),
-        "specimens": m28,
+        "specimens": m29,
         "startInventory":
             MessageLookupByLibrary.simpleMessage("Iniciar inventário"),
         "startNextList":
@@ -520,6 +541,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Tempo (intervalos de 10 minutos)"),
         "timedQualitativeLists": MessageLookupByLibrary.simpleMessage(
             "Listas qualitativas temporizadas"),
+        "title": MessageLookupByLibrary.simpleMessage("Título"),
         "totalIndividuals":
             MessageLookupByLibrary.simpleMessage("Total de indivíduos"),
         "totalSpecies":

@@ -82,6 +82,28 @@ class S {
     );
   }
 
+  /// `Field journal`
+  String get fieldJournal {
+    return Intl.message(
+      'Field journal',
+      name: 'fieldJournal',
+      desc: 'Field journal option in navigation drawer',
+      args: [],
+    );
+  }
+
+  /// `{howMany, plural, one{Journal entry} other{Journal entries}}`
+  String journalEntries(int howMany) {
+    return Intl.plural(
+      howMany,
+      one: 'Journal entry',
+      other: 'Journal entries',
+      name: 'journalEntries',
+      desc: 'Titles and messages about field journal entries',
+      args: [howMany],
+    );
+  }
+
   /// `Settings`
   String get settings {
     return Intl.message(
@@ -2462,6 +2484,106 @@ class S {
       'No',
       name: 'no',
       desc: 'Negative button label',
+      args: [],
+    );
+  }
+
+  /// `New journal entry`
+  String get newJournalEntry {
+    return Intl.message(
+      'New journal entry',
+      name: 'newJournalEntry',
+      desc: 'New journal entry screen title and button hint',
+      args: [],
+    );
+  }
+
+  /// `Sort by Last Modified Time`
+  String get sortByLastModified {
+    return Intl.message(
+      'Sort by Last Modified Time',
+      name: 'sortByLastModified',
+      desc: 'Menu option to sort by last modified date',
+      args: [],
+    );
+  }
+
+  /// `Sort by Title`
+  String get sortByTitle {
+    return Intl.message(
+      'Sort by Title',
+      name: 'sortByTitle',
+      desc: 'Menu option to sort by title text',
+      args: [],
+    );
+  }
+
+  /// `Find journal entries`
+  String get findJournalEntries {
+    return Intl.message(
+      'Find journal entries',
+      name: 'findJournalEntries',
+      desc: 'Field journal search bar hint',
+      args: [],
+    );
+  }
+
+  /// `No journal entries found`
+  String get noJournalEntriesFound {
+    return Intl.message(
+      'No journal entries found',
+      name: 'noJournalEntriesFound',
+      desc: 'Text displayed when the field journal list is empty',
+      args: [],
+    );
+  }
+
+  /// `Title`
+  String get title {
+    return Intl.message(
+      'Title',
+      name: 'title',
+      desc: 'Title field label',
+      args: [],
+    );
+  }
+
+  /// `Insert a title for the journal entry`
+  String get insertTitle {
+    return Intl.message(
+      'Insert a title for the journal entry',
+      name: 'insertTitle',
+      desc: 'Validation message for title field',
+      args: [],
+    );
+  }
+
+  /// `Error saving the field journal entry`
+  String get errorSavingJournalEntry {
+    return Intl.message(
+      'Error saving the field journal entry',
+      name: 'errorSavingJournalEntry',
+      desc: 'Message shown when an error occurred while saving a journal entry',
+      args: [],
+    );
+  }
+
+  /// `Delete journal entry`
+  String get deleteJournalEntry {
+    return Intl.message(
+      'Delete journal entry',
+      name: 'deleteJournalEntry',
+      desc: 'Menu option to delete a field journal entry',
+      args: [],
+    );
+  }
+
+  /// `Edit journal entry`
+  String get editJournalEntry {
+    return Intl.message(
+      'Edit journal entry',
+      name: 'editJournalEntry',
+      desc: 'Menu option to edit a field journal entry',
       args: [],
     );
   }

@@ -12,6 +12,22 @@
             }
         }
     },
+    "fieldJournal": "Diário de campo",
+    "@fieldJournal": {
+        "type": "text",
+        "description": "Field journal option in navigation drawer"
+    },
+    "journalEntries": "{howMany, plural, one{Nota do diário} other{Notas do diário}}",
+    "@journalEntries": {
+        "type": "text",
+        "description": "Titles and messages about field journal entries",
+        "placeholders": {
+            "howMany": {
+                "type": "int",
+                "description": "How many journal entries it is referring to"
+            }
+        }
+    },
     "settings": "Configurações",
     "general": "Geral",
     "@general": {
@@ -776,6 +792,56 @@
     "@no": {
         "type": "text",
         "description": "Negative button label"
+    },
+    "newJournalEntry": "Nova nota",
+    "@newJournalEntry": {
+        "type": "text",
+        "description": "New journal entry screen title and button hint"
+    },
+    "sortByLastModified": "Ordenar por última modificação",
+    "@sortByLastModified": {
+        "type": "text",
+        "description": "Menu option to sort by last modified date"
+    },
+    "sortByTitle": "Ordenar por título",
+    "@sortByTitle": {
+        "type": "text",
+        "description": "Menu option to sort by title text"
+    },
+    "findJournalEntries": "Procurar notas",
+    "@findJournalEntries": {
+        "type": "text",
+        "description": "Field journal search bar hint"
+    },
+    "noJournalEntriesFound": "Nenhuma nota encontrada",
+    "@noJournalEntriesFound": {
+        "type": "text",
+        "description": "Text displayed when the field journal list is empty"
+    },
+    "title": "Título",
+    "@title": {
+        "type": "text",
+        "description": "Title field label"
+    },
+    "insertTitle": "Insira um título para a nota",
+    "@insertTitle": {
+        "type": "text",
+        "description": "Validation message for title field"
+    },
+    "errorSavingJournalEntry": "Erro ao salvar a nota do diário de campo",
+    "@errorSavingJournalEntry": {
+        "type": "text",
+        "description": "Message shown when an error occurred while saving a journal entry"
+    },
+    "deleteJournalEntry": "Apagar nota",
+    "@deleteJournalEntry": {
+        "type": "text",
+        "description": "Menu option to delete a field journal entry"
+    },
+    "editJournalEntry": "Editar nota",
+    "@editJournalEntry": {
+        "type": "text",
+        "description": "Menu option to edit a field journal entry"
     },
     "precipitationNone": "Nenhuma",
     "precipitationFog": "Névoa",

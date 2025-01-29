@@ -23,7 +23,7 @@ class DatabaseHelper {
     String path = join(await getDatabasesPath(), 'xolmis_database.db');
     return await openDatabase(
       path,
-      version: 11, // Increase the version number
+      version: 12, // Increase the version number
       onCreate: _createTables,
       onUpgrade: _upgradeTables,
       onOpen: (db) {
@@ -185,6 +185,15 @@ class DatabaseHelper {
         FOREIGN KEY (nestRevisionId) REFERENCES nest_revisions(id) ON DELETE CASCADE
       )
     ''');
+    db.execute('''
+      CREATE TABLE field_journal (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT NOT NULL,
+        notes TEXT,
+        creationDate TEXT,
+        lastModifiedDate TEXT
+      )
+    ''');
   }
 
   // Update SQLite database structure based on DB version
@@ -280,20 +289,20 @@ class DatabaseHelper {
     }
     if (oldVersion < 7) {
       db.execute('''
-      CREATE TABLE images (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        imagePath TEXT NOT NULL,
-        notes TEXT,
-        vegetationId INTEGER,
-        eggId INTEGER,
-        specimenId INTEGER,
-        nestRevisionId INTEGER,
-        FOREIGN KEY (vegetationId) REFERENCES vegetation(id) ON DELETE CASCADE,
-        FOREIGN KEY (eggId) REFERENCES eggs(id) ON DELETE CASCADE,
-        FOREIGN KEY (specimenId) REFERENCES specimens(id) ON DELETE CASCADE,
-        FOREIGN KEY (nestRevisionId) REFERENCES nest_revisions(id) ON DELETE CASCADE
-      )
-    ''');
+        CREATE TABLE images (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          imagePath TEXT NOT NULL,
+          notes TEXT,
+          vegetationId INTEGER,
+          eggId INTEGER,
+          specimenId INTEGER,
+          nestRevisionId INTEGER,
+          FOREIGN KEY (vegetationId) REFERENCES vegetation(id) ON DELETE CASCADE,
+          FOREIGN KEY (eggId) REFERENCES eggs(id) ON DELETE CASCADE,
+          FOREIGN KEY (specimenId) REFERENCES specimens(id) ON DELETE CASCADE,
+          FOREIGN KEY (nestRevisionId) REFERENCES nest_revisions(id) ON DELETE CASCADE
+        )
+      ''');
     }
     if (oldVersion < 8) {
       db.execute(
@@ -317,6 +326,17 @@ class DatabaseHelper {
       db.execute(
         'ALTER TABLE species ADD COLUMN sampleTime TEXT',
       );
+    }
+    if (oldVersion < 12) {
+      db.execute('''
+        CREATE TABLE field_journal (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          title TEXT NOT NULL,
+          notes TEXT,
+          creationDate TEXT,
+          lastModifiedDate TEXT
+        )
+      ''');
     }
   }
 

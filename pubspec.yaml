@@ -60,6 +60,7 @@ dependencies:
   settings_ui: ^2.0.2
   intl_utils: ^2.8.7
   fl_chart: ^0.70.2
+  timelines_plus: ^1.0.6
 #  equations: ^5.0.2
 
 dev_dependencies:
