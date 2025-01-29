@@ -185,27 +185,6 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     widget.inventory.speciesList = speciesProvider.getSpeciesForInventory(inventoryId);
   }
 
-  // Show the species search dialog
-  // void _showSpeciesSearch(SpeciesRepository speciesRepository,
-  //     InventoryRepository inventoryRepository) async {
-    
-  //   final selectedSpecies = await showSearch(
-  //     context: context,
-  //     delegate: SpeciesSearchDelegate(
-  //       allSpeciesNames,
-  //       (speciesName) => _addSpeciesToInventory(
-  //           speciesName, speciesRepository, inventoryRepository),
-  //       _updateSpeciesList(widget.inventory.id),
-  //     ),
-  //     useRootNavigator: true,
-  //   );
-
-  //   if (selectedSpecies != null) {
-  //     // Reload the species list after adding a new species
-  //     _updateSpeciesList(widget.inventory.id);
-  //   }
-  // }
-
   // Delete the selected species from the list
   Future<void> _deleteSpecies(Species species) async {
     final speciesProvider = Provider.of<SpeciesProvider>(context, listen: false);
@@ -460,52 +439,25 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                 // );
               },
               suggestionsBuilder: (context, controller) {
-                return List<String>.from(allSpeciesNames)
+                if (controller.text.isEmpty) {
+                  return [];
+                } else {
+                  return List<String>.from(allSpeciesNames)
                     .where((species) => speciesMatchesQuery(
                         species, controller.text.toLowerCase()))
                     .map((species) {
-                  return ListTile(
-                    title: Text(species),
-                    onTap: () async {
-                      await _addSpeciesToInventory(species, speciesRepository, inventoryRepository);
-                      controller.closeView(species);
-                      controller.clear();
-                    },
-                  );
-                }).toList();
+                    return ListTile(
+                      title: Text(species),
+                      onTap: () async {
+                        await _addSpeciesToInventory(species, speciesRepository, inventoryRepository);
+                        controller.closeView(species);
+                        controller.clear();
+                      },
+                    );
+                  }).toList();
+                };
               },
             ),
-
-            // Old search bar
-            // TextField(
-            //   decoration: InputDecoration(
-            //     hintText: '${S.of(context).addSpecies}...',
-            //     prefixIcon: const Icon(Icons.search_outlined),
-            //     border: const OutlineInputBorder(),
-            //     icon: IconButton(
-            //       icon: const Icon(Icons.show_chart_outlined),
-            //       onPressed: () {
-            //     Navigator.push(
-            //       context,
-            //       MaterialPageRoute(
-            //         builder: (context) => SpeciesChartScreen(
-            //             inventory: widget.inventory),
-            //       ),
-            //     );
-            //   },
-            //     ),
-            //     suffixIcon: IconButton(
-            //       icon: const Icon(Icons.add_box_outlined),
-            //       onPressed: () {
-            //         _showAddSpeciesDialog(context, widget.speciesRepository, widget.inventoryRepository);
-            //       },
-            //     ),
-            //   ),
-            //   readOnly: true,
-            //   onTap: () async {
-            //     _showSpeciesSearch(speciesRepository, inventoryRepository);
-            //   },
-            // ),
           ),
         ),
       ),

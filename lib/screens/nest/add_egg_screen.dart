@@ -123,22 +123,26 @@ class AddEggScreenState extends State<AddEggScreen> {
                         );
                       },
                       suggestionsBuilder: (context, controller) {
-                        return List<String>.from(allSpeciesNames)
-                            .where((species) => speciesMatchesQuery(
-                                species, controller.text.toLowerCase()))
-                            .map((species) {
-                          return ListTile(
-                            title: Text(species),
-                            onTap: () async {
-                              setState(() {
-                                _speciesNameController.text = species;
-                              });
-                              controller.closeView(species);
-                              controller.clear();
-                            },
-                          );
-                        }).toList();
-                      }
+                          if (controller.text.isEmpty) {
+                            return [];
+                          } else {
+                            return List<String>.from(allSpeciesNames)
+                                .where((species) => speciesMatchesQuery(
+                                    species, controller.text.toLowerCase()))
+                                .map((species) {
+                              return ListTile(
+                                title: Text(species),
+                                onTap: () async {
+                                  setState(() {
+                                    _speciesNameController.text = species;
+                                  });
+                                  controller.closeView(species);
+                                  controller.clear();
+                                },
+                              );
+                            }).toList();
+                          }
+                        }
                         ),                        
                         const SizedBox(height: 16.0),
                         DropdownButtonFormField<EggShapeType>(
