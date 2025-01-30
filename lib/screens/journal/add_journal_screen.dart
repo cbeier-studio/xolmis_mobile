@@ -1,11 +1,15 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:fleather/fleather.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as path;
 import 'package:provider/provider.dart';
-import 'package:parchment/codecs.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../data/models/journal.dart';
 import '../../providers/journal_provider.dart';
@@ -64,9 +68,83 @@ class AddJournalScreenState extends State<AddJournalScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(S.of(context).newJournalEntry),
-        ),
+      appBar: AppBar(
+        title: Text(S.of(context).newJournalEntry),
+        actions: [
+          MenuAnchor(
+            builder: (context, controller, child) {
+              return IconButton(
+                icon: Icon(Icons.add_a_photo_outlined),
+                tooltip: S.of(context).addImage,
+                onPressed: () {
+                  if (controller.isOpen) {
+                    controller.close();
+                  } else {
+                    controller.open();
+                  }
+                },
+              );
+            },
+            menuChildren: [
+              MenuItemButton(
+                onPressed: () async {
+                  final picker = ImagePicker();
+                  final pickedFile = await picker.pickImage(source: ImageSource.camera);
+                  if (pickedFile != null) {
+                    // Save the image to the app's documents directory
+                    final directory = await getApplicationDocumentsDirectory();
+                    final fileName = path.basename(pickedFile.path);
+                    final savedImage = await File(pickedFile.path).copy('${directory.path}/$fileName');
+      
+                    final selection = _notesController.selection;
+                    _notesController.replaceText(
+                      selection.baseOffset,
+                      selection.extentOffset - selection.baseOffset,
+                      EmbeddableObject('image', inline: false, data: {
+                        'source_type': kIsWeb ? 'url' : 'file',
+                        'source': savedImage.path,
+                      }),
+                    );
+                    _notesController.replaceText(
+                      selection.baseOffset + 1,
+                      0,
+                      '\n',
+                      selection: TextSelection.collapsed(
+                          offset: selection.baseOffset + 2),
+                    );
+                  }
+                },
+                child: Text(S.current.camera),
+              ),
+              MenuItemButton(
+                onPressed: () async {
+                  final picker = ImagePicker();
+                  final image = await picker.pickImage(source: ImageSource.gallery);
+                  if (image != null) {
+                    final selection = _notesController.selection;
+                    _notesController.replaceText(
+                      selection.baseOffset,
+                      selection.extentOffset - selection.baseOffset,
+                      EmbeddableObject('image', inline: false, data: {
+                        'source_type': kIsWeb ? 'url' : 'file',
+                        'source': image.path,
+                      }),
+                    );
+                    _notesController.replaceText(
+                      selection.baseOffset + 1,
+                      0,
+                      '\n',
+                      selection: TextSelection.collapsed(
+                          offset: selection.baseOffset + 2),
+                    );
+                  }
+                },
+                child: Text(S.current.gallery),
+              ),
+            ],
+          ),
+        ],
+      ),
         body: Column(
             children: [
               Form(
@@ -101,9 +179,9 @@ class AddJournalScreenState extends State<AddJournalScreen> {
                       right: 16,
                       bottom: MediaQuery.of(context).padding.bottom,
                     ),
-                    // onLaunchUrl: _launchUrl,
+                    onLaunchUrl: _launchUrl,
                     maxContentWidth: 800,
-                    // embedBuilder: _embedBuilder,
+                    embedBuilder: _embedBuilder,
                     spellCheckConfiguration: SpellCheckConfiguration(
                         spellCheckService: DefaultSpellCheckService(),
                         misspelledSelectionColor: Colors.red,
@@ -135,6 +213,54 @@ class AddJournalScreenState extends State<AddJournalScreen> {
             ],   
                   ),
     );
+  }
+
+  Widget _embedBuilder(BuildContext context, EmbedNode node) {
+    if (node.value.type == 'icon') {
+      final data = node.value.data;
+      // Icons.rocket_launch_outlined
+      return Icon(
+        IconData(int.parse(data['codePoint']), fontFamily: data['fontFamily']),
+        color: Color(int.parse(data['color'])),
+        size: 18,
+      );
+    }
+
+    if (node.value.type == 'image') {
+      final sourceType = node.value.data['source_type'];
+      ImageProvider? image;
+      if (sourceType == 'assets') {
+        image = AssetImage(node.value.data['source']);
+      } else if (sourceType == 'file') {
+        image = FileImage(File(node.value.data['source']));
+      } else if (sourceType == 'url') {
+        image = NetworkImage(node.value.data['source']);
+      }
+      if (image != null) {
+        return Padding(
+          // Caret takes 2 pixels, hence not symmetric padding values.
+          padding: const EdgeInsets.only(left: 4, right: 2, top: 2, bottom: 2),
+          child: Container(
+            width: 300,
+            height: 300,
+            decoration: BoxDecoration(
+              image: DecorationImage(image: image, fit: BoxFit.cover),
+            ),
+          ),
+        );
+      }
+    }
+
+    return defaultFleatherEmbedBuilder(context, node);
+  }
+
+  void _launchUrl(String? url) async {
+    if (url == null) return;
+    final uri = Uri.parse(url);
+    final canLaunch = await canLaunchUrl(uri);
+    if (canLaunch) {
+      await launchUrl(uri);
+    }
   }
 
   void _submitForm() async {
