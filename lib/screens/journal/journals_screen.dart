@@ -522,7 +522,7 @@ class JournalsScreenState extends State<JournalsScreen> {
         onPressed: () {
           _showAddJournalScreen(context);
         },
-        child: const Icon(Icons.add_outlined),
+        child: const Icon(Icons.note_add_outlined),
       ),
       bottomNavigationBar: selectedJournals.isNotEmpty
           ? BottomAppBar(
@@ -593,7 +593,15 @@ class JournalsScreenState extends State<JournalsScreen> {
         onLongPress: () =>
             _showBottomSheet(context, entry),
         onTap: () {
-          // open AddJournalScreen
+          Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AddJournalScreen(
+              journalEntry: entry,
+              isEditing: true,
+            ),
+          ),
+        );
         },
         child: Card.outlined(
           child: Stack(
@@ -680,7 +688,15 @@ class JournalsScreenState extends State<JournalsScreen> {
       onLongPress: () =>
           _showBottomSheet(context, entry),
       onTap: () {
-        // open AddJournalScreen
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AddJournalScreen(
+              journalEntry: entry,
+              isEditing: true,
+            ),
+          ),
+        );
       },
     );
   }

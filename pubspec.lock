@@ -126,6 +126,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.6"
+  csslib:
+    dependency: transitive
+    description:
+      name: csslib
+      sha256: "09bad715f418841f976c77db72d5398dc1253c21fb9c0c7f0b0b985860b2d58e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.2"
   csv:
     dependency: "direct main"
     description:
@@ -174,6 +182,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.2"
+  diff_match_patch:
+    dependency: transitive
+    description:
+      name: diff_match_patch
+      sha256: "2efc9e6e8f449d0abe15be240e2c2a3bcd977c8d126cfd70598aee60af35c0a4"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.1"
   equatable:
     dependency: transitive
     description:
@@ -262,6 +278,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.70.2"
+  fleather:
+    dependency: "direct main"
+    description:
+      name: fleather
+      sha256: f819156c338dbbabe314a170efe20c227b0262a0c622d68e965c5674a317a3ee
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.20.0"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -402,6 +426,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.2"
+  html:
+    dependency: transitive
+    description:
+      name: html
+      sha256: "1fc58edeaec4307368c60d59b7e15b9d658b57d7f3125098b6294153c75337ec"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.15.5"
   http:
     dependency: transitive
     description:
@@ -634,6 +666,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.2"
+  parchment:
+    dependency: transitive
+    description:
+      name: parchment
+      sha256: "5d9451fc7244b3d634db89a4d03946de59e2100edc2ad1b7b92df3a4ad81f32a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.20.0"
+  parchment_delta:
+    dependency: transitive
+    description:
+      name: parchment_delta
+      sha256: "8b360d0138eb591c7fe193670e2d05466e482792af9c5b4d3f568c5c61530f08"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   path:
     dependency: "direct main"
     description:
@@ -786,6 +834,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.5"
+  quiver:
+    dependency: transitive
+    description:
+      name: quiver
+      sha256: ea0b925899e64ecdfbf9c7becb60d5b50e706ade44a85b2363be2a22d88117d2
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.2"
   settings_ui:
     dependency: "direct main"
     description:

@@ -1,3 +1,4 @@
+import 'package:fleather/fleather.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,6 +9,9 @@ import 'package:workmanager/workmanager.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:xolmis/data/database/daos/journal_dao.dart';
+import 'package:xolmis/data/database/repositories/journal_repository.dart';
+import 'package:xolmis/providers/journal_provider.dart';
 
 import 'data/database/database_helper.dart';
 
@@ -45,6 +49,7 @@ import 'providers/specimen_provider.dart';
 import 'providers/app_image_provider.dart';
 
 import 'screens/inventory/inventories_screen.dart';
+import 'screens/journal/journals_screen.dart';
 import 'screens/nest/nests_screen.dart';
 import 'screens/specimen/specimens_screen.dart';
 import 'screens/settings_screen.dart';
@@ -99,6 +104,7 @@ void main() async {
   final nestDao = NestDao(databaseHelper, nestRevisionDao, eggDao);
   final specimenDao = SpecimenDao(databaseHelper);
   final appImageDao = AppImageDao(databaseHelper);
+  final journalDao = FieldJournalDao(databaseHelper);
 
   // Create the repositories
   final inventoryRepository = InventoryRepository(inventoryDao);
@@ -111,6 +117,7 @@ void main() async {
   final eggRepository = EggRepository(eggDao);
   final specimenRepository = SpecimenRepository(specimenDao);
   final appImageRepository = AppImageRepository(appImageDao);
+  final journalRepository = FieldJournalRepository(journalDao);
 
   // Preload the species names list
   allSpeciesNames = await loadSpeciesSearchData();
@@ -130,6 +137,7 @@ void main() async {
         eggRepository: eggRepository,
         specimenRepository: specimenRepository,
         appImageRepository: appImageRepository,
+        journalRepository: journalRepository,
       ),
     ),
   );
@@ -146,6 +154,7 @@ class MyApp extends StatelessWidget {
   final EggRepository eggRepository;
   final SpecimenRepository specimenRepository;
   final AppImageRepository appImageRepository;
+  final FieldJournalRepository journalRepository;
 
   const MyApp({
     super.key,
@@ -159,12 +168,14 @@ class MyApp extends StatelessWidget {
     required this.eggRepository,
     required this.specimenRepository,
     required this.appImageRepository,
+    required this.journalRepository,
   });
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (context) => FieldJournalProvider(journalRepository)),
         ChangeNotifierProvider(create: (context) => AppImageProvider(appImageRepository)),
         ChangeNotifierProvider(create: (context) => SpecimenProvider(specimenRepository)),
         ChangeNotifierProvider(create: (context) => NestRevisionProvider(nestRevisionRepository)),
@@ -187,12 +198,14 @@ class MyApp extends StatelessWidget {
         Provider(create: (_) => poiRepository),
         Provider(create: (_) => vegetationRepository),
         Provider(create: (_) => weatherRepository),
+        Provider(create: (_) => journalRepository),
       ],
       child: Consumer<ThemeModel>(
         builder: (context, themeModel, child) {
           return MaterialApp(
             localizationsDelegates: [
                 S.delegate,
+                FleatherLocalizations.delegate,
                 GlobalMaterialLocalizations.delegate,
                 GlobalWidgetsLocalizations.delegate,
                 GlobalCupertinoLocalizations.delegate,
@@ -242,6 +255,7 @@ class _MainScreenState extends State<MainScreen> {
         (context, scaffoldKey) => InventoriesScreen(scaffoldKey: scaffoldKey),
         (context, scaffoldKey) => NestsScreen(scaffoldKey: scaffoldKey),
         (context, scaffoldKey) => SpecimensScreen(scaffoldKey: scaffoldKey),
+        (context, scaffoldKey) => JournalsScreen(scaffoldKey: scaffoldKey),
   ];
 
   @override
@@ -254,6 +268,7 @@ class _MainScreenState extends State<MainScreen> {
     Provider.of<InventoryProvider>(context, listen: false).fetchInventories();
     Provider.of<NestProvider>(context, listen: false).fetchNests();
     Provider.of<SpecimenProvider>(context, listen: false).fetchSpecimens();
+    Provider.of<FieldJournalProvider>(context, listen: false).fetchJournalEntries();
   }
 
   @override
@@ -356,37 +371,14 @@ class _MainScreenState extends State<MainScreen> {
         label: Text(S.of(context).nests),
       ),
       NavigationRailDestination(
-        icon: Selector<SpecimenProvider, int>(
-          selector: (context, provider) => provider.specimensCount,
-          builder: (context, specimensCount, child) {
-            return Visibility(
-              visible: specimensCount > 0,
-              replacement: const Icon(Icons.local_offer_outlined),
-              child: Badge.count(
-                backgroundColor: Colors.deepPurple[100],
-                textColor: Colors.deepPurple[800],
-                count: specimensCount,
-                child: const Icon(Icons.local_offer_outlined),
-              ),
-            );
-          },
-        ),
-        selectedIcon: Selector<SpecimenProvider, int>(
-          selector: (context, provider) => provider.specimensCount,
-          builder: (context, specimensCount, child) {
-            return Visibility(
-              visible: specimensCount > 0,
-              replacement: const Icon(Icons.local_offer),
-              child: Badge.count(
-                backgroundColor: Colors.deepPurple[100],
-                textColor: Colors.deepPurple[800],
-                count: specimensCount,
-                child: const Icon(Icons.local_offer),
-              ),
-            );
-          },
-        ),
+        icon: const Icon(Icons.local_offer_outlined),
+        selectedIcon: const Icon(Icons.local_offer),
         label: Text(S.of(context).specimens(2)),
+      ),
+      NavigationRailDestination(
+        icon: const Icon(Icons.book_outlined),
+        selectedIcon: const Icon(Icons.book),
+        label: Text(S.of(context).fieldJournal),
       ),
     ];
 
@@ -513,6 +505,11 @@ class _MainScreenState extends State<MainScreen> {
           icon: const Icon(Icons.local_offer_outlined),
           label: Text(S.of(context).specimens(2)),
           selectedIcon: const Icon(Icons.local_offer),
+        ),
+        NavigationDrawerDestination(
+          icon: const Icon(Icons.book_outlined),
+          label: Text(S.of(context).fieldJournal),
+          selectedIcon: const Icon(Icons.book),
         ),
       ],
     );

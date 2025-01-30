@@ -61,6 +61,7 @@ dependencies:
   intl_utils: ^2.8.7
   fl_chart: ^0.70.2
   timelines_plus: ^1.0.6
+  fleather: ^1.20.0
 #  equations: ^5.0.2
 
 dev_dependencies:

@@ -1,6 +1,11 @@
+import 'dart:convert';
+
+import 'package:fleather/fleather.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:parchment/codecs.dart';
 
 import '../../data/models/journal.dart';
 import '../../providers/journal_provider.dart';
@@ -22,20 +27,38 @@ class AddJournalScreen extends StatefulWidget {
 
 class AddJournalScreenState extends State<AddJournalScreen> {
   final _formKey = GlobalKey<FormState>();
+  final FocusNode _focusNode = FocusNode();
+  final GlobalKey<EditorState> _editorKey = GlobalKey();
   late TextEditingController _titleController;
-  late TextEditingController _notesController;
+  late FleatherController _notesController;
   bool _isSubmitting = false;
 
   @override
   void initState() {
     super.initState();
     _titleController = TextEditingController();
-    _notesController = TextEditingController();
-    
+
     if (widget.isEditing) {
       _titleController.text = widget.journalEntry!.title;
-      _notesController.text = widget.journalEntry!.notes ?? '';
-    } 
+      dynamic notesJson;
+      try {
+        notesJson = jsonDecode(widget.journalEntry!.notes!);
+        final doc = ParchmentDocument.fromJson(notesJson);
+        _notesController = FleatherController(document: doc);
+      } catch (e) {
+        notesJson = [];
+        _notesController = FleatherController();
+      }
+    } else {
+      _notesController = FleatherController();
+    }
+  }
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _notesController.dispose();
+    super.dispose();
   }
 
   @override
@@ -46,16 +69,13 @@ class AddJournalScreenState extends State<AddJournalScreen> {
         ),
         body: Column(
             children: [
-              Expanded(
-                child: Form(
-                  key: _formKey,
-                  child: SingleChildScrollView( // Prevent keyboard overflow
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      children: [
-                        TextFormField(
+              Form(
+                key: _formKey,
+                child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: TextFormField(
                           controller: _titleController,
-                          textCapitalization: TextCapitalization.characters,
+                          textCapitalization: TextCapitalization.sentences,
                           decoration: InputDecoration(
                             labelText: '${S.of(context).title} *',
                             border: OutlineInputBorder(),
@@ -67,15 +87,32 @@ class AddJournalScreenState extends State<AddJournalScreen> {
                             return null;
                           },
                         ),
-                        const SizedBox(height: 16.0),
-                        
-                        // >> ADD FLEATHER EDITOR HERE
-
-                      ],
-                    ),
-                  ),
                 ),
               ),
+                        // const SizedBox(height: 16.0),
+                Expanded(
+                  child: FleatherEditor(
+                    controller: _notesController,
+                    focusNode: _focusNode,
+                    editorKey: _editorKey,
+                    
+                    padding: EdgeInsets.only(
+                      left: 16,
+                      right: 16,
+                      bottom: MediaQuery.of(context).padding.bottom,
+                    ),
+                    // onLaunchUrl: _launchUrl,
+                    maxContentWidth: 800,
+                    // embedBuilder: _embedBuilder,
+                    spellCheckConfiguration: SpellCheckConfiguration(
+                        spellCheckService: DefaultSpellCheckService(),
+                        misspelledSelectionColor: Colors.red,
+                        misspelledTextStyle:
+                            DefaultTextStyle.of(context).style),
+                  ),
+                ),
+                FleatherToolbar.basic(
+                    controller: _notesController, editorKey: _editorKey),
               SafeArea(
                 child: Container(
                     padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 16.0),
@@ -95,8 +132,8 @@ class AddJournalScreenState extends State<AddJournalScreen> {
                     )
                 ),
               ),
-            ]
-        )
+            ],   
+                  ),
     );
   }
 
@@ -110,7 +147,7 @@ class AddJournalScreenState extends State<AddJournalScreen> {
       if (widget.isEditing) {
         final updatedEntry = widget.journalEntry!.copyWith(
           title: _titleController.text,
-          notes: _notesController.text,
+          notes: jsonEncode(_notesController.document.toDelta().toList()),
           lastModifiedDate: DateTime.now(),
         );
 
@@ -138,7 +175,7 @@ class AddJournalScreenState extends State<AddJournalScreen> {
         // Create Nest object with form data
         final newEntry = FieldJournal(
           title: _titleController.text,
-          notes: _notesController.text,
+          notes: jsonEncode(_notesController.document.toDelta().toList()),
           creationDate: DateTime.now(),
           lastModifiedDate: DateTime.now(),
         );

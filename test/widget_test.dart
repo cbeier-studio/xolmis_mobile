@@ -7,6 +7,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:xolmis/data/database/daos/journal_dao.dart';
+import 'package:xolmis/data/database/repositories/journal_repository.dart';
 
 import 'package:xolmis/main.dart';
 
@@ -47,6 +49,7 @@ Future<void> main() async {
   late EggDao eggDao;
   late SpecimenDao specimenDao;
   late AppImageDao appImageDao;
+  late FieldJournalDao journalDao;
 
   late InventoryRepository inventoryRepository;
   late SpeciesRepository speciesRepository;
@@ -58,6 +61,7 @@ Future<void> main() async {
   late EggRepository eggRepository;
   late SpecimenRepository specimenRepository;
   late AppImageRepository appImageRepository;
+  late FieldJournalRepository journalRepository;
 
   setUp(() async {
     databaseHelper = DatabaseHelper();
@@ -73,6 +77,7 @@ Future<void> main() async {
     nestDao = NestDao(databaseHelper, nestRevisionDao, eggDao);
     specimenDao = SpecimenDao(databaseHelper);
     appImageDao = AppImageDao(databaseHelper);
+    journalDao = FieldJournalDao(databaseHelper);
 
     poiRepository = PoiRepository(poiDao);
     speciesRepository = SpeciesRepository(speciesDao);
@@ -84,6 +89,7 @@ Future<void> main() async {
     nestRepository = NestRepository(nestDao);
     specimenRepository = SpecimenRepository(specimenDao);
     appImageRepository = AppImageRepository(appImageDao);
+    journalRepository = FieldJournalRepository(journalDao);
   });
 
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
@@ -100,6 +106,7 @@ Future<void> main() async {
           eggRepository: eggRepository,
           specimenRepository: specimenRepository,
           appImageRepository: appImageRepository,
+          journalRepository: journalRepository,
         )
     );
 
