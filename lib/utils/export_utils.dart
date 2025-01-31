@@ -100,126 +100,10 @@ Future<void> exportInventoryToJson(BuildContext context, Inventory inventory, bo
 
 Future<void> exportInventoryToCsv(BuildContext context, Inventory inventory, bool shareIt) async {
   try {
-    // Request storage permission
-    // bool permissionGranted = await requestStoragePermission();
-    // if (!permissionGranted) {
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(content: Row(
-    //       children: [
-    //         Icon(Icons.error_outlined, color: Colors.red),
-    //         SizedBox(width: 8),
-    //         Text(S.current.storagePermissionDenied),
-    //       ],
-    //     )),
-    //   );
-    //   return;
-    // }
+    final locale = Localizations.localeOf(context);
 
     // 1. Create a list of data for the CSV
-    List<List<dynamic>> rows = [];
-    rows.add([
-      'ID',
-      'Type',
-      'Duration',
-      'Max of species',
-      'Start time',
-      'End time',
-      'Start longitude',
-      'Start latitude',
-      'End longitude',
-      'End latitude',
-      'Intervals'
-    ]);
-    rows.add([
-      inventory.id,
-      inventoryTypeFriendlyNames[inventory.type],
-      inventory.duration,
-      inventory.maxSpecies,
-      inventory.startTime,
-      inventory.endTime,
-      inventory.startLongitude,
-      inventory.startLatitude,
-      inventory.endLongitude,
-      inventory.endLatitude,
-      inventory.currentInterval
-    ]);
-
-    // Add species data
-    rows.add([]); // Empty line to separate the inventory of the species
-    rows.add(['SPECIES', 'Count', 'Time', 'Out of sample', 'Notes']);
-    for (var species in inventory.speciesList) {
-      rows.add([species.name, species.count, species.sampleTime, species.isOutOfInventory, species.notes]);
-    }
-
-    // Add vegetation data
-    rows.add([]); // Empty line to separate vegetation data
-    rows.add(['VEGETATION']);
-    rows.add([
-      'Date/Time',
-      'Latitude',
-      'Longitude',
-      'Herbs Proportion',
-      'Herbs Distribution',
-      'Herbs Height',
-      'Shrubs Proportion',
-      'Shrubs Distribution',
-      'Shrubs Height',
-      'Trees Proportion',
-      'Trees Distribution',
-      'Trees Height',
-      'Notes'
-    ]);
-    for (var vegetation in inventory.vegetationList) {
-      rows.add([
-        vegetation.sampleTime,
-        vegetation.latitude,
-        vegetation.longitude,
-        vegetation.herbsProportion,
-        vegetation.herbsDistribution?.index,
-        vegetation.herbsHeight,
-        vegetation.shrubsProportion,
-        vegetation.shrubsDistribution?.index,
-        vegetation.shrubsHeight,
-        vegetation.treesProportion,
-        vegetation.treesDistribution?.index,
-        vegetation.treesHeight,
-        vegetation.notes
-      ]);
-    }
-
-    // Add weather data
-    rows.add([]); // Empty line to separate weather data
-    rows.add(['WEATHER']);
-    rows.add([
-      'Date/Time',
-      'Cloud cover',
-      'Precipitation',
-      'Temperature',
-      'Wind speed'
-    ]);
-    for (var weather in inventory.weatherList) {
-      rows.add([
-        weather.sampleTime,
-        weather.cloudCover,
-        precipitationTypeFriendlyNames[weather.precipitation],
-        weather.temperature,
-        weather.windSpeed
-      ]);
-    }
-
-    // Add POIs data
-    rows.add([]); // Empty line to separate POI data
-    rows.add(['POINTS OF INTEREST']);
-    for (var species in inventory.speciesList) {
-      if (species.pois.isNotEmpty) {
-        rows.add(['Species: ${species.name}']);
-        rows.add(['Latitude', 'Longitude']);
-        for (var poi in species.pois) {
-          rows.add([poi.latitude, poi.longitude]);
-        }
-        rows.add([]); // Empty line to
-      }// separate species POIs
-    }
+    List<List<dynamic>> rows = buildInventoryCsvRows(inventory, locale);
 
     // 2. Convert the list of data to CSV
     String csv = const ListToCsvConverter().convert(rows, fieldDelimiter: ';');
@@ -238,13 +122,6 @@ Future<void> exportInventoryToCsv(BuildContext context, Inventory inventory, boo
           text: S.current.inventoryExported(1),
           subject: '${S.current.inventoryExported(1)} ${inventory.id}');
     } 
-    // else {
-    //   Directory? directory = await getExternalStorageDirectory();
-    //   if (directory != null) {
-    //     final newPath = '${directory.path}/inventory_${inventory.id}.csv';
-    //     File newFile = await file.copy(newPath);
-    //   }
-    // }
   } catch (error) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Row(
@@ -257,6 +134,127 @@ Future<void> exportInventoryToCsv(BuildContext context, Inventory inventory, boo
       ),
     );
   }
+}
+
+List<List<dynamic>> buildInventoryCsvRows(Inventory inventory, Locale locale) {
+  final List<List<dynamic>> rows = [];
+  rows.add([
+    'ID',
+    'Type',
+    'Duration',
+    'Max of species',
+    'Start date',
+    'Start time',
+    'End date',
+    'End time',
+    'Start longitude',
+    'Start latitude',
+    'End longitude',
+    'End latitude',
+    'Intervals'
+  ]);
+  rows.add([
+    inventory.id,
+    inventoryTypeFriendlyNames[inventory.type],
+    inventory.duration,
+    inventory.maxSpecies,
+    DateFormat.yMd(locale.toString()).format(inventory.startTime!),
+    DateFormat.Hms(locale.toString()).format(inventory.startTime!),
+    DateFormat.yMd(locale.toString()).format(inventory.endTime!),
+    DateFormat.Hms(locale.toString()).format(inventory.endTime!),
+    NumberFormat.decimalPattern(locale.toString()).format(inventory.startLongitude),
+    NumberFormat.decimalPattern(locale.toString()).format(inventory.startLatitude),
+    NumberFormat.decimalPattern(locale.toString()).format(inventory.endLongitude),
+    NumberFormat.decimalPattern(locale.toString()).format(inventory.endLatitude),
+    inventory.currentInterval
+  ]);
+  
+  // Add species data
+  rows.add([]); // Empty line to separate the inventory of the species
+  rows.add(['SPECIES', 'Count', 'Time', 'Out of sample', 'Notes']);
+  for (var species in inventory.speciesList) {
+    rows.add([
+      species.name, 
+      species.count, 
+      DateFormat('dd/MM/yyyy HH:mm:ss').format(species.sampleTime!), 
+      species.isOutOfInventory, species.notes
+    ]);
+  }
+  
+  // Add vegetation data
+  rows.add([]); // Empty line to separate vegetation data
+  rows.add(['VEGETATION']);
+  rows.add([
+    'Date/Time',
+    'Latitude',
+    'Longitude',
+    'Herbs Proportion',
+    'Herbs Distribution',
+    'Herbs Height',
+    'Shrubs Proportion',
+    'Shrubs Distribution',
+    'Shrubs Height',
+    'Trees Proportion',
+    'Trees Distribution',
+    'Trees Height',
+    'Notes'
+  ]);
+  for (var vegetation in inventory.vegetationList) {
+    rows.add([
+      DateFormat('dd/MM/yyyy HH:mm:ss').format(vegetation.sampleTime!),
+      NumberFormat.decimalPattern(locale.toString()).format(vegetation.latitude),
+      NumberFormat.decimalPattern(locale.toString()).format(vegetation.longitude),
+      vegetation.herbsProportion,
+      vegetation.herbsDistribution?.index,
+      vegetation.herbsHeight,
+      vegetation.shrubsProportion,
+      vegetation.shrubsDistribution?.index,
+      vegetation.shrubsHeight,
+      vegetation.treesProportion,
+      vegetation.treesDistribution?.index,
+      vegetation.treesHeight,
+      vegetation.notes
+    ]);
+  }
+  
+  // Add weather data
+  rows.add([]); // Empty line to separate weather data
+  rows.add(['WEATHER']);
+  rows.add([
+    'Date/Time',
+    'Cloud cover',
+    'Precipitation',
+    'Temperature',
+    'Wind speed'
+  ]);
+  for (var weather in inventory.weatherList) {
+    rows.add([
+      DateFormat('dd/MM/yyyy HH:mm:ss').format(weather.sampleTime!),
+      weather.cloudCover,
+      precipitationTypeFriendlyNames[weather.precipitation],
+      NumberFormat.decimalPattern(locale.toString()).format(weather.temperature),
+      weather.windSpeed
+    ]);
+  }
+  
+  // Add POIs data
+  rows.add([]); // Empty line to separate POI data
+  rows.add(['POINTS OF INTEREST']);
+  for (var species in inventory.speciesList) {
+    if (species.pois.isNotEmpty) {
+      rows.add(['Species: ${species.name}']);
+      rows.add(['Latitude', 'Longitude']);
+      for (var poi in species.pois) {
+        rows.add([
+          NumberFormat.decimalPattern(locale.toString()).format(poi.latitude), 
+          NumberFormat.decimalPattern(locale.toString()).format(poi.longitude)
+        ]);
+      }
+      rows.add([]); // Empty line to
+    }// separate species POIs
+  }
+
+  return rows;
 }
 
 Future<void> exportAllInactiveNestsToJson(BuildContext context) async {
@@ -320,90 +318,9 @@ Future<void> exportNestToJson(BuildContext context, Nest nest) async {
 
 Future<void> exportNestToCsv(BuildContext context, Nest nest) async {
   try {
+    final locale = Localizations.localeOf(context);
     // 1. Create a list of data for the CSV
-    List<List<dynamic>> rows = [];
-    rows.add([
-      'Field number',
-      'Species',
-      'Locality',
-      'Longitude',
-      'Latitude',
-      'Date found',
-      'Support',
-      'Height above ground',
-      'Male',
-      'Female',
-      'Helpers',
-      'Last date',
-      'Fate',
-    ]);
-    rows.add([
-      nest.fieldNumber,
-      nest.speciesName,
-      nest.localityName,
-      nest.longitude,
-      nest.latitude,
-      nest.foundTime,
-      nest.support,
-      nest.heightAboveGround,
-      nest.male,
-      nest.female,
-      nest.helpers,
-      nest.lastTime,
-      nestFateTypeFriendlyNames[nest.nestFate],
-    ]);
-
-    // Add nest revision data
-    rows.add([]); // Empty line as separator
-    rows.add(['REVISIONS']);
-    rows.add([
-      'Date/Time',
-      'Status',
-      'Phase',
-      'Host eggs',
-      'Host nestlings',
-      'Nidoparasite eggs',
-      'Nidoparasite nestlings',
-      'Has Philornis larvae',
-      'Notes',
-    ]);
-    for (var revision in nest.revisionsList ?? []) {
-      rows.add([
-        revision.sampleTime,
-        nestStatusTypeFriendlyNames[revision.nestStatus],
-        nestStageTypeFriendlyNames[revision.nestStage],
-        revision.eggsHost,
-        revision.nestlingsHost,
-        revision.eggsParasite,
-        revision.nestlingsParasite,
-        revision.hasPhilornisLarvae,
-        revision.notes,
-      ]);
-    }
-
-    // Add egg data
-    rows.add([]);
-    rows.add(['EGGS']);
-    rows.add([
-      'Date/Time',
-      'Field number',
-      'Species',
-      'Egg shape',
-      'Width',
-      'Length',
-      'Weight',
-    ]);
-    for (var egg in nest.eggsList ?? []) {
-      rows.add([
-        egg.sampleTime,
-        egg.fieldNumber,
-        egg.speciesName,
-        eggShapeTypeFriendlyNames[egg.eggShape],
-        egg.width,
-        egg.length,
-        egg.mass,
-      ]);
-    }
+    List<List<dynamic>> rows = buildNestCsvRows(nest, locale);
 
     // 2. Convert the list of data to CSV
     String csv = const ListToCsvConverter().convert(rows, fieldDelimiter: ';');
@@ -430,6 +347,94 @@ Future<void> exportNestToCsv(BuildContext context, Nest nest) async {
       ),
     );
   }
+}
+
+List<List<dynamic>> buildNestCsvRows(Nest nest, Locale locale) {
+  List<List<dynamic>> rows = [];
+  rows.add([
+    'Field number',
+    'Species',
+    'Locality',
+    'Longitude',
+    'Latitude',
+    'Date found',
+    'Support',
+    'Height above ground',
+    'Male',
+    'Female',
+    'Helpers',
+    'Last date',
+    'Fate',
+  ]);
+  rows.add([
+    nest.fieldNumber,
+    nest.speciesName,
+    nest.localityName,
+    NumberFormat.decimalPattern(locale.toString()).format(nest.longitude),
+    NumberFormat.decimalPattern(locale.toString()).format(nest.latitude),
+    nest.foundTime != null ? DateFormat('dd/MM/yyyy HH:mm:ss').format(nest.foundTime!) : '',
+    nest.support,
+    NumberFormat.decimalPattern(locale.toString()).format(nest.heightAboveGround),
+    nest.male,
+    nest.female,
+    nest.helpers,
+    nest.lastTime != null ? DateFormat('dd/MM/yyyy HH:mm:ss').format(nest.lastTime!) : '',
+    nestFateTypeFriendlyNames[nest.nestFate],
+  ]);
+  
+  // Add nest revision data
+  rows.add([]); // Empty line as separator
+  rows.add(['REVISIONS']);
+  rows.add([
+    'Date/Time',
+    'Status',
+    'Phase',
+    'Host eggs',
+    'Host nestlings',
+    'Nidoparasite eggs',
+    'Nidoparasite nestlings',
+    'Has Philornis larvae',
+    'Notes',
+  ]);
+  for (var revision in nest.revisionsList ?? []) {
+    rows.add([
+      DateFormat('dd/MM/yyyy HH:mm:ss').format(revision.sampleTime!),
+      nestStatusTypeFriendlyNames[revision.nestStatus],
+      nestStageTypeFriendlyNames[revision.nestStage],
+      revision.eggsHost,
+      revision.nestlingsHost,
+      revision.eggsParasite,
+      revision.nestlingsParasite,
+      revision.hasPhilornisLarvae,
+      revision.notes,
+    ]);
+  }
+  
+  // Add egg data
+  rows.add([]);
+  rows.add(['EGGS']);
+  rows.add([
+    'Date/Time',
+    'Field number',
+    'Species',
+    'Egg shape',
+    'Width',
+    'Length',
+    'Weight',
+  ]);
+  for (var egg in nest.eggsList ?? []) {
+    rows.add([
+      DateFormat('dd/MM/yyyy HH:mm:ss').format(egg.sampleTime!),
+      egg.fieldNumber,
+      egg.speciesName,
+      eggShapeTypeFriendlyNames[egg.eggShape],
+      NumberFormat.decimalPattern(locale.toString()).format(egg.width),
+      NumberFormat.decimalPattern(locale.toString()).format(egg.length),
+      NumberFormat.decimalPattern(locale.toString()).format(egg.mass),
+    ]);
+  }
+
+  return rows;
 }
 
 Future<void> exportAllSpecimensToJson(BuildContext context) async {
@@ -465,31 +470,10 @@ Future<void> exportAllSpecimensToCsv(BuildContext context) async {
   try {
     final specimenProvider = Provider.of<SpecimenProvider>(context, listen: false);
     final specimenList = specimenProvider.specimens;
+    final locale = Localizations.localeOf(context);
 
     // 1. Create a list of data for the CSV
-    List<List<dynamic>> rows = [];
-    rows.add([
-      'Date/Time',
-      'Field number',
-      'Species',
-      'Type',
-      'Locality',
-      'Longitude',
-      'Latitude',
-      'Notes',
-    ]);
-    for (var specimen in specimenList) {
-      rows.add([
-        specimen.sampleTime,
-        specimen.fieldNumber,
-        specimen.speciesName,
-        specimenTypeFriendlyNames[specimen.type],
-        specimen.locality,
-        specimen.longitude,
-        specimen.latitude,
-        specimen.notes,
-      ]);
-    }
+    List<List<dynamic>> rows = buildSpecimensCsvRows(specimenList, locale);
 
     // 2. Convert the list of data to CSV
     String csv = const ListToCsvConverter().convert(rows, fieldDelimiter: ';');
@@ -516,4 +500,32 @@ Future<void> exportAllSpecimensToCsv(BuildContext context) async {
       ),
     );
   }
+}
+
+List<List<dynamic>> buildSpecimensCsvRows(List<Specimen> specimenList, Locale locale) {
+  List<List<dynamic>> rows = [];
+  rows.add([
+    'Date/Time',
+    'Field number',
+    'Species',
+    'Type',
+    'Locality',
+    'Longitude',
+    'Latitude',
+    'Notes',
+  ]);
+  for (var specimen in specimenList) {
+    rows.add([
+      DateFormat('dd/MM/yyyy HH:mm:ss').format(specimen.sampleTime!),
+      specimen.fieldNumber,
+      specimen.speciesName,
+      specimenTypeFriendlyNames[specimen.type],
+      specimen.locality,
+      NumberFormat.decimalPattern(locale.toString()).format(specimen.longitude),
+      NumberFormat.decimalPattern(locale.toString()).format(specimen.latitude),
+      specimen.notes,
+    ]);
+  }
+
+  return rows;
 }

@@ -215,93 +215,12 @@ class NestsScreenState extends State<NestsScreen> {
     try {
       final nestProvider = Provider.of<NestProvider>(context, listen: false);
       final nests = await Future.wait(selectedNests.map((id) => nestProvider.getNestById(id)));
+      final locale = Localizations.localeOf(context);
       List<XFile> csvFiles = [];
 
       for (final nest in nests) {
         // 1. Create a list of data for the CSV
-        List<List<dynamic>> rows = [];
-        rows.add([
-          'Field number',
-          'Species',
-          'Locality',
-          'Longitude',
-          'Latitude',
-          'Date found',
-          'Support',
-          'Height above ground',
-          'Male',
-          'Female',
-          'Helpers',
-          'Last date',
-          'Fate',
-        ]);
-        rows.add([
-          nest.fieldNumber,
-          nest.speciesName,
-          nest.localityName,
-          nest.longitude,
-          nest.latitude,
-          nest.foundTime,
-          nest.support,
-          nest.heightAboveGround,
-          nest.male,
-          nest.female,
-          nest.helpers,
-          nest.lastTime,
-          nestFateTypeFriendlyNames[nest.nestFate],
-        ]);
-
-        // Add nest revision data
-        rows.add([]); // Empty line as separator
-        rows.add(['REVISIONS']);
-        rows.add([
-          'Date/Time',
-          'Status',
-          'Phase',
-          'Host eggs',
-          'Host nestlings',
-          'Nidoparasite eggs',
-          'Nidoparasite nestlings',
-          'Has Philornis larvae',
-          'Notes',
-        ]);
-        for (var revision in nest.revisionsList ?? []) {
-          rows.add([
-            revision.sampleTime,
-            nestStatusTypeFriendlyNames[revision.nestStatus],
-            nestStageTypeFriendlyNames[revision.nestStage],
-            revision.eggsHost,
-            revision.nestlingsHost,
-            revision.eggsParasite,
-            revision.nestlingsParasite,
-            revision.hasPhilornisLarvae,
-            revision.notes,
-          ]);
-        }
-
-        // Add egg data
-        rows.add([]);
-        rows.add(['EGGS']);
-        rows.add([
-          'Date/Time',
-          'Field number',
-          'Species',
-          'Egg shape',
-          'Width',
-          'Length',
-          'Weight',
-        ]);
-        for (var egg in nest.eggsList ?? []) {
-          rows.add([
-            egg.sampleTime,
-            egg.fieldNumber,
-            egg.speciesName,
-            eggShapeTypeFriendlyNames[egg.eggShape],
-            egg.width,
-            egg.length,
-            egg.mass,
-          ]);
-        }
+        List<List<dynamic>> rows = buildNestCsvRows(nest, locale);
 
         // 2. Convert the list of data to CSV
         String csv = const ListToCsvConverter().convert(rows, fieldDelimiter: ';');

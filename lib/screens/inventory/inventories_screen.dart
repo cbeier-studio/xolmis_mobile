@@ -290,131 +290,26 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     try {
       final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
       final inventories = selectedInventories.map((id) => inventoryProvider.getInventoryById(id)).toList();
+      final locale = Localizations.localeOf(context);
       List<XFile> csvFiles = [];
 
-      for (final inventory in inventories) {
-        // 1. Create a list of data for the CSV
-        List<List<dynamic>> rows = [];
-        rows.add([
-          'ID',
-          'Type',
-          'Duration',
-          'Max of species',
-          'Start time',
-          'End time',
-          'Start longitude',
-          'Start latitude',
-          'End longitude',
-          'End latitude',
-          'Intervals'
-        ]);
-        rows.add([
-          inventory!.id,
-          inventoryTypeFriendlyNames[inventory.type],
-          inventory.duration,
-          inventory.maxSpecies,
-          inventory.startTime,
-          inventory.endTime,
-          inventory.startLongitude,
-          inventory.startLatitude,
-          inventory.endLongitude,
-          inventory.endLatitude,
-          inventory.currentInterval
-        ]);
+      if (inventories.isNotEmpty) {
+        for (final inventory in inventories) {
+          // 1. Create a list of data for the CSV
+          List<List<dynamic>> rows = buildInventoryCsvRows(inventory!, locale);
 
-        // Add species data
-        rows.add([]); // Empty line to separate the inventory of the species
-        rows.add(['SPECIES', 'Count', 'Time', 'Out of sample', 'Notes']);
-        for (var species in inventory.speciesList) {
-          rows.add([
-            species.name,
-            species.count,
-            species.sampleTime,
-            species.isOutOfInventory,
-            species.notes
-          ]);
+          // 2. Convert the list of data to CSV
+          String csv =
+              const ListToCsvConverter().convert(rows, fieldDelimiter: ';');
+
+          // 3. Create the file in a temporary directory
+          Directory tempDir = await getApplicationDocumentsDirectory();
+          final filePath = '${tempDir.path}/inventory_${inventory.id}.csv';
+          final file = File(filePath);
+          await file.writeAsString(csv);
+
+          csvFiles.add(XFile(filePath, mimeType: 'text/csv'));
         }
-
-        // Add vegetation data
-        rows.add([]); // Empty line to separate vegetation data
-        rows.add(['VEGETATION']);
-        rows.add([
-          'Date/Time',
-          'Latitude',
-          'Longitude',
-          'Herbs Proportion',
-          'Herbs Distribution',
-          'Herbs Height',
-          'Shrubs Proportion',
-          'Shrubs Distribution',
-          'Shrubs Height',
-          'Trees Proportion',
-          'Trees Distribution',
-          'Trees Height',
-          'Notes'
-        ]);
-        for (var vegetation in inventory.vegetationList) {
-          rows.add([
-            vegetation.sampleTime,
-            vegetation.latitude,
-            vegetation.longitude,
-            vegetation.herbsProportion,
-            vegetation.herbsDistribution?.index,
-            vegetation.herbsHeight,
-            vegetation.shrubsProportion,
-            vegetation.shrubsDistribution?.index,
-            vegetation.shrubsHeight,
-            vegetation.treesProportion,
-            vegetation.treesDistribution?.index,
-            vegetation.treesHeight,
-            vegetation.notes
-          ]);
-        }
-
-        // Add weather data
-        rows.add([]); // Empty line to separate weather data
-        rows.add(['WEATHER']);
-        rows.add([
-          'Date/Time',
-          'Cloud cover',
-          'Precipitation',
-          'Temperature',
-          'Wind speed'
-        ]);
-        for (var weather in inventory.weatherList) {
-          rows.add([
-            weather.sampleTime,
-            weather.cloudCover,
-            precipitationTypeFriendlyNames[weather.precipitation],
-            weather.temperature,
-            weather.windSpeed
-          ]);
-        }
-
-        // Add POIs data
-        rows.add([]); // Empty line to separate POI data
-        rows.add(['POINTS OF INTEREST']);
-        for (var species in inventory.speciesList) {
-          if (species.pois.isNotEmpty) {
-            rows.add(['Species: ${species.name}']);
-            rows.add(['Latitude', 'Longitude']);
-            for (var poi in species.pois) {
-              rows.add([poi.latitude, poi.longitude]);
-            }
-            rows.add([]); // Empty line to
-          } // separate species POIs
-        }
-
-        // 2. Convert the list of data to CSV
-        String csv = const ListToCsvConverter().convert(rows, fieldDelimiter: ';');
-
-        // 3. Create the file in a temporary directory
-        Directory tempDir = await getApplicationDocumentsDirectory();
-        final filePath = '${tempDir.path}/inventory_${inventory.id}.csv';
-        final file = File(filePath);
-        await file.writeAsString(csv);
-
-        csvFiles.add(XFile(filePath, mimeType: 'text/csv'));
       }
 
       // Share the file using share_plus
