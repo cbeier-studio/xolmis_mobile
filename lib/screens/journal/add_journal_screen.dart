@@ -74,7 +74,7 @@ class AddJournalScreenState extends State<AddJournalScreen> {
           MenuAnchor(
             builder: (context, controller, child) {
               return IconButton(
-                icon: Icon(Icons.add_a_photo_outlined),
+                icon: const Icon(Icons.add_a_photo_outlined),
                 tooltip: S.of(context).addImage,
                 onPressed: () {
                   if (controller.isOpen) {
@@ -216,15 +216,15 @@ class AddJournalScreenState extends State<AddJournalScreen> {
   }
 
   Widget _embedBuilder(BuildContext context, EmbedNode node) {
-    if (node.value.type == 'icon') {
-      final data = node.value.data;
-      // Icons.rocket_launch_outlined
-      return Icon(
-        IconData(int.parse(data['codePoint']), fontFamily: data['fontFamily']),
-        color: Color(int.parse(data['color'])),
-        size: 18,
-      );
-    }
+    // if (node.value.type == 'icon') {
+    //   final data = node.value.data;
+    //   // Icons.rocket_launch_outlined
+    //   return Icon(
+    //     IconData(int.parse(data['codePoint']), fontFamily: data['fontFamily']),
+    //     color: Color(int.parse(data['color'])),
+    //     size: 18,
+    //   );
+    // }
 
     if (node.value.type == 'image') {
       final sourceType = node.value.data['source_type'];
