@@ -136,6 +136,7 @@ Future<void> exportInventoryToCsv(BuildContext context, Inventory inventory, boo
   }
 }
 
+// Add inventory data to CSV rows
 List<List<dynamic>> buildInventoryCsvRows(Inventory inventory, Locale locale) {
   final List<List<dynamic>> rows = [];
   rows.add([
@@ -166,7 +167,7 @@ List<List<dynamic>> buildInventoryCsvRows(Inventory inventory, Locale locale) {
     NumberFormat.decimalPattern(locale.toString()).format(inventory.startLatitude),
     NumberFormat.decimalPattern(locale.toString()).format(inventory.endLongitude),
     NumberFormat.decimalPattern(locale.toString()).format(inventory.endLatitude),
-    inventory.currentInterval
+    inventory.currentInterval,
   ]);
   
   // Add species data
@@ -177,7 +178,8 @@ List<List<dynamic>> buildInventoryCsvRows(Inventory inventory, Locale locale) {
       species.name, 
       species.count, 
       DateFormat('dd/MM/yyyy HH:mm:ss').format(species.sampleTime!), 
-      species.isOutOfInventory, species.notes
+      species.isOutOfInventory, 
+      species.notes ?? '',
     ]);
   }
   
@@ -213,7 +215,7 @@ List<List<dynamic>> buildInventoryCsvRows(Inventory inventory, Locale locale) {
       vegetation.treesProportion,
       vegetation.treesDistribution?.index,
       vegetation.treesHeight,
-      vegetation.notes
+      vegetation.notes ?? '',
     ]);
   }
   
@@ -349,6 +351,7 @@ Future<void> exportNestToCsv(BuildContext context, Nest nest) async {
   }
 }
 
+// Add nest data to CSV rows
 List<List<dynamic>> buildNestCsvRows(Nest nest, Locale locale) {
   List<List<dynamic>> rows = [];
   rows.add([
@@ -502,6 +505,7 @@ Future<void> exportAllSpecimensToCsv(BuildContext context) async {
   }
 }
 
+// Add specimens data to CSV rows
 List<List<dynamic>> buildSpecimensCsvRows(List<Specimen> specimenList, Locale locale) {
   List<List<dynamic>> rows = [];
   rows.add([
