@@ -533,6 +533,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Iniciar inventário"),
         "startNextList":
             MessageLookupByLibrary.simpleMessage("Iniciar próxima lista"),
+        "statistics": MessageLookupByLibrary.simpleMessage("Estatísticas"),
         "systemMode": MessageLookupByLibrary.simpleMessage("Tema do sistema"),
         "temperature": MessageLookupByLibrary.simpleMessage("Temperatura"),
         "timeFound":

@@ -92,7 +92,7 @@ class JournalsScreenState extends State<JournalsScreen> {
               borderRadius: BorderRadius.circular(16.0),
             ),
             child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 400),
+              constraints: const BoxConstraints(maxWidth: 800),
               child: const AddJournalScreen(),
             ),
           );
@@ -155,109 +155,6 @@ class JournalsScreenState extends State<JournalsScreen> {
       },
     );
   }
-
-  // void _exportSelectedSpecimensToJson() async {
-  //   try {
-  //     final specimenProvider = Provider.of<SpecimenProvider>(context, listen: false);
-  //     final specimens = await Future.wait(selectedSpecimens.map((id) => specimenProvider.getSpecimenById(id)));
-  //
-  //     final jsonString = jsonEncode(specimens.map((specimen) => specimen.toJson()).toList());
-  //
-  //     final now = DateTime.now();
-  //     final formatter = DateFormat('yyyyMMdd_HHmmss');
-  //     final formattedDate = formatter.format(now);
-  //
-  //     final directory = await getApplicationDocumentsDirectory();
-  //     final filePath = '${directory.path}/selected_specimens_$formattedDate.json';
-  //     final file = File(filePath);
-  //     await file.writeAsString(jsonString);
-  //
-  //     // Share the file using share_plus
-  //     await Share.shareXFiles([
-  //       XFile(filePath, mimeType: 'application/json'),
-  //     ], text: S.current.specimenExported(2), subject: S.current.specimenData(2));
-  //
-  //     setState(() {
-  //       selectedSpecimens.clear();
-  //     });
-  //   } catch (error) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(
-  //         content: Row(
-  //           children: [
-  //             Icon(Icons.error_outlined, color: Colors.red),
-  //             SizedBox(width: 8),
-  //             Text(S.current.errorExportingSpecimen(2, error.toString())),
-  //           ],
-  //         ),
-  //       ),
-  //     );
-  //   }
-  // }
-  //
-  // void _exportSelectedSpecimensToCsv() async {
-  //   try {
-  //     final specimenProvider = Provider.of<SpecimenProvider>(context, listen: false);
-  //     final specimens = await Future.wait(selectedSpecimens.map((id) => specimenProvider.getSpecimenById(id)));
-  //
-  //     // 1. Create a list of data for the CSV
-  //     List<List<dynamic>> rows = [];
-  //     rows.add([
-  //       'Date/Time',
-  //       'Field number',
-  //       'Species',
-  //       'Type',
-  //       'Locality',
-  //       'Longitude',
-  //       'Latitude',
-  //       'Notes',
-  //     ]);
-  //     for (var specimen in specimens) {
-  //       rows.add([
-  //         specimen.sampleTime,
-  //         specimen.fieldNumber,
-  //         specimen.speciesName,
-  //         specimenTypeFriendlyNames[specimen.type],
-  //         specimen.locality,
-  //         specimen.longitude,
-  //         specimen.latitude,
-  //         specimen.notes,
-  //       ]);
-  //     }
-  //
-  //     // 2. Convert the list of data to CSV
-  //     String csv = const ListToCsvConverter().convert(rows, fieldDelimiter: ';');
-  //
-  //     final now = DateTime.now();
-  //     final formatter = DateFormat('yyyyMMdd_HHmmss');
-  //     final formattedDate = formatter.format(now);
-  //
-  //     // 3. Create the file in a temporary directory
-  //     Directory tempDir = await getApplicationDocumentsDirectory();
-  //     final filePath = '${tempDir.path}/selected_specimens_$formattedDate.csv';
-  //     final file = File(filePath);
-  //     await file.writeAsString(csv);
-  //
-  //     // Share the file using share_plus
-  //     await Share.shareXFiles([XFile(filePath, mimeType: 'text/csv')], text: S.current.specimenExported(2), subject: S.current.specimenData(2));
-  //
-  //     setState(() {
-  //       selectedSpecimens.clear();
-  //     });
-  //   } catch (error) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(
-  //         content: Row(
-  //           children: [
-  //             Icon(Icons.error_outlined, color: Colors.red),
-  //             SizedBox(width: 8),
-  //             Text(S.current.errorExportingSpecimen(2, error.toString())),
-  //           ],
-  //         ),
-  //       ),
-  //     );
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {

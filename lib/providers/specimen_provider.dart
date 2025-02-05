@@ -20,6 +20,11 @@ class SpecimenProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  // Get list of specimens by species
+  Future<List<Specimen>> getSpecimensBySpecies(String speciesName) async {
+    return await _specimenRepository.getSpecimensBySpecies(speciesName);
+  }
+
   // Get specimen data by ID
   Future<Specimen> getSpecimenById(int specimenId) async {
     return await _specimenRepository.getSpecimenById(specimenId);

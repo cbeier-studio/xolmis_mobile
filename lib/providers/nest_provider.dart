@@ -24,6 +24,11 @@ class NestProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  // Get list of nests by species
+  Future<List<Nest>> getNestsBySpecies(String speciesName) async {
+    return await _nestRepository.getNestsBySpecies(speciesName);
+  }
+
   // Get nest data by ID
   Future<Nest> getNestById(int nestId) async {
     return await _nestRepository.getNestById(nestId);

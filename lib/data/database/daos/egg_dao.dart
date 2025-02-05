@@ -40,6 +40,19 @@ class EggDao {
     });
   }
 
+  // Get list of all eggs for a species
+  Future<List<Egg>> getEggsBySpecies(String speciesName) async {
+    final db = await _dbHelper.database;
+    final List<Map<String, dynamic>> maps = await db?.query(
+      'eggs',
+      where: 'speciesName = ?',
+      whereArgs: [speciesName],
+    ) ?? [];
+    return List.generate(maps.length, (i) {
+      return Egg.fromMap(maps[i]);
+    });
+  }
+
   // Update vegetation record in the database
   Future<void> updateEgg(Egg egg) async {
     final db = await _dbHelper.database;

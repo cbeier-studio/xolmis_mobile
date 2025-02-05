@@ -2588,6 +2588,16 @@ class S {
     );
   }
 
+  /// `Statistics`
+  String get statistics {
+    return Intl.message(
+      'Statistics',
+      name: 'statistics',
+      desc: 'Title for statistics screen and labels',
+      args: [],
+    );
+  }
+
   /// `None`
   String get precipitationNone {
     return Intl.message(

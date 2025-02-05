@@ -455,7 +455,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                       },
                     );
                   }).toList();
-                };
+                }
               },
             ),
           ),

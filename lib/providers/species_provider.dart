@@ -47,6 +47,10 @@ class SpeciesProvider with ChangeNotifier {
     return _speciesMap[inventoryId] ?? [];
   }
 
+  Future<List<Species>> getAllRecordsBySpecies(String speciesName) async {
+    return await _speciesRepository.getAllRecordsBySpecies(speciesName);
+  }
+
   // Add species to the database and the list
   Future<void> addSpecies(BuildContext context, String inventoryId, Species species) async {
     await _speciesRepository.insertSpecies(inventoryId, species);

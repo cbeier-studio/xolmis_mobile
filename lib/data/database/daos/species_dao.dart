@@ -104,4 +104,35 @@ class SpeciesDao {
     }).toList();
   }
 
+  // Get list of all records of a species
+  Future<List<Species>> getAllRecordsBySpecies(String speciesName) async {
+    final db = await _dbHelper.database;
+    final speciesMaps = await db?.query(
+      'species',
+      where: 'name = ?',
+      whereArgs: [speciesName],
+    ) ?? [];
+
+    if (speciesMaps.isEmpty) return [];
+
+    final speciesIds = speciesMaps.map((map) => map['id'] as int).toList();
+    final poisMaps = await db?.query(
+      'pois',
+      where: 'speciesId IN (${speciesIds.join(',')})',
+    ) ?? [];
+
+    // Get the species POIs 
+    final poisBySpeciesId = <int, List<Poi>>{};
+    for (final poiMap in poisMaps) {
+      final speciesId = poiMap['speciesId'] as int;
+      poisBySpeciesId.putIfAbsent(speciesId, () => []);
+      poisBySpeciesId[speciesId]!.add(Poi.fromMap(poiMap));
+    }
+
+    return speciesMaps.map((map) {
+      final speciesId = map['id'] as int;
+      final pois = poisBySpeciesId[speciesId] ?? [];
+      return Species.fromMap(map, pois);
+    }).toList();
+  }
 }

@@ -22,6 +22,10 @@ class SpeciesRepository {
     return _speciesDao.getSpeciesByInventory(inventoryId);
   }
 
+  Future<List<Species>> getAllRecordsBySpecies(String speciesName) {
+    return _speciesDao.getAllRecordsBySpecies(speciesName);
+  }
+
   Future<void> deleteSpecies(int? speciesId) {
     return _speciesDao.deleteSpecies(speciesId);
   }

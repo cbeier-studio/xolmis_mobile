@@ -79,6 +79,46 @@ class NestDao {
     }
   }
 
+  // Get list of all nests of a species
+  Future<List<Nest>> getNestsBySpecies(String speciesName) async {
+    final db = await _dbHelper.database;
+
+    final List<Map<String, dynamic>> maps = await db?.query(
+      'nests',
+      where: 'speciesName = ?',
+      whereArgs: [speciesName],
+    ) ?? [];
+
+    List<Nest> nests = await Future.wait(maps.map((map) async {
+      List<NestRevision> revisionsList = await _nestRevisionDao.getNestRevisionsForNest(map['id']);
+      List<Egg> eggsList = await _eggDao.getEggsForNest(map['id']);
+      // Create Nest instance using the main constructor
+      Nest nest = Nest(
+        id: map['id']?.toInt(),
+        fieldNumber: map['fieldNumber'],
+        speciesName: map['speciesName'],
+        localityName: map['localityName'],
+        longitude: map['longitude']?.toDouble(),
+        latitude: map['latitude']?.toDouble(),
+        support: map['support'],
+        heightAboveGround: map['heightAboveGround']?.toDouble(),
+        foundTime: map['foundTime'] != null ? DateTime.parse(map['foundTime']) : null,
+        lastTime: map['lastTime'] != null ? DateTime.parse(map['lastTime']) : null,
+        nestFate: NestFateType.values[map['nestFate']],
+        male: map['male'],
+        female: map['female'],
+        helpers: map['helpers'],
+        isActive: map['isActive'] == 1,
+        revisionsList: revisionsList,
+        eggsList: eggsList,
+      );
+
+      return nest;
+    }).toList());
+
+    return nests;
+  }
+
   // Find and get a nest by ID
   Future<Nest> getNestById(int nestId) async {
     final db = await _dbHelper.database;

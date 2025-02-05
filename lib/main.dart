@@ -53,6 +53,7 @@ import 'screens/journal/journals_screen.dart';
 import 'screens/nest/nests_screen.dart';
 import 'screens/specimen/specimens_screen.dart';
 import 'screens/settings_screen.dart';
+import 'screens/statistics_screen.dart';
 import 'utils/utils.dart';
 import 'utils/themes.dart';
 import 'generated/l10n.dart';
@@ -256,6 +257,7 @@ class _MainScreenState extends State<MainScreen> {
         (context, scaffoldKey) => NestsScreen(scaffoldKey: scaffoldKey),
         (context, scaffoldKey) => SpecimensScreen(scaffoldKey: scaffoldKey),
         (context, scaffoldKey) => JournalsScreen(scaffoldKey: scaffoldKey),
+        (context, scaffoldKey) => StatisticsScreen(scaffoldKey: scaffoldKey),
   ];
 
   @override
@@ -380,17 +382,61 @@ class _MainScreenState extends State<MainScreen> {
         selectedIcon: const Icon(Icons.book),
         label: Text(S.of(context).fieldJournal),
       ),
+      NavigationRailDestination(
+        icon: const Icon(Icons.assessment_outlined),
+        selectedIcon: const Icon(Icons.assessment),
+        label: Text(S.of(context).statistics),
+      ),
     ];
 
       return Scaffold(
       key: _scaffoldKey,
+      // EXPERIMENTAL, not implemented
+      // >> Use BottomNavigationBar to navigate between main features
+      // bottomNavigationBar: (!useSideNavRail || !useFixedNavDrawer) ? BottomNavigationBar(
+      //   type: BottomNavigationBarType.fixed,
+      //   useLegacyColorScheme: false,
+      //   selectedItemColor:  Theme.of(context).brightness == Brightness.light ? Colors.deepPurple : Colors.deepPurple[300],
+      //   showSelectedLabels: true,
+      //   showUnselectedLabels: true,
+      //   items: <BottomNavigationBarItem>[
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.list_alt_outlined), 
+      //       activeIcon: Icon(Icons.list_alt),
+      //       label: S.current.inventories
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.egg_outlined), 
+      //       activeIcon: Icon(Icons.egg),
+      //       label: S.current.nests
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.local_offer_outlined), 
+      //       activeIcon: Icon(Icons.local_offer),
+      //       label: S.current.specimens(2)
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.book_outlined), 
+      //       activeIcon: Icon(Icons.book),
+      //       label: S.current.notes
+      //     ),
+      //   ],
+      //   currentIndex: _selectedIndex,
+      //   onTap: (index) {
+      //     setState(() {
+      //       _selectedIndex = index;
+      //     });
+      //   },
+      // ) : null,
       drawer: _buildNavigationDrawer(context),
         body: Row(
           children: [
-            if (useSideNavRail || useFixedNavDrawer) NavigationRail(
+            if (useSideNavRail || useFixedNavDrawer)
+            NavigationRail(
               trailing: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
+                  // Expanded(child: SizedBox.shrink()),
                   IconButton(
                     icon: Theme.of(context).brightness == Brightness.light
                         ? const Icon(Icons.settings_outlined)
@@ -510,6 +556,11 @@ class _MainScreenState extends State<MainScreen> {
           icon: const Icon(Icons.book_outlined),
           label: Text(S.of(context).fieldJournal),
           selectedIcon: const Icon(Icons.book),
+        ),
+        NavigationDrawerDestination(
+          icon: const Icon(Icons.assessment_outlined),
+          label: Text(S.of(context).statistics),
+          selectedIcon: const Icon(Icons.assessment),
         ),
       ],
     );

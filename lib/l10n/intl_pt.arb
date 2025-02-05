@@ -843,6 +843,11 @@
         "type": "text",
         "description": "Menu option to edit a field journal entry"
     },
+    "statistics": "Estatísticas",
+    "@statistics": {
+        "type": "text",
+        "description": "Title for statistics screen and labels"
+    },
     "precipitationNone": "Nenhuma",
     "precipitationFog": "Névoa",
     "precipitationMist": "Neblina",

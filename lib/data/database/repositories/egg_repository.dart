@@ -14,6 +14,10 @@ class EggRepository {
     return _eggDao.getEggsForNest(nestId);
   }
 
+  Future<List<Egg>> getEggsBySpecies(String speciesName) {
+    return _eggDao.getEggsBySpecies(speciesName);
+  }
+
   Future<void> updateEgg(Egg egg) {
     return _eggDao.updateEgg(egg);
   }

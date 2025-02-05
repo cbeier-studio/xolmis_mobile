@@ -63,6 +63,16 @@ class SpecimenDao {
     });
   }
 
+  // Get list of specimens by species
+  Future<List<Specimen>> getSpecimensBySpecies(String speciesName) async {
+    final db = await _dbHelper.database;
+    final maps = await db?.query('specimens',
+        where: 'speciesName = ?', whereArgs: [speciesName]) ?? [];
+    return List.generate(maps.length, (i) {
+      return Specimen.fromMap(maps[i]);
+    });
+  }
+
   // Find and get a specimen by ID
   Future<Specimen> getSpecimenById(int specimenId) async {
     final db = await _dbHelper.database;

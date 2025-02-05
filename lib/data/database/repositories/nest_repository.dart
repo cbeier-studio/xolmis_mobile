@@ -14,6 +14,10 @@ class NestRepository {
     return _nestDao.getNests();
   }
 
+  Future<List<Nest>> getNestsBySpecies(String speciesName) {
+    return _nestDao.getNestsBySpecies(speciesName);
+  }
+
   Future<Nest> getNestById(int nestId) {
     return _nestDao.getNestById(nestId);
   }

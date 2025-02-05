@@ -1404,6 +1404,11 @@
         "type": "text",
         "description": "Menu option to edit a field journal entry"
     },
+    "statistics": "Statistics",
+    "@statistics": {
+        "type": "text",
+        "description": "Title for statistics screen and labels"
+    },
     "precipitationNone": "None",
     "precipitationFog": "Fog",
     "precipitationMist": "Mist",

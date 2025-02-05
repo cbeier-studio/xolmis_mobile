@@ -31,6 +31,11 @@ class EggProvider with ChangeNotifier {
     return _eggMap[nestId] ?? [];
   }
 
+  // Get list of eggs by species
+  Future<List<Egg>> getEggsBySpecies(String speciesName) async {
+    return await _eggRepository.getEggsBySpecies(speciesName);
+  }
+
   // Check if the egg field number already exists
   Future<bool> eggFieldNumberExists(String fieldNumber) async {
     return await _eggRepository.eggFieldNumberExists(fieldNumber);
