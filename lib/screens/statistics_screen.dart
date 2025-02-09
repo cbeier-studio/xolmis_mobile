@@ -78,7 +78,7 @@ class StatisticsScreenState extends State<StatisticsScreen> {
     final nestProvider = Provider.of<NestProvider>(context, listen: false);
     final eggProvider = Provider.of<EggProvider>(context, listen: false);
     final specimenProvider = Provider.of<SpecimenProvider>(context, listen: false);
-
+    final locale = Localizations.localeOf(context);
 
     List<PieChartSectionData> totalsSections = getTotalsByRecordType(allSpeciesList, nestList, eggList, specimenList).entries.map((entry) {
       return PieChartSectionData(
@@ -334,16 +334,7 @@ class StatisticsScreenState extends State<StatisticsScreen> {
               child: Padding(
                 padding: EdgeInsets.all(16.0),
                 child: ListTile(
-                  title: Text('0', style: TextStyle(fontSize: 20)),
-                  subtitle: Text('inventários realizados'),
-                ),
-              ),
-            ),
-            Card(
-              child: Padding(
-                padding: EdgeInsets.all(16.0),
-                child: ListTile(
-                  title: Text(totalInventoryHours.toString(), style: TextStyle(fontSize: 20)),
+                  title: Text(NumberFormat.decimalPattern(locale.toString()).format(totalInventoryHours), style: TextStyle(fontSize: 20)),
                   subtitle: Text('horas de amostragem'),
                 ),
               ),
@@ -352,8 +343,8 @@ class StatisticsScreenState extends State<StatisticsScreen> {
               child: Padding(
                 padding: EdgeInsets.all(16.0),
                 child: ListTile(
-                  title: Text(averageInventoryHours.toString(), style: TextStyle(fontSize: 20)),
-                  subtitle: Text('horas em média'),
+                  title: Text(NumberFormat.decimalPattern(locale.toString()).format(averageInventoryHours), style: TextStyle(fontSize: 20)),
+                  subtitle: Text('média de horas de amostragem'),
                 ),
               ),
             ),

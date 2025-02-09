@@ -34,7 +34,7 @@ class Poi {
     return Poi(
       id: map['id'],
       speciesId: map['speciesId'],
-      sampleTime: DateTime.parse(map['sampleTime']),
+      sampleTime: map['sampleTime'] != null ? DateTime.parse(map['sampleTime']) : null,
       longitude: map['longitude'],
       latitude: map['latitude'],
     );
@@ -74,7 +74,7 @@ class Poi {
     return Poi(
       id: json['id'],
       speciesId: json['speciesId'],
-      sampleTime: DateTime.parse(json['sampleTime']),
+      sampleTime: json['sampleTime'] != null ? DateTime.parse(json['sampleTime']) : null,
       longitude: json['longitude'],
       latitude: json['latitude'],
     );

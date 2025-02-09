@@ -196,32 +196,66 @@ class InventoryProvider with ChangeNotifier {
 
   // Calculate the total sampling hours from all inventories
   Future<double> getTotalSamplingHours() async {
-    fetchInventories();
-    final inventories = finishedInventories;
-    Duration totalDuration = Duration.zero;
+    final allInventories = await _inventoryRepository.getInventories();
+    final inventories = allInventories.where((inventory) => inventory.isFinished).toList();
+
+    // Sort inventories by start time
+    inventories.sort((a, b) => a.startTime!.compareTo(b.startTime!));
+
+    Duration totalNonOverlappingDuration = Duration.zero;
+    DateTime? coveredUntil; // The end of the currently covered time range
 
     for (final inventory in inventories) {
-      if (inventory.startTime != null && inventory.endTime != null) {
-        totalDuration += inventory.endTime!.difference(inventory.startTime!);
+      if (inventory.startTime == null || inventory.endTime == null) {
+        continue; // Skip inventories with missing start or end times
+      }
+
+      if (coveredUntil == null || inventory.startTime!.isAfter(coveredUntil)) {
+        // No overlap: Add the entire duration
+        totalNonOverlappingDuration += inventory.endTime!.difference(inventory.startTime!);
+        coveredUntil = inventory.endTime;
+      } else {
+        // Overlap: Add only the non-overlapping portion
+        if (inventory.endTime!.isAfter(coveredUntil)) {
+          totalNonOverlappingDuration += inventory.endTime!.difference(coveredUntil);
+          coveredUntil = inventory.endTime;
+        }
       }
     }
 
-    return totalDuration.inMinutes / 60.0; // Convert to hours
+    return totalNonOverlappingDuration.inMinutes / 60.0; // Convert to hours
   }
 
   // Calculate the average sampling hours from all inventories
   Future<double> getAverageSamplingHours() async {
-    fetchInventories();
-    final inventories = finishedInventories;
-    Duration totalDuration = Duration.zero;
+    final allInventories = await _inventoryRepository.getInventories();
+    final inventories = allInventories.where((inventory) => inventory.isFinished).toList();
+
+    // Sort inventories by start time
+    inventories.sort((a, b) => a.startTime!.compareTo(b.startTime!));
+
+    Duration totalNonOverlappingDuration = Duration.zero;
+    DateTime? coveredUntil; // The end of the currently covered time range
 
     for (final inventory in inventories) {
-      if (inventory.startTime != null && inventory.endTime != null) {
-        totalDuration += inventory.endTime!.difference(inventory.startTime!);
+      if (inventory.startTime == null || inventory.endTime == null) {
+        continue; // Skip inventories with missing start or end times
+      }
+
+      if (coveredUntil == null || inventory.startTime!.isAfter(coveredUntil)) {
+        // No overlap: Add the entire duration
+        totalNonOverlappingDuration += inventory.endTime!.difference(inventory.startTime!);
+        coveredUntil = inventory.endTime;
+      } else {
+        // Overlap: Add only the non-overlapping portion
+        if (inventory.endTime!.isAfter(coveredUntil)) {
+          totalNonOverlappingDuration += inventory.endTime!.difference(coveredUntil);
+          coveredUntil = inventory.endTime;
+        }
       }
     }
 
-    return totalDuration.inMinutes / finishedInventories.length / 60.0; // Convert to hours
+    return (totalNonOverlappingDuration.inMinutes / inventories.length) / 60.0; // Convert to hours
   }
 
 }
