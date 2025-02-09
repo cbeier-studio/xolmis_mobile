@@ -1,9 +1,7 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:xolmis/data/database/database_helper.dart';
 import 'package:xolmis/generated/l10n.dart';
 
 import '../data/models/inventory.dart';
@@ -17,6 +15,7 @@ import '../providers/egg_provider.dart';
 import '../providers/specimen_provider.dart';
 
 import '../utils/utils.dart';
+import '../utils/statistics_logic.dart';
 
 class StatisticsScreen extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
@@ -28,177 +27,49 @@ class StatisticsScreen extends StatefulWidget {
 }
 
 class StatisticsScreenState extends State<StatisticsScreen> {
-  final _dbHelper = DatabaseHelper();
-  final List<Species> speciesList = [];
-  final List<Inventory> inventoryList= [];
-  String? selectedSpecies;
   final SearchController searchController = SearchController();
+  String? selectedSpecies;
   List<Species> allSpeciesList = [];
   List<Nest> nestList = [];
   List<Egg> eggList = [];
   List<Specimen> specimenList = [];
   bool isLoadingData = false;
   int totalRecordsPerSpecies = 0;
+  int totalDistinctSpecies = 0;
+  double totalInventoryHours = 0.0;
+  double averageInventoryHours = 0.0;
 
-  // Color mapping for each record type
-  final Map<String, Color> _recordTypeColors = {
-    S.current.inventories: Colors.blue,
-    S.current.nests: Colors.orange,
-    S.current.egg(2): Colors.green,
-    S.current.specimens(2): Colors.purple,
-  };
-
-  // Function to get the color for a given record type
-  Color _getColor(String recordType) {
-    return _recordTypeColors[recordType] ?? Colors.grey; // Default to grey if not found
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
   }
 
-  // Helper function to get distinct species names from a table
-  Future<List<String>> _getDistinctSpeciesFromTable(String tableName) async {
-    final db = await _dbHelper.database;
-    final String columnName = tableName == 'species' ? 'name' : 'speciesName';
-    if (db == null) {
-      debugPrint('Error: Database is null.');
-      return [];
-    }
+  Future<void> _loadData() async {
+    final inventoryProvider = Provider.of<InventoryProvider>(
+        context, listen: false);
     try {
-      final List<Map<String, dynamic>> results = await db.query(
-        tableName,
-        columns: [columnName],
-        distinct: true,
-      );
-
-      // Extract the species names from the results.
-      final List<String> speciesNames = results
-          .map((row) => row[columnName] as String)
-          .toList();
-
-      return speciesNames;
+      setState(() {
+        isLoadingData = true;
+      });
+      totalDistinctSpecies = await getTotalSpeciesWithRecords();
+      totalInventoryHours = await inventoryProvider.getTotalSamplingHours();
+      averageInventoryHours = await inventoryProvider.getAverageSamplingHours();
     } catch (e) {
-      debugPrint('Error querying database: $e');
-      return []; // Return an empty list in case of an error.
+      // Handle errors here, e.g., show a snackbar
+      debugPrint('Error loading data: $e');
+    } finally {
+      setState(() {
+        isLoadingData = false;
+      });
     }
   }
 
-  // Get the total number of species with records in any table
-  Future<int> getTotalSpeciesWithRecords() async {
-    final speciesFromSpecies = await _getDistinctSpeciesFromTable('species');
-    final speciesFromNests = await _getDistinctSpeciesFromTable('nests');
-    final speciesFromEggs = await _getDistinctSpeciesFromTable('eggs');
-    final speciesFromSpecimens = await _getDistinctSpeciesFromTable('specimens');
-
-    final allSpecies = <String>{
-      ...speciesFromSpecies,
-      ...speciesFromNests,
-      ...speciesFromEggs,
-      ...speciesFromSpecimens,
-    };
-
-    return allSpecies.length;
-  }
-
-  // Get the top 10 species with the most records
-  Future<List<MapEntry<String, int>>> getTop10SpeciesWithMostRecords() async {
-    final speciesFromSpecies = await _getDistinctSpeciesFromTable('species');
-    final speciesFromNests = await _getDistinctSpeciesFromTable('nests');
-    final speciesFromEggs = await _getDistinctSpeciesFromTable('eggs');
-    final speciesFromSpecimens = await _getDistinctSpeciesFromTable(
-        'specimens');
-
-    final speciesCounts = <String, int>{};
-
-    // Count species from species table
-    for (final species in speciesFromSpecies) {
-      speciesCounts[species] = (speciesCounts[species] ?? 0) + 1;
-    }
-
-    // Count species from nests table
-    for (final species in speciesFromNests) {
-      speciesCounts[species] = (speciesCounts[species] ?? 0) + 1;
-    }
-
-    // Count species from eggs table
-    for (final species in speciesFromEggs) {
-      speciesCounts[species] = (speciesCounts[species] ?? 0) + 1;
-    }
-
-    // Count species from specimens table
-    for (final species in speciesFromSpecimens) {
-      speciesCounts[species] = (speciesCounts[species] ?? 0) + 1;
-    }
-
-    // Sort by count in descending order and take the top 10
-    final sortedSpecies = speciesCounts.entries.toList()
-      ..sort((a, b) => b.value.compareTo(a.value));
-
-    return sortedSpecies.take(10).toList();
-  }
-
-  Map<int, int> getOccurrencesByMonth(
-    BuildContext context,
-    List<Species> speciesList,
-    List<Nest> nestList,
-    List<Egg> eggList,
-    List<Specimen> specimenList,
-  ) {
-    Map<int, int> occurrences = {};
-
-    // Initialize the occurrences map with zero for each month
-    for (int month = 1; month <= 12; month++) {
-      occurrences[month] = 0;
-    }
-
-    void addOccurrence(DateTime date) {
-      occurrences[date.month] = (occurrences[date.month] ?? 0) + 1;
-    }
-
-    // Check the list of species
-    for (var specie in speciesList) {
-      // if (specie.id == species.id) {
-        DateTime? speciesDate = specie.sampleTime;
-
-        if (speciesDate == null) {
-          Inventory? inventory = Provider.of<InventoryProvider>(context, listen: false).getInventoryById(specie.inventoryId);
-          speciesDate = inventory?.startTime;
-        }
-
-        if (speciesDate != null) {
-          addOccurrence(speciesDate);
-        }
-      // }
-    }
-
-    // Check the list of nests
-    for (var nest in nestList) {
-      if (nest.speciesName == selectedSpecies) {
-        addOccurrence(nest.foundTime!);
-      }
-    }
-
-    // Check the list of eggs
-    for (var egg in eggList) {
-      if (egg.speciesName == selectedSpecies) {
-        addOccurrence(egg.sampleTime!);
-      }
-    }
-
-    // Check the list of specimens
-    for (var specimen in specimenList) {
-      if (specimen.speciesName == selectedSpecies) {
-        addOccurrence(specimen.sampleTime!);
-      }
-    }
-
-    return occurrences;
-  }
-
-  Map<String, int> getTotalsByRecordType(List<Species> inventories, List<Nest> nests, List<Egg> eggs, List<Specimen> specimens) {
-    return {
-      S.current.inventories: inventories.length,
-      S.current.nests: nests.length,
-      S.current.egg(2): eggs.length,
-      S.current.specimens(2): specimens.length,
-    };
+  Future<void> loadDataLists(SpeciesProvider speciesProvider, NestProvider nestProvider, EggProvider eggProvider, SpecimenProvider specimenProvider) async {
+    allSpeciesList = await speciesProvider.getAllRecordsBySpecies(selectedSpecies ?? '');
+    nestList = await nestProvider.getNestsBySpecies(selectedSpecies ?? '');
+    eggList = await eggProvider.getEggsBySpecies(selectedSpecies ?? '');
+    specimenList = await specimenProvider.getSpecimensBySpecies(selectedSpecies ?? '');
   }
 
   @override
@@ -208,12 +79,13 @@ class StatisticsScreenState extends State<StatisticsScreen> {
     final eggProvider = Provider.of<EggProvider>(context, listen: false);
     final specimenProvider = Provider.of<SpecimenProvider>(context, listen: false);
 
+
     List<PieChartSectionData> totalsSections = getTotalsByRecordType(allSpeciesList, nestList, eggList, specimenList).entries.map((entry) {
       return PieChartSectionData(
         showTitle: true,
         title: entry.value.toString(),
         value: entry.value.toDouble(),
-        color: _getColor(entry.key),
+        color: getColor(entry.key),
         radius: 20,
         // titleStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
       );
@@ -238,6 +110,49 @@ class StatisticsScreenState extends State<StatisticsScreen> {
                 child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text(S.current.species(2), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+            Card(
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: ListTile(
+                  title: Text(totalDistinctSpecies.toString(), style: TextStyle(fontSize: 20)),
+                  subtitle: Text('espécies registradas'),
+                ),
+              ),
+            ),
+            Card(
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Text('Top 10 espécies mais registradas', style: TextStyle(fontSize: 16),),
+                    SizedBox(height: 8,),
+                      FutureBuilder<List<MapEntry<String, int>>>(
+                        future: getTop10SpeciesWithMostRecords(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return CircularProgressIndicator(); // Show a loading indicator
+                          } else if (snapshot.hasError) {
+                            return Text('Erro: ${snapshot.error}');
+                          } else if (snapshot.hasData) {
+                            return Column(
+                              children: snapshot.data!.map((entry) => ListTile(
+                                dense: true,
+                                visualDensity: VisualDensity(horizontal: 0, vertical: -4),
+                                title: Text(entry.key, style: TextStyle(fontStyle: FontStyle.italic, fontSize: 12,)),
+                                trailing: Text(entry.value.toString(), style: TextStyle(color: Colors.grey)),
+                              )).toList(),
+                            );
+                          } else {
+                            return Text('Nenhum dado disponível');
+                          }
+                        },
+                      ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 16,),
             Text(S.current.perSpecies, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
             Row(
               children: [
@@ -382,7 +297,7 @@ class StatisticsScreenState extends State<StatisticsScreen> {
                               getTitlesWidget: (value, meta) {
                                 String monthAbbreviation =
                                     DateFormat('MMM').format(DateTime(0, value.toInt()));
-                                return Text(monthAbbreviation);
+                                return Text(monthAbbreviation[0].toUpperCase());
                               },
                             ),
                           ),
@@ -398,7 +313,7 @@ class StatisticsScreenState extends State<StatisticsScreen> {
                         ),
                         barGroups: createBarGroupsFromOccurrencesMap(
                             getOccurrencesByMonth(context, allSpeciesList,
-                                nestList, eggList, specimenList)),
+                                nestList, eggList, specimenList, selectedSpecies)),
                       ),
                     ),
                   ),
@@ -413,6 +328,35 @@ class StatisticsScreenState extends State<StatisticsScreen> {
             ] else ...[
               Center(child: Text(S.current.selectSpeciesToShowStats))
             ],
+            SizedBox(height: 16,),
+            Text(S.current.inventories, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+            Card(
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: ListTile(
+                  title: Text('0', style: TextStyle(fontSize: 20)),
+                  subtitle: Text('inventários realizados'),
+                ),
+              ),
+            ),
+            Card(
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: ListTile(
+                  title: Text(totalInventoryHours.toString(), style: TextStyle(fontSize: 20)),
+                  subtitle: Text('horas de amostragem'),
+                ),
+              ),
+            ),
+            Card(
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: ListTile(
+                  title: Text(averageInventoryHours.toString(), style: TextStyle(fontSize: 20)),
+                  subtitle: Text('horas em média'),
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -420,12 +364,7 @@ class StatisticsScreenState extends State<StatisticsScreen> {
     );
   }
 
-  Future<void> loadDataLists(SpeciesProvider speciesProvider, NestProvider nestProvider, EggProvider eggProvider, SpecimenProvider specimenProvider) async {
-    allSpeciesList = await speciesProvider.getAllRecordsBySpecies(selectedSpecies ?? '');
-    nestList = await nestProvider.getNestsBySpecies(selectedSpecies ?? '');
-    eggList = await eggProvider.getEggsBySpecies(selectedSpecies ?? '');
-    specimenList = await specimenProvider.getSpecimensBySpecies(selectedSpecies ?? '');
-  }
+
 
   List<BarChartGroupData> createBarGroupsFromOccurrencesMap(Map<int, int> monthlyOccurrences) {
     final List<BarChartGroupData> barGroups = [];
@@ -450,13 +389,6 @@ class StatisticsScreenState extends State<StatisticsScreen> {
     });
     return barGroups;
   }
-}
-
-class MonthOccurrence {
-  final int month;
-  final int occurrences;
-
-  MonthOccurrence({required this.month, required this.occurrences});
 }
 
 class Indicator extends StatelessWidget {

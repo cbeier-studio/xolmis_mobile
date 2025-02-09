@@ -194,4 +194,34 @@ class InventoryProvider with ChangeNotifier {
     return _inventoryRepository.getNextSequentialNumber(local, observer, ano, mes, dia, typeChar);
   }
 
+  // Calculate the total sampling hours from all inventories
+  Future<double> getTotalSamplingHours() async {
+    fetchInventories();
+    final inventories = finishedInventories;
+    Duration totalDuration = Duration.zero;
+
+    for (final inventory in inventories) {
+      if (inventory.startTime != null && inventory.endTime != null) {
+        totalDuration += inventory.endTime!.difference(inventory.startTime!);
+      }
+    }
+
+    return totalDuration.inMinutes / 60.0; // Convert to hours
+  }
+
+  // Calculate the average sampling hours from all inventories
+  Future<double> getAverageSamplingHours() async {
+    fetchInventories();
+    final inventories = finishedInventories;
+    Duration totalDuration = Duration.zero;
+
+    for (final inventory in inventories) {
+      if (inventory.startTime != null && inventory.endTime != null) {
+        totalDuration += inventory.endTime!.difference(inventory.startTime!);
+      }
+    }
+
+    return totalDuration.inMinutes / finishedInventories.length / 60.0; // Convert to hours
+  }
+
 }
