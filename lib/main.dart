@@ -382,11 +382,11 @@ class _MainScreenState extends State<MainScreen> {
         selectedIcon: const Icon(Icons.book),
         label: Text(S.of(context).fieldJournal),
       ),
-      NavigationRailDestination(
-        icon: const Icon(Icons.assessment_outlined),
-        selectedIcon: const Icon(Icons.assessment),
-        label: Text(S.of(context).statistics),
-      ),
+      // NavigationRailDestination(
+      //   icon: const Icon(Icons.assessment_outlined),
+      //   selectedIcon: const Icon(Icons.assessment),
+      //   label: Text(S.of(context).statistics),
+      // ),
     ];
 
       return Scaffold(
@@ -557,11 +557,11 @@ class _MainScreenState extends State<MainScreen> {
           label: Text(S.of(context).fieldJournal),
           selectedIcon: const Icon(Icons.book),
         ),
-        NavigationDrawerDestination(
-          icon: const Icon(Icons.assessment_outlined),
-          label: Text(S.of(context).statistics),
-          selectedIcon: const Icon(Icons.assessment),
-        ),
+        // NavigationDrawerDestination(
+        //   icon: const Icon(Icons.assessment_outlined),
+        //   label: Text(S.of(context).statistics),
+        //   selectedIcon: const Icon(Icons.assessment),
+        // ),
       ],
     );
   }

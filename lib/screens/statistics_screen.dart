@@ -35,6 +35,7 @@ class StatisticsScreenState extends State<StatisticsScreen> {
   List<Egg> eggList = [];
   List<Specimen> specimenList = [];
   bool isLoadingData = false;
+  int totalRecords = 0;
 
   // Color mapping for each record type
   final Map<String, Color> _recordTypeColors = {
@@ -133,6 +134,7 @@ class StatisticsScreenState extends State<StatisticsScreen> {
         // titleStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
       );
     }).toList();
+    totalRecords = allSpeciesList.length + nestList.length + eggList.length + specimenList.length;
 
     return Scaffold(
       appBar: AppBar(
@@ -207,6 +209,10 @@ class StatisticsScreenState extends State<StatisticsScreen> {
       child: Column(
                   children: [
                     Text('Total de registros', style: TextStyle(fontSize: 16),),
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Text(totalRecords.toString(), style: TextStyle(fontSize: 20,),),
                     SizedBox(
                       height: 300,
                       child: PieChart(
@@ -221,6 +227,50 @@ class StatisticsScreenState extends State<StatisticsScreen> {
                 ),
               ),
                     ),
+                      ],
+                    ),
+                    SizedBox(height: 8.0,),
+                    Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Indicator(
+                color: Colors.blue,
+                text: S.current.inventories,
+                isSquare: false,
+                // size: touchedIndex == 0 ? 18 : 16,
+                // textColor: touchedIndex == 0
+                //     ? AppColors.mainTextColor1
+                //     : AppColors.mainTextColor3,
+              ),
+              Indicator(
+                color: Colors.orange,
+                text: S.current.nests,
+                isSquare: false,
+                // size: touchedIndex == 1 ? 18 : 16,
+                // textColor: touchedIndex == 1
+                //     ? AppColors.mainTextColor1
+                //     : AppColors.mainTextColor3,
+              ),
+              Indicator(
+                color: Colors.green,
+                text: S.current.egg(2),
+                isSquare: false,
+                // size: touchedIndex == 2 ? 18 : 16,
+                // textColor: touchedIndex == 2
+                //     ? AppColors.mainTextColor1
+                //     : AppColors.mainTextColor3,
+              ),
+              Indicator(
+                color: Colors.purple,
+                text: S.current.specimens(2),
+                isSquare: false,
+                // size: touchedIndex == 3 ? 18 : 16,
+                // textColor: touchedIndex == 3
+                //     ? AppColors.mainTextColor1
+                //     : AppColors.mainTextColor3,
+              ),
+            ],
+          ),
                   ],
                 ),
                 ),
@@ -324,4 +374,47 @@ class MonthOccurrence {
   final int occurrences;
 
   MonthOccurrence({required this.month, required this.occurrences});
+}
+
+class Indicator extends StatelessWidget {
+  const Indicator({
+    super.key,
+    required this.color,
+    required this.text,
+    required this.isSquare,
+    this.size = 16,
+    this.textColor,
+  });
+  final Color color;
+  final String text;
+  final bool isSquare;
+  final double size;
+  final Color? textColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        Container(
+          width: size,
+          height: size,
+          decoration: BoxDecoration(
+            shape: isSquare ? BoxShape.rectangle : BoxShape.circle,
+            color: color,
+          ),
+        ),
+        const SizedBox(
+          width: 4,
+        ),
+        Text(
+          text,
+          style: TextStyle(
+            // fontSize: 16,
+            // fontWeight: FontWeight.bold,
+            color: textColor,
+          ),
+        )
+      ],
+    );
+  }
 }
