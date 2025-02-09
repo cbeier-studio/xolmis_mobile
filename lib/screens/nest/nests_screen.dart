@@ -220,7 +220,7 @@ class NestsScreenState extends State<NestsScreen> {
 
       for (final nest in nests) {
         // 1. Create a list of data for the CSV
-        List<List<dynamic>> rows = buildNestCsvRows(nest, locale);
+        List<List<dynamic>> rows = await buildNestCsvRows(nest, locale);
 
         // 2. Convert the list of data to CSV
         String csv = const ListToCsvConverter().convert(rows, fieldDelimiter: ';');

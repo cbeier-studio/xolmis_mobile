@@ -296,7 +296,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
       if (inventories.isNotEmpty) {
         for (final inventory in inventories) {
           // 1. Create a list of data for the CSV
-          List<List<dynamic>> rows = buildInventoryCsvRows(inventory!, locale);
+          List<List<dynamic>> rows = await buildInventoryCsvRows(inventory!, locale);
 
           // 2. Convert the list of data to CSV
           String csv =

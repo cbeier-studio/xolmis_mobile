@@ -25,7 +25,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   int _pointCountsDuration = 8;
   int _cumulativeTimeDuration = 45;
   int _intervalsDuration = 10;
-  String _observerAcronym = '';
+  String _observerAbbreviation = '';
+  bool _formatNumbers = true;
   PackageInfo? _packageInfo;
 
   @override
@@ -50,7 +51,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
       _pointCountsDuration = prefs.getInt('pointCountsDuration') ?? 8;
       _cumulativeTimeDuration = prefs.getInt('cumulativeTimeDuration') ?? 45;
       _intervalsDuration = prefs.getInt('intervalsDuration') ?? 10;
-      _observerAcronym = prefs.getString('observerAcronym') ?? '';
+      _observerAbbreviation = prefs.getString('observerAcronym') ?? '';
+      _formatNumbers = prefs.getBool('formatNumbers') ?? true;
     });
   }
 
@@ -63,7 +65,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
     await prefs.setInt('pointCountsDuration', _pointCountsDuration);
     await prefs.setInt('cumulativeTimeDuration', _cumulativeTimeDuration);
     await prefs.setInt('intervalsDuration', _intervalsDuration);
-    await prefs.setString('observerAcronym', _observerAcronym);
+    await prefs.setString('observerAcronym', _observerAbbreviation);
+    await prefs.setBool('formatNumbers', _formatNumbers);
   }
 
   @override
@@ -83,7 +86,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             SettingsTile.navigation(
               leading: Icon(Icons.person_outlined),
               title: Text(S.of(context).observerSetting),
-              value: Text(_observerAcronym),
+              value: Text(_observerAbbreviation),
               onPressed: (context) async {
                 String? newObserver = await showDialog<String>(
                   context: context,
@@ -117,7 +120,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                 if (newObserver != null && newObserver.isNotEmpty) {
                   setState(() {
-                    _observerAcronym = newObserver;
+                    _observerAbbreviation = newObserver;
                   });
                   _saveSettings();
                 }
@@ -251,6 +254,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   });
                   _saveSettings();
                 }
+              },
+            ),
+          ]),
+          SettingsSection(title: Text(S.of(context).export), tiles: [
+            SettingsTile.switchTile(
+              title: Text(S.of(context).formatNumbers),
+              initialValue: _formatNumbers,
+              onToggle: (bool value) {
+                setState(() {
+                  _formatNumbers = value;
+                });
+                _saveSettings();
               },
             ),
           ]),

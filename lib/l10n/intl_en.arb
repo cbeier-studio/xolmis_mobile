@@ -164,6 +164,11 @@
         "type": "text",
         "description": "Interval qualitative lists option in settings"
     },
+    "formatNumbers": "Format numbers",
+    "@formatNumbers": {
+        "type": "text",
+        "description": "Format numbers option in settings"
+    },
     "about": "About the app",
     "@about": {
         "type": "text",

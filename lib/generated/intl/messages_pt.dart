@@ -287,6 +287,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "finishInventory":
             MessageLookupByLibrary.simpleMessage("Encerrar inventário"),
         "finished": MessageLookupByLibrary.simpleMessage("Encerrados"),
+        "formatNumbers":
+            MessageLookupByLibrary.simpleMessage("Formatar números"),
         "gallery": MessageLookupByLibrary.simpleMessage("Galeria"),
         "general": MessageLookupByLibrary.simpleMessage("Geral"),
         "generateId": MessageLookupByLibrary.simpleMessage("Gerar ID"),

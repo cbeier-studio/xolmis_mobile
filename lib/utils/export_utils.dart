@@ -8,6 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../data/models/inventory.dart';
 import '../data/models/nest.dart';
@@ -103,7 +104,7 @@ Future<void> exportInventoryToCsv(BuildContext context, Inventory inventory, boo
     final locale = Localizations.localeOf(context);
 
     // 1. Create a list of data for the CSV
-    List<List<dynamic>> rows = buildInventoryCsvRows(inventory, locale);
+    List<List<dynamic>> rows = await buildInventoryCsvRows(inventory, locale);
 
     // 2. Convert the list of data to CSV
     String csv = const ListToCsvConverter().convert(rows, fieldDelimiter: ';');
@@ -137,9 +138,11 @@ Future<void> exportInventoryToCsv(BuildContext context, Inventory inventory, boo
 }
 
 // Add inventory data to CSV rows
-List<List<dynamic>> buildInventoryCsvRows(Inventory inventory, Locale locale) {
+Future<List<List>> buildInventoryCsvRows(Inventory inventory, Locale locale) async {
   final List<List<dynamic>> rows = [];
   final numberFormat = NumberFormat.decimalPattern(locale.toString())..maximumFractionDigits = 7;
+  final prefs = await SharedPreferences.getInstance();
+  final formatNumbers = prefs.getBool('formatNumbers') ?? true;
   rows.add([
     'ID',
     'Type',
@@ -164,10 +167,10 @@ List<List<dynamic>> buildInventoryCsvRows(Inventory inventory, Locale locale) {
     DateFormat.Hms(locale.toString()).format(inventory.startTime!),
     DateFormat.yMd(locale.toString()).format(inventory.endTime!),
     DateFormat.Hms(locale.toString()).format(inventory.endTime!),
-    numberFormat.format(inventory.startLongitude),
-    numberFormat.format(inventory.startLatitude),
-    numberFormat.format(inventory.endLongitude),
-    numberFormat.format(inventory.endLatitude),
+    formatNumbers ? numberFormat.format(inventory.startLongitude) : inventory.startLongitude,
+    formatNumbers ? numberFormat.format(inventory.startLatitude) : inventory.startLatitude,
+    formatNumbers ? numberFormat.format(inventory.endLongitude) : inventory.endLongitude,
+    formatNumbers ? numberFormat.format(inventory.endLatitude) : inventory.endLatitude,
     inventory.currentInterval,
   ]);
   
@@ -205,8 +208,8 @@ List<List<dynamic>> buildInventoryCsvRows(Inventory inventory, Locale locale) {
   for (var vegetation in inventory.vegetationList) {
     rows.add([
       DateFormat('dd/MM/yyyy HH:mm:ss').format(vegetation.sampleTime!),
-      numberFormat.format(vegetation.latitude),
-      numberFormat.format(vegetation.longitude),
+      formatNumbers ? numberFormat.format(vegetation.latitude) : vegetation.latitude,
+      formatNumbers ? numberFormat.format(vegetation.longitude) : vegetation.longitude,
       vegetation.herbsProportion,
       vegetation.herbsDistribution?.index,
       vegetation.herbsHeight,
@@ -235,7 +238,7 @@ List<List<dynamic>> buildInventoryCsvRows(Inventory inventory, Locale locale) {
       DateFormat('dd/MM/yyyy HH:mm:ss').format(weather.sampleTime!),
       weather.cloudCover,
       precipitationTypeFriendlyNames[weather.precipitation],
-      NumberFormat.decimalPattern(locale.toString()).format(weather.temperature),
+      formatNumbers ? NumberFormat.decimalPattern(locale.toString()).format(weather.temperature) : weather.temperature,
       weather.windSpeed
     ]);
   }
@@ -249,8 +252,8 @@ List<List<dynamic>> buildInventoryCsvRows(Inventory inventory, Locale locale) {
       rows.add(['Latitude', 'Longitude']);
       for (var poi in species.pois) {
         rows.add([
-          numberFormat.format(poi.latitude), 
-          numberFormat.format(poi.longitude)
+          formatNumbers ? numberFormat.format(poi.latitude) : poi.latitude,
+          formatNumbers ? numberFormat.format(poi.longitude) : poi.longitude
         ]);
       }
       rows.add([]); // Empty line to
@@ -323,7 +326,7 @@ Future<void> exportNestToCsv(BuildContext context, Nest nest) async {
   try {
     final locale = Localizations.localeOf(context);
     // 1. Create a list of data for the CSV
-    List<List<dynamic>> rows = buildNestCsvRows(nest, locale);
+    List<List<dynamic>> rows = await buildNestCsvRows(nest, locale);
 
     // 2. Convert the list of data to CSV
     String csv = const ListToCsvConverter().convert(rows, fieldDelimiter: ';');
@@ -353,9 +356,11 @@ Future<void> exportNestToCsv(BuildContext context, Nest nest) async {
 }
 
 // Add nest data to CSV rows
-List<List<dynamic>> buildNestCsvRows(Nest nest, Locale locale) {
+Future<List<List>> buildNestCsvRows(Nest nest, Locale locale) async {
   final numberFormat = NumberFormat.decimalPattern(locale.toString())..maximumFractionDigits = 7;
   List<List<dynamic>> rows = [];
+  final prefs = await SharedPreferences.getInstance();
+  final formatNumbers = prefs.getBool('formatNumbers') ?? true;
   rows.add([
     'Field number',
     'Species',
@@ -375,11 +380,11 @@ List<List<dynamic>> buildNestCsvRows(Nest nest, Locale locale) {
     nest.fieldNumber,
     nest.speciesName,
     nest.localityName,
-    numberFormat.format(nest.longitude),
-    numberFormat.format(nest.latitude),
+    formatNumbers ? numberFormat.format(nest.longitude) : nest.longitude,
+    formatNumbers ? numberFormat.format(nest.latitude) : nest.latitude,
     nest.foundTime != null ? DateFormat('dd/MM/yyyy HH:mm:ss').format(nest.foundTime!) : '',
     nest.support,
-    NumberFormat.decimalPattern(locale.toString()).format(nest.heightAboveGround),
+    formatNumbers ? NumberFormat.decimalPattern(locale.toString()).format(nest.heightAboveGround) : nest.heightAboveGround,
     nest.male,
     nest.female,
     nest.helpers,
@@ -433,9 +438,9 @@ List<List<dynamic>> buildNestCsvRows(Nest nest, Locale locale) {
       egg.fieldNumber,
       egg.speciesName,
       eggShapeTypeFriendlyNames[egg.eggShape],
-      NumberFormat.decimalPattern(locale.toString()).format(egg.width),
-      NumberFormat.decimalPattern(locale.toString()).format(egg.length),
-      NumberFormat.decimalPattern(locale.toString()).format(egg.mass),
+      formatNumbers ? NumberFormat.decimalPattern(locale.toString()).format(egg.width) : egg.width,
+      formatNumbers ? NumberFormat.decimalPattern(locale.toString()).format(egg.length) : egg.length,
+      formatNumbers ? NumberFormat.decimalPattern(locale.toString()).format(egg.mass) : egg.mass,
     ]);
   }
 
@@ -478,7 +483,7 @@ Future<void> exportAllSpecimensToCsv(BuildContext context) async {
     final locale = Localizations.localeOf(context);
 
     // 1. Create a list of data for the CSV
-    List<List<dynamic>> rows = buildSpecimensCsvRows(specimenList, locale);
+    List<List<dynamic>> rows = await buildSpecimensCsvRows(specimenList, locale);
 
     // 2. Convert the list of data to CSV
     String csv = const ListToCsvConverter().convert(rows, fieldDelimiter: ';');
@@ -508,9 +513,11 @@ Future<void> exportAllSpecimensToCsv(BuildContext context) async {
 }
 
 // Add specimens data to CSV rows
-List<List<dynamic>> buildSpecimensCsvRows(List<Specimen> specimenList, Locale locale) {
+Future<List<List>> buildSpecimensCsvRows(List<Specimen> specimenList, Locale locale) async {
   final numberFormat = NumberFormat.decimalPattern(locale.toString())..maximumFractionDigits = 7;
   List<List<dynamic>> rows = [];
+  final prefs = await SharedPreferences.getInstance();
+  final formatNumbers = prefs.getBool('formatNumbers') ?? true;
   rows.add([
     'Date/Time',
     'Field number',
@@ -528,8 +535,8 @@ List<List<dynamic>> buildSpecimensCsvRows(List<Specimen> specimenList, Locale lo
       specimen.speciesName,
       specimenTypeFriendlyNames[specimen.type],
       specimen.locality,
-      numberFormat.format(specimen.longitude),
-      numberFormat.format(specimen.latitude),
+      formatNumbers ? numberFormat.format(specimen.longitude) : specimen.longitude,
+      formatNumbers ? numberFormat.format(specimen.latitude) : specimen.latitude,
       specimen.notes,
     ]);
   }

@@ -1,7 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:xolmis/data/database/database_helper.dart';
 import 'package:xolmis/generated/l10n.dart';
 
 import '../data/models/inventory.dart';
@@ -26,6 +28,7 @@ class StatisticsScreen extends StatefulWidget {
 }
 
 class StatisticsScreenState extends State<StatisticsScreen> {
+  final _dbHelper = DatabaseHelper();
   final List<Species> speciesList = [];
   final List<Inventory> inventoryList= [];
   String? selectedSpecies;
@@ -48,6 +51,87 @@ class StatisticsScreenState extends State<StatisticsScreen> {
   // Function to get the color for a given record type
   Color _getColor(String recordType) {
     return _recordTypeColors[recordType] ?? Colors.grey; // Default to grey if not found
+  }
+
+  // Helper function to get distinct species names from a table
+  Future<List<String>> _getDistinctSpeciesFromTable(String tableName) async {
+    final db = await _dbHelper.database;
+    final String columnName = tableName == 'species' ? 'name' : 'speciesName';
+    if (db == null) {
+      debugPrint('Error: Database is null.');
+      return [];
+    }
+    try {
+      final List<Map<String, dynamic>> results = await db.query(
+        tableName,
+        columns: [columnName],
+        distinct: true,
+      );
+
+      // Extract the species names from the results.
+      final List<String> speciesNames = results
+          .map((row) => row[columnName] as String)
+          .toList();
+
+      return speciesNames;
+    } catch (e) {
+      debugPrint('Error querying database: $e');
+      return []; // Return an empty list in case of an error.
+    }
+  }
+
+  // Get the total number of species with records in any table
+  Future<int> getTotalSpeciesWithRecords() async {
+    final speciesFromSpecies = await _getDistinctSpeciesFromTable('species');
+    final speciesFromNests = await _getDistinctSpeciesFromTable('nests');
+    final speciesFromEggs = await _getDistinctSpeciesFromTable('eggs');
+    final speciesFromSpecimens = await _getDistinctSpeciesFromTable('specimens');
+
+    final allSpecies = <String>{
+      ...speciesFromSpecies,
+      ...speciesFromNests,
+      ...speciesFromEggs,
+      ...speciesFromSpecimens,
+    };
+
+    return allSpecies.length;
+  }
+
+  // Get the top 10 species with the most records
+  Future<List<MapEntry<String, int>>> getTop10SpeciesWithMostRecords() async {
+    final speciesFromSpecies = await _getDistinctSpeciesFromTable('species');
+    final speciesFromNests = await _getDistinctSpeciesFromTable('nests');
+    final speciesFromEggs = await _getDistinctSpeciesFromTable('eggs');
+    final speciesFromSpecimens = await _getDistinctSpeciesFromTable(
+        'specimens');
+
+    final speciesCounts = <String, int>{};
+
+    // Count species from species table
+    for (final species in speciesFromSpecies) {
+      speciesCounts[species] = (speciesCounts[species] ?? 0) + 1;
+    }
+
+    // Count species from nests table
+    for (final species in speciesFromNests) {
+      speciesCounts[species] = (speciesCounts[species] ?? 0) + 1;
+    }
+
+    // Count species from eggs table
+    for (final species in speciesFromEggs) {
+      speciesCounts[species] = (speciesCounts[species] ?? 0) + 1;
+    }
+
+    // Count species from specimens table
+    for (final species in speciesFromSpecimens) {
+      speciesCounts[species] = (speciesCounts[species] ?? 0) + 1;
+    }
+
+    // Sort by count in descending order and take the top 10
+    final sortedSpecies = speciesCounts.entries.toList()
+      ..sort((a, b) => b.value.compareTo(a.value));
+
+    return sortedSpecies.take(10).toList();
   }
 
   Map<int, int> getOccurrencesByMonth(

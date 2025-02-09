@@ -95,6 +95,11 @@
         "type": "text",
         "description": "Interval qualitative lists option in settings"
     },
+    "formatNumbers": "Formatar números",
+    "@formatNumbers": {
+        "type": "text",
+        "description": "Format numbers option in settings"
+    },
     "about": "Sobre o app",
     "dangerZone": "Área perigosa",
     "deleteAppData": "Apagar dados do aplicativo",

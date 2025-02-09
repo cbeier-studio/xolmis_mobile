@@ -339,6 +339,16 @@ class S {
     );
   }
 
+  /// `Format numbers`
+  String get formatNumbers {
+    return Intl.message(
+      'Format numbers',
+      name: 'formatNumbers',
+      desc: 'Format numbers option in settings',
+      args: [],
+    );
+  }
+
   /// `About the app`
   String get about {
     return Intl.message(
