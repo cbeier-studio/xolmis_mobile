@@ -139,6 +139,7 @@ Future<void> exportInventoryToCsv(BuildContext context, Inventory inventory, boo
 // Add inventory data to CSV rows
 List<List<dynamic>> buildInventoryCsvRows(Inventory inventory, Locale locale) {
   final List<List<dynamic>> rows = [];
+  final numberFormat = NumberFormat.decimalPattern(locale.toString())..maximumFractionDigits = 7;
   rows.add([
     'ID',
     'Type',
@@ -163,10 +164,10 @@ List<List<dynamic>> buildInventoryCsvRows(Inventory inventory, Locale locale) {
     DateFormat.Hms(locale.toString()).format(inventory.startTime!),
     DateFormat.yMd(locale.toString()).format(inventory.endTime!),
     DateFormat.Hms(locale.toString()).format(inventory.endTime!),
-    NumberFormat.decimalPattern(locale.toString()).format(inventory.startLongitude),
-    NumberFormat.decimalPattern(locale.toString()).format(inventory.startLatitude),
-    NumberFormat.decimalPattern(locale.toString()).format(inventory.endLongitude),
-    NumberFormat.decimalPattern(locale.toString()).format(inventory.endLatitude),
+    numberFormat.format(inventory.startLongitude),
+    numberFormat.format(inventory.startLatitude),
+    numberFormat.format(inventory.endLongitude),
+    numberFormat.format(inventory.endLatitude),
     inventory.currentInterval,
   ]);
   
@@ -204,8 +205,8 @@ List<List<dynamic>> buildInventoryCsvRows(Inventory inventory, Locale locale) {
   for (var vegetation in inventory.vegetationList) {
     rows.add([
       DateFormat('dd/MM/yyyy HH:mm:ss').format(vegetation.sampleTime!),
-      NumberFormat.decimalPattern(locale.toString()).format(vegetation.latitude),
-      NumberFormat.decimalPattern(locale.toString()).format(vegetation.longitude),
+      numberFormat.format(vegetation.latitude),
+      numberFormat.format(vegetation.longitude),
       vegetation.herbsProportion,
       vegetation.herbsDistribution?.index,
       vegetation.herbsHeight,
@@ -248,8 +249,8 @@ List<List<dynamic>> buildInventoryCsvRows(Inventory inventory, Locale locale) {
       rows.add(['Latitude', 'Longitude']);
       for (var poi in species.pois) {
         rows.add([
-          NumberFormat.decimalPattern(locale.toString()).format(poi.latitude), 
-          NumberFormat.decimalPattern(locale.toString()).format(poi.longitude)
+          numberFormat.format(poi.latitude), 
+          numberFormat.format(poi.longitude)
         ]);
       }
       rows.add([]); // Empty line to
@@ -353,6 +354,7 @@ Future<void> exportNestToCsv(BuildContext context, Nest nest) async {
 
 // Add nest data to CSV rows
 List<List<dynamic>> buildNestCsvRows(Nest nest, Locale locale) {
+  final numberFormat = NumberFormat.decimalPattern(locale.toString())..maximumFractionDigits = 7;
   List<List<dynamic>> rows = [];
   rows.add([
     'Field number',
@@ -373,8 +375,8 @@ List<List<dynamic>> buildNestCsvRows(Nest nest, Locale locale) {
     nest.fieldNumber,
     nest.speciesName,
     nest.localityName,
-    NumberFormat.decimalPattern(locale.toString()).format(nest.longitude),
-    NumberFormat.decimalPattern(locale.toString()).format(nest.latitude),
+    numberFormat.format(nest.longitude),
+    numberFormat.format(nest.latitude),
     nest.foundTime != null ? DateFormat('dd/MM/yyyy HH:mm:ss').format(nest.foundTime!) : '',
     nest.support,
     NumberFormat.decimalPattern(locale.toString()).format(nest.heightAboveGround),
@@ -507,6 +509,7 @@ Future<void> exportAllSpecimensToCsv(BuildContext context) async {
 
 // Add specimens data to CSV rows
 List<List<dynamic>> buildSpecimensCsvRows(List<Specimen> specimenList, Locale locale) {
+  final numberFormat = NumberFormat.decimalPattern(locale.toString())..maximumFractionDigits = 7;
   List<List<dynamic>> rows = [];
   rows.add([
     'Date/Time',
@@ -525,8 +528,8 @@ List<List<dynamic>> buildSpecimensCsvRows(List<Specimen> specimenList, Locale lo
       specimen.speciesName,
       specimenTypeFriendlyNames[specimen.type],
       specimen.locality,
-      NumberFormat.decimalPattern(locale.toString()).format(specimen.longitude),
-      NumberFormat.decimalPattern(locale.toString()).format(specimen.latitude),
+      numberFormat.format(specimen.longitude),
+      numberFormat.format(specimen.latitude),
       specimen.notes,
     ]);
   }
