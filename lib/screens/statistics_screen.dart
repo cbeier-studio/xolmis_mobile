@@ -35,7 +35,7 @@ class StatisticsScreenState extends State<StatisticsScreen> {
   List<Egg> eggList = [];
   List<Specimen> specimenList = [];
   bool isLoadingData = false;
-  int totalRecords = 0;
+  int totalRecordsPerSpecies = 0;
 
   // Color mapping for each record type
   final Map<String, Color> _recordTypeColors = {
@@ -134,7 +134,7 @@ class StatisticsScreenState extends State<StatisticsScreen> {
         // titleStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
       );
     }).toList();
-    totalRecords = allSpeciesList.length + nestList.length + eggList.length + specimenList.length;
+    totalRecordsPerSpecies = allSpeciesList.length + nestList.length + eggList.length + specimenList.length;
 
     return Scaffold(
       appBar: AppBar(
@@ -154,7 +154,7 @@ class StatisticsScreenState extends State<StatisticsScreen> {
                 child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Por espécie', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+            Text(S.current.perSpecies, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
             Row(
               children: [
                 SearchAnchor(
@@ -208,11 +208,11 @@ class StatisticsScreenState extends State<StatisticsScreen> {
           padding: EdgeInsets.all(16.0),
       child: Column(
                   children: [
-                    Text('Total de registros', style: TextStyle(fontSize: 16),),
+                    Text(S.current.totalRecords, style: TextStyle(fontSize: 16),),
                     Stack(
                       alignment: Alignment.center,
                       children: [
-                        Text(totalRecords.toString(), style: TextStyle(fontSize: 20,),),
+                        Text(totalRecordsPerSpecies.toString(), style: TextStyle(fontSize: 20,),),
                     SizedBox(
                       height: 300,
                       child: PieChart(
@@ -281,7 +281,7 @@ class StatisticsScreenState extends State<StatisticsScreen> {
                   padding: EdgeInsets.all(16.0),
                   child: Column(
                   children: [
-                    Text('Registros por mês', style: TextStyle(fontSize: 16),),
+                    Text(S.current.recordsPerMonth, style: TextStyle(fontSize: 16),),
                   SizedBox(
                     height: 300,
                     child: BarChart(
@@ -296,7 +296,6 @@ class StatisticsScreenState extends State<StatisticsScreen> {
                             sideTitles: SideTitles(
                               showTitles: true,
                               getTitlesWidget: (value, meta) {
-                                final locale = Localizations.localeOf(context);
                                 String monthAbbreviation =
                                     DateFormat('MMM').format(DateTime(0, value.toInt()));
                                 return Text(monthAbbreviation);
@@ -328,7 +327,7 @@ class StatisticsScreenState extends State<StatisticsScreen> {
             ] else if (isLoadingData) ...[
               Center(child: CircularProgressIndicator())
             ] else ...[
-              Center(child: Text('Selecione uma espécie para ver as estatísticas'))
+              Center(child: Text(S.current.selectSpeciesToShowStats))
             ],
           ],
         ),

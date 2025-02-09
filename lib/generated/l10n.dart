@@ -2598,6 +2598,46 @@ class S {
     );
   }
 
+  /// `Select a species to show the statistics`
+  String get selectSpeciesToShowStats {
+    return Intl.message(
+      'Select a species to show the statistics',
+      name: 'selectSpeciesToShowStats',
+      desc: 'Message shown when no species is selected in statistics',
+      args: [],
+    );
+  }
+
+  /// `Per species`
+  String get perSpecies {
+    return Intl.message(
+      'Per species',
+      name: 'perSpecies',
+      desc: 'Per species section title in statistics',
+      args: [],
+    );
+  }
+
+  /// `Total of records`
+  String get totalRecords {
+    return Intl.message(
+      'Total of records',
+      name: 'totalRecords',
+      desc: 'Total of records card title in statistics',
+      args: [],
+    );
+  }
+
+  /// `Records per month`
+  String get recordsPerMonth {
+    return Intl.message(
+      'Records per month',
+      name: 'recordsPerMonth',
+      desc: 'Records per month card title in statistics',
+      args: [],
+    );
+  }
+
   /// `None`
   String get precipitationNone {
     return Intl.message(

@@ -431,6 +431,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "outOfSample":
             MessageLookupByLibrary.simpleMessage("Out of the sample"),
         "pause": MessageLookupByLibrary.simpleMessage("Pause"),
+        "perSpecies": MessageLookupByLibrary.simpleMessage("Per species"),
         "permissionDenied":
             MessageLookupByLibrary.simpleMessage("Permission denied."),
         "permissionDeniedPermanently": MessageLookupByLibrary.simpleMessage(
@@ -449,6 +450,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "reactivateInventory":
             MessageLookupByLibrary.simpleMessage("Reactivate inventory"),
         "recordTime": MessageLookupByLibrary.simpleMessage("Record time"),
+        "recordsPerMonth":
+            MessageLookupByLibrary.simpleMessage("Records per month"),
         "refreshList": MessageLookupByLibrary.simpleMessage("Refresh"),
         "removeSpeciesFromSample":
             MessageLookupByLibrary.simpleMessage("Remove from the sample"),
@@ -465,6 +468,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Select precipitation"),
         "selectSpecies":
             MessageLookupByLibrary.simpleMessage("Please, select a species"),
+        "selectSpeciesToShowStats": MessageLookupByLibrary.simpleMessage(
+            "Select a species to show the statistics"),
         "settings": MessageLookupByLibrary.simpleMessage("Settings"),
         "shareImage": MessageLookupByLibrary.simpleMessage("Share image"),
         "shrubs": MessageLookupByLibrary.simpleMessage("Shrubs"),
@@ -533,6 +538,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "title": MessageLookupByLibrary.simpleMessage("Title"),
         "totalIndividuals":
             MessageLookupByLibrary.simpleMessage("Total Individuals"),
+        "totalRecords":
+            MessageLookupByLibrary.simpleMessage("Total of records"),
         "totalSpecies": MessageLookupByLibrary.simpleMessage("Total Species"),
         "trees": MessageLookupByLibrary.simpleMessage("Trees"),
         "vegetation": MessageLookupByLibrary.simpleMessage("Vegetation"),

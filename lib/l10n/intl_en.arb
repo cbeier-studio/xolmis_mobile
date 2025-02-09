@@ -1409,6 +1409,26 @@
         "type": "text",
         "description": "Title for statistics screen and labels"
     },
+    "selectSpeciesToShowStats": "Select a species to show the statistics",
+    "@selectSpeciesToShowStats": {
+        "type": "text",
+        "description": "Message shown when no species is selected in statistics"
+    },
+    "perSpecies": "Per species",
+    "@perSpecies": {
+        "type": "text",
+        "description": "Per species section title in statistics"
+    },
+    "totalRecords": "Total of records",
+    "@totalRecords": {
+        "type": "text",
+        "description": "Total of records card title in statistics"
+    },
+    "recordsPerMonth": "Records per month",
+    "@recordsPerMonth": {
+        "type": "text",
+        "description": "Records per month card title in statistics"
+    },
     "precipitationNone": "None",
     "precipitationFog": "Fog",
     "precipitationMist": "Mist",

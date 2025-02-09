@@ -848,6 +848,26 @@
         "type": "text",
         "description": "Title for statistics screen and labels"
     },
+    "selectSpeciesToShowStats": "Selecione uma espécie para ver as estatísticas",
+    "@selectSpeciesToShowStats": {
+        "type": "text",
+        "description": "Message shown when no species is selected in statistics"
+    },
+    "perSpecies": "Por espécie",
+    "@perSpecies": {
+        "type": "text",
+        "description": "Per species section title in statistics"
+    },
+    "totalRecords": "Total de registros",
+    "@totalRecords": {
+        "type": "text",
+        "description": "Total of records card title in statistics"
+    },
+    "recordsPerMonth": "Registros por mês",
+    "@recordsPerMonth": {
+        "type": "text",
+        "description": "Records per month card title in statistics"
+    },
     "precipitationNone": "Nenhuma",
     "precipitationFog": "Névoa",
     "precipitationMist": "Neblina",
