@@ -9,9 +9,6 @@ import 'package:workmanager/workmanager.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:xolmis/data/database/daos/journal_dao.dart';
-import 'package:xolmis/data/database/repositories/journal_repository.dart';
-import 'package:xolmis/providers/journal_provider.dart';
 
 import 'data/database/database_helper.dart';
 
@@ -25,6 +22,7 @@ import 'data/database/daos/nest_revision_dao.dart';
 import 'data/database/daos/egg_dao.dart';
 import 'data/database/daos/specimen_dao.dart';
 import 'data/database/daos/app_image_dao.dart';
+import 'data/database/daos/journal_dao.dart';
 
 import 'data/database/repositories/inventory_repository.dart';
 import 'data/database/repositories/species_repository.dart';
@@ -36,6 +34,7 @@ import 'data/database/repositories/nest_revision_repository.dart';
 import 'data/database/repositories/egg_repository.dart';
 import 'data/database/repositories/specimen_repository.dart';
 import 'data/database/repositories/app_image_repository.dart';
+import 'data/database/repositories/journal_repository.dart';
 
 import 'providers/inventory_provider.dart';
 import 'providers/species_provider.dart';
@@ -47,6 +46,7 @@ import 'providers/nest_revision_provider.dart';
 import 'providers/egg_provider.dart';
 import 'providers/specimen_provider.dart';
 import 'providers/app_image_provider.dart';
+import 'providers/journal_provider.dart';
 
 import 'screens/inventory/inventories_screen.dart';
 import 'screens/journal/journals_screen.dart';
@@ -382,11 +382,11 @@ class _MainScreenState extends State<MainScreen> {
         selectedIcon: const Icon(Icons.book),
         label: Text(S.of(context).fieldJournal),
       ),
-      // NavigationRailDestination(
-      //   icon: const Icon(Icons.assessment_outlined),
-      //   selectedIcon: const Icon(Icons.assessment),
-      //   label: Text(S.of(context).statistics),
-      // ),
+      NavigationRailDestination(
+        icon: const Icon(Icons.assessment_outlined),
+        selectedIcon: const Icon(Icons.assessment),
+        label: Text(S.of(context).statistics),
+      ),
     ];
 
       return Scaffold(
@@ -557,11 +557,11 @@ class _MainScreenState extends State<MainScreen> {
           label: Text(S.of(context).fieldJournal),
           selectedIcon: const Icon(Icons.book),
         ),
-        // NavigationDrawerDestination(
-        //   icon: const Icon(Icons.assessment_outlined),
-        //   label: Text(S.of(context).statistics),
-        //   selectedIcon: const Icon(Icons.assessment),
-        // ),
+        NavigationDrawerDestination(
+          icon: const Icon(Icons.assessment_outlined),
+          label: Text(S.of(context).statistics),
+          selectedIcon: const Icon(Icons.assessment),
+        ),
       ],
     );
   }

@@ -18,12 +18,14 @@ import '../../generated/l10n.dart';
 class Poi {
   late int? id;
   final int speciesId;
+  DateTime? sampleTime;
   double longitude;
   double latitude;
 
   Poi({
     this.id,
     required this.speciesId,
+    required this.sampleTime,
     required this.longitude,
     required this.latitude,
   });
@@ -32,15 +34,17 @@ class Poi {
     return Poi(
       id: map['id'],
       speciesId: map['speciesId'],
+      sampleTime: DateTime.parse(map['sampleTime']),
       longitude: map['longitude'],
       latitude: map['latitude'],
     );
   }
 
-  Poi copyWith({int? id, int? speciesId, double? longitude, double? latitude}) {
+  Poi copyWith({int? id, int? speciesId, DateTime? sampleTime, double? longitude, double? latitude}) {
     return Poi(
       id: id ?? this.id,
       speciesId: speciesId ?? this.speciesId,
+      sampleTime: sampleTime ?? this.sampleTime,
       longitude: longitude ?? this.longitude,
       latitude: latitude ?? this.latitude,
     );
@@ -50,6 +54,7 @@ class Poi {
     return {
       'id': id,
       'speciesId': speciesId,
+      'sampleTime': sampleTime?.toIso8601String(),
       'longitude': longitude,
       'latitude': latitude,
     };
@@ -59,6 +64,7 @@ class Poi {
     return {
       'id': id,
       'speciesId': speciesId,
+      'sampleTime': sampleTime?.toIso8601String(),
       'longitude': longitude,
       'latitude': latitude,
     };
@@ -68,6 +74,7 @@ class Poi {
     return Poi(
       id: json['id'],
       speciesId: json['speciesId'],
+      sampleTime: DateTime.parse(json['sampleTime']),
       longitude: json['longitude'],
       latitude: json['latitude'],
     );
@@ -78,6 +85,7 @@ class Poi {
     return 'Poi{'
         'id: $id, '
         'speciesId: $speciesId, '
+        'sampleTime: $sampleTime, '
         'longitude: $longitude, '
         'latitude: $latitude}';
   }

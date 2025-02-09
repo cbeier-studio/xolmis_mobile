@@ -116,6 +116,7 @@ class SpeciesListItemState extends State<SpeciesListItem> {
                       // Create a new POI
                       final poi = Poi(
                         speciesId: widget.species.id!,
+                        sampleTime: DateTime.now(),
                         longitude: position.longitude,
                         latitude: position.latitude,
                       );

@@ -575,6 +575,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                         // Create a new POI
                         final poi = Poi(
                           speciesId: species.id!,
+                          sampleTime: DateTime.now(),
                           longitude: position.longitude,
                           latitude: position.latitude,
                         );

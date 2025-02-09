@@ -246,18 +246,18 @@ Future<List<List>> buildInventoryCsvRows(Inventory inventory, Locale locale) asy
   // Add POIs data
   rows.add([]); // Empty line to separate POI data
   rows.add(['POINTS OF INTEREST']);
+  rows.add(['Species', 'Date/Time', 'Latitude', 'Longitude']);
   for (var species in inventory.speciesList) {
     if (species.pois.isNotEmpty) {
-      rows.add(['Species: ${species.name}']);
-      rows.add(['Latitude', 'Longitude']);
       for (var poi in species.pois) {
         rows.add([
+          species.name,
+          poi.sampleTime != null ? DateFormat('dd/MM/yyyy HH:mm:ss').format(poi.sampleTime!) : '',
           formatNumbers ? numberFormat.format(poi.latitude) : poi.latitude,
           formatNumbers ? numberFormat.format(poi.longitude) : poi.longitude
         ]);
       }
-      rows.add([]); // Empty line to
-    }// separate species POIs
+    }
   }
 
   return rows;

@@ -23,7 +23,7 @@ class DatabaseHelper {
     String path = join(await getDatabasesPath(), 'xolmis_database.db');
     return await openDatabase(
       path,
-      version: 12, // Increase the version number
+      version: 13, // Increase the version number
       onCreate: _createTables,
       onUpgrade: _upgradeTables,
       onOpen: (db) {
@@ -165,6 +165,7 @@ class DatabaseHelper {
         CREATE TABLE pois (
             id INTEGER PRIMARY KEY AUTOINCREMENT, 
             speciesId INTEGER NOT NULL, 
+            sampleTime TEXT, 
             longitude REAL NOT NULL, 
             latitude REAL NOT NULL, 
             FOREIGN KEY (speciesId) REFERENCES species(id) ON DELETE CASCADE 
@@ -337,6 +338,11 @@ class DatabaseHelper {
           lastModifiedDate TEXT
         )
       ''');
+    }
+    if (oldVersion < 13) {
+      db.execute(
+        'ALTER TABLE pois ADD COLUMN sampleTime TEXT',
+      );
     }
   }
 
