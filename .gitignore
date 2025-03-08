@@ -16,6 +16,9 @@ migrate_working_dir/
 *.iws
 .idea/
 
+# CMake
+cmake-build-*/
+
 # The .vscode folder contains launch configuration and tasks you configure in
 # VS Code which you may wish to be included in version control, so this line
 # is commented out by default.
@@ -31,6 +34,7 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
+.fvm/
 
 # Symbolication related
 app.*.symbols
@@ -42,4 +46,5 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+/android/app/.cxx/
 untranslated_messages.json

@@ -58,6 +58,26 @@ Future<List<String>> _getDistinctSpeciesFromTable(String tableName) async {
   }
 }
 
+// Get a list of recorded species
+Future<List<String>> getRecordedSpeciesList() async {
+  final speciesFromSpecies = await _getDistinctSpeciesFromTable('species');
+  final speciesFromNests = await _getDistinctSpeciesFromTable('nests');
+  final speciesFromEggs = await _getDistinctSpeciesFromTable('eggs');
+  final speciesFromSpecimens = await _getDistinctSpeciesFromTable('specimens');
+
+  final allSpecies = <String>{
+    ...speciesFromSpecies,
+    ...speciesFromNests,
+    ...speciesFromEggs,
+    ...speciesFromSpecimens,
+  };
+
+  List<String> sortedSpecies = allSpecies.toList();
+  sortedSpecies.sort((a, b) => a.compareTo(b));
+
+  return sortedSpecies;
+}
+
 // Get the total number of species with records in any table
 Future<int> getTotalSpeciesWithRecords() async {
   final speciesFromSpecies = await _getDistinctSpeciesFromTable('species');
@@ -145,6 +165,59 @@ Map<int, int> getOccurrencesByMonth(
       addOccurrence(speciesDate);
     }
     // }
+  }
+
+  // Check the list of nests
+  for (var nest in nestList) {
+    if (nest.speciesName == selectedSpecies) {
+      addOccurrence(nest.foundTime!);
+    }
+  }
+
+  // Check the list of eggs
+  for (var egg in eggList) {
+    if (egg.speciesName == selectedSpecies) {
+      addOccurrence(egg.sampleTime!);
+    }
+  }
+
+  // Check the list of specimens
+  for (var specimen in specimenList) {
+    if (specimen.speciesName == selectedSpecies) {
+      addOccurrence(specimen.sampleTime!);
+    }
+  }
+
+  return occurrences;
+}
+
+Map<int, int> getOccurrencesByYear(
+    BuildContext context,
+    List<Species> speciesList,
+    List<Nest> nestList,
+    List<Egg> eggList,
+    List<Specimen> specimenList,
+    String? selectedSpecies) {
+  Map<int, int> occurrences = {};
+
+  void addOccurrence(DateTime date) {
+    occurrences[date.year] = (occurrences[date.year] ?? 0) + 1;
+  }
+
+  // Check the list of species
+  for (var specie in speciesList) {
+    DateTime? speciesDate = specie.sampleTime;
+
+    if (speciesDate == null) {
+      Inventory? inventory =
+          Provider.of<InventoryProvider>(context, listen: false)
+              .getInventoryById(specie.inventoryId);
+      speciesDate = inventory?.startTime;
+    }
+
+    if (speciesDate != null) {
+      addOccurrence(speciesDate);
+    }
   }
 
   // Check the list of nests

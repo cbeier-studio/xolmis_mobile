@@ -51,7 +51,11 @@ dependencies:
   shared_preferences: ^2.3.4
   numberpicker: ^2.1.2
   package_info_plus: ^8.1.2
-  workmanager: ^0.5.2
+  workmanager: 
+    git:
+      url: https://github.com/fluttercommunity/flutter_workmanager.git
+      path: workmanager
+      ref: main
   side_sheet: ^1.0.4
   image_picker: ^1.1.2
   file_picker: ^8.1.7

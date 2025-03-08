@@ -873,6 +873,11 @@
         "type": "text",
         "description": "Records per month card title in statistics"
     },
+    "recordsPerYear": "Registros por ano",
+    "@recordsPerYear": {
+        "type": "text",
+        "description": "Records per year card title in statistics"
+    },
     "precipitationNone": "Nenhuma",
     "precipitationFog": "Névoa",
     "precipitationMist": "Neblina",

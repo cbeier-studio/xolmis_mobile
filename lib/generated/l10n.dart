@@ -18,17 +18,20 @@ class S {
   static S? _current;
 
   static S get current {
-    assert(_current != null,
-        'No instance of S was loaded. Try to initialize the S delegate before accessing S.current.');
+    assert(
+      _current != null,
+      'No instance of S was loaded. Try to initialize the S delegate before accessing S.current.',
+    );
     return _current!;
   }
 
   static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
 
   static Future<S> load(Locale locale) {
-    final name = (locale.countryCode?.isEmpty ?? false)
-        ? locale.languageCode
-        : locale.toString();
+    final name =
+        (locale.countryCode?.isEmpty ?? false)
+            ? locale.languageCode
+            : locale.toString();
     final localeName = Intl.canonicalizedLocale(name);
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
@@ -41,8 +44,10 @@ class S {
 
   static S of(BuildContext context) {
     final instance = S.maybeOf(context);
-    assert(instance != null,
-        'No instance of S present in the widget tree. Did you add S.delegate in localizationsDelegates?');
+    assert(
+      instance != null,
+      'No instance of S present in the widget tree. Did you add S.delegate in localizationsDelegates?',
+    );
     return instance!;
   }
 
@@ -52,22 +57,12 @@ class S {
 
   /// `Inventories`
   String get inventories {
-    return Intl.message(
-      'Inventories',
-      name: 'inventories',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Inventories', name: 'inventories', desc: '', args: []);
   }
 
   /// `Nests`
   String get nests {
-    return Intl.message(
-      'Nests',
-      name: 'nests',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Nests', name: 'nests', desc: '', args: []);
   }
 
   /// `{howMany, plural, one{Specimen} other{Specimens}}`
@@ -431,12 +426,7 @@ class S {
 
   /// `OK`
   String get ok {
-    return Intl.message(
-      'OK',
-      name: 'ok',
-      desc: 'OK button label',
-      args: [],
-    );
+    return Intl.message('OK', name: 'ok', desc: 'OK button label', args: []);
   }
 
   /// `Limit of simultaneous inventories reached.`
@@ -2648,34 +2638,29 @@ class S {
     );
   }
 
-  /// `None`
-  String get precipitationNone {
+  /// `Records per year`
+  String get recordsPerYear {
     return Intl.message(
-      'None',
-      name: 'precipitationNone',
-      desc: '',
+      'Records per year',
+      name: 'recordsPerYear',
+      desc: 'Records per year card title in statistics',
       args: [],
     );
+  }
+
+  /// `None`
+  String get precipitationNone {
+    return Intl.message('None', name: 'precipitationNone', desc: '', args: []);
   }
 
   /// `Fog`
   String get precipitationFog {
-    return Intl.message(
-      'Fog',
-      name: 'precipitationFog',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Fog', name: 'precipitationFog', desc: '', args: []);
   }
 
   /// `Mist`
   String get precipitationMist {
-    return Intl.message(
-      'Mist',
-      name: 'precipitationMist',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Mist', name: 'precipitationMist', desc: '', args: []);
   }
 
   /// `Drizzle`
@@ -2690,32 +2675,17 @@ class S {
 
   /// `Rain`
   String get precipitationRain {
-    return Intl.message(
-      'Rain',
-      name: 'precipitationRain',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Rain', name: 'precipitationRain', desc: '', args: []);
   }
 
   /// `None`
   String get distributionNone {
-    return Intl.message(
-      'None',
-      name: 'distributionNone',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('None', name: 'distributionNone', desc: '', args: []);
   }
 
   /// `Rare`
   String get distributionRare {
-    return Intl.message(
-      'Rare',
-      name: 'distributionRare',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Rare', name: 'distributionRare', desc: '', args: []);
   }
 
   /// `Few sparse individuals`
@@ -2950,12 +2920,7 @@ class S {
 
   /// `Oval`
   String get eggShapeOval {
-    return Intl.message(
-      'Oval',
-      name: 'eggShapeOval',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Oval', name: 'eggShapeOval', desc: '', args: []);
   }
 
   /// `Pyriform`
@@ -2970,12 +2935,7 @@ class S {
 
   /// `Conical`
   String get eggShapeConical {
-    return Intl.message(
-      'Conical',
-      name: 'eggShapeConical',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Conical', name: 'eggShapeConical', desc: '', args: []);
   }
 
   /// `Biconical`
@@ -3030,12 +2990,7 @@ class S {
 
   /// `Laying`
   String get nestStageLaying {
-    return Intl.message(
-      'Laying',
-      name: 'nestStageLaying',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Laying', name: 'nestStageLaying', desc: '', args: []);
   }
 
   /// `Incubating`
@@ -3090,12 +3045,7 @@ class S {
 
   /// `Active`
   String get nestStatusActive {
-    return Intl.message(
-      'Active',
-      name: 'nestStatusActive',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Active', name: 'nestStatusActive', desc: '', args: []);
   }
 
   /// `Inactive`
@@ -3130,32 +3080,17 @@ class S {
 
   /// `Nest`
   String get specimenNest {
-    return Intl.message(
-      'Nest',
-      name: 'specimenNest',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Nest', name: 'specimenNest', desc: '', args: []);
   }
 
   /// `Bones`
   String get specimenBones {
-    return Intl.message(
-      'Bones',
-      name: 'specimenBones',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Bones', name: 'specimenBones', desc: '', args: []);
   }
 
   /// `Egg`
   String get specimenEgg {
-    return Intl.message(
-      'Egg',
-      name: 'specimenEgg',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Egg', name: 'specimenEgg', desc: '', args: []);
   }
 
   /// `Parasites`
@@ -3180,52 +3115,27 @@ class S {
 
   /// `Blood`
   String get specimenBlood {
-    return Intl.message(
-      'Blood',
-      name: 'specimenBlood',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Blood', name: 'specimenBlood', desc: '', args: []);
   }
 
   /// `Claw`
   String get specimenClaw {
-    return Intl.message(
-      'Claw',
-      name: 'specimenClaw',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Claw', name: 'specimenClaw', desc: '', args: []);
   }
 
   /// `Swab`
   String get specimenSwab {
-    return Intl.message(
-      'Swab',
-      name: 'specimenSwab',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Swab', name: 'specimenSwab', desc: '', args: []);
   }
 
   /// `Tissues`
   String get specimenTissues {
-    return Intl.message(
-      'Tissues',
-      name: 'specimenTissues',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Tissues', name: 'specimenTissues', desc: '', args: []);
   }
 
   /// `Feces`
   String get specimenFeces {
-    return Intl.message(
-      'Feces',
-      name: 'specimenFeces',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Feces', name: 'specimenFeces', desc: '', args: []);
   }
 
   /// `Regurgite`

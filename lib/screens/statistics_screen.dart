@@ -28,6 +28,7 @@ class StatisticsScreen extends StatefulWidget {
 
 class StatisticsScreenState extends State<StatisticsScreen> {
   final SearchController searchController = SearchController();
+  List<String> recordedSpeciesNames = [];
   String? selectedSpecies;
   List<Species> allSpeciesList = [];
   List<Nest> nestList = [];
@@ -52,6 +53,7 @@ class StatisticsScreenState extends State<StatisticsScreen> {
       setState(() {
         isLoadingData = true;
       });
+      recordedSpeciesNames = await getRecordedSpeciesList();
       totalDistinctSpecies = await getTotalSpeciesWithRecords();
       totalInventoryHours = await inventoryProvider.getTotalSamplingHours();
       averageInventoryHours = await inventoryProvider.getAverageSamplingHours();
@@ -168,10 +170,7 @@ class StatisticsScreenState extends State<StatisticsScreen> {
                 );
               },
               suggestionsBuilder: (context, controller) {
-                if (controller.text.isEmpty) {
-                  return [];
-                } else {
-                  return List<String>.from(allSpeciesNames)
+                  return List<String>.from(recordedSpeciesNames)
                     .where((species) => speciesMatchesQuery(
                         species, controller.text.toLowerCase()))
                     .map((species) {
@@ -192,7 +191,6 @@ class StatisticsScreenState extends State<StatisticsScreen> {
                       },
                     );
                   }).toList();
-                }
               },
             ),
                 SizedBox(width: 16.0,),
@@ -275,6 +273,8 @@ class StatisticsScreenState extends State<StatisticsScreen> {
                 ),
               ),
               SizedBox(height: 16.0),
+
+              // Records per month
               Card(
                 child: Padding(
                   padding: EdgeInsets.all(16.0),
@@ -313,6 +313,53 @@ class StatisticsScreenState extends State<StatisticsScreen> {
                         ),
                         barGroups: createBarGroupsFromOccurrencesMap(
                             getOccurrencesByMonth(context, allSpeciesList,
+                                nestList, eggList, specimenList, selectedSpecies)),
+                      ),
+                    ),
+                  ),
+
+                ]),
+                      ),
+              ),
+              SizedBox(height: 16.0),
+
+              // Records per year
+              Card(
+                child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Column(
+                  children: [
+                    Text(S.current.recordsPerYear, style: TextStyle(fontSize: 16),),
+                  SizedBox(
+                    height: 300,
+                    child: BarChart(
+                      BarChartData(
+                        alignment: BarChartAlignment.spaceAround,
+                        gridData: FlGridData(show: false),
+                        borderData: FlBorderData(show: false),
+                        barTouchData: BarTouchData(enabled: true),
+                        titlesData: FlTitlesData(
+                          show: true,
+                          bottomTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              getTitlesWidget: (value, meta) {
+                                return Text(value.toInt().toString());
+                              },
+                            ),
+                          ),
+                          leftTitles: AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
+                          ),
+                          topTitles: AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
+                          ),
+                          rightTitles: AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
+                          ),
+                        ),
+                        barGroups: createBarGroupsFromYearOccurrencesMap(
+                            getOccurrencesByYear(context, allSpeciesList,
                                 nestList, eggList, specimenList, selectedSpecies)),
                       ),
                     ),
@@ -364,6 +411,30 @@ class StatisticsScreenState extends State<StatisticsScreen> {
       barGroups.add(
         BarChartGroupData(
           x: month, // O mês será o valor do eixo X
+          barRods: [
+            BarChartRodData(
+              toY: count.toDouble(), // A contagem de espécies será o valor do eixo Y
+              color: Colors.blue, // Cor da barra (você pode personalizar)
+              width: 16, // Largura da barra (você pode personalizar)
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(6),
+                topRight: Radius.circular(6),
+              ),
+            ),
+          ],
+        ),
+      );
+    });
+    return barGroups;
+  }
+
+  List<BarChartGroupData> createBarGroupsFromYearOccurrencesMap(Map<int, int> yearlyOccurrences) {
+    final List<BarChartGroupData> barGroups = [];
+    yearlyOccurrences.forEach((year, count) {
+      // Converter a abreviação do mês para um número (1-12)
+      barGroups.add(
+        BarChartGroupData(
+          x: year, // O mês será o valor do eixo X
           barRods: [
             BarChartRodData(
               toY: count.toDouble(), // A contagem de espécies será o valor do eixo Y

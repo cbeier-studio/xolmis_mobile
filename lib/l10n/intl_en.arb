@@ -1434,6 +1434,11 @@
         "type": "text",
         "description": "Records per month card title in statistics"
     },
+    "recordsPerYear": "Records per year",
+    "@recordsPerYear": {
+        "type": "text",
+        "description": "Records per year card title in statistics"
+    },
     "precipitationNone": "None",
     "precipitationFog": "Fog",
     "precipitationMist": "Mist",
