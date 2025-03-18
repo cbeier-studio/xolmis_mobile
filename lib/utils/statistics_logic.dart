@@ -96,7 +96,12 @@ Future<int> getTotalSpeciesWithRecords() async {
 }
 
 // Get the top 10 species with the most records
-Future<List<MapEntry<String, int>>> getTop10SpeciesWithMostRecords() async {
+Future<List<MapEntry<String, int>>> getTop10SpeciesWithMostRecords(
+  List<Species> inventories,
+    List<Nest> nests,
+    List<Egg> eggs,
+    List<Specimen> specimens
+) async {
   final speciesFromSpecies = await _getDistinctSpeciesFromTable('species');
   final speciesFromNests = await _getDistinctSpeciesFromTable('nests');
   final speciesFromEggs = await _getDistinctSpeciesFromTable('eggs');
@@ -104,24 +109,18 @@ Future<List<MapEntry<String, int>>> getTop10SpeciesWithMostRecords() async {
 
   final speciesCounts = <String, int>{};
 
-  // Count species from species table
-  for (final species in speciesFromSpecies) {
-    speciesCounts[species] = (speciesCounts[species] ?? 0) + 1;
-  }
+  final allSpeciesSet = <String>{
+    ...speciesFromSpecies,
+    ...speciesFromNests,
+    ...speciesFromEggs,
+    ...speciesFromSpecimens,
+  };
+  List<String> allSpeciesList = allSpeciesSet.toList();
 
-  // Count species from nests table
-  for (final species in speciesFromNests) {
-    speciesCounts[species] = (speciesCounts[species] ?? 0) + 1;
-  }
-
-  // Count species from eggs table
-  for (final species in speciesFromEggs) {
-    speciesCounts[species] = (speciesCounts[species] ?? 0) + 1;
-  }
-
-  // Count species from specimens table
-  for (final species in speciesFromSpecimens) {
-    speciesCounts[species] = (speciesCounts[species] ?? 0) + 1;
+  // Count species from species list
+  for (final species in allSpeciesList) {
+    int countTotal = await getTotalsForSpecies(species, inventories, nests, eggs, specimens);
+    speciesCounts[species] = countTotal;
   }
 
   // Sort by count in descending order and take the top 10
@@ -252,4 +251,58 @@ Map<String, int> getTotalsByRecordType(List<Species> inventories,
     S.current.egg(2): eggs.length,
     S.current.specimens(2): specimens.length,
   };
+}
+
+Future<int> getTotalsForSpecies(
+    String speciesName,
+    List<Species> inventories,
+    List<Nest> nests,
+    List<Egg> eggs,
+    List<Specimen> specimens) async {
+      final DatabaseHelper _dbHelper;
+  _dbHelper = DatabaseHelper();
+  final db = await _dbHelper.database;
+  
+  if (db == null) {
+    debugPrint('Error: Database is null.');
+    return 0;
+  }
+  try {
+    final List<Map<String, dynamic>> resultSpecies = await db.query(
+      'species',
+      columns: ['count(*) as count'],
+      where: 'name = ?',
+      whereArgs: [speciesName],
+    );
+    int inventoryCount = resultSpecies[0]['count'] as int;
+
+    final List<Map<String, dynamic>> resultNests = await db.query(
+      'nests',
+      columns: ['count(*) as count'],
+      where: 'speciesName = ?',
+      whereArgs: [speciesName],
+    );
+    int nestCount = resultNests[0]['count'] as int;
+
+    final List<Map<String, dynamic>> resultEggs = await db.query(
+      'eggs',
+      columns: ['count(*) as count'],
+      where: 'speciesName = ?',
+      whereArgs: [speciesName],
+    );
+    int eggCount = resultEggs[0]['count'] as int;
+
+    final List<Map<String, dynamic>> resultSpecimens = await db.query(
+      'specimens',
+      columns: ['count(*) as count'],
+      where: 'speciesName = ?',
+      whereArgs: [speciesName],
+    );
+    int specimenCount = resultSpecimens[0]['count'] as int;
+
+    return inventoryCount + nestCount + eggCount + specimenCount;
+  } catch (e) {
+    debugPrint('Error querying database: $e');
+    return 0; 
+  }
 }

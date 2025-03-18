@@ -35,6 +35,7 @@ class StatisticsScreenState extends State<StatisticsScreen> {
   List<Egg> eggList = [];
   List<Specimen> specimenList = [];
   bool isLoadingData = false;
+  bool isLoadingSpecies = false;
   int totalRecordsPerSpecies = 0;
   int totalDistinctSpecies = 0;
   double totalInventoryHours = 0.0;
@@ -53,6 +54,11 @@ class StatisticsScreenState extends State<StatisticsScreen> {
       setState(() {
         isLoadingData = true;
       });
+      await loadDataLists(
+        Provider.of<SpeciesProvider>(context, listen: false), 
+        Provider.of<NestProvider>(context, listen: false), 
+        Provider.of<EggProvider>(context, listen: false), 
+        Provider.of<SpecimenProvider>(context, listen: false));
       recordedSpeciesNames = await getRecordedSpeciesList();
       totalDistinctSpecies = await getTotalSpeciesWithRecords();
       totalInventoryHours = await inventoryProvider.getTotalSamplingHours();
@@ -112,6 +118,7 @@ class StatisticsScreenState extends State<StatisticsScreen> {
                 child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            if (!isLoadingData) ...[
             Text(S.current.species(2), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
             Card(
               child: Padding(
@@ -130,7 +137,7 @@ class StatisticsScreenState extends State<StatisticsScreen> {
                     Text('Top 10 espécies mais registradas', style: TextStyle(fontSize: 16),),
                     SizedBox(height: 8,),
                       FutureBuilder<List<MapEntry<String, int>>>(
-                        future: getTop10SpeciesWithMostRecords(),
+                        future: getTop10SpeciesWithMostRecords(allSpeciesList, nestList, eggList, specimenList),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState == ConnectionState.waiting) {
                             return CircularProgressIndicator(); // Show a loading indicator
@@ -179,11 +186,11 @@ class StatisticsScreenState extends State<StatisticsScreen> {
                       onTap: () async {
                         setState(() {
                           selectedSpecies = species;
-                          isLoadingData = true;
+                          isLoadingSpecies = true;
                         });
                         await loadDataLists(speciesProvider, nestProvider, eggProvider, specimenProvider);
                         setState(() {
-                          isLoadingData = false;
+                          isLoadingSpecies = false;
                         });
                         controller.text = selectedSpecies ?? '';
                         controller.closeView('');
@@ -198,7 +205,7 @@ class StatisticsScreenState extends State<StatisticsScreen> {
             ],
             ),
             SizedBox(height: 16.0),
-            if (selectedSpecies != null && !isLoadingData) ...[
+            if (selectedSpecies != null && !isLoadingSpecies) ...[
               Column(children: [                  
               Card(
                 child: Padding(
@@ -370,7 +377,7 @@ class StatisticsScreenState extends State<StatisticsScreen> {
               ),
                 ],
                 ),
-            ] else if (isLoadingData) ...[
+            ] else if (isLoadingSpecies) ...[
               Center(child: CircularProgressIndicator())
             ] else ...[
               Center(child: Text(S.current.selectSpeciesToShowStats))
@@ -395,8 +402,12 @@ class StatisticsScreenState extends State<StatisticsScreen> {
                 ),
               ),
             ),
+            ] else if (isLoadingData) ...[
+              Center(child: CircularProgressIndicator())
+            ],
           ],
         ),
+        
       ),
       ),
     );
