@@ -1,3 +1,4 @@
+import 'package:fleather/fleather.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -56,15 +57,15 @@ void callbackDispatcher() {
     switch (task) {
       case "wakeup":
         debugPrint('Xolmis acordado pelo WorkManager (KeepAwake Task)');
-        // Aqui podemos adicionar lógicas adicionais caso necessário
-        // Por exemplo: verificar se existe alguma tarefa importante pendente
+        // Here we can add additional logic if necessary
+        // E.g.: check if there is an important pending task
         break;
       default:
         debugPrint("Tarefa desconhecida: $task");
         break;
     }
 
-    // Retorna true para indicar que a tarefa foi bem sucedida
+    // True to indicate that the task was successful
     return Future.value(true);
   });
 }
@@ -257,7 +258,7 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
             localizationsDelegates: [
                 S.delegate,
-                // FleatherLocalizations.delegate,
+                FleatherLocalizations.delegate,
                 GlobalMaterialLocalizations.delegate,
                 GlobalWidgetsLocalizations.delegate,
                 GlobalCupertinoLocalizations.delegate,
