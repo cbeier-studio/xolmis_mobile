@@ -1439,6 +1439,11 @@
         "type": "text",
         "description": "Records per year card title in statistics"
     },
+    "addCoordinates": "Add coordinates",
+    "@addCoordinates": {
+        "type": "text",
+        "description": "Add coordinates button hint"
+    },
     "precipitationNone": "None",
     "precipitationFog": "Fog",
     "precipitationMist": "Mist",

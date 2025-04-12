@@ -5,6 +5,7 @@ import 'package:fleather/fleather.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
@@ -14,6 +15,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../data/models/journal.dart';
 import '../../providers/journal_provider.dart';
 import '../../generated/l10n.dart';
+import '../../utils/utils.dart';
 
 class AddJournalScreen extends StatefulWidget {
   final FieldJournal? journalEntry;
@@ -71,6 +73,23 @@ class AddJournalScreenState extends State<AddJournalScreen> {
       appBar: AppBar(
         title: Text(S.of(context).newJournalEntry),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.add_location_alt_outlined),
+            tooltip: S.of(context).addCoordinates,
+            onPressed: () async {
+              Position? position = await getPosition();
+              if (position != null) {
+                final selection = _notesController.selection;
+                final positionText = '${position.longitude}; ${position.latitude}';
+                _notesController.replaceText(
+                  selection.baseOffset,
+                  0,
+                  positionText,
+                  selection: TextSelection.collapsed(offset: selection.baseOffset + positionText.length),
+                );
+              }              
+            },
+          ),
           MenuAnchor(
             builder: (context, controller, child) {
               return IconButton(

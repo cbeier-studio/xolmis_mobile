@@ -111,6 +111,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
     "about": MessageLookupByLibrary.simpleMessage("About the app"),
     "active": MessageLookupByLibrary.simpleMessage("Active"),
+    "addCoordinates": MessageLookupByLibrary.simpleMessage("Add coordinates"),
     "addEgg": MessageLookupByLibrary.simpleMessage("Add egg"),
     "addImage": MessageLookupByLibrary.simpleMessage("Add image"),
     "addPoi": MessageLookupByLibrary.simpleMessage("Add POI"),

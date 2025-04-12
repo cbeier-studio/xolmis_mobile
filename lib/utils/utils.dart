@@ -53,26 +53,20 @@ bool speciesMatchesQuery(String speciesName, String query) {
 String getNextInventoryId(String currentId) {
   // 1. Split the string in parts using '-' as delimiter
   final parts = currentId.split('-');
-
   // 2. Check if it has at least one part
   if (parts.isEmpty) {
     return currentId; // Return the original ID if it has no parts
   }
-
   // 3. Get the last part of the string
   var lastPart = parts.last;
-
   // 4. Extract the last two digits as integer
   var numericPart = int.tryParse(lastPart.substring(max(0, lastPart.length - 2)));
-
   // 5. Check if the extraction was successful
   if (numericPart == null) {
     return currentId; // Return the original ID if the extraction was unsuccessful
   }
-
   // 6. Increment the number in 1
   numericPart++;
-
   // 7. Replace the last two digits by the new formatted number
   lastPart = lastPart.substring(0, max(0, lastPart.length - 2)) + numericPart.toString().padLeft(2, '0');
 

@@ -1,5 +1,5 @@
 {
-    "@@locale": "pt_BR",
+    "@@locale": "pt",
     "inventories": "Inventários",
     "nests": "Ninhos",
     "specimens": "{howMany, plural, one{Espécime} other{Espécimes}}",

@@ -2648,6 +2648,16 @@ class S {
     );
   }
 
+  /// `Add coordinates`
+  String get addCoordinates {
+    return Intl.message(
+      'Add coordinates',
+      name: 'addCoordinates',
+      desc: 'Add coordinates button hint',
+      args: [],
+    );
+  }
+
   /// `None`
   String get precipitationNone {
     return Intl.message('None', name: 'precipitationNone', desc: '', args: []);
@@ -3155,6 +3165,7 @@ class AppLocalizationDelegate extends LocalizationsDelegate<S> {
   List<Locale> get supportedLocales {
     return const <Locale>[
       Locale.fromSubtags(languageCode: 'en'),
+      Locale.fromSubtags(languageCode: 'pt'),
       Locale.fromSubtags(languageCode: 'pt', countryCode: 'BR'),
     ];
   }

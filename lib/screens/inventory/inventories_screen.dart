@@ -540,7 +540,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                 return const Center(
                   child: Padding(
                       padding: EdgeInsets.all(16.0),
-                      child: CircularProgressIndicator()),
+                      child: CircularProgressIndicator(year2023: false,)),
                 );
               } else if (_isShowingActiveInventories &&
                       inventoryProvider.activeInventories.isEmpty ||

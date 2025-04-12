@@ -1,5 +1,5 @@
 // DO NOT EDIT. This is code generated via package:intl/generate_localized.dart
-// This is a library that provides messages for a pt_BR locale. All the
+// This is a library that provides messages for a pt locale. All the
 // messages from the main program should be duplicated here with the same
 // function name.
 
@@ -18,7 +18,7 @@ final messages = new MessageLookup();
 typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 
 class MessageLookup extends MessageLookupByLibrary {
-  String get localeName => 'pt_BR';
+  String get localeName => 'pt';
 
   static String m0(howMany, gender, what) =>
       "Tem certeza que deseja excluir ${Intl.plural(howMany, one: '${Intl.gender(gender, female: 'esta', male: 'este', other: 'este(a)')}', other: '${Intl.gender(gender, female: 'estas', male: 'estes', other: 'estes(as)')}')} ${what}?";

@@ -79,6 +79,8 @@ void main() async {
 }
 
 class MyAppInitializer extends StatelessWidget {
+  const MyAppInitializer({super.key});
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Map<String, dynamic>>(
@@ -87,7 +89,7 @@ class MyAppInitializer extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return MaterialApp(
             home: Scaffold(
-              body: Center(child: CircularProgressIndicator()),
+              body: Center(child: CircularProgressIndicator.adaptive()),
             ),
           );
         } else if (snapshot.hasError) {
@@ -278,8 +280,8 @@ class MyApp extends StatelessWidget {
               return Locale('en', '');  
             },
             title: 'Xolmis',
-            theme: ThemeData.light(),
-            darkTheme: ThemeData.dark(),
+            theme: ThemeData(brightness: Brightness.light),
+            darkTheme: ThemeData(brightness: Brightness.dark),
             themeMode: themeModel.themeMode,
             home: MainScreen(),
           );
