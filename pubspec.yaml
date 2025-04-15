@@ -3,7 +3,7 @@ description: "Xolmis goes mobile."
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.2+69
+version: 1.0.2+70
 
 environment:
   sdk: ^3.7.0

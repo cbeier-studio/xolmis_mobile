@@ -1444,6 +1444,26 @@
         "type": "text",
         "description": "Add coordinates button hint"
     },
+    "recordedSpecies": "recorded species",
+    "@recordedSpecies": {
+        "type": "text",
+        "description": "Recorded species card title in statistics"
+    },
+    "topTenSpecies": "Top 10 most recorded species",
+    "@topTenSpecies": {
+        "type": "text",
+        "description": "Top 10 most recorded species card title in statistics"
+    },
+    "surveyHours": "survey hours",
+    "@surveyHours": {
+        "type": "text",
+        "description": "Survey hours card title in statistics"
+    },
+    "averageSurveyHours": "survey hours per inventory",
+    "@averageSurveyHours": {
+        "type": "text",
+        "description": "Average survey hours card title in statistics"
+    },
     "precipitationNone": "None",
     "precipitationFog": "Fog",
     "precipitationMist": "Mist",

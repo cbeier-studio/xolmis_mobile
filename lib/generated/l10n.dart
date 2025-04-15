@@ -2658,6 +2658,46 @@ class S {
     );
   }
 
+  /// `recorded species`
+  String get recordedSpecies {
+    return Intl.message(
+      'recorded species',
+      name: 'recordedSpecies',
+      desc: 'Recorded species card title in statistics',
+      args: [],
+    );
+  }
+
+  /// `Top 10 most recorded species`
+  String get topTenSpecies {
+    return Intl.message(
+      'Top 10 most recorded species',
+      name: 'topTenSpecies',
+      desc: 'Top 10 most recorded species card title in statistics',
+      args: [],
+    );
+  }
+
+  /// `survey hours`
+  String get surveyHours {
+    return Intl.message(
+      'survey hours',
+      name: 'surveyHours',
+      desc: 'Survey hours card title in statistics',
+      args: [],
+    );
+  }
+
+  /// `survey hours per inventory`
+  String get averageSurveyHours {
+    return Intl.message(
+      'survey hours per inventory',
+      name: 'averageSurveyHours',
+      desc: 'Average survey hours card title in statistics',
+      args: [],
+    );
+  }
+
   /// `None`
   String get precipitationNone {
     return Intl.message('None', name: 'precipitationNone', desc: '', args: []);

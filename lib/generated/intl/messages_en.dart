@@ -120,6 +120,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Add to the sample",
     ),
     "appearance": MessageLookupByLibrary.simpleMessage("Appearance"),
+    "averageSurveyHours": MessageLookupByLibrary.simpleMessage(
+      "survey hours per inventory",
+    ),
     "camera": MessageLookupByLibrary.simpleMessage("Camera"),
     "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
     "clearSelection": MessageLookupByLibrary.simpleMessage("Clear selection"),
@@ -513,6 +516,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Reactivate inventory",
     ),
     "recordTime": MessageLookupByLibrary.simpleMessage("Record time"),
+    "recordedSpecies": MessageLookupByLibrary.simpleMessage("recorded species"),
     "recordsPerMonth": MessageLookupByLibrary.simpleMessage(
       "Records per month",
     ),
@@ -602,6 +606,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "startInventory": MessageLookupByLibrary.simpleMessage("Start inventory"),
     "startNextList": MessageLookupByLibrary.simpleMessage("Start next list"),
     "statistics": MessageLookupByLibrary.simpleMessage("Statistics"),
+    "surveyHours": MessageLookupByLibrary.simpleMessage("survey hours"),
     "systemMode": MessageLookupByLibrary.simpleMessage("System theme"),
     "temperature": MessageLookupByLibrary.simpleMessage("Temperature"),
     "timeFound": MessageLookupByLibrary.simpleMessage("Date and time found"),
@@ -612,6 +617,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Timed qualitative lists",
     ),
     "title": MessageLookupByLibrary.simpleMessage("Title"),
+    "topTenSpecies": MessageLookupByLibrary.simpleMessage(
+      "Top 10 most recorded species",
+    ),
     "totalIndividuals": MessageLookupByLibrary.simpleMessage(
       "Total Individuals",
     ),

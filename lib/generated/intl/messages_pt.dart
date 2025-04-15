@@ -123,6 +123,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Incluir na amostra",
     ),
     "appearance": MessageLookupByLibrary.simpleMessage("Aparência"),
+    "averageSurveyHours": MessageLookupByLibrary.simpleMessage(
+      "horas de amostragem por inventário",
+    ),
     "camera": MessageLookupByLibrary.simpleMessage("Câmera"),
     "cancel": MessageLookupByLibrary.simpleMessage("Cancelar"),
     "clearSelection": MessageLookupByLibrary.simpleMessage("Limpar seleção"),
@@ -539,6 +542,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Reativar inventário",
     ),
     "recordTime": MessageLookupByLibrary.simpleMessage("Hora do registro"),
+    "recordedSpecies": MessageLookupByLibrary.simpleMessage(
+      "espécies registradas",
+    ),
     "recordsPerMonth": MessageLookupByLibrary.simpleMessage(
       "Registros por mês",
     ),
@@ -635,6 +641,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Iniciar próxima lista",
     ),
     "statistics": MessageLookupByLibrary.simpleMessage("Estatísticas"),
+    "surveyHours": MessageLookupByLibrary.simpleMessage("horas de amostragem"),
     "systemMode": MessageLookupByLibrary.simpleMessage("Tema do sistema"),
     "temperature": MessageLookupByLibrary.simpleMessage("Temperatura"),
     "timeFound": MessageLookupByLibrary.simpleMessage(
@@ -647,6 +654,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Listas qualitativas temporizadas",
     ),
     "title": MessageLookupByLibrary.simpleMessage("Título"),
+    "topTenSpecies": MessageLookupByLibrary.simpleMessage(
+      "Top 10 espécies mais registradas",
+    ),
     "totalIndividuals": MessageLookupByLibrary.simpleMessage(
       "Total de indivíduos",
     ),
