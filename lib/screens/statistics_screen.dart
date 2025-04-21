@@ -132,6 +132,7 @@ class _GeneralStatisticsTabState extends State<GeneralStatisticsTab> {
   List<Nest> nestList = [];
   List<Egg> eggList = [];
   List<Specimen> specimenList = [];
+  List<PieChartSectionData> specimenTypeSections = [];
 
   @override
   void initState() {
@@ -153,6 +154,16 @@ class _GeneralStatisticsTabState extends State<GeneralStatisticsTab> {
       totalDistinctSpecies = await getTotalSpeciesWithRecords();
       totalInventoryHours = await inventoryProvider.getTotalSamplingHours();
       averageInventoryHours = await inventoryProvider.getAverageSamplingHours();
+      final specimenTypeCounts = await getSpecimenTypeCounts();
+      specimenTypeSections = specimenTypeCounts.entries.map((entry) {
+        return PieChartSectionData(
+          showTitle: true,
+          title: entry.value.toString(),
+          value: entry.value.toDouble(),
+          color: getSpecimenColor(entry.key),
+          radius: 20,
+        );
+      }).toList();
     } catch (e) {
       // Handle errors here, e.g., show a snackbar
       debugPrint('Error loading data: $e');
@@ -289,6 +300,139 @@ class _GeneralStatisticsTabState extends State<GeneralStatisticsTab> {
                       ),
                     ),
                   ),
+                  SizedBox(height: 16),
+                  Text(
+                    S.current.specimens(2),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                  ),
+                  // Chart of specimens by type
+                  Card(
+                        child: Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: Column(
+                            children: [
+                              Text(
+                                S.current.specimenType,
+                                style: TextStyle(fontSize: 16),
+                              ),
+                              Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  // Text(
+                                  //   totalRecordsPerSpecies.toString(),
+                                  //   style: TextStyle(fontSize: 20),
+                                  // ),
+                                  SizedBox(
+                                    height: 300,
+                                    child: PieChart(
+                                      PieChartData(
+                                        borderData: FlBorderData(show: false),
+                                        // pieTouchData: PieTouchData(enabled: true),
+                                        sectionsSpace: 2,
+                                        centerSpaceRadius: 80,
+                                        sections: specimenTypeSections,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 8.0),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  Indicator(
+                                    color: Colors.blue,
+                                    text: S.current.specimenWholeCarcass,
+                                    isSquare: false,
+                                  ),
+                                  Indicator(
+                                    color: Colors.orange,
+                                    text: S.current.specimenPartialCarcass,
+                                    isSquare: false,
+                                  ),
+                                  
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  Indicator(
+                                    color: Colors.green,
+                                    text: S.current.specimenNest,
+                                    isSquare: false,
+                                  ),
+                                  Indicator(
+                                    color: Colors.purple,
+                                    text: S.current.specimenBones,
+                                    isSquare: false,
+                                  ),
+                                  Indicator(
+                                    color: Colors.yellow,
+                                    text: S.current.specimenEgg,
+                                    isSquare: false,
+                                  ),
+                                  Indicator(
+                                    color: Colors.cyan,
+                                    text: S.current.specimenParasites,
+                                    isSquare: false,
+                                  ),
+                                  
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  Indicator(
+                                    color: Colors.deepPurple,
+                                    text: S.current.specimenFeathers,
+                                    isSquare: false,
+                                  ),
+                                  Indicator(
+                                    color: Colors.red,
+                                    text: S.current.specimenBlood,
+                                    isSquare: false,
+                                  ),
+                                  Indicator(
+                                    color: Colors.teal,
+                                    text: S.current.specimenClaw,
+                                    isSquare: false,
+                                  ),
+                                  Indicator(
+                                    color: Colors.amber,
+                                    text: S.current.specimenSwab,
+                                    isSquare: false,
+                                  ),
+                                  
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  Indicator(
+                                    color: Colors.lightGreen,
+                                    text: S.current.specimenTissues,
+                                    isSquare: false,
+                                  ),
+                                  Indicator(
+                                    color: Colors.deepOrange,
+                                    text: S.current.specimenFeces,
+                                    isSquare: false,
+                                  ),
+                                  Indicator(
+                                    color: Colors.pink,
+                                    text: S.current.specimenRegurgite,
+                                    isSquare: false,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                 ] else if (isLoadingData) ...[
                   Center(child: CircularProgressIndicator()),
                 ],
@@ -366,7 +510,7 @@ class _PerSpeciesStatisticsTabState extends State<PerSpeciesStatisticsTab> {
             showTitle: true,
             title: entry.value.toString(),
             value: entry.value.toDouble(),
-            color: getColor(entry.key),
+            color: getRecordColor(entry.key),
             radius: 20,
             // titleStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
           );

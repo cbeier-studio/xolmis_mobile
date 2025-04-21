@@ -25,19 +25,42 @@ final Map<String, Color> _recordTypeColors = {
 };
 
 // Function to get the color for a given record type
-Color getColor(String recordType) {
+Color getRecordColor(String recordType) {
   return _recordTypeColors[recordType] ??
+      Colors.grey; // Default to grey if not found
+}
+
+// Color mapping for each specimen type
+final Map<String, Color> _specimenTypeColors = {
+  S.current.specimenWholeCarcass: Colors.blue,
+  S.current.specimenPartialCarcass: Colors.orange,
+  S.current.specimenNest: Colors.green,
+  S.current.specimenBones: Colors.purple,
+  S.current.specimenEgg: Colors.yellow,
+  S.current.specimenParasites: Colors.cyan,
+  S.current.specimenFeathers: Colors.deepPurple,
+  S.current.specimenBlood: Colors.red,
+  S.current.specimenClaw: Colors.teal,
+  S.current.specimenSwab: Colors.amber,
+  S.current.specimenTissues: Colors.lightGreen,
+  S.current.specimenFeces: Colors.deepOrange,
+  S.current.specimenRegurgite: Colors.pink,
+};
+
+// Function to get the color for a given record type
+Color getSpecimenColor(String specimenType) {
+  return _specimenTypeColors[specimenType] ??
       Colors.grey; // Default to grey if not found
 }
 
 // Helper function to get distinct species names from a table
 Future<List<String>> _getDistinctSpeciesFromTable(String tableName) async {
-  final DatabaseHelper _dbHelper;
-  _dbHelper = DatabaseHelper();
-  final db = await _dbHelper.database;
+  final DatabaseHelper dbHelper;
+  dbHelper = DatabaseHelper();
+  final db = await dbHelper.database;
   final String columnName = tableName == 'species' ? 'name' : 'speciesName';
   if (db == null) {
-    debugPrint('Error: Database is null.');
+    debugPrint('Error: Unable to access the database. It is null. Please ensure the database is initialized properly.');
     return [];
   }
   try {
@@ -297,12 +320,50 @@ Future<int> getTotalsForSpecies(
       columns: ['count(*) as count'],
       where: 'speciesName = ?',
       whereArgs: [speciesName],
-    );
-    int specimenCount = resultSpecimens[0]['count'] as int;
+        );
+        int specimenCount = resultSpecimens[0]['count'] as int;
 
-    return inventoryCount + nestCount + eggCount + specimenCount;
-  } catch (e) {
-    debugPrint('Error querying database: $e');
-    return 0; 
-  }
+        return inventoryCount + nestCount + eggCount + specimenCount;
+      } catch (e) {
+        debugPrint('Error querying database: $e');
+        return 0; 
+      }
 }
+
+    // Get a list of specimen types and the number of records per type
+    Future<Map<String, int>> getSpecimenTypeCounts() async {
+      final DatabaseHelper dbHelper;
+      dbHelper = DatabaseHelper();
+      final db = await dbHelper.database;
+      List<MapEntry<String, int>?> specimenTypeCounts = [];
+      Map<String, int> specimenTypeCountsMap = {};
+
+      if (db == null) {
+        debugPrint('Error: Database is null.');
+        return {};
+      }
+
+      try {
+        final List<Map<String, dynamic>> results = await db.query(
+          'specimens',
+          columns: ['type', 'COUNT(*) as count'],
+          where: 'type IS NOT NULL',
+          groupBy: 'type',
+        );
+
+        specimenTypeCounts = results.map((row) {
+          final specimenType = row['type'];
+          final count = row['count'];
+          if (specimenType != null && count != null) {
+            return MapEntry(specimenTypeFriendlyNames[SpecimenType.values[specimenType as int]] as String, count as int);
+          }
+        }).toList();
+
+        specimenTypeCountsMap = Map.fromEntries(specimenTypeCounts.whereType<MapEntry<String, int>>());
+
+        return specimenTypeCountsMap;
+      } catch (e) {
+        debugPrint('Error querying database: $e');
+        return {}; // Return an empty map in case of an error.
+      }
+    }
