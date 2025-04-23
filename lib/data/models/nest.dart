@@ -260,10 +260,10 @@ enum NestFateType {
   fatLost,
 }
 
-const Map<NestFateType, String> nestFateTypeFriendlyNames = {
-  NestFateType.fatUnknown: 'Indeterminado',
-  NestFateType.fatSuccess: 'Sucesso',
-  NestFateType.fatLost: 'Perdido',
+Map<NestFateType, String> nestFateTypeFriendlyNames = {
+  NestFateType.fatUnknown: S.current.nestFateUnknown,
+  NestFateType.fatSuccess: S.current.nestFateSuccess,
+  NestFateType.fatLost: S.current.nestFateLost,
 };
 
 class Nest {

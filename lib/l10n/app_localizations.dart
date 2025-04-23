@@ -1932,6 +1932,24 @@ abstract class AppLocalizations {
   /// **'Inactive'**
   String get nestStatusInactive;
 
+  /// No description provided for @nestFateUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get nestFateUnknown;
+
+  /// No description provided for @nestFateLost.
+  ///
+  /// In en, this message translates to:
+  /// **'Lost'**
+  String get nestFateLost;
+
+  /// No description provided for @nestFateSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Success'**
+  String get nestFateSuccess;
+
   /// No description provided for @specimenWholeCarcass.
   ///
   /// In en, this message translates to:

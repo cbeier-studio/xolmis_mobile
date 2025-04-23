@@ -1160,6 +1160,15 @@ class AppLocalizationsPt extends AppLocalizations {
   String get nestStatusInactive => 'Inativo';
 
   @override
+  String get nestFateUnknown => 'Indeterminado';
+
+  @override
+  String get nestFateLost => 'Perdido';
+
+  @override
+  String get nestFateSuccess => 'Sucesso';
+
+  @override
   String get specimenWholeCarcass => 'Carcaça inteira';
 
   @override
@@ -2347,6 +2356,15 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get nestStatusInactive => 'Inativo';
+
+  @override
+  String get nestFateUnknown => 'Indeterminado';
+
+  @override
+  String get nestFateLost => 'Perdido';
+
+  @override
+  String get nestFateSuccess => 'Sucesso';
 
   @override
   String get specimenWholeCarcass => 'Carcaça inteira';

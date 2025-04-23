@@ -1160,6 +1160,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get nestStatusInactive => 'Inactive';
 
   @override
+  String get nestFateUnknown => 'Unknown';
+
+  @override
+  String get nestFateLost => 'Lost';
+
+  @override
+  String get nestFateSuccess => 'Success';
+
+  @override
   String get specimenWholeCarcass => 'Whole carcass';
 
   @override

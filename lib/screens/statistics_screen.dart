@@ -464,6 +464,7 @@ class _PerSpeciesStatisticsTabState extends State<PerSpeciesStatisticsTab> {
   bool isLoadingSpecies = false;
   List<PieChartSectionData> totalsSections = [];
   List<String> recordedSpeciesNames = [];
+  List<PieChartSectionData> nestFateSections = [];
 
   @override
   void initState() {
@@ -511,6 +512,19 @@ class _PerSpeciesStatisticsTabState extends State<PerSpeciesStatisticsTab> {
             title: entry.value.toString(),
             value: entry.value.toDouble(),
             color: getRecordColor(entry.key),
+            radius: 20,
+            // titleStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+          );
+        }).toList();
+    nestFateSections =
+        getNestFateCounts(
+          nestList,
+        ).entries.map((entry) {
+          return PieChartSectionData(
+            showTitle: true,
+            title: entry.value.toString(),
+            value: entry.value.toDouble(),
+            color: getNestFateColor(entry.key),
             radius: 20,
             // titleStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
           );
@@ -808,8 +822,68 @@ class _PerSpeciesStatisticsTabState extends State<PerSpeciesStatisticsTab> {
                           ),
                         ),
                       ),
+                      SizedBox(height: 16.0),
+                      // Nest fate per species
+                      Card(
+                        child: Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: Column(
+                            children: [
+                              Text(
+                                S.current.nestFate,
+                                style: TextStyle(fontSize: 16),
+                              ),
+                              Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  Text(
+                                    nestList.length.toString(),
+                                    style: TextStyle(fontSize: 20),
+                                  ),
+                                  SizedBox(
+                                    height: 300,
+                                    child: PieChart(
+                                      PieChartData(
+                                        borderData: FlBorderData(show: false),
+                                        // pieTouchData: PieTouchData(enabled: true),
+                                        sectionsSpace: 2,
+                                        centerSpaceRadius: 80,
+                                        sections: nestFateSections,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 8.0),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  Indicator(
+                                    color: Colors.grey,
+                                    text: S.current.nestFateUnknown,
+                                    isSquare: false,
+                                  ),
+                                  Indicator(
+                                    color: Colors.red,
+                                    text: S.current.nestFateLost,
+                                    isSquare: false,
+                                  ),
+                                  Indicator(
+                                    color: Colors.blue,
+                                    text: S.current.nestFateSuccess,
+                                    isSquare: false,
+                                  ),                                  
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ],
                   ),
+                    
+                  
                 ] else if (isLoadingSpecies) ...[
                   Center(child: CircularProgressIndicator()),
                 ] else ...[

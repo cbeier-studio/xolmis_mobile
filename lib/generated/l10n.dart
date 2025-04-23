@@ -3108,6 +3108,21 @@ class S {
     );
   }
 
+  /// `Unknown`
+  String get nestFateUnknown {
+    return Intl.message('Unknown', name: 'nestFateUnknown', desc: '', args: []);
+  }
+
+  /// `Lost`
+  String get nestFateLost {
+    return Intl.message('Lost', name: 'nestFateLost', desc: '', args: []);
+  }
+
+  /// `Success`
+  String get nestFateSuccess {
+    return Intl.message('Success', name: 'nestFateSuccess', desc: '', args: []);
+  }
+
   /// `Whole carcass`
   String get specimenWholeCarcass {
     return Intl.message(

@@ -53,6 +53,19 @@ Color getSpecimenColor(String specimenType) {
       Colors.grey; // Default to grey if not found
 }
 
+// Color mapping for each nest fate type
+final Map<String, Color> _nestFateTypeColors = {
+  S.current.nestFateUnknown: Colors.grey,
+  S.current.nestFateLost: Colors.red,
+  S.current.nestFateSuccess: Colors.blue,
+};
+
+// Function to get the color for a given nest fate type
+Color getNestFateColor(String fateType) {
+  return _nestFateTypeColors[fateType] ??
+      Colors.grey; // Default to grey if not found
+}
+
 // Helper function to get distinct species names from a table
 Future<List<String>> _getDistinctSpeciesFromTable(String tableName) async {
   final DatabaseHelper dbHelper;
@@ -367,3 +380,18 @@ Future<int> getTotalsForSpecies(
         return {}; // Return an empty map in case of an error.
       }
     }
+
+Map<String, int> getNestFateCounts(List<Nest> nests) {
+  Map<String, int> nestFateCounts = {};
+
+  for (var nest in nests) {
+    String fate = (nestFateTypeFriendlyNames[nest.nestFate] ?? nestFateTypeFriendlyNames[NestFateType.fatUnknown]) as String;
+    if (nestFateCounts.containsKey(fate)) {
+      nestFateCounts[fate] = (nestFateCounts[fate] ?? 0) + 1;
+    } else {
+      nestFateCounts[fate] = 1;
+    }
+  }
+
+  return nestFateCounts;
+}
