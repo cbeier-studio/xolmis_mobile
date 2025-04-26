@@ -319,14 +319,12 @@ class NestDetailScreenState extends State<NestDetailScreen> {
               ),
             )
         ),
-        body: Expanded(
-              child: TabBarView(
+        body: TabBarView(
                 children: [
                   NestRevisionsTab(nest: widget.nest),
                   EggsTab(nest: widget.nest),
                 ],
-              ),
-            ),          
+              ),          
         floatingActionButton: widget.nest.isActive
             ? SpeedDial(
           icon: Icons.add_outlined,

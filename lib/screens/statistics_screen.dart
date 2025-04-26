@@ -315,7 +315,7 @@ class _GeneralStatisticsTabState extends State<GeneralStatisticsTab> {
                                 S.current.specimenType,
                                 style: TextStyle(fontSize: 16),
                               ),
-                              Stack(
+                              specimenTypeSections.isNotEmpty ? Stack(
                                 alignment: Alignment.center,
                                 children: [
                                   // Text(
@@ -335,7 +335,7 @@ class _GeneralStatisticsTabState extends State<GeneralStatisticsTab> {
                                     ),
                                   ),
                                 ],
-                              ),
+                              ) : Text(S.current.noDataAvailable),
                               SizedBox(height: 8.0),
                               Row(
                                 mainAxisAlignment:
@@ -833,7 +833,7 @@ class _PerSpeciesStatisticsTabState extends State<PerSpeciesStatisticsTab> {
                                 S.current.nestFate,
                                 style: TextStyle(fontSize: 16),
                               ),
-                              Stack(
+                              nestList.isNotEmpty ? Stack(
                                 alignment: Alignment.center,
                                 children: [
                                   Text(
@@ -853,7 +853,7 @@ class _PerSpeciesStatisticsTabState extends State<PerSpeciesStatisticsTab> {
                                     ),
                                   ),
                                 ],
-                              ),
+                              ) : Text(S.current.noDataAvailable),
                               SizedBox(height: 8.0),
                               Row(
                                 mainAxisAlignment:
