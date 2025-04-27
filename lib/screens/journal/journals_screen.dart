@@ -394,7 +394,8 @@ class JournalsScreenState extends State<JournalsScreen> {
                                 ),
                               );
                             } else {
-                              return ListView.builder(
+                              return ListView.separated(
+                                separatorBuilder: (context, index) => Divider(),
                                 shrinkWrap: true,
                                 itemCount: filteredEntries.length,
                                 itemBuilder: (context, index) {

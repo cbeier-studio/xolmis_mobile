@@ -488,7 +488,8 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                       ),
                     );
                   } else {
-                    return ListView.builder(
+                    return ListView.separated(
+                      separatorBuilder: (context, index) => Divider(),
                       shrinkWrap: true,
                       itemCount: filteredSpecimens.length,
                       itemBuilder: (context, index) {

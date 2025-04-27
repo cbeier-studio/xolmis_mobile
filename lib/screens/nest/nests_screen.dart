@@ -503,7 +503,8 @@ class NestsScreenState extends State<NestsScreen> {
                     );
                   } else {
                     // Show the nests in a list view on small screens
-                    return ListView.builder(
+                    return ListView.separated(
+                      separatorBuilder: (context, index) => Divider(),
                       shrinkWrap: true,
                       itemCount: filteredNests.length,
                       itemBuilder: (context, index) {

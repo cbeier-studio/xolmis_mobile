@@ -337,7 +337,8 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
   }
 
   Widget _buildListView(List<Egg> eggList) {
-    return ListView.builder(
+    return ListView.separated(
+      separatorBuilder: (context, index) => Divider(),
       shrinkWrap: true,
       itemCount: eggList.length,
       itemBuilder: (context, index) {

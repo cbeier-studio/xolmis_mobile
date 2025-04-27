@@ -318,7 +318,8 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
   }
 
   Widget _buildListView(List<Vegetation> vegetationList) {
-    return ListView.builder(
+    return ListView.separated(
+      separatorBuilder: (context, index) => Divider(),
       shrinkWrap: true,
       itemCount: vegetationList.length,
       itemBuilder: (context, index) {

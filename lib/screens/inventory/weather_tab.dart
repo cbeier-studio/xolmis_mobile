@@ -250,7 +250,8 @@ class _WeatherTabState extends State<WeatherTab> with AutomaticKeepAliveClientMi
   }
 
   Widget _buildListView(List<Weather> weatherList) {
-    return ListView.builder(
+    return ListView.separated(
+      separatorBuilder: (context, index) => Divider(),
       shrinkWrap: true,
       itemCount: weatherList.length,
       itemBuilder: (context, index) {

@@ -434,7 +434,8 @@ class _NestRevisionsTabState extends State<NestRevisionsTab> with AutomaticKeepA
   }
 
   Widget _buildListView(List<NestRevision> revisionList) {
-    return ListView.builder(
+    return ListView.separated(
+      separatorBuilder: (context, index) => Divider(),
       shrinkWrap: true,
       itemCount: revisionList.length,
       itemBuilder: (context, index) {

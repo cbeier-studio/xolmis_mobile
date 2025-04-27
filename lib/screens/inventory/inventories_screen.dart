@@ -611,7 +611,8 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                     );
                   } else {
                     // Show the inventories in a list on small screens
-                    return ListView.builder(
+                    return ListView.separated(
+                      separatorBuilder: (context, index) => Divider(),
                       shrinkWrap: true,
                       itemCount: filteredInventories.length,
                       itemBuilder: (context, index) {
