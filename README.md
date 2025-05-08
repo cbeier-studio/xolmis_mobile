@@ -26,11 +26,12 @@ Here is a list of the main features:
 - [x] Record nests and eggs monitoring.
 - [x] Record specimens collected.
 - [x] Export data to CSV or JSON files.
-- [ ] Field journal and notes.
+- [x] Field journal and notes.
 - [ ] Collect quali-quantitative data of captured birds.
 - [x] Attach images to the data (vegetation, nests, and specimens).
 - [ ] Task lists.
 - [x] Integration with Xolmis desktop (via text files).
+- [x] Statistics view.
 
 ## How to contribute
 
