@@ -22,7 +22,7 @@ dependencies:
   side_sheet: ^1.0.4
   flutter_speed_dial: ^7.0.0
   settings_ui: ^2.0.2
-  fleather: ^1.21.0
+  fleather: ^1.22.0
   fl_chart: ^1.0.0
   numberpicker: ^2.1.2
   image_picker: ^1.1.2
