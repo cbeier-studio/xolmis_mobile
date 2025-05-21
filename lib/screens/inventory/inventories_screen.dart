@@ -211,7 +211,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
+        return AlertDialog.adaptive(
           title: Text(S.of(context).confirmDelete),
           content: Text(S
               .of(context)
@@ -855,7 +855,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
         // Show checkbox to select inventories if not active
         Visibility(
           visible: !_isShowingActiveInventories,
-          child: Checkbox(
+          child: Checkbox.adaptive(
             value: isSelected,
             onChanged: (bool? value) {
               setState(() {
@@ -1049,7 +1049,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                     // Show checkbox to select inventories if not active
                     Visibility(
                       visible: !_isShowingActiveInventories,
-                      child: Checkbox(
+                      child: Checkbox.adaptive(
                         value: isSelected,
                         onChanged: (bool? value) {
                           setState(() {
@@ -1105,7 +1105,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                   // Show the inventory ID
-                  Text(inventory.id, style: const TextStyle(fontSize: 20,), overflow: TextOverflow.ellipsis,),
+                  Text(inventory.id, style: TextTheme.of(context).bodyLarge, overflow: TextOverflow.ellipsis,),
                   // Show the inventory type
                   Text('${inventoryTypeFriendlyNames[inventory.type]}', overflow: TextOverflow.ellipsis,),
                   // Show the inventory timer duration if active
@@ -1278,7 +1278,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
-                          return AlertDialog(
+                          return AlertDialog.adaptive(
                             title: Text(S.of(context).confirmDelete),
                             content: Text(S.of(context).confirmDeleteMessage(1, "male", S.of(context).inventory(1))),
                             actions: <Widget>[
@@ -1322,7 +1322,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
+        return AlertDialog.adaptive(
           title: Text('Editar ID'),
           content: TextField(
             controller: idController,
@@ -1382,7 +1382,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
+        return AlertDialog.adaptive(
           title: Text(S.of(context).confirmFinish),
           content: Text(S.of(context).confirmFinishMessage),
           actions: <Widget>[

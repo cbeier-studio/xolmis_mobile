@@ -46,7 +46,7 @@ class _NestRevisionsTabState extends State<NestRevisionsTab> with AutomaticKeepA
     return await showDialog<bool>(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
+        return AlertDialog.adaptive(
           title: Text(S.of(context).confirmDelete),
           content: Text(S.of(context).confirmDeleteMessage(1, "female", S.of(context).revision(1).toLowerCase())),
           actions: <Widget>[
@@ -203,8 +203,7 @@ class _NestRevisionsTabState extends State<NestRevisionsTab> with AutomaticKeepA
                           children: [
                             Text(
                       DateFormat('dd/MM/yyyy HH:mm:ss').format(revision.sampleTime!),
-                      style: const TextStyle(
-      fontSize: 20),
+                      style: TextTheme.of(context).bodyLarge,
                     ),
                     Text('${nestStatusTypeFriendlyNames[revision.nestStatus]}: ${nestStageTypeFriendlyNames[revision.nestStage]}'),
                     Text('${S.of(context).host}: ${revision.eggsHost ?? 0} ${S.of(context).egg(revision.eggsHost ?? 0).toLowerCase()}, ${revision.nestlingsHost ?? 0} ${S.of(context).nestling(revision.nestlingsHost ?? 0).toLowerCase()}'),
@@ -392,8 +391,7 @@ class _NestRevisionsTabState extends State<NestRevisionsTab> with AutomaticKeepA
                       children: [
                         Text(
                   DateFormat('dd/MM/yyyy HH:mm:ss').format(revision.sampleTime!),
-                  style: const TextStyle(
-                              fontSize: 20),
+                  style: TextTheme.of(context).bodyLarge,
                 ),
                 Text('${nestStatusTypeFriendlyNames[revision.nestStatus]}: ${nestStageTypeFriendlyNames[revision.nestStage]}'),
                 Text('${S.of(context).host}: ${revision.eggsHost ?? 0} ${S.of(context).egg(revision.eggsHost ?? 0).toLowerCase()}, ${revision.nestlingsHost ?? 0} ${S.of(context).nestling(revision.nestlingsHost ?? 0).toLowerCase()}'),

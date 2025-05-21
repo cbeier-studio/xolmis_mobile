@@ -631,7 +631,7 @@ class NestsScreenState extends State<NestsScreen> {
           // Show checkbox if showing inactive nests
           Visibility(
         visible: !_showActive,
-        child: Checkbox(
+        child: Checkbox.adaptive(
           value: isSelected,
           onChanged: (bool? value) {
             setState(() {
@@ -706,7 +706,7 @@ class NestsScreenState extends State<NestsScreen> {
                     // Show checkbox to select inventories if not active
                     Visibility(
                       visible: !_showActive,
-                      child: Checkbox(
+                      child: Checkbox.adaptive(
                         value: isSelected,
                         onChanged: (bool? value) {
                           setState(() {
@@ -722,7 +722,7 @@ class NestsScreenState extends State<NestsScreen> {
                   ],
                 ),
                 Expanded(child: SizedBox.shrink()),
-                Text(nest.fieldNumber!, style: const TextStyle(fontSize: 20),),
+                Text(nest.fieldNumber!, style: TextTheme.of(context).bodyLarge,),
                 Text(nest.speciesName!, style: const TextStyle(fontStyle: FontStyle.italic), overflow: TextOverflow.ellipsis,),
                 Text(nest.localityName!, overflow: TextOverflow.ellipsis,),
                 Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(nest.foundTime!), overflow: TextOverflow.ellipsis,),
@@ -740,7 +740,7 @@ class NestsScreenState extends State<NestsScreen> {
                     // Show dialog with the DropdownButton
                     await showDialog<NestFateType>(
                       context: context,
-                      builder: (context) => AlertDialog(
+                      builder: (context) => AlertDialog.adaptive(
                         title: Text(S.of(context).confirmFate),
                         content: DropdownButtonFormField<NestFateType>(
                           value: selectedNestFate,
@@ -909,7 +909,7 @@ class NestsScreenState extends State<NestsScreen> {
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
-                          return AlertDialog(
+                          return AlertDialog.adaptive(
                             title: Text(S.of(context).confirmDelete),
                             content: Text(S.of(context).confirmDeleteMessage(1, "male", S.of(context).nest(1))),
                             actions: <Widget>[

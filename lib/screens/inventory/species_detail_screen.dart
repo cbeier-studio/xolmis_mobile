@@ -122,7 +122,7 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
     return await showDialog<bool>(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
+        return AlertDialog.adaptive(
           title: Text(S.of(context).confirmDelete),
           content: Text(S.of(context).confirmDeleteMessage(1, "male", S.of(context).poi)),
           actions: <Widget>[
@@ -322,7 +322,7 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
+        return AlertDialog.adaptive(
           title: Text(S.of(context).speciesInfo),
           content: SingleChildScrollView(
             child: ListBody(

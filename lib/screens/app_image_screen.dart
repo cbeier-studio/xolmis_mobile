@@ -150,7 +150,7 @@ class _AppImageScreenState extends State<AppImageScreen> {
             showDialog(
               context: context,
               builder: (context) {
-                return AlertDialog(
+                return AlertDialog.adaptive(
                   title: Text(S.of(context).addImage),
                   content: SingleChildScrollView(
                     child: Form(
@@ -263,7 +263,7 @@ class _AppImageScreenState extends State<AppImageScreen> {
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
-                          return AlertDialog(
+                          return AlertDialog.adaptive(
                             title: Text(S.of(context).confirmDelete),
                             content: Text(S.of(context).confirmDeleteMessage(1, "female", S.of(context).images(1).toLowerCase())),
                             actions: <Widget>[
@@ -306,7 +306,7 @@ class _AppImageScreenState extends State<AppImageScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
+        return AlertDialog.adaptive(
           title: Text(S.of(context).editNotes),
           content: TextField(
             controller: notesController,

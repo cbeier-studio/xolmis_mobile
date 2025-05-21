@@ -192,7 +192,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                 // Show confirmation dialog
                 final confirmed = await showDialog<bool>(
                   context: context,
-                  builder: (context) => AlertDialog(
+                  builder: (context) => AlertDialog.adaptive(
                     title: Text(S.of(context).confirmFinish),
                     content: Text(S.of(context).confirmFinishMessage),
                     actions: [

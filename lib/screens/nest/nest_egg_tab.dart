@@ -46,7 +46,7 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
     return await showDialog<bool>(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
+        return AlertDialog.adaptive(
           title: Text(S.of(context).confirmDelete),
           content: Text(S.of(context).confirmDeleteMessage(1, "male", S.of(context).egg(1))),
           actions: <Widget>[
@@ -184,8 +184,7 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
                           children: [
                             Text(
                   egg.fieldNumber!,
-                  style: const TextStyle(
-      fontSize: 20),
+                  style: TextTheme.of(context).bodyLarge,
                 ),
                 Text(
                   egg.speciesName!,

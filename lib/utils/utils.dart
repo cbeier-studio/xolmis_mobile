@@ -91,7 +91,7 @@ void _showMackinnonDialog(BuildContext context, Inventory inventory, InventoryRe
   showDialog(
     context: context,
     builder: (context) {
-      return AlertDialog(
+      return AlertDialog.adaptive(
         title: Text(S.current.listFinished),
         content: Text(S.current.listFinishedMessage),
         actions: [

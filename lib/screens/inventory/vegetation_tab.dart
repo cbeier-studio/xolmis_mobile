@@ -45,7 +45,7 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
     return await showDialog<bool>(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
+        return AlertDialog.adaptive(
           title: Text(S.of(context).confirmDelete),
           content: Text(S.of(context).confirmDeleteMessage(2, "male", S.of(context).vegetationData.toLowerCase())),
           actions: <Widget>[
@@ -179,18 +179,17 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
                           MainAxisAlignment.end,
                       crossAxisAlignment:
                           CrossAxisAlignment.start,
-                      children: [
-                        
+                      children: [                        
                         Text(
-                      DateFormat('dd/MM/yyyy HH:mm:ss').format(vegetation.sampleTime!),
-                      style: const TextStyle(
-                              fontSize: 20),
-                    ),
-                    Text('${vegetation.latitude}; ${vegetation.longitude}'),
-                    Text('${S.of(context).herbs}: ${vegetation.herbsDistribution?.index ?? 0}; ${vegetation.herbsProportion}%; ${vegetation.herbsHeight} cm'),
-                    Text('${S.of(context).shrubs}: ${vegetation.shrubsDistribution?.index ?? 0}; ${vegetation.shrubsProportion}%; ${vegetation.shrubsHeight} cm'),
-                    Text('${S.of(context).trees}: ${vegetation.treesDistribution?.index ?? 0}; ${vegetation.treesProportion}%; ${vegetation.treesHeight} cm'),
-                    if (vegetation.notes!.isNotEmpty) Text('${vegetation.notes}'),
+                          DateFormat('dd/MM/yyyy HH:mm:ss').format(vegetation.sampleTime!),
+                          style: TextTheme.of(context).bodyLarge,
+                        ),
+                        Text('${vegetation.latitude}; ${vegetation.longitude}'),
+                        Text('${S.of(context).herbs}: ${vegetation.herbsDistribution?.index ?? 0}; ${vegetation.herbsProportion}%; ${vegetation.herbsHeight} cm'),
+                        Text('${S.of(context).shrubs}: ${vegetation.shrubsDistribution?.index ?? 0}; ${vegetation.shrubsProportion}%; ${vegetation.shrubsHeight} cm'),
+                        Text('${S.of(context).trees}: ${vegetation.treesDistribution?.index ?? 0}; ${vegetation.treesProportion}%; ${vegetation.treesHeight} cm'),
+                        if (vegetation.notes!.isNotEmpty) 
+                          Text('${vegetation.notes}'),
                       ],
                     ),
                   ),

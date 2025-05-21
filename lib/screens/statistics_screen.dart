@@ -245,14 +245,14 @@ class _GeneralStatisticsTabState extends State<GeneralStatisticsTab> {
                                               ),
                                               title: Text(
                                                 entry.key,
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                   fontStyle: FontStyle.italic,
                                                   fontSize: 12,
                                                 ),
                                               ),
                                               trailing: Text(
                                                 entry.value.toString(),
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                   color: Colors.grey,
                                                 ),
                                               ),
@@ -612,7 +612,7 @@ class _PerSpeciesStatisticsTabState extends State<PerSpeciesStatisticsTab> {
                 if (selectedSpecies != null) ...[
                   Text(
                     selectedSpecies!,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontStyle: FontStyle.italic,
                       fontSize: 16,

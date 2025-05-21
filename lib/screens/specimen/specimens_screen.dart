@@ -125,7 +125,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
+        return AlertDialog.adaptive(
           title: Text(S.of(context).confirmDelete),
           content: Text(S
               .of(context)
@@ -666,8 +666,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                       children: [
                         Text(
                           specimen.fieldNumber,
-                          style: const TextStyle(
-                              fontSize: 20),
+                          style: TextTheme.of(context).bodyLarge,
                         ),
                         Text(
                             '${specimenTypeFriendlyNames[specimen.type]}'),
@@ -690,7 +689,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
               Positioned(
                 top: 8,
                 right: 8,
-                child: Checkbox(
+                child: Checkbox.adaptive(
                   value: isSelected,
                   onChanged: (bool? value) {
                     setState(() {
@@ -717,7 +716,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
     final isSelected =
         selectedSpecimens.contains(specimen.id);
     return ListTile(
-      leading: Checkbox(
+      leading: Checkbox.adaptive(
         value: isSelected,
         onChanged: (bool? value) {
           setState(() {
@@ -832,7 +831,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
-                          return AlertDialog(
+                          return AlertDialog.adaptive(
                             title: Text(S.of(context).confirmDelete),
                             content: Text(S.of(context).confirmDeleteMessage(1, "male", S.of(context).specimens(1))),
                             actions: <Widget>[

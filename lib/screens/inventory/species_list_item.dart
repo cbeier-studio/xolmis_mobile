@@ -69,7 +69,7 @@ class SpeciesListItemState extends State<SpeciesListItem> {
                     padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
                     child: Text(
                       widget.species.count.toString(),
-                      style: const TextStyle(fontSize: 14),
+                      style: TextTheme.of(context).bodyMedium,
                     ),
                   );
                 },
@@ -180,7 +180,7 @@ class SpeciesListItemState extends State<SpeciesListItem> {
       context: context,
       builder: (BuildContext context) {
         int currentCount = widget.species.count;
-        return AlertDialog(
+        return AlertDialog.adaptive(
           title: Text(S.of(context).editCount),
           content: StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {

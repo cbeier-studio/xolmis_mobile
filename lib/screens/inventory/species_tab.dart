@@ -236,7 +236,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     return await showDialog<bool>(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
+        return AlertDialog.adaptive(
           title: Text(S.of(context).confirmDelete),
           content: Text(S.of(context).confirmDeleteMessage(1, 'female', S.of(context).species(1).toLowerCase())),
           actions: <Widget>[
@@ -260,7 +260,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     return await showDialog<bool>(
           context: context,
           builder: (BuildContext context) {
-            return AlertDialog(
+            return AlertDialog.adaptive(
               title: Text(S.of(context).confirmDeleteSpecies),
               content: Text(S.of(context).confirmDeleteSpeciesMessage(speciesName)),
               actions: <Widget>[
@@ -288,7 +288,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
       context: context,
       builder: (BuildContext context) {
         String speciesName = '';
-        return AlertDialog(
+        return AlertDialog.adaptive(
           title: Text(S.of(context).addSpecies),
           content: TextField(
             textCapitalization: TextCapitalization.sentences,
@@ -655,7 +655,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
+        return AlertDialog.adaptive(
           title: Text(S.of(context).editNotes),
           content: TextField(
             controller: notesController,

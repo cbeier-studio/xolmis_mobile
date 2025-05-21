@@ -521,8 +521,7 @@ class JournalsScreenState extends State<JournalsScreen> {
                       children: [
                         Text(
                           entry.title,
-                          style: const TextStyle(
-                              fontSize: 20),
+                          style: TextTheme.of(context).bodyLarge,
                         ),
                         Text(DateFormat(
                             'dd/MM/yyyy HH:mm:ss')
@@ -536,7 +535,7 @@ class JournalsScreenState extends State<JournalsScreen> {
               Positioned(
                 top: 8,
                 right: 8,
-                child: Checkbox(
+                child: Checkbox.adaptive(
                   value: isSelected,
                   onChanged: (bool? value) {
                     setState(() {
@@ -563,7 +562,7 @@ class JournalsScreenState extends State<JournalsScreen> {
     final isSelected =
     selectedJournals.contains(entry.id);
     return ListTile(
-      leading: Checkbox(
+      leading: Checkbox.adaptive(
         value: isSelected,
         onChanged: (bool? value) {
           setState(() {

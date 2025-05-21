@@ -37,7 +37,7 @@ class _WeatherTabState extends State<WeatherTab> with AutomaticKeepAliveClientMi
     return await showDialog<bool>(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
+        return AlertDialog.adaptive(
           title: Text(S.of(context).confirmDelete),
           content: Text(S.of(context).confirmDeleteMessage(1, "male", S.of(context).weatherRecord)),
           actions: <Widget>[
@@ -115,8 +115,7 @@ class _WeatherTabState extends State<WeatherTab> with AutomaticKeepAliveClientMi
           children: [
             Text(
               DateFormat('dd/MM/yyyy HH:mm:ss').format(weather.sampleTime!),
-              style: const TextStyle(
-                  fontSize: 20,),
+              style: TextTheme.of(context).bodyLarge,
             ),
             
                 // Icon(Icons.cloud_outlined),

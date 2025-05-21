@@ -92,7 +92,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   context: context,
                   builder: (BuildContext context) {
                     String observer = '';
-                    return AlertDialog(
+                    return AlertDialog.adaptive(
                       title: Text(S.of(context).observer),
                       content: TextField(
                         textCapitalization: TextCapitalization.characters,
@@ -371,7 +371,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
+        return AlertDialog.adaptive(
           title: Text(S.of(context).deleteData),
           content: Text(S.of(context).deleteDataMessage),
           actions: <Widget>[
@@ -448,7 +448,7 @@ class _NumberPickerDialogState extends State<NumberPickerDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
+    return AlertDialog.adaptive(
       title: Text(widget.title),
       content: NumberPicker(
         value: _currentValue,
