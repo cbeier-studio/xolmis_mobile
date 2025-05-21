@@ -193,7 +193,7 @@ class _GeneralStatisticsTabState extends State<GeneralStatisticsTab> {
                 if (!isLoadingData) ...[
                   Text(
                     S.current.species(2),
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                    style: TextTheme.of(context).titleLarge,
                   ),
                   // Total species with records
                   Card(
@@ -202,7 +202,7 @@ class _GeneralStatisticsTabState extends State<GeneralStatisticsTab> {
                       child: ListTile(
                         title: Text(
                           totalDistinctSpecies.toString(),
-                          style: TextStyle(fontSize: 20),
+                          style: TextTheme.of(context).headlineSmall,
                         ),
                         subtitle: Text(S.current.recordedSpecies),
                       ),
@@ -216,7 +216,7 @@ class _GeneralStatisticsTabState extends State<GeneralStatisticsTab> {
                         children: [
                           Text(
                             S.current.topTenSpecies,
-                            style: TextStyle(fontSize: 16),
+                            style: TextTheme.of(context).titleMedium,
                           ),
                           SizedBox(height: 8),
                           FutureBuilder<List<MapEntry<String, int>>>(
@@ -272,7 +272,7 @@ class _GeneralStatisticsTabState extends State<GeneralStatisticsTab> {
                   SizedBox(height: 16),
                   Text(
                     S.current.inventories,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                    style: TextTheme.of(context).titleLarge,
                   ),
                   // Total sampling hours
                   Card(
@@ -281,7 +281,7 @@ class _GeneralStatisticsTabState extends State<GeneralStatisticsTab> {
                       child: ListTile(
                         title: Text(
                           NumberFormat.decimalPattern(locale.toString(),).format(totalInventoryHours),
-                          style: TextStyle(fontSize: 20),
+                          style: TextTheme.of(context).headlineSmall,
                         ),
                         subtitle: Text(S.current.surveyHours),
                       ),
@@ -294,7 +294,7 @@ class _GeneralStatisticsTabState extends State<GeneralStatisticsTab> {
                       child: ListTile(
                         title: Text(
                           NumberFormat.decimalPattern(locale.toString(),).format(averageInventoryHours),
-                          style: TextStyle(fontSize: 20),
+                          style: TextTheme.of(context).headlineSmall,
                         ),
                         subtitle: Text(S.current.averageSurveyHours),
                       ),
@@ -303,7 +303,7 @@ class _GeneralStatisticsTabState extends State<GeneralStatisticsTab> {
                   SizedBox(height: 16),
                   Text(
                     S.current.specimens(2),
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                    style: TextTheme.of(context).titleLarge,
                   ),
                   // Chart of specimens by type
                   Card(
@@ -313,7 +313,7 @@ class _GeneralStatisticsTabState extends State<GeneralStatisticsTab> {
                             children: [
                               Text(
                                 S.current.specimenType,
-                                style: TextStyle(fontSize: 16),
+                                style: TextTheme.of(context).titleMedium,
                               ),
                               specimenTypeSections.isNotEmpty ? Stack(
                                 alignment: Alignment.center,
@@ -631,14 +631,14 @@ class _PerSpeciesStatisticsTabState extends State<PerSpeciesStatisticsTab> {
                             children: [
                               Text(
                                 S.current.totalRecords,
-                                style: TextStyle(fontSize: 16),
+                                style: TextTheme.of(context).titleMedium,
                               ),
                               Stack(
                                 alignment: Alignment.center,
                                 children: [
                                   Text(
                                     totalRecordsPerSpecies.toString(),
-                                    style: TextStyle(fontSize: 20),
+                                    style: TextTheme.of(context).headlineSmall,
                                   ),
                                   SizedBox(
                                     height: 300,
@@ -695,7 +695,7 @@ class _PerSpeciesStatisticsTabState extends State<PerSpeciesStatisticsTab> {
                             children: [
                               Text(
                                 S.current.recordsPerMonth,
-                                style: TextStyle(fontSize: 16),
+                                style: TextTheme.of(context).titleMedium,
                               ),
                               SizedBox(
                                 height: 300,
@@ -766,7 +766,7 @@ class _PerSpeciesStatisticsTabState extends State<PerSpeciesStatisticsTab> {
                             children: [
                               Text(
                                 S.current.recordsPerYear,
-                                style: TextStyle(fontSize: 16),
+                                style: TextTheme.of(context).titleMedium,
                               ),
                               SizedBox(
                                 height: 300,
@@ -831,14 +831,14 @@ class _PerSpeciesStatisticsTabState extends State<PerSpeciesStatisticsTab> {
                             children: [
                               Text(
                                 S.current.nestFate,
-                                style: TextStyle(fontSize: 16),
+                                style: TextTheme.of(context).titleMedium,
                               ),
                               nestList.isNotEmpty ? Stack(
                                 alignment: Alignment.center,
                                 children: [
                                   Text(
                                     nestList.length.toString(),
-                                    style: TextStyle(fontSize: 20),
+                                    style: TextTheme.of(context).headlineSmall,
                                   ),
                                   SizedBox(
                                     height: 300,
