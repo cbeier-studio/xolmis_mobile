@@ -27,7 +27,7 @@ dependencies:
   numberpicker: ^2.1.2
   image_picker: ^1.1.2
   file_picker: ^10.1.9
-  share_plus: ^10.1.4
+  share_plus: ^11.0.0
 #  timelines_plus: ^1.0.6
 
   # Data and persistence dependencies

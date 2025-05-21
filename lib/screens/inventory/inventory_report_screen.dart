@@ -135,6 +135,8 @@ class InventoryReportScreen extends StatelessWidget {
     final file = File(path);
     await file.writeAsString(csv);
 
-    await Share.shareXFiles([XFile(path)], text: S.current.reportSpeciesByInventory);
+    await SharePlus.instance.share(
+      ShareParams(files: [XFile(path)], text: S.current.reportSpeciesByInventory)
+    );
   }
 }

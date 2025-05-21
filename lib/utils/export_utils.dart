@@ -47,9 +47,13 @@ Future<void> exportAllInventoriesToJson(BuildContext context, InventoryProvider 
     await file.writeAsString(jsonString);
 
     // Share the file using share_plus
-    await Share.shareXFiles([
-      XFile(filePath, mimeType: 'application/json'),
-    ], text: S.current.inventoryExported(2), subject: S.current.inventoryData(2));
+    await SharePlus.instance.share(
+      ShareParams(
+        files: [XFile(filePath, mimeType: 'application/json')], 
+        text: S.current.inventoryExported(2), 
+        subject: S.current.inventoryData(2)
+      ),
+    );
   } catch (error) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Row(
@@ -79,11 +83,13 @@ Future<void> exportInventoryToJson(BuildContext context, Inventory inventory, bo
 
     // Share the file using share_plus
     if (shareIt) {
-      await Share.shareXFiles([
-        XFile(filePath, mimeType: 'application/json'),
-      ],
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [XFile(filePath, mimeType: 'application/json')],
           text: S.current.inventoryExported(1),
-          subject: '${S.current.inventoryExported(1)} ${inventory.id}');
+          subject: '${S.current.inventoryExported(1)} ${inventory.id}'
+        ),
+      );
     }
   } catch (error) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -117,11 +123,13 @@ Future<void> exportInventoryToCsv(BuildContext context, Inventory inventory, boo
 
     // 4. Share the file using share_plus
     if (shareIt) {
-      await Share.shareXFiles([
-        XFile(filePath, mimeType: 'text/csv'),
-      ],
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [XFile(filePath, mimeType: 'text/csv')],
           text: S.current.inventoryExported(1),
-          subject: '${S.current.inventoryExported(1)} ${inventory.id}');
+          subject: '${S.current.inventoryExported(1)} ${inventory.id}'
+        ),
+      );
     } 
   } catch (error) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -275,9 +283,13 @@ Future<void> exportAllInactiveNestsToJson(BuildContext context) async {
     final file = File(filePath);
     await file.writeAsString(jsonString);
 
-    await Share.shareXFiles([
-      XFile(filePath, mimeType: 'application/json'),
-    ], text: S.current.nestExported(2), subject: S.current.nestData(2));
+    await SharePlus.instance.share(
+      ShareParams(
+        files: [XFile(filePath, mimeType: 'application/json')], 
+        text: S.current.nestExported(2), 
+        subject: S.current.nestData(2)
+      ),
+    );
   } catch (error) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Row(
@@ -305,9 +317,13 @@ Future<void> exportNestToJson(BuildContext context, Nest nest) async {
     await file.writeAsString(jsonString);
 
     // 3. Share the file using share_plus
-    await Share.shareXFiles([
-      XFile(filePath, mimeType: 'application/json'),
-    ], text: S.current.nestExported(1), subject: '${S.current.nestData(1)} ${nest.fieldNumber}');
+    await SharePlus.instance.share(
+      ShareParams(
+        files: [XFile(filePath, mimeType: 'application/json')], 
+        text: S.current.nestExported(1), 
+        subject: '${S.current.nestData(1)} ${nest.fieldNumber}'
+      ),
+    );
   } catch (error) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Row(
@@ -338,9 +354,13 @@ Future<void> exportNestToCsv(BuildContext context, Nest nest) async {
     await file.writeAsString(csv);
 
     // 4. Share the file using share_plus
-    await Share.shareXFiles([
-      XFile(filePath, mimeType: 'text/csv'),
-    ], text: S.current.nestExported(1), subject: '${S.current.nestData(1)} ${nest.id}');
+    await SharePlus.instance.share(
+      ShareParams(
+        files: [XFile(filePath, mimeType: 'text/csv')], 
+        text: S.current.nestExported(1), 
+        subject: '${S.current.nestData(1)} ${nest.id}'
+      ),
+    );
   } catch (error) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Row(
@@ -459,9 +479,13 @@ Future<void> exportAllSpecimensToJson(BuildContext context) async {
     final file = File(filePath);
     await file.writeAsString(jsonString);
 
-    await Share.shareXFiles([
-      XFile(filePath, mimeType: 'application/json'),
-    ], text: S.current.specimenExported(2), subject: S.current.specimenData(2));
+    await SharePlus.instance.share(
+      ShareParams(
+        files: [XFile(filePath, mimeType: 'application/json')], 
+        text: S.current.specimenExported(2), 
+        subject: S.current.specimenData(2)
+      ),
+    );
   } catch (error) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Row(
@@ -495,9 +519,13 @@ Future<void> exportAllSpecimensToCsv(BuildContext context) async {
     await file.writeAsString(csv);
 
     // 4. Share the file using share_plus
-    await Share.shareXFiles([
-      XFile(filePath, mimeType: 'text/csv'),
-    ], text: S.current.specimenExported(2), subject: S.current.specimenData(2));
+    await SharePlus.instance.share(
+      ShareParams(
+        files: [XFile(filePath, mimeType: 'text/csv')], 
+        text: S.current.specimenExported(2), 
+        subject: S.current.specimenData(2)
+      ),
+    );
   } catch (error) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Row(

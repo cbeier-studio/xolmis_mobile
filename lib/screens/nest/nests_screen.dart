@@ -188,9 +188,13 @@ class NestsScreenState extends State<NestsScreen> {
       await file.writeAsString(jsonString);
 
       // Share the file using share_plus
-      await Share.shareXFiles([
-        XFile(filePath, mimeType: 'application/json'),
-      ], text: S.current.nestExported(2), subject: S.current.nestData(2));
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [XFile(filePath, mimeType: 'application/json')], 
+          text: S.current.nestExported(2), 
+          subject: S.current.nestData(2)
+        ),
+      );
 
       setState(() {
         selectedNests.clear();
@@ -235,7 +239,13 @@ class NestsScreenState extends State<NestsScreen> {
       }
 
       // Share the file using share_plus
-      await Share.shareXFiles(csvFiles, text: S.current.nestExported(2), subject: S.current.nestData(2));
+      await SharePlus.instance.share(
+        ShareParams(
+          files: csvFiles, 
+          text: S.current.nestExported(2), 
+          subject: S.current.nestData(2)
+        ),
+      );
 
       setState(() {
         selectedNests.clear();

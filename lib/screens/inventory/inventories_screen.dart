@@ -262,9 +262,13 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
       await file.writeAsString(jsonString);
 
       // Share the file using share_plus
-      await Share.shareXFiles([
-        XFile(filePath, mimeType: 'application/json'),
-      ], text: S.current.inventoryExported(2), subject: S.current.inventoryData(2));
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [XFile(filePath, mimeType: 'application/json')],
+          text: S.current.inventoryExported(2), 
+          subject: S.current.inventoryData(2)
+        )
+      );
 
       // Clear the selected inventories
       setState(() {
@@ -313,7 +317,13 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
       }
 
       // Share the file using share_plus
-      await Share.shareXFiles(csvFiles, text: S.current.inventoryExported(2), subject: S.current.inventoryData(2));
+      await SharePlus.instance.share(
+        ShareParams(
+          files: csvFiles, 
+          text: S.current.inventoryExported(2), 
+          subject: S.current.inventoryData(2)
+        )
+      );
 
       // Clear the selected inventories
       setState(() {

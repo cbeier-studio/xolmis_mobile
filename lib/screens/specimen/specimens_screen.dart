@@ -176,9 +176,13 @@ class SpecimensScreenState extends State<SpecimensScreen> {
       await file.writeAsString(jsonString);
 
       // Share the file using share_plus
-      await Share.shareXFiles([
-        XFile(filePath, mimeType: 'application/json'),
-      ], text: S.current.specimenExported(2), subject: S.current.specimenData(2));
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [XFile(filePath, mimeType: 'application/json')], 
+          text: S.current.specimenExported(2), 
+          subject: S.current.specimenData(2)
+        ),
+      );
 
       setState(() {
         selectedSpecimens.clear();
@@ -242,7 +246,13 @@ class SpecimensScreenState extends State<SpecimensScreen> {
         await file.writeAsString(csv);
 
       // Share the file using share_plus
-      await Share.shareXFiles([XFile(filePath, mimeType: 'text/csv')], text: S.current.specimenExported(2), subject: S.current.specimenData(2));
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [XFile(filePath, mimeType: 'text/csv')], 
+          text: S.current.specimenExported(2), 
+          subject: S.current.specimenData(2)
+        ),
+      );
 
       setState(() {
         selectedSpecimens.clear();

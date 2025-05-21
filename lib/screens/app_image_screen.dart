@@ -233,7 +233,9 @@ class _AppImageScreenState extends State<AppImageScreen> {
                     leading: const Icon(Icons.share_outlined),
                     title: Text(S.of(context).shareImage),
                     onTap: () {
-                      Share.shareXFiles([XFile(appImage.imagePath)], text: 'Compartilhando imagem');
+                      SharePlus.instance.share(
+                        ShareParams(files: [XFile(appImage.imagePath)], text: 'Compartilhando imagem'),
+                      );
                       Navigator.pop(context);
                     },
                   ),
