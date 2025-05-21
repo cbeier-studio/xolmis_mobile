@@ -13,38 +13,43 @@ dependencies:
     sdk: flutter
   flutter_localizations: 
     sdk: flutter
+  intl: ^0.19.0
+  intl_utils: ^2.8.10
 
+  # UI dependencies
   cupertino_icons: ^1.0.8
+  flutter_local_notifications: ^19.0.0
+  side_sheet: ^1.0.4
+  flutter_speed_dial: ^7.0.0
+  settings_ui: ^2.0.2
+  fleather: ^1.21.0
+  fl_chart: ^0.70.2
+  numberpicker: ^2.1.2
+  image_picker: ^1.1.2
+  file_picker: ^9.2.3
+  share_plus: ^10.1.4
+#  timelines_plus: ^1.0.6
+
+  # Data and persistence dependencies
   sqflite: ^2.4.2
+  csv: ^6.0.0
+  shared_preferences: ^2.5.3
+
+  # State management
+  provider: ^6.1.4
+  
+  # Other dependencies
   path: ^1.9.1
   path_provider: ^2.1.5
-#  animated_list: ^0.0.4
-  provider: ^6.1.4
-  permission_handler: ^11.4.0
-  flutter_local_notifications: ^19.0.0
-  csv: ^6.0.0
+  permission_handler: ^11.4.0  
   geolocator: ^13.0.4
-  flutter_launcher_icons: ^0.14.3
-  intl: ^0.19.0
-  share_plus: ^10.1.4
-  shared_preferences: ^2.5.3
-  numberpicker: ^2.1.2
   package_info_plus: ^8.3.0
   workmanager: 
     git:
       url: https://github.com/fluttercommunity/flutter_workmanager.git
       path: workmanager
       ref: main    
-  side_sheet: ^1.0.4
-  image_picker: ^1.1.2
-  file_picker: ^9.2.3
-  flutter_speed_dial: ^7.0.0
   device_info_plus: ^11.3.3
-  settings_ui: ^2.0.2
-  intl_utils: ^2.8.10
-  fl_chart: ^0.70.2
-#  timelines_plus: ^1.0.6
-  fleather: ^1.21.0
   url_launcher: ^6.3.1
 #  equations: ^5.0.2
 
@@ -53,6 +58,8 @@ dev_dependencies:
     sdk: flutter
 
   flutter_lints: ^5.0.0
+
+  flutter_launcher_icons: ^0.14.3
 
 flutter:
   uses-material-design: true
@@ -92,7 +99,7 @@ flutter:
     - assets/xolmis_icon_monochrome.png
 
 
-flutter_icons:
+flutter_launcher_icons:
   android: "ic_launcher"
   ios: true
   image_path_android: "assets/xolmis_icon.png"
