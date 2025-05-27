@@ -82,17 +82,16 @@ class InventoryProvider with ChangeNotifier {
     try {
       await _inventoryRepository.insertInventory(inventory);
       _inventories.add(inventory);
+      _inventoryMap[inventory.id] = inventory; // Add to the map
+      notifyListeners();
       startInventoryTimer(inventory, _inventoryRepository);
 
       return true;
     } catch (error) {
-      // Handle insertion error
       if (kDebugMode) {
         print('Error adding inventory: $error');
       }
       return false;
-    } finally {
-      notifyListeners();
     }
   }
 
@@ -101,16 +100,15 @@ class InventoryProvider with ChangeNotifier {
     try {
       await _inventoryRepository.importInventory(inventory);
       _inventories.add(inventory);
+      _inventoryMap[inventory.id] = inventory; // Add to the map
+      notifyListeners();
 
       return true;
     } catch (error) {
-      // Handle insertion error
       if (kDebugMode) {
         print('Error importing inventory: $error');
       }
       return false;
-    } finally {
-      notifyListeners();
     }
   }
 
@@ -118,6 +116,11 @@ class InventoryProvider with ChangeNotifier {
   void updateInventory(Inventory inventory) async {
     await _inventoryRepository.updateInventory(inventory);
 
+    final index = _inventories.indexWhere((inv) => inv.id == inventory.id);
+    if (index != -1) {
+      _inventories[index] = inventory;
+    }
+    // Ensure the map also has the updated instance, though if instances are shared, this might be redundant.
     _inventoryMap[inventory.id] = inventory;
     notifyListeners();
   }
@@ -141,7 +144,7 @@ class InventoryProvider with ChangeNotifier {
     if (inventory.duration > 0 && !inventory.isFinished && !inventory.isPaused) {
       inventory.startTimer(inventoryRepository);
       updateInventory(inventory);
-      notifyListeners();
+      // notifyListeners();
     }
   }
 
@@ -149,27 +152,32 @@ class InventoryProvider with ChangeNotifier {
   void pauseInventoryTimer(Inventory inventory, InventoryRepository inventoryRepository) {
     inventory.pauseTimer(inventoryRepository);
     updateInventory(inventory);
-    notifyListeners();
+    // notifyListeners();
   }
 
   // Resume inventory timer
   void resumeInventoryTimer(Inventory inventory, InventoryRepository inventoryRepository) {
     inventory.resumeTimer(inventoryRepository);
     updateInventory(inventory);
-    notifyListeners();
+    // notifyListeners();
   }
 
   // Update the ID in the database and the list
   Future<void> changeInventoryId(String oldId, String newId) async {
     await _inventoryRepository.changeInventoryId(oldId, newId);
-    fetchInventories();
-    notifyListeners();
+    await fetchInventories();
+    // notifyListeners();
   }
 
   // Update the elapsed time in the database and the list
   Future<void> updateInventoryElapsedTime(String inventoryId, double elapsedTime) async {
     await _inventoryRepository.updateInventoryElapsedTime(inventoryId, elapsedTime);
     _inventoryMap[inventoryId]?.elapsedTime = elapsedTime;
+    final index = _inventories.indexWhere((inv) => inv.id == inventoryId);
+    if (index != -1 && _inventories[index].elapsedTime != elapsedTime) {
+      // To ensure the instance in the list is also updated if it's a different object or for direct field update
+      _inventories[index].elapsedTime = elapsedTime;
+    }
     notifyListeners();
   }
 
@@ -177,6 +185,11 @@ class InventoryProvider with ChangeNotifier {
   Future<void> updateInventoryCurrentInterval(String inventoryId, int currentInterval) async {
     await _inventoryRepository.updateInventoryCurrentInterval(inventoryId, currentInterval);
     _inventoryMap[inventoryId]?.currentInterval = currentInterval;
+    final index = _inventories.indexWhere((inv) => inv.id == inventoryId);
+    if (index != -1 && _inventories[index].currentInterval != currentInterval) {
+      // To ensure the instance in the list is also updated
+      _inventories[index].currentInterval = currentInterval;
+    }
     notifyListeners();
   }
 
@@ -185,7 +198,7 @@ class InventoryProvider with ChangeNotifier {
     final inventory = getInventoryById(inventoryId);
     if (inventory != null) {
       speciesCountNotifier.value = inventory.speciesList.length;
-      speciesCountNotifier.notifyListeners();
+      // speciesCountNotifier.notifyListeners();
     }
   }
 

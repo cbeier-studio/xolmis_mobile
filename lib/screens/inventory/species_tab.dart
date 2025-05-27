@@ -125,7 +125,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     for (final inventory in inventoryProvider.activeInventories) {
       if (inventory.id != widget.inventory.id &&
           !speciesProvider.speciesExistsInInventory(inventory.id, speciesName) &&
-          widget.inventory.type != InventoryType.invBanding) {
+          inventory.type != InventoryType.invBanding) {
         // Set the initial count to 1 for transect and point count inventories
         final initialCount = inventory.type == InventoryType.invTransectionCount || inventory.type == InventoryType.invPointCount ? 1 : 0;
         // Create the new species

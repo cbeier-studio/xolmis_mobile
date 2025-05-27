@@ -61,6 +61,10 @@ class AppImageProvider with ChangeNotifier {
 
   Future<void> updateImage(AppImage appImage) async {
     await _appImageRepository.updateImage(appImage);
+    final index = _images.indexWhere((img) => img.id == appImage.id);
+    if (index != -1) {
+      _images[index] = appImage;
+    }
     notifyListeners();
   }
 

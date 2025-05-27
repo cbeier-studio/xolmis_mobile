@@ -502,6 +502,7 @@ class Weather {
 
   factory Weather.fromJson(Map<String, dynamic> json) {
     return Weather(
+      id: json['id'],
       inventoryId: json['inventoryId'],
       sampleTime: DateTime.parse(json['sampleTime']), 
       cloudCover: json['cloudCover'],
@@ -804,8 +805,9 @@ class Inventory with ChangeNotifier {
 
       // Cancel any existing timer before starting a new one
       _timer?.cancel();
+      _timer = null;
 
-      _timer ??= Stream<void>.periodic(const Duration(seconds: 5)).listen((_) async {
+      _timer = Stream<void>.periodic(const Duration(seconds: 5)).listen((_) async {
         // Only process things if inventory is not paused or finished
         if (!isPaused && !isFinished) {
           if (elapsedTime == 0) {
@@ -838,6 +840,7 @@ class Inventory with ChangeNotifier {
               intervalWithoutSpeciesNotifier.value = intervalsWithoutNewSpecies;
               intervalWithoutSpeciesNotifier.notifyListeners();
               // Every interval, reset species counter
+              await inventoryRepository.updateInventoryCurrentIntervalSpeciesCount(id, 0);
               currentIntervalSpeciesCount = 0;
 
               if (intervalsWithoutNewSpecies == 3) {

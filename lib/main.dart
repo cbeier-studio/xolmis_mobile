@@ -49,6 +49,8 @@ import 'utils/utils.dart';
 import 'utils/themes.dart';
 import 'generated/l10n.dart';
 
+const String keepAwakeTaskName = "wakeup";
+
 // Run an empty task just to maintain Xolmis awake
 @pragma('vm:entry-point')
 void callbackDispatcher() {
@@ -56,12 +58,12 @@ void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     switch (task) {
       case "wakeup":
-        debugPrint('Xolmis acordado pelo WorkManager (KeepAwake Task)');
+        debugPrint('Xolmis awakened by WorkManager (KeepAwake Task)');
         // Here we can add additional logic if necessary
         // E.g.: check if there is an important pending task
         break;
       default:
-        debugPrint("Tarefa desconhecida: $task");
+        debugPrint("Unknown task: $task");
         break;
     }
 
@@ -78,12 +80,42 @@ void main() async {
   runApp(MyAppInitializer());
 }
 
+class AppDependencies {
+  final InventoryRepository inventoryRepository;
+  final SpeciesRepository speciesRepository;
+  final PoiRepository poiRepository;
+  final VegetationRepository vegetationRepository;
+  final WeatherRepository weatherRepository;
+  final NestRepository nestRepository;
+  final NestRevisionRepository nestRevisionRepository;
+  final EggRepository eggRepository;
+  final SpecimenRepository specimenRepository;
+  final AppImageRepository appImageRepository;
+  final FieldJournalRepository journalRepository;
+  final List<String> preloadedSpeciesNames;
+
+  AppDependencies({
+    required this.inventoryRepository,
+    required this.speciesRepository,
+    required this.poiRepository,
+    required this.vegetationRepository,
+    required this.weatherRepository,
+    required this.nestRepository,
+    required this.nestRevisionRepository,
+    required this.eggRepository,
+    required this.specimenRepository,
+    required this.appImageRepository,
+    required this.journalRepository,
+    this.preloadedSpeciesNames = const [],
+  });
+}
+
 class MyAppInitializer extends StatelessWidget {
   const MyAppInitializer({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Map<String, dynamic>>(
+    return FutureBuilder<AppDependencies>(
       future: _initializeApp(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -99,21 +131,11 @@ class MyAppInitializer extends StatelessWidget {
             ),
           );
         } else {
-          final data = snapshot.data!;
+          final dependencies = snapshot.data!;
           return ChangeNotifierProvider(
             create: (context) => ThemeModel(),
             child: MyApp(
-              inventoryRepository: data['inventoryRepository'],
-              speciesRepository: data['speciesRepository'],
-              poiRepository: data['poiRepository'],
-              vegetationRepository: data['vegetationRepository'],
-              weatherRepository: data['weatherRepository'],
-              nestRepository: data['nestRepository'],
-              nestRevisionRepository: data['nestRevisionRepository'],
-              eggRepository: data['eggRepository'],
-              specimenRepository: data['specimenRepository'],
-              appImageRepository: data['appImageRepository'],
-              journalRepository: data['journalRepository'],
+              dependencies: dependencies,
             ),
           );
         }
@@ -121,7 +143,7 @@ class MyAppInitializer extends StatelessWidget {
     );
   }
 
-  Future<Map<String, dynamic>> _initializeApp() async {
+  Future<AppDependencies> _initializeApp() async {
     try {
       // Register the Xolmis license
       LicenseRegistry.addLicense(() async* {
@@ -145,10 +167,10 @@ class MyAppInitializer extends StatelessWidget {
       await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
       // Initialize the database
-      await DatabaseHelper().initDatabase();
+      final databaseHelper = DatabaseHelper();
+      await databaseHelper.initDatabase();
 
       // Create the DAOs
-      final databaseHelper = DatabaseHelper();
       final poiDao = PoiDao(databaseHelper);
       final speciesDao = SpeciesDao(databaseHelper, poiDao);
       final vegetationDao = VegetationDao(databaseHelper);
@@ -175,85 +197,67 @@ class MyAppInitializer extends StatelessWidget {
       final journalRepository = FieldJournalRepository(journalDao);
 
       // Preload the species names list
-      allSpeciesNames = await loadSpeciesSearchData();
-      allSpeciesNames.sort((a, b) => a.compareTo(b));
+      List<String> preloadedSpeciesNames = await loadSpeciesSearchData();
+      preloadedSpeciesNames.sort((a, b) => a.compareTo(b));
+      allSpeciesNames = List.from(preloadedSpeciesNames);
 
-      return {
-        'inventoryRepository': inventoryRepository,
-        'speciesRepository': speciesRepository,
-        'poiRepository': poiRepository,
-        'vegetationRepository': vegetationRepository,
-        'weatherRepository': weatherRepository,
-        'nestRepository': nestRepository,
-        'nestRevisionRepository': nestRevisionRepository,
-        'eggRepository': eggRepository,
-        'specimenRepository': specimenRepository,
-        'appImageRepository': appImageRepository,
-        'journalRepository': journalRepository,
-      };
-    } catch (e) {
-      debugPrint('Erro ao inicializar o aplicativo: $e');
+      return AppDependencies(
+        inventoryRepository: inventoryRepository,
+        speciesRepository: speciesRepository,
+        poiRepository: poiRepository,
+        vegetationRepository: vegetationRepository,
+        weatherRepository: weatherRepository,
+        nestRepository: nestRepository,
+        nestRevisionRepository: nestRevisionRepository,
+        eggRepository: eggRepository,
+        specimenRepository: specimenRepository,
+        appImageRepository: appImageRepository,
+        journalRepository: journalRepository,
+        preloadedSpeciesNames: preloadedSpeciesNames, 
+      );
+    } catch (e, s) {
+      debugPrint('Erro ao inicializar o aplicativo: $e\n$s');
       rethrow;
     }
   }
 }
 
 class MyApp extends StatelessWidget {
-  final InventoryRepository inventoryRepository;
-  final SpeciesRepository speciesRepository;
-  final PoiRepository poiRepository;
-  final VegetationRepository vegetationRepository;
-  final WeatherRepository weatherRepository;
-  final NestRepository nestRepository;
-  final NestRevisionRepository nestRevisionRepository;
-  final EggRepository eggRepository;
-  final SpecimenRepository specimenRepository;
-  final AppImageRepository appImageRepository;
-  final FieldJournalRepository journalRepository;
+  final AppDependencies dependencies;
 
   const MyApp({
     super.key,
-    required this.inventoryRepository,
-    required this.speciesRepository,
-    required this.poiRepository,
-    required this.vegetationRepository,
-    required this.weatherRepository,
-    required this.nestRepository,
-    required this.nestRevisionRepository,
-    required this.eggRepository,
-    required this.specimenRepository,
-    required this.appImageRepository,
-    required this.journalRepository,
+    required this.dependencies,
   });
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => FieldJournalProvider(journalRepository)),
-        ChangeNotifierProvider(create: (context) => AppImageProvider(appImageRepository)),
-        ChangeNotifierProvider(create: (context) => SpecimenProvider(specimenRepository)),
-        ChangeNotifierProvider(create: (context) => NestRevisionProvider(nestRevisionRepository)),
-        ChangeNotifierProvider(create: (context) => EggProvider(eggRepository)),
-        ChangeNotifierProvider(create: (context) => PoiProvider(poiRepository)),
-        ChangeNotifierProvider(create: (context) => SpeciesProvider(speciesRepository)),
-        ChangeNotifierProvider(create: (context) => VegetationProvider(vegetationRepository)),
-        ChangeNotifierProvider(create: (context) => WeatherProvider(weatherRepository)),
+        ChangeNotifierProvider(create: (context) => FieldJournalProvider(dependencies.journalRepository)),
+        ChangeNotifierProvider(create: (context) => AppImageProvider(dependencies.appImageRepository)),
+        ChangeNotifierProvider(create: (context) => SpecimenProvider(dependencies.specimenRepository)),
+        ChangeNotifierProvider(create: (context) => NestRevisionProvider(dependencies.nestRevisionRepository)),
+        ChangeNotifierProvider(create: (context) => EggProvider(dependencies.eggRepository)),
+        ChangeNotifierProvider(create: (context) => PoiProvider(dependencies.poiRepository)),
+        ChangeNotifierProvider(create: (context) => SpeciesProvider(dependencies.speciesRepository)),
+        ChangeNotifierProvider(create: (context) => VegetationProvider(dependencies.vegetationRepository)),
+        ChangeNotifierProvider(create: (context) => WeatherProvider(dependencies.weatherRepository)),
         ChangeNotifierProvider(
           create: (context) => InventoryProvider(
-            inventoryRepository,
+            dependencies.inventoryRepository,
             context.read<SpeciesProvider>(),
             context.read<VegetationProvider>(),
             context.read<WeatherProvider>(),
           ),
         ),
-        ChangeNotifierProvider(create: (_) => NestProvider(nestRepository)),
-        Provider(create: (_) => inventoryRepository),
-        Provider(create: (_) => speciesRepository),
-        Provider(create: (_) => poiRepository),
-        Provider(create: (_) => vegetationRepository),
-        Provider(create: (_) => weatherRepository),
-        Provider(create: (_) => journalRepository),
+        ChangeNotifierProvider(create: (_) => NestProvider(dependencies.nestRepository)),
+        Provider(create: (_) => dependencies.inventoryRepository),
+        Provider(create: (_) => dependencies.speciesRepository),
+        Provider(create: (_) => dependencies.poiRepository),
+        Provider(create: (_) => dependencies.vegetationRepository),
+        Provider(create: (_) => dependencies.weatherRepository),
+        Provider(create: (_) => dependencies.journalRepository),
       ],
       child: Consumer<ThemeModel>(
         builder: (context, themeModel, child) {

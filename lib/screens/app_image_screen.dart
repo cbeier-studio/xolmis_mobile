@@ -15,6 +15,8 @@ import '../providers/app_image_provider.dart';
 import 'image_details_screen.dart';
 import '../generated/l10n.dart';
 
+enum ImageParentType { vegetation, egg, specimen, nestRevision }
+
 class AppImageScreen extends StatefulWidget {
   final int? vegetationId;
   final int? eggId;
@@ -37,24 +39,58 @@ class _AppImageScreenState extends State<AppImageScreen> {
   final _formKey = GlobalKey<FormState>();
   final _notesController = TextEditingController();
   late AppImageProvider appImageProvider;
+  int? _activeParentId;
+  ImageParentType? _activeParentType;
 
   @override
   void initState() {
     super.initState();
     appImageProvider = context.read<AppImageProvider>();
+    _determineActiveParent();
     _loadImages();
+  }
+
+  @override
+  void dispose() {
+    _notesController.dispose();
+    super.dispose();
+  }
+
+  void _determineActiveParent() {
+    if (widget.vegetationId != null) {
+      _activeParentId = widget.vegetationId;
+      _activeParentType = ImageParentType.vegetation;
+    } else if (widget.eggId != null) {
+      _activeParentId = widget.eggId;
+      _activeParentType = ImageParentType.egg;
+    } else if (widget.specimenId != null) {
+      _activeParentId = widget.specimenId;
+      _activeParentType = ImageParentType.specimen;
+    } else if (widget.nestRevisionId != null) {
+      _activeParentId = widget.nestRevisionId;
+      _activeParentType = ImageParentType.nestRevision;
+    } else {
+      debugPrint("AppImageScreen initialized without a parent ID.");
+    }
   }
 
   // Load images from the database
   Future<void> _loadImages() async {
-    if (widget.vegetationId != null) {
-      await appImageProvider.fetchImagesForVegetation(widget.vegetationId!);
-    } else if (widget.eggId != null) {
-      await appImageProvider.fetchImagesForEgg(widget.eggId!);
-    } else if (widget.specimenId != null) {
-      await appImageProvider.fetchImagesForSpecimen(widget.specimenId!);
-    } else if (widget.nestRevisionId != null) {
-      await appImageProvider.fetchImagesForNestRevision(widget.nestRevisionId!);
+    if (_activeParentId == null || _activeParentType == null) return;
+
+    switch (_activeParentType!) {
+      case ImageParentType.vegetation:
+        await appImageProvider.fetchImagesForVegetation(_activeParentId!);
+        break;
+      case ImageParentType.egg:
+        await appImageProvider.fetchImagesForEgg(_activeParentId!);
+        break;
+      case ImageParentType.specimen:
+        await appImageProvider.fetchImagesForSpecimen(_activeParentId!);
+        break;
+      case ImageParentType.nestRevision:
+        await appImageProvider.fetchImagesForNestRevision(_activeParentId!);
+        break;
     }
   }
 
@@ -67,8 +103,14 @@ class _AppImageScreenState extends State<AppImageScreen> {
     if (pickedFile != null) {
       // Save the image to the app's documents directory
       final directory = await getApplicationDocumentsDirectory();
-      final fileName = path.basename(pickedFile.path);
-      final savedImage = await File(pickedFile.path).copy('${directory.path}/$fileName');
+      // Generate a unique filename
+      final String originalFileName = path.basename(pickedFile.path);
+      final String extension = path.extension(originalFileName);
+      final String newFileNameBase = DateTime.now().millisecondsSinceEpoch.toString();
+      final String newFileName = '$newFileNameBase$extension';
+      final String newPath = path.join(directory.path, newFileName);
+
+      final savedImage = await File(pickedFile.path).copy(newPath);
 
       // Create an AppImage object and save it to the database
       final appImage = AppImage(
@@ -76,7 +118,7 @@ class _AppImageScreenState extends State<AppImageScreen> {
         notes: _notesController.text,
       );
 
-      final appImageProvider = Provider.of<AppImageProvider>(context, listen: false);
+      // final appImageProvider = Provider.of<AppImageProvider>(context, listen: false);
       if (widget.vegetationId != null) {
         await appImageProvider.addImageToVegetation(appImage, widget.vegetationId!);
       } else if (widget.eggId != null) {
@@ -87,8 +129,9 @@ class _AppImageScreenState extends State<AppImageScreen> {
         await appImageProvider.addImageToNestRevision(appImage, widget.nestRevisionId!);
       }
 
-      // Close the dialog
-      Navigator.pop(context);
+      if (!mounted) return;
+      Navigator.pop(context); // Close the dialog
+      _notesController.clear(); // Clear notes after successful add
     }
   }
 
@@ -133,86 +176,108 @@ class _AppImageScreenState extends State<AppImageScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           // Request permission to access the camera and photos
-          final cameraStatus = await Permission.camera.request();
-          late PermissionStatus photosStatus = PermissionStatus.denied;
+          final permissionsGranted = await _requestPermissions();
+          if (!mounted) return;
 
-          if (Platform.isAndroid) {
-            final androidInfo = await DeviceInfoPlugin().androidInfo;
-            if (androidInfo.version.sdkInt <= 32) {
-              photosStatus = await Permission.storage.request();
-            }  else {
-              photosStatus = await Permission.photos.request();
-            }
-          }
-
-          // If permission is granted, show the dialog to add an image
-          if (cameraStatus.isGranted && photosStatus.isGranted) {
-            showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog.adaptive(
-                  title: Text(S.of(context).addImage),
-                  content: SingleChildScrollView(
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          TextFormField(
-                            controller: _notesController,
-                            maxLines: 3,
-                            textCapitalization: TextCapitalization.sentences,
-                            decoration: InputDecoration(
-                              labelText: S.of(context).notes,
-                              border: OutlineInputBorder(),
-                            ),
-                          ),
-                          const SizedBox(height: 16.0),
-                          Row(
-                            children: [
-                              // Option to select image from gallery
-                              OutlinedButton.icon(
-                                onPressed: () => _addImage(ImageSource.gallery),
-                                label: Text(S.of(context).gallery),
-                                icon: const Icon(Icons.image_search_outlined),
-                              ),
-                              const SizedBox(width: 8.0),
-                              // Option to take a picture with the camera
-                              OutlinedButton.icon(
-                                onPressed: () => _addImage(ImageSource.camera),
-                                label: Text(S.of(context).camera),
-                                icon: const Icon(Icons.camera_alt_outlined),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  actions: <Widget>[
-                    TextButton(
-                      child: Text(S.of(context).cancel),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ],
-                );
-              },
-            );
-          } else if (cameraStatus.isDenied || photosStatus.isDenied) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(S.current.permissionDenied)),
-            );
-          } else if (cameraStatus.isPermanentlyDenied || photosStatus.isPermanentlyDenied) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(S.current.permissionDeniedPermanently)),
-            );
-            openAppSettings();
+          if (permissionsGranted) {
+            _notesController.clear(); // Clear notes before showing dialog
+            _showAddImageDialog();
           }
         },
         child: const Icon(Icons.add_a_photo_outlined),
       ),
+    );
+  }
+
+  Future<bool> _requestPermissions() async {
+    final cameraStatus = await Permission.camera.request();
+    PermissionStatus photosStatus;
+
+    if (!mounted) return false;
+
+    if (Platform.isAndroid) {
+      final androidInfo = await DeviceInfoPlugin().androidInfo;
+      if (!mounted) return false;
+      if (androidInfo.version.sdkInt <= 32) { // Target Android 12 and lower
+        photosStatus = await Permission.storage.request();
+      } else { // Target Android 13 and higher
+        photosStatus = await Permission.photos.request();
+      }
+    } else { // For iOS and other platforms
+      photosStatus = await Permission.photos.request();
+    }
+
+    if (!mounted) return false;
+
+    if (cameraStatus.isGranted && photosStatus.isGranted) {
+      return true;
+    } else {
+      if (cameraStatus.isPermanentlyDenied || photosStatus.isPermanentlyDenied) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(S.current.permissionDeniedPermanently)),
+        );
+        openAppSettings();
+      } else if (cameraStatus.isDenied || photosStatus.isDenied) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(S.current.permissionDenied)),
+        );
+      }
+      return false;
+    }
+  }
+
+  void _showAddImageDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog.adaptive(
+          title: Text(S.of(context).addImage),
+          content: SingleChildScrollView(
+            child: Form(
+              key: _formKey, // _formKey can be used if validation is needed
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextFormField(
+                    controller: _notesController,
+                    maxLines: 3,
+                    textCapitalization: TextCapitalization.sentences,
+                    decoration: InputDecoration(
+                      labelText: S.of(context).notes,
+                      border: const OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 16.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      OutlinedButton.icon(
+                        onPressed: () => _addImage(ImageSource.gallery),
+                        label: Text(S.of(context).gallery),
+                        icon: const Icon(Icons.image_search_outlined),
+                      ),
+                      OutlinedButton.icon(
+                        onPressed: () => _addImage(ImageSource.camera),
+                        label: Text(S.of(context).camera),
+                        icon: const Icon(Icons.camera_alt_outlined),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text(S.of(context).cancel),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _notesController.clear(); // Clear on cancel
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -279,7 +344,7 @@ class _AppImageScreenState extends State<AppImageScreen> {
                                   Navigator.of(context).pop(true);
                                   Navigator.of(context).pop();
                                   // Call the function to delete image
-                                  appImageProvider.deleteImage(appImage.id!);
+                                  if (appImage.id != null) appImageProvider.deleteImage(appImage.id!);
                                 },
                                 child: Text(S.of(context).delete),
                               ),
@@ -338,8 +403,9 @@ class _AppImageScreenState extends State<AppImageScreen> {
                   eggId: appImage.eggId,
                 );
                 await appImageProvider.updateImage(updatedImage);
+                if (!mounted) return;
                 Navigator.of(context).pop();
-                setState(() {});
+                // setState(() {});
               },
             ),
           ],
@@ -385,18 +451,17 @@ class _AppImageScreenState extends State<AppImageScreen> {
                         _showEditNotesDialog(context, image);
                       }),
             ),
-            child: Stack(
-              children: [
+            child: 
                 ClipRRect(
+                  clipBehavior: Clip.hardEdge,
                   // borderRadius: BorderRadius.circular(0.0),
-                  child: Image.file(
+                  child: image.imagePath.isNotEmpty ? Image.file(
                     File(image.imagePath),
                     fit: BoxFit.cover,
+                  ) : const Center(
+                    child: Text('No Image'),
                   ),
                 ),
-                
-              ],
-            ),
           ),
             
         );
