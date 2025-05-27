@@ -153,13 +153,15 @@ class AppLocalizationsPt extends AppLocalizations {
   String get deleteAppData => 'Apagar dados do aplicativo';
 
   @override
-  String get deleteAppDataDescription => 'Todos os dados serão apagados. Use com cautela! Esta ação não poderá ser desfeita.';
+  String get deleteAppDataDescription =>
+      'Todos os dados serão apagados. Use com cautela! Esta ação não poderá ser desfeita.';
 
   @override
   String get deleteData => 'Apagar dados';
 
   @override
-  String get deleteDataMessage => 'Tem certeza que deseja apagar todos os dados do aplicativo? Esta ação não poderá ser desfeita.';
+  String get deleteDataMessage =>
+      'Tem certeza que deseja apagar todos os dados do aplicativo? Esta ação não poderá ser desfeita.';
 
   @override
   String get delete => 'Apagar';
@@ -171,7 +173,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get ok => 'OK';
 
   @override
-  String get simultaneousLimitReached => 'Limite de inventários simultâneos atingido.';
+  String get simultaneousLimitReached =>
+      'Limite de inventários simultâneos atingido.';
 
   @override
   String get sortByTime => 'Ordenar por tempo';
@@ -205,22 +208,16 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String confirmDeleteMessage(int howMany, String gender, String what) {
-    String _temp0 = intl.Intl.selectLogic(
-      gender,
-      {
-        'male': 'estes',
-        'female': 'estas',
-        'other': 'estes(as)',
-      },
-    );
-    String _temp1 = intl.Intl.selectLogic(
-      gender,
-      {
-        'male': 'este',
-        'female': 'esta',
-        'other': 'este(a)',
-      },
-    );
+    String _temp0 = intl.Intl.selectLogic(gender, {
+      'male': 'estes',
+      'female': 'estas',
+      'other': 'estes(as)',
+    });
+    String _temp1 = intl.Intl.selectLogic(gender, {
+      'male': 'este',
+      'female': 'esta',
+      'other': 'este(a)',
+    });
     String _temp2 = intl.Intl.pluralLogic(
       howMany,
       locale: localeName,
@@ -234,10 +231,12 @@ class AppLocalizationsPt extends AppLocalizations {
   String get confirmFinish => 'Confirmar encerramento';
 
   @override
-  String get confirmFinishMessage => 'Tem certeza que deseja encerrar este inventário?';
+  String get confirmFinishMessage =>
+      'Tem certeza que deseja encerrar este inventário?';
 
   @override
-  String get confirmAutoFinishMessage => 'Inventário automaticamente encerrado. Você deseja mantê-lo ativo ou finalizar este inventário?';
+  String get confirmAutoFinishMessage =>
+      'Inventário automaticamente encerrado. Você deseja mantê-lo ativo ou finalizar este inventário?';
 
   @override
   String get finish => 'Encerrar';
@@ -292,7 +291,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get inventoryType => 'Tipo de inventário';
 
   @override
-  String get selectInventoryType => 'Por favor, selecione um tipo de inventário';
+  String get selectInventoryType =>
+      'Por favor, selecione um tipo de inventário';
 
   @override
   String get inventoryId => 'ID do Inventário';
@@ -384,7 +384,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get importingInventory => 'Importando inventário...';
 
   @override
-  String get inventoryImportedSuccessfully => 'Inventário importado com sucesso!';
+  String get inventoryImportedSuccessfully =>
+      'Inventário importado com sucesso!';
 
   @override
   String get noFileSelected => 'Nenhum arquivo selecionado.';
@@ -688,7 +689,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get weight => 'Peso';
 
   @override
-  String get errorEggAlreadyExists => 'Já existe um ovo com este número de campo.';
+  String get errorEggAlreadyExists =>
+      'Já existe um ovo com este número de campo.';
 
   @override
   String get errorSavingEgg => 'Erro ao salvar o ovo.';
@@ -700,7 +702,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get insertNestSupport => 'Por favor, insira o suporte do ninho';
 
   @override
-  String get errorNestAlreadyExists => 'Já existe um ninho com este número de campo.';
+  String get errorNestAlreadyExists =>
+      'Já existe um ninho com este número de campo.';
 
   @override
   String get errorSavingNest => 'Erro ao salvar o ninho.';
@@ -736,7 +739,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get specimenType => 'Tipo de espécime';
 
   @override
-  String get errorSpecimenAlreadyExists => 'Já existe um espécime com este número de campo.';
+  String get errorSpecimenAlreadyExists =>
+      'Já existe um espécime com este número de campo.';
 
   @override
   String get errorSavingSpecimen => 'Erro ao salvar o espécime.';
@@ -918,7 +922,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get listFinished => 'Lista concluída';
 
   @override
-  String get listFinishedMessage => 'A lista atingiu o número máximo de espécies. Deseja iniciar a próxima lista ou encerrar?';
+  String get listFinishedMessage =>
+      'A lista atingiu o número máximo de espécies. Deseja iniciar a próxima lista ou encerrar?';
 
   @override
   String get startNextList => 'Iniciar próxima lista';
@@ -980,7 +985,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get insertTitle => 'Insira um título para a nota';
 
   @override
-  String get errorSavingJournalEntry => 'Erro ao salvar a nota do diário de campo';
+  String get errorSavingJournalEntry =>
+      'Erro ao salvar a nota do diário de campo';
 
   @override
   String get deleteJournalEntry => 'Apagar nota';
@@ -992,7 +998,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get statistics => 'Estatísticas';
 
   @override
-  String get selectSpeciesToShowStats => 'Selecione uma espécie para ver as estatísticas';
+  String get selectSpeciesToShowStats =>
+      'Selecione uma espécie para ver as estatísticas';
 
   @override
   String get perSpecies => 'Por espécie';
@@ -1049,37 +1056,44 @@ class AppLocalizationsPt extends AppLocalizations {
   String get distributionOnePatch => 'Uma mancha';
 
   @override
-  String get distributionOnePatchFewSparseIndividuals => 'Uma mancha e indivíduos isolados';
+  String get distributionOnePatchFewSparseIndividuals =>
+      'Uma mancha e indivíduos isolados';
 
   @override
   String get distributionManySparseIndividuals => 'Vários indivíduos esparsos';
 
   @override
-  String get distributionOnePatchManySparseIndividuals => 'Mancha e vários indivíduos isolados';
+  String get distributionOnePatchManySparseIndividuals =>
+      'Mancha e vários indivíduos isolados';
 
   @override
   String get distributionFewPatches => 'Poucas manchas';
 
   @override
-  String get distributionFewPatchesSparseIndividuals => 'Poucas manchas e indivíduos isolados';
+  String get distributionFewPatchesSparseIndividuals =>
+      'Poucas manchas e indivíduos isolados';
 
   @override
   String get distributionManyPatches => 'Várias manchas equidistantes';
 
   @override
-  String get distributionManyPatchesSparseIndividuals => 'Várias manchas e indivíduos dispersos';
+  String get distributionManyPatchesSparseIndividuals =>
+      'Várias manchas e indivíduos dispersos';
 
   @override
-  String get distributionHighDensityIndividuals => 'Indivíduos isolados em alta densidade';
+  String get distributionHighDensityIndividuals =>
+      'Indivíduos isolados em alta densidade';
 
   @override
-  String get distributionContinuousCoverWithGaps => 'Contínua com manchas sem cobertura';
+  String get distributionContinuousCoverWithGaps =>
+      'Contínua com manchas sem cobertura';
 
   @override
   String get distributionContinuousDenseCover => 'Contínua e densa';
 
   @override
-  String get distributionContinuousDenseCoverWithEdge => 'Contínua com borda separando estratos';
+  String get distributionContinuousDenseCoverWithEdge =>
+      'Contínua com borda separando estratos';
 
   @override
   String get inventoryFreeQualitative => 'Lista Qualitativa Livre';
@@ -1210,7 +1224,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
 class AppLocalizationsPtBr extends AppLocalizationsPt {
-  AppLocalizationsPtBr(): super('pt_BR');
+  AppLocalizationsPtBr() : super('pt_BR');
 
   @override
   String get inventories => 'Inventários';
@@ -1354,13 +1368,15 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get deleteAppData => 'Apagar dados do aplicativo';
 
   @override
-  String get deleteAppDataDescription => 'Todos os dados serão apagados. Use com cautela! Esta ação não poderá ser desfeita.';
+  String get deleteAppDataDescription =>
+      'Todos os dados serão apagados. Use com cautela! Esta ação não poderá ser desfeita.';
 
   @override
   String get deleteData => 'Apagar dados';
 
   @override
-  String get deleteDataMessage => 'Tem certeza que deseja apagar todos os dados do aplicativo? Esta ação não poderá ser desfeita.';
+  String get deleteDataMessage =>
+      'Tem certeza que deseja apagar todos os dados do aplicativo? Esta ação não poderá ser desfeita.';
 
   @override
   String get delete => 'Apagar';
@@ -1372,7 +1388,8 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get ok => 'OK';
 
   @override
-  String get simultaneousLimitReached => 'Limite de inventários simultâneos atingido.';
+  String get simultaneousLimitReached =>
+      'Limite de inventários simultâneos atingido.';
 
   @override
   String get sortByTime => 'Ordenar por tempo';
@@ -1406,22 +1423,16 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String confirmDeleteMessage(int howMany, String gender, String what) {
-    String _temp0 = intl.Intl.selectLogic(
-      gender,
-      {
-        'male': 'estes',
-        'female': 'estas',
-        'other': 'estes(as)',
-      },
-    );
-    String _temp1 = intl.Intl.selectLogic(
-      gender,
-      {
-        'male': 'este',
-        'female': 'esta',
-        'other': 'este(a)',
-      },
-    );
+    String _temp0 = intl.Intl.selectLogic(gender, {
+      'male': 'estes',
+      'female': 'estas',
+      'other': 'estes(as)',
+    });
+    String _temp1 = intl.Intl.selectLogic(gender, {
+      'male': 'este',
+      'female': 'esta',
+      'other': 'este(a)',
+    });
     String _temp2 = intl.Intl.pluralLogic(
       howMany,
       locale: localeName,
@@ -1435,10 +1446,12 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get confirmFinish => 'Confirmar encerramento';
 
   @override
-  String get confirmFinishMessage => 'Tem certeza que deseja encerrar este inventário?';
+  String get confirmFinishMessage =>
+      'Tem certeza que deseja encerrar este inventário?';
 
   @override
-  String get confirmAutoFinishMessage => 'Inventário automaticamente encerrado. Você deseja mantê-lo ativo ou finalizar este inventário?';
+  String get confirmAutoFinishMessage =>
+      'Inventário automaticamente encerrado. Você deseja mantê-lo ativo ou finalizar este inventário?';
 
   @override
   String get finish => 'Encerrar';
@@ -1493,7 +1506,8 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get inventoryType => 'Tipo de inventário';
 
   @override
-  String get selectInventoryType => 'Por favor, selecione um tipo de inventário';
+  String get selectInventoryType =>
+      'Por favor, selecione um tipo de inventário';
 
   @override
   String get inventoryId => 'ID do Inventário';
@@ -1582,7 +1596,8 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get importingInventory => 'Importando inventário...';
 
   @override
-  String get inventoryImportedSuccessfully => 'Inventário importado com sucesso!';
+  String get inventoryImportedSuccessfully =>
+      'Inventário importado com sucesso!';
 
   @override
   String get noFileSelected => 'Nenhum arquivo selecionado.';
@@ -1886,7 +1901,8 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get weight => 'Peso';
 
   @override
-  String get errorEggAlreadyExists => 'Já existe um ovo com este número de campo.';
+  String get errorEggAlreadyExists =>
+      'Já existe um ovo com este número de campo.';
 
   @override
   String get errorSavingEgg => 'Erro ao salvar o ovo.';
@@ -1898,7 +1914,8 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get insertNestSupport => 'Por favor, insira o suporte do ninho';
 
   @override
-  String get errorNestAlreadyExists => 'Já existe um ninho com este número de campo.';
+  String get errorNestAlreadyExists =>
+      'Já existe um ninho com este número de campo.';
 
   @override
   String get errorSavingNest => 'Erro ao salvar o ninho.';
@@ -1934,7 +1951,8 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get specimenType => 'Tipo de espécime';
 
   @override
-  String get errorSpecimenAlreadyExists => 'Já existe um espécime com este número de campo.';
+  String get errorSpecimenAlreadyExists =>
+      'Já existe um espécime com este número de campo.';
 
   @override
   String get errorSavingSpecimen => 'Erro ao salvar o espécime.';
@@ -2116,7 +2134,8 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get listFinished => 'Lista concluída';
 
   @override
-  String get listFinishedMessage => 'A lista atingiu o número máximo de espécies. Deseja iniciar a próxima lista ou encerrar?';
+  String get listFinishedMessage =>
+      'A lista atingiu o número máximo de espécies. Deseja iniciar a próxima lista ou encerrar?';
 
   @override
   String get startNextList => 'Iniciar próxima lista';
@@ -2178,7 +2197,8 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get insertTitle => 'Insira um título para a nota';
 
   @override
-  String get errorSavingJournalEntry => 'Erro ao salvar a nota do diário de campo';
+  String get errorSavingJournalEntry =>
+      'Erro ao salvar a nota do diário de campo';
 
   @override
   String get deleteJournalEntry => 'Apagar nota';
@@ -2190,7 +2210,8 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get statistics => 'Estatísticas';
 
   @override
-  String get selectSpeciesToShowStats => 'Selecione uma espécie para ver as estatísticas';
+  String get selectSpeciesToShowStats =>
+      'Selecione uma espécie para ver as estatísticas';
 
   @override
   String get perSpecies => 'Por espécie';
@@ -2247,37 +2268,44 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get distributionOnePatch => 'Uma mancha';
 
   @override
-  String get distributionOnePatchFewSparseIndividuals => 'Uma mancha e indivíduos isolados';
+  String get distributionOnePatchFewSparseIndividuals =>
+      'Uma mancha e indivíduos isolados';
 
   @override
   String get distributionManySparseIndividuals => 'Vários indivíduos esparsos';
 
   @override
-  String get distributionOnePatchManySparseIndividuals => 'Mancha e vários indivíduos isolados';
+  String get distributionOnePatchManySparseIndividuals =>
+      'Mancha e vários indivíduos isolados';
 
   @override
   String get distributionFewPatches => 'Poucas manchas';
 
   @override
-  String get distributionFewPatchesSparseIndividuals => 'Poucas manchas e indivíduos isolados';
+  String get distributionFewPatchesSparseIndividuals =>
+      'Poucas manchas e indivíduos isolados';
 
   @override
   String get distributionManyPatches => 'Várias manchas equidistantes';
 
   @override
-  String get distributionManyPatchesSparseIndividuals => 'Várias manchas e indivíduos dispersos';
+  String get distributionManyPatchesSparseIndividuals =>
+      'Várias manchas e indivíduos dispersos';
 
   @override
-  String get distributionHighDensityIndividuals => 'Indivíduos isolados em alta densidade';
+  String get distributionHighDensityIndividuals =>
+      'Indivíduos isolados em alta densidade';
 
   @override
-  String get distributionContinuousCoverWithGaps => 'Contínua com manchas sem cobertura';
+  String get distributionContinuousCoverWithGaps =>
+      'Contínua com manchas sem cobertura';
 
   @override
   String get distributionContinuousDenseCover => 'Contínua e densa';
 
   @override
-  String get distributionContinuousDenseCoverWithEdge => 'Contínua com borda separando estratos';
+  String get distributionContinuousDenseCoverWithEdge =>
+      'Contínua com borda separando estratos';
 
   @override
   String get inventoryFreeQualitative => 'Lista Qualitativa Livre';

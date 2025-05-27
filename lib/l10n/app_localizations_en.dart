@@ -153,13 +153,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deleteAppData => 'Delete the app data';
 
   @override
-  String get deleteAppDataDescription => 'All data will be erased. Use with caution! This action cannot be undone.';
+  String get deleteAppDataDescription =>
+      'All data will be erased. Use with caution! This action cannot be undone.';
 
   @override
   String get deleteData => 'Delete data';
 
   @override
-  String get deleteDataMessage => 'Are you sure you want to delete all app data? This action cannot be undone.';
+  String get deleteDataMessage =>
+      'Are you sure you want to delete all app data? This action cannot be undone.';
 
   @override
   String get delete => 'Delete';
@@ -171,7 +173,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ok => 'OK';
 
   @override
-  String get simultaneousLimitReached => 'Limit of simultaneous inventories reached.';
+  String get simultaneousLimitReached =>
+      'Limit of simultaneous inventories reached.';
 
   @override
   String get sortByTime => 'Sort by Time';
@@ -205,22 +208,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String confirmDeleteMessage(int howMany, String gender, String what) {
-    String _temp0 = intl.Intl.selectLogic(
-      gender,
-      {
-        'male': 'these',
-        'female': 'these',
-        'other': 'these',
-      },
-    );
-    String _temp1 = intl.Intl.selectLogic(
-      gender,
-      {
-        'male': 'this',
-        'female': 'this',
-        'other': 'this',
-      },
-    );
+    String _temp0 = intl.Intl.selectLogic(gender, {
+      'male': 'these',
+      'female': 'these',
+      'other': 'these',
+    });
+    String _temp1 = intl.Intl.selectLogic(gender, {
+      'male': 'this',
+      'female': 'this',
+      'other': 'this',
+    });
     String _temp2 = intl.Intl.pluralLogic(
       howMany,
       locale: localeName,
@@ -234,10 +231,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get confirmFinish => 'Confirm finish';
 
   @override
-  String get confirmFinishMessage => 'Are you sure you want to finish this inventory?';
+  String get confirmFinishMessage =>
+      'Are you sure you want to finish this inventory?';
 
   @override
-  String get confirmAutoFinishMessage => 'Inventory automatically finished. Do you want to keep active or finish this inventory?';
+  String get confirmAutoFinishMessage =>
+      'Inventory automatically finished. Do you want to keep active or finish this inventory?';
 
   @override
   String get finish => 'Finish';
@@ -384,7 +383,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get importingInventory => 'Importing inventory...';
 
   @override
-  String get inventoryImportedSuccessfully => 'Inventory imported successfully!';
+  String get inventoryImportedSuccessfully =>
+      'Inventory imported successfully!';
 
   @override
   String get noFileSelected => 'No file selected.';
@@ -688,7 +688,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get weight => 'Weight';
 
   @override
-  String get errorEggAlreadyExists => 'An egg with this field number already exists.';
+  String get errorEggAlreadyExists =>
+      'An egg with this field number already exists.';
 
   @override
   String get errorSavingEgg => 'Error saving egg.';
@@ -700,7 +701,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get insertNestSupport => 'Please, insert nest support';
 
   @override
-  String get errorNestAlreadyExists => 'A nest with this field number already exists.';
+  String get errorNestAlreadyExists =>
+      'A nest with this field number already exists.';
 
   @override
   String get errorSavingNest => 'Error saving nest.';
@@ -736,7 +738,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get specimenType => 'Specimen type';
 
   @override
-  String get errorSpecimenAlreadyExists => 'A specimen with this field number already exists.';
+  String get errorSpecimenAlreadyExists =>
+      'A specimen with this field number already exists.';
 
   @override
   String get errorSavingSpecimen => 'Error saving specimen.';
@@ -918,7 +921,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get listFinished => 'List finished';
 
   @override
-  String get listFinishedMessage => 'The list reached the maximum of species. Do you want to start the next list or finish now?';
+  String get listFinishedMessage =>
+      'The list reached the maximum of species. Do you want to start the next list or finish now?';
 
   @override
   String get startNextList => 'Start next list';
@@ -992,7 +996,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get statistics => 'Statistics';
 
   @override
-  String get selectSpeciesToShowStats => 'Select a species to show the statistics';
+  String get selectSpeciesToShowStats =>
+      'Select a species to show the statistics';
 
   @override
   String get perSpecies => 'Per species';
@@ -1049,28 +1054,33 @@ class AppLocalizationsEn extends AppLocalizations {
   String get distributionOnePatch => 'One patch';
 
   @override
-  String get distributionOnePatchFewSparseIndividuals => 'One patch and isolated individuals';
+  String get distributionOnePatchFewSparseIndividuals =>
+      'One patch and isolated individuals';
 
   @override
   String get distributionManySparseIndividuals => 'Many sparse individuals';
 
   @override
-  String get distributionOnePatchManySparseIndividuals => 'Patch and many isolated individuals';
+  String get distributionOnePatchManySparseIndividuals =>
+      'Patch and many isolated individuals';
 
   @override
   String get distributionFewPatches => 'Few patches';
 
   @override
-  String get distributionFewPatchesSparseIndividuals => 'Few patches and isolated individuals';
+  String get distributionFewPatchesSparseIndividuals =>
+      'Few patches and isolated individuals';
 
   @override
   String get distributionManyPatches => 'Many equidistant patches';
 
   @override
-  String get distributionManyPatchesSparseIndividuals => 'Many patches and scattered individuals';
+  String get distributionManyPatchesSparseIndividuals =>
+      'Many patches and scattered individuals';
 
   @override
-  String get distributionHighDensityIndividuals => 'Isolated individuals in high density';
+  String get distributionHighDensityIndividuals =>
+      'Isolated individuals in high density';
 
   @override
   String get distributionContinuousCoverWithGaps => 'Continuous with gaps';
@@ -1079,7 +1089,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get distributionContinuousDenseCover => 'Continuous and dense';
 
   @override
-  String get distributionContinuousDenseCoverWithEdge => 'Continuous with edge between strata';
+  String get distributionContinuousDenseCoverWithEdge =>
+      'Continuous with edge between strata';
 
   @override
   String get inventoryFreeQualitative => 'Free Qualitative List';
