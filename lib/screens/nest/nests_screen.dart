@@ -302,53 +302,45 @@ class NestsScreenState extends State<NestsScreen> {
             },
             menuChildren: [
               MenuItemButton(
+                leadingIcon: Icon(Icons.schedule_outlined),
+                trailingIcon: _sortField == 'foundTime'
+                    ? Icon(Icons.check_outlined)
+                    : null, 
                 onPressed: () {
                   _changeSortField('foundTime');
                 },
-                child: Row(
-                  children: [
-                    Icon(Icons.schedule_outlined),
-                    SizedBox(width: 8),
-                    Text(S.of(context).sortByTime),
-                  ],
-                ),
+                child: Text(S.of(context).sortByTime),
               ),
               MenuItemButton(
+                leadingIcon: Icon(Icons.sort_by_alpha_outlined),
+                trailingIcon: _sortField == 'fieldNumber'
+                    ? Icon(Icons.check_outlined)
+                    : null, 
                 onPressed: () {
                   _changeSortField('fieldNumber');
                 },
-                child: Row(
-                  children: [
-                    Icon(Icons.sort_by_alpha_outlined),
-                    SizedBox(width: 8),
-                    Text(S.of(context).sortByName),
-                  ],
-                ),
+                child: Text(S.of(context).sortByName),
               ),
               Divider(),
               MenuItemButton(
+                leadingIcon: Icon(Icons.south_outlined),
+                trailingIcon: _isAscendingOrder
+                    ? Icon(Icons.check_outlined)
+                    : null, 
                 onPressed: () {
                   _toggleSortOrder('ascending');
                 },
-                child: Row(
-                  children: [
-                    Icon(Icons.south_outlined),
-                    SizedBox(width: 8),
-                    Text(S.of(context).sortAscending),
-                  ],
-                ),
+                child: Text(S.of(context).sortAscending),
               ),
               MenuItemButton(
+                leadingIcon: Icon(Icons.north_outlined),
+                trailingIcon: !_isAscendingOrder
+                    ? Icon(Icons.check_outlined)
+                    : null, 
                 onPressed: () {
                   _toggleSortOrder('descending');
                 },
-                child: Row(
-                  children: [
-                    Icon(Icons.north_outlined),
-                    SizedBox(width: 8),
-                    Text(S.of(context).sortDescending),
-                  ],
-                ),
+                child: Text(S.of(context).sortDescending),
               ),
             ],
           ),
@@ -367,16 +359,11 @@ class NestsScreenState extends State<NestsScreen> {
             },
             menuChildren: [
               MenuItemButton(
+                leadingIcon: Icon(Icons.file_upload_outlined),
                 onPressed: () async {
                   await exportAllInactiveNestsToJson(context);
                 },
-                child: Row(
-                  children: [
-                    Icon(Icons.file_upload_outlined),
-                    SizedBox(width: 8),
-                    Text(S.of(context).exportAll),
-                  ],
-                ),
+                child: Text(S.of(context).exportAll),
               ),
             ],
           ),

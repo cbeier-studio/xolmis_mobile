@@ -91,9 +91,9 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     super.dispose();
   }
 
-  void _onInventoryPausedOrResumed(Inventory inventory) {
-    inventoryProvider.updateInventory(inventory);
-  }
+  // void _onInventoryPausedOrResumed(Inventory inventory) {
+  //   inventoryProvider.updateInventory(inventory);
+  // }
 
   void onInventoryUpdated(Inventory inventory) {
     inventoryProvider.updateInventory(inventory);
@@ -383,53 +383,45 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
             },
             menuChildren: [
               MenuItemButton(
+                leadingIcon: Icon(Icons.schedule_outlined),
+                trailingIcon: _sortField == 'startTime'
+                    ? Icon(Icons.check_outlined)
+                    : null, 
                 onPressed: () {
                   _changeSortField('startTime');
                 },
-                child: Row(
-                  children: [
-                    Icon(Icons.schedule_outlined),
-                    SizedBox(width: 8),
-                    Text(S.of(context).sortByTime),
-                  ],
-                ),
+                child: Text(S.of(context).sortByTime),
               ),
               MenuItemButton(
+                leadingIcon: Icon(Icons.sort_by_alpha_outlined),
+                trailingIcon: _sortField == 'id'
+                    ? Icon(Icons.check_outlined)
+                    : null, 
                 onPressed: () {
                   _changeSortField('id');
                 },
-                child: Row(
-                  children: [
-                    Icon(Icons.sort_by_alpha_outlined),
-                    SizedBox(width: 8),
-                    Text(S.of(context).sortByName),
-                  ],
-                ),
+                child: Text(S.of(context).sortByName),
               ),
               Divider(),
               MenuItemButton(
+                leadingIcon: Icon(Icons.south_outlined),
+                trailingIcon: _isAscendingOrder
+                    ? Icon(Icons.check_outlined)
+                    : null, 
                 onPressed: () {
                   _toggleSortOrder('ascending');
                 },
-                child: Row(
-                  children: [
-                    Icon(Icons.south_outlined),
-                    SizedBox(width: 8),
-                    Text(S.of(context).sortAscending),
-                  ],
-                ),
+                child: Text(S.of(context).sortAscending),
               ),
               MenuItemButton(
+                leadingIcon: Icon(Icons.north_outlined),
+                trailingIcon: !_isAscendingOrder
+                    ? Icon(Icons.check_outlined)
+                    : null, 
                 onPressed: () {
                   _toggleSortOrder('descending');
                 },
-                child: Row(
-                  children: [
-                    Icon(Icons.north_outlined),
-                    SizedBox(width: 8),
-                    Text(S.of(context).sortDescending),
-                  ],
-                ),
+                child: Text(S.of(context).sortDescending),
               ),
             ],
           ),
@@ -449,30 +441,20 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
             menuChildren: [
               // Action to import inventories from JSON
               MenuItemButton(
+                leadingIcon: Icon(Icons.file_open_outlined),
                 onPressed: () async {
                   await importInventoryFromJson(context);
                   await inventoryProvider.fetchInventories();
                 },
-                child: Row(
-                  children: [
-                    Icon(Icons.file_open_outlined),
-                    SizedBox(width: 8),
-                    Text(S.of(context).import),
-                  ],
-                ),
+                child: Text(S.of(context).import),
               ),
               // Action to export all finished inventories to JSON
               MenuItemButton(
+                leadingIcon: Icon(Icons.file_upload_outlined),
                 onPressed: () async {
                   await exportAllInventoriesToJson(context, inventoryProvider);
                 },
-                child: Row(
-                  children: [
-                    Icon(Icons.file_upload_outlined),
-                    SizedBox(width: 8),
-                    Text(S.of(context).exportAll),
-                  ],
-                ),
+                child: Text(S.of(context).exportAll),
               ),
             ],
           ),

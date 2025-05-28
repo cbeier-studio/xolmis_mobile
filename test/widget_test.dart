@@ -36,7 +36,7 @@ import 'package:xolmis/data/database/daos/vegetation_dao.dart';
 import 'package:xolmis/data/database/daos/weather_dao.dart';
 import 'package:xolmis/data/database/daos/app_image_dao.dart';
 
-Future<void> main() async {
+void main() async {
   late DatabaseHelper databaseHelper;
 
   late InventoryDao inventoryDao;
@@ -62,6 +62,8 @@ Future<void> main() async {
   late SpecimenRepository specimenRepository;
   late AppImageRepository appImageRepository;
   late FieldJournalRepository journalRepository;
+
+  late AppDependencies dependencies;
 
   setUp(() async {
     databaseHelper = DatabaseHelper();
@@ -90,23 +92,27 @@ Future<void> main() async {
     specimenRepository = SpecimenRepository(specimenDao);
     appImageRepository = AppImageRepository(appImageDao);
     journalRepository = FieldJournalRepository(journalDao);
+
+    dependencies = AppDependencies(
+      inventoryRepository: inventoryRepository, 
+      speciesRepository: speciesRepository, 
+      poiRepository: poiRepository, 
+      vegetationRepository: vegetationRepository, 
+      weatherRepository: weatherRepository, 
+      nestRepository: nestRepository, 
+      nestRevisionRepository: nestRevisionRepository, 
+      eggRepository: eggRepository, 
+      specimenRepository: specimenRepository, 
+      appImageRepository: appImageRepository, 
+      journalRepository: journalRepository
+    );    
   });
 
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
     await tester.pumpWidget(
         MyApp(
-          inventoryRepository: inventoryRepository,
-          speciesRepository: speciesRepository,
-          poiRepository: poiRepository,
-          vegetationRepository: vegetationRepository,
-          weatherRepository: weatherRepository,
-          nestRepository: nestRepository,
-          nestRevisionRepository: nestRevisionRepository,
-          eggRepository: eggRepository,
-          specimenRepository: specimenRepository,
-          appImageRepository: appImageRepository,
-          journalRepository: journalRepository,
+          dependencies: dependencies,
         )
     );
 

@@ -1,17 +1,11 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
-import 'package:share_plus/share_plus.dart';
 
 import '../../data/models/journal.dart';
 import '../../providers/journal_provider.dart';
 
 import 'add_journal_screen.dart';
-import '../../utils/export_utils.dart';
 import '../../generated/l10n.dart';
 
 class JournalsScreen extends StatefulWidget {
@@ -191,65 +185,55 @@ class JournalsScreenState extends State<JournalsScreen> {
             },
             menuChildren: [
               MenuItemButton(
+                leadingIcon: Icon(Icons.schedule_outlined),
+                trailingIcon: _sortField == 'creationDate'
+                    ? Icon(Icons.check_outlined)
+                    : null, 
                 onPressed: () {
                   _changeSortField('creationDate');
                 },
-                child: Row(
-                  children: [
-                    Icon(Icons.schedule_outlined),
-                    SizedBox(width: 8),
-                    Text(S.of(context).sortByTime),
-                  ],
-                ),
+                child: Text(S.of(context).sortByTime),
               ),
               MenuItemButton(
+                leadingIcon: Icon(Icons.schedule_outlined),
+                trailingIcon: _sortField == 'lastModifiedDate'
+                    ? Icon(Icons.check_outlined)
+                    : null, 
                 onPressed: () {
                   _changeSortField('lastModifiedDate');
                 },
-                child: Row(
-                  children: [
-                    Icon(Icons.schedule_outlined),
-                    SizedBox(width: 8),
-                    Text(S.of(context).sortByLastModified),
-                  ],
-                ),
+                child: Text(S.of(context).sortByLastModified),
               ),
               MenuItemButton(
+                leadingIcon: Icon(Icons.sort_by_alpha_outlined),
+                trailingIcon: _sortField == 'title'
+                    ? Icon(Icons.check_outlined)
+                    : null, 
                 onPressed: () {
                   _changeSortField('title');
                 },
-                child: Row(
-                  children: [
-                    Icon(Icons.sort_by_alpha_outlined),
-                    SizedBox(width: 8),
-                    Text(S.of(context).sortByTitle),
-                  ],
-                ),
+                child: Text(S.of(context).sortByTitle),
               ),
               Divider(),
               MenuItemButton(
+                leadingIcon: Icon(Icons.south_outlined),
+                trailingIcon: _isAscendingOrder
+                    ? Icon(Icons.check_outlined)
+                    : null, 
                 onPressed: () {
                   _toggleSortOrder('ascending');
                 },
-                child: Row(
-                  children: [
-                    Icon(Icons.south_outlined),
-                    SizedBox(width: 8),
-                    Text(S.of(context).sortAscending),
-                  ],
-                ),
+                child: Text(S.of(context).sortAscending),
               ),
               MenuItemButton(
+                leadingIcon: Icon(Icons.north_outlined),
+                trailingIcon: !_isAscendingOrder
+                    ? Icon(Icons.check_outlined)
+                    : null, 
                 onPressed: () {
                   _toggleSortOrder('descending');
                 },
-                child: Row(
-                  children: [
-                    Icon(Icons.north_outlined),
-                    SizedBox(width: 8),
-                    Text(S.of(context).sortDescending),
-                  ],
-                ),
+                child: Text(S.of(context).sortDescending),
               ),
             ],
           ),
