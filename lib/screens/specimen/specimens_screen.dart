@@ -18,6 +18,16 @@ import '../app_image_screen.dart';
 import '../../utils/export_utils.dart';
 import '../../generated/l10n.dart';
 
+enum SpecimenSortField {
+  fieldNumber,
+  sampleTime,
+}
+
+enum SortOrder {
+  ascending,
+  descending,
+}
+
 class SpecimensScreen extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
 
@@ -32,9 +42,9 @@ class SpecimensScreenState extends State<SpecimensScreen> {
   final _searchController = TextEditingController();
   bool _isSearchBarVisible = false;
   String _searchQuery = '';
-  bool _isAscendingOrder = false;
-  String _sortField = 'sampleTime';
   Set<int> selectedSpecimens = {};
+  SortOrder _sortOrder = SortOrder.descending;
+  SpecimenSortField _sortField = SpecimenSortField.sampleTime;
 
   @override
   void initState() {
@@ -49,13 +59,13 @@ class SpecimensScreenState extends State<SpecimensScreen> {
     });
   }
 
-  void _toggleSortOrder(String order) {
+  void _setSortOrder(SortOrder order) {
     setState(() {
-      _isAscendingOrder = order == 'ascending';
+      _sortOrder = order;
     });
   }
 
-  void _changeSortField(String field) {
+  void _setSortField(SpecimenSortField field) {
     setState(() {
       _sortField = field;
     });
@@ -64,12 +74,15 @@ class SpecimensScreenState extends State<SpecimensScreen> {
   List<Specimen> _sortSpecimens(List<Specimen> specimens) {
     specimens.sort((a, b) {
       int comparison;
-      if (_sortField == 'fieldNumber') {
-        comparison = a.fieldNumber.compareTo(b.fieldNumber);
-      } else {
-        comparison = a.sampleTime!.compareTo(b.sampleTime!);
+      switch (_sortField) {
+        case SpecimenSortField.fieldNumber:
+          comparison = a.fieldNumber.compareTo(b.fieldNumber);
+          break;
+        case SpecimenSortField.sampleTime:
+          comparison = a.sampleTime!.compareTo(b.sampleTime!);
+          break;
       }
-      return _isAscendingOrder ? comparison : -comparison;
+      return _sortOrder == SortOrder.ascending ? comparison : -comparison;
     });
     return specimens;
   }
@@ -308,42 +321,42 @@ class SpecimensScreenState extends State<SpecimensScreen> {
             menuChildren: [
               MenuItemButton(
                 leadingIcon: Icon(Icons.schedule_outlined),
-                trailingIcon: _sortField == 'sampleTime'
+                trailingIcon: _sortField == SpecimenSortField.sampleTime
                     ? Icon(Icons.check_outlined)
                     : null, 
                 onPressed: () {
-                  _changeSortField('sampleTime');
+                  _setSortField(SpecimenSortField.sampleTime);
                 },
                 child: Text(S.of(context).sortByTime),
               ),
               MenuItemButton(
                 leadingIcon: Icon(Icons.sort_by_alpha_outlined),
-                trailingIcon: _sortField == 'fieldNumber'
+                trailingIcon: _sortField == SpecimenSortField.fieldNumber
                     ? Icon(Icons.check_outlined)
                     : null, 
                 onPressed: () {
-                  _changeSortField('fieldNumber');
+                  _setSortField(SpecimenSortField.fieldNumber);
                 },
                 child: Text(S.of(context).sortByName),
               ),
               Divider(),
               MenuItemButton(
                 leadingIcon: Icon(Icons.south_outlined),
-                trailingIcon: _isAscendingOrder
+                trailingIcon: _sortOrder == SortOrder.ascending
                     ? Icon(Icons.check_outlined)
                     : null, 
                 onPressed: () {
-                  _toggleSortOrder('ascending');
+                  _setSortOrder(SortOrder.ascending);
                 },
                 child: Text(S.of(context).sortAscending),
               ),
               MenuItemButton(
                 leadingIcon: Icon(Icons.north_outlined),
-                trailingIcon: !_isAscendingOrder
+                trailingIcon: _sortOrder == SortOrder.descending
                     ? Icon(Icons.check_outlined)
                     : null, 
                 onPressed: () {
-                  _toggleSortOrder('descending');
+                  _setSortOrder(SortOrder.descending);
                 },
                 child: Text(S.of(context).sortDescending),
               ),

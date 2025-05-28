@@ -17,6 +17,16 @@ import 'nest_detail_screen.dart';
 import '../../utils/export_utils.dart';
 import '../../generated/l10n.dart';
 
+enum NestSortField {
+  fieldNumber,
+  foundTime,
+}
+
+enum SortOrder {
+  ascending,
+  descending,
+}
+
 class NestsScreen extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
 
@@ -30,11 +40,11 @@ class NestsScreenState extends State<NestsScreen> {
   late NestProvider nestProvider;
   final _searchController = TextEditingController();
   bool _showActive = true; // Show active nests by default
-  bool _isAscendingOrder = false; // Sort descending by default
-  String _sortField = 'foundTime'; // Sort by found time by default
   bool _isSearchBarVisible = false; // Hide search bar by default
   String _searchQuery = ''; // Empty search query by default
   Set<int> selectedNests = {}; // Set of selected nests
+  SortOrder _sortOrder = SortOrder.descending; // Default sort order
+  NestSortField _sortField = NestSortField.foundTime; // Default sort field
 
   @override
   void initState() {
@@ -51,14 +61,14 @@ class NestsScreenState extends State<NestsScreen> {
   }
 
   // Toggle the sort order
-  void _toggleSortOrder(String order) {
+  void _setSortOrder(SortOrder order) {
     setState(() {
-      _isAscendingOrder = order == 'ascending';
+      _sortOrder = order;
     });
   }
 
   // Change the sort field
-  void _changeSortField(String field) {
+  void _setSortField(NestSortField field) {
     setState(() {
       _sortField = field;
     });
@@ -68,12 +78,15 @@ class NestsScreenState extends State<NestsScreen> {
   List<Nest> _sortNests(List<Nest> nests) {
     nests.sort((a, b) {
       int comparison;
-      if (_sortField == 'fieldNumber') {
-        comparison = a.fieldNumber!.compareTo(b.fieldNumber!);
-      } else {
-        comparison = a.foundTime!.compareTo(b.foundTime!);
+      switch (_sortField) {
+        case NestSortField.fieldNumber:
+          comparison = a.fieldNumber!.compareTo(b.fieldNumber!);
+          break;
+        case NestSortField.foundTime:
+          comparison = a.foundTime!.compareTo(b.foundTime!);
+          break;
       }
-      return _isAscendingOrder ? comparison : -comparison;
+      return _sortOrder == SortOrder.ascending ? comparison : -comparison;
     });
     return nests;
   }
@@ -303,42 +316,42 @@ class NestsScreenState extends State<NestsScreen> {
             menuChildren: [
               MenuItemButton(
                 leadingIcon: Icon(Icons.schedule_outlined),
-                trailingIcon: _sortField == 'foundTime'
+                trailingIcon: _sortField == NestSortField.foundTime
                     ? Icon(Icons.check_outlined)
                     : null, 
                 onPressed: () {
-                  _changeSortField('foundTime');
+                  _setSortField(NestSortField.foundTime);
                 },
                 child: Text(S.of(context).sortByTime),
               ),
               MenuItemButton(
                 leadingIcon: Icon(Icons.sort_by_alpha_outlined),
-                trailingIcon: _sortField == 'fieldNumber'
+                trailingIcon: _sortField == NestSortField.fieldNumber
                     ? Icon(Icons.check_outlined)
                     : null, 
                 onPressed: () {
-                  _changeSortField('fieldNumber');
+                  _setSortField(NestSortField.fieldNumber);
                 },
                 child: Text(S.of(context).sortByName),
               ),
               Divider(),
               MenuItemButton(
                 leadingIcon: Icon(Icons.south_outlined),
-                trailingIcon: _isAscendingOrder
+                trailingIcon: _sortOrder == SortOrder.ascending
                     ? Icon(Icons.check_outlined)
                     : null, 
                 onPressed: () {
-                  _toggleSortOrder('ascending');
+                  _setSortOrder(SortOrder.ascending);
                 },
                 child: Text(S.of(context).sortAscending),
               ),
               MenuItemButton(
                 leadingIcon: Icon(Icons.north_outlined),
-                trailingIcon: !_isAscendingOrder
+                trailingIcon: _sortOrder == SortOrder.descending
                     ? Icon(Icons.check_outlined)
                     : null, 
                 onPressed: () {
-                  _toggleSortOrder('descending');
+                  _setSortOrder(SortOrder.descending);
                 },
                 child: Text(S.of(context).sortDescending),
               ),

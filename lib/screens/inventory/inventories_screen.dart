@@ -31,6 +31,16 @@ import '../../generated/l10n.dart';
 import 'mackinnon_chart_screen.dart';
 import 'species_count_chart_screen.dart';
 
+enum InventorySortField {
+  id,
+  startTime,
+}
+
+enum SortOrder {
+  ascending,
+  descending,
+}
+
 class InventoriesScreen extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
 
@@ -52,11 +62,11 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
   late WeatherRepository weatherRepository;
   final _searchController = TextEditingController();
   bool _isShowingActiveInventories = true; // Default to show active inventories
-  bool _isAscendingOrder = false; // Default to descending order
-  String _sortField = 'startTime'; // Default to sort by startTime
   bool _isSearchBarVisible = false; // Default to hide search bar
   String _searchQuery = ''; // Default search query
   Set<String> selectedInventories = {}; // Set of selected inventories
+  SortOrder _sortOrder = SortOrder.descending; // Default sort order
+  InventorySortField _sortField = InventorySortField.startTime; // Default sort field
 
   @override
   void initState() {
@@ -107,14 +117,14 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
   }
 
   // Toggle the sort order between ascending and descending
-  void _toggleSortOrder(String order) {
+  void _setSortOrder(SortOrder order) {
     setState(() {
-      _isAscendingOrder = order == 'ascending';
+      _sortOrder = order;
     });
   }
 
   // Change the field to sort by
-  void _changeSortField(String field) {
+  void _setSortField(InventorySortField field) {
     setState(() {
       _sortField = field;
     });
@@ -124,12 +134,15 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
   List<Inventory> _sortInventories(List<Inventory> inventories) {
     inventories.sort((a, b) {
       int comparison;
-      if (_sortField == 'id') {
-        comparison = a.id.compareTo(b.id);
-      } else {
-        comparison = a.startTime!.compareTo(b.startTime!);
+      switch (_sortField) {
+        case InventorySortField.id:
+          comparison = a.id.compareTo(b.id);
+          break;
+        case InventorySortField.startTime:
+          comparison = a.startTime!.compareTo(b.startTime!);
+          break;
       }
-      return _isAscendingOrder ? comparison : -comparison;
+      return _sortOrder == SortOrder.ascending ? comparison : -comparison;
     });
     return inventories;
   }
@@ -384,42 +397,42 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
             menuChildren: [
               MenuItemButton(
                 leadingIcon: Icon(Icons.schedule_outlined),
-                trailingIcon: _sortField == 'startTime'
+                trailingIcon: _sortField == InventorySortField.startTime
                     ? Icon(Icons.check_outlined)
                     : null, 
                 onPressed: () {
-                  _changeSortField('startTime');
+                  _setSortField(InventorySortField.startTime);
                 },
                 child: Text(S.of(context).sortByTime),
               ),
               MenuItemButton(
                 leadingIcon: Icon(Icons.sort_by_alpha_outlined),
-                trailingIcon: _sortField == 'id'
+                trailingIcon: _sortField == InventorySortField.id
                     ? Icon(Icons.check_outlined)
                     : null, 
                 onPressed: () {
-                  _changeSortField('id');
+                  _setSortField(InventorySortField.id);
                 },
                 child: Text(S.of(context).sortByName),
               ),
               Divider(),
               MenuItemButton(
                 leadingIcon: Icon(Icons.south_outlined),
-                trailingIcon: _isAscendingOrder
+                trailingIcon: _sortOrder == SortOrder.ascending
                     ? Icon(Icons.check_outlined)
                     : null, 
                 onPressed: () {
-                  _toggleSortOrder('ascending');
+                  _setSortOrder(SortOrder.ascending);
                 },
                 child: Text(S.of(context).sortAscending),
               ),
               MenuItemButton(
                 leadingIcon: Icon(Icons.north_outlined),
-                trailingIcon: !_isAscendingOrder
+                trailingIcon: _sortOrder == SortOrder.descending
                     ? Icon(Icons.check_outlined)
                     : null, 
                 onPressed: () {
-                  _toggleSortOrder('descending');
+                  _setSortOrder(SortOrder.descending);
                 },
                 child: Text(S.of(context).sortDescending),
               ),

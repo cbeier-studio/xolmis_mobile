@@ -8,6 +8,17 @@ import '../../providers/journal_provider.dart';
 import 'add_journal_screen.dart';
 import '../../generated/l10n.dart';
 
+enum JournalSortField {
+  title,
+  creationDate,
+  lastModifiedDate,
+}
+
+enum SortOrder {
+  ascending,
+  descending,
+}
+
 class JournalsScreen extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
 
@@ -22,9 +33,9 @@ class JournalsScreenState extends State<JournalsScreen> {
   final _searchController = TextEditingController();
   bool _isSearchBarVisible = false;
   String _searchQuery = '';
-  bool _isAscendingOrder = false;
-  String _sortField = 'sampleTime';
   Set<int> selectedJournals = {};
+  JournalSortField _sortField = JournalSortField.creationDate;
+  SortOrder _sortOrder = SortOrder.descending;
 
   @override
   void initState() {
@@ -39,13 +50,13 @@ class JournalsScreenState extends State<JournalsScreen> {
     });
   }
 
-  void _toggleSortOrder(String order) {
+  void _setSortOrder(SortOrder order) {
     setState(() {
-      _isAscendingOrder = order == 'ascending';
+      _sortOrder = order;
     });
   }
 
-  void _changeSortField(String field) {
+  void _setSortField(JournalSortField field) {
     setState(() {
       _sortField = field;
     });
@@ -54,14 +65,18 @@ class JournalsScreenState extends State<JournalsScreen> {
   List<FieldJournal> _sortJournalEntries(List<FieldJournal> journalEntries) {
     journalEntries.sort((a, b) {
       int comparison;
-      if (_sortField == 'title') {
-        comparison = a.title.compareTo(b.title);
-      } else if (_sortField == 'lastModifiedDate') {
-        comparison = a.lastModifiedDate!.compareTo(b.lastModifiedDate!);
-      } else {
-        comparison = a.creationDate!.compareTo(b.creationDate!);
+      switch (_sortField) {
+        case JournalSortField.title:
+          comparison = a.title.compareTo(b.title);
+          break;
+        case JournalSortField.lastModifiedDate:
+          comparison = a.lastModifiedDate!.compareTo(b.lastModifiedDate!);
+          break;
+        case JournalSortField.creationDate:
+          comparison = a.creationDate!.compareTo(b.creationDate!);
+          break;
       }
-      return _isAscendingOrder ? comparison : -comparison;
+      return _sortOrder == SortOrder.ascending ? comparison : -comparison;
     });
     return journalEntries;
   }
@@ -186,52 +201,52 @@ class JournalsScreenState extends State<JournalsScreen> {
             menuChildren: [
               MenuItemButton(
                 leadingIcon: Icon(Icons.schedule_outlined),
-                trailingIcon: _sortField == 'creationDate'
+                trailingIcon: _sortField == JournalSortField.creationDate
                     ? Icon(Icons.check_outlined)
                     : null, 
                 onPressed: () {
-                  _changeSortField('creationDate');
+                  _setSortField(JournalSortField.creationDate);
                 },
                 child: Text(S.of(context).sortByTime),
               ),
               MenuItemButton(
                 leadingIcon: Icon(Icons.schedule_outlined),
-                trailingIcon: _sortField == 'lastModifiedDate'
+                trailingIcon: _sortField == JournalSortField.lastModifiedDate
                     ? Icon(Icons.check_outlined)
                     : null, 
                 onPressed: () {
-                  _changeSortField('lastModifiedDate');
+                  _setSortField(JournalSortField.lastModifiedDate);
                 },
                 child: Text(S.of(context).sortByLastModified),
               ),
               MenuItemButton(
                 leadingIcon: Icon(Icons.sort_by_alpha_outlined),
-                trailingIcon: _sortField == 'title'
+                trailingIcon: _sortField == JournalSortField.title
                     ? Icon(Icons.check_outlined)
                     : null, 
                 onPressed: () {
-                  _changeSortField('title');
+                  _setSortField(JournalSortField.title);
                 },
                 child: Text(S.of(context).sortByTitle),
               ),
               Divider(),
               MenuItemButton(
                 leadingIcon: Icon(Icons.south_outlined),
-                trailingIcon: _isAscendingOrder
+                trailingIcon: _sortOrder == SortOrder.ascending
                     ? Icon(Icons.check_outlined)
                     : null, 
                 onPressed: () {
-                  _toggleSortOrder('ascending');
+                  _setSortOrder(SortOrder.ascending);
                 },
                 child: Text(S.of(context).sortAscending),
               ),
               MenuItemButton(
                 leadingIcon: Icon(Icons.north_outlined),
-                trailingIcon: !_isAscendingOrder
+                trailingIcon: _sortOrder == SortOrder.descending
                     ? Icon(Icons.check_outlined)
                     : null, 
                 onPressed: () {
-                  _toggleSortOrder('descending');
+                  _setSortOrder(SortOrder.descending);
                 },
                 child: Text(S.of(context).sortDescending),
               ),
