@@ -98,7 +98,8 @@ class NestsScreenState extends State<NestsScreen> {
     }
     List<Nest> filteredNests = nests.where((nest) =>
         nest.fieldNumber!.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-        nest.speciesName!.toLowerCase().contains(_searchQuery.toLowerCase())
+        nest.speciesName!.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+        nest.localityName!.toLowerCase().contains(_searchQuery.toLowerCase())
     ).toList();
     return _sortNests(filteredNests);
   }

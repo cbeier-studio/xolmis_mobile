@@ -94,7 +94,8 @@ class SpecimensScreenState extends State<SpecimensScreen> {
     }
     List<Specimen> filteredSpecimens = specimens.where((specimen) =>
       specimen.fieldNumber.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-      specimen.speciesName!.toLowerCase().contains(_searchQuery.toLowerCase())
+      specimen.speciesName!.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+      specimen.locality!.toLowerCase().contains(_searchQuery.toLowerCase())
     ).toList();
     return _sortSpecimens(filteredSpecimens);
   }
