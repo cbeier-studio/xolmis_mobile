@@ -1464,6 +1464,21 @@
         "type": "text",
         "description": "Average survey hours card title in statistics"
     },
+    "pending": "Pending",
+    "@pending": {
+        "type": "text",
+        "description": "Pending segmented button label in specimens"
+    },
+    "archived": "Archived",
+    "@archived": {
+        "type": "text",
+        "description": "Archived segmented button label in specimens"
+    },
+    "archiveSpecimen": "Archive specimen",
+    "@archiveSpecimen": {
+        "type": "text",
+        "description": "Menu option to archive a specimen"
+    },
     "precipitationNone": "None",
     "precipitationFog": "Fog",
     "precipitationMist": "Mist",

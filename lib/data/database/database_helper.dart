@@ -23,7 +23,7 @@ class DatabaseHelper {
     String path = join(await getDatabasesPath(), 'xolmis_database.db');
     return await openDatabase(
       path,
-      version: 13, // Increase the version number
+      version: 14, // Increase the version number
       onCreate: _createTables,
       onUpgrade: _upgradeTables,
       onOpen: (db) {
@@ -158,7 +158,8 @@ class DatabaseHelper {
           latitude REAL,
           locality TEXT,
           speciesName TEXT,
-          notes TEXT
+          notes TEXT,
+          isPending INTEGER DEFAULT 1
         )
       ''');
     db.execute('''
@@ -342,6 +343,11 @@ class DatabaseHelper {
     if (oldVersion < 13) {
       db.execute(
         'ALTER TABLE pois ADD COLUMN sampleTime TEXT',
+      );
+    }
+    if (oldVersion < 14) {
+      db.execute(
+        'ALTER TABLE specimens ADD COLUMN isPending INTEGER DEFAULT 1',
       );
     }
   }

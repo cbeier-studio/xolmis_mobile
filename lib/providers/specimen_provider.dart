@@ -11,8 +11,12 @@ class SpecimenProvider with ChangeNotifier {
 
   List<Specimen> _specimens = [];
   List<Specimen> get specimens => _specimens;
+  // Get list of pending specimens
+  List<Specimen> get pendingSpecimens => _specimens.where((specimen) => specimen.isPending).toList();
+  // Get list of archived specimens
+  List<Specimen> get archivedSpecimens => _specimens.where((specimen) => !specimen.isPending).toList();
 
-  int get specimensCount => specimens.length;
+  int get specimensCount => pendingSpecimens.length;
 
   // Load list of all specimens
   Future<void> fetchSpecimens() async {

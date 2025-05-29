@@ -216,7 +216,9 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                     ? const SizedBox(
                   width: 24,
                   height: 24,
-                  child: CircularProgressIndicator(strokeWidth: 2),
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    year2023: false,),
                 )
                     : FilledButton(
                   onPressed: _submitForm,

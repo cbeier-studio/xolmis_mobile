@@ -44,6 +44,7 @@ class Specimen {
   String? locality;
   String? speciesName;
   String? notes;
+  bool isPending;
 
   Specimen({
     this.id,
@@ -55,6 +56,7 @@ class Specimen {
     this.locality,
     this.speciesName,
     this.notes,
+    this.isPending = true,
   });
 
   Map<String, dynamic> toMap() {
@@ -68,6 +70,7 @@ class Specimen {
       'locality': locality,
       'speciesName': speciesName,
       'notes': notes,
+      'isPending': isPending ? 1 : 0,
     };
   }
 
@@ -82,6 +85,7 @@ class Specimen {
       'locality': locality,
       'speciesName': speciesName,
       'notes': notes,
+      'isPending': isPending,
     };
   }
 
@@ -96,6 +100,7 @@ class Specimen {
       locality: map['locality'],
       speciesName: map['speciesName'],
       notes: map['notes'],
+      isPending: map['isPending'] == 1,
     );
   }
 
@@ -109,6 +114,7 @@ class Specimen {
     String? locality,
     String? speciesName,
     String? notes,
+    bool? isPending,
   }) {
     return Specimen(
       id: id ?? this.id,
@@ -120,6 +126,7 @@ class Specimen {
       locality: locality ?? this.locality,
       speciesName: speciesName ?? this.speciesName,
       notes: notes ?? this.notes,
+      isPending: isPending ?? this.isPending,
     );
   }
 }

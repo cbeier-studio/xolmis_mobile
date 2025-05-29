@@ -232,6 +232,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                 height: 24,
                 child: CircularProgressIndicator(
                   valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  year2023: false,
                 ),
               )
                   : const Icon(Icons.flag_outlined),
@@ -298,6 +299,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                           ? Colors.deepPurple
                           : Colors.deepPurpleAccent,
                     ),
+                    year2023: false,
                   );
                 },
               )

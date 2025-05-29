@@ -42,6 +42,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
   final _searchController = TextEditingController();
   bool _isSearchBarVisible = false;
   String _searchQuery = '';
+  bool _showPending = true; // Show pending specimens by default
   Set<int> selectedSpecimens = {};
   SortOrder _sortOrder = SortOrder.descending;
   SpecimenSortField _sortField = SpecimenSortField.sampleTime;
@@ -379,14 +380,14 @@ class SpecimensScreenState extends State<SpecimensScreen> {
               MenuItemButton(
                 leadingIcon: Icon(Icons.file_upload_outlined),
                 onPressed: () {
-                  exportAllSpecimensToCsv(context);
+                  exportAllSpecimensToCsv(context, _showPending ? specimenProvider.pendingSpecimens : specimenProvider.archivedSpecimens);
                 },
                 child: Text('${S.of(context).exportAll} (CSV)'),
               ),
               MenuItemButton(
                 leadingIcon: Icon(Icons.file_upload_outlined),
                 onPressed: () {
-                  exportAllSpecimensToJson(context);
+                  exportAllSpecimensToJson(context, _showPending ? specimenProvider.pendingSpecimens : specimenProvider.archivedSpecimens);
                 },
                 child: Text('${S.of(context).exportAll} (JSON)'),
               ),
@@ -423,13 +424,44 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                 },
               ),
             ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
+            child: LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+                final screenWidth = constraints.maxWidth;
+                final buttonWidth = screenWidth < 600 ? screenWidth : 400.0;
+
+                // Show the segmented button to toggle between active and inactive nests
+                return SizedBox(
+                  width: buttonWidth,
+                  child: SegmentedButton<bool>(
+                    segments: [
+                      ButtonSegment(value: true, label: Text(S.of(context).pending)),
+                      ButtonSegment(value: false, label: Text(S.of(context).archived)),
+                    ],
+                    selected: {_showPending},
+                    onSelectionChanged: (Set<bool> newSelection) {
+                      setState(() {
+                        selectedSpecimens.clear();
+                        _showPending = newSelection.first;
+                      });
+                      // nestProvider.notifyListeners();
+                    },
+                  ),
+                );
+              },
+            ),
+          ),
           Expanded(
             child: Consumer<SpecimenProvider>(
                 builder: (context, specimenProvider, child) {
               final filteredSpecimens =
-                  _filterSpecimens(specimenProvider.specimens);
+                  _filterSpecimens(_showPending 
+                    ? specimenProvider.pendingSpecimens
+                    : specimenProvider.archivedSpecimens);
 
-              if (filteredSpecimens.isEmpty) {
+              if (_showPending && specimenProvider.pendingSpecimens.isEmpty ||
+                  !_showPending && specimenProvider.archivedSpecimens.isEmpty) {
                 return Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -457,7 +489,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
                 child: Text(
-                  '${filteredSpecimens.length} ${S.of(context).specimens(filteredSpecimens.length)}',
+                  '${filteredSpecimens.length} ${S.of(context).specimens(filteredSpecimens.length).toLowerCase()}',
                   // style: TextStyle(fontSize: 16,),
                 ),
               ),
@@ -563,6 +595,21 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                       ),
                     ],
                   ),
+                  if (_showPending)
+                    IconButton(
+                      icon: Icon(Icons.archive_outlined),
+                      tooltip: S.of(context).archiveSpecimen,
+                      onPressed: () async {
+                        for (final id in selectedSpecimens) {
+                          final specimen = await specimenProvider.getSpecimenById(id);
+                          specimen.isPending = false;
+                          specimenProvider.updateSpecimen(specimen);
+                        }
+                        setState(() {
+                          selectedSpecimens.clear();
+                        });
+                      },
+                      ),
                   VerticalDivider(),
                   // Option to clear the selected specimens
                   IconButton(
@@ -621,7 +668,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                         if (snapshot
                                 .connectionState ==
                             ConnectionState.waiting) {
-                          return const CircularProgressIndicator();
+                          return const CircularProgressIndicator(year2023: false,);
                         } else if (snapshot
                             .hasError) {
                           return const Icon(
@@ -730,7 +777,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
         builder: (context, snapshot) {
           if (snapshot.connectionState ==
               ConnectionState.waiting) {
-            return const CircularProgressIndicator();
+            return const CircularProgressIndicator(year2023: false,);
           } else if (snapshot.hasError) {
             return const Icon(Icons.error);
           } else if (snapshot.hasData &&
@@ -813,6 +860,16 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                       );
                     },
                   ),
+                  if (_showPending)
+                    ListTile(
+                      leading: const Icon(Icons.archive_outlined),
+                      title: Text(S.of(context).archiveSpecimen),
+                      onTap: () {
+                        specimen.isPending = false;
+                        specimenProvider.updateSpecimen(specimen);
+                        Navigator.pop(context);
+                      },
+                    ),
                   // Divider(),
                   ListTile(
                     leading: Icon(Icons.delete_outlined, color: Theme.of(context).brightness == Brightness.light

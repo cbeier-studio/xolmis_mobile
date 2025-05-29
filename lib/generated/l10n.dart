@@ -2698,6 +2698,36 @@ class S {
     );
   }
 
+  /// `Pending`
+  String get pending {
+    return Intl.message(
+      'Pending',
+      name: 'pending',
+      desc: 'Pending segmented button label in specimens',
+      args: [],
+    );
+  }
+
+  /// `Archived`
+  String get archived {
+    return Intl.message(
+      'Archived',
+      name: 'archived',
+      desc: 'Archived segmented button label in specimens',
+      args: [],
+    );
+  }
+
+  /// `Archive specimen`
+  String get archiveSpecimen {
+    return Intl.message(
+      'Archive specimen',
+      name: 'archiveSpecimen',
+      desc: 'Menu option to archive a specimen',
+      args: [],
+    );
+  }
+
   /// `None`
   String get precipitationNone {
     return Intl.message('None', name: 'precipitationNone', desc: '', args: []);

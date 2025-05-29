@@ -200,7 +200,10 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
             ? const SizedBox(
           width: 24,
           height: 24,
-          child: CircularProgressIndicator(strokeWidth: 2),
+          child: CircularProgressIndicator(
+            strokeWidth: 2,
+            year2023: false,
+          ),
         )
             : const Icon(Icons.add_location_outlined),
       ),

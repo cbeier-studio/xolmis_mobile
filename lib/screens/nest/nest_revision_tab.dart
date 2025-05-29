@@ -17,14 +17,14 @@ import 'add_revision_screen.dart';
 class NestRevisionsTab extends StatefulWidget {
   final Nest nest;
 
-  const NestRevisionsTab(
-      {super.key, required this.nest});
+  const NestRevisionsTab({super.key, required this.nest});
 
   @override
   State<NestRevisionsTab> createState() => _NestRevisionsTabState();
 }
 
-class _NestRevisionsTabState extends State<NestRevisionsTab> with AutomaticKeepAliveClientMixin {
+class _NestRevisionsTabState extends State<NestRevisionsTab>
+    with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
 
@@ -37,31 +37,42 @@ class _NestRevisionsTabState extends State<NestRevisionsTab> with AutomaticKeepA
   Future<void> _deleteNestRevision(NestRevision revision) async {
     final confirmed = await _showDeleteConfirmationDialog(context);
     if (confirmed) {
-      Provider.of<NestRevisionProvider>(context, listen: false)
-          .removeNestRevision(widget.nest.id!, revision.id!);
+      Provider.of<NestRevisionProvider>(
+        context,
+        listen: false,
+      ).removeNestRevision(widget.nest.id!, revision.id!);
     }
   }
 
   Future<bool> _showDeleteConfirmationDialog(BuildContext context) async {
     return await showDialog<bool>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog.adaptive(
-          title: Text(S.of(context).confirmDelete),
-          content: Text(S.of(context).confirmDeleteMessage(1, "female", S.of(context).revision(1).toLowerCase())),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: Text(S.of(context).cancel),
-            ),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              child: Text(S.of(context).delete),
-            ),
-          ],
-        );
-      },
-    ) ?? false;
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog.adaptive(
+              title: Text(S.of(context).confirmDelete),
+              content: Text(
+                S
+                    .of(context)
+                    .confirmDeleteMessage(
+                      1,
+                      "female",
+                      S.of(context).revision(1).toLowerCase(),
+                    ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: Text(S.of(context).cancel),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: Text(S.of(context).delete),
+                ),
+              ],
+            );
+          },
+        ) ??
+        false;
   }
 
   Widget _buildNestRevisionList() {
@@ -69,178 +80,179 @@ class _NestRevisionsTabState extends State<NestRevisionsTab> with AutomaticKeepA
       children: [
         Expanded(
           child: Consumer<NestRevisionProvider>(
-              builder: (context, nestRevisionProvider, child) {
-                final revisionList = nestRevisionProvider.getRevisionForNest(
-                    widget.nest.id!);
+            builder: (context, nestRevisionProvider, child) {
+              final revisionList = nestRevisionProvider.getRevisionForNest(
+                widget.nest.id!,
+              );
 
-                if (revisionList.isEmpty) {
-                  return Center(
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 16.0),
-                      child: Text(S.of(context).noRevisionsFound),
-                    ),
-                  );
-                } else {
-                  return RefreshIndicator(
-                    onRefresh: () async {
-                      await nestRevisionProvider.getRevisionForNest(
-                          widget.nest.id ?? 0);
+              if (revisionList.isEmpty) {
+                return Center(
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 16.0),
+                    child: Text(S.of(context).noRevisionsFound),
+                  ),
+                );
+              } else {
+                return RefreshIndicator(
+                  onRefresh: () async {
+                    await nestRevisionProvider.getRevisionForNest(
+                      widget.nest.id ?? 0,
+                    );
+                  },
+                  child: LayoutBuilder(
+                    builder: (
+                      BuildContext context,
+                      BoxConstraints constraints,
+                    ) {
+                      final screenWidth = constraints.maxWidth;
+                      final isLargeScreen = screenWidth > 600;
+
+                      if (isLargeScreen) {
+                        return revisionGridTileItem(constraints, revisionList);
+                      } else {
+                        return _buildListView(revisionList);
+                      }
                     },
-                    child: LayoutBuilder(
-                        builder: (BuildContext context,
-                            BoxConstraints constraints) {
-                          final screenWidth = constraints.maxWidth;
-                          final isLargeScreen = screenWidth > 600;
-
-                          if (isLargeScreen) {
-                            return revisionGridTileItem(constraints, revisionList);
-                          } else {
-                            return _buildListView(revisionList);
-                          }
-                        }
-                    ),
-                  );
-                }
+                  ),
+                );
               }
+            },
           ),
-        )
+        ),
       ],
     );
   }
 
-  SingleChildScrollView revisionGridTileItem(BoxConstraints constraints, List<NestRevision> revisionList) {
+  SingleChildScrollView revisionGridTileItem(
+    BoxConstraints constraints,
+    List<NestRevision> revisionList,
+  ) {
     final double minWidth = 340;
     int crossAxisCountCalculated = (constraints.maxWidth / minWidth).floor();
     return SingleChildScrollView(
-          child: Align(
-          alignment: Alignment.topCenter,
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 840),
-            child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: crossAxisCountCalculated,
-                  childAspectRatio: 1,
-                ),
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: revisionList.length,
-                itemBuilder: (context, index) {
-                  final revision = revisionList[index];
-        // final isSelected = selectedSpecimens.contains(specimen.id);
-        return GridTile(
-          child: InkWell(
-            onLongPress: () =>
-                _showBottomSheet(context, revision),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => AppImageScreen(
-                    specimenId: revision.id,
+      child: Align(
+        alignment: Alignment.topCenter,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 840),
+          child: GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: crossAxisCountCalculated,
+              childAspectRatio: 1,
+            ),
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: revisionList.length,
+            itemBuilder: (context, index) {
+              final revision = revisionList[index];
+              // final isSelected = selectedSpecimens.contains(specimen.id);
+              return GridTile(
+                child: InkWell(
+                  onLongPress: () => _showBottomSheet(context, revision),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder:
+                            (context) =>
+                                AppImageScreen(specimenId: revision.id),
+                      ),
+                    );
+                  },
+                  child: Card.outlined(
+                    child: Stack(
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: FutureBuilder<List<AppImage>>(
+                                future: Provider.of<AppImageProvider>(
+                                  context,
+                                  listen: false,
+                                ).fetchImagesForNestRevision(revision.id!),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const CircularProgressIndicator(
+                                      year2023: false,
+                                    );
+                                  } else if (snapshot.hasError) {
+                                    return const Icon(Icons.error);
+                                  } else if (snapshot.hasData &&
+                                      snapshot.data!.isNotEmpty) {
+                                    return ClipRRect(
+                                      borderRadius: BorderRadius.vertical(
+                                        top: Radius.circular(12.0),
+                                      ),
+                                      child: Image.file(
+                                        File(snapshot.data!.first.imagePath),
+                                        width: double.infinity,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    );
+                                  } else {
+                                    return const Center(
+                                      child: Icon(Icons.hide_image_outlined),
+                                    );
+                                  }
+                                },
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    DateFormat(
+                                      'dd/MM/yyyy HH:mm:ss',
+                                    ).format(revision.sampleTime!),
+                                    style: TextTheme.of(context).bodyLarge,
+                                  ),
+                                  Text(
+                                    '${nestStatusTypeFriendlyNames[revision.nestStatus]}: ${nestStageTypeFriendlyNames[revision.nestStage]}',
+                                  ),
+                                  Text(
+                                    '${S.of(context).host}: ${revision.eggsHost ?? 0} ${S.of(context).egg(revision.eggsHost ?? 0).toLowerCase()}, ${revision.nestlingsHost ?? 0} ${S.of(context).nestling(revision.nestlingsHost ?? 0).toLowerCase()}',
+                                  ),
+                                  Text(
+                                    '${S.of(context).nidoparasite}: ${revision.eggsParasite ?? 0} ${S.of(context).egg(revision.eggsParasite ?? 0).toLowerCase()}, ${revision.nestlingsParasite ?? 0} ${S.of(context).nestling(revision.nestlingsParasite ?? 0).toLowerCase()}',
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        // Positioned(
+                        //   top: 8,
+                        //   right: 8,
+                        //   child: Checkbox(
+                        //     value: isSelected,
+                        //     onChanged: (bool? value) {
+                        //       setState(() {
+                        //         if (value == true) {
+                        //           selectedSpecimens
+                        //               .add(specimen.id!);
+                        //         } else {
+                        //           selectedSpecimens
+                        //               .remove(specimen.id);
+                        //         }
+                        //       });
+                        //     },
+                        //   ),
+                        // ),
+                      ],
+                    ),
                   ),
                 ),
               );
             },
-            child: Card.outlined(
-              child: Stack(
-                children: [
-                  Column(
-                    mainAxisAlignment:
-                        MainAxisAlignment.end,
-                    crossAxisAlignment:
-                        CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child:
-                            FutureBuilder<List<AppImage>>(
-                          future: Provider.of<
-          AppImageProvider>(
-      context,
-      listen: false)
-                              .fetchImagesForNestRevision(
-      revision.id!),
-                          builder: (context, snapshot) {
-                            if (snapshot
-        .connectionState ==
-    ConnectionState.waiting) {
-                              return const CircularProgressIndicator();
-                            } else if (snapshot
-    .hasError) {
-                              return const Icon(
-      Icons.error);
-                            } else if (snapshot.hasData &&
-    snapshot
-        .data!.isNotEmpty) {
-                              return ClipRRect(
-    borderRadius:
-        BorderRadius.vertical(
-            top: Radius
-                .circular(
-                    12.0)),
-    child: Image.file(
-      File(snapshot.data!
-          .first.imagePath),
-      width: double.infinity,
-      fit: BoxFit.cover,
-    ),
-                              );
-                            } else {
-                              return const Center(
-      child: Icon(Icons
-          .hide_image_outlined));
-                            }
-                          },
-                        ),
-                      ),
-                      Padding(
-                        padding:
-                            const EdgeInsets.all(16.0),
-                        child: Column(
-                          mainAxisAlignment:
-                              MainAxisAlignment.end,
-                          crossAxisAlignment:
-                              CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                      DateFormat('dd/MM/yyyy HH:mm:ss').format(revision.sampleTime!),
-                      style: TextTheme.of(context).bodyLarge,
-                    ),
-                    Text('${nestStatusTypeFriendlyNames[revision.nestStatus]}: ${nestStageTypeFriendlyNames[revision.nestStage]}'),
-                    Text('${S.of(context).host}: ${revision.eggsHost ?? 0} ${S.of(context).egg(revision.eggsHost ?? 0).toLowerCase()}, ${revision.nestlingsHost ?? 0} ${S.of(context).nestling(revision.nestlingsHost ?? 0).toLowerCase()}'),
-                    Text('${S.of(context).nidoparasite}: ${revision.eggsParasite ?? 0} ${S.of(context).egg(revision.eggsParasite ?? 0).toLowerCase()}, ${revision.nestlingsParasite ?? 0} ${S.of(context).nestling(revision.nestlingsParasite ?? 0).toLowerCase()}'),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  // Positioned(
-                  //   top: 8,
-                  //   right: 8,
-                  //   child: Checkbox(
-                  //     value: isSelected,
-                  //     onChanged: (bool? value) {
-                  //       setState(() {
-                  //         if (value == true) {
-                  //           selectedSpecimens
-                  //               .add(specimen.id!);
-                  //         } else {
-                  //           selectedSpecimens
-                  //               .remove(specimen.id);
-                  //         }
-                  //       });
-                  //     },
-                  //   ),
-                  // ),
-                ],
-              ),
-            ),
           ),
-        );
-                },
-              ),
-            ),
-          ),
-        );
+        ),
+      ),
+    );
   }
 
   void _showBottomSheet(BuildContext context, NestRevision revision) {
@@ -256,7 +268,11 @@ class _NestRevisionsTabState extends State<NestRevisionsTab> with AutomaticKeepA
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   ListTile(
-                    title: Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(revision.sampleTime!),),
+                    title: Text(
+                      DateFormat(
+                        'dd/MM/yyyy HH:mm:ss',
+                      ).format(revision.sampleTime!),
+                    ),
                   ),
                   Divider(),
                   ListTile(
@@ -267,28 +283,39 @@ class _NestRevisionsTabState extends State<NestRevisionsTab> with AutomaticKeepA
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => AddNestRevisionScreen(
-                            nest: widget.nest,
-                            nestRevision: revision, 
-                            isEditing: true, 
-                          ),
+                          builder:
+                              (context) => AddNestRevisionScreen(
+                                nest: widget.nest,
+                                nestRevision: revision,
+                                isEditing: true,
+                              ),
                         ),
                       );
                     },
                   ),
                   // Divider(),
                   ListTile(
-                    leading: Icon(Icons.delete_outlined, color: Theme.of(context).brightness == Brightness.light
-                        ? Colors.red
-                        : Colors.redAccent,),
-                    title: Text(S.of(context).deleteRevision, style: TextStyle(color: Theme.of(context).brightness == Brightness.light
-                        ? Colors.red
-                        : Colors.redAccent,),),
+                    leading: Icon(
+                      Icons.delete_outlined,
+                      color:
+                          Theme.of(context).brightness == Brightness.light
+                              ? Colors.red
+                              : Colors.redAccent,
+                    ),
+                    title: Text(
+                      S.of(context).deleteRevision,
+                      style: TextStyle(
+                        color:
+                            Theme.of(context).brightness == Brightness.light
+                                ? Colors.red
+                                : Colors.redAccent,
+                      ),
+                    ),
                     onTap: () async {
                       await _deleteNestRevision(revision);
                       Navigator.pop(context);
                     },
-                  )
+                  ),
                 ],
               ),
             );
@@ -301,10 +328,10 @@ class _NestRevisionsTabState extends State<NestRevisionsTab> with AutomaticKeepA
   Widget _buildGridView(List<NestRevision> revisionList) {
     return SingleChildScrollView(
       child: Align(
-      alignment: Alignment.topCenter,
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 840),
-        child: GridView.builder(
+        alignment: Alignment.topCenter,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 840),
+          child: GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
               childAspectRatio: 1,
@@ -314,116 +341,108 @@ class _NestRevisionsTabState extends State<NestRevisionsTab> with AutomaticKeepA
             itemCount: revisionList.length,
             itemBuilder: (context, index) {
               final revision = revisionList[index];
-    // final isSelected = selectedSpecimens.contains(specimen.id);
-    return GridTile(
-      child: InkWell(
-        onLongPress: () =>
-            _showBottomSheet(context, revision),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AppImageScreen(
-                specimenId: revision.id,
-              ),
-            ),
-          );
-        },
-        child: Card.outlined(
-          child: Stack(
-            children: [
-              Column(
-                mainAxisAlignment:
-                    MainAxisAlignment.end,
-                crossAxisAlignment:
-                    CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child:
-                        FutureBuilder<List<AppImage>>(
-                      future: Provider.of<
-                                  AppImageProvider>(
-                              context,
-                              listen: false)
-                          .fetchImagesForNestRevision(
-                              revision.id!),
-                      builder: (context, snapshot) {
-                        if (snapshot
-                                .connectionState ==
-                            ConnectionState.waiting) {
-                          return const CircularProgressIndicator();
-                        } else if (snapshot
-                            .hasError) {
-                          return const Icon(
-                              Icons.error);
-                        } else if (snapshot.hasData &&
-                            snapshot
-                                .data!.isNotEmpty) {
-                          return ClipRRect(
-                            borderRadius:
-                                BorderRadius.vertical(
-                                    top: Radius
-                                        .circular(
-                                            12.0)),
-                            child: Image.file(
-                              File(snapshot.data!
-                                  .first.imagePath),
-                              width: double.infinity,
-                              fit: BoxFit.cover,
-                            ),
-                          );
-                        } else {
-                          return const Center(
-                              child: Icon(Icons
-                                  .hide_image_outlined));
-                        }
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.all(16.0),
-                    child: Column(
-                      mainAxisAlignment:
-                          MainAxisAlignment.end,
-                      crossAxisAlignment:
-                          CrossAxisAlignment.start,
+              // final isSelected = selectedSpecimens.contains(specimen.id);
+              return GridTile(
+                child: InkWell(
+                  onLongPress: () => _showBottomSheet(context, revision),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder:
+                            (context) =>
+                                AppImageScreen(specimenId: revision.id),
+                      ),
+                    );
+                  },
+                  child: Card.outlined(
+                    child: Stack(
                       children: [
-                        Text(
-                  DateFormat('dd/MM/yyyy HH:mm:ss').format(revision.sampleTime!),
-                  style: TextTheme.of(context).bodyLarge,
-                ),
-                Text('${nestStatusTypeFriendlyNames[revision.nestStatus]}: ${nestStageTypeFriendlyNames[revision.nestStage]}'),
-                Text('${S.of(context).host}: ${revision.eggsHost ?? 0} ${S.of(context).egg(revision.eggsHost ?? 0).toLowerCase()}, ${revision.nestlingsHost ?? 0} ${S.of(context).nestling(revision.nestlingsHost ?? 0).toLowerCase()}'),
-                Text('${S.of(context).nidoparasite}: ${revision.eggsParasite ?? 0} ${S.of(context).egg(revision.eggsParasite ?? 0).toLowerCase()}, ${revision.nestlingsParasite ?? 0} ${S.of(context).nestling(revision.nestlingsParasite ?? 0).toLowerCase()}'),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: FutureBuilder<List<AppImage>>(
+                                future: Provider.of<AppImageProvider>(
+                                  context,
+                                  listen: false,
+                                ).fetchImagesForNestRevision(revision.id!),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const CircularProgressIndicator(year2023: false,);
+                                  } else if (snapshot.hasError) {
+                                    return const Icon(Icons.error);
+                                  } else if (snapshot.hasData &&
+                                      snapshot.data!.isNotEmpty) {
+                                    return ClipRRect(
+                                      borderRadius: BorderRadius.vertical(
+                                        top: Radius.circular(12.0),
+                                      ),
+                                      child: Image.file(
+                                        File(snapshot.data!.first.imagePath),
+                                        width: double.infinity,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    );
+                                  } else {
+                                    return const Center(
+                                      child: Icon(Icons.hide_image_outlined),
+                                    );
+                                  }
+                                },
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    DateFormat(
+                                      'dd/MM/yyyy HH:mm:ss',
+                                    ).format(revision.sampleTime!),
+                                    style: TextTheme.of(context).bodyLarge,
+                                  ),
+                                  Text(
+                                    '${nestStatusTypeFriendlyNames[revision.nestStatus]}: ${nestStageTypeFriendlyNames[revision.nestStage]}',
+                                  ),
+                                  Text(
+                                    '${S.of(context).host}: ${revision.eggsHost ?? 0} ${S.of(context).egg(revision.eggsHost ?? 0).toLowerCase()}, ${revision.nestlingsHost ?? 0} ${S.of(context).nestling(revision.nestlingsHost ?? 0).toLowerCase()}',
+                                  ),
+                                  Text(
+                                    '${S.of(context).nidoparasite}: ${revision.eggsParasite ?? 0} ${S.of(context).egg(revision.eggsParasite ?? 0).toLowerCase()}, ${revision.nestlingsParasite ?? 0} ${S.of(context).nestling(revision.nestlingsParasite ?? 0).toLowerCase()}',
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        // Positioned(
+                        //   top: 8,
+                        //   right: 8,
+                        //   child: Checkbox(
+                        //     value: isSelected,
+                        //     onChanged: (bool? value) {
+                        //       setState(() {
+                        //         if (value == true) {
+                        //           selectedSpecimens
+                        //               .add(specimen.id!);
+                        //         } else {
+                        //           selectedSpecimens
+                        //               .remove(specimen.id);
+                        //         }
+                        //       });
+                        //     },
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
-                ],
-              ),
-              // Positioned(
-              //   top: 8,
-              //   right: 8,
-              //   child: Checkbox(
-              //     value: isSelected,
-              //     onChanged: (bool? value) {
-              //       setState(() {
-              //         if (value == true) {
-              //           selectedSpecimens
-              //               .add(specimen.id!);
-              //         } else {
-              //           selectedSpecimens
-              //               .remove(specimen.id);
-              //         }
-              //       });
-              //     },
-              //   ),
-              // ),
-            ],
-          ),
-        ),
-      ),
-    );
+                ),
+              );
             },
           ),
         ),
@@ -440,8 +459,7 @@ class _NestRevisionsTabState extends State<NestRevisionsTab> with AutomaticKeepA
         final nestRevision = revisionList[index];
         return RevisionListItem(
           nestRevision: nestRevision,
-          onLongPress: () =>
-              _showBottomSheet(context, nestRevision),
+          onLongPress: () => _showBottomSheet(context, nestRevision),
         );
       },
     );
@@ -449,10 +467,7 @@ class _NestRevisionsTabState extends State<NestRevisionsTab> with AutomaticKeepA
 }
 
 class NestRevisionGridItem extends StatelessWidget {
-  const NestRevisionGridItem({
-    super.key,
-    required this.revision,
-  });
+  const NestRevisionGridItem({super.key, required this.revision});
 
   final NestRevision revision;
 
@@ -466,11 +481,13 @@ class NestRevisionGridItem extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
               child: FutureBuilder<List<AppImage>>(
-                future: Provider.of<AppImageProvider>(context, listen: false)
-                    .fetchImagesForNestRevision(revision.id!),
+                future: Provider.of<AppImageProvider>(
+                  context,
+                  listen: false,
+                ).fetchImagesForNestRevision(revision.id!),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const CircularProgressIndicator();
+                    return const CircularProgressIndicator(year2023: false,);
                   } else if (snapshot.hasError) {
                     return const Icon(Icons.error);
                   } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
@@ -494,13 +511,20 @@ class NestRevisionGridItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  DateFormat('dd/MM/yyyy HH:mm:ss').format(revision.sampleTime!),
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold),
+                  DateFormat(
+                    'dd/MM/yyyy HH:mm:ss',
+                  ).format(revision.sampleTime!),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
-                Text('${nestStatusTypeFriendlyNames[revision.nestStatus]}: ${nestStageTypeFriendlyNames[revision.nestStage]}'),
-                Text('${S.of(context).host}: ${revision.eggsHost ?? 0} ${S.of(context).egg(revision.eggsHost ?? 0)}, ${revision.nestlingsHost ?? 0} ${S.of(context).nestling(revision.nestlingsHost ?? 0).toLowerCase()}'),
-                Text('${S.of(context).nidoparasite}: ${revision.eggsParasite ?? 0} ${S.of(context).egg(revision.eggsParasite ?? 0)}, ${revision.nestlingsParasite ?? 0} ${S.of(context).nestling(revision.nestlingsParasite ?? 0).toLowerCase()}'),
+                Text(
+                  '${nestStatusTypeFriendlyNames[revision.nestStatus]}: ${nestStageTypeFriendlyNames[revision.nestStage]}',
+                ),
+                Text(
+                  '${S.of(context).host}: ${revision.eggsHost ?? 0} ${S.of(context).egg(revision.eggsHost ?? 0)}, ${revision.nestlingsHost ?? 0} ${S.of(context).nestling(revision.nestlingsHost ?? 0).toLowerCase()}',
+                ),
+                Text(
+                  '${S.of(context).nidoparasite}: ${revision.eggsParasite ?? 0} ${S.of(context).egg(revision.eggsParasite ?? 0)}, ${revision.nestlingsParasite ?? 0} ${S.of(context).nestling(revision.nestlingsParasite ?? 0).toLowerCase()}',
+                ),
               ],
             ),
           ],
@@ -529,11 +553,13 @@ class RevisionListItemState extends State<RevisionListItem> {
   Widget build(BuildContext context) {
     return ListTile(
       leading: FutureBuilder<List<AppImage>>(
-        future: Provider.of<AppImageProvider>(context, listen: false)
-            .fetchImagesForNestRevision(widget.nestRevision.id ?? 0),
+        future: Provider.of<AppImageProvider>(
+          context,
+          listen: false,
+        ).fetchImagesForNestRevision(widget.nestRevision.id ?? 0),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator();
+            return const CircularProgressIndicator(year2023: false,);
           } else if (snapshot.hasError) {
             return const Icon(Icons.error);
           } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
@@ -551,22 +577,32 @@ class RevisionListItemState extends State<RevisionListItem> {
           }
         },
       ),
-      title: Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(widget.nestRevision.sampleTime!)),
+      title: Text(
+        DateFormat(
+          'dd/MM/yyyy HH:mm:ss',
+        ).format(widget.nestRevision.sampleTime!),
+      ),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             '${nestStatusTypeFriendlyNames[widget.nestRevision.nestStatus]}: ${nestStageTypeFriendlyNames[widget.nestRevision.nestStage]}',
             style: TextStyle(
-              color: widget.nestRevision.nestStatus == NestStatusType.nstActive
-                  ? Colors.blue
-                  : widget.nestRevision.nestStatus == NestStatusType.nstInactive
-                  ? Colors.red
-                  : null,
+              color:
+                  widget.nestRevision.nestStatus == NestStatusType.nstActive
+                      ? Colors.blue
+                      : widget.nestRevision.nestStatus ==
+                          NestStatusType.nstInactive
+                      ? Colors.red
+                      : null,
             ),
           ),
-          Text('${S.of(context).host}: ${widget.nestRevision.eggsHost ?? 0} ${S.of(context).egg(widget.nestRevision.eggsHost ?? 0)}, ${widget.nestRevision.nestlingsHost ?? 0} ${S.of(context).nestling(widget.nestRevision.nestlingsHost ?? 0).toLowerCase()}'),
-          Text('${S.of(context).nidoparasite}: ${widget.nestRevision.eggsParasite ?? 0} ${S.of(context).egg(widget.nestRevision.eggsParasite ?? 0)}, ${widget.nestRevision.nestlingsParasite ?? 0} ${S.of(context).nestling(widget.nestRevision.nestlingsParasite ?? 0).toLowerCase()}'),
+          Text(
+            '${S.of(context).host}: ${widget.nestRevision.eggsHost ?? 0} ${S.of(context).egg(widget.nestRevision.eggsHost ?? 0)}, ${widget.nestRevision.nestlingsHost ?? 0} ${S.of(context).nestling(widget.nestRevision.nestlingsHost ?? 0).toLowerCase()}',
+          ),
+          Text(
+            '${S.of(context).nidoparasite}: ${widget.nestRevision.eggsParasite ?? 0} ${S.of(context).egg(widget.nestRevision.eggsParasite ?? 0)}, ${widget.nestRevision.nestlingsParasite ?? 0} ${S.of(context).nestling(widget.nestRevision.nestlingsParasite ?? 0).toLowerCase()}',
+          ),
         ],
       ),
       onLongPress: widget.onLongPress,
@@ -574,13 +610,12 @@ class RevisionListItemState extends State<RevisionListItem> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => AppImageScreen(
-              nestRevisionId: widget.nestRevision.id,
-            ),
+            builder:
+                (context) =>
+                    AppImageScreen(nestRevisionId: widget.nestRevision.id),
           ),
         );
       },
-
     );
   }
 }

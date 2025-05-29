@@ -1659,6 +1659,24 @@ abstract class AppLocalizations {
   /// **'survey hours per inventory'**
   String get averageSurveyHours;
 
+  /// Pending segmented button label in specimens
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get pending;
+
+  /// Archived segmented button label in specimens
+  ///
+  /// In en, this message translates to:
+  /// **'Archived'**
+  String get archived;
+
+  /// Menu option to archive a specimen
+  ///
+  /// In en, this message translates to:
+  /// **'Archive specimen'**
+  String get archiveSpecimen;
+
   /// No description provided for @precipitationNone.
   ///
   /// In en, this message translates to:

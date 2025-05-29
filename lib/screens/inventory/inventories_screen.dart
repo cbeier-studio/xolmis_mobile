@@ -810,6 +810,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     return ListTile(
       // Show progress of the inventory timer
       leading: Stack(alignment: Alignment.center, children: [
+        if (_isShowingActiveInventories && inventory.duration > 0)
         ValueListenableBuilder<double>(
           valueListenable: inventory.elapsedTimeNotifier,
           builder: (context, elapsedTime, child) {
@@ -836,6 +837,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                     ? Colors.deepPurple
                     : Colors.deepPurpleAccent,
               ),
+              year2023: false,
             );
           },
         ),
@@ -1091,6 +1093,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                             ? Colors.deepPurple
                             : Colors.deepPurpleAccent,
                         ),
+                        year2023: false,
                       );
                     },
                   ),

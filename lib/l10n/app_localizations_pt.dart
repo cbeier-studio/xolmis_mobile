@@ -1029,6 +1029,15 @@ class AppLocalizationsPt extends AppLocalizations {
   String get averageSurveyHours => 'horas de amostragem por inventário';
 
   @override
+  String get pending => 'Pendentes';
+
+  @override
+  String get archived => 'Arquivados';
+
+  @override
+  String get archiveSpecimen => 'Arquivar espécime';
+
+  @override
   String get precipitationNone => 'Nenhuma';
 
   @override
@@ -2239,6 +2248,15 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get averageSurveyHours => 'horas de amostragem por inventário';
+
+  @override
+  String get pending => 'Pendentes';
+
+  @override
+  String get archived => 'Arquivados';
+
+  @override
+  String get archiveSpecimen => 'Arquivar espécime';
 
   @override
   String get precipitationNone => 'Nenhuma';

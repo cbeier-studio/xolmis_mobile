@@ -229,7 +229,9 @@ class _GeneralStatisticsTabState extends State<GeneralStatisticsTab> {
                             builder: (context, snapshot) {
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
-                                return CircularProgressIndicator();
+                                return CircularProgressIndicator(
+                                  year2023: false,
+                                );
                               } else if (snapshot.hasError) {
                                 return Text('Error: ${snapshot.error}');
                               } else if (snapshot.hasData) {
@@ -434,7 +436,9 @@ class _GeneralStatisticsTabState extends State<GeneralStatisticsTab> {
                         ),
                       ),
                 ] else if (isLoadingData) ...[
-                  Center(child: CircularProgressIndicator()),
+                  Center(child: CircularProgressIndicator(
+                    year2023: false,
+                  )),
                 ],
               ],
             ),
@@ -885,7 +889,9 @@ class _PerSpeciesStatisticsTabState extends State<PerSpeciesStatisticsTab> {
                     
                   
                 ] else if (isLoadingSpecies) ...[
-                  Center(child: CircularProgressIndicator()),
+                  Center(child: CircularProgressIndicator(
+                    year2023: false,
+                  )),
                 ] else ...[
                   Center(child: Text(S.current.selectSpeciesToShowStats)),
                 ],

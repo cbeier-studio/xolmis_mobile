@@ -1027,6 +1027,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get averageSurveyHours => 'survey hours per inventory';
 
   @override
+  String get pending => 'Pending';
+
+  @override
+  String get archived => 'Archived';
+
+  @override
+  String get archiveSpecimen => 'Archive specimen';
+
+  @override
   String get precipitationNone => 'None';
 
   @override

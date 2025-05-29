@@ -34,7 +34,7 @@ Future<void> importInventoryFromJson(BuildContext context) async {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  CircularProgressIndicator(),
+                  CircularProgressIndicator(year2023: false,),
                   SizedBox(width: 16),
                   Text(S.current.importingInventory),
                 ],

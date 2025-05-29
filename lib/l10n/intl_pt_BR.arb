@@ -903,6 +903,21 @@
         "type": "text",
         "description": "Average survey hours card title in statistics"
     },
+    "pending": "Pendentes",
+    "@pending": {
+        "type": "text",
+        "description": "Pending segmented button label in specimens"
+    },
+    "archived": "Arquivados",
+    "@archived": {
+        "type": "text",
+        "description": "Archived segmented button label in specimens"
+    },
+    "archiveSpecimen": "Arquivar espécime",
+    "@archiveSpecimen": {
+        "type": "text",
+        "description": "Menu option to archive a specimen"
+    },
     "precipitationNone": "Nenhuma",
     "precipitationFog": "Névoa",
     "precipitationMist": "Neblina",

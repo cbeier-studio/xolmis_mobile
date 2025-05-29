@@ -123,6 +123,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "Incluir na amostra",
     ),
     "appearance": MessageLookupByLibrary.simpleMessage("Aparência"),
+    "archiveSpecimen": MessageLookupByLibrary.simpleMessage(
+      "Arquivar espécime",
+    ),
+    "archived": MessageLookupByLibrary.simpleMessage("Arquivados"),
     "averageSurveyHours": MessageLookupByLibrary.simpleMessage(
       "horas de amostragem por inventário",
     ),
@@ -522,6 +526,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "optional": MessageLookupByLibrary.simpleMessage("* opcional"),
     "outOfSample": MessageLookupByLibrary.simpleMessage("Fora da amostra"),
     "pause": MessageLookupByLibrary.simpleMessage("Pausa"),
+    "pending": MessageLookupByLibrary.simpleMessage("Pendentes"),
     "perSpecies": MessageLookupByLibrary.simpleMessage("Por espécie"),
     "permissionDenied": MessageLookupByLibrary.simpleMessage(
       "Permissão negada.",

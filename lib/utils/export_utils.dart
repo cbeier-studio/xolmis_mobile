@@ -467,10 +467,10 @@ Future<List<List>> buildNestCsvRows(Nest nest, Locale locale) async {
   return rows;
 }
 
-Future<void> exportAllSpecimensToJson(BuildContext context) async {
+Future<void> exportAllSpecimensToJson(BuildContext context, List<Specimen> specimenList) async {
   try {
-    final specimenProvider = Provider.of<SpecimenProvider>(context, listen: false);
-    final specimenList = specimenProvider.specimens;
+    // final specimenProvider = Provider.of<SpecimenProvider>(context, listen: false);
+    // final specimenList = specimenProvider.specimens;
     final jsonData = specimenList.map((specimen) => specimen.toJson()).toList();
     final jsonString = jsonEncode(jsonData);
 
@@ -500,10 +500,10 @@ Future<void> exportAllSpecimensToJson(BuildContext context) async {
   }
 }
 
-Future<void> exportAllSpecimensToCsv(BuildContext context) async {
+Future<void> exportAllSpecimensToCsv(BuildContext context, List<Specimen> specimenList) async {
   try {
-    final specimenProvider = Provider.of<SpecimenProvider>(context, listen: false);
-    final specimenList = specimenProvider.specimens;
+    // final specimenProvider = Provider.of<SpecimenProvider>(context, listen: false);
+    // final specimenList = specimenProvider.specimens;
     final locale = Localizations.localeOf(context);
 
     // 1. Create a list of data for the CSV

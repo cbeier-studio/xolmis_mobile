@@ -357,8 +357,7 @@ class JournalsScreenState extends State<JournalsScreen> {
                         Padding(
                           padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
                           child: Text(
-                            '${filteredEntries.length} ${S.of(context).journalEntries(filteredEntries.length)}',
-                            // style: TextStyle(fontSize: 16,),
+                            '${filteredEntries.length} ${S.of(context).journalEntries(filteredEntries.length).toLowerCase()}',
                           ),
                         ),
                         Expanded(

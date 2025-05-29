@@ -142,7 +142,9 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
                         if (snapshot
                                 .connectionState ==
                             ConnectionState.waiting) {
-                          return const CircularProgressIndicator();
+                          return const CircularProgressIndicator(
+                            year2023: false,
+                          );
                         } else if (snapshot
                             .hasError) {
                           return const Icon(
@@ -401,7 +403,9 @@ class VegetationListItemState extends State<VegetationListItem> {
             .fetchImagesForVegetation(widget.vegetation.id ?? 0),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator();
+            return const CircularProgressIndicator(
+              year2023: false,
+            );
           } else if (snapshot.hasError) {
             return const Icon(Icons.error);
           } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
