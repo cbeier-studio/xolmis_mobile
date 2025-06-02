@@ -519,6 +519,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "notes": MessageLookupByLibrary.simpleMessage("Observações"),
     "observer": MessageLookupByLibrary.simpleMessage("Observador"),
+    "observerAbbreviation": MessageLookupByLibrary.simpleMessage(
+      "Sigla do observador",
+    ),
     "observerSetting": MessageLookupByLibrary.simpleMessage(
       "Observador (sigla)",
     ),
@@ -589,6 +592,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "simultaneousLimitReached": MessageLookupByLibrary.simpleMessage(
       "Limite de inventários simultâneos atingido.",
+    ),
+    "siteAbbreviation": MessageLookupByLibrary.simpleMessage(
+      "Nome ou sigla do local",
     ),
     "sortAscending": MessageLookupByLibrary.simpleMessage("Ordem crescente"),
     "sortByLastModified": MessageLookupByLibrary.simpleMessage(

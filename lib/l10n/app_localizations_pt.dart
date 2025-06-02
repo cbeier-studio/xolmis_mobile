@@ -67,7 +67,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get observer => 'Observador';
 
   @override
-  String get observerAbbreviation => 'Observer abbreviation';
+  String get observerAbbreviation => 'Sigla do observador';
 
   @override
   String get cancel => 'Cancelar';
@@ -301,7 +301,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get generateId => 'Gerar ID';
 
   @override
-  String get siteAbbreviation => 'Site name or abbreviation';
+  String get siteAbbreviation => 'Nome ou sigla do local';
 
   @override
   String get optional => '* opcional';
@@ -1294,6 +1294,9 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get observer => 'Observador';
 
   @override
+  String get observerAbbreviation => 'Sigla do observador';
+
+  @override
   String get cancel => 'Cancelar';
 
   @override
@@ -1523,6 +1526,9 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get generateId => 'Gerar ID';
+
+  @override
+  String get siteAbbreviation => 'Nome ou sigla do local';
 
   @override
   String get optional => '* opcional';
