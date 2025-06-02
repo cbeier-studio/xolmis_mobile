@@ -319,6 +319,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "exportAllWhat": m7,
     "exportWhat": m8,
     "female": MessageLookupByLibrary.simpleMessage("Fêmea"),
+    "femaleNameOrId": MessageLookupByLibrary.simpleMessage(
+      "Nome ou ID da fêmea",
+    ),
     "fieldJournal": MessageLookupByLibrary.simpleMessage("Diário de campo"),
     "fieldNumber": MessageLookupByLibrary.simpleMessage("Número de campo"),
     "findInventories": MessageLookupByLibrary.simpleMessage(
@@ -338,6 +341,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "finished": MessageLookupByLibrary.simpleMessage("Encerrados"),
     "formatNumbers": MessageLookupByLibrary.simpleMessage("Formatar números"),
+    "formatNumbersDescription": MessageLookupByLibrary.simpleMessage(
+      "Desmarque para formatar números com ponto como separador decimal",
+    ),
     "gallery": MessageLookupByLibrary.simpleMessage("Galeria"),
     "general": MessageLookupByLibrary.simpleMessage("Geral"),
     "generateId": MessageLookupByLibrary.simpleMessage("Gerar ID"),
@@ -346,6 +352,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Altura acima do solo",
     ),
     "helpers": MessageLookupByLibrary.simpleMessage("Ajudantes de ninho"),
+    "helpersNamesOrIds": MessageLookupByLibrary.simpleMessage(
+      "Nomes ou IDs dos ajudantes",
+    ),
     "herbs": MessageLookupByLibrary.simpleMessage("Herbáceas"),
     "host": MessageLookupByLibrary.simpleMessage("Hospedeiro"),
     "imageDetails": MessageLookupByLibrary.simpleMessage("Detalhes da imagem"),
@@ -442,6 +451,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Listas de Mackinnon",
     ),
     "male": MessageLookupByLibrary.simpleMessage("Macho"),
+    "maleNameOrId": MessageLookupByLibrary.simpleMessage("Nome ou ID do macho"),
     "maxSpecies": MessageLookupByLibrary.simpleMessage("Máx. espécies"),
     "minutes": m17,
     "mustBeBiggerThanFive": MessageLookupByLibrary.simpleMessage(
@@ -539,6 +549,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "philornisLarvaePresent": MessageLookupByLibrary.simpleMessage(
       "Presença de larvas de Philornis",
+    ),
+    "plantSpeciesOrSupportType": MessageLookupByLibrary.simpleMessage(
+      "Espécie vegetal ou tipo de suporte",
     ),
     "poi": MessageLookupByLibrary.simpleMessage("POI"),
     "pointCounts": MessageLookupByLibrary.simpleMessage("Pontos de contagem"),

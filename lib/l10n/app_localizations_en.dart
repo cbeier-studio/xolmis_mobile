@@ -1036,6 +1036,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get archiveSpecimen => 'Archive specimen';
 
   @override
+  String get maleNameOrId => 'Male name or ID';
+
+  @override
+  String get femaleNameOrId => 'Female name or ID';
+
+  @override
+  String get helpersNamesOrIds => 'Helpers names or IDs';
+
+  @override
+  String get plantSpeciesOrSupportType => 'Plant species or support type';
+
+  @override
+  String get formatNumbersDescription =>
+      'Uncheck this to format numbers with point as decimal separator';
+
+  @override
   String get precipitationNone => 'None';
 
   @override

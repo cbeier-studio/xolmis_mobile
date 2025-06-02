@@ -126,7 +126,7 @@ class AddNestScreenState extends State<AddNestScreen> {
                           textCapitalization: TextCapitalization.characters,
                           decoration: InputDecoration(
                             labelText: '${S.of(context).fieldNumber} *',
-                            // helperText: S.of(context).requiredField,
+                            helperText: S.of(context).requiredField,
                             border: OutlineInputBorder(),
                           ),
                           validator: (value) {
@@ -237,6 +237,8 @@ class AddNestScreenState extends State<AddNestScreen> {
                         return Align(
                           alignment: Alignment.topLeft,
                           child: Material(
+                            elevation: 4.0, // Add this line for shadow
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
                             child: SizedBox(
                               width: MediaQuery.of(context).size.width * 0.9,
                               child: ListView.builder(
@@ -295,7 +297,8 @@ class AddNestScreenState extends State<AddNestScreen> {
                           textCapitalization: TextCapitalization.sentences,
                           decoration: InputDecoration(
                             labelText: '${S.of(context).nestSupport} *',
-                            helperText: S.of(context).requiredField,
+                            // helperText: S.of(context).requiredField,
+                            hintText: S.of(context).plantSpeciesOrSupportType,
                             border: OutlineInputBorder(),
                           ),
                           validator: (value) {
@@ -315,6 +318,8 @@ class AddNestScreenState extends State<AddNestScreen> {
                         return Align(
                           alignment: Alignment.topLeft,
                           child: Material(
+                            elevation: 4.0, // Add this line for shadow
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
                             child: SizedBox(
                               width: MediaQuery.of(context).size.width * 0.9,
                               child: ListView.builder(
@@ -357,6 +362,7 @@ class AddNestScreenState extends State<AddNestScreen> {
                           controller: _maleController,
                           decoration: InputDecoration(
                             labelText: S.of(context).male,
+                            hintText: S.of(context).maleNameOrId,
                             border: OutlineInputBorder(),
                           ),
                         ),
@@ -365,6 +371,7 @@ class AddNestScreenState extends State<AddNestScreen> {
                           controller: _femaleController,
                           decoration: InputDecoration(
                             labelText: S.of(context).female,
+                            hintText: S.of(context).femaleNameOrId,
                             border: OutlineInputBorder(),
                           ),
                         ),
@@ -373,6 +380,7 @@ class AddNestScreenState extends State<AddNestScreen> {
                           controller: _helpersController,
                           decoration: InputDecoration(
                             labelText: S.of(context).helpers,
+                            hintText: S.of(context).helpersNamesOrIds,
                             border: OutlineInputBorder(),
                           ),
                         ),

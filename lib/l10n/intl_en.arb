@@ -1479,6 +1479,31 @@
         "type": "text",
         "description": "Menu option to archive a specimen"
     },
+    "maleNameOrId": "Male name or ID",
+    "@maleNameOrId": {
+        "type": "text",
+        "description": "Male name or ID field hint"
+    },
+    "femaleNameOrId": "Female name or ID",
+    "@femaleNameOrId": {
+        "type": "text",
+        "description": "Female name or ID field hint"
+    },
+    "helpersNamesOrIds": "Helpers names or IDs",
+    "@helpersNamesOrIds": {
+        "type": "text",
+        "description": "Helpers names or IDs field hint"
+    },
+    "plantSpeciesOrSupportType": "Plant species or support type",
+    "@plantSpeciesOrSupportType": {
+        "type": "text",
+        "description": "Plant species or support type field hint"
+    },
+    "formatNumbersDescription": "Uncheck this to format numbers with point as decimal separator",
+    "@formatNumbersDescription": {
+        "type": "text",
+        "description": "Description of the format numbers option in settings"
+    },
     "precipitationNone": "None",
     "precipitationFog": "Fog",
     "precipitationMist": "Mist",

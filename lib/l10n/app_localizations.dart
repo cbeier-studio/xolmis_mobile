@@ -1677,6 +1677,36 @@ abstract class AppLocalizations {
   /// **'Archive specimen'**
   String get archiveSpecimen;
 
+  /// Male name or ID field hint
+  ///
+  /// In en, this message translates to:
+  /// **'Male name or ID'**
+  String get maleNameOrId;
+
+  /// Female name or ID field hint
+  ///
+  /// In en, this message translates to:
+  /// **'Female name or ID'**
+  String get femaleNameOrId;
+
+  /// Helpers names or IDs field hint
+  ///
+  /// In en, this message translates to:
+  /// **'Helpers names or IDs'**
+  String get helpersNamesOrIds;
+
+  /// Plant species or support type field hint
+  ///
+  /// In en, this message translates to:
+  /// **'Plant species or support type'**
+  String get plantSpeciesOrSupportType;
+
+  /// Description of the format numbers option in settings
+  ///
+  /// In en, this message translates to:
+  /// **'Uncheck this to format numbers with point as decimal separator'**
+  String get formatNumbersDescription;
+
   /// No description provided for @precipitationNone.
   ///
   /// In en, this message translates to:

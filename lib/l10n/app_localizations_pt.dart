@@ -1038,6 +1038,22 @@ class AppLocalizationsPt extends AppLocalizations {
   String get archiveSpecimen => 'Arquivar espécime';
 
   @override
+  String get maleNameOrId => 'Nome ou ID do macho';
+
+  @override
+  String get femaleNameOrId => 'Nome ou ID da fêmea';
+
+  @override
+  String get helpersNamesOrIds => 'Nomes ou IDs dos ajudantes';
+
+  @override
+  String get plantSpeciesOrSupportType => 'Espécie vegetal ou tipo de suporte';
+
+  @override
+  String get formatNumbersDescription =>
+      'Desmarque para formatar números com ponto como separador decimal';
+
+  @override
   String get precipitationNone => 'Nenhuma';
 
   @override
@@ -2263,6 +2279,22 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get archiveSpecimen => 'Arquivar espécime';
+
+  @override
+  String get maleNameOrId => 'Nome ou ID do macho';
+
+  @override
+  String get femaleNameOrId => 'Nome ou ID da fêmea';
+
+  @override
+  String get helpersNamesOrIds => 'Nomes ou IDs dos ajudantes';
+
+  @override
+  String get plantSpeciesOrSupportType => 'Espécie vegetal ou tipo de suporte';
+
+  @override
+  String get formatNumbersDescription =>
+      'Desmarque para formatar números com ponto como separador decimal';
 
   @override
   String get precipitationNone => 'Nenhuma';

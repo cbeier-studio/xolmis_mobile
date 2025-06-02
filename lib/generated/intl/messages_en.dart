@@ -306,6 +306,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "exportAllWhat": m7,
     "exportWhat": m8,
     "female": MessageLookupByLibrary.simpleMessage("Female"),
+    "femaleNameOrId": MessageLookupByLibrary.simpleMessage("Female name or ID"),
     "fieldJournal": MessageLookupByLibrary.simpleMessage("Field journal"),
     "fieldNumber": MessageLookupByLibrary.simpleMessage("Field number"),
     "findInventories": MessageLookupByLibrary.simpleMessage(
@@ -321,6 +322,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "finishInventory": MessageLookupByLibrary.simpleMessage("Finish inventory"),
     "finished": MessageLookupByLibrary.simpleMessage("Finished"),
     "formatNumbers": MessageLookupByLibrary.simpleMessage("Format numbers"),
+    "formatNumbersDescription": MessageLookupByLibrary.simpleMessage(
+      "Uncheck this to format numbers with point as decimal separator",
+    ),
     "gallery": MessageLookupByLibrary.simpleMessage("Gallery"),
     "general": MessageLookupByLibrary.simpleMessage("General"),
     "generateId": MessageLookupByLibrary.simpleMessage("Generate ID"),
@@ -329,6 +333,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Height above ground",
     ),
     "helpers": MessageLookupByLibrary.simpleMessage("Nest helpers"),
+    "helpersNamesOrIds": MessageLookupByLibrary.simpleMessage(
+      "Helpers names or IDs",
+    ),
     "herbs": MessageLookupByLibrary.simpleMessage("Herbs"),
     "host": MessageLookupByLibrary.simpleMessage("Host"),
     "imageDetails": MessageLookupByLibrary.simpleMessage("Image details"),
@@ -419,6 +426,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "locality": MessageLookupByLibrary.simpleMessage("Locality"),
     "mackinnonLists": MessageLookupByLibrary.simpleMessage("Mackinnon lists"),
     "male": MessageLookupByLibrary.simpleMessage("Male"),
+    "maleNameOrId": MessageLookupByLibrary.simpleMessage("Male name or ID"),
     "maxSpecies": MessageLookupByLibrary.simpleMessage("Max species"),
     "minutes": m17,
     "mustBeBiggerThanFive": MessageLookupByLibrary.simpleMessage(
@@ -508,6 +516,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "philornisLarvaePresent": MessageLookupByLibrary.simpleMessage(
       "Philornis larvae present",
+    ),
+    "plantSpeciesOrSupportType": MessageLookupByLibrary.simpleMessage(
+      "Plant species or support type",
     ),
     "poi": MessageLookupByLibrary.simpleMessage("POI"),
     "pointCounts": MessageLookupByLibrary.simpleMessage("Point counts"),

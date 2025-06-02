@@ -918,6 +918,31 @@
         "type": "text",
         "description": "Menu option to archive a specimen"
     },
+    "maleNameOrId": "Nome ou ID do macho",
+    "@maleNameOrId": {
+        "type": "text",
+        "description": "Male name or ID field hint"
+    },
+    "femaleNameOrId": "Nome ou ID da fêmea",
+    "@femaleNameOrId": {
+        "type": "text",
+        "description": "Female name or ID field hint"
+    },
+    "helpersNamesOrIds": "Nomes ou IDs dos ajudantes",
+    "@helpersNamesOrIds": {
+        "type": "text",
+        "description": "Helpers names or IDs field hint"
+    },
+    "plantSpeciesOrSupportType": "Espécie vegetal ou tipo de suporte",
+    "@plantSpeciesOrSupportType": {
+        "type": "text",
+        "description": "Plant species or support type field hint"
+    },
+    "formatNumbersDescription": "Desmarque para formatar números com ponto como separador decimal",
+    "@formatNumbersDescription": {
+        "type": "text",
+        "description": "Description of the format numbers option in settings"
+    },
     "precipitationNone": "Nenhuma",
     "precipitationFog": "Névoa",
     "precipitationMist": "Neblina",

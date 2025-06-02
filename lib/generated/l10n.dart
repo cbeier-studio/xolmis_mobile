@@ -2728,6 +2728,56 @@ class S {
     );
   }
 
+  /// `Male name or ID`
+  String get maleNameOrId {
+    return Intl.message(
+      'Male name or ID',
+      name: 'maleNameOrId',
+      desc: 'Male name or ID field hint',
+      args: [],
+    );
+  }
+
+  /// `Female name or ID`
+  String get femaleNameOrId {
+    return Intl.message(
+      'Female name or ID',
+      name: 'femaleNameOrId',
+      desc: 'Female name or ID field hint',
+      args: [],
+    );
+  }
+
+  /// `Helpers names or IDs`
+  String get helpersNamesOrIds {
+    return Intl.message(
+      'Helpers names or IDs',
+      name: 'helpersNamesOrIds',
+      desc: 'Helpers names or IDs field hint',
+      args: [],
+    );
+  }
+
+  /// `Plant species or support type`
+  String get plantSpeciesOrSupportType {
+    return Intl.message(
+      'Plant species or support type',
+      name: 'plantSpeciesOrSupportType',
+      desc: 'Plant species or support type field hint',
+      args: [],
+    );
+  }
+
+  /// `Uncheck this to format numbers with point as decimal separator`
+  String get formatNumbersDescription {
+    return Intl.message(
+      'Uncheck this to format numbers with point as decimal separator',
+      name: 'formatNumbersDescription',
+      desc: 'Description of the format numbers option in settings',
+      args: [],
+    );
+  }
+
   /// `None`
   String get precipitationNone {
     return Intl.message('None', name: 'precipitationNone', desc: '', args: []);

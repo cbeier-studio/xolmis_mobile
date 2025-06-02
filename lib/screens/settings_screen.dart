@@ -81,7 +81,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
           titleTextColor: Colors.deepPurple,
         ),
         sections: [
-          SettingsSection(title: Text(S.of(context).observer), tiles: [
+          SettingsSection(
+            title: Text(S.of(context).observer), 
+            tiles: [
             // Observer abbreviation
             SettingsTile.navigation(
               leading: Icon(Icons.person_outlined),
@@ -260,6 +262,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           SettingsSection(title: Text(S.of(context).export), tiles: [
             SettingsTile.switchTile(
               title: Text(S.of(context).formatNumbers),
+              description: Text(S.of(context).formatNumbersDescription),
               initialValue: _formatNumbers,
               onToggle: (bool value) {
                 setState(() {
@@ -275,7 +278,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
               SettingsTile.navigation(
                 leading: Icon(Icons.dark_mode_outlined),
                 title: Text(S.of(context).appearance),
-                value: Text(_themeMode.name),
+                value: Builder(
+                  builder: (context) {
+                    switch (_themeMode) {
+                      case ThemeMode.light:
+                        return Text(S.of(context).lightMode);
+                      case ThemeMode.dark:
+                        return Text(S.of(context).darkMode);
+                      case ThemeMode.system:
+                        return Text(S.of(context).systemMode);
+                    }
+                  }
+                ),
                 onPressed: (context) {
                   showDialog(
                     context: context,
@@ -339,83 +353,83 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ]
           ),
-          SettingsSection(
-            title: Text(S.of(context).dangerZone,
-                    style: TextStyle(color: Theme.of(context).brightness == Brightness.light
-                        ? Colors.red
-                        : Colors.redAccent,)), 
-            tiles: [
-            // Option to delete app data
-            SettingsTile(
-                leading: Icon(
-                  Icons.delete_forever,
-                  color: Theme.of(context).brightness == Brightness.light
-                        ? Colors.red
-                        : Colors.redAccent,
-                ),
-                title: Text(S.of(context).deleteAppData,
-                    style: TextStyle(color: Theme.of(context).brightness == Brightness.light
-                        ? Colors.red
-                        : Colors.redAccent,)),
-                description: Text(S.of(context).deleteAppDataDescription),
-                onPressed: (context) {
-                  _showDeleteConfirmationDialog(context);
-                }),
-          ]),
+          // SettingsSection(
+          //   title: Text(S.of(context).dangerZone,
+          //           style: TextStyle(color: Theme.of(context).brightness == Brightness.light
+          //               ? Colors.red
+          //               : Colors.redAccent,)), 
+          //   tiles: [
+          //   // Option to delete app data
+          //   SettingsTile(
+          //       leading: Icon(
+          //         Icons.delete_forever,
+          //         color: Theme.of(context).brightness == Brightness.light
+          //               ? Colors.red
+          //               : Colors.redAccent,
+          //       ),
+          //       title: Text(S.of(context).deleteAppData,
+          //           style: TextStyle(color: Theme.of(context).brightness == Brightness.light
+          //               ? Colors.red
+          //               : Colors.redAccent,)),
+          //       description: Text(S.of(context).deleteAppDataDescription),
+          //       onPressed: (context) {
+          //         _showDeleteConfirmationDialog(context);
+          //       }),
+          // ]),
         ],
       ),
     );
   }
 
-  Future<void> _showDeleteConfirmationDialog(BuildContext context) async {
-    return showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog.adaptive(
-          title: Text(S.of(context).deleteData),
-          content: Text(S.of(context).deleteDataMessage),
-          actions: <Widget>[
-            TextButton(
-              child: Text(S.of(context).cancel),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text(S.of(context).delete),
-              onPressed: () async {
-                // Delete the app data
-                await _deleteAppData();
-                Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(S.of(context).dataDeleted)),
-                );
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+  // Future<void> _showDeleteConfirmationDialog(BuildContext context) async {
+  //   return showDialog<void>(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog.adaptive(
+  //         title: Text(S.of(context).deleteData),
+  //         content: Text(S.of(context).deleteDataMessage),
+  //         actions: <Widget>[
+  //           TextButton(
+  //             child: Text(S.of(context).cancel),
+  //             onPressed: () {
+  //               Navigator.of(context).pop();
+  //             },
+  //           ),
+  //           TextButton(
+  //             child: Text(S.of(context).delete),
+  //             onPressed: () async {
+  //               // Delete the app data
+  //               await _deleteAppData();
+  //               Navigator.of(context).pop();
+  //               ScaffoldMessenger.of(context).showSnackBar(
+  //                 SnackBar(content: Text(S.of(context).dataDeleted)),
+  //               );
+  //             },
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
-  Future<void> _deleteAppData() async {
-    // 1. Get the database path
-    var databasesPath = await getDatabasesPath();
-    String path = join(databasesPath, 'xolmis_database.db');
+//   Future<void> _deleteAppData() async {
+//     // 1. Get the database path
+//     var databasesPath = await getDatabasesPath();
+//     String path = join(databasesPath, 'xolmis_database.db');
 
-    DatabaseHelper databaseHelper = DatabaseHelper();
-    await databaseHelper.closeDatabase();
+//     DatabaseHelper databaseHelper = DatabaseHelper();
+//     await databaseHelper.closeDatabase();
 
-    // 2. Delete the database file
-    await deleteDatabase(path);
+//     // 2. Delete the database file
+//     await deleteDatabase(path);
 
-    // 3. Recreate the database
+//     // 3. Recreate the database
 
-    await databaseHelper.initDatabase();
+//     await databaseHelper.initDatabase();
 
-    // 4. Clear other app data, if necessary (ex: SharedPreferences)
-    // ...
-  }
+//     // 4. Clear other app data, if necessary (ex: SharedPreferences)
+//     // ...
+//   }
 }
 
 // Auxiliary widget to select a number
