@@ -452,6 +452,20 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
               );
             },
             menuChildren: [
+              // Action to select all inventories
+              if (!_isShowingActiveInventories)
+                MenuItemButton(
+                  leadingIcon: Icon(Icons.library_add_check_outlined),
+                  onPressed: () {
+                    final filteredInventories = _filterInventories(inventoryProvider.finishedInventories);
+                    setState(() {
+                      selectedInventories = filteredInventories
+                          .map((inventory) => inventory.id)
+                          .toSet();
+                    });
+                  },
+                  child: Text(S.of(context).selectAll),
+                ),
               // Action to import inventories from JSON
               MenuItemButton(
                 leadingIcon: Icon(Icons.file_open_outlined),

@@ -1052,6 +1052,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'Uncheck this to format numbers with point as decimal separator';
 
   @override
+  String get selectAll => 'Select all';
+
+  @override
   String get precipitationNone => 'None';
 
   @override

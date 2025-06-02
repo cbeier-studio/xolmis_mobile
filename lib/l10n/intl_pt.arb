@@ -943,6 +943,11 @@
         "type": "text",
         "description": "Description of the format numbers option in settings"
     },
+    "selectAll": "Selecionar todos",
+    "@selectAll": {
+        "type": "text",
+        "description": "Select all menu and button label"
+    },
     "precipitationNone": "Nenhuma",
     "precipitationFog": "Névoa",
     "precipitationMist": "Neblina",

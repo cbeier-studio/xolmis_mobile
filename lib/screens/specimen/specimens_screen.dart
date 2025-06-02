@@ -378,6 +378,22 @@ class SpecimensScreenState extends State<SpecimensScreen> {
               );
             },
             menuChildren: [
+              // Action to select all specimens
+                MenuItemButton(
+                  leadingIcon: Icon(Icons.library_add_check_outlined),
+                  onPressed: () {
+                    final filteredSpecimens = _filterSpecimens(_showPending 
+                        ? specimenProvider.pendingSpecimens
+                        : specimenProvider.archivedSpecimens);
+                    setState(() {
+                      selectedSpecimens = filteredSpecimens
+                          .map((specimen) => specimen.id)
+                          .whereType<int>()
+                          .toSet();
+                    });
+                  },
+                  child: Text(S.of(context).selectAll),
+                ),
               MenuItemButton(
                 leadingIcon: Icon(Icons.file_upload_outlined),
                 onPressed: () {

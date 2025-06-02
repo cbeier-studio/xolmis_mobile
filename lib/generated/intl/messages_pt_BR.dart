@@ -584,6 +584,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "resume": MessageLookupByLibrary.simpleMessage("Retomar"),
     "revision": m22,
     "save": MessageLookupByLibrary.simpleMessage("Salvar"),
+    "selectAll": MessageLookupByLibrary.simpleMessage("Selecionar todos"),
     "selectInventoryType": MessageLookupByLibrary.simpleMessage(
       "Por favor, selecione um tipo de inventário",
     ),

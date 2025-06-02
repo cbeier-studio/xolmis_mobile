@@ -252,46 +252,60 @@ class JournalsScreenState extends State<JournalsScreen> {
               ),
             ],
           ),
-          // MenuAnchor(
-          //   builder: (context, controller, child) {
-          //     return IconButton(
-          //       icon: Icon(Icons.more_vert_outlined),
-          //       onPressed: () {
-          //         if (controller.isOpen) {
-          //           controller.close();
-          //         } else {
-          //           controller.open();
-          //         }
-          //       },
-          //     );
-          //   },
-          //   menuChildren: [
-          //     MenuItemButton(
-          //       onPressed: () {
-          //         exportAllSpecimensToCsv(context);
-          //       },
-          //       child: Row(
-          //         children: [
-          //           Icon(Icons.file_upload_outlined),
-          //           SizedBox(width: 8),
-          //           Text('${S.of(context).exportAll} (CSV)'),
-          //         ],
-          //       ),
-          //     ),
-          //     MenuItemButton(
-          //       onPressed: () {
-          //         exportAllSpecimensToJson(context);
-          //       },
-          //       child: Row(
-          //         children: [
-          //           Icon(Icons.file_upload_outlined),
-          //           SizedBox(width: 8),
-          //           Text('${S.of(context).exportAll} (JSON)'),
-          //         ],
-          //       ),
-          //     ),
-          //   ],
-          // ),
+          MenuAnchor(
+            builder: (context, controller, child) {
+              return IconButton(
+                icon: Icon(Icons.more_vert_outlined),
+                onPressed: () {
+                  if (controller.isOpen) {
+                    controller.close();
+                  } else {
+                    controller.open();
+                  }
+                },
+              );
+            },
+            menuChildren: [
+              // Action to select all journal entries
+              MenuItemButton(
+                leadingIcon: Icon(Icons.library_add_check_outlined),
+                onPressed: () {
+                  final filteredJournals = _filterJournalEntries(journalProvider.journalEntries);
+                  setState(() {
+                    selectedJournals = filteredJournals
+                        .map((journal) => journal.id)
+                        .whereType<int>()
+                        .toSet();
+                  });
+                },
+                child: Text(S.of(context).selectAll),
+              ),
+              // MenuItemButton(
+              //   onPressed: () {
+              //     exportAllSpecimensToCsv(context);
+              //   },
+              //   child: Row(
+              //     children: [
+              //       Icon(Icons.file_upload_outlined),
+              //       SizedBox(width: 8),
+              //       Text('${S.of(context).exportAll} (CSV)'),
+              //     ],
+              //   ),
+              // ),
+              // MenuItemButton(
+              //   onPressed: () {
+              //     exportAllSpecimensToJson(context);
+              //   },
+              //   child: Row(
+              //     children: [
+              //       Icon(Icons.file_upload_outlined),
+              //       SizedBox(width: 8),
+              //       Text('${S.of(context).exportAll} (JSON)'),
+              //     ],
+              //   ),
+              // ),
+            ],
+          ),
         ],
       ),
       body: Column(

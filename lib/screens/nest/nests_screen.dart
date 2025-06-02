@@ -372,6 +372,21 @@ class NestsScreenState extends State<NestsScreen> {
               );
             },
             menuChildren: [
+              // Action to select all nests
+              if (!_showActive)
+                MenuItemButton(
+                  leadingIcon: Icon(Icons.library_add_check_outlined),
+                  onPressed: () {
+                    final filteredNests = _filterNests(nestProvider.inactiveNests);
+                    setState(() {
+                      selectedNests = filteredNests
+                          .map((nest) => nest.id)
+                          .whereType<int>()
+                          .toSet();
+                    });
+                  },
+                  child: Text(S.of(context).selectAll),
+                ),
               MenuItemButton(
                 leadingIcon: Icon(Icons.file_upload_outlined),
                 onPressed: () async {

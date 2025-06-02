@@ -1054,6 +1054,9 @@ class AppLocalizationsPt extends AppLocalizations {
       'Desmarque para formatar números com ponto como separador decimal';
 
   @override
+  String get selectAll => 'Selecionar todos';
+
+  @override
   String get precipitationNone => 'Nenhuma';
 
   @override
@@ -2295,6 +2298,9 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   @override
   String get formatNumbersDescription =>
       'Desmarque para formatar números com ponto como separador decimal';
+
+  @override
+  String get selectAll => 'Selecionar todos';
 
   @override
   String get precipitationNone => 'Nenhuma';

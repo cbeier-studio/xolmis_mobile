@@ -1707,6 +1707,12 @@ abstract class AppLocalizations {
   /// **'Uncheck this to format numbers with point as decimal separator'**
   String get formatNumbersDescription;
 
+  /// Select all menu and button label
+  ///
+  /// In en, this message translates to:
+  /// **'Select all'**
+  String get selectAll;
+
   /// No description provided for @precipitationNone.
   ///
   /// In en, this message translates to:

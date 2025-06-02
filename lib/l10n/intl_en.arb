@@ -1504,6 +1504,11 @@
         "type": "text",
         "description": "Description of the format numbers option in settings"
     },
+    "selectAll": "Select all",
+    "@selectAll": {
+        "type": "text",
+        "description": "Select all menu and button label"
+    },
     "precipitationNone": "None",
     "precipitationFog": "Fog",
     "precipitationMist": "Mist",
