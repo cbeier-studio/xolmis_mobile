@@ -129,7 +129,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                               },
                             );
 
-                            if (result != null || result != '') {
+                            if (result != null && result.isNotEmpty) {
                               // Concatenate the inventory ID in the specified format
                               final prefs = await SharedPreferences.getInstance();
                               final observerAcronym = prefs.getString('observerAcronym') ?? '';

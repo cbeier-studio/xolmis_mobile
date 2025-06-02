@@ -126,7 +126,7 @@ class AddNestScreenState extends State<AddNestScreen> {
                           textCapitalization: TextCapitalization.characters,
                           decoration: InputDecoration(
                             labelText: '${S.of(context).fieldNumber} *',
-                            helperText: S.of(context).requiredField,
+                            // helperText: S.of(context).requiredField,
                             border: OutlineInputBorder(),
                           ),
                           validator: (value) {
@@ -144,7 +144,7 @@ class AddNestScreenState extends State<AddNestScreen> {
                           controller: _speciesNameController,
                           decoration: InputDecoration(
                             labelText: '${S.of(context).species(1)} *',
-                            helperText: S.of(context).requiredField,
+                            // helperText: S.of(context).requiredField,
                             border: OutlineInputBorder(),
                           ),
                           readOnly: true,
@@ -217,7 +217,7 @@ class AddNestScreenState extends State<AddNestScreen> {
                           textCapitalization: TextCapitalization.words,
                           decoration: InputDecoration(
                             labelText: '${S.of(context).locality} *',
-                            helperText: S.of(context).requiredField,
+                            // helperText: S.of(context).requiredField,
                             border: OutlineInputBorder(),
                           ),
                           validator: (value) {
