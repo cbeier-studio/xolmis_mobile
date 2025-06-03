@@ -15,7 +15,6 @@ import '../data/models/nest.dart';
 import '../data/models/specimen.dart';
 import '../providers/inventory_provider.dart';
 import '../providers/nest_provider.dart';
-import '../providers/specimen_provider.dart';
 
 import '../generated/l10n.dart';
 
@@ -28,7 +27,32 @@ Future<bool> requestStoragePermission() async {
 }
 
 Future<void> exportAllInventoriesToJson(BuildContext context, InventoryProvider inventoryProvider) async {
+  bool isDialogShown = false;
+
   try {
+    // Show a loading dialog
+      if (!context.mounted) return;
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Dialog(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CircularProgressIndicator(year2023: false,),
+                  SizedBox(width: 16),
+                  Text(S.current.exporting),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+      isDialogShown = true;
+
     final finishedInventories = inventoryProvider.finishedInventories;
     final jsonData = finishedInventories.map((inventory) => inventory.toJson()).toList();
     var encoder = JsonEncoder.withIndent("  ");
@@ -46,6 +70,13 @@ Future<void> exportAllInventoriesToJson(BuildContext context, InventoryProvider 
     final file = File(filePath);
     await file.writeAsString(jsonString);
 
+    if (isDialogShown) {
+        if (context.mounted) {
+          Navigator.of(context).pop();
+        }
+        isDialogShown = false; // Dialog is now closed
+      }
+
     // Share the file using share_plus
     await SharePlus.instance.share(
       ShareParams(
@@ -55,6 +86,7 @@ Future<void> exportAllInventoriesToJson(BuildContext context, InventoryProvider 
       ),
     );
   } catch (error) {
+    if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Row(
         children: [
@@ -65,6 +97,12 @@ Future<void> exportAllInventoriesToJson(BuildContext context, InventoryProvider 
       ),
       ),
     );
+  } finally {
+    // Ensure the dialog is always closed if it was shown and an error occurred,
+    // or if the function returned early while the dialog was up.
+    if (isDialogShown && context.mounted) {
+      Navigator.of(context).pop();
+    }
   }
 }
 
@@ -92,6 +130,7 @@ Future<void> exportInventoryToJson(BuildContext context, Inventory inventory, bo
       );
     }
   } catch (error) {
+    if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Row(
         children: [
@@ -132,6 +171,7 @@ Future<void> exportInventoryToCsv(BuildContext context, Inventory inventory, boo
       );
     } 
   } catch (error) {
+    if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Row(
         children: [
@@ -272,7 +312,32 @@ Future<List<List>> buildInventoryCsvRows(Inventory inventory, Locale locale) asy
 }
 
 Future<void> exportAllInactiveNestsToJson(BuildContext context) async {
+  bool isDialogShown = false;
+
   try {
+    // Show a loading dialog
+      if (!context.mounted) return;
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Dialog(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CircularProgressIndicator(year2023: false,),
+                  SizedBox(width: 16),
+                  Text(S.current.exporting),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+      isDialogShown = true;
+
     final nestProvider = Provider.of<NestProvider>(context, listen: false);
     final inactiveNests = nestProvider.inactiveNests;
     final jsonData = inactiveNests.map((nest) => nest.toJson()).toList();
@@ -283,6 +348,13 @@ Future<void> exportAllInactiveNestsToJson(BuildContext context) async {
     final file = File(filePath);
     await file.writeAsString(jsonString);
 
+    if (isDialogShown) {
+        if (context.mounted) {
+          Navigator.of(context).pop();
+        }
+        isDialogShown = false; // Dialog is now closed
+      }
+
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(filePath, mimeType: 'application/json')], 
@@ -291,6 +363,7 @@ Future<void> exportAllInactiveNestsToJson(BuildContext context) async {
       ),
     );
   } catch (error) {
+    if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Row(
         children: [
@@ -301,6 +374,12 @@ Future<void> exportAllInactiveNestsToJson(BuildContext context) async {
       ),
       ),
     );
+  } finally {
+    // Ensure the dialog is always closed if it was shown and an error occurred,
+    // or if the function returned early while the dialog was up.
+    if (isDialogShown && context.mounted) {
+      Navigator.of(context).pop();
+    }
   }
 }
 
@@ -325,6 +404,7 @@ Future<void> exportNestToJson(BuildContext context, Nest nest) async {
       ),
     );
   } catch (error) {
+    if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Row(
         children: [
@@ -362,6 +442,7 @@ Future<void> exportNestToCsv(BuildContext context, Nest nest) async {
       ),
     );
   } catch (error) {
+    if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Row(
         children: [
@@ -468,7 +549,32 @@ Future<List<List>> buildNestCsvRows(Nest nest, Locale locale) async {
 }
 
 Future<void> exportAllSpecimensToJson(BuildContext context, List<Specimen> specimenList) async {
+  bool isDialogShown = false;
+
   try {
+    // Show a loading dialog
+      if (!context.mounted) return;
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Dialog(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CircularProgressIndicator(year2023: false,),
+                  SizedBox(width: 16),
+                  Text(S.current.exporting),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+      isDialogShown = true;
+
     // final specimenProvider = Provider.of<SpecimenProvider>(context, listen: false);
     // final specimenList = specimenProvider.specimens;
     final jsonData = specimenList.map((specimen) => specimen.toJson()).toList();
@@ -479,6 +585,13 @@ Future<void> exportAllSpecimensToJson(BuildContext context, List<Specimen> speci
     final file = File(filePath);
     await file.writeAsString(jsonString);
 
+    if (isDialogShown) {
+        if (context.mounted) {
+          Navigator.of(context).pop();
+        }
+        isDialogShown = false; // Dialog is now closed
+      }
+
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(filePath, mimeType: 'application/json')], 
@@ -487,6 +600,7 @@ Future<void> exportAllSpecimensToJson(BuildContext context, List<Specimen> speci
       ),
     );
   } catch (error) {
+    if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Row(
         children: [
@@ -497,11 +611,42 @@ Future<void> exportAllSpecimensToJson(BuildContext context, List<Specimen> speci
       ),
       ),
     );
+  } finally {
+    // Ensure the dialog is always closed if it was shown and an error occurred,
+    // or if the function returned early while the dialog was up.
+    if (isDialogShown && context.mounted) {
+      Navigator.of(context).pop();
+    }
   }
 }
 
 Future<void> exportAllSpecimensToCsv(BuildContext context, List<Specimen> specimenList) async {
+  bool isDialogShown = false;
+
   try {
+    // Show a loading dialog
+      if (!context.mounted) return;
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Dialog(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CircularProgressIndicator(year2023: false,),
+                  SizedBox(width: 16),
+                  Text(S.current.exporting),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+      isDialogShown = true;
+
     // final specimenProvider = Provider.of<SpecimenProvider>(context, listen: false);
     // final specimenList = specimenProvider.specimens;
     final locale = Localizations.localeOf(context);
@@ -518,6 +663,13 @@ Future<void> exportAllSpecimensToCsv(BuildContext context, List<Specimen> specim
     final file = File(filePath);
     await file.writeAsString(csv);
 
+    if (isDialogShown) {
+        if (context.mounted) {
+          Navigator.of(context).pop();
+        }
+        isDialogShown = false; // Dialog is now closed
+      }
+
     // 4. Share the file using share_plus
     await SharePlus.instance.share(
       ShareParams(
@@ -527,6 +679,7 @@ Future<void> exportAllSpecimensToCsv(BuildContext context, List<Specimen> specim
       ),
     );
   } catch (error) {
+    if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Row(
         children: [
@@ -537,6 +690,12 @@ Future<void> exportAllSpecimensToCsv(BuildContext context, List<Specimen> specim
       ),
       ),
     );
+  } finally {
+    // Ensure the dialog is always closed if it was shown and an error occurred,
+    // or if the function returned early while the dialog was up.
+    if (isDialogShown && context.mounted) {
+      Navigator.of(context).pop();
+    }
   }
 }
 

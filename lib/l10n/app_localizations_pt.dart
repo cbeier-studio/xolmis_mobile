@@ -388,6 +388,9 @@ class AppLocalizationsPt extends AppLocalizations {
       'Inventário importado com sucesso!';
 
   @override
+  String get inventoryImportFailed => 'Falha ao importar inventário.';
+
+  @override
   String get noFileSelected => 'Nenhum arquivo selecionado.';
 
   @override
@@ -671,10 +674,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String get fieldNumber => 'Número de campo';
 
   @override
-  String get insertFieldNumber => 'Por favor, insira o número de campo';
+  String get insertFieldNumber => 'Insira o número de campo';
 
   @override
-  String get selectSpecies => 'Por favor, selecione uma espécie';
+  String get selectSpecies => 'Selecione uma espécie';
 
   @override
   String get eggShape => 'Forma do ovo';
@@ -1055,6 +1058,12 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get selectAll => 'Selecionar todos';
+
+  @override
+  String get exporting => 'Exportando...';
+
+  @override
+  String get noDataToExport => 'Sem dados para exportar.';
 
   @override
   String get precipitationNone => 'Nenhuma';
@@ -1634,6 +1643,9 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
       'Inventário importado com sucesso!';
 
   @override
+  String get inventoryImportFailed => 'Falha ao importar inventário.';
+
+  @override
   String get noFileSelected => 'Nenhum arquivo selecionado.';
 
   @override
@@ -1917,10 +1929,10 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get fieldNumber => 'Número de campo';
 
   @override
-  String get insertFieldNumber => 'Por favor, insira o número de campo';
+  String get insertFieldNumber => 'Insira o número de campo';
 
   @override
-  String get selectSpecies => 'Por favor, selecione uma espécie';
+  String get selectSpecies => 'Selecione uma espécie';
 
   @override
   String get eggShape => 'Forma do ovo';
@@ -2301,6 +2313,12 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get selectAll => 'Selecionar todos';
+
+  @override
+  String get exporting => 'Exportando...';
+
+  @override
+  String get noDataToExport => 'Sem dados para exportar.';
 
   @override
   String get precipitationNone => 'Nenhuma';

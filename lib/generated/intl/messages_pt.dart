@@ -318,6 +318,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "exportAll": MessageLookupByLibrary.simpleMessage("Exportar todos"),
     "exportAllWhat": m7,
     "exportWhat": m8,
+    "exporting": MessageLookupByLibrary.simpleMessage("Exportando..."),
     "female": MessageLookupByLibrary.simpleMessage("Fêmea"),
     "femaleNameOrId": MessageLookupByLibrary.simpleMessage(
       "Nome ou ID da fêmea",
@@ -378,7 +379,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Insira uma duração",
     ),
     "insertFieldNumber": MessageLookupByLibrary.simpleMessage(
-      "Por favor, insira o número de campo",
+      "Insira o número de campo",
     ),
     "insertHeight": MessageLookupByLibrary.simpleMessage("Insira a altura"),
     "insertInventoryId": MessageLookupByLibrary.simpleMessage(
@@ -418,6 +419,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "inventoryId": MessageLookupByLibrary.simpleMessage("ID do Inventário"),
     "inventoryIdAlreadyExists": MessageLookupByLibrary.simpleMessage(
       "Já existe um inventário com esta ID.",
+    ),
+    "inventoryImportFailed": MessageLookupByLibrary.simpleMessage(
+      "Falha ao importar inventário.",
     ),
     "inventoryImportedSuccessfully": MessageLookupByLibrary.simpleMessage(
       "Inventário importado com sucesso!",
@@ -490,6 +494,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "no": MessageLookupByLibrary.simpleMessage("Não"),
     "noDataAvailable": MessageLookupByLibrary.simpleMessage(
       "Dados não disponíveis.",
+    ),
+    "noDataToExport": MessageLookupByLibrary.simpleMessage(
+      "Sem dados para exportar.",
     ),
     "noEggsFound": MessageLookupByLibrary.simpleMessage(
       "Nenhum ovo registrado.",
@@ -593,7 +600,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Selecione uma precipitação",
     ),
     "selectSpecies": MessageLookupByLibrary.simpleMessage(
-      "Por favor, selecione uma espécie",
+      "Selecione uma espécie",
     ),
     "selectSpeciesToShowStats": MessageLookupByLibrary.simpleMessage(
       "Selecione uma espécie para ver as estatísticas",

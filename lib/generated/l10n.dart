@@ -1007,6 +1007,16 @@ class S {
     );
   }
 
+  /// `Inventory import failed.`
+  String get inventoryImportFailed {
+    return Intl.message(
+      'Inventory import failed.',
+      name: 'inventoryImportFailed',
+      desc: 'Message shown when an inventory import failed',
+      args: [],
+    );
+  }
+
   /// `No file selected.`
   String get noFileSelected {
     return Intl.message(
@@ -1778,20 +1788,20 @@ class S {
     );
   }
 
-  /// `Please, insert the field number`
+  /// `Insert the field number`
   String get insertFieldNumber {
     return Intl.message(
-      'Please, insert the field number',
+      'Insert the field number',
       name: 'insertFieldNumber',
       desc: 'Validation message shown when the field number is empty',
       args: [],
     );
   }
 
-  /// `Please, select a species`
+  /// `Select a species`
   String get selectSpecies {
     return Intl.message(
-      'Please, select a species',
+      'Select a species',
       name: 'selectSpecies',
       desc: 'Validation message shown when the species is empty',
       args: [],
@@ -2784,6 +2794,26 @@ class S {
       'Select all',
       name: 'selectAll',
       desc: 'Select all menu and button label',
+      args: [],
+    );
+  }
+
+  /// `Exporting...`
+  String get exporting {
+    return Intl.message(
+      'Exporting...',
+      name: 'exporting',
+      desc: 'Message shown when exporting data',
+      args: [],
+    );
+  }
+
+  /// `No data to export.`
+  String get noDataToExport {
+    return Intl.message(
+      'No data to export.',
+      name: 'noDataToExport',
+      desc: 'Message shown when there is no data to export',
       args: [],
     );
   }

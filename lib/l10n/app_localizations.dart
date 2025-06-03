@@ -669,6 +669,12 @@ abstract class AppLocalizations {
   /// **'Inventory imported successfully!'**
   String get inventoryImportedSuccessfully;
 
+  /// Message shown when an inventory import failed
+  ///
+  /// In en, this message translates to:
+  /// **'Inventory import failed.'**
+  String get inventoryImportFailed;
+
   /// Message shown when no file is selected to import
   ///
   /// In en, this message translates to:
@@ -1122,13 +1128,13 @@ abstract class AppLocalizations {
   /// Validation message shown when the field number is empty
   ///
   /// In en, this message translates to:
-  /// **'Please, insert the field number'**
+  /// **'Insert the field number'**
   String get insertFieldNumber;
 
   /// Validation message shown when the species is empty
   ///
   /// In en, this message translates to:
-  /// **'Please, select a species'**
+  /// **'Select a species'**
   String get selectSpecies;
 
   /// Egg shape field label
@@ -1712,6 +1718,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Select all'**
   String get selectAll;
+
+  /// Message shown when exporting data
+  ///
+  /// In en, this message translates to:
+  /// **'Exporting...'**
+  String get exporting;
+
+  /// Message shown when there is no data to export
+  ///
+  /// In en, this message translates to:
+  /// **'No data to export.'**
+  String get noDataToExport;
 
   /// No description provided for @precipitationNone.
   ///

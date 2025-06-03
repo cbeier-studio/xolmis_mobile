@@ -312,6 +312,11 @@
         "type": "text",
         "description": "Message shown when an inventory is imported successfully"
     },
+    "inventoryImportFailed": "Falha ao importar inventário.",
+    "@inventoryImportFailed": {
+        "type": "text",
+        "description": "Message shown when an inventory import failed"
+    },
     "noFileSelected": "Nenhum arquivo selecionado.",
     "@noFileSelected": {
         "type": "text",
@@ -484,8 +489,8 @@
     },
     "addEgg": "Adicionar ovo",
     "fieldNumber": "Número de campo",
-    "insertFieldNumber": "Por favor, insira o número de campo",
-    "selectSpecies": "Por favor, selecione uma espécie",
+    "insertFieldNumber": "Insira o número de campo",
+    "selectSpecies": "Selecione uma espécie",
     "eggShape": "Forma do ovo",
     "width": "Largura",
     "length": "Comprimento",
@@ -947,6 +952,16 @@
     "@selectAll": {
         "type": "text",
         "description": "Select all menu and button label"
+    },
+    "exporting": "Exportando...",
+    "@exporting": {
+        "type": "text",
+        "description": "Message shown when exporting data"
+    },
+    "noDataToExport": "Sem dados para exportar.",
+    "@noDataToExport": {
+        "type": "text",
+        "description": "Message shown when there is no data to export"
     },
     "precipitationNone": "Nenhuma",
     "precipitationFog": "Névoa",

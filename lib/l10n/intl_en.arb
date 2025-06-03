@@ -533,6 +533,11 @@
         "type": "text",
         "description": "Message shown when an inventory is imported successfully"
     },
+    "inventoryImportFailed": "Inventory import failed.",
+    "@inventoryImportFailed": {
+        "type": "text",
+        "description": "Message shown when an inventory import failed"
+    },
     "noFileSelected": "No file selected.",
     "@noFileSelected": {
         "type": "text",
@@ -949,12 +954,12 @@
         "type": "text",
         "description": "Field number field label"
     },
-    "insertFieldNumber": "Please, insert the field number",
+    "insertFieldNumber": "Insert the field number",
     "@insertFieldNumber": {
         "type": "text",
         "description": "Validation message shown when the field number is empty"
     },
-    "selectSpecies": "Please, select a species",
+    "selectSpecies": "Select a species",
     "@selectSpecies": {
         "type": "text",
         "description": "Validation message shown when the species is empty"
@@ -1508,6 +1513,16 @@
     "@selectAll": {
         "type": "text",
         "description": "Select all menu and button label"
+    },
+    "exporting": "Exporting...",
+    "@exporting": {
+        "type": "text",
+        "description": "Message shown when exporting data"
+    },
+    "noDataToExport": "No data to export.",
+    "@noDataToExport": {
+        "type": "text",
+        "description": "Message shown when there is no data to export"
     },
     "precipitationNone": "None",
     "precipitationFog": "Fog",

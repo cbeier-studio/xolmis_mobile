@@ -320,7 +320,7 @@ class _MainScreenState extends State<MainScreen> {
               providerType: item.badgeProviderType,
               isForIcon: false),
         );
-      }),
+      }),      
       ],
     );
   }

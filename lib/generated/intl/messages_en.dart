@@ -305,6 +305,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "exportAll": MessageLookupByLibrary.simpleMessage("Export all"),
     "exportAllWhat": m7,
     "exportWhat": m8,
+    "exporting": MessageLookupByLibrary.simpleMessage("Exporting..."),
     "female": MessageLookupByLibrary.simpleMessage("Female"),
     "femaleNameOrId": MessageLookupByLibrary.simpleMessage("Female name or ID"),
     "fieldJournal": MessageLookupByLibrary.simpleMessage("Field journal"),
@@ -357,7 +358,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "insertDuration": MessageLookupByLibrary.simpleMessage("Insert a duration"),
     "insertFieldNumber": MessageLookupByLibrary.simpleMessage(
-      "Please, insert the field number",
+      "Insert the field number",
     ),
     "insertHeight": MessageLookupByLibrary.simpleMessage("Insert height"),
     "insertInventoryId": MessageLookupByLibrary.simpleMessage(
@@ -397,6 +398,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "inventoryId": MessageLookupByLibrary.simpleMessage("Inventory ID"),
     "inventoryIdAlreadyExists": MessageLookupByLibrary.simpleMessage(
       "This inventory ID already exists.",
+    ),
+    "inventoryImportFailed": MessageLookupByLibrary.simpleMessage(
+      "Inventory import failed.",
     ),
     "inventoryImportedSuccessfully": MessageLookupByLibrary.simpleMessage(
       "Inventory imported successfully!",
@@ -467,6 +471,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "no": MessageLookupByLibrary.simpleMessage("No"),
     "noDataAvailable": MessageLookupByLibrary.simpleMessage(
       "No data available.",
+    ),
+    "noDataToExport": MessageLookupByLibrary.simpleMessage(
+      "No data to export.",
     ),
     "noEggsFound": MessageLookupByLibrary.simpleMessage("No eggs recorded."),
     "noFileSelected": MessageLookupByLibrary.simpleMessage("No file selected."),
@@ -557,9 +564,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "selectPrecipitation": MessageLookupByLibrary.simpleMessage(
       "Select precipitation",
     ),
-    "selectSpecies": MessageLookupByLibrary.simpleMessage(
-      "Please, select a species",
-    ),
+    "selectSpecies": MessageLookupByLibrary.simpleMessage("Select a species"),
     "selectSpeciesToShowStats": MessageLookupByLibrary.simpleMessage(
       "Select a species to show the statistics",
     ),

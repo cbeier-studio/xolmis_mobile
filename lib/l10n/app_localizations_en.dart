@@ -387,6 +387,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'Inventory imported successfully!';
 
   @override
+  String get inventoryImportFailed => 'Inventory import failed.';
+
+  @override
   String get noFileSelected => 'No file selected.';
 
   @override
@@ -670,10 +673,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fieldNumber => 'Field number';
 
   @override
-  String get insertFieldNumber => 'Please, insert the field number';
+  String get insertFieldNumber => 'Insert the field number';
 
   @override
-  String get selectSpecies => 'Please, select a species';
+  String get selectSpecies => 'Select a species';
 
   @override
   String get eggShape => 'Egg shape';
@@ -1053,6 +1056,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get selectAll => 'Select all';
+
+  @override
+  String get exporting => 'Exporting...';
+
+  @override
+  String get noDataToExport => 'No data to export.';
 
   @override
   String get precipitationNone => 'None';

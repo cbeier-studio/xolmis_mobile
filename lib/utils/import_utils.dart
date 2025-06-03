@@ -11,12 +11,13 @@ import '../data/models/inventory.dart';
 import '../providers/inventory_provider.dart';
 
 Future<void> importInventoryFromJson(BuildContext context) async {
+  bool isDialogShown = false;
   
   try {
     // Pick a JSON file
     FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.any,
-      // allowedExtensions: ['json'],
+      type: FileType.custom,
+      allowedExtensions: ['json'],
     );
 
     if (result != null && result.files.single.path != null) {
@@ -24,6 +25,7 @@ Future<void> importInventoryFromJson(BuildContext context) async {
       final file = File(filePath);
 
       // Show a loading dialog
+      if (!context.mounted) return;
       showDialog(
         context: context,
         barrierDismissible: false,
@@ -43,6 +45,7 @@ Future<void> importInventoryFromJson(BuildContext context) async {
           );
         },
       );
+      isDialogShown = true;
 
       // Read the JSON file
       final jsonString = await file.readAsString();
@@ -51,29 +54,39 @@ Future<void> importInventoryFromJson(BuildContext context) async {
       // Convert JSON data to Inventory object
       final inventory = Inventory.fromJson(jsonData);
 
+      if (!context.mounted) return;
       final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
       // Save the inventory to the database
       final success = await inventoryProvider.importInventory(inventory);
 
       // Close the loading dialog
-      Navigator.of(context).pop();
+      if (isDialogShown) {
+        if (context.mounted) {
+          Navigator.of(context).pop();
+        }
+        isDialogShown = false; // Dialog is now closed
+      }
 
+      if (!context.mounted) return;
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(S.current.inventoryImportedSuccessfully)),
         );
       } 
-      // else {
-      //   ScaffoldMessenger.of(context).showSnackBar(
-      //     SnackBar(content: Text('Failed to import inventory')),
-      //   );
-      // }
+      else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(S.current.inventoryImportFailed)),
+        );
+      }
     } else {
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(S.current.noFileSelected)),
       );
     }
   } catch (error) {
+    debugPrint('Error importing inventory: $error');
+    if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Row(
         children: [
@@ -84,5 +97,11 @@ Future<void> importInventoryFromJson(BuildContext context) async {
       ),
       ),
     );
+  } finally {
+    // Ensure the dialog is always closed if it was shown and an error occurred,
+    // or if the function returned early while the dialog was up.
+    if (isDialogShown && context.mounted) {
+      Navigator.of(context).pop();
+    }
   }
 }
