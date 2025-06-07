@@ -215,38 +215,38 @@ class _WeatherTabState extends State<WeatherTab> with AutomaticKeepAliveClientMi
     );
   }
 
-  Widget _buildGridView(List<Weather> weatherList) {
-    return SingleChildScrollView(
-        child: Align(
-      alignment: Alignment.topCenter,
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 840),
-        child: GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 3.8,
-            ),
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: weatherList.length,
-            itemBuilder: (context, index) {
-              final weather = weatherList[index];
-              return GridTile(
-                child: InkWell(
-                  onLongPress: () =>
-                      _showBottomSheet(context, weather),
-                  // onTap: () {
-                  //
-                  // },
-                  child: WeatherGridItem(weather: weather),
-                ),
-              );
-            },
-        ),
-      ),
-    ),
-    );
-  }
+  // Widget _buildGridView(List<Weather> weatherList) {
+  //   return SingleChildScrollView(
+  //       child: Align(
+  //     alignment: Alignment.topCenter,
+  //     child: ConstrainedBox(
+  //       constraints: const BoxConstraints(maxWidth: 840),
+  //       child: GridView.builder(
+  //           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+  //             crossAxisCount: 2,
+  //             childAspectRatio: 3.8,
+  //           ),
+  //           physics: const NeverScrollableScrollPhysics(),
+  //           shrinkWrap: true,
+  //           itemCount: weatherList.length,
+  //           itemBuilder: (context, index) {
+  //             final weather = weatherList[index];
+  //             return GridTile(
+  //               child: InkWell(
+  //                 onLongPress: () =>
+  //                     _showBottomSheet(context, weather),
+  //                 // onTap: () {
+  //                 //
+  //                 // },
+  //                 child: WeatherGridItem(weather: weather),
+  //               ),
+  //             );
+  //           },
+  //       ),
+  //     ),
+  //   ),
+  //   );
+  // }
 
   Widget _buildListView(List<Weather> weatherList) {
     return ListView.separated(

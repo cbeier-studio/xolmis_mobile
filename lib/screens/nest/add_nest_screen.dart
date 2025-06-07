@@ -98,13 +98,13 @@ class AddNestScreenState extends State<AddNestScreen> {
     }
   }
 
-  void _addSpeciesToNest(String speciesName) async {
-    // Empty
-  }
+  // void _addSpeciesToNest(String speciesName) async {
+  //   // Empty
+  // }
 
-  void _updateNest() async {
-    // Empty
-  }
+  // void _updateNest() async {
+  //   // Empty
+  // }
 
   @override
   Widget build(BuildContext context) {

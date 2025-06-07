@@ -288,6 +288,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
         selectedInventories.clear();
       });
     } catch (error) {
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Row(
@@ -343,6 +344,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
         selectedInventories.clear();
       });
     } catch (error) {
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Row(

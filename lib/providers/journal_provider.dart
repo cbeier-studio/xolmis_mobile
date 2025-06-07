@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 
 import '../data/models/journal.dart';
 import '../data/database/repositories/journal_repository.dart';
-import '../generated/l10n.dart';
+// import '../generated/l10n.dart';
 
 class FieldJournalProvider with ChangeNotifier {
   final FieldJournalRepository _journalRepository;

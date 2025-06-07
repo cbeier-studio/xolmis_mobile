@@ -39,13 +39,13 @@ class AddEggScreenState extends State<AddEggScreen> {
   late TextEditingController _massController;
   bool _isSubmitting = false;
 
-  void _addSpeciesToEgg(String speciesName) async {
-    // Empty
-  }
+  // void _addSpeciesToEgg(String speciesName) async {
+  //   // Empty
+  // }
 
-  void _updateEgg() async {
-    // Empty
-  }
+  // void _updateEgg() async {
+  //   // Empty
+  // }
 
   @override
   void initState() {

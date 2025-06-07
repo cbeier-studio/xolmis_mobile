@@ -150,11 +150,11 @@ class _MainScreenState extends State<MainScreen> {
     debugPrint("Notification permission granted.");
   } else if (status.isDenied) {
     // Permission denied
-    // TODO: Optionally show a dialog explaining why the permission is useful
+    // Optionally show a dialog explaining why the permission is useful
     debugPrint("Notification permission denied.");
   } else if (status.isPermanentlyDenied) {
     // Permission permanently denied
-    // TODO: Guide user to app settings if they want to enable it later
+    // Guide user to app settings if they want to enable it later
     debugPrint("Notification permission permanently denied.");
     // Example: openAppSettings(); (from permission_handler)
   }

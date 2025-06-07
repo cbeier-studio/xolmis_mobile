@@ -276,47 +276,47 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
     );
   }
 
-  Widget _buildGridView(List<Vegetation> vegetationList) {
-    return SingleChildScrollView(
-        child: Align(
-      alignment: Alignment.topCenter,
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 840),
-        child: SingleChildScrollView(
-          child: GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 2.8,
-            ),
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: vegetationList.length,
-            itemBuilder: (context, index) {
-              final vegetation = vegetationList[index];
-              return GridTile(
-                child: InkWell(
-                  onLongPress: () =>
-                      _showBottomSheet(context, vegetation),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => AppImageScreen(
-                          vegetationId: vegetation.id,
-                        ),
-                      ),
-                    );
-                  },
-                  child: VegetationGridItem(vegetation: vegetation),
-                ),
-              );
-            },
-          ),
-        ),
-      ),
-        ),
-    );
-  }
+  // Widget _buildGridView(List<Vegetation> vegetationList) {
+  //   return SingleChildScrollView(
+  //       child: Align(
+  //     alignment: Alignment.topCenter,
+  //     child: ConstrainedBox(
+  //       constraints: const BoxConstraints(maxWidth: 840),
+  //       child: SingleChildScrollView(
+  //         child: GridView.builder(
+  //           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+  //             crossAxisCount: 2,
+  //             childAspectRatio: 2.8,
+  //           ),
+  //           physics: const NeverScrollableScrollPhysics(),
+  //           shrinkWrap: true,
+  //           itemCount: vegetationList.length,
+  //           itemBuilder: (context, index) {
+  //             final vegetation = vegetationList[index];
+  //             return GridTile(
+  //               child: InkWell(
+  //                 onLongPress: () =>
+  //                     _showBottomSheet(context, vegetation),
+  //                 onTap: () {
+  //                   Navigator.push(
+  //                     context,
+  //                     MaterialPageRoute(
+  //                       builder: (context) => AppImageScreen(
+  //                         vegetationId: vegetation.id,
+  //                       ),
+  //                     ),
+  //                   );
+  //                 },
+  //                 child: VegetationGridItem(vegetation: vegetation),
+  //               ),
+  //             );
+  //           },
+  //         ),
+  //       ),
+  //     ),
+  //       ),
+  //   );
+  // }
 
   Widget _buildListView(List<Vegetation> vegetationList) {
     return ListView.separated(

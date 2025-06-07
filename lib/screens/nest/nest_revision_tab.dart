@@ -325,130 +325,130 @@ class _NestRevisionsTabState extends State<NestRevisionsTab>
     );
   }
 
-  Widget _buildGridView(List<NestRevision> revisionList) {
-    return SingleChildScrollView(
-      child: Align(
-        alignment: Alignment.topCenter,
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 840),
-          child: GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              childAspectRatio: 1,
-            ),
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: revisionList.length,
-            itemBuilder: (context, index) {
-              final revision = revisionList[index];
-              // final isSelected = selectedSpecimens.contains(specimen.id);
-              return GridTile(
-                child: InkWell(
-                  onLongPress: () => _showBottomSheet(context, revision),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder:
-                            (context) =>
-                                AppImageScreen(specimenId: revision.id),
-                      ),
-                    );
-                  },
-                  child: Card.outlined(
-                    child: Stack(
-                      children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: FutureBuilder<List<AppImage>>(
-                                future: Provider.of<AppImageProvider>(
-                                  context,
-                                  listen: false,
-                                ).fetchImagesForNestRevision(revision.id!),
-                                builder: (context, snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return const CircularProgressIndicator(year2023: false,);
-                                  } else if (snapshot.hasError) {
-                                    return const Icon(Icons.error);
-                                  } else if (snapshot.hasData &&
-                                      snapshot.data!.isNotEmpty) {
-                                    return ClipRRect(
-                                      borderRadius: BorderRadius.vertical(
-                                        top: Radius.circular(12.0),
-                                      ),
-                                      child: Image.file(
-                                        File(snapshot.data!.first.imagePath),
-                                        width: double.infinity,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    );
-                                  } else {
-                                    return const Center(
-                                      child: Icon(Icons.hide_image_outlined),
-                                    );
-                                  }
-                                },
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    DateFormat(
-                                      'dd/MM/yyyy HH:mm:ss',
-                                    ).format(revision.sampleTime!),
-                                    style: TextTheme.of(context).bodyLarge,
-                                  ),
-                                  Text(
-                                    '${nestStatusTypeFriendlyNames[revision.nestStatus]}: ${nestStageTypeFriendlyNames[revision.nestStage]}',
-                                  ),
-                                  Text(
-                                    '${S.of(context).host}: ${revision.eggsHost ?? 0} ${S.of(context).egg(revision.eggsHost ?? 0).toLowerCase()}, ${revision.nestlingsHost ?? 0} ${S.of(context).nestling(revision.nestlingsHost ?? 0).toLowerCase()}',
-                                  ),
-                                  Text(
-                                    '${S.of(context).nidoparasite}: ${revision.eggsParasite ?? 0} ${S.of(context).egg(revision.eggsParasite ?? 0).toLowerCase()}, ${revision.nestlingsParasite ?? 0} ${S.of(context).nestling(revision.nestlingsParasite ?? 0).toLowerCase()}',
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        // Positioned(
-                        //   top: 8,
-                        //   right: 8,
-                        //   child: Checkbox(
-                        //     value: isSelected,
-                        //     onChanged: (bool? value) {
-                        //       setState(() {
-                        //         if (value == true) {
-                        //           selectedSpecimens
-                        //               .add(specimen.id!);
-                        //         } else {
-                        //           selectedSpecimens
-                        //               .remove(specimen.id);
-                        //         }
-                        //       });
-                        //     },
-                        //   ),
-                        // ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-      ),
-    );
-  }
+  // Widget _buildGridView(List<NestRevision> revisionList) {
+  //   return SingleChildScrollView(
+  //     child: Align(
+  //       alignment: Alignment.topCenter,
+  //       child: ConstrainedBox(
+  //         constraints: const BoxConstraints(maxWidth: 840),
+  //         child: GridView.builder(
+  //           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+  //             crossAxisCount: 3,
+  //             childAspectRatio: 1,
+  //           ),
+  //           physics: const NeverScrollableScrollPhysics(),
+  //           shrinkWrap: true,
+  //           itemCount: revisionList.length,
+  //           itemBuilder: (context, index) {
+  //             final revision = revisionList[index];
+  //             // final isSelected = selectedSpecimens.contains(specimen.id);
+  //             return GridTile(
+  //               child: InkWell(
+  //                 onLongPress: () => _showBottomSheet(context, revision),
+  //                 onTap: () {
+  //                   Navigator.push(
+  //                     context,
+  //                     MaterialPageRoute(
+  //                       builder:
+  //                           (context) =>
+  //                               AppImageScreen(specimenId: revision.id),
+  //                     ),
+  //                   );
+  //                 },
+  //                 child: Card.outlined(
+  //                   child: Stack(
+  //                     children: [
+  //                       Column(
+  //                         mainAxisAlignment: MainAxisAlignment.end,
+  //                         crossAxisAlignment: CrossAxisAlignment.start,
+  //                         children: [
+  //                           Expanded(
+  //                             child: FutureBuilder<List<AppImage>>(
+  //                               future: Provider.of<AppImageProvider>(
+  //                                 context,
+  //                                 listen: false,
+  //                               ).fetchImagesForNestRevision(revision.id!),
+  //                               builder: (context, snapshot) {
+  //                                 if (snapshot.connectionState ==
+  //                                     ConnectionState.waiting) {
+  //                                   return const CircularProgressIndicator(year2023: false,);
+  //                                 } else if (snapshot.hasError) {
+  //                                   return const Icon(Icons.error);
+  //                                 } else if (snapshot.hasData &&
+  //                                     snapshot.data!.isNotEmpty) {
+  //                                   return ClipRRect(
+  //                                     borderRadius: BorderRadius.vertical(
+  //                                       top: Radius.circular(12.0),
+  //                                     ),
+  //                                     child: Image.file(
+  //                                       File(snapshot.data!.first.imagePath),
+  //                                       width: double.infinity,
+  //                                       fit: BoxFit.cover,
+  //                                     ),
+  //                                   );
+  //                                 } else {
+  //                                   return const Center(
+  //                                     child: Icon(Icons.hide_image_outlined),
+  //                                   );
+  //                                 }
+  //                               },
+  //                             ),
+  //                           ),
+  //                           Padding(
+  //                             padding: const EdgeInsets.all(16.0),
+  //                             child: Column(
+  //                               mainAxisAlignment: MainAxisAlignment.end,
+  //                               crossAxisAlignment: CrossAxisAlignment.start,
+  //                               children: [
+  //                                 Text(
+  //                                   DateFormat(
+  //                                     'dd/MM/yyyy HH:mm:ss',
+  //                                   ).format(revision.sampleTime!),
+  //                                   style: TextTheme.of(context).bodyLarge,
+  //                                 ),
+  //                                 Text(
+  //                                   '${nestStatusTypeFriendlyNames[revision.nestStatus]}: ${nestStageTypeFriendlyNames[revision.nestStage]}',
+  //                                 ),
+  //                                 Text(
+  //                                   '${S.of(context).host}: ${revision.eggsHost ?? 0} ${S.of(context).egg(revision.eggsHost ?? 0).toLowerCase()}, ${revision.nestlingsHost ?? 0} ${S.of(context).nestling(revision.nestlingsHost ?? 0).toLowerCase()}',
+  //                                 ),
+  //                                 Text(
+  //                                   '${S.of(context).nidoparasite}: ${revision.eggsParasite ?? 0} ${S.of(context).egg(revision.eggsParasite ?? 0).toLowerCase()}, ${revision.nestlingsParasite ?? 0} ${S.of(context).nestling(revision.nestlingsParasite ?? 0).toLowerCase()}',
+  //                                 ),
+  //                               ],
+  //                             ),
+  //                           ),
+  //                         ],
+  //                       ),
+  //                       // Positioned(
+  //                       //   top: 8,
+  //                       //   right: 8,
+  //                       //   child: Checkbox(
+  //                       //     value: isSelected,
+  //                       //     onChanged: (bool? value) {
+  //                       //       setState(() {
+  //                       //         if (value == true) {
+  //                       //           selectedSpecimens
+  //                       //               .add(specimen.id!);
+  //                       //         } else {
+  //                       //           selectedSpecimens
+  //                       //               .remove(specimen.id);
+  //                       //         }
+  //                       //       });
+  //                       //     },
+  //                       //   ),
+  //                       // ),
+  //                     ],
+  //                   ),
+  //                 ),
+  //               ),
+  //             );
+  //           },
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _buildListView(List<NestRevision> revisionList) {
     return ListView.separated(

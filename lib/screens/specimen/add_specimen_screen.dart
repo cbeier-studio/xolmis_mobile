@@ -84,13 +84,13 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
     }
   }
 
-  void _addSpeciesToSpecimen(String speciesName) async {
-    // Empty
-  }
+  // void _addSpeciesToSpecimen(String speciesName) async {
+  //   // Empty
+  // }
 
-  void _updateSpecimen() async {
-    // Empty
-  }
+  // void _updateSpecimen() async {
+  //   // Empty
+  // }
 
   @override
   Widget build(BuildContext context) {

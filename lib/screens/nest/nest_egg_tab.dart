@@ -315,42 +315,42 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
     );
   }
 
-  Widget _buildGridView(List<Egg> eggList) {
-    return SingleChildScrollView(
-      child: Align(
-        alignment: Alignment.topCenter,
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 840),
-          child: GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 3.5,
-            ),
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: eggList.length,
-            itemBuilder: (context, index) {
-              final egg = eggList[index];
-              return GridTile(
-                child: InkWell(
-                  onLongPress: () => _showBottomSheet(context, egg),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => AppImageScreen(eggId: egg.id),
-                      ),
-                    );
-                  },
-                  child: EggGridItem(egg: egg),
-                ),
-              );
-            },
-          ),
-        ),
-      ),
-    );
-  }
+  // Widget _buildGridView(List<Egg> eggList) {
+  //   return SingleChildScrollView(
+  //     child: Align(
+  //       alignment: Alignment.topCenter,
+  //       child: ConstrainedBox(
+  //         constraints: const BoxConstraints(maxWidth: 840),
+  //         child: GridView.builder(
+  //           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+  //             crossAxisCount: 2,
+  //             childAspectRatio: 3.5,
+  //           ),
+  //           physics: const NeverScrollableScrollPhysics(),
+  //           shrinkWrap: true,
+  //           itemCount: eggList.length,
+  //           itemBuilder: (context, index) {
+  //             final egg = eggList[index];
+  //             return GridTile(
+  //               child: InkWell(
+  //                 onLongPress: () => _showBottomSheet(context, egg),
+  //                 onTap: () {
+  //                   Navigator.push(
+  //                     context,
+  //                     MaterialPageRoute(
+  //                       builder: (context) => AppImageScreen(eggId: egg.id),
+  //                     ),
+  //                   );
+  //                 },
+  //                 child: EggGridItem(egg: egg),
+  //               ),
+  //             );
+  //           },
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _buildListView(List<Egg> eggList) {
     return ListView.separated(
