@@ -198,17 +198,19 @@ class NestDao {
         throw Exception('Database is not available');
       }
 
-      final results = await db.rawQuery('SELECT DISTINCT localityName FROM nests');
+      final List<Map<String, Object?>> results = await db.query(
+        'nests',
+        distinct: true,
+        columns: ['localityName'],
+        where: 'localityName IS NOT NULL', // Ensure we only retrieve non-null locality names
+      );
 
-      if (results.isNotEmpty) {
-        final localities = results.map((row) => row['localityName'] as String).toList();
-        debugPrint('Distinct localities: $localities');
-        return localities;
-      } else {
-        return [];
-      }
-    } catch (e) {
-      debugPrint('Error fetching distinct localities: $e');
+      final localities = results.map((row) => row['localityName'] as String).toList();
+      
+      debugPrint('Distinct localities from nests: $localities');
+      return localities;
+    } catch (e, s) {
+      debugPrint('Error fetching nests distinct localities: $e\n$s');
       return [];
     }
   }
@@ -222,17 +224,19 @@ class NestDao {
         throw Exception('Database is not available');
       }
 
-      final results = await db.rawQuery('SELECT DISTINCT support FROM nests');
+      final List<Map<String, Object?>> results = await db.query(
+        'nests',
+        distinct: true,
+        columns: ['support'],
+        where: 'support IS NOT NULL', // Ensure we only retrieve non-null supports
+      );
 
-      if (results.isNotEmpty) {
-        final supports = results.map((row) => row['support'] as String).toList();
-        debugPrint('Distinct supports: $supports');
-        return supports;
-      } else {
-        return [];
-      }
-    } catch (e) {
-      debugPrint('Error fetching distinct supports: $e');
+      final supports = results.map((row) => row['support'] as String).toList();
+
+      debugPrint('Distinct supports from nests: $supports');
+      return supports;
+    } catch (e, s) {
+      debugPrint('Error fetching nests distinct supports: $e\n$s');
       return [];
     }
   }

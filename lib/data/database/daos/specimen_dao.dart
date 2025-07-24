@@ -143,13 +143,26 @@ class SpecimenDao {
 
   // Get list of distinct localities for autocomplete
   Future<List<String>> getDistinctLocalities() async {
-    final db = await _dbHelper.database;
+    try {
+      final db = await _dbHelper.database;
 
-    final results = await db?.rawQuery('SELECT DISTINCT locality FROM specimens');
+      if (db == null) {
+        throw Exception('Database is not available');
+      }
 
-    if (results!.isNotEmpty) {
-      return results.map((row) => row['locality'] as String).toList();
-    } else {
+      final List<Map<String, Object?>> results = await db.query(
+        'specimens',
+        distinct: true,
+        columns: ['locality'],
+        where: 'locality IS NOT NULL', // Ensure we only retrieve non-null locality names
+      );
+
+      final localities = results.map((row) => row['locality'] as String).toList();
+      
+      debugPrint('Distinct localities from specimens: $localities');
+      return localities;
+    } catch (e, s) {
+      debugPrint('Error fetching specimens distinct localities: $e\n$s');
       return [];
     }
   }

@@ -300,6 +300,7 @@ class InventoryDao {
           currentInterval: map['currentInterval'] ?? 1,
           intervalsWithoutNewSpecies: map['intervalsWithoutNewSpecies'] ?? 0,
           currentIntervalSpeciesCount: map['currentIntervalSpeciesCount'] ?? 0,
+          localityName: map['localityName'],
           speciesList: speciesList,
           vegetationList: vegetationList,
           weatherList: weatherList,
@@ -361,6 +362,32 @@ class InventoryDao {
       return sequentialNumber + 1;
     } else {
       return 1;
+    }
+  }
+
+  // Get list of distinct localities for autocomplete
+  Future<List<String>> getDistinctLocalities() async {
+    try {
+      final db = await _dbHelper.database;
+
+      if (db == null) {
+        throw Exception('Database is not available');
+      }
+
+      final List<Map<String, Object?>> results = await db.query(
+        'inventories',
+        distinct: true,
+        columns: ['localityName'],
+        where: 'localityName IS NOT NULL', // Ensure we only retrieve non-null locality names
+      );
+
+      final localities = results.map((row) => row['localityName'] as String).toList();
+      
+      debugPrint('Distinct localities from inventories: $localities');
+      return localities;
+    } catch (e, s) {
+      debugPrint('Error fetching inventories distinct localities: $e\n$s');
+      return [];
     }
   }
 }

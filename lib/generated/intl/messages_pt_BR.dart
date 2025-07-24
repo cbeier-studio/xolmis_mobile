@@ -319,6 +319,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "exportAllWhat": m7,
     "exportWhat": m8,
     "exporting": MessageLookupByLibrary.simpleMessage("Exportando..."),
+    "exportingPleaseWait": MessageLookupByLibrary.simpleMessage(
+      "Exportando, aguarde...",
+    ),
     "female": MessageLookupByLibrary.simpleMessage("Fêmea"),
     "femaleNameOrId": MessageLookupByLibrary.simpleMessage(
       "Nome ou ID da fêmea",

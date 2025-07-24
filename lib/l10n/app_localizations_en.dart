@@ -1064,6 +1064,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noDataToExport => 'No data to export.';
 
   @override
+  String get exportingPleaseWait => 'Exporting, please wait...';
+
+  @override
   String get precipitationNone => 'None';
 
   @override

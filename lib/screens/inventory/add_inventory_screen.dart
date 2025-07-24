@@ -23,6 +23,8 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
   final _idController = TextEditingController();
   final _durationController = TextEditingController();
   final _maxSpeciesController = TextEditingController();
+  late TextEditingController _localityNameController;
+  late TextEditingController _fieldLocalityEditingController;
   InventoryType _selectedType = InventoryType.invFreeQualitative;
   bool _isSubmitting = false;
 
@@ -32,6 +34,18 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
     _idController.text = widget.initialInventoryId ?? '';
     _selectedType = widget.initialInventoryType ?? _selectedType;
     _maxSpeciesController.text = widget.initialMaxSpecies?.toString() ?? '';
+    _localityNameController = TextEditingController();
+    _fieldLocalityEditingController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _idController.dispose();
+    _durationController.dispose();
+    _maxSpeciesController.dispose();
+    _localityNameController.dispose();
+    _fieldLocalityEditingController.dispose();
+    super.dispose();
   }
 
   @override
@@ -155,6 +169,86 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                       },
                     ),
                     const SizedBox(height: 16.0),
+                    Autocomplete<String>(
+                      optionsBuilder:
+                          (TextEditingValue textEditingValue) async {
+                        if (textEditingValue.text.isEmpty) {
+                          return const Iterable<String>.empty();
+                        }
+
+                        try {
+                          final localityOptions = await Provider.of<InventoryProvider>(context, listen: false).getDistinctLocalities();
+                          return localityOptions.where((String option) {
+                            return option.toLowerCase().contains(textEditingValue.text.toLowerCase());
+                          });
+                        } catch (e) {
+                          debugPrint('Error fetching locality options: $e');
+                          return const Iterable<String>.empty();
+                        }
+                      },
+                      onSelected: (String selection) {
+                        _localityNameController.text = selection;
+                        _fieldLocalityEditingController.text = selection;
+                      },
+                      fieldViewBuilder: (BuildContext context,
+                          TextEditingController fieldTextEditingController,
+                          FocusNode fieldFocusNode,
+                          VoidCallback onFieldSubmitted) {
+                        _fieldLocalityEditingController = fieldTextEditingController;
+                        // if (widget.isEditing && !_isSubmitting) {
+                        //   _fieldLocalityEditingController.text = widget.inventory?.localityName ?? '';
+                        // }
+                        return TextFormField(
+                          controller: _fieldLocalityEditingController,
+                          focusNode: fieldFocusNode,
+                          textCapitalization: TextCapitalization.words,
+                          decoration: InputDecoration(
+                            labelText: '${S.of(context).locality} *',
+                            // helperText: S.of(context).requiredField,
+                            border: OutlineInputBorder(),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return S.of(context).insertLocality;
+                            }
+                            return null;
+                          },
+                          onFieldSubmitted: (String value) {
+                            onFieldSubmitted();
+                          },
+                        );
+                      },
+                      optionsViewBuilder: (BuildContext context,
+                          AutocompleteOnSelected<String> onSelected,
+                          Iterable<String> options) {
+                        return Align(
+                          alignment: Alignment.topLeft,
+                          child: Material(
+                            elevation: 4.0, // Add this line for shadow
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
+                            child: SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              child: ListView.builder(
+                                padding: EdgeInsets.all(8.0),
+                                itemCount: options.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  final String option = options.elementAt(index);
+                                  return GestureDetector(
+                                    onTap: () {
+                                      onSelected(option);
+                                    },
+                                    child: ListTile(
+                                      title: Text(option),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    SizedBox(height: 16.0,),
                     Row(
                         children: [
                           Expanded(
@@ -271,6 +365,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
       final newInventory = Inventory(
         id: _idController.text,
         type: _selectedType,
+        localityName: _localityNameController.text,
         duration: int.tryParse(_durationController.text) ?? 0,
         maxSpecies: int.tryParse(_maxSpeciesController.text) ?? 0,
         speciesList: [],

@@ -2818,6 +2818,16 @@ class S {
     );
   }
 
+  /// `Exporting, please wait...`
+  String get exportingPleaseWait {
+    return Intl.message(
+      'Exporting, please wait...',
+      name: 'exportingPleaseWait',
+      desc: 'Message shown when exporting data',
+      args: [],
+    );
+  }
+
   /// `None`
   String get precipitationNone {
     return Intl.message('None', name: 'precipitationNone', desc: '', args: []);

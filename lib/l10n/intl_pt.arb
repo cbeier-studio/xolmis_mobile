@@ -963,6 +963,11 @@
         "type": "text",
         "description": "Message shown when there is no data to export"
     },
+    "exportingPleaseWait": "Exportando, aguarde...",
+    "@exportingPleaseWait": {
+        "type": "text",
+        "description": "Message shown when exporting data"
+    },
     "precipitationNone": "Nenhuma",
     "precipitationFog": "Névoa",
     "precipitationMist": "Neblina",

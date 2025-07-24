@@ -271,4 +271,9 @@ class InventoryProvider with ChangeNotifier {
     return (totalNonOverlappingDuration.inMinutes / inventories.length) / 60.0; // Convert to hours
   }
 
+  // Get list of distinct localities for autocomplete
+  Future<List<String>> getDistinctLocalities() {
+    return _inventoryRepository.getDistinctLocalities();
+  }
+
 }

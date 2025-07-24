@@ -1731,6 +1731,12 @@ abstract class AppLocalizations {
   /// **'No data to export.'**
   String get noDataToExport;
 
+  /// Message shown when exporting data
+  ///
+  /// In en, this message translates to:
+  /// **'Exporting, please wait...'**
+  String get exportingPleaseWait;
+
   /// No description provided for @precipitationNone.
   ///
   /// In en, this message translates to:

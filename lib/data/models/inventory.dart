@@ -563,6 +563,7 @@ class Inventory with ChangeNotifier {
   double? startLatitude;
   double? endLongitude;
   double? endLatitude;
+  String? localityName;
   List<Species> speciesList;
   List<Vegetation> vegetationList;
   List<Weather> weatherList;
@@ -595,6 +596,7 @@ class Inventory with ChangeNotifier {
     this.startLatitude,
     this.endLongitude,
     this.endLatitude,
+    this.localityName,
     this.speciesList = const [],
     this.vegetationList = const [],
     this.weatherList = const [],
@@ -626,6 +628,7 @@ class Inventory with ChangeNotifier {
         startLatitude = map['startLatitude'],
         endLongitude = map['endLongitude'],
         endLatitude = map['endLatitude'],
+        localityName = map['localityName'],
         currentInterval = map['currentInterval'],
         intervalsWithoutNewSpecies = map['intervalsWithoutNewSpecies'],
         currentIntervalSpeciesCount = map['currentIntervalSpeciesCount'],
@@ -650,6 +653,7 @@ class Inventory with ChangeNotifier {
     int? currentInterval,
     int? intervalsWithoutNewSpecies,
     int? currentIntervalSpeciesCount,
+    String? localityName,
     List<Species>? speciesList,
     List<Vegetation>? vegetationList,
     List<Weather>? weatherList,
@@ -671,6 +675,7 @@ class Inventory with ChangeNotifier {
       currentInterval: currentInterval ?? this.currentInterval,
       intervalsWithoutNewSpecies: intervalsWithoutNewSpecies ?? this.intervalsWithoutNewSpecies,
       currentIntervalSpeciesCount: currentIntervalSpeciesCount ?? this.currentIntervalSpeciesCount,
+      localityName: localityName ?? this.localityName,
       speciesList: speciesList ?? this.speciesList,
       vegetationList: vegetationList ?? this.vegetationList,
       weatherList: weatherList ?? this.weatherList,
@@ -695,6 +700,7 @@ class Inventory with ChangeNotifier {
       'currentInterval': currentInterval,
       'intervalsWithoutNewSpecies': intervalsWithoutNewSpecies,
       'currentIntervalSpeciesCount': currentIntervalSpeciesCount,
+      'localityName': localityName,
     };
   }
 
@@ -716,7 +722,8 @@ class Inventory with ChangeNotifier {
         'endLatitude: $endLatitude, '
         'currentInterval: $currentInterval, '
         'intervalsWithoutNewSpecies: $intervalsWithoutNewSpecies, '
-        'currentIntervalSpeciesCount: $currentIntervalSpeciesCount}';
+        'currentIntervalSpeciesCount: $currentIntervalSpeciesCount, '
+        'localityName: $localityName, }';
   }
 
   Map<String, dynamic> toJson() {
@@ -731,6 +738,7 @@ class Inventory with ChangeNotifier {
       'startLatitude': startLatitude,
       'endLongitude': endLongitude,
       'endLatitude': endLatitude,
+      'localityName': localityName,
       'currentInterval': currentInterval,
       'intervalsWithoutNewSpecies': intervalsWithoutNewSpecies,
       'currentIntervalSpeciesCount': currentIntervalSpeciesCount,
@@ -752,6 +760,7 @@ class Inventory with ChangeNotifier {
       startLatitude: json['startLatitude'],
       endLongitude: json['endLongitude'],
       endLatitude: json['endLatitude'],
+      localityName: json['localityName'],
       currentInterval: json['currentInterval'],
       intervalsWithoutNewSpecies: json['intervalsWithoutNewSpecies'],
       currentIntervalSpeciesCount: json['currentIntervalSpeciesCount'],

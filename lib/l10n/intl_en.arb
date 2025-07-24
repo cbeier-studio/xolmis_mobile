@@ -1524,6 +1524,11 @@
         "type": "text",
         "description": "Message shown when there is no data to export"
     },
+    "exportingPleaseWait": "Exporting, please wait...",
+    "@exportingPleaseWait": {
+        "type": "text",
+        "description": "Message shown when exporting data"
+    },
     "precipitationNone": "None",
     "precipitationFog": "Fog",
     "precipitationMist": "Mist",

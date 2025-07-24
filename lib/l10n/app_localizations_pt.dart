@@ -1066,6 +1066,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get noDataToExport => 'Sem dados para exportar.';
 
   @override
+  String get exportingPleaseWait => 'Exportando, aguarde...';
+
+  @override
   String get precipitationNone => 'Nenhuma';
 
   @override
@@ -2319,6 +2322,9 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get noDataToExport => 'Sem dados para exportar.';
+
+  @override
+  String get exportingPleaseWait => 'Exportando, aguarde...';
 
   @override
   String get precipitationNone => 'Nenhuma';

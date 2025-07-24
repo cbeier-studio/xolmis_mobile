@@ -137,7 +137,7 @@ class _MainScreenState extends State<MainScreen> {
       "wakeup", // O nome da tarefa. Deve coincidir com o nome no dispatcher
       frequency: Duration(minutes: 15), // Idealmente, ajuste isso para 15 minutos (mínimo)
       constraints: Constraints(
-        networkType: NetworkType.not_required,
+        networkType: NetworkType.notRequired,
         requiresBatteryNotLow: false,
       ),
     );

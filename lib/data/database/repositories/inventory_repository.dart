@@ -61,4 +61,8 @@ class InventoryRepository {
   Future<int> getNextSequentialNumber(String? local, String observer, int ano, int mes, int dia, String? typeChar) {
     return _inventoryDao.getNextSequentialNumber(local, observer, ano, mes, dia, typeChar);
   }
+
+  Future<List<String>> getDistinctLocalities() {
+    return _inventoryDao.getDistinctLocalities();
+  }
 }
