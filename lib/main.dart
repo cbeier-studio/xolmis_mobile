@@ -75,9 +75,103 @@ void callbackDispatcher() {
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
   FlutterLocalNotificationsPlugin();
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(MyAppInitializer());
+
+  try {
+    // All initialization logic is moved here, before runApp is called.
+
+    // Register the Xolmis license
+    LicenseRegistry.addLicense(() async* {
+      final license = await rootBundle.loadString('assets/license.txt');
+      yield LicenseEntryWithLineBreaks(['xolmis'], license);
+    });
+
+    // Start the work manager
+    Workmanager().initialize(
+      callbackDispatcher,
+      isInDebugMode: false,
+    );
+
+    // Start the notification service
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('ic_notification');
+    const DarwinInitializationSettings initializationSettingsIOS =
+        DarwinInitializationSettings();
+    const InitializationSettings initializationSettings = InitializationSettings(
+        android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
+    // Initialize the database
+    final databaseHelper = DatabaseHelper();
+    await databaseHelper.initDatabase();
+
+    // Create the DAOs
+    final poiDao = PoiDao(databaseHelper);
+    final speciesDao = SpeciesDao(databaseHelper, poiDao);
+    final vegetationDao = VegetationDao(databaseHelper);
+    final weatherDao = WeatherDao(databaseHelper);
+    final inventoryDao =
+        InventoryDao(databaseHelper, speciesDao, vegetationDao, weatherDao);
+    final nestRevisionDao = NestRevisionDao(databaseHelper);
+    final eggDao = EggDao(databaseHelper);
+    final nestDao = NestDao(databaseHelper, nestRevisionDao, eggDao);
+    final specimenDao = SpecimenDao(databaseHelper);
+    final appImageDao = AppImageDao(databaseHelper);
+    final journalDao = FieldJournalDao(databaseHelper);
+
+    // Create the repositories
+    final inventoryRepository = InventoryRepository(inventoryDao);
+    final speciesRepository = SpeciesRepository(speciesDao);
+    final poiRepository = PoiRepository(poiDao);
+    final vegetationRepository = VegetationRepository(vegetationDao);
+    final weatherRepository = WeatherRepository(weatherDao);
+    final nestRepository = NestRepository(nestDao);
+    final nestRevisionRepository = NestRevisionRepository(nestRevisionDao);
+    final eggRepository = EggRepository(eggDao);
+    final specimenRepository = SpecimenRepository(specimenDao);
+    final appImageRepository = AppImageRepository(appImageDao);
+    final journalRepository = FieldJournalRepository(journalDao);
+
+    // Preload the species names list
+    List<String> preloadedSpeciesNames = await loadSpeciesSearchData();
+    preloadedSpeciesNames.sort((a, b) => a.compareTo(b));
+    allSpeciesNames = List.from(preloadedSpeciesNames);
+
+    final dependencies = AppDependencies(
+      inventoryRepository: inventoryRepository,
+      speciesRepository: speciesRepository,
+      poiRepository: poiRepository,
+      vegetationRepository: vegetationRepository,
+      weatherRepository: weatherRepository,
+      nestRepository: nestRepository,
+      nestRevisionRepository: nestRevisionRepository,
+      eggRepository: eggRepository,
+      specimenRepository: specimenRepository,
+      appImageRepository: appImageRepository,
+      journalRepository: journalRepository,
+      preloadedSpeciesNames: preloadedSpeciesNames,
+    );
+
+    runApp(
+      ChangeNotifierProvider(
+        create: (context) => ThemeModel(),
+        child: MyApp(
+          dependencies: dependencies,
+        ),
+      ),
+    );
+  } catch (e, s) {
+    debugPrint('Erro fatal ao inicializar o aplicativo: $e\n$s');
+    // Optionally, you can run an error-specific app widget
+    runApp(MaterialApp(
+      home: Scaffold(
+        body: Center(
+          child: Text('Erro fatal ao inicializar o aplicativo: $e'),
+        ),
+      ),
+    ));
+  }
 }
 
 class AppDependencies {
@@ -108,118 +202,6 @@ class AppDependencies {
     required this.journalRepository,
     this.preloadedSpeciesNames = const [],
   });
-}
-
-class MyAppInitializer extends StatelessWidget {
-  const MyAppInitializer({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<AppDependencies>(
-      future: _initializeApp(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return MaterialApp(
-            home: Scaffold(
-              body: Center(child: CircularProgressIndicator.adaptive()),
-            ),
-          );
-        } else if (snapshot.hasError) {
-          return MaterialApp(
-            home: Scaffold(
-              body: Center(child: Text('Erro ao inicializar o aplicativo: ${snapshot.error}')),
-            ),
-          );
-        } else {
-          final dependencies = snapshot.data!;
-          return ChangeNotifierProvider(
-            create: (context) => ThemeModel(),
-            child: MyApp(
-              dependencies: dependencies,
-            ),
-          );
-        }
-      },
-    );
-  }
-
-  Future<AppDependencies> _initializeApp() async {
-    try {
-      // Register the Xolmis license
-      LicenseRegistry.addLicense(() async* {
-        final license = await rootBundle.loadString('assets/license.txt');
-        yield LicenseEntryWithLineBreaks(['xolmis'], license);
-      });
-
-      // Start the work manager
-      Workmanager().initialize(
-        callbackDispatcher,
-        isInDebugMode: false,
-      );
-
-      // Start the notification service
-      const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('ic_notification');
-      const DarwinInitializationSettings initializationSettingsIOS =
-        DarwinInitializationSettings();
-      const InitializationSettings initializationSettings = InitializationSettings(
-          android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
-      await flutterLocalNotificationsPlugin.initialize(initializationSettings);
-
-      // Initialize the database
-      final databaseHelper = DatabaseHelper();
-      await databaseHelper.initDatabase();
-
-      // Create the DAOs
-      final poiDao = PoiDao(databaseHelper);
-      final speciesDao = SpeciesDao(databaseHelper, poiDao);
-      final vegetationDao = VegetationDao(databaseHelper);
-      final weatherDao = WeatherDao(databaseHelper);
-      final inventoryDao = InventoryDao(databaseHelper, speciesDao, vegetationDao, weatherDao);
-      final nestRevisionDao = NestRevisionDao(databaseHelper);
-      final eggDao = EggDao(databaseHelper);
-      final nestDao = NestDao(databaseHelper, nestRevisionDao, eggDao);
-      final specimenDao = SpecimenDao(databaseHelper);
-      final appImageDao = AppImageDao(databaseHelper);
-      final journalDao = FieldJournalDao(databaseHelper);
-
-      // Create the repositories
-      final inventoryRepository = InventoryRepository(inventoryDao);
-      final speciesRepository = SpeciesRepository(speciesDao);
-      final poiRepository = PoiRepository(poiDao);
-      final vegetationRepository = VegetationRepository(vegetationDao);
-      final weatherRepository = WeatherRepository(weatherDao);
-      final nestRepository = NestRepository(nestDao);
-      final nestRevisionRepository = NestRevisionRepository(nestRevisionDao);
-      final eggRepository = EggRepository(eggDao);
-      final specimenRepository = SpecimenRepository(specimenDao);
-      final appImageRepository = AppImageRepository(appImageDao);
-      final journalRepository = FieldJournalRepository(journalDao);
-
-      // Preload the species names list
-      List<String> preloadedSpeciesNames = await loadSpeciesSearchData();
-      preloadedSpeciesNames.sort((a, b) => a.compareTo(b));
-      allSpeciesNames = List.from(preloadedSpeciesNames);
-
-      return AppDependencies(
-        inventoryRepository: inventoryRepository,
-        speciesRepository: speciesRepository,
-        poiRepository: poiRepository,
-        vegetationRepository: vegetationRepository,
-        weatherRepository: weatherRepository,
-        nestRepository: nestRepository,
-        nestRevisionRepository: nestRevisionRepository,
-        eggRepository: eggRepository,
-        specimenRepository: specimenRepository,
-        appImageRepository: appImageRepository,
-        journalRepository: journalRepository,
-        preloadedSpeciesNames: preloadedSpeciesNames, 
-      );
-    } catch (e, s) {
-      debugPrint('Erro ao inicializar o aplicativo: $e\n$s');
-      rethrow;
-    }
-  }
 }
 
 class MyApp extends StatelessWidget {
@@ -294,4 +276,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-

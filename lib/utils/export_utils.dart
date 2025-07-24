@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:csv/csv.dart';
+import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
@@ -168,7 +169,7 @@ Future<void> exportInventoryToCsv(BuildContext context, Inventory inventory, boo
     final locale = Localizations.localeOf(context);
 
     // 1. Create a list of data for the CSV
-    List<List<dynamic>> rows = await buildInventoryCsvRows(inventory, locale);
+    List<List<dynamic>> rows = await buildInventoryRows(inventory, locale);
 
     // 2. Convert the list of data to CSV
     String csv = const ListToCsvConverter().convert(rows, fieldDelimiter: ';', convertNullTo: '');
@@ -209,7 +210,7 @@ Future<void> exportInventoryToCsv(BuildContext context, Inventory inventory, boo
 }
 
 // Add inventory data to CSV rows
-Future<List<List>> buildInventoryCsvRows(Inventory inventory, Locale locale) async {
+Future<List<List>> buildInventoryRows(Inventory inventory, Locale locale) async {
   const List<String> inventoryHeaders = ['ID','Type','Duration',
     'Max of species','Start date','Start time','End date','End time',
     'Locality','Start longitude','Start latitude','End longitude',
@@ -238,7 +239,7 @@ Future<List<List>> buildInventoryCsvRows(Inventory inventory, Locale locale) asy
     inventory.startTime != null ? DateFormat.Hms(locale.toString()).format(inventory.startTime!) : '',
     inventory.endTime != null ? DateFormat.yMd(locale.toString()).format(inventory.endTime!) : '',
     inventory.endTime != null ? DateFormat.Hms(locale.toString()).format(inventory.endTime!) : '',
-    inventory.localityName,
+    inventory.localityName ?? '',
     formatNumbers ? numberFormat.format(inventory.startLongitude) : inventory.startLongitude,
     formatNumbers ? numberFormat.format(inventory.startLatitude) : inventory.startLatitude,
     formatNumbers ? numberFormat.format(inventory.endLongitude) : inventory.endLongitude,
@@ -247,7 +248,7 @@ Future<List<List>> buildInventoryCsvRows(Inventory inventory, Locale locale) asy
   ]);
   
   // Add species data
-  rows.add([]); // Empty line to separate the inventory of the species
+  rows.add(['']); // Empty line to separate the inventory of the species
   rows.add(speciesHeaders);
   for (var species in inventory.speciesList) {
     rows.add([
@@ -260,7 +261,7 @@ Future<List<List>> buildInventoryCsvRows(Inventory inventory, Locale locale) asy
   }
   
   // Add vegetation data
-  rows.add([]); // Empty line to separate vegetation data
+  rows.add(['']); // Empty line to separate vegetation data
   rows.add(['VEGETATION']);
   rows.add(vegetationHeaders);
   for (var vegetation in inventory.vegetationList) {
@@ -282,7 +283,7 @@ Future<List<List>> buildInventoryCsvRows(Inventory inventory, Locale locale) asy
   }
   
   // Add weather data
-  rows.add([]); // Empty line to separate weather data
+  rows.add(['']); // Empty line to separate weather data
   rows.add(['WEATHER']);
   rows.add(weatherHeaders);
   for (var weather in inventory.weatherList) {
@@ -296,7 +297,7 @@ Future<List<List>> buildInventoryCsvRows(Inventory inventory, Locale locale) asy
   }
   
   // Add POIs data
-  rows.add([]); // Empty line to separate POI data
+  rows.add(['']); // Empty line to separate POI data
   rows.add(['POINTS OF INTEREST']);
   rows.add(poiHeaders);
   for (var species in inventory.speciesList) {
@@ -313,6 +314,118 @@ Future<List<List>> buildInventoryCsvRows(Inventory inventory, Locale locale) asy
   }
 
   return rows;
+}
+
+CellValue _convertToCellValue(dynamic val) {
+  if (val == null) {
+    return TextCellValue('');
+  }
+  if (val is String) {
+    // if (val.startsWith('=')) {
+    //   return FormulaCellValue(val);
+    // }
+    return TextCellValue(val);
+  }
+  if (val is int) {
+    return IntCellValue(val);
+  }
+  if (val is double) {
+    return DoubleCellValue(val);
+  }
+  if (val is bool) {
+    return BoolCellValue(val);
+  }
+  // if (val is DateTime) {
+  //   return TextCellValue(DateFormat('dd/MM/yyyy HH:mm:ss').format(val));
+  // }
+
+  return TextCellValue(val.toString());
+}
+
+List<List<CellValue>> convertRowsToCellValues(List<List<dynamic>> dynamicRows) {
+  List<List<CellValue>> cellValueRows = [];
+  for (var dynamicRow in dynamicRows) {
+    List<CellValue> cellValueRow = [];
+    for (var val in dynamicRow) {
+      cellValueRow.add(_convertToCellValue(val));
+    }
+    cellValueRows.add(cellValueRow);
+  }
+  return cellValueRows;
+}
+
+Future<void> exportInventoryToExcel(BuildContext context, Inventory inventory, bool shareIt) async {
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return Dialog(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(width: 16),
+              Text(S.current.exportingPleaseWait),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+  try {
+    final locale = Localizations.localeOf(context);
+
+    // 1. Create a list of data
+    List<List<dynamic>> rows = await buildInventoryRows(inventory, locale);
+    List<List<CellValue>> cellRows = convertRowsToCellValues(rows);
+
+    // 2. Convert the list of data to Excel
+    final excel = Excel.createExcel();
+    final Sheet sheet = excel['Sheet1'];
+
+    for (List<CellValue> row in cellRows) {
+      sheet.appendRow(row);
+    }
+
+    // 3. Create the file in a temporary directory
+    var fileBytes = excel.save();
+    Directory tempDir = await getTemporaryDirectory();
+    final filePath = '${tempDir.path}/inventory_${inventory.id}.xlsx';
+    if (fileBytes != null) {
+      File(filePath)
+        ..createSync(recursive: true)
+        ..writeAsBytesSync(fileBytes);
+    }
+
+    // 4. Share the file using share_plus
+    if (shareIt) {
+      await SharePlus.instance.share(
+        ShareParams(
+            files: [XFile(filePath, mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')],
+            text: S.current.inventoryExported(1),
+            subject: '${S.current.inventoryExported(1)} ${inventory.id}'
+        ),
+      );
+    }
+  } catch (error) {
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Row(
+        children: [
+          Icon(Icons.error_outlined, color: Colors.red),
+          SizedBox(width: 8),
+          Text(S.current.errorExportingInventory(1, error.toString())),
+        ],
+      ),
+      ),
+    );
+  } finally {
+    if (context.mounted) {
+      Navigator.of(context).pop(); // Dismiss the loading dialog
+    }
+  }
 }
 
 Future<void> exportAllInactiveNestsToJson(BuildContext context) async {

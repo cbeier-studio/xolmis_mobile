@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:csv/csv.dart';
+import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
@@ -314,7 +315,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
       if (inventories.isNotEmpty) {
         for (final inventory in inventories) {
           // 1. Create a list of data for the CSV
-          List<List<dynamic>> rows = await buildInventoryCsvRows(inventory!, locale);
+          List<List<dynamic>> rows = await buildInventoryRows(inventory!, locale);
 
           // 2. Convert the list of data to CSV
           String csv =
@@ -334,6 +335,71 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
       await SharePlus.instance.share(
         ShareParams(
           files: csvFiles, 
+          text: S.current.inventoryExported(2), 
+          subject: S.current.inventoryData(2)
+        )
+      );
+
+      // Clear the selected inventories
+      setState(() {
+        selectedInventories.clear();
+      });
+    } catch (error) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              Icon(Icons.error_outlined, color: Colors.red),
+              SizedBox(width: 8),
+              Text(S.current.errorExportingInventory(2, error.toString())),
+            ],
+          ),
+        ),
+      );
+    }
+  }
+
+  // Export all selected inventories to Excel
+  void _exportSelectedInventoriesToExcel() async {
+    try {
+      final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
+      final inventories = selectedInventories.map((id) => inventoryProvider.getInventoryById(id)).toList();
+      final locale = Localizations.localeOf(context);
+      List<XFile> excelFiles = [];
+
+      if (inventories.isNotEmpty) {
+        for (final inventory in inventories) {
+          // 1. Create a list of data
+          List<List<dynamic>> rows = await buildInventoryRows(inventory!, locale);
+          List<List<CellValue>> cellRows = convertRowsToCellValues(rows);
+
+          // 2. Convert the list of data to Excel
+          final excel = Excel.createExcel();
+          final Sheet sheet = excel['Sheet1'];
+
+          for (List<CellValue> row in cellRows) {
+            sheet.appendRow(row);
+          }
+
+          // 3. Create the file in a temporary directory
+          var fileBytes = excel.save();
+          Directory tempDir = await getTemporaryDirectory();
+          final filePath = '${tempDir.path}/inventory_${inventory.id}.xlsx';
+          if (fileBytes != null) {
+            File(filePath)
+              ..createSync(recursive: true)
+              ..writeAsBytesSync(fileBytes);
+          }
+
+          excelFiles.add(XFile(filePath, mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'));
+        }
+      }
+
+      // Share the file using share_plus
+      await SharePlus.instance.share(
+        ShareParams(
+          files: excelFiles, 
           text: S.current.inventoryExported(2), 
           subject: S.current.inventoryData(2)
         )
@@ -700,6 +766,12 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                           _exportSelectedInventoriesToCsv();
                         },
                         child: Text('CSV'),
+                      ),
+                      MenuItemButton(
+                        onPressed: () {
+                          _exportSelectedInventoriesToExcel();
+                        },
+                        child: Text('Excel'),
                       ),
                       MenuItemButton(
                         onPressed: () {
