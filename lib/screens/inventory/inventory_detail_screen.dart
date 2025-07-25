@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../data/models/inventory.dart';
 import '../../data/database/repositories/inventory_repository.dart';
@@ -254,10 +255,34 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
               },
               menuChildren: [
                 MenuItemButton(
-                  onPressed: () {
-                    exportInventoryToCsv(context, widget.inventory, true);
+                  onPressed: () async {
+                    final locale = Localizations.localeOf(context);
+                    final csvFile = await exportInventoryToCsv(context, widget.inventory, locale);
+                    // Share the file using share_plus
+                    await SharePlus.instance.share(
+                      ShareParams(
+                        files: [XFile(csvFile, mimeType: 'text/csv')],
+                        text: S.current.inventoryExported(1),
+                        subject: S.current.inventoryData(1),
+                      ),
+                    );
                   },
                   child: Text('CSV'),
+                ),
+                MenuItemButton(
+                  onPressed: () async {
+                    final locale = Localizations.localeOf(context);
+                    final excelFile = await exportInventoryToExcel(context, widget.inventory, locale);
+                    // Share the file using share_plus
+                    await SharePlus.instance.share(
+                      ShareParams(
+                        files: [XFile(excelFile, mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')],
+                        text: S.current.inventoryExported(1),
+                        subject: S.current.inventoryData(1),
+                      ),
+                    );
+                  },
+                  child: Text('Excel'),
                 ),
                 MenuItemButton(
                   onPressed: () {

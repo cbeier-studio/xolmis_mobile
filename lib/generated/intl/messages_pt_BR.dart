@@ -314,6 +314,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "errorSpecimenAlreadyExists": MessageLookupByLibrary.simpleMessage(
       "Já existe um espécime com este número de campo.",
     ),
+    "errorTitle": MessageLookupByLibrary.simpleMessage("Erro"),
     "export": MessageLookupByLibrary.simpleMessage("Exportar"),
     "exportAll": MessageLookupByLibrary.simpleMessage("Exportar todos"),
     "exportAllWhat": m7,

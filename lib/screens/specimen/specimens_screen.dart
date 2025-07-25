@@ -174,7 +174,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
     );
   }
 
-  void _exportSelectedSpecimensToJson() async {
+  void _exportSelectedSpecimensToJson(BuildContext context) async {
     try {
       final specimenProvider = Provider.of<SpecimenProvider>(context, listen: false);
       final specimens = await Future.wait(selectedSpecimens.map((id) => specimenProvider.getSpecimenById(id)));
@@ -217,57 +217,37 @@ class SpecimensScreenState extends State<SpecimensScreen> {
     }
   }
 
-  void _exportSelectedSpecimensToCsv() async {
+  void _exportSelectedSpecimensToCsv(BuildContext context) async {
     try {
       final specimenProvider = Provider.of<SpecimenProvider>(context, listen: false);
       final specimens = await Future.wait(selectedSpecimens.map((id) => specimenProvider.getSpecimenById(id)));
             
-        // 1. Create a list of data for the CSV
-        List<List<dynamic>> rows = [];
-    rows.add([
-      'Date/Time',
-      'Field number',
-      'Species',
-      'Type',
-      'Locality',
-      'Longitude',
-      'Latitude',
-      'Notes',
-    ]);
-    for (var specimen in specimens) {
-      rows.add([
-        specimen.sampleTime,
-        specimen.fieldNumber,
-        specimen.speciesName,
-        specimenTypeFriendlyNames[specimen.type],
-        specimen.locality,
-        specimen.longitude,
-        specimen.latitude,
-        specimen.notes,
-      ]);
-    }
+      await exportAllSpecimensToCsv(context, specimens);
 
-        // 2. Convert the list of data to CSV
-        String csv = const ListToCsvConverter().convert(rows, fieldDelimiter: ';');
-
-        final now = DateTime.now();
-      final formatter = DateFormat('yyyyMMdd_HHmmss');
-      final formattedDate = formatter.format(now);
-
-        // 3. Create the file in a temporary directory
-        Directory tempDir = await getApplicationDocumentsDirectory();
-        final filePath = '${tempDir.path}/selected_specimens_$formattedDate.csv';
-        final file = File(filePath);
-        await file.writeAsString(csv);
-
-      // Share the file using share_plus
-      await SharePlus.instance.share(
-        ShareParams(
-          files: [XFile(filePath, mimeType: 'text/csv')], 
-          text: S.current.specimenExported(2), 
-          subject: S.current.specimenData(2)
+      setState(() {
+        selectedSpecimens.clear();
+      });
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              Icon(Icons.error_outlined, color: Colors.red),
+              SizedBox(width: 8),
+              Text(S.current.errorExportingSpecimen(2, error.toString())),
+            ],
+          ),
         ),
       );
+    }
+  }
+
+  void _exportSelectedSpecimensToExcel(BuildContext context) async {
+    try {
+      final specimenProvider = Provider.of<SpecimenProvider>(context, listen: false);
+      final specimens = await Future.wait(selectedSpecimens.map((id) => specimenProvider.getSpecimenById(id)));
+            
+      await exportAllSpecimensToExcel(context, specimens);
 
       setState(() {
         selectedSpecimens.clear();
@@ -400,6 +380,13 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                   exportAllSpecimensToCsv(context, _showPending ? specimenProvider.pendingSpecimens : specimenProvider.archivedSpecimens);
                 },
                 child: Text('${S.of(context).exportAll} (CSV)'),
+              ),
+              MenuItemButton(
+                leadingIcon: Icon(Icons.file_upload_outlined),
+                onPressed: () {
+                  exportAllSpecimensToExcel(context, _showPending ? specimenProvider.pendingSpecimens : specimenProvider.archivedSpecimens);
+                },
+                child: Text('${S.of(context).exportAll} (Excel)'),
               ),
               MenuItemButton(
                 leadingIcon: Icon(Icons.file_upload_outlined),
@@ -600,13 +587,19 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                     menuChildren: [
                       MenuItemButton(
                         onPressed: () {
-                          _exportSelectedSpecimensToCsv();
+                          _exportSelectedSpecimensToCsv(context);
                         },
                         child: Text('CSV'),
                       ),
                       MenuItemButton(
                         onPressed: () {
-                          _exportSelectedSpecimensToJson();
+                          _exportSelectedSpecimensToExcel(context);
+                        },
+                        child: Text('Excel'),
+                      ),
+                      MenuItemButton(
+                        onPressed: () {
+                          _exportSelectedSpecimensToJson(context);
                         },
                         child: Text('JSON'),
                       ),

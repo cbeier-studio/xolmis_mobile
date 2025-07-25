@@ -968,6 +968,11 @@
         "type": "text",
         "description": "Message shown when exporting data"
     },
+    "errorTitle": "Erro",
+    "@errorTitle": {
+        "type": "text",
+        "description": "Error title"
+    },
     "precipitationNone": "Nenhuma",
     "precipitationFog": "Névoa",
     "precipitationMist": "Neblina",

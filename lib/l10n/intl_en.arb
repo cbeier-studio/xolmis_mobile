@@ -1529,6 +1529,11 @@
         "type": "text",
         "description": "Message shown when exporting data"
     },
+    "errorTitle": "Error",
+    "@errorTitle": {
+        "type": "text",
+        "description": "Error title"
+    },
     "precipitationNone": "None",
     "precipitationFog": "Fog",
     "precipitationMist": "Mist",

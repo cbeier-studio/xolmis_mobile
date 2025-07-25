@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../data/models/nest.dart';
 import '../../providers/nest_provider.dart';
@@ -256,14 +257,44 @@ class NestDetailScreenState extends State<NestDetailScreen> {
                     );
                   },
                   menuChildren: [
+                    // Option to export the selected nest to CSV
                     MenuItemButton(
-                      onPressed: () {
-                        exportNestToCsv(context, widget.nest);
+                      onPressed: () async {
+                        Navigator.of(context).pop();
+                        final locale = Localizations.localeOf(context);
+                        final csvFile = await exportNestToCsv(context, widget.nest, locale);
+                        // Share the file using share_plus
+                        await SharePlus.instance.share(
+                          ShareParams(
+                            files: [XFile(csvFile, mimeType: 'text/csv')],
+                            text: S.current.nestExported(1),
+                            subject: S.current.nestData(1),
+                          ),
+                        );
                       },
                       child: Text('CSV'),
                     ),
+                    // Option to export the selected nest to Excel
+                    TextButton(
+                      onPressed: () async {
+                        Navigator.of(context).pop();
+                        final locale = Localizations.localeOf(context);
+                        final excelFile = await exportNestToExcel(context, widget.nest, locale);
+                        // Share the file using share_plus
+                        await SharePlus.instance.share(
+                          ShareParams(
+                            files: [XFile(excelFile, mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')], 
+                            text: S.current.nestExported(1), 
+                            subject: S.current.nestData(1)
+                          ),
+                        );
+                      },
+                      child: Text('Excel'),
+                    ),
+                    // Option to export the selected nest to JSON
                     MenuItemButton(
                       onPressed: () {
+                        Navigator.of(context).pop();
                         exportNestToJson(context, widget.nest);
                       },
                       child: Text('JSON'),

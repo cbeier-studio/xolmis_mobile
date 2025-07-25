@@ -301,6 +301,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "errorSpecimenAlreadyExists": MessageLookupByLibrary.simpleMessage(
       "A specimen with this field number already exists.",
     ),
+    "errorTitle": MessageLookupByLibrary.simpleMessage("Error"),
     "export": MessageLookupByLibrary.simpleMessage("Export"),
     "exportAll": MessageLookupByLibrary.simpleMessage("Export all"),
     "exportAllWhat": m7,

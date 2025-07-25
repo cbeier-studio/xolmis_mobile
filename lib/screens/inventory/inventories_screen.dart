@@ -259,7 +259,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
   }
 
   // Export all selected inventories to JSON
-  void _exportSelectedInventoriesToJson() async {
+  void _exportSelectedInventoriesToJson(BuildContext context) async {
     try {
       final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
       final inventories = selectedInventories.map((id) => inventoryProvider.getInventoryById(id)).toList();
@@ -290,22 +290,55 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
       });
     } catch (error) {
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              Icon(Icons.error_outlined, color: Colors.red),
-              SizedBox(width: 8),
-              Text(S.current.errorExportingInventory(2, error.toString())),
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Row(
+              children: [
+                const Icon(Icons.error_outlined, color: Colors.red),
+                const SizedBox(width: 10),
+                Text(S.current.errorTitle),
+              ],
+            ),
+            content: SingleChildScrollView(
+              child: Text(
+                S.current.errorExportingInventory(2, error.toString()),
+              ),
+            ),
+            actions: [
+              TextButton(
+                child: Text(S.of(context).ok),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
             ],
-          ),
-        ),
+          );
+        },
       );
     }
   }
 
   // Export all selected inventories to CSV
-  void _exportSelectedInventoriesToCsv() async {
+  void _exportSelectedInventoriesToCsv(BuildContext context) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(width: 16),
+                Text(S.current.exportingPleaseWait),
+              ],
+            ),
+          ),
+        );
+      },
+    );
     try {
       final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
       final inventories = selectedInventories.map((id) => inventoryProvider.getInventoryById(id)).toList();
@@ -314,19 +347,8 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
 
       if (inventories.isNotEmpty) {
         for (final inventory in inventories) {
-          // 1. Create a list of data for the CSV
-          List<List<dynamic>> rows = await buildInventoryRows(inventory!, locale);
-
-          // 2. Convert the list of data to CSV
-          String csv =
-              const ListToCsvConverter().convert(rows, fieldDelimiter: ';');
-
-          // 3. Create the file in a temporary directory
-          Directory tempDir = await getApplicationDocumentsDirectory();
-          final filePath = '${tempDir.path}/inventory_${inventory.id}.csv';
-          final file = File(filePath);
-          await file.writeAsString(csv);
-
+          final filePath = await exportInventoryToCsv(context, inventory!, locale);
+          
           csvFiles.add(XFile(filePath, mimeType: 'text/csv'));
         }
       }
@@ -346,22 +368,57 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
       });
     } catch (error) {
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              Icon(Icons.error_outlined, color: Colors.red),
-              SizedBox(width: 8),
-              Text(S.current.errorExportingInventory(2, error.toString())),
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Row(
+              children: [
+                const Icon(Icons.error_outlined, color: Colors.red),
+                const SizedBox(width: 10),
+                Text(S.current.errorTitle),
+              ],
+            ),
+            content: SingleChildScrollView(
+              child: Text(S.current.errorExportingInventory(2, error.toString())),
+            ),
+            actions: [
+              TextButton(
+                child: Text(S.of(context).ok),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
             ],
-          ),
-        ),
+          );
+        },
       );
+    } finally {
+      if (context.mounted) {
+        Navigator.of(context).pop(); // Dismiss the loading dialog
+      }
     }
   }
 
   // Export all selected inventories to Excel
-  void _exportSelectedInventoriesToExcel() async {
+  void _exportSelectedInventoriesToExcel(BuildContext context) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(width: 16),
+                Text(S.current.exportingPleaseWait),
+              ],
+            ),
+          ),
+        );
+      },
+    );
     try {
       final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
       final inventories = selectedInventories.map((id) => inventoryProvider.getInventoryById(id)).toList();
@@ -371,26 +428,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
       if (inventories.isNotEmpty) {
         for (final inventory in inventories) {
           // 1. Create a list of data
-          List<List<dynamic>> rows = await buildInventoryRows(inventory!, locale);
-          List<List<CellValue>> cellRows = convertRowsToCellValues(rows);
-
-          // 2. Convert the list of data to Excel
-          final excel = Excel.createExcel();
-          final Sheet sheet = excel['Sheet1'];
-
-          for (List<CellValue> row in cellRows) {
-            sheet.appendRow(row);
-          }
-
-          // 3. Create the file in a temporary directory
-          var fileBytes = excel.save();
-          Directory tempDir = await getTemporaryDirectory();
-          final filePath = '${tempDir.path}/inventory_${inventory.id}.xlsx';
-          if (fileBytes != null) {
-            File(filePath)
-              ..createSync(recursive: true)
-              ..writeAsBytesSync(fileBytes);
-          }
+          final filePath = await exportInventoryToExcel(context, inventory!, locale);
 
           excelFiles.add(XFile(filePath, mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'));
         }
@@ -411,17 +449,35 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
       });
     } catch (error) {
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              Icon(Icons.error_outlined, color: Colors.red),
-              SizedBox(width: 8),
-              Text(S.current.errorExportingInventory(2, error.toString())),
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Row(
+              children: [
+                const Icon(Icons.error_outlined, color: Colors.red),
+                const SizedBox(width: 10),
+                Text(S.current.errorTitle),
+              ],
+            ),
+            content: SingleChildScrollView(
+              child: Text(
+                S.current.errorExportingInventory(2, error.toString()),
+              ),
+            ),
+            actions: [
+              TextButton(
+                child: Text(S.of(context).ok),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
             ],
-          ),
-        ),
+          );
+        },
       );
+    } finally {
+      if (context.mounted) {
+        Navigator.of(context).pop(); // Dismiss the loading dialog
+      }
     }
   }
 
@@ -763,19 +819,19 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                     menuChildren: [
                       MenuItemButton(
                         onPressed: () {
-                          _exportSelectedInventoriesToCsv();
+                          _exportSelectedInventoriesToCsv(context);
                         },
                         child: Text('CSV'),
                       ),
                       MenuItemButton(
                         onPressed: () {
-                          _exportSelectedInventoriesToExcel();
+                          _exportSelectedInventoriesToExcel(context);
                         },
                         child: Text('Excel'),
                       ),
                       MenuItemButton(
                         onPressed: () {
-                          _exportSelectedInventoriesToJson();
+                          _exportSelectedInventoriesToJson(context);
                         },
                         child: Text('JSON'),
                       ),
@@ -1333,11 +1389,37 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                         children: [
                           // Option to export the selected inventory to CSV
                           TextButton(
-                            onPressed: () {
+                            onPressed: () async {
                               Navigator.of(context).pop();
-                              exportInventoryToCsv(context, inventory, true);
+                              final locale = Localizations.localeOf(context);
+                              final csvFile = await exportInventoryToCsv(context, inventory, locale);
+                              // Share the file using share_plus
+                              await SharePlus.instance.share(
+                                ShareParams(
+                                  files: [XFile(csvFile, mimeType: 'text/csv')], 
+                                  text: S.current.inventoryExported(1), 
+                                  subject: S.current.inventoryData(1)
+                                ),
+                              );
                             },
                             child: Text('CSV'),
+                          ),
+                          // Option to export the selected inventory to Excel
+                          TextButton(
+                            onPressed: () async {
+                              Navigator.of(context).pop();
+                              final locale = Localizations.localeOf(context);
+                              final excelFile = await exportInventoryToExcel(context, inventory, locale);
+                              // Share the file using share_plus
+                              await SharePlus.instance.share(
+                                ShareParams(
+                                  files: [XFile(excelFile, mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')], 
+                                  text: S.current.inventoryExported(1), 
+                                  subject: S.current.inventoryData(1)
+                                ),
+                              );
+                            },
+                            child: Text('Excel'),
                           ),
                           // Option to export the selected inventory to JSON
                           TextButton(

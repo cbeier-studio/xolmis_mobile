@@ -56,19 +56,20 @@ const String keepAwakeTaskName = "wakeup";
 void callbackDispatcher() {
   WidgetsFlutterBinding.ensureInitialized();
   Workmanager().executeTask((task, inputData) async {
-    switch (task) {
-      case "wakeup":
-        debugPrint('Xolmis awakened by WorkManager (KeepAwake Task)');
-        // Here we can add additional logic if necessary
-        // E.g.: check if there is an important pending task
-        break;
-      default:
-        debugPrint("Unknown task: $task");
-        break;
+    try {
+      switch (task) {
+        case "wakeup":
+          debugPrint('Xolmis awakened by WorkManager (KeepAwake Task)');
+          break;
+        default:
+          debugPrint("Unknown task: $task");
+          break;
+      }
+      return Future.value(true); // Successful execution
+    } catch (e, s) {
+      debugPrint('WorkManager error: $e\n$s');
+      return Future.value(false);
     }
-
-    // True to indicate that the task was successful
-    return Future.value(true);
   });
 }
 

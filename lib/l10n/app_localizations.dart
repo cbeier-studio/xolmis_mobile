@@ -1737,6 +1737,12 @@ abstract class AppLocalizations {
   /// **'Exporting, please wait...'**
   String get exportingPleaseWait;
 
+  /// Error title
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get errorTitle;
+
   /// No description provided for @precipitationNone.
   ///
   /// In en, this message translates to:

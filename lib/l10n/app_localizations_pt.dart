@@ -1069,6 +1069,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get exportingPleaseWait => 'Exportando, aguarde...';
 
   @override
+  String get errorTitle => 'Erro';
+
+  @override
   String get precipitationNone => 'Nenhuma';
 
   @override
@@ -2325,6 +2328,9 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get exportingPleaseWait => 'Exportando, aguarde...';
+
+  @override
+  String get errorTitle => 'Erro';
 
   @override
   String get precipitationNone => 'Nenhuma';

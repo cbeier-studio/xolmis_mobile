@@ -88,15 +88,28 @@ Future<void> exportAllInventoriesToJson(BuildContext context, InventoryProvider 
     );
   } catch (error) {
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Row(
-        children: [
-          Icon(Icons.error_outlined, color: Colors.red),
-          SizedBox(width: 8),
-          Text(S.current.errorExportingInventory(2, error.toString())),
-        ],
-      ),
-      ),
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Row(
+            children: [
+              const Icon(Icons.error_outlined, color: Colors.red),
+              const SizedBox(width: 10),
+              Text(S.current.errorTitle),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Text(S.current.errorExportingInventory(1, error.toString())),
+          ),
+          actions: [
+            TextButton(
+              child: Text(S.of(context).ok),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        );
+      },
     );
   } finally {
     // Ensure the dialog is always closed if it was shown and an error occurred,
@@ -132,84 +145,33 @@ Future<void> exportInventoryToJson(BuildContext context, Inventory inventory, bo
     }
   } catch (error) {
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Row(
-        children: [
-          Icon(Icons.error_outlined, color: Colors.red),
-          SizedBox(width: 8),
-          Text(S.current.errorExportingInventory(1, error.toString())),
-        ],
-      ),
-      ),
-    );
-  }
-}
-
-Future<void> exportInventoryToCsv(BuildContext context, Inventory inventory, bool shareIt) async {
-  showDialog(
-    context: context,
-    barrierDismissible: false,
-    builder: (BuildContext context) {
-      return Dialog(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Row(
             children: [
-              CircularProgressIndicator(),
-              SizedBox(width: 16),
-              Text(S.current.exportingPleaseWait),
+              const Icon(Icons.error_outlined, color: Colors.red),
+              const SizedBox(width: 10),
+              Text(S.current.errorTitle),
             ],
           ),
-        ),
-      );
-    },
-  );
-  try {
-    final locale = Localizations.localeOf(context);
-
-    // 1. Create a list of data for the CSV
-    List<List<dynamic>> rows = await buildInventoryRows(inventory, locale);
-
-    // 2. Convert the list of data to CSV
-    String csv = const ListToCsvConverter().convert(rows, fieldDelimiter: ';', convertNullTo: '');
-
-    // 3. Create the file in a temporary directory
-    Directory tempDir = await getTemporaryDirectory();
-    final filePath = '${tempDir.path}/inventory_${inventory.id}.csv';
-    final file = File(filePath);
-    await file.writeAsString(csv);
-
-    // 4. Share the file using share_plus
-    if (shareIt) {
-      await SharePlus.instance.share(
-        ShareParams(
-          files: [XFile(filePath, mimeType: 'text/csv')],
-          text: S.current.inventoryExported(1),
-          subject: '${S.current.inventoryExported(1)} ${inventory.id}'
-        ),
-      );
-    } 
-  } catch (error) {
-    if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Row(
-        children: [
-          Icon(Icons.error_outlined, color: Colors.red),
-          SizedBox(width: 8),
-          Text(S.current.errorExportingInventory(1, error.toString())),
-        ],
-      ),
-      ),
+          content: SingleChildScrollView(
+            child: Text(S.current.errorExportingInventory(1, error.toString())),
+          ),
+          actions: [
+            TextButton(
+              child: Text(S.of(context).ok),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        );
+      },
     );
-  } finally {
-    if (context.mounted) {
-      Navigator.of(context).pop(); // Dismiss the loading dialog
-    }
   }
 }
 
-// Add inventory data to CSV rows
+// Add inventory data to list of rows
 Future<List<List>> buildInventoryRows(Inventory inventory, Locale locale) async {
   const List<String> inventoryHeaders = ['ID','Type','Duration',
     'Max of species','Start date','Start time','End date','End time',
@@ -316,6 +278,7 @@ Future<List<List>> buildInventoryRows(Inventory inventory, Locale locale) async 
   return rows;
 }
 
+// Convert to CellValue based on value type
 CellValue _convertToCellValue(dynamic val) {
   if (val == null) {
     return TextCellValue('');
@@ -342,6 +305,7 @@ CellValue _convertToCellValue(dynamic val) {
   return TextCellValue(val.toString());
 }
 
+// Convert lists of dynamic to lists of CellValue to use in Excel
 List<List<CellValue>> convertRowsToCellValues(List<List<dynamic>> dynamicRows) {
   List<List<CellValue>> cellValueRows = [];
   for (var dynamicRow in dynamicRows) {
@@ -354,29 +318,9 @@ List<List<CellValue>> convertRowsToCellValues(List<List<dynamic>> dynamicRows) {
   return cellValueRows;
 }
 
-Future<void> exportInventoryToExcel(BuildContext context, Inventory inventory, bool shareIt) async {
-  showDialog(
-    context: context,
-    barrierDismissible: false,
-    builder: (BuildContext context) {
-      return Dialog(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CircularProgressIndicator(),
-              SizedBox(width: 16),
-              Text(S.current.exportingPleaseWait),
-            ],
-          ),
-        ),
-      );
-    },
-  );
+// Export an inventory to a Excel file, returns the file path
+Future<String> exportInventoryToExcel(BuildContext context, Inventory inventory, Locale locale) async {
   try {
-    final locale = Localizations.localeOf(context);
-
     // 1. Create a list of data
     List<List<dynamic>> rows = await buildInventoryRows(inventory, locale);
     List<List<CellValue>> cellRows = convertRowsToCellValues(rows);
@@ -393,38 +337,88 @@ Future<void> exportInventoryToExcel(BuildContext context, Inventory inventory, b
     var fileBytes = excel.save();
     Directory tempDir = await getTemporaryDirectory();
     final filePath = '${tempDir.path}/inventory_${inventory.id}.xlsx';
-    if (fileBytes != null) {
+    // if (sheet.rows.isNotEmpty) {
       File(filePath)
-        ..createSync(recursive: true)
-        ..writeAsBytesSync(fileBytes);
-    }
+        ..create(recursive: true)
+        ..writeAsBytes(fileBytes!);
+      return filePath; // Return the file path for further use
+    // } else {
+      // throw Exception('Failed to generate Excel file.');
+    // }
+  } catch (error) {
+    if (!context.mounted) return '';
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Row(
+            children: [
+              const Icon(Icons.error_outlined, color: Colors.red),
+              const SizedBox(width: 10),
+              Text(S.current.errorTitle),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Text(S.current.errorExportingInventory(1, error.toString())),
+          ),
+          actions: [
+            TextButton(
+              child: Text(S.of(context).ok),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        );
+      },
+    );
+    return '';
+  }
+}
 
-    // 4. Share the file using share_plus
-    if (shareIt) {
-      await SharePlus.instance.share(
-        ShareParams(
-            files: [XFile(filePath, mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')],
-            text: S.current.inventoryExported(1),
-            subject: '${S.current.inventoryExported(1)} ${inventory.id}'
-        ),
-      );
+// Export an inventory to a CSV file
+Future<String> exportInventoryToCsv(BuildContext context, Inventory inventory, Locale locale) async {
+  try {
+    // 1. Create a list of data 
+    List<List<dynamic>> rows = await buildInventoryRows(inventory, locale);
+
+    // 2. Convert the list of data to CSV
+    String csv = const ListToCsvConverter().convert(rows, fieldDelimiter: ';', convertNullTo: '');
+
+    // 3. Create the file in a temporary directory
+    Directory tempDir = await getTemporaryDirectory();
+    final filePath = '${tempDir.path}/inventory_${inventory.id}.csv';
+    if (csv.isNotEmpty) {
+      final file = File(filePath);
+      await file.writeAsString(csv);
+      return filePath;
+    } else {
+      throw Exception('Failed to generate CSV file.');
     }
   } catch (error) {
-    if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Row(
-        children: [
-          Icon(Icons.error_outlined, color: Colors.red),
-          SizedBox(width: 8),
-          Text(S.current.errorExportingInventory(1, error.toString())),
-        ],
-      ),
-      ),
+    if (!context.mounted) return '';
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Row(
+            children: [
+              const Icon(Icons.error_outlined, color: Colors.red),
+              const SizedBox(width: 10),
+              Text(S.current.errorTitle),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Text(S.current.errorExportingInventory(1, error.toString())),
+          ),
+          actions: [
+            TextButton(
+              child: Text(S.of(context).ok),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        );
+      },
     );
-  } finally {
-    if (context.mounted) {
-      Navigator.of(context).pop(); // Dismiss the loading dialog
-    }
+    return '';
   }
 }
 
@@ -481,15 +475,28 @@ Future<void> exportAllInactiveNestsToJson(BuildContext context) async {
     );
   } catch (error) {
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Row(
-        children: [
-          Icon(Icons.error_outlined, color: Colors.red),
-          SizedBox(width: 8),
-          Text(S.current.errorExportingNest(2, error.toString())),
-        ],
-      ),
-      ),
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Row(
+            children: [
+              const Icon(Icons.error_outlined, color: Colors.red),
+              const SizedBox(width: 10),
+              Text(S.current.errorTitle),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Text(S.current.errorExportingNest(1, error.toString())),
+          ),
+          actions: [
+            TextButton(
+              child: Text(S.of(context).ok),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        );
+      },
     );
   } finally {
     // Ensure the dialog is always closed if it was shown and an error occurred,
@@ -522,78 +529,149 @@ Future<void> exportNestToJson(BuildContext context, Nest nest) async {
     );
   } catch (error) {
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Row(
-        children: [
-          Icon(Icons.error_outlined, color: Colors.red),
-          SizedBox(width: 8),
-          Text(S.current.errorExportingNest(1, error.toString())),
-        ],
-      ),
-      ),
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Row(
+            children: [
+              const Icon(Icons.error_outlined, color: Colors.red),
+              const SizedBox(width: 10),
+              Text(S.current.errorTitle),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Text(S.current.errorExportingNest(1, error.toString())),
+          ),
+          actions: [
+            TextButton(
+              child: Text(S.of(context).ok),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        );
+      },
     );
   }
 }
 
-Future<void> exportNestToCsv(BuildContext context, Nest nest) async {
+Future<String> exportNestToCsv(BuildContext context, Nest nest, Locale locale) async {
   try {
-    final locale = Localizations.localeOf(context);
     // 1. Create a list of data for the CSV
-    List<List<dynamic>> rows = await buildNestCsvRows(nest, locale);
+    List<List<dynamic>> rows = await buildNestRows(nest, locale);
 
     // 2. Convert the list of data to CSV
     String csv = const ListToCsvConverter().convert(rows, fieldDelimiter: ';', convertNullTo: '');
 
     // 3. Create the file in a temporary directory
     Directory tempDir = await getTemporaryDirectory();
-    final filePath = '${tempDir.path}/nest_${nest.id}.csv';
-    final file = File(filePath);
-    await file.writeAsString(csv);
-
-    // 4. Share the file using share_plus
-    await SharePlus.instance.share(
-      ShareParams(
-        files: [XFile(filePath, mimeType: 'text/csv')], 
-        text: S.current.nestExported(1), 
-        subject: '${S.current.nestData(1)} ${nest.id}'
-      ),
-    );
+    final filePath = '${tempDir.path}/nest_${nest.fieldNumber}.csv';
+    if (csv.isNotEmpty) {
+      final file = File(filePath);
+      await file.writeAsString(csv);
+      return filePath;
+    } else {
+      throw Exception('Failed to generate CSV file.');
+    }    
   } catch (error) {
-    if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Row(
-        children: [
-          Icon(Icons.error_outlined, color: Colors.red),
-          SizedBox(width: 8),
-          Text(S.current.errorExportingNest(1, error.toString())),
-        ],
-      ),
-      ),
+    if (!context.mounted) return '';
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Row(
+            children: [
+              const Icon(Icons.error_outlined, color: Colors.red),
+              const SizedBox(width: 10),
+              Text(S.current.errorTitle),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Text(S.current.errorExportingNest(1, error.toString())),
+          ),
+          actions: [
+            TextButton(
+              child: Text(S.of(context).ok),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        );
+      },
     );
+    return '';
+  }
+}
+
+// Export a nest to an Excel file, returns the file path
+Future<String> exportNestToExcel(BuildContext context, Nest nest, Locale locale) async {
+  try {
+    // 1. Create a list of data
+    List<List<dynamic>> rows = await buildNestRows(nest, locale);
+    List<List<CellValue>> cellRows = convertRowsToCellValues(rows);
+
+    // 2. Convert the list of data to Excel
+    final excel = Excel.createExcel();
+    final Sheet sheet = excel['Sheet1'];
+
+    for (List<CellValue> row in cellRows) {
+      sheet.appendRow(row);
+    }
+
+    // 3. Create the file in a temporary directory
+    var fileBytes = excel.save();
+    Directory tempDir = await getTemporaryDirectory();
+    final filePath = '${tempDir.path}/nest_${nest.fieldNumber}.xlsx';
+    if (fileBytes != null) {
+      File(filePath)
+        ..create(recursive: true)
+        ..writeAsBytes(fileBytes);
+      return filePath; // Return the file path for further use
+    } else {
+      throw Exception('Failed to generate Excel file.');
+    }
+  } catch (error) {
+    if (!context.mounted) return '';
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Row(
+            children: [
+              const Icon(Icons.error_outlined, color: Colors.red),
+              const SizedBox(width: 10),
+              Text(S.current.errorTitle),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Text(S.current.errorExportingNest(1, error.toString())),
+          ),
+          actions: [
+            TextButton(
+              child: Text(S.of(context).ok),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        );
+      },
+    );
+    return '';
   }
 }
 
 // Add nest data to CSV rows
-Future<List<List>> buildNestCsvRows(Nest nest, Locale locale) async {
+Future<List<List>> buildNestRows(Nest nest, Locale locale) async {
+  const nestHeaders = ['Field number','Species','Locality','Longitude','Latitude',
+    'Date found','Support','Height above ground','Male','Female','Helpers',
+    'Last date','Fate'];
+  const revisionHeaders = ['Date/Time','Status','Phase','Host eggs','Host nestlings',
+    'Nidoparasite eggs','Nidoparasite nestlings','Has Philornis larvae','Notes'];
+  const eggHeaders = ['Date/Time','Field number','Species','Egg shape',
+    'Width','Length','Weight'];
   final numberFormat = NumberFormat.decimalPattern(locale.toString())..maximumFractionDigits = 7;
   List<List<dynamic>> rows = [];
   final prefs = await SharedPreferences.getInstance();
   final formatNumbers = prefs.getBool('formatNumbers') ?? true;
-  rows.add([
-    'Field number',
-    'Species',
-    'Locality',
-    'Longitude',
-    'Latitude',
-    'Date found',
-    'Support',
-    'Height above ground',
-    'Male',
-    'Female',
-    'Helpers',
-    'Last date',
-    'Fate',
-  ]);
+  rows.add(nestHeaders);
   rows.add([
     nest.fieldNumber,
     nest.speciesName,
@@ -611,19 +689,9 @@ Future<List<List>> buildNestCsvRows(Nest nest, Locale locale) async {
   ]);
   
   // Add nest revision data
-  rows.add([]); // Empty line as separator
+  rows.add(['']); // Empty line as separator
   rows.add(['REVISIONS']);
-  rows.add([
-    'Date/Time',
-    'Status',
-    'Phase',
-    'Host eggs',
-    'Host nestlings',
-    'Nidoparasite eggs',
-    'Nidoparasite nestlings',
-    'Has Philornis larvae',
-    'Notes',
-  ]);
+  rows.add(revisionHeaders);
   for (var revision in nest.revisionsList ?? []) {
     rows.add([
       revision.sampleTime != null ? DateFormat('dd/MM/yyyy HH:mm:ss').format(revision.sampleTime!) : '',
@@ -639,17 +707,9 @@ Future<List<List>> buildNestCsvRows(Nest nest, Locale locale) async {
   }
   
   // Add egg data
-  rows.add([]);
+  rows.add(['']);
   rows.add(['EGGS']);
-  rows.add([
-    'Date/Time',
-    'Field number',
-    'Species',
-    'Egg shape',
-    'Width',
-    'Length',
-    'Weight',
-  ]);
+  rows.add(eggHeaders);
   for (var egg in nest.eggsList ?? []) {
     rows.add([
       egg.sampleTime != null ? DateFormat('dd/MM/yyyy HH:mm:ss').format(egg.sampleTime!) : '',
@@ -718,15 +778,28 @@ Future<void> exportAllSpecimensToJson(BuildContext context, List<Specimen> speci
     );
   } catch (error) {
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Row(
-        children: [
-          Icon(Icons.error_outlined, color: Colors.red),
-          SizedBox(width: 8),
-          Text(S.current.errorExportingSpecimen(2, error.toString())),
-        ],
-      ),
-      ),
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Row(
+            children: [
+              const Icon(Icons.error_outlined, color: Colors.red),
+              const SizedBox(width: 10),
+              Text(S.current.errorTitle),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Text(S.current.errorExportingSpecimen(1, error.toString())),
+          ),
+          actions: [
+            TextButton(
+              child: Text(S.of(context).ok),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        );
+      },
     );
   } finally {
     // Ensure the dialog is always closed if it was shown and an error occurred,
@@ -769,7 +842,7 @@ Future<void> exportAllSpecimensToCsv(BuildContext context, List<Specimen> specim
     final locale = Localizations.localeOf(context);
 
     // 1. Create a list of data for the CSV
-    List<List<dynamic>> rows = await buildSpecimensCsvRows(specimenList, locale);
+    List<List<dynamic>> rows = await buildSpecimensRows(specimenList, locale);
 
     // 2. Convert the list of data to CSV
     String csv = const ListToCsvConverter().convert(rows, fieldDelimiter: ';', convertNullTo: '');
@@ -797,15 +870,134 @@ Future<void> exportAllSpecimensToCsv(BuildContext context, List<Specimen> specim
     );
   } catch (error) {
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Row(
-        children: [
-          Icon(Icons.error_outlined, color: Colors.red),
-          SizedBox(width: 8),
-          Text(S.current.errorExportingSpecimen(2, error.toString())),
-        ],
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Row(
+            children: [
+              const Icon(Icons.error_outlined, color: Colors.red),
+              const SizedBox(width: 10),
+              Text(S.current.errorTitle),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Text(S.current.errorExportingSpecimen(1, error.toString())),
+          ),
+          actions: [
+            TextButton(
+              child: Text(S.of(context).ok),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        );
+      },
+    );
+  } finally {
+    // Ensure the dialog is always closed if it was shown and an error occurred,
+    // or if the function returned early while the dialog was up.
+    if (isDialogShown && context.mounted) {
+      Navigator.of(context).pop();
+    }
+  }
+}
+
+Future<void> exportAllSpecimensToExcel(BuildContext context, List<Specimen> specimenList) async {
+  bool isDialogShown = false;
+
+  try {
+    // Show a loading dialog
+      if (!context.mounted) return;
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Dialog(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CircularProgressIndicator(year2023: false,),
+                  SizedBox(width: 16),
+                  Text(S.current.exporting),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+      isDialogShown = true;
+
+      final locale = Localizations.localeOf(context);
+
+    // 1. Create a list of data
+    List<List<dynamic>> rows = await buildSpecimensRows(specimenList, locale);
+    List<List<CellValue>> cellRows = convertRowsToCellValues(rows);
+
+    // 2. Convert the list of data to Excel
+    final excel = Excel.createExcel();
+    final Sheet sheet = excel['Sheet1'];
+
+    for (List<CellValue> row in cellRows) {
+      sheet.appendRow(row);
+    }
+
+    // 3. Create the file in a temporary directory
+    final now = DateTime.now();
+    final formatter = DateFormat('yyyyMMdd_HHmmss');
+    final formattedDate = formatter.format(now);
+    
+    var fileBytes = excel.save();
+    Directory tempDir = await getTemporaryDirectory();
+    final filePath = '${tempDir.path}/specimens_$formattedDate.xlsx';
+    if (fileBytes != null) {
+      File(filePath)
+        ..create(recursive: true)
+        ..writeAsBytes(fileBytes);
+
+      if (isDialogShown) {
+        if (context.mounted) {
+          Navigator.of(context).pop();
+        }
+        isDialogShown = false; // Dialog is now closed
+      }
+    } else {
+      throw Exception('Failed to generate Excel file.');
+    }
+
+    // 4. Share the file using share_plus
+    await SharePlus.instance.share(
+      ShareParams(
+        files: [XFile(filePath, mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')], 
+        text: S.current.specimenExported(2), 
+        subject: S.current.specimenData(2)
       ),
-      ),
+    );
+  } catch (error) {
+    if (!context.mounted) return;
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Row(
+            children: [
+              const Icon(Icons.error_outlined, color: Colors.red),
+              const SizedBox(width: 10),
+              Text(S.current.errorTitle),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Text(S.current.errorExportingSpecimen(1, error.toString())),
+          ),
+          actions: [
+            TextButton(
+              child: Text(S.of(context).ok),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        );
+      },
     );
   } finally {
     // Ensure the dialog is always closed if it was shown and an error occurred,
@@ -817,21 +1009,15 @@ Future<void> exportAllSpecimensToCsv(BuildContext context, List<Specimen> specim
 }
 
 // Add specimens data to CSV rows
-Future<List<List>> buildSpecimensCsvRows(List<Specimen> specimenList, Locale locale) async {
+Future<List<List>> buildSpecimensRows(List<Specimen> specimenList, Locale locale) async {
+  const specimenHeaders = ['Date/Time','Field number','Species','Type','Locality',
+    'Longitude','Latitude','Notes'];
   final numberFormat = NumberFormat.decimalPattern(locale.toString())..maximumFractionDigits = 7;
   List<List<dynamic>> rows = [];
   final prefs = await SharedPreferences.getInstance();
   final formatNumbers = prefs.getBool('formatNumbers') ?? true;
-  rows.add([
-    'Date/Time',
-    'Field number',
-    'Species',
-    'Type',
-    'Locality',
-    'Longitude',
-    'Latitude',
-    'Notes',
-  ]);
+
+  rows.add(specimenHeaders);
   for (var specimen in specimenList) {
     rows.add([
       specimen.sampleTime != null ? DateFormat('dd/MM/yyyy HH:mm:ss').format(specimen.sampleTime!) : '',

@@ -2828,6 +2828,16 @@ class S {
     );
   }
 
+  /// `Error`
+  String get errorTitle {
+    return Intl.message(
+      'Error',
+      name: 'errorTitle',
+      desc: 'Error title',
+      args: [],
+    );
+  }
+
   /// `None`
   String get precipitationNone {
     return Intl.message('None', name: 'precipitationNone', desc: '', args: []);
