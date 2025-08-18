@@ -225,7 +225,8 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
-        return BottomSheet(
+        return SafeArea(
+          child: BottomSheet(
           onClosing: () {},
           builder: (BuildContext context) {
             return Container(
@@ -271,6 +272,7 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
               ),
             );
           },
+          ),
         );
       },
     );

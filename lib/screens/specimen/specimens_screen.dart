@@ -842,7 +842,8 @@ class SpecimensScreenState extends State<SpecimensScreen> {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
-        return BottomSheet(
+        return SafeArea(
+          child: BottomSheet(
           onClosing: () {},
           builder: (BuildContext context) {
             return Container(
@@ -924,6 +925,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
               ),
             );
           },
+          ),
         );
       },
     );

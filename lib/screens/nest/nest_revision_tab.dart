@@ -259,7 +259,8 @@ class _NestRevisionsTabState extends State<NestRevisionsTab>
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
-        return BottomSheet(
+        return SafeArea(
+          child: BottomSheet(
           onClosing: () {},
           builder: (BuildContext context) {
             return Container(
@@ -320,6 +321,7 @@ class _NestRevisionsTabState extends State<NestRevisionsTab>
               ),
             );
           },
+          ),
         );
       },
     );

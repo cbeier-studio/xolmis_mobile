@@ -65,11 +65,13 @@ class StatisticsScreenState extends State<StatisticsScreen>
           tabs: [Tab(text: S.current.general), Tab(text: S.current.perSpecies)],
         ),
       ),
-      body: TabBarView(
+      body: SafeArea(
+        child: TabBarView(
         controller: _tabController,
         dragStartBehavior: DragStartBehavior.down,
         physics: NeverScrollableScrollPhysics(),
         children: [GeneralStatisticsTab(), PerSpeciesStatisticsTab()],
+      ),
       ),
     );
   }

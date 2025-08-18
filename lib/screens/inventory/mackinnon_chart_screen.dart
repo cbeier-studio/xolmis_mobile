@@ -17,7 +17,8 @@ class MackinnonChartScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(S.of(context).speciesAccumulationCurve),
       ),
-      body: Padding(
+      body: SafeArea(
+        child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: LineChart(
           LineChartData(
@@ -87,6 +88,7 @@ class MackinnonChartScreen extends StatelessWidget {
             ),
           ),
         ),
+      ),
       ),
     );
   }

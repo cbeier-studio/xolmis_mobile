@@ -1326,7 +1326,8 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
-        return BottomSheet(
+        return SafeArea(
+        child: BottomSheet(
           onClosing: () {},
           builder: (BuildContext context) {
             return Container(
@@ -1476,6 +1477,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
               ),
             );
           },
+        ),
         );
       },
     );

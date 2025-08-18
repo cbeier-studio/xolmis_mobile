@@ -15,7 +15,8 @@ class SpeciesCountChartScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(S.current.speciesCounted),
       ),
-      body: Center(
+      body: SafeArea(
+        child: Center(
         child: Container(
           // height: 400,
           padding: EdgeInsets.all(16),
@@ -102,6 +103,7 @@ class SpeciesCountChartScreen extends StatelessWidget {
             ),
           ),
         ),
+      ),
       ),
     );
   }

@@ -519,7 +519,8 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
-        return BottomSheet(
+        return SafeArea(
+          child: BottomSheet(
           onClosing: () {},
           builder: (BuildContext context) {
             return Container(
@@ -625,6 +626,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
               ),
             );
           },
+          ),
         );
       },
     );

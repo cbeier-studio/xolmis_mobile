@@ -78,7 +78,8 @@ class _SpeciesChartScreenState extends State<SpeciesChartScreen> {
       appBar: AppBar(
         title: Text(S.of(context).speciesAccumulationCurve),        
       ),
-      body: Padding(
+      body: SafeArea(
+        child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: speciesAccumulationData.isEmpty
           // Show a message if there is no data
@@ -149,6 +150,7 @@ class _SpeciesChartScreenState extends State<SpeciesChartScreen> {
             ],
           ),
         ),
+      ),
       ),
     );
   }

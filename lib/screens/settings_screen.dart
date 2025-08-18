@@ -75,7 +75,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
       appBar: AppBar(
         title: Text(S.of(context).settings),
       ),
-      body: SettingsList(
+      body: SafeArea(
+        child: SettingsList(
         lightTheme: SettingsThemeData(
           settingsListBackground: ThemeData.light().scaffoldBackgroundColor,
           titleTextColor: Colors.deepPurple,
@@ -377,6 +378,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           //       }),
           // ]),
         ],
+      ),
       ),
     );
   }

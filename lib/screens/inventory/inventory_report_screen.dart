@@ -32,7 +32,8 @@ class InventoryReportScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: SingleChildScrollView(
+      body: SafeArea(
+        child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
@@ -42,6 +43,7 @@ class InventoryReportScreen extends StatelessWidget {
             rows: _buildRows(speciesSet, reportData),
           ),
         ),
+      ),
       ),
     );
   }

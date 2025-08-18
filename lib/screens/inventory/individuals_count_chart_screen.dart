@@ -20,7 +20,8 @@ class IndividualsCountChartScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(S.current.individualsCounted),
       ),
-      body: Padding(
+      body: SafeArea(
+        child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: BarChart(
             BarChartData(
@@ -99,6 +100,7 @@ class IndividualsCountChartScreen extends StatelessWidget {
             ),
           ),
         ),
+      ),
     );
   }
 

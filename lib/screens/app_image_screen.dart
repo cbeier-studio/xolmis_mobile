@@ -141,7 +141,8 @@ class _AppImageScreenState extends State<AppImageScreen> {
       appBar: AppBar(
         title: Text(S.of(context).images(2)),
       ),
-      body: Consumer<AppImageProvider>(
+      body: SafeArea(
+        child: Consumer<AppImageProvider>(
           builder: (context, appImageProvider, child) {
             final images = appImageProvider.images;
             if (images.isEmpty) {
@@ -172,6 +173,7 @@ class _AppImageScreenState extends State<AppImageScreen> {
               );
             }
           }
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
@@ -285,7 +287,8 @@ class _AppImageScreenState extends State<AppImageScreen> {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
-        return BottomSheet(
+        return SafeArea(
+          child: BottomSheet(
           onClosing: () {},
           builder: (BuildContext context) {
             return Container(
@@ -359,6 +362,7 @@ class _AppImageScreenState extends State<AppImageScreen> {
               ),
             );
           },
+          ),
         );
       },
     );
