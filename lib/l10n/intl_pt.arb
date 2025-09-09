@@ -973,6 +973,56 @@
         "type": "text",
         "description": "Error title"
     },
+    "warningTitle": "Aviso",
+    "@warningTitle": {
+        "type": "text",
+        "description": "Warning title"
+    },
+    "remindMissingVegetationData": "Lembrar dados faltantes de vegetação",
+    "@remindMissingVegetationData": {
+        "type": "text",
+        "description": "Settings option to remind missing vegetation data"
+    },
+    "remindMissingWeatherData": "Lembrar dados faltantes do tempo",
+    "@remindMissingWeatherData": {
+        "type": "text",
+        "description": "Settings option to remind missing weather data"
+    },
+    "missingVegetationData": "Não há dados de vegetação.",
+    "@missingVegetationData": {
+        "type": "text",
+        "description": "Message shown when there is no vegetation data"
+    },
+    "missingWeatherData": "Não há dados do tempo.",
+    "@missingWeatherData": {
+        "type": "text",
+        "description": "Message shown when there is no weather data"
+    },
+    "addButton": "Adicionar",
+    "@addButton": {
+        "type": "text",
+        "description": "Add button label"
+    },
+    "ignoreButton": "Ignorar",
+    "@ignoreButton": {
+        "type": "text",
+        "description": "Ignore button label"
+    },
+    "observerAbbreviationMissing": "Sigla do observador não encontrada. Adicione-a nas configurações.",
+    "@observerAbbreviationMissing": {
+        "type": "text",
+        "description": "Message shown when the observer abbreviation is missing"
+    },
+    "invalidNumericValue": "Valor inválido",
+    "@invalidNumericValue": {
+        "type": "text",
+        "description": "Message shown when the value is not a number"
+    },
+    "nestRevisionsMissing": "Não há revisões para este ninho. Adicione ao menos uma revisão.",
+    "@nestRevisionsMissing": {
+        "type": "text",
+        "description": "Message shown when there are no revisions for a nest"
+    },
     "precipitationNone": "Nenhuma",
     "precipitationFog": "Névoa",
     "precipitationMist": "Neblina",

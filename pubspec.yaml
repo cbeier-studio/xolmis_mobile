@@ -14,20 +14,20 @@ dependencies:
   flutter_localizations: 
     sdk: flutter
   intl: ^0.20.2
-  intl_utils: ^2.8.10
+  intl_utils: ^2.8.11
 
   # UI dependencies
   cupertino_icons: ^1.0.8
-  flutter_local_notifications: ^19.3.1
-  side_sheet: ^1.0.4
+  flutter_local_notifications: ^19.4.1
+  side_sheet: ^1.0.4+1
   flutter_speed_dial: ^7.0.0
   settings_ui: ^2.0.2
-  fleather: ^1.24.0+1
+  fleather: ^1.25.1
   fl_chart: ^1.0.0
   numberpicker: ^2.1.2
-  image_picker: ^1.1.2
-  file_picker: ^10.2.0
-  share_plus: ^11.0.0
+  image_picker: ^1.2.0
+  file_picker: ^10.3.2
+  share_plus: ^11.1.0
 #  timelines_plus: ^1.0.6
 
   # Data and persistence dependencies
@@ -37,14 +37,14 @@ dependencies:
   excel: ^4.0.6
 
   # State management
-  provider: ^6.1.5
+  provider: ^6.1.5+1
   
   # Other dependencies
   path: ^1.9.1
   path_provider: ^2.1.5
   permission_handler: ^12.0.1  
   geolocator: ^14.0.2
-  package_info_plus: ^8.3.0
+  package_info_plus: ^8.3.1
   workmanager: 
     git:
       url: https://github.com/fluttercommunity/flutter_workmanager.git
@@ -61,6 +61,9 @@ dev_dependencies:
   flutter_lints: ^6.0.0
 
   flutter_launcher_icons: ^0.14.4
+
+dependency_overrides:
+  vector_math: 2.2.0
 
 flutter:
   uses-material-design: true

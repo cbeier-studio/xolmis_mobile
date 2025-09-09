@@ -21,7 +21,11 @@ class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'pt_BR';
 
   static String m0(howMany, gender, what) =>
-      "Tem certeza que deseja excluir ${Intl.plural(howMany, one: '${Intl.gender(gender, female: 'esta', male: 'este', other: 'este(a)')}', other: '${Intl.gender(gender, female: 'estas', male: 'estes', other: 'estes(as)')}')} ${what}?";
+      "Tem certeza que deseja excluir ${Intl.plural(
+        howMany,
+        one: '${Intl.gender(gender, female: 'esta', male: 'este', other: 'este(a)')}',
+        other: '${Intl.gender(gender, female: 'estas', male: 'estes', other: 'estes(as)')}',
+      )} ${what}?";
 
   static String m1(speciesName) =>
       "Deseja remover a espécie ${speciesName} dos outros inventários ativos?";
@@ -112,6 +116,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
     "about": MessageLookupByLibrary.simpleMessage("Sobre o app"),
     "active": MessageLookupByLibrary.simpleMessage("Ativos"),
+    "addButton": MessageLookupByLibrary.simpleMessage("Adicionar"),
     "addCoordinates": MessageLookupByLibrary.simpleMessage(
       "Adicionar coordenadas",
     ),
@@ -362,6 +367,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "herbs": MessageLookupByLibrary.simpleMessage("Herbáceas"),
     "host": MessageLookupByLibrary.simpleMessage("Hospedeiro"),
+    "ignoreButton": MessageLookupByLibrary.simpleMessage("Ignorar"),
     "imageDetails": MessageLookupByLibrary.simpleMessage("Detalhes da imagem"),
     "images": m9,
     "import": MessageLookupByLibrary.simpleMessage("Importar"),
@@ -406,6 +412,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "intervaledQualitativeLists": MessageLookupByLibrary.simpleMessage(
       "Listas qualitativas por intervalo",
+    ),
+    "invalidNumericValue": MessageLookupByLibrary.simpleMessage(
+      "Valor inválido",
     ),
     "inventories": MessageLookupByLibrary.simpleMessage("Inventários"),
     "inventory": m11,
@@ -462,6 +471,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "maleNameOrId": MessageLookupByLibrary.simpleMessage("Nome ou ID do macho"),
     "maxSpecies": MessageLookupByLibrary.simpleMessage("Máx. espécies"),
     "minutes": m17,
+    "missingVegetationData": MessageLookupByLibrary.simpleMessage(
+      "Não há dados de vegetação.",
+    ),
+    "missingWeatherData": MessageLookupByLibrary.simpleMessage(
+      "Não há dados do tempo.",
+    ),
     "mustBeBiggerThanFive": MessageLookupByLibrary.simpleMessage(
       "Deve ser maior ou igual a 5",
     ),
@@ -475,6 +490,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "nestInfo": MessageLookupByLibrary.simpleMessage("Informações do ninho"),
     "nestPhase": MessageLookupByLibrary.simpleMessage("Estágio"),
     "nestRevision": MessageLookupByLibrary.simpleMessage("Revisão de ninho"),
+    "nestRevisionsMissing": MessageLookupByLibrary.simpleMessage(
+      "Não há revisões para este ninho. Adicione ao menos uma revisão.",
+    ),
     "nestStageBuilding": MessageLookupByLibrary.simpleMessage("Construção"),
     "nestStageHatching": MessageLookupByLibrary.simpleMessage("Eclosão"),
     "nestStageInactive": MessageLookupByLibrary.simpleMessage("Inativo"),
@@ -543,6 +561,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "observerAbbreviation": MessageLookupByLibrary.simpleMessage(
       "Sigla do observador",
     ),
+    "observerAbbreviationMissing": MessageLookupByLibrary.simpleMessage(
+      "Sigla do observador não encontrada. Adicione-a nas configurações.",
+    ),
     "observerSetting": MessageLookupByLibrary.simpleMessage(
       "Observador (sigla)",
     ),
@@ -585,6 +606,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "recordsPerYear": MessageLookupByLibrary.simpleMessage("Registros por ano"),
     "refreshList": MessageLookupByLibrary.simpleMessage("Atualizar"),
+    "remindMissingVegetationData": MessageLookupByLibrary.simpleMessage(
+      "Lembrar dados faltantes de vegetação",
+    ),
+    "remindMissingWeatherData": MessageLookupByLibrary.simpleMessage(
+      "Lembrar dados faltantes do tempo",
+    ),
     "removeSpeciesFromSample": MessageLookupByLibrary.simpleMessage(
       "Remover da amostra",
     ),
@@ -706,6 +733,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "vegetationData": MessageLookupByLibrary.simpleMessage(
       "Dados de vegetação",
     ),
+    "warningTitle": MessageLookupByLibrary.simpleMessage("Aviso"),
     "weather": MessageLookupByLibrary.simpleMessage("Tempo"),
     "weatherData": MessageLookupByLibrary.simpleMessage("Dados do tempo"),
     "weatherRecord": MessageLookupByLibrary.simpleMessage("registro do tempo"),

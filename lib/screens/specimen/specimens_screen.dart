@@ -7,6 +7,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/models/specimen.dart';
 import '../../data/models/app_image.dart';
@@ -100,7 +101,33 @@ class SpecimensScreenState extends State<SpecimensScreen> {
     return _sortSpecimens(filteredSpecimens);
   }
 
-  void _showAddSpecimenScreen(BuildContext context) {
+  void _showAddSpecimenScreen(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    final String observerAbbreviation = prefs.getString('observerAcronym') ?? '';
+
+    if (observerAbbreviation.isEmpty) {
+      if (context.mounted) {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog.adaptive(
+              title: Text(S.of(context).warningTitle),
+              content: Text(S.of(context).observerAbbreviationMissing),
+              actions: <Widget>[
+                TextButton(
+                  child: Text(S.of(context).ok),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
+      return;
+    }
+
     if (MediaQuery.sizeOf(context).width > 600) {
       showDialog(
         context: context,

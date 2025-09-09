@@ -27,6 +27,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   int _intervalsDuration = 10;
   String _observerAbbreviation = '';
   bool _formatNumbers = true;
+  bool _remindVegetationEmpty = false;
+  bool _remindWeatherEmpty = false;
   PackageInfo? _packageInfo;
 
   @override
@@ -53,6 +55,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
       _intervalsDuration = prefs.getInt('intervalsDuration') ?? 10;
       _observerAbbreviation = prefs.getString('observerAcronym') ?? '';
       _formatNumbers = prefs.getBool('formatNumbers') ?? true;
+      _remindVegetationEmpty = prefs.getBool('remindVegetationEmpty') ?? false;
+      _remindWeatherEmpty = prefs.getBool('remindWeatherEmpty') ?? false;
     });
   }
 
@@ -67,6 +71,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
     await prefs.setInt('intervalsDuration', _intervalsDuration);
     await prefs.setString('observerAcronym', _observerAbbreviation);
     await prefs.setBool('formatNumbers', _formatNumbers);
+    await prefs.setBool('remindVegetationEmpty', _remindVegetationEmpty);
+    await prefs.setBool('remindWeatherEmpty', _remindWeatherEmpty);
   }
 
   @override
@@ -257,6 +263,28 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   });
                   _saveSettings();
                 }
+              },
+            ),
+            SettingsTile.switchTile(
+              title: Text(S.of(context).remindMissingVegetationData),
+              // description: Text(S.of(context).formatNumbersDescription),
+              initialValue: _remindVegetationEmpty,
+              onToggle: (bool value) {
+                setState(() {
+                  _remindVegetationEmpty = value;
+                });
+                _saveSettings();
+              },
+            ),
+            SettingsTile.switchTile(
+              title: Text(S.of(context).remindMissingWeatherData),
+              // description: Text(S.of(context).formatNumbersDescription),
+              initialValue: _remindWeatherEmpty,
+              onToggle: (bool value) {
+                setState(() {
+                  _remindWeatherEmpty = value;
+                });
+                _saveSettings();
               },
             ),
           ]),

@@ -1743,6 +1743,66 @@ abstract class AppLocalizations {
   /// **'Error'**
   String get errorTitle;
 
+  /// Warning title
+  ///
+  /// In en, this message translates to:
+  /// **'Warning'**
+  String get warningTitle;
+
+  /// Settings option to remind missing vegetation data
+  ///
+  /// In en, this message translates to:
+  /// **'Remind missing vegetation data'**
+  String get remindMissingVegetationData;
+
+  /// Settings option to remind missing weather data
+  ///
+  /// In en, this message translates to:
+  /// **'Remind missing weather data'**
+  String get remindMissingWeatherData;
+
+  /// Message shown when there is no vegetation data
+  ///
+  /// In en, this message translates to:
+  /// **'There is no vegetation data.'**
+  String get missingVegetationData;
+
+  /// Message shown when there is no weather data
+  ///
+  /// In en, this message translates to:
+  /// **'There is no weather data.'**
+  String get missingWeatherData;
+
+  /// Add button label
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get addButton;
+
+  /// Ignore button label
+  ///
+  /// In en, this message translates to:
+  /// **'Ignore'**
+  String get ignoreButton;
+
+  /// Message shown when the observer abbreviation is missing
+  ///
+  /// In en, this message translates to:
+  /// **'Observer abbreviation is missing. Please add it in the settings.'**
+  String get observerAbbreviationMissing;
+
+  /// Message shown when the value is not a number
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid numeric value'**
+  String get invalidNumericValue;
+
+  /// Message shown when there are no revisions for a nest
+  ///
+  /// In en, this message translates to:
+  /// **'There are no revisions for this nest. Add at least one revision.'**
+  String get nestRevisionsMissing;
+
   /// No description provided for @precipitationNone.
   ///
   /// In en, this message translates to:

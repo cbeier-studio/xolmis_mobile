@@ -23,6 +23,7 @@ import 'species_tab.dart';
 import 'vegetation_tab.dart';
 import 'weather_tab.dart';
 import '../../utils/export_utils.dart';
+import '../../utils/inventory_completion_service.dart';
 import '../../generated/l10n.dart';
 
 class InventoryDetailScreen extends StatefulWidget {
@@ -181,8 +182,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                   } else {
                     inventoryProvider.pauseInventoryTimer(inventory, widget.inventoryRepository);
                   }
-                  Provider.of<InventoryProvider>(context, listen: false)
-                      .updateInventory(inventory);
+                  inventoryProvider.updateInventory(inventory);
                 },
               );
             },
@@ -191,36 +191,43 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
             IconButton.filled(
               onPressed: () async {
                 // Show confirmation dialog
-                final confirmed = await showDialog<bool>(
-                  context: context,
-                  builder: (context) => AlertDialog.adaptive(
-                    title: Text(S.of(context).confirmFinish),
-                    content: Text(S.of(context).confirmFinishMessage),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(context, false),
-                        child: Text(S.of(context).cancel),
-                      ),
-                      TextButton(
-                        onPressed: () => Navigator.pop(context, true),
-                        child: Text(S.of(context).finish),
-                      ),
-                    ],
-                  ),
-                );
-
-                // If confirmed, finish the inventory
-                if (confirmed == true) {
+                // final confirmed = await showDialog<bool>(
+                //   context: context,
+                //   builder: (context) => AlertDialog.adaptive(
+                //     title: Text(S.of(context).confirmFinish),
+                //     content: Text(S.of(context).confirmFinishMessage),
+                //     actions: [
+                //       TextButton(
+                //         onPressed: () => Navigator.pop(context, false),
+                //         child: Text(S.of(context).cancel),
+                //       ),
+                //       TextButton(
+                //         onPressed: () => Navigator.pop(context, true),
+                //         child: Text(S.of(context).finish),
+                //       ),
+                //     ],
+                //   ),
+                // );
+                //
+                // // If confirmed, finish the inventory
+                // if (confirmed == true) {
                   setState(() {
                     _isSubmitting = true;
                   });
-                  widget.inventory.updateIsFinished(true);
-                  await widget.inventory.stopTimer(widget.inventoryRepository);
+                  // widget.inventory.updateIsFinished(true);
+                  // await widget.inventory.stopTimer(widget.inventoryRepository);
+                  final completionService = InventoryCompletionService(
+                    context: context,
+                    inventory: widget.inventory,
+                    inventoryProvider: Provider.of<InventoryProvider>(context, listen: false),
+                    inventoryRepository: widget.inventoryRepository,
+                  );
+                  await completionService.attemptFinishInventory();
                   Navigator.pop(context, true);
                   setState(() {
                     _isSubmitting = false;
                   });
-                }
+                // }
               },
               style: IconButton.styleFrom(
                 foregroundColor: Theme.of(context).brightness == Brightness.light
