@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:csv/csv.dart';
-import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
@@ -24,10 +22,13 @@ import 'add_inventory_screen.dart';
 import 'individuals_count_chart_screen.dart';
 import 'inventory_detail_screen.dart';
 import 'inventory_report_screen.dart';
+import 'add_vegetation_screen.dart';
+import 'add_weather_screen.dart';
 
 import '../../utils/utils.dart';
 import '../../utils/export_utils.dart';
 import '../../utils/import_utils.dart';
+import '../../utils/inventory_completion_service.dart';
 import '../../generated/l10n.dart';
 import 'mackinnon_chart_screen.dart';
 import 'species_count_chart_screen.dart';
@@ -41,6 +42,9 @@ enum SortOrder {
   ascending,
   descending,
 }
+
+// Enum for warning dialog actions
+enum ConditionalAction { add, ignore, cancelDialog }
 
 class InventoriesScreen extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
@@ -160,8 +164,33 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
 
   // Show the dialog to add a new inventory
   Future<void> _showAddInventoryScreen(BuildContext context) async {
-    // Check if the maximum number of simultaneous inventories has been reached
     final prefs = await SharedPreferences.getInstance();
+    final String observerAbbreviation = prefs.getString('observerAcronym') ?? '';
+
+    if (observerAbbreviation.isEmpty) {
+      if (context.mounted) {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog.adaptive(
+              title: Text(S.of(context).warningTitle),
+              content: Text(S.of(context).observerAbbreviationMissing),
+              actions: <Widget>[
+                TextButton(
+                  child: Text(S.of(context).ok),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
+      return;
+    }
+
+    // Check if the maximum number of simultaneous inventories has been reached
     if (inventoryProvider.activeInventories.length ==
         (prefs.getInt('maxSimultaneousInventories') ?? 2)) {
       if (context.mounted) {
@@ -954,6 +983,8 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     return ListTile(
       // Show progress of the inventory timer
       leading: Stack(alignment: Alignment.center, children: [
+        if (_isShowingActiveInventories && inventory.duration == 0)
+          const SizedBox(width: 47,),
         if (_isShowingActiveInventories && inventory.duration > 0)
         ValueListenableBuilder<double>(
           valueListenable: inventory.elapsedTimeNotifier,
@@ -1283,9 +1314,16 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                           child: FilledButton.icon(
                             icon: const Icon(Icons.flag_outlined),
                             label: Text(S.of(context).finish),
-                            onPressed: () {
+                            onPressed: () async {
                               // Ask for user confirmation
-                              showFinishDialog(context, inventory);
+                              // showFinishDialog(context, inventory);
+                              final completionService = InventoryCompletionService(
+                                context: context,
+                                inventory: inventory,
+                                inventoryProvider: inventoryProvider,
+                                inventoryRepository: inventoryRepository,
+                              );
+                              await completionService.attemptFinishInventory();
                             },
                           ),
                         ),
@@ -1356,9 +1394,16 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                     ListTile(
                       leading: const Icon(Icons.flag_outlined),
                       title: Text(S.of(context).finishInventory),
-                      onTap: () {
+                      onTap: () async {
                         // Ask for user confirmation
-                        showFinishDialog(context, inventory);
+                        // showFinishDialog(context, inventory);
+                        final completionService = InventoryCompletionService(
+                          context: context,
+                          inventory: inventory,
+                          inventoryProvider: inventoryProvider,
+                          inventoryRepository: inventoryRepository,
+                        );
+                        await completionService.attemptFinishInventory();
                       },
                     ),
                   // Option to reactivate the finished inventory
@@ -1548,35 +1593,159 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
   }
 
   // Show the dialog to confirm finishing the inventory
-  Future<dynamic> showFinishDialog(BuildContext context, Inventory inventory) {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog.adaptive(
-          title: Text(S.of(context).confirmFinish),
-          content: Text(S.of(context).confirmFinishMessage),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(false);
-                Navigator.of(context).pop();
-              },
-              child: Text(S.of(context).cancel),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(true);
-                Navigator.of(context).pop();
-                // Call the function to delete species
-                inventory.stopTimer(inventoryRepository);
-                inventoryProvider.updateInventory(inventory);
-                // inventoryProvider.notifyListeners();
-              },
-              child: Text(S.of(context).finish),
-            ),
-          ],
-        );
-      },
-    );
-  }
+  // Future<void> showFinishDialog(BuildContext context, Inventory inventory) async {
+  //   final bool? confirmedFinish = await showDialog<bool>(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog.adaptive(
+  //         title: Text(S.of(context).confirmFinish),
+  //         content: Text(S.of(context).confirmFinishMessage),
+  //         actions: <Widget>[
+  //           TextButton(
+  //             onPressed: () {
+  //               Navigator.of(context).pop(false);
+  //               // Navigator.of(context).pop();
+  //             },
+  //             child: Text(S.of(context).cancel),
+  //           ),
+  //           TextButton(
+  //             onPressed: () {
+  //               Navigator.of(context).pop(true);
+  //               // Navigator.of(context).pop();
+  //               // Call the function to delete species
+  //               // inventory.stopTimer(inventoryRepository);
+  //               // inventoryProvider.updateInventory(inventory);
+  //               // inventoryProvider.notifyListeners();
+  //             },
+  //             child: Text(S.of(context).finish),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  //
+  //   if (confirmedFinish == true) {
+  //     if (context.mounted) {
+  //       await _processConditionalRemindersAndFinalize(context, inventory, inventoryProvider, inventoryRepository, vegetationRepository, weatherRepository);
+  //     }
+  //   }
+  // }
+  //
+  // Future<void> _finalizeInventory(BuildContext context, Inventory inventory, InventoryProvider inventoryProvider, InventoryRepository inventoryRepository) async {
+  //   inventory.stopTimer(inventoryRepository);
+  //   inventoryProvider.updateInventory(inventory);
+  //   // inventoryProvider.notifyListeners();
+  //
+  //   if (context.mounted) {
+  //     // Navigator.of(context).pop(true);
+  //     Navigator.of(context).pop();
+  //   }
+  // }
+  //
+  // Future<void> _processConditionalRemindersAndFinalize(BuildContext context, Inventory inventory, InventoryProvider inventoryProvider, InventoryRepository inventoryRepository, VegetationRepository vegetationRepository, WeatherRepository weatherRepository) async {
+  //   bool proceedToFinalize = true;
+  //
+  //   // Load user settings
+  //   final prefs = await SharedPreferences.getInstance();
+  //   final bool remindVegetationEmpty = prefs.getBool('remindVegetationEmpty') ?? false;
+  //   final bool remindWeatherEmpty = prefs.getBool('remindWeatherEmpty') ?? false;
+  //
+  //   // Check if the lists are empty
+  //   bool isVegetationListEmpty = inventory.vegetationList.isEmpty;
+  //   bool isWeatherListEmpty = inventory.weatherList.isEmpty;
+  //
+  //   // 1. Vegetation Warning
+  //   if (remindVegetationEmpty && isVegetationListEmpty) {
+  //     final vegetationAction = await _showConditionalReminderDialog(
+  //       context,
+  //       title: S.of(context).warningTitle,
+  //       content: S.of(context).missingVegetationData,
+  //     );
+  //
+  //     if (vegetationAction == ConditionalAction.add) {
+  //       proceedToFinalize = false;
+  //       if (context.mounted) {
+  //         bool? vegetationAdded = await Navigator.of(context).push(
+  //           MaterialPageRoute(builder: (_) => AddVegetationDataScreen(inventory: inventory)),
+  //         );
+  //         if (vegetationAdded != null && vegetationAdded) {
+  //           await inventoryProvider.fetchInventories();
+  //           proceedToFinalize = true;
+  //         }
+  //       }
+  //       // return; // Interrompe o processo de finalização aqui, usuário foi para outra tela
+  //     } else if (vegetationAction == ConditionalAction.cancelDialog) {
+  //       proceedToFinalize = false;
+  //     }
+  //     // If ConditionalAction.ignore, proceedToFinalize still true
+  //   }
+  //
+  //   // 2. Weather Warning
+  //   // (executes only if the vegetation warning was ignored or is not necessary)
+  //   if (proceedToFinalize && remindWeatherEmpty && isWeatherListEmpty) {
+  //     final weatherAction = await _showConditionalReminderDialog(
+  //       context,
+  //       title: S.of(context).warningTitle,
+  //       content: S.of(context).missingWeatherData,
+  //     );
+  //
+  //     if (weatherAction == ConditionalAction.add) {
+  //       proceedToFinalize = false;
+  //       if (context.mounted) {
+  //         bool? weatherAdded = await Navigator.of(context).push(
+  //           MaterialPageRoute(builder: (_) => AddWeatherScreen(inventory: inventory)),
+  //         );
+  //         if (weatherAdded != null && weatherAdded) {
+  //           await inventoryProvider.fetchInventories();
+  //           proceedToFinalize = true;
+  //         }
+  //       }
+  //       // return; // Interrompe o processo de finalização aqui
+  //     } else if (weatherAction == ConditionalAction.cancelDialog) {
+  //       proceedToFinalize = false;
+  //     }
+  //     // Se for ConditionalAction.ignore, proceedToFinalize continua true
+  //   }
+  //
+  //   // 3. Finish the inventory
+  //   if (proceedToFinalize) {
+  //     if (context.mounted) {
+  //       await _finalizeInventory(context, inventory, inventoryProvider, inventoryRepository);
+  //     }
+  //   }
+  // }
+  //
+  // // Helper to show conditional warning dialog
+  // Future<ConditionalAction?> _showConditionalReminderDialog(BuildContext context, {required String title, required String content}) async {
+  //   return showDialog<ConditionalAction>(
+  //     context: context,
+  //     barrierDismissible: false,
+  //     builder: (BuildContext dialogContext) {
+  //       return AlertDialog.adaptive(
+  //         title: Text(title),
+  //         content: Text(content),
+  //         actions: <Widget>[
+  //           TextButton(
+  //             child: Text(S.of(dialogContext).cancel),
+  //             onPressed: () {
+  //               Navigator.of(dialogContext).pop(ConditionalAction.cancelDialog);
+  //             },
+  //           ),
+  //           TextButton(
+  //             child: Text(S.of(dialogContext).ignoreButton),
+  //             onPressed: () {
+  //               Navigator.of(dialogContext).pop(ConditionalAction.ignore);
+  //             },
+  //           ),
+  //           FilledButton(
+  //             child: Text(S.of(dialogContext).addButton),
+  //             onPressed: () {
+  //               Navigator.of(dialogContext).pop(ConditionalAction.add);
+  //             },
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 }

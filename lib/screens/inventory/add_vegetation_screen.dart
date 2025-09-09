@@ -254,11 +254,20 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
   }
 
   void _submitForm() async {
+    if (!_formKey.currentState!.validate()) {
+      if (_isSubmitting) {
+        setState(() {
+          _isSubmitting = false;
+        });
+      }
+      return;
+    }
+
     setState(() {
       _isSubmitting = true;
     });
 
-    if (_formKey.currentState!.validate()) {
+    try {
       if (widget.isEditing) {
         final updatedVegetation = widget.vegetation!.copyWith(
           herbsProportion: int.tryParse(_herbsProportionController.text) ?? 0,
@@ -273,25 +282,11 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
           notes: _notesController.text,
         );
 
-        try {
-          final vegetationProvider = Provider.of<VegetationProvider>(context, listen: false);
-          await vegetationProvider.updateVegetation(widget.inventory.id, updatedVegetation);
+        final vegetationProvider = Provider.of<VegetationProvider>(context, listen: false);
+        await vegetationProvider.updateVegetation(widget.inventory.id, updatedVegetation);
 
-          Navigator.pop(context);
-        } catch (error) {
-          if (kDebugMode) {
-            print('Error saving vegetation: $error');
-          }
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Row(
-              children: [
-                Icon(Icons.error_outlined, color: Colors.red),
-                SizedBox(width: 8),
-                Text(S.current.errorSavingVegetation),
-              ],
-            ),
-            ),
-          );
+        if (mounted) {
+          Navigator.pop(context, true);
         }
       } else {
         Position? position = await getPosition();
@@ -314,37 +309,38 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
           notes: _notesController.text,
         );
 
-        try {
-          final vegetationProvider = Provider.of<VegetationProvider>(context, listen: false);
-          await vegetationProvider.addVegetation(
+        final vegetationProvider = Provider.of<VegetationProvider>(context, listen: false);
+        await vegetationProvider.addVegetation(
                 context, widget.inventory.id, vegetation);
 
-          Navigator.pop(context);
-        } catch (error) {
-          if (kDebugMode) {
-            print('Error adding vegetation: $error');
-          }
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Row(
-              children: [
-                Icon(Icons.error_outlined, color: Colors.red),
-                SizedBox(width: 8),
-                Text(S.current.errorSavingVegetation),
-              ],
-            ),
-            ),
-          );
+        if (mounted) {
+          Navigator.pop(context, true);
         }
       }
 
-      setState(() {
-        _isSubmitting = false;
-      });
-
-    } else {
-      setState(() {
-        _isSubmitting = false;
-      });
+    } catch (error) {
+      if (kDebugMode) {
+        print('Error saving weather: $error');
+      }
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                const Icon(Icons.error_outlined, color: Colors.red),
+                const SizedBox(width: 8),
+                Text(S.of(context).errorSavingWeather), // Use S.of(context)
+              ],
+            ),
+          ),
+        );
+      }
+    } finally {
+      if (mounted && _isSubmitting) {
+        setState(() {
+          _isSubmitting = false;
+        });
+      }
     }
   }
 }

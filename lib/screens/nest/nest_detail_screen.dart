@@ -139,6 +139,29 @@ class NestDetailScreenState extends State<NestDetailScreen> {
               if (widget.nest.isActive)
                 IconButton.filled(
                   onPressed: () async {
+                    if (widget.nest.revisionsList != null && widget.nest.revisionsList!.isEmpty) {
+                      if (context.mounted) {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog.adaptive(
+                              title: Text(S.of(context).warningTitle),
+                              content: Text(S.of(context).nestRevisionsMissing),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: Text(S.of(context).ok),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      }
+                      return;
+                    }
+
                     NestFateType? selectedNestFate;
 
                     // Show dialog with the DropdownButton

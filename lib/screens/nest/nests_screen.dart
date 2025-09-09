@@ -7,6 +7,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/models/nest.dart';
 import '../../providers/nest_provider.dart';
@@ -105,7 +106,33 @@ class NestsScreenState extends State<NestsScreen> {
   }
 
   // Show the add nest screen
-  void _showAddNestScreen(BuildContext context) {
+  void _showAddNestScreen(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    final String observerAbbreviation = prefs.getString('observerAcronym') ?? '';
+
+    if (observerAbbreviation.isEmpty) {
+      if (context.mounted) {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog.adaptive(
+              title: Text(S.of(context).warningTitle),
+              content: Text(S.of(context).observerAbbreviationMissing),
+              actions: <Widget>[
+                TextButton(
+                  child: Text(S.of(context).ok),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
+      return;
+    }
+
     if (MediaQuery.sizeOf(context).width > 600) {
       // Show the dialog on large screens
       showDialog(

@@ -28,10 +28,9 @@ class S {
   static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
 
   static Future<S> load(Locale locale) {
-    final name =
-        (locale.countryCode?.isEmpty ?? false)
-            ? locale.languageCode
-            : locale.toString();
+    final name = (locale.countryCode?.isEmpty ?? false)
+        ? locale.languageCode
+        : locale.toString();
     final localeName = Intl.canonicalizedLocale(name);
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
@@ -2834,6 +2833,106 @@ class S {
       'Error',
       name: 'errorTitle',
       desc: 'Error title',
+      args: [],
+    );
+  }
+
+  /// `Warning`
+  String get warningTitle {
+    return Intl.message(
+      'Warning',
+      name: 'warningTitle',
+      desc: 'Warning title',
+      args: [],
+    );
+  }
+
+  /// `Remind missing vegetation data`
+  String get remindMissingVegetationData {
+    return Intl.message(
+      'Remind missing vegetation data',
+      name: 'remindMissingVegetationData',
+      desc: 'Settings option to remind missing vegetation data',
+      args: [],
+    );
+  }
+
+  /// `Remind missing weather data`
+  String get remindMissingWeatherData {
+    return Intl.message(
+      'Remind missing weather data',
+      name: 'remindMissingWeatherData',
+      desc: 'Settings option to remind missing weather data',
+      args: [],
+    );
+  }
+
+  /// `There is no vegetation data.`
+  String get missingVegetationData {
+    return Intl.message(
+      'There is no vegetation data.',
+      name: 'missingVegetationData',
+      desc: 'Message shown when there is no vegetation data',
+      args: [],
+    );
+  }
+
+  /// `There is no weather data.`
+  String get missingWeatherData {
+    return Intl.message(
+      'There is no weather data.',
+      name: 'missingWeatherData',
+      desc: 'Message shown when there is no weather data',
+      args: [],
+    );
+  }
+
+  /// `Add`
+  String get addButton {
+    return Intl.message(
+      'Add',
+      name: 'addButton',
+      desc: 'Add button label',
+      args: [],
+    );
+  }
+
+  /// `Ignore`
+  String get ignoreButton {
+    return Intl.message(
+      'Ignore',
+      name: 'ignoreButton',
+      desc: 'Ignore button label',
+      args: [],
+    );
+  }
+
+  /// `Observer abbreviation is missing. Please add it in the settings.`
+  String get observerAbbreviationMissing {
+    return Intl.message(
+      'Observer abbreviation is missing. Please add it in the settings.',
+      name: 'observerAbbreviationMissing',
+      desc: 'Message shown when the observer abbreviation is missing',
+      args: [],
+    );
+  }
+
+  /// `Invalid numeric value`
+  String get invalidNumericValue {
+    return Intl.message(
+      'Invalid numeric value',
+      name: 'invalidNumericValue',
+      desc: 'Message shown when the value is not a number',
+      args: [],
+    );
+  }
+
+  /// `There are no revisions for this nest. Add at least one revision.`
+  String get nestRevisionsMissing {
+    return Intl.message(
+      'There are no revisions for this nest. Add at least one revision.',
+      name: 'nestRevisionsMissing',
+      desc: 'Message shown when there are no revisions for a nest',
       args: [],
     );
   }

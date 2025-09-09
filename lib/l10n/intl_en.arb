@@ -1534,6 +1534,56 @@
         "type": "text",
         "description": "Error title"
     },
+    "warningTitle": "Warning",
+    "@warningTitle": {
+        "type": "text",
+        "description": "Warning title"
+    },
+    "remindMissingVegetationData": "Remind missing vegetation data",
+    "@remindMissingVegetationData": {
+        "type": "text",
+        "description": "Settings option to remind missing vegetation data"
+    },
+    "remindMissingWeatherData": "Remind missing weather data",
+    "@remindMissingWeatherData": {
+        "type": "text",
+        "description": "Settings option to remind missing weather data"
+    },
+    "missingVegetationData": "There is no vegetation data.",
+    "@missingVegetationData": {
+        "type": "text",
+        "description": "Message shown when there is no vegetation data"
+    },
+    "missingWeatherData": "There is no weather data.",
+    "@missingWeatherData": {
+        "type": "text",
+        "description": "Message shown when there is no weather data"
+    },
+    "addButton": "Add",
+    "@addButton": {
+        "type": "text",
+        "description": "Add button label"
+    },
+    "ignoreButton": "Ignore",
+    "@ignoreButton": {
+        "type": "text",
+        "description": "Ignore button label"
+    },
+    "observerAbbreviationMissing": "Observer abbreviation is missing. Please add it in the settings.",
+    "@observerAbbreviationMissing": {
+        "type": "text",
+        "description": "Message shown when the observer abbreviation is missing"
+    },
+    "invalidNumericValue": "Invalid numeric value",
+    "@invalidNumericValue": {
+        "type": "text",
+        "description": "Message shown when the value is not a number"
+    },
+    "nestRevisionsMissing": "There are no revisions for this nest. Add at least one revision.",
+    "@nestRevisionsMissing": {
+        "type": "text",
+        "description": "Message shown when there are no revisions for a nest"
+    },
     "precipitationNone": "None",
     "precipitationFog": "Fog",
     "precipitationMist": "Mist",

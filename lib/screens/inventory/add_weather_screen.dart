@@ -78,7 +78,6 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
                                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                                 decoration: InputDecoration(
                                   labelText: S.of(context).cloudCover,
-                                  helperText: ' ',
                                   border: OutlineInputBorder(),
                                   suffixText: '%',
                                 ),
@@ -145,7 +144,14 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
                                   suffixText: 'bft',
                                 ),
                                 validator: (value) {
-                                  if (value != null && (int.tryParse(value)! < 0 || int.tryParse(value)! > 12)) {
+                                  if (value == null || value.isEmpty) {
+                                    return null;
+                                  }
+                                  final speed = int.tryParse(value);
+                                  if (speed == null) {
+                                    return S.of(context).invalidNumericValue;
+                                  }
+                                  if (speed < 0 || speed > 12) {
                                     return S.of(context).windSpeedRangeError;
                                   }
                                   return null;
@@ -186,11 +192,20 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
   }
 
   void _submitForm() async {
+    if (!_formKey.currentState!.validate()) {
+      if (_isSubmitting) {
+        setState(() {
+          _isSubmitting = false;
+        });
+      }
+      return;
+    }
+
     setState(() {
       _isSubmitting = true;
     });
 
-    if (_formKey.currentState!.validate()) {
+    try {
       if (widget.isEditing) {
         final updatedWeather = widget.weather!.copyWith(
           cloudCover: int.tryParse(_cloudCoverController.text) ?? 0,
@@ -199,26 +214,11 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
           windSpeed: int.tryParse(_windSpeedController.text) ?? 0,
         );
 
-        try {
-          final weatherProvider = Provider.of<WeatherProvider>(context, listen: false);
-          await weatherProvider.updateWeather(updatedWeather);
+        final weatherProvider = Provider.of<WeatherProvider>(context, listen: false);
+        await weatherProvider.updateWeather(updatedWeather);
 
-          Navigator.pop(context);
-        } catch (error) {
-          if (kDebugMode) {
-            print('Error saving weather: $error');
-          }
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Row(
-                children: [
-                  Icon(Icons.error_outlined, color: Colors.red),
-                  SizedBox(width: 8),
-                  Text(S.current.errorSavingWeather),
-                ],
-              ),
-            ),
-          );
+        if (mounted) {
+          Navigator.pop(context, true);
         }
       } else {
         // Save the weather data
@@ -231,47 +231,48 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
           windSpeed: int.tryParse(_windSpeedController.text) ?? 0,
         );
 
+        final weatherProvider = Provider.of<WeatherProvider>(context, listen: false);
+        await weatherProvider.addWeather(context, widget.inventory.id, weather);
+
+        if (mounted) {
+          Navigator.pop(context, true);
+          // ScaffoldMessenger.of(context).showSnackBar(
+          //   SnackBar(
+          //     content: Row(
+          //       children: [
+          //         Icon(Icons.check_circle_outlined, color: Colors.green),
+          //         SizedBox(width: 8),
+          //         Text(S.current.weatherDataAddedSuccessfully), // Use sua string traduzida
+          //       ],
+          //     ),
+          //   ),
+          // );
+        }
+      }
+    } catch (error) {
+      if (kDebugMode) {
+        print('Error saving weather: $error');
+      }
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                const Icon(Icons.error_outlined, color: Colors.red),
+                const SizedBox(width: 8),
+                Text(S.of(context).errorSavingWeather), // Use S.of(context)
+              ],
+            ),
+          ),
+        );
+      }
+    } finally {
+      if (mounted && _isSubmitting) {
         setState(() {
           _isSubmitting = false;
         });
-
-        final weatherProvider =
-            Provider.of<WeatherProvider>(context, listen: false);
-        try {
-          await weatherProvider.addWeather(
-              context, widget.inventory.id, weather);
-          Navigator.pop(context);
-          // ScaffoldMessenger.of(context).showSnackBar(
-          //   const SnackBar(content: Row(
-          //     children: [
-          //       Icon(Icons.check_circle_outlined, color: Colors.green),
-          //       SizedBox(width: 8),
-          //       Text('Dados do tempo adicionados!'),
-          //     ],
-          //   ),
-          //   ),
-          // );
-        } catch (error) {
-          if (kDebugMode) {
-            print('Error adding weather: $error');
-          }
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Row(
-                children: [
-                  Icon(Icons.error_outlined, color: Colors.red),
-                  SizedBox(width: 8),
-                  Text(S.current.errorSavingWeather),
-                ],
-              ),
-            ),
-          );
-        }
       }
-    } else {
-      setState(() {
-        _isSubmitting = false;
-      });
     }
   }
+
 }

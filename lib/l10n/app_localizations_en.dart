@@ -1070,6 +1070,38 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errorTitle => 'Error';
 
   @override
+  String get warningTitle => 'Warning';
+
+  @override
+  String get remindMissingVegetationData => 'Remind missing vegetation data';
+
+  @override
+  String get remindMissingWeatherData => 'Remind missing weather data';
+
+  @override
+  String get missingVegetationData => 'There is no vegetation data.';
+
+  @override
+  String get missingWeatherData => 'There is no weather data.';
+
+  @override
+  String get addButton => 'Add';
+
+  @override
+  String get ignoreButton => 'Ignore';
+
+  @override
+  String get observerAbbreviationMissing =>
+      'Observer abbreviation is missing. Please add it in the settings.';
+
+  @override
+  String get invalidNumericValue => 'Invalid numeric value';
+
+  @override
+  String get nestRevisionsMissing =>
+      'There are no revisions for this nest. Add at least one revision.';
+
+  @override
   String get precipitationNone => 'None';
 
   @override

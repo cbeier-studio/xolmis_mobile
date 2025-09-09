@@ -1072,6 +1072,39 @@ class AppLocalizationsPt extends AppLocalizations {
   String get errorTitle => 'Erro';
 
   @override
+  String get warningTitle => 'Aviso';
+
+  @override
+  String get remindMissingVegetationData =>
+      'Lembrar dados faltantes de vegetação';
+
+  @override
+  String get remindMissingWeatherData => 'Lembrar dados faltantes do tempo';
+
+  @override
+  String get missingVegetationData => 'Não há dados de vegetação.';
+
+  @override
+  String get missingWeatherData => 'Não há dados do tempo.';
+
+  @override
+  String get addButton => 'Adicionar';
+
+  @override
+  String get ignoreButton => 'Ignorar';
+
+  @override
+  String get observerAbbreviationMissing =>
+      'Sigla do observador não encontrada. Adicione-a nas configurações.';
+
+  @override
+  String get invalidNumericValue => 'Valor inválido';
+
+  @override
+  String get nestRevisionsMissing =>
+      'Não há revisões para este ninho. Adicione ao menos uma revisão.';
+
+  @override
   String get precipitationNone => 'Nenhuma';
 
   @override
@@ -2331,6 +2364,39 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get errorTitle => 'Erro';
+
+  @override
+  String get warningTitle => 'Aviso';
+
+  @override
+  String get remindMissingVegetationData =>
+      'Lembrar dados faltantes de vegetação';
+
+  @override
+  String get remindMissingWeatherData => 'Lembrar dados faltantes do tempo';
+
+  @override
+  String get missingVegetationData => 'Não há dados de vegetação.';
+
+  @override
+  String get missingWeatherData => 'Não há dados do tempo.';
+
+  @override
+  String get addButton => 'Adicionar';
+
+  @override
+  String get ignoreButton => 'Ignorar';
+
+  @override
+  String get observerAbbreviationMissing =>
+      'Sigla do observador não encontrada. Adicione-a nas configurações.';
+
+  @override
+  String get invalidNumericValue => 'Valor inválido';
+
+  @override
+  String get nestRevisionsMissing =>
+      'Não há revisões para este ninho. Adicione ao menos uma revisão.';
 
   @override
   String get precipitationNone => 'Nenhuma';
