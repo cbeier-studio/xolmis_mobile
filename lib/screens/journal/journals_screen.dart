@@ -83,7 +83,7 @@ class JournalsScreenState extends State<JournalsScreen> {
 
   List<FieldJournal> _filterJournalEntries(List<FieldJournal> journalEntries) {
     if (_searchQuery.isEmpty) {
-      return journalEntries;
+      return _sortJournalEntries(journalEntries);
     }
     List<FieldJournal> filteredEntries = journalEntries.where((entry) =>
       entry.title.toLowerCase().contains(_searchQuery.toLowerCase())
@@ -571,8 +571,7 @@ class JournalsScreenState extends State<JournalsScreen> {
 
   ListTile journalListTileItem(List<FieldJournal> filteredEntries, int index, BuildContext context) {
     final entry = filteredEntries[index];
-    final isSelected =
-    selectedJournals.contains(entry.id);
+    final isSelected = selectedJournals.contains(entry.id);
     return ListTile(
       leading: Checkbox.adaptive(
         value: isSelected,

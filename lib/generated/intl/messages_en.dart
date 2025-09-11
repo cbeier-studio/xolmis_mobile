@@ -242,6 +242,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "editJournalEntry": MessageLookupByLibrary.simpleMessage(
       "Edit journal entry",
     ),
+    "editLocality": MessageLookupByLibrary.simpleMessage("Edit locality"),
     "editNest": MessageLookupByLibrary.simpleMessage("Edit nest"),
     "editNestRevision": MessageLookupByLibrary.simpleMessage(
       "Edit nest revision",

@@ -2937,6 +2937,16 @@ class S {
     );
   }
 
+  /// `Edit locality`
+  String get editLocality {
+    return Intl.message(
+      'Edit locality',
+      name: 'editLocality',
+      desc: 'Dialog title to edit a locality',
+      args: [],
+    );
+  }
+
   /// `None`
   String get precipitationNone {
     return Intl.message('None', name: 'precipitationNone', desc: '', args: []);

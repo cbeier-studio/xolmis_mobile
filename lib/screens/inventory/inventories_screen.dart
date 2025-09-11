@@ -1047,6 +1047,9 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
         children: [
           // Show the inventory type
           Text('${inventoryTypeFriendlyNames[inventory.type]}'),
+          // Show the inventory locality
+          if (inventory.localityName != null && inventory.localityName!.isNotEmpty)
+            Text(inventory.localityName!, overflow: TextOverflow.ellipsis,),
           // Show the inventory timer duration if active
           if (_isShowingActiveInventories && inventory.duration > 0)
             Text(S.of(context).inventoryDuration(inventory.duration)),
@@ -1281,6 +1284,9 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                   Text(inventory.id, style: TextTheme.of(context).bodyLarge, overflow: TextOverflow.ellipsis,),
                   // Show the inventory type
                   Text('${inventoryTypeFriendlyNames[inventory.type]}', overflow: TextOverflow.ellipsis,),
+                  // Show the inventory locality
+                  if (inventory.localityName != null && inventory.localityName!.isNotEmpty)
+                    Text(inventory.localityName!, overflow: TextOverflow.ellipsis,),
                   // Show the inventory timer duration if active
                   if (_isShowingActiveInventories && inventory.duration > 0)
                     Text(S.of(context).inventoryDuration(inventory.duration), overflow: TextOverflow.ellipsis,),
@@ -1389,6 +1395,14 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                         _showEditIdDialog(context, inventory);
                       },
                     ),
+                  ListTile(
+                    leading: const Icon(Icons.edit_outlined),
+                    title: Text(S.of(context).editLocality),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      _showEditLocalityDialog(context, inventory);
+                    },
+                  ),
                   // Option to finish the active inventory
                   if (_isShowingActiveInventories)
                     ListTile(
@@ -1592,160 +1606,119 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     );
   }
 
-  // Show the dialog to confirm finishing the inventory
-  // Future<void> showFinishDialog(BuildContext context, Inventory inventory) async {
-  //   final bool? confirmedFinish = await showDialog<bool>(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog.adaptive(
-  //         title: Text(S.of(context).confirmFinish),
-  //         content: Text(S.of(context).confirmFinishMessage),
-  //         actions: <Widget>[
-  //           TextButton(
-  //             onPressed: () {
-  //               Navigator.of(context).pop(false);
-  //               // Navigator.of(context).pop();
-  //             },
-  //             child: Text(S.of(context).cancel),
-  //           ),
-  //           TextButton(
-  //             onPressed: () {
-  //               Navigator.of(context).pop(true);
-  //               // Navigator.of(context).pop();
-  //               // Call the function to delete species
-  //               // inventory.stopTimer(inventoryRepository);
-  //               // inventoryProvider.updateInventory(inventory);
-  //               // inventoryProvider.notifyListeners();
-  //             },
-  //             child: Text(S.of(context).finish),
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  //
-  //   if (confirmedFinish == true) {
-  //     if (context.mounted) {
-  //       await _processConditionalRemindersAndFinalize(context, inventory, inventoryProvider, inventoryRepository, vegetationRepository, weatherRepository);
-  //     }
-  //   }
-  // }
-  //
-  // Future<void> _finalizeInventory(BuildContext context, Inventory inventory, InventoryProvider inventoryProvider, InventoryRepository inventoryRepository) async {
-  //   inventory.stopTimer(inventoryRepository);
-  //   inventoryProvider.updateInventory(inventory);
-  //   // inventoryProvider.notifyListeners();
-  //
-  //   if (context.mounted) {
-  //     // Navigator.of(context).pop(true);
-  //     Navigator.of(context).pop();
-  //   }
-  // }
-  //
-  // Future<void> _processConditionalRemindersAndFinalize(BuildContext context, Inventory inventory, InventoryProvider inventoryProvider, InventoryRepository inventoryRepository, VegetationRepository vegetationRepository, WeatherRepository weatherRepository) async {
-  //   bool proceedToFinalize = true;
-  //
-  //   // Load user settings
-  //   final prefs = await SharedPreferences.getInstance();
-  //   final bool remindVegetationEmpty = prefs.getBool('remindVegetationEmpty') ?? false;
-  //   final bool remindWeatherEmpty = prefs.getBool('remindWeatherEmpty') ?? false;
-  //
-  //   // Check if the lists are empty
-  //   bool isVegetationListEmpty = inventory.vegetationList.isEmpty;
-  //   bool isWeatherListEmpty = inventory.weatherList.isEmpty;
-  //
-  //   // 1. Vegetation Warning
-  //   if (remindVegetationEmpty && isVegetationListEmpty) {
-  //     final vegetationAction = await _showConditionalReminderDialog(
-  //       context,
-  //       title: S.of(context).warningTitle,
-  //       content: S.of(context).missingVegetationData,
-  //     );
-  //
-  //     if (vegetationAction == ConditionalAction.add) {
-  //       proceedToFinalize = false;
-  //       if (context.mounted) {
-  //         bool? vegetationAdded = await Navigator.of(context).push(
-  //           MaterialPageRoute(builder: (_) => AddVegetationDataScreen(inventory: inventory)),
-  //         );
-  //         if (vegetationAdded != null && vegetationAdded) {
-  //           await inventoryProvider.fetchInventories();
-  //           proceedToFinalize = true;
-  //         }
-  //       }
-  //       // return; // Interrompe o processo de finalização aqui, usuário foi para outra tela
-  //     } else if (vegetationAction == ConditionalAction.cancelDialog) {
-  //       proceedToFinalize = false;
-  //     }
-  //     // If ConditionalAction.ignore, proceedToFinalize still true
-  //   }
-  //
-  //   // 2. Weather Warning
-  //   // (executes only if the vegetation warning was ignored or is not necessary)
-  //   if (proceedToFinalize && remindWeatherEmpty && isWeatherListEmpty) {
-  //     final weatherAction = await _showConditionalReminderDialog(
-  //       context,
-  //       title: S.of(context).warningTitle,
-  //       content: S.of(context).missingWeatherData,
-  //     );
-  //
-  //     if (weatherAction == ConditionalAction.add) {
-  //       proceedToFinalize = false;
-  //       if (context.mounted) {
-  //         bool? weatherAdded = await Navigator.of(context).push(
-  //           MaterialPageRoute(builder: (_) => AddWeatherScreen(inventory: inventory)),
-  //         );
-  //         if (weatherAdded != null && weatherAdded) {
-  //           await inventoryProvider.fetchInventories();
-  //           proceedToFinalize = true;
-  //         }
-  //       }
-  //       // return; // Interrompe o processo de finalização aqui
-  //     } else if (weatherAction == ConditionalAction.cancelDialog) {
-  //       proceedToFinalize = false;
-  //     }
-  //     // Se for ConditionalAction.ignore, proceedToFinalize continua true
-  //   }
-  //
-  //   // 3. Finish the inventory
-  //   if (proceedToFinalize) {
-  //     if (context.mounted) {
-  //       await _finalizeInventory(context, inventory, inventoryProvider, inventoryRepository);
-  //     }
-  //   }
-  // }
-  //
-  // // Helper to show conditional warning dialog
-  // Future<ConditionalAction?> _showConditionalReminderDialog(BuildContext context, {required String title, required String content}) async {
-  //   return showDialog<ConditionalAction>(
-  //     context: context,
-  //     barrierDismissible: false,
-  //     builder: (BuildContext dialogContext) {
-  //       return AlertDialog.adaptive(
-  //         title: Text(title),
-  //         content: Text(content),
-  //         actions: <Widget>[
-  //           TextButton(
-  //             child: Text(S.of(dialogContext).cancel),
-  //             onPressed: () {
-  //               Navigator.of(dialogContext).pop(ConditionalAction.cancelDialog);
-  //             },
-  //           ),
-  //           TextButton(
-  //             child: Text(S.of(dialogContext).ignoreButton),
-  //             onPressed: () {
-  //               Navigator.of(dialogContext).pop(ConditionalAction.ignore);
-  //             },
-  //           ),
-  //           FilledButton(
-  //             child: Text(S.of(dialogContext).addButton),
-  //             onPressed: () {
-  //               Navigator.of(dialogContext).pop(ConditionalAction.add);
-  //             },
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
+  // Show the dialog to edit inventory locality
+  void _showEditLocalityDialog(BuildContext context, Inventory inventory) {
+    final localityNameController = TextEditingController(text: inventory.localityName);
+    final inventoryProvider = Provider.of<InventoryProvider>(
+        context, listen: false);
+    late TextEditingController fieldLocalityEditingController;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog.adaptive(
+          title: Text(S.of(context).editLocality),
+          content: Autocomplete<String>(
+            optionsBuilder:
+                (TextEditingValue textEditingValue) async {
+              if (textEditingValue.text.isEmpty) {
+                return const Iterable<String>.empty();
+              }
+
+              try {
+                final localityOptions = await Provider.of<InventoryProvider>(context, listen: false).getDistinctLocalities();
+                return localityOptions.where((String option) {
+                  return option.toLowerCase().contains(textEditingValue.text.toLowerCase());
+                });
+              } catch (e) {
+                debugPrint('Error fetching locality options: $e');
+                return const Iterable<String>.empty();
+              }
+            },
+            onSelected: (String selection) {
+              localityNameController.text = selection;
+              fieldLocalityEditingController.text = selection;
+            },
+            fieldViewBuilder: (BuildContext context,
+                TextEditingController fieldTextEditingController,
+                FocusNode fieldFocusNode,
+                VoidCallback onFieldSubmitted) {
+              fieldLocalityEditingController = fieldTextEditingController;
+              fieldLocalityEditingController.text = inventory.localityName ?? '';
+              return TextFormField(
+                controller: fieldLocalityEditingController,
+                focusNode: fieldFocusNode,
+                textCapitalization: TextCapitalization.words,
+                decoration: InputDecoration(
+                  labelText: '${S.of(context).locality} *',
+                  // helperText: S.of(context).requiredField,
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return S.of(context).insertLocality;
+                  }
+                  return null;
+                },
+                onFieldSubmitted: (String value) {
+                  onFieldSubmitted();
+                },
+              );
+            },
+            optionsViewBuilder: (BuildContext context,
+                AutocompleteOnSelected<String> onSelected,
+                Iterable<String> options) {
+              return Align(
+                alignment: Alignment.topLeft,
+                child: Material(
+                  elevation: 4.0, // Add this line for shadow
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    child: ListView.builder(
+                      padding: EdgeInsets.all(8.0),
+                      itemCount: options.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        final String option = options.elementAt(index);
+                        return GestureDetector(
+                          onTap: () {
+                            onSelected(option);
+                          },
+                          child: ListTile(
+                            title: Text(option),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text(S.of(context).cancel),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text(S.of(context).save),
+              onPressed: () async {
+                // inventory.localityName = localityNameController.text;
+                final updatedInventory = inventory.copyWith(
+                  localityName: fieldLocalityEditingController.text,
+                );
+                inventoryProvider.updateInventory(updatedInventory);
+                if (context.mounted) {
+                  Navigator.of(context).pop();
+                }
+                setState(() {});
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 }

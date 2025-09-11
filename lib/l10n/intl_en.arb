@@ -1584,6 +1584,11 @@
         "type": "text",
         "description": "Message shown when there are no revisions for a nest"
     },
+    "editLocality": "Edit locality",
+    "@editLocality": {
+        "type": "text",
+        "description": "Dialog title to edit a locality"
+    },
     "precipitationNone": "None",
     "precipitationFog": "Fog",
     "precipitationMist": "Mist",

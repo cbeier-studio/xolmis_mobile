@@ -1102,6 +1102,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'There are no revisions for this nest. Add at least one revision.';
 
   @override
+  String get editLocality => 'Edit locality';
+
+  @override
   String get precipitationNone => 'None';
 
   @override

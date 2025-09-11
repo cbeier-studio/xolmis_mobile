@@ -755,7 +755,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                               fontStyle:
                                   FontStyle.italic),
                         ),
-                        Text(specimen.locality!),
+                        Text(specimen.locality!, overflow: TextOverflow.ellipsis,),
                         Text(DateFormat(
                                 'dd/MM/yyyy HH:mm:ss')
                             .format(specimen
@@ -843,7 +843,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
             style: const TextStyle(
                 fontStyle: FontStyle.italic),
           ),
-          Text(specimen.locality!),
+          Text(specimen.locality!, overflow: TextOverflow.ellipsis,),
           Text(
               '${specimen.longitude}; ${specimen.latitude}'),
           Text(DateFormat('dd/MM/yyyy HH:mm:ss')

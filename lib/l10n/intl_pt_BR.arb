@@ -1023,6 +1023,11 @@
         "type": "text",
         "description": "Message shown when there are no revisions for a nest"
     },
+    "editLocality": "Editar localidade",
+    "@editLocality": {
+        "type": "text",
+        "description": "Dialog title to edit a locality"
+    },
     "precipitationNone": "Nenhuma",
     "precipitationFog": "Névoa",
     "precipitationMist": "Neblina",

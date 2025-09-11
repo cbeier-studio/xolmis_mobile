@@ -1105,6 +1105,9 @@ class AppLocalizationsPt extends AppLocalizations {
       'Não há revisões para este ninho. Adicione ao menos uma revisão.';
 
   @override
+  String get editLocality => 'Editar localidade';
+
+  @override
   String get precipitationNone => 'Nenhuma';
 
   @override
@@ -2397,6 +2400,9 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   @override
   String get nestRevisionsMissing =>
       'Não há revisões para este ninho. Adicione ao menos uma revisão.';
+
+  @override
+  String get editLocality => 'Editar localidade';
 
   @override
   String get precipitationNone => 'Nenhuma';

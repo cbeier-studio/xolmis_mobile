@@ -1,9 +1,9 @@
 name: xolmis
-description: "Xolmis goes mobile."
+description: "Collect ornithological data in the field."
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.2+77
+version: 1.0.2+78
 
 environment:
   sdk: ^3.7.0
@@ -14,7 +14,7 @@ dependencies:
   flutter_localizations: 
     sdk: flutter
   intl: ^0.20.2
-  intl_utils: ^2.8.11
+  intl_utils: ^2.8.12
 
   # UI dependencies
   cupertino_icons: ^1.0.8
@@ -23,11 +23,11 @@ dependencies:
   flutter_speed_dial: ^7.0.0
   settings_ui: ^2.0.2
   fleather: ^1.25.1
-  fl_chart: ^1.0.0
+  fl_chart: ^1.1.0
   numberpicker: ^2.1.2
   image_picker: ^1.2.0
-  file_picker: ^10.3.2
-  share_plus: ^11.1.0
+  file_picker: ^10.3.3
+  share_plus: ^12.0.0
 #  timelines_plus: ^1.0.6
 
   # Data and persistence dependencies
@@ -35,6 +35,7 @@ dependencies:
   csv: ^6.0.0
   shared_preferences: ^2.5.3
   excel: ^4.0.6
+#  geoxml: ^2.6.2
 
   # State management
   provider: ^6.1.5+1
@@ -50,7 +51,7 @@ dependencies:
       url: https://github.com/fluttercommunity/flutter_workmanager.git
       path: workmanager
       ref: main    
-  device_info_plus: ^11.5.0
+  device_info_plus: ^12.0.0
   url_launcher: ^6.3.2
 #  equations: ^5.0.2
 

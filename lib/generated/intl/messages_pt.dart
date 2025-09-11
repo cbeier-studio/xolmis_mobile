@@ -249,6 +249,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "editInventoryId": MessageLookupByLibrary.simpleMessage("Editar ID"),
     "editJournalEntry": MessageLookupByLibrary.simpleMessage("Editar nota"),
+    "editLocality": MessageLookupByLibrary.simpleMessage("Editar localidade"),
     "editNest": MessageLookupByLibrary.simpleMessage("Editar ninho"),
     "editNestRevision": MessageLookupByLibrary.simpleMessage(
       "Editar revisão de ninho",

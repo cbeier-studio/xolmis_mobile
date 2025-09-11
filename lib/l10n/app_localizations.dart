@@ -1803,6 +1803,12 @@ abstract class AppLocalizations {
   /// **'There are no revisions for this nest. Add at least one revision.'**
   String get nestRevisionsMissing;
 
+  /// Dialog title to edit a locality
+  ///
+  /// In en, this message translates to:
+  /// **'Edit locality'**
+  String get editLocality;
+
   /// No description provided for @precipitationNone.
   ///
   /// In en, this message translates to:
