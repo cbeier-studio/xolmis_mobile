@@ -379,7 +379,8 @@ class PoiListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-        title: Text('${poi.latitude}, ${poi.longitude}'),
+        title: Text('POI #${poi.id}'),
+        subtitle: Text('${poi.latitude}, ${poi.longitude}'),
         leading: const Icon(Icons.location_on_outlined),
         onLongPress: onLongPress,
     );
