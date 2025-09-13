@@ -21,6 +21,7 @@ class Poi {
   DateTime? sampleTime;
   double longitude;
   double latitude;
+  String? notes;
 
   Poi({
     this.id,
@@ -28,6 +29,7 @@ class Poi {
     required this.sampleTime,
     required this.longitude,
     required this.latitude,
+    this.notes,
   });
 
   factory Poi.fromMap(Map<String, dynamic> map) {
@@ -37,16 +39,18 @@ class Poi {
       sampleTime: map['sampleTime'] != null ? DateTime.parse(map['sampleTime']) : null,
       longitude: map['longitude'],
       latitude: map['latitude'],
+      notes: map['notes'],
     );
   }
 
-  Poi copyWith({int? id, int? speciesId, DateTime? sampleTime, double? longitude, double? latitude}) {
+  Poi copyWith({int? id, int? speciesId, DateTime? sampleTime, double? longitude, double? latitude, String? notes}) {
     return Poi(
       id: id ?? this.id,
       speciesId: speciesId ?? this.speciesId,
       sampleTime: sampleTime ?? this.sampleTime,
       longitude: longitude ?? this.longitude,
       latitude: latitude ?? this.latitude,
+      notes: notes ?? this.notes,
     );
   }
 
@@ -57,6 +61,7 @@ class Poi {
       'sampleTime': sampleTime?.toIso8601String(),
       'longitude': longitude,
       'latitude': latitude,
+      'notes': notes,
     };
   }
 
@@ -67,6 +72,7 @@ class Poi {
       'sampleTime': sampleTime?.toIso8601String(),
       'longitude': longitude,
       'latitude': latitude,
+      'notes': notes,
     };
   }
 
@@ -77,6 +83,7 @@ class Poi {
       sampleTime: json['sampleTime'] != null ? DateTime.parse(json['sampleTime']) : null,
       longitude: json['longitude'],
       latitude: json['latitude'],
+      notes: json['notes'],
     );
   }
 
@@ -87,7 +94,8 @@ class Poi {
         'speciesId: $speciesId, '
         'sampleTime: $sampleTime, '
         'longitude: $longitude, '
-        'latitude: $latitude}';
+        'latitude: $latitude, '
+        'notes: $notes}';
   }
 }
 

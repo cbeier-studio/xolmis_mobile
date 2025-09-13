@@ -2947,6 +2947,16 @@ class S {
     );
   }
 
+  /// `Add/edit notes`
+  String get addEditNotes {
+    return Intl.message(
+      'Add/edit notes',
+      name: 'addEditNotes',
+      desc: 'Dialog title and menu option to add/edit notes',
+      args: [],
+    );
+  }
+
   /// `None`
   String get precipitationNone {
     return Intl.message('None', name: 'precipitationNone', desc: '', args: []);

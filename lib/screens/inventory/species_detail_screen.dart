@@ -223,6 +223,19 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
+                  ListTile(
+                    title: Text('POI #${poi.id}',),
+                  ),
+                  Divider(),
+                  // Option to edit the POI notes
+                  ListTile(
+                    leading: const Icon(Icons.edit_outlined),
+                    title: Text(S.of(context).addEditNotes),
+                    onTap: () {
+                      Navigator.pop(context);
+                      _showEditNotesDialog(context, poi);
+                    },
+                  ),
                   // Option to delete the POI
                   ListTile(
                     leading: const Icon(Icons.delete_outlined, color: Colors.red,),
@@ -363,6 +376,50 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
       },
     );
   }
+
+  // Show the dialog to edit POI notes
+  void _showEditNotesDialog(BuildContext context, Poi poi) {
+    final notesController = TextEditingController(text: poi.notes);
+    final poiProvider = Provider.of<PoiProvider>(context, listen: false);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog.adaptive(
+          title: Text(S.of(context).editNotes),
+          content: TextField(
+            controller: notesController,
+            maxLines: 3,
+            textCapitalization: TextCapitalization.sentences,
+            decoration: InputDecoration(
+              labelText: S.of(context).notes,
+              border: OutlineInputBorder(),
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text(S.of(context).cancel),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text(S.of(context).save),
+              onPressed: () async {
+                poi.notes = notesController.text;
+                final updatedPoi = poi.copyWith(notes: poi.notes);
+                poiProvider.updatePoi(poi.speciesId, updatedPoi);
+                if (context.mounted) {
+                  Navigator.of(context).pop();
+                }
+                setState(() {});
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
 
 // POI list item
@@ -380,7 +437,16 @@ class PoiListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
         title: Text('POI #${poi.id}'),
-        subtitle: Text('${poi.latitude}, ${poi.longitude}'),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Show the POI coordinates
+            Text('${poi.latitude}, ${poi.longitude}'),
+            // Show the POI notes
+            if (poi.notes != null && poi.notes!.isNotEmpty)
+              Text(poi.notes!, overflow: TextOverflow.ellipsis,),
+          ],
+        ),
         leading: const Icon(Icons.location_on_outlined),
         onLongPress: onLongPress,
     );

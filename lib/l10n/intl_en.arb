@@ -1589,6 +1589,11 @@
         "type": "text",
         "description": "Dialog title to edit a locality"
     },
+    "addEditNotes": "Add/edit notes",
+    "@addEditNotes": {
+        "type": "text",
+        "description": "Dialog title and menu option to add/edit notes"
+    },
     "precipitationNone": "None",
     "precipitationFog": "Fog",
     "precipitationMist": "Mist",

@@ -184,7 +184,7 @@ Future<List<List>> buildInventoryRows(Inventory inventory, Locale locale) async 
     'Trees Proportion','Trees Distribution','Trees Height','Notes'];
   const List<String> weatherHeaders = ['Date/Time','Cloud cover','Precipitation',
     'Temperature','Wind speed'];
-  const List<String> poiHeaders = ['Species', 'Date/Time', 'Latitude', 'Longitude'];
+  const List<String> poiHeaders = ['Species', 'Date/Time', 'Latitude', 'Longitude', 'Notes'];
   final List<List<dynamic>> rows = [];
   final numberFormat = NumberFormat.decimalPattern(locale.toString())..maximumFractionDigits = 7;
   final prefs = await SharedPreferences.getInstance();
@@ -269,7 +269,8 @@ Future<List<List>> buildInventoryRows(Inventory inventory, Locale locale) async 
           species.name,
           poi.sampleTime != null ? DateFormat('dd/MM/yyyy HH:mm:ss').format(poi.sampleTime!) : '',
           formatNumbers ? numberFormat.format(poi.latitude) : poi.latitude,
-          formatNumbers ? numberFormat.format(poi.longitude) : poi.longitude
+          formatNumbers ? numberFormat.format(poi.longitude) : poi.longitude,
+          poi.notes ?? '',
         ]);
       }
     }
