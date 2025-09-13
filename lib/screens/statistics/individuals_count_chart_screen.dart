@@ -22,7 +22,7 @@ class IndividualsCountChartScreen extends StatelessWidget {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 56.0),
           child: BarChart(
             BarChartData(
               alignment: BarChartAlignment.spaceAround,

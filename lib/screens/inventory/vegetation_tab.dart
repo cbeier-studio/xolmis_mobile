@@ -10,7 +10,7 @@ import '../../data/models/app_image.dart';
 import '../../providers/vegetation_provider.dart';
 import '../../providers/app_image_provider.dart';
 
-import '../app_image_screen.dart';
+import '../images/app_image_screen.dart';
 import '../../generated/l10n.dart';
 import 'add_vegetation_screen.dart';
 

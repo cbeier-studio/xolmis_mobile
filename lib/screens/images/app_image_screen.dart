@@ -9,11 +9,11 @@ import 'package:share_plus/share_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 
-import '../data/models/app_image.dart';
-import '../providers/app_image_provider.dart';
+import '../../data/models/app_image.dart';
+import '../../providers/app_image_provider.dart';
 
 import 'image_details_screen.dart';
-import '../generated/l10n.dart';
+import '../../generated/l10n.dart';
 
 enum ImageParentType { vegetation, egg, specimen, nestRevision }
 

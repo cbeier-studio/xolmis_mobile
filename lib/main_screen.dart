@@ -14,8 +14,8 @@ import 'screens/inventory/inventories_screen.dart';
 import 'screens/journal/journals_screen.dart';
 import 'screens/nest/nests_screen.dart';
 import 'screens/specimen/specimens_screen.dart';
-import 'screens/settings_screen.dart';
-import 'screens/statistics_screen.dart';
+import 'screens/settings/settings_screen.dart';
+import 'screens/statistics/statistics_screen.dart';
 
 import 'generated/l10n.dart';
 

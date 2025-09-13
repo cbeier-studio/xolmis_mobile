@@ -19,7 +19,7 @@ class SpeciesCountChartScreen extends StatelessWidget {
         child: Center(
         child: Container(
           // height: 400,
-          padding: EdgeInsets.all(16),
+          padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 56.0),
           child: BarChart(
             BarChartData(
               alignment: BarChartAlignment.spaceAround,

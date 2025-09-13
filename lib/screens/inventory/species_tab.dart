@@ -12,7 +12,7 @@ import '../../providers/poi_provider.dart';
 import '../../utils/utils.dart';
 // import '../../utils/species_search_delegate.dart';
 // import '../../utils/species_search_dialog.dart';
-import 'species_chart_screen.dart';
+import '../statistics/species_chart_screen.dart';
 import 'species_list_item.dart';
 import '../../generated/l10n.dart';
 

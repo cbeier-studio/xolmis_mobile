@@ -19,19 +19,19 @@ import '../../providers/inventory_provider.dart';
 import '../../providers/species_provider.dart';
 
 import 'add_inventory_screen.dart';
-import 'individuals_count_chart_screen.dart';
+import '../statistics/individuals_count_chart_screen.dart';
 import 'inventory_detail_screen.dart';
-import 'inventory_report_screen.dart';
+import '../statistics/inventory_report_screen.dart';
 import 'add_vegetation_screen.dart';
 import 'add_weather_screen.dart';
 
 import '../../utils/utils.dart';
 import '../../utils/export_utils.dart';
 import '../../utils/import_utils.dart';
-import '../../utils/inventory_completion_service.dart';
+import '../../services/inventory_completion_service.dart';
 import '../../generated/l10n.dart';
-import 'mackinnon_chart_screen.dart';
-import 'species_count_chart_screen.dart';
+import '../statistics/mackinnon_chart_screen.dart';
+import '../statistics/species_count_chart_screen.dart';
 
 enum InventorySortField {
   id,

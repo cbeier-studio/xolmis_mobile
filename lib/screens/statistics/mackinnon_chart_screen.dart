@@ -19,7 +19,7 @@ class MackinnonChartScreen extends StatelessWidget {
       ),
       body: SafeArea(
         child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 56.0),
         child: LineChart(
           LineChartData(
             // minX: 0,
@@ -37,7 +37,9 @@ class MackinnonChartScreen extends StatelessWidget {
                     : Colors.deepPurple[200],
                 barWidth: 2,
                 isStrokeCapRound: true,
-                dotData: FlDotData(show: true),
+                dotData: FlDotData(
+                  show: true,
+                ),
                 belowBarData: BarAreaData(
                   show: true,
                   color: Colors.deepPurpleAccent.withAlpha(30),
@@ -85,6 +87,28 @@ class MackinnonChartScreen extends StatelessWidget {
             borderData: FlBorderData(
               show: true,
               border: Border.all(color: Colors.grey, width: 1),
+            ),
+            lineTouchData: LineTouchData(
+              handleBuiltInTouches: true,
+              touchTooltipData: LineTouchTooltipData(
+                // tooltipBgColor: Colors.blueGrey.withOpacity(0.8),
+                tooltipBorderRadius: BorderRadius.all(Radius.circular(8)),
+                getTooltipItems: (List<LineBarSpot> touchedSpots) {
+                  return touchedSpots.map((LineBarSpot touchedSpot) {
+                    final textStyle = TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    );
+
+                    return LineTooltipItem(
+                      '${touchedSpot.y.toInt()}',
+                      textStyle,
+                      textAlign: TextAlign.left,
+                    );
+                  }).toList();
+                },
+              ),
             ),
           ),
         ),

@@ -15,7 +15,7 @@ import '../../providers/specimen_provider.dart';
 import '../../providers/app_image_provider.dart';
 
 import 'add_specimen_screen.dart';
-import '../app_image_screen.dart';
+import '../images/app_image_screen.dart';
 import '../../utils/export_utils.dart';
 import '../../generated/l10n.dart';
 

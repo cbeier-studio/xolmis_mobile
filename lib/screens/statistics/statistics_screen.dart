@@ -5,18 +5,18 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:xolmis/generated/l10n.dart';
 
-import '../data/models/inventory.dart';
-import '../data/models/nest.dart';
-import '../data/models/specimen.dart';
+import '../../data/models/inventory.dart';
+import '../../data/models/nest.dart';
+import '../../data/models/specimen.dart';
 
-import '../providers/inventory_provider.dart';
-import '../providers/species_provider.dart';
-import '../providers/nest_provider.dart';
-import '../providers/egg_provider.dart';
-import '../providers/specimen_provider.dart';
+import '../../providers/inventory_provider.dart';
+import '../../providers/species_provider.dart';
+import '../../providers/nest_provider.dart';
+import '../../providers/egg_provider.dart';
+import '../../providers/specimen_provider.dart';
 
-import '../utils/utils.dart';
-import '../utils/statistics_logic.dart';
+import '../../utils/utils.dart';
+import '../../utils/statistics_logic.dart';
 
 class StatisticsScreen extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;

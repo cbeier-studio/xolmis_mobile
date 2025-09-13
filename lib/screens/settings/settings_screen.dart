@@ -8,8 +8,8 @@ import 'package:package_info_plus/package_info_plus.dart';
 // import 'package:sqflite/sqflite.dart';
 import 'package:settings_ui/settings_ui.dart';
 // import '../data/database/database_helper.dart';
-import '../utils/themes.dart';
-import '../generated/l10n.dart';
+import '../../utils/themes.dart';
+import '../../generated/l10n.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});

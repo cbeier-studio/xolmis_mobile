@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-import '../generated/l10n.dart';
+import '../../generated/l10n.dart';
 
 class ImageDetailsScreen extends StatelessWidget {
   final String imagePath;

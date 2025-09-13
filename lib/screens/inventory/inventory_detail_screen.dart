@@ -23,7 +23,7 @@ import 'species_tab.dart';
 import 'vegetation_tab.dart';
 import 'weather_tab.dart';
 import '../../utils/export_utils.dart';
-import '../../utils/inventory_completion_service.dart';
+import '../../services/inventory_completion_service.dart';
 import '../../generated/l10n.dart';
 
 class InventoryDetailScreen extends StatefulWidget {

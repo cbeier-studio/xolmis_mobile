@@ -80,7 +80,7 @@ class _SpeciesChartScreenState extends State<SpeciesChartScreen> {
       ),
       body: SafeArea(
         child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 56.0),
         child: speciesAccumulationData.isEmpty
           // Show a message if there is no data
             ? Center(child: Text(S.current.noDataAvailable))
@@ -148,6 +148,28 @@ class _SpeciesChartScreenState extends State<SpeciesChartScreen> {
               //       dotData: FlDotData(show: false),
               //     ),
             ],
+            lineTouchData: LineTouchData(
+              handleBuiltInTouches: true,
+              touchTooltipData: LineTouchTooltipData(
+                // tooltipBgColor: Colors.blueGrey.withOpacity(0.8),
+                tooltipBorderRadius: BorderRadius.all(Radius.circular(8)),
+                getTooltipItems: (List<LineBarSpot> touchedSpots) {
+                  return touchedSpots.map((LineBarSpot touchedSpot) {
+                    final textStyle = TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    );
+
+                    return LineTooltipItem(
+                      '${touchedSpot.y.toInt()}',
+                      textStyle,
+                      textAlign: TextAlign.left,
+                    );
+                  }).toList();
+                },
+              ),
+            ),
           ),
         ),
       ),
