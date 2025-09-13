@@ -99,7 +99,10 @@ class MackinnonChartScreen extends StatelessWidget {
 
     for (var i = 0; i < selectedInventories.length; i++) {
       final inventory = selectedInventories[i];
-      inventory.speciesList.where((species) => speciesSet.add(species.name));
+      // inventory.speciesList.where((species) => speciesSet.add(species.name));
+      for (final species in inventory.speciesList) {
+        speciesSet.add(species.name);
+      }
       accumulatedSpeciesData.add(FlSpot(i.toDouble(), speciesSet.length.toDouble()));
     }
 
