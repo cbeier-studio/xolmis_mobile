@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:csv/csv.dart';
 import 'package:excel/excel.dart';
+import 'package:geoxml/geoxml.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
@@ -420,6 +421,73 @@ Future<String> exportInventoryToCsv(BuildContext context, Inventory inventory, L
       },
     );
     return '';
+  }
+}
+
+Future<void> exportInventoryToKml(BuildContext context, Inventory inventory) async {
+  try {
+    final gpx = GeoXml();
+    gpx.creator = 'Xolmis Mobile';
+    gpx.metadata = Metadata(
+      name: 'Inventory ${inventory.id}',
+      desc: 'Points of Interest for Inventory ${inventory.id}',
+      time: inventory.startTime ?? DateTime.now(),
+    );
+
+    for (var species in inventory.speciesList) {
+      if (species.pois.isNotEmpty) {
+        for (var poi in species.pois) {
+          gpx.wpts.add(Wpt(
+            lat: poi.latitude,
+            lon: poi.longitude,
+            name: '${species.name} - POI #${poi.id}',
+            desc: poi.notes ?? '',
+          ));
+        }
+      }
+    }
+
+    if (gpx.wpts.isEmpty) {
+      if (!context.mounted) return;
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(S.current.warningTitle),
+          content: Text(S.current.noPoisToExport),
+          actions: [
+            TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(S.current.ok)),
+          ],
+        ),
+      );
+      return;
+    }
+
+    final kmlString = KmlWriter(altitudeMode: AltitudeMode.clampToGround).asString(gpx, pretty: true);
+
+    Directory tempDir = await getTemporaryDirectory();
+    final filePath = '${tempDir.path}/inventory_${inventory.id}_pois.kml';
+    final file = File(filePath);
+    await file.writeAsString(kmlString);
+
+    await SharePlus.instance.share(
+      ShareParams(
+        files: [XFile(filePath, mimeType: 'application/vnd.google-earth.kml+xml')],
+        text: S.current.inventoryExported(1),
+        subject: '${S.current.inventoryExported(1)} ${inventory.id}',
+      ),
+    );
+  } catch (error) {
+    if (!context.mounted) return;
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(S.current.errorTitle),
+        content: Text(S.current.errorExportingInventory(1, error.toString())),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(S.current.ok)),
+        ],
+      ),
+    );
   }
 }
 

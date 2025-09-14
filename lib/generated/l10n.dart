@@ -2957,6 +2957,36 @@ class S {
     );
   }
 
+  /// `Export KML`
+  String get exportKml {
+    return Intl.message(
+      'Export KML',
+      name: 'exportKml',
+      desc: 'Menu option to export to KML',
+      args: [],
+    );
+  }
+
+  /// `Edit`
+  String get edit {
+    return Intl.message(
+      'Edit',
+      name: 'edit',
+      desc: 'Edit button label',
+      args: [],
+    );
+  }
+
+  /// `No POIs to export.`
+  String get noPoisToExport {
+    return Intl.message(
+      'No POIs to export.',
+      name: 'noPoisToExport',
+      desc: 'Message shown when there are no POIs to export',
+      args: [],
+    );
+  }
+
   /// `None`
   String get precipitationNone {
     return Intl.message('None', name: 'precipitationNone', desc: '', args: []);

@@ -1809,6 +1809,30 @@ abstract class AppLocalizations {
   /// **'Edit locality'**
   String get editLocality;
 
+  /// Dialog title and menu option to add/edit notes
+  ///
+  /// In en, this message translates to:
+  /// **'Add/edit notes'**
+  String get addEditNotes;
+
+  /// Menu option to export to KML
+  ///
+  /// In en, this message translates to:
+  /// **'Export KML'**
+  String get exportKml;
+
+  /// Edit button label
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get edit;
+
+  /// Message shown when there are no POIs to export
+  ///
+  /// In en, this message translates to:
+  /// **'No POIs to export.'**
+  String get noPoisToExport;
+
   /// No description provided for @precipitationNone.
   ///
   /// In en, this message translates to:

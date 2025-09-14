@@ -236,6 +236,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "distributionRare": MessageLookupByLibrary.simpleMessage("Rare"),
     "duration": MessageLookupByLibrary.simpleMessage("Duration"),
     "durationMin": MessageLookupByLibrary.simpleMessage("Duration (min)"),
+    "edit": MessageLookupByLibrary.simpleMessage("Edit"),
     "editCount": MessageLookupByLibrary.simpleMessage("Edit count"),
     "editEgg": MessageLookupByLibrary.simpleMessage("Edit egg"),
     "editImageNotes": MessageLookupByLibrary.simpleMessage("Edit image notes"),
@@ -312,6 +313,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "export": MessageLookupByLibrary.simpleMessage("Export"),
     "exportAll": MessageLookupByLibrary.simpleMessage("Export all"),
     "exportAllWhat": m7,
+    "exportKml": MessageLookupByLibrary.simpleMessage("Export KML"),
     "exportWhat": m8,
     "exporting": MessageLookupByLibrary.simpleMessage("Exporting..."),
     "exportingPleaseWait": MessageLookupByLibrary.simpleMessage(
@@ -510,6 +512,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "noNestsFound": MessageLookupByLibrary.simpleMessage("No nests found."),
     "noPoiFound": MessageLookupByLibrary.simpleMessage("No POI found."),
+    "noPoisToExport": MessageLookupByLibrary.simpleMessage(
+      "No POIs to export.",
+    ),
     "noRevisionsFound": MessageLookupByLibrary.simpleMessage(
       "No revisions recorded.",
     ),

@@ -297,6 +297,12 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                   },
                   child: Text('JSON'),
                 ),
+                MenuItemButton(
+                  onPressed: () {
+                    exportInventoryToKml(context, widget.inventory);
+                  },
+                  child: Text('KML'),
+                ),
               ],
             ),
           // const SizedBox(width: 8.0,),

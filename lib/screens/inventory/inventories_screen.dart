@@ -1386,23 +1386,46 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                     // subtitle: Text(S.of(context).inventoryId),
                   ),
                   Divider(),
-                  // Option to edit the inventory ID
-                  ListTile(
-                      leading: const Icon(Icons.edit_outlined),
-                      title: Text(S.of(context).editInventoryId),
-                      onTap: () {
-                        Navigator.of(context).pop();
-                        _showEditIdDialog(context, inventory);
-                      },
-                    ),
                   ListTile(
                     leading: const Icon(Icons.edit_outlined),
-                    title: Text(S.of(context).editLocality),
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      _showEditLocalityDialog(context, inventory);
-                    },
+                    title: Text(S.current.edit),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            _showEditIdDialog(context, inventory);
+                          },
+                          child: Text('ID'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            _showEditLocalityDialog(context, inventory);
+                          },
+                          child: Text(S.current.locality),
+                        ),
+                      ],
+                    ),
                   ),
+                  // Option to edit the inventory ID
+                  // ListTile(
+                  //     leading: const Icon(Icons.edit_outlined),
+                  //     title: Text(S.of(context).editInventoryId),
+                  //     onTap: () {
+                  //       Navigator.of(context).pop();
+                  //       _showEditIdDialog(context, inventory);
+                  //     },
+                  //   ),
+                  // ListTile(
+                  //   leading: const Icon(Icons.edit_outlined),
+                  //   title: Text(S.of(context).editLocality),
+                  //   onTap: () {
+                  //     Navigator.of(context).pop();
+                  //     _showEditLocalityDialog(context, inventory);
+                  //   },
+                  // ),
                   // Option to finish the active inventory
                   if (_isShowingActiveInventories)
                     ListTile(
@@ -1491,6 +1514,15 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                           ),
                         ]
                       ),
+                    ),
+                  if (!_isShowingActiveInventories)
+                    ListTile(
+                      leading: const Icon(Icons.file_upload_outlined),
+                      title: Text(S.of(context).exportKml),
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        exportInventoryToKml(context, inventory);
+                      },
                     ),
                   // Divider(),
                   // Option to delete the inventory

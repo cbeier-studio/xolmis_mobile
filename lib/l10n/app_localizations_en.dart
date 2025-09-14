@@ -1105,6 +1105,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get editLocality => 'Edit locality';
 
   @override
+  String get addEditNotes => 'Add/edit notes';
+
+  @override
+  String get exportKml => 'Export KML';
+
+  @override
+  String get edit => 'Edit';
+
+  @override
+  String get noPoisToExport => 'No POIs to export.';
+
+  @override
   String get precipitationNone => 'None';
 
   @override

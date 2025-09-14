@@ -18,7 +18,7 @@ dependencies:
 
   # UI dependencies
   cupertino_icons: ^1.0.8
-  flutter_local_notifications: ^19.4.1
+  flutter_local_notifications: ^19.4.2
   side_sheet: ^1.0.4+1
   flutter_speed_dial: ^7.0.0
   settings_ui: ^2.0.2
@@ -35,7 +35,7 @@ dependencies:
   csv: ^6.0.0
   shared_preferences: ^2.5.3
   excel: ^4.0.6
-#  geoxml: ^2.6.2
+  geoxml: ^2.6.2
 
   # State management
   provider: ^6.1.5+1
@@ -51,7 +51,7 @@ dependencies:
       url: https://github.com/fluttercommunity/flutter_workmanager.git
       path: workmanager
       ref: main    
-  device_info_plus: ^12.0.0
+  device_info_plus: ^12.1.0
   url_launcher: ^6.3.2
 #  equations: ^5.0.2
 

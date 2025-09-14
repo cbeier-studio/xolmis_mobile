@@ -1108,6 +1108,18 @@ class AppLocalizationsPt extends AppLocalizations {
   String get editLocality => 'Editar localidade';
 
   @override
+  String get addEditNotes => 'Adicionar/editar anotações';
+
+  @override
+  String get exportKml => 'Exportar KML';
+
+  @override
+  String get edit => 'Editar';
+
+  @override
+  String get noPoisToExport => 'Nenhum POI para exportar.';
+
+  @override
   String get precipitationNone => 'Nenhuma';
 
   @override
@@ -2403,6 +2415,18 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get editLocality => 'Editar localidade';
+
+  @override
+  String get addEditNotes => 'Adicionar/editar anotações';
+
+  @override
+  String get exportKml => 'Exportar KML';
+
+  @override
+  String get edit => 'Editar';
+
+  @override
+  String get noPoisToExport => 'Nenhum POI para exportar.';
 
   @override
   String get precipitationNone => 'Nenhuma';

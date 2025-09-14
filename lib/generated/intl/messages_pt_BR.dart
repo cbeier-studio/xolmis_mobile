@@ -245,6 +245,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "distributionRare": MessageLookupByLibrary.simpleMessage("Rara"),
     "duration": MessageLookupByLibrary.simpleMessage("Duração"),
     "durationMin": MessageLookupByLibrary.simpleMessage("Duração (min)"),
+    "edit": MessageLookupByLibrary.simpleMessage("Editar"),
     "editCount": MessageLookupByLibrary.simpleMessage("Editar contagem"),
     "editEgg": MessageLookupByLibrary.simpleMessage("Editar ovo"),
     "editImageNotes": MessageLookupByLibrary.simpleMessage(
@@ -327,6 +328,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "export": MessageLookupByLibrary.simpleMessage("Exportar"),
     "exportAll": MessageLookupByLibrary.simpleMessage("Exportar todos"),
     "exportAllWhat": m7,
+    "exportKml": MessageLookupByLibrary.simpleMessage("Exportar KML"),
     "exportWhat": m8,
     "exporting": MessageLookupByLibrary.simpleMessage("Exportando..."),
     "exportingPleaseWait": MessageLookupByLibrary.simpleMessage(
@@ -544,6 +546,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "noPoiFound": MessageLookupByLibrary.simpleMessage(
       "Nenhum POI encontrado.",
+    ),
+    "noPoisToExport": MessageLookupByLibrary.simpleMessage(
+      "Nenhum POI para exportar.",
     ),
     "noRevisionsFound": MessageLookupByLibrary.simpleMessage(
       "Nenhuma revisão registrada.",
