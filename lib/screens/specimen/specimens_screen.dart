@@ -908,6 +908,14 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                         Navigator.pop(context);
                       },
                     ),
+                  ListTile(
+                    leading: const Icon(Icons.file_upload_outlined),
+                    title: Text(S.of(context).exportKml),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      exportSpecimenToKml(context, specimen);
+                    },
+                  ),
                   // Divider(),
                   ListTile(
                     leading: Icon(Icons.delete_outlined, color: Theme.of(context).brightness == Brightness.light

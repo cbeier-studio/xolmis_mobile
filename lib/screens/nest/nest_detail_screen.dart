@@ -322,6 +322,14 @@ class NestDetailScreenState extends State<NestDetailScreen> {
                       },
                       child: Text('JSON'),
                     ),
+                    // Option to export the selected nest to JSON
+                    MenuItemButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        exportNestToKml(context, widget.nest);
+                      },
+                      child: Text('KML'),
+                    ),
                   ],
                 ),
               // const SizedBox(width: 8.0,),

@@ -434,6 +434,19 @@ Future<void> exportInventoryToKml(BuildContext context, Inventory inventory) asy
       time: inventory.startTime ?? DateTime.now(),
     );
 
+    gpx.wpts.add(Wpt(
+      lat: inventory.startLatitude,
+      lon: inventory.startLongitude,
+      name: '${inventory.id} - Start',
+      desc: inventoryTypeFriendlyNames[inventory.type] ?? '',
+    ));
+    gpx.wpts.add(Wpt(
+      lat: inventory.endLatitude,
+      lon: inventory.endLongitude,
+      name: '${inventory.id} - End',
+      desc: inventoryTypeFriendlyNames[inventory.type] ?? '',
+    ));
+
     for (var species in inventory.speciesList) {
       if (species.pois.isNotEmpty) {
         for (var poi in species.pois) {
@@ -794,6 +807,67 @@ Future<List<List>> buildNestRows(Nest nest, Locale locale) async {
   return rows;
 }
 
+Future<void> exportNestToKml(BuildContext context, Nest nest) async {
+  try {
+    final gpx = GeoXml();
+    gpx.creator = 'Xolmis Mobile';
+    gpx.metadata = Metadata(
+      name: 'Nest ${nest.fieldNumber}',
+      desc: 'Coordinates for Nest ${nest.fieldNumber}',
+      time: nest.foundTime ?? DateTime.now(),
+    );
+
+          gpx.wpts.add(Wpt(
+            lat: nest.latitude,
+            lon: nest.longitude,
+            name: '${nest.fieldNumber} - ${nest.speciesName}',
+            desc: nest.localityName ?? '',
+          ));
+
+    if (gpx.wpts.isEmpty) {
+      if (!context.mounted) return;
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(S.current.warningTitle),
+          content: Text(S.current.noPoisToExport),
+          actions: [
+            TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(S.current.ok)),
+          ],
+        ),
+      );
+      return;
+    }
+
+    final kmlString = KmlWriter(altitudeMode: AltitudeMode.clampToGround).asString(gpx, pretty: true);
+
+    Directory tempDir = await getTemporaryDirectory();
+    final filePath = '${tempDir.path}/nest_${nest.fieldNumber}.kml';
+    final file = File(filePath);
+    await file.writeAsString(kmlString);
+
+    await SharePlus.instance.share(
+      ShareParams(
+        files: [XFile(filePath, mimeType: 'application/vnd.google-earth.kml+xml')],
+        text: S.current.nestExported(1),
+        subject: '${S.current.nestExported(1)} ${nest.fieldNumber}',
+      ),
+    );
+  } catch (error) {
+    if (!context.mounted) return;
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(S.current.errorTitle),
+        content: Text(S.current.errorExportingNest(1, error.toString())),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(S.current.ok)),
+        ],
+      ),
+    );
+  }
+}
+
 Future<void> exportAllSpecimensToJson(BuildContext context, List<Specimen> specimenList) async {
   bool isDialogShown = false;
 
@@ -1101,4 +1175,65 @@ Future<List<List>> buildSpecimensRows(List<Specimen> specimenList, Locale locale
   }
 
   return rows;
+}
+
+Future<void> exportSpecimenToKml(BuildContext context, Specimen specimen) async {
+  try {
+    final gpx = GeoXml();
+    gpx.creator = 'Xolmis Mobile';
+    gpx.metadata = Metadata(
+      name: 'Specimen ${specimen.fieldNumber}',
+      desc: 'Coordinates for Specimen ${specimen.fieldNumber}',
+      time: specimen.sampleTime ?? DateTime.now(),
+    );
+
+    gpx.wpts.add(Wpt(
+      lat: specimen.latitude,
+      lon: specimen.longitude,
+      name: '${specimen.fieldNumber} - ${specimen.speciesName}',
+      desc: specimen.locality ?? '',
+    ));
+
+    if (gpx.wpts.isEmpty) {
+      if (!context.mounted) return;
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(S.current.warningTitle),
+          content: Text(S.current.noPoisToExport),
+          actions: [
+            TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(S.current.ok)),
+          ],
+        ),
+      );
+      return;
+    }
+
+    final kmlString = KmlWriter(altitudeMode: AltitudeMode.clampToGround).asString(gpx, pretty: true);
+
+    Directory tempDir = await getTemporaryDirectory();
+    final filePath = '${tempDir.path}/specimen_${specimen.fieldNumber}.kml';
+    final file = File(filePath);
+    await file.writeAsString(kmlString);
+
+    await SharePlus.instance.share(
+      ShareParams(
+        files: [XFile(filePath, mimeType: 'application/vnd.google-earth.kml+xml')],
+        text: S.current.specimenExported(1),
+        subject: '${S.current.specimenExported(1)} ${specimen.fieldNumber}',
+      ),
+    );
+  } catch (error) {
+    if (!context.mounted) return;
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(S.current.errorTitle),
+        content: Text(S.current.errorExportingSpecimen(1, error.toString())),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(S.current.ok)),
+        ],
+      ),
+    );
+  }
 }

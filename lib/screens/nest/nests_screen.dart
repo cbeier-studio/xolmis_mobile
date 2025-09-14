@@ -1082,6 +1082,14 @@ class NestsScreenState extends State<NestsScreen> {
                         ]
                       ),
                     ),
+                  ListTile(
+                    leading: const Icon(Icons.file_upload_outlined),
+                    title: Text(S.of(context).exportKml),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      exportNestToKml(context, nest);
+                    },
+                  ),
                   // if (!_showActive) 
                   //   Divider(),
                   // Option to delete the nest
