@@ -439,12 +439,14 @@ Future<void> exportInventoryToKml(BuildContext context, Inventory inventory) asy
       lon: inventory.startLongitude,
       name: '${inventory.id} - Start',
       desc: inventoryTypeFriendlyNames[inventory.type] ?? '',
+      time: inventory.startTime ?? DateTime.now(),
     ));
     gpx.wpts.add(Wpt(
       lat: inventory.endLatitude,
       lon: inventory.endLongitude,
       name: '${inventory.id} - End',
       desc: inventoryTypeFriendlyNames[inventory.type] ?? '',
+      time: inventory.endTime ?? DateTime.now(),
     ));
 
     for (var species in inventory.speciesList) {
@@ -455,6 +457,7 @@ Future<void> exportInventoryToKml(BuildContext context, Inventory inventory) asy
             lon: poi.longitude,
             name: '${species.name} - POI #${poi.id}',
             desc: poi.notes ?? '',
+            time: poi.sampleTime ?? DateTime.now(),
           ));
         }
       }
@@ -822,6 +825,7 @@ Future<void> exportNestToKml(BuildContext context, Nest nest) async {
             lon: nest.longitude,
             name: '${nest.fieldNumber} - ${nest.speciesName}',
             desc: nest.localityName ?? '',
+            time: nest.foundTime ?? DateTime.now(),
           ));
 
     if (gpx.wpts.isEmpty) {
@@ -1192,6 +1196,7 @@ Future<void> exportSpecimenToKml(BuildContext context, Specimen specimen) async 
       lon: specimen.longitude,
       name: '${specimen.fieldNumber} - ${specimen.speciesName}',
       desc: specimen.locality ?? '',
+      time: specimen.sampleTime ?? DateTime.now(),
     ));
 
     if (gpx.wpts.isEmpty) {
