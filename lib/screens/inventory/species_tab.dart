@@ -188,6 +188,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
   // Delete the selected species from the list
   Future<void> _deleteSpecies(Species species) async {
     final speciesProvider = Provider.of<SpeciesProvider>(context, listen: false);
+    final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
     final confirmed = await _showDeleteConfirmationDialog(context);
     if (confirmed) {
       if (mounted) {
@@ -197,7 +198,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     }
 
     // Ask to delete the species from other active inventories
-    if (!widget.inventory.isFinished) {
+    if (!widget.inventory.isFinished && inventoryProvider.activeInventories.length > 1) {
       if (mounted) {
         bool confirm = await _showDeleteFromOtherListsConfirmationDialog(context, species.name);
         if (confirm) {

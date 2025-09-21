@@ -25,29 +25,52 @@ Future<List<String>> loadSpeciesSearchData() async {
 }
 
 bool speciesMatchesQuery(String speciesName, String query) {
-  if (query.length == 4 || query.length == 6) {
-    final words = speciesName.split(' ');
+  final String lowerSpeciesName = speciesName.toLowerCase();
+  final String lowerQuery = query.toLowerCase();
+
+  if (lowerQuery.isEmpty) {
+    return true;
+  }
+
+  // 1. Match parts (query with spaces)
+  if (lowerQuery.contains(' ')) {
+    final queryParts = lowerQuery.split(' ').where((part) => part.isNotEmpty).toList();
+    final speciesWords = lowerSpeciesName.split(' ').where((word) => word.isNotEmpty).toList();
+
+    if (queryParts.isEmpty) {
+      return true;
+    }
+
+    return queryParts.every((queryPart) {
+      return speciesWords.any((speciesWord) => speciesWord.contains(queryPart));
+    });
+  }
+
+  // 2. Special match of 4 or 6 characters (query without spaces)
+  if (lowerQuery.length == 4 || lowerQuery.length == 6) {
+    final words = lowerSpeciesName.split(' ');
     if (words.length >= 2) {
       final firstWord = words[0];
       final secondWord = words[1];
-      final firstPartLength = query.length == 4 ? 2 : 3;
-      final firstPart = query.substring(0, firstPartLength);
-      final secondPart = query.substring(firstPartLength);
 
-      // Check if the parts of query match the parts of the species name
-      if (firstWord.toLowerCase().startsWith(firstPart.toLowerCase()) &&
-          secondWord.toLowerCase().startsWith(secondPart.toLowerCase())) {
-        return true;
+      final int firstPartLength = lowerQuery.length == 4 ? 2 : 3;
+
+      if (lowerQuery.length >= firstPartLength * 2) {
+        final firstQueryPart = lowerQuery.substring(0, firstPartLength);
+        final secondQueryPart = lowerQuery.substring(firstPartLength);
+
+        if (firstWord.startsWith(firstQueryPart) && secondWord.startsWith(secondQueryPart)) {
+          return true;
+        }
       }
     }
-
-    if (speciesName.toLowerCase().contains(query.toLowerCase())) {
+    if (lowerSpeciesName.contains(lowerQuery)) {
       return true;
     }
   }
-  // If que query do not have 4 or 6 characters, or if the species name do not have two words,
-  // use the previous search logic (e.g.: contains)
-  return speciesName.toLowerCase().contains(query.toLowerCase());
+
+  // 3. Standard match 'contains' (general fallback)
+  return lowerSpeciesName.contains(lowerQuery);
 }
 
 String getNextInventoryId(String currentId) {

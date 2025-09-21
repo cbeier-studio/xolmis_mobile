@@ -18,8 +18,8 @@ class SpeciesRepository {
     return _speciesDao.getSpeciesById(id);
   }
 
-  Future<List<Species>> getSpeciesByInventory(String inventoryId) {
-    return _speciesDao.getSpeciesByInventory(inventoryId);
+  Future<List<Species>> getSpeciesByInventory(String inventoryId, bool onlySpeciesInSample) {
+    return _speciesDao.getSpeciesByInventory(inventoryId, onlySpeciesInSample);
   }
 
   Future<List<Species>> getAllRecordsBySpecies(String speciesName) {

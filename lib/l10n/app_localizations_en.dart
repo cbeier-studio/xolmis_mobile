@@ -1117,6 +1117,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noPoisToExport => 'No POIs to export.';
 
   @override
+  String get totalSpeciesWithinSample => 'Species within sample';
+
+  @override
   String get precipitationNone => 'None';
 
   @override

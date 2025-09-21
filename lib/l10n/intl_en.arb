@@ -1609,6 +1609,11 @@
         "type": "text",
         "description": "Message shown when there are no POIs to export"
     },
+    "totalSpeciesWithinSample": "Species within sample",
+    "@totalSpeciesWithinSample": {
+        "type": "text",
+        "description": "Total species within sample card title in statistics"
+    },
     "precipitationNone": "None",
     "precipitationFog": "Fog",
     "precipitationMist": "Mist",

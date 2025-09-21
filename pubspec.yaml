@@ -23,7 +23,7 @@ dependencies:
   flutter_speed_dial: ^7.0.0
   settings_ui: ^2.0.2
   fleather: ^1.25.1
-  fl_chart: ^1.1.0
+  fl_chart: ^1.1.1
   numberpicker: ^2.1.2
   image_picker: ^1.2.0
   file_picker: ^10.3.3
@@ -63,8 +63,8 @@ dev_dependencies:
 
   flutter_launcher_icons: ^0.14.4
 
-dependency_overrides:
-  vector_math: 2.2.0
+#dependency_overrides:
+#  vector_math: 2.2.0
 
 flutter:
   uses-material-design: true

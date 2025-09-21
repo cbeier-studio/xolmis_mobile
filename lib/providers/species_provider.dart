@@ -29,7 +29,7 @@ class SpeciesProvider with ChangeNotifier {
       return;
     }
     try {
-      final speciesList = await _speciesRepository.getSpeciesByInventory(inventoryId);
+      final speciesList = await _speciesRepository.getSpeciesByInventory(inventoryId, false);
       _speciesMap[inventoryId] = speciesList;
     } catch (e) {
       if (kDebugMode) {

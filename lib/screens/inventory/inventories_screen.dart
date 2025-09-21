@@ -1057,13 +1057,36 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
           if (!_isShowingActiveInventories)
             Text('${DateFormat('dd/MM/yyyy HH:mm:ss').format(inventory.startTime!)} - ${DateFormat('HH:mm:ss').format(inventory.endTime!)}'),
           // Show the species count
-          Selector<SpeciesProvider, int>(
-            selector: (context, speciesProvider) =>
-              speciesProvider.getSpeciesForInventory(inventory.id).length,
+          Selector<SpeciesProvider, Map<String, int>>(
+            selector: (context, speciesProvider) {
+              final speciesList = speciesProvider.getSpeciesForInventory(inventory.id);
+              int speciesWithinCount = 0;
+              int speciesOutOfCount = 0;
+
+              for (final species in speciesList) {
+                if (species.isOutOfInventory) {
+                  speciesOutOfCount++;
+                } else {
+                  speciesWithinCount++;
+                }
+              }
+              return {
+                'within': speciesWithinCount,
+                'out': speciesOutOfCount,
+              };
+            },
             shouldRebuild: (previous, next) =>
-              previous != next,
-            builder: (context, speciesCount, child) {
-              return Text('$speciesCount ${S.of(context).speciesCount(speciesCount)}');
+            previous['within'] != next['within'] || previous['out'] != next['out'],
+            builder: (context, speciesCounts, child) {
+              final int withinCount = speciesCounts['within'] ?? 0;
+              final int outCount = speciesCounts['out'] ?? 0;
+
+              String speciesText = "$withinCount ${S.current.speciesCount(withinCount)}";
+              if (outCount > 0) {
+                speciesText += " + $outCount ${S.current.outOfSample.toLowerCase()}";
+              }
+
+              return Text(speciesText);
             },
           ),
         ],

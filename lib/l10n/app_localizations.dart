@@ -1833,6 +1833,12 @@ abstract class AppLocalizations {
   /// **'No POIs to export.'**
   String get noPoisToExport;
 
+  /// Total species within sample card title in statistics
+  ///
+  /// In en, this message translates to:
+  /// **'Species within sample'**
+  String get totalSpeciesWithinSample;
+
   /// No description provided for @precipitationNone.
   ///
   /// In en, this message translates to:

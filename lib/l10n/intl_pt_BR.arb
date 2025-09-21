@@ -1048,6 +1048,11 @@
         "type": "text",
         "description": "Message shown when there are no POIs to export"
     },
+    "totalSpeciesWithinSample": "Espécies na amostra",
+    "@totalSpeciesWithinSample": {
+        "type": "text",
+        "description": "Total species within sample card title in statistics"
+    },
     "precipitationNone": "Nenhuma",
     "precipitationFog": "Névoa",
     "precipitationMist": "Neblina",

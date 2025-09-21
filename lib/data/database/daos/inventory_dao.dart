@@ -279,7 +279,7 @@ class InventoryDao {
       final List<Map<String, dynamic>> maps = await db?.query('inventories') ?? [];
 
       List<Inventory> inventories = await Future.wait(maps.map((map) async {
-        List<Species> speciesList = await _speciesDao.getSpeciesByInventory(map['id']);
+        List<Species> speciesList = await _speciesDao.getSpeciesByInventory(map['id'], false);
         List<Vegetation> vegetationList = await _vegetationDao.getVegetationByInventory(map['id']);
         List<Weather> weatherList = await _weatherDao.getWeatherByInventory(map['id']);
         // Create Inventory instance using the main constructor
@@ -332,7 +332,7 @@ class InventoryDao {
     ) ?? [];
     if (maps.isNotEmpty) {
       final map = maps.first;
-      List<Species> speciesList = await _speciesDao.getSpeciesByInventory(map['id']);
+      List<Species> speciesList = await _speciesDao.getSpeciesByInventory(map['id'], false);
       List<Vegetation> vegetationList = await _vegetationDao.getVegetationByInventory(map['id']);
       List<Weather> weatherList = await _weatherDao.getWeatherByInventory(map['id']);
       return Inventory.fromMap(map, speciesList, vegetationList, weatherList);

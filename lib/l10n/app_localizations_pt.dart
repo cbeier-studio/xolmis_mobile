@@ -1120,6 +1120,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get noPoisToExport => 'Nenhum POI para exportar.';
 
   @override
+  String get totalSpeciesWithinSample => 'Espécies na amostra';
+
+  @override
   String get precipitationNone => 'Nenhuma';
 
   @override
@@ -2427,6 +2430,9 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get noPoisToExport => 'Nenhum POI para exportar.';
+
+  @override
+  String get totalSpeciesWithinSample => 'Espécies na amostra';
 
   @override
   String get precipitationNone => 'Nenhuma';

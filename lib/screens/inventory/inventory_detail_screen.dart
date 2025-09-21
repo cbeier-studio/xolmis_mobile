@@ -187,8 +187,9 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
               );
             },
           ) : const SizedBox.shrink(),
-          if (!widget.inventory.isFinished)
-            IconButton.filled(
+          Visibility(
+              visible: !widget.inventory.isFinished,
+              child: IconButton.filled(
               onPressed: () async {
                 // Show confirmation dialog
                 // final confirmed = await showDialog<bool>(
@@ -245,8 +246,10 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
               )
                   : const Icon(Icons.flag_outlined),
             ),
-          if (widget.inventory.isFinished)
-            MenuAnchor(
+          ),
+          Visibility(
+              visible: widget.inventory.isFinished,
+              child: MenuAnchor(
               builder: (context, controller, child) {
                 return IconButton(
                   icon: Icon(Icons.file_upload_outlined),
@@ -305,6 +308,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                 ),
               ],
             ),
+          ),
           // const SizedBox(width: 8.0,),
         ],
         bottom: PreferredSize( // Wrap TabBar and LinearProgressIndicator in PreferredSize

@@ -73,11 +73,11 @@ class SpeciesDao {
   }
 
   // Get list of species from inventory
-  Future<List<Species>> getSpeciesByInventory(String inventoryId) async {
+  Future<List<Species>> getSpeciesByInventory(String inventoryId, bool onlySpeciesInSample) async {
     final db = await _dbHelper.database;
     final speciesMaps = await db?.query(
       'species',
-      where: 'inventoryId = ?',
+      where: onlySpeciesInSample ? 'inventoryId = ? AND isOutOfInventory = 0' : 'inventoryId = ?',
       whereArgs: [inventoryId],
     ) ?? [];
 
@@ -135,4 +135,6 @@ class SpeciesDao {
       return Species.fromMap(map, pois);
     }).toList();
   }
+
+
 }

@@ -737,6 +737,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "totalRecords": MessageLookupByLibrary.simpleMessage("Total de registros"),
     "totalSpecies": MessageLookupByLibrary.simpleMessage("Total de espécies"),
+    "totalSpeciesWithinSample": MessageLookupByLibrary.simpleMessage(
+      "Espécies na amostra",
+    ),
     "trees": MessageLookupByLibrary.simpleMessage("Árvores"),
     "vegetation": MessageLookupByLibrary.simpleMessage("Vegetação"),
     "vegetationData": MessageLookupByLibrary.simpleMessage(

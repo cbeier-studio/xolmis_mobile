@@ -2987,6 +2987,16 @@ class S {
     );
   }
 
+  /// `Species within sample`
+  String get totalSpeciesWithinSample {
+    return Intl.message(
+      'Species within sample',
+      name: 'totalSpeciesWithinSample',
+      desc: 'Total species within sample card title in statistics',
+      args: [],
+    );
+  }
+
   /// `None`
   String get precipitationNone {
     return Intl.message('None', name: 'precipitationNone', desc: '', args: []);
