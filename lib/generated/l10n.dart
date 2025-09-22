@@ -2997,6 +2997,36 @@ class S {
     );
   }
 
+  /// `Details`
+  String get details {
+    return Intl.message(
+      'Details',
+      name: 'details',
+      desc: 'Details button label',
+      args: [],
+    );
+  }
+
+  /// `Inventory details`
+  String get editInventoryDetails {
+    return Intl.message(
+      'Inventory details',
+      name: 'editInventoryDetails',
+      desc: 'Menu option to edit inventory details',
+      args: [],
+    );
+  }
+
+  /// `Discarded inventory`
+  String get discardedInventory {
+    return Intl.message(
+      'Discarded inventory',
+      name: 'discardedInventory',
+      desc: 'Menu option to discard an inventory',
+      args: [],
+    );
+  }
+
   /// `None`
   String get precipitationNone {
     return Intl.message('None', name: 'precipitationNone', desc: '', args: []);

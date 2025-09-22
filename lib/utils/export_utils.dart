@@ -177,7 +177,7 @@ Future<List<List>> buildInventoryRows(Inventory inventory, Locale locale) async 
   const List<String> inventoryHeaders = ['ID','Type','Duration',
     'Max of species','Start date','Start time','End date','End time',
     'Locality','Start longitude','Start latitude','End longitude',
-    'End latitude','Intervals'];
+    'End latitude','Intervals','Notes','Discarded'];
   const List<String> speciesHeaders = ['SPECIES', 'Count', 'Time', 'Out of sample', 'Notes'];
   const List<String> vegetationHeaders = ['Date/Time','Latitude','Longitude',
     'Herbs Proportion','Herbs Distribution','Herbs Height',
@@ -208,6 +208,8 @@ Future<List<List>> buildInventoryRows(Inventory inventory, Locale locale) async 
     formatNumbers ? numberFormat.format(inventory.endLongitude) : inventory.endLongitude,
     formatNumbers ? numberFormat.format(inventory.endLatitude) : inventory.endLatitude,
     inventory.currentInterval,
+    inventory.notes ?? '',
+    inventory.isDiscarded ? 'Yes' : 'No',
   ]);
   
   // Add species data

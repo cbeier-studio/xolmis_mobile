@@ -572,6 +572,8 @@ class Inventory with ChangeNotifier {
   double? endLongitude;
   double? endLatitude;
   String? localityName;
+  String? notes;
+  bool isDiscarded;
   List<Species> speciesList;
   List<Vegetation> vegetationList;
   List<Weather> weatherList;
@@ -605,6 +607,8 @@ class Inventory with ChangeNotifier {
     this.endLongitude,
     this.endLatitude,
     this.localityName,
+    this.notes,
+    this.isDiscarded = false,
     this.speciesList = const [],
     this.vegetationList = const [],
     this.weatherList = const [],
@@ -637,6 +641,8 @@ class Inventory with ChangeNotifier {
         endLongitude = map['endLongitude'],
         endLatitude = map['endLatitude'],
         localityName = map['localityName'],
+        notes = map['notes'],
+        isDiscarded = map['isDiscarded'] == 1,
         currentInterval = map['currentInterval'],
         intervalsWithoutNewSpecies = map['intervalsWithoutNewSpecies'],
         currentIntervalSpeciesCount = map['currentIntervalSpeciesCount'],
@@ -662,6 +668,8 @@ class Inventory with ChangeNotifier {
     int? intervalsWithoutNewSpecies,
     int? currentIntervalSpeciesCount,
     String? localityName,
+    String? notes,
+    bool? isDiscarded,
     List<Species>? speciesList,
     List<Vegetation>? vegetationList,
     List<Weather>? weatherList,
@@ -684,6 +692,8 @@ class Inventory with ChangeNotifier {
       intervalsWithoutNewSpecies: intervalsWithoutNewSpecies ?? this.intervalsWithoutNewSpecies,
       currentIntervalSpeciesCount: currentIntervalSpeciesCount ?? this.currentIntervalSpeciesCount,
       localityName: localityName ?? this.localityName,
+      notes: notes ?? this.notes,
+      isDiscarded: isDiscarded ?? this.isDiscarded,
       speciesList: speciesList ?? this.speciesList,
       vegetationList: vegetationList ?? this.vegetationList,
       weatherList: weatherList ?? this.weatherList,
@@ -709,6 +719,8 @@ class Inventory with ChangeNotifier {
       'intervalsWithoutNewSpecies': intervalsWithoutNewSpecies,
       'currentIntervalSpeciesCount': currentIntervalSpeciesCount,
       'localityName': localityName,
+      'notes': notes,
+      'isDiscarded': isDiscarded ? 1 : 0,
     };
   }
 
@@ -731,7 +743,9 @@ class Inventory with ChangeNotifier {
         'currentInterval: $currentInterval, '
         'intervalsWithoutNewSpecies: $intervalsWithoutNewSpecies, '
         'currentIntervalSpeciesCount: $currentIntervalSpeciesCount, '
-        'localityName: $localityName, }';
+        'localityName: $localityName, '
+        'notes: $notes, '
+        'isDiscarded: $isDiscarded }';
   }
 
   Map<String, dynamic> toJson() {
@@ -747,6 +761,8 @@ class Inventory with ChangeNotifier {
       'endLongitude': endLongitude,
       'endLatitude': endLatitude,
       'localityName': localityName,
+      'notes': notes,
+      'isDiscarded': isDiscarded,
       'currentInterval': currentInterval,
       'intervalsWithoutNewSpecies': intervalsWithoutNewSpecies,
       'currentIntervalSpeciesCount': currentIntervalSpeciesCount,
@@ -769,6 +785,8 @@ class Inventory with ChangeNotifier {
       endLongitude: json['endLongitude'],
       endLatitude: json['endLatitude'],
       localityName: json['localityName'],
+      notes: json['notes'],
+      isDiscarded: json['isDiscarded'],
       currentInterval: json['currentInterval'],
       intervalsWithoutNewSpecies: json['intervalsWithoutNewSpecies'],
       currentIntervalSpeciesCount: json['currentIntervalSpeciesCount'],

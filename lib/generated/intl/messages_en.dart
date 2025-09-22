@@ -189,6 +189,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "deleteWeather": MessageLookupByLibrary.simpleMessage(
       "Delete weather record",
     ),
+    "details": MessageLookupByLibrary.simpleMessage("Details"),
+    "discardedInventory": MessageLookupByLibrary.simpleMessage(
+      "Discarded inventory",
+    ),
     "distribution": MessageLookupByLibrary.simpleMessage("Distribution"),
     "distributionContinuousCoverWithGaps": MessageLookupByLibrary.simpleMessage(
       "Continuous with gaps",
@@ -240,6 +244,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "editCount": MessageLookupByLibrary.simpleMessage("Edit count"),
     "editEgg": MessageLookupByLibrary.simpleMessage("Edit egg"),
     "editImageNotes": MessageLookupByLibrary.simpleMessage("Edit image notes"),
+    "editInventoryDetails": MessageLookupByLibrary.simpleMessage(
+      "Inventory details",
+    ),
     "editInventoryId": MessageLookupByLibrary.simpleMessage("Edit ID"),
     "editJournalEntry": MessageLookupByLibrary.simpleMessage(
       "Edit journal entry",

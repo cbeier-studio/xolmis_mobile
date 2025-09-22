@@ -1123,6 +1123,15 @@ class AppLocalizationsPt extends AppLocalizations {
   String get totalSpeciesWithinSample => 'Espécies na amostra';
 
   @override
+  String get details => 'Detalhes';
+
+  @override
+  String get editInventoryDetails => 'Detalhes do inventário';
+
+  @override
+  String get discardedInventory => 'Inventário descartado';
+
+  @override
   String get precipitationNone => 'Nenhuma';
 
   @override
@@ -2433,6 +2442,15 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get totalSpeciesWithinSample => 'Espécies na amostra';
+
+  @override
+  String get details => 'Detalhes';
+
+  @override
+  String get editInventoryDetails => 'Detalhes do inventário';
+
+  @override
+  String get discardedInventory => 'Inventário descartado';
 
   @override
   String get precipitationNone => 'Nenhuma';

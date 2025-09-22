@@ -1120,6 +1120,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get totalSpeciesWithinSample => 'Species within sample';
 
   @override
+  String get details => 'Details';
+
+  @override
+  String get editInventoryDetails => 'Inventory details';
+
+  @override
+  String get discardedInventory => 'Discarded inventory';
+
+  @override
   String get precipitationNone => 'None';
 
   @override

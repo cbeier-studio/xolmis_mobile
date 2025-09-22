@@ -1053,6 +1053,21 @@
         "type": "text",
         "description": "Total species within sample card title in statistics"
     },
+    "details": "Detalhes",
+    "@details": {
+        "type": "text",
+        "description": "Details button label"
+    },
+    "editInventoryDetails": "Detalhes do inventário",
+    "@editInventoryDetails": {
+        "type": "text",
+        "description": "Menu option to edit inventory details"
+    },
+    "discardedInventory": "Inventário descartado",
+    "@discardedInventory": {
+        "type": "text",
+        "description": "Menu option to discard an inventory"
+    },
     "precipitationNone": "Nenhuma",
     "precipitationFog": "Névoa",
     "precipitationMist": "Neblina",

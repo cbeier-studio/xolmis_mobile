@@ -198,6 +198,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "deleteWeather": MessageLookupByLibrary.simpleMessage(
       "Apagar registro do tempo",
     ),
+    "details": MessageLookupByLibrary.simpleMessage("Detalhes"),
+    "discardedInventory": MessageLookupByLibrary.simpleMessage(
+      "Inventário descartado",
+    ),
     "distribution": MessageLookupByLibrary.simpleMessage("Distribuição"),
     "distributionContinuousCoverWithGaps": MessageLookupByLibrary.simpleMessage(
       "Contínua com manchas sem cobertura",
@@ -250,6 +254,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "editEgg": MessageLookupByLibrary.simpleMessage("Editar ovo"),
     "editImageNotes": MessageLookupByLibrary.simpleMessage(
       "Editar notas da imagem",
+    ),
+    "editInventoryDetails": MessageLookupByLibrary.simpleMessage(
+      "Detalhes do inventário",
     ),
     "editInventoryId": MessageLookupByLibrary.simpleMessage("Editar ID"),
     "editJournalEntry": MessageLookupByLibrary.simpleMessage("Editar nota"),

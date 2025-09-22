@@ -1094,6 +1094,11 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
+          // Show icon for discarded inventory
+          Visibility(
+            visible: inventory.isDiscarded,
+            child: const Icon(Icons.block),
+          ),
           // Show the number of intervals without species for qualitative inventories
           Visibility(
             visible: inventory.type == InventoryType.invIntervalQualitative,
@@ -1425,9 +1430,9 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                         TextButton(
                           onPressed: () {
                             Navigator.of(context).pop();
-                            _showEditLocalityDialog(context, inventory);
+                            _showEditDetailsDialog(context, inventory);
                           },
-                          child: Text(S.current.locality),
+                          child: Text(S.current.details),
                         ),
                       ],
                     ),
@@ -1661,19 +1666,27 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     );
   }
 
-  // Show the dialog to edit inventory locality
-  void _showEditLocalityDialog(BuildContext context, Inventory inventory) {
+  // Show the dialog to edit inventory details
+  void _showEditDetailsDialog(BuildContext context, Inventory inventory) {
     final localityNameController = TextEditingController(text: inventory.localityName);
+    final notesController = TextEditingController(text: inventory.notes);
     final inventoryProvider = Provider.of<InventoryProvider>(
-        context, listen: false);
+      context, listen: false);
     late TextEditingController fieldLocalityEditingController;
+    bool isDiscarded = inventory.isDiscarded; // Initialize with current value
 
     showDialog(
       context: context,
       builder: (BuildContext context) {
+        // Use StatefulBuilder to manage the state of the checkbox
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setStateDialog) {
         return AlertDialog.adaptive(
-          title: Text(S.of(context).editLocality),
-          content: Autocomplete<String>(
+          title: Text(S.of(context).editInventoryDetails),
+          content: Column(
+            mainAxisSize: MainAxisSize.min, // Important to prevent unbounded height
+            children: [
+              Autocomplete<String>(
             optionsBuilder:
                 (TextEditingValue textEditingValue) async {
               if (textEditingValue.text.isEmpty) {
@@ -1750,6 +1763,33 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
               );
             },
           ),
+              SizedBox(height: 8),
+              TextFormField(
+                controller: notesController,
+                textCapitalization: TextCapitalization.sentences,
+                maxLines: 3,
+                decoration: InputDecoration(
+                  labelText: S.of(context).notes,
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              SizedBox(height: 8),
+              Row(
+                children: [
+                  Checkbox(
+                    value: isDiscarded,
+                    onChanged: (bool? value) {
+                      setStateDialog(() {
+                        isDiscarded = value ?? false;
+                      });
+                    },
+                  ),
+                  Text(S.of(context).discardedInventory),
+                ],
+              ),
+              SizedBox(height: 8),
+            ],
+          ),
           actions: <Widget>[
             TextButton(
               child: Text(S.of(context).cancel),
@@ -1763,6 +1803,8 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                 // inventory.localityName = localityNameController.text;
                 final updatedInventory = inventory.copyWith(
                   localityName: fieldLocalityEditingController.text,
+                  notes: notesController.text,
+                  isDiscarded: isDiscarded,
                 );
                 inventoryProvider.updateInventory(updatedInventory);
                 if (context.mounted) {
@@ -1772,6 +1814,8 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
               },
             ),
           ],
+        );
+          },
         );
       },
     );

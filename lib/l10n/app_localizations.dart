@@ -1839,6 +1839,24 @@ abstract class AppLocalizations {
   /// **'Species within sample'**
   String get totalSpeciesWithinSample;
 
+  /// Details button label
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get details;
+
+  /// Menu option to edit inventory details
+  ///
+  /// In en, this message translates to:
+  /// **'Inventory details'**
+  String get editInventoryDetails;
+
+  /// Menu option to discard an inventory
+  ///
+  /// In en, this message translates to:
+  /// **'Discarded inventory'**
+  String get discardedInventory;
+
   /// No description provided for @precipitationNone.
   ///
   /// In en, this message translates to:
