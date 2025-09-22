@@ -158,7 +158,9 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
       return _sortInventories(inventories);
     }
     List<Inventory> filteredInventories = inventories.where((inventory) =>
-      inventory.id.toLowerCase().contains(_searchQuery.toLowerCase())).toList();
+      inventory.id.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+      inventory.localityName!.toLowerCase().contains(_searchQuery.toLowerCase())
+    ).toList();
     return _sortInventories(filteredInventories);
   }
 
