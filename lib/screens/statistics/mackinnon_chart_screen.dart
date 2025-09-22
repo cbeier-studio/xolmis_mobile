@@ -12,6 +12,7 @@ class MackinnonChartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final accumulatedSpeciesData = _prepareAccumulatedSpeciesData(selectedInventories);
+    final accumulatedSpeciesWithinSampleData = _prepareAccumulatedSpeciesWithinSample(selectedInventories);
 
     return Scaffold(
       appBar: AppBar(
@@ -19,7 +20,7 @@ class MackinnonChartScreen extends StatelessWidget {
       ),
       body: SafeArea(
         child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 56.0),
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 81.0),
         child: LineChart(
           LineChartData(
             // minX: 0,
@@ -43,6 +44,22 @@ class MackinnonChartScreen extends StatelessWidget {
                 belowBarData: BarAreaData(
                   show: true,
                   color: Colors.deepPurpleAccent.withAlpha(30),
+                ),
+              ),
+              LineChartBarData(
+                spots: accumulatedSpeciesWithinSampleData,
+                isCurved: false,
+                color: Theme.of(context).brightness == Brightness.light
+                    ? Colors.pink
+                    : Colors.pink[200],
+                barWidth: 2,
+                isStrokeCapRound: true,
+                dotData: FlDotData(
+                  show: true,
+                ),
+                belowBarData: BarAreaData(
+                  show: true,
+                  color: Colors.pinkAccent.withAlpha(30),
                 ),
               ),
             ],
@@ -126,6 +143,24 @@ class MackinnonChartScreen extends StatelessWidget {
       // inventory.speciesList.where((species) => speciesSet.add(species.name));
       for (final species in inventory.speciesList) {
         speciesSet.add(species.name);
+      }
+      accumulatedSpeciesData.add(FlSpot(i.toDouble(), speciesSet.length.toDouble()));
+    }
+
+    return accumulatedSpeciesData;
+  }
+
+  List<FlSpot> _prepareAccumulatedSpeciesWithinSample(List<Inventory> selectedInventories) {
+    final speciesSet = <String>{};
+    final accumulatedSpeciesData = <FlSpot>[];
+
+    for (var i = 0; i < selectedInventories.length; i++) {
+      final inventory = selectedInventories[i];
+      // inventory.speciesList.where((species) => speciesSet.add(species.name));
+      for (final species in inventory.speciesList) {
+        if (!species.isOutOfInventory) {
+          speciesSet.add(species.name);
+        }
       }
       accumulatedSpeciesData.add(FlSpot(i.toDouble(), speciesSet.length.toDouble()));
     }

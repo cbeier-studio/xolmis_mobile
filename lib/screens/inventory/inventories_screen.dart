@@ -939,25 +939,25 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                         leadingIcon: const Icon(Icons.bar_chart_outlined),
                         child: Text(S.current.speciesCounted),
                       ),
-                      MenuItemButton(
-                        onPressed: () {
-                          final inventories = selectedInventories
-                              .map((id) =>
-                                  inventoryProvider.getInventoryById(id))
-                              .toList();
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => IndividualsCountChartScreen(
-                                selectedInventories:
-                                    inventories.whereType<Inventory>().toList(),
-                              ),
-                            ),
-                          );
-                        },
-                        leadingIcon: const Icon(Icons.bar_chart_outlined),
-                        child: Text(S.current.individualsCounted),
-                      ),
+                      // MenuItemButton(
+                      //   onPressed: () {
+                      //     final inventories = selectedInventories
+                      //         .map((id) =>
+                      //             inventoryProvider.getInventoryById(id))
+                      //         .toList();
+                      //     Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //         builder: (context) => IndividualsCountChartScreen(
+                      //           selectedInventories:
+                      //               inventories.whereType<Inventory>().toList(),
+                      //         ),
+                      //       ),
+                      //     );
+                      //   },
+                      //   leadingIcon: const Icon(Icons.bar_chart_outlined),
+                      //   child: Text(S.current.individualsCounted),
+                      // ),
                     ],
                   ),
                   VerticalDivider(),
