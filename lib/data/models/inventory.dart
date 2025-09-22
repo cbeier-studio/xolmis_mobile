@@ -786,7 +786,7 @@ class Inventory with ChangeNotifier {
       endLatitude: json['endLatitude'],
       localityName: json['localityName'],
       notes: json['notes'],
-      isDiscarded: json['isDiscarded'],
+      isDiscarded: json['isDiscarded'] ?? false,
       currentInterval: json['currentInterval'],
       intervalsWithoutNewSpecies: json['intervalsWithoutNewSpecies'],
       currentIntervalSpeciesCount: json['currentIntervalSpeciesCount'],

@@ -78,9 +78,20 @@ class InventoryReportScreen extends StatelessWidget {
           // Add the species count to the row
           final speciesCount = speciesInInventory.count;
           // Add 'X' if the species is in the inventory, 'O' if it is out of inventory, if count is 0
-          row.add(speciesCount > 0 ? speciesCount : !speciesInInventory.isOutOfInventory ? 'X' : 'O');
-          // Add the species count to the total
-          totalIndividuals += speciesCount;
+          if (speciesCount > 0) {
+            if (speciesInInventory.isOutOfInventory) {
+              row.add('($speciesCount)');
+            } else {
+              row.add(speciesCount);
+            }
+            totalIndividuals += speciesCount;
+          } else {
+            if (speciesInInventory.isOutOfInventory) {
+              row.add('O');
+            } else {
+              row.add('X');
+            }
+          }
         } else {
           row.add('');
         }
@@ -93,7 +104,20 @@ class InventoryReportScreen extends StatelessWidget {
     // Add the total species row
     final totalSpeciesRow = ['${S.current.totalSpecies}: ${speciesSet.length}'];
     for (final inventory in inventories) {
-      totalSpeciesRow.add(inventory.speciesList.length.toString());
+      var totalSpeciesWithinSample = 0;
+      var totalSpeciesOutsideSample = 0;
+      for (final species in inventory.speciesList) {
+        if (species.isOutOfInventory) {
+          totalSpeciesOutsideSample = totalSpeciesOutsideSample + 1;
+        } else {
+          totalSpeciesWithinSample = totalSpeciesWithinSample + 1;
+        }
+      }
+      if (totalSpeciesOutsideSample > 0) {
+        totalSpeciesRow.add('$totalSpeciesWithinSample + ($totalSpeciesOutsideSample)');
+      } else {
+        totalSpeciesRow.add(totalSpeciesWithinSample.toString());
+      }
     }
     totalSpeciesRow.add(reportData.fold(0, (sum, row) => sum + (row.last as int)).toString());
 
