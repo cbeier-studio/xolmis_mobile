@@ -1159,6 +1159,27 @@ class AppLocalizationsPt extends AppLocalizations {
       'Formato JSON inválido. Esperado um objeto ou uma lista.';
 
   @override
+  String get importingNests => 'Importando ninhos';
+
+  @override
+  String get errorImportingNests => 'Erro importando ninhos';
+
+  @override
+  String errorImportingNestsWithFormatError(String errorMessage) {
+    return 'Erro de formato importando ninho: $errorMessage';
+  }
+
+  @override
+  String nestsImportedSuccessfully(int howMany) {
+    return 'Ninhos importados com sucesso: $howMany';
+  }
+
+  @override
+  String failedToImportNestWithId(int id) {
+    return 'Falha ao importar ninho com ID: $id';
+  }
+
+  @override
   String get precipitationNone => 'Nenhuma';
 
   @override
@@ -2505,6 +2526,27 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   @override
   String get invalidJsonFormatExpectedObjectOrArray =>
       'Formato JSON inválido. Esperado um objeto ou uma lista.';
+
+  @override
+  String get importingNests => 'Importando ninhos';
+
+  @override
+  String get errorImportingNests => 'Erro importando ninhos';
+
+  @override
+  String errorImportingNestsWithFormatError(String errorMessage) {
+    return 'Erro de formato importando ninho: $errorMessage';
+  }
+
+  @override
+  String nestsImportedSuccessfully(int howMany) {
+    return 'Ninhos importados com sucesso: $howMany';
+  }
+
+  @override
+  String failedToImportNestWithId(int id) {
+    return 'Falha ao importar ninho com ID: $id';
+  }
 
   @override
   String get precipitationNone => 'Nenhuma';

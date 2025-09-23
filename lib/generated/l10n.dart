@@ -3080,6 +3080,56 @@ class S {
     );
   }
 
+  /// `Importing nests`
+  String get importingNests {
+    return Intl.message(
+      'Importing nests',
+      name: 'importingNests',
+      desc: 'Message when importing nests',
+      args: [],
+    );
+  }
+
+  /// `Error importing nests`
+  String get errorImportingNests {
+    return Intl.message(
+      'Error importing nests',
+      name: 'errorImportingNests',
+      desc: 'Error message when importing nests',
+      args: [],
+    );
+  }
+
+  /// `Format error importing nest: {errorMessage}`
+  String errorImportingNestsWithFormatError(String errorMessage) {
+    return Intl.message(
+      'Format error importing nest: $errorMessage',
+      name: 'errorImportingNestsWithFormatError',
+      desc: 'Error message when importing nests with a format error',
+      args: [errorMessage],
+    );
+  }
+
+  /// `Nests imported successfully: {howMany}`
+  String nestsImportedSuccessfully(int howMany) {
+    return Intl.message(
+      'Nests imported successfully: $howMany',
+      name: 'nestsImportedSuccessfully',
+      desc: 'Message when nests are imported successfully',
+      args: [howMany],
+    );
+  }
+
+  /// `Failed to import nest with ID: {id}`
+  String failedToImportNestWithId(int id) {
+    return Intl.message(
+      'Failed to import nest with ID: $id',
+      name: 'failedToImportNestWithId',
+      desc: 'Message when failed to import a nest',
+      args: [id],
+    );
+  }
+
   /// `None`
   String get precipitationNone {
     return Intl.message('None', name: 'precipitationNone', desc: '', args: []);

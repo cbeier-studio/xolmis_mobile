@@ -1890,6 +1890,36 @@ abstract class AppLocalizations {
   /// **'Invalid JSON format. Expected an object or an array.'**
   String get invalidJsonFormatExpectedObjectOrArray;
 
+  /// Message when importing nests
+  ///
+  /// In en, this message translates to:
+  /// **'Importing nests'**
+  String get importingNests;
+
+  /// Error message when importing nests
+  ///
+  /// In en, this message translates to:
+  /// **'Error importing nests'**
+  String get errorImportingNests;
+
+  /// Error message when importing nests with a format error
+  ///
+  /// In en, this message translates to:
+  /// **'Format error importing nest: {errorMessage}'**
+  String errorImportingNestsWithFormatError(String errorMessage);
+
+  /// Message when nests are imported successfully
+  ///
+  /// In en, this message translates to:
+  /// **'Nests imported successfully: {howMany}'**
+  String nestsImportedSuccessfully(int howMany);
+
+  /// Message when failed to import a nest
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to import nest with ID: {id}'**
+  String failedToImportNestWithId(int id);
+
   /// No description provided for @precipitationNone.
   ///
   /// In en, this message translates to:

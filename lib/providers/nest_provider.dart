@@ -50,6 +50,22 @@ class NestProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  // Add imported nest to the database and the list
+  Future<bool> importNest(Nest nest) async {
+    try {
+      await _nestRepository.importNest(nest);
+      _nests.add(nest);
+      notifyListeners();
+
+      return true;
+    } catch (error) {
+      if (kDebugMode) {
+        print('Error importing nest: $error');
+      }
+      return false;
+    }
+  }
+
   // Update nest in the database and the list
   Future<void> updateNest(Nest nest) async {
     await _nestRepository.updateNest(nest);

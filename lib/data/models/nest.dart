@@ -75,6 +75,20 @@ class Egg {
     };
   }
 
+  factory Egg.fromJson(Map<String, dynamic> json) {
+    return Egg(
+      id: json['id'],
+      nestId: json['nestId'],
+      sampleTime: json['sampleTime'] != null ? DateTime.parse(json['sampleTime']) : null,
+      fieldNumber: json['fieldNumber'],
+      eggShape: json['eggShape'] != null ? EggShapeType.values[json['eggShape']] : EggShapeType.estOval,
+      width: json['width'],
+      length: json['length'],
+      mass: json['mass'],
+      speciesName: json['speciesName'],
+    );
+  }
+
   factory Egg.fromMap(Map<String, dynamic> map) {
     return Egg(
       id: map['id']?.toInt(),
@@ -205,6 +219,22 @@ class NestRevision {
       'hasPhilornisLarvae': hasPhilornisLarvae == true ? 1 : 0, // Convert bool to int
       'notes': notes,
     };
+  }
+
+  factory NestRevision.fromJson(Map<String, dynamic> json) {
+    return NestRevision(
+      id: json['id'],
+      nestId: json['nestId'],
+      sampleTime: json['sampleTime'] != null ? DateTime.parse(json['sampleTime']) : null,
+      nestStatus: json['nestStatus'] != null ? NestStatusType.values[json['nestStatus']] : NestStatusType.nstUnknown,
+      nestStage: json['nestStage'] != null ? NestStageType.values[json['nestStage']] : NestStageType.stgUnknown,
+      eggsHost: json['eggsHost'],
+      nestlingsHost: json['nestlingsHost'],
+      eggsParasite: json['eggsParasite'],
+      nestlingsParasite: json['nestlingsParasite'],
+      hasPhilornisLarvae: json['hasPhilornisLarvae'] == 1,
+      notes: json['notes'],
+    );
   }
 
   factory NestRevision.fromMap(Map<String, dynamic> map) {
@@ -345,6 +375,28 @@ class Nest {
       'revisionsList': revisionsList?.map((nestRevision) => nestRevision.toJson()).toList(),
       'eggsList': eggsList?.map((egg) => egg.toJson()).toList(),
     };
+  }
+
+  factory Nest.fromJson(Map<String, dynamic> json) {
+    return Nest(
+      id: json['id'],
+      fieldNumber: json['fieldNumber'],
+      speciesName: json['speciesName'],
+      localityName: json['localityName'],
+      foundTime: json['foundTime'] != null ? DateTime.parse(json['foundTime']) : null,
+      lastTime: json['lastTime'] != null ? DateTime.parse(json['lastTime']) : null,
+      longitude: json['longitude'],
+      latitude: json['latitude'],
+      support: json['support'],
+      heightAboveGround: json['heightAboveGround'],
+      nestFate: json['nestFate'] != null ? NestFateType.values[json['nestFate']] : NestFateType.fatUnknown,
+      male: json['male'],
+      female: json['female'],
+      helpers: json['helpers'],
+      isActive: json['isActive'] == 1,
+      revisionsList: (json['revisionsList'] as List).map((item) => NestRevision.fromJson(item)).toList(),
+      eggsList: (json['eggsList'] as List).map((item) => Egg.fromJson(item)).toList(),
+    );
   }
 
   factory Nest.fromMap(Map<String, dynamic> map, List<NestRevision> revisionsList, List<Egg> eggsList) {

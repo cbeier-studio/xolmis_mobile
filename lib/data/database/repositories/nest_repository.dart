@@ -10,6 +10,10 @@ class NestRepository {
     return _nestDao.insertNest(nest);
   }
 
+  Future<bool> importNest(Nest nest) {
+    return _nestDao.importNest(nest);
+  }
+
   Future<List<Nest>> getNests() {
     return _nestDao.getNests();
   }

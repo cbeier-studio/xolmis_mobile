@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +15,7 @@ import 'add_nest_screen.dart';
 import 'nest_detail_screen.dart';
 
 import '../../utils/export_utils.dart';
+import '../../utils/import_utils.dart';
 import '../../generated/l10n.dart';
 
 enum NestSortField {
@@ -526,6 +526,15 @@ class NestsScreenState extends State<NestsScreen> {
                   },
                   child: Text(S.of(context).selectAll),
                 ),
+              // Action to import inventories from JSON
+              MenuItemButton(
+                leadingIcon: Icon(Icons.file_open_outlined),
+                onPressed: () async {
+                  await importNestsFromJson(context);
+                  await nestProvider.fetchNests();
+                },
+                child: Text(S.of(context).import),
+              ),
               MenuItemButton(
                 leadingIcon: Icon(Icons.file_upload_outlined),
                 onPressed: () async {

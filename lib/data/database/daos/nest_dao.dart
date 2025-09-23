@@ -33,6 +33,48 @@ class NestDao {
     }
   }
 
+  // Import nest into database, ignoring id if present
+  Future<bool> importNest(Nest nest) async {
+    final db = await _dbHelper.database;
+    try {
+      // Create a map from the nest, but explicitly set id to null
+      // to allow autoincrement to assign a new ID.
+      Map<String, dynamic> nestMap = nest.toMap();
+      nestMap['id'] = null; // Ensure ID is null for autoincrement
+
+      int? newNestId = await db?.insert(
+        'nests',
+        nestMap,
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+
+      if (newNestId != null) {
+        // Update the original nest object's ID with the new ID from the database
+        nest.id = newNestId;
+
+        // Now, import related revisions and eggs, associating them with the new nest ID
+        if (nest.revisionsList != null && nest.revisionsList!.isNotEmpty) {
+          for (var revision in nest.revisionsList!) {
+            revision.nestId = newNestId;
+            await _nestRevisionDao.insertNestRevision(revision);
+          }
+        }
+        if (nest.eggsList != null && nest.eggsList!.isNotEmpty) {
+          for (var egg in nest.eggsList!) {
+            egg.nestId = newNestId;
+            await _eggDao.insertEgg(egg);
+          }
+        }
+      }
+      return true;
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error importing nest: $e');
+      }
+      return false;
+    }
+  }
+
   // Get list of all nests
   Future<List<Nest>> getNests() async {
     final db = await _dbHelper.database;

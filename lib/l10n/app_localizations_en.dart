@@ -1156,6 +1156,27 @@ class AppLocalizationsEn extends AppLocalizations {
       'Invalid JSON format. Expected an object or an array.';
 
   @override
+  String get importingNests => 'Importing nests';
+
+  @override
+  String get errorImportingNests => 'Error importing nests';
+
+  @override
+  String errorImportingNestsWithFormatError(String errorMessage) {
+    return 'Format error importing nest: $errorMessage';
+  }
+
+  @override
+  String nestsImportedSuccessfully(int howMany) {
+    return 'Nests imported successfully: $howMany';
+  }
+
+  @override
+  String failedToImportNestWithId(int id) {
+    return 'Failed to import nest with ID: $id';
+  }
+
+  @override
   String get precipitationNone => 'None';
 
   @override

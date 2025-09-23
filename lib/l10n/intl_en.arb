@@ -1677,6 +1677,46 @@
         "type": "text",
         "description": "Message when the JSON format is invalid"
     },
+    "importingNests": "Importing nests",
+    "@importingNests": {
+        "type": "text",
+        "description": "Message when importing nests"
+    },
+    "errorImportingNests": "Error importing nests",
+    "@errorImportingNests": {
+        "type": "text",
+        "description": "Error message when importing nests"
+    },
+    "errorImportingNestsWithFormatError": "Format error importing nest: {errorMessage}",
+    "@errorImportingNestsWithFormatError": {
+        "type": "text",
+        "description": "Error message when importing nests with a format error",
+        "placeholders": {
+            "errorMessage": {
+                "type": "String"
+            }
+        }
+    },
+    "nestsImportedSuccessfully": "Nests imported successfully: {howMany}",
+    "@nestsImportedSuccessfully": {
+        "type": "text",
+        "description": "Message when nests are imported successfully",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
+    "failedToImportNestWithId": "Failed to import nest with ID: {id}",
+    "@failedToImportNestWithId": {
+        "type": "text",
+        "description": "Message when failed to import a nest",
+        "placeholders": {
+            "id": {
+                "type": "int"
+            }
+        }
+    },
     "precipitationNone": "None",
     "precipitationFog": "Fog",
     "precipitationMist": "Mist",

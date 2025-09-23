@@ -7,8 +7,10 @@ import 'package:provider/provider.dart';
 import 'package:xolmis/generated/l10n.dart';
 
 import '../data/models/inventory.dart';
+import '../data/models/nest.dart';
 
 import '../providers/inventory_provider.dart';
+import '../providers/nest_provider.dart';
 
 Future<void> importInventoryFromJson(BuildContext context) async {
   bool isDialogShown = false;
@@ -129,7 +131,7 @@ Future<void> importInventoryFromJson(BuildContext context) async {
       } else {
         summaryMessage = S.current.importCompletedWithErrors(successfullyImportedCount, importErrors.length);
         // Opcional: mostrar os erros detalhados em um diálogo de expansão ou log
-        debugPrint("Erros de importação: \n${importErrors.join('\n')}");
+        debugPrint("Import errors: \n${importErrors.join('\n')}");
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -175,5 +177,122 @@ Future<void> importInventoryFromJson(BuildContext context) async {
     if (isDialogShown && context.mounted) {
       Navigator.of(context).pop();
     }
+  }
+}
+
+Future<void> importNestsFromJson(BuildContext context) async {
+  bool isDialogShown = false;
+  int successfullyImportedCount = 0;
+  int totalNestsToImport = 0;
+  List<String> importErrors = [];
+
+  try {
+    // Pick a JSON file
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['json'],
+    );
+
+    if (result != null && result.files.single.path != null) {
+      final filePath = result.files.single.path!;
+      final file = File(filePath);
+
+      // Show a loading dialog
+      if (!context.mounted) return;
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Dialog(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CircularProgressIndicator(year2023: false,),
+                  SizedBox(width: 16),
+                  Text(S.current.importingNests),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+      isDialogShown = true;
+
+      // Read the JSON file
+      final jsonString = await file.readAsString();
+      final jsonData = jsonDecode(jsonString);
+
+      final nestProvider = Provider.of<NestProvider>(context, listen: false);
+      List<Nest> nestsToImport = [];
+
+      if (jsonData is List) {
+        totalNestsToImport = jsonData.length;
+        for (final item in jsonData) {
+          if (item is Map<String, dynamic>) {
+            try {
+              nestsToImport.add(Nest.fromJson(item));
+            } catch (e) {
+              importErrors.add("Erro ao parsear item do array: ${e.toString()} \nItem: $item");
+            }
+          } else {
+            importErrors.add("Item inesperado no array JSON: $item");
+          }
+        }
+      } else if (jsonData is Map<String, dynamic> && jsonData.containsKey('nests') && jsonData['nests'] is List) {
+        final List<dynamic> nestsJsonList = jsonData['nests'];
+        totalNestsToImport = nestsJsonList.length;
+        for (final item in nestsJsonList) {
+          if (item is Map<String, dynamic>) {
+            try {
+              nestsToImport.add(Nest.fromJson(item)); // Alterado para Nest.fromJson
+            } catch (e) {
+              importErrors.add("Erro ao parsear item da lista 'nests': ${e.toString()} \nItem: $item");
+            }
+          } else {
+            importErrors.add("Item inesperado na lista 'nests': $item");
+          }
+        }
+      } else {
+        throw FormatException(S.current.invalidJsonFormatExpectedObjectOrArray);
+      }
+
+      if (!context.mounted) return;
+      // Save the nests to the database
+      for (final nest in nestsToImport) {
+        final success = await nestProvider.importNest(nest);
+        if (success) {
+          successfullyImportedCount++;
+        } else {
+          importErrors.add("${S.current.failedToImportNestWithId(nest.id!)}");
+        }
+      }
+
+      if (isDialogShown && context.mounted) Navigator.of(context).pop();
+      isDialogShown = false;
+
+      if (!context.mounted) return;
+
+      String summaryMessage = importErrors.isEmpty
+          ? S.current.nestsImportedSuccessfully(successfullyImportedCount)
+          : S.current.importCompletedWithErrors(successfullyImportedCount, importErrors.length);
+      if (importErrors.isNotEmpty) debugPrint("Import errors: \n${importErrors.join('\n')}");
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(summaryMessage)));
+    } else {
+      if (isDialogShown && context.mounted) Navigator.of(context).pop();
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(S.current.noFileSelected)));
+    }
+  } catch (error) {
+    if (isDialogShown && context.mounted) Navigator.of(context).pop();
+    debugPrint('Error importing nests: $error');
+    if (!context.mounted) return;
+    String errorMessage = '${S.current.errorImportingNests}: ${error.toString()}';
+    if (error is FormatException) errorMessage = S.current.errorImportingNestsWithFormatError(error.message);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Row(children: [Icon(Icons.error_outlined, color: Colors.red), SizedBox(width: 8), Text(errorMessage)]), duration: Duration(seconds: 5)));
+  } finally {
+    if (isDialogShown && context.mounted) Navigator.of(context).pop();
   }
 }

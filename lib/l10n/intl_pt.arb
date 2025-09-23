@@ -1116,6 +1116,46 @@
         "type": "text",
         "description": "Message when the JSON format is invalid"
     },
+    "importingNests": "Importando ninhos",
+    "@importingNests": {
+        "type": "text",
+        "description": "Message when importing nests"
+    },
+    "errorImportingNests": "Erro importando ninhos",
+    "@errorImportingNests": {
+        "type": "text",
+        "description": "Error message when importing nests"
+    },
+    "errorImportingNestsWithFormatError": "Erro de formato importando ninho: {errorMessage}",
+    "@errorImportingNestsWithFormatError": {
+        "type": "text",
+        "description": "Error message when importing nests with a format error",
+        "placeholders": {
+            "errorMessage": {
+                "type": "String"
+            }
+        }
+    },
+    "nestsImportedSuccessfully": "Ninhos importados com sucesso: {howMany}",
+    "@nestsImportedSuccessfully": {
+        "type": "text",
+        "description": "Message when nests are imported successfully",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
+    "failedToImportNestWithId": "Falha ao importar ninho com ID: {id}",
+    "@failedToImportNestWithId": {
+        "type": "text",
+        "description": "Message when failed to import a nest",
+        "placeholders": {
+            "id": {
+                "type": "int"
+            }
+        }
+    },
     "precipitationNone": "Nenhuma",
     "precipitationFog": "Névoa",
     "precipitationMist": "Neblina",
