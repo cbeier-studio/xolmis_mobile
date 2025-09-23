@@ -1132,6 +1132,33 @@ class AppLocalizationsPt extends AppLocalizations {
   String get discardedInventory => 'Inventário descartado';
 
   @override
+  String errorImportingInventoryWithFormatError(String errorMessage) {
+    return 'Erro de formato ao importar inventário: $errorMessage';
+  }
+
+  @override
+  String inventoriesImportedSuccessfully(int howMany) {
+    return 'Inventários importados com sucesso: $howMany';
+  }
+
+  @override
+  String importCompletedWithErrors(
+    int successfullyImportedCount,
+    int importErrorsCount,
+  ) {
+    return 'Importação concluída com erros: $successfullyImportedCount com sucesso, $importErrorsCount erros';
+  }
+
+  @override
+  String failedToImportInventoryWithId(String id) {
+    return 'Falha ao importar inventário com ID: $id';
+  }
+
+  @override
+  String get invalidJsonFormatExpectedObjectOrArray =>
+      'Formato JSON inválido. Esperado um objeto ou uma lista.';
+
+  @override
   String get precipitationNone => 'Nenhuma';
 
   @override
@@ -2451,6 +2478,33 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get discardedInventory => 'Inventário descartado';
+
+  @override
+  String errorImportingInventoryWithFormatError(String errorMessage) {
+    return 'Erro de formato ao importar inventário: $errorMessage';
+  }
+
+  @override
+  String inventoriesImportedSuccessfully(int howMany) {
+    return 'Inventários importados com sucesso: $howMany';
+  }
+
+  @override
+  String importCompletedWithErrors(
+    int successfullyImportedCount,
+    int importErrorsCount,
+  ) {
+    return 'Importação concluída com erros: $successfullyImportedCount com sucesso, $importErrorsCount erros';
+  }
+
+  @override
+  String failedToImportInventoryWithId(String id) {
+    return 'Falha ao importar inventário com ID: $id';
+  }
+
+  @override
+  String get invalidJsonFormatExpectedObjectOrArray =>
+      'Formato JSON inválido. Esperado um objeto ou uma lista.';
 
   @override
   String get precipitationNone => 'Nenhuma';

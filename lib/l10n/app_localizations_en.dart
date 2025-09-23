@@ -1129,6 +1129,33 @@ class AppLocalizationsEn extends AppLocalizations {
   String get discardedInventory => 'Discarded inventory';
 
   @override
+  String errorImportingInventoryWithFormatError(String errorMessage) {
+    return 'Format error importing inventory: $errorMessage';
+  }
+
+  @override
+  String inventoriesImportedSuccessfully(int howMany) {
+    return 'Inventories imported successfully: $howMany';
+  }
+
+  @override
+  String importCompletedWithErrors(
+    int successfullyImportedCount,
+    int importErrorsCount,
+  ) {
+    return 'Import completed with errors: $successfullyImportedCount successful, $importErrorsCount errors';
+  }
+
+  @override
+  String failedToImportInventoryWithId(String id) {
+    return 'Failed to import inventory with ID: $id';
+  }
+
+  @override
+  String get invalidJsonFormatExpectedObjectOrArray =>
+      'Invalid JSON format. Expected an object or an array.';
+
+  @override
   String get precipitationNone => 'None';
 
   @override

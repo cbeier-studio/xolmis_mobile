@@ -1857,6 +1857,39 @@ abstract class AppLocalizations {
   /// **'Discarded inventory'**
   String get discardedInventory;
 
+  /// Error message when importing inventories with a format error
+  ///
+  /// In en, this message translates to:
+  /// **'Format error importing inventory: {errorMessage}'**
+  String errorImportingInventoryWithFormatError(String errorMessage);
+
+  /// Message when inventories are imported successfully
+  ///
+  /// In en, this message translates to:
+  /// **'Inventories imported successfully: {howMany}'**
+  String inventoriesImportedSuccessfully(int howMany);
+
+  /// Message when import is completed with errors
+  ///
+  /// In en, this message translates to:
+  /// **'Import completed with errors: {successfullyImportedCount} successful, {importErrorsCount} errors'**
+  String importCompletedWithErrors(
+    int successfullyImportedCount,
+    int importErrorsCount,
+  );
+
+  /// Message when failed to import an inventory
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to import inventory with ID: {id}'**
+  String failedToImportInventoryWithId(String id);
+
+  /// Message when the JSON format is invalid
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid JSON format. Expected an object or an array.'**
+  String get invalidJsonFormatExpectedObjectOrArray;
+
   /// No description provided for @precipitationNone.
   ///
   /// In en, this message translates to:

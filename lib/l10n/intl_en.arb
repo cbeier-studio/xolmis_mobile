@@ -1629,6 +1629,54 @@
         "type": "text",
         "description": "Menu option to discard an inventory"
     },
+    "errorImportingInventoryWithFormatError": "Format error importing inventory: {errorMessage}",
+    "@errorImportingInventoryWithFormatError": {
+        "type": "text",
+        "description": "Error message when importing inventories with a format error",
+        "placeholders": {
+            "errorMessage": {
+                "type": "String"
+            }
+        }
+    },
+    "inventoriesImportedSuccessfully": "Inventories imported successfully: {howMany}",
+    "@inventoriesImportedSuccessfully": {
+        "type": "text",
+        "description": "Message when inventories are imported successfully",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
+    "importCompletedWithErrors": "Import completed with errors: {successfullyImportedCount} successful, {importErrorsCount} errors",
+    "@importCompletedWithErrors": {
+        "type": "text",
+        "description": "Message when import is completed with errors",
+        "placeholders": {
+            "successfullyImportedCount": {
+                "type": "int"
+            },
+            "importErrorsCount": {
+                "type": "int"
+            }
+        }
+    },
+    "failedToImportInventoryWithId": "Failed to import inventory with ID: {id}",
+    "@failedToImportInventoryWithId": {
+        "type": "text",
+        "description": "Message when failed to import an inventory",
+        "placeholders": {
+            "id": {
+                "type": "String"
+            }
+        }
+    },
+    "invalidJsonFormatExpectedObjectOrArray": "Invalid JSON format. Expected an object or an array.",
+    "@invalidJsonFormatExpectedObjectOrArray": {
+        "type": "text",
+        "description": "Message when the JSON format is invalid"
+    },
     "precipitationNone": "None",
     "precipitationFog": "Fog",
     "precipitationMist": "Mist",

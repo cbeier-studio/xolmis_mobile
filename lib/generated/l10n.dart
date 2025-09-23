@@ -3027,6 +3027,59 @@ class S {
     );
   }
 
+  /// `Format error importing inventory: {errorMessage}`
+  String errorImportingInventoryWithFormatError(String errorMessage) {
+    return Intl.message(
+      'Format error importing inventory: $errorMessage',
+      name: 'errorImportingInventoryWithFormatError',
+      desc: 'Error message when importing inventories with a format error',
+      args: [errorMessage],
+    );
+  }
+
+  /// `Inventories imported successfully: {howMany}`
+  String inventoriesImportedSuccessfully(int howMany) {
+    return Intl.message(
+      'Inventories imported successfully: $howMany',
+      name: 'inventoriesImportedSuccessfully',
+      desc: 'Message when inventories are imported successfully',
+      args: [howMany],
+    );
+  }
+
+  /// `Import completed with errors: {successfullyImportedCount} successful, {importErrorsCount} errors`
+  String importCompletedWithErrors(
+    int successfullyImportedCount,
+    int importErrorsCount,
+  ) {
+    return Intl.message(
+      'Import completed with errors: $successfullyImportedCount successful, $importErrorsCount errors',
+      name: 'importCompletedWithErrors',
+      desc: 'Message when import is completed with errors',
+      args: [successfullyImportedCount, importErrorsCount],
+    );
+  }
+
+  /// `Failed to import inventory with ID: {id}`
+  String failedToImportInventoryWithId(String id) {
+    return Intl.message(
+      'Failed to import inventory with ID: $id',
+      name: 'failedToImportInventoryWithId',
+      desc: 'Message when failed to import an inventory',
+      args: [id],
+    );
+  }
+
+  /// `Invalid JSON format. Expected an object or an array.`
+  String get invalidJsonFormatExpectedObjectOrArray {
+    return Intl.message(
+      'Invalid JSON format. Expected an object or an array.',
+      name: 'invalidJsonFormatExpectedObjectOrArray',
+      desc: 'Message when the JSON format is invalid',
+      args: [],
+    );
+  }
+
   /// `None`
   String get precipitationNone {
     return Intl.message('None', name: 'precipitationNone', desc: '', args: []);
