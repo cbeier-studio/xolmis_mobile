@@ -1156,6 +1156,61 @@
             }
         }
     },
+    "backup": "Backup",
+    "@backup": {
+        "type": "text",
+        "description": "Settings backup section title"
+    },
+    "createBackup": "Criar backup",
+    "@createBackup": {
+        "type": "text",
+        "description": "Create backup settings tile title"
+    },
+    "sendBackupTo": "Enviar backup para...",
+    "@sendBackupTo": {
+        "type": "text",
+        "description": "Share backup title"
+    },
+    "backupCreatedAndSharedSuccessfully": "Backup criado e compartilhado com sucesso",
+    "@backupCreatedAndSharedSuccessfully": {
+        "type": "text",
+        "description": "Message when backup is created and shared successfully"
+    },
+    "errorCreatingBackup": "Erro criando backup",
+    "@errorCreatingBackup": {
+        "type": "text",
+        "description": "Error message when creating backup"
+    },
+    "errorBackupNotFound": "Backup não encontrado",
+    "@errorBackupNotFound": {
+        "type": "text",
+        "description": "Error message when backup is not found"
+    },
+    "restoreBackup": "Restaurar backup",
+    "@restoreBackup": {
+        "type": "text",
+        "description": "Restore backup settings tile title"
+    },
+    "backupRestoredSuccessfully": "Backup restaurado com sucesso! Reinicie o app para aplicar as alterações.",
+    "@backupRestoredSuccessfully": {
+        "type": "text",
+        "description": "Message when backup is restored successfully"
+    },
+    "errorRestoringBackup": "Erro restaurando backup",
+    "@errorRestoringBackup": {
+        "type": "text",
+        "description": "Error message when restoring backup"
+    },
+    "backingUpData": "Criando backup dos dados",
+    "@backingUpData": {
+        "type": "text",
+        "description": "Message when backing up data"
+    },
+    "restoringData": "Restaurando dados",
+    "@restoringData": {
+        "type": "text",
+        "description": "Message when restoring data"
+    },
     "precipitationNone": "Nenhuma",
     "precipitationFog": "Névoa",
     "precipitationMist": "Neblina",

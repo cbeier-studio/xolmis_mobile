@@ -1177,6 +1177,41 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get backup => 'Backup';
+
+  @override
+  String get createBackup => 'Create backup';
+
+  @override
+  String get sendBackupTo => 'Send backup to...';
+
+  @override
+  String get backupCreatedAndSharedSuccessfully =>
+      'Backup created and shared successfully';
+
+  @override
+  String get errorCreatingBackup => 'Error creating backup';
+
+  @override
+  String get errorBackupNotFound => 'Backup not found';
+
+  @override
+  String get restoreBackup => 'Restore backup';
+
+  @override
+  String get backupRestoredSuccessfully =>
+      'Backup restored successfully! Restart the app to apply the changes.';
+
+  @override
+  String get errorRestoringBackup => 'Error restoring backup';
+
+  @override
+  String get backingUpData => 'Backing up data';
+
+  @override
+  String get restoringData => 'Restoring data';
+
+  @override
   String get precipitationNone => 'None';
 
   @override

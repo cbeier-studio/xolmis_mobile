@@ -1717,6 +1717,61 @@
             }
         }
     },
+    "backup": "Backup",
+    "@backup": {
+        "type": "text",
+        "description": "Settings backup section title"
+    },
+    "createBackup": "Create backup",
+    "@createBackup": {
+        "type": "text",
+        "description": "Create backup settings tile title"
+    },
+    "sendBackupTo": "Send backup to...",
+    "@sendBackupTo": {
+        "type": "text",
+        "description": "Share backup title"
+    },
+    "backupCreatedAndSharedSuccessfully": "Backup created and shared successfully",
+    "@backupCreatedAndSharedSuccessfully": {
+        "type": "text",
+        "description": "Message when backup is created and shared successfully"
+    },
+    "errorCreatingBackup": "Error creating backup",
+    "@errorCreatingBackup": {
+        "type": "text",
+        "description": "Error message when creating backup"
+    },
+    "errorBackupNotFound": "Backup not found",
+    "@errorBackupNotFound": {
+        "type": "text",
+        "description": "Error message when backup is not found"
+    },
+    "restoreBackup": "Restore backup",
+    "@restoreBackup": {
+        "type": "text",
+        "description": "Restore backup settings tile title"
+    },
+    "backupRestoredSuccessfully": "Backup restored successfully! Restart the app to apply the changes.",
+    "@backupRestoredSuccessfully": {
+        "type": "text",
+        "description": "Message when backup is restored successfully"
+    },
+    "errorRestoringBackup": "Error restoring backup",
+    "@errorRestoringBackup": {
+        "type": "text",
+        "description": "Error message when restoring backup"
+    },
+    "backingUpData": "Backing up data",
+    "@backingUpData": {
+        "type": "text",
+        "description": "Message when backing up data"
+    },
+    "restoringData": "Restoring data",
+    "@restoringData": {
+        "type": "text",
+        "description": "Message when restoring data"
+    },
     "precipitationNone": "None",
     "precipitationFog": "Fog",
     "precipitationMist": "Mist",

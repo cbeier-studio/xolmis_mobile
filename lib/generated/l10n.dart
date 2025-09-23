@@ -3130,6 +3130,116 @@ class S {
     );
   }
 
+  /// `Backup`
+  String get backup {
+    return Intl.message(
+      'Backup',
+      name: 'backup',
+      desc: 'Settings backup section title',
+      args: [],
+    );
+  }
+
+  /// `Create backup`
+  String get createBackup {
+    return Intl.message(
+      'Create backup',
+      name: 'createBackup',
+      desc: 'Create backup settings tile title',
+      args: [],
+    );
+  }
+
+  /// `Send backup to...`
+  String get sendBackupTo {
+    return Intl.message(
+      'Send backup to...',
+      name: 'sendBackupTo',
+      desc: 'Share backup title',
+      args: [],
+    );
+  }
+
+  /// `Backup created and shared successfully`
+  String get backupCreatedAndSharedSuccessfully {
+    return Intl.message(
+      'Backup created and shared successfully',
+      name: 'backupCreatedAndSharedSuccessfully',
+      desc: 'Message when backup is created and shared successfully',
+      args: [],
+    );
+  }
+
+  /// `Error creating backup`
+  String get errorCreatingBackup {
+    return Intl.message(
+      'Error creating backup',
+      name: 'errorCreatingBackup',
+      desc: 'Error message when creating backup',
+      args: [],
+    );
+  }
+
+  /// `Backup not found`
+  String get errorBackupNotFound {
+    return Intl.message(
+      'Backup not found',
+      name: 'errorBackupNotFound',
+      desc: 'Error message when backup is not found',
+      args: [],
+    );
+  }
+
+  /// `Restore backup`
+  String get restoreBackup {
+    return Intl.message(
+      'Restore backup',
+      name: 'restoreBackup',
+      desc: 'Restore backup settings tile title',
+      args: [],
+    );
+  }
+
+  /// `Backup restored successfully! Restart the app to apply the changes.`
+  String get backupRestoredSuccessfully {
+    return Intl.message(
+      'Backup restored successfully! Restart the app to apply the changes.',
+      name: 'backupRestoredSuccessfully',
+      desc: 'Message when backup is restored successfully',
+      args: [],
+    );
+  }
+
+  /// `Error restoring backup`
+  String get errorRestoringBackup {
+    return Intl.message(
+      'Error restoring backup',
+      name: 'errorRestoringBackup',
+      desc: 'Error message when restoring backup',
+      args: [],
+    );
+  }
+
+  /// `Backing up data`
+  String get backingUpData {
+    return Intl.message(
+      'Backing up data',
+      name: 'backingUpData',
+      desc: 'Message when backing up data',
+      args: [],
+    );
+  }
+
+  /// `Restoring data`
+  String get restoringData {
+    return Intl.message(
+      'Restoring data',
+      name: 'restoringData',
+      desc: 'Message when restoring data',
+      args: [],
+    );
+  }
+
   /// `None`
   String get precipitationNone {
     return Intl.message('None', name: 'precipitationNone', desc: '', args: []);

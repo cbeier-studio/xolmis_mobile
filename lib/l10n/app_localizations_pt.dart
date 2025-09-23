@@ -1180,6 +1180,41 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
+  String get backup => 'Backup';
+
+  @override
+  String get createBackup => 'Criar backup';
+
+  @override
+  String get sendBackupTo => 'Enviar backup para...';
+
+  @override
+  String get backupCreatedAndSharedSuccessfully =>
+      'Backup criado e compartilhado com sucesso';
+
+  @override
+  String get errorCreatingBackup => 'Erro criando backup';
+
+  @override
+  String get errorBackupNotFound => 'Backup não encontrado';
+
+  @override
+  String get restoreBackup => 'Restaurar backup';
+
+  @override
+  String get backupRestoredSuccessfully =>
+      'Backup restaurado com sucesso! Reinicie o app para aplicar as alterações.';
+
+  @override
+  String get errorRestoringBackup => 'Erro restaurando backup';
+
+  @override
+  String get backingUpData => 'Criando backup dos dados';
+
+  @override
+  String get restoringData => 'Restaurando dados';
+
+  @override
   String get precipitationNone => 'Nenhuma';
 
   @override
@@ -2547,6 +2582,41 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String failedToImportNestWithId(int id) {
     return 'Falha ao importar ninho com ID: $id';
   }
+
+  @override
+  String get backup => 'Backup';
+
+  @override
+  String get createBackup => 'Criar backup';
+
+  @override
+  String get sendBackupTo => 'Enviar backup para...';
+
+  @override
+  String get backupCreatedAndSharedSuccessfully =>
+      'Backup criado e compartilhado com sucesso';
+
+  @override
+  String get errorCreatingBackup => 'Erro criando backup';
+
+  @override
+  String get errorBackupNotFound => 'Backup não encontrado';
+
+  @override
+  String get restoreBackup => 'Restaurar backup';
+
+  @override
+  String get backupRestoredSuccessfully =>
+      'Backup restaurado com sucesso! Reinicie o app para aplicar as alterações.';
+
+  @override
+  String get errorRestoringBackup => 'Erro restaurando backup';
+
+  @override
+  String get backingUpData => 'Criando backup dos dados';
+
+  @override
+  String get restoringData => 'Restaurando dados';
 
   @override
   String get precipitationNone => 'Nenhuma';

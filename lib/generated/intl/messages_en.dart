@@ -148,6 +148,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "averageSurveyHours": MessageLookupByLibrary.simpleMessage(
       "survey hours per inventory",
     ),
+    "backingUpData": MessageLookupByLibrary.simpleMessage("Backing up data"),
+    "backup": MessageLookupByLibrary.simpleMessage("Backup"),
+    "backupCreatedAndSharedSuccessfully": MessageLookupByLibrary.simpleMessage(
+      "Backup created and shared successfully",
+    ),
+    "backupRestoredSuccessfully": MessageLookupByLibrary.simpleMessage(
+      "Backup restored successfully! Restart the app to apply the changes.",
+    ),
     "camera": MessageLookupByLibrary.simpleMessage("Camera"),
     "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
     "clearSelection": MessageLookupByLibrary.simpleMessage("Clear selection"),
@@ -168,6 +176,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Are you sure you want to finish this inventory?",
     ),
     "count": MessageLookupByLibrary.simpleMessage("Count"),
+    "createBackup": MessageLookupByLibrary.simpleMessage("Create backup"),
     "dangerZone": MessageLookupByLibrary.simpleMessage("Danger zone"),
     "darkMode": MessageLookupByLibrary.simpleMessage("Dark"),
     "dataDeleted": MessageLookupByLibrary.simpleMessage(
@@ -289,6 +298,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "eggShapeOval": MessageLookupByLibrary.simpleMessage("Oval"),
     "eggShapePyriform": MessageLookupByLibrary.simpleMessage("Pyriform"),
     "eggShapeSpherical": MessageLookupByLibrary.simpleMessage("Spherical"),
+    "errorBackupNotFound": MessageLookupByLibrary.simpleMessage(
+      "Backup not found",
+    ),
+    "errorCreatingBackup": MessageLookupByLibrary.simpleMessage(
+      "Error creating backup",
+    ),
     "errorEggAlreadyExists": MessageLookupByLibrary.simpleMessage(
       "An egg with this field number already exists.",
     ),
@@ -312,6 +327,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "errorNestAlreadyExists": MessageLookupByLibrary.simpleMessage(
       "A nest with this field number already exists.",
+    ),
+    "errorRestoringBackup": MessageLookupByLibrary.simpleMessage(
+      "Error restoring backup",
     ),
     "errorSavingEgg": MessageLookupByLibrary.simpleMessage("Error saving egg."),
     "errorSavingJournalEntry": MessageLookupByLibrary.simpleMessage(
@@ -630,6 +648,8 @@ class MessageLookup extends MessageLookupByLibrary {
       "Species by inventory",
     ),
     "requiredField": MessageLookupByLibrary.simpleMessage("* required"),
+    "restoreBackup": MessageLookupByLibrary.simpleMessage("Restore backup"),
+    "restoringData": MessageLookupByLibrary.simpleMessage("Restoring data"),
     "resume": MessageLookupByLibrary.simpleMessage("Resume"),
     "revision": m29,
     "save": MessageLookupByLibrary.simpleMessage("Save"),
@@ -645,6 +665,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "selectSpeciesToShowStats": MessageLookupByLibrary.simpleMessage(
       "Select a species to show the statistics",
     ),
+    "sendBackupTo": MessageLookupByLibrary.simpleMessage("Send backup to..."),
     "settings": MessageLookupByLibrary.simpleMessage("Settings"),
     "shareImage": MessageLookupByLibrary.simpleMessage("Share image"),
     "shrubs": MessageLookupByLibrary.simpleMessage("Shrubs"),

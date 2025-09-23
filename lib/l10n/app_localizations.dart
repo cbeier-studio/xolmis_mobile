@@ -1920,6 +1920,72 @@ abstract class AppLocalizations {
   /// **'Failed to import nest with ID: {id}'**
   String failedToImportNestWithId(int id);
 
+  /// Settings backup section title
+  ///
+  /// In en, this message translates to:
+  /// **'Backup'**
+  String get backup;
+
+  /// Create backup settings tile title
+  ///
+  /// In en, this message translates to:
+  /// **'Create backup'**
+  String get createBackup;
+
+  /// Share backup title
+  ///
+  /// In en, this message translates to:
+  /// **'Send backup to...'**
+  String get sendBackupTo;
+
+  /// Message when backup is created and shared successfully
+  ///
+  /// In en, this message translates to:
+  /// **'Backup created and shared successfully'**
+  String get backupCreatedAndSharedSuccessfully;
+
+  /// Error message when creating backup
+  ///
+  /// In en, this message translates to:
+  /// **'Error creating backup'**
+  String get errorCreatingBackup;
+
+  /// Error message when backup is not found
+  ///
+  /// In en, this message translates to:
+  /// **'Backup not found'**
+  String get errorBackupNotFound;
+
+  /// Restore backup settings tile title
+  ///
+  /// In en, this message translates to:
+  /// **'Restore backup'**
+  String get restoreBackup;
+
+  /// Message when backup is restored successfully
+  ///
+  /// In en, this message translates to:
+  /// **'Backup restored successfully! Restart the app to apply the changes.'**
+  String get backupRestoredSuccessfully;
+
+  /// Error message when restoring backup
+  ///
+  /// In en, this message translates to:
+  /// **'Error restoring backup'**
+  String get errorRestoringBackup;
+
+  /// Message when backing up data
+  ///
+  /// In en, this message translates to:
+  /// **'Backing up data'**
+  String get backingUpData;
+
+  /// Message when restoring data
+  ///
+  /// In en, this message translates to:
+  /// **'Restoring data'**
+  String get restoringData;
+
   /// No description provided for @precipitationNone.
   ///
   /// In en, this message translates to:
