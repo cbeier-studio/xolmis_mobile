@@ -380,7 +380,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   'assets/xolmis_icon.png',
                   scale: 3,
                 ),
-                applicationLegalese: '© ${DateTime.now().year} Christian Beier',
+                applicationLegalese: '© 2024-${DateTime.now().year} Christian Beier',
                 applicationName: _packageInfo?.appName ?? 'Xolmis',
                 applicationVersion: '${_packageInfo?.version ?? ''}+${_packageInfo?.buildNumber ?? ''}',
               ),
@@ -393,159 +393,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 leading: Icon(Icons.save_outlined),
                 title: Text(S.current.createBackup),
                 onPressed: (context) async {
-                  bool isDialogShown = false;
-                  try {
-                    final directory = await getDownloadsDirectory();
-                    final now = DateTime.now();
-                    final formatter = DateFormat('yyyyMMdd_HHmmss');
-                    final formattedDate = formatter.format(now);
-                    final backupFilePath = '${directory!.path}/xolmis_backup_$formattedDate.zip';
-
-                    if (mounted) { // Garante que o widget ainda está na árvore
-                      showDialog(
-                        context: context,
-                        barrierDismissible: false, // O usuário não pode dispensar o diálogo
-                        builder: (BuildContext dialogContext) {
-                          return Dialog(
-                            child: Padding(
-                              padding: const EdgeInsets.all(20.0),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  CircularProgressIndicator(),
-                                  SizedBox(width: 20),
-                                  Text(S.of(dialogContext).backingUpData),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                      isDialogShown = true;
-                    }
-
-                    final success = await backupDatabase(backupFilePath);
-
-                    if (isDialogShown && mounted) {
-                      Navigator.of(context).pop();
-                      isDialogShown = false;
-                    }
-
-                    if (success) {
-                      final result = await SharePlus.instance.share(
-                          ShareParams(
-                              files: [XFile(backupFilePath, mimeType: 'application/zip')],
-                              text: S.current.sendBackupTo,
-                          )
-                      );
-
-                      if (result.status == ShareResultStatus.success) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(S.current.backupCreatedAndSharedSuccessfully)),
-                        );
-                      }
-                    } else {
-                      if (isDialogShown && mounted) {
-                        Navigator.of(context).pop();
-                        isDialogShown = false;
-                      }
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(S.current.errorBackupNotFound)),
-                      );
-                    }
-                  } catch (e) {
-                    if (isDialogShown && mounted) {
-                      Navigator.of(context).pop();
-                      isDialogShown = false;
-                    }
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('${S.current.errorCreatingBackup}: ${e.toString()}')),
-                    );
-                  }
+                  await runCreateBackup(context);
                 }
               ),
               SettingsTile.navigation(
                 leading: Icon(Icons.settings_backup_restore_outlined),
                 title: Text(S.current.restoreBackup),
                 onPressed: (context) async {
-                  final result = await FilePicker.platform.pickFiles(
-                    type: FileType.custom,
-                    allowedExtensions: ['zip'],
-                  );
-
-                  if (result != null && result.files.single.path != null) {
-                    final filePath = result.files.single.path!;
-                    bool isDialogShown = false;
-                    try {
-                      if (mounted) {
-                        showDialog(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (BuildContext dialogContext) {
-                            return Dialog(
-                              child: Padding(
-                                padding: const EdgeInsets.all(20.0),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    CircularProgressIndicator(),
-                                    SizedBox(width: 20),
-                                    Text(S.of(dialogContext).restoringData),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                        );
-                        isDialogShown = true;
-                      }
-
-                      final success = await restoreDatabase(filePath);
-
-                      if (isDialogShown && mounted) {
-                        Navigator.of(context).pop();
-                        isDialogShown = false;
-                      }
-
-                      if (success) {
-                        if (mounted) {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext dialogContext) {
-                              return AlertDialog.adaptive(
-                                title: Text(S.of(dialogContext).restoreBackup),
-                                content: Text(S.of(dialogContext).backupRestoredSuccessfully),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text(S.of(context).ok),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        }
-                      } else {
-                        if (isDialogShown && mounted) {
-                          Navigator.of(context).pop();
-                          isDialogShown = false;
-                        }
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(S.current.errorRestoringBackup)),
-                        );
-                      }
-                    } catch (e) {
-                      if (isDialogShown && mounted) {
-                        Navigator.of(context).pop();
-                        isDialogShown = false;
-                      }
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('${S.current.errorRestoringBackup}: ${e.toString()}')),
-                      );
-                    }
-                  }
+                  await runBackupRestore(context);
                 },
               ),
             ],
@@ -577,6 +432,159 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
       ),
     );
+  }
+
+  Future<void> runCreateBackup(BuildContext context) async {
+    bool isDialogShown = false;
+    try {
+      final directory = await getDownloadsDirectory();
+      final now = DateTime.now();
+      final formatter = DateFormat('yyyyMMdd_HHmmss');
+      final formattedDate = formatter.format(now);
+      final backupFilePath = '${directory!.path}/xolmis_backup_$formattedDate.zip';
+
+      if (mounted) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext dialogContext) {
+            return Dialog(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CircularProgressIndicator(),
+                    SizedBox(width: 20),
+                    Text(S.of(dialogContext).backingUpData),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+        isDialogShown = true;
+      }
+
+      final success = await backupDatabase(backupFilePath);
+
+      if (isDialogShown && mounted) {
+        Navigator.of(context).pop();
+        isDialogShown = false;
+      }
+
+      if (success) {
+        final result = await SharePlus.instance.share(
+            ShareParams(
+                files: [XFile(backupFilePath, mimeType: 'application/zip')],
+                text: S.current.sendBackupTo,
+            )
+        );
+
+        if (result.status == ShareResultStatus.success) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(S.current.backupCreatedAndSharedSuccessfully)),
+          );
+        }
+      } else {
+        if (isDialogShown && mounted) {
+          Navigator.of(context).pop();
+          isDialogShown = false;
+        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(S.current.errorBackupNotFound)),
+        );
+      }
+    } catch (e) {
+      if (isDialogShown && mounted) {
+        Navigator.of(context).pop();
+        isDialogShown = false;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('${S.current.errorCreatingBackup}: ${e.toString()}')),
+      );
+    }
+  }
+
+  Future<void> runBackupRestore(BuildContext context) async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['zip'],
+    );
+
+    if (result != null && result.files.single.path != null) {
+      final filePath = result.files.single.path!;
+      bool isDialogShown = false;
+      try {
+        if (mounted) {
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext dialogContext) {
+              return Dialog(
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      CircularProgressIndicator(),
+                      SizedBox(width: 20),
+                      Text(S.of(dialogContext).restoringData),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+          isDialogShown = true;
+        }
+
+        final success = await restoreDatabase(filePath);
+
+        if (isDialogShown && mounted) {
+          Navigator.of(context).pop();
+          isDialogShown = false;
+        }
+
+        if (success) {
+          if (mounted) {
+            showDialog(
+              context: context,
+              builder: (BuildContext dialogContext) {
+                return AlertDialog.adaptive(
+                  title: Text(S.of(dialogContext).restoreBackup),
+                  content: Text(S.of(dialogContext).backupRestoredSuccessfully),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(S.of(context).ok),
+                    ),
+                  ],
+                );
+              },
+            );
+          }
+        } else {
+          if (isDialogShown && mounted) {
+            Navigator.of(context).pop();
+            isDialogShown = false;
+          }
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(S.current.errorRestoringBackup)),
+          );
+        }
+      } catch (e) {
+        if (isDialogShown && mounted) {
+          Navigator.of(context).pop();
+          isDialogShown = false;
+        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('${S.current.errorRestoringBackup}: ${e.toString()}')),
+        );
+      }
+    }
   }
 
   // Future<void> _showDeleteConfirmationDialog(BuildContext context) async {

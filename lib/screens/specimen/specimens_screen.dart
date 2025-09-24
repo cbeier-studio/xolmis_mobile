@@ -14,6 +14,7 @@ import '../../data/models/app_image.dart';
 import '../../providers/specimen_provider.dart';
 import '../../providers/app_image_provider.dart';
 
+import '../../utils/import_utils.dart';
 import 'add_specimen_screen.dart';
 import '../images/app_image_screen.dart';
 import '../../utils/export_utils.dart';
@@ -401,6 +402,15 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                   },
                   child: Text(S.of(context).selectAll),
                 ),
+              // Action to import specimens from JSON
+              MenuItemButton(
+                leadingIcon: Icon(Icons.file_open_outlined),
+                onPressed: () async {
+                  await importSpecimensFromJson(context);
+                  await specimenProvider.fetchSpecimens();
+                },
+                child: Text(S.of(context).import),
+              ),
               MenuItemButton(
                 leadingIcon: Icon(Icons.file_upload_outlined),
                 onPressed: () {

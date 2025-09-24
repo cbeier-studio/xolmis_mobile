@@ -8,9 +8,11 @@ import 'package:xolmis/generated/l10n.dart';
 
 import '../data/models/inventory.dart';
 import '../data/models/nest.dart';
+import '../data/models/specimen.dart';
 
 import '../providers/inventory_provider.dart';
 import '../providers/nest_provider.dart';
+import '../providers/specimen_provider.dart';
 
 Future<void> importInventoryFromJson(BuildContext context) async {
   bool isDialogShown = false;
@@ -291,6 +293,123 @@ Future<void> importNestsFromJson(BuildContext context) async {
     if (!context.mounted) return;
     String errorMessage = '${S.current.errorImportingNests}: ${error.toString()}';
     if (error is FormatException) errorMessage = S.current.errorImportingNestsWithFormatError(error.message);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Row(children: [Icon(Icons.error_outlined, color: Colors.red), SizedBox(width: 8), Text(errorMessage)]), duration: Duration(seconds: 5)));
+  } finally {
+    if (isDialogShown && context.mounted) Navigator.of(context).pop();
+  }
+}
+
+Future<void> importSpecimensFromJson(BuildContext context) async {
+  bool isDialogShown = false;
+  int successfullyImportedCount = 0;
+  int totalSpecimensToImport = 0;
+  List<String> importErrors = [];
+
+  try {
+    // Pick a JSON file
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['json'],
+    );
+
+    if (result != null && result.files.single.path != null) {
+      final filePath = result.files.single.path!;
+      final file = File(filePath);
+
+      // Show a loading dialog
+      if (!context.mounted) return;
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Dialog(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CircularProgressIndicator(year2023: false,),
+                  SizedBox(width: 16),
+                  Text(S.current.importingSpecimens),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+      isDialogShown = true;
+
+      // Read the JSON file
+      final jsonString = await file.readAsString();
+      final jsonData = jsonDecode(jsonString);
+
+      final specimenProvider = Provider.of<SpecimenProvider>(context, listen: false);
+      List<Specimen> specimensToImport = [];
+
+      if (jsonData is List) {
+        totalSpecimensToImport = jsonData.length;
+        for (final item in jsonData) {
+          if (item is Map<String, dynamic>) {
+            try {
+              specimensToImport.add(Specimen.fromJson(item));
+            } catch (e) {
+              importErrors.add("Erro ao parsear item do array: ${e.toString()} \nItem: $item");
+            }
+          } else {
+            importErrors.add("Item inesperado no array JSON: $item");
+          }
+        }
+      } else if (jsonData is Map<String, dynamic> && jsonData.containsKey('specimens') && jsonData['specimens'] is List) {
+        final List<dynamic> specimensJsonList = jsonData['specimens'];
+        totalSpecimensToImport = specimensJsonList.length;
+        for (final item in specimensJsonList) {
+          if (item is Map<String, dynamic>) {
+            try {
+              specimensToImport.add(Specimen.fromJson(item));
+            } catch (e) {
+              importErrors.add("Erro ao parsear item da lista 'specimens': ${e.toString()} \nItem: $item");
+            }
+          } else {
+            importErrors.add("Item inesperado na lista 'specimens': $item");
+          }
+        }
+      } else {
+        throw FormatException(S.current.invalidJsonFormatExpectedObjectOrArray);
+      }
+
+      if (!context.mounted) return;
+      // Save the specimens to the database
+      for (final specimen in specimensToImport) {
+        final success = await specimenProvider.importSpecimen(specimen);
+        if (success) {
+          successfullyImportedCount++;
+        } else {
+          importErrors.add("${S.current.failedToImportSpecimenWithId(specimen.id!)}");
+        }
+      }
+
+      if (isDialogShown && context.mounted) Navigator.of(context).pop();
+      isDialogShown = false;
+
+      if (!context.mounted) return;
+
+      String summaryMessage = importErrors.isEmpty
+          ? S.current.specimensImportedSuccessfully(successfullyImportedCount)
+          : S.current.importCompletedWithErrors(successfullyImportedCount, importErrors.length);
+      if (importErrors.isNotEmpty) debugPrint("Import errors: \n${importErrors.join('\n')}");
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(summaryMessage)));
+    } else {
+      if (isDialogShown && context.mounted) Navigator.of(context).pop();
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(S.current.noFileSelected)));
+    }
+  } catch (error) {
+    if (isDialogShown && context.mounted) Navigator.of(context).pop();
+    debugPrint('Error importing specimens: $error');
+    if (!context.mounted) return;
+    String errorMessage = '${S.current.errorImportingSpecimens}: ${error.toString()}';
+    if (error is FormatException) errorMessage = S.current.errorImportingSpecimensWithFormatError(error.message);
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Row(children: [Icon(Icons.error_outlined, color: Colors.red), SizedBox(width: 8), Text(errorMessage)]), duration: Duration(seconds: 5)));
   } finally {
     if (isDialogShown && context.mounted) Navigator.of(context).pop();

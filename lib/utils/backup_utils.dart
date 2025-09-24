@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:archive/archive_io.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
@@ -53,7 +54,7 @@ Future<bool> restoreDatabase(String filePath) async {
     // Check if the database file exists in the archive
     final dbFileInArchive = archive.findFile('xolmis_database.db');
     if (dbFileInArchive == null) {
-      print('Error: xolmis_database.db not found in the backup file.');
+      debugPrint('Error: xolmis_database.db not found in the backup file.');
       return false;
     }
 
@@ -75,8 +76,8 @@ Future<bool> restoreDatabase(String filePath) async {
     final db = await dbHelper.initDatabase();
 
     // Update image paths in the database
-    final images = await db?.query('images', columns: ['id', 'imagePath']);
-    if (images != null) {
+    final images = await db.query('images', columns: ['id', 'imagePath']);
+    if (images.isNotEmpty) {
       final imageDirectory = await getApplicationDocumentsDirectory();
       for (final imageRow in images) {
         final imageId = imageRow['id'] as int?;
@@ -85,14 +86,14 @@ Future<bool> restoreDatabase(String filePath) async {
           final imageName = path.basename(oldImagePath);
           final newImagePath = path.join(imageDirectory.path, imageName);
           if (await File(newImagePath).exists()) {
-            await db?.update('images', {'imagePath': newImagePath}, where: 'id = ?', whereArgs: [imageId]);
+            await db.update('images', {'imagePath': newImagePath}, where: 'id = ?', whereArgs: [imageId]);
           }
         }
       }
     }
     return true;
   } catch (e) {
-    print('Error restoring database: $e');
+    debugPrint('Error restoring database: $e');
     return false;
   }
 }

@@ -54,6 +54,22 @@ class SpecimenProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  // Add imported specimen to the database and the list
+  Future<bool> importSpecimen(Specimen specimen) async {
+    try {
+      await _specimenRepository.importSpecimen(specimen);
+      _specimens.add(specimen);
+      notifyListeners();
+
+      return true;
+    } catch (error) {
+      if (kDebugMode) {
+        print('Error importing specimen: $error');
+      }
+      return false;
+    }
+  }
+
   // Update specimen in the database and the list
   Future<void> updateSpecimen(Specimen specimen) async {
     await _specimenRepository.updateSpecimen(specimen);

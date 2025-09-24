@@ -1211,6 +1211,46 @@
         "type": "text",
         "description": "Message when restoring data"
     },
+    "importingSpecimens": "Importando espécimes",
+    "@importingSpecimens": {
+        "type": "text",
+        "description": "Message when importing specimens"
+    },
+    "errorImportingSpecimens": "Erro importando espécimes",
+    "@errorImportingSpecimens": {
+        "type": "text",
+        "description": "Error message when importing specimens"
+    },
+    "errorImportingSpecimensWithFormatError": "Erro de formato importando espécime: {errorMessage}",
+    "@errorImportingSpecimensWithFormatError": {
+        "type": "text",
+        "description": "Error message when importing specimens with a format error",
+        "placeholders": {
+            "errorMessage": {
+                "type": "String"
+            }
+        }
+    },
+    "specimensImportedSuccessfully": "Espécimes importados com sucesso: {howMany}",
+    "@specimensImportedSuccessfully": {
+        "type": "text",
+        "description": "Message when specimens are imported successfully",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
+    "failedToImportSpecimenWithId": "Falha ao importar espécime com ID: {id}",
+    "@failedToImportSpecimenWithId": {
+        "type": "text",
+        "description": "Message when failed to import a specimen",
+        "placeholders": {
+            "id": {
+                "type": "int"
+            }
+        }
+    },
     "precipitationNone": "Nenhuma",
     "precipitationFog": "Névoa",
     "precipitationMist": "Neblina",

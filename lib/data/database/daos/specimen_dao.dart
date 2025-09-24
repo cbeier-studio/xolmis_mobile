@@ -36,6 +36,34 @@ class SpecimenDao {
     }
   }
 
+  // Import specimen into database, ignoring id if present
+  Future<bool> importSpecimen(Specimen specimen) async {
+    final db = await _dbHelper.database;
+    try {
+      // Create a map from the specimen, but explicitly set id to null
+      // to allow autoincrement to assign a new ID.
+      Map<String, dynamic> specimenMap = specimen.toMap();
+      specimenMap['id'] = null; // Ensure ID is null for autoincrement
+
+      int? newSpecimenId = await db?.insert(
+        'specimens',
+        specimenMap,
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+
+      if (newSpecimenId != null) {
+        // Update the original specimen object's ID with the new ID from the database
+        specimen.id = newSpecimenId;
+      }
+      return true;
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error importing specimen: $e');
+      }
+      return false;
+    }
+  }
+
   // Get list of all specimens
   Future<List<Specimen>> getSpecimens() async {
     final db = await _dbHelper.database;

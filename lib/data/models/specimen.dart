@@ -89,6 +89,21 @@ class Specimen {
     };
   }
 
+  factory Specimen.fromJson(Map<String, dynamic> json) {
+    return Specimen(
+      id: json['id'],
+      sampleTime: json['sampleTime'] != null ? DateTime.parse(json['sampleTime']) : null,
+      fieldNumber: json['fieldNumber'],
+      type: json['type'] != null ? SpecimenType.values[json['type']] : SpecimenType.spcFeathers,
+      longitude: json['longitude'],
+      latitude: json['latitude'],
+      locality: json['locality'],
+      speciesName: json['speciesName'],
+      notes: json['notes'],
+      isPending: json['isPending'] == 1,
+    );
+  }
+
   factory Specimen.fromMap(Map<String, dynamic> map) {
     return Specimen(
       id: map['id']?.toInt(),

@@ -1772,6 +1772,46 @@
         "type": "text",
         "description": "Message when restoring data"
     },
+    "importingSpecimens": "Importing specimens",
+    "@importingSpecimens": {
+        "type": "text",
+        "description": "Message when importing specimens"
+    },
+    "errorImportingSpecimens": "Error importing specimens",
+    "@errorImportingSpecimens": {
+        "type": "text",
+        "description": "Error message when importing specimens"
+    },
+    "errorImportingSpecimensWithFormatError": "Format error importing specimen: {errorMessage}",
+    "@errorImportingSpecimensWithFormatError": {
+        "type": "text",
+        "description": "Error message when importing specimens with a format error",
+        "placeholders": {
+            "errorMessage": {
+                "type": "String"
+            }
+        }
+    },
+    "specimensImportedSuccessfully": "Specimens imported successfully: {howMany}",
+    "@specimensImportedSuccessfully": {
+        "type": "text",
+        "description": "Message when specimens are imported successfully",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
+    "failedToImportSpecimenWithId": "Failed to import specimen with ID: {id}",
+    "@failedToImportSpecimenWithId": {
+        "type": "text",
+        "description": "Message when failed to import a specimen",
+        "placeholders": {
+            "id": {
+                "type": "int"
+            }
+        }
+    },
     "precipitationNone": "None",
     "precipitationFog": "Fog",
     "precipitationMist": "Mist",

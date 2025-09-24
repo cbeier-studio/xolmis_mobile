@@ -526,7 +526,7 @@ class NestsScreenState extends State<NestsScreen> {
                   },
                   child: Text(S.of(context).selectAll),
                 ),
-              // Action to import inventories from JSON
+              // Action to import nests from JSON
               MenuItemButton(
                 leadingIcon: Icon(Icons.file_open_outlined),
                 onPressed: () async {

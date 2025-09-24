@@ -3240,6 +3240,56 @@ class S {
     );
   }
 
+  /// `Importing specimens`
+  String get importingSpecimens {
+    return Intl.message(
+      'Importing specimens',
+      name: 'importingSpecimens',
+      desc: 'Message when importing specimens',
+      args: [],
+    );
+  }
+
+  /// `Error importing specimens`
+  String get errorImportingSpecimens {
+    return Intl.message(
+      'Error importing specimens',
+      name: 'errorImportingSpecimens',
+      desc: 'Error message when importing specimens',
+      args: [],
+    );
+  }
+
+  /// `Format error importing specimen: {errorMessage}`
+  String errorImportingSpecimensWithFormatError(String errorMessage) {
+    return Intl.message(
+      'Format error importing specimen: $errorMessage',
+      name: 'errorImportingSpecimensWithFormatError',
+      desc: 'Error message when importing specimens with a format error',
+      args: [errorMessage],
+    );
+  }
+
+  /// `Specimens imported successfully: {howMany}`
+  String specimensImportedSuccessfully(int howMany) {
+    return Intl.message(
+      'Specimens imported successfully: $howMany',
+      name: 'specimensImportedSuccessfully',
+      desc: 'Message when specimens are imported successfully',
+      args: [howMany],
+    );
+  }
+
+  /// `Failed to import specimen with ID: {id}`
+  String failedToImportSpecimenWithId(int id) {
+    return Intl.message(
+      'Failed to import specimen with ID: $id',
+      name: 'failedToImportSpecimenWithId',
+      desc: 'Message when failed to import a specimen',
+      args: [id],
+    );
+  }
+
   /// `None`
   String get precipitationNone {
     return Intl.message('None', name: 'precipitationNone', desc: '', args: []);

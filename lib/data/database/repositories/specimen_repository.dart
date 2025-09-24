@@ -10,6 +10,10 @@ class SpecimenRepository {
     return _specimenDao.insertSpecimen(specimen);
   }
 
+  Future<bool> importSpecimen(Specimen specimen) {
+    return _specimenDao.importSpecimen(specimen);
+  }
+
   Future<List<Specimen>> getSpecimens() {
     return _specimenDao.getSpecimens();
   }
