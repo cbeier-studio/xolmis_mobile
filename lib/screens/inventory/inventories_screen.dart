@@ -1675,7 +1675,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     final inventoryProvider = Provider.of<InventoryProvider>(
       context, listen: false);
     late TextEditingController fieldLocalityEditingController;
-    bool isDiscarded = inventory.isDiscarded; // Initialize with current value
+    bool isDiscardedCheckbox = inventory.isDiscarded; // Initialize with current value
 
     showDialog(
       context: context,
@@ -1779,10 +1779,10 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
               Row(
                 children: [
                   Checkbox(
-                    value: isDiscarded,
+                    value: isDiscardedCheckbox,
                     onChanged: (bool? value) {
                       setStateDialog(() {
-                        isDiscarded = value ?? false;
+                        isDiscardedCheckbox = value ?? false;
                       });
                     },
                   ),
@@ -1806,7 +1806,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                 final updatedInventory = inventory.copyWith(
                   localityName: fieldLocalityEditingController.text,
                   notes: notesController.text,
-                  isDiscarded: isDiscarded,
+                  isDiscarded: isDiscardedCheckbox,
                 );
                 inventoryProvider.updateInventory(updatedInventory);
                 if (context.mounted) {
