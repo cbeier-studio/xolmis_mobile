@@ -1212,6 +1212,27 @@ class AppLocalizationsEn extends AppLocalizations {
   String get restoringData => 'Restoring data';
 
   @override
+  String get importingSpecimens => 'Importing specimens';
+
+  @override
+  String get errorImportingSpecimens => 'Error importing specimens';
+
+  @override
+  String errorImportingSpecimensWithFormatError(String errorMessage) {
+    return 'Format error importing specimen: $errorMessage';
+  }
+
+  @override
+  String specimensImportedSuccessfully(int howMany) {
+    return 'Specimens imported successfully: $howMany';
+  }
+
+  @override
+  String failedToImportSpecimenWithId(int id) {
+    return 'Failed to import specimen with ID: $id';
+  }
+
+  @override
   String get precipitationNone => 'None';
 
   @override

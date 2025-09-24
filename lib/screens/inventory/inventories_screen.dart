@@ -1802,17 +1802,15 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
             TextButton(
               child: Text(S.of(context).save),
               onPressed: () async {
-                // inventory.localityName = localityNameController.text;
-                final updatedInventory = inventory.copyWith(
-                  localityName: fieldLocalityEditingController.text,
-                  notes: notesController.text,
-                  isDiscarded: isDiscardedCheckbox,
-                );
-                inventoryProvider.updateInventory(updatedInventory);
+                inventory.localityName = fieldLocalityEditingController.text;
+                inventory.notes = notesController.text;
+                inventory.isDiscarded = isDiscardedCheckbox;
+
+                await inventoryProvider.updateInventory(inventory);
                 if (context.mounted) {
                   Navigator.of(context).pop();
                 }
-                setState(() {});
+                // setState(() {});
               },
             ),
           ],

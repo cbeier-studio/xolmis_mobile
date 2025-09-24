@@ -1215,6 +1215,27 @@ class AppLocalizationsPt extends AppLocalizations {
   String get restoringData => 'Restaurando dados';
 
   @override
+  String get importingSpecimens => 'Importando espécimes';
+
+  @override
+  String get errorImportingSpecimens => 'Erro importando espécimes';
+
+  @override
+  String errorImportingSpecimensWithFormatError(String errorMessage) {
+    return 'Erro de formato importando espécime: $errorMessage';
+  }
+
+  @override
+  String specimensImportedSuccessfully(int howMany) {
+    return 'Espécimes importados com sucesso: $howMany';
+  }
+
+  @override
+  String failedToImportSpecimenWithId(int id) {
+    return 'Falha ao importar espécime com ID: $id';
+  }
+
+  @override
   String get precipitationNone => 'Nenhuma';
 
   @override
@@ -2617,6 +2638,27 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get restoringData => 'Restaurando dados';
+
+  @override
+  String get importingSpecimens => 'Importando espécimes';
+
+  @override
+  String get errorImportingSpecimens => 'Erro importando espécimes';
+
+  @override
+  String errorImportingSpecimensWithFormatError(String errorMessage) {
+    return 'Erro de formato importando espécime: $errorMessage';
+  }
+
+  @override
+  String specimensImportedSuccessfully(int howMany) {
+    return 'Espécimes importados com sucesso: $howMany';
+  }
+
+  @override
+  String failedToImportSpecimenWithId(int id) {
+    return 'Falha ao importar espécime com ID: $id';
+  }
 
   @override
   String get precipitationNone => 'Nenhuma';

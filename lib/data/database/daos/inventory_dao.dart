@@ -168,13 +168,18 @@ class InventoryDao {
 
   // Update inventory data in the database
   Future<void> updateInventory(Inventory inventory) async {
-    final db = await _dbHelper.database;
-    await db?.update(
-      'inventories',
-      inventory.toMap(),
-      where: 'id = ?',
-      whereArgs: [inventory.id],
-    );
+    try {
+      final db = await _dbHelper.database;
+      await db?.update(
+        'inventories',
+        inventory.toMap(),
+        where: 'id = ?',
+        whereArgs: [inventory.id],
+      );
+      debugPrint('Inventory updated: ${inventory.id}');
+    } catch (e) {
+      debugPrint('Error updating inventory: $e');
+    }
   }
 
   // Update the elapsed time of the inventory in the database
@@ -283,28 +288,31 @@ class InventoryDao {
         List<Vegetation> vegetationList = await _vegetationDao.getVegetationByInventory(map['id']);
         List<Weather> weatherList = await _weatherDao.getWeatherByInventory(map['id']);
         // Create Inventory instance using the main constructor
-        Inventory inventory = Inventory(
-          id: map['id'],
-          type: InventoryType.values[map['type']],
-          duration: map['duration'],
-          maxSpecies: map['maxSpecies'],
-          isPaused: map['isPaused'] == 1,
-          isFinished: map['isFinished'] == 1,
-          elapsedTime: map['elapsedTime'],
-          startTime: map['startTime'] != null ? DateTime.parse(map['startTime']) : null,
-          endTime: map['endTime'] != null ? DateTime.parse(map['endTime']) : null,
-          startLongitude: map['startLongitude'],
-          startLatitude: map['startLatitude'],
-          endLongitude: map['endLongitude'],
-          endLatitude: map['endLatitude'],
-          currentInterval: map['currentInterval'] ?? 1,
-          intervalsWithoutNewSpecies: map['intervalsWithoutNewSpecies'] ?? 0,
-          currentIntervalSpeciesCount: map['currentIntervalSpeciesCount'] ?? 0,
-          localityName: map['localityName'],
-          speciesList: speciesList,
-          vegetationList: vegetationList,
-          weatherList: weatherList,
-        );
+        // Inventory inventory = Inventory(
+        //   id: map['id'],
+        //   type: InventoryType.values[map['type']],
+        //   duration: map['duration'],
+        //   maxSpecies: map['maxSpecies'],
+        //   isPaused: map['isPaused'] == 1,
+        //   isFinished: map['isFinished'] == 1,
+        //   elapsedTime: map['elapsedTime'],
+        //   startTime: map['startTime'] != null ? DateTime.parse(map['startTime']) : null,
+        //   endTime: map['endTime'] != null ? DateTime.parse(map['endTime']) : null,
+        //   startLongitude: map['startLongitude'],
+        //   startLatitude: map['startLatitude'],
+        //   endLongitude: map['endLongitude'],
+        //   endLatitude: map['endLatitude'],
+        //   currentInterval: map['currentInterval'] ?? 1,
+        //   intervalsWithoutNewSpecies: map['intervalsWithoutNewSpecies'] ?? 0,
+        //   currentIntervalSpeciesCount: map['currentIntervalSpeciesCount'] ?? 0,
+        //   localityName: map['localityName'],
+        //   notes: map['notes'],
+        //   isDiscarded: map['isDiscarded'] == 1,
+        //   speciesList: speciesList,
+        //   vegetationList: vegetationList,
+        //   weatherList: weatherList,
+        // );
+        Inventory inventory = Inventory.fromMap(map, speciesList, vegetationList, weatherList);
 
         return inventory;
       }).toList());

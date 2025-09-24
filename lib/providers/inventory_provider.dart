@@ -113,7 +113,7 @@ class InventoryProvider with ChangeNotifier {
   }
 
   // Update inventory in the database and the list
-  void updateInventory(Inventory inventory) async {
+  Future<void> updateInventory(Inventory inventory) async {
     await _inventoryRepository.updateInventory(inventory);
 
     final index = _inventories.indexWhere((inv) => inv.id == inventory.id);

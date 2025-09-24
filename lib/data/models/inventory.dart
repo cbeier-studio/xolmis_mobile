@@ -643,9 +643,9 @@ class Inventory with ChangeNotifier {
         localityName = map['localityName'],
         notes = map['notes'],
         isDiscarded = map['isDiscarded'] == 1,
-        currentInterval = map['currentInterval'],
-        intervalsWithoutNewSpecies = map['intervalsWithoutNewSpecies'],
-        currentIntervalSpeciesCount = map['currentIntervalSpeciesCount'],
+        currentInterval = map['currentInterval'] ?? 1,
+        intervalsWithoutNewSpecies = map['intervalsWithoutNewSpecies'] ?? 0,
+        currentIntervalSpeciesCount = map['currentIntervalSpeciesCount'] ?? 0,
         this.speciesList = speciesList,
         this.vegetationList = vegetationList,
         this.weatherList = weatherList;

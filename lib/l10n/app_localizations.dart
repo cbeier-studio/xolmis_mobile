@@ -1986,6 +1986,36 @@ abstract class AppLocalizations {
   /// **'Restoring data'**
   String get restoringData;
 
+  /// Message when importing specimens
+  ///
+  /// In en, this message translates to:
+  /// **'Importing specimens'**
+  String get importingSpecimens;
+
+  /// Error message when importing specimens
+  ///
+  /// In en, this message translates to:
+  /// **'Error importing specimens'**
+  String get errorImportingSpecimens;
+
+  /// Error message when importing specimens with a format error
+  ///
+  /// In en, this message translates to:
+  /// **'Format error importing specimen: {errorMessage}'**
+  String errorImportingSpecimensWithFormatError(String errorMessage);
+
+  /// Message when specimens are imported successfully
+  ///
+  /// In en, this message translates to:
+  /// **'Specimens imported successfully: {howMany}'**
+  String specimensImportedSuccessfully(int howMany);
+
+  /// Message when failed to import a specimen
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to import specimen with ID: {id}'**
+  String failedToImportSpecimenWithId(int id);
+
   /// No description provided for @precipitationNone.
   ///
   /// In en, this message translates to:
