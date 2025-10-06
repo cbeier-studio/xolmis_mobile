@@ -439,6 +439,8 @@ class Weather {
   PrecipitationType? precipitation = PrecipitationType.preNone;
   double? temperature;
   int? windSpeed;
+  double? atmosphericPressure;
+  double? relativeHumidity;
 
   Weather({
     this.id,
@@ -448,6 +450,8 @@ class Weather {
     this.precipitation,
     this.temperature,
     this.windSpeed,
+    this.atmosphericPressure,
+    this.relativeHumidity,
   });
 
   factory Weather.fromMap(Map<String, dynamic> map) {
@@ -461,6 +465,8 @@ class Weather {
       precipitation: PrecipitationType.values[map['precipitation']],
       temperature: map['temperature'],
       windSpeed: map['windSpeed'],
+      atmosphericPressure: map['atmosphericPressure'],
+      relativeHumidity: map['relativeHumidity'],
     );
   }
 
@@ -471,7 +477,9 @@ class Weather {
       int? cloudCover,
       PrecipitationType? precipitation,
       double? temperature,
-      int? windSpeed
+      int? windSpeed,
+      double? atmosphericPressure,
+      double? relativeHumidity,
   }) {
     return Weather(
       id: id ?? this.id,
@@ -481,6 +489,8 @@ class Weather {
       precipitation: precipitation ?? this.precipitation,
       temperature: temperature ?? this.temperature,
       windSpeed: windSpeed ?? this.windSpeed,
+      atmosphericPressure: atmosphericPressure ?? this.atmosphericPressure,
+      relativeHumidity: relativeHumidity ?? this.relativeHumidity,
     );
   }
 
@@ -493,6 +503,8 @@ class Weather {
       'precipitation': precipitation?.index,
       'temperature': temperature,
       'windSpeed': windSpeed,
+      'atmosphericPressure': atmosphericPressure,
+      'relativeHumidity': relativeHumidity,
     };
   }
 
@@ -505,6 +517,8 @@ class Weather {
       'precipitation': precipitation?.index,
       'temperature': temperature,
       'windSpeed': windSpeed,
+      'atmosphericPressure': atmosphericPressure,
+      'relativeHumidity': relativeHumidity,
     };
   }
 
@@ -517,6 +531,8 @@ class Weather {
       precipitation: json['precipitation'] != null ? PrecipitationType.values[json['precipitation']] : PrecipitationType.preNone,
       temperature: json['temperature'],
       windSpeed: json['windSpeed'],
+      atmosphericPressure: json['atmosphericPressure'],
+      relativeHumidity: json['relativeHumidity'],
     );
   } 
 
@@ -529,7 +545,9 @@ class Weather {
         'cloudCover: $cloudCover, '
         'precipitation: $precipitation, '
         'temperature: $temperature, '
-        'windSpeed: $windSpeed }';
+        'windSpeed: $windSpeed, '
+        'atmosphericPressure: $atmosphericPressure, '
+        'relativeHumidity: $relativeHumidity }';
   }
 }
 
@@ -572,6 +590,7 @@ class Inventory with ChangeNotifier {
   double? endLongitude;
   double? endLatitude;
   String? localityName;
+  int totalObservers;
   String? notes;
   bool isDiscarded;
   List<Species> speciesList;
@@ -607,6 +626,7 @@ class Inventory with ChangeNotifier {
     this.endLongitude,
     this.endLatitude,
     this.localityName,
+    this.totalObservers = 1,
     this.notes,
     this.isDiscarded = false,
     this.speciesList = const [],
@@ -641,6 +661,7 @@ class Inventory with ChangeNotifier {
         endLongitude = map['endLongitude'],
         endLatitude = map['endLatitude'],
         localityName = map['localityName'],
+        totalObservers = map['totalObservers'],
         notes = map['notes'],
         isDiscarded = map['isDiscarded'] == 1,
         currentInterval = map['currentInterval'] ?? 1,
@@ -668,6 +689,7 @@ class Inventory with ChangeNotifier {
     int? intervalsWithoutNewSpecies,
     int? currentIntervalSpeciesCount,
     String? localityName,
+    int? totalObservers,
     String? notes,
     bool? isDiscarded,
     List<Species>? speciesList,
@@ -692,6 +714,7 @@ class Inventory with ChangeNotifier {
       intervalsWithoutNewSpecies: intervalsWithoutNewSpecies ?? this.intervalsWithoutNewSpecies,
       currentIntervalSpeciesCount: currentIntervalSpeciesCount ?? this.currentIntervalSpeciesCount,
       localityName: localityName ?? this.localityName,
+      totalObservers: totalObservers ?? this.totalObservers,
       notes: notes ?? this.notes,
       isDiscarded: isDiscarded ?? this.isDiscarded,
       speciesList: speciesList ?? this.speciesList,
@@ -719,6 +742,7 @@ class Inventory with ChangeNotifier {
       'intervalsWithoutNewSpecies': intervalsWithoutNewSpecies,
       'currentIntervalSpeciesCount': currentIntervalSpeciesCount,
       'localityName': localityName,
+      'totalObservers': totalObservers,
       'notes': notes,
       'isDiscarded': isDiscarded ? 1 : 0,
     };
@@ -744,6 +768,7 @@ class Inventory with ChangeNotifier {
         'intervalsWithoutNewSpecies: $intervalsWithoutNewSpecies, '
         'currentIntervalSpeciesCount: $currentIntervalSpeciesCount, '
         'localityName: $localityName, '
+        'totalObservers: $totalObservers, '
         'notes: $notes, '
         'isDiscarded: $isDiscarded }';
   }
@@ -761,6 +786,7 @@ class Inventory with ChangeNotifier {
       'endLongitude': endLongitude,
       'endLatitude': endLatitude,
       'localityName': localityName,
+      'totalObservers': totalObservers,
       'notes': notes,
       'isDiscarded': isDiscarded,
       'currentInterval': currentInterval,
@@ -785,6 +811,7 @@ class Inventory with ChangeNotifier {
       endLongitude: json['endLongitude'],
       endLatitude: json['endLatitude'],
       localityName: json['localityName'],
+      totalObservers: json['totalObservers'] ?? 1,
       notes: json['notes'],
       isDiscarded: json['isDiscarded'] ?? false,
       currentInterval: json['currentInterval'],

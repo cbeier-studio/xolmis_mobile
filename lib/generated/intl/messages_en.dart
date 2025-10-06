@@ -152,6 +152,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "appearance": MessageLookupByLibrary.simpleMessage("Appearance"),
     "archiveSpecimen": MessageLookupByLibrary.simpleMessage("Archive specimen"),
     "archived": MessageLookupByLibrary.simpleMessage("Archived"),
+    "atmosphericPressure": MessageLookupByLibrary.simpleMessage(
+      "Atmospheric pressure",
+    ),
     "averageSurveyHours": MessageLookupByLibrary.simpleMessage(
       "survey hours per inventory",
     ),
@@ -168,6 +171,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "clearSelection": MessageLookupByLibrary.simpleMessage("Clear selection"),
     "close": MessageLookupByLibrary.simpleMessage("Close"),
     "cloudCover": MessageLookupByLibrary.simpleMessage("Cloud cover"),
+    "cloudCoverRangeError": MessageLookupByLibrary.simpleMessage(
+      "Cloud cover must be between 0 and 100",
+    ),
     "confirmAutoFinishMessage": MessageLookupByLibrary.simpleMessage(
       "Inventory automatically finished. Do you want to keep active or finish this inventory?",
     ),
@@ -650,6 +656,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "recordsPerYear": MessageLookupByLibrary.simpleMessage("Records per year"),
     "refreshList": MessageLookupByLibrary.simpleMessage("Refresh"),
+    "relativeHumidity": MessageLookupByLibrary.simpleMessage(
+      "Relative humidity",
+    ),
+    "relativeHumidityRangeError": MessageLookupByLibrary.simpleMessage(
+      "Relative humidity must be between 0 and 100",
+    ),
     "remindMissingVegetationData": MessageLookupByLibrary.simpleMessage(
       "Remind missing vegetation data",
     ),
@@ -759,6 +771,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "totalIndividuals": MessageLookupByLibrary.simpleMessage(
       "Total Individuals",
+    ),
+    "totalOfObservers": MessageLookupByLibrary.simpleMessage(
+      "Total of observers",
     ),
     "totalRecords": MessageLookupByLibrary.simpleMessage("Total of records"),
     "totalSpecies": MessageLookupByLibrary.simpleMessage("Total Species"),

@@ -1812,6 +1812,31 @@
             }
         }
     },
+    "cloudCoverRangeError": "Cloud cover must be between 0 and 100",
+    "@cloudCoverRangeError": {
+        "type": "text",
+        "description": "Error message when cloud cover is out of range"
+    },
+    "relativeHumidityRangeError": "Relative humidity must be between 0 and 100",
+    "@relativeHumidityRangeError": {
+        "type": "text",
+        "description": "Error message when relative humidity is out of range"
+    },
+    "atmosphericPressure": "Atmospheric pressure",
+    "@atmosphericPressure": {
+        "type": "text",
+        "description": "Atmospheric pressure field label"
+    },
+    "relativeHumidity": "Relative humidity",
+    "@relativeHumidity": {
+        "type": "text",
+        "description": "Relative humidity field label"
+    },
+    "totalOfObservers": "Total of observers",
+    "@totalOfObservers": {
+        "type": "text",
+        "description": "Total of observers field label"
+    },
     "precipitationNone": "None",
     "precipitationFog": "Fog",
     "precipitationMist": "Mist",

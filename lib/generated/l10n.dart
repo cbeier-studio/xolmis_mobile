@@ -3290,6 +3290,56 @@ class S {
     );
   }
 
+  /// `Cloud cover must be between 0 and 100`
+  String get cloudCoverRangeError {
+    return Intl.message(
+      'Cloud cover must be between 0 and 100',
+      name: 'cloudCoverRangeError',
+      desc: 'Error message when cloud cover is out of range',
+      args: [],
+    );
+  }
+
+  /// `Relative humidity must be between 0 and 100`
+  String get relativeHumidityRangeError {
+    return Intl.message(
+      'Relative humidity must be between 0 and 100',
+      name: 'relativeHumidityRangeError',
+      desc: 'Error message when relative humidity is out of range',
+      args: [],
+    );
+  }
+
+  /// `Atmospheric pressure`
+  String get atmosphericPressure {
+    return Intl.message(
+      'Atmospheric pressure',
+      name: 'atmosphericPressure',
+      desc: 'Atmospheric pressure field label',
+      args: [],
+    );
+  }
+
+  /// `Relative humidity`
+  String get relativeHumidity {
+    return Intl.message(
+      'Relative humidity',
+      name: 'relativeHumidity',
+      desc: 'Relative humidity field label',
+      args: [],
+    );
+  }
+
+  /// `Total of observers`
+  String get totalOfObservers {
+    return Intl.message(
+      'Total of observers',
+      name: 'totalOfObservers',
+      desc: 'Total of observers field label',
+      args: [],
+    );
+  }
+
   /// `None`
   String get precipitationNone {
     return Intl.message('None', name: 'precipitationNone', desc: '', args: []);

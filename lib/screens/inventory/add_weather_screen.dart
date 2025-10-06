@@ -29,6 +29,8 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
   PrecipitationType _selectedPrecipitation = PrecipitationType.preNone;
   late TextEditingController _temperatureController;
   late TextEditingController _windSpeedController;
+  late TextEditingController _atmosphericPressureController;
+  late TextEditingController _relativeHumidityController;
   bool _isSubmitting = false;
 
   @override
@@ -37,12 +39,16 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
     _cloudCoverController = TextEditingController();
     _temperatureController = TextEditingController();
     _windSpeedController = TextEditingController();
+    _atmosphericPressureController = TextEditingController();
+    _relativeHumidityController = TextEditingController();
 
     if (widget.isEditing) {
       _selectedPrecipitation = widget.weather!.precipitation!;
       _cloudCoverController.text = widget.weather!.cloudCover.toString();
       _temperatureController.text = widget.weather!.temperature.toString();
       _windSpeedController.text = widget.weather!.windSpeed.toString();
+      _atmosphericPressureController.text = widget.weather!.atmosphericPressure.toString();
+      _relativeHumidityController.text = widget.weather!.relativeHumidity.toString();
     }
   }
 
@@ -51,6 +57,8 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
     _cloudCoverController.dispose();
     _temperatureController.dispose();
     _windSpeedController.dispose();
+    _atmosphericPressureController.dispose();
+    _relativeHumidityController.dispose();
     super.dispose();
   }
 
@@ -81,6 +89,19 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
                                   border: OutlineInputBorder(),
                                   suffixText: '%',
                                 ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return null;
+                                  }
+                                  final clouds = int.tryParse(value);
+                                  if (clouds == null) {
+                                    return S.of(context).invalidNumericValue;
+                                  }
+                                  if (clouds < 0 || clouds > 100) {
+                                    return S.of(context).cloudCoverRangeError;
+                                  }
+                                  return null;
+                                },
                               ),
                             ),
                             const SizedBox(width: 8.0),
@@ -160,6 +181,57 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
                             ),
                           ],
                         ),
+                        const SizedBox(height: 16.0),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                controller: _atmosphericPressureController,
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  CommaToDotTextInputFormatter(),
+                                  // Allow only numbers and decimal separator with 1 decimal place
+                                  FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,1}')),
+                                ],
+                                decoration: InputDecoration(
+                                  labelText: S.of(context).atmosphericPressure,
+                                  border: OutlineInputBorder(),
+                                  suffixText: 'mPa',
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8.0),
+                            Expanded(
+                              child: TextFormField(
+                                controller: _relativeHumidityController,
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  CommaToDotTextInputFormatter(),
+                                  // Allow only numbers and decimal separator with 1 decimal place
+                                  FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,1}')),
+                                ],
+                                decoration: InputDecoration(
+                                  labelText: S.of(context).relativeHumidity,
+                                  border: OutlineInputBorder(),
+                                  suffixText: '%',
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return null;
+                                  }
+                                  final humidity = double.tryParse(value);
+                                  if (humidity == null) {
+                                    return S.of(context).invalidNumericValue;
+                                  }
+                                  if (humidity < 0 || humidity > 100) {
+                                    return S.of(context).relativeHumidityRangeError;
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   ),
@@ -212,6 +284,8 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
           precipitation: _selectedPrecipitation,
           temperature: double.tryParse(_temperatureController.text) ?? 0,
           windSpeed: int.tryParse(_windSpeedController.text) ?? 0,
+          atmosphericPressure: double.tryParse(_atmosphericPressureController.text) ?? 0,
+          relativeHumidity: double.tryParse(_relativeHumidityController.text) ?? 0,
         );
 
         final weatherProvider = Provider.of<WeatherProvider>(context, listen: false);
@@ -229,6 +303,8 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
           precipitation: _selectedPrecipitation,
           temperature: double.tryParse(_temperatureController.text) ?? 0,
           windSpeed: int.tryParse(_windSpeedController.text) ?? 0,
+          atmosphericPressure: double.tryParse(_atmosphericPressureController.text) ?? 0,
+          relativeHumidity: double.tryParse(_relativeHumidityController.text) ?? 0,
         );
 
         final weatherProvider = Provider.of<WeatherProvider>(context, listen: false);

@@ -1251,6 +1251,31 @@
             }
         }
     },
+    "cloudCoverRangeError": "Nebulosidade deve estar entre 0 e 100",
+    "@cloudCoverRangeError": {
+        "type": "text",
+        "description": "Error message when cloud cover is out of range"
+    },
+    "relativeHumidityRangeError": "Umidade relativa deve estar entre 0 e 100",
+    "@relativeHumidityRangeError": {
+        "type": "text",
+        "description": "Error message when relative humidity is out of range"
+    },
+    "atmosphericPressure": "Pressão atmosférica",
+    "@atmosphericPressure": {
+        "type": "text",
+        "description": "Atmospheric pressure field label"
+    },
+    "relativeHumidity": "Umidade relativa",
+    "@relativeHumidity": {
+        "type": "text",
+        "description": "Relative humidity field label"
+    },
+    "totalOfObservers": "Total de observadores",
+    "@totalOfObservers": {
+        "type": "text",
+        "description": "Total of observers field label"
+    },
     "precipitationNone": "Nenhuma",
     "precipitationFog": "Névoa",
     "precipitationMist": "Neblina",

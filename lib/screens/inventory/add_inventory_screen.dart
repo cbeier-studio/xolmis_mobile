@@ -23,6 +23,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
   final _idController = TextEditingController();
   final _durationController = TextEditingController();
   final _maxSpeciesController = TextEditingController();
+  final _totalObserversController = TextEditingController();
   late TextEditingController _localityNameController;
   late TextEditingController _fieldLocalityEditingController;
   InventoryType _selectedType = InventoryType.invFreeQualitative;
@@ -43,6 +44,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
     _idController.dispose();
     _durationController.dispose();
     _maxSpeciesController.dispose();
+    _totalObserversController.dispose();
     _localityNameController.dispose();
     _fieldLocalityEditingController.dispose();
     super.dispose();
@@ -250,50 +252,71 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                     ),
                     SizedBox(height: 16.0,),
                     Row(
-                        children: [
-                          Expanded(
-                            // Inventory duration
-                            child: TextFormField(
-                              controller: _durationController,
-                              keyboardType: TextInputType.number,
-                              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                              decoration: InputDecoration(
-                                labelText: S.of(context).duration,
-                                border: OutlineInputBorder(),
-                                suffixText: S.of(context).minutes(2),
-                              ),
-                              validator: (value) {
-                                if ((_selectedType == InventoryType.invTimedQualitative || _selectedType == InventoryType.invIntervalQualitative || _selectedType == InventoryType.invPointCount) && (value == null || value.isEmpty)) {
-                                  return S.of(context).insertDuration;
-                                }
-                                return null;
-                              },
+                      children: [
+                        Expanded(
+                          // Inventory duration
+                          child: TextFormField(
+                            controller: _durationController,
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                            decoration: InputDecoration(
+                              labelText: S.of(context).duration,
+                              border: OutlineInputBorder(),
+                              suffixText: S.of(context).minutes(2),
+                            ),
+                            validator: (value) {
+                              if ((_selectedType == InventoryType.invTimedQualitative || _selectedType == InventoryType.invIntervalQualitative || _selectedType == InventoryType.invPointCount) && (value == null || value.isEmpty)) {
+                                return S.of(context).insertDuration;
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 8.0),
+                        Expanded(
+                          // Inventory max of species
+                          child: TextFormField(
+                            controller: _maxSpeciesController,
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                            decoration: InputDecoration(
+                              labelText: S.of(context).maxSpecies,
+                              border: OutlineInputBorder(),
+                              suffixText: 'spp.',
+                            ),
+                            validator: (value) {
+                              if ((_selectedType == InventoryType.invMackinnonList) && (value == null || value.isEmpty)) {
+                                return S.of(context).insertMaxSpecies;
+                              }
+                              if ((value != null && value.isNotEmpty) && int.tryParse(value)! < 5) {
+                                return S.of(context).mustBeBiggerThanFive;
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 16.0,),
+                    Row(
+                      children: [
+                        Expanded(
+                          // Total of observers
+                          child: TextFormField(
+                            controller: _totalObserversController,
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                            decoration: InputDecoration(
+                              labelText: S.of(context).totalOfObservers,
+                              border: OutlineInputBorder(),
                             ),
                           ),
-                          const SizedBox(width: 8.0),
-                          Expanded(
-                             // Inventory max of species
-                            child: TextFormField(
-                              controller: _maxSpeciesController,
-                              keyboardType: TextInputType.number,
-                              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                              decoration: InputDecoration(
-                                labelText: S.of(context).maxSpecies,
-                                border: OutlineInputBorder(),
-                                suffixText: 'spp.',
-                              ),
-                              validator: (value) {
-                                if ((_selectedType == InventoryType.invMackinnonList) && (value == null || value.isEmpty)) {
-                                  return S.of(context).insertMaxSpecies;
-                                }
-                                if ((value != null && value.isNotEmpty) && int.tryParse(value)! < 5) {
-                                  return S.of(context).mustBeBiggerThanFive;
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-                        ]
+                        ),
+                        const SizedBox(width: 8.0),
+                        Expanded(
+                          child: SizedBox(width: 8.0,),
+                        ),
+                      ],
                     ),
                   ],
                 ),

@@ -160,6 +160,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Arquivar espécime",
     ),
     "archived": MessageLookupByLibrary.simpleMessage("Arquivados"),
+    "atmosphericPressure": MessageLookupByLibrary.simpleMessage(
+      "Pressão atmosférica",
+    ),
     "averageSurveyHours": MessageLookupByLibrary.simpleMessage(
       "horas de amostragem por inventário",
     ),
@@ -178,6 +181,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "clearSelection": MessageLookupByLibrary.simpleMessage("Limpar seleção"),
     "close": MessageLookupByLibrary.simpleMessage("Fechar"),
     "cloudCover": MessageLookupByLibrary.simpleMessage("Nebulosidade"),
+    "cloudCoverRangeError": MessageLookupByLibrary.simpleMessage(
+      "Nebulosidade deve estar entre 0 e 100",
+    ),
     "confirmAutoFinishMessage": MessageLookupByLibrary.simpleMessage(
       "Inventário automaticamente encerrado. Você deseja mantê-lo ativo ou finalizar este inventário?",
     ),
@@ -690,6 +696,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "recordsPerYear": MessageLookupByLibrary.simpleMessage("Registros por ano"),
     "refreshList": MessageLookupByLibrary.simpleMessage("Atualizar"),
+    "relativeHumidity": MessageLookupByLibrary.simpleMessage(
+      "Umidade relativa",
+    ),
+    "relativeHumidityRangeError": MessageLookupByLibrary.simpleMessage(
+      "Umidade relativa deve estar entre 0 e 100",
+    ),
     "remindMissingVegetationData": MessageLookupByLibrary.simpleMessage(
       "Lembrar dados faltantes de vegetação",
     ),
@@ -815,6 +827,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "totalIndividuals": MessageLookupByLibrary.simpleMessage(
       "Total de indivíduos",
+    ),
+    "totalOfObservers": MessageLookupByLibrary.simpleMessage(
+      "Total de observadores",
     ),
     "totalRecords": MessageLookupByLibrary.simpleMessage("Total de registros"),
     "totalSpecies": MessageLookupByLibrary.simpleMessage("Total de espécies"),
