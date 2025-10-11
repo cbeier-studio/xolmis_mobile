@@ -35,6 +35,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
     _idController.text = widget.initialInventoryId ?? '';
     _selectedType = widget.initialInventoryType ?? _selectedType;
     _maxSpeciesController.text = widget.initialMaxSpecies?.toString() ?? '';
+    _totalObserversController.text = '1';
     _localityNameController = TextEditingController();
     _fieldLocalityEditingController = TextEditingController();
   }
@@ -391,6 +392,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
         localityName: _fieldLocalityEditingController.text,
         duration: int.tryParse(_durationController.text) ?? 0,
         maxSpecies: int.tryParse(_maxSpeciesController.text) ?? 0,
+        totalObservers: int.tryParse(_totalObserversController.text) ?? 1,
         speciesList: [],
         vegetationList: [],
         weatherList: [],
