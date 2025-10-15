@@ -73,7 +73,7 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
   }
 
   Future<void> _getCurrentLocation() async {
-    Position? position = await getPosition();
+    Position? position = await getPosition(context);
     if (position != null) {
       setState(() {
         _currentPosition = position;

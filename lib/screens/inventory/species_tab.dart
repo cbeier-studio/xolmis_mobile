@@ -175,7 +175,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     inventoryProvider.updateInventory(inventory);
     
     // Start the timer if it is not already running
-    inventory.startTimer(inventoryRepository);
+    inventory.startTimer(context, inventoryRepository);
   }
 
   // Reload the species list for the current inventory
@@ -571,7 +571,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                       final poiProvider =
                           Provider.of<PoiProvider>(context, listen: false);
                       // Get the current location
-                      Position? position = await getPosition();
+                      Position? position = await getPosition(context);
 
                       if (position != null) {
                         // Create a new POI

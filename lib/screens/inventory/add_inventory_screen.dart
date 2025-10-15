@@ -424,7 +424,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
       }
 
       // ID do not exist, insert inventory
-      final success = await inventoryProvider.addInventory(newInventory);
+      final success = await inventoryProvider.addInventory(context, newInventory);
 
       setState(() {
         _isSubmitting = false;

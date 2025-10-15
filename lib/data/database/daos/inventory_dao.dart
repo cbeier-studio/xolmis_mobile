@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:sqflite/sqflite.dart';
@@ -19,11 +20,11 @@ class InventoryDao {
   InventoryDao(this._dbHelper, this._speciesDao, this._vegetationDao, this._weatherDao);
 
   // Insert new inventory to database
-  Future<bool> insertInventory(Inventory inventory) async {
+  Future<bool> insertInventory(BuildContext context, Inventory inventory) async {
     final db = await _dbHelper.database;
     try {
       inventory.startTime = DateTime.now();
-      Position? position = await getPosition();
+      Position? position = await getPosition(context);
       if (position != null) {
         inventory.startLatitude = position.latitude;
         inventory.startLongitude = position.longitude;

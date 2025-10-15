@@ -656,12 +656,12 @@ class Inventory with ChangeNotifier {
         endTime = map['endTime'] != null
             ? DateTime.parse(map['endTime'])
             : null,
-        startLongitude = map['startLongitude'],
-        startLatitude = map['startLatitude'],
-        endLongitude = map['endLongitude'],
-        endLatitude = map['endLatitude'],
+        startLongitude = map['startLongitude'] ?? 0,
+        startLatitude = map['startLatitude'] ?? 0,
+        endLongitude = map['endLongitude'] ?? 0,
+        endLatitude = map['endLatitude'] ?? 0,
         localityName = map['localityName'],
-        totalObservers = map['totalObservers'],
+        totalObservers = map['totalObservers'] ?? 1,
         notes = map['notes'],
         isDiscarded = map['isDiscarded'] == 1,
         currentInterval = map['currentInterval'] ?? 1,
@@ -806,10 +806,10 @@ class Inventory with ChangeNotifier {
       maxSpecies: json['maxSpecies'],
       startTime: json['startTime'] != null ? DateTime.parse(json['startTime']) : null,
       endTime: json['endTime'] != null ? DateTime.parse(json['endTime']) : null,
-      startLongitude: json['startLongitude'],
-      startLatitude: json['startLatitude'],
-      endLongitude: json['endLongitude'],
-      endLatitude: json['endLatitude'],
+      startLongitude: json['startLongitude'] ?? 0,
+      startLatitude: json['startLatitude'] ?? 0,
+      endLongitude: json['endLongitude'] ?? 0,
+      endLatitude: json['endLatitude'] ?? 0,
       localityName: json['localityName'],
       totalObservers: json['totalObservers'] ?? 1,
       notes: json['notes'],
@@ -851,7 +851,7 @@ class Inventory with ChangeNotifier {
   }
 
   // Start the inventory timer
-  Future<void> startTimer(InventoryRepository inventoryRepository) async {
+  Future<void> startTimer(BuildContext context, InventoryRepository inventoryRepository) async {
     if (kDebugMode) {
       print('startTimer called');
     }
@@ -919,7 +919,7 @@ class Inventory with ChangeNotifier {
             }
 
             if (isAutoFinished()) {
-              await stopTimer(inventoryRepository);
+              await stopTimer(context, inventoryRepository);
               // If finished automatically, show a notification
               await showNotification(flutterLocalNotificationsPlugin);
               if (kDebugMode) {
@@ -948,7 +948,7 @@ class Inventory with ChangeNotifier {
   }
 
   // Resume the inventory timer
-  Future<void> resumeTimer(InventoryRepository inventoryRepository) async {
+  Future<void> resumeTimer(BuildContext context, InventoryRepository inventoryRepository) async {
     if (kDebugMode) {
       print('resumeTimer called');
     }
@@ -958,7 +958,7 @@ class Inventory with ChangeNotifier {
     } else {
       // If not paused, it means it was stopped.
       // We need to start it again.
-      startTimer(inventoryRepository);
+      startTimer(context, inventoryRepository);
     }
     elapsedTimeNotifier.value = elapsedTime.toDouble();
     elapsedTimeNotifier.notifyListeners();
@@ -967,7 +967,7 @@ class Inventory with ChangeNotifier {
   }
 
   // Stop the timer and finish the inventory
-  Future<void> stopTimer(InventoryRepository inventoryRepository) async {
+  Future<void> stopTimer(BuildContext context, InventoryRepository inventoryRepository) async {
     if (kDebugMode) {
       print('stopTimer called');
     }
@@ -982,7 +982,7 @@ class Inventory with ChangeNotifier {
 
     // Define endTime, endLatitude and endLongitude when finishing the inventory
     endTime = DateTime.now();
-    Position? position = await getPosition();
+    Position? position = await getPosition(context);
     if (position != null) {
       endLatitude = position.latitude;
       endLongitude = position.longitude;

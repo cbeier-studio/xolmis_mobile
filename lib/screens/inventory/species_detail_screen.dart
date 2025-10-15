@@ -46,7 +46,7 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
     });
 
     // Get the current location
-    Position? position = await getPosition();
+    Position? position = await getPosition(context);
 
     if (position != null) {
       // Create a new POI

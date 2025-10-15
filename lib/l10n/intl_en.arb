@@ -1837,6 +1837,56 @@
         "type": "text",
         "description": "Total of observers field label"
     },
+    "enterCoordinates": "Enter coordinates",
+    "@enterCoordinates": {
+        "type": "text",
+        "description": "Enter coordinates dialog title"
+    },
+    "latitude": "Latitude",
+    "@latitude": {
+        "type": "text",
+        "description": "Latitude field label"
+    },
+    "longitude": "Longitude",
+    "@longitude": {
+        "type": "text",
+        "description": "Longitude field label"
+    },
+    "invalidLatitude": "Invalid latitude",
+    "@invalidLatitude": {
+        "type": "text",
+        "description": "Error message when the latitude is invalid"
+    },
+    "invalidLongitude": "Invalid longitude",
+    "@invalidLongitude": {
+        "type": "text",
+        "description": "Error message when the longitude is invalid"
+    },
+    "fieldCannotBeEmpty": "Field cannot be empty",
+    "@fieldCannotBeEmpty": {
+        "type": "text",
+        "description": "Error message when a field is empty"
+    },
+    "locationError": "Location error",
+    "@locationError": {
+        "type": "text",
+        "description": "Location error dialog title"
+    },
+    "couldNotGetGpsLocation": "Could not get GPS location",
+    "@couldNotGetGpsLocation": {
+        "type": "text",
+        "description": "Location error dialog message"
+    },
+    "continueWithout": "Continue without",
+    "@continueWithout": {
+        "type": "text",
+        "description": "Continue without button label"
+    },
+    "enterManually": "Enter manually",
+    "@enterManually": {
+        "type": "text",
+        "description": "Enter manually button label"
+    },
     "precipitationNone": "None",
     "precipitationFog": "Fog",
     "precipitationMist": "Mist",

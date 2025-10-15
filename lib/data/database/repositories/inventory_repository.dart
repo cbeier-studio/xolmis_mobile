@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+
 import '../daos/inventory_dao.dart';
 import '../../models/inventory.dart';
 
@@ -6,8 +8,8 @@ class InventoryRepository {
 
   InventoryRepository(this._inventoryDao);
 
-  Future<bool> insertInventory(Inventory inventory) {
-    return _inventoryDao.insertInventory(inventory);
+  Future<bool> insertInventory(BuildContext context, Inventory inventory) {
+    return _inventoryDao.insertInventory(context, inventory);
   }
 
   Future<bool> importInventory(Inventory inventory) {

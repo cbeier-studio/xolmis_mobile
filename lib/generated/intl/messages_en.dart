@@ -188,6 +188,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "confirmFinishMessage": MessageLookupByLibrary.simpleMessage(
       "Are you sure you want to finish this inventory?",
     ),
+    "continueWithout": MessageLookupByLibrary.simpleMessage("Continue without"),
+    "couldNotGetGpsLocation": MessageLookupByLibrary.simpleMessage(
+      "Could not get GPS location",
+    ),
     "count": MessageLookupByLibrary.simpleMessage("Count"),
     "createBackup": MessageLookupByLibrary.simpleMessage("Create backup"),
     "dangerZone": MessageLookupByLibrary.simpleMessage("Danger zone"),
@@ -311,6 +315,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "eggShapeOval": MessageLookupByLibrary.simpleMessage("Oval"),
     "eggShapePyriform": MessageLookupByLibrary.simpleMessage("Pyriform"),
     "eggShapeSpherical": MessageLookupByLibrary.simpleMessage("Spherical"),
+    "enterCoordinates": MessageLookupByLibrary.simpleMessage(
+      "Enter coordinates",
+    ),
+    "enterManually": MessageLookupByLibrary.simpleMessage("Enter manually"),
     "errorBackupNotFound": MessageLookupByLibrary.simpleMessage(
       "Backup not found",
     ),
@@ -388,6 +396,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "failedToImportSpecimenWithId": m14,
     "female": MessageLookupByLibrary.simpleMessage("Female"),
     "femaleNameOrId": MessageLookupByLibrary.simpleMessage("Female name or ID"),
+    "fieldCannotBeEmpty": MessageLookupByLibrary.simpleMessage(
+      "Field cannot be empty",
+    ),
     "fieldJournal": MessageLookupByLibrary.simpleMessage("Field journal"),
     "fieldNumber": MessageLookupByLibrary.simpleMessage("Field number"),
     "findInventories": MessageLookupByLibrary.simpleMessage(
@@ -472,6 +483,10 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage(
           "Invalid JSON format. Expected an object or an array.",
         ),
+    "invalidLatitude": MessageLookupByLibrary.simpleMessage("Invalid latitude"),
+    "invalidLongitude": MessageLookupByLibrary.simpleMessage(
+      "Invalid longitude",
+    ),
     "invalidNumericValue": MessageLookupByLibrary.simpleMessage(
       "Invalid numeric value",
     ),
@@ -515,6 +530,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "inventoryType": MessageLookupByLibrary.simpleMessage("Inventory type"),
     "journalEntries": m24,
     "keepRunning": MessageLookupByLibrary.simpleMessage("Keep active"),
+    "latitude": MessageLookupByLibrary.simpleMessage("Latitude"),
     "length": MessageLookupByLibrary.simpleMessage("Length"),
     "lightMode": MessageLookupByLibrary.simpleMessage("Light"),
     "listFinished": MessageLookupByLibrary.simpleMessage("List finished"),
@@ -522,6 +538,8 @@ class MessageLookup extends MessageLookupByLibrary {
       "The list reached the maximum of species. Do you want to start the next list or finish now?",
     ),
     "locality": MessageLookupByLibrary.simpleMessage("Locality"),
+    "locationError": MessageLookupByLibrary.simpleMessage("Location error"),
+    "longitude": MessageLookupByLibrary.simpleMessage("Longitude"),
     "mackinnonLists": MessageLookupByLibrary.simpleMessage("Mackinnon lists"),
     "male": MessageLookupByLibrary.simpleMessage("Male"),
     "maleNameOrId": MessageLookupByLibrary.simpleMessage("Male name or ID"),

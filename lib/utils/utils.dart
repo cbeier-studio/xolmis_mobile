@@ -123,7 +123,7 @@ void _showMackinnonDialog(BuildContext context, Inventory inventory, InventoryRe
             onPressed: () async {
               // Finish the inventory and open the screen to add inventory
               var maxSpecies = inventory.maxSpecies;
-              await inventory.stopTimer(inventoryRepository);
+              await inventory.stopTimer(context, inventoryRepository);
               // onInventoryUpdated(inventory);
               Navigator.pop(context, true);
               Navigator.of(context).pop();
@@ -143,7 +143,7 @@ void _showMackinnonDialog(BuildContext context, Inventory inventory, InventoryRe
             child: Text(S.current.finish),
             onPressed: () async {
               // Finish the inventory and go back to the Home screen
-              await inventory.stopTimer(inventoryRepository);
+              await inventory.stopTimer(context, inventoryRepository);
               // onInventoryUpdated(inventory);
               Navigator.pop(context, true);
               Navigator.of(context).pop();
@@ -193,14 +193,144 @@ Future<Position> _determinePosition() async {
 
   // When we reach here, permissions are granted and we can
   // continue accessing the position of the device.
-  return await Geolocator.getCurrentPosition();
+  final LocationSettings locationSettings = LocationSettings(
+    accuracy: LocationAccuracy.high,
+    timeLimit: const Duration(seconds: 30),
+  );
+
+  return await Geolocator.getCurrentPosition(
+    locationSettings: locationSettings,
+  );
 }
 
-Future<Position?> getPosition() async {
+Future<Position?> _showManualCoordinatesDialog(BuildContext context) {
+  final formKey = GlobalKey<FormState>();
+  final latitudeController = TextEditingController();
+  final longitudeController = TextEditingController();
+
+  return showDialog<Position?>(
+    context: context,
+    barrierDismissible: false,
+    builder: (dialogContext) {
+      return AlertDialog.adaptive(
+        title: Text(S.of(dialogContext).enterCoordinates),
+        content: Form(
+          key: formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                controller: latitudeController,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: S.of(dialogContext).latitude,
+                ),
+                keyboardType: TextInputType.numberWithOptions(signed: true, decimal: true),
+                inputFormatters: [
+                  CommaToDotTextInputFormatter(),
+                ],
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return S.of(dialogContext).fieldCannotBeEmpty;
+                  }
+                  final lat = double.tryParse(value);
+                  if (lat == null || lat < -90 || lat > 90) {
+                    return S.of(dialogContext).invalidLatitude;
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(height: 8),
+              TextFormField(
+                controller: longitudeController,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: S.of(dialogContext).longitude,
+                ),
+                keyboardType: TextInputType.numberWithOptions(signed: true, decimal: true),
+                inputFormatters: [
+                  CommaToDotTextInputFormatter(),
+                ],
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return S.of(dialogContext).fieldCannotBeEmpty;
+                  }
+                  final lon = double.tryParse(value);
+                  if (lon == null || lon < -180 || lon > 180) {
+                    return S.of(dialogContext).invalidLongitude;
+                  }
+                  return null;
+                },
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            child: Text(S.of(dialogContext).cancel),
+            onPressed: () => Navigator.of(dialogContext).pop(null),
+          ),
+          TextButton(
+            child: Text(S.of(dialogContext).save),
+            onPressed: () {
+              if (formKey.currentState!.validate()) {
+                final now = DateTime.now();
+                final position = Position(
+                  latitude: double.parse(latitudeController.text),
+                  longitude: double.parse(longitudeController.text),
+                  timestamp: now,
+                  accuracy: 0.0,
+                  altitude: 0.0,
+                  altitudeAccuracy: 0.0,
+                  heading: 0.0,
+                  headingAccuracy: 0.0,
+                  speed: 0.0,
+                  speedAccuracy: 0.0,
+                );
+                Navigator.of(dialogContext).pop(position);
+              }
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
+Future<Position?> getPosition(BuildContext context) async {
   try {
     return await _determinePosition();
   } catch (e) {
-    return null;
+    debugPrint("Error getting position: $e");
+    if (!context.mounted) return null;
+
+    final choice = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) {
+        return AlertDialog.adaptive(
+          title: Text(S.of(dialogContext).locationError),
+          content: Text(S.of(dialogContext).couldNotGetGpsLocation),
+          actions: [
+            TextButton(
+              child: Text(S.of(dialogContext).continueWithout),
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+            ),
+            TextButton(
+              child: Text(S.of(dialogContext).enterManually),
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (choice == true) {
+      if (!context.mounted) return null;
+      return await _showManualCoordinatesDialog(context);
+    } else {
+      return null;
+    }
   }
 }
 

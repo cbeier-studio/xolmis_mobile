@@ -289,7 +289,7 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
           Navigator.pop(context, true);
         }
       } else {
-        Position? position = await getPosition();
+        Position? position = await getPosition(context);
 
         // Save the vegetation data
         final vegetation = Vegetation(

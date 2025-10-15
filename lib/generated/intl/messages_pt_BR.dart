@@ -200,6 +200,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "confirmFinishMessage": MessageLookupByLibrary.simpleMessage(
       "Tem certeza que deseja encerrar este inventário?",
     ),
+    "continueWithout": MessageLookupByLibrary.simpleMessage("Continuar sem"),
+    "couldNotGetGpsLocation": MessageLookupByLibrary.simpleMessage(
+      "Não foi possível obter a localização do GPS",
+    ),
     "count": MessageLookupByLibrary.simpleMessage("Contagem"),
     "createBackup": MessageLookupByLibrary.simpleMessage("Criar backup"),
     "dangerZone": MessageLookupByLibrary.simpleMessage("Área perigosa"),
@@ -327,6 +331,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "eggShapeOval": MessageLookupByLibrary.simpleMessage("Oval"),
     "eggShapePyriform": MessageLookupByLibrary.simpleMessage("Piriforme"),
     "eggShapeSpherical": MessageLookupByLibrary.simpleMessage("Esférico"),
+    "enterCoordinates": MessageLookupByLibrary.simpleMessage(
+      "Entrar coordenadas",
+    ),
+    "enterManually": MessageLookupByLibrary.simpleMessage("Entrar manualmente"),
     "errorBackupNotFound": MessageLookupByLibrary.simpleMessage(
       "Backup não encontrado",
     ),
@@ -407,6 +415,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "female": MessageLookupByLibrary.simpleMessage("Fêmea"),
     "femaleNameOrId": MessageLookupByLibrary.simpleMessage(
       "Nome ou ID da fêmea",
+    ),
+    "fieldCannotBeEmpty": MessageLookupByLibrary.simpleMessage(
+      "Campo deve ser preenchido",
     ),
     "fieldJournal": MessageLookupByLibrary.simpleMessage("Diário de campo"),
     "fieldNumber": MessageLookupByLibrary.simpleMessage("Número de campo"),
@@ -498,6 +509,12 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage(
           "Formato JSON inválido. Esperado um objeto ou uma lista.",
         ),
+    "invalidLatitude": MessageLookupByLibrary.simpleMessage(
+      "Latitude inválida",
+    ),
+    "invalidLongitude": MessageLookupByLibrary.simpleMessage(
+      "Longitude inválida",
+    ),
     "invalidNumericValue": MessageLookupByLibrary.simpleMessage(
       "Valor inválido",
     ),
@@ -543,6 +560,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "inventoryType": MessageLookupByLibrary.simpleMessage("Tipo de inventário"),
     "journalEntries": m24,
     "keepRunning": MessageLookupByLibrary.simpleMessage("Manter ativo"),
+    "latitude": MessageLookupByLibrary.simpleMessage("Latitude"),
     "length": MessageLookupByLibrary.simpleMessage("Comprimento"),
     "lightMode": MessageLookupByLibrary.simpleMessage("Claro"),
     "listFinished": MessageLookupByLibrary.simpleMessage("Lista concluída"),
@@ -550,6 +568,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "A lista atingiu o número máximo de espécies. Deseja iniciar a próxima lista ou encerrar?",
     ),
     "locality": MessageLookupByLibrary.simpleMessage("Localidade"),
+    "locationError": MessageLookupByLibrary.simpleMessage(
+      "Erro de localização",
+    ),
+    "longitude": MessageLookupByLibrary.simpleMessage("Longitude"),
     "mackinnonLists": MessageLookupByLibrary.simpleMessage(
       "Listas de Mackinnon",
     ),

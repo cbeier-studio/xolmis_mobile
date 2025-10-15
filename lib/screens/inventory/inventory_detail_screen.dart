@@ -178,7 +178,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                 tooltip: inventory.isPaused ? S.of(context).resume : S.of(context).pause,
                 onPressed: () {
                   if (inventory.isPaused) {
-                    inventoryProvider.resumeInventoryTimer(inventory, widget.inventoryRepository);
+                    inventoryProvider.resumeInventoryTimer(context, inventory, widget.inventoryRepository);
                   } else {
                     inventoryProvider.pauseInventoryTimer(inventory, widget.inventoryRepository);
                   }
@@ -223,7 +223,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                     inventoryProvider: Provider.of<InventoryProvider>(context, listen: false),
                     inventoryRepository: widget.inventoryRepository,
                   );
-                  await completionService.attemptFinishInventory();
+                  await completionService.attemptFinishInventory(context);
                   Navigator.pop(context, true);
                   setState(() {
                     _isSubmitting = false;

@@ -1276,6 +1276,56 @@
         "type": "text",
         "description": "Total of observers field label"
     },
+    "enterCoordinates": "Entrar coordenadas",
+    "@enterCoordinates": {
+        "type": "text",
+        "description": "Enter coordinates dialog title"
+    },
+    "latitude": "Latitude",
+    "@latitude": {
+        "type": "text",
+        "description": "Latitude field label"
+    },
+    "longitude": "Longitude",
+    "@longitude": {
+        "type": "text",
+        "description": "Longitude field label"
+    },
+    "invalidLatitude": "Latitude inválida",
+    "@invalidLatitude": {
+        "type": "text",
+        "description": "Error message when the latitude is invalid"
+    },
+    "invalidLongitude": "Longitude inválida",
+    "@invalidLongitude": {
+        "type": "text",
+        "description": "Error message when the longitude is invalid"
+    },
+    "fieldCannotBeEmpty": "Campo deve ser preenchido",
+    "@fieldCannotBeEmpty": {
+        "type": "text",
+        "description": "Error message when a field is empty"
+    },
+    "locationError": "Erro de localização",
+    "@locationError": {
+        "type": "text",
+        "description": "Location error dialog title"
+    },
+    "couldNotGetGpsLocation": "Não foi possível obter a localização do GPS",
+    "@couldNotGetGpsLocation": {
+        "type": "text",
+        "description": "Location error dialog message"
+    },
+    "continueWithout": "Continuar sem",
+    "@continueWithout": {
+        "type": "text",
+        "description": "Continue without button label"
+    },
+    "enterManually": "Entrar manualmente",
+    "@enterManually": {
+        "type": "text",
+        "description": "Enter manually button label"
+    },
     "precipitationNone": "Nenhuma",
     "precipitationFog": "Névoa",
     "precipitationMist": "Neblina",

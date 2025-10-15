@@ -38,7 +38,7 @@ class InventoryProvider with ChangeNotifier {
   InventoryProvider(this._inventoryRepository, this._speciesProvider, this._vegetationProvider, this._weatherProvider);
 
   // Load all inventories from the database
-  Future<void> fetchInventories() async {
+  Future<void> fetchInventories(BuildContext context) async {
     _isLoading = true;
     try {
       _inventories.clear();
@@ -51,7 +51,7 @@ class InventoryProvider with ChangeNotifier {
         await _speciesProvider.loadSpeciesForInventory(inventory.id);
         await _vegetationProvider.loadVegetationForInventory(inventory.id);
         await _weatherProvider.loadWeatherForInventory(inventory.id);
-        startInventoryTimer(inventory, _inventoryRepository);
+        startInventoryTimer(context, inventory, _inventoryRepository);
       }
       if (kDebugMode) {
         print('Inventories loaded');
@@ -78,13 +78,13 @@ class InventoryProvider with ChangeNotifier {
   }
 
   // Add inventory to the database and the list
-  Future<bool> addInventory(Inventory inventory) async {
+  Future<bool> addInventory(BuildContext context, Inventory inventory) async {
     try {
-      await _inventoryRepository.insertInventory(inventory);
+      await _inventoryRepository.insertInventory(context, inventory);
       _inventories.add(inventory);
       _inventoryMap[inventory.id] = inventory; // Add to the map
       notifyListeners();
-      startInventoryTimer(inventory, _inventoryRepository);
+      startInventoryTimer(context, inventory, _inventoryRepository);
 
       return true;
     } catch (error) {
@@ -140,9 +140,9 @@ class InventoryProvider with ChangeNotifier {
   }
 
   // Start inventory timer
-  void startInventoryTimer(Inventory inventory, InventoryRepository inventoryRepository) {
+  void startInventoryTimer(BuildContext context, Inventory inventory, InventoryRepository inventoryRepository) {
     if (inventory.duration > 0 && !inventory.isFinished && !inventory.isPaused) {
-      inventory.startTimer(inventoryRepository);
+      inventory.startTimer(context, inventoryRepository);
       updateInventory(inventory);
       // notifyListeners();
     }
@@ -156,16 +156,16 @@ class InventoryProvider with ChangeNotifier {
   }
 
   // Resume inventory timer
-  void resumeInventoryTimer(Inventory inventory, InventoryRepository inventoryRepository) {
-    inventory.resumeTimer(inventoryRepository);
+  void resumeInventoryTimer(BuildContext context, Inventory inventory, InventoryRepository inventoryRepository) {
+    inventory.resumeTimer(context, inventoryRepository);
     updateInventory(inventory);
     // notifyListeners();
   }
 
   // Update the ID in the database and the list
-  Future<void> changeInventoryId(String oldId, String newId) async {
+  Future<void> changeInventoryId(BuildContext context, String oldId, String newId) async {
     await _inventoryRepository.changeInventoryId(oldId, newId);
-    await fetchInventories();
+    await fetchInventories(context);
     // notifyListeners();
   }
 

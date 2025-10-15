@@ -2016,6 +2016,96 @@ abstract class AppLocalizations {
   /// **'Failed to import specimen with ID: {id}'**
   String failedToImportSpecimenWithId(int id);
 
+  /// Error message when cloud cover is out of range
+  ///
+  /// In en, this message translates to:
+  /// **'Cloud cover must be between 0 and 100'**
+  String get cloudCoverRangeError;
+
+  /// Error message when relative humidity is out of range
+  ///
+  /// In en, this message translates to:
+  /// **'Relative humidity must be between 0 and 100'**
+  String get relativeHumidityRangeError;
+
+  /// Atmospheric pressure field label
+  ///
+  /// In en, this message translates to:
+  /// **'Atmospheric pressure'**
+  String get atmosphericPressure;
+
+  /// Relative humidity field label
+  ///
+  /// In en, this message translates to:
+  /// **'Relative humidity'**
+  String get relativeHumidity;
+
+  /// Total of observers field label
+  ///
+  /// In en, this message translates to:
+  /// **'Total of observers'**
+  String get totalOfObservers;
+
+  /// Enter coordinates dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Enter coordinates'**
+  String get enterCoordinates;
+
+  /// Latitude field label
+  ///
+  /// In en, this message translates to:
+  /// **'Latitude'**
+  String get latitude;
+
+  /// Longitude field label
+  ///
+  /// In en, this message translates to:
+  /// **'Longitude'**
+  String get longitude;
+
+  /// Error message when the latitude is invalid
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid latitude'**
+  String get invalidLatitude;
+
+  /// Error message when the longitude is invalid
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid longitude'**
+  String get invalidLongitude;
+
+  /// Error message when a field is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Field cannot be empty'**
+  String get fieldCannotBeEmpty;
+
+  /// Location error dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Location error'**
+  String get locationError;
+
+  /// Location error dialog message
+  ///
+  /// In en, this message translates to:
+  /// **'Could not get GPS location'**
+  String get couldNotGetGpsLocation;
+
+  /// Continue without button label
+  ///
+  /// In en, this message translates to:
+  /// **'Continue without'**
+  String get continueWithout;
+
+  /// Enter manually button label
+  ///
+  /// In en, this message translates to:
+  /// **'Enter manually'**
+  String get enterManually;
+
   /// No description provided for @precipitationNone.
   ///
   /// In en, this message translates to:

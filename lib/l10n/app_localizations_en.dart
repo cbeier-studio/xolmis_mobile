@@ -1233,6 +1233,52 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get cloudCoverRangeError => 'Cloud cover must be between 0 and 100';
+
+  @override
+  String get relativeHumidityRangeError =>
+      'Relative humidity must be between 0 and 100';
+
+  @override
+  String get atmosphericPressure => 'Atmospheric pressure';
+
+  @override
+  String get relativeHumidity => 'Relative humidity';
+
+  @override
+  String get totalOfObservers => 'Total of observers';
+
+  @override
+  String get enterCoordinates => 'Enter coordinates';
+
+  @override
+  String get latitude => 'Latitude';
+
+  @override
+  String get longitude => 'Longitude';
+
+  @override
+  String get invalidLatitude => 'Invalid latitude';
+
+  @override
+  String get invalidLongitude => 'Invalid longitude';
+
+  @override
+  String get fieldCannotBeEmpty => 'Field cannot be empty';
+
+  @override
+  String get locationError => 'Location error';
+
+  @override
+  String get couldNotGetGpsLocation => 'Could not get GPS location';
+
+  @override
+  String get continueWithout => 'Continue without';
+
+  @override
+  String get enterManually => 'Enter manually';
+
+  @override
   String get precipitationNone => 'None';
 
   @override

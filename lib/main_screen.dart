@@ -110,7 +110,7 @@ class _MainScreenState extends State<MainScreen> {
     _fetchAppVersion();
 
     try {
-    Provider.of<InventoryProvider>(context, listen: false).fetchInventories();
+    Provider.of<InventoryProvider>(context, listen: false).fetchInventories(context);
     Provider.of<NestProvider>(context, listen: false).fetchNests();
     Provider.of<SpecimenProvider>(context, listen: false).fetchSpecimens();
     Provider.of<FieldJournalProvider>(context, listen: false).fetchJournalEntries();

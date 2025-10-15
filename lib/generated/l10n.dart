@@ -3340,6 +3340,106 @@ class S {
     );
   }
 
+  /// `Enter coordinates`
+  String get enterCoordinates {
+    return Intl.message(
+      'Enter coordinates',
+      name: 'enterCoordinates',
+      desc: 'Enter coordinates dialog title',
+      args: [],
+    );
+  }
+
+  /// `Latitude`
+  String get latitude {
+    return Intl.message(
+      'Latitude',
+      name: 'latitude',
+      desc: 'Latitude field label',
+      args: [],
+    );
+  }
+
+  /// `Longitude`
+  String get longitude {
+    return Intl.message(
+      'Longitude',
+      name: 'longitude',
+      desc: 'Longitude field label',
+      args: [],
+    );
+  }
+
+  /// `Invalid latitude`
+  String get invalidLatitude {
+    return Intl.message(
+      'Invalid latitude',
+      name: 'invalidLatitude',
+      desc: 'Error message when the latitude is invalid',
+      args: [],
+    );
+  }
+
+  /// `Invalid longitude`
+  String get invalidLongitude {
+    return Intl.message(
+      'Invalid longitude',
+      name: 'invalidLongitude',
+      desc: 'Error message when the longitude is invalid',
+      args: [],
+    );
+  }
+
+  /// `Field cannot be empty`
+  String get fieldCannotBeEmpty {
+    return Intl.message(
+      'Field cannot be empty',
+      name: 'fieldCannotBeEmpty',
+      desc: 'Error message when a field is empty',
+      args: [],
+    );
+  }
+
+  /// `Location error`
+  String get locationError {
+    return Intl.message(
+      'Location error',
+      name: 'locationError',
+      desc: 'Location error dialog title',
+      args: [],
+    );
+  }
+
+  /// `Could not get GPS location`
+  String get couldNotGetGpsLocation {
+    return Intl.message(
+      'Could not get GPS location',
+      name: 'couldNotGetGpsLocation',
+      desc: 'Location error dialog message',
+      args: [],
+    );
+  }
+
+  /// `Continue without`
+  String get continueWithout {
+    return Intl.message(
+      'Continue without',
+      name: 'continueWithout',
+      desc: 'Continue without button label',
+      args: [],
+    );
+  }
+
+  /// `Enter manually`
+  String get enterManually {
+    return Intl.message(
+      'Enter manually',
+      name: 'enterManually',
+      desc: 'Enter manually button label',
+      args: [],
+    );
+  }
+
   /// `None`
   String get precipitationNone {
     return Intl.message('None', name: 'precipitationNone', desc: '', args: []);

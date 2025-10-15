@@ -29,8 +29,8 @@ class InventoryCompletionService {
   });
 
   // Função para realmente finalizar o inventário
-  Future<void> _finalizeInventory() async {
-    inventory.stopTimer(inventoryRepository);
+  Future<void> _finalizeInventory(BuildContext context) async {
+    inventory.stopTimer(context, inventoryRepository);
     inventoryProvider.updateInventory(inventory);
     // inventoryProvider.notifyListeners();
 
@@ -75,7 +75,7 @@ class InventoryCompletionService {
   }
 
   // Função principal para processar os avisos e finalizar
-  Future<void> processConditionalRemindersAndFinalize() async {
+  Future<void> processConditionalRemindersAndFinalize(BuildContext context) async {
     bool proceedToFinalize = true;
 
     final prefs = await SharedPreferences.getInstance();
@@ -101,7 +101,7 @@ class InventoryCompletionService {
             MaterialPageRoute(builder: (_) => AddVegetationDataScreen(inventory: inventory)),
           );
           if (vegetationAdded != null && vegetationAdded) {
-            await inventoryProvider.fetchInventories();
+            await inventoryProvider.fetchInventories(context);
             proceedToFinalize = true;
           }
         }
@@ -126,7 +126,7 @@ class InventoryCompletionService {
             MaterialPageRoute(builder: (_) => AddWeatherScreen(inventory: inventory)),
           );
           if (weatherAdded != null && weatherAdded) {
-            await inventoryProvider.fetchInventories();
+            await inventoryProvider.fetchInventories(context);
             proceedToFinalize = true;
           }
         }
@@ -139,13 +139,13 @@ class InventoryCompletionService {
     // 3. Finalizar o inventário
     if (proceedToFinalize) {
       if (context.mounted) {
-        await _finalizeInventory();
+        await _finalizeInventory(context);
       }
     }
   }
 
   // Função pública para iniciar o processo de finalização (chamada pela UI)
-  Future<void> attemptFinishInventory() async {
+  Future<void> attemptFinishInventory(BuildContext context) async {
     final bool? confirmedFinish = await showDialog<bool>(
       context: context,
       builder: (BuildContext dialogContext) {
@@ -168,7 +168,7 @@ class InventoryCompletionService {
 
     if (confirmedFinish == true) {
       if (context.mounted) {
-        await processConditionalRemindersAndFinalize();
+        await processConditionalRemindersAndFinalize(context);
       }
     }
   }

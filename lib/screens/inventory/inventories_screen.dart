@@ -89,14 +89,14 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
         for (var inventory in inventoryProvider.activeInventories) {
           if (inventory.duration != 0 && !inventory.isPaused) {
             // Restart the timer for active inventories
-            inventory.startTimer(inventoryRepository);
+            inventory.startTimer(context, inventoryRepository);
           }
         }
       });
     });
     onInventoryStopped = (inventoryId) {
       // When an inventory is stopped, update the inventory list
-      inventoryProvider.fetchInventories();
+      inventoryProvider.fetchInventories(context);
     };
   }
 
@@ -626,7 +626,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                 leadingIcon: Icon(Icons.file_open_outlined),
                 onPressed: () async {
                   await importInventoryFromJson(context);
-                  await inventoryProvider.fetchInventories();
+                  await inventoryProvider.fetchInventories(context);
                 },
                 child: Text(S.of(context).import),
               ),
@@ -706,7 +706,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
           Expanded(
               child: RefreshIndicator(
             onRefresh: () async {
-              await inventoryProvider.fetchInventories();
+              await inventoryProvider.fetchInventories(context);
             },
             child: Consumer<InventoryProvider>(
                 builder: (context, inventoryProvider, child) {
@@ -730,7 +730,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                       IconButton.filled(
                         icon: Icon(Icons.refresh_outlined),
                         onPressed: () async {
-                          await inventoryProvider.fetchInventories();
+                          await inventoryProvider.fetchInventories(context);
                         }, 
                       )
                     ],
@@ -1130,7 +1130,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
               onPressed: () {
                 if (inventory.isPaused) {
                   Provider.of<InventoryProvider>(context, listen: false)
-                    .resumeInventoryTimer(inventory, inventoryRepository);
+                    .resumeInventoryTimer(context, inventory, inventoryRepository);
                 } else {
                   Provider.of<InventoryProvider>(context, listen: false)
                     .pauseInventoryTimer(inventory, inventoryRepository);
@@ -1241,7 +1241,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                         onPressed: () {
                           if (inventory.isPaused) {
                             Provider.of<InventoryProvider>(context, listen: false)
-                              .resumeInventoryTimer(inventory, inventoryRepository);
+                              .resumeInventoryTimer(context, inventory, inventoryRepository);
                           } else {
                             Provider.of<InventoryProvider>(context, listen: false)
                               .pauseInventoryTimer(inventory, inventoryRepository);
@@ -1359,7 +1359,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                 inventoryProvider: inventoryProvider,
                                 inventoryRepository: inventoryRepository,
                               );
-                              await completionService.attemptFinishInventory();
+                              await completionService.attemptFinishInventory(context);
                             },
                           ),
                         ),
@@ -1470,7 +1470,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                           inventoryProvider: inventoryProvider,
                           inventoryRepository: inventoryRepository,
                         );
-                        await completionService.attemptFinishInventory();
+                        await completionService.attemptFinishInventory(context);
                       },
                     ),
                   // Option to reactivate the finished inventory
@@ -1487,7 +1487,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                         inventory.intervalWithoutSpeciesNotifier.value = inventory.intervalsWithoutNewSpecies;
                         inventory.updateIsFinished(false);
                         inventoryProvider.updateInventory(inventory);
-                        inventoryProvider.startInventoryTimer(inventory, inventoryRepository);
+                        inventoryProvider.startInventoryTimer(context, inventory, inventoryRepository);
                         // inventoryProvider.notifyListeners();
                       },
                     ),
@@ -1655,7 +1655,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                   }
                   return; // Prevent adding inventory
                 }
-                inventoryProvider.changeInventoryId(oldId, newId);
+                inventoryProvider.changeInventoryId(context, oldId, newId);
                 if (context.mounted) {
                   Navigator.of(context).pop();
                 }

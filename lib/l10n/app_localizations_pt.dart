@@ -1236,6 +1236,53 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
+  String get cloudCoverRangeError => 'Nebulosidade deve estar entre 0 e 100';
+
+  @override
+  String get relativeHumidityRangeError =>
+      'Umidade relativa deve estar entre 0 e 100';
+
+  @override
+  String get atmosphericPressure => 'Pressão atmosférica';
+
+  @override
+  String get relativeHumidity => 'Umidade relativa';
+
+  @override
+  String get totalOfObservers => 'Total de observadores';
+
+  @override
+  String get enterCoordinates => 'Entrar coordenadas';
+
+  @override
+  String get latitude => 'Latitude';
+
+  @override
+  String get longitude => 'Longitude';
+
+  @override
+  String get invalidLatitude => 'Latitude inválida';
+
+  @override
+  String get invalidLongitude => 'Longitude inválida';
+
+  @override
+  String get fieldCannotBeEmpty => 'Campo deve ser preenchido';
+
+  @override
+  String get locationError => 'Erro de localização';
+
+  @override
+  String get couldNotGetGpsLocation =>
+      'Não foi possível obter a localização do GPS';
+
+  @override
+  String get continueWithout => 'Continuar sem';
+
+  @override
+  String get enterManually => 'Entrar manualmente';
+
+  @override
   String get precipitationNone => 'Nenhuma';
 
   @override
@@ -2659,6 +2706,53 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String failedToImportSpecimenWithId(int id) {
     return 'Falha ao importar espécime com ID: $id';
   }
+
+  @override
+  String get cloudCoverRangeError => 'Nebulosidade deve estar entre 0 e 100';
+
+  @override
+  String get relativeHumidityRangeError =>
+      'Umidade relativa deve estar entre 0 e 100';
+
+  @override
+  String get atmosphericPressure => 'Pressão atmosférica';
+
+  @override
+  String get relativeHumidity => 'Umidade relativa';
+
+  @override
+  String get totalOfObservers => 'Total de observadores';
+
+  @override
+  String get enterCoordinates => 'Entrar coordenadas';
+
+  @override
+  String get latitude => 'Latitude';
+
+  @override
+  String get longitude => 'Longitude';
+
+  @override
+  String get invalidLatitude => 'Latitude inválida';
+
+  @override
+  String get invalidLongitude => 'Longitude inválida';
+
+  @override
+  String get fieldCannotBeEmpty => 'Campo deve ser preenchido';
+
+  @override
+  String get locationError => 'Erro de localização';
+
+  @override
+  String get couldNotGetGpsLocation =>
+      'Não foi possível obter a localização do GPS';
+
+  @override
+  String get continueWithout => 'Continuar sem';
+
+  @override
+  String get enterManually => 'Entrar manualmente';
 
   @override
   String get precipitationNone => 'Nenhuma';

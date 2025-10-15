@@ -77,7 +77,7 @@ class AddJournalScreenState extends State<AddJournalScreen> {
             icon: const Icon(Icons.add_location_alt_outlined),
             tooltip: S.of(context).addCoordinates,
             onPressed: () async {
-              Position? position = await getPosition();
+              Position? position = await getPosition(context);
               if (position != null) {
                 final selection = _notesController.selection;
                 final positionText = '${position.longitude}; ${position.latitude}';

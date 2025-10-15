@@ -87,7 +87,7 @@ class AddNestScreenState extends State<AddNestScreen> {
   }
 
   Future<void> _getCurrentLocation() async {
-    Position? position = await getPosition();
+    Position? position = await getPosition(context);
     if (position != null) {
       setState(() {
         _currentPosition = position;
