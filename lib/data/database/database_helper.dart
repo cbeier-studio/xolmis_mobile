@@ -23,7 +23,7 @@ class DatabaseHelper {
     String path = join(await getDatabasesPath(), 'xolmis_database.db');
     return await openDatabase(
       path,
-      version: 18, // Increase the version number
+      version: 19, // Increase the version number
       onCreate: _createTables,
       onUpgrade: _upgradeTables,
       onOpen: (db) {
@@ -66,6 +66,9 @@ class DatabaseHelper {
           name TEXT, 
           isOutOfInventory INTEGER, 
           count INTEGER, 
+          distance REAL,
+          flightHeight REAL,
+          flightDirection TEXT,
           notes TEXT, 
           sampleTime TEXT,
           FOREIGN KEY (inventoryId) REFERENCES inventories(id) ON DELETE CASCADE 
@@ -384,6 +387,17 @@ class DatabaseHelper {
       );
       db.execute(
         'ALTER TABLE weather ADD COLUMN relativeHumidity REAL',
+      );
+    }
+    if (oldVersion < 19) {
+      db.execute(
+        'ALTER TABLE species ADD COLUMN distance REAL',
+      );
+      db.execute(
+        'ALTER TABLE species ADD COLUMN flightHeight REAL',
+      );
+      db.execute(
+        'ALTER TABLE species ADD COLUMN flightDirection TEXT',
       );
     }
   }

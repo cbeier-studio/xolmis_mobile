@@ -236,6 +236,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "discardedInventory": MessageLookupByLibrary.simpleMessage(
       "Discarded inventory",
     ),
+    "distance": MessageLookupByLibrary.simpleMessage("Distance"),
     "distribution": MessageLookupByLibrary.simpleMessage("Distribution"),
     "distributionContinuousCoverWithGaps": MessageLookupByLibrary.simpleMessage(
       "Continuous with gaps",
@@ -413,6 +414,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "finish": MessageLookupByLibrary.simpleMessage("Finish"),
     "finishInventory": MessageLookupByLibrary.simpleMessage("Finish inventory"),
     "finished": MessageLookupByLibrary.simpleMessage("Finished"),
+    "flightDirection": MessageLookupByLibrary.simpleMessage("Flight direction"),
+    "flightHeight": MessageLookupByLibrary.simpleMessage("Flight height"),
     "formatNumbers": MessageLookupByLibrary.simpleMessage("Format numbers"),
     "formatNumbersDescription": MessageLookupByLibrary.simpleMessage(
       "Uncheck this to format numbers with point as decimal separator",
@@ -453,6 +456,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "individualsCounted": MessageLookupByLibrary.simpleMessage(
       "Individuals counted",
     ),
+    "insertCount": MessageLookupByLibrary.simpleMessage("Insert count"),
     "insertDuration": MessageLookupByLibrary.simpleMessage("Insert a duration"),
     "insertFieldNumber": MessageLookupByLibrary.simpleMessage(
       "Insert the field number",
@@ -475,6 +479,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "insertTitle": MessageLookupByLibrary.simpleMessage(
       "Insert a title for the journal entry",
+    ),
+    "insertValidNumber": MessageLookupByLibrary.simpleMessage(
+      "Insert a valid number",
     ),
     "intervaledQualitativeLists": MessageLookupByLibrary.simpleMessage(
       "Interval qualitative lists",
@@ -521,11 +528,17 @@ class MessageLookup extends MessageLookupByLibrary {
       "Mackinnon List",
     ),
     "inventoryPointCount": MessageLookupByLibrary.simpleMessage("Point Count"),
+    "inventoryPointDistance": MessageLookupByLibrary.simpleMessage(
+      "Point count with distance/height",
+    ),
     "inventoryTimedQualitative": MessageLookupByLibrary.simpleMessage(
       "Timed Qualitative List",
     ),
     "inventoryTransectionCount": MessageLookupByLibrary.simpleMessage(
       "Transection Count",
+    ),
+    "inventoryTransectionDistance": MessageLookupByLibrary.simpleMessage(
+      "Transection with distance/height",
     ),
     "inventoryType": MessageLookupByLibrary.simpleMessage("Inventory type"),
     "journalEntries": m24,

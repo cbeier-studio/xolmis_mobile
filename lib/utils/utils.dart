@@ -344,7 +344,11 @@ String? getInventoryTypeLetter(InventoryType inventoryType) {
       return 'L';
     case InventoryType.invTransectionCount:
       return 'T';
+    case InventoryType.invTransectionDistance:
+      return 'T';
     case InventoryType.invPointCount:
+      return 'P';
+    case InventoryType.invPointDistance:
       return 'P';
     default:
       return null;

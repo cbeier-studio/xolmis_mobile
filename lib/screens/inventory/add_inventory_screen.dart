@@ -69,7 +69,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                   children: [
                     // Inventory type
                     DropdownButtonFormField<InventoryType>(
-                      value: _selectedType,
+                      initialValue: _selectedType,
                       decoration: InputDecoration(
                         labelText: '${S.of(context).inventoryType} *',
                         helperText: S.of(context).requiredField,
@@ -266,7 +266,11 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                               suffixText: S.of(context).minutes(2),
                             ),
                             validator: (value) {
-                              if ((_selectedType == InventoryType.invTimedQualitative || _selectedType == InventoryType.invIntervalQualitative || _selectedType == InventoryType.invPointCount) && (value == null || value.isEmpty)) {
+                              if ((_selectedType == InventoryType.invTimedQualitative ||
+                                  _selectedType == InventoryType.invIntervalQualitative ||
+                                  _selectedType == InventoryType.invPointCount ||
+                                  _selectedType == InventoryType.invPointDistance) &&
+                                  (value == null || value.isEmpty)) {
                                 return S.of(context).insertDuration;
                               }
                               return null;
@@ -369,7 +373,8 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
       } else if (newValue == InventoryType.invMackinnonList) {
         _maxSpeciesController.text = maxSpeciesMackinnon.toString();
         _durationController.text = '';
-      } else if (newValue == InventoryType.invPointCount) {
+      } else if (newValue == InventoryType.invPointCount ||
+          newValue == InventoryType.invPointDistance) {
         _durationController.text = pointCountsDuration.toString();
         _maxSpeciesController.text = '';
       } else {

@@ -3440,6 +3440,56 @@ class S {
     );
   }
 
+  /// `Distance`
+  String get distance {
+    return Intl.message(
+      'Distance',
+      name: 'distance',
+      desc: 'Distance field label',
+      args: [],
+    );
+  }
+
+  /// `Flight height`
+  String get flightHeight {
+    return Intl.message(
+      'Flight height',
+      name: 'flightHeight',
+      desc: 'Flight height field label',
+      args: [],
+    );
+  }
+
+  /// `Flight direction`
+  String get flightDirection {
+    return Intl.message(
+      'Flight direction',
+      name: 'flightDirection',
+      desc: 'Flight direction field label',
+      args: [],
+    );
+  }
+
+  /// `Insert count`
+  String get insertCount {
+    return Intl.message(
+      'Insert count',
+      name: 'insertCount',
+      desc: 'Insert count field label',
+      args: [],
+    );
+  }
+
+  /// `Insert a valid number`
+  String get insertValidNumber {
+    return Intl.message(
+      'Insert a valid number',
+      name: 'insertValidNumber',
+      desc: 'Validation message for insert count field',
+      args: [],
+    );
+  }
+
   /// `None`
   String get precipitationNone {
     return Intl.message('None', name: 'precipitationNone', desc: '', args: []);
@@ -3685,6 +3735,26 @@ class S {
     return Intl.message(
       'Casual Observation',
       name: 'inventoryCasual',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Transection with distance/height`
+  String get inventoryTransectionDistance {
+    return Intl.message(
+      'Transection with distance/height',
+      name: 'inventoryTransectionDistance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Point count with distance/height`
+  String get inventoryPointDistance {
+    return Intl.message(
+      'Point count with distance/height',
+      name: 'inventoryPointDistance',
       desc: '',
       args: [],
     );

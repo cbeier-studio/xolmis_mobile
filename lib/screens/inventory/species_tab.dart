@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:xolmis/screens/inventory/edit_species_screen.dart';
 
 import '../../data/models/inventory.dart';
 import '../../data/database/repositories/inventory_repository.dart';
@@ -52,17 +53,23 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
 
     // If the species is already in the inventory, show a message and return
-    if (speciesProvider.speciesExistsInInventory(
+    if (widget.inventory.type != InventoryType.invTransectionDistance &&
+      widget.inventory.type != InventoryType.invPointDistance) {
+      if (speciesProvider.speciesExistsInInventory(
         widget.inventory.id, speciesName)) {
-      _showSpeciesAlreadyExistsMessage();
-      return;
+        _showSpeciesAlreadyExistsMessage();
+        return;
+      }
     }
 
     // Set the initial count to 1 for transect and point count inventories
-    final initialCount = widget.inventory.type == InventoryType.invTransectionCount || widget.inventory.type == InventoryType.invPointCount ? 1 : 0;
+    final initialCount = widget.inventory.type == InventoryType.invTransectionCount ||
+        widget.inventory.type == InventoryType.invPointCount ||
+        widget.inventory.type == InventoryType.invTransectionDistance ||
+        widget.inventory.type == InventoryType.invPointDistance ? 1 : 0;
 
     // Create the new species
-    final newSpecies = Species(
+    Species? newSpecies = Species(
       inventoryId: widget.inventory.id,
       name: speciesName,
       sampleTime: DateTime.now(),
@@ -71,8 +78,19 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
       pois: [],
     );
 
+    // Add species details
+    if (widget.inventory.type == InventoryType.invTransectionDistance ||
+        widget.inventory.type == InventoryType.invPointDistance) {
+      newSpecies = await Navigator.push<Species>(
+        context,
+        MaterialPageRoute(
+          builder: (context) => EditSpeciesScreen(species: newSpecies!),
+        ),
+      );
+    }
+
     // Insert the new species in the database
-    await speciesRepository.insertSpecies(widget.inventory.id, newSpecies);
+    await speciesRepository.insertSpecies(widget.inventory.id, newSpecies!);
     
     // Check is Mackinnon list was completed and ask to start the next list
     setState(() {
@@ -125,9 +143,12 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     for (final inventory in inventoryProvider.activeInventories) {
       if (inventory.id != widget.inventory.id &&
           !speciesProvider.speciesExistsInInventory(inventory.id, speciesName) &&
-          inventory.type != InventoryType.invBanding) {
+          (inventory.type != InventoryType.invBanding ||
+              inventory.type != InventoryType.invTransectionDistance ||
+              inventory.type != InventoryType.invPointDistance)) {
         // Set the initial count to 1 for transect and point count inventories
-        final initialCount = inventory.type == InventoryType.invTransectionCount || inventory.type == InventoryType.invPointCount ? 1 : 0;
+        final initialCount = inventory.type == InventoryType.invTransectionCount ||
+            inventory.type == InventoryType.invPointCount ? 1 : 0;
         // Create the new species
         final newSpeciesForOtherInventory = Species(
           inventoryId: inventory.id,
@@ -198,7 +219,9 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     }
 
     // Ask to delete the species from other active inventories
-    if (!widget.inventory.isFinished && inventoryProvider.activeInventories.length > 1) {
+    if (!widget.inventory.isFinished && inventoryProvider.activeInventories.length > 1 &&
+        (widget.inventory.type != InventoryType.invTransectionDistance &&
+            widget.inventory.type != InventoryType.invPointDistance)) {
       if (mounted) {
         bool confirm = await _showDeleteFromOtherListsConfirmationDialog(context, species.name);
         if (confirm) {
@@ -215,7 +238,9 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     for (final inventory in inventoryProvider.activeInventories) {
       if (inventory.id != species.inventoryId &&
           speciesProvider.speciesExistsInInventory(inventory.id, species.name) &&
-          inventory.type != InventoryType.invBanding) {
+          (inventory.type != InventoryType.invBanding &&
+              inventory.type != InventoryType.invTransectionDistance &&
+              inventory.type != InventoryType.invPointDistance)) {
         
         await speciesProvider.removeSpeciesFromInventory(
           context,
@@ -338,18 +363,6 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                     hintText: '${S.of(context).addSpecies}...',
                     prefixIcon: const Icon(Icons.search_outlined),
                     border: const OutlineInputBorder(),
-                    //   icon: IconButton(
-                    //     icon: const Icon(Icons.show_chart_outlined),
-                    //     onPressed: () {
-                    //   Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //       builder: (context) => SpeciesChartScreen(
-                    //           inventory: widget.inventory),
-                    //     ),
-                    //   );
-                    // },
-                    //   ),
                     suffixIcon: MenuAnchor(
                       builder: (context, controller, child) {
                         return IconButton(
@@ -393,51 +406,12 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                         ),
                       ],
                     ),
-                    // IconButton(
-                    //   icon: const Icon(Icons.add_box_outlined),
-                    //   onPressed: () {
-                    //     _showAddSpeciesDialog(context, widget.speciesRepository, widget.inventoryRepository);
-                    //   },
-                    // ),
                   ),
                   readOnly: true,
                   onTap: () {
                     controller.openView();
                   },
                 );
-                // SearchBar(
-                //   controller: controller,
-                //   hintText: S.of(context).addSpecies,
-                //   leading: const Icon(Icons.search_outlined),
-                //   trailing: [
-                //     IconButton(
-                //       icon: const Icon(Icons.add_box_outlined),
-                //       onPressed: () {
-                //         _showAddSpeciesDialog(
-                //             context, speciesRepository, inventoryRepository);
-                //       },
-                //     ),
-                //     IconButton(
-                //       icon: const Icon(Icons.show_chart_outlined),
-                //       onPressed: () {
-                //         Navigator.push(
-                //           context,
-                //           MaterialPageRoute(
-                //             builder: (context) => SpeciesChartScreen(
-                //               inventory: widget.inventory,
-                //             ),
-                //           ),
-                //         );
-                //       },
-                //     ),
-                //   ],
-                //   onTap: () {
-                //     controller.openView();
-                //   },
-                //   onChanged: (_) {
-                //     controller.openView();
-                //   },
-                // );
               },
               suggestionsBuilder: (context, controller) {
                 if (controller.text.isEmpty) {
@@ -464,7 +438,24 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
       ),
       Expanded(child: Consumer<SpeciesProvider>(builder: (context, speciesProvider, child) {
         final speciesList = speciesProvider.getSpeciesForInventory(widget.inventory.id);
-        speciesList.sort((a, b) => a.name.compareTo(b.name));
+        if (widget.inventory.type == InventoryType.invTransectionDistance ||
+            widget.inventory.type == InventoryType.invPointDistance) {
+          speciesList.sort((a, b) {
+            if (a.sampleTime == null && b.sampleTime == null) {
+              return 0; // Both are null, considered the same
+            }
+            if (a.sampleTime == null) {
+              return -1; // 'a' is null, then goes to the end of list
+            }
+            if (b.sampleTime == null) {
+              return 1; // 'b' is null, then goes to the end of list (and 'a' goes first)
+            }
+            // None is null, compare the times
+            return b.sampleTime!.compareTo(a.sampleTime!);
+          });
+        } else {
+          speciesList.sort((a, b) => a.name.compareTo(b.name));
+        }
 
         if (speciesList.isEmpty) {
           return Center(
@@ -537,9 +528,20 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                   ListTile(
                     leading: const Icon(Icons.edit_outlined),
                     title: Text(S.of(context).speciesNotes),
-                    onTap: () {
+                    onTap: () async {
                       Navigator.pop(context);
-                      _showEditNotesDialog(context, species);
+                      // _showEditNotesDialog(context, species);
+                      final speciesProvider = Provider.of<SpeciesProvider>(
+                          context, listen: false);
+                      final editedSpecies = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditSpeciesScreen(species: species),
+                        ),
+                      );
+                      if (editedSpecies != null && editedSpecies is Species) {
+                        await speciesProvider.updateSpecies(widget.inventory.id, editedSpecies);
+                      }
                     },
                   ),
                   // Option to add the species to the sample

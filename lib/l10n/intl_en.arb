@@ -1887,6 +1887,31 @@
         "type": "text",
         "description": "Enter manually button label"
     },
+    "distance": "Distance",
+    "@distance": {
+        "type": "text",
+        "description": "Distance field label"
+    },
+    "flightHeight": "Flight height",
+    "@flightHeight": {
+        "type": "text",
+        "description": "Flight height field label"
+    },
+    "flightDirection": "Flight direction",
+    "@flightDirection": {
+        "type": "text",
+        "description": "Flight direction field label"
+    },
+    "insertCount": "Insert count",
+    "@insertCount": {
+        "type": "text",
+        "description": "Insert count field label"
+    },
+    "insertValidNumber": "Insert a valid number",
+    "@insertValidNumber": {
+        "type": "text",
+        "description": "Validation message for insert count field"
+    },
     "precipitationNone": "None",
     "precipitationFog": "Fog",
     "precipitationMist": "Mist",
@@ -1915,6 +1940,8 @@
     "inventoryPointCount": "Point Count",
     "inventoryBanding": "Banding",
     "inventoryCasual": "Casual Observation",
+    "inventoryTransectionDistance": "Transection with distance/height",
+    "inventoryPointDistance": "Point count with distance/height",
     "eggShapeSpherical": "Spherical",
     "eggShapeElliptical": "Elliptical",
     "eggShapeOval": "Oval",

@@ -2106,6 +2106,36 @@ abstract class AppLocalizations {
   /// **'Enter manually'**
   String get enterManually;
 
+  /// Distance field label
+  ///
+  /// In en, this message translates to:
+  /// **'Distance'**
+  String get distance;
+
+  /// Flight height field label
+  ///
+  /// In en, this message translates to:
+  /// **'Flight height'**
+  String get flightHeight;
+
+  /// Flight direction field label
+  ///
+  /// In en, this message translates to:
+  /// **'Flight direction'**
+  String get flightDirection;
+
+  /// Insert count field label
+  ///
+  /// In en, this message translates to:
+  /// **'Insert count'**
+  String get insertCount;
+
+  /// Validation message for insert count field
+  ///
+  /// In en, this message translates to:
+  /// **'Insert a valid number'**
+  String get insertValidNumber;
+
   /// No description provided for @precipitationNone.
   ///
   /// In en, this message translates to:
@@ -2273,6 +2303,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Casual Observation'**
   String get inventoryCasual;
+
+  /// No description provided for @inventoryTransectionDistance.
+  ///
+  /// In en, this message translates to:
+  /// **'Transection with distance'**
+  String get inventoryTransectionDistance;
+
+  /// No description provided for @inventoryPointDistance.
+  ///
+  /// In en, this message translates to:
+  /// **'Point count with distance'**
+  String get inventoryPointDistance;
+
+  /// No description provided for @inventoryTransectionFlight.
+  ///
+  /// In en, this message translates to:
+  /// **'Aerial transection'**
+  String get inventoryTransectionFlight;
+
+  /// No description provided for @inventoryPointFlight.
+  ///
+  /// In en, this message translates to:
+  /// **'Aerial point count'**
+  String get inventoryPointFlight;
 
   /// No description provided for @eggShapeSpherical.
   ///

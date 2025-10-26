@@ -1279,6 +1279,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enterManually => 'Enter manually';
 
   @override
+  String get distance => 'Distance';
+
+  @override
+  String get flightHeight => 'Flight height';
+
+  @override
+  String get flightDirection => 'Flight direction';
+
+  @override
+  String get insertCount => 'Insert count';
+
+  @override
+  String get insertValidNumber => 'Insert a valid number';
+
+  @override
   String get precipitationNone => 'None';
 
   @override
@@ -1367,6 +1382,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get inventoryCasual => 'Casual Observation';
+
+  @override
+  String get inventoryTransectionDistance => 'Transection with distance';
+
+  @override
+  String get inventoryPointDistance => 'Point count with distance';
+
+  @override
+  String get inventoryTransectionFlight => 'Aerial transection';
+
+  @override
+  String get inventoryPointFlight => 'Aerial point count';
 
   @override
   String get eggShapeSpherical => 'Spherical';

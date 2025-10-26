@@ -1283,6 +1283,21 @@ class AppLocalizationsPt extends AppLocalizations {
   String get enterManually => 'Entrar manualmente';
 
   @override
+  String get distance => 'Distância';
+
+  @override
+  String get flightHeight => 'Altura de voo';
+
+  @override
+  String get flightDirection => 'Direção de voo';
+
+  @override
+  String get insertCount => 'Insira a contagem';
+
+  @override
+  String get insertValidNumber => 'Insira um número válido';
+
+  @override
   String get precipitationNone => 'Nenhuma';
 
   @override
@@ -1372,6 +1387,18 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get inventoryCasual => 'Observação Casual';
+
+  @override
+  String get inventoryTransectionDistance => 'Transecção com distância';
+
+  @override
+  String get inventoryPointDistance => 'Ponto de contagem com distância';
+
+  @override
+  String get inventoryTransectionFlight => 'Transecção aérea';
+
+  @override
+  String get inventoryPointFlight => 'Ponto de contagem aéreo';
 
   @override
   String get eggShapeSpherical => 'Esférico';
@@ -2755,6 +2782,21 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get enterManually => 'Entrar manualmente';
 
   @override
+  String get distance => 'Distância';
+
+  @override
+  String get flightHeight => 'Altura de voo';
+
+  @override
+  String get flightDirection => 'Direção de voo';
+
+  @override
+  String get insertCount => 'Insira a contagem';
+
+  @override
+  String get insertValidNumber => 'Insira um número válido';
+
+  @override
   String get precipitationNone => 'Nenhuma';
 
   @override
@@ -2844,6 +2886,18 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get inventoryCasual => 'Observação Casual';
+
+  @override
+  String get inventoryTransectionDistance => 'Transecção com distância';
+
+  @override
+  String get inventoryPointDistance => 'Ponto de contagem com distância';
+
+  @override
+  String get inventoryTransectionFlight => 'Transecção aérea';
+
+  @override
+  String get inventoryPointFlight => 'Ponto de contagem aéreo';
 
   @override
   String get eggShapeSpherical => 'Esférico';

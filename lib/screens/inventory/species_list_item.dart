@@ -30,10 +30,11 @@ class SpeciesListItemState extends State<SpeciesListItem> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-        title: Text(
-          widget.species.name,
-          style: const TextStyle(fontStyle: FontStyle.italic),
-        ),
+      title: Text(
+        widget.species.name,
+         style: const TextStyle(fontStyle: FontStyle.italic),
+      ),
+      subtitle: _buildSubtitle(),
       tileColor: widget.species.isOutOfInventory
           ? Theme.of(context).highlightColor
           : null,
@@ -175,6 +176,31 @@ class SpeciesListItemState extends State<SpeciesListItem> {
             ),
           );
         },
+    );
+  }
+
+  Widget? _buildSubtitle() {
+    final species = widget.species;
+    final parts = <String>[];
+
+    if (species.distance != null) {
+      parts.add('Dist: ${species.distance} m');
+    }
+    if (species.flightHeight != null) {
+      parts.add('Alt: ${species.flightHeight} m ${species.flightDirection ?? ''}');
+    }
+    if (species.notes != null && species.notes!.isNotEmpty) {
+      parts.add(species.notes!);
+    }
+
+    if (parts.isEmpty) {
+      return null; // Do not show subtitle if there is no data
+    }
+
+    return Text(
+      parts.join(' | '), // Join parts with separator
+      maxLines: 3,
+      overflow: TextOverflow.ellipsis,
     );
   }
 

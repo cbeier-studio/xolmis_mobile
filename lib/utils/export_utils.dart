@@ -178,7 +178,8 @@ Future<List<List>> buildInventoryRows(Inventory inventory, Locale locale) async 
     'Max of species','Start date','Start time','End date','End time',
     'Locality','Start longitude','Start latitude','End longitude',
     'End latitude','Intervals','Notes','Discarded'];
-  const List<String> speciesHeaders = ['SPECIES', 'Count', 'Time', 'Out of sample', 'Notes'];
+  const List<String> speciesHeaders = ['SPECIES', 'Count', 'Time', 'Out of sample',
+    'Distance', 'Flight height', 'Flight direction', 'Notes'];
   const List<String> vegetationHeaders = ['Date/Time','Latitude','Longitude',
     'Herbs Proportion','Herbs Distribution','Herbs Height',
     'Shrubs Proportion','Shrubs Distribution','Shrubs Height',
@@ -203,10 +204,10 @@ Future<List<List>> buildInventoryRows(Inventory inventory, Locale locale) async 
     inventory.endTime != null ? DateFormat.yMd(locale.toString()).format(inventory.endTime!) : '',
     inventory.endTime != null ? DateFormat.Hms(locale.toString()).format(inventory.endTime!) : '',
     inventory.localityName ?? '',
-    formatNumbers ? numberFormat.format(inventory.startLongitude) : inventory.startLongitude,
-    formatNumbers ? numberFormat.format(inventory.startLatitude) : inventory.startLatitude,
-    formatNumbers ? numberFormat.format(inventory.endLongitude) : inventory.endLongitude,
-    formatNumbers ? numberFormat.format(inventory.endLatitude) : inventory.endLatitude,
+    inventory.startLongitude != null ? formatNumbers ? numberFormat.format(inventory.startLongitude) : inventory.startLongitude : '',
+    inventory.startLatitude != null ? formatNumbers ? numberFormat.format(inventory.startLatitude) : inventory.startLatitude : '',
+    inventory.endLongitude != null ? formatNumbers ? numberFormat.format(inventory.endLongitude) : inventory.endLongitude : '',
+    inventory.endLatitude != null ? formatNumbers ? numberFormat.format(inventory.endLatitude) : inventory.endLatitude : '',
     inventory.currentInterval,
     inventory.notes ?? '',
     inventory.isDiscarded ? 'Yes' : 'No',
@@ -220,7 +221,10 @@ Future<List<List>> buildInventoryRows(Inventory inventory, Locale locale) async 
       species.name, 
       species.count,
       species.sampleTime != null ? DateFormat('dd/MM/yyyy HH:mm:ss').format(species.sampleTime!) : '',
-      species.isOutOfInventory, 
+      species.isOutOfInventory ? 'Yes' : 'No',
+      species.distance != null ? formatNumbers ? numberFormat.format(species.distance) : species.distance : '',
+      species.flightDirection != null ? formatNumbers ? numberFormat.format(species.flightHeight) : species.flightHeight : '',
+      species.flightDirection,
       species.notes ?? '',
     ]);
   }
@@ -232,8 +236,8 @@ Future<List<List>> buildInventoryRows(Inventory inventory, Locale locale) async 
   for (var vegetation in inventory.vegetationList) {
     rows.add([
       vegetation.sampleTime != null ? DateFormat('dd/MM/yyyy HH:mm:ss').format(vegetation.sampleTime!) : '',
-      formatNumbers ? numberFormat.format(vegetation.latitude) : vegetation.latitude,
-      formatNumbers ? numberFormat.format(vegetation.longitude) : vegetation.longitude,
+      vegetation.latitude != null ? formatNumbers ? numberFormat.format(vegetation.latitude) : vegetation.latitude : '',
+      vegetation.longitude != null ? formatNumbers ? numberFormat.format(vegetation.longitude) : vegetation.longitude : '',
       vegetation.herbsProportion,
       vegetation.herbsDistribution?.index ?? '',
       vegetation.herbsHeight,
@@ -256,7 +260,7 @@ Future<List<List>> buildInventoryRows(Inventory inventory, Locale locale) async 
       weather.sampleTime != null ? DateFormat('dd/MM/yyyy HH:mm:ss').format(weather.sampleTime!) : '',
       weather.cloudCover,
       precipitationTypeFriendlyNames[weather.precipitation] ?? '',
-      formatNumbers ? NumberFormat.decimalPattern(locale.toString()).format(weather.temperature) : weather.temperature,
+      weather.temperature != null ? formatNumbers ? NumberFormat.decimalPattern(locale.toString()).format(weather.temperature) : weather.temperature : '',
       weather.windSpeed
     ]);
   }

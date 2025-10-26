@@ -356,6 +356,18 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
                 ListTile(
                   title: Text(species.isOutOfInventory ? S.of(context).outOfSample : S.of(context).withinSample),
                 ),
+                ListTile(
+                  title: Text('${species.distance}'),
+                  subtitle: Text(S.current.distance),
+                ),
+                ListTile(
+                  title: Text('${species.flightHeight}'),
+                  subtitle: Text(S.current.flightHeight),
+                ),
+                ListTile(
+                  title: Text('${species.flightDirection}'),
+                  subtitle: Text(S.current.flightDirection),
+                ),
                 if (species.notes != null && species.notes!.isNotEmpty)
                   ListTile(
                     title: Text(species.notes ?? ''),

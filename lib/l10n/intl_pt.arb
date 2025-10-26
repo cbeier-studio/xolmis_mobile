@@ -1326,6 +1326,31 @@
         "type": "text",
         "description": "Enter manually button label"
     },
+    "distance": "Distância",
+    "@distance": {
+        "type": "text",
+        "description": "Distance field label"
+    },
+    "flightHeight": "Altura de voo",
+    "@flightHeight": {
+        "type": "text",
+        "description": "Flight height field label"
+    },
+    "flightDirection": "Direção de voo",
+    "@flightDirection": {
+        "type": "text",
+        "description": "Flight direction field label"
+    },
+    "insertCount": "Insira a contagem",
+    "@insertCount": {
+        "type": "text",
+        "description": "Insert count field label"
+    },
+    "insertValidNumber": "Insira um número válido",
+    "@insertValidNumber": {
+        "type": "text",
+        "description": "Validation message for insert count field"
+    },
     "precipitationNone": "Nenhuma",
     "precipitationFog": "Névoa",
     "precipitationMist": "Neblina",
@@ -1354,6 +1379,8 @@
     "inventoryPointCount": "Ponto de Contagem",
     "inventoryBanding": "Anilhamento",
     "inventoryCasual": "Observação Casual",
+    "inventoryTransectionDistance": "Transecção com distância/altura",
+    "inventoryPointDistance": "Ponto de contagem com distância/altura",
     "eggShapeSpherical": "Esférico",
     "eggShapeElliptical": "Elíptico",
     "eggShapeOval": "Oval",

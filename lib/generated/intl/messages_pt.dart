@@ -248,6 +248,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "discardedInventory": MessageLookupByLibrary.simpleMessage(
       "Inventário descartado",
     ),
+    "distance": MessageLookupByLibrary.simpleMessage("Distância"),
     "distribution": MessageLookupByLibrary.simpleMessage("Distribuição"),
     "distributionContinuousCoverWithGaps": MessageLookupByLibrary.simpleMessage(
       "Contínua com manchas sem cobertura",
@@ -437,6 +438,8 @@ class MessageLookup extends MessageLookupByLibrary {
       "Encerrar inventário",
     ),
     "finished": MessageLookupByLibrary.simpleMessage("Encerrados"),
+    "flightDirection": MessageLookupByLibrary.simpleMessage("Direção de voo"),
+    "flightHeight": MessageLookupByLibrary.simpleMessage("Altura de voo"),
     "formatNumbers": MessageLookupByLibrary.simpleMessage("Formatar números"),
     "formatNumbersDescription": MessageLookupByLibrary.simpleMessage(
       "Desmarque para formatar números com ponto como separador decimal",
@@ -477,6 +480,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "individualsCounted": MessageLookupByLibrary.simpleMessage(
       "Número de indivíduos",
     ),
+    "insertCount": MessageLookupByLibrary.simpleMessage("Insira a contagem"),
     "insertDuration": MessageLookupByLibrary.simpleMessage(
       "Insira uma duração",
     ),
@@ -501,6 +505,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "insertTitle": MessageLookupByLibrary.simpleMessage(
       "Insira um título para a nota",
+    ),
+    "insertValidNumber": MessageLookupByLibrary.simpleMessage(
+      "Insira um número válido",
     ),
     "intervaledQualitativeLists": MessageLookupByLibrary.simpleMessage(
       "Listas qualitativas por intervalo",
@@ -551,11 +558,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "inventoryPointCount": MessageLookupByLibrary.simpleMessage(
       "Ponto de Contagem",
     ),
+    "inventoryPointDistance": MessageLookupByLibrary.simpleMessage(
+      "Ponto de contagem com distância/altura",
+    ),
     "inventoryTimedQualitative": MessageLookupByLibrary.simpleMessage(
       "Lista Qualitativa Temporizada",
     ),
     "inventoryTransectionCount": MessageLookupByLibrary.simpleMessage(
       "Contagem em Transecção",
+    ),
+    "inventoryTransectionDistance": MessageLookupByLibrary.simpleMessage(
+      "Transecção com distância/altura",
     ),
     "inventoryType": MessageLookupByLibrary.simpleMessage("Tipo de inventário"),
     "journalEntries": m24,

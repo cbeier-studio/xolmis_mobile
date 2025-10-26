@@ -109,6 +109,9 @@ class Species {
   int count;
   String? notes;
   DateTime? sampleTime;
+  double? distance;
+  double? flightHeight;
+  String? flightDirection;
   List<Poi> pois;
 
   Species({
@@ -119,6 +122,9 @@ class Species {
     this.count = 0,
     this.notes,
     this.sampleTime,
+    this.distance,
+    this.flightHeight,
+    this.flightDirection,
     this.pois = const [],
   });
 
@@ -133,11 +139,26 @@ class Species {
           ? DateTime.parse(map['sampleTime'])
           : null,
       isOutOfInventory: map['isOutOfInventory'] == 1, // Convert int to boolean
+      distance: map['distance'],
+      flightHeight: map['flightHeight'],
+      flightDirection: map['flightDirection'],
       pois: pois,
     );
   }
 
-  Species copyWith({int? id, String? inventoryId, String? name, bool? isOutOfInventory, int? count, List<Poi>? pois}) {
+  Species copyWith({
+    int? id,
+    String? inventoryId,
+    String? name,
+    bool? isOutOfInventory,
+    int? count,
+    String? notes,
+    DateTime? sampleTime,
+    double? distance,
+    double? flightHeight,
+    String? flightDirection,
+    List<Poi>? pois
+  }) {
     return Species(
       id: id ?? this.id,
       inventoryId: inventoryId ?? this.inventoryId,
@@ -146,6 +167,9 @@ class Species {
       count: count ?? this.count,
       notes: notes ?? this.notes,
       sampleTime: sampleTime ?? this.sampleTime,
+      distance: distance ?? this.distance,
+      flightHeight: flightHeight ?? this.flightHeight,
+      flightDirection: flightDirection ?? this.flightDirection,
       pois: pois ?? this.pois,
     );
   }
@@ -159,6 +183,9 @@ class Species {
       'count': count,
       'notes': notes,
       'sampleTime': sampleTime?.toIso8601String(),
+      'distance': distance,
+      'flightHeight': flightHeight,
+      'flightDirection': flightDirection
     };
   }
 
@@ -171,6 +198,9 @@ class Species {
       'count': count,
       'notes': notes,
       'sampleTime': sampleTime?.toIso8601String(),
+      'distance': distance,
+      'flightHeight': flightHeight,
+      'flightDirection': flightDirection,
       'pois': pois.map((poi) => poi.toJson()).toList(),
     };
   }
@@ -184,6 +214,9 @@ class Species {
       count: json['count'],
       notes: json['notes'],
       sampleTime: json['sampleTime'] != null ? DateTime.parse(json['sampleTime']) : null,
+      distance: json['distance'],
+      flightHeight: json['flightHeight'],
+      flightDirection: json['flightDirection'],
       pois: (json['pois'] as List).map((item) => Poi.fromJson(item)).toList(),
     );
   }
@@ -197,6 +230,9 @@ class Species {
         'isOutOfInventory: $isOutOfInventory, '
         'count: $count, '
         'sampleTime: $sampleTime, '
+        'distance: $distance, '
+        'flightHeight: $flightHeight, '
+        'flightDirection: $flightDirection, '
         'notes: $notes}';
   }
 }
@@ -562,6 +598,8 @@ enum InventoryType {
   invPointCount,
   invBanding,
   invCasual,
+  invTransectionDistance,
+  invPointDistance,
 }
 
 Map<InventoryType, String> inventoryTypeFriendlyNames = {
@@ -573,6 +611,8 @@ Map<InventoryType, String> inventoryTypeFriendlyNames = {
   InventoryType.invPointCount: S.current.inventoryPointCount,
   InventoryType.invBanding: S.current.inventoryBanding,
   InventoryType.invCasual: S.current.inventoryCasual,
+  InventoryType.invTransectionDistance: S.current.inventoryTransectionDistance,
+  InventoryType.invPointDistance: S.current.inventoryPointDistance,
 };
 
 class Inventory with ChangeNotifier {
