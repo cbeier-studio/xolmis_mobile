@@ -211,20 +211,24 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     final speciesProvider = Provider.of<SpeciesProvider>(context, listen: false);
     final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
     final confirmed = await _showDeleteConfirmationDialog(context);
-    if (confirmed) {
-      if (mounted) {
-        await speciesProvider.removeSpecies(context, widget.inventory.id, species.id!);
-        widget.inventory.speciesList.remove(species);
-      }
+
+    if (!confirmed) return;
+
+    if (mounted) {
+      await speciesProvider.removeSpecies(context, widget.inventory.id, species.id!);
+      widget.inventory.speciesList.remove(species);
     }
 
     // Ask to delete the species from other active inventories
-    if (!widget.inventory.isFinished && inventoryProvider.activeInventories.length > 1 &&
-        (widget.inventory.type != InventoryType.invTransectionDistance &&
-            widget.inventory.type != InventoryType.invPointDistance)) {
+    final shouldAskAboutOtherInventories = !widget.inventory.isFinished &&
+        inventoryProvider.activeInventories.length > 1 &&
+        widget.inventory.type != InventoryType.invTransectionDistance &&
+        widget.inventory.type != InventoryType.invPointDistance;
+
+    if (shouldAskAboutOtherInventories) {
       if (mounted) {
-        bool confirm = await _showDeleteFromOtherListsConfirmationDialog(context, species.name);
-        if (confirm) {
+        bool confirmDeleteFromOthers = await _showDeleteFromOtherListsConfirmationDialog(context, species.name);
+        if (confirmDeleteFromOthers) {
           await _deleteSpeciesFromOtherActiveInventories(species, speciesProvider); 
         } 
       }          

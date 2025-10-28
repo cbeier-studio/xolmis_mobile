@@ -90,79 +90,90 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // --- Campo Count ---
-                TextFormField(
-                  controller: _countController,
-                  decoration: InputDecoration(
-                    labelText: S.current.count,
-                    border: OutlineInputBorder(),
-                  ),
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return S.current.insertCount;
-                    }
-                    if (int.tryParse(value) == null) {
-                      return S.current.insertValidNumber;
-                    }
-                    return null;
-                  },
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        controller: _countController,
+                        decoration: InputDecoration(
+                          labelText: S.current.count,
+                          border: OutlineInputBorder(),
+                        ),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return S.current.insertCount;
+                          }
+                          if (int.tryParse(value) == null) {
+                            return S.current.insertValidNumber;
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Expanded(
+                      child: TextFormField(
+                        controller: _distanceController,
+                        decoration: InputDecoration(
+                          labelText: S.current.distance,
+                          suffixText: 'm',
+                          border: OutlineInputBorder(),
+                        ),
+                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 16),
 
-                // --- Campo Distance ---
-                TextFormField(
-                  controller: _distanceController,
-                  decoration: InputDecoration(
-                    labelText: S.current.distance,
-                    border: OutlineInputBorder(),
-                  ),
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        controller: _flightHeightController,
+                        decoration: InputDecoration(
+                          labelText: S.current.flightHeight,
+                          suffixText: 'm',
+                          border: OutlineInputBorder(),
+                        ),
+                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Expanded(
+                      child: DropdownButtonFormField<String>(
+                        initialValue: _selectedFlightDirection,
+                        decoration: InputDecoration(
+                          labelText: S.current.flightDirection,
+                          border: const OutlineInputBorder(),
+                        ),
+                        // hint: Text(S.current.selectADirection),
+                        isExpanded: true,
+                        items: [
+                          // Pontos Cardeais
+                          'N', 'S', 'E', 'W',
+                          // Pontos Colaterais (Intercardinais)
+                          'NE', 'NW', 'SE', 'SW',
+                          // Pontos Subcolaterais (Secundários)
+                          // 'NNE', 'ENE', 'ESE', 'SSE', 'SSW', 'WSW', 'WNW', 'NNW',
+                        ].map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            _selectedFlightDirection = newValue;
+                          });
+                        },
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 16),
-
-                // --- Campo Flight Height ---
-                TextFormField(
-                  controller: _flightHeightController,
-                  decoration: InputDecoration(
-                    labelText: S.current.flightHeight,
-                    border: OutlineInputBorder(),
-                  ),
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                ),
-                const SizedBox(height: 16),
-
-                // --- Campo Flight Direction ---
-                DropdownButtonFormField<String>(
-                  initialValue: _selectedFlightDirection,
-                  decoration: InputDecoration(
-                    labelText: S.current.flightDirection,
-                    border: const OutlineInputBorder(),
-                  ),
-                  // hint: Text(S.current.selectADirection),
-                  isExpanded: true,
-                  items: [
-                    // Pontos Cardeais
-                    'N', 'S', 'E', 'W',
-                    // Pontos Colaterais (Intercardinais)
-                    'NE', 'SE', 'SW', 'NW',
-                    // Pontos Subcolaterais (Secundários)
-                    'NNE', 'ENE', 'ESE', 'SSE', 'SSW', 'WSW', 'WNW', 'NNW',
-                  ].map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      _selectedFlightDirection = newValue;
-                    });
-                  },
-                ),
-                const SizedBox(height: 16),
-
                 // --- Campo Notes ---
                 TextFormField(
                   controller: _notesController,
@@ -173,7 +184,6 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
                   maxLines: 3,
                 ),
                 const SizedBox(height: 16),
-
                 // --- Campo Is Out Of Inventory ---
                 SwitchListTile(
                   title: Text(S.current.outOfSample),

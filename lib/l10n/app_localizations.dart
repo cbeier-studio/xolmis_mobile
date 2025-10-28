@@ -2307,26 +2307,14 @@ abstract class AppLocalizations {
   /// No description provided for @inventoryTransectionDistance.
   ///
   /// In en, this message translates to:
-  /// **'Transection with distance'**
+  /// **'Transection with distance/height'**
   String get inventoryTransectionDistance;
 
   /// No description provided for @inventoryPointDistance.
   ///
   /// In en, this message translates to:
-  /// **'Point count with distance'**
+  /// **'Point count with distance/height'**
   String get inventoryPointDistance;
-
-  /// No description provided for @inventoryTransectionFlight.
-  ///
-  /// In en, this message translates to:
-  /// **'Aerial transection'**
-  String get inventoryTransectionFlight;
-
-  /// No description provided for @inventoryPointFlight.
-  ///
-  /// In en, this message translates to:
-  /// **'Aerial point count'**
-  String get inventoryPointFlight;
 
   /// No description provided for @eggShapeSpherical.
   ///

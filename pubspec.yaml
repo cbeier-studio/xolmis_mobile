@@ -3,7 +3,7 @@ description: "Collect ornithological data in the field."
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.2+82
+version: 1.0.2+84
 
 environment:
   sdk: ^3.7.0
@@ -18,16 +18,16 @@ dependencies:
 
   # UI dependencies
   cupertino_icons: ^1.0.8
-  flutter_local_notifications: ^19.4.2
+  flutter_local_notifications: ^19.5.0
   side_sheet: ^1.0.4+1
   flutter_speed_dial: ^7.0.0
   settings_ui: ^2.0.2
-  fleather: ^1.25.1
+  fleather: ^1.26.0
   fl_chart: ^1.1.1
   numberpicker: ^2.1.2
   image_picker: ^1.2.0
   file_picker: ^10.3.3
-  share_plus: ^12.0.0
+  share_plus: ^12.0.1
 #  timelines_plus: ^1.0.6
 
   # Data and persistence dependencies
@@ -52,7 +52,7 @@ dependencies:
       url: https://github.com/fluttercommunity/flutter_workmanager.git
       path: workmanager
       ref: main    
-  device_info_plus: ^12.1.0
+  device_info_plus: ^12.2.0
   url_launcher: ^6.3.2
 #  equations: ^5.0.2
 

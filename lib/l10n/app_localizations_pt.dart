@@ -1389,16 +1389,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String get inventoryCasual => 'Observação Casual';
 
   @override
-  String get inventoryTransectionDistance => 'Transecção com distância';
+  String get inventoryTransectionDistance => 'Transecção com distância/altura';
 
   @override
-  String get inventoryPointDistance => 'Ponto de contagem com distância';
-
-  @override
-  String get inventoryTransectionFlight => 'Transecção aérea';
-
-  @override
-  String get inventoryPointFlight => 'Ponto de contagem aéreo';
+  String get inventoryPointDistance => 'Ponto de contagem com distância/altura';
 
   @override
   String get eggShapeSpherical => 'Esférico';
@@ -2888,16 +2882,10 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get inventoryCasual => 'Observação Casual';
 
   @override
-  String get inventoryTransectionDistance => 'Transecção com distância';
+  String get inventoryTransectionDistance => 'Transecção com distância/altura';
 
   @override
-  String get inventoryPointDistance => 'Ponto de contagem com distância';
-
-  @override
-  String get inventoryTransectionFlight => 'Transecção aérea';
-
-  @override
-  String get inventoryPointFlight => 'Ponto de contagem aéreo';
+  String get inventoryPointDistance => 'Ponto de contagem com distância/altura';
 
   @override
   String get eggShapeSpherical => 'Esférico';

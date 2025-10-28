@@ -1384,16 +1384,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get inventoryCasual => 'Casual Observation';
 
   @override
-  String get inventoryTransectionDistance => 'Transection with distance';
+  String get inventoryTransectionDistance => 'Transection with distance/height';
 
   @override
-  String get inventoryPointDistance => 'Point count with distance';
-
-  @override
-  String get inventoryTransectionFlight => 'Aerial transection';
-
-  @override
-  String get inventoryPointFlight => 'Aerial point count';
+  String get inventoryPointDistance => 'Point count with distance/height';
 
   @override
   String get eggShapeSpherical => 'Spherical';
