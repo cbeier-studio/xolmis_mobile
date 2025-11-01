@@ -457,6 +457,10 @@ enum PrecipitationType {
   preMist,
   preDrizzle,
   preRain,
+  preShowers,
+  preSnow,
+  preHail,
+  preFrost,
 }
 
 Map<PrecipitationType, String> precipitationTypeFriendlyNames = {
@@ -465,6 +469,10 @@ Map<PrecipitationType, String> precipitationTypeFriendlyNames = {
   PrecipitationType.preMist: S.current.precipitationMist,
   PrecipitationType.preDrizzle: S.current.precipitationDrizzle,
   PrecipitationType.preRain: S.current.precipitationRain,
+  PrecipitationType.preShowers: S.current.precipitationShowers,
+  PrecipitationType.preSnow: S.current.precipitationSnow,
+  PrecipitationType.preHail: S.current.precipitationHail,
+  PrecipitationType.preFrost: S.current.precipitationFrost,
 };
 
 class Weather {
@@ -475,6 +483,7 @@ class Weather {
   PrecipitationType? precipitation = PrecipitationType.preNone;
   double? temperature;
   int? windSpeed;
+  String? windDirection;
   double? atmosphericPressure;
   double? relativeHumidity;
 
@@ -486,6 +495,7 @@ class Weather {
     this.precipitation,
     this.temperature,
     this.windSpeed,
+    this.windDirection,
     this.atmosphericPressure,
     this.relativeHumidity,
   });
@@ -501,6 +511,7 @@ class Weather {
       precipitation: PrecipitationType.values[map['precipitation']],
       temperature: map['temperature'],
       windSpeed: map['windSpeed'],
+      windDirection: map['windDirection'],
       atmosphericPressure: map['atmosphericPressure'],
       relativeHumidity: map['relativeHumidity'],
     );
@@ -514,6 +525,7 @@ class Weather {
       PrecipitationType? precipitation,
       double? temperature,
       int? windSpeed,
+      String? windDirection,
       double? atmosphericPressure,
       double? relativeHumidity,
   }) {
@@ -525,6 +537,7 @@ class Weather {
       precipitation: precipitation ?? this.precipitation,
       temperature: temperature ?? this.temperature,
       windSpeed: windSpeed ?? this.windSpeed,
+      windDirection: windDirection ?? this.windDirection,
       atmosphericPressure: atmosphericPressure ?? this.atmosphericPressure,
       relativeHumidity: relativeHumidity ?? this.relativeHumidity,
     );
@@ -539,6 +552,7 @@ class Weather {
       'precipitation': precipitation?.index,
       'temperature': temperature,
       'windSpeed': windSpeed,
+      'windDirection': windDirection,
       'atmosphericPressure': atmosphericPressure,
       'relativeHumidity': relativeHumidity,
     };
@@ -553,6 +567,7 @@ class Weather {
       'precipitation': precipitation?.index,
       'temperature': temperature,
       'windSpeed': windSpeed,
+      'windDirection': windDirection,
       'atmosphericPressure': atmosphericPressure,
       'relativeHumidity': relativeHumidity,
     };
@@ -567,6 +582,7 @@ class Weather {
       precipitation: json['precipitation'] != null ? PrecipitationType.values[json['precipitation']] : PrecipitationType.preNone,
       temperature: json['temperature'],
       windSpeed: json['windSpeed'],
+      windDirection: json['windDirection'],
       atmosphericPressure: json['atmosphericPressure'],
       relativeHumidity: json['relativeHumidity'],
     );
@@ -582,6 +598,7 @@ class Weather {
         'precipitation: $precipitation, '
         'temperature: $temperature, '
         'windSpeed: $windSpeed, '
+        'windDirection: $windDirection, '
         'atmosphericPressure: $atmosphericPressure, '
         'relativeHumidity: $relativeHumidity }';
   }
@@ -594,12 +611,12 @@ enum InventoryType {
   invTimedQualitative,
   invIntervalQualitative,
   invMackinnonList,
-  invTransectionCount,
+  invTransectCount,
   invPointCount,
   invBanding,
   invCasual,
-  invTransectionDistance,
-  invPointDistance,
+  invTransectDetection,
+  invPointDetection,
 }
 
 Map<InventoryType, String> inventoryTypeFriendlyNames = {
@@ -607,12 +624,12 @@ Map<InventoryType, String> inventoryTypeFriendlyNames = {
   InventoryType.invTimedQualitative: S.current.inventoryTimedQualitative,
   InventoryType.invIntervalQualitative: S.current.inventoryIntervalQualitative,
   InventoryType.invMackinnonList: S.current.inventoryMackinnonList,
-  InventoryType.invTransectionCount: S.current.inventoryTransectionCount,
+  InventoryType.invTransectCount: S.current.inventoryTransectCount,
   InventoryType.invPointCount: S.current.inventoryPointCount,
   InventoryType.invBanding: S.current.inventoryBanding,
   InventoryType.invCasual: S.current.inventoryCasual,
-  InventoryType.invTransectionDistance: S.current.inventoryTransectionDistance,
-  InventoryType.invPointDistance: S.current.inventoryPointDistance,
+  InventoryType.invTransectDetection: S.current.inventoryTransectDetection,
+  InventoryType.invPointDetection: S.current.inventoryPointDetection,
 };
 
 class Inventory with ChangeNotifier {

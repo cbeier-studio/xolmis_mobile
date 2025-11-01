@@ -177,7 +177,7 @@ Future<List<List>> buildInventoryRows(Inventory inventory, Locale locale) async 
   const List<String> inventoryHeaders = ['ID','Type','Duration',
     'Max of species','Start date','Start time','End date','End time',
     'Locality','Start longitude','Start latitude','End longitude',
-    'End latitude','Intervals','Notes','Discarded'];
+    'End latitude','Total of observers','Intervals','Notes','Discarded'];
   const List<String> speciesHeaders = ['SPECIES', 'Count', 'Time', 'Out of sample',
     'Distance', 'Flight height', 'Flight direction', 'Notes'];
   const List<String> vegetationHeaders = ['Date/Time','Latitude','Longitude',
@@ -185,7 +185,8 @@ Future<List<List>> buildInventoryRows(Inventory inventory, Locale locale) async 
     'Shrubs Proportion','Shrubs Distribution','Shrubs Height',
     'Trees Proportion','Trees Distribution','Trees Height','Notes'];
   const List<String> weatherHeaders = ['Date/Time','Cloud cover','Precipitation',
-    'Temperature','Wind speed'];
+    'Temperature','Wind speed','Wind direction','Atmospheric pressure',
+    'Relative humidity'];
   const List<String> poiHeaders = ['Species', 'Date/Time', 'Latitude', 'Longitude', 'Notes'];
   final List<List<dynamic>> rows = [];
   final numberFormat = NumberFormat.decimalPattern(locale.toString())..maximumFractionDigits = 7;
@@ -208,7 +209,8 @@ Future<List<List>> buildInventoryRows(Inventory inventory, Locale locale) async 
     inventory.startLatitude != null ? formatNumbers ? numberFormat.format(inventory.startLatitude) : inventory.startLatitude : '',
     inventory.endLongitude != null ? formatNumbers ? numberFormat.format(inventory.endLongitude) : inventory.endLongitude : '',
     inventory.endLatitude != null ? formatNumbers ? numberFormat.format(inventory.endLatitude) : inventory.endLatitude : '',
-    inventory.currentInterval,
+    inventory.totalObservers ?? '',
+    inventory.currentInterval ?? '',
     inventory.notes ?? '',
     inventory.isDiscarded ? 'Yes' : 'No',
   ]);
@@ -258,10 +260,13 @@ Future<List<List>> buildInventoryRows(Inventory inventory, Locale locale) async 
   for (var weather in inventory.weatherList) {
     rows.add([
       weather.sampleTime != null ? DateFormat('dd/MM/yyyy HH:mm:ss').format(weather.sampleTime!) : '',
-      weather.cloudCover,
+      weather.cloudCover ?? '',
       precipitationTypeFriendlyNames[weather.precipitation] ?? '',
       weather.temperature != null ? formatNumbers ? NumberFormat.decimalPattern(locale.toString()).format(weather.temperature) : weather.temperature : '',
-      weather.windSpeed
+      weather.windSpeed ?? '',
+      weather.windDirection,
+      weather.atmosphericPressure ?? '',
+      weather.relativeHumidity ?? '',
     ]);
   }
   

@@ -1294,6 +1294,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get insertValidNumber => 'Insert a valid number';
 
   @override
+  String get windDirection => 'Wind direction';
+
+  @override
   String get precipitationNone => 'None';
 
   @override
@@ -1307,6 +1310,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get precipitationRain => 'Rain';
+
+  @override
+  String get precipitationShowers => 'Showers';
+
+  @override
+  String get precipitationSnow => 'Snow';
+
+  @override
+  String get precipitationHail => 'Hail';
+
+  @override
+  String get precipitationFrost => 'Frost';
 
   @override
   String get distributionNone => 'None';
@@ -1372,7 +1387,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get inventoryMackinnonList => 'Mackinnon List';
 
   @override
-  String get inventoryTransectionCount => 'Transection Count';
+  String get inventoryTransectCount => 'Transect Count';
 
   @override
   String get inventoryPointCount => 'Point Count';
@@ -1384,10 +1399,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get inventoryCasual => 'Casual Observation';
 
   @override
-  String get inventoryTransectionDistance => 'Transection with distance/height';
+  String get inventoryTransectDetection => 'Detection Transect Count';
 
   @override
-  String get inventoryPointDistance => 'Point count with distance/height';
+  String get inventoryPointDetection => 'Detection Point Count';
 
   @override
   String get eggShapeSpherical => 'Spherical';

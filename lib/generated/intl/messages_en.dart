@@ -528,17 +528,17 @@ class MessageLookup extends MessageLookupByLibrary {
       "Mackinnon List",
     ),
     "inventoryPointCount": MessageLookupByLibrary.simpleMessage("Point Count"),
-    "inventoryPointDistance": MessageLookupByLibrary.simpleMessage(
-      "Point count with distance/height",
+    "inventoryPointDetection": MessageLookupByLibrary.simpleMessage(
+      "Detection Point Count",
     ),
     "inventoryTimedQualitative": MessageLookupByLibrary.simpleMessage(
       "Timed Qualitative List",
     ),
-    "inventoryTransectionCount": MessageLookupByLibrary.simpleMessage(
-      "Transection Count",
+    "inventoryTransectCount": MessageLookupByLibrary.simpleMessage(
+      "Transect Count",
     ),
-    "inventoryTransectionDistance": MessageLookupByLibrary.simpleMessage(
-      "Transection with distance/height",
+    "inventoryTransectDetection": MessageLookupByLibrary.simpleMessage(
+      "Detection Transect Count",
     ),
     "inventoryType": MessageLookupByLibrary.simpleMessage("Inventory type"),
     "journalEntries": m24,
@@ -673,9 +673,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "precipitation": MessageLookupByLibrary.simpleMessage("Precipitation"),
     "precipitationDrizzle": MessageLookupByLibrary.simpleMessage("Drizzle"),
     "precipitationFog": MessageLookupByLibrary.simpleMessage("Fog"),
+    "precipitationFrost": MessageLookupByLibrary.simpleMessage("Frost"),
+    "precipitationHail": MessageLookupByLibrary.simpleMessage("Hail"),
     "precipitationMist": MessageLookupByLibrary.simpleMessage("Mist"),
     "precipitationNone": MessageLookupByLibrary.simpleMessage("None"),
     "precipitationRain": MessageLookupByLibrary.simpleMessage("Rain"),
+    "precipitationShowers": MessageLookupByLibrary.simpleMessage("Showers"),
+    "precipitationSnow": MessageLookupByLibrary.simpleMessage("Snow"),
     "proportion": MessageLookupByLibrary.simpleMessage("Proportion"),
     "reactivateInventory": MessageLookupByLibrary.simpleMessage(
       "Reactivate inventory",
@@ -820,6 +824,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "weatherRecord": MessageLookupByLibrary.simpleMessage("weather record"),
     "weight": MessageLookupByLibrary.simpleMessage("Weight"),
     "width": MessageLookupByLibrary.simpleMessage("Width"),
+    "windDirection": MessageLookupByLibrary.simpleMessage("Wind direction"),
     "windSpeed": MessageLookupByLibrary.simpleMessage("Wind speed"),
     "windSpeedRangeError": MessageLookupByLibrary.simpleMessage(
       "Must be between 0 and 12 bft",

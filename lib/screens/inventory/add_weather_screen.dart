@@ -29,6 +29,7 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
   PrecipitationType _selectedPrecipitation = PrecipitationType.preNone;
   late TextEditingController _temperatureController;
   late TextEditingController _windSpeedController;
+  String? _selectedWindDirection;
   late TextEditingController _atmosphericPressureController;
   late TextEditingController _relativeHumidityController;
   bool _isSubmitting = false;
@@ -47,6 +48,7 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
       _cloudCoverController.text = widget.weather!.cloudCover.toString();
       _temperatureController.text = widget.weather!.temperature.toString();
       _windSpeedController.text = widget.weather!.windSpeed.toString();
+      _selectedWindDirection = widget.weather!.windDirection;
       _atmosphericPressureController.text = widget.weather!.atmosphericPressure.toString();
       _relativeHumidityController.text = widget.weather!.relativeHumidity.toString();
     }
@@ -156,6 +158,14 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
                             ),
                             const SizedBox(width: 8.0),
                             Expanded(
+                              child: SizedBox(width: 8.0),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16.0,),
+                        Row(
+                          children: [
+                            Expanded(
                               child: TextFormField(
                                 controller: _windSpeedController,
                                 keyboardType: TextInputType.number,
@@ -177,6 +187,36 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
                                     return S.of(context).windSpeedRangeError;
                                   }
                                   return null;
+                                },
+                              ),
+                            ),
+                            const SizedBox(width: 8.0),
+                            Expanded(
+                              child: DropdownButtonFormField<String>(
+                                initialValue: _selectedWindDirection,
+                                decoration: InputDecoration(
+                                  labelText: S.current.windDirection,
+                                  border: const OutlineInputBorder(),
+                                ),
+                                // hint: Text(S.current.selectADirection),
+                                isExpanded: true,
+                                items: [
+                                  // Pontos Cardeais
+                                  'N', 'S', 'E', 'W',
+                                  // Pontos Colaterais (Intercardinais)
+                                  'NE', 'NW', 'SE', 'SW',
+                                  // Pontos Subcolaterais (Secundários)
+                                  // 'NNE', 'ENE', 'ESE', 'SSE', 'SSW', 'WSW', 'WNW', 'NNW',
+                                ].map<DropdownMenuItem<String>>((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    _selectedWindDirection = newValue;
+                                  });
                                 },
                               ),
                             ),
@@ -285,6 +325,7 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
           precipitation: _selectedPrecipitation,
           temperature: double.tryParse(_temperatureController.text) ?? 0,
           windSpeed: int.tryParse(_windSpeedController.text) ?? 0,
+          windDirection: _selectedWindDirection,
           atmosphericPressure: double.tryParse(_atmosphericPressureController.text) ?? 0,
           relativeHumidity: double.tryParse(_relativeHumidityController.text) ?? 0,
         );
@@ -304,6 +345,7 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
           precipitation: _selectedPrecipitation,
           temperature: double.tryParse(_temperatureController.text) ?? 0,
           windSpeed: int.tryParse(_windSpeedController.text) ?? 0,
+          windDirection: _selectedWindDirection,
           atmosphericPressure: double.tryParse(_atmosphericPressureController.text) ?? 0,
           relativeHumidity: double.tryParse(_relativeHumidityController.text) ?? 0,
         );

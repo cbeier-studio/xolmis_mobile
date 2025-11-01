@@ -53,8 +53,8 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
 
     // If the species is already in the inventory, show a message and return
-    if (widget.inventory.type != InventoryType.invTransectionDistance &&
-      widget.inventory.type != InventoryType.invPointDistance) {
+    if (widget.inventory.type != InventoryType.invTransectDetection &&
+      widget.inventory.type != InventoryType.invPointDetection) {
       if (speciesProvider.speciesExistsInInventory(
         widget.inventory.id, speciesName)) {
         _showSpeciesAlreadyExistsMessage();
@@ -63,10 +63,10 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     }
 
     // Set the initial count to 1 for transect and point count inventories
-    final initialCount = widget.inventory.type == InventoryType.invTransectionCount ||
+    final initialCount = widget.inventory.type == InventoryType.invTransectCount ||
         widget.inventory.type == InventoryType.invPointCount ||
-        widget.inventory.type == InventoryType.invTransectionDistance ||
-        widget.inventory.type == InventoryType.invPointDistance ? 1 : 0;
+        widget.inventory.type == InventoryType.invTransectDetection ||
+        widget.inventory.type == InventoryType.invPointDetection ? 1 : 0;
 
     // Create the new species
     Species? newSpecies = Species(
@@ -79,8 +79,8 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     );
 
     // Add species details
-    if (widget.inventory.type == InventoryType.invTransectionDistance ||
-        widget.inventory.type == InventoryType.invPointDistance) {
+    if (widget.inventory.type == InventoryType.invTransectDetection ||
+        widget.inventory.type == InventoryType.invPointDetection) {
       newSpecies = await Navigator.push<Species>(
         context,
         MaterialPageRoute(
@@ -144,10 +144,10 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
       if (inventory.id != widget.inventory.id &&
           !speciesProvider.speciesExistsInInventory(inventory.id, speciesName) &&
           (inventory.type != InventoryType.invBanding ||
-              inventory.type != InventoryType.invTransectionDistance ||
-              inventory.type != InventoryType.invPointDistance)) {
+              inventory.type != InventoryType.invTransectDetection ||
+              inventory.type != InventoryType.invPointDetection)) {
         // Set the initial count to 1 for transect and point count inventories
-        final initialCount = inventory.type == InventoryType.invTransectionCount ||
+        final initialCount = inventory.type == InventoryType.invTransectCount ||
             inventory.type == InventoryType.invPointCount ? 1 : 0;
         // Create the new species
         final newSpeciesForOtherInventory = Species(
@@ -222,8 +222,8 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     // Ask to delete the species from other active inventories
     final shouldAskAboutOtherInventories = !widget.inventory.isFinished &&
         inventoryProvider.activeInventories.length > 1 &&
-        widget.inventory.type != InventoryType.invTransectionDistance &&
-        widget.inventory.type != InventoryType.invPointDistance;
+        widget.inventory.type != InventoryType.invTransectDetection &&
+        widget.inventory.type != InventoryType.invPointDetection;
 
     if (shouldAskAboutOtherInventories) {
       if (mounted) {
@@ -243,8 +243,8 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
       if (inventory.id != species.inventoryId &&
           speciesProvider.speciesExistsInInventory(inventory.id, species.name) &&
           (inventory.type != InventoryType.invBanding &&
-              inventory.type != InventoryType.invTransectionDistance &&
-              inventory.type != InventoryType.invPointDistance)) {
+              inventory.type != InventoryType.invTransectDetection &&
+              inventory.type != InventoryType.invPointDetection)) {
         
         await speciesProvider.removeSpeciesFromInventory(
           context,
@@ -442,8 +442,8 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
       ),
       Expanded(child: Consumer<SpeciesProvider>(builder: (context, speciesProvider, child) {
         final speciesList = speciesProvider.getSpeciesForInventory(widget.inventory.id);
-        if (widget.inventory.type == InventoryType.invTransectionDistance ||
-            widget.inventory.type == InventoryType.invPointDistance) {
+        if (widget.inventory.type == InventoryType.invTransectDetection ||
+            widget.inventory.type == InventoryType.invPointDetection) {
           speciesList.sort((a, b) {
             if (a.sampleTime == null && b.sampleTime == null) {
               return 0; // Both are null, considered the same

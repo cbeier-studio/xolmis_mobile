@@ -342,13 +342,13 @@ String? getInventoryTypeLetter(InventoryType inventoryType) {
       return 'C';
     case InventoryType.invMackinnonList:
       return 'L';
-    case InventoryType.invTransectionCount:
+    case InventoryType.invTransectCount:
       return 'T';
-    case InventoryType.invTransectionDistance:
+    case InventoryType.invTransectDetection:
       return 'T';
     case InventoryType.invPointCount:
       return 'P';
-    case InventoryType.invPointDistance:
+    case InventoryType.invPointDetection:
       return 'P';
     default:
       return null;

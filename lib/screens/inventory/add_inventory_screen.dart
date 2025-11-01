@@ -72,7 +72,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                       initialValue: _selectedType,
                       decoration: InputDecoration(
                         labelText: '${S.of(context).inventoryType} *',
-                        helperText: S.of(context).requiredField,
+                        // helperText: S.of(context).requiredField,
                         border: OutlineInputBorder(),
                       ),
                       items: InventoryType.values.map((type) {
@@ -263,13 +263,33 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                             decoration: InputDecoration(
                               labelText: S.of(context).duration,
                               border: OutlineInputBorder(),
-                              suffixText: S.of(context).minutes(2),
+                              suffixText: 'min', //S.of(context).minutes(2),
+                              prefixIcon: IconButton(
+                                  onPressed: () {
+                                    int count = int.tryParse(_durationController.text) ?? 1;
+                                    if (count > 1) {
+                                      setState(() {
+                                        count--;
+                                        _durationController.text = count.toString();
+                                      });
+                                    }
+                                  },
+                                  icon: Icon(Icons.remove_outlined)),
+                              suffixIcon: IconButton(
+                                  onPressed: () {
+                                    int count = int.tryParse(_durationController.text) ?? 1;
+                                    setState(() {
+                                      count++;
+                                      _durationController.text = count.toString();
+                                    });
+                                  },
+                                  icon: Icon(Icons.add_outlined)),
                             ),
                             validator: (value) {
                               if ((_selectedType == InventoryType.invTimedQualitative ||
                                   _selectedType == InventoryType.invIntervalQualitative ||
                                   _selectedType == InventoryType.invPointCount ||
-                                  _selectedType == InventoryType.invPointDistance) &&
+                                  _selectedType == InventoryType.invPointDetection) &&
                                   (value == null || value.isEmpty)) {
                                 return S.of(context).insertDuration;
                               }
@@ -288,6 +308,26 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                               labelText: S.of(context).maxSpecies,
                               border: OutlineInputBorder(),
                               suffixText: 'spp.',
+                              prefixIcon: IconButton(
+                                  onPressed: () {
+                                    int count = int.tryParse(_maxSpeciesController.text) ?? 10;
+                                    if (count > 5) {
+                                      setState(() {
+                                        count--;
+                                        _maxSpeciesController.text = count.toString();
+                                      });
+                                    }
+                                  },
+                                  icon: Icon(Icons.remove_outlined)),
+                              suffixIcon: IconButton(
+                                  onPressed: () {
+                                    int count = int.tryParse(_maxSpeciesController.text) ?? 10;
+                                    setState(() {
+                                      count++;
+                                      _maxSpeciesController.text = count.toString();
+                                    });
+                                  },
+                                  icon: Icon(Icons.add_outlined)),
                             ),
                             validator: (value) {
                               if ((_selectedType == InventoryType.invMackinnonList) && (value == null || value.isEmpty)) {
@@ -311,10 +351,40 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                             controller: _totalObserversController,
                             keyboardType: TextInputType.number,
                             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                            textAlign: TextAlign.center,
                             decoration: InputDecoration(
                               labelText: S.of(context).totalOfObservers,
                               border: OutlineInputBorder(),
+                              prefixIcon: IconButton(
+                                  onPressed: () {
+                                    int count = int.tryParse(_totalObserversController.text) ?? 1;
+                                    if (count > 1) {
+                                      setState(() {
+                                        count--;
+                                        _totalObserversController.text = count.toString();
+                                      });
+                                    }
+                                  },
+                                  icon: Icon(Icons.remove_outlined)),
+                              suffixIcon: IconButton(
+                                  onPressed: () {
+                                    int count = int.tryParse(_totalObserversController.text) ?? 1;
+                                    setState(() {
+                                      count++;
+                                      _totalObserversController.text = count.toString();
+                                    });
+                                  },
+                                  icon: Icon(Icons.add_outlined)),
                             ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return S.current.insertCount;
+                              }
+                              if (int.tryParse(value) == null || int.tryParse(value)! < 1) {
+                                return S.current.insertValidNumber;
+                              }
+                              return null;
+                            },
                           ),
                         ),
                         const SizedBox(width: 8.0),
@@ -374,7 +444,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
         _maxSpeciesController.text = maxSpeciesMackinnon.toString();
         _durationController.text = '';
       } else if (newValue == InventoryType.invPointCount ||
-          newValue == InventoryType.invPointDistance) {
+          newValue == InventoryType.invPointDetection) {
         _durationController.text = pointCountsDuration.toString();
         _maxSpeciesController.text = '';
       } else {

@@ -117,22 +117,76 @@ class _WeatherTabState extends State<WeatherTab> with AutomaticKeepAliveClientMi
               DateFormat('dd/MM/yyyy HH:mm:ss').format(weather.sampleTime!),
               style: TextTheme.of(context).bodyLarge,
             ),
-            
+            Wrap(
+              spacing: 8.0, // horizontal space between children
+              runSpacing: 4.0, // vertical space between runs
+              alignment: WrapAlignment.start,
+              children: <Widget>[
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.cloud_outlined),
+                    SizedBox(width: 4,),
+                    Text('${weather.cloudCover}%'),
+                  ],
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.cloudy_snowing),
+                    SizedBox(width: 4,),
+                    Text('${precipitationTypeFriendlyNames[weather.precipitation]}'),
+                  ],
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.thermostat_outlined),
+                    SizedBox(width: 4,),
+                    Text('${weather.temperature} °C'),
+                  ],
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.wind_power_outlined),
+                    SizedBox(width: 4,),
+                    Text('${weather.windSpeed} bft ${weather.windDirection}'),
+                  ],
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.cyclone_outlined),
+                    SizedBox(width: 4,),
+                    Text('${weather.atmosphericPressure ?? 0} mPa'),
+                  ],
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.water_drop_outlined),
+                    SizedBox(width: 4,),
+                    Text('${weather.relativeHumidity ?? 0}%'),
+                  ],
+                ),
+              ],
+            ),
                 // Icon(Icons.cloud_outlined),
                 // SizedBox(width: 4,),
-                Text('${S.current.cloudCover}: ${weather.cloudCover}%'),
+                // Text('${S.current.cloudCover}: ${weather.cloudCover}%'),
                 // SizedBox(width: 8,),
                 // Icon(Icons.water_drop_outlined),
                 // SizedBox(width: 4,),
-                Text('${S.current.precipitation}: ${precipitationTypeFriendlyNames[weather.precipitation]}'),
+                // Text('${S.current.precipitation}: ${precipitationTypeFriendlyNames[weather.precipitation]}'),
                 // SizedBox(width: 8,),
                 // Icon(Icons.thermostat_outlined),
                 // SizedBox(width: 4,),
-                Text('${S.current.temperature}: ${weather.temperature} °C'),
+                // Text('${S.current.temperature}: ${weather.temperature} °C'),
                 // SizedBox(width: 8,),
                 // Icon(Icons.wind_power_outlined),
                 // SizedBox(width: 4,),
-                Text('${S.current.windSpeed}: ${weather.windSpeed} bft'),
+                // Text('${S.current.windSpeed}: ${weather.windSpeed} bft'),
               ],
             ),
           
@@ -287,35 +341,54 @@ class WeatherGridItem extends StatelessWidget {
               style: const TextStyle(
                   fontWeight: FontWeight.bold),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+            Wrap(
+              spacing: 8.0, // horizontal space between children
+              runSpacing: 4.0, // vertical space between runs
+              alignment: WrapAlignment.start,
+              children: <Widget>[
                 Row(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(Icons.cloud_outlined),
                     SizedBox(width: 4,),
                     Text('${weather.cloudCover}%'),
-                    SizedBox(width: 8,),
+                  ],
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
                     Icon(Icons.cloudy_snowing),
                     SizedBox(width: 4,),
                     Text('${precipitationTypeFriendlyNames[weather.precipitation]}'),
-                    SizedBox(width: 8,),
+                  ],
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
                     Icon(Icons.thermostat_outlined),
                     SizedBox(width: 4,),
                     Text('${weather.temperature} °C'),
-                    SizedBox(width: 8,),
-                    Icon(Icons.wind_power_outlined),
-                    SizedBox(width: 4,),
-                    Text('${weather.windSpeed} bft'),
                   ],
                 ),
-                SizedBox(height: 4,),
                 Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.wind_power_outlined),
+                    SizedBox(width: 4,),
+                    Text('${weather.windSpeed} bft ${weather.windDirection}'),
+                  ],
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(Icons.cyclone_outlined),
                     SizedBox(width: 4,),
                     Text('${weather.atmosphericPressure ?? 0} mPa'),
-                    SizedBox(width: 8,),
+                  ],
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
                     Icon(Icons.water_drop_outlined),
                     SizedBox(width: 4,),
                     Text('${weather.relativeHumidity ?? 0}%'),
@@ -323,6 +396,42 @@ class WeatherGridItem extends StatelessWidget {
                 ),
               ],
             ),
+            // Column(
+            //   crossAxisAlignment: CrossAxisAlignment.start,
+            //   children: [
+            //     Row(
+            //       children: [
+            //         Icon(Icons.cloud_outlined),
+            //         SizedBox(width: 4,),
+            //         Text('${weather.cloudCover}%'),
+            //         SizedBox(width: 8,),
+            //         Icon(Icons.cloudy_snowing),
+            //         SizedBox(width: 4,),
+            //         Text('${precipitationTypeFriendlyNames[weather.precipitation]}'),
+            //         SizedBox(width: 8,),
+            //         Icon(Icons.thermostat_outlined),
+            //         SizedBox(width: 4,),
+            //         Text('${weather.temperature} °C'),
+            //         SizedBox(width: 8,),
+            //         Icon(Icons.wind_power_outlined),
+            //         SizedBox(width: 4,),
+            //         Text('${weather.windSpeed} bft ${weather.windDirection}'),
+            //       ],
+            //     ),
+            //     SizedBox(height: 4,),
+            //     Row(
+            //       children: [
+            //         Icon(Icons.cyclone_outlined),
+            //         SizedBox(width: 4,),
+            //         Text('${weather.atmosphericPressure ?? 0} mPa'),
+            //         SizedBox(width: 8,),
+            //         Icon(Icons.water_drop_outlined),
+            //         SizedBox(width: 4,),
+            //         Text('${weather.relativeHumidity ?? 0}%'),
+            //       ],
+            //     ),
+            //   ],
+            // ),
           ],
         ),
       ),
@@ -350,35 +459,55 @@ class WeatherListItemState extends State<WeatherListItem> {
     return ListTile(
       // leading: const Icon(Icons.wb_sunny_outlined),
       title: Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(widget.weather.sampleTime!)),
-      subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+      subtitle: Wrap(
+        direction: Axis.horizontal,
+        spacing: 8.0, // horizontal space between children
+        runSpacing: 4.0, // vertical space between runs
+        alignment: WrapAlignment.start,
+        children: <Widget>[
           Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Icon(Icons.cloud_outlined),
               SizedBox(width: 4,),
               Text('${widget.weather.cloudCover}%'),
-              SizedBox(width: 8,),
+            ],
+          ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
               Icon(Icons.cloudy_snowing),
               SizedBox(width: 4,),
               Text('${precipitationTypeFriendlyNames[widget.weather.precipitation]}'),
-              SizedBox(width: 8,),
+            ],
+          ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
               Icon(Icons.thermostat_outlined),
               SizedBox(width: 4,),
               Text('${widget.weather.temperature} °C'),
-              SizedBox(width: 8,),
-              Icon(Icons.wind_power_outlined),
-              SizedBox(width: 4,),
-              Text('${widget.weather.windSpeed} bft'),
             ],
           ),
-          SizedBox(height: 4,),
           Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.wind_power_outlined),
+              SizedBox(width: 4,),
+              Text('${widget.weather.windSpeed} bft ${widget.weather.windDirection}'),
+            ],
+          ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Icon(Icons.cyclone_outlined),
               SizedBox(width: 4,),
               Text('${widget.weather.atmosphericPressure ?? 0} mPa'),
-              SizedBox(width: 8,),
+            ],
+          ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
               Icon(Icons.water_drop_outlined),
               SizedBox(width: 4,),
               Text('${widget.weather.relativeHumidity ?? 0}%'),
@@ -386,6 +515,42 @@ class WeatherListItemState extends State<WeatherListItem> {
           ),
         ],
       ),
+      // Column(
+      //   crossAxisAlignment: CrossAxisAlignment.start,
+      //   children: [
+      //     Row(
+      //       children: [
+      //         Icon(Icons.cloud_outlined),
+      //         SizedBox(width: 4,),
+      //         Text('${widget.weather.cloudCover}%'),
+      //         SizedBox(width: 8,),
+      //         Icon(Icons.cloudy_snowing),
+      //         SizedBox(width: 4,),
+      //         Text('${precipitationTypeFriendlyNames[widget.weather.precipitation]}'),
+      //         SizedBox(width: 8,),
+      //         Icon(Icons.thermostat_outlined),
+      //         SizedBox(width: 4,),
+      //         Text('${widget.weather.temperature} °C'),
+      //         SizedBox(width: 8,),
+      //         Icon(Icons.wind_power_outlined),
+      //         SizedBox(width: 4,),
+      //         Text('${widget.weather.windSpeed} bft ${widget.weather.windDirection}'),
+      //       ],
+      //     ),
+      //     SizedBox(height: 4,),
+      //     Row(
+      //       children: [
+      //         Icon(Icons.cyclone_outlined),
+      //         SizedBox(width: 4,),
+      //         Text('${widget.weather.atmosphericPressure ?? 0} mPa'),
+      //         SizedBox(width: 8,),
+      //         Icon(Icons.water_drop_outlined),
+      //         SizedBox(width: 4,),
+      //         Text('${widget.weather.relativeHumidity ?? 0}%'),
+      //       ],
+      //     ),
+      //   ],
+      // ),
       onLongPress: widget.onLongPress,
       // onTap: () {
       //

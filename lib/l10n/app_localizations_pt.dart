@@ -1298,6 +1298,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get insertValidNumber => 'Insira um número válido';
 
   @override
+  String get windDirection => 'Direção do vento';
+
+  @override
   String get precipitationNone => 'Nenhuma';
 
   @override
@@ -1311,6 +1314,18 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get precipitationRain => 'Chuva';
+
+  @override
+  String get precipitationShowers => 'Pancadas';
+
+  @override
+  String get precipitationSnow => 'Neve';
+
+  @override
+  String get precipitationHail => 'Granizo';
+
+  @override
+  String get precipitationFrost => 'Geada';
 
   @override
   String get distributionNone => 'Nada';
@@ -1377,7 +1392,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get inventoryMackinnonList => 'Lista de Mackinnon';
 
   @override
-  String get inventoryTransectionCount => 'Contagem em Transecção';
+  String get inventoryTransectCount => 'Contagem em Transecto';
 
   @override
   String get inventoryPointCount => 'Ponto de Contagem';
@@ -1389,10 +1404,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String get inventoryCasual => 'Observação Casual';
 
   @override
-  String get inventoryTransectionDistance => 'Transecção com distância/altura';
+  String get inventoryTransectDetection => 'Transecto de Detecções';
 
   @override
-  String get inventoryPointDistance => 'Ponto de contagem com distância/altura';
+  String get inventoryPointDetection => 'Ponto de Detecções';
 
   @override
   String get eggShapeSpherical => 'Esférico';
@@ -2791,6 +2806,9 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get insertValidNumber => 'Insira um número válido';
 
   @override
+  String get windDirection => 'Direção do vento';
+
+  @override
   String get precipitationNone => 'Nenhuma';
 
   @override
@@ -2804,6 +2822,18 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get precipitationRain => 'Chuva';
+
+  @override
+  String get precipitationShowers => 'Pancadas';
+
+  @override
+  String get precipitationSnow => 'Neve';
+
+  @override
+  String get precipitationHail => 'Granizo';
+
+  @override
+  String get precipitationFrost => 'Geada';
 
   @override
   String get distributionNone => 'Nada';
@@ -2870,7 +2900,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get inventoryMackinnonList => 'Lista de Mackinnon';
 
   @override
-  String get inventoryTransectionCount => 'Contagem em Transecção';
+  String get inventoryTransectCount => 'Contagem em Transecto';
 
   @override
   String get inventoryPointCount => 'Ponto de Contagem';
@@ -2882,10 +2912,10 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get inventoryCasual => 'Observação Casual';
 
   @override
-  String get inventoryTransectionDistance => 'Transecção com distância/altura';
+  String get inventoryTransectDetection => 'Transecto de Detecções';
 
   @override
-  String get inventoryPointDistance => 'Ponto de contagem com distância/altura';
+  String get inventoryPointDetection => 'Ponto de Detecções';
 
   @override
   String get eggShapeSpherical => 'Esférico';

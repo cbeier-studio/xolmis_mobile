@@ -1,7 +1,8 @@
+import 'package:fab_m3e/fab_m3e.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+// import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../data/models/nest.dart';
@@ -27,6 +28,7 @@ class NestDetailScreen extends StatefulWidget {
 
 class NestDetailScreenState extends State<NestDetailScreen> {
   bool _isSubmitting = false;
+  final fabController = FabMenuController();
 
   @override
   void didChangeDependencies() {
@@ -170,7 +172,7 @@ class NestDetailScreenState extends State<NestDetailScreen> {
                       builder: (context) => AlertDialog.adaptive(
                         title: Text(S.of(context).confirmFate),
                         content: DropdownButtonFormField<NestFateType>(
-                          value: selectedNestFate,
+                          initialValue: selectedNestFate,
                           decoration: InputDecoration(
                             labelText: S.of(context).nestFate,
                             helperText: S.of(context).requiredField,
@@ -387,34 +389,62 @@ class NestDetailScreenState extends State<NestDetailScreen> {
                   NestRevisionsTab(nest: widget.nest),
                   EggsTab(nest: widget.nest),
                 ],
-              ),          
+              ),
         floatingActionButton: widget.nest.isActive
-            ? SpeedDial(
-          icon: Icons.add_outlined,
-          activeIcon: Icons.close_outlined,
-          spaceBetweenChildren: 8.0,
-          children: [
-            SpeedDialChild(
-              child: Theme.of(context).brightness == Brightness.light
+            ? FabMenuM3E(
+          controller: fabController,
+          alignment: Alignment.bottomRight,
+          direction: FabMenuDirection.up,
+          overlay: false,
+          primaryFab: FabM3E(icon: const Icon(Icons.add), onPressed: fabController.toggle),
+          items: [
+            FabMenuItem(
+              icon: Theme.of(context).brightness == Brightness.light
                   ? const Icon(Icons.beenhere_outlined)
                   : const Icon(Icons.beenhere),
-              label: S.of(context).revision(1),
-              onTap: () {
+              label: Text(S.of(context).revision(1)),
+              onPressed: () {
                 _showAddRevisionScreen(context);
               },
             ),
-            SpeedDialChild(
-              child: Theme.of(context).brightness == Brightness.light
+            FabMenuItem(
+              icon: Theme.of(context).brightness == Brightness.light
                   ? const Icon(Icons.egg_outlined)
                   : const Icon(Icons.egg),
-              label: S.of(context).egg(1),
-              onTap: () async {
+              label: Text(S.of(context).egg(1)),
+              onPressed: () async {
                 await _showAddEggScreen(context);
               },
             ),
           ],
-        )
-            : null,
+        ) : null,
+        // floatingActionButton: widget.nest.isActive
+        //     ? SpeedDial(
+        //   icon: Icons.add_outlined,
+        //   activeIcon: Icons.close_outlined,
+        //   spaceBetweenChildren: 8.0,
+        //   children: [
+        //     SpeedDialChild(
+        //       child: Theme.of(context).brightness == Brightness.light
+        //           ? const Icon(Icons.beenhere_outlined)
+        //           : const Icon(Icons.beenhere),
+        //       label: S.of(context).revision(1),
+        //       onTap: () {
+        //         _showAddRevisionScreen(context);
+        //       },
+        //     ),
+        //     SpeedDialChild(
+        //       child: Theme.of(context).brightness == Brightness.light
+        //           ? const Icon(Icons.egg_outlined)
+        //           : const Icon(Icons.egg),
+        //       label: S.of(context).egg(1),
+        //       onTap: () async {
+        //         await _showAddEggScreen(context);
+        //       },
+        //     ),
+        //   ],
+        // )
+        //     : null,
       ),
     );
   }

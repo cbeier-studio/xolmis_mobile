@@ -2136,6 +2136,12 @@ abstract class AppLocalizations {
   /// **'Insert a valid number'**
   String get insertValidNumber;
 
+  /// Wind direction field label
+  ///
+  /// In en, this message translates to:
+  /// **'Wind direction'**
+  String get windDirection;
+
   /// No description provided for @precipitationNone.
   ///
   /// In en, this message translates to:
@@ -2165,6 +2171,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Rain'**
   String get precipitationRain;
+
+  /// No description provided for @precipitationShowers.
+  ///
+  /// In en, this message translates to:
+  /// **'Showers'**
+  String get precipitationShowers;
+
+  /// No description provided for @precipitationSnow.
+  ///
+  /// In en, this message translates to:
+  /// **'Snow'**
+  String get precipitationSnow;
+
+  /// No description provided for @precipitationHail.
+  ///
+  /// In en, this message translates to:
+  /// **'Hail'**
+  String get precipitationHail;
+
+  /// No description provided for @precipitationFrost.
+  ///
+  /// In en, this message translates to:
+  /// **'Frost'**
+  String get precipitationFrost;
 
   /// No description provided for @distributionNone.
   ///
@@ -2280,11 +2310,11 @@ abstract class AppLocalizations {
   /// **'Mackinnon List'**
   String get inventoryMackinnonList;
 
-  /// No description provided for @inventoryTransectionCount.
+  /// No description provided for @inventoryTransectCount.
   ///
   /// In en, this message translates to:
-  /// **'Transection Count'**
-  String get inventoryTransectionCount;
+  /// **'Transect Count'**
+  String get inventoryTransectCount;
 
   /// No description provided for @inventoryPointCount.
   ///
@@ -2304,17 +2334,17 @@ abstract class AppLocalizations {
   /// **'Casual Observation'**
   String get inventoryCasual;
 
-  /// No description provided for @inventoryTransectionDistance.
+  /// No description provided for @inventoryTransectDetection.
   ///
   /// In en, this message translates to:
-  /// **'Transection with distance/height'**
-  String get inventoryTransectionDistance;
+  /// **'Detection Transect Count'**
+  String get inventoryTransectDetection;
 
-  /// No description provided for @inventoryPointDistance.
+  /// No description provided for @inventoryPointDetection.
   ///
   /// In en, this message translates to:
-  /// **'Point count with distance/height'**
-  String get inventoryPointDistance;
+  /// **'Detection Point Count'**
+  String get inventoryPointDetection;
 
   /// No description provided for @eggShapeSpherical.
   ///

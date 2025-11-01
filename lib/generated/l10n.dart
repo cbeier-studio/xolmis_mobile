@@ -3490,6 +3490,16 @@ class S {
     );
   }
 
+  /// `Wind direction`
+  String get windDirection {
+    return Intl.message(
+      'Wind direction',
+      name: 'windDirection',
+      desc: 'Wind direction field label',
+      args: [],
+    );
+  }
+
   /// `None`
   String get precipitationNone {
     return Intl.message('None', name: 'precipitationNone', desc: '', args: []);
@@ -3518,6 +3528,36 @@ class S {
   /// `Rain`
   String get precipitationRain {
     return Intl.message('Rain', name: 'precipitationRain', desc: '', args: []);
+  }
+
+  /// `Showers`
+  String get precipitationShowers {
+    return Intl.message(
+      'Showers',
+      name: 'precipitationShowers',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Snow`
+  String get precipitationSnow {
+    return Intl.message('Snow', name: 'precipitationSnow', desc: '', args: []);
+  }
+
+  /// `Hail`
+  String get precipitationHail {
+    return Intl.message('Hail', name: 'precipitationHail', desc: '', args: []);
+  }
+
+  /// `Frost`
+  String get precipitationFrost {
+    return Intl.message(
+      'Frost',
+      name: 'precipitationFrost',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `None`
@@ -3700,11 +3740,11 @@ class S {
     );
   }
 
-  /// `Transection Count`
-  String get inventoryTransectionCount {
+  /// `Transect Count`
+  String get inventoryTransectCount {
     return Intl.message(
-      'Transection Count',
-      name: 'inventoryTransectionCount',
+      'Transect Count',
+      name: 'inventoryTransectCount',
       desc: '',
       args: [],
     );
@@ -3740,21 +3780,21 @@ class S {
     );
   }
 
-  /// `Transection with distance/height`
-  String get inventoryTransectionDistance {
+  /// `Detection Transect Count`
+  String get inventoryTransectDetection {
     return Intl.message(
-      'Transection with distance/height',
-      name: 'inventoryTransectionDistance',
+      'Detection Transect Count',
+      name: 'inventoryTransectDetection',
       desc: '',
       args: [],
     );
   }
 
-  /// `Point count with distance/height`
-  String get inventoryPointDistance {
+  /// `Detection Point Count`
+  String get inventoryPointDetection {
     return Intl.message(
-      'Point count with distance/height',
-      name: 'inventoryPointDistance',
+      'Detection Point Count',
+      name: 'inventoryPointDetection',
       desc: '',
       args: [],
     );

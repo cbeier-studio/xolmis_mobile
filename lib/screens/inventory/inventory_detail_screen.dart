@@ -1,8 +1,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+// import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:fab_m3e/fab_m3e.dart';
 
 import '../../data/models/inventory.dart';
 import '../../data/database/repositories/inventory_repository.dart';
@@ -52,6 +53,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   bool _isSubmitting = false;
+  final fabController = FabMenuController();
 
   @override
   void initState() {
@@ -420,31 +422,58 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
           ),
         ],
       ),
-      floatingActionButton: SpeedDial(
-        icon: Icons.add_outlined,
-        activeIcon: Icons.close_outlined,
-        spaceBetweenChildren: 8.0,
-        children: [
-          SpeedDialChild(
-            child: Theme.of(context).brightness == Brightness.light
-                ? const Icon(Icons.local_florist_outlined)
-                : const Icon(Icons.local_florist),
-            label: S.of(context).vegetationData,
-            onTap: () {
+      floatingActionButton: FabMenuM3E(
+        controller: fabController,
+        alignment: Alignment.bottomRight,
+        direction: FabMenuDirection.up,
+        overlay: false,
+        primaryFab: FabM3E(icon: const Icon(Icons.add), onPressed: fabController.toggle),
+        items: [
+          FabMenuItem(
+            icon: Theme.of(context).brightness == Brightness.light
+                  ? const Icon(Icons.local_florist_outlined)
+                  : const Icon(Icons.local_florist),
+            label: Text(S.of(context).vegetationData),
+            onPressed: () {
               _showAddVegetationScreen(context);
             },
           ),
-          SpeedDialChild(
-            child: Theme.of(context).brightness == Brightness.light
-                ? const Icon(Icons.wb_sunny_outlined)
-                : const Icon(Icons.wb_sunny),
-            label: S.of(context).weatherData,
-            onTap: () {
+          FabMenuItem(
+            icon: Theme.of(context).brightness == Brightness.light
+              ? const Icon(Icons.wb_sunny_outlined)
+              : const Icon(Icons.wb_sunny),
+            label: Text(S.of(context).weatherData),
+            onPressed: () {
               _showAddWeatherScreen(context);
             },
           ),
         ],
       ),
+      // floatingActionButton: SpeedDial(
+      //   icon: Icons.add_outlined,
+      //   activeIcon: Icons.close_outlined,
+      //   spaceBetweenChildren: 8.0,
+      //   children: [
+      //     SpeedDialChild(
+      //       child: Theme.of(context).brightness == Brightness.light
+      //           ? const Icon(Icons.local_florist_outlined)
+      //           : const Icon(Icons.local_florist),
+      //       label: S.of(context).vegetationData,
+      //       onTap: () {
+      //         _showAddVegetationScreen(context);
+      //       },
+      //     ),
+      //     SpeedDialChild(
+      //       child: Theme.of(context).brightness == Brightness.light
+      //           ? const Icon(Icons.wb_sunny_outlined)
+      //           : const Icon(Icons.wb_sunny),
+      //       label: S.of(context).weatherData,
+      //       onTap: () {
+      //         _showAddWeatherScreen(context);
+      //       },
+      //     ),
+      //   ],
+      // ),
     );
   }
 }
