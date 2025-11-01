@@ -230,35 +230,69 @@ class InventoryDao {
   // Update the ID of the inventory in the database
   Future<void> changeInventoryId(String oldId, String newId) async {
     final db = await _dbHelper.database;
-    await db?.transaction((txn) async {
-      await txn.execute('PRAGMA foreign_keys = OFF;');
-      await txn.update(
-        'inventories',
-        {'id': newId},
-        where: 'id = ?',
-        whereArgs: [oldId],
-      );
-      await txn.update(
-        'species',
-        {'inventoryId': newId},
-        where: 'inventoryId = ?',
-        whereArgs: [oldId],
-      );
-      await txn.update(
-        'vegetation',
-        {'inventoryId': newId},
-        where: 'inventoryId = ?',
-        whereArgs: [oldId],
-      );
-      await txn.update(
-        'weather',
-        {'inventoryId': newId},
-        where: 'inventoryId = ?',
-        whereArgs: [oldId],
-      );
-      await txn.execute('PRAGMA foreign_keys = ON;');
-    });
+
+    // 1. Check if database connection is available
+    if (db == null) {
+      debugPrint('Error: Database connection is not available.');
+      throw Exception('Database connection is not available.');
+    }
+
+    try {
+      await db.execute('PRAGMA foreign_keys = OFF;');
+      // 2. Run transaction logic
+      await db.transaction((txn) async {
+
+        // 3. Update the main table 'inventories'.
+        int inventoryUpdated = await txn.update(
+          'inventories',
+          {'id': newId},
+          where: 'id = ?',
+          whereArgs: [oldId],
+        );
+
+        // 4. Crucial check: if main record was not found, stop transaction
+        if (inventoryUpdated == 0) {
+          throw Exception('Inventory with old ID "$oldId" not found. Transaction rolled back.');
+        }
+
+        // 5. Update related tables with the 'inventoryId'.
+        await txn.update(
+          'species',
+          {'inventoryId': newId},
+          where: 'inventoryId = ?',
+          whereArgs: [oldId],
+        );
+
+        await txn.update(
+          'vegetation',
+          {'inventoryId': newId},
+          where: 'inventoryId = ?',
+          whereArgs: [oldId],
+        );
+
+        await txn.update(
+          'weather',
+          {'inventoryId': newId},
+          where: 'inventoryId = ?',
+          whereArgs: [oldId],
+        );
+      });
+      await db.execute('PRAGMA foreign_keys = ON;');
+
+      debugPrint('Successfully changed inventory ID from "$oldId" to "$newId"');
+
+    } on DatabaseException catch (e, s) {
+      // 6. Capture database errors (e.g.: constraint violation)
+      debugPrint('Database error changing inventory ID: $e');
+      debugPrint('Stack trace: $s');
+      throw Exception('Failed to change inventory ID due to a database error: $e');
+    } catch (e) {
+      // 7. Capture other errors
+      debugPrint('Generic error changing inventory ID: $e');
+      rethrow;
+    }
   }
+
 
   // Check if the ID already exists
   Future<bool> inventoryIdExists(String id) async {

@@ -1048,7 +1048,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Show the inventory type
-          Text('${inventoryTypeFriendlyNames[inventory.type]}'),
+          Text('${inventoryTypeFriendlyNames[inventory.type]}', overflow: TextOverflow.ellipsis,),
           // Show the inventory locality
           if (inventory.localityName != null && inventory.localityName!.isNotEmpty)
             Text(inventory.localityName!, overflow: TextOverflow.ellipsis,),
@@ -1605,68 +1605,121 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
   }
 
   // Show the dialog to edit the inventory ID
-  void _showEditIdDialog(BuildContext context, Inventory inventory) {
-    final idController = TextEditingController(text: inventory.id);
-    final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
-    final oldId = inventory.id;
+  void _showEditIdDialog(BuildContext context, Inventory inventory) {final idController = TextEditingController(text: inventory.id);
+  final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
+  final oldId = inventory.id;
 
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog.adaptive(
-          title: Text('Editar ID'),
-          content: TextField(
-            controller: idController,
-            textCapitalization: TextCapitalization.sentences,
-            decoration: InputDecoration(
-              labelText: 'ID',
-              border: OutlineInputBorder(),
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text(S.of(context).cancel),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text(S.of(context).save),
-              onPressed: () async {
-                var newId = idController.text;
-                // Check if the ID already exists in the database
-                // final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
-                final idExists = await inventoryProvider.inventoryIdExists(newId);
+  showDialog(
+    context: context,
+    // Barrier is not dismissible while saving to prevent accidental taps
+    barrierDismissible: true,
+    builder: (BuildContext context) {
+      // Use StatefulBuilder to manage the loading state inside the dialog
+      return StatefulBuilder(
+        builder: (context, setStateDialog) {
+          bool isSaving = false;
 
-                if (idExists) {
-                  // ID already exists, show a SnackBar
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Row(
-                          children: [
-                            const Icon(Icons.info_outlined, color: Colors.blue),
-                            const SizedBox(width: 8),
-                            Text(S.of(context).inventoryIdAlreadyExists),
-                          ],
-                        ),
-                      ),
-                    );
-                  }
-                  return; // Prevent adding inventory
-                }
-                inventoryProvider.changeInventoryId(context, oldId, newId);
-                if (context.mounted) {
+          return AlertDialog.adaptive(
+            title: Text('Editar ID'),
+            content: TextField(
+              controller: idController,
+              textCapitalization: TextCapitalization.sentences,
+              enabled: !isSaving, // Disable field while saving
+              decoration: InputDecoration(
+                labelText: 'ID',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: isSaving ? null : () {
                   Navigator.of(context).pop();
-                }
-                setState(() {});
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+                },
+                child: Text(S.of(context).cancel),
+              ),
+              // Show a loading indicator or the save button
+              isSaving
+                  ? const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                child: CircularProgressIndicator.adaptive(),
+              )
+                  : TextButton(
+                child: Text(S.of(context).save),
+                onPressed: () async {
+                  var newId = idController.text.trim(); // Use trim() to remove whitespace
+
+                  if (newId == oldId) {
+                    // If the ID hasn't changed, just close the dialog.
+                    Navigator.of(context).pop();
+                    return;
+                  }
+
+                  // Check if the ID already exists
+                  final idExists = await inventoryProvider.inventoryIdExists(newId);
+
+                  if (idExists) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Row(
+                            children: [
+                              const Icon(Icons.error_outline, color: Colors.orange),
+                              const SizedBox(width: 8),
+                              Text(S.of(context).inventoryIdAlreadyExists),
+                            ],
+                          ),
+                        ),
+                      );
+                    }
+                    return;
+                  }
+
+                  // --- Start Saving Process ---
+                  setStateDialog(() {
+                    isSaving = true;
+                  });
+
+                  try {
+                    await inventoryProvider.changeInventoryId(context, oldId, newId);
+
+                    // If successful, close the dialog
+                    if (context.mounted) {
+                      Navigator.of(context).pop();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('ID do inventário atualizado com sucesso!'),
+                          backgroundColor: Colors.green,
+                        ),
+                      );
+                    }
+                  } catch (e) {
+                    // If an error occurs, show a message
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Update ID failed: $e'),
+                          backgroundColor: Theme.of(context).colorScheme.error,
+                        ),
+                      );
+                    }
+                  } finally {
+                    // --- End Saving Process ---
+                    // Ensure the loading state is always reset, even on error
+                    if (context.mounted) {
+                      setStateDialog(() {
+                        isSaving = false;
+                      });
+                    }
+                  }
+                },
+              ),
+            ],
+          );
+        },
+      );
+    },
+  );
+}
 
   // Show the dialog to edit inventory details
   void _showEditDetailsDialog(BuildContext context, Inventory inventory) {

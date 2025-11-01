@@ -98,9 +98,30 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
                         decoration: InputDecoration(
                           labelText: S.current.count,
                           border: OutlineInputBorder(),
+                          prefixIcon: IconButton(
+                              onPressed: () {
+                                int count = int.tryParse(_countController.text) ?? 0;
+                                if (count > 0) {
+                                  setState(() {
+                                    count--;
+                                    _countController.text = count.toString();
+                                  });
+                                }
+                              },
+                              icon: Icon(Icons.remove_outlined)),
+                          suffixIcon: IconButton(
+                              onPressed: () {
+                                int count = int.tryParse(_countController.text) ?? 0;
+                                setState(() {
+                                  count++;
+                                  _countController.text = count.toString();
+                                });
+                              },
+                              icon: Icon(Icons.add_outlined)),
                         ),
                         keyboardType: TextInputType.number,
                         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                        textAlign: TextAlign.center,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return S.current.insertCount;
@@ -112,7 +133,7 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
                         },
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(width: 8),
                     Expanded(
                       child: TextFormField(
                         controller: _distanceController,
@@ -141,7 +162,7 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
                         keyboardType: const TextInputType.numberWithOptions(decimal: true),
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(width: 8),
                     Expanded(
                       child: DropdownButtonFormField<String>(
                         initialValue: _selectedFlightDirection,
