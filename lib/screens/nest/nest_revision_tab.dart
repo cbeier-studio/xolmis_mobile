@@ -10,6 +10,7 @@ import '../../providers/nest_revision_provider.dart';
 import '../../providers/app_image_provider.dart';
 
 import '../images/app_image_screen.dart';
+import '../../utils/utils.dart';
 import '../../generated/l10n.dart';
 
 import 'add_revision_screen.dart';
@@ -276,6 +277,34 @@ class _NestRevisionsTabState extends State<NestRevisionsTab>
                     ),
                   ),
                   Divider(),
+                  GridView.count(
+                    crossAxisCount: 4,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: <Widget>[
+                      buildGridMenuItem(
+                          context, Icons.edit_outlined, S.current.edit, () {
+                        Navigator.of(context).pop();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) => AddNestRevisionScreen(
+                              nest: widget.nest,
+                              nestRevision: revision,
+                              isEditing: true,
+                            ),
+                          ),
+                        );
+                      }),
+                      buildGridMenuItem(context, Icons.delete_outlined,
+                          S.of(context).delete, () async {
+                            Navigator.of(context).pop();
+                            await _deleteNestRevision(revision);
+                          }, color: Theme.of(context).colorScheme.error),
+                    ],
+                  ),
+                  /*
                   ListTile(
                     leading: const Icon(Icons.edit_outlined),
                     title: Text(S.of(context).editNestRevision),
@@ -317,6 +346,7 @@ class _NestRevisionsTabState extends State<NestRevisionsTab>
                       Navigator.pop(context);
                     },
                   ),
+                  */
                 ],
               ),
             );

@@ -6,6 +6,7 @@ import '../../data/models/journal.dart';
 import '../../providers/journal_provider.dart';
 
 import 'add_journal_screen.dart';
+import '../../utils/utils.dart';
 import '../../generated/l10n.dart';
 
 enum JournalSortField {
@@ -717,6 +718,59 @@ class JournalsScreenState extends State<JournalsScreen> {
                     title: Text(journalEntry.title, overflow: TextOverflow.fade,),
                   ),
                   Divider(),
+                  GridView.count(
+                    crossAxisCount: 4,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: <Widget>[
+                      buildGridMenuItem(
+                          context, Icons.edit_outlined, S.current.edit, () {
+                        Navigator.of(context).pop();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AddJournalScreen(
+                              journalEntry: journalEntry,
+                              isEditing: true,
+                            ),
+                          ),
+                        );
+                      }),
+                      buildGridMenuItem(context, Icons.delete_outlined,
+                          S.of(context).delete, () {
+                            Navigator.of(context).pop();
+                            // Ask for user confirmation
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text(S.of(context).confirmDelete),
+                                  content: Text(S.of(context).confirmDeleteMessage(1, "female", S.of(context).journalEntries(1).toLowerCase())),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop(false);
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text(S.of(context).cancel),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop(true);
+                                        Navigator.of(context).pop();
+                                        // Call the function to delete species
+                                        journalProvider.removeJournalEntry(journalEntry);
+                                      },
+                                      child: Text(S.of(context).delete),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }, color: Theme.of(context).colorScheme.error),
+                    ],
+                  ),
+                  /*
                   ListTile(
                     leading: const Icon(Icons.edit_outlined),
                     title: Text(S.of(context).editJournalEntry),
@@ -773,6 +827,7 @@ class JournalsScreenState extends State<JournalsScreen> {
                     },
                   )
                   // )
+                  */
                 ],
               ),
             );

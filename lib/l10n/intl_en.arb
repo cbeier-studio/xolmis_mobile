@@ -1917,6 +1917,16 @@
         "type": "text",
         "description": "Wind direction field label"
     },
+    "reactivate": "Reactivate",
+    "@reactivate": {
+        "type": "text",
+        "description": "Reactivate button label"
+    },
+  "archive": "Archive",
+  "@archive": {
+    "type": "text",
+    "description": "Archive button label"
+  },
     "precipitationNone": "None",
     "precipitationFog": "Fog",
     "precipitationMist": "Mist",

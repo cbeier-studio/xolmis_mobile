@@ -1301,6 +1301,12 @@ class AppLocalizationsPt extends AppLocalizations {
   String get windDirection => 'Direção do vento';
 
   @override
+  String get reactivate => 'Reativar';
+
+  @override
+  String get archive => 'Arquivar';
+
+  @override
   String get precipitationNone => 'Nenhuma';
 
   @override
@@ -2807,6 +2813,12 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get windDirection => 'Direção do vento';
+
+  @override
+  String get reactivate => 'Reativar';
+
+  @override
+  String get archive => 'Arquivar';
 
   @override
   String get precipitationNone => 'Nenhuma';

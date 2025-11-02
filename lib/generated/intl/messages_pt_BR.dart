@@ -156,6 +156,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Incluir na amostra",
     ),
     "appearance": MessageLookupByLibrary.simpleMessage("Aparência"),
+    "archive": MessageLookupByLibrary.simpleMessage("Arquivar"),
     "archiveSpecimen": MessageLookupByLibrary.simpleMessage(
       "Arquivar espécime",
     ),
@@ -723,6 +724,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "precipitationShowers": MessageLookupByLibrary.simpleMessage("Pancadas"),
     "precipitationSnow": MessageLookupByLibrary.simpleMessage("Neve"),
     "proportion": MessageLookupByLibrary.simpleMessage("Proporção"),
+    "reactivate": MessageLookupByLibrary.simpleMessage("Reativar"),
     "reactivateInventory": MessageLookupByLibrary.simpleMessage(
       "Reativar inventário",
     ),

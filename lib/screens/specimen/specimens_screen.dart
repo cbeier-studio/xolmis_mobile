@@ -14,6 +14,7 @@ import '../../data/models/app_image.dart';
 import '../../providers/specimen_provider.dart';
 import '../../providers/app_image_provider.dart';
 
+import '../../utils/utils.dart';
 import '../../utils/import_utils.dart';
 import 'add_specimen_screen.dart';
 import '../images/app_image_screen.dart';
@@ -973,6 +974,72 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                     title: Text(specimen.fieldNumber),
                   ),
                   Divider(),
+                  GridView.count(
+                    crossAxisCount: 4,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: <Widget>[
+                      buildGridMenuItem(
+                          context, Icons.edit_outlined, S.current.edit, () {
+                        Navigator.of(context).pop();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AddSpecimenScreen(
+                              specimen: specimen,
+                              isEditing: true,
+                            ),
+                          ),
+                        );
+                      }),
+                      if (_showPending)
+                      buildGridMenuItem(context, Icons.archive_outlined,
+                          S.current.archive, () {
+                            Navigator.of(context).pop();
+                            specimen.isPending = false;
+                            specimenProvider.updateSpecimen(specimen);
+                          }),
+                      buildGridMenuItem(
+                            context, Icons.share_outlined, 'KML',
+                                () async {
+                              Navigator.of(context).pop();
+                              exportSpecimenToKml(context, specimen);
+                            }),
+                      buildGridMenuItem(context, Icons.delete_outlined,
+                          S.of(context).delete, () {
+                            Navigator.of(context).pop();
+                            // Ask for user confirmation
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog.adaptive(
+                                  title: Text(S.of(context).confirmDelete),
+                                  content: Text(S.of(context).confirmDeleteMessage(1, "male", S.of(context).specimens(1))),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop(false);
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text(S.of(context).cancel),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop(true);
+                                        Navigator.of(context).pop();
+                                        // Call the function to delete species
+                                        specimenProvider.removeSpecimen(specimen);
+                                      },
+                                      child: Text(S.of(context).delete),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }, color: Theme.of(context).colorScheme.error),
+                    ],
+                  ),
+                  /*
                   ListTile(
                     leading: const Icon(Icons.edit_outlined),
                     title: Text(S.of(context).editSpecimen),
@@ -1047,6 +1114,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                     },
                   )
                   // )
+                  */
                 ],
               ),
             );

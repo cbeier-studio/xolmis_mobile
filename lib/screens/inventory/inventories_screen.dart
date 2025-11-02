@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
@@ -20,6 +21,7 @@ import '../../providers/species_provider.dart';
 
 import 'add_inventory_screen.dart';
 import '../statistics/individuals_count_chart_screen.dart';
+import 'edit_inventory_screen.dart';
 import 'inventory_detail_screen.dart';
 import '../statistics/inventory_report_screen.dart';
 import 'add_vegetation_screen.dart';
@@ -916,7 +918,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                   MenuAnchor(
                     builder: (context, controller, child) {
                       return IconButton(
-                        icon: Icon(Icons.file_upload_outlined),
+                        icon: Icon(Icons.share_outlined),
                         tooltip: S
                             .of(context)
                             .exportWhat(S.of(context).inventory(2)),
@@ -1498,6 +1500,142 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                     // subtitle: Text(S.of(context).inventoryId),
                   ),
                   Divider(),
+                  GridView.count(
+                    crossAxisCount: 4,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: <Widget>[
+                      buildGridMenuItem(
+                          context, Icons.edit_outlined, '${S.current.edit} ID', () {
+                        Navigator.of(context).pop();
+                        _showEditIdDialog(context, inventory);
+                      }),
+                      buildGridMenuItem(context, Icons.edit_outlined,
+                          S.current.details, () async {
+                            Navigator.of(context).pop();
+                            // _showEditDetailsDialog(context, inventory);
+                            // final speciesProvider = Provider.of<SpeciesProvider>(
+                            //     context, listen: false);
+                            final editedInventory = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EditInventoryScreen(inventory: inventory),
+                              ),
+                            );
+                            if (editedInventory != null && editedInventory is Inventory) {
+                              await inventoryProvider.updateInventory(editedInventory);
+                            }
+                          }),
+                      if (_isShowingActiveInventories)
+                        buildGridMenuItem(
+                            context, Icons.flag_outlined, S.of(context).finish,
+                            () async {
+                              Navigator.of(context).pop();
+                          final completionService = InventoryCompletionService(
+                            context: context,
+                            inventory: inventory,
+                            inventoryProvider: inventoryProvider,
+                            inventoryRepository: inventoryRepository,
+                          );
+                          await completionService.attemptFinishInventory(context);
+                        }),
+                      if (!_isShowingActiveInventories)
+                        buildGridMenuItem(context, Icons.undo_outlined,
+                            S.of(context).reactivate, () {
+                          Navigator.of(context).pop();
+                          inventory.updateElapsedTime(0);
+                          inventory.updateCurrentInterval(
+                              inventory.currentInterval + 1);
+                          inventory.currentIntervalSpeciesCount = 0;
+                          inventory.intervalsWithoutNewSpecies = 0;
+                          inventory.intervalWithoutSpeciesNotifier.value =
+                              inventory.intervalsWithoutNewSpecies;
+                          inventory.updateIsFinished(false);
+                          inventoryProvider.updateInventory(inventory);
+                          inventoryProvider.startInventoryTimer(
+                              context, inventory, inventoryRepository);
+                        }),
+                      buildGridMenuItem(context, Icons.delete_outlined,
+                          S.of(context).delete, () {
+                            Navigator.of(context).pop();
+                            // Ask for user confirmation
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog.adaptive(
+                                  title: Text(S.of(context).confirmDelete),
+                                  content: Text(S.of(context).confirmDeleteMessage(1, "male", S.of(context).inventory(1))),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop(false);
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text(S.of(context).cancel),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop(true);
+                                        Navigator.of(context).pop();
+                                        // Call the function to delete species
+                                        inventoryProvider.removeInventory(inventory.id);
+                                      },
+                                      child: Text(S.of(context).delete),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }, color: Theme.of(context).colorScheme.error),
+                      if (!_isShowingActiveInventories)
+                      buildGridMenuItem(
+                          context, Icons.share_outlined, 'CSV',
+                          () async {
+                        Navigator.of(context).pop();
+                        final locale = Localizations.localeOf(context);
+                        final csvFile = await exportInventoryToCsv(context, inventory, locale);
+                        // Share the file using share_plus
+                        await SharePlus.instance.share(
+                          ShareParams(
+                              files: [XFile(csvFile, mimeType: 'text/csv')],
+                              text: S.current.inventoryExported(1),
+                              subject: S.current.inventoryData(1)
+                          ),
+                        );
+                      }),
+                      if (!_isShowingActiveInventories)
+                      buildGridMenuItem(
+                          context, Icons.share_outlined, 'Excel',
+                          () async {
+                        Navigator.of(context).pop();
+                        final locale = Localizations.localeOf(context);
+                        final excelFile = await exportInventoryToExcel(context, inventory, locale);
+                        // Share the file using share_plus
+                        await SharePlus.instance.share(
+                          ShareParams(
+                              files: [XFile(excelFile, mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')],
+                              text: S.current.inventoryExported(1),
+                              subject: S.current.inventoryData(1)
+                          ),
+                        );
+                      }),
+                      if (!_isShowingActiveInventories)
+                      buildGridMenuItem(
+                          context, Icons.share_outlined, 'JSON',
+                          () {
+                        Navigator.of(context).pop();
+                        exportInventoryToJson(context, inventory, true);
+                      }),
+                      if (!_isShowingActiveInventories)
+                      buildGridMenuItem(context, Icons.share_outlined,
+                          'KML', () {
+                            Navigator.of(context).pop();
+                            exportInventoryToKml(context, inventory);
+                      }),
+
+                    ],
+                  ),
+                  /*
                   ListTile(
                     leading: const Icon(Icons.edit_outlined),
                     title: Text(S.current.edit),
@@ -1521,24 +1659,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                       ],
                     ),
                   ),
-                  // Option to edit the inventory ID
-                  // ListTile(
-                  //     leading: const Icon(Icons.edit_outlined),
-                  //     title: Text(S.of(context).editInventoryId),
-                  //     onTap: () {
-                  //       Navigator.of(context).pop();
-                  //       _showEditIdDialog(context, inventory);
-                  //     },
-                  //   ),
-                  // ListTile(
-                  //   leading: const Icon(Icons.edit_outlined),
-                  //   title: Text(S.of(context).editLocality),
-                  //   onTap: () {
-                  //     Navigator.of(context).pop();
-                  //     _showEditLocalityDialog(context, inventory);
-                  //   },
-                  // ),
-                  // Option to finish the active inventory
+
                   if (_isShowingActiveInventories)
                     ListTile(
                       leading: const Icon(Icons.flag_outlined),
@@ -1555,7 +1676,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                         await completionService.attemptFinishInventory(context);
                       },
                     ),
-                  // Option to reactivate the finished inventory
+
                   if (!_isShowingActiveInventories)
                     ListTile(
                       leading: const Icon(Icons.undo_outlined),
@@ -1573,8 +1694,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                         // inventoryProvider.notifyListeners();
                       },
                     ),
-                  // if (!_isShowingActiveInventories) 
-                  //   Divider(),
+
                   if (!_isShowingActiveInventories)
                     ListTile(
                       leading: const Icon(Icons.file_upload_outlined),
@@ -1636,8 +1756,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                         exportInventoryToKml(context, inventory);
                       },
                     ),
-                  // Divider(),
-                  // Option to delete the inventory
+
                   ListTile(
                     leading: Icon(Icons.delete_outlined, color: Theme.of(context).brightness == Brightness.light
                         ? Colors.red
@@ -1676,6 +1795,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                       );
                     },
                   )
+                  */
                 ],
               ),
             );
@@ -1685,6 +1805,25 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
       },
     );
   }
+
+  // Widget _buildGridMenuItem(
+  //     BuildContext context, IconData icon, String label, VoidCallback onTap,
+  //     {Color? color}) {
+  //   final itemColor =
+  //       color ?? Theme.of(context).textTheme.bodyLarge?.color;
+  //   return InkWell(
+  //     onTap: onTap,
+  //     borderRadius: BorderRadius.circular(8),
+  //     child: Column(
+  //       mainAxisAlignment: MainAxisAlignment.center,
+  //       children: <Widget>[
+  //         IconButton(icon: Icon(icon, color: itemColor), onPressed: onTap),
+  //         Text(label,
+  //             textAlign: TextAlign.center, style: TextStyle(color: itemColor)),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   // Show the dialog to edit the inventory ID
   void _showEditIdDialog(BuildContext context, Inventory inventory) {final idController = TextEditingController(text: inventory.id);
@@ -1807,6 +1946,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
   void _showEditDetailsDialog(BuildContext context, Inventory inventory) {
     final localityNameController = TextEditingController(text: inventory.localityName);
     final notesController = TextEditingController(text: inventory.notes);
+    final totalObserversController = TextEditingController(text: inventory.totalObservers.toString());
     final inventoryProvider = Provider.of<InventoryProvider>(
       context, listen: false);
     late TextEditingController fieldLocalityEditingController;
@@ -1820,7 +1960,8 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
           builder: (BuildContext context, StateSetter setStateDialog) {
         return AlertDialog.adaptive(
           title: Text(S.of(context).editInventoryDetails),
-          content: Column(
+          content: SingleChildScrollView(
+            child: Column(
             mainAxisSize: MainAxisSize.min, // Important to prevent unbounded height
             children: [
               Autocomplete<String>(
@@ -1925,7 +2066,48 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                 ],
               ),
               SizedBox(height: 8),
+              TextFormField(
+                controller: totalObserversController,
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                textAlign: TextAlign.center,
+                decoration: InputDecoration(
+                  labelText: S.of(context).totalOfObservers,
+                  border: OutlineInputBorder(),
+                  prefixIcon: IconButton(
+                      onPressed: () {
+                        int count = int.tryParse(totalObserversController.text) ?? 1;
+                        if (count > 1) {
+                          setState(() {
+                            count--;
+                            totalObserversController.text = count.toString();
+                          });
+                        }
+                      },
+                      icon: Icon(Icons.remove_outlined)),
+                  suffixIcon: IconButton(
+                      onPressed: () {
+                        int count = int.tryParse(totalObserversController.text) ?? 1;
+                        setState(() {
+                          count++;
+                          totalObserversController.text = count.toString();
+                        });
+                      },
+                      icon: Icon(Icons.add_outlined)),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return S.current.insertCount;
+                  }
+                  if (int.tryParse(value) == null || int.tryParse(value)! < 1) {
+                    return S.current.insertValidNumber;
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(height: 8),
             ],
+          ),
           ),
           actions: <Widget>[
             TextButton(
@@ -1940,6 +2122,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                 inventory.localityName = fieldLocalityEditingController.text;
                 inventory.notes = notesController.text;
                 inventory.isDiscarded = isDiscardedCheckbox;
+                inventory.totalObservers = totalObserversController.text == '' ? 1 : int.parse(totalObserversController.text);
 
                 await inventoryProvider.updateInventory(inventory);
                 if (context.mounted) {

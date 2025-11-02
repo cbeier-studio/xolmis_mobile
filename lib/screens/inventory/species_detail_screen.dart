@@ -227,6 +227,24 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
                     title: Text('POI #${poi.id}',),
                   ),
                   Divider(),
+                  GridView.count(
+                    crossAxisCount: 4,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: <Widget>[
+                      buildGridMenuItem(
+                          context, Icons.edit_outlined, S.current.details, () {
+                        Navigator.of(context).pop();
+                        _showEditNotesDialog(context, poi);
+                      }),
+                      buildGridMenuItem(context, Icons.delete_outlined,
+                          S.of(context).delete, () async {
+                            Navigator.of(context).pop();
+                            await _deletePoi(poi);
+                          }, color: Theme.of(context).colorScheme.error),
+                    ],
+                  ),
+                  /*
                   // Option to edit the POI notes
                   ListTile(
                     leading: const Icon(Icons.edit_outlined),
@@ -246,7 +264,8 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
                         Navigator.pop(context);
                       }
                     },
-                  ),                  
+                  ),
+                  */
                 ],
               ),
             );

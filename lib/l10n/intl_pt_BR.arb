@@ -1351,10 +1351,20 @@
         "type": "text",
         "description": "Validation message for insert count field"
     },
-  "windDirection": "Direção do vento",
-  "@windDirection": {
+    "windDirection": "Direção do vento",
+    "@windDirection": {
+      "type": "text",
+      "description": "Wind direction field label"
+    },
+    "reactivate": "Reativar",
+    "@reactivate": {
+      "type": "text",
+      "description": "Reactivate button label"
+    },
+  "archive": "Arquivar",
+  "@archive": {
     "type": "text",
-    "description": "Wind direction field label"
+    "description": "Archive button label"
   },
     "precipitationNone": "Nenhuma",
     "precipitationFog": "Névoa",

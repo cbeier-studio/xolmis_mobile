@@ -11,6 +11,7 @@ import '../../providers/vegetation_provider.dart';
 import '../../providers/app_image_provider.dart';
 
 import '../images/app_image_screen.dart';
+import '../../utils/utils.dart';
 import '../../generated/l10n.dart';
 import 'add_vegetation_screen.dart';
 
@@ -238,6 +239,33 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
                     title: Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(vegetation.sampleTime!),),
                   ),
                   Divider(),
+                  GridView.count(
+                    crossAxisCount: 4,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: <Widget>[
+                      buildGridMenuItem(
+                          context, Icons.edit_outlined, S.current.edit, () {
+                        Navigator.of(context).pop();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AddVegetationDataScreen(
+                              inventory: widget.inventory,
+                              vegetation: vegetation,
+                              isEditing: true,
+                            ),
+                          ),
+                        );
+                      }),
+                      buildGridMenuItem(context, Icons.delete_outlined,
+                          S.of(context).delete, () async {
+                            Navigator.of(context).pop();
+                            await _deleteVegetation(vegetation);
+                          }, color: Theme.of(context).colorScheme.error),
+                    ],
+                  ),
+                  /*
                   ListTile(
                     leading: const Icon(Icons.edit_outlined),
                     title: Text(S.of(context).editVegetation),
@@ -268,6 +296,7 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
                       Navigator.pop(context);
                     },
                   )
+                  */
                 ],
               ),
             );

@@ -3500,6 +3500,26 @@ class S {
     );
   }
 
+  /// `Reactivate`
+  String get reactivate {
+    return Intl.message(
+      'Reactivate',
+      name: 'reactivate',
+      desc: 'Reactivate button label',
+      args: [],
+    );
+  }
+
+  /// `Archive`
+  String get archive {
+    return Intl.message(
+      'Archive',
+      name: 'archive',
+      desc: 'Archive button label',
+      args: [],
+    );
+  }
+
   /// `None`
   String get precipitationNone {
     return Intl.message('None', name: 'precipitationNone', desc: '', args: []);

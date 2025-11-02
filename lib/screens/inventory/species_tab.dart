@@ -365,7 +365,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                   controller: controller,
                   decoration: InputDecoration(
                     hintText: '${S.of(context).addSpecies}...',
-                    prefixIcon: const Icon(Icons.search_outlined),
+                    prefixIcon: const Icon(Icons.add_outlined),
                     border: const OutlineInputBorder(),
                     suffixIcon: MenuAnchor(
                       builder: (context, controller, child) {
@@ -528,6 +528,86 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                     title: Text(species.name, style: TextStyle(fontStyle: FontStyle.italic),),
                   ),
                   Divider(),
+                  GridView.count(
+                    crossAxisCount: 4,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: <Widget>[
+                      buildGridMenuItem(
+                          context, Icons.edit_outlined, S.current.details, () async {
+                        Navigator.of(context).pop();
+                        final speciesProvider = Provider.of<SpeciesProvider>(
+                            context, listen: false);
+                        final editedSpecies = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EditSpeciesScreen(species: species),
+                          ),
+                        );
+                        if (editedSpecies != null && editedSpecies is Species) {
+                          await speciesProvider.updateSpecies(widget.inventory.id, editedSpecies);
+                        }
+                      }),
+                      if (species.isOutOfInventory)
+                      buildGridMenuItem(context, Icons.inventory_outlined,
+                          S.current.addSpeciesToSample, () {
+                            Navigator.of(context).pop();
+                            _addSpeciesToSample(context, species);
+                          }),
+                      if (!species.isOutOfInventory)
+                        buildGridMenuItem(
+                            context, Icons.content_paste_go_outlined, S.of(context).removeSpeciesFromSample,
+                                () async {
+                              Navigator.of(context).pop();
+                              _removeSpeciesToSample(context, species);
+                            }),
+                        buildGridMenuItem(context, Icons.add_location_outlined,
+                            S.of(context).addPoi, () async {
+                              Navigator.of(context).pop();
+                              final poiProvider =
+                              Provider.of<PoiProvider>(context, listen: false);
+                              // Get the current location
+                              Position? position = await getPosition(context);
+
+                              if (position != null) {
+                                // Create a new POI
+                                final poi = Poi(
+                                  speciesId: species.id!,
+                                  sampleTime: DateTime.now(),
+                                  longitude: position.longitude,
+                                  latitude: position.latitude,
+                                );
+
+                                // Insert the POI in the database
+                                if (context.mounted) {
+                                  poiProvider.addPoi(context, species.id!, poi);
+                                  // poiProvider.notifyListeners();
+                                }
+                              } else {
+                                if (context.mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Row(
+                                        children: [
+                                          const Icon(Icons.error_outlined,
+                                              color: Colors.red),
+                                          const SizedBox(width: 8),
+                                          Text(S.of(context).errorGettingLocation),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                }
+                              }
+                            }),
+                      buildGridMenuItem(context, Icons.delete_outlined,
+                          S.of(context).delete, () async {
+                            Navigator.of(context).pop();
+                            await _deleteSpecies(species);
+                          }, color: Theme.of(context).colorScheme.error),
+                    ],
+                  ),
+                  /*
                   // Option to edit the species notes
                   ListTile(
                     leading: const Icon(Icons.edit_outlined),
@@ -629,6 +709,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                       }
                     },
                   )
+                  */
                 ],
               ),
             );

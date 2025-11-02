@@ -14,6 +14,7 @@ import '../../providers/nest_provider.dart';
 import 'add_nest_screen.dart';
 import 'nest_detail_screen.dart';
 
+import '../../utils/utils.dart';
 import '../../utils/export_utils.dart';
 import '../../utils/import_utils.dart';
 import '../../generated/l10n.dart';
@@ -1101,6 +1102,106 @@ class NestsScreenState extends State<NestsScreen> {
                     title: Text(nest.fieldNumber!),
                   ),
                   Divider(),
+                  GridView.count(
+                    crossAxisCount: 4,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: <Widget>[
+                      buildGridMenuItem(
+                          context, Icons.edit_outlined, S.current.edit, () {
+                        Navigator.of(context).pop();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AddNestScreen(
+                              nest: nest,
+                              isEditing: true,
+                            ),
+                          ),
+                        );
+                      }),
+                      buildGridMenuItem(context, Icons.delete_outlined,
+                          S.of(context).delete, () {
+                            Navigator.of(context).pop();
+                            // Ask for user confirmation
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog.adaptive(
+                                  title: Text(S.of(context).confirmDelete),
+                                  content: Text(S.of(context).confirmDeleteMessage(1, "male", S.of(context).nest(1))),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop(false);
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text(S.of(context).cancel),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop(true);
+                                        Navigator.of(context).pop();
+                                        // Call the function to delete species
+                                        Provider.of<NestProvider>(context, listen: false)
+                                            .removeNest(nest);
+                                      },
+                                      child: Text(S.of(context).delete),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }, color: Theme.of(context).colorScheme.error),
+                      if (!_showActive)
+                        buildGridMenuItem(
+                            context, Icons.share_outlined, 'CSV',
+                                () async {
+                              Navigator.of(context).pop();
+                              final locale = Localizations.localeOf(context);
+                              final csvFile = await exportNestToCsv(context, nest, locale);
+                              // Share the file using share_plus
+                              await SharePlus.instance.share(
+                                ShareParams(
+                                    files: [XFile(csvFile, mimeType: 'text/csv')],
+                                    text: S.current.nestExported(1),
+                                    subject: S.current.nestData(1)
+                                ),
+                              );
+                            }),
+                      if (!_showActive)
+                        buildGridMenuItem(
+                            context, Icons.share_outlined, 'Excel',
+                                () async {
+                              Navigator.of(context).pop();
+                              final locale = Localizations.localeOf(context);
+                              final excelFile = await exportNestToExcel(context, nest, locale);
+                              // Share the file using share_plus
+                              await SharePlus.instance.share(
+                                ShareParams(
+                                    files: [XFile(excelFile, mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')],
+                                    text: S.current.nestExported(1),
+                                    subject: S.current.nestData(1)
+                                ),
+                              );
+                            }),
+                      if (!_showActive)
+                        buildGridMenuItem(
+                            context, Icons.share_outlined, 'JSON',
+                                () {
+                              Navigator.of(context).pop();
+                              exportNestToJson(context, nest);
+                            }),
+                      if (!_showActive)
+                        buildGridMenuItem(context, Icons.share_outlined,
+                            'KML', () {
+                              Navigator.of(context).pop();
+                              exportNestToKml(context, nest);
+                            }),
+
+                    ],
+                  ),
+                  /*
                   // Option to edit the nest
                   ListTile(
                     leading: const Icon(Icons.edit_outlined),
@@ -1223,6 +1324,7 @@ class NestsScreenState extends State<NestsScreen> {
                     },
                   )
                   // )
+                  */
                 ],
               ),
             );

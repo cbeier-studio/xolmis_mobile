@@ -1297,6 +1297,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get windDirection => 'Wind direction';
 
   @override
+  String get reactivate => 'Reactivate';
+
+  @override
+  String get archive => 'Archive';
+
+  @override
   String get precipitationNone => 'None';
 
   @override

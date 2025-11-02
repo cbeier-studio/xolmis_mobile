@@ -306,13 +306,15 @@ class _MainScreenState extends State<MainScreen> {
           ],
         ),
       ),
-      footer: ListTile(
+      footer: SafeArea(
+        child: ListTile(
           leading: Theme.of(context).brightness == Brightness.light
           ? const Icon(Icons.settings_outlined)
           : const Icon(Icons.settings),
           title: Text(S.of(context).settings),
           contentPadding: const EdgeInsets.symmetric(horizontal: 24.0),
           onTap: () => _navigateToSettings(context),
+      ),
       ),
       children: <Widget>[
         // Generate NavigationDrawerDestinations from _navItems

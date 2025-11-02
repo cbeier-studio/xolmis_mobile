@@ -10,6 +10,7 @@ import '../../providers/egg_provider.dart';
 import '../../providers/app_image_provider.dart';
 
 import '../images/app_image_screen.dart';
+import '../../utils/utils.dart';
 import '../../generated/l10n.dart';
 
 import 'add_egg_screen.dart';
@@ -266,6 +267,34 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
                 children: <Widget>[
                   ListTile(title: Text(egg.fieldNumber!)),
                   Divider(),
+                  GridView.count(
+                    crossAxisCount: 4,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: <Widget>[
+                      buildGridMenuItem(
+                          context, Icons.edit_outlined, S.current.edit, () {
+                        Navigator.of(context).pop();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) => AddEggScreen(
+                              nest: widget.nest,
+                              egg: egg,
+                              isEditing: true,
+                            ),
+                          ),
+                        );
+                      }),
+                      buildGridMenuItem(context, Icons.delete_outlined,
+                          S.of(context).delete, () async {
+                            Navigator.of(context).pop();
+                            await _deleteEgg(egg);
+                          }, color: Theme.of(context).colorScheme.error),
+                    ],
+                  ),
+                  /*
                   ListTile(
                     leading: const Icon(Icons.edit_outlined),
                     title: Text(S.of(context).editEgg),
@@ -307,6 +336,7 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
                       Navigator.pop(context);
                     },
                   ),
+                  */
                 ],
               ),
             );

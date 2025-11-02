@@ -366,4 +366,22 @@ class CommaToDotTextInputFormatter extends TextInputFormatter {
   }
 }
 
+Widget buildGridMenuItem(
+    BuildContext context, IconData icon, String label, VoidCallback onTap,
+    {Color? color}) {
+  final itemColor =
+      color ?? Theme.of(context).textTheme.bodyLarge?.color;
+  return InkWell(
+    onTap: onTap,
+    borderRadius: BorderRadius.circular(8),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        IconButton(icon: Icon(icon, color: itemColor), onPressed: onTap),
+        Text(label,
+            textAlign: TextAlign.center, style: TextStyle(color: itemColor)),
+      ],
+    ),
+  );
+}
 

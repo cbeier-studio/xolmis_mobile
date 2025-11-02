@@ -13,6 +13,7 @@ import '../../data/models/app_image.dart';
 import '../../providers/app_image_provider.dart';
 
 import 'image_details_screen.dart';
+import '../../utils/utils.dart';
 import '../../generated/l10n.dart';
 
 enum ImageParentType { vegetation, egg, specimen, nestRevision }
@@ -296,6 +297,58 @@ class _AppImageScreenState extends State<AppImageScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
+                  GridView.count(
+                    crossAxisCount: 4,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: <Widget>[
+                      buildGridMenuItem(
+                          context, Icons.edit_outlined, S.current.edit, () {
+                        Navigator.of(context).pop();
+                        _showEditNotesDialog(context, appImage);
+                      }),
+                      buildGridMenuItem(
+                          context, Icons.share_outlined, S.current.export, () {
+                        Navigator.of(context).pop();
+                        SharePlus.instance.share(
+                          ShareParams(files: [XFile(appImage.imagePath)], text: 'Compartilhando imagem'),
+                        );
+                      }),
+                      buildGridMenuItem(context, Icons.delete_outlined,
+                          S.of(context).delete, () async {
+                            Navigator.of(context).pop();
+                            // Ask for user confirmation
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog.adaptive(
+                                  title: Text(S.of(context).confirmDelete),
+                                  content: Text(S.of(context).confirmDeleteMessage(1, "female", S.of(context).images(1).toLowerCase())),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop(false);
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text(S.of(context).cancel),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop(true);
+                                        Navigator.of(context).pop();
+                                        // Call the function to delete image
+                                        if (appImage.id != null) appImageProvider.deleteImage(appImage.id!);
+                                      },
+                                      child: Text(S.of(context).delete),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }, color: Theme.of(context).colorScheme.error),
+                    ],
+                  ),
+                  /*
                   // Option to share the image
                   ListTile(
                     leading: const Icon(Icons.share_outlined),
@@ -358,6 +411,7 @@ class _AppImageScreenState extends State<AppImageScreen> {
                     },
                   )
                   // )
+                  */
                 ],
               ),
             );

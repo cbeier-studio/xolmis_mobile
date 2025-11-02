@@ -2142,6 +2142,18 @@ abstract class AppLocalizations {
   /// **'Wind direction'**
   String get windDirection;
 
+  /// Reactivate button label
+  ///
+  /// In en, this message translates to:
+  /// **'Reactivate'**
+  String get reactivate;
+
+  /// Archive button label
+  ///
+  /// In en, this message translates to:
+  /// **'Archive'**
+  String get archive;
+
   /// No description provided for @precipitationNone.
   ///
   /// In en, this message translates to:
