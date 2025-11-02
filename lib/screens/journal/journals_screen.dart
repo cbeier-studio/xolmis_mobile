@@ -169,7 +169,98 @@ class JournalsScreenState extends State<JournalsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(S.of(context).fieldJournal),
+        title: SearchBar(
+          controller: _searchController,
+          hintText: S.of(context).fieldJournal,
+          elevation: WidgetStateProperty.all(0),
+          // leading: const Icon(Icons.search_outlined),
+          trailing: [
+            MenuAnchor(
+              builder: (context, controller, child) {
+                return IconButton(
+                  icon: Icon(Icons.sort_outlined),
+                  onPressed: () {
+                    if (controller.isOpen) {
+                      controller.close();
+                    } else {
+                      controller.open();
+                    }
+                  },
+                );
+              },
+              menuChildren: [
+                MenuItemButton(
+                  leadingIcon: Icon(Icons.schedule_outlined),
+                  trailingIcon: _sortField == JournalSortField.creationDate
+                      ? Icon(Icons.check_outlined)
+                      : null,
+                  onPressed: () {
+                    _setSortField(JournalSortField.creationDate);
+                  },
+                  child: Text(S.of(context).sortByTime),
+                ),
+                MenuItemButton(
+                  leadingIcon: Icon(Icons.schedule_outlined),
+                  trailingIcon: _sortField == JournalSortField.lastModifiedDate
+                      ? Icon(Icons.check_outlined)
+                      : null,
+                  onPressed: () {
+                    _setSortField(JournalSortField.lastModifiedDate);
+                  },
+                  child: Text(S.of(context).sortByLastModified),
+                ),
+                MenuItemButton(
+                  leadingIcon: Icon(Icons.sort_by_alpha_outlined),
+                  trailingIcon: _sortField == JournalSortField.title
+                      ? Icon(Icons.check_outlined)
+                      : null,
+                  onPressed: () {
+                    _setSortField(JournalSortField.title);
+                  },
+                  child: Text(S.of(context).sortByTitle),
+                ),
+                Divider(),
+                MenuItemButton(
+                  leadingIcon: Icon(Icons.south_outlined),
+                  trailingIcon: _sortOrder == SortOrder.ascending
+                      ? Icon(Icons.check_outlined)
+                      : null,
+                  onPressed: () {
+                    _setSortOrder(SortOrder.ascending);
+                  },
+                  child: Text(S.of(context).sortAscending),
+                ),
+                MenuItemButton(
+                  leadingIcon: Icon(Icons.north_outlined),
+                  trailingIcon: _sortOrder == SortOrder.descending
+                      ? Icon(Icons.check_outlined)
+                      : null,
+                  onPressed: () {
+                    _setSortOrder(SortOrder.descending);
+                  },
+                  child: Text(S.of(context).sortDescending),
+                ),
+              ],
+            ),
+            _searchController.text.isNotEmpty
+                ? IconButton(
+              icon: const Icon(Icons.clear_outlined),
+              onPressed: () {
+                setState(() {
+                  _searchQuery = '';
+                  _searchController.clear();
+                });
+              },
+            )
+                : SizedBox.shrink(),
+          ],
+          onChanged: (query) {
+            setState(() {
+              _searchQuery = query;
+            });
+          },
+        ),
+        // title: Text(S.of(context).fieldJournal),
         leading: MediaQuery.sizeOf(context).width < 600 ? Builder(
           builder: (context) => IconButton(
             icon: const Icon(Icons.menu_outlined),
@@ -179,79 +270,79 @@ class JournalsScreenState extends State<JournalsScreen> {
           ),
         ) : SizedBox.shrink(),
         actions: [
-          IconButton(
-            icon: Icon(Icons.search_outlined),
-            selectedIcon: Icon(Icons.search_off_outlined),
-            isSelected: _isSearchBarVisible,
-            onPressed: _toggleSearchBarVisibility,
-          ),
-          MenuAnchor(
-            builder: (context, controller, child) {
-              return IconButton(
-                icon: Icon(Icons.sort_outlined),
-                onPressed: () {
-                  if (controller.isOpen) {
-                    controller.close();
-                  } else {
-                    controller.open();
-                  }
-                },
-              );
-            },
-            menuChildren: [
-              MenuItemButton(
-                leadingIcon: Icon(Icons.schedule_outlined),
-                trailingIcon: _sortField == JournalSortField.creationDate
-                    ? Icon(Icons.check_outlined)
-                    : null, 
-                onPressed: () {
-                  _setSortField(JournalSortField.creationDate);
-                },
-                child: Text(S.of(context).sortByTime),
-              ),
-              MenuItemButton(
-                leadingIcon: Icon(Icons.schedule_outlined),
-                trailingIcon: _sortField == JournalSortField.lastModifiedDate
-                    ? Icon(Icons.check_outlined)
-                    : null, 
-                onPressed: () {
-                  _setSortField(JournalSortField.lastModifiedDate);
-                },
-                child: Text(S.of(context).sortByLastModified),
-              ),
-              MenuItemButton(
-                leadingIcon: Icon(Icons.sort_by_alpha_outlined),
-                trailingIcon: _sortField == JournalSortField.title
-                    ? Icon(Icons.check_outlined)
-                    : null, 
-                onPressed: () {
-                  _setSortField(JournalSortField.title);
-                },
-                child: Text(S.of(context).sortByTitle),
-              ),
-              Divider(),
-              MenuItemButton(
-                leadingIcon: Icon(Icons.south_outlined),
-                trailingIcon: _sortOrder == SortOrder.ascending
-                    ? Icon(Icons.check_outlined)
-                    : null, 
-                onPressed: () {
-                  _setSortOrder(SortOrder.ascending);
-                },
-                child: Text(S.of(context).sortAscending),
-              ),
-              MenuItemButton(
-                leadingIcon: Icon(Icons.north_outlined),
-                trailingIcon: _sortOrder == SortOrder.descending
-                    ? Icon(Icons.check_outlined)
-                    : null, 
-                onPressed: () {
-                  _setSortOrder(SortOrder.descending);
-                },
-                child: Text(S.of(context).sortDescending),
-              ),
-            ],
-          ),
+          // IconButton(
+          //   icon: Icon(Icons.search_outlined),
+          //   selectedIcon: Icon(Icons.search_off_outlined),
+          //   isSelected: _isSearchBarVisible,
+          //   onPressed: _toggleSearchBarVisibility,
+          // ),
+          // MenuAnchor(
+          //   builder: (context, controller, child) {
+          //     return IconButton(
+          //       icon: Icon(Icons.sort_outlined),
+          //       onPressed: () {
+          //         if (controller.isOpen) {
+          //           controller.close();
+          //         } else {
+          //           controller.open();
+          //         }
+          //       },
+          //     );
+          //   },
+          //   menuChildren: [
+          //     MenuItemButton(
+          //       leadingIcon: Icon(Icons.schedule_outlined),
+          //       trailingIcon: _sortField == JournalSortField.creationDate
+          //           ? Icon(Icons.check_outlined)
+          //           : null,
+          //       onPressed: () {
+          //         _setSortField(JournalSortField.creationDate);
+          //       },
+          //       child: Text(S.of(context).sortByTime),
+          //     ),
+          //     MenuItemButton(
+          //       leadingIcon: Icon(Icons.schedule_outlined),
+          //       trailingIcon: _sortField == JournalSortField.lastModifiedDate
+          //           ? Icon(Icons.check_outlined)
+          //           : null,
+          //       onPressed: () {
+          //         _setSortField(JournalSortField.lastModifiedDate);
+          //       },
+          //       child: Text(S.of(context).sortByLastModified),
+          //     ),
+          //     MenuItemButton(
+          //       leadingIcon: Icon(Icons.sort_by_alpha_outlined),
+          //       trailingIcon: _sortField == JournalSortField.title
+          //           ? Icon(Icons.check_outlined)
+          //           : null,
+          //       onPressed: () {
+          //         _setSortField(JournalSortField.title);
+          //       },
+          //       child: Text(S.of(context).sortByTitle),
+          //     ),
+          //     Divider(),
+          //     MenuItemButton(
+          //       leadingIcon: Icon(Icons.south_outlined),
+          //       trailingIcon: _sortOrder == SortOrder.ascending
+          //           ? Icon(Icons.check_outlined)
+          //           : null,
+          //       onPressed: () {
+          //         _setSortOrder(SortOrder.ascending);
+          //       },
+          //       child: Text(S.of(context).sortAscending),
+          //     ),
+          //     MenuItemButton(
+          //       leadingIcon: Icon(Icons.north_outlined),
+          //       trailingIcon: _sortOrder == SortOrder.descending
+          //           ? Icon(Icons.check_outlined)
+          //           : null,
+          //       onPressed: () {
+          //         _setSortOrder(SortOrder.descending);
+          //       },
+          //       child: Text(S.of(context).sortDescending),
+          //     ),
+          //   ],
+          // ),
           MenuAnchor(
             builder: (context, controller, child) {
               return IconButton(
@@ -310,33 +401,33 @@ class JournalsScreenState extends State<JournalsScreen> {
       ),
       body: Column(
         children: [
-          if (_isSearchBarVisible)
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 16.0),
-              child: SearchBar(
-                controller: _searchController,
-                hintText: S.of(context).findJournalEntries,
-                leading: const Icon(Icons.search_outlined),
-                trailing: [
-                  _searchController.text.isNotEmpty
-                      ? IconButton(
-                    icon: const Icon(Icons.clear_outlined),
-                    onPressed: () {
-                      setState(() {
-                        _searchQuery = '';
-                        _searchController.clear();
-                      });
-                    },
-                  )
-                      : SizedBox.shrink(),
-                ],
-                onChanged: (query) {
-                  setState(() {
-                    _searchQuery = query;
-                  });
-                },
-              ),
-            ),
+          // if (_isSearchBarVisible)
+          //   Padding(
+          //     padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 16.0),
+          //     child: SearchBar(
+          //       controller: _searchController,
+          //       hintText: S.of(context).findJournalEntries,
+          //       leading: const Icon(Icons.search_outlined),
+          //       trailing: [
+          //         _searchController.text.isNotEmpty
+          //             ? IconButton(
+          //           icon: const Icon(Icons.clear_outlined),
+          //           onPressed: () {
+          //             setState(() {
+          //               _searchQuery = '';
+          //               _searchController.clear();
+          //             });
+          //           },
+          //         )
+          //             : SizedBox.shrink(),
+          //       ],
+          //       onChanged: (query) {
+          //         setState(() {
+          //           _searchQuery = query;
+          //         });
+          //       },
+          //     ),
+          //   ),
           Expanded(
             child: Consumer<FieldJournalProvider>(
                 builder: (context, journalProvider, child) {
@@ -369,7 +460,7 @@ class JournalsScreenState extends State<JournalsScreen> {
                     child: Column(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
+                          padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0),
                           child: Text(
                             '${filteredEntries.length} ${S.of(context).journalEntries(filteredEntries.length).toLowerCase()}',
                           ),

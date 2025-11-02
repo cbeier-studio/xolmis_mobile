@@ -293,21 +293,28 @@ class _MainScreenState extends State<MainScreen> {
         });
         Navigator.pop(context);
       },
-      children: <Widget>[
-        UserAccountsDrawerHeader(
-          accountName: Text('Xolmis', style: textTheme.headlineSmall?.copyWith(color: headerTextColor) ?? TextStyle(fontSize: 30, color: headerTextColor)), 
-          accountEmail: Text(_appVersion, style: textTheme.bodyMedium?.copyWith(color: headerTextColor) ?? TextStyle(color: headerTextColor)),          
-          otherAccountsPictures: [
-            IconButton(
-                icon: Theme.of(context).brightness == Brightness.light
-                    ? const Icon(Icons.settings_outlined)
-                    : const Icon(Icons.settings),
-                tooltip: S.of(context).settings,
-                color: headerTextColor,
-                onPressed: () => _navigateToSettings(context),
-              ),
+      header: DrawerHeader(
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.primary,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text('Xolmis', style: textTheme.headlineSmall?.copyWith(color: headerTextColor) ?? TextStyle(fontSize: 30, color: headerTextColor)),
+            Text(_appVersion, style: textTheme.bodyMedium?.copyWith(color: headerTextColor) ?? TextStyle(color: headerTextColor)),
           ],
         ),
+      ),
+      footer: ListTile(
+          leading: Theme.of(context).brightness == Brightness.light
+          ? const Icon(Icons.settings_outlined)
+          : const Icon(Icons.settings),
+          title: Text(S.of(context).settings),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 24.0),
+          onTap: () => _navigateToSettings(context),
+      ),
+      children: <Widget>[
         // Generate NavigationDrawerDestinations from _navItems
       ..._navItems.asMap().entries.map((entry) {
         _NavigationItem item = entry.value;

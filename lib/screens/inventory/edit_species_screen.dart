@@ -206,7 +206,7 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
                 ),
                 const SizedBox(height: 16),
                 // --- Campo Is Out Of Inventory ---
-                SwitchListTile(
+                SwitchListTile.adaptive(
                   title: Text(S.current.outOfSample),
                   value: _isOutOfInventory,
                   onChanged: (bool value) {

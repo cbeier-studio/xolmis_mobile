@@ -422,7 +422,88 @@ class NestsScreenState extends State<NestsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(S.of(context).nests),
+        title: SearchBar(
+          controller: _searchController,
+          hintText: S.of(context).nests,
+          elevation: WidgetStateProperty.all(0),
+          // leading: const Icon(Icons.search_outlined),
+          trailing: [
+            MenuAnchor(
+              builder: (context, controller, child) {
+                return IconButton(
+                  icon: Icon(Icons.sort_outlined),
+                  onPressed: () {
+                    if (controller.isOpen) {
+                      controller.close();
+                    } else {
+                      controller.open();
+                    }
+                  },
+                );
+              },
+              menuChildren: [
+                MenuItemButton(
+                  leadingIcon: Icon(Icons.schedule_outlined),
+                  trailingIcon: _sortField == NestSortField.foundTime
+                      ? Icon(Icons.check_outlined)
+                      : null,
+                  onPressed: () {
+                    _setSortField(NestSortField.foundTime);
+                  },
+                  child: Text(S.of(context).sortByTime),
+                ),
+                MenuItemButton(
+                  leadingIcon: Icon(Icons.sort_by_alpha_outlined),
+                  trailingIcon: _sortField == NestSortField.fieldNumber
+                      ? Icon(Icons.check_outlined)
+                      : null,
+                  onPressed: () {
+                    _setSortField(NestSortField.fieldNumber);
+                  },
+                  child: Text(S.of(context).sortByName),
+                ),
+                Divider(),
+                MenuItemButton(
+                  leadingIcon: Icon(Icons.south_outlined),
+                  trailingIcon: _sortOrder == SortOrder.ascending
+                      ? Icon(Icons.check_outlined)
+                      : null,
+                  onPressed: () {
+                    _setSortOrder(SortOrder.ascending);
+                  },
+                  child: Text(S.of(context).sortAscending),
+                ),
+                MenuItemButton(
+                  leadingIcon: Icon(Icons.north_outlined),
+                  trailingIcon: _sortOrder == SortOrder.descending
+                      ? Icon(Icons.check_outlined)
+                      : null,
+                  onPressed: () {
+                    _setSortOrder(SortOrder.descending);
+                  },
+                  child: Text(S.of(context).sortDescending),
+                ),
+              ],
+            ),
+            _searchController.text.isNotEmpty
+                ? IconButton(
+              icon: const Icon(Icons.clear_outlined),
+              onPressed: () {
+                setState(() {
+                  _searchQuery = '';
+                  _searchController.clear();
+                });
+              },
+            )
+                : SizedBox.shrink(),
+          ],
+          onChanged: (query) {
+            setState(() {
+              _searchQuery = query;
+            });
+          },
+        ),
+        // title: Text(S.of(context).nests),
         leading: MediaQuery.sizeOf(context).width < 600 ? Builder(
           builder: (context) => IconButton(
             icon: const Icon(Icons.menu_outlined),
@@ -433,70 +514,70 @@ class NestsScreenState extends State<NestsScreen> {
         ) : SizedBox.shrink(),
         actions: [
           // Action to toggle the visibility of the search bar
-          IconButton(
-            icon: Icon(Icons.search_outlined),
-            selectedIcon: Icon(Icons.search_off_outlined),
-            isSelected: _isSearchBarVisible,
-            onPressed: _toggleSearchBarVisibility,
-          ),
+          // IconButton(
+          //   icon: Icon(Icons.search_outlined),
+          //   selectedIcon: Icon(Icons.search_off_outlined),
+          //   isSelected: _isSearchBarVisible,
+          //   onPressed: _toggleSearchBarVisibility,
+          // ),
           // Action to sort the nests
-          MenuAnchor(
-            builder: (context, controller, child) {
-              return IconButton(
-                icon: Icon(Icons.sort_outlined),
-                onPressed: () {
-                  if (controller.isOpen) {
-                    controller.close();
-                  } else {
-                    controller.open();
-                  }
-                },
-              );
-            },
-            menuChildren: [
-              MenuItemButton(
-                leadingIcon: Icon(Icons.schedule_outlined),
-                trailingIcon: _sortField == NestSortField.foundTime
-                    ? Icon(Icons.check_outlined)
-                    : null, 
-                onPressed: () {
-                  _setSortField(NestSortField.foundTime);
-                },
-                child: Text(S.of(context).sortByTime),
-              ),
-              MenuItemButton(
-                leadingIcon: Icon(Icons.sort_by_alpha_outlined),
-                trailingIcon: _sortField == NestSortField.fieldNumber
-                    ? Icon(Icons.check_outlined)
-                    : null, 
-                onPressed: () {
-                  _setSortField(NestSortField.fieldNumber);
-                },
-                child: Text(S.of(context).sortByName),
-              ),
-              Divider(),
-              MenuItemButton(
-                leadingIcon: Icon(Icons.south_outlined),
-                trailingIcon: _sortOrder == SortOrder.ascending
-                    ? Icon(Icons.check_outlined)
-                    : null, 
-                onPressed: () {
-                  _setSortOrder(SortOrder.ascending);
-                },
-                child: Text(S.of(context).sortAscending),
-              ),
-              MenuItemButton(
-                leadingIcon: Icon(Icons.north_outlined),
-                trailingIcon: _sortOrder == SortOrder.descending
-                    ? Icon(Icons.check_outlined)
-                    : null, 
-                onPressed: () {
-                  _setSortOrder(SortOrder.descending);
-                },
-                child: Text(S.of(context).sortDescending),
-              ),
-            ],
-          ),
+          // MenuAnchor(
+          //   builder: (context, controller, child) {
+          //     return IconButton(
+          //       icon: Icon(Icons.sort_outlined),
+          //       onPressed: () {
+          //         if (controller.isOpen) {
+          //           controller.close();
+          //         } else {
+          //           controller.open();
+          //         }
+          //       },
+          //     );
+          //   },
+          //   menuChildren: [
+          //     MenuItemButton(
+          //       leadingIcon: Icon(Icons.schedule_outlined),
+          //       trailingIcon: _sortField == NestSortField.foundTime
+          //           ? Icon(Icons.check_outlined)
+          //           : null,
+          //       onPressed: () {
+          //         _setSortField(NestSortField.foundTime);
+          //       },
+          //       child: Text(S.of(context).sortByTime),
+          //     ),
+          //     MenuItemButton(
+          //       leadingIcon: Icon(Icons.sort_by_alpha_outlined),
+          //       trailingIcon: _sortField == NestSortField.fieldNumber
+          //           ? Icon(Icons.check_outlined)
+          //           : null,
+          //       onPressed: () {
+          //         _setSortField(NestSortField.fieldNumber);
+          //       },
+          //       child: Text(S.of(context).sortByName),
+          //     ),
+          //     Divider(),
+          //     MenuItemButton(
+          //       leadingIcon: Icon(Icons.south_outlined),
+          //       trailingIcon: _sortOrder == SortOrder.ascending
+          //           ? Icon(Icons.check_outlined)
+          //           : null,
+          //       onPressed: () {
+          //         _setSortOrder(SortOrder.ascending);
+          //       },
+          //       child: Text(S.of(context).sortAscending),
+          //     ),
+          //     MenuItemButton(
+          //       leadingIcon: Icon(Icons.north_outlined),
+          //       trailingIcon: _sortOrder == SortOrder.descending
+          //           ? Icon(Icons.check_outlined)
+          //           : null,
+          //       onPressed: () {
+          //         _setSortOrder(SortOrder.descending);
+          //       },
+          //       child: Text(S.of(context).sortDescending),
+          //     ),
+          //   ],
+          // ),
           MenuAnchor(
             builder: (context, controller, child) {
               return IconButton(
@@ -549,32 +630,32 @@ class NestsScreenState extends State<NestsScreen> {
       body: Column(
         children: [
           // Show the search bar
-          if (_isSearchBarVisible) Padding(
-            padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
-            child: SearchBar(
-              controller: _searchController,
-              hintText: S.of(context).findNests,
-              leading: const Icon(Icons.search_outlined),
-              trailing: [
-                _searchController.text.isNotEmpty
-                    ? IconButton(
-                  icon: const Icon(Icons.clear_outlined),
-                  onPressed: () {
-                    setState(() {
-                      _searchQuery = '';
-                      _searchController.clear();
-                    });
-                  },
-                )
-                    : SizedBox.shrink(),
-              ],
-              onChanged: (query) {
-                setState(() {
-                  _searchQuery = query;
-                });
-              },
-            ),
-          ),
+          // if (_isSearchBarVisible) Padding(
+          //   padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
+          //   child: SearchBar(
+          //     controller: _searchController,
+          //     hintText: S.of(context).findNests,
+          //     leading: const Icon(Icons.search_outlined),
+          //     trailing: [
+          //       _searchController.text.isNotEmpty
+          //           ? IconButton(
+          //         icon: const Icon(Icons.clear_outlined),
+          //         onPressed: () {
+          //           setState(() {
+          //             _searchQuery = '';
+          //             _searchController.clear();
+          //           });
+          //         },
+          //       )
+          //           : SizedBox.shrink(),
+          //     ],
+          //     onChanged: (query) {
+          //       setState(() {
+          //         _searchQuery = query;
+          //       });
+          //     },
+          //   ),
+          // ),
           Padding(
             padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
             child: LayoutBuilder(
