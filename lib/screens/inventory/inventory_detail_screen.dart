@@ -254,7 +254,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
               child: MenuAnchor(
               builder: (context, controller, child) {
                 return IconButton(
-                  icon: Icon(Icons.file_upload_outlined),
+                  icon: Icon(Icons.share_outlined),
                   tooltip: S.of(context).exportWhat(S.of(context).inventory(1)),
                   onPressed: () {
                     if (controller.isOpen) {

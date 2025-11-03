@@ -271,7 +271,7 @@ class NestDetailScreenState extends State<NestDetailScreen> {
                 MenuAnchor(
                   builder: (context, controller, child) {
                     return IconButton(
-                      icon: Icon(Icons.file_upload_outlined),
+                      icon: Icon(Icons.share_outlined),
                       onPressed: () {
                         if (controller.isOpen) {
                           controller.close();

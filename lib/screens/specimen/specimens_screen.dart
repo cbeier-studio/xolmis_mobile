@@ -494,21 +494,21 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                 child: Text(S.of(context).import),
               ),
               MenuItemButton(
-                leadingIcon: Icon(Icons.file_upload_outlined),
+                leadingIcon: Icon(Icons.share_outlined),
                 onPressed: () {
                   exportAllSpecimensToCsv(context, _showPending ? specimenProvider.pendingSpecimens : specimenProvider.archivedSpecimens);
                 },
                 child: Text('${S.of(context).exportAll} (CSV)'),
               ),
               MenuItemButton(
-                leadingIcon: Icon(Icons.file_upload_outlined),
+                leadingIcon: Icon(Icons.share_outlined),
                 onPressed: () {
                   exportAllSpecimensToExcel(context, _showPending ? specimenProvider.pendingSpecimens : specimenProvider.archivedSpecimens);
                 },
                 child: Text('${S.of(context).exportAll} (Excel)'),
               ),
               MenuItemButton(
-                leadingIcon: Icon(Icons.file_upload_outlined),
+                leadingIcon: Icon(Icons.share_outlined),
                 onPressed: () {
                   exportAllSpecimensToJson(context, _showPending ? specimenProvider.pendingSpecimens : specimenProvider.archivedSpecimens);
                 },
@@ -691,7 +691,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                   MenuAnchor(
                     builder: (context, controller, child) {
                       return IconButton(
-                        icon: Icon(Icons.file_upload_outlined),
+                        icon: Icon(Icons.share_outlined),
                         tooltip: S.of(context).exportWhat(
                             S.of(context).specimens(2).toLowerCase()),
                         onPressed: () {
@@ -999,12 +999,12 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                             specimen.isPending = false;
                             specimenProvider.updateSpecimen(specimen);
                           }),
-                      buildGridMenuItem(
-                            context, Icons.share_outlined, 'KML',
-                                () async {
-                              Navigator.of(context).pop();
-                              exportSpecimenToKml(context, specimen);
-                            }),
+                      // buildGridMenuItem(
+                      //       context, Icons.share_outlined, 'KML',
+                      //           () async {
+                      //         Navigator.of(context).pop();
+                      //         exportSpecimenToKml(context, specimen);
+                      //       }),
                       buildGridMenuItem(context, Icons.delete_outlined,
                           S.of(context).delete, () {
                             Navigator.of(context).pop();
@@ -1039,82 +1039,35 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                           }, color: Theme.of(context).colorScheme.error),
                     ],
                   ),
-                  /*
-                  ListTile(
-                    leading: const Icon(Icons.edit_outlined),
-                    title: Text(S.of(context).editSpecimen),
-                    onTap: () {
-                      Navigator.pop(context);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AddSpecimenScreen(
-                            specimen: specimen, 
-                            isEditing: true, 
+                  Divider(),
+                  Row(
+                    children: [
+                      const SizedBox(width: 8.0),
+                      Text(S.current.export, style: TextTheme
+                          .of(context)
+                          .bodyMedium,),
+                      // Icon(Icons.share_outlined),
+                      Expanded(
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child:
+                          Row(
+                            children: [
+                              const SizedBox(width: 16.0),
+                              ActionChip(
+                                label: Text('KML'),
+                                onPressed: () async {
+                                  Navigator.of(context).pop();
+                                  exportSpecimenToKml(context, specimen);
+                                },
+                              ),
+                              const SizedBox(width: 8.0),
+                            ],
                           ),
                         ),
-                      );
-                    },
+                      ),
+                    ],
                   ),
-                  if (_showPending)
-                    ListTile(
-                      leading: const Icon(Icons.archive_outlined),
-                      title: Text(S.of(context).archiveSpecimen),
-                      onTap: () {
-                        specimen.isPending = false;
-                        specimenProvider.updateSpecimen(specimen);
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ListTile(
-                    leading: const Icon(Icons.file_upload_outlined),
-                    title: Text(S.of(context).exportKml),
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      exportSpecimenToKml(context, specimen);
-                    },
-                  ),
-                  // Divider(),
-                  ListTile(
-                    leading: Icon(Icons.delete_outlined, color: Theme.of(context).brightness == Brightness.light
-                        ? Colors.red
-                        : Colors.redAccent,),
-                    title: Text(S.of(context).deleteSpecimen, style: TextStyle(color: Theme.of(context).brightness == Brightness.light
-                        ? Colors.red
-                        : Colors.redAccent,),),
-                    onTap: () {
-                      // Ask for user confirmation
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog.adaptive(
-                            title: Text(S.of(context).confirmDelete),
-                            content: Text(S.of(context).confirmDeleteMessage(1, "male", S.of(context).specimens(1))),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop(false);
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text(S.of(context).cancel),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop(true);
-                                  Navigator.of(context).pop();
-                                  // Call the function to delete species
-                                  specimenProvider.removeSpecimen(specimen);
-                                },
-                                child: Text(S.of(context).delete),
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    },
-                  )
-                  // )
-                  */
                 ],
               ),
             );

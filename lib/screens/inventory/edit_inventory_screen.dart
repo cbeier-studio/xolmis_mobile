@@ -15,6 +15,7 @@ class EditInventoryScreen extends StatefulWidget {
 }
 
 class _EditInventoryScreenState extends State<EditInventoryScreen> {
+  late final TextEditingController _idController;
   late final TextEditingController _localityNameController;
   late final TextEditingController _notesController;
   late final TextEditingController _totalObserversController;
@@ -29,6 +30,7 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
   void initState() {
     super.initState();
     // Inicializa os controladores com os dados da espécie recebida
+    _idController = TextEditingController(text: widget.inventory.id);
     _localityNameController = TextEditingController(text: widget.inventory.localityName);
     _notesController = TextEditingController(text: widget.inventory.notes);
     _totalObserversController = TextEditingController(text: widget.inventory.totalObservers.toString());
@@ -38,6 +40,7 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
   @override
   void dispose() {
     // Libera os recursos dos controladores
+    _idController.dispose();
     _localityNameController.dispose();
     _notesController.dispose();
     _totalObserversController.dispose();
@@ -51,6 +54,7 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
 
       // Cria uma cópia da espécie original com os dados atualizados do formulário
       final updatedInventory = widget.inventory.copyWith(
+        id: _idController.text,
         localityName: fieldLocalityEditingController.text,
         totalObservers: int.tryParse(_totalObserversController.text),
         notes: _notesController.text.isNotEmpty ? _notesController.text : null,
@@ -85,6 +89,20 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                TextFormField(
+                  controller: _idController,
+                  decoration: InputDecoration(
+                    labelText: S.of(context).inventoryId,
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return S.current.insertInventoryId;
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 8),
                 Autocomplete<String>(
                   optionsBuilder:
                       (TextEditingValue textEditingValue) async {
@@ -164,26 +182,6 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
                 ),
                 SizedBox(height: 8),
                 TextFormField(
-                  controller: _notesController,
-                  textCapitalization: TextCapitalization.sentences,
-                  maxLines: 3,
-                  decoration: InputDecoration(
-                    labelText: S.of(context).notes,
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                SizedBox(height: 8),
-                SwitchListTile.adaptive(
-                  title: Text(S.current.discardedInventory),
-                  value: _isDiscarded,
-                  onChanged: (bool value) {
-                    setState(() {
-                      _isDiscarded = value;
-                    });
-                  },
-                ),
-                SizedBox(height: 8),
-                TextFormField(
                   controller: _totalObserversController,
                   keyboardType: TextInputType.number,
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
@@ -220,6 +218,26 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
                       return S.current.insertValidNumber;
                     }
                     return null;
+                  },
+                ),
+                SizedBox(height: 8),
+                TextFormField(
+                  controller: _notesController,
+                  textCapitalization: TextCapitalization.sentences,
+                  maxLines: 3,
+                  decoration: InputDecoration(
+                    labelText: S.of(context).notes,
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                SizedBox(height: 8),
+                SwitchListTile.adaptive(
+                  title: Text(S.current.discardedInventory),
+                  value: _isDiscarded,
+                  onChanged: (bool value) {
+                    setState(() {
+                      _isDiscarded = value;
+                    });
                   },
                 ),
                 const SizedBox(height: 16),

@@ -715,7 +715,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
               ),
               // Action to export all finished inventories to JSON
               MenuItemButton(
-                leadingIcon: Icon(Icons.file_upload_outlined),
+                leadingIcon: Icon(Icons.share_outlined),
                 onPressed: () async {
                   await exportAllInventoriesToJson(context, inventoryProvider);
                 },
@@ -1492,6 +1492,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
+                // crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   // Show the inventory ID
                   ListTile(
@@ -1505,13 +1506,13 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     children: <Widget>[
-                      buildGridMenuItem(
-                          context, Icons.edit_outlined, '${S.current.edit} ID', () {
-                        Navigator.of(context).pop();
-                        _showEditIdDialog(context, inventory);
-                      }),
+                      // buildGridMenuItem(
+                      //     context, Icons.edit_outlined, '${S.current.edit} ID', () {
+                      //   Navigator.of(context).pop();
+                      //   _showEditIdDialog(context, inventory);
+                      // }),
                       buildGridMenuItem(context, Icons.edit_outlined,
-                          S.current.details, () async {
+                          S.current.edit, () async {
                             Navigator.of(context).pop();
                             // _showEditDetailsDialog(context, inventory);
                             // final speciesProvider = Provider.of<SpeciesProvider>(
@@ -1523,6 +1524,52 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                               ),
                             );
                             if (editedInventory != null && editedInventory is Inventory) {
+                              if (inventory.id != editedInventory.id) {
+                                final idExists = await inventoryProvider.inventoryIdExists(editedInventory.id);
+
+                                if (idExists) {
+                                  if (context.mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Row(
+                                          children: [
+                                            const Icon(Icons.error_outline, color: Colors.orange),
+                                            const SizedBox(width: 8),
+                                            Text(S.of(context).inventoryIdAlreadyExists),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                  return;
+                                }
+
+                                try {
+                                  await inventoryProvider.changeInventoryId(context, inventory.id, editedInventory.id);
+
+                                  // If successful, close the dialog
+                                  if (context.mounted) {
+                                    Navigator.of(context).pop();
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text('ID do inventário atualizado com sucesso!'),
+                                        backgroundColor: Colors.green,
+                                      ),
+                                    );
+                                  }
+                                } catch (e) {
+                                  // If an error occurs, show a message
+                                  if (context.mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text('Update ID failed: $e'),
+                                        backgroundColor: Theme.of(context).colorScheme.error,
+                                      ),
+                                    );
+                                  }
+                                }
+                              }
+
                               await inventoryProvider.updateInventory(editedInventory);
                             }
                           }),
@@ -1587,52 +1634,133 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                               },
                             );
                           }, color: Theme.of(context).colorScheme.error),
-                      if (!_isShowingActiveInventories)
-                      buildGridMenuItem(
-                          context, Icons.share_outlined, 'CSV',
-                          () async {
-                        Navigator.of(context).pop();
-                        final locale = Localizations.localeOf(context);
-                        final csvFile = await exportInventoryToCsv(context, inventory, locale);
-                        // Share the file using share_plus
-                        await SharePlus.instance.share(
-                          ShareParams(
-                              files: [XFile(csvFile, mimeType: 'text/csv')],
-                              text: S.current.inventoryExported(1),
-                              subject: S.current.inventoryData(1)
-                          ),
-                        );
-                      }),
-                      if (!_isShowingActiveInventories)
-                      buildGridMenuItem(
-                          context, Icons.share_outlined, 'Excel',
-                          () async {
-                        Navigator.of(context).pop();
-                        final locale = Localizations.localeOf(context);
-                        final excelFile = await exportInventoryToExcel(context, inventory, locale);
-                        // Share the file using share_plus
-                        await SharePlus.instance.share(
-                          ShareParams(
-                              files: [XFile(excelFile, mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')],
-                              text: S.current.inventoryExported(1),
-                              subject: S.current.inventoryData(1)
-                          ),
-                        );
-                      }),
-                      if (!_isShowingActiveInventories)
-                      buildGridMenuItem(
-                          context, Icons.share_outlined, 'JSON',
-                          () {
-                        Navigator.of(context).pop();
-                        exportInventoryToJson(context, inventory, true);
-                      }),
-                      if (!_isShowingActiveInventories)
-                      buildGridMenuItem(context, Icons.share_outlined,
-                          'KML', () {
-                            Navigator.of(context).pop();
-                            exportInventoryToKml(context, inventory);
-                      }),
+                      // if (!_isShowingActiveInventories)
+                      // buildGridMenuItem(
+                      //     context, Icons.share_outlined, 'CSV',
+                      //     () async {
+                      //   Navigator.of(context).pop();
+                      //   final locale = Localizations.localeOf(context);
+                      //   final csvFile = await exportInventoryToCsv(context, inventory, locale);
+                      //   // Share the file using share_plus
+                      //   await SharePlus.instance.share(
+                      //     ShareParams(
+                      //         files: [XFile(csvFile, mimeType: 'text/csv')],
+                      //         text: S.current.inventoryExported(1),
+                      //         subject: S.current.inventoryData(1)
+                      //     ),
+                      //   );
+                      // }),
+                      // if (!_isShowingActiveInventories)
+                      // buildGridMenuItem(
+                      //     context, Icons.share_outlined, 'Excel',
+                      //     () async {
+                      //   Navigator.of(context).pop();
+                      //   final locale = Localizations.localeOf(context);
+                      //   final excelFile = await exportInventoryToExcel(context, inventory, locale);
+                      //   // Share the file using share_plus
+                      //   await SharePlus.instance.share(
+                      //     ShareParams(
+                      //         files: [XFile(excelFile, mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')],
+                      //         text: S.current.inventoryExported(1),
+                      //         subject: S.current.inventoryData(1)
+                      //     ),
+                      //   );
+                      // }),
+                      // if (!_isShowingActiveInventories)
+                      // buildGridMenuItem(
+                      //     context, Icons.share_outlined, 'JSON',
+                      //     () {
+                      //   Navigator.of(context).pop();
+                      //   exportInventoryToJson(context, inventory, true);
+                      // }),
+                      // if (!_isShowingActiveInventories)
+                      // buildGridMenuItem(context, Icons.share_outlined,
+                      //     'KML', () {
+                      //       Navigator.of(context).pop();
+                      //       exportInventoryToKml(context, inventory);
+                      // }),
 
+                    ],
+                  ),
+                  Divider(),
+                  Row(
+                    children: [
+                      const SizedBox(width: 8.0),
+                      Text(S.current.export, style: TextTheme
+                          .of(context)
+                          .bodyMedium,),
+                      // Icon(Icons.share_outlined),
+                      Expanded(
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child:
+                          Row(
+                            children: [
+                              const SizedBox(width: 16.0),
+                              ActionChip(
+                                label: Text('CSV'),
+                                onPressed: () async {
+                                  Navigator.of(context).pop();
+                                  final locale = Localizations.localeOf(
+                                      context);
+                                  final csvFile = await exportInventoryToCsv(
+                                      context, inventory, locale);
+                                  // Share the file using share_plus
+                                  await SharePlus.instance.share(
+                                    ShareParams(
+                                        files: [
+                                          XFile(csvFile, mimeType: 'text/csv')
+                                        ],
+                                        text: S.current.inventoryExported(1),
+                                        subject: S.current.inventoryData(1)
+                                    ),
+                                  );
+                                },
+                              ),
+                              const SizedBox(width: 8.0),
+                              ActionChip(
+                                label: Text('Excel'),
+                                onPressed: () async {
+                                  Navigator.of(context).pop();
+                                  final locale = Localizations.localeOf(
+                                      context);
+                                  final excelFile = await exportInventoryToExcel(
+                                      context, inventory, locale);
+                                  // Share the file using share_plus
+                                  await SharePlus.instance.share(
+                                    ShareParams(
+                                        files: [
+                                          XFile(excelFile,
+                                              mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+                                        ],
+                                        text: S.current.inventoryExported(1),
+                                        subject: S.current.inventoryData(1)
+                                    ),
+                                  );
+                                },
+                              ),
+                              const SizedBox(width: 8.0),
+                              ActionChip(
+                                label: Text('JSON'),
+                                onPressed: () async {
+                                  Navigator.of(context).pop();
+                                  exportInventoryToJson(
+                                      context, inventory, true);
+                                },
+                              ),
+                              const SizedBox(width: 8.0),
+                              ActionChip(
+                                label: Text('KML'),
+                                onPressed: () async {
+                                  Navigator.of(context).pop();
+                                  exportInventoryToKml(context, inventory);
+                                },
+                              ),
+                              const SizedBox(width: 8.0),
+                            ],
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                   /*
@@ -1801,339 +1929,6 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
             );
           },
         ),
-        );
-      },
-    );
-  }
-
-  // Widget _buildGridMenuItem(
-  //     BuildContext context, IconData icon, String label, VoidCallback onTap,
-  //     {Color? color}) {
-  //   final itemColor =
-  //       color ?? Theme.of(context).textTheme.bodyLarge?.color;
-  //   return InkWell(
-  //     onTap: onTap,
-  //     borderRadius: BorderRadius.circular(8),
-  //     child: Column(
-  //       mainAxisAlignment: MainAxisAlignment.center,
-  //       children: <Widget>[
-  //         IconButton(icon: Icon(icon, color: itemColor), onPressed: onTap),
-  //         Text(label,
-  //             textAlign: TextAlign.center, style: TextStyle(color: itemColor)),
-  //       ],
-  //     ),
-  //   );
-  // }
-
-  // Show the dialog to edit the inventory ID
-  void _showEditIdDialog(BuildContext context, Inventory inventory) {final idController = TextEditingController(text: inventory.id);
-  final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
-  final oldId = inventory.id;
-
-  showDialog(
-    context: context,
-    // Barrier is not dismissible while saving to prevent accidental taps
-    barrierDismissible: true,
-    builder: (BuildContext context) {
-      // Use StatefulBuilder to manage the loading state inside the dialog
-      return StatefulBuilder(
-        builder: (context, setStateDialog) {
-          bool isSaving = false;
-
-          return AlertDialog.adaptive(
-            title: Text('Editar ID'),
-            content: TextField(
-              controller: idController,
-              textCapitalization: TextCapitalization.sentences,
-              enabled: !isSaving, // Disable field while saving
-              decoration: InputDecoration(
-                labelText: 'ID',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            actions: <Widget>[
-              TextButton(
-                onPressed: isSaving ? null : () {
-                  Navigator.of(context).pop();
-                },
-                child: Text(S.of(context).cancel),
-              ),
-              // Show a loading indicator or the save button
-              isSaving
-                  ? const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.0),
-                child: CircularProgressIndicator.adaptive(),
-              )
-                  : TextButton(
-                child: Text(S.of(context).save),
-                onPressed: () async {
-                  var newId = idController.text.trim(); // Use trim() to remove whitespace
-
-                  if (newId == oldId) {
-                    // If the ID hasn't changed, just close the dialog.
-                    Navigator.of(context).pop();
-                    return;
-                  }
-
-                  // Check if the ID already exists
-                  final idExists = await inventoryProvider.inventoryIdExists(newId);
-
-                  if (idExists) {
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Row(
-                            children: [
-                              const Icon(Icons.error_outline, color: Colors.orange),
-                              const SizedBox(width: 8),
-                              Text(S.of(context).inventoryIdAlreadyExists),
-                            ],
-                          ),
-                        ),
-                      );
-                    }
-                    return;
-                  }
-
-                  // --- Start Saving Process ---
-                  setStateDialog(() {
-                    isSaving = true;
-                  });
-
-                  try {
-                    await inventoryProvider.changeInventoryId(context, oldId, newId);
-
-                    // If successful, close the dialog
-                    if (context.mounted) {
-                      Navigator.of(context).pop();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('ID do inventário atualizado com sucesso!'),
-                          backgroundColor: Colors.green,
-                        ),
-                      );
-                    }
-                  } catch (e) {
-                    // If an error occurs, show a message
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Update ID failed: $e'),
-                          backgroundColor: Theme.of(context).colorScheme.error,
-                        ),
-                      );
-                    }
-                  } finally {
-                    // --- End Saving Process ---
-                    // Ensure the loading state is always reset, even on error
-                    if (context.mounted) {
-                      setStateDialog(() {
-                        isSaving = false;
-                      });
-                    }
-                  }
-                },
-              ),
-            ],
-          );
-        },
-      );
-    },
-  );
-}
-
-  // Show the dialog to edit inventory details
-  void _showEditDetailsDialog(BuildContext context, Inventory inventory) {
-    final localityNameController = TextEditingController(text: inventory.localityName);
-    final notesController = TextEditingController(text: inventory.notes);
-    final totalObserversController = TextEditingController(text: inventory.totalObservers.toString());
-    final inventoryProvider = Provider.of<InventoryProvider>(
-      context, listen: false);
-    late TextEditingController fieldLocalityEditingController;
-    bool isDiscardedCheckbox = inventory.isDiscarded; // Initialize with current value
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        // Use StatefulBuilder to manage the state of the checkbox
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setStateDialog) {
-        return AlertDialog.adaptive(
-          title: Text(S.of(context).editInventoryDetails),
-          content: SingleChildScrollView(
-            child: Column(
-            mainAxisSize: MainAxisSize.min, // Important to prevent unbounded height
-            children: [
-              Autocomplete<String>(
-            optionsBuilder:
-                (TextEditingValue textEditingValue) async {
-              if (textEditingValue.text.isEmpty) {
-                return const Iterable<String>.empty();
-              }
-
-              try {
-                final localityOptions = await Provider.of<InventoryProvider>(context, listen: false).getDistinctLocalities();
-                return localityOptions.where((String option) {
-                  return option.toLowerCase().contains(textEditingValue.text.toLowerCase());
-                });
-              } catch (e) {
-                debugPrint('Error fetching locality options: $e');
-                return const Iterable<String>.empty();
-              }
-            },
-            onSelected: (String selection) {
-              localityNameController.text = selection;
-              fieldLocalityEditingController.text = selection;
-            },
-            fieldViewBuilder: (BuildContext context,
-                TextEditingController fieldTextEditingController,
-                FocusNode fieldFocusNode,
-                VoidCallback onFieldSubmitted) {
-              fieldLocalityEditingController = fieldTextEditingController;
-              fieldLocalityEditingController.text = inventory.localityName ?? '';
-              return TextFormField(
-                controller: fieldLocalityEditingController,
-                focusNode: fieldFocusNode,
-                textCapitalization: TextCapitalization.words,
-                decoration: InputDecoration(
-                  labelText: '${S.of(context).locality} *',
-                  // helperText: S.of(context).requiredField,
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return S.of(context).insertLocality;
-                  }
-                  return null;
-                },
-                onFieldSubmitted: (String value) {
-                  onFieldSubmitted();
-                },
-              );
-            },
-            optionsViewBuilder: (BuildContext context,
-                AutocompleteOnSelected<String> onSelected,
-                Iterable<String> options) {
-              return Align(
-                alignment: Alignment.topLeft,
-                child: Material(
-                  elevation: 4.0, // Add this line for shadow
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    child: ListView.builder(
-                      padding: EdgeInsets.all(8.0),
-                      itemCount: options.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        final String option = options.elementAt(index);
-                        return GestureDetector(
-                          onTap: () {
-                            onSelected(option);
-                          },
-                          child: ListTile(
-                            title: Text(option),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              );
-            },
-          ),
-              SizedBox(height: 8),
-              TextFormField(
-                controller: notesController,
-                textCapitalization: TextCapitalization.sentences,
-                maxLines: 3,
-                decoration: InputDecoration(
-                  labelText: S.of(context).notes,
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              SizedBox(height: 8),
-              Row(
-                children: [
-                  Checkbox(
-                    value: isDiscardedCheckbox,
-                    onChanged: (bool? value) {
-                      setStateDialog(() {
-                        isDiscardedCheckbox = value ?? false;
-                      });
-                    },
-                  ),
-                  Text(S.of(context).discardedInventory),
-                ],
-              ),
-              SizedBox(height: 8),
-              TextFormField(
-                controller: totalObserversController,
-                keyboardType: TextInputType.number,
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                textAlign: TextAlign.center,
-                decoration: InputDecoration(
-                  labelText: S.of(context).totalOfObservers,
-                  border: OutlineInputBorder(),
-                  prefixIcon: IconButton(
-                      onPressed: () {
-                        int count = int.tryParse(totalObserversController.text) ?? 1;
-                        if (count > 1) {
-                          setState(() {
-                            count--;
-                            totalObserversController.text = count.toString();
-                          });
-                        }
-                      },
-                      icon: Icon(Icons.remove_outlined)),
-                  suffixIcon: IconButton(
-                      onPressed: () {
-                        int count = int.tryParse(totalObserversController.text) ?? 1;
-                        setState(() {
-                          count++;
-                          totalObserversController.text = count.toString();
-                        });
-                      },
-                      icon: Icon(Icons.add_outlined)),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return S.current.insertCount;
-                  }
-                  if (int.tryParse(value) == null || int.tryParse(value)! < 1) {
-                    return S.current.insertValidNumber;
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 8),
-            ],
-          ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text(S.of(context).cancel),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text(S.of(context).save),
-              onPressed: () async {
-                inventory.localityName = fieldLocalityEditingController.text;
-                inventory.notes = notesController.text;
-                inventory.isDiscarded = isDiscardedCheckbox;
-                inventory.totalObservers = totalObserversController.text == '' ? 1 : int.parse(totalObserversController.text);
-
-                await inventoryProvider.updateInventory(inventory);
-                if (context.mounted) {
-                  Navigator.of(context).pop();
-                }
-                // setState(() {});
-              },
-            ),
-          ],
-        );
-          },
         );
       },
     );

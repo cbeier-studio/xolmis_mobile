@@ -618,7 +618,7 @@ class NestsScreenState extends State<NestsScreen> {
                 child: Text(S.of(context).import),
               ),
               MenuItemButton(
-                leadingIcon: Icon(Icons.file_upload_outlined),
+                leadingIcon: Icon(Icons.share_outlined),
                 onPressed: () async {
                   await exportAllInactiveNestsToJson(context);
                 },
@@ -809,7 +809,7 @@ class NestsScreenState extends State<NestsScreen> {
                   MenuAnchor(
                     builder: (context, controller, child) {
                       return IconButton(
-                        icon: Icon(Icons.file_upload_outlined),
+                        icon: Icon(Icons.share_outlined),
                         tooltip:
                             S.of(context).exportWhat(S.of(context).nest(2)),
                         onPressed: () {
@@ -1153,178 +1153,125 @@ class NestsScreenState extends State<NestsScreen> {
                               },
                             );
                           }, color: Theme.of(context).colorScheme.error),
-                      if (!_showActive)
-                        buildGridMenuItem(
-                            context, Icons.share_outlined, 'CSV',
-                                () async {
-                              Navigator.of(context).pop();
-                              final locale = Localizations.localeOf(context);
-                              final csvFile = await exportNestToCsv(context, nest, locale);
-                              // Share the file using share_plus
-                              await SharePlus.instance.share(
-                                ShareParams(
-                                    files: [XFile(csvFile, mimeType: 'text/csv')],
-                                    text: S.current.nestExported(1),
-                                    subject: S.current.nestData(1)
-                                ),
-                              );
-                            }),
-                      if (!_showActive)
-                        buildGridMenuItem(
-                            context, Icons.share_outlined, 'Excel',
-                                () async {
-                              Navigator.of(context).pop();
-                              final locale = Localizations.localeOf(context);
-                              final excelFile = await exportNestToExcel(context, nest, locale);
-                              // Share the file using share_plus
-                              await SharePlus.instance.share(
-                                ShareParams(
-                                    files: [XFile(excelFile, mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')],
-                                    text: S.current.nestExported(1),
-                                    subject: S.current.nestData(1)
-                                ),
-                              );
-                            }),
-                      if (!_showActive)
-                        buildGridMenuItem(
-                            context, Icons.share_outlined, 'JSON',
-                                () {
-                              Navigator.of(context).pop();
-                              exportNestToJson(context, nest);
-                            }),
-                      if (!_showActive)
-                        buildGridMenuItem(context, Icons.share_outlined,
-                            'KML', () {
-                              Navigator.of(context).pop();
-                              exportNestToKml(context, nest);
-                            }),
+                      // if (!_showActive)
+                      //   buildGridMenuItem(
+                      //       context, Icons.share_outlined, 'CSV',
+                      //           () async {
+                      //         Navigator.of(context).pop();
+                      //         final locale = Localizations.localeOf(context);
+                      //         final csvFile = await exportNestToCsv(context, nest, locale);
+                      //         // Share the file using share_plus
+                      //         await SharePlus.instance.share(
+                      //           ShareParams(
+                      //               files: [XFile(csvFile, mimeType: 'text/csv')],
+                      //               text: S.current.nestExported(1),
+                      //               subject: S.current.nestData(1)
+                      //           ),
+                      //         );
+                      //       }),
+                      // if (!_showActive)
+                      //   buildGridMenuItem(
+                      //       context, Icons.share_outlined, 'Excel',
+                      //           () async {
+                      //         Navigator.of(context).pop();
+                      //         final locale = Localizations.localeOf(context);
+                      //         final excelFile = await exportNestToExcel(context, nest, locale);
+                      //         // Share the file using share_plus
+                      //         await SharePlus.instance.share(
+                      //           ShareParams(
+                      //               files: [XFile(excelFile, mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')],
+                      //               text: S.current.nestExported(1),
+                      //               subject: S.current.nestData(1)
+                      //           ),
+                      //         );
+                      //       }),
+                      // if (!_showActive)
+                      //   buildGridMenuItem(
+                      //       context, Icons.share_outlined, 'JSON',
+                      //           () {
+                      //         Navigator.of(context).pop();
+                      //         exportNestToJson(context, nest);
+                      //       }),
+                      // if (!_showActive)
+                      //   buildGridMenuItem(context, Icons.share_outlined,
+                      //       'KML', () {
+                      //         Navigator.of(context).pop();
+                      //         exportNestToKml(context, nest);
+                      //       }),
 
                     ],
                   ),
-                  /*
-                  // Option to edit the nest
-                  ListTile(
-                    leading: const Icon(Icons.edit_outlined),
-                    title: Text(S.of(context).editNest),
-                    onTap: () {
-                      Navigator.pop(context);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AddNestScreen(
-                            nest: nest, 
-                            isEditing: true, 
+                  Divider(),
+                  Row(
+                    children: [
+                      const SizedBox(width: 8.0),
+                      Text(S.current.export, style: TextTheme
+                          .of(context)
+                          .bodyMedium,),
+                      // Icon(Icons.share_outlined),
+                      Expanded(
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child:
+                          Row(
+                            children: [
+                              const SizedBox(width: 16.0),
+                              ActionChip(
+                                label: Text('CSV'),
+                                onPressed: () async {
+                                  Navigator.of(context).pop();
+                                  final locale = Localizations.localeOf(context);
+                                  final csvFile = await exportNestToCsv(context, nest, locale);
+                                  // Share the file using share_plus
+                                  await SharePlus.instance.share(
+                                    ShareParams(
+                                        files: [XFile(csvFile, mimeType: 'text/csv')],
+                                        text: S.current.nestExported(1),
+                                        subject: S.current.nestData(1)
+                                    ),
+                                  );
+                                },
+                              ),
+                              const SizedBox(width: 8.0),
+                              ActionChip(
+                                label: Text('Excel'),
+                                onPressed: () async {
+                                  Navigator.of(context).pop();
+                                  final locale = Localizations.localeOf(context);
+                                  final excelFile = await exportNestToExcel(context, nest, locale);
+                                  // Share the file using share_plus
+                                  await SharePlus.instance.share(
+                                    ShareParams(
+                                        files: [XFile(excelFile, mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')],
+                                        text: S.current.nestExported(1),
+                                        subject: S.current.nestData(1)
+                                    ),
+                                  );
+                                },
+                              ),
+                              const SizedBox(width: 8.0),
+                              ActionChip(
+                                label: Text('JSON'),
+                                onPressed: () async {
+                                  Navigator.of(context).pop();
+                                  exportNestToJson(context, nest);
+                                },
+                              ),
+                              const SizedBox(width: 8.0),
+                              ActionChip(
+                                label: Text('KML'),
+                                onPressed: () async {
+                                  Navigator.of(context).pop();
+                                  exportNestToKml(context, nest);
+                                },
+                              ),
+                              const SizedBox(width: 8.0),
+                            ],
                           ),
                         ),
-                      );
-                    },
-                  ),
-                  // Divider(),
-                  // Option to export the nest to CSV or JSON
-                  if (!_showActive) 
-                    ListTile(
-                      leading: const Icon(Icons.file_upload_outlined),
-                      title: Text(S.of(context).export), 
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,                       
-                        children: [
-                          // Option to export the selected nest to CSV
-                          TextButton(
-                            onPressed: () async {
-                              Navigator.of(context).pop();
-                              final locale = Localizations.localeOf(context);
-                              final csvFile = await exportNestToCsv(context, nest, locale);
-                              // Share the file using share_plus
-                              await SharePlus.instance.share(
-                                ShareParams(
-                                  files: [XFile(csvFile, mimeType: 'text/csv')], 
-                                  text: S.current.nestExported(1), 
-                                  subject: S.current.nestData(1)
-                                ),
-                              );
-                            },
-                            child: Text('CSV'),
-                          ),
-                          // Option to export the selected nest to Excel
-                          TextButton(
-                            onPressed: () async {
-                              Navigator.of(context).pop();
-                              final locale = Localizations.localeOf(context);
-                              final excelFile = await exportNestToExcel(context, nest, locale);
-                              // Share the file using share_plus
-                              await SharePlus.instance.share(
-                                ShareParams(
-                                  files: [XFile(excelFile, mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')], 
-                                  text: S.current.nestExported(1), 
-                                  subject: S.current.nestData(1)
-                                ),
-                              );
-                            },
-                            child: Text('Excel'),
-                          ),
-                          // Option to export the selected nest to JSON
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                              exportNestToJson(context, nest);
-                            },
-                            child: Text('JSON'),
-                          ),
-                        ]
                       ),
-                    ),
-                  ListTile(
-                    leading: const Icon(Icons.file_upload_outlined),
-                    title: Text(S.of(context).exportKml),
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      exportNestToKml(context, nest);
-                    },
+                    ],
                   ),
-                  // if (!_showActive) 
-                  //   Divider(),
-                  // Option to delete the nest
-                  ListTile(
-                    leading: Icon(Icons.delete_outlined, color: Theme.of(context).brightness == Brightness.light
-                        ? Colors.red
-                        : Colors.redAccent,),
-                    title: Text(S.of(context).deleteNest, style: TextStyle(color: Theme.of(context).brightness == Brightness.light
-                        ? Colors.red
-                        : Colors.redAccent,),),
-                    onTap: () {
-                      // Ask for user confirmation
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog.adaptive(
-                            title: Text(S.of(context).confirmDelete),
-                            content: Text(S.of(context).confirmDeleteMessage(1, "male", S.of(context).nest(1))),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop(false);
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text(S.of(context).cancel),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop(true);
-                                  Navigator.of(context).pop();
-                                  // Call the function to delete species
-                                  Provider.of<NestProvider>(context, listen: false)
-                                      .removeNest(nest);
-                                },
-                                child: Text(S.of(context).delete),
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    },
-                  )
-                  // )
-                  */
                 ],
               ),
             );
