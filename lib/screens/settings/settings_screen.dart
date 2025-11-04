@@ -273,6 +273,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             SettingsTile.switchTile(
               title: Text(S.of(context).remindMissingVegetationData),
               // description: Text(S.of(context).formatNumbersDescription),
+              leading: Icon(Icons.notification_important_outlined),
               initialValue: _remindVegetationEmpty,
               onToggle: (bool value) {
                 setState(() {
@@ -284,6 +285,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             SettingsTile.switchTile(
               title: Text(S.of(context).remindMissingWeatherData),
               // description: Text(S.of(context).formatNumbersDescription),
+              leading: Icon(Icons.notification_important_outlined),
               initialValue: _remindWeatherEmpty,
               onToggle: (bool value) {
                 setState(() {
@@ -297,6 +299,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             SettingsTile.switchTile(
               title: Text(S.of(context).formatNumbers),
               description: Text(S.of(context).formatNumbersDescription),
+              leading: Icon(Icons.numbers_outlined),
               initialValue: _formatNumbers,
               onToggle: (bool value) {
                 setState(() {
@@ -310,7 +313,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             tiles: [
               // Option to select the theme mode
               SettingsTile.navigation(
-                leading: Icon(Icons.dark_mode_outlined),
+                leading: Icon(Icons.contrast_outlined),
                 title: Text(S.of(context).appearance),
                 value: Builder(
                   builder: (context) {
@@ -332,7 +335,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         title: Text(S.of(context).selectMode),
                         children: [
                           SimpleDialogOption(
-                            child: Text(S.of(context).lightMode),
+                            child: Row(
+                              children: [
+                                Icon(Icons.light_mode_outlined),
+                                const SizedBox(width: 8.0,),
+                                Text(S.of(context).lightMode),
+                              ],
+                            ),
                             onPressed: () {
                               setState(() {
                                 _themeMode = ThemeMode.light;
@@ -343,7 +352,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             },
                           ),
                           SimpleDialogOption(
-                            child: Text(S.of(context).darkMode),
+                            child: Row(
+                              children: [
+                                Icon(Icons.dark_mode_outlined),
+                                const SizedBox(width: 8.0,),
+                                Text(S.of(context).darkMode),
+                              ],
+                            ),
                             onPressed: () {
                               setState(() {
                                 _themeMode = ThemeMode.dark;
@@ -354,7 +369,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             },
                           ),
                           SimpleDialogOption(
-                            child: Text(S.of(context).systemMode),
+                            child: Row(
+                              children: [
+                                Icon(Icons.contrast_outlined),
+                                const SizedBox(width: 8.0,),
+                                Text(S.of(context).systemMode),
+                              ],
+                            ),
                             onPressed: () {
                               setState(() {
                                 _themeMode = ThemeMode.system;
