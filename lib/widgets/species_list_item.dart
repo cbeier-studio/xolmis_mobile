@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
 
-import '../../data/models/inventory.dart';
-import '../../providers/species_provider.dart';
-import '../../providers/poi_provider.dart';
+import '../data/models/inventory.dart';
+import '../providers/species_provider.dart';
+import '../providers/poi_provider.dart';
 
-import 'species_detail_screen.dart';
-import '../../utils/utils.dart';
-import '../../generated/l10n.dart';
+import '../screens/inventory/species_detail_screen.dart';
+import '../utils/utils.dart';
+import '../generated/l10n.dart';
 
 class SpeciesListItem extends StatefulWidget {
   final Species species;
