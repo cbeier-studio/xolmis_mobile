@@ -4,7 +4,7 @@
 
 ### New Features
 
-* New types of inventories: transection and point count with distance/flight height.
+* New types of inventories: detection transect and point count.
 * Field journal.
 * Statistics view.
 * Backup and restore data.
@@ -13,8 +13,7 @@
 * Add and edit details of an inventory.
 * Set an inventory as discarded (experimental).
 * Add and edit notes of species' POIs.
-* Import inventories in JSON format, including files with more than one inventory.
-* Import nests and specimens from JSON file.
+* Import inventories, nests or specimens from JSON file.
 * Add location coordinates to a journal entry.
 * Report screen to compare species between lists.
 * Species accumulation chart in inventory details.
@@ -26,17 +25,18 @@
 * Specimens divided into pending and archived categories.
 * Setting to disable number formatting when exporting CSV files.
 * Configurable reminders to add vegetation and/or weather data when finishing an inventory.
-* Sort menus show the selected options.
+* Sort menus refactored and improved.
 * Refactored long press menus to accommodate more options.
 * Now the species count is separated in within and outside sample for inventories.
 * Species accumulation curve of selected inventories now shows two lines: all accumulated species and species within sample only.
 * Changed icon of export options to reflect better their function.
-* Set initial individuals count to one when a species is added to a quantitative list.
+* Set initial individuals count to 1 when a species is added to a quantitative list.
 * Do not allow to inactivate a nest without revisions.
 * Do not allow to add inventories, nests, or specimens without setting the observer abbreviation.
 * Improve screen layout on larger displays.
 * Added refresh button to inventories, nests and specimens lists when they are empty.
 * About screen refactored, with the addition of sponsors.
+* Search bar moved to the screen header.
 
 ### Technical/Dependencies
 

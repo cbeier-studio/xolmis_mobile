@@ -653,7 +653,8 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     showModalBottomSheet(
       context: context,
       builder: (context) {
-        return StatefulBuilder(
+        return SafeArea(
+          child: StatefulBuilder(
           builder: (BuildContext context, StateSetter setModalState) {
             return Padding(
               padding: const EdgeInsets.all(16.0),
@@ -717,6 +718,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
               ),
             );
           },
+          ),
         );
       },
     );

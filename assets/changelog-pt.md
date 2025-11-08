@@ -1,4 +1,4 @@
-# Changelog
+# Log de alterações
 
 ## 1.0.2
 
@@ -13,9 +13,8 @@
 * Adicionar e editar detalhes de um inventário.
 * Definir um inventário como descartado (experimental).
 * Adicionar e editar observações dos POIs das espécies.
-* Importar inventários em formato JSON, incluindo arquivos com mais de um inventário.
-* Importar ninhos e espécimes de arquivo JSON.
-* Adicionar coordenadas da localização atual no texto de um item do diário de campo.
+* Importar inventários, ninhos ou espécimes de arquivo JSON.
+* Adicionar coordenadas da localização atual no texto de uma nota do diário de campo.
 * Relatório para comparar espécies entre listas.
 * Gráfico de acumulação de espécies nos detalhes do inventário.
 * Gráfico de acumulação de espécies para inventários selecionados.
@@ -26,7 +25,7 @@
 * Espécimes separados em categorias: pendentes e arquivados.
 * Configuração para desativar formatação de números ao exportar arquivos CSV.
 * Lembretes configuráveis para adicionar vegetação e/ou dados do tempo quando encerrar um inventário.
-* Menus de ordenação dos registros mostram as opções selecionadas.
+* Menus de ordenação refatorados e melhorados.
 * Menus de pressionamento longo refatorados para acomodar mais opções.
 * Agora a contagem de espécies de inventários separa registros dentro e fora da amostra.
 * Curva de acumulação de espécies para inventários selecionados agora mostra duas linhas: acumulado de todas espécies e apenas as espécies dentro da amostra.
@@ -37,6 +36,7 @@
 * Melhorias no layout em telas maiores.
 * Adicionado botão para atualizar as listas de inventários, ninhos e espécimes se estiverem vazias.
 * Tela com informações sobre o app reformulada, com adição dos patrocinadores.
+* Barra de pesquisa movida para o cabeçalho da tela.
 
 ### Técnico/Dependências
 

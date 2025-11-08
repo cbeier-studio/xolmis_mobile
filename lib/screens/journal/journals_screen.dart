@@ -58,7 +58,8 @@ class JournalsScreenState extends State<JournalsScreen> {
     showModalBottomSheet(
       context: context,
       builder: (context) {
-        return StatefulBuilder(
+        return SafeArea(
+            child: StatefulBuilder(
           builder: (BuildContext context, StateSetter setModalState) {
             return Padding(
               padding: const EdgeInsets.all(16.0),
@@ -135,6 +136,7 @@ class JournalsScreenState extends State<JournalsScreen> {
               ),
             );
           },
+            ),
         );
       },
     );

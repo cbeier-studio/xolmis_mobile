@@ -146,7 +146,8 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     showModalBottomSheet(
       context: context,
       builder: (context) {
-        return StatefulBuilder(
+        return SafeArea(
+          child: StatefulBuilder(
           builder: (BuildContext context, StateSetter setModalState) {
             return Padding(
               padding: const EdgeInsets.all(16.0),
@@ -249,6 +250,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
               ),
             );
           },
+          ),
         );
       },
     );
