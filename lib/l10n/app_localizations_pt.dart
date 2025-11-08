@@ -1307,6 +1307,18 @@ class AppLocalizationsPt extends AppLocalizations {
   String get archive => 'Arquivar';
 
   @override
+  String get platinumSponsor => 'Patrocinador Platina';
+
+  @override
+  String get changelog => 'Log de alterações';
+
+  @override
+  String get viewLicense => 'Ver licença';
+
+  @override
+  String get openSourceLicenses => 'Licenças de código aberto';
+
+  @override
   String get precipitationNone => 'Nenhuma';
 
   @override
@@ -2819,6 +2831,18 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get archive => 'Arquivar';
+
+  @override
+  String get platinumSponsor => 'Patrocinador Platina';
+
+  @override
+  String get changelog => 'Log de alterações';
+
+  @override
+  String get viewLicense => 'Ver licença';
+
+  @override
+  String get openSourceLicenses => 'Licenças de código aberto';
 
   @override
   String get precipitationNone => 'Nenhuma';

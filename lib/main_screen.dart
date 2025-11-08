@@ -252,6 +252,7 @@ class _MainScreenState extends State<MainScreen> {
           children: [
             if (useSideNavRail || useFixedNavDrawer)
             NavigationRail(
+              trailingAtBottom: true,
               trailing: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -262,6 +263,8 @@ class _MainScreenState extends State<MainScreen> {
                         : const Icon(Icons.settings),
                     onPressed: () => _navigateToSettings(context),
                   ),
+                  // const SizedBox(height: 8),
+                  // Text(S.current.settings),
                 ],
               ),
               destinations: railDestinations,

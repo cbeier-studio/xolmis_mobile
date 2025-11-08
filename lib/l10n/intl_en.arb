@@ -1927,6 +1927,26 @@
     "type": "text",
     "description": "Archive button label"
   },
+  "platinumSponsor": "Platinum Sponsor",
+  "@platinumSponsor": {
+    "type": "text",
+    "description": "Platinum Sponsor field label"
+  },
+  "changelog": "Changelog",
+  "@changelog": {
+    "type": "text",
+    "description": "Changelog button label"
+  },
+  "viewLicense": "View License",
+  "@viewLicense": {
+    "type": "text",
+    "description": "View License button label"
+  },
+  "openSourceLicenses": "Open Source Licenses",
+  "@openSourceLicenses": {
+    "type": "text",
+    "description": "Open Source Licenses button label"
+  },
     "precipitationNone": "None",
     "precipitationFog": "Fog",
     "precipitationMist": "Mist",

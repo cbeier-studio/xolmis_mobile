@@ -2154,6 +2154,30 @@ abstract class AppLocalizations {
   /// **'Archive'**
   String get archive;
 
+  /// Platinum Sponsor field label
+  ///
+  /// In en, this message translates to:
+  /// **'Platinum Sponsor'**
+  String get platinumSponsor;
+
+  /// Changelog button label
+  ///
+  /// In en, this message translates to:
+  /// **'Changelog'**
+  String get changelog;
+
+  /// View License button label
+  ///
+  /// In en, this message translates to:
+  /// **'View License'**
+  String get viewLicense;
+
+  /// Open Source Licenses button label
+  ///
+  /// In en, this message translates to:
+  /// **'Open Source Licenses'**
+  String get openSourceLicenses;
+
   /// No description provided for @precipitationNone.
   ///
   /// In en, this message translates to:

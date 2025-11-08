@@ -26,7 +26,7 @@ class DatabaseHelper {
       version: 20, // Increase the version number
       onCreate: _createTables,
       onUpgrade: _upgradeTables,
-      onOpen: (db) {
+      onConfigure: (db) {
         // Turn on SQLite foreign keys (disabled by default)
         db.execute('PRAGMA foreign_keys = ON;');
       }

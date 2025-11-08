@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:about/about.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:file_picker/file_picker.dart';
@@ -395,15 +396,54 @@ class _SettingsScreenState extends State<SettingsScreen> {
             SettingsTile.navigation(
               leading: Icon(Icons.info_outlined),
               title: Text(S.of(context).about),
-              onPressed: (context) => showLicensePage(
+              onPressed: (context) => showAboutPage(
                 context: context,
+                title: Text(S.of(context).about),
+                values: {
+                  'version': '${_packageInfo?.version}',
+                  'buildNumber': '${_packageInfo?.buildNumber}',
+                  'year': '2024-${DateTime.now().year}',
+                  'author': 'Christian Beier',
+                },
                 applicationIcon: Image.asset(
                   'assets/xolmis_icon.png',
-                  scale: 3,
+                  width: 150,
+                  height: 150,
                 ),
-                applicationLegalese: '© 2024-${DateTime.now().year} Christian Beier',
+                applicationLegalese: '© {{ year }}  {{ author }}',
                 applicationName: _packageInfo?.appName ?? 'Xolmis',
-                applicationVersion: '${_packageInfo?.version ?? ''}+${_packageInfo?.buildNumber ?? ''}',
+                applicationVersion: '{{ version }}+{{ buildNumber }}',
+                applicationDescription: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(S.of(context).platinumSponsor),
+                    Image.asset(
+                      'assets/alianza_del_pastizal_logo.png',
+                      scale: 3,
+                    ),
+                  ],
+                ),
+                children: [
+                  MarkdownPageListTile(
+                    icon: Icon(Icons.list),
+                    title: Text(S.current.changelog),
+                    filename: 'assets/changelog.md',
+                  ),
+                  MarkdownPageListTile(
+                    filename: 'assets/license.md',
+                    title: Text(S.current.viewLicense),
+                    icon: Icon(Icons.description),
+                  ),
+                  // MarkdownPageListTile(
+                  //   filename: 'CONTRIBUTING.md',
+                  //   title: Text('Contributing'),
+                  //   icon: Icon(Icons.share),
+                  // ),
+                  LicensesPageListTile(
+                    title: Text(S.current.openSourceLicenses),
+                    icon: Icon(Icons.favorite),
+                  ),
+                ],
               ),
             ),
           ]

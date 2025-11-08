@@ -179,6 +179,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "camera": MessageLookupByLibrary.simpleMessage("Câmera"),
     "cancel": MessageLookupByLibrary.simpleMessage("Cancelar"),
+    "changelog": MessageLookupByLibrary.simpleMessage("Log de alterações"),
     "clearSelection": MessageLookupByLibrary.simpleMessage("Limpar seleção"),
     "close": MessageLookupByLibrary.simpleMessage("Fechar"),
     "cloudCover": MessageLookupByLibrary.simpleMessage("Nebulosidade"),
@@ -694,6 +695,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Observador (sigla)",
     ),
     "ok": MessageLookupByLibrary.simpleMessage("OK"),
+    "openSourceLicenses": MessageLookupByLibrary.simpleMessage(
+      "Licenças de código aberto",
+    ),
     "optional": MessageLookupByLibrary.simpleMessage("* opcional"),
     "outOfSample": MessageLookupByLibrary.simpleMessage("Fora da amostra"),
     "pause": MessageLookupByLibrary.simpleMessage("Pausa"),
@@ -710,6 +714,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "plantSpeciesOrSupportType": MessageLookupByLibrary.simpleMessage(
       "Espécie vegetal ou tipo de suporte",
+    ),
+    "platinumSponsor": MessageLookupByLibrary.simpleMessage(
+      "Patrocinador Platina",
     ),
     "poi": MessageLookupByLibrary.simpleMessage("POI"),
     "pointCounts": MessageLookupByLibrary.simpleMessage("Pontos de contagem"),
@@ -882,6 +889,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "vegetationData": MessageLookupByLibrary.simpleMessage(
       "Dados de vegetação",
     ),
+    "viewLicense": MessageLookupByLibrary.simpleMessage("Ver licença"),
     "warningTitle": MessageLookupByLibrary.simpleMessage("Aviso"),
     "weather": MessageLookupByLibrary.simpleMessage("Tempo"),
     "weatherData": MessageLookupByLibrary.simpleMessage("Dados do tempo"),

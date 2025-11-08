@@ -3520,6 +3520,46 @@ class S {
     );
   }
 
+  /// `Platinum Sponsor`
+  String get platinumSponsor {
+    return Intl.message(
+      'Platinum Sponsor',
+      name: 'platinumSponsor',
+      desc: 'Platinum Sponsor field label',
+      args: [],
+    );
+  }
+
+  /// `Changelog`
+  String get changelog {
+    return Intl.message(
+      'Changelog',
+      name: 'changelog',
+      desc: 'Changelog button label',
+      args: [],
+    );
+  }
+
+  /// `View License`
+  String get viewLicense {
+    return Intl.message(
+      'View License',
+      name: 'viewLicense',
+      desc: 'View License button label',
+      args: [],
+    );
+  }
+
+  /// `Open Source Licenses`
+  String get openSourceLicenses {
+    return Intl.message(
+      'Open Source Licenses',
+      name: 'openSourceLicenses',
+      desc: 'Open Source Licenses button label',
+      args: [],
+    );
+  }
+
   /// `None`
   String get precipitationNone {
     return Intl.message('None', name: 'precipitationNone', desc: '', args: []);

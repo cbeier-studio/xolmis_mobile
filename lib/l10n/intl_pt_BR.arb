@@ -1366,6 +1366,26 @@
     "type": "text",
     "description": "Archive button label"
   },
+  "platinumSponsor": "Patrocinador Platina",
+  "@platinumSponsor": {
+    "type": "text",
+    "description": "Platinum Sponsor field label"
+  },
+  "changelog": "Log de alterações",
+  "@changelog": {
+    "type": "text",
+    "description": "Changelog button label"
+  },
+  "viewLicense": "Ver licença",
+  "@viewLicense": {
+    "type": "text",
+    "description": "View License button label"
+  },
+  "openSourceLicenses": "Licenças de código aberto",
+  "@openSourceLicenses": {
+    "type": "text",
+    "description": "Open Source Licenses button label"
+  },
     "precipitationNone": "Nenhuma",
     "precipitationFog": "Névoa",
     "precipitationMist": "Neblina",

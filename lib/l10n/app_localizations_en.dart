@@ -1303,6 +1303,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get archive => 'Archive';
 
   @override
+  String get platinumSponsor => 'Platinum Sponsor';
+
+  @override
+  String get changelog => 'Changelog';
+
+  @override
+  String get viewLicense => 'View License';
+
+  @override
+  String get openSourceLicenses => 'Open Source Licenses';
+
+  @override
   String get precipitationNone => 'None';
 
   @override

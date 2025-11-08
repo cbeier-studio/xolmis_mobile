@@ -119,12 +119,86 @@ class _WeatherTabState extends State<WeatherTab>
                                 itemCount: weatherList.length,
                                 itemBuilder: (context, index) {
                                   final weather = weatherList[index];
-                                  return WeatherGridItem(
-                                    weather: weather,
-                                    onLongPress:
-                                        () =>
-                                            _showBottomSheet(context, weather),
-                                  );
+                                    return GridTile(
+                                      child: InkWell(
+                                        onLongPress: () => _showBottomSheet(context, weather),
+                                        child: Card.outlined(
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(16.0),
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.end,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  DateFormat('dd/MM/yyyy HH:mm:ss').format(weather.sampleTime!),
+                                                  style: TextTheme.of(context).headlineSmall,
+                                                ),
+                                                const SizedBox(height: 8),
+                                                Wrap(
+                                                  spacing: 8.0, // horizontal space between children
+                                                  runSpacing: 4.0, // vertical space between runs
+                                                  alignment: WrapAlignment.start,
+                                                  children: <Widget>[
+                                                    Row(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      children: [
+                                                        Icon(Icons.cloud_outlined),
+                                                        SizedBox(width: 4),
+                                                        Text('${weather.cloudCover}%'),
+                                                      ],
+                                                    ),
+                                                    Row(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      children: [
+                                                        Icon(Icons.cloudy_snowing),
+                                                        SizedBox(width: 4),
+                                                        Text(
+                                                          '${precipitationTypeFriendlyNames[weather.precipitation]}',
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Row(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      children: [
+                                                        Icon(Icons.thermostat_outlined),
+                                                        SizedBox(width: 4),
+                                                        Text('${weather.temperature} °C'),
+                                                      ],
+                                                    ),
+                                                    Row(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      children: [
+                                                        Icon(Icons.wind_power_outlined),
+                                                        SizedBox(width: 4),
+                                                        Text(
+                                                          '${weather.windSpeed} bft ${weather.windDirection ?? ''}',
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Row(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      children: [
+                                                        Icon(Icons.cyclone_outlined),
+                                                        SizedBox(width: 4),
+                                                        Text('${weather.atmosphericPressure ?? 0} mPa'),
+                                                      ],
+                                                    ),
+                                                    Row(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      children: [
+                                                        Icon(Icons.water_drop_outlined),
+                                                        SizedBox(width: 4),
+                                                        Text('${weather.relativeHumidity ?? 0}%'),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    );
                                 },
                               ),
                             ),
@@ -244,7 +318,8 @@ class WeatherGridItem extends StatefulWidget {
 class WeatherGridItemState extends State<WeatherGridItem> {
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return GridTile(
+        child: InkWell(
       onLongPress: () => widget.onLongPress,
       child: Card.outlined(
         child: Padding(
@@ -321,6 +396,7 @@ class WeatherGridItemState extends State<WeatherGridItem> {
           ),
         ),
       ),
+        ),
     );
   }
 }

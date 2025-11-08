@@ -169,6 +169,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "camera": MessageLookupByLibrary.simpleMessage("Camera"),
     "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+    "changelog": MessageLookupByLibrary.simpleMessage("Changelog"),
     "clearSelection": MessageLookupByLibrary.simpleMessage("Clear selection"),
     "close": MessageLookupByLibrary.simpleMessage("Close"),
     "cloudCover": MessageLookupByLibrary.simpleMessage("Cloud cover"),
@@ -652,6 +653,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Observer (abbreviation)",
     ),
     "ok": MessageLookupByLibrary.simpleMessage("OK"),
+    "openSourceLicenses": MessageLookupByLibrary.simpleMessage(
+      "Open Source Licenses",
+    ),
     "optional": MessageLookupByLibrary.simpleMessage("* optional"),
     "outOfSample": MessageLookupByLibrary.simpleMessage("Out of the sample"),
     "pause": MessageLookupByLibrary.simpleMessage("Pause"),
@@ -669,6 +673,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "plantSpeciesOrSupportType": MessageLookupByLibrary.simpleMessage(
       "Plant species or support type",
     ),
+    "platinumSponsor": MessageLookupByLibrary.simpleMessage("Platinum Sponsor"),
     "poi": MessageLookupByLibrary.simpleMessage("POI"),
     "pointCounts": MessageLookupByLibrary.simpleMessage("Point counts"),
     "precipitation": MessageLookupByLibrary.simpleMessage("Precipitation"),
@@ -820,6 +825,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "trees": MessageLookupByLibrary.simpleMessage("Trees"),
     "vegetation": MessageLookupByLibrary.simpleMessage("Vegetation"),
     "vegetationData": MessageLookupByLibrary.simpleMessage("Vegetation data"),
+    "viewLicense": MessageLookupByLibrary.simpleMessage("View License"),
     "warningTitle": MessageLookupByLibrary.simpleMessage("Warning"),
     "weather": MessageLookupByLibrary.simpleMessage("Weather"),
     "weatherData": MessageLookupByLibrary.simpleMessage("Weather data"),
