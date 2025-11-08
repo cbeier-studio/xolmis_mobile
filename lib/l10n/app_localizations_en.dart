@@ -1315,6 +1315,39 @@ class AppLocalizationsEn extends AppLocalizations {
   String get openSourceLicenses => 'Open Source Licenses';
 
   @override
+  String get sortBy => 'Sort by';
+
+  @override
+  String get startTime => 'Start time';
+
+  @override
+  String get endTime => 'End time';
+
+  @override
+  String get direction => 'Direction';
+
+  @override
+  String get ascending => 'Ascending';
+
+  @override
+  String get descending => 'Descending';
+
+  @override
+  String get foundTime => 'Found time';
+
+  @override
+  String get lastTime => 'Last time';
+
+  @override
+  String get creationTime => 'Creation time';
+
+  @override
+  String get lastModifiedTime => 'Last modified time';
+
+  @override
+  String get sampleTime => 'Sample time';
+
+  @override
   String get precipitationNone => 'None';
 
   @override

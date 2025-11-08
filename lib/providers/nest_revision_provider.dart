@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../data/models/nest.dart';
-import '../data/database/daos/nest_revision_dao.dart';
+import '../data/daos/nest_revision_dao.dart';
 
 class NestRevisionProvider with ChangeNotifier {
   final NestRevisionDao _nestRevisionDao;

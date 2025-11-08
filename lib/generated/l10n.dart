@@ -3560,6 +3560,116 @@ class S {
     );
   }
 
+  /// `Sort by`
+  String get sortBy {
+    return Intl.message(
+      'Sort by',
+      name: 'sortBy',
+      desc: 'Sort by button label',
+      args: [],
+    );
+  }
+
+  /// `Start time`
+  String get startTime {
+    return Intl.message(
+      'Start time',
+      name: 'startTime',
+      desc: 'Start time field label',
+      args: [],
+    );
+  }
+
+  /// `End time`
+  String get endTime {
+    return Intl.message(
+      'End time',
+      name: 'endTime',
+      desc: 'End time field label',
+      args: [],
+    );
+  }
+
+  /// `Direction`
+  String get direction {
+    return Intl.message(
+      'Direction',
+      name: 'direction',
+      desc: 'Direction field label',
+      args: [],
+    );
+  }
+
+  /// `Ascending`
+  String get ascending {
+    return Intl.message(
+      'Ascending',
+      name: 'ascending',
+      desc: 'Ascending direction option',
+      args: [],
+    );
+  }
+
+  /// `Descending`
+  String get descending {
+    return Intl.message(
+      'Descending',
+      name: 'descending',
+      desc: 'Descending direction option',
+      args: [],
+    );
+  }
+
+  /// `Found time`
+  String get foundTime {
+    return Intl.message(
+      'Found time',
+      name: 'foundTime',
+      desc: 'Found time field label',
+      args: [],
+    );
+  }
+
+  /// `Last time`
+  String get lastTime {
+    return Intl.message(
+      'Last time',
+      name: 'lastTime',
+      desc: 'Last time field label',
+      args: [],
+    );
+  }
+
+  /// `Creation time`
+  String get creationTime {
+    return Intl.message(
+      'Creation time',
+      name: 'creationTime',
+      desc: 'Creation time field label',
+      args: [],
+    );
+  }
+
+  /// `Last modified time`
+  String get lastModifiedTime {
+    return Intl.message(
+      'Last modified time',
+      name: 'lastModifiedTime',
+      desc: 'Last modified time field label',
+      args: [],
+    );
+  }
+
+  /// `Sample time`
+  String get sampleTime {
+    return Intl.message(
+      'Sample time',
+      name: 'sampleTime',
+      desc: 'Sample time field label',
+      args: [],
+    );
+  }
+
   /// `None`
   String get precipitationNone {
     return Intl.message('None', name: 'precipitationNone', desc: '', args: []);

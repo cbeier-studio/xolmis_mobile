@@ -153,6 +153,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "archive": MessageLookupByLibrary.simpleMessage("Archive"),
     "archiveSpecimen": MessageLookupByLibrary.simpleMessage("Archive specimen"),
     "archived": MessageLookupByLibrary.simpleMessage("Archived"),
+    "ascending": MessageLookupByLibrary.simpleMessage("Ascending"),
     "atmosphericPressure": MessageLookupByLibrary.simpleMessage(
       "Atmospheric pressure",
     ),
@@ -196,6 +197,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "count": MessageLookupByLibrary.simpleMessage("Count"),
     "createBackup": MessageLookupByLibrary.simpleMessage("Create backup"),
+    "creationTime": MessageLookupByLibrary.simpleMessage("Creation time"),
     "dangerZone": MessageLookupByLibrary.simpleMessage("Danger zone"),
     "darkMode": MessageLookupByLibrary.simpleMessage("Dark"),
     "dataDeleted": MessageLookupByLibrary.simpleMessage(
@@ -234,7 +236,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "deleteWeather": MessageLookupByLibrary.simpleMessage(
       "Delete weather record",
     ),
+    "descending": MessageLookupByLibrary.simpleMessage("Descending"),
     "details": MessageLookupByLibrary.simpleMessage("Details"),
+    "direction": MessageLookupByLibrary.simpleMessage("Direction"),
     "discardedInventory": MessageLookupByLibrary.simpleMessage(
       "Discarded inventory",
     ),
@@ -318,6 +322,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "eggShapeOval": MessageLookupByLibrary.simpleMessage("Oval"),
     "eggShapePyriform": MessageLookupByLibrary.simpleMessage("Pyriform"),
     "eggShapeSpherical": MessageLookupByLibrary.simpleMessage("Spherical"),
+    "endTime": MessageLookupByLibrary.simpleMessage("End time"),
     "enterCoordinates": MessageLookupByLibrary.simpleMessage(
       "Enter coordinates",
     ),
@@ -422,6 +427,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "formatNumbersDescription": MessageLookupByLibrary.simpleMessage(
       "Uncheck this to format numbers with point as decimal separator",
     ),
+    "foundTime": MessageLookupByLibrary.simpleMessage("Found time"),
     "gallery": MessageLookupByLibrary.simpleMessage("Gallery"),
     "general": MessageLookupByLibrary.simpleMessage("General"),
     "generateId": MessageLookupByLibrary.simpleMessage("Generate ID"),
@@ -545,6 +551,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "inventoryType": MessageLookupByLibrary.simpleMessage("Inventory type"),
     "journalEntries": m24,
     "keepRunning": MessageLookupByLibrary.simpleMessage("Keep active"),
+    "lastModifiedTime": MessageLookupByLibrary.simpleMessage(
+      "Last modified time",
+    ),
+    "lastTime": MessageLookupByLibrary.simpleMessage("Last time"),
     "latitude": MessageLookupByLibrary.simpleMessage("Latitude"),
     "length": MessageLookupByLibrary.simpleMessage("Length"),
     "lightMode": MessageLookupByLibrary.simpleMessage("Light"),
@@ -721,6 +731,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "restoringData": MessageLookupByLibrary.simpleMessage("Restoring data"),
     "resume": MessageLookupByLibrary.simpleMessage("Resume"),
     "revision": m31,
+    "sampleTime": MessageLookupByLibrary.simpleMessage("Sample time"),
     "save": MessageLookupByLibrary.simpleMessage("Save"),
     "selectAll": MessageLookupByLibrary.simpleMessage("Select all"),
     "selectInventoryType": MessageLookupByLibrary.simpleMessage(
@@ -748,6 +759,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Site name or abbreviation",
     ),
     "sortAscending": MessageLookupByLibrary.simpleMessage("Sort ascending"),
+    "sortBy": MessageLookupByLibrary.simpleMessage("Sort by"),
     "sortByLastModified": MessageLookupByLibrary.simpleMessage(
       "Sort by Last Modified Time",
     ),
@@ -796,6 +808,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "specimensImportedSuccessfully": m39,
     "startInventory": MessageLookupByLibrary.simpleMessage("Start inventory"),
     "startNextList": MessageLookupByLibrary.simpleMessage("Start next list"),
+    "startTime": MessageLookupByLibrary.simpleMessage("Start time"),
     "statistics": MessageLookupByLibrary.simpleMessage("Statistics"),
     "surveyHours": MessageLookupByLibrary.simpleMessage("survey hours"),
     "systemMode": MessageLookupByLibrary.simpleMessage("System theme"),

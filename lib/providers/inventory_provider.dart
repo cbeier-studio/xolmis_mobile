@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../data/models/inventory.dart';
-import '../data/database/daos/inventory_dao.dart';
+import '../data/daos/inventory_dao.dart';
 
 import 'species_provider.dart';
 import 'vegetation_provider.dart';

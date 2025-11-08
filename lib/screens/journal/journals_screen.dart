@@ -6,19 +6,9 @@ import '../../data/models/journal.dart';
 import '../../providers/journal_provider.dart';
 
 import 'add_journal_screen.dart';
+import '../../core/core_consts.dart';
 import '../../utils/utils.dart';
 import '../../generated/l10n.dart';
-
-enum JournalSortField {
-  title,
-  creationDate,
-  lastModifiedDate,
-}
-
-enum SortOrder {
-  ascending,
-  descending,
-}
 
 class JournalsScreen extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
@@ -45,24 +35,6 @@ class JournalsScreenState extends State<JournalsScreen> {
     journalProvider.fetchJournalEntries();
   }
 
-  void _toggleSearchBarVisibility() {
-    setState(() {
-      _isSearchBarVisible = !_isSearchBarVisible;
-    });
-  }
-
-  void _setSortOrder(SortOrder order) {
-    setState(() {
-      _sortOrder = order;
-    });
-  }
-
-  void _setSortField(JournalSortField field) {
-    setState(() {
-      _sortField = field;
-    });
-  }
-
   List<FieldJournal> _sortJournalEntries(List<FieldJournal> journalEntries) {
     journalEntries.sort((a, b) {
       int comparison;
@@ -80,6 +52,92 @@ class JournalsScreenState extends State<JournalsScreen> {
       return _sortOrder == SortOrder.ascending ? comparison : -comparison;
     });
     return journalEntries;
+  }
+
+  void _showSortOptionsBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setModalState) {
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(S.of(context).sortBy, style: Theme.of(context).textTheme.bodyLarge),
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 8.0, // Space between chips
+                    children: <Widget>[
+                      ChoiceChip(
+                        label: Text(S.current.title),
+                        showCheckmark: false,
+                        selected: _sortField == JournalSortField.title,
+                        onSelected: (bool selected) {
+                          setModalState(() {
+                            _sortField = JournalSortField.title;
+                          });
+                          setState(() {
+                            _sortField = JournalSortField.title;
+                          });
+                        },
+                      ),
+                      ChoiceChip(
+                        label: Text(S.current.creationTime),
+                        showCheckmark: false,
+                        selected: _sortField == JournalSortField.creationDate,
+                        onSelected: (bool selected) {
+                          setModalState(() {
+                            _sortField = JournalSortField.creationDate;
+                          });
+                          setState(() {
+                            _sortField = JournalSortField.creationDate;
+                          });
+                        },
+                      ),
+                      ChoiceChip(
+                        label: Text(S.current.lastModifiedTime),
+                        showCheckmark: false,
+                        selected: _sortField == JournalSortField.lastModifiedDate,
+                        onSelected: (bool selected) {
+                          setModalState(() {
+                            _sortField = JournalSortField.lastModifiedDate;
+                          });
+                          setState(() {
+                            _sortField = JournalSortField.lastModifiedDate;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                  const Divider(),
+                  Text(S.of(context).direction, style: Theme.of(context).textTheme.bodyLarge),
+                  const SizedBox(height: 8),
+                  SegmentedButton<SortOrder>(
+                    segments: [
+                      ButtonSegment(value: SortOrder.ascending, label: Text(S.of(context).ascending), icon: Icon(Icons.south_outlined)),
+                      ButtonSegment(value: SortOrder.descending, label: Text(S.of(context).descending), icon: Icon(Icons.north_outlined)),
+                    ],
+                    selected: {_sortOrder},
+                    showSelectedIcon: false,
+                    onSelectionChanged: (Set<SortOrder> newSelection) {
+                      setModalState(() {
+                        _sortOrder = newSelection.first;
+                      });
+                      setState(() {
+                        _sortOrder = newSelection.first;
+                      });
+                    },
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
   List<FieldJournal> _filterJournalEntries(List<FieldJournal> journalEntries) {
@@ -176,72 +234,12 @@ class JournalsScreenState extends State<JournalsScreen> {
           elevation: WidgetStateProperty.all(0),
           // leading: const Icon(Icons.search_outlined),
           trailing: [
-            MenuAnchor(
-              builder: (context, controller, child) {
-                return IconButton(
-                  icon: Icon(Icons.sort_outlined),
-                  onPressed: () {
-                    if (controller.isOpen) {
-                      controller.close();
-                    } else {
-                      controller.open();
-                    }
-                  },
-                );
+            IconButton(
+              icon: const Icon(Icons.sort_outlined),
+              tooltip: S.of(context).sortBy,
+              onPressed: () {
+                _showSortOptionsBottomSheet();
               },
-              menuChildren: [
-                MenuItemButton(
-                  leadingIcon: Icon(Icons.schedule_outlined),
-                  trailingIcon: _sortField == JournalSortField.creationDate
-                      ? Icon(Icons.check_outlined)
-                      : null,
-                  onPressed: () {
-                    _setSortField(JournalSortField.creationDate);
-                  },
-                  child: Text(S.of(context).sortByTime),
-                ),
-                MenuItemButton(
-                  leadingIcon: Icon(Icons.schedule_outlined),
-                  trailingIcon: _sortField == JournalSortField.lastModifiedDate
-                      ? Icon(Icons.check_outlined)
-                      : null,
-                  onPressed: () {
-                    _setSortField(JournalSortField.lastModifiedDate);
-                  },
-                  child: Text(S.of(context).sortByLastModified),
-                ),
-                MenuItemButton(
-                  leadingIcon: Icon(Icons.sort_by_alpha_outlined),
-                  trailingIcon: _sortField == JournalSortField.title
-                      ? Icon(Icons.check_outlined)
-                      : null,
-                  onPressed: () {
-                    _setSortField(JournalSortField.title);
-                  },
-                  child: Text(S.of(context).sortByTitle),
-                ),
-                Divider(),
-                MenuItemButton(
-                  leadingIcon: Icon(Icons.south_outlined),
-                  trailingIcon: _sortOrder == SortOrder.ascending
-                      ? Icon(Icons.check_outlined)
-                      : null,
-                  onPressed: () {
-                    _setSortOrder(SortOrder.ascending);
-                  },
-                  child: Text(S.of(context).sortAscending),
-                ),
-                MenuItemButton(
-                  leadingIcon: Icon(Icons.north_outlined),
-                  trailingIcon: _sortOrder == SortOrder.descending
-                      ? Icon(Icons.check_outlined)
-                      : null,
-                  onPressed: () {
-                    _setSortOrder(SortOrder.descending);
-                  },
-                  child: Text(S.of(context).sortDescending),
-                ),
-              ],
             ),
             _searchController.text.isNotEmpty
                 ? IconButton(
@@ -271,79 +269,6 @@ class JournalsScreenState extends State<JournalsScreen> {
           ),
         ) : SizedBox.shrink(),
         actions: [
-          // IconButton(
-          //   icon: Icon(Icons.search_outlined),
-          //   selectedIcon: Icon(Icons.search_off_outlined),
-          //   isSelected: _isSearchBarVisible,
-          //   onPressed: _toggleSearchBarVisibility,
-          // ),
-          // MenuAnchor(
-          //   builder: (context, controller, child) {
-          //     return IconButton(
-          //       icon: Icon(Icons.sort_outlined),
-          //       onPressed: () {
-          //         if (controller.isOpen) {
-          //           controller.close();
-          //         } else {
-          //           controller.open();
-          //         }
-          //       },
-          //     );
-          //   },
-          //   menuChildren: [
-          //     MenuItemButton(
-          //       leadingIcon: Icon(Icons.schedule_outlined),
-          //       trailingIcon: _sortField == JournalSortField.creationDate
-          //           ? Icon(Icons.check_outlined)
-          //           : null,
-          //       onPressed: () {
-          //         _setSortField(JournalSortField.creationDate);
-          //       },
-          //       child: Text(S.of(context).sortByTime),
-          //     ),
-          //     MenuItemButton(
-          //       leadingIcon: Icon(Icons.schedule_outlined),
-          //       trailingIcon: _sortField == JournalSortField.lastModifiedDate
-          //           ? Icon(Icons.check_outlined)
-          //           : null,
-          //       onPressed: () {
-          //         _setSortField(JournalSortField.lastModifiedDate);
-          //       },
-          //       child: Text(S.of(context).sortByLastModified),
-          //     ),
-          //     MenuItemButton(
-          //       leadingIcon: Icon(Icons.sort_by_alpha_outlined),
-          //       trailingIcon: _sortField == JournalSortField.title
-          //           ? Icon(Icons.check_outlined)
-          //           : null,
-          //       onPressed: () {
-          //         _setSortField(JournalSortField.title);
-          //       },
-          //       child: Text(S.of(context).sortByTitle),
-          //     ),
-          //     Divider(),
-          //     MenuItemButton(
-          //       leadingIcon: Icon(Icons.south_outlined),
-          //       trailingIcon: _sortOrder == SortOrder.ascending
-          //           ? Icon(Icons.check_outlined)
-          //           : null,
-          //       onPressed: () {
-          //         _setSortOrder(SortOrder.ascending);
-          //       },
-          //       child: Text(S.of(context).sortAscending),
-          //     ),
-          //     MenuItemButton(
-          //       leadingIcon: Icon(Icons.north_outlined),
-          //       trailingIcon: _sortOrder == SortOrder.descending
-          //           ? Icon(Icons.check_outlined)
-          //           : null,
-          //       onPressed: () {
-          //         _setSortOrder(SortOrder.descending);
-          //       },
-          //       child: Text(S.of(context).sortDescending),
-          //     ),
-          //   ],
-          // ),
           MenuAnchor(
             builder: (context, controller, child) {
               return IconButton(
@@ -372,63 +297,12 @@ class JournalsScreenState extends State<JournalsScreen> {
                 },
                 child: Text(S.of(context).selectAll),
               ),
-              // MenuItemButton(
-              //   onPressed: () {
-              //     exportAllSpecimensToCsv(context);
-              //   },
-              //   child: Row(
-              //     children: [
-              //       Icon(Icons.file_upload_outlined),
-              //       SizedBox(width: 8),
-              //       Text('${S.of(context).exportAll} (CSV)'),
-              //     ],
-              //   ),
-              // ),
-              // MenuItemButton(
-              //   onPressed: () {
-              //     exportAllSpecimensToJson(context);
-              //   },
-              //   child: Row(
-              //     children: [
-              //       Icon(Icons.file_upload_outlined),
-              //       SizedBox(width: 8),
-              //       Text('${S.of(context).exportAll} (JSON)'),
-              //     ],
-              //   ),
-              // ),
             ],
           ),
         ],
       ),
       body: Column(
         children: [
-          // if (_isSearchBarVisible)
-          //   Padding(
-          //     padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 16.0),
-          //     child: SearchBar(
-          //       controller: _searchController,
-          //       hintText: S.of(context).findJournalEntries,
-          //       leading: const Icon(Icons.search_outlined),
-          //       trailing: [
-          //         _searchController.text.isNotEmpty
-          //             ? IconButton(
-          //           icon: const Icon(Icons.clear_outlined),
-          //           onPressed: () {
-          //             setState(() {
-          //               _searchQuery = '';
-          //               _searchController.clear();
-          //             });
-          //           },
-          //         )
-          //             : SizedBox.shrink(),
-          //       ],
-          //       onChanged: (query) {
-          //         setState(() {
-          //           _searchQuery = query;
-          //         });
-          //       },
-          //     ),
-          //   ),
           Expanded(
             child: Consumer<FieldJournalProvider>(
                 builder: (context, journalProvider, child) {
@@ -770,64 +644,6 @@ class JournalsScreenState extends State<JournalsScreen> {
                           }, color: Theme.of(context).colorScheme.error),
                     ],
                   ),
-                  /*
-                  ListTile(
-                    leading: const Icon(Icons.edit_outlined),
-                    title: Text(S.of(context).editJournalEntry),
-                    onTap: () {
-                      Navigator.pop(context);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AddJournalScreen(
-                            journalEntry: journalEntry,
-                            isEditing: true,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                  // Divider(),
-                  ListTile(
-                    leading: Icon(Icons.delete_outlined, color: Theme.of(context).brightness == Brightness.light
-                        ? Colors.red
-                        : Colors.redAccent,),
-                    title: Text(S.of(context).deleteJournalEntry, style: TextStyle(color: Theme.of(context).brightness == Brightness.light
-                        ? Colors.red
-                        : Colors.redAccent,),),
-                    onTap: () {
-                      // Ask for user confirmation
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text(S.of(context).confirmDelete),
-                            content: Text(S.of(context).confirmDeleteMessage(1, "female", S.of(context).journalEntries(1).toLowerCase())),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop(false);
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text(S.of(context).cancel),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop(true);
-                                  Navigator.of(context).pop();
-                                  // Call the function to delete species
-                                  journalProvider.removeJournalEntry(journalEntry);
-                                },
-                                child: Text(S.of(context).delete),
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    },
-                  )
-                  // )
-                  */
                 ],
               ),
             );

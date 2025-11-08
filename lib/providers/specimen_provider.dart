@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 import '../data/models/specimen.dart';
-import '../data/database/daos/specimen_dao.dart';
+import '../data/daos/specimen_dao.dart';
 import '../generated/l10n.dart';
 
 class SpecimenProvider with ChangeNotifier {

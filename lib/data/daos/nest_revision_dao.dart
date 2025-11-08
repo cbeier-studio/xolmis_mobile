@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 
-import '../../models/nest.dart';
-import '../database_helper.dart';
+import '../models/nest.dart';
+import '../database/database_helper.dart';
 
 
 class NestRevisionDao {

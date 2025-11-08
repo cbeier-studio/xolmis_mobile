@@ -7,7 +7,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:xolmis/data/database/daos/journal_dao.dart';
+import 'package:xolmis/data/daos/journal_dao.dart';
 // import 'package:xolmis/data/database/repositories/journal_repository.dart';
 
 import 'package:xolmis/main.dart';
@@ -25,16 +25,16 @@ import 'package:xolmis/data/database/database_helper.dart';
 // import 'package:xolmis/data/database/repositories/specimen_repository.dart';
 // import 'package:xolmis/data/database/repositories/app_image_repository.dart';
 
-import 'package:xolmis/data/database/daos/egg_dao.dart';
-import 'package:xolmis/data/database/daos/inventory_dao.dart';
-import 'package:xolmis/data/database/daos/nest_dao.dart';
-import 'package:xolmis/data/database/daos/nest_revision_dao.dart';
-import 'package:xolmis/data/database/daos/poi_dao.dart';
-import 'package:xolmis/data/database/daos/species_dao.dart';
-import 'package:xolmis/data/database/daos/specimen_dao.dart';
-import 'package:xolmis/data/database/daos/vegetation_dao.dart';
-import 'package:xolmis/data/database/daos/weather_dao.dart';
-import 'package:xolmis/data/database/daos/app_image_dao.dart';
+import 'package:xolmis/data/daos/egg_dao.dart';
+import 'package:xolmis/data/daos/inventory_dao.dart';
+import 'package:xolmis/data/daos/nest_dao.dart';
+import 'package:xolmis/data/daos/nest_revision_dao.dart';
+import 'package:xolmis/data/daos/poi_dao.dart';
+import 'package:xolmis/data/daos/species_dao.dart';
+import 'package:xolmis/data/daos/specimen_dao.dart';
+import 'package:xolmis/data/daos/vegetation_dao.dart';
+import 'package:xolmis/data/daos/weather_dao.dart';
+import 'package:xolmis/data/daos/app_image_dao.dart';
 
 void main() async {
   late DatabaseHelper databaseHelper;

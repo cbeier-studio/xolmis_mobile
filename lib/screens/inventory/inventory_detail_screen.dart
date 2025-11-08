@@ -6,11 +6,11 @@ import 'package:share_plus/share_plus.dart';
 import 'package:fab_m3e/fab_m3e.dart';
 
 import '../../data/models/inventory.dart';
-import '../../data/database/daos/inventory_dao.dart';
-import '../../data/database/daos/species_dao.dart';
-import '../../data/database/daos/poi_dao.dart';
-import '../../data/database/daos/vegetation_dao.dart';
-import '../../data/database/daos/weather_dao.dart';
+import '../../data/daos/inventory_dao.dart';
+import '../../data/daos/species_dao.dart';
+import '../../data/daos/poi_dao.dart';
+import '../../data/daos/vegetation_dao.dart';
+import '../../data/daos/weather_dao.dart';
 
 import '../../providers/inventory_provider.dart';
 import '../../providers/species_provider.dart';

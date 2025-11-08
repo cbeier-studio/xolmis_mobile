@@ -1386,6 +1386,61 @@
     "type": "text",
     "description": "Open Source Licenses button label"
   },
+  "sortBy": "Ordenar por",
+  "@sortBy": {
+    "type": "text",
+    "description": "Sort by button label"
+  },
+  "startTime": "Hora inicial",
+  "@startTime": {
+    "type": "text",
+    "description": "Start time field label"
+  },
+  "endTime": "Hora final",
+  "@endTime": {
+    "type": "text",
+    "description": "End time field label"
+  },
+  "direction": "Direção",
+  "@direction": {
+    "type": "text",
+    "description": "Direction field label"
+  },
+  "ascending": "Crescente",
+  "@ascending": {
+    "type": "text",
+    "description": "Ascending direction option"
+  },
+  "descending": "Decrescente",
+  "@descending": {
+    "type": "text",
+    "description": "Descending direction option"
+  },
+  "foundTime": "Hora do encontro",
+  "@foundTime": {
+    "type": "text",
+    "description": "Found time field label"
+  },
+  "lastTime": "Hora final",
+  "@lastTime": {
+    "type": "text",
+    "description": "Last time field label"
+  },
+  "creationTime": "Hora de criação",
+  "@creationTime": {
+    "type": "text",
+    "description": "Creation time field label"
+  },
+  "lastModifiedTime": "Última modificação",
+  "@lastModifiedTime": {
+    "type": "text",
+    "description": "Last modified time field label"
+  },
+  "sampleTime": "Hora da coleta",
+  "@sampleTime": {
+    "type": "text",
+    "description": "Sample time field label"
+  },
     "precipitationNone": "Nenhuma",
     "precipitationFog": "Névoa",
     "precipitationMist": "Neblina",

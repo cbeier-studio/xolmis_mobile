@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 
-import '../../models/nest.dart';
-import '../database_helper.dart';
-import '../daos/nest_revision_dao.dart';
-import '../daos/egg_dao.dart';
+import '../models/nest.dart';
+import '../database/database_helper.dart';
+import 'nest_revision_dao.dart';
+import 'egg_dao.dart';
 
 
 class NestDao {

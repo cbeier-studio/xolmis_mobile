@@ -8,29 +8,17 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'data/database/database_helper.dart';
-import 'data/database/daos/inventory_dao.dart';
-import 'data/database/daos/species_dao.dart';
-import 'data/database/daos/poi_dao.dart';
-import 'data/database/daos/vegetation_dao.dart';
-import 'data/database/daos/weather_dao.dart';
-import 'data/database/daos/nest_dao.dart';
-import 'data/database/daos/nest_revision_dao.dart';
-import 'data/database/daos/egg_dao.dart';
-import 'data/database/daos/specimen_dao.dart';
-import 'data/database/daos/app_image_dao.dart';
-import 'data/database/daos/journal_dao.dart';
-
-// import 'data/database/repositories/inventory_repository.dart';
-// import 'data/database/repositories/species_repository.dart';
-// import 'data/database/repositories/poi_repository.dart';
-// import 'data/database/repositories/vegetation_repository.dart';
-// import 'data/database/repositories/weather_repository.dart';
-// import 'data/database/repositories/nest_repository.dart';
-// import 'data/database/repositories/nest_revision_repository.dart';
-// import 'data/database/repositories/egg_repository.dart';
-// import 'data/database/repositories/specimen_repository.dart';
-// import 'data/database/repositories/app_image_repository.dart';
-// import 'data/database/repositories/journal_repository.dart';
+import 'data/daos/inventory_dao.dart';
+import 'data/daos/species_dao.dart';
+import 'data/daos/poi_dao.dart';
+import 'data/daos/vegetation_dao.dart';
+import 'data/daos/weather_dao.dart';
+import 'data/daos/nest_dao.dart';
+import 'data/daos/nest_revision_dao.dart';
+import 'data/daos/egg_dao.dart';
+import 'data/daos/specimen_dao.dart';
+import 'data/daos/app_image_dao.dart';
+import 'data/daos/journal_dao.dart';
 
 import 'providers/inventory_provider.dart';
 import 'providers/species_provider.dart';
@@ -120,19 +108,6 @@ Future<void> main() async {
     final specimenDao = SpecimenDao(databaseHelper);
     final appImageDao = AppImageDao(databaseHelper);
     final journalDao = FieldJournalDao(databaseHelper);
-
-    // Create the repositories
-    // final inventoryRepository = InventoryRepository(inventoryDao);
-    // final speciesRepository = SpeciesRepository(speciesDao);
-    // final poiRepository = PoiRepository(poiDao);
-    // final vegetationRepository = VegetationRepository(vegetationDao);
-    // final weatherRepository = WeatherRepository(weatherDao);
-    // final nestRepository = NestRepository(nestDao);
-    // final nestRevisionRepository = NestRevisionRepository(nestRevisionDao);
-    // final eggRepository = EggRepository(eggDao);
-    // final specimenRepository = SpecimenRepository(specimenDao);
-    // final appImageRepository = AppImageRepository(appImageDao);
-    // final journalRepository = FieldJournalRepository(journalDao);
 
     // Preload the species names list
     List<String> preloadedSpeciesNames = await loadSpeciesSearchData();

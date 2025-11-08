@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
@@ -14,22 +13,13 @@ import '../../data/models/app_image.dart';
 import '../../providers/specimen_provider.dart';
 import '../../providers/app_image_provider.dart';
 
+import '../../core/core_consts.dart';
 import '../../utils/utils.dart';
 import '../../utils/import_utils.dart';
 import 'add_specimen_screen.dart';
 import '../images/app_image_screen.dart';
 import '../../utils/export_utils.dart';
 import '../../generated/l10n.dart';
-
-enum SpecimenSortField {
-  fieldNumber,
-  sampleTime,
-}
-
-enum SortOrder {
-  ascending,
-  descending,
-}
 
 class SpecimensScreen extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
@@ -57,38 +47,157 @@ class SpecimensScreenState extends State<SpecimensScreen> {
     specimenProvider.fetchSpecimens();
   }
 
-  void _toggleSearchBarVisibility() {
-    setState(() {
-      _isSearchBarVisible = !_isSearchBarVisible;
-    });
-  }
-
-  void _setSortOrder(SortOrder order) {
-    setState(() {
-      _sortOrder = order;
-    });
-  }
-
-  void _setSortField(SpecimenSortField field) {
-    setState(() {
-      _sortField = field;
-    });
-  }
-
   List<Specimen> _sortSpecimens(List<Specimen> specimens) {
     specimens.sort((a, b) {
       int comparison;
+
+      // Helper function to handle nulls. Null values are treated as "smaller".
+      int compareNullables<T extends Comparable>(T? a, T? b) {
+        if (a == null && b == null) return 0; // Both are equal
+        if (a == null) return -1; // a is "smaller"
+        if (b == null) return 1;  // b is "smaller"
+        return a.compareTo(b);
+      }
+
+      // Helper function for comparing strings via a map lookup.
+      int compareMappedStrings(SpecimenType aKey, SpecimenType bKey) {
+        final aValue = aKey != null ? specimenTypeFriendlyNames[aKey] : null;
+        final bValue = bKey != null ? specimenTypeFriendlyNames[bKey] : null;
+        return compareNullables(aValue, bValue);
+      }
+
       switch (_sortField) {
         case SpecimenSortField.fieldNumber:
           comparison = a.fieldNumber.compareTo(b.fieldNumber);
           break;
         case SpecimenSortField.sampleTime:
-          comparison = a.sampleTime!.compareTo(b.sampleTime!);
+          comparison = compareNullables(a.sampleTime, b.sampleTime);
+          break;
+        case SpecimenSortField.species:
+          comparison = compareNullables(a.speciesName, b.speciesName);
+          break;
+        case SpecimenSortField.locality:
+          comparison = compareNullables(a.locality, b.locality);
+          break;
+        case SpecimenSortField.specimenType:
+          comparison = compareMappedStrings(a.type, b.type);
           break;
       }
       return _sortOrder == SortOrder.ascending ? comparison : -comparison;
     });
     return specimens;
+  }
+
+  void _showSortOptionsBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setModalState) {
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(S.of(context).sortBy, style: Theme.of(context).textTheme.bodyLarge),
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 8.0, // Space between chips
+                    children: <Widget>[
+                      ChoiceChip(
+                        label: Text(S.current.fieldNumber),
+                        showCheckmark: false,
+                        selected: _sortField == SpecimenSortField.fieldNumber,
+                        onSelected: (bool selected) {
+                          setModalState(() {
+                            _sortField = SpecimenSortField.fieldNumber;
+                          });
+                          setState(() {
+                            _sortField = SpecimenSortField.fieldNumber;
+                          });
+                        },
+                      ),
+                      ChoiceChip(
+                        label: Text(S.current.sampleTime),
+                        showCheckmark: false,
+                        selected: _sortField == SpecimenSortField.sampleTime,
+                        onSelected: (bool selected) {
+                          setModalState(() {
+                            _sortField = SpecimenSortField.sampleTime;
+                          });
+                          setState(() {
+                            _sortField = SpecimenSortField.sampleTime;
+                          });
+                        },
+                      ),
+                      ChoiceChip(
+                        label: Text(S.current.species(1)),
+                        showCheckmark: false,
+                        selected: _sortField == SpecimenSortField.species,
+                        onSelected: (bool selected) {
+                          setModalState(() {
+                            _sortField = SpecimenSortField.species;
+                          });
+                          setState(() {
+                            _sortField = SpecimenSortField.species;
+                          });
+                        },
+                      ),
+                      ChoiceChip(
+                        label: Text(S.current.locality),
+                        showCheckmark: false,
+                        selected: _sortField == SpecimenSortField.locality,
+                        onSelected: (bool selected) {
+                          setModalState(() {
+                            _sortField = SpecimenSortField.locality;
+                          });
+                          setState(() {
+                            _sortField = SpecimenSortField.locality;
+                          });
+                        },
+                      ),
+                      ChoiceChip(
+                        label: Text(S.current.specimenType),
+                        showCheckmark: false,
+                        selected: _sortField == SpecimenSortField.specimenType,
+                        onSelected: (bool selected) {
+                          setModalState(() {
+                            _sortField = SpecimenSortField.specimenType;
+                          });
+                          setState(() {
+                            _sortField = SpecimenSortField.specimenType;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                  const Divider(),
+                  Text(S.of(context).direction, style: Theme.of(context).textTheme.bodyLarge),
+                  const SizedBox(height: 8),
+                  SegmentedButton<SortOrder>(
+                    segments: [
+                      ButtonSegment(value: SortOrder.ascending, label: Text(S.of(context).ascending), icon: Icon(Icons.south_outlined)),
+                      ButtonSegment(value: SortOrder.descending, label: Text(S.of(context).descending), icon: Icon(Icons.north_outlined)),
+                    ],
+                    selected: {_sortOrder},
+                    showSelectedIcon: false,
+                    onSelectionChanged: (Set<SortOrder> newSelection) {
+                      setModalState(() {
+                        _sortOrder = newSelection.first;
+                      });
+                      setState(() {
+                        _sortOrder = newSelection.first;
+                      });
+                    },
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
   List<Specimen> _filterSpecimens(List<Specimen> specimens) {
@@ -306,62 +415,12 @@ class SpecimensScreenState extends State<SpecimensScreen> {
           elevation: WidgetStateProperty.all(0),
           // leading: const Icon(Icons.search_outlined),
           trailing: [
-            MenuAnchor(
-              builder: (context, controller, child) {
-                return IconButton(
-                  icon: Icon(Icons.sort_outlined),
-                  onPressed: () {
-                    if (controller.isOpen) {
-                      controller.close();
-                    } else {
-                      controller.open();
-                    }
-                  },
-                );
+            IconButton(
+              icon: const Icon(Icons.sort_outlined),
+              tooltip: S.of(context).sortBy,
+              onPressed: () {
+                _showSortOptionsBottomSheet();
               },
-              menuChildren: [
-                MenuItemButton(
-                  leadingIcon: Icon(Icons.schedule_outlined),
-                  trailingIcon: _sortField == SpecimenSortField.sampleTime
-                      ? Icon(Icons.check_outlined)
-                      : null,
-                  onPressed: () {
-                    _setSortField(SpecimenSortField.sampleTime);
-                  },
-                  child: Text(S.of(context).sortByTime),
-                ),
-                MenuItemButton(
-                  leadingIcon: Icon(Icons.sort_by_alpha_outlined),
-                  trailingIcon: _sortField == SpecimenSortField.fieldNumber
-                      ? Icon(Icons.check_outlined)
-                      : null,
-                  onPressed: () {
-                    _setSortField(SpecimenSortField.fieldNumber);
-                  },
-                  child: Text(S.of(context).sortByName),
-                ),
-                Divider(),
-                MenuItemButton(
-                  leadingIcon: Icon(Icons.south_outlined),
-                  trailingIcon: _sortOrder == SortOrder.ascending
-                      ? Icon(Icons.check_outlined)
-                      : null,
-                  onPressed: () {
-                    _setSortOrder(SortOrder.ascending);
-                  },
-                  child: Text(S.of(context).sortAscending),
-                ),
-                MenuItemButton(
-                  leadingIcon: Icon(Icons.north_outlined),
-                  trailingIcon: _sortOrder == SortOrder.descending
-                      ? Icon(Icons.check_outlined)
-                      : null,
-                  onPressed: () {
-                    _setSortOrder(SortOrder.descending);
-                  },
-                  child: Text(S.of(context).sortDescending),
-                ),
-              ],
             ),
             _searchController.text.isNotEmpty
                 ? IconButton(
@@ -391,69 +450,6 @@ class SpecimensScreenState extends State<SpecimensScreen> {
           ),
         ) : SizedBox.shrink(),
         actions: [
-          // IconButton(
-          //   icon: Icon(Icons.search_outlined),
-          //   selectedIcon: Icon(Icons.search_off_outlined),
-          //   isSelected: _isSearchBarVisible,
-          //   onPressed: _toggleSearchBarVisibility,
-          // ),
-          // MenuAnchor(
-          //   builder: (context, controller, child) {
-          //     return IconButton(
-          //       icon: Icon(Icons.sort_outlined),
-          //       onPressed: () {
-          //         if (controller.isOpen) {
-          //           controller.close();
-          //         } else {
-          //           controller.open();
-          //         }
-          //       },
-          //     );
-          //   },
-          //   menuChildren: [
-          //     MenuItemButton(
-          //       leadingIcon: Icon(Icons.schedule_outlined),
-          //       trailingIcon: _sortField == SpecimenSortField.sampleTime
-          //           ? Icon(Icons.check_outlined)
-          //           : null,
-          //       onPressed: () {
-          //         _setSortField(SpecimenSortField.sampleTime);
-          //       },
-          //       child: Text(S.of(context).sortByTime),
-          //     ),
-          //     MenuItemButton(
-          //       leadingIcon: Icon(Icons.sort_by_alpha_outlined),
-          //       trailingIcon: _sortField == SpecimenSortField.fieldNumber
-          //           ? Icon(Icons.check_outlined)
-          //           : null,
-          //       onPressed: () {
-          //         _setSortField(SpecimenSortField.fieldNumber);
-          //       },
-          //       child: Text(S.of(context).sortByName),
-          //     ),
-          //     Divider(),
-          //     MenuItemButton(
-          //       leadingIcon: Icon(Icons.south_outlined),
-          //       trailingIcon: _sortOrder == SortOrder.ascending
-          //           ? Icon(Icons.check_outlined)
-          //           : null,
-          //       onPressed: () {
-          //         _setSortOrder(SortOrder.ascending);
-          //       },
-          //       child: Text(S.of(context).sortAscending),
-          //     ),
-          //     MenuItemButton(
-          //       leadingIcon: Icon(Icons.north_outlined),
-          //       trailingIcon: _sortOrder == SortOrder.descending
-          //           ? Icon(Icons.check_outlined)
-          //           : null,
-          //       onPressed: () {
-          //         _setSortOrder(SortOrder.descending);
-          //       },
-          //       child: Text(S.of(context).sortDescending),
-          //     ),
-          //   ],
-          // ),
           MenuAnchor(
             builder: (context, controller, child) {
               return IconButton(
@@ -520,33 +516,6 @@ class SpecimensScreenState extends State<SpecimensScreen> {
       ),
       body: Column(
         children: [
-          // if (_isSearchBarVisible)
-          //   Padding(
-          //     padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 16.0),
-          //     child: SearchBar(
-          //       controller: _searchController,
-          //       hintText: S.of(context).findSpecimens,
-          //       leading: const Icon(Icons.search_outlined),
-          //       trailing: [
-          //         _searchController.text.isNotEmpty
-          //             ? IconButton(
-          //                 icon: const Icon(Icons.clear_outlined),
-          //                 onPressed: () {
-          //                   setState(() {
-          //                     _searchQuery = '';
-          //                     _searchController.clear();
-          //                   });
-          //                 },
-          //               )
-          //             : SizedBox.shrink(),
-          //       ],
-          //       onChanged: (query) {
-          //         setState(() {
-          //           _searchQuery = query;
-          //         });
-          //       },
-          //     ),
-          //   ),
           Padding(
             padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
             child: LayoutBuilder(

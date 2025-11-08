@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../data/models/inventory.dart';
-import '../data/database/daos/species_dao.dart';
+import '../data/daos/species_dao.dart';
 
 import '../providers/inventory_provider.dart';
 

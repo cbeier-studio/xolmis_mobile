@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 import '../data/models/journal.dart';
-import '../data/database/daos/journal_dao.dart';
+import '../data/daos/journal_dao.dart';
 // import '../generated/l10n.dart';
 
 class FieldJournalProvider with ChangeNotifier {

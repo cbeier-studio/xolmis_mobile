@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 import '../data/models/nest.dart';
-import '../data/database/daos/nest_dao.dart';
+import '../data/daos/nest_dao.dart';
 import '../generated/l10n.dart';
 
 class NestProvider with ChangeNotifier {

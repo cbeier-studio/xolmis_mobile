@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../data/models/nest.dart';
-import '../data/database/daos/egg_dao.dart';
+import '../data/daos/egg_dao.dart';
 import '../generated/l10n.dart';
 
 class EggProvider with ChangeNotifier {

@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../data/models/inventory.dart';
-import '../data/database/daos/weather_dao.dart';
+import '../data/daos/weather_dao.dart';
 
 class WeatherProvider with ChangeNotifier {
   final WeatherDao _weatherDao;

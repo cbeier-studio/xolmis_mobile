@@ -6,7 +6,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import '../../utils/utils.dart';
 
-import '../database/daos/inventory_dao.dart';
+import '../daos/inventory_dao.dart';
 
 import '../../main.dart';
 

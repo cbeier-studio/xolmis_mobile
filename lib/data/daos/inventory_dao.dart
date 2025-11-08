@@ -3,13 +3,13 @@ import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:sqflite/sqflite.dart';
 
-import '../database_helper.dart';
-import '../../models/inventory.dart';
-import '../daos/species_dao.dart';
-import '../daos/vegetation_dao.dart';
-import '../daos/weather_dao.dart';
+import '../database/database_helper.dart';
+import '../models/inventory.dart';
+import 'species_dao.dart';
+import 'vegetation_dao.dart';
+import 'weather_dao.dart';
 
-import '../../../utils/utils.dart';
+import '../../utils/utils.dart';
 
 class InventoryDao {
   final DatabaseHelper _dbHelper;

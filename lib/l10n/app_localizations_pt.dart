@@ -1319,6 +1319,39 @@ class AppLocalizationsPt extends AppLocalizations {
   String get openSourceLicenses => 'Licenças de código aberto';
 
   @override
+  String get sortBy => 'Ordenar por';
+
+  @override
+  String get startTime => 'Hora inicial';
+
+  @override
+  String get endTime => 'Hora final';
+
+  @override
+  String get direction => 'Direção';
+
+  @override
+  String get ascending => 'Crescente';
+
+  @override
+  String get descending => 'Decrescente';
+
+  @override
+  String get foundTime => 'Hora do encontro';
+
+  @override
+  String get lastTime => 'Hora final';
+
+  @override
+  String get creationTime => 'Hora de criação';
+
+  @override
+  String get lastModifiedTime => 'Última modificação';
+
+  @override
+  String get sampleTime => 'Hora da coleta';
+
+  @override
   String get precipitationNone => 'Nenhuma';
 
   @override
@@ -2843,6 +2876,39 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get openSourceLicenses => 'Licenças de código aberto';
+
+  @override
+  String get sortBy => 'Ordenar por';
+
+  @override
+  String get startTime => 'Hora inicial';
+
+  @override
+  String get endTime => 'Hora final';
+
+  @override
+  String get direction => 'Direção';
+
+  @override
+  String get ascending => 'Crescente';
+
+  @override
+  String get descending => 'Decrescente';
+
+  @override
+  String get foundTime => 'Hora do encontro';
+
+  @override
+  String get lastTime => 'Hora final';
+
+  @override
+  String get creationTime => 'Hora de criação';
+
+  @override
+  String get lastModifiedTime => 'Última modificação';
+
+  @override
+  String get sampleTime => 'Hora da coleta';
 
   @override
   String get precipitationNone => 'Nenhuma';

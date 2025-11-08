@@ -14,20 +14,11 @@ import '../../providers/nest_provider.dart';
 import 'add_nest_screen.dart';
 import 'nest_detail_screen.dart';
 
+import '../../core/core_consts.dart';
 import '../../utils/utils.dart';
 import '../../utils/export_utils.dart';
 import '../../utils/import_utils.dart';
 import '../../generated/l10n.dart';
-
-enum NestSortField {
-  fieldNumber,
-  foundTime,
-}
-
-enum SortOrder {
-  ascending,
-  descending,
-}
 
 class NestsScreen extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
@@ -55,31 +46,26 @@ class NestsScreenState extends State<NestsScreen> {
     nestProvider.fetchNests();
   }
 
-  // Toggle the visibility of the search bar
-  void _toggleSearchBarVisibility() {
-    setState(() {
-      _isSearchBarVisible = !_isSearchBarVisible;
-    });
-  }
-
-  // Toggle the sort order
-  void _setSortOrder(SortOrder order) {
-    setState(() {
-      _sortOrder = order;
-    });
-  }
-
-  // Change the sort field
-  void _setSortField(NestSortField field) {
-    setState(() {
-      _sortField = field;
-    });
-  }
-
   // Sort the nests by the selected field
   List<Nest> _sortNests(List<Nest> nests) {
     nests.sort((a, b) {
       int comparison;
+
+      // Helper function to handle nulls. Null values are treated as "smaller".
+      int compareNullables<T extends Comparable>(T? a, T? b) {
+        if (a == null && b == null) return 0; // Both are equal
+        if (a == null) return -1; // a is "smaller"
+        if (b == null) return 1;  // b is "smaller"
+        return a.compareTo(b);
+      }
+
+      // Helper function for comparing strings via a map lookup.
+      int compareMappedStrings(NestFateType aKey, NestFateType bKey) {
+        final aValue = aKey != null ? nestFateTypeFriendlyNames[aKey] : null;
+        final bValue = bKey != null ? nestFateTypeFriendlyNames[bKey] : null;
+        return compareNullables(aValue, bValue);
+      }
+
       switch (_sortField) {
         case NestSortField.fieldNumber:
           comparison = a.fieldNumber!.compareTo(b.fieldNumber!);
@@ -87,10 +73,147 @@ class NestsScreenState extends State<NestsScreen> {
         case NestSortField.foundTime:
           comparison = a.foundTime!.compareTo(b.foundTime!);
           break;
+        case NestSortField.lastTime:
+          comparison = compareNullables(a.lastTime, b.lastTime);
+          break;
+        case NestSortField.species:
+          comparison = compareNullables(a.speciesName, b.speciesName);
+          break;
+        case NestSortField.locality:
+          comparison = compareNullables(a.localityName, b.localityName);
+          break;
+        case NestSortField.nestFate:
+          comparison = compareMappedStrings(a.nestFate!, b.nestFate!);
+          break;
       }
       return _sortOrder == SortOrder.ascending ? comparison : -comparison;
     });
     return nests;
+  }
+
+  void _showSortOptionsBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setModalState) {
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(S.of(context).sortBy, style: Theme.of(context).textTheme.bodyLarge),
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 8.0, // Space between chips
+                    children: <Widget>[
+                      ChoiceChip(
+                        label: Text(S.current.fieldNumber),
+                        showCheckmark: false,
+                        selected: _sortField == NestSortField.fieldNumber,
+                        onSelected: (bool selected) {
+                          setModalState(() {
+                            _sortField = NestSortField.fieldNumber;
+                          });
+                          setState(() {
+                            _sortField = NestSortField.fieldNumber;
+                          });
+                        },
+                      ),
+                      ChoiceChip(
+                        label: Text(S.current.foundTime),
+                        showCheckmark: false,
+                        selected: _sortField == NestSortField.foundTime,
+                        onSelected: (bool selected) {
+                          setModalState(() {
+                            _sortField = NestSortField.foundTime;
+                          });
+                          setState(() {
+                            _sortField = NestSortField.foundTime;
+                          });
+                        },
+                      ),
+                      ChoiceChip(
+                        label: Text(S.current.lastTime),
+                        showCheckmark: false,
+                        selected: _sortField == NestSortField.lastTime,
+                        onSelected: (bool selected) {
+                          setModalState(() {
+                            _sortField = NestSortField.lastTime;
+                          });
+                          setState(() {
+                            _sortField = NestSortField.lastTime;
+                          });
+                        },
+                      ),
+                      ChoiceChip(
+                        label: Text(S.current.species(1)),
+                        showCheckmark: false,
+                        selected: _sortField == NestSortField.species,
+                        onSelected: (bool selected) {
+                          setModalState(() {
+                            _sortField = NestSortField.species;
+                          });
+                          setState(() {
+                            _sortField = NestSortField.species;
+                          });
+                        },
+                      ),
+                      ChoiceChip(
+                        label: Text(S.current.locality),
+                        showCheckmark: false,
+                        selected: _sortField == NestSortField.locality,
+                        onSelected: (bool selected) {
+                          setModalState(() {
+                            _sortField = NestSortField.locality;
+                          });
+                          setState(() {
+                            _sortField = NestSortField.locality;
+                          });
+                        },
+                      ),
+                      ChoiceChip(
+                        label: Text(S.current.nestFate),
+                        showCheckmark: false,
+                        selected: _sortField == NestSortField.nestFate,
+                        onSelected: (bool selected) {
+                          setModalState(() {
+                            _sortField = NestSortField.nestFate;
+                          });
+                          setState(() {
+                            _sortField = NestSortField.nestFate;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                  const Divider(),
+                  Text(S.of(context).direction, style: Theme.of(context).textTheme.bodyLarge),
+                  const SizedBox(height: 8),
+                  SegmentedButton<SortOrder>(
+                    segments: [
+                      ButtonSegment(value: SortOrder.ascending, label: Text(S.of(context).ascending), icon: Icon(Icons.south_outlined)),
+                      ButtonSegment(value: SortOrder.descending, label: Text(S.of(context).descending), icon: Icon(Icons.north_outlined)),
+                    ],
+                    selected: {_sortOrder},
+                    showSelectedIcon: false,
+                    onSelectionChanged: (Set<SortOrder> newSelection) {
+                      setModalState(() {
+                        _sortOrder = newSelection.first;
+                      });
+                      setState(() {
+                        _sortOrder = newSelection.first;
+                      });
+                    },
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
   // Filter the nests based on the search query
@@ -429,62 +552,12 @@ class NestsScreenState extends State<NestsScreen> {
           elevation: WidgetStateProperty.all(0),
           // leading: const Icon(Icons.search_outlined),
           trailing: [
-            MenuAnchor(
-              builder: (context, controller, child) {
-                return IconButton(
-                  icon: Icon(Icons.sort_outlined),
-                  onPressed: () {
-                    if (controller.isOpen) {
-                      controller.close();
-                    } else {
-                      controller.open();
-                    }
-                  },
-                );
+            IconButton(
+              icon: const Icon(Icons.sort_outlined),
+              tooltip: S.of(context).sortBy,
+              onPressed: () {
+                _showSortOptionsBottomSheet();
               },
-              menuChildren: [
-                MenuItemButton(
-                  leadingIcon: Icon(Icons.schedule_outlined),
-                  trailingIcon: _sortField == NestSortField.foundTime
-                      ? Icon(Icons.check_outlined)
-                      : null,
-                  onPressed: () {
-                    _setSortField(NestSortField.foundTime);
-                  },
-                  child: Text(S.of(context).sortByTime),
-                ),
-                MenuItemButton(
-                  leadingIcon: Icon(Icons.sort_by_alpha_outlined),
-                  trailingIcon: _sortField == NestSortField.fieldNumber
-                      ? Icon(Icons.check_outlined)
-                      : null,
-                  onPressed: () {
-                    _setSortField(NestSortField.fieldNumber);
-                  },
-                  child: Text(S.of(context).sortByName),
-                ),
-                Divider(),
-                MenuItemButton(
-                  leadingIcon: Icon(Icons.south_outlined),
-                  trailingIcon: _sortOrder == SortOrder.ascending
-                      ? Icon(Icons.check_outlined)
-                      : null,
-                  onPressed: () {
-                    _setSortOrder(SortOrder.ascending);
-                  },
-                  child: Text(S.of(context).sortAscending),
-                ),
-                MenuItemButton(
-                  leadingIcon: Icon(Icons.north_outlined),
-                  trailingIcon: _sortOrder == SortOrder.descending
-                      ? Icon(Icons.check_outlined)
-                      : null,
-                  onPressed: () {
-                    _setSortOrder(SortOrder.descending);
-                  },
-                  child: Text(S.of(context).sortDescending),
-                ),
-              ],
             ),
             _searchController.text.isNotEmpty
                 ? IconButton(
@@ -514,71 +587,6 @@ class NestsScreenState extends State<NestsScreen> {
           ),
         ) : SizedBox.shrink(),
         actions: [
-          // Action to toggle the visibility of the search bar
-          // IconButton(
-          //   icon: Icon(Icons.search_outlined),
-          //   selectedIcon: Icon(Icons.search_off_outlined),
-          //   isSelected: _isSearchBarVisible,
-          //   onPressed: _toggleSearchBarVisibility,
-          // ),
-          // Action to sort the nests
-          // MenuAnchor(
-          //   builder: (context, controller, child) {
-          //     return IconButton(
-          //       icon: Icon(Icons.sort_outlined),
-          //       onPressed: () {
-          //         if (controller.isOpen) {
-          //           controller.close();
-          //         } else {
-          //           controller.open();
-          //         }
-          //       },
-          //     );
-          //   },
-          //   menuChildren: [
-          //     MenuItemButton(
-          //       leadingIcon: Icon(Icons.schedule_outlined),
-          //       trailingIcon: _sortField == NestSortField.foundTime
-          //           ? Icon(Icons.check_outlined)
-          //           : null,
-          //       onPressed: () {
-          //         _setSortField(NestSortField.foundTime);
-          //       },
-          //       child: Text(S.of(context).sortByTime),
-          //     ),
-          //     MenuItemButton(
-          //       leadingIcon: Icon(Icons.sort_by_alpha_outlined),
-          //       trailingIcon: _sortField == NestSortField.fieldNumber
-          //           ? Icon(Icons.check_outlined)
-          //           : null,
-          //       onPressed: () {
-          //         _setSortField(NestSortField.fieldNumber);
-          //       },
-          //       child: Text(S.of(context).sortByName),
-          //     ),
-          //     Divider(),
-          //     MenuItemButton(
-          //       leadingIcon: Icon(Icons.south_outlined),
-          //       trailingIcon: _sortOrder == SortOrder.ascending
-          //           ? Icon(Icons.check_outlined)
-          //           : null,
-          //       onPressed: () {
-          //         _setSortOrder(SortOrder.ascending);
-          //       },
-          //       child: Text(S.of(context).sortAscending),
-          //     ),
-          //     MenuItemButton(
-          //       leadingIcon: Icon(Icons.north_outlined),
-          //       trailingIcon: _sortOrder == SortOrder.descending
-          //           ? Icon(Icons.check_outlined)
-          //           : null,
-          //       onPressed: () {
-          //         _setSortOrder(SortOrder.descending);
-          //       },
-          //       child: Text(S.of(context).sortDescending),
-          //     ),
-          //   ],
-          // ),
           MenuAnchor(
             builder: (context, controller, child) {
               return IconButton(
@@ -630,33 +638,6 @@ class NestsScreenState extends State<NestsScreen> {
       ),
       body: Column(
         children: [
-          // Show the search bar
-          // if (_isSearchBarVisible) Padding(
-          //   padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
-          //   child: SearchBar(
-          //     controller: _searchController,
-          //     hintText: S.of(context).findNests,
-          //     leading: const Icon(Icons.search_outlined),
-          //     trailing: [
-          //       _searchController.text.isNotEmpty
-          //           ? IconButton(
-          //         icon: const Icon(Icons.clear_outlined),
-          //         onPressed: () {
-          //           setState(() {
-          //             _searchQuery = '';
-          //             _searchController.clear();
-          //           });
-          //         },
-          //       )
-          //           : SizedBox.shrink(),
-          //     ],
-          //     onChanged: (query) {
-          //       setState(() {
-          //         _searchQuery = query;
-          //       });
-          //     },
-          //   ),
-          // ),
           Padding(
             padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
             child: LayoutBuilder(
@@ -1153,52 +1134,6 @@ class NestsScreenState extends State<NestsScreen> {
                               },
                             );
                           }, color: Theme.of(context).colorScheme.error),
-                      // if (!_showActive)
-                      //   buildGridMenuItem(
-                      //       context, Icons.share_outlined, 'CSV',
-                      //           () async {
-                      //         Navigator.of(context).pop();
-                      //         final locale = Localizations.localeOf(context);
-                      //         final csvFile = await exportNestToCsv(context, nest, locale);
-                      //         // Share the file using share_plus
-                      //         await SharePlus.instance.share(
-                      //           ShareParams(
-                      //               files: [XFile(csvFile, mimeType: 'text/csv')],
-                      //               text: S.current.nestExported(1),
-                      //               subject: S.current.nestData(1)
-                      //           ),
-                      //         );
-                      //       }),
-                      // if (!_showActive)
-                      //   buildGridMenuItem(
-                      //       context, Icons.share_outlined, 'Excel',
-                      //           () async {
-                      //         Navigator.of(context).pop();
-                      //         final locale = Localizations.localeOf(context);
-                      //         final excelFile = await exportNestToExcel(context, nest, locale);
-                      //         // Share the file using share_plus
-                      //         await SharePlus.instance.share(
-                      //           ShareParams(
-                      //               files: [XFile(excelFile, mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')],
-                      //               text: S.current.nestExported(1),
-                      //               subject: S.current.nestData(1)
-                      //           ),
-                      //         );
-                      //       }),
-                      // if (!_showActive)
-                      //   buildGridMenuItem(
-                      //       context, Icons.share_outlined, 'JSON',
-                      //           () {
-                      //         Navigator.of(context).pop();
-                      //         exportNestToJson(context, nest);
-                      //       }),
-                      // if (!_showActive)
-                      //   buildGridMenuItem(context, Icons.share_outlined,
-                      //       'KML', () {
-                      //         Navigator.of(context).pop();
-                      //         exportNestToKml(context, nest);
-                      //       }),
-
                     ],
                   ),
                   Divider(),

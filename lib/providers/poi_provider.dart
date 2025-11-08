@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../data/models/inventory.dart';
-import '../data/database/daos/poi_dao.dart';
+import '../data/daos/poi_dao.dart';
 
 class PoiProvider with ChangeNotifier {
   final PoiDao _poiDao;

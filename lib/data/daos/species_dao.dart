@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 
-import '../../models/inventory.dart';
-import '../../database/database_helper.dart';
-import '../../database/daos/poi_dao.dart';
+import '../models/inventory.dart';
+import '../database/database_helper.dart';
+import 'poi_dao.dart';
 
 class SpeciesDao {
   final DatabaseHelper _dbHelper;

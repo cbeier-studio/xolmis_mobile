@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
 
 import '../data/models/inventory.dart';
-import '../data/database/daos/inventory_dao.dart';
+import '../data/daos/inventory_dao.dart';
 import '../providers/species_provider.dart';
 
 import '../screens/inventory/add_inventory_screen.dart';

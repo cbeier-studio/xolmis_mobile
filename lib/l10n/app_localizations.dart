@@ -2178,6 +2178,72 @@ abstract class AppLocalizations {
   /// **'Open Source Licenses'**
   String get openSourceLicenses;
 
+  /// Sort by button label
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by'**
+  String get sortBy;
+
+  /// Start time field label
+  ///
+  /// In en, this message translates to:
+  /// **'Start time'**
+  String get startTime;
+
+  /// End time field label
+  ///
+  /// In en, this message translates to:
+  /// **'End time'**
+  String get endTime;
+
+  /// Direction field label
+  ///
+  /// In en, this message translates to:
+  /// **'Direction'**
+  String get direction;
+
+  /// Ascending direction option
+  ///
+  /// In en, this message translates to:
+  /// **'Ascending'**
+  String get ascending;
+
+  /// Descending direction option
+  ///
+  /// In en, this message translates to:
+  /// **'Descending'**
+  String get descending;
+
+  /// Found time field label
+  ///
+  /// In en, this message translates to:
+  /// **'Found time'**
+  String get foundTime;
+
+  /// Last time field label
+  ///
+  /// In en, this message translates to:
+  /// **'Last time'**
+  String get lastTime;
+
+  /// Creation time field label
+  ///
+  /// In en, this message translates to:
+  /// **'Creation time'**
+  String get creationTime;
+
+  /// Last modified time field label
+  ///
+  /// In en, this message translates to:
+  /// **'Last modified time'**
+  String get lastModifiedTime;
+
+  /// Sample time field label
+  ///
+  /// In en, this message translates to:
+  /// **'Sample time'**
+  String get sampleTime;
+
   /// No description provided for @precipitationNone.
   ///
   /// In en, this message translates to:

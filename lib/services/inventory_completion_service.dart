@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart'; // Para configuraç
 // Importe seus modelos e providers necessários
 import '../../data/models/inventory.dart';
 import '../providers/inventory_provider.dart'; // Exemplo
-import '../../data/database/daos/inventory_dao.dart'; // Exemplo
+import '../data/daos/inventory_dao.dart'; // Exemplo
 // Importe suas telas de adição de vegetação/tempo e strings S.of(context)
 import '../screens/inventory/add_vegetation_screen.dart';
 import '../screens/inventory/add_weather_screen.dart';

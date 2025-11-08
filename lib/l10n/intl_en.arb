@@ -1947,6 +1947,61 @@
     "type": "text",
     "description": "Open Source Licenses button label"
   },
+  "sortBy": "Sort by",
+    "@sortBy": {
+      "type": "text",
+      "description": "Sort by button label"
+    },
+  "startTime": "Start time",
+    "@startTime": {
+      "type": "text",
+      "description": "Start time field label"
+    },
+  "endTime": "End time",
+    "@endTime": {
+      "type": "text",
+      "description": "End time field label"
+    },
+  "direction": "Direction",
+    "@direction": {
+      "type": "text",
+      "description": "Direction field label"
+    },
+  "ascending": "Ascending",
+    "@ascending": {
+      "type": "text",
+      "description": "Ascending direction option"
+    },
+  "descending": "Descending",
+    "@descending": {
+      "type": "text",
+      "description": "Descending direction option"
+    },
+  "foundTime": "Found time",
+    "@foundTime": {
+      "type": "text",
+      "description": "Found time field label"
+    },
+  "lastTime": "Last time",
+    "@lastTime": {
+      "type": "text",
+      "description": "Last time field label"
+    },
+  "creationTime": "Creation time",
+    "@creationTime": {
+      "type": "text",
+      "description": "Creation time field label"
+    },
+  "lastModifiedTime": "Last modified time",
+    "@lastModifiedTime": {
+      "type": "text",
+      "description": "Last modified time field label"
+    },
+  "sampleTime": "Sample time",
+    "@sampleTime": {
+      "type": "text",
+      "description": "Sample time field label"
+    },
     "precipitationNone": "None",
     "precipitationFog": "Fog",
     "precipitationMist": "Mist",

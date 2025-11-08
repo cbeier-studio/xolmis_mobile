@@ -4,15 +4,14 @@ import 'package:geolocator/geolocator.dart';
 import 'package:xolmis/screens/inventory/edit_species_screen.dart';
 
 import '../../data/models/inventory.dart';
-import '../../data/database/daos/inventory_dao.dart';
-import '../../data/database/daos/species_dao.dart';
+import '../../data/daos/inventory_dao.dart';
+import '../../data/daos/species_dao.dart';
 import '../../providers/inventory_provider.dart';
 import '../../providers/species_provider.dart';
 import '../../providers/poi_provider.dart';
 
+import '../../core/core_consts.dart';
 import '../../utils/utils.dart';
-// import '../../utils/species_search_delegate.dart';
-// import '../../utils/species_search_dialog.dart';
 import '../statistics/species_chart_screen.dart';
 import '../../widgets/species_list_item.dart';
 import '../../generated/l10n.dart';
@@ -34,6 +33,11 @@ class SpeciesTab extends StatefulWidget {
 }
 
 class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMixin {
+
+  late SpeciesSortField _sortOption = widget.inventory.type == InventoryType.invTransectDetection ||
+      widget.inventory.type == InventoryType.invPointDetection ? SpeciesSortField.time : SpeciesSortField.name;
+  late SortOrder _sortOrder = widget.inventory.type == InventoryType.invTransectDetection ||
+      widget.inventory.type == InventoryType.invPointDetection ? SortOrder.descending : SortOrder.ascending;
 
   @override
   bool get wantKeepAlive => true;
@@ -117,8 +121,6 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     // await inventoryRepository.updateInventory(widget.inventory);
     // Reload the species list for the current inventory
     await _updateSpeciesList(widget.inventory.id);
-
-    // speciesProvider.notifyListeners();
   }
 
   void _showSpeciesAlreadyExistsMessage() {
@@ -177,7 +179,6 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
         // Reload the species list for the other inventory
         await speciesProvider.loadSpeciesForInventory(inventory.id);
         inventory.speciesList = speciesProvider.getSpeciesForInventory(inventory.id);
-        // speciesProvider.notifyListeners();
       }
 
     }
@@ -255,7 +256,6 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
         
         speciesProvider.loadSpeciesForInventory(inventory.id);
         inventory.speciesList = speciesProvider.getSpeciesForInventory(inventory.id);
-        // speciesProvider.notifyListeners();
       }
 
     }
@@ -364,49 +364,60 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                 return TextField(
                   controller: controller,
                   decoration: InputDecoration(
+                    filled: true,
                     hintText: '${S.of(context).addSpecies}...',
                     prefixIcon: const Icon(Icons.add_outlined),
                     border: const OutlineInputBorder(),
-                    suffixIcon: MenuAnchor(
-                      builder: (context, controller, child) {
-                        return IconButton(
-                          icon: Icon(Icons.more_vert_outlined),
-                          // tooltip: S.of(context).exportWhat(S.of(context).inventory(1)),
-                          onPressed: () {
-                            if (controller.isOpen) {
-                              controller.close();
-                            } else {
-                              controller.open();
-                            }
-                          },
-                        );
-                      },
-                      menuChildren: [
-                        MenuItemButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => SpeciesChartScreen(
-                                    inventory: widget.inventory),
-                              ),
+                    suffixIcon: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.sort_outlined),
+                          tooltip: S.of(context).sortBy,
+                          onPressed: () => _showSortOptionsBottomSheet(),
+                        ),
+                        MenuAnchor(
+                          builder: (context, controller, child) {
+                            return IconButton(
+                              icon: Icon(Icons.more_vert_outlined),
+                              // tooltip: S.of(context).exportWhat(S.of(context).inventory(1)),
+                              onPressed: () {
+                                if (controller.isOpen) {
+                                  controller.close();
+                                } else {
+                                  controller.open();
+                                }
+                              },
                             );
                           },
-                          leadingIcon: const Icon(Icons.show_chart_outlined),
-                          child: Text(
-                            S.current.speciesAccumulationCurve,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        MenuItemButton(
-                          onPressed: () {
-                            _showAddSpeciesDialog(
-                                context,
-                                widget.speciesDao,
-                                widget.inventoryDao);
-                          },
-                          leadingIcon: const Icon(Icons.add_box_outlined),
-                          child: Text(S.current.addSpecies),
+                          menuChildren: [
+                            MenuItemButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => SpeciesChartScreen(
+                                        inventory: widget.inventory),
+                                  ),
+                                );
+                              },
+                              leadingIcon: const Icon(Icons.show_chart_outlined),
+                              child: Text(
+                                S.current.speciesAccumulationCurve,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            MenuItemButton(
+                              onPressed: () {
+                                _showAddSpeciesDialog(
+                                    context,
+                                    widget.speciesDao,
+                                    widget.inventoryDao);
+                              },
+                              leadingIcon: const Icon(Icons.add_box_outlined),
+                              child: Text(S.current.addSpecies),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -442,24 +453,29 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
       ),
       Expanded(child: Consumer<SpeciesProvider>(builder: (context, speciesProvider, child) {
         final speciesList = speciesProvider.getSpeciesForInventory(widget.inventory.id);
-        if (widget.inventory.type == InventoryType.invTransectDetection ||
-            widget.inventory.type == InventoryType.invPointDetection) {
-          speciesList.sort((a, b) {
-            if (a.sampleTime == null && b.sampleTime == null) {
-              return 0; // Both are null, considered the same
-            }
-            if (a.sampleTime == null) {
-              return -1; // 'a' is null, then goes to the end of list
-            }
-            if (b.sampleTime == null) {
-              return 1; // 'b' is null, then goes to the end of list (and 'a' goes first)
-            }
-            // None is null, compare the times
-            return b.sampleTime!.compareTo(a.sampleTime!);
-          });
-        } else {
-          speciesList.sort((a, b) => a.name.compareTo(b.name));
-        }
+        speciesList.sort((a, b) {
+          int comparison;
+
+          // Helper function to handle nulls. Null values are treated as "smaller".
+          int compareNullables<T extends Comparable>(T? a, T? b) {
+            if (a == null && b == null) return 0; // Both are equal
+            if (a == null) return -1; // a is "smaller"
+            if (b == null) return 1;  // b is "smaller"
+            return a.compareTo(b);
+          }
+
+          switch (_sortOption) {
+            case SpeciesSortField.name:
+              comparison = compareNullables(a.name, b.name);
+              break;
+            case SpeciesSortField.time:
+              comparison = compareNullables(a.sampleTime, b.sampleTime);
+              break;
+          }
+
+          // Apply the sort order (ascending or descending)
+          return _sortOrder == SortOrder.ascending ? comparison : -comparison;
+        });
 
         if (speciesList.isEmpty) {
           return Center(
@@ -607,109 +623,6 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                           }, color: Theme.of(context).colorScheme.error),
                     ],
                   ),
-                  /*
-                  // Option to edit the species notes
-                  ListTile(
-                    leading: const Icon(Icons.edit_outlined),
-                    title: Text(S.of(context).speciesNotes),
-                    onTap: () async {
-                      Navigator.pop(context);
-                      // _showEditNotesDialog(context, species);
-                      final speciesProvider = Provider.of<SpeciesProvider>(
-                          context, listen: false);
-                      final editedSpecies = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => EditSpeciesScreen(species: species),
-                        ),
-                      );
-                      if (editedSpecies != null && editedSpecies is Species) {
-                        await speciesProvider.updateSpecies(widget.inventory.id, editedSpecies);
-                      }
-                    },
-                  ),
-                  // Option to add the species to the sample
-                  if (species.isOutOfInventory)
-                    ListTile(
-                      leading: const Icon(Icons.inventory_outlined),
-                      title: Text(S.of(context).addSpeciesToSample),
-                      onTap: () {
-                        Navigator.pop(context);
-                        _addSpeciesToSample(context, species);
-                      },
-                    ),
-                  // Option to remove the species from the sample                  
-                  if (!species.isOutOfInventory)
-                    ListTile(
-                      leading: const Icon(Icons.content_paste_go_outlined),
-                      title: Text(S.of(context).removeSpeciesFromSample),
-                      onTap: () {
-                        Navigator.pop(context);
-                        _removeSpeciesToSample(context, species);
-                      },
-                    ),
-                  // Divider(),
-                  // Option to add a POI
-                  ListTile(
-                    leading: const Icon(Icons.add_location_outlined),
-                    title: Text(S.of(context).addPoi),
-                    onTap: () async {
-                      final poiProvider =
-                          Provider.of<PoiProvider>(context, listen: false);
-                      // Get the current location
-                      Position? position = await getPosition(context);
-
-                      if (position != null) {
-                        // Create a new POI
-                        final poi = Poi(
-                          speciesId: species.id!,
-                          sampleTime: DateTime.now(),
-                          longitude: position.longitude,
-                          latitude: position.latitude,
-                        );
-
-                        // Insert the POI in the database
-                        if (context.mounted) {
-                          poiProvider.addPoi(context, species.id!, poi);
-                          // poiProvider.notifyListeners();
-                        }                        
-                      } else {
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Row(
-                                children: [
-                                  const Icon(Icons.error_outlined,
-                                      color: Colors.red),
-                                  const SizedBox(width: 8),
-                                  Text(S.of(context).errorGettingLocation),
-                                ],
-                              ),
-                            ),
-                          );
-                        }
-                      }
-                    },
-                  ),
-                  // Divider(),
-                  // Option to delete the species
-                  ListTile(
-                    leading: Icon(
-                      Icons.delete_outlined, color: Theme.of(context).brightness == Brightness.light
-                        ? Colors.red
-                        : Colors.redAccent,),
-                    title: Text(
-                      S.of(context).deleteSpecies, style: TextStyle(color: Theme.of(context).brightness == Brightness.light
-                        ? Colors.red
-                        : Colors.redAccent,),),
-                    onTap: () async {
-                      await _deleteSpecies(species);
-                      if (context.mounted) {
-                        Navigator.pop(context);
-                      }
-                    },
-                  )
-                  */
                 ],
               ),
             );
@@ -736,53 +649,74 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     speciesProvider.updateSpecies(species.inventoryId, species);
   }
 
-  // Show the dialog to edit species notes
-  void _showEditNotesDialog(BuildContext context, Species species) {
-    final notesController = TextEditingController(text: species.notes);
-    final speciesProvider = Provider.of<SpeciesProvider>(
-        context, listen: false);
-
-    showDialog(
+  void _showSortOptionsBottomSheet() {
+    showModalBottomSheet(
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog.adaptive(
-          title: Text(S.of(context).editNotes),
-          content: TextField(
-            controller: notesController,
-            maxLines: 3,
-            textCapitalization: TextCapitalization.sentences,
-            decoration: InputDecoration(
-              labelText: S.of(context).notes,
-              border: OutlineInputBorder(),
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text(S.of(context).cancel),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text(S.of(context).save),
-              onPressed: () async {
-                species.notes = notesController.text;
-                final updatedSpecies = Species(
-                  id: species.id,
-                  inventoryId: species.inventoryId,
-                  notes: notesController.text,
-                  isOutOfInventory: species.isOutOfInventory,
-                  count: species.count,
-                  name: species.name,
-                );
-                await speciesProvider.updateSpecies(species.inventoryId, updatedSpecies);
-                if (context.mounted) {
-                  Navigator.of(context).pop();
-                }
-                setState(() {});
-              },
-            ),
-          ],
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setModalState) {
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(S.of(context).sortBy, style: Theme.of(context).textTheme.bodyLarge),
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 8.0, // Space between chips
+                    children: <Widget>[
+                      ChoiceChip(
+                        label: Text(S.current.speciesName),
+                        showCheckmark: false,
+                        selected: _sortOption == SpeciesSortField.name,
+                        onSelected: (bool selected) {
+                          setModalState(() {
+                            _sortOption = SpeciesSortField.name;
+                          });
+                          setState(() {
+                            _sortOption = SpeciesSortField.name;
+                          });
+                        },
+                      ),
+                      ChoiceChip(
+                        label: Text(S.current.sampleTime),
+                        showCheckmark: false,
+                        selected: _sortOption == SpeciesSortField.time,
+                        onSelected: (bool selected) {
+                          setModalState(() {
+                            _sortOption = SpeciesSortField.time;
+                          });
+                          setState(() {
+                            _sortOption = SpeciesSortField.time;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                  const Divider(),
+                  Text(S.of(context).direction, style: Theme.of(context).textTheme.bodyLarge),
+                  const SizedBox(height: 8),
+                  SegmentedButton<SortOrder>(
+                    segments: [
+                      ButtonSegment(value: SortOrder.ascending, label: Text(S.of(context).ascending), icon: Icon(Icons.south_outlined)),
+                      ButtonSegment(value: SortOrder.descending, label: Text(S.of(context).descending), icon: Icon(Icons.north_outlined)),
+                    ],
+                    selected: {_sortOrder},
+                    showSelectedIcon: false,
+                    onSelectionChanged: (Set<SortOrder> newSelection) {
+                      setModalState(() {
+                        _sortOrder = newSelection.first;
+                      });
+                      setState(() {
+                        _sortOrder = newSelection.first;
+                      });
+                    },
+                  ),
+                ],
+              ),
+            );
+          },
         );
       },
     );

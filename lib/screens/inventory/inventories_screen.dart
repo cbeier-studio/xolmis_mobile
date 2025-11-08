@@ -10,23 +10,21 @@ import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/models/inventory.dart';
-import '../../data/database/daos/inventory_dao.dart';
-import '../../data/database/daos/species_dao.dart';
-import '../../data/database/daos/poi_dao.dart';
-import '../../data/database/daos/vegetation_dao.dart';
-import '../../data/database/daos/weather_dao.dart';
+import '../../data/daos/inventory_dao.dart';
+import '../../data/daos/species_dao.dart';
+import '../../data/daos/poi_dao.dart';
+import '../../data/daos/vegetation_dao.dart';
+import '../../data/daos/weather_dao.dart';
 
 import '../../providers/inventory_provider.dart';
 import '../../providers/species_provider.dart';
 
 import 'add_inventory_screen.dart';
-import '../statistics/individuals_count_chart_screen.dart';
 import 'edit_inventory_screen.dart';
 import 'inventory_detail_screen.dart';
 import '../statistics/inventory_report_screen.dart';
-import 'add_vegetation_screen.dart';
-import 'add_weather_screen.dart';
 
+import '../../core/core_consts.dart';
 import '../../utils/utils.dart';
 import '../../utils/export_utils.dart';
 import '../../utils/import_utils.dart';
@@ -34,19 +32,6 @@ import '../../services/inventory_completion_service.dart';
 import '../../generated/l10n.dart';
 import '../statistics/mackinnon_chart_screen.dart';
 import '../statistics/species_count_chart_screen.dart';
-
-enum InventorySortField {
-  id,
-  startTime,
-}
-
-enum SortOrder {
-  ascending,
-  descending,
-}
-
-// Enum for warning dialog actions
-enum ConditionalAction { add, ignore, cancelDialog }
 
 class InventoriesScreen extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
@@ -108,50 +93,165 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     super.dispose();
   }
 
-  // void _onInventoryPausedOrResumed(Inventory inventory) {
-  //   inventoryProvider.updateInventory(inventory);
-  // }
-
   void onInventoryUpdated(Inventory inventory) {
     inventoryProvider.updateInventory(inventory);
-  }
-
-  // Show or hide the search bar
-  void _toggleSearchBarVisibility() {
-    setState(() {
-      _isSearchBarVisible = !_isSearchBarVisible;
-    });
-  }
-
-  // Toggle the sort order between ascending and descending
-  void _setSortOrder(SortOrder order) {
-    setState(() {
-      _sortOrder = order;
-    });
-  }
-
-  // Change the field to sort by
-  void _setSortField(InventorySortField field) {
-    setState(() {
-      _sortField = field;
-    });
   }
 
   // Sort the inventories by the selected field and order
   List<Inventory> _sortInventories(List<Inventory> inventories) {
     inventories.sort((a, b) {
       int comparison;
+
+      // Helper function to handle nulls. Null values are treated as "smaller".
+      int compareNullables<T extends Comparable>(T? a, T? b) {
+        if (a == null && b == null) return 0; // Both are equal
+        if (a == null) return -1; // a is "smaller"
+        if (b == null) return 1;  // b is "smaller"
+        return a.compareTo(b);
+      }
+
+      // Helper function for comparing strings via a map lookup.
+      int compareMappedStrings(InventoryType aKey, InventoryType bKey) {
+        final aValue = aKey != null ? inventoryTypeFriendlyNames[aKey] : null;
+        final bValue = bKey != null ? inventoryTypeFriendlyNames[bKey] : null;
+        return compareNullables(aValue, bValue);
+      }
+
       switch (_sortField) {
         case InventorySortField.id:
+        // 'id' is non-nullable, so direct comparison is safe.
           comparison = a.id.compareTo(b.id);
           break;
         case InventorySortField.startTime:
-          comparison = a.startTime!.compareTo(b.startTime!);
+          comparison = compareNullables(a.startTime, b.startTime);
+          break;
+        case InventorySortField.endTime:
+          comparison = compareNullables(a.endTime, b.endTime);
+          break;
+        case InventorySortField.locality:
+          comparison = compareNullables(a.localityName, b.localityName);
+          break;
+        case InventorySortField.inventoryType:
+          comparison = compareMappedStrings(a.type, b.type);
           break;
       }
+
+      // Apply the sort order (ascending or descending)
       return _sortOrder == SortOrder.ascending ? comparison : -comparison;
     });
     return inventories;
+  }
+
+  void _showSortOptionsBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setModalState) {
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(S.of(context).sortBy, style: Theme.of(context).textTheme.bodyLarge),
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 8.0, // Space between chips
+                    children: <Widget>[
+                      ChoiceChip(
+                        label: Text(S.current.inventoryId),
+                        showCheckmark: false,
+                        selected: _sortField == InventorySortField.id,
+                        onSelected: (bool selected) {
+                          setModalState(() {
+                            _sortField = InventorySortField.id;
+                          });
+                          setState(() {
+                            _sortField = InventorySortField.id;
+                          });
+                        },
+                      ),
+                      ChoiceChip(
+                        label: Text(S.current.startTime),
+                        showCheckmark: false,
+                        selected: _sortField == InventorySortField.startTime,
+                        onSelected: (bool selected) {
+                          setModalState(() {
+                            _sortField = InventorySortField.startTime;
+                          });
+                          setState(() {
+                            _sortField = InventorySortField.startTime;
+                          });
+                        },
+                      ),
+                      ChoiceChip(
+                        label: Text(S.current.endTime),
+                        showCheckmark: false,
+                        selected: _sortField == InventorySortField.endTime,
+                        onSelected: (bool selected) {
+                          setModalState(() {
+                            _sortField = InventorySortField.endTime;
+                          });
+                          setState(() {
+                            _sortField = InventorySortField.endTime;
+                          });
+                        },
+                      ),
+                      ChoiceChip(
+                        label: Text(S.current.locality),
+                        showCheckmark: false,
+                        selected: _sortField == InventorySortField.locality,
+                        onSelected: (bool selected) {
+                          setModalState(() {
+                            _sortField = InventorySortField.locality;
+                          });
+                          setState(() {
+                            _sortField = InventorySortField.locality;
+                          });
+                        },
+                      ),
+                      ChoiceChip(
+                        label: Text(S.current.inventoryType),
+                        showCheckmark: false,
+                        selected: _sortField == InventorySortField.inventoryType,
+                        onSelected: (bool selected) {
+                          setModalState(() {
+                            _sortField = InventorySortField.inventoryType;
+                          });
+                          setState(() {
+                            _sortField = InventorySortField.inventoryType;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                  const Divider(),
+                  Text(S.of(context).direction, style: Theme.of(context).textTheme.bodyLarge),
+                  const SizedBox(height: 8),
+                  SegmentedButton<SortOrder>(
+                    segments: [
+                      ButtonSegment(value: SortOrder.ascending, label: Text(S.of(context).ascending), icon: Icon(Icons.south_outlined)),
+                      ButtonSegment(value: SortOrder.descending, label: Text(S.of(context).descending), icon: Icon(Icons.north_outlined)),
+                    ],
+                    selected: {_sortOrder},
+                    showSelectedIcon: false,
+                    onSelectionChanged: (Set<SortOrder> newSelection) {
+                      setModalState(() {
+                        _sortOrder = newSelection.first;
+                      });
+                      setState(() {
+                        _sortOrder = newSelection.first;
+                      });
+                    },
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
   // Filter the inventories by the search query
@@ -524,62 +624,12 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
           elevation: WidgetStateProperty.all(0),
           // leading: const Icon(Icons.search_outlined),
           trailing: [
-            MenuAnchor(
-              builder: (context, controller, child) {
-                return IconButton(
-                  icon: Icon(Icons.sort_outlined),
-                  onPressed: () {
-                    if (controller.isOpen) {
-                      controller.close();
-                    } else {
-                      controller.open();
-                    }
-                  },
-                );
+            IconButton(
+              icon: const Icon(Icons.sort_outlined),
+              tooltip: S.of(context).sortBy,
+              onPressed: () {
+                _showSortOptionsBottomSheet();
               },
-              menuChildren: [
-                MenuItemButton(
-                  leadingIcon: Icon(Icons.schedule_outlined),
-                  trailingIcon: _sortField == InventorySortField.startTime
-                      ? Icon(Icons.check_outlined)
-                      : null,
-                  onPressed: () {
-                    _setSortField(InventorySortField.startTime);
-                  },
-                  child: Text(S.of(context).sortByTime),
-                ),
-                MenuItemButton(
-                  leadingIcon: Icon(Icons.sort_by_alpha_outlined),
-                  trailingIcon: _sortField == InventorySortField.id
-                      ? Icon(Icons.check_outlined)
-                      : null,
-                  onPressed: () {
-                    _setSortField(InventorySortField.id);
-                  },
-                  child: Text(S.of(context).sortByName),
-                ),
-                Divider(),
-                MenuItemButton(
-                  leadingIcon: Icon(Icons.south_outlined),
-                  trailingIcon: _sortOrder == SortOrder.ascending
-                      ? Icon(Icons.check_outlined)
-                      : null,
-                  onPressed: () {
-                    _setSortOrder(SortOrder.ascending);
-                  },
-                  child: Text(S.of(context).sortAscending),
-                ),
-                MenuItemButton(
-                  leadingIcon: Icon(Icons.north_outlined),
-                  trailingIcon: _sortOrder == SortOrder.descending
-                      ? Icon(Icons.check_outlined)
-                      : null,
-                  onPressed: () {
-                    _setSortOrder(SortOrder.descending);
-                  },
-                  child: Text(S.of(context).sortDescending),
-                ),
-              ],
             ),
             _searchController.text.isNotEmpty
                 ? IconButton(
@@ -617,64 +667,6 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
           //   selectedIcon: Icon(Icons.search_off_outlined),
           //   isSelected: _isSearchBarVisible,
           //   onPressed: _toggleSearchBarVisibility,
-          // ),
-          // Action to show the sort options
-          // MenuAnchor(
-          //   builder: (context, controller, child) {
-          //     return IconButton(
-          //       icon: Icon(Icons.sort_outlined),
-          //       onPressed: () {
-          //         if (controller.isOpen) {
-          //           controller.close();
-          //         } else {
-          //           controller.open();
-          //         }
-          //       },
-          //     );
-          //   },
-          //   menuChildren: [
-          //     MenuItemButton(
-          //       leadingIcon: Icon(Icons.schedule_outlined),
-          //       trailingIcon: _sortField == InventorySortField.startTime
-          //           ? Icon(Icons.check_outlined)
-          //           : null,
-          //       onPressed: () {
-          //         _setSortField(InventorySortField.startTime);
-          //       },
-          //       child: Text(S.of(context).sortByTime),
-          //     ),
-          //     MenuItemButton(
-          //       leadingIcon: Icon(Icons.sort_by_alpha_outlined),
-          //       trailingIcon: _sortField == InventorySortField.id
-          //           ? Icon(Icons.check_outlined)
-          //           : null,
-          //       onPressed: () {
-          //         _setSortField(InventorySortField.id);
-          //       },
-          //       child: Text(S.of(context).sortByName),
-          //     ),
-          //     Divider(),
-          //     MenuItemButton(
-          //       leadingIcon: Icon(Icons.south_outlined),
-          //       trailingIcon: _sortOrder == SortOrder.ascending
-          //           ? Icon(Icons.check_outlined)
-          //           : null,
-          //       onPressed: () {
-          //         _setSortOrder(SortOrder.ascending);
-          //       },
-          //       child: Text(S.of(context).sortAscending),
-          //     ),
-          //     MenuItemButton(
-          //       leadingIcon: Icon(Icons.north_outlined),
-          //       trailingIcon: _sortOrder == SortOrder.descending
-          //           ? Icon(Icons.check_outlined)
-          //           : null,
-          //       onPressed: () {
-          //         _setSortOrder(SortOrder.descending);
-          //       },
-          //       child: Text(S.of(context).sortDescending),
-          //     ),
-          //   ],
           // ),
           MenuAnchor(
             builder: (context, controller, child) {
@@ -727,34 +719,6 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
       ),
       body: Column(
         children: [
-          // if (_isSearchBarVisible)
-          //   Padding(
-          //     padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
-          //     child: SearchBar(
-          //       controller: _searchController,
-          //       hintText: S.of(context).findInventories,
-          //       elevation: WidgetStateProperty.all(2),
-          //       leading: const Icon(Icons.search_outlined),
-          //       trailing: [
-          //         _searchController.text.isNotEmpty
-          //             ? IconButton(
-          //                 icon: const Icon(Icons.clear_outlined),
-          //                 onPressed: () {
-          //                   setState(() {
-          //                     _searchQuery = '';
-          //                     _searchController.clear();
-          //                   });
-          //                 },
-          //               )
-          //             : SizedBox.shrink(),
-          //       ],
-          //       onChanged: (query) {
-          //         setState(() {
-          //           _searchQuery = query;
-          //         });
-          //       },
-          //     ),
-          //   ),
           Padding(
             padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
             child: LayoutBuilder(
@@ -1448,27 +1412,6 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                           ),
                         ),
                       ),
-                // Visibility(
-                //   visible: !_isShowingActiveInventories,
-                //   child: Align(
-                //   alignment: Alignment.bottomRight,
-                //   child: TextButton(
-                //       child: Text(S.of(context).reactivateInventory),
-                //       onPressed: () {
-                //         Navigator.of(context).pop();
-                //         inventory.updateElapsedTime(0);
-                //         inventory.updateCurrentInterval(inventory.currentInterval + 1);
-                //         inventory.currentIntervalSpeciesCount = 0;
-                //         inventory.intervalsWithoutNewSpecies = 0;
-                //         inventory.intervalWithoutSpeciesNotifier.value = inventory.intervalsWithoutNewSpecies;
-                //         inventory.updateIsFinished(false);
-                //         inventoryProvider.updateInventory(inventory);
-                //         inventoryProvider.startInventoryTimer(inventory, inventoryRepository);
-                //         // inventoryProvider.notifyListeners();
-                //       },
-                //     ),
-                //   ),
-                // ),
                     ],
                   ),
                 ),
@@ -1506,17 +1449,9 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     children: <Widget>[
-                      // buildGridMenuItem(
-                      //     context, Icons.edit_outlined, '${S.current.edit} ID', () {
-                      //   Navigator.of(context).pop();
-                      //   _showEditIdDialog(context, inventory);
-                      // }),
                       buildGridMenuItem(context, Icons.edit_outlined,
                           S.current.edit, () async {
                             Navigator.of(context).pop();
-                            // _showEditDetailsDialog(context, inventory);
-                            // final speciesProvider = Provider.of<SpeciesProvider>(
-                            //     context, listen: false);
                             final editedInventory = await Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -1634,52 +1569,6 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                               },
                             );
                           }, color: Theme.of(context).colorScheme.error),
-                      // if (!_isShowingActiveInventories)
-                      // buildGridMenuItem(
-                      //     context, Icons.share_outlined, 'CSV',
-                      //     () async {
-                      //   Navigator.of(context).pop();
-                      //   final locale = Localizations.localeOf(context);
-                      //   final csvFile = await exportInventoryToCsv(context, inventory, locale);
-                      //   // Share the file using share_plus
-                      //   await SharePlus.instance.share(
-                      //     ShareParams(
-                      //         files: [XFile(csvFile, mimeType: 'text/csv')],
-                      //         text: S.current.inventoryExported(1),
-                      //         subject: S.current.inventoryData(1)
-                      //     ),
-                      //   );
-                      // }),
-                      // if (!_isShowingActiveInventories)
-                      // buildGridMenuItem(
-                      //     context, Icons.share_outlined, 'Excel',
-                      //     () async {
-                      //   Navigator.of(context).pop();
-                      //   final locale = Localizations.localeOf(context);
-                      //   final excelFile = await exportInventoryToExcel(context, inventory, locale);
-                      //   // Share the file using share_plus
-                      //   await SharePlus.instance.share(
-                      //     ShareParams(
-                      //         files: [XFile(excelFile, mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')],
-                      //         text: S.current.inventoryExported(1),
-                      //         subject: S.current.inventoryData(1)
-                      //     ),
-                      //   );
-                      // }),
-                      // if (!_isShowingActiveInventories)
-                      // buildGridMenuItem(
-                      //     context, Icons.share_outlined, 'JSON',
-                      //     () {
-                      //   Navigator.of(context).pop();
-                      //   exportInventoryToJson(context, inventory, true);
-                      // }),
-                      // if (!_isShowingActiveInventories)
-                      // buildGridMenuItem(context, Icons.share_outlined,
-                      //     'KML', () {
-                      //       Navigator.of(context).pop();
-                      //       exportInventoryToKml(context, inventory);
-                      // }),
-
                     ],
                   ),
                   Divider(),
@@ -1763,167 +1652,6 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                       ),
                     ],
                   ),
-                  /*
-                  ListTile(
-                    leading: const Icon(Icons.edit_outlined),
-                    title: Text(S.current.edit),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            _showEditIdDialog(context, inventory);
-                          },
-                          child: Text('ID'),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            _showEditDetailsDialog(context, inventory);
-                          },
-                          child: Text(S.current.details),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  if (_isShowingActiveInventories)
-                    ListTile(
-                      leading: const Icon(Icons.flag_outlined),
-                      title: Text(S.of(context).finishInventory),
-                      onTap: () async {
-                        // Ask for user confirmation
-                        // showFinishDialog(context, inventory);
-                        final completionService = InventoryCompletionService(
-                          context: context,
-                          inventory: inventory,
-                          inventoryProvider: inventoryProvider,
-                          inventoryRepository: inventoryRepository,
-                        );
-                        await completionService.attemptFinishInventory(context);
-                      },
-                    ),
-
-                  if (!_isShowingActiveInventories)
-                    ListTile(
-                      leading: const Icon(Icons.undo_outlined),
-                      title: Text(S.of(context).reactivateInventory),
-                      onTap: () {
-                        Navigator.of(context).pop();
-                        inventory.updateElapsedTime(0);
-                        inventory.updateCurrentInterval(inventory.currentInterval + 1);
-                        inventory.currentIntervalSpeciesCount = 0;
-                        inventory.intervalsWithoutNewSpecies = 0;
-                        inventory.intervalWithoutSpeciesNotifier.value = inventory.intervalsWithoutNewSpecies;
-                        inventory.updateIsFinished(false);
-                        inventoryProvider.updateInventory(inventory);
-                        inventoryProvider.startInventoryTimer(context, inventory, inventoryRepository);
-                        // inventoryProvider.notifyListeners();
-                      },
-                    ),
-
-                  if (!_isShowingActiveInventories)
-                    ListTile(
-                      leading: const Icon(Icons.file_upload_outlined),
-                      title: Text(S.of(context).export), 
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,                       
-                        children: [
-                          // Option to export the selected inventory to CSV
-                          TextButton(
-                            onPressed: () async {
-                              Navigator.of(context).pop();
-                              final locale = Localizations.localeOf(context);
-                              final csvFile = await exportInventoryToCsv(context, inventory, locale);
-                              // Share the file using share_plus
-                              await SharePlus.instance.share(
-                                ShareParams(
-                                  files: [XFile(csvFile, mimeType: 'text/csv')], 
-                                  text: S.current.inventoryExported(1), 
-                                  subject: S.current.inventoryData(1)
-                                ),
-                              );
-                            },
-                            child: Text('CSV'),
-                          ),
-                          // Option to export the selected inventory to Excel
-                          TextButton(
-                            onPressed: () async {
-                              Navigator.of(context).pop();
-                              final locale = Localizations.localeOf(context);
-                              final excelFile = await exportInventoryToExcel(context, inventory, locale);
-                              // Share the file using share_plus
-                              await SharePlus.instance.share(
-                                ShareParams(
-                                  files: [XFile(excelFile, mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')], 
-                                  text: S.current.inventoryExported(1), 
-                                  subject: S.current.inventoryData(1)
-                                ),
-                              );
-                            },
-                            child: Text('Excel'),
-                          ),
-                          // Option to export the selected inventory to JSON
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                              exportInventoryToJson(context, inventory, true);
-                            },
-                            child: Text('JSON'),
-                          ),
-                        ]
-                      ),
-                    ),
-                  if (!_isShowingActiveInventories)
-                    ListTile(
-                      leading: const Icon(Icons.file_upload_outlined),
-                      title: Text(S.of(context).exportKml),
-                      onTap: () {
-                        Navigator.of(context).pop();
-                        exportInventoryToKml(context, inventory);
-                      },
-                    ),
-
-                  ListTile(
-                    leading: Icon(Icons.delete_outlined, color: Theme.of(context).brightness == Brightness.light
-                        ? Colors.red
-                        : Colors.redAccent,),
-                    title: Text(S.of(context).deleteInventory, style: TextStyle(color: Theme.of(context).brightness == Brightness.light
-                        ? Colors.red
-                        : Colors.redAccent,),),
-                    onTap: () {
-                      // Ask for user confirmation
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog.adaptive(
-                            title: Text(S.of(context).confirmDelete),
-                            content: Text(S.of(context).confirmDeleteMessage(1, "male", S.of(context).inventory(1))),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop(false);
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text(S.of(context).cancel),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop(true);
-                                  Navigator.of(context).pop();
-                                  // Call the function to delete species
-                                  inventoryProvider.removeInventory(inventory.id);
-                                },
-                                child: Text(S.of(context).delete),
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    },
-                  )
-                  */
                 ],
               ),
             );

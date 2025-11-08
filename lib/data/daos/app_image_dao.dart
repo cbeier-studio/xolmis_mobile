@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 
-import '../../models/app_image.dart';
-import '../database_helper.dart';
+import '../models/app_image.dart';
+import '../database/database_helper.dart';
 
 
 class AppImageDao {

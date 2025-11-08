@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import '../data/models/app_image.dart';
-import '../data/database/daos/app_image_dao.dart';
+import '../data/daos/app_image_dao.dart';
 
 class AppImageProvider with ChangeNotifier {
   final AppImageDao _appImageDao;

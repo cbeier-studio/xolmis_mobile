@@ -161,6 +161,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Arquivar espécime",
     ),
     "archived": MessageLookupByLibrary.simpleMessage("Arquivados"),
+    "ascending": MessageLookupByLibrary.simpleMessage("Crescente"),
     "atmosphericPressure": MessageLookupByLibrary.simpleMessage(
       "Pressão atmosférica",
     ),
@@ -208,6 +209,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "count": MessageLookupByLibrary.simpleMessage("Contagem"),
     "createBackup": MessageLookupByLibrary.simpleMessage("Criar backup"),
+    "creationTime": MessageLookupByLibrary.simpleMessage("Hora de criação"),
     "dangerZone": MessageLookupByLibrary.simpleMessage("Área perigosa"),
     "darkMode": MessageLookupByLibrary.simpleMessage("Escuro"),
     "dataDeleted": MessageLookupByLibrary.simpleMessage(
@@ -246,7 +248,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "deleteWeather": MessageLookupByLibrary.simpleMessage(
       "Apagar registro do tempo",
     ),
+    "descending": MessageLookupByLibrary.simpleMessage("Decrescente"),
     "details": MessageLookupByLibrary.simpleMessage("Detalhes"),
+    "direction": MessageLookupByLibrary.simpleMessage("Direção"),
     "discardedInventory": MessageLookupByLibrary.simpleMessage(
       "Inventário descartado",
     ),
@@ -334,6 +338,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "eggShapeOval": MessageLookupByLibrary.simpleMessage("Oval"),
     "eggShapePyriform": MessageLookupByLibrary.simpleMessage("Piriforme"),
     "eggShapeSpherical": MessageLookupByLibrary.simpleMessage("Esférico"),
+    "endTime": MessageLookupByLibrary.simpleMessage("Hora final"),
     "enterCoordinates": MessageLookupByLibrary.simpleMessage(
       "Entrar coordenadas",
     ),
@@ -446,6 +451,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "formatNumbersDescription": MessageLookupByLibrary.simpleMessage(
       "Desmarque para formatar números com ponto como separador decimal",
     ),
+    "foundTime": MessageLookupByLibrary.simpleMessage("Hora do encontro"),
     "gallery": MessageLookupByLibrary.simpleMessage("Galeria"),
     "general": MessageLookupByLibrary.simpleMessage("Geral"),
     "generateId": MessageLookupByLibrary.simpleMessage("Gerar ID"),
@@ -575,6 +581,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "inventoryType": MessageLookupByLibrary.simpleMessage("Tipo de inventário"),
     "journalEntries": m24,
     "keepRunning": MessageLookupByLibrary.simpleMessage("Manter ativo"),
+    "lastModifiedTime": MessageLookupByLibrary.simpleMessage(
+      "Última modificação",
+    ),
+    "lastTime": MessageLookupByLibrary.simpleMessage("Hora final"),
     "latitude": MessageLookupByLibrary.simpleMessage("Latitude"),
     "length": MessageLookupByLibrary.simpleMessage("Comprimento"),
     "lightMode": MessageLookupByLibrary.simpleMessage("Claro"),
@@ -767,6 +777,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "restoringData": MessageLookupByLibrary.simpleMessage("Restaurando dados"),
     "resume": MessageLookupByLibrary.simpleMessage("Retomar"),
     "revision": m31,
+    "sampleTime": MessageLookupByLibrary.simpleMessage("Hora da coleta"),
     "save": MessageLookupByLibrary.simpleMessage("Salvar"),
     "selectAll": MessageLookupByLibrary.simpleMessage("Selecionar todos"),
     "selectInventoryType": MessageLookupByLibrary.simpleMessage(
@@ -798,6 +809,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Nome ou sigla do local",
     ),
     "sortAscending": MessageLookupByLibrary.simpleMessage("Ordem crescente"),
+    "sortBy": MessageLookupByLibrary.simpleMessage("Ordenar por"),
     "sortByLastModified": MessageLookupByLibrary.simpleMessage(
       "Ordenar por última modificação",
     ),
@@ -856,6 +868,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "startNextList": MessageLookupByLibrary.simpleMessage(
       "Iniciar próxima lista",
     ),
+    "startTime": MessageLookupByLibrary.simpleMessage("Hora inicial"),
     "statistics": MessageLookupByLibrary.simpleMessage("Estatísticas"),
     "surveyHours": MessageLookupByLibrary.simpleMessage("horas de amostragem"),
     "systemMode": MessageLookupByLibrary.simpleMessage("Tema do sistema"),
