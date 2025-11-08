@@ -20,17 +20,17 @@ import 'data/database/daos/specimen_dao.dart';
 import 'data/database/daos/app_image_dao.dart';
 import 'data/database/daos/journal_dao.dart';
 
-import 'data/database/repositories/inventory_repository.dart';
-import 'data/database/repositories/species_repository.dart';
-import 'data/database/repositories/poi_repository.dart';
-import 'data/database/repositories/vegetation_repository.dart';
-import 'data/database/repositories/weather_repository.dart';
-import 'data/database/repositories/nest_repository.dart';
-import 'data/database/repositories/nest_revision_repository.dart';
-import 'data/database/repositories/egg_repository.dart';
-import 'data/database/repositories/specimen_repository.dart';
-import 'data/database/repositories/app_image_repository.dart';
-import 'data/database/repositories/journal_repository.dart';
+// import 'data/database/repositories/inventory_repository.dart';
+// import 'data/database/repositories/species_repository.dart';
+// import 'data/database/repositories/poi_repository.dart';
+// import 'data/database/repositories/vegetation_repository.dart';
+// import 'data/database/repositories/weather_repository.dart';
+// import 'data/database/repositories/nest_repository.dart';
+// import 'data/database/repositories/nest_revision_repository.dart';
+// import 'data/database/repositories/egg_repository.dart';
+// import 'data/database/repositories/specimen_repository.dart';
+// import 'data/database/repositories/app_image_repository.dart';
+// import 'data/database/repositories/journal_repository.dart';
 
 import 'providers/inventory_provider.dart';
 import 'providers/species_provider.dart';
@@ -122,17 +122,17 @@ Future<void> main() async {
     final journalDao = FieldJournalDao(databaseHelper);
 
     // Create the repositories
-    final inventoryRepository = InventoryRepository(inventoryDao);
-    final speciesRepository = SpeciesRepository(speciesDao);
-    final poiRepository = PoiRepository(poiDao);
-    final vegetationRepository = VegetationRepository(vegetationDao);
-    final weatherRepository = WeatherRepository(weatherDao);
-    final nestRepository = NestRepository(nestDao);
-    final nestRevisionRepository = NestRevisionRepository(nestRevisionDao);
-    final eggRepository = EggRepository(eggDao);
-    final specimenRepository = SpecimenRepository(specimenDao);
-    final appImageRepository = AppImageRepository(appImageDao);
-    final journalRepository = FieldJournalRepository(journalDao);
+    // final inventoryRepository = InventoryRepository(inventoryDao);
+    // final speciesRepository = SpeciesRepository(speciesDao);
+    // final poiRepository = PoiRepository(poiDao);
+    // final vegetationRepository = VegetationRepository(vegetationDao);
+    // final weatherRepository = WeatherRepository(weatherDao);
+    // final nestRepository = NestRepository(nestDao);
+    // final nestRevisionRepository = NestRevisionRepository(nestRevisionDao);
+    // final eggRepository = EggRepository(eggDao);
+    // final specimenRepository = SpecimenRepository(specimenDao);
+    // final appImageRepository = AppImageRepository(appImageDao);
+    // final journalRepository = FieldJournalRepository(journalDao);
 
     // Preload the species names list
     List<String> preloadedSpeciesNames = await loadSpeciesSearchData();
@@ -140,17 +140,17 @@ Future<void> main() async {
     allSpeciesNames = List.from(preloadedSpeciesNames);
 
     final dependencies = AppDependencies(
-      inventoryRepository: inventoryRepository,
-      speciesRepository: speciesRepository,
-      poiRepository: poiRepository,
-      vegetationRepository: vegetationRepository,
-      weatherRepository: weatherRepository,
-      nestRepository: nestRepository,
-      nestRevisionRepository: nestRevisionRepository,
-      eggRepository: eggRepository,
-      specimenRepository: specimenRepository,
-      appImageRepository: appImageRepository,
-      journalRepository: journalRepository,
+      inventoryDao: inventoryDao,
+      speciesDao: speciesDao,
+      poiDao: poiDao,
+      vegetationDao: vegetationDao,
+      weatherDao: weatherDao,
+      nestDao: nestDao,
+      nestRevisionDao: nestRevisionDao,
+      eggDao: eggDao,
+      specimenDao: specimenDao,
+      appImageDao: appImageDao,
+      journalDao: journalDao,
       preloadedSpeciesNames: preloadedSpeciesNames,
     );
 
@@ -176,31 +176,31 @@ Future<void> main() async {
 }
 
 class AppDependencies {
-  final InventoryRepository inventoryRepository;
-  final SpeciesRepository speciesRepository;
-  final PoiRepository poiRepository;
-  final VegetationRepository vegetationRepository;
-  final WeatherRepository weatherRepository;
-  final NestRepository nestRepository;
-  final NestRevisionRepository nestRevisionRepository;
-  final EggRepository eggRepository;
-  final SpecimenRepository specimenRepository;
-  final AppImageRepository appImageRepository;
-  final FieldJournalRepository journalRepository;
+  final InventoryDao inventoryDao;
+  final SpeciesDao speciesDao;
+  final PoiDao poiDao;
+  final VegetationDao vegetationDao;
+  final WeatherDao weatherDao;
+  final NestDao nestDao;
+  final NestRevisionDao nestRevisionDao;
+  final EggDao eggDao;
+  final SpecimenDao specimenDao;
+  final AppImageDao appImageDao;
+  final FieldJournalDao journalDao;
   final List<String> preloadedSpeciesNames;
 
   AppDependencies({
-    required this.inventoryRepository,
-    required this.speciesRepository,
-    required this.poiRepository,
-    required this.vegetationRepository,
-    required this.weatherRepository,
-    required this.nestRepository,
-    required this.nestRevisionRepository,
-    required this.eggRepository,
-    required this.specimenRepository,
-    required this.appImageRepository,
-    required this.journalRepository,
+    required this.inventoryDao,
+    required this.speciesDao,
+    required this.poiDao,
+    required this.vegetationDao,
+    required this.weatherDao,
+    required this.nestDao,
+    required this.nestRevisionDao,
+    required this.eggDao,
+    required this.specimenDao,
+    required this.appImageDao,
+    required this.journalDao,
     this.preloadedSpeciesNames = const [],
   });
 }
@@ -217,30 +217,30 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => FieldJournalProvider(dependencies.journalRepository)),
-        ChangeNotifierProvider(create: (context) => AppImageProvider(dependencies.appImageRepository)),
-        ChangeNotifierProvider(create: (context) => SpecimenProvider(dependencies.specimenRepository)),
-        ChangeNotifierProvider(create: (context) => NestRevisionProvider(dependencies.nestRevisionRepository)),
-        ChangeNotifierProvider(create: (context) => EggProvider(dependencies.eggRepository)),
-        ChangeNotifierProvider(create: (context) => PoiProvider(dependencies.poiRepository)),
-        ChangeNotifierProvider(create: (context) => SpeciesProvider(dependencies.speciesRepository)),
-        ChangeNotifierProvider(create: (context) => VegetationProvider(dependencies.vegetationRepository)),
-        ChangeNotifierProvider(create: (context) => WeatherProvider(dependencies.weatherRepository)),
+        ChangeNotifierProvider(create: (context) => FieldJournalProvider(dependencies.journalDao)),
+        ChangeNotifierProvider(create: (context) => AppImageProvider(dependencies.appImageDao)),
+        ChangeNotifierProvider(create: (context) => SpecimenProvider(dependencies.specimenDao)),
+        ChangeNotifierProvider(create: (context) => NestRevisionProvider(dependencies.nestRevisionDao)),
+        ChangeNotifierProvider(create: (context) => EggProvider(dependencies.eggDao)),
+        ChangeNotifierProvider(create: (context) => PoiProvider(dependencies.poiDao)),
+        ChangeNotifierProvider(create: (context) => SpeciesProvider(dependencies.speciesDao)),
+        ChangeNotifierProvider(create: (context) => VegetationProvider(dependencies.vegetationDao)),
+        ChangeNotifierProvider(create: (context) => WeatherProvider(dependencies.weatherDao)),
         ChangeNotifierProvider(
           create: (context) => InventoryProvider(
-            dependencies.inventoryRepository,
+            dependencies.inventoryDao,
             context.read<SpeciesProvider>(),
             context.read<VegetationProvider>(),
             context.read<WeatherProvider>(),
           ),
         ),
-        ChangeNotifierProvider(create: (_) => NestProvider(dependencies.nestRepository)),
-        Provider(create: (_) => dependencies.inventoryRepository),
-        Provider(create: (_) => dependencies.speciesRepository),
-        Provider(create: (_) => dependencies.poiRepository),
-        Provider(create: (_) => dependencies.vegetationRepository),
-        Provider(create: (_) => dependencies.weatherRepository),
-        Provider(create: (_) => dependencies.journalRepository),
+        ChangeNotifierProvider(create: (_) => NestProvider(dependencies.nestDao)),
+        Provider(create: (_) => dependencies.inventoryDao),
+        Provider(create: (_) => dependencies.speciesDao),
+        Provider(create: (_) => dependencies.poiDao),
+        Provider(create: (_) => dependencies.vegetationDao),
+        Provider(create: (_) => dependencies.weatherDao),
+        Provider(create: (_) => dependencies.journalDao),
       ],
       child: Consumer<ThemeModel>(
         builder: (context, themeModel, child) {

@@ -6,11 +6,11 @@ import 'package:share_plus/share_plus.dart';
 import 'package:fab_m3e/fab_m3e.dart';
 
 import '../../data/models/inventory.dart';
-import '../../data/database/repositories/inventory_repository.dart';
-import '../../data/database/repositories/species_repository.dart';
-import '../../data/database/repositories/poi_repository.dart';
-import '../../data/database/repositories/vegetation_repository.dart';
-import '../../data/database/repositories/weather_repository.dart';
+import '../../data/database/daos/inventory_dao.dart';
+import '../../data/database/daos/species_dao.dart';
+import '../../data/database/daos/poi_dao.dart';
+import '../../data/database/daos/vegetation_dao.dart';
+import '../../data/database/daos/weather_dao.dart';
 
 import '../../providers/inventory_provider.dart';
 import '../../providers/species_provider.dart';
@@ -29,20 +29,20 @@ import '../../generated/l10n.dart';
 
 class InventoryDetailScreen extends StatefulWidget {
   final Inventory inventory;
-  final SpeciesRepository speciesRepository;
-  final InventoryRepository inventoryRepository;
-  final PoiRepository poiRepository;
-  final VegetationRepository vegetationRepository;
-  final WeatherRepository weatherRepository;
+  final SpeciesDao speciesDao;
+  final InventoryDao inventoryDao;
+  final PoiDao poiDao;
+  final VegetationDao vegetationDao;
+  final WeatherDao weatherDao;
 
   const InventoryDetailScreen({
     super.key,
     required this.inventory,
-    required this.speciesRepository,
-    required this.inventoryRepository,
-    required this.poiRepository,
-    required this.vegetationRepository,
-    required this.weatherRepository,
+    required this.speciesDao,
+    required this.inventoryDao,
+    required this.poiDao,
+    required this.vegetationDao,
+    required this.weatherDao,
   });
 
   @override
@@ -180,9 +180,9 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                 tooltip: inventory.isPaused ? S.of(context).resume : S.of(context).pause,
                 onPressed: () {
                   if (inventory.isPaused) {
-                    inventoryProvider.resumeInventoryTimer(context, inventory, widget.inventoryRepository);
+                    inventoryProvider.resumeInventoryTimer(context, inventory, widget.inventoryDao);
                   } else {
-                    inventoryProvider.pauseInventoryTimer(inventory, widget.inventoryRepository);
+                    inventoryProvider.pauseInventoryTimer(inventory, widget.inventoryDao);
                   }
                   inventoryProvider.updateInventory(inventory);
                 },
@@ -223,7 +223,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                     context: context,
                     inventory: widget.inventory,
                     inventoryProvider: Provider.of<InventoryProvider>(context, listen: false),
-                    inventoryRepository: widget.inventoryRepository,
+                    inventoryDao: widget.inventoryDao,
                   );
                   await completionService.attemptFinishInventory(context);
                   Navigator.pop(context, true);
@@ -411,8 +411,8 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
         children: [
           SpeciesTab(
             inventory: widget.inventory,
-            speciesRepository: widget.speciesRepository,
-            inventoryRepository: widget.inventoryRepository,
+            speciesDao: widget.speciesDao,
+            inventoryDao: widget.inventoryDao,
           ),
           VegetationTab(
             inventory: widget.inventory,

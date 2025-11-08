@@ -8,22 +8,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:xolmis/data/database/daos/journal_dao.dart';
-import 'package:xolmis/data/database/repositories/journal_repository.dart';
+// import 'package:xolmis/data/database/repositories/journal_repository.dart';
 
 import 'package:xolmis/main.dart';
 
 import 'package:xolmis/data/database/database_helper.dart';
 
-import 'package:xolmis/data/database/repositories/inventory_repository.dart';
-import 'package:xolmis/data/database/repositories/species_repository.dart';
-import 'package:xolmis/data/database/repositories/poi_repository.dart';
-import 'package:xolmis/data/database/repositories/vegetation_repository.dart';
-import 'package:xolmis/data/database/repositories/weather_repository.dart';
-import 'package:xolmis/data/database/repositories/nest_repository.dart';
-import 'package:xolmis/data/database/repositories/nest_revision_repository.dart';
-import 'package:xolmis/data/database/repositories/egg_repository.dart';
-import 'package:xolmis/data/database/repositories/specimen_repository.dart';
-import 'package:xolmis/data/database/repositories/app_image_repository.dart';
+// import 'package:xolmis/data/database/repositories/inventory_repository.dart';
+// import 'package:xolmis/data/database/repositories/species_repository.dart';
+// import 'package:xolmis/data/database/repositories/poi_repository.dart';
+// import 'package:xolmis/data/database/repositories/vegetation_repository.dart';
+// import 'package:xolmis/data/database/repositories/weather_repository.dart';
+// import 'package:xolmis/data/database/repositories/nest_repository.dart';
+// import 'package:xolmis/data/database/repositories/nest_revision_repository.dart';
+// import 'package:xolmis/data/database/repositories/egg_repository.dart';
+// import 'package:xolmis/data/database/repositories/specimen_repository.dart';
+// import 'package:xolmis/data/database/repositories/app_image_repository.dart';
 
 import 'package:xolmis/data/database/daos/egg_dao.dart';
 import 'package:xolmis/data/database/daos/inventory_dao.dart';
@@ -51,17 +51,17 @@ void main() async {
   late AppImageDao appImageDao;
   late FieldJournalDao journalDao;
 
-  late InventoryRepository inventoryRepository;
-  late SpeciesRepository speciesRepository;
-  late PoiRepository poiRepository;
-  late VegetationRepository vegetationRepository;
-  late WeatherRepository weatherRepository;
-  late NestRepository nestRepository;
-  late NestRevisionRepository nestRevisionRepository;
-  late EggRepository eggRepository;
-  late SpecimenRepository specimenRepository;
-  late AppImageRepository appImageRepository;
-  late FieldJournalRepository journalRepository;
+  // late InventoryRepository inventoryRepository;
+  // late SpeciesRepository speciesRepository;
+  // late PoiRepository poiRepository;
+  // late VegetationRepository vegetationRepository;
+  // late WeatherRepository weatherRepository;
+  // late NestRepository nestRepository;
+  // late NestRevisionRepository nestRevisionRepository;
+  // late EggRepository eggRepository;
+  // late SpecimenRepository specimenRepository;
+  // late AppImageRepository appImageRepository;
+  // late FieldJournalRepository journalRepository;
 
   late AppDependencies dependencies;
 
@@ -81,30 +81,30 @@ void main() async {
     appImageDao = AppImageDao(databaseHelper);
     journalDao = FieldJournalDao(databaseHelper);
 
-    poiRepository = PoiRepository(poiDao);
-    speciesRepository = SpeciesRepository(speciesDao);
-    vegetationRepository = VegetationRepository(vegetationDao);
-    weatherRepository = WeatherRepository(weatherDao);
-    inventoryRepository = InventoryRepository(inventoryDao);
-    eggRepository = EggRepository(eggDao);
-    nestRevisionRepository = NestRevisionRepository(nestRevisionDao);
-    nestRepository = NestRepository(nestDao);
-    specimenRepository = SpecimenRepository(specimenDao);
-    appImageRepository = AppImageRepository(appImageDao);
-    journalRepository = FieldJournalRepository(journalDao);
+    // poiRepository = PoiRepository(poiDao);
+    // speciesRepository = SpeciesRepository(speciesDao);
+    // vegetationRepository = VegetationRepository(vegetationDao);
+    // weatherRepository = WeatherRepository(weatherDao);
+    // inventoryRepository = InventoryRepository(inventoryDao);
+    // eggRepository = EggRepository(eggDao);
+    // nestRevisionRepository = NestRevisionRepository(nestRevisionDao);
+    // nestRepository = NestRepository(nestDao);
+    // specimenRepository = SpecimenRepository(specimenDao);
+    // appImageRepository = AppImageRepository(appImageDao);
+    // journalRepository = FieldJournalRepository(journalDao);
 
     dependencies = AppDependencies(
-      inventoryRepository: inventoryRepository, 
-      speciesRepository: speciesRepository, 
-      poiRepository: poiRepository, 
-      vegetationRepository: vegetationRepository, 
-      weatherRepository: weatherRepository, 
-      nestRepository: nestRepository, 
-      nestRevisionRepository: nestRevisionRepository, 
-      eggRepository: eggRepository, 
-      specimenRepository: specimenRepository, 
-      appImageRepository: appImageRepository, 
-      journalRepository: journalRepository
+      inventoryDao: inventoryDao,
+      speciesDao: speciesDao,
+      poiDao: poiDao,
+      vegetationDao: vegetationDao,
+      weatherDao: weatherDao,
+      nestDao: nestDao,
+      nestRevisionDao: nestRevisionDao,
+      eggDao: eggDao,
+      specimenDao: specimenDao,
+      appImageDao: appImageDao,
+      journalDao: journalDao
     );    
   });
 

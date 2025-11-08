@@ -2,19 +2,19 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../data/models/inventory.dart';
-import '../data/database/repositories/poi_repository.dart';
+import '../data/database/daos/poi_dao.dart';
 
 class PoiProvider with ChangeNotifier {
-  final PoiRepository _poiRepository;
+  final PoiDao _poiDao;
 
-  PoiProvider(this._poiRepository);
+  PoiProvider(this._poiDao);
 
   final Map<int, List<Poi>> _poiMap = {};
 
   // Load list of POIs for a species ID
   Future<void> loadPoisForSpecies(int speciesId) async {
     try {
-      final poiList = await _poiRepository.getPoisForSpecies(speciesId);
+      final poiList = await _poiDao.getPoisForSpecies(speciesId);
       _poiMap[speciesId] = poiList;
       notifyListeners();
     } catch (e) {
@@ -32,7 +32,7 @@ class PoiProvider with ChangeNotifier {
   // Add POI to the database and the list
   Future<void> addPoi(BuildContext context, int speciesId, Poi poi) async {
     // Insert the POI in the database
-    await _poiRepository.insertPoi(poi);
+    await _poiDao.insertPoi(poi);
     // Add the POI to the list of the provider
     _poiMap[speciesId] = _poiMap[speciesId] ?? [];
     _poiMap[speciesId]!.add(poi);
@@ -41,7 +41,7 @@ class PoiProvider with ChangeNotifier {
 
   // Update POI in the database and the list
   void updatePoi(int speciesId, Poi poi) async {
-    await _poiRepository.updatePoi(poi);
+    await _poiDao.updatePoi(poi);
 
     final poiList = _poiMap[speciesId];
     if (poiList != null) {
@@ -55,7 +55,7 @@ class PoiProvider with ChangeNotifier {
 
   // Remove POI from database and from list
   Future<void> removePoi(int speciesId, int poiId) async {
-    await _poiRepository.deletePoi(poiId);
+    await _poiDao.deletePoi(poiId);
 
     final poiList = _poiMap[speciesId];
     if (poiList != null) {

@@ -4,8 +4,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:xolmis/screens/inventory/edit_species_screen.dart';
 
 import '../../data/models/inventory.dart';
-import '../../data/database/repositories/inventory_repository.dart';
-import '../../data/database/repositories/species_repository.dart';
+import '../../data/database/daos/inventory_dao.dart';
+import '../../data/database/daos/species_dao.dart';
 import '../../providers/inventory_provider.dart';
 import '../../providers/species_provider.dart';
 import '../../providers/poi_provider.dart';
@@ -19,14 +19,14 @@ import '../../generated/l10n.dart';
 
 class SpeciesTab extends StatefulWidget {
   final Inventory inventory;
-  final SpeciesRepository speciesRepository;
-  final InventoryRepository inventoryRepository;
+  final SpeciesDao speciesDao;
+  final InventoryDao inventoryDao;
 
   const SpeciesTab({
     super.key,
     required this.inventory,
-    required this.speciesRepository,
-    required this.inventoryRepository
+    required this.speciesDao,
+    required this.inventoryDao
   });
 
   @override
@@ -42,13 +42,13 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
   Widget build(BuildContext context) {
     super.build(context);
     return _buildSpeciesList(
-        widget.speciesRepository, widget.inventoryRepository);
+        widget.speciesDao, widget.inventoryDao);
   }
 
   // Add a species to the inventory
   Future<void> _addSpeciesToInventory(String speciesName,
-      SpeciesRepository speciesRepository,
-      InventoryRepository inventoryRepository) async {
+      SpeciesDao speciesDao,
+      InventoryDao inventoryDao) async {
     final speciesProvider = Provider.of<SpeciesProvider>(context, listen: false);
     final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
 
@@ -90,26 +90,26 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     }
 
     // Insert the new species in the database
-    await speciesRepository.insertSpecies(widget.inventory.id, newSpecies!);
+    await speciesDao.insertSpecies(widget.inventory.id, newSpecies!);
     
     // Check is Mackinnon list was completed and ask to start the next list
     setState(() {
-      checkMackinnonCompletion(context, widget.inventory, inventoryRepository);
+      checkMackinnonCompletion(context, widget.inventory, inventoryDao);
     });
 
     if (!widget.inventory.isFinished) {
       // If the inventory is not finished, add the species to other active inventories
       await _addSpeciesToOtherActiveInventories(
-          speciesName, speciesProvider, inventoryProvider, speciesRepository,
-          inventoryRepository);
+          speciesName, speciesProvider, inventoryProvider, speciesDao,
+          inventoryDao);
 
       if (widget.inventory.type == InventoryType.invIntervalQualitative) {
         // Increment the current interval species count for interval qualitative inventories
         widget.inventory.currentIntervalSpeciesCount++;
-        await inventoryRepository.updateInventoryCurrentIntervalSpeciesCount(widget.inventory.id, widget.inventory.currentIntervalSpeciesCount);
+        await inventoryDao.updateInventoryCurrentIntervalSpeciesCount(widget.inventory.id, widget.inventory.currentIntervalSpeciesCount);
       } else if (widget.inventory.type == InventoryType.invTimedQualitative) {
         // Restart the inventory timer for timed qualitative inventories
-        _restartInventoryTimer(inventoryProvider, widget.inventory, inventoryRepository);
+        _restartInventoryTimer(inventoryProvider, widget.inventory, inventoryDao);
       }
     }
 
@@ -138,8 +138,8 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
   // Add species to other active inventories
   Future<void> _addSpeciesToOtherActiveInventories(String speciesName,
       SpeciesProvider speciesProvider, InventoryProvider inventoryProvider,
-      SpeciesRepository speciesRepository,
-      InventoryRepository inventoryRepository) async {
+      SpeciesDao speciesDao,
+      InventoryDao inventoryDao) async {
     for (final inventory in inventoryProvider.activeInventories) {
       if (inventory.id != widget.inventory.id &&
           !speciesProvider.speciesExistsInInventory(inventory.id, speciesName) &&
@@ -159,17 +159,17 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
           pois: [],
         );
         // Insert the new species in the database
-        await speciesRepository.insertSpecies(
+        await speciesDao.insertSpecies(
             newSpeciesForOtherInventory.inventoryId,
             newSpeciesForOtherInventory);
 
         if (inventory.type == InventoryType.invIntervalQualitative) {
           // Increment the current interval species count for interval qualitative inventories
           inventory.currentIntervalSpeciesCount++;
-          await inventoryRepository.updateInventoryCurrentIntervalSpeciesCount(inventory.id, inventory.currentIntervalSpeciesCount);
+          await inventoryDao.updateInventoryCurrentIntervalSpeciesCount(inventory.id, inventory.currentIntervalSpeciesCount);
         } else if (inventory.type == InventoryType.invTimedQualitative) {
           // Restart the inventory timer for timed qualitative inventories
-          _restartInventoryTimer(inventoryProvider, inventory, inventoryRepository);
+          _restartInventoryTimer(inventoryProvider, inventory, inventoryDao);
         } else {
           // Or just update the inventory in the database
           inventoryProvider.updateInventory(inventory);
@@ -185,7 +185,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
 
   // Restart the inventory timer
   void _restartInventoryTimer(InventoryProvider inventoryProvider,
-      Inventory inventory, InventoryRepository inventoryRepository) async {
+      Inventory inventory, InventoryDao inventoryDao) async {
     // Update the elapsed time to 0 and save it in the database
     inventory.updateElapsedTime(0);
     await inventoryProvider.updateInventoryElapsedTime(inventory.id, inventory.elapsedTime);
@@ -196,7 +196,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     inventoryProvider.updateInventory(inventory);
     
     // Start the timer if it is not already running
-    inventory.startTimer(context, inventoryRepository);
+    inventory.startTimer(context, inventoryDao);
   }
 
   // Reload the species list for the current inventory
@@ -313,7 +313,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
   }
 
   // Show dialog to add a personalized species name
-  Future<void> _showAddSpeciesDialog(BuildContext context, SpeciesRepository speciesRepository, InventoryRepository inventoryRepository) async {
+  Future<void> _showAddSpeciesDialog(BuildContext context, SpeciesDao speciesDao, InventoryDao inventoryDao) async {
     String? newSpeciesName = await showDialog<String>(
       context: context,
       builder: (BuildContext context) {
@@ -345,13 +345,13 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     );
 
     if (newSpeciesName != null && newSpeciesName.isNotEmpty) {
-      await _addSpeciesToInventory(newSpeciesName, speciesRepository, inventoryRepository);
+      await _addSpeciesToInventory(newSpeciesName, speciesDao, inventoryDao);
     }
   }
 
   // Build the species list
-  Widget _buildSpeciesList(SpeciesRepository speciesRepository,
-      InventoryRepository inventoryRepository) {
+  Widget _buildSpeciesList(SpeciesDao speciesDao,
+      InventoryDao inventoryDao) {
     return Column(children: [
       Padding(
         padding: const EdgeInsets.all(8.0),
@@ -402,8 +402,8 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                           onPressed: () {
                             _showAddSpeciesDialog(
                                 context,
-                                widget.speciesRepository,
-                                widget.inventoryRepository);
+                                widget.speciesDao,
+                                widget.inventoryDao);
                           },
                           leadingIcon: const Icon(Icons.add_box_outlined),
                           child: Text(S.current.addSpecies),
@@ -428,7 +428,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                     return ListTile(
                       title: Text(species),
                       onTap: () async {
-                        await _addSpeciesToInventory(species, speciesRepository, inventoryRepository);
+                        await _addSpeciesToInventory(species, speciesDao, inventoryDao);
                         controller.closeView(species);
                         controller.clear();
                       },

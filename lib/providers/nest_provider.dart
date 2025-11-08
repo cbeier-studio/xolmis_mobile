@@ -1,13 +1,13 @@
 import 'package:flutter/foundation.dart';
 
 import '../data/models/nest.dart';
-import '../data/database/repositories/nest_repository.dart';
+import '../data/database/daos/nest_dao.dart';
 import '../generated/l10n.dart';
 
 class NestProvider with ChangeNotifier {
-  final NestRepository _nestRepository;
+  final NestDao _nestDao;
 
-  NestProvider(this._nestRepository);
+  NestProvider(this._nestDao);
   // List of all nests
   List<Nest> _nests = [];
   List<Nest> get nests => _nests;
@@ -20,23 +20,23 @@ class NestProvider with ChangeNotifier {
 
   // Load list of all nests
   Future<void> fetchNests() async {
-    _nests = await _nestRepository.getNests();
+    _nests = await _nestDao.getNests();
     notifyListeners();
   }
 
   // Get list of nests by species
   Future<List<Nest>> getNestsBySpecies(String speciesName) async {
-    return await _nestRepository.getNestsBySpecies(speciesName);
+    return await _nestDao.getNestsBySpecies(speciesName);
   }
 
   // Get nest data by ID
   Future<Nest> getNestById(int nestId) async {
-    return await _nestRepository.getNestById(nestId);
+    return await _nestDao.getNestById(nestId);
   }
 
   // Check if nest field number already exists
   Future<bool> nestFieldNumberExists(String fieldNumber) async {
-    return await _nestRepository.nestFieldNumberExists(fieldNumber);
+    return await _nestDao.nestFieldNumberExists(fieldNumber);
   }
 
   // Add nest to the database and to the list
@@ -45,7 +45,7 @@ class NestProvider with ChangeNotifier {
       throw Exception(S.current.errorNestAlreadyExists);
     }
 
-    await _nestRepository.insertNest(nest);
+    await _nestDao.insertNest(nest);
     _nests.add(nest);
     notifyListeners();
   }
@@ -53,7 +53,7 @@ class NestProvider with ChangeNotifier {
   // Add imported nest to the database and the list
   Future<bool> importNest(Nest nest) async {
     try {
-      await _nestRepository.importNest(nest);
+      await _nestDao.importNest(nest);
       _nests.add(nest);
       notifyListeners();
 
@@ -68,7 +68,7 @@ class NestProvider with ChangeNotifier {
 
   // Update nest in the database and the list
   Future<void> updateNest(Nest nest) async {
-    await _nestRepository.updateNest(nest);
+    await _nestDao.updateNest(nest);
 
     final index = _nests.indexWhere((n) => n.id == nest.id);
     if (index != -1) {
@@ -87,24 +87,24 @@ class NestProvider with ChangeNotifier {
       throw ArgumentError('Invalid nest ID: ${nest.id}');
     }
 
-    await _nestRepository.deleteNest(nest.id!);
+    await _nestDao.deleteNest(nest.id!);
     _nests.remove(nest);
     notifyListeners();
   }
 
   // Get the next field number
   Future<int> getNextSequentialNumber(String acronym, int ano, int mes) async {
-    return await _nestRepository.getNextSequentialNumber(acronym, ano, mes);
+    return await _nestDao.getNextSequentialNumber(acronym, ano, mes);
   }
 
   // Get list of distinct localities for autocomplete
   Future<List<String>> getDistinctLocalities() {
-    return _nestRepository.getDistinctLocalities();
+    return _nestDao.getDistinctLocalities();
   }
 
   // Get list of distinct nest supports for autocomplete
   Future<List<String>> getDistinctSupports() {
-    return _nestRepository.getDistinctSupports();
+    return _nestDao.getDistinctSupports();
   }
 
 }

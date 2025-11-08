@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
 
 import '../data/models/inventory.dart';
-import '../data/database/repositories/inventory_repository.dart';
+import '../data/database/daos/inventory_dao.dart';
 import '../providers/species_provider.dart';
 
 import '../screens/inventory/add_inventory_screen.dart';
@@ -100,17 +100,17 @@ String getNextInventoryId(String currentId) {
   return nextId;
 }
 
-void checkMackinnonCompletion(BuildContext context, Inventory inventory, InventoryRepository inventoryRepository) {
+void checkMackinnonCompletion(BuildContext context, Inventory inventory, InventoryDao inventoryDao) {
   final speciesProvider = Provider.of<SpeciesProvider>(context, listen: false);
   final speciesList = speciesProvider.getSpeciesForInventory(inventory.id);
   // print('speciesList: ${speciesList.length} ; maxSpecies: ${inventory.maxSpecies}');
   if (inventory.type == InventoryType.invMackinnonList &&
       speciesList.length == inventory.maxSpecies - 1) {
-    _showMackinnonDialog(context, inventory, inventoryRepository);
+    _showMackinnonDialog(context, inventory, inventoryDao);
   }
 }
 
-void _showMackinnonDialog(BuildContext context, Inventory inventory, InventoryRepository inventoryRepository) {
+void _showMackinnonDialog(BuildContext context, Inventory inventory, InventoryDao inventoryDao) {
   showDialog(
     context: context,
     builder: (context) {
@@ -123,7 +123,7 @@ void _showMackinnonDialog(BuildContext context, Inventory inventory, InventoryRe
             onPressed: () async {
               // Finish the inventory and open the screen to add inventory
               var maxSpecies = inventory.maxSpecies;
-              await inventory.stopTimer(context, inventoryRepository);
+              await inventory.stopTimer(context, inventoryDao);
               // onInventoryUpdated(inventory);
               Navigator.pop(context, true);
               Navigator.of(context).pop();
@@ -143,7 +143,7 @@ void _showMackinnonDialog(BuildContext context, Inventory inventory, InventoryRe
             child: Text(S.current.finish),
             onPressed: () async {
               // Finish the inventory and go back to the Home screen
-              await inventory.stopTimer(context, inventoryRepository);
+              await inventory.stopTimer(context, inventoryDao);
               // onInventoryUpdated(inventory);
               Navigator.pop(context, true);
               Navigator.of(context).pop();

@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart'; // Para configuraç
 // Importe seus modelos e providers necessários
 import '../../data/models/inventory.dart';
 import '../providers/inventory_provider.dart'; // Exemplo
-import '../../data/database/repositories/inventory_repository.dart'; // Exemplo
+import '../../data/database/daos/inventory_dao.dart'; // Exemplo
 // Importe suas telas de adição de vegetação/tempo e strings S.of(context)
 import '../screens/inventory/add_vegetation_screen.dart';
 import '../screens/inventory/add_weather_screen.dart';
@@ -18,19 +18,19 @@ class InventoryCompletionService {
   final BuildContext context; // Precisa do contexto para navegação, diálogos, ScaffoldMessenger
   final Inventory inventory;
   final InventoryProvider inventoryProvider;
-  final InventoryRepository inventoryRepository;
+  final InventoryDao inventoryDao;
   // Adicione quaisquer outros providers ou repositórios necessários, ex: VegetationRepository
 
   InventoryCompletionService({
     required this.context,
     required this.inventory,
     required this.inventoryProvider,
-    required this.inventoryRepository,
+    required this.inventoryDao,
   });
 
   // Função para realmente finalizar o inventário
   Future<void> _finalizeInventory(BuildContext context) async {
-    inventory.stopTimer(context, inventoryRepository);
+    inventory.stopTimer(context, inventoryDao);
     inventoryProvider.updateInventory(inventory);
     // inventoryProvider.notifyListeners();
 

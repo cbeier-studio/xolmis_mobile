@@ -1,13 +1,13 @@
 import 'package:flutter/foundation.dart';
 
 import '../data/models/specimen.dart';
-import '../data/database/repositories/specimen_repository.dart';
+import '../data/database/daos/specimen_dao.dart';
 import '../generated/l10n.dart';
 
 class SpecimenProvider with ChangeNotifier {
-  final SpecimenRepository _specimenRepository;
+  final SpecimenDao _specimenDao;
 
-  SpecimenProvider(this._specimenRepository);
+  SpecimenProvider(this._specimenDao);
 
   List<Specimen> _specimens = [];
   List<Specimen> get specimens => _specimens;
@@ -20,27 +20,27 @@ class SpecimenProvider with ChangeNotifier {
 
   // Load list of all specimens
   Future<void> fetchSpecimens() async {
-    _specimens = await _specimenRepository.getSpecimens();
+    _specimens = await _specimenDao.getSpecimens();
     notifyListeners();
   }
 
   // Get list of specimens by species
   Future<List<Specimen>> getSpecimensBySpecies(String speciesName) async {
-    return await _specimenRepository.getSpecimensBySpecies(speciesName);
+    return await _specimenDao.getSpecimensBySpecies(speciesName);
   }
 
   // Get specimen data by ID
   Future<Specimen> getSpecimenById(int specimenId) async {
-    return await _specimenRepository.getSpecimenById(specimenId);
+    return await _specimenDao.getSpecimenById(specimenId);
   }
 
   // Check if the specimen field number already exists
   Future<bool> specimenFieldNumberExists(String fieldNumber) async {
-    return await _specimenRepository.specimenFieldNumberExists(fieldNumber);
+    return await _specimenDao.specimenFieldNumberExists(fieldNumber);
   }
 
   Future<int> getNextSequentialNumber(String acronym, int ano, int mes) async {
-    return await _specimenRepository.getNextSequentialNumber(acronym, ano, mes);
+    return await _specimenDao.getNextSequentialNumber(acronym, ano, mes);
   }
 
   // Add specimen to the database and the list
@@ -49,7 +49,7 @@ class SpecimenProvider with ChangeNotifier {
       throw Exception(S.current.errorSpecimenAlreadyExists);
     }
 
-    await _specimenRepository.insertSpecimen(specimen);
+    await _specimenDao.insertSpecimen(specimen);
     _specimens.add(specimen);
     notifyListeners();
   }
@@ -57,7 +57,7 @@ class SpecimenProvider with ChangeNotifier {
   // Add imported specimen to the database and the list
   Future<bool> importSpecimen(Specimen specimen) async {
     try {
-      await _specimenRepository.importSpecimen(specimen);
+      await _specimenDao.importSpecimen(specimen);
       _specimens.add(specimen);
       notifyListeners();
 
@@ -72,7 +72,7 @@ class SpecimenProvider with ChangeNotifier {
 
   // Update specimen in the database and the list
   Future<void> updateSpecimen(Specimen specimen) async {
-    await _specimenRepository.updateSpecimen(specimen);
+    await _specimenDao.updateSpecimen(specimen);
 
     final index = _specimens.indexWhere((n) => n.id == specimen.id);
     if (index != -1) {
@@ -91,13 +91,13 @@ class SpecimenProvider with ChangeNotifier {
       throw ArgumentError('Invalid specimen ID: ${specimen.id}');
     }
 
-    await _specimenRepository.deleteSpecimen(specimen.id!);
+    await _specimenDao.deleteSpecimen(specimen.id!);
     _specimens.remove(specimen);
     notifyListeners();
   }
 
   // Get list of distinct localities for autocomplete
   Future<List<String>> getDistinctLocalities() {
-    return _specimenRepository.getDistinctLocalities();
+    return _specimenDao.getDistinctLocalities();
   }
 }

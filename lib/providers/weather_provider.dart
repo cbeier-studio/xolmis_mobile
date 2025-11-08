@@ -2,19 +2,19 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../data/models/inventory.dart';
-import '../data/database/repositories/weather_repository.dart';
+import '../data/database/daos/weather_dao.dart';
 
 class WeatherProvider with ChangeNotifier {
-  final WeatherRepository _weatherRepository;
+  final WeatherDao _weatherDao;
 
-  WeatherProvider(this._weatherRepository);
+  WeatherProvider(this._weatherDao);
 
   final Map<String, List<Weather>> _weatherMap = {};
 
   // Load weather records for an inventory ID
   Future<void> loadWeatherForInventory(String inventoryId) async {
     try {
-      final weatherList = await _weatherRepository.getWeatherByInventory(inventoryId);
+      final weatherList = await _weatherDao.getWeatherByInventory(inventoryId);
       _weatherMap[inventoryId] = weatherList;
     } catch (e) {
       if (kDebugMode) {
@@ -33,10 +33,10 @@ class WeatherProvider with ChangeNotifier {
   // Add weather record to the database and the list
   Future<void> addWeather(BuildContext context, String inventoryId, Weather weather) async {
     // Insert the weather data in the database
-    await _weatherRepository.insertWeather(weather);
+    await _weatherDao.insertWeather(weather);
 
     // Add the weather data to the list of the provider
-    _weatherMap[inventoryId] = await _weatherRepository.getWeatherByInventory(inventoryId);
+    _weatherMap[inventoryId] = await _weatherDao.getWeatherByInventory(inventoryId);
     // _weatherMap[inventoryId] = _weatherMap[inventoryId] ?? [];
     // _weatherMap[inventoryId]!.add(weather);
 
@@ -45,16 +45,16 @@ class WeatherProvider with ChangeNotifier {
 
   // Update weather in the database and the list
   Future<void> updateWeather(Weather weather) async {
-    await _weatherRepository.updateWeather(weather);
+    await _weatherDao.updateWeather(weather);
 
-    _weatherMap[weather.inventoryId] = await _weatherRepository.getWeatherByInventory(weather.inventoryId);
+    _weatherMap[weather.inventoryId] = await _weatherDao.getWeatherByInventory(weather.inventoryId);
 
     notifyListeners();
   }
 
   // Remove weather record from database and from list
   Future<void> removeWeather(String inventoryId, int weatherId) async {
-    await _weatherRepository.deleteWeather(weatherId);
+    await _weatherDao.deleteWeather(weatherId);
 
     final weatherList = _weatherMap[inventoryId];
     if (weatherList != null) {

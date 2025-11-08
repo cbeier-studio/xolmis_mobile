@@ -6,7 +6,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import '../../utils/utils.dart';
 
-import '../database/repositories/inventory_repository.dart';
+import '../database/daos/inventory_dao.dart';
 
 import '../../main.dart';
 
@@ -908,7 +908,7 @@ class Inventory with ChangeNotifier {
   }
 
   // Start the inventory timer
-  Future<void> startTimer(BuildContext context, InventoryRepository inventoryRepository) async {
+  Future<void> startTimer(BuildContext context, InventoryDao inventoryDao) async {
     if (kDebugMode) {
       print('startTimer called');
     }
@@ -932,12 +932,12 @@ class Inventory with ChangeNotifier {
           if (elapsedTime == 0) {
             updateElapsedTime(0);
             // If elapsed time is zero, update it in the database
-            await inventoryRepository.updateInventoryElapsedTime(id, elapsedTime);
+            await inventoryDao.updateInventoryElapsedTime(id, elapsedTime);
           }
 
           // Update the elapsed time every 5 seconds
           updateElapsedTime(elapsedTime += 5);
-          await inventoryRepository.updateInventoryElapsedTime(id, elapsedTime);
+          await inventoryDao.updateInventoryElapsedTime(id, elapsedTime);
 
           // Elapsed time reach the defined duration
           if (elapsedTime >= duration * 60 && !isFinished) {
@@ -946,7 +946,7 @@ class Inventory with ChangeNotifier {
               // Increment the currentInterval counter
               currentInterval++;
               updateCurrentInterval(currentInterval);
-              await inventoryRepository.updateInventoryCurrentInterval(id, currentInterval);
+              await inventoryDao.updateInventoryCurrentInterval(id, currentInterval);
 
               if (currentIntervalSpeciesCount == 0) {
                 // If no new species on interval, increment counter
@@ -955,11 +955,11 @@ class Inventory with ChangeNotifier {
                 // If has new species on interval, reset counter
                 intervalsWithoutNewSpecies = 0;
               }
-              await inventoryRepository.updateInventoryIntervalsWithoutSpecies(id, intervalsWithoutNewSpecies);
+              await inventoryDao.updateInventoryIntervalsWithoutSpecies(id, intervalsWithoutNewSpecies);
               intervalWithoutSpeciesNotifier.value = intervalsWithoutNewSpecies;
               intervalWithoutSpeciesNotifier.notifyListeners();
               // Every interval, reset species counter
-              await inventoryRepository.updateInventoryCurrentIntervalSpeciesCount(id, 0);
+              await inventoryDao.updateInventoryCurrentIntervalSpeciesCount(id, 0);
               currentIntervalSpeciesCount = 0;
 
               if (intervalsWithoutNewSpecies == 3) {
@@ -968,7 +968,7 @@ class Inventory with ChangeNotifier {
               } else {
                 // Else, reset elapsed time for new interval
                 updateElapsedTime(0.0);
-                await inventoryRepository.updateInventoryElapsedTime(id, elapsedTime);
+                await inventoryDao.updateInventoryElapsedTime(id, elapsedTime);
               }
             } else {
               // If other type of timed inventory, finish inventory if duration is reached
@@ -976,7 +976,7 @@ class Inventory with ChangeNotifier {
             }
 
             if (isAutoFinished()) {
-              await stopTimer(context, inventoryRepository);
+              await stopTimer(context, inventoryDao);
               // If finished automatically, show a notification
               await showNotification(flutterLocalNotificationsPlugin);
               if (kDebugMode) {
@@ -991,7 +991,7 @@ class Inventory with ChangeNotifier {
   }
 
   // Pause the inventory timer
-  Future<void> pauseTimer(InventoryRepository inventoryRepository) async {
+  Future<void> pauseTimer(InventoryDao inventoryDao) async {
     if (kDebugMode) {
       print('pauseTimer called');
     }
@@ -1001,11 +1001,11 @@ class Inventory with ChangeNotifier {
     elapsedTimeNotifier.value = elapsedTime;
     elapsedTimeNotifier.notifyListeners();
     notifyListeners();
-    await inventoryRepository.updateInventory(this);
+    await inventoryDao.updateInventory(this);
   }
 
   // Resume the inventory timer
-  Future<void> resumeTimer(BuildContext context, InventoryRepository inventoryRepository) async {
+  Future<void> resumeTimer(BuildContext context, InventoryDao inventoryDao) async {
     if (kDebugMode) {
       print('resumeTimer called');
     }
@@ -1015,16 +1015,16 @@ class Inventory with ChangeNotifier {
     } else {
       // If not paused, it means it was stopped.
       // We need to start it again.
-      startTimer(context, inventoryRepository);
+      startTimer(context, inventoryDao);
     }
     elapsedTimeNotifier.value = elapsedTime.toDouble();
     elapsedTimeNotifier.notifyListeners();
     notifyListeners();
-    await inventoryRepository.updateInventory(this);
+    await inventoryDao.updateInventory(this);
   }
 
   // Stop the timer and finish the inventory
-  Future<void> stopTimer(BuildContext context, InventoryRepository inventoryRepository) async {
+  Future<void> stopTimer(BuildContext context, InventoryDao inventoryDao) async {
     if (kDebugMode) {
       print('stopTimer called');
     }
@@ -1045,7 +1045,7 @@ class Inventory with ChangeNotifier {
       endLongitude = position.longitude;
     }
 
-    await inventoryRepository.updateInventory(this);
+    await inventoryDao.updateInventory(this);
     onInventoryStopped?.call(id);
     notifyListeners();
   }

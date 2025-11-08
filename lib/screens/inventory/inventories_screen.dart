@@ -10,11 +10,11 @@ import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/models/inventory.dart';
-import '../../data/database/repositories/inventory_repository.dart';
-import '../../data/database/repositories/species_repository.dart';
-import '../../data/database/repositories/poi_repository.dart';
-import '../../data/database/repositories/vegetation_repository.dart';
-import '../../data/database/repositories/weather_repository.dart';
+import '../../data/database/daos/inventory_dao.dart';
+import '../../data/database/daos/species_dao.dart';
+import '../../data/database/daos/poi_dao.dart';
+import '../../data/database/daos/vegetation_dao.dart';
+import '../../data/database/daos/weather_dao.dart';
 
 import '../../providers/inventory_provider.dart';
 import '../../providers/species_provider.dart';
@@ -62,11 +62,11 @@ class InventoriesScreen extends StatefulWidget {
 
 class _InventoriesScreenState extends State<InventoriesScreen> {
   late InventoryProvider inventoryProvider;
-  late InventoryRepository inventoryRepository;
-  late SpeciesRepository speciesRepository;
-  late PoiRepository poiRepository;
-  late VegetationRepository vegetationRepository;
-  late WeatherRepository weatherRepository;
+  late InventoryDao inventoryDao;
+  late SpeciesDao speciesDao;
+  late PoiDao poiDao;
+  late VegetationDao vegetationDao;
+  late WeatherDao weatherDao;
   final _searchController = TextEditingController();
   bool _isShowingActiveInventories = true; // Default to show active inventories
   bool _isSearchBarVisible = false; // Default to hide search bar
@@ -79,11 +79,11 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
   void initState() {
     super.initState();
     inventoryProvider = context.read<InventoryProvider>();
-    inventoryRepository = context.read<InventoryRepository>();
-    speciesRepository = context.read<SpeciesRepository>();
-    poiRepository = context.read<PoiRepository>();
-    vegetationRepository = context.read<VegetationRepository>();
-    weatherRepository = context.read<WeatherRepository>();
+    inventoryDao = context.read<InventoryDao>();
+    speciesDao = context.read<SpeciesDao>();
+    poiDao = context.read<PoiDao>();
+    vegetationDao = context.read<VegetationDao>();
+    weatherDao = context.read<WeatherDao>();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Future.delayed(Duration.zero, ()
@@ -91,7 +91,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
         for (var inventory in inventoryProvider.activeInventories) {
           if (inventory.duration != 0 && !inventory.isPaused) {
             // Restart the timer for active inventories
-            inventory.startTimer(context, inventoryRepository);
+            inventory.startTimer(context, inventoryDao);
           }
         }
       });
@@ -1214,10 +1214,10 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
               onPressed: () {
                 if (inventory.isPaused) {
                   Provider.of<InventoryProvider>(context, listen: false)
-                    .resumeInventoryTimer(context, inventory, inventoryRepository);
+                    .resumeInventoryTimer(context, inventory, inventoryDao);
                 } else {
                   Provider.of<InventoryProvider>(context, listen: false)
-                    .pauseInventoryTimer(inventory, inventoryRepository);
+                    .pauseInventoryTimer(inventory, inventoryDao);
                 }
               },
             ),
@@ -1231,11 +1231,11 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
           MaterialPageRoute(
             builder: (context) => InventoryDetailScreen(
               inventory: inventory,
-              speciesRepository: speciesRepository,
-              inventoryRepository: inventoryRepository,
-              poiRepository: poiRepository,
-              vegetationRepository: vegetationRepository,
-              weatherRepository: weatherRepository,
+              speciesDao: speciesDao,
+              inventoryDao: inventoryDao,
+              poiDao: poiDao,
+              vegetationDao: vegetationDao,
+              weatherDao: weatherDao,
             ),
           ),
         ).then((result) {
@@ -1262,11 +1262,11 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
             MaterialPageRoute(
               builder: (context) => InventoryDetailScreen(
                 inventory: inventory,
-                speciesRepository: speciesRepository,
-                inventoryRepository: inventoryRepository,
-                poiRepository: poiRepository,
-                vegetationRepository: vegetationRepository,
-                weatherRepository: weatherRepository,
+                speciesDao: speciesDao,
+                inventoryDao: inventoryDao,
+                poiDao: poiDao,
+                vegetationDao: vegetationDao,
+                weatherDao: weatherDao,
               ),
             ),
           ).then((result) {
@@ -1325,10 +1325,10 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                         onPressed: () {
                           if (inventory.isPaused) {
                             Provider.of<InventoryProvider>(context, listen: false)
-                              .resumeInventoryTimer(context, inventory, inventoryRepository);
+                              .resumeInventoryTimer(context, inventory, inventoryDao);
                           } else {
                             Provider.of<InventoryProvider>(context, listen: false)
-                              .pauseInventoryTimer(inventory, inventoryRepository);
+                              .pauseInventoryTimer(inventory, inventoryDao);
                           }
                           Provider.of<InventoryProvider>(context, listen: false)
                             .updateInventory(inventory);
@@ -1441,7 +1441,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                 context: context,
                                 inventory: inventory,
                                 inventoryProvider: inventoryProvider,
-                                inventoryRepository: inventoryRepository,
+                                inventoryDao: inventoryDao,
                               );
                               await completionService.attemptFinishInventory(context);
                             },
@@ -1582,7 +1582,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                             context: context,
                             inventory: inventory,
                             inventoryProvider: inventoryProvider,
-                            inventoryRepository: inventoryRepository,
+                            inventoryDao: inventoryDao,
                           );
                           await completionService.attemptFinishInventory(context);
                         }),
@@ -1600,7 +1600,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                           inventory.updateIsFinished(false);
                           inventoryProvider.updateInventory(inventory);
                           inventoryProvider.startInventoryTimer(
-                              context, inventory, inventoryRepository);
+                              context, inventory, inventoryDao);
                         }),
                       buildGridMenuItem(context, Icons.delete_outlined,
                           S.of(context).delete, () {
