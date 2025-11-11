@@ -1441,7 +1441,17 @@
     "type": "text",
     "description": "Sample time field label"
   },
-    "precipitationNone": "Nenhuma",
+  "refresh": "Recarregar",
+  "@refresh": {
+    "type": "text",
+    "description": "Refresh button label"
+  },
+  "inventoryIdUpdated": "ID do inventário atualizada com sucesso!",
+  "@inventoryIdUpdated": {
+    "type": "text",
+    "description": "Message when inventory ID is updated successfully"
+  },
+  "precipitationNone": "Nenhuma",
     "precipitationFog": "Névoa",
     "precipitationMist": "Neblina",
     "precipitationDrizzle": "Garoa",

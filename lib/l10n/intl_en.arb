@@ -2002,6 +2002,16 @@
       "type": "text",
       "description": "Sample time field label"
     },
+  "refresh": "Refresh",
+    "@refresh": {
+      "type": "text",
+      "description": "Refresh button label"
+    },
+  "inventoryIdUpdated": "Inventory ID updated successfully!",
+    "@inventoryIdUpdated": {
+      "type": "text",
+      "description": "Message when inventory ID is updated successfully"
+    },
     "precipitationNone": "None",
     "precipitationFog": "Fog",
     "precipitationMist": "Mist",

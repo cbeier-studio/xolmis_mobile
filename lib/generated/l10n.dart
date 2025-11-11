@@ -3670,6 +3670,26 @@ class S {
     );
   }
 
+  /// `Refresh`
+  String get refresh {
+    return Intl.message(
+      'Refresh',
+      name: 'refresh',
+      desc: 'Refresh button label',
+      args: [],
+    );
+  }
+
+  /// `Inventory ID updated successfully!`
+  String get inventoryIdUpdated {
+    return Intl.message(
+      'Inventory ID updated successfully!',
+      name: 'inventoryIdUpdated',
+      desc: 'Message when inventory ID is updated successfully',
+      args: [],
+    );
+  }
+
   /// `None`
   String get precipitationNone {
     return Intl.message('None', name: 'precipitationNone', desc: '', args: []);

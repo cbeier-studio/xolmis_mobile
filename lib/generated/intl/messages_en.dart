@@ -523,6 +523,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "inventoryIdAlreadyExists": MessageLookupByLibrary.simpleMessage(
       "This inventory ID already exists.",
     ),
+    "inventoryIdUpdated": MessageLookupByLibrary.simpleMessage(
+      "Inventory ID updated successfully!",
+    ),
     "inventoryImportFailed": MessageLookupByLibrary.simpleMessage(
       "Inventory import failed.",
     ),
@@ -707,6 +710,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Records per month",
     ),
     "recordsPerYear": MessageLookupByLibrary.simpleMessage("Records per year"),
+    "refresh": MessageLookupByLibrary.simpleMessage("Refresh"),
     "refreshList": MessageLookupByLibrary.simpleMessage("Refresh"),
     "relativeHumidity": MessageLookupByLibrary.simpleMessage(
       "Relative humidity",

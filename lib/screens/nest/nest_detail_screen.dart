@@ -2,7 +2,6 @@ import 'package:fab_m3e/fab_m3e.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-// import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../data/models/nest.dart';
@@ -14,6 +13,7 @@ import 'nest_revision_tab.dart';
 import 'nest_egg_tab.dart';
 import 'add_egg_screen.dart';
 import 'add_revision_screen.dart';
+import '../../core/core_consts.dart';
 import '../../utils/export_utils.dart';
 import '../../generated/l10n.dart';
 
@@ -297,7 +297,7 @@ class NestDetailScreenState extends State<NestDetailScreen> {
                           ),
                         );
                       },
-                      child: Text('CSV'),
+                      child: const Text('CSV'),
                     ),
                     // Option to export the selected nest to Excel
                     TextButton(
@@ -314,7 +314,7 @@ class NestDetailScreenState extends State<NestDetailScreen> {
                           ),
                         );
                       },
-                      child: Text('Excel'),
+                      child: const Text('Excel'),
                     ),
                     // Option to export the selected nest to JSON
                     MenuItemButton(
@@ -322,7 +322,7 @@ class NestDetailScreenState extends State<NestDetailScreen> {
                         Navigator.of(context).pop();
                         exportNestToJson(context, widget.nest);
                       },
-                      child: Text('JSON'),
+                      child: const Text('JSON'),
                     ),
                     // Option to export the selected nest to JSON
                     MenuItemButton(
@@ -330,7 +330,7 @@ class NestDetailScreenState extends State<NestDetailScreen> {
                         Navigator.of(context).pop();
                         exportNestToKml(context, widget.nest);
                       },
-                      child: Text('KML'),
+                      child: const Text('KML'),
                     ),
                   ],
                 ),
@@ -396,7 +396,10 @@ class NestDetailScreenState extends State<NestDetailScreen> {
           alignment: Alignment.bottomRight,
           direction: FabMenuDirection.up,
           overlay: false,
-          primaryFab: FabM3E(icon: const Icon(Icons.add), onPressed: fabController.toggle),
+          primaryFab: FabM3E(
+              icon: fabController.isOpen ? const Icon(Icons.close) : const Icon(Icons.add),
+              onPressed: fabController.toggle
+          ),
           items: [
             FabMenuItem(
               icon: Theme.of(context).brightness == Brightness.light

@@ -262,13 +262,18 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
           builder: (BuildContext context) {
             return Container(
               padding: const EdgeInsets.all(16.0),
-              child: Column(
+              child: SingleChildScrollView(
+                child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  ListTile(title: Text(egg.fieldNumber!)),
-                  Divider(),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(egg.fieldNumber!, style: TextTheme.of(context).bodyLarge,),
+                  ),
+                  // ListTile(title: Text(egg.fieldNumber!)),
+                  const Divider(),
                   GridView.count(
-                    crossAxisCount: 4,
+                    crossAxisCount: MediaQuery.sizeOf(context).width < 600 ? 4 : 5,
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     children: <Widget>[
@@ -294,50 +299,8 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
                           }, color: Theme.of(context).colorScheme.error),
                     ],
                   ),
-                  /*
-                  ListTile(
-                    leading: const Icon(Icons.edit_outlined),
-                    title: Text(S.of(context).editEgg),
-                    onTap: () {
-                      Navigator.pop(context);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder:
-                              (context) => AddEggScreen(
-                                nest: widget.nest,
-                                egg: egg,
-                                isEditing: true,
-                              ),
-                        ),
-                      );
-                    },
-                  ),
-                  // Divider(),
-                  ListTile(
-                    leading: Icon(
-                      Icons.delete_outlined,
-                      color:
-                          Theme.of(context).brightness == Brightness.light
-                              ? Colors.red
-                              : Colors.redAccent,
-                    ),
-                    title: Text(
-                      S.of(context).deleteEgg,
-                      style: TextStyle(
-                        color:
-                            Theme.of(context).brightness == Brightness.light
-                                ? Colors.red
-                                : Colors.redAccent,
-                      ),
-                    ),
-                    onTap: () async {
-                      await _deleteEgg(egg);
-                      Navigator.pop(context);
-                    },
-                  ),
-                  */
                 ],
+              ),
               ),
             );
           },
@@ -346,43 +309,6 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
       },
     );
   }
-
-  // Widget _buildGridView(List<Egg> eggList) {
-  //   return SingleChildScrollView(
-  //     child: Align(
-  //       alignment: Alignment.topCenter,
-  //       child: ConstrainedBox(
-  //         constraints: const BoxConstraints(maxWidth: 840),
-  //         child: GridView.builder(
-  //           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-  //             crossAxisCount: 2,
-  //             childAspectRatio: 3.5,
-  //           ),
-  //           physics: const NeverScrollableScrollPhysics(),
-  //           shrinkWrap: true,
-  //           itemCount: eggList.length,
-  //           itemBuilder: (context, index) {
-  //             final egg = eggList[index];
-  //             return GridTile(
-  //               child: InkWell(
-  //                 onLongPress: () => _showBottomSheet(context, egg),
-  //                 onTap: () {
-  //                   Navigator.push(
-  //                     context,
-  //                     MaterialPageRoute(
-  //                       builder: (context) => AppImageScreen(eggId: egg.id),
-  //                     ),
-  //                   );
-  //                 },
-  //                 child: EggGridItem(egg: egg),
-  //               ),
-  //             );
-  //           },
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
 
   Widget _buildListView(List<Egg> eggList) {
     return ListView.separated(

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../data/models/inventory.dart';
 import '../../providers/weather_provider.dart';
 import '../../generated/l10n.dart';
+import '../../core/core_consts.dart';
 import '../../utils/utils.dart';
 
 class AddWeatherScreen extends StatefulWidget {

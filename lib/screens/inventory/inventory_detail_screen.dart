@@ -1,7 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-// import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:fab_m3e/fab_m3e.dart';
 
@@ -18,11 +17,13 @@ import '../../providers/poi_provider.dart';
 import '../../providers/vegetation_provider.dart';
 import '../../providers/weather_provider.dart';
 
+import '../../utils/utils.dart';
 import 'add_vegetation_screen.dart';
 import 'add_weather_screen.dart';
 import 'species_tab.dart';
 import 'vegetation_tab.dart';
 import 'weather_tab.dart';
+import '../../core/core_consts.dart';
 import '../../utils/export_utils.dart';
 import '../../services/inventory_completion_service.dart';
 import '../../generated/l10n.dart';
@@ -194,31 +195,9 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
               child: IconButton.filled(
               onPressed: () async {
                 // Show confirmation dialog
-                // final confirmed = await showDialog<bool>(
-                //   context: context,
-                //   builder: (context) => AlertDialog.adaptive(
-                //     title: Text(S.of(context).confirmFinish),
-                //     content: Text(S.of(context).confirmFinishMessage),
-                //     actions: [
-                //       TextButton(
-                //         onPressed: () => Navigator.pop(context, false),
-                //         child: Text(S.of(context).cancel),
-                //       ),
-                //       TextButton(
-                //         onPressed: () => Navigator.pop(context, true),
-                //         child: Text(S.of(context).finish),
-                //       ),
-                //     ],
-                //   ),
-                // );
-                //
-                // // If confirmed, finish the inventory
-                // if (confirmed == true) {
                   setState(() {
                     _isSubmitting = true;
                   });
-                  // widget.inventory.updateIsFinished(true);
-                  // await widget.inventory.stopTimer(widget.inventoryRepository);
                   final completionService = InventoryCompletionService(
                     context: context,
                     inventory: widget.inventory,
@@ -251,10 +230,17 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
           ),
           Visibility(
               visible: widget.inventory.isFinished,
-              child: MenuAnchor(
+              child: MediaQuery.sizeOf(context).width < 600
+                  ? IconButton(
+                icon: const Icon(Icons.more_vert_outlined),
+                onPressed: () {
+                  _showMoreOptionsBottomSheet(context, widget.inventory);
+                },
+              )
+                  : MenuAnchor(
               builder: (context, controller, child) {
                 return IconButton(
-                  icon: Icon(Icons.share_outlined),
+                  icon: Icon(Icons.more_vert_outlined),
                   tooltip: S.of(context).exportWhat(S.of(context).inventory(1)),
                   onPressed: () {
                     if (controller.isOpen) {
@@ -267,6 +253,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
               },
               menuChildren: [
                 MenuItemButton(
+                  leadingIcon: const Icon(Icons.share_outlined),
                   onPressed: () async {
                     final locale = Localizations.localeOf(context);
                     final csvFile = await exportInventoryToCsv(context, widget.inventory, locale);
@@ -279,9 +266,10 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                       ),
                     );
                   },
-                  child: Text('CSV'),
+                  child: Text('${S.current.export} CSV'),
                 ),
                 MenuItemButton(
+                  leadingIcon: const Icon(Icons.share_outlined),
                   onPressed: () async {
                     final locale = Localizations.localeOf(context);
                     final excelFile = await exportInventoryToExcel(context, widget.inventory, locale);
@@ -294,19 +282,21 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                       ),
                     );
                   },
-                  child: Text('Excel'),
+                  child: Text('${S.current.export} Excel'),
                 ),
                 MenuItemButton(
+                  leadingIcon: const Icon(Icons.share_outlined),
                   onPressed: () {
                     exportInventoryToJson(context, widget.inventory, true);
                   },
-                  child: Text('JSON'),
+                  child: Text('${S.current.export} JSON'),
                 ),
                 MenuItemButton(
+                  leadingIcon: const Icon(Icons.share_outlined),
                   onPressed: () {
                     exportInventoryToKml(context, widget.inventory);
                   },
-                  child: Text('KML'),
+                  child: Text('${S.current.export} KML'),
                 ),
               ],
             ),
@@ -427,7 +417,10 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
         alignment: Alignment.bottomRight,
         direction: FabMenuDirection.up,
         overlay: false,
-        primaryFab: FabM3E(icon: const Icon(Icons.add), onPressed: fabController.toggle),
+        primaryFab: FabM3E(
+            icon: fabController.isOpen ? const Icon(Icons.close) : const Icon(Icons.add),
+            onPressed: fabController.toggle
+        ),
         items: [
           FabMenuItem(
             icon: Theme.of(context).brightness == Brightness.light
@@ -449,31 +442,133 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
           ),
         ],
       ),
-      // floatingActionButton: SpeedDial(
-      //   icon: Icons.add_outlined,
-      //   activeIcon: Icons.close_outlined,
-      //   spaceBetweenChildren: 8.0,
-      //   children: [
-      //     SpeedDialChild(
-      //       child: Theme.of(context).brightness == Brightness.light
-      //           ? const Icon(Icons.local_florist_outlined)
-      //           : const Icon(Icons.local_florist),
-      //       label: S.of(context).vegetationData,
-      //       onTap: () {
-      //         _showAddVegetationScreen(context);
-      //       },
-      //     ),
-      //     SpeedDialChild(
-      //       child: Theme.of(context).brightness == Brightness.light
-      //           ? const Icon(Icons.wb_sunny_outlined)
-      //           : const Icon(Icons.wb_sunny),
-      //       label: S.of(context).weatherData,
-      //       onTap: () {
-      //         _showAddWeatherScreen(context);
-      //       },
-      //     ),
-      //   ],
-      // ),
+    );
+  }
+
+  void _showMoreOptionsBottomSheet(BuildContext context, Inventory inventory) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: BottomSheet(
+            onClosing: () {},
+            builder: (BuildContext context) {
+              return Container(
+                padding: const EdgeInsets.all(16.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    // crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      // Show the inventory ID
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(inventory.id, style: TextTheme.of(context).bodyLarge,),
+                      ),
+                      const Divider(),
+
+                      // GridView.count(
+                      //   crossAxisCount: MediaQuery.sizeOf(context).width < 600 ? 4 : 5,
+                      //   shrinkWrap: true,
+                      //   physics: const NeverScrollableScrollPhysics(),
+                      //   children: <Widget>[
+                      //     buildGridMenuItem(context, Icons.delete_outlined,
+                      //         S.of(context).delete, () {
+                      //           Navigator.of(context).pop();
+                      //           // Ask for user confirmation
+                      //           _confirmDelete(context, inventory);
+                      //         }, color: Theme.of(context).colorScheme.error),
+                      //   ],
+                      // ),
+                      // Divider(),
+                      Row(
+                        children: [
+                          const SizedBox(width: 8.0),
+                          Text(S.current.export, style: TextTheme
+                              .of(context)
+                              .bodyMedium,),
+                          // Icon(Icons.share_outlined),
+                          Expanded(
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child:
+                              Row(
+                                children: [
+                                  const SizedBox(width: 16.0),
+                                  ActionChip(
+                                    label: const Text('CSV'),
+                                    onPressed: () async {
+                                      Navigator.of(context).pop();
+                                      final locale = Localizations.localeOf(
+                                          context);
+                                      final csvFile = await exportInventoryToCsv(
+                                          context, inventory, locale);
+                                      // Share the file using share_plus
+                                      await SharePlus.instance.share(
+                                        ShareParams(
+                                            files: [
+                                              XFile(csvFile, mimeType: 'text/csv')
+                                            ],
+                                            text: S.current.inventoryExported(1),
+                                            subject: S.current.inventoryData(1)
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  const SizedBox(width: 8.0),
+                                  ActionChip(
+                                    label: const Text('Excel'),
+                                    onPressed: () async {
+                                      Navigator.of(context).pop();
+                                      final locale = Localizations.localeOf(
+                                          context);
+                                      final excelFile = await exportInventoryToExcel(
+                                          context, inventory, locale);
+                                      // Share the file using share_plus
+                                      await SharePlus.instance.share(
+                                        ShareParams(
+                                            files: [
+                                              XFile(excelFile,
+                                                  mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+                                            ],
+                                            text: S.current.inventoryExported(1),
+                                            subject: S.current.inventoryData(1)
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  const SizedBox(width: 8.0),
+                                  ActionChip(
+                                    label: const Text('JSON'),
+                                    onPressed: () async {
+                                      Navigator.of(context).pop();
+                                      exportInventoryToJson(
+                                          context, inventory, true);
+                                    },
+                                  ),
+                                  const SizedBox(width: 8.0),
+                                  ActionChip(
+                                    label: const Text('KML'),
+                                    onPressed: () async {
+                                      Navigator.of(context).pop();
+                                      exportInventoryToKml(context, inventory);
+                                    },
+                                  ),
+                                  const SizedBox(width: 8.0),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }

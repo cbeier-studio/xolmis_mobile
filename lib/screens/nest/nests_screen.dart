@@ -33,7 +33,6 @@ class NestsScreenState extends State<NestsScreen> {
   late NestProvider nestProvider;
   final _searchController = TextEditingController();
   bool _showActive = true; // Show active nests by default
-  bool _isSearchBarVisible = false; // Hide search bar by default
   String _searchQuery = ''; // Empty search query by default
   Set<int> selectedNests = {}; // Set of selected nests
   SortOrder _sortOrder = SortOrder.descending; // Default sort order
@@ -100,7 +99,8 @@ class NestsScreenState extends State<NestsScreen> {
           builder: (BuildContext context, StateSetter setModalState) {
             return Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Column(
+              child: SingleChildScrollView(
+                child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -194,8 +194,8 @@ class NestsScreenState extends State<NestsScreen> {
                   const SizedBox(height: 8),
                   SegmentedButton<SortOrder>(
                     segments: [
-                      ButtonSegment(value: SortOrder.ascending, label: Text(S.of(context).ascending), icon: Icon(Icons.south_outlined)),
-                      ButtonSegment(value: SortOrder.descending, label: Text(S.of(context).descending), icon: Icon(Icons.north_outlined)),
+                      ButtonSegment(value: SortOrder.ascending, label: Text(S.of(context).ascending), icon: const Icon(Icons.south_outlined)),
+                      ButtonSegment(value: SortOrder.descending, label: Text(S.of(context).descending), icon: const Icon(Icons.north_outlined)),
                     ],
                     selected: {_sortOrder},
                     showSelectedIcon: false,
@@ -209,6 +209,7 @@ class NestsScreenState extends State<NestsScreen> {
                     },
                   ),
                 ],
+              ),
               ),
             );
           },
@@ -407,7 +408,7 @@ class NestsScreenState extends State<NestsScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 CircularProgressIndicator(),
-                SizedBox(width: 16),
+                const SizedBox(width: 16),
                 Text(S.current.exportingPleaseWait),
               ],
             ),
@@ -482,7 +483,7 @@ class NestsScreenState extends State<NestsScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 CircularProgressIndicator(),
-                SizedBox(width: 16),
+                const SizedBox(width: 16),
                 Text(S.current.exportingPleaseWait),
               ],
             ),
@@ -571,7 +572,7 @@ class NestsScreenState extends State<NestsScreen> {
                 });
               },
             )
-                : SizedBox.shrink(),
+                : const SizedBox.shrink(),
           ],
           onChanged: (query) {
             setState(() {
@@ -587,12 +588,19 @@ class NestsScreenState extends State<NestsScreen> {
               widget.scaffoldKey.currentState?.openDrawer();
             },
           ),
-        ) : SizedBox.shrink(),
+        ) : const SizedBox.shrink(),
         actions: [
-          MenuAnchor(
+          MediaQuery.sizeOf(context).width < 600
+              ? IconButton(
+            icon: const Icon(Icons.more_vert_outlined),
+            onPressed: () {
+              _showMoreOptionsBottomSheet(context);
+            },
+          )
+              : MenuAnchor(
             builder: (context, controller, child) {
               return IconButton(
-                icon: Icon(Icons.more_vert_outlined),
+                icon: const Icon(Icons.more_vert_outlined),
                 onPressed: () {
                   if (controller.isOpen) {
                     controller.close();
@@ -606,7 +614,7 @@ class NestsScreenState extends State<NestsScreen> {
               // Action to select all nests
               if (!_showActive)
                 MenuItemButton(
-                  leadingIcon: Icon(Icons.library_add_check_outlined),
+                  leadingIcon: const Icon(Icons.library_add_check_outlined),
                   onPressed: () {
                     final filteredNests = _filterNests(nestProvider.inactiveNests);
                     setState(() {
@@ -620,7 +628,7 @@ class NestsScreenState extends State<NestsScreen> {
                 ),
               // Action to import nests from JSON
               MenuItemButton(
-                leadingIcon: Icon(Icons.file_open_outlined),
+                leadingIcon: const Icon(Icons.file_open_outlined),
                 onPressed: () async {
                   await importNestsFromJson(context);
                   await nestProvider.fetchNests();
@@ -628,7 +636,7 @@ class NestsScreenState extends State<NestsScreen> {
                 child: Text(S.of(context).import),
               ),
               MenuItemButton(
-                leadingIcon: Icon(Icons.share_outlined),
+                leadingIcon: const Icon(Icons.share_outlined),
                 onPressed: () async {
                   await exportAllInactiveNestsToJson(context);
                 },
@@ -684,9 +692,10 @@ class NestsScreenState extends State<NestsScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(S.of(context).noNestsFound),
-                      SizedBox(height: 8),
-                      IconButton.filled(
-                        icon: Icon(Icons.refresh_outlined),
+                      const SizedBox(height: 8),
+                      FilledButton.icon(
+                        label: Text(S.of(context).refresh),
+                        icon: const Icon(Icons.refresh_outlined),
                         onPressed: () async {
                           await nestProvider.fetchNests();
                         }, 
@@ -780,19 +789,19 @@ class NestsScreenState extends State<NestsScreen> {
                 children: [
                   // Option to delete the selected nests
                   IconButton(
-                    icon: Icon(Icons.delete_outlined),
+                    icon: const Icon(Icons.delete_outlined),
                     tooltip: S.of(context).delete,
                     color: Theme.of(context).brightness == Brightness.light
                         ? Colors.red
                         : Colors.redAccent,
                     onPressed: _deleteSelectedNests,
                   ),
-                  VerticalDivider(),
+                  const VerticalDivider(),
                   // Option to export the selected nests
                   MenuAnchor(
                     builder: (context, controller, child) {
                       return IconButton(
-                        icon: Icon(Icons.share_outlined),
+                        icon: const Icon(Icons.share_outlined),
                         tooltip:
                             S.of(context).exportWhat(S.of(context).nest(2)),
                         onPressed: () {
@@ -809,26 +818,26 @@ class NestsScreenState extends State<NestsScreen> {
                         onPressed: () {
                           _exportSelectedNestsToCsv(context);
                         },
-                        child: Text('CSV'),
+                        child: const Text('CSV'),
                       ),
                       MenuItemButton(
                         onPressed: () {
                           _exportSelectedNestsToExcel(context);
                         },
-                        child: Text('Excel'),
+                        child: const Text('Excel'),
                       ),
                       MenuItemButton(
                         onPressed: () {
                           _exportSelectedNestsToJson(context);
                         },
-                        child: Text('JSON'),
+                        child: const Text('JSON'),
                       ),
                     ],
                   ),
-                  VerticalDivider(),
+                  const VerticalDivider(),
                   // Option to clear the selected nests
                   IconButton(
-                    icon: Icon(Icons.clear_outlined),
+                    icon: const Icon(Icons.clear_outlined),
                     tooltip: S.current.clearSelection,
                     onPressed: () {
                       setState(() {
@@ -968,7 +977,7 @@ class NestsScreenState extends State<NestsScreen> {
                     children: [
                       Visibility(
                         visible: _showActive,
-                        child:FilledButton.icon(
+                        child: FilledButton.icon(
                         onPressed: () async {
                     NestFateType? selectedNestFate;
 
@@ -1052,7 +1061,7 @@ class NestsScreenState extends State<NestsScreen> {
                     );
                         }, 
                         label: Text(S.current.finish),
-                        icon: Icon(Icons.flag_outlined),
+                        icon: const Icon(Icons.flag_outlined),
                       ),
                       ),
                     ],
@@ -1077,16 +1086,21 @@ class NestsScreenState extends State<NestsScreen> {
           builder: (BuildContext context) {
             return Container(
               padding: const EdgeInsets.all(16.0),
-              child: Column(
+              child: SingleChildScrollView(
+                child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   // Show the field number of the nest
-                  ListTile(
-                    title: Text(nest.fieldNumber!),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(nest.fieldNumber!, style: TextTheme.of(context).bodyLarge,),
                   ),
-                  Divider(),
+                  // ListTile(
+                  //   title: Text(nest.fieldNumber!),
+                  // ),
+                  const Divider(),
                   GridView.count(
-                    crossAxisCount: 4,
+                    crossAxisCount: MediaQuery.sizeOf(context).width < 600 ? 4 : 5,
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     children: <Widget>[
@@ -1138,7 +1152,7 @@ class NestsScreenState extends State<NestsScreen> {
                           }, color: Theme.of(context).colorScheme.error),
                     ],
                   ),
-                  Divider(),
+                  // Divider(),
                   Row(
                     children: [
                       const SizedBox(width: 8.0),
@@ -1154,7 +1168,7 @@ class NestsScreenState extends State<NestsScreen> {
                             children: [
                               const SizedBox(width: 16.0),
                               ActionChip(
-                                label: Text('CSV'),
+                                label: const Text('CSV'),
                                 onPressed: () async {
                                   Navigator.of(context).pop();
                                   final locale = Localizations.localeOf(context);
@@ -1171,7 +1185,7 @@ class NestsScreenState extends State<NestsScreen> {
                               ),
                               const SizedBox(width: 8.0),
                               ActionChip(
-                                label: Text('Excel'),
+                                label: const Text('Excel'),
                                 onPressed: () async {
                                   Navigator.of(context).pop();
                                   final locale = Localizations.localeOf(context);
@@ -1188,7 +1202,7 @@ class NestsScreenState extends State<NestsScreen> {
                               ),
                               const SizedBox(width: 8.0),
                               ActionChip(
-                                label: Text('JSON'),
+                                label: const Text('JSON'),
                                 onPressed: () async {
                                   Navigator.of(context).pop();
                                   exportNestToJson(context, nest);
@@ -1196,7 +1210,7 @@ class NestsScreenState extends State<NestsScreen> {
                               ),
                               const SizedBox(width: 8.0),
                               ActionChip(
-                                label: Text('KML'),
+                                label: const Text('KML'),
                                 onPressed: () async {
                                   Navigator.of(context).pop();
                                   exportNestToKml(context, nest);
@@ -1211,8 +1225,69 @@ class NestsScreenState extends State<NestsScreen> {
                   ),
                 ],
               ),
+              ),
             );
           },
+          ),
+        );
+      },
+    );
+  }
+
+  void _showMoreOptionsBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: BottomSheet(
+            onClosing: () {},
+            builder: (BuildContext context) {
+              return Container(
+                padding: const EdgeInsets.all(16.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    // crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      GridView.count(
+                        crossAxisCount: MediaQuery.sizeOf(context).width < 600 ? 4 : 5,
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        children: <Widget>[
+                          if (!_showActive)
+                            buildGridMenuItem(
+                                context, Icons.library_add_check_outlined, S.of(context).selectAll,
+                                    () async {
+                                  Navigator.of(context).pop();
+                                  final filteredNests = _filterNests(nestProvider.inactiveNests);
+                                  setState(() {
+                                    selectedNests = filteredNests
+                                        .map((nest) => nest.id)
+                                        .whereType<int>()
+                                        .toSet();
+                                  });
+                                }),
+                          // Action to import nests from JSON
+                          buildGridMenuItem(
+                              context, Icons.file_open_outlined, S.of(context).import,
+                                  () async {
+                                Navigator.of(context).pop();
+                                await importNestsFromJson(context);
+                                await nestProvider.fetchNests();
+                              }),
+                          buildGridMenuItem(
+                              context, Icons.share_outlined, S.of(context).exportAll,
+                                  () async {
+                                Navigator.of(context).pop();
+                                await exportAllInactiveNestsToJson(context);
+                              }),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
           ),
         );
       },

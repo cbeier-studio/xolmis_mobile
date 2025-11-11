@@ -11,6 +11,7 @@ import '../data/daos/inventory_dao.dart';
 import '../providers/species_provider.dart';
 
 import '../screens/inventory/add_inventory_screen.dart';
+import '../core/core_consts.dart';
 import '../generated/l10n.dart';
 
 List<String> allSpeciesNames = [];
@@ -377,7 +378,9 @@ Widget buildGridMenuItem(
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        IconButton(icon: Icon(icon, color: itemColor), onPressed: onTap),
+        Icon(icon, color: itemColor),
+        const SizedBox(height: 8,),
+        // IconButton(icon: Icon(icon, color: itemColor), onPressed: onTap),
         Text(label,
             textAlign: TextAlign.center, style: TextStyle(color: itemColor)),
       ],

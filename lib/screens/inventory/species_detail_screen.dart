@@ -220,15 +220,20 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
           builder: (BuildContext context) {
             return Container(
               padding: const EdgeInsets.all(16.0),
-              child: Column(
+              child: SingleChildScrollView(
+                child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  ListTile(
-                    title: Text('POI #${poi.id}',),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text('POI #${poi.id}', style: TextTheme.of(context).bodyLarge,),
                   ),
-                  Divider(),
+                  // ListTile(
+                  //   title: Text('POI #${poi.id}',),
+                  // ),
+                  const Divider(),
                   GridView.count(
-                    crossAxisCount: 4,
+                    crossAxisCount: MediaQuery.sizeOf(context).width < 600 ? 4 : 5,
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     children: <Widget>[
@@ -244,29 +249,8 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
                           }, color: Theme.of(context).colorScheme.error),
                     ],
                   ),
-                  /*
-                  // Option to edit the POI notes
-                  ListTile(
-                    leading: const Icon(Icons.edit_outlined),
-                    title: Text(S.of(context).addEditNotes),
-                    onTap: () {
-                      Navigator.pop(context);
-                      _showEditNotesDialog(context, poi);
-                    },
-                  ),
-                  // Option to delete the POI
-                  ListTile(
-                    leading: const Icon(Icons.delete_outlined, color: Colors.red,),
-                    title: Text(S.of(context).deletePoi, style: TextStyle(color: Colors.red),),
-                    onTap: () async {                      
-                      await _deletePoi(poi);
-                      if (context.mounted) {
-                        Navigator.pop(context);
-                      }
-                    },
-                  ),
-                  */
                 ],
+              ),
               ),
             );
           },
@@ -303,7 +287,7 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,                       
                       children: [
                         const Icon(Icons.location_on_outlined),
-                        Expanded(child: SizedBox.shrink()),
+                        Expanded(child: const SizedBox.shrink()),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.end,
                           crossAxisAlignment: CrossAxisAlignment.start,

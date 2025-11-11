@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../../data/models/inventory.dart';
 import '../../providers/vegetation_provider.dart';
 
+import '../../core/core_consts.dart';
 import '../../utils/utils.dart';
 import '../../generated/l10n.dart';
 

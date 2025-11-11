@@ -1,38 +1,6 @@
-import '../../generated/l10n.dart';
+import '../../core/core_consts.dart';
 
 // Specimen class
-
-enum SpecimenType {
-  spcWholeCarcass,
-  spcPartialCarcass,
-  spcNest,
-  spcBones,
-  spcEgg,
-  spcParasites,
-  spcFeathers,
-  spcBlood,
-  spcClaw,
-  spcSwab,
-  spcTissues,
-  spcFeces,
-  spcRegurgite,
-}
-
-Map<SpecimenType, String> specimenTypeFriendlyNames = {
-  SpecimenType.spcWholeCarcass: S.current.specimenWholeCarcass,
-  SpecimenType.spcPartialCarcass: S.current.specimenPartialCarcass,
-  SpecimenType.spcNest: S.current.specimenNest,
-  SpecimenType.spcBones: S.current.specimenBones,
-  SpecimenType.spcEgg: S.current.specimenEgg,
-  SpecimenType.spcParasites: S.current.specimenParasites,
-  SpecimenType.spcFeathers: S.current.specimenFeathers,
-  SpecimenType.spcBlood: S.current.specimenBlood,
-  SpecimenType.spcClaw: S.current.specimenClaw,
-  SpecimenType.spcSwab: S.current.specimenSwab,
-  SpecimenType.spcTissues: S.current.specimenTissues,
-  SpecimenType.spcFeces: S.current.specimenFeces,
-  SpecimenType.spcRegurgite: S.current.specimenRegurgite,
-};
 
 class Specimen {
   int? id;

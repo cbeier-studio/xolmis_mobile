@@ -4,14 +4,12 @@ import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+import '../../core/core_consts.dart';
 import '../../utils/utils.dart';
 
 import '../daos/inventory_dao.dart';
 
 import '../../main.dart';
-
-import '../../generated/l10n.dart';
-
 
 // POI class
 
@@ -239,42 +237,6 @@ class Species {
 
 // Vegetation class
 
-enum DistributionType {
-  disNone,
-  disRare,
-  disFewSparseIndividuals,
-  disOnePatch,
-  disOnePatchFewSparseIndividuals,
-  disManySparseIndividuals,
-  disOnePatchManySparseIndividuals,
-  disFewPatches,
-  disFewPatchesSparseIndividuals,
-  disManyPatches,
-  disManyPatchesSparseIndividuals,
-  disHighDensityIndividuals,
-  disContinuousCoverWithGaps,
-  disContinuousDenseCover,
-  disContinuousDenseCoverWithEdge,
-}
-
-Map<DistributionType, String> distributionTypeFriendlyNames = {
-  DistributionType.disNone: S.current.distributionNone,
-  DistributionType.disRare: S.current.distributionRare,
-  DistributionType.disFewSparseIndividuals: S.current.distributionFewSparseIndividuals,
-  DistributionType.disOnePatch: S.current.distributionOnePatch,
-  DistributionType.disOnePatchFewSparseIndividuals: S.current.distributionOnePatchFewSparseIndividuals,
-  DistributionType.disManySparseIndividuals: S.current.distributionManySparseIndividuals,
-  DistributionType.disOnePatchManySparseIndividuals: S.current.distributionOnePatchManySparseIndividuals,
-  DistributionType.disFewPatches: S.current.distributionFewPatches,
-  DistributionType.disFewPatchesSparseIndividuals: S.current.distributionFewPatchesSparseIndividuals,
-  DistributionType.disManyPatches: S.current.distributionManyPatches,
-  DistributionType.disManyPatchesSparseIndividuals: S.current.distributionManyPatchesSparseIndividuals,
-  DistributionType.disHighDensityIndividuals: S.current.distributionHighDensityIndividuals,
-  DistributionType.disContinuousCoverWithGaps: S.current.distributionContinuousCoverWithGaps,
-  DistributionType.disContinuousDenseCover: S.current.distributionContinuousDenseCover,
-  DistributionType.disContinuousDenseCoverWithEdge: S.current.distributionContinuousDenseCoverWithEdge,
-};
-
 class Vegetation {
   late int? id;
   final String inventoryId;
@@ -451,30 +413,6 @@ class Vegetation {
 
 // Weather class
 
-enum PrecipitationType {
-  preNone,
-  preFog,
-  preMist,
-  preDrizzle,
-  preRain,
-  preShowers,
-  preSnow,
-  preHail,
-  preFrost,
-}
-
-Map<PrecipitationType, String> precipitationTypeFriendlyNames = {
-  PrecipitationType.preNone: S.current.precipitationNone,
-  PrecipitationType.preFog: S.current.precipitationFog,
-  PrecipitationType.preMist: S.current.precipitationMist,
-  PrecipitationType.preDrizzle: S.current.precipitationDrizzle,
-  PrecipitationType.preRain: S.current.precipitationRain,
-  PrecipitationType.preShowers: S.current.precipitationShowers,
-  PrecipitationType.preSnow: S.current.precipitationSnow,
-  PrecipitationType.preHail: S.current.precipitationHail,
-  PrecipitationType.preFrost: S.current.precipitationFrost,
-};
-
 class Weather {
   late int? id;
   final String inventoryId;
@@ -605,32 +543,6 @@ class Weather {
 }
 
 // Inventory class
-
-enum InventoryType {
-  invFreeQualitative,
-  invTimedQualitative,
-  invIntervalQualitative,
-  invMackinnonList,
-  invTransectCount,
-  invPointCount,
-  invBanding,
-  invCasual,
-  invTransectDetection,
-  invPointDetection,
-}
-
-Map<InventoryType, String> inventoryTypeFriendlyNames = {
-  InventoryType.invFreeQualitative: S.current.inventoryFreeQualitative,
-  InventoryType.invTimedQualitative: S.current.inventoryTimedQualitative,
-  InventoryType.invIntervalQualitative: S.current.inventoryIntervalQualitative,
-  InventoryType.invMackinnonList: S.current.inventoryMackinnonList,
-  InventoryType.invTransectCount: S.current.inventoryTransectCount,
-  InventoryType.invPointCount: S.current.inventoryPointCount,
-  InventoryType.invBanding: S.current.inventoryBanding,
-  InventoryType.invCasual: S.current.inventoryCasual,
-  InventoryType.invTransectDetection: S.current.inventoryTransectDetection,
-  InventoryType.invPointDetection: S.current.inventoryPointDetection,
-};
 
 class Inventory with ChangeNotifier {
   String id;
@@ -1049,32 +961,6 @@ class Inventory with ChangeNotifier {
     onInventoryStopped?.call(id);
     notifyListeners();
   }
-
-  // Future<bool> _showAutoFinishConfirmationDialog(BuildContext context) async {
-  //   return await showDialog<bool>(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: Text(S.of(context).confirmFinish),
-  //         content: Text(S.of(context).confirmFinishMessage),
-  //         actions: <Widget>[
-  //           TextButton(
-  //             child: Text(S.of(context).keepRunning),
-  //             onPressed: () {
-  //               Navigator.of(context).pop(false);
-  //             },
-  //           ),
-  //           TextButton(
-  //             child: Text(S.of(context).finish),
-  //             onPressed: () {
-  //               Navigator.of(context).pop(true);
-  //             },
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   ) ?? false;
-  // }
 
   // Show notification when inventory was finished automatically
   Future<void> showNotification(

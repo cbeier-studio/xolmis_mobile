@@ -232,15 +232,23 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
           builder: (BuildContext context) {
             return Container(
               padding: const EdgeInsets.all(16.0),
-              child: Column(
+              child: SingleChildScrollView(
+                child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  ListTile(
-                    title: Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(vegetation.sampleTime!),),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      DateFormat('dd/MM/yyyy HH:mm:ss').format(vegetation.sampleTime!),
+                      style: TextTheme.of(context).bodyLarge,
+                    ),
                   ),
-                  Divider(),
+                  // ListTile(
+                  //   title: Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(vegetation.sampleTime!),),
+                  // ),
+                  const Divider(),
                   GridView.count(
-                    crossAxisCount: 4,
+                    crossAxisCount: MediaQuery.sizeOf(context).width < 600 ? 4 : 5,
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     children: <Widget>[
@@ -265,39 +273,8 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
                           }, color: Theme.of(context).colorScheme.error),
                     ],
                   ),
-                  /*
-                  ListTile(
-                    leading: const Icon(Icons.edit_outlined),
-                    title: Text(S.of(context).editVegetation),
-                    onTap: () {
-                      Navigator.pop(context);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AddVegetationDataScreen(
-                            inventory: widget.inventory,
-                            vegetation: vegetation, // Passe o objeto Vegetation
-                            isEditing: true, // Defina isEditing como true
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                  // Divider(),
-                  ListTile(
-                    leading: Icon(Icons.delete_outlined, color: Theme.of(context).brightness == Brightness.light
-                        ? Colors.red
-                        : Colors.redAccent,),
-                    title: Text(S.of(context).deleteVegetation, style: TextStyle(color: Theme.of(context).brightness == Brightness.light
-                        ? Colors.red
-                        : Colors.redAccent,),),
-                    onTap: () async {
-                      await _deleteVegetation(vegetation);
-                      Navigator.pop(context);
-                    },
-                  )
-                  */
                 ],
+              ),
               ),
             );
           },
@@ -306,48 +283,6 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
       },
     );
   }
-
-  // Widget _buildGridView(List<Vegetation> vegetationList) {
-  //   return SingleChildScrollView(
-  //       child: Align(
-  //     alignment: Alignment.topCenter,
-  //     child: ConstrainedBox(
-  //       constraints: const BoxConstraints(maxWidth: 840),
-  //       child: SingleChildScrollView(
-  //         child: GridView.builder(
-  //           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-  //             crossAxisCount: 2,
-  //             childAspectRatio: 2.8,
-  //           ),
-  //           physics: const NeverScrollableScrollPhysics(),
-  //           shrinkWrap: true,
-  //           itemCount: vegetationList.length,
-  //           itemBuilder: (context, index) {
-  //             final vegetation = vegetationList[index];
-  //             return GridTile(
-  //               child: InkWell(
-  //                 onLongPress: () =>
-  //                     _showBottomSheet(context, vegetation),
-  //                 onTap: () {
-  //                   Navigator.push(
-  //                     context,
-  //                     MaterialPageRoute(
-  //                       builder: (context) => AppImageScreen(
-  //                         vegetationId: vegetation.id,
-  //                       ),
-  //                     ),
-  //                   );
-  //                 },
-  //                 child: VegetationGridItem(vegetation: vegetation),
-  //               ),
-  //             );
-  //           },
-  //         ),
-  //       ),
-  //     ),
-  //       ),
-  //   );
-  // }
 
   Widget _buildListView(List<Vegetation> vegetationList) {
     return ListView.separated(

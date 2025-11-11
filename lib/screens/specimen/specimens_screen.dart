@@ -33,7 +33,6 @@ class SpecimensScreen extends StatefulWidget {
 class SpecimensScreenState extends State<SpecimensScreen> {
   late SpecimenProvider specimenProvider;
   final _searchController = TextEditingController();
-  bool _isSearchBarVisible = false;
   String _searchQuery = '';
   bool _showPending = true; // Show pending specimens by default
   Set<int> selectedSpecimens = {};
@@ -97,7 +96,8 @@ class SpecimensScreenState extends State<SpecimensScreen> {
           builder: (BuildContext context, StateSetter setModalState) {
             return Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Column(
+              child: SingleChildScrollView(
+                child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -193,6 +193,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                     },
                   ),
                 ],
+              ),
               ),
             );
           },
@@ -348,7 +349,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
           content: Row(
             children: [
               Icon(Icons.error_outlined, color: Colors.red),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Text(S.current.errorExportingSpecimen(2, error.toString())),
             ],
           ),
@@ -373,7 +374,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
           content: Row(
             children: [
               Icon(Icons.error_outlined, color: Colors.red),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Text(S.current.errorExportingSpecimen(2, error.toString())),
             ],
           ),
@@ -398,7 +399,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
           content: Row(
             children: [
               Icon(Icons.error_outlined, color: Colors.red),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Text(S.current.errorExportingSpecimen(2, error.toString())),
             ],
           ),
@@ -434,7 +435,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                 });
               },
             )
-                : SizedBox.shrink(),
+                : const SizedBox.shrink(),
           ],
           onChanged: (query) {
             setState(() {
@@ -450,12 +451,19 @@ class SpecimensScreenState extends State<SpecimensScreen> {
               widget.scaffoldKey.currentState?.openDrawer();
             },
           ),
-        ) : SizedBox.shrink(),
+        ) : const SizedBox.shrink(),
         actions: [
-          MenuAnchor(
+          MediaQuery.sizeOf(context).width < 600
+              ? IconButton(
+            icon: const Icon(Icons.more_vert_outlined),
+            onPressed: () {
+              _showMoreOptionsBottomSheet(context);
+            },
+          )
+              : MenuAnchor(
             builder: (context, controller, child) {
               return IconButton(
-                icon: Icon(Icons.more_vert_outlined),
+                icon: const Icon(Icons.more_vert_outlined),
                 onPressed: () {
                   if (controller.isOpen) {
                     controller.close();
@@ -468,7 +476,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
             menuChildren: [
               // Action to select all specimens
                 MenuItemButton(
-                  leadingIcon: Icon(Icons.library_add_check_outlined),
+                  leadingIcon: const Icon(Icons.library_add_check_outlined),
                   onPressed: () {
                     final filteredSpecimens = _filterSpecimens(_showPending 
                         ? specimenProvider.pendingSpecimens
@@ -484,7 +492,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                 ),
               // Action to import specimens from JSON
               MenuItemButton(
-                leadingIcon: Icon(Icons.file_open_outlined),
+                leadingIcon: const Icon(Icons.file_open_outlined),
                 onPressed: () async {
                   await importSpecimensFromJson(context);
                   await specimenProvider.fetchSpecimens();
@@ -492,21 +500,21 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                 child: Text(S.of(context).import),
               ),
               MenuItemButton(
-                leadingIcon: Icon(Icons.share_outlined),
+                leadingIcon: const Icon(Icons.share_outlined),
                 onPressed: () {
                   exportAllSpecimensToCsv(context, _showPending ? specimenProvider.pendingSpecimens : specimenProvider.archivedSpecimens);
                 },
                 child: Text('${S.of(context).exportAll} (CSV)'),
               ),
               MenuItemButton(
-                leadingIcon: Icon(Icons.share_outlined),
+                leadingIcon: const Icon(Icons.share_outlined),
                 onPressed: () {
                   exportAllSpecimensToExcel(context, _showPending ? specimenProvider.pendingSpecimens : specimenProvider.archivedSpecimens);
                 },
                 child: Text('${S.of(context).exportAll} (Excel)'),
               ),
               MenuItemButton(
-                leadingIcon: Icon(Icons.share_outlined),
+                leadingIcon: const Icon(Icons.share_outlined),
                 onPressed: () {
                   exportAllSpecimensToJson(context, _showPending ? specimenProvider.pendingSpecimens : specimenProvider.archivedSpecimens);
                 },
@@ -562,9 +570,10 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(S.of(context).noSpecimenCollected),
-                      SizedBox(height: 8),
-                      IconButton.filled(
-                        icon: Icon(Icons.refresh_outlined),
+                      const SizedBox(height: 8),
+                      FilledButton.icon(
+                        label: Text(S.of(context).refresh),
+                        icon: const Icon(Icons.refresh_outlined),
                         onPressed: () async {
                           await specimenProvider.fetchSpecimens();
                         }, 
@@ -653,16 +662,16 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   IconButton(
-                    icon: Icon(Icons.delete_outlined),
+                    icon: const Icon(Icons.delete_outlined),
                     tooltip: S.of(context).delete,
                     color: Colors.red,
                     onPressed: _deleteSelectedSpecimens,
                   ),
-                  VerticalDivider(),
+                  const VerticalDivider(),
                   MenuAnchor(
                     builder: (context, controller, child) {
                       return IconButton(
-                        icon: Icon(Icons.share_outlined),
+                        icon: const Icon(Icons.share_outlined),
                         tooltip: S.of(context).exportWhat(
                             S.of(context).specimens(2).toLowerCase()),
                         onPressed: () {
@@ -679,25 +688,25 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                         onPressed: () {
                           _exportSelectedSpecimensToCsv(context);
                         },
-                        child: Text('CSV'),
+                        child: const Text('CSV'),
                       ),
                       MenuItemButton(
                         onPressed: () {
                           _exportSelectedSpecimensToExcel(context);
                         },
-                        child: Text('Excel'),
+                        child: const Text('Excel'),
                       ),
                       MenuItemButton(
                         onPressed: () {
                           _exportSelectedSpecimensToJson(context);
                         },
-                        child: Text('JSON'),
+                        child: const Text('JSON'),
                       ),
                     ],
                   ),
                   if (_showPending)
                     IconButton(
-                      icon: Icon(Icons.archive_outlined),
+                      icon: const Icon(Icons.archive_outlined),
                       tooltip: S.of(context).archiveSpecimen,
                       onPressed: () async {
                         for (final id in selectedSpecimens) {
@@ -710,10 +719,10 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                         });
                       },
                       ),
-                  VerticalDivider(),
+                  const VerticalDivider(),
                   // Option to clear the selected specimens
                   IconButton(
-                    icon: Icon(Icons.clear_outlined),
+                    icon: const Icon(Icons.clear_outlined),
                     tooltip: S.current.clearSelection,
                     onPressed: () {
                       setState(() {
@@ -938,15 +947,20 @@ class SpecimensScreenState extends State<SpecimensScreen> {
           builder: (BuildContext context) {
             return Container(
               padding: const EdgeInsets.all(16.0),
-              child: Column(
+              child: SingleChildScrollView(
+                child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  ListTile(
-                    title: Text(specimen.fieldNumber),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(specimen.fieldNumber, style: TextTheme.of(context).bodyLarge,),
                   ),
-                  Divider(),
+                  // ListTile(
+                  //   title: Text(specimen.fieldNumber),
+                  // ),
+                  const Divider(),
                   GridView.count(
-                    crossAxisCount: 4,
+                    crossAxisCount: MediaQuery.sizeOf(context).width < 600 ? 4 : 5,
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     children: <Widget>[
@@ -1010,7 +1024,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                           }, color: Theme.of(context).colorScheme.error),
                     ],
                   ),
-                  Divider(),
+                  // Divider(),
                   Row(
                     children: [
                       const SizedBox(width: 8.0),
@@ -1026,7 +1040,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                             children: [
                               const SizedBox(width: 16.0),
                               ActionChip(
-                                label: Text('KML'),
+                                label: const Text('KML'),
                                 onPressed: () async {
                                   Navigator.of(context).pop();
                                   exportSpecimenToKml(context, specimen);
@@ -1041,8 +1055,82 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                   ),
                 ],
               ),
+              ),
             );
           },
+          ),
+        );
+      },
+    );
+  }
+
+  void _showMoreOptionsBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: BottomSheet(
+            onClosing: () {},
+            builder: (BuildContext context) {
+              return Container(
+                padding: const EdgeInsets.all(16.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    // crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      GridView.count(
+                        crossAxisCount: MediaQuery.sizeOf(context).width < 600 ? 4 : 5,
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        children: <Widget>[
+                            buildGridMenuItem(
+                                context, Icons.library_add_check_outlined, S.of(context).selectAll,
+                                    () async {
+                                  Navigator.of(context).pop();
+                                  final filteredSpecimens = _filterSpecimens(_showPending
+                                      ? specimenProvider.pendingSpecimens
+                                      : specimenProvider.archivedSpecimens);
+                                  setState(() {
+                                    selectedSpecimens = filteredSpecimens
+                                        .map((specimen) => specimen.id)
+                                        .whereType<int>()
+                                        .toSet();
+                                  });
+                                }),
+                          // Action to import nests from JSON
+                          buildGridMenuItem(
+                              context, Icons.file_open_outlined, S.of(context).import,
+                                  () async {
+                                Navigator.of(context).pop();
+                                await importSpecimensFromJson(context);
+                                await specimenProvider.fetchSpecimens();
+                              }),
+                          buildGridMenuItem(
+                              context, Icons.share_outlined, '${S.of(context).exportAll} (CSV)',
+                                  () async {
+                                Navigator.of(context).pop();
+                                exportAllSpecimensToCsv(context, _showPending ? specimenProvider.pendingSpecimens : specimenProvider.archivedSpecimens);
+                              }),
+                          buildGridMenuItem(
+                              context, Icons.share_outlined, '${S.of(context).exportAll} (Excel)',
+                                  () async {
+                                Navigator.of(context).pop();
+                                exportAllSpecimensToExcel(context, _showPending ? specimenProvider.pendingSpecimens : specimenProvider.archivedSpecimens);
+                              }),
+                          buildGridMenuItem(
+                              context, Icons.share_outlined, '${S.of(context).exportAll} (JSON)',
+                                  () async {
+                                Navigator.of(context).pop();
+                                exportAllSpecimensToJson(context, _showPending ? specimenProvider.pendingSpecimens : specimenProvider.archivedSpecimens);
+                              }),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
           ),
         );
       },

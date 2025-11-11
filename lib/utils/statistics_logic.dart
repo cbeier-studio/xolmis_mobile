@@ -7,6 +7,7 @@ import '../data/models/specimen.dart';
 import '../data/models/inventory.dart';
 import '../providers/inventory_provider.dart';
 
+import '../core/core_consts.dart';
 import '../generated/l10n.dart';
 
 class MonthOccurrence {

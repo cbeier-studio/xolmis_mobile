@@ -46,7 +46,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   // Set the package info
   Future<void> _setPackageInfo() async => PackageInfo.fromPlatform().then(
-        (PackageInfo packageInfo) => setState(() => _packageInfo = packageInfo),
+    (PackageInfo packageInfo) => setState(() => _packageInfo = packageInfo),
   );
 
   // Load the settings from SharedPreferences
@@ -54,7 +54,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       _themeMode = ThemeMode.values[prefs.getInt('themeMode') ?? 0];
-      _maxSimultaneousInventories = prefs.getInt('maxSimultaneousInventories') ?? 2;
+      _maxSimultaneousInventories =
+          prefs.getInt('maxSimultaneousInventories') ?? 2;
       _maxSpeciesMackinnon = prefs.getInt('maxSpeciesMackinnon') ?? 10;
       _pointCountsDuration = prefs.getInt('pointCountsDuration') ?? 8;
       _cumulativeTimeDuration = prefs.getInt('cumulativeTimeDuration') ?? 45;
@@ -70,7 +71,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Future<void> _saveSettings() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt('themeMode', _themeMode.index);
-    await prefs.setInt('maxSimultaneousInventories', _maxSimultaneousInventories);
+    await prefs.setInt(
+      'maxSimultaneousInventories',
+      _maxSimultaneousInventories,
+    );
     await prefs.setInt('maxSpeciesMackinnon', _maxSpeciesMackinnon);
     await prefs.setInt('pointCountsDuration', _pointCountsDuration);
     await prefs.setInt('cumulativeTimeDuration', _cumulativeTimeDuration);
@@ -84,414 +88,437 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(S.of(context).settings),
-      ),
+      appBar: AppBar(title: Text(S.of(context).settings)),
       body: SafeArea(
         child: SettingsList(
-        lightTheme: SettingsThemeData(
-          settingsListBackground: ThemeData.light().scaffoldBackgroundColor,
-          titleTextColor: Colors.deepPurple,
-        ),
-        sections: [
-          SettingsSection(
-            title: Text(S.of(context).observer), 
-            tiles: [
-            // Observer abbreviation
-            SettingsTile.navigation(
-              leading: Icon(Icons.person_outlined),
-              title: Text(S.of(context).observerSetting),
-              value: Text(_observerAbbreviation),
-              onPressed: (context) async {
-                String? newObserver = await showDialog<String>(
-                  context: context,
-                  builder: (BuildContext context) {
-                    String observer = '';
-                    return AlertDialog.adaptive(
-                      title: Text(S.of(context).observer),
-                      content: TextField(
-                        textCapitalization: TextCapitalization.characters,
-                        onChanged: (value) {
-                          observer = value;
-                        },
-                        decoration: InputDecoration(
-                          labelText: S.of(context).observerAbbreviation,
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                      actions: <Widget>[
-                        TextButton(
-                          onPressed: () => Navigator.of(context).pop(),
-                          child: Text(S.of(context).cancel),
-                        ),
-                        TextButton(
-                          onPressed: () => Navigator.of(context).pop(observer),
-                          child: Text(S.of(context).save),
-                        ),
-                      ],
-                    );
-                  },
-                );
+          lightTheme: SettingsThemeData(
+            settingsListBackground: ThemeData.light().scaffoldBackgroundColor,
+            titleTextColor: Colors.deepPurple,
+          ),
+          sections: [
+            SettingsSection(
+              title: Text(S.of(context).observer),
+              tiles: [
+                // Observer abbreviation
+                SettingsTile.navigation(
+                  leading: const Icon(Icons.person_outlined),
+                  title: Text(S.of(context).observerSetting),
+                  value: Text(_observerAbbreviation),
+                  onPressed: (context) async {
+                    String? newObserver = await buildObserverDialog(context);
 
-                if (newObserver != null && newObserver.isNotEmpty) {
-                  setState(() {
-                    _observerAbbreviation = newObserver;
-                  });
-                  _saveSettings();
-                }
-              },
-            ),
-          ]),
-          SettingsSection(title: Text(S.of(context).inventories), tiles: [
-            // Maximum number of simultaneous inventories
-            SettingsTile.navigation(
-              leading: Icon(Icons.list_alt_outlined),
-              title: Text(S.of(context).simultaneousInventories),
-              value: Text(
-                  '$_maxSimultaneousInventories ${S.of(context).inventory(_maxSimultaneousInventories)}'),
-              onPressed: (context) async {
-                final newMaxInventories = await showDialog<int>(
-                  context: context,
-                  builder: (context) {
-                    return NumberPickerDialog(
-                      minValue: 1,
-                      maxValue: 10,
-                      initialValue: _maxSimultaneousInventories,
-                      title: S.of(context).simultaneousInventories,
-                    );
-                  },
-                );
-                if (newMaxInventories != null) {
-                  setState(() {
-                    _maxSimultaneousInventories = newMaxInventories;
-                  });
-                  _saveSettings();
-                }
-              },
-            ),
-            // Mackinnon lists default number of species
-            SettingsTile.navigation(
-              leading: Icon(Icons.checklist_outlined),
-              title: Text(S.of(context).mackinnonLists),
-              value: Text(S.of(context).speciesPerList(_maxSpeciesMackinnon)),
-              onPressed: (context) async {
-                final newMaxSpecies = await showDialog<int>(
-                  context: context,
-                  builder: (context) {
-                    return NumberPickerDialog(
-                      minValue: 1,
-                      maxValue: 30,
-                      initialValue: _maxSpeciesMackinnon,
-                      title: S.of(context).speciesPerListTitle,
-                    );
-                  },
-                );
-                if (newMaxSpecies != null) {
-                  setState(() {
-                    _maxSpeciesMackinnon = newMaxSpecies;
-                  });
-                  _saveSettings();
-                }
-              },
-            ),
-            // Point counts default duration
-            SettingsTile.navigation(
-              leading: Icon(Icons.timer_outlined),
-              title: Text(S.of(context).pointCounts),
-              value:
-                  Text(S.of(context).inventoryDuration(_pointCountsDuration)),
-              onPressed: (context) async {
-                final newDuration = await showDialog<int>(
-                  context: context,
-                  builder: (context) {
-                    return NumberPickerDialog(
-                      minValue: 1,
-                      maxValue: 60,
-                      initialValue: _pointCountsDuration,
-                      title: S.of(context).durationMin,
-                    );
-                  },
-                );
-                if (newDuration != null) {
-                  setState(() {
-                    _pointCountsDuration = newDuration;
-                  });
-                  _saveSettings();
-                }
-              },
-            ),
-            // Timed qualitative list default duration
-            SettingsTile.navigation(
-              leading: Icon(Icons.timer_outlined),
-              title: Text(S.of(context).timedQualitativeLists),
-              value: Text(
-                  S.of(context).inventoryDuration(_cumulativeTimeDuration)),
-              onPressed: (context) async {
-                final newDuration = await showDialog<int>(
-                  context: context,
-                  builder: (context) {
-                    return NumberPickerDialog(
-                      minValue: 1,
-                      maxValue: 120,
-                      initialValue: _cumulativeTimeDuration,
-                      title: S.of(context).durationMin,
-                    );
-                  },
-                );
-                if (newDuration != null) {
-                  setState(() {
-                    _cumulativeTimeDuration = newDuration;
-                  });
-                  _saveSettings();
-                }
-              },
-            ),
-            // Interval qualitative list default duration
-            SettingsTile.navigation(
-              leading: Icon(Icons.timer_outlined),
-              title: Text(S.of(context).intervaledQualitativeLists),
-              value: Text(S.of(context).inventoryDuration(_intervalsDuration)),
-              onPressed: (context) async {
-                final newDuration = await showDialog<int>(
-                  context: context,
-                  builder: (context) {
-                    return NumberPickerDialog(
-                      minValue: 1,
-                      maxValue: 120,
-                      initialValue: _intervalsDuration,
-                      title: S.of(context).durationMin,
-                    );
-                  },
-                );
-                if (newDuration != null) {
-                  setState(() {
-                    _intervalsDuration = newDuration;
-                  });
-                  _saveSettings();
-                }
-              },
-            ),
-            SettingsTile.switchTile(
-              title: Text(S.of(context).remindMissingVegetationData),
-              // description: Text(S.of(context).formatNumbersDescription),
-              leading: Icon(Icons.notification_important_outlined),
-              initialValue: _remindVegetationEmpty,
-              onToggle: (bool value) {
-                setState(() {
-                  _remindVegetationEmpty = value;
-                });
-                _saveSettings();
-              },
-            ),
-            SettingsTile.switchTile(
-              title: Text(S.of(context).remindMissingWeatherData),
-              // description: Text(S.of(context).formatNumbersDescription),
-              leading: Icon(Icons.notification_important_outlined),
-              initialValue: _remindWeatherEmpty,
-              onToggle: (bool value) {
-                setState(() {
-                  _remindWeatherEmpty = value;
-                });
-                _saveSettings();
-              },
-            ),
-          ]),
-          SettingsSection(title: Text(S.of(context).export), tiles: [
-            SettingsTile.switchTile(
-              title: Text(S.of(context).formatNumbers),
-              description: Text(S.of(context).formatNumbersDescription),
-              leading: Icon(Icons.numbers_outlined),
-              initialValue: _formatNumbers,
-              onToggle: (bool value) {
-                setState(() {
-                  _formatNumbers = value;
-                });
-                _saveSettings();
-              },
-            ),
-          ]),
-          SettingsSection(title: Text(S.of(context).general), 
-            tiles: [
-              // Option to select the theme mode
-              SettingsTile.navigation(
-                leading: Icon(Icons.contrast_outlined),
-                title: Text(S.of(context).appearance),
-                value: Builder(
-                  builder: (context) {
-                    switch (_themeMode) {
-                      case ThemeMode.light:
-                        return Text(S.of(context).lightMode);
-                      case ThemeMode.dark:
-                        return Text(S.of(context).darkMode);
-                      case ThemeMode.system:
-                        return Text(S.of(context).systemMode);
+                    if (newObserver != null && newObserver.isNotEmpty) {
+                      setState(() {
+                        _observerAbbreviation = newObserver;
+                      });
+                      _saveSettings();
                     }
-                  }
+                  },
                 ),
-                onPressed: (context) {
-                  showDialog(
-                    context: context,
+              ],
+            ),
+            SettingsSection(
+              title: Text(S.of(context).inventories),
+              tiles: [
+                // Maximum number of simultaneous inventories
+                SettingsTile.navigation(
+                  leading: const Icon(Icons.list_alt_outlined),
+                  title: Text(S.of(context).simultaneousInventories),
+                  value: Text(
+                    '$_maxSimultaneousInventories ${S.of(context).inventory(_maxSimultaneousInventories)}',
+                  ),
+                  onPressed: (context) async {
+                    final newMaxInventories = await showDialog<int>(
+                      context: context,
+                      builder: (context) {
+                        return NumberPickerDialog(
+                          minValue: 1,
+                          maxValue: 10,
+                          initialValue: _maxSimultaneousInventories,
+                          title: S.of(context).simultaneousInventories,
+                        );
+                      },
+                    );
+                    if (newMaxInventories != null) {
+                      setState(() {
+                        _maxSimultaneousInventories = newMaxInventories;
+                      });
+                      _saveSettings();
+                    }
+                  },
+                ),
+                // Mackinnon lists default number of species
+                SettingsTile.navigation(
+                  leading: const Icon(Icons.checklist_outlined),
+                  title: Text(S.of(context).mackinnonLists),
+                  value: Text(
+                    S.of(context).speciesPerList(_maxSpeciesMackinnon),
+                  ),
+                  onPressed: (context) async {
+                    final newMaxSpecies = await showDialog<int>(
+                      context: context,
+                      builder: (context) {
+                        return NumberPickerDialog(
+                          minValue: 1,
+                          maxValue: 30,
+                          initialValue: _maxSpeciesMackinnon,
+                          title: S.of(context).speciesPerListTitle,
+                        );
+                      },
+                    );
+                    if (newMaxSpecies != null) {
+                      setState(() {
+                        _maxSpeciesMackinnon = newMaxSpecies;
+                      });
+                      _saveSettings();
+                    }
+                  },
+                ),
+                // Point counts default duration
+                SettingsTile.navigation(
+                  leading: const Icon(Icons.timer_outlined),
+                  title: Text(S.of(context).pointCounts),
+                  value: Text(
+                    S.of(context).inventoryDuration(_pointCountsDuration),
+                  ),
+                  onPressed: (context) async {
+                    final newDuration = await showDialog<int>(
+                      context: context,
+                      builder: (context) {
+                        return NumberPickerDialog(
+                          minValue: 1,
+                          maxValue: 60,
+                          initialValue: _pointCountsDuration,
+                          title: S.of(context).durationMin,
+                        );
+                      },
+                    );
+                    if (newDuration != null) {
+                      setState(() {
+                        _pointCountsDuration = newDuration;
+                      });
+                      _saveSettings();
+                    }
+                  },
+                ),
+                // Timed qualitative list default duration
+                SettingsTile.navigation(
+                  leading: const Icon(Icons.timer_outlined),
+                  title: Text(S.of(context).timedQualitativeLists),
+                  value: Text(
+                    S.of(context).inventoryDuration(_cumulativeTimeDuration),
+                  ),
+                  onPressed: (context) async {
+                    final newDuration = await showDialog<int>(
+                      context: context,
+                      builder: (context) {
+                        return NumberPickerDialog(
+                          minValue: 1,
+                          maxValue: 120,
+                          initialValue: _cumulativeTimeDuration,
+                          title: S.of(context).durationMin,
+                        );
+                      },
+                    );
+                    if (newDuration != null) {
+                      setState(() {
+                        _cumulativeTimeDuration = newDuration;
+                      });
+                      _saveSettings();
+                    }
+                  },
+                ),
+                // Interval qualitative list default duration
+                SettingsTile.navigation(
+                  leading: const Icon(Icons.timer_outlined),
+                  title: Text(S.of(context).intervaledQualitativeLists),
+                  value: Text(
+                    S.of(context).inventoryDuration(_intervalsDuration),
+                  ),
+                  onPressed: (context) async {
+                    final newDuration = await showDialog<int>(
+                      context: context,
+                      builder: (context) {
+                        return NumberPickerDialog(
+                          minValue: 1,
+                          maxValue: 120,
+                          initialValue: _intervalsDuration,
+                          title: S.of(context).durationMin,
+                        );
+                      },
+                    );
+                    if (newDuration != null) {
+                      setState(() {
+                        _intervalsDuration = newDuration;
+                      });
+                      _saveSettings();
+                    }
+                  },
+                ),
+                SettingsTile.switchTile(
+                  title: Text(S.of(context).remindMissingVegetationData),
+                  // description: Text(S.of(context).formatNumbersDescription),
+                  leading: const Icon(Icons.notification_important_outlined),
+                  initialValue: _remindVegetationEmpty,
+                  onToggle: (bool value) {
+                    setState(() {
+                      _remindVegetationEmpty = value;
+                    });
+                    _saveSettings();
+                  },
+                ),
+                SettingsTile.switchTile(
+                  title: Text(S.of(context).remindMissingWeatherData),
+                  // description: Text(S.of(context).formatNumbersDescription),
+                  leading: const Icon(Icons.notification_important_outlined),
+                  initialValue: _remindWeatherEmpty,
+                  onToggle: (bool value) {
+                    setState(() {
+                      _remindWeatherEmpty = value;
+                    });
+                    _saveSettings();
+                  },
+                ),
+              ],
+            ),
+            SettingsSection(
+              title: Text(S.of(context).export),
+              tiles: [
+                SettingsTile.switchTile(
+                  title: Text(S.of(context).formatNumbers),
+                  description: Text(S.of(context).formatNumbersDescription),
+                  leading: const Icon(Icons.numbers_outlined),
+                  initialValue: _formatNumbers,
+                  onToggle: (bool value) {
+                    setState(() {
+                      _formatNumbers = value;
+                    });
+                    _saveSettings();
+                  },
+                ),
+              ],
+            ),
+            SettingsSection(
+              title: Text(S.of(context).general),
+              tiles: [
+                // Option to select the theme mode
+                SettingsTile.navigation(
+                  leading: const Icon(Icons.contrast_outlined),
+                  title: Text(S.of(context).appearance),
+                  value: Builder(
                     builder: (context) {
-                      return SimpleDialog(
-                        title: Text(S.of(context).selectMode),
-                        children: [
-                          SimpleDialogOption(
-                            child: Row(
-                              children: [
-                                Icon(Icons.light_mode_outlined),
-                                const SizedBox(width: 8.0,),
-                                Text(S.of(context).lightMode),
-                              ],
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                _themeMode = ThemeMode.light;
-                              });
-                              _saveSettings();
-                              Provider.of<ThemeModel>(context, listen: false).getThemeMode();
-                              Navigator.pop(context);
-                            },
-                          ),
-                          SimpleDialogOption(
-                            child: Row(
-                              children: [
-                                Icon(Icons.dark_mode_outlined),
-                                const SizedBox(width: 8.0,),
-                                Text(S.of(context).darkMode),
-                              ],
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                _themeMode = ThemeMode.dark;
-                              });
-                              _saveSettings();
-                              Provider.of<ThemeModel>(context, listen: false).getThemeMode();
-                              Navigator.pop(context);
-                            },
-                          ),
-                          SimpleDialogOption(
-                            child: Row(
-                              children: [
-                                Icon(Icons.contrast_outlined),
-                                const SizedBox(width: 8.0,),
-                                Text(S.of(context).systemMode),
-                              ],
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                _themeMode = ThemeMode.system;
-                              });
-                              _saveSettings();
-                              Provider.of<ThemeModel>(context, listen: false).getThemeMode();
-                              Navigator.pop(context);
-                            },
-                          ),
-                        ],
-                      );
+                      switch (_themeMode) {
+                        case ThemeMode.light:
+                          return Text(S.of(context).lightMode);
+                        case ThemeMode.dark:
+                          return Text(S.of(context).darkMode);
+                        case ThemeMode.system:
+                          return Text(S.of(context).systemMode);
+                      }
                     },
-                  );
-                },
-              ),
-            // About the app
-            SettingsTile.navigation(
-              leading: Icon(Icons.info_outlined),
-              title: Text(S.of(context).about),
-              onPressed: (context) => showAboutPage(
-                context: context,
-                title: Text(S.of(context).about),
-                values: {
-                  'version': '${_packageInfo?.version}',
-                  'buildNumber': '${_packageInfo?.buildNumber}',
-                  'year': '2024-${DateTime.now().year}',
-                  'author': 'Christian Beier',
-                },
-                applicationIcon: Image.asset(
-                  'assets/xolmis_icon.png',
-                  width: 150,
-                  height: 150,
+                  ),
+                  onPressed: (context) {
+                    buildThemeModeSelector(context);
+                  },
                 ),
-                applicationLegalese: '© {{ year }}  {{ author }}',
-                applicationName: _packageInfo?.appName ?? 'Xolmis',
-                applicationVersion: '{{ version }}+{{ buildNumber }}',
-                applicationDescription: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(S.of(context).platinumSponsor),
-                    Image.asset(
-                      'assets/alianza_del_pastizal_logo.png',
-                      scale: 3,
-                    ),
-                  ],
+                // About the app
+                SettingsTile.navigation(
+                  leading: const Icon(Icons.info_outlined),
+                  title: Text(S.of(context).about),
+                  onPressed: (context) => buildShowAboutPage(context),
                 ),
+              ],
+            ),
+            SettingsSection(
+              title: Text(S.current.backup),
+              tiles: [
+                SettingsTile.navigation(
+                  leading: const Icon(Icons.save_outlined),
+                  title: Text(S.current.createBackup),
+                  onPressed: (context) async {
+                    await runCreateBackup(context);
+                  },
+                ),
+                SettingsTile.navigation(
+                  leading: const Icon(Icons.settings_backup_restore_outlined),
+                  title: Text(S.current.restoreBackup),
+                  onPressed: (context) async {
+                    await runBackupRestore(context);
+                  },
+                ),
+              ],
+            ),
+            // SettingsSection(
+            //   title: Text(S.of(context).dangerZone,
+            //           style: TextStyle(color: Theme.of(context).brightness == Brightness.light
+            //               ? Colors.red
+            //               : Colors.redAccent,)),
+            //   tiles: [
+            //   // Option to delete app data
+            //   SettingsTile(
+            //       leading: Icon(
+            //         const Icons.delete_forever,
+            //         color: Theme.of(context).brightness == Brightness.light
+            //               ? Colors.red
+            //               : Colors.redAccent,
+            //       ),
+            //       title: Text(S.of(context).deleteAppData,
+            //           style: TextStyle(color: Theme.of(context).brightness == Brightness.light
+            //               ? Colors.red
+            //               : Colors.redAccent,)),
+            //       description: Text(S.of(context).deleteAppDataDescription),
+            //       onPressed: (context) {
+            //         _showDeleteConfirmationDialog(context);
+            //       }),
+            // ]),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<String?> buildObserverDialog(BuildContext context) async {
+    return await showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        String observer = '';
+        return AlertDialog.adaptive(
+          title: Text(S.of(context).observer),
+          content: TextField(
+            textCapitalization: TextCapitalization.characters,
+            onChanged: (value) {
+              observer = value;
+            },
+            decoration: InputDecoration(
+              labelText: S.of(context).observerAbbreviation,
+              border: OutlineInputBorder(),
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(S.of(context).cancel),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(observer),
+              child: Text(S.of(context).save),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<dynamic> buildThemeModeSelector(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return SimpleDialog(
+          title: Text(S.of(context).selectMode),
+          children: [
+            SimpleDialogOption(
+              child: Row(
                 children: [
-                  MarkdownPageListTile(
-                    icon: Icon(Icons.list),
-                    title: Text(S.current.changelog),
-                    filename: 'assets/changelog.md',
-                  ),
-                  MarkdownPageListTile(
-                    filename: 'assets/license.md',
-                    title: Text(S.current.viewLicense),
-                    icon: Icon(Icons.description),
-                  ),
-                  // MarkdownPageListTile(
-                  //   filename: 'CONTRIBUTING.md',
-                  //   title: Text('Contributing'),
-                  //   icon: Icon(Icons.share),
-                  // ),
-                  LicensesPageListTile(
-                    title: Text(S.current.openSourceLicenses),
-                    icon: Icon(Icons.favorite),
-                  ),
+                  const Icon(Icons.light_mode_outlined),
+                  const SizedBox(width: 8.0),
+                  Text(S.of(context).lightMode),
                 ],
               ),
+              onPressed: () {
+                setState(() {
+                  _themeMode = ThemeMode.light;
+                });
+                _saveSettings();
+                Provider.of<ThemeModel>(context, listen: false).getThemeMode();
+                Navigator.pop(context);
+              },
             ),
-          ]
-          ),
-          SettingsSection(title: Text(S.current.backup),
-            tiles: [
-              SettingsTile.navigation(
-                leading: Icon(Icons.save_outlined),
-                title: Text(S.current.createBackup),
-                onPressed: (context) async {
-                  await runCreateBackup(context);
-                }
+            SimpleDialogOption(
+              child: Row(
+                children: [
+                  const Icon(Icons.dark_mode_outlined),
+                  const SizedBox(width: 8.0),
+                  Text(S.of(context).darkMode),
+                ],
               ),
-              SettingsTile.navigation(
-                leading: Icon(Icons.settings_backup_restore_outlined),
-                title: Text(S.current.restoreBackup),
-                onPressed: (context) async {
-                  await runBackupRestore(context);
-                },
+              onPressed: () {
+                setState(() {
+                  _themeMode = ThemeMode.dark;
+                });
+                _saveSettings();
+                Provider.of<ThemeModel>(context, listen: false).getThemeMode();
+                Navigator.pop(context);
+              },
+            ),
+            SimpleDialogOption(
+              child: Row(
+                children: [
+                  const Icon(Icons.contrast_outlined),
+                  const SizedBox(width: 8.0),
+                  Text(S.of(context).systemMode),
+                ],
               ),
-            ],
-          ),
-          // SettingsSection(
-          //   title: Text(S.of(context).dangerZone,
-          //           style: TextStyle(color: Theme.of(context).brightness == Brightness.light
-          //               ? Colors.red
-          //               : Colors.redAccent,)), 
-          //   tiles: [
-          //   // Option to delete app data
-          //   SettingsTile(
-          //       leading: Icon(
-          //         Icons.delete_forever,
-          //         color: Theme.of(context).brightness == Brightness.light
-          //               ? Colors.red
-          //               : Colors.redAccent,
-          //       ),
-          //       title: Text(S.of(context).deleteAppData,
-          //           style: TextStyle(color: Theme.of(context).brightness == Brightness.light
-          //               ? Colors.red
-          //               : Colors.redAccent,)),
-          //       description: Text(S.of(context).deleteAppDataDescription),
-          //       onPressed: (context) {
-          //         _showDeleteConfirmationDialog(context);
-          //       }),
-          // ]),
+              onPressed: () {
+                setState(() {
+                  _themeMode = ThemeMode.system;
+                });
+                _saveSettings();
+                Provider.of<ThemeModel>(context, listen: false).getThemeMode();
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> buildShowAboutPage(BuildContext context) {
+    return showAboutPage(
+      context: context,
+      title: Text(S.of(context).about),
+      values: {
+        'version': '${_packageInfo?.version}',
+        'buildNumber': '${_packageInfo?.buildNumber}',
+        'year': '2024-${DateTime.now().year}',
+        'author': 'Christian Beier',
+      },
+      applicationIcon: Image.asset(
+        'assets/xolmis_icon.png',
+        width: 150,
+        height: 150,
+      ),
+      applicationLegalese: '© {{ year }}  {{ author }}',
+      applicationName: _packageInfo?.appName ?? 'Xolmis',
+      applicationVersion: '{{ version }}+{{ buildNumber }}',
+      applicationDescription: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(S.of(context).platinumSponsor),
+          Image.asset('assets/alianza_del_pastizal_logo.png', scale: 3),
         ],
       ),
-      ),
+      children: [
+        MarkdownPageListTile(
+          icon: const Icon(Icons.list),
+          title: Text(S.current.changelog),
+          filename: 'assets/changelog.md',
+        ),
+        MarkdownPageListTile(
+          filename: 'assets/license.md',
+          title: Text(S.current.viewLicense),
+          icon: const Icon(Icons.description),
+        ),
+        // MarkdownPageListTile(
+        //   filename: 'CONTRIBUTING.md',
+        //   title: Text('Contributing'),
+        //   icon: const Icon(Icons.share),
+        // ),
+        LicensesPageListTile(
+          title: Text(S.current.openSourceLicenses),
+          icon: const Icon(Icons.favorite),
+        ),
+      ],
     );
   }
 
@@ -502,7 +529,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
       final now = DateTime.now();
       final formatter = DateFormat('yyyyMMdd_HHmmss');
       final formattedDate = formatter.format(now);
-      final backupFilePath = '${directory!.path}/xolmis_backup_$formattedDate.zip';
+      final backupFilePath =
+          '${directory!.path}/xolmis_backup_$formattedDate.zip';
 
       if (mounted) {
         showDialog(
@@ -536,15 +564,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
       if (success) {
         final result = await SharePlus.instance.share(
-            ShareParams(
-                files: [XFile(backupFilePath, mimeType: 'application/zip')],
-                text: S.current.sendBackupTo,
-            )
+          ShareParams(
+            files: [XFile(backupFilePath, mimeType: 'application/zip')],
+            text: S.current.sendBackupTo,
+          ),
         );
 
         if (result.status == ShareResultStatus.success) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(S.current.backupCreatedAndSharedSuccessfully)),
+            SnackBar(
+              content: Text(S.current.backupCreatedAndSharedSuccessfully),
+            ),
           );
         }
       } else {
@@ -552,9 +582,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Navigator.of(context).pop();
           isDialogShown = false;
         }
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(S.current.errorBackupNotFound)),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(S.current.errorBackupNotFound)));
       }
     } catch (e) {
       if (isDialogShown && mounted) {
@@ -562,7 +592,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
         isDialogShown = false;
       }
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('${S.current.errorCreatingBackup}: ${e.toString()}')),
+        SnackBar(
+          content: Text('${S.current.errorCreatingBackup}: ${e.toString()}'),
+        ),
       );
     }
   }
@@ -642,7 +674,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
           isDialogShown = false;
         }
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('${S.current.errorRestoringBackup}: ${e.toString()}')),
+          SnackBar(
+            content: Text('${S.current.errorRestoringBackup}: ${e.toString()}'),
+          ),
         );
       }
     }
@@ -679,24 +713,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
   //   );
   // }
 
-//   Future<void> _deleteAppData() async {
-//     // 1. Get the database path
-//     var databasesPath = await getDatabasesPath();
-//     String path = join(databasesPath, 'xolmis_database.db');
+  //   Future<void> _deleteAppData() async {
+  //     // 1. Get the database path
+  //     var databasesPath = await getDatabasesPath();
+  //     String path = join(databasesPath, 'xolmis_database.db');
 
-//     DatabaseHelper databaseHelper = DatabaseHelper();
-//     await databaseHelper.closeDatabase();
+  //     DatabaseHelper databaseHelper = DatabaseHelper();
+  //     await databaseHelper.closeDatabase();
 
-//     // 2. Delete the database file
-//     await deleteDatabase(path);
+  //     // 2. Delete the database file
+  //     await deleteDatabase(path);
 
-//     // 3. Recreate the database
+  //     // 3. Recreate the database
 
-//     await databaseHelper.initDatabase();
+  //     await databaseHelper.initDatabase();
 
-//     // 4. Clear other app data, if necessary (ex: SharedPreferences)
-//     // ...
-//   }
+  //     // 4. Clear other app data, if necessary (ex: SharedPreferences)
+  //     // ...
+  //   }
 }
 
 // Auxiliary widget to select a number

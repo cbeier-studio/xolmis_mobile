@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../data/models/inventory.dart';
 import '../../providers/weather_provider.dart';
+import '../../core/core_consts.dart';
 import '../../utils/utils.dart';
 import '../../generated/l10n.dart';
 import 'add_weather_screen.dart';
@@ -142,16 +143,16 @@ class _WeatherTabState extends State<WeatherTab>
                                                     Row(
                                                       mainAxisSize: MainAxisSize.min,
                                                       children: [
-                                                        Icon(Icons.cloud_outlined),
-                                                        SizedBox(width: 4),
+                                                        const Icon(Icons.cloud_outlined),
+                                                        const SizedBox(width: 4),
                                                         Text('${weather.cloudCover}%'),
                                                       ],
                                                     ),
                                                     Row(
                                                       mainAxisSize: MainAxisSize.min,
                                                       children: [
-                                                        Icon(Icons.cloudy_snowing),
-                                                        SizedBox(width: 4),
+                                                        const Icon(Icons.cloudy_snowing),
+                                                        const SizedBox(width: 4),
                                                         Text(
                                                           '${precipitationTypeFriendlyNames[weather.precipitation]}',
                                                         ),
@@ -160,16 +161,16 @@ class _WeatherTabState extends State<WeatherTab>
                                                     Row(
                                                       mainAxisSize: MainAxisSize.min,
                                                       children: [
-                                                        Icon(Icons.thermostat_outlined),
-                                                        SizedBox(width: 4),
+                                                        const Icon(Icons.thermostat_outlined),
+                                                        const SizedBox(width: 4),
                                                         Text('${weather.temperature} °C'),
                                                       ],
                                                     ),
                                                     Row(
                                                       mainAxisSize: MainAxisSize.min,
                                                       children: [
-                                                        Icon(Icons.wind_power_outlined),
-                                                        SizedBox(width: 4),
+                                                        const Icon(Icons.wind_power_outlined),
+                                                        const SizedBox(width: 4),
                                                         Text(
                                                           '${weather.windSpeed} bft ${weather.windDirection ?? ''}',
                                                         ),
@@ -178,16 +179,16 @@ class _WeatherTabState extends State<WeatherTab>
                                                     Row(
                                                       mainAxisSize: MainAxisSize.min,
                                                       children: [
-                                                        Icon(Icons.cyclone_outlined),
-                                                        SizedBox(width: 4),
+                                                        const Icon(Icons.cyclone_outlined),
+                                                        const SizedBox(width: 4),
                                                         Text('${weather.atmosphericPressure ?? 0} mPa'),
                                                       ],
                                                     ),
                                                     Row(
                                                       mainAxisSize: MainAxisSize.min,
                                                       children: [
-                                                        Icon(Icons.water_drop_outlined),
-                                                        SizedBox(width: 4),
+                                                        const Icon(Icons.water_drop_outlined),
+                                                        const SizedBox(width: 4),
                                                         Text('${weather.relativeHumidity ?? 0}%'),
                                                       ],
                                                     ),
@@ -228,19 +229,27 @@ class _WeatherTabState extends State<WeatherTab>
             builder: (BuildContext context) {
               return Container(
                 padding: const EdgeInsets.all(16.0),
-                child: Column(
+                child: SingleChildScrollView(
+                  child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    ListTile(
-                      title: Text(
-                        DateFormat(
-                          'dd/MM/yyyy HH:mm:ss',
-                        ).format(weather.sampleTime!),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        DateFormat('dd/MM/yyyy HH:mm:ss',).format(weather.sampleTime!),
+                        style: TextTheme.of(context).bodyLarge,
                       ),
                     ),
-                    Divider(),
+                    // ListTile(
+                    //   title: Text(
+                    //     DateFormat(
+                    //       'dd/MM/yyyy HH:mm:ss',
+                    //     ).format(weather.sampleTime!),
+                    //   ),
+                    // ),
+                    const Divider(),
                     GridView.count(
-                      crossAxisCount: 4,
+                      crossAxisCount: MediaQuery.sizeOf(context).width < 600 ? 4 : 5,
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       children: <Widget>[
@@ -276,6 +285,7 @@ class _WeatherTabState extends State<WeatherTab>
                       ],
                     ),
                   ],
+                ),
                 ),
               );
             },
@@ -341,16 +351,16 @@ class WeatherGridItemState extends State<WeatherGridItem> {
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.cloud_outlined),
-                      SizedBox(width: 4),
+                      const Icon(Icons.cloud_outlined),
+                      const SizedBox(width: 4),
                       Text('${widget.weather.cloudCover}%'),
                     ],
                   ),
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.cloudy_snowing),
-                      SizedBox(width: 4),
+                      const Icon(Icons.cloudy_snowing),
+                      const SizedBox(width: 4),
                       Text(
                         '${precipitationTypeFriendlyNames[widget.weather.precipitation]}',
                       ),
@@ -359,16 +369,16 @@ class WeatherGridItemState extends State<WeatherGridItem> {
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.thermostat_outlined),
-                      SizedBox(width: 4),
+                      const Icon(Icons.thermostat_outlined),
+                      const SizedBox(width: 4),
                       Text('${widget.weather.temperature} °C'),
                     ],
                   ),
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.wind_power_outlined),
-                      SizedBox(width: 4),
+                      const Icon(Icons.wind_power_outlined),
+                      const SizedBox(width: 4),
                       Text(
                         '${widget.weather.windSpeed} bft ${widget.weather.windDirection ?? ''}',
                       ),
@@ -377,16 +387,16 @@ class WeatherGridItemState extends State<WeatherGridItem> {
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.cyclone_outlined),
-                      SizedBox(width: 4),
+                      const Icon(Icons.cyclone_outlined),
+                      const SizedBox(width: 4),
                       Text('${widget.weather.atmosphericPressure ?? 0} mPa'),
                     ],
                   ),
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.water_drop_outlined),
-                      SizedBox(width: 4),
+                      const Icon(Icons.water_drop_outlined),
+                      const SizedBox(width: 4),
                       Text('${widget.weather.relativeHumidity ?? 0}%'),
                     ],
                   ),
@@ -432,16 +442,16 @@ class WeatherListItemState extends State<WeatherListItem> {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.cloud_outlined),
-              SizedBox(width: 4),
+              const Icon(Icons.cloud_outlined),
+              const SizedBox(width: 4),
               Text('${widget.weather.cloudCover}%'),
             ],
           ),
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.cloudy_snowing),
-              SizedBox(width: 4),
+              const Icon(Icons.cloudy_snowing),
+              const SizedBox(width: 4),
               Text(
                 '${precipitationTypeFriendlyNames[widget.weather.precipitation]}',
               ),
@@ -450,16 +460,16 @@ class WeatherListItemState extends State<WeatherListItem> {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.thermostat_outlined),
-              SizedBox(width: 4),
+              const Icon(Icons.thermostat_outlined),
+              const SizedBox(width: 4),
               Text('${widget.weather.temperature} °C'),
             ],
           ),
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.wind_power_outlined),
-              SizedBox(width: 4),
+              const Icon(Icons.wind_power_outlined),
+              const SizedBox(width: 4),
               Text(
                 '${widget.weather.windSpeed} bft ${widget.weather.windDirection ?? ''}',
               ),
@@ -468,16 +478,16 @@ class WeatherListItemState extends State<WeatherListItem> {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.cyclone_outlined),
-              SizedBox(width: 4),
+              const Icon(Icons.cyclone_outlined),
+              const SizedBox(width: 4),
               Text('${widget.weather.atmosphericPressure ?? 0} mPa'),
             ],
           ),
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.water_drop_outlined),
-              SizedBox(width: 4),
+              const Icon(Icons.water_drop_outlined),
+              const SizedBox(width: 4),
               Text('${widget.weather.relativeHumidity ?? 0}%'),
             ],
           ),

@@ -1348,6 +1348,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sampleTime => 'Sample time';
 
   @override
+  String get refresh => 'Refresh';
+
+  @override
   String get precipitationNone => 'None';
 
   @override

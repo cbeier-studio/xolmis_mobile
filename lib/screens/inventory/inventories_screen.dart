@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
@@ -19,6 +18,7 @@ import '../../data/daos/weather_dao.dart';
 import '../../providers/inventory_provider.dart';
 import '../../providers/species_provider.dart';
 
+import '../../widgets/timer_progress_indicator.dart';
 import 'add_inventory_screen.dart';
 import 'edit_inventory_screen.dart';
 import 'inventory_detail_screen.dart';
@@ -54,7 +54,6 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
   late WeatherDao weatherDao;
   final _searchController = TextEditingController();
   bool _isShowingActiveInventories = true; // Default to show active inventories
-  bool _isSearchBarVisible = false; // Default to hide search bar
   String _searchQuery = ''; // Default search query
   Set<String> selectedInventories = {}; // Set of selected inventories
   SortOrder _sortOrder = SortOrder.descending; // Default sort order
@@ -151,7 +150,8 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
           builder: (BuildContext context, StateSetter setModalState) {
             return Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Column(
+              child: SingleChildScrollView(
+                child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -247,6 +247,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                     },
                   ),
                 ],
+              ),
               ),
             );
           },
@@ -643,7 +644,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                 });
               },
             )
-                : SizedBox.shrink(),
+                : const SizedBox.shrink(),
           ],
           onChanged: (query) {
             setState(() {
@@ -661,19 +662,19 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                   },
                 ),
               )
-            : SizedBox.shrink(),
+            : const SizedBox.shrink(),
         actions: [
-          // Action to show or hide the search bar
-          // IconButton(
-          //   icon: Icon(Icons.search_outlined),
-          //   selectedIcon: Icon(Icons.search_off_outlined),
-          //   isSelected: _isSearchBarVisible,
-          //   onPressed: _toggleSearchBarVisibility,
-          // ),
-          MenuAnchor(
+          MediaQuery.sizeOf(context).width < 600
+          ? IconButton(
+        icon: const Icon(Icons.more_vert_outlined),
+        onPressed: () {
+          _showMoreOptionsBottomSheet(context);
+        },
+      )
+          : MenuAnchor(
             builder: (context, controller, child) {
               return IconButton(
-                icon: Icon(Icons.more_vert_outlined),
+                icon: const Icon(Icons.more_vert_outlined),
                 onPressed: () {
                   if (controller.isOpen) {
                     controller.close();
@@ -687,7 +688,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
               // Action to select all inventories
               if (!_isShowingActiveInventories)
                 MenuItemButton(
-                  leadingIcon: Icon(Icons.library_add_check_outlined),
+                  leadingIcon: const Icon(Icons.library_add_check_outlined),
                   onPressed: () {
                     final filteredInventories = _filterInventories(inventoryProvider.finishedInventories);
                     setState(() {
@@ -700,7 +701,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                 ),
               // Action to import inventories from JSON
               MenuItemButton(
-                leadingIcon: Icon(Icons.file_open_outlined),
+                leadingIcon: const Icon(Icons.file_open_outlined),
                 onPressed: () async {
                   await importInventoryFromJson(context);
                   await inventoryProvider.fetchInventories(context);
@@ -709,7 +710,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
               ),
               // Action to export all finished inventories to JSON
               MenuItemButton(
-                leadingIcon: Icon(Icons.share_outlined),
+                leadingIcon: const Icon(Icons.share_outlined),
                 onPressed: () async {
                   await exportAllInventoriesToJson(context, inventoryProvider);
                 },
@@ -776,9 +777,10 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(S.of(context).noInventoriesFound),
-                      SizedBox(height: 8),
-                      IconButton.filled(
-                        icon: Icon(Icons.refresh_outlined),
+                      const SizedBox(height: 8),
+                      FilledButton.icon(
+                        label: Text(S.of(context).refresh),
+                        icon: const Icon(Icons.refresh_outlined),
                         onPressed: () async {
                           await inventoryProvider.fetchInventories(context);
                         }, 
@@ -874,17 +876,17 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                 children: [
                   // Option to delete all selected inventories
                   IconButton(
-                    icon: Icon(Icons.delete_outlined),
+                    icon: const Icon(Icons.delete_outlined),
                     tooltip: S.of(context).delete,
                     color: Colors.red,
                     onPressed: _deleteSelectedInventories,
                   ),
-                  VerticalDivider(),
+                  const VerticalDivider(),
                   // Option to export all selected inventories to CSV or JSON
                   MenuAnchor(
                     builder: (context, controller, child) {
                       return IconButton(
-                        icon: Icon(Icons.share_outlined),
+                        icon: const Icon(Icons.share_outlined),
                         tooltip: S
                             .of(context)
                             .exportWhat(S.of(context).inventory(2)),
@@ -902,26 +904,26 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                         onPressed: () {
                           _exportSelectedInventoriesToCsv(context);
                         },
-                        child: Text('CSV'),
+                        child: const Text('CSV'),
                       ),
                       MenuItemButton(
                         onPressed: () {
                           _exportSelectedInventoriesToExcel(context);
                         },
-                        child: Text('Excel'),
+                        child: const Text('Excel'),
                       ),
                       MenuItemButton(
                         onPressed: () {
                           _exportSelectedInventoriesToJson(context);
                         },
-                        child: Text('JSON'),
+                        child: const Text('JSON'),
                       ),
                     ],
                   ),
                   MenuAnchor(
                     builder: (context, controller, child) {
                       return IconButton(
-                        icon: Icon(Icons.more_vert_outlined),
+                        icon: const Icon(Icons.more_vert_outlined),
                         onPressed: () {
                           if (controller.isOpen) {
                             controller.close();
@@ -951,6 +953,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                         leadingIcon: const Icon(Icons.table_view_outlined),
                         child: Text(S.current.reportSpeciesByInventory),
                       ),
+                      if (selectedInventories.length > 1)
                       MenuItemButton(
                         onPressed: () {
                           final inventories = selectedInventories
@@ -970,6 +973,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                         leadingIcon: const Icon(Icons.show_chart_outlined),
                         child: Text(S.current.speciesAccumulationCurve),
                       ),
+                      if (selectedInventories.length > 1)
                       MenuItemButton(
                         onPressed: () {
                           final inventories = selectedInventories
@@ -989,6 +993,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                         leadingIcon: const Icon(Icons.bar_chart_outlined),
                         child: Text(S.current.speciesCounted),
                       ),
+                      // if (selectedInventories.length > 1)
                       // MenuItemButton(
                       //   onPressed: () {
                       //     final inventories = selectedInventories
@@ -1010,10 +1015,10 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                       // ),
                     ],
                   ),
-                  VerticalDivider(),
+                  const VerticalDivider(),
                   // Option to clear the selected inventories
                   IconButton(
-                    icon: Icon(Icons.clear_outlined),
+                    icon: const Icon(Icons.clear_outlined),
                     tooltip: S.current.clearSelection,
                     onPressed: () {
                       setState(() {
@@ -1044,27 +1049,15 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
             var progress = (inventory.isPaused || inventory.duration < 0)
               ? null
               : (elapsedTime / (inventory.duration * 60)).toDouble();
-    
+
             if (progress != null && (progress.isNaN || progress.isInfinite || progress < 0 || progress > 1)) {
               progress = 0;
             }
-    
-            return CircularProgressIndicator(
-              value: progress,
-              backgroundColor:
-                _isShowingActiveInventories && inventory.duration > 0
-                  ? Theme.of(context).brightness == Brightness.light
-                    ? Colors.grey[200]
-                    : Colors.black
-                  : null,
-              valueColor: AlwaysStoppedAnimation<Color>(
-                inventory.isPaused
-                  ? Colors.amber
-                  : Theme.of(context).brightness == Brightness.light
-                    ? Colors.deepPurple
-                    : Colors.deepPurpleAccent,
-              ),
-              year2023: false,
+
+            return TimerProgressIndicator(
+                value: progress,
+                isVisible: _isShowingActiveInventories,
+                inventory: inventory
             );
           },
         ),
@@ -1094,55 +1087,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
         ),
       ]),
       title: Text(inventory.id),
-      subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Show the inventory type
-          Text('${inventoryTypeFriendlyNames[inventory.type]}', overflow: TextOverflow.ellipsis,),
-          // Show the inventory locality
-          if (inventory.localityName != null && inventory.localityName!.isNotEmpty)
-            Text(inventory.localityName!, overflow: TextOverflow.ellipsis,),
-          // Show the inventory timer duration if active
-          if (_isShowingActiveInventories && inventory.duration > 0)
-            Text(S.of(context).inventoryDuration(inventory.duration)),
-          // Show the date and time of the inventory
-          if (!_isShowingActiveInventories)
-            Text('${DateFormat('dd/MM/yyyy HH:mm:ss').format(inventory.startTime!)} - ${DateFormat('HH:mm:ss').format(inventory.endTime!)}'),
-          // Show the species count
-          Selector<SpeciesProvider, Map<String, int>>(
-            selector: (context, speciesProvider) {
-              final speciesList = speciesProvider.getSpeciesForInventory(inventory.id);
-              int speciesWithinCount = 0;
-              int speciesOutOfCount = 0;
-
-              for (final species in speciesList) {
-                if (species.isOutOfInventory) {
-                  speciesOutOfCount++;
-                } else {
-                  speciesWithinCount++;
-                }
-              }
-              return {
-                'within': speciesWithinCount,
-                'out': speciesOutOfCount,
-              };
-            },
-            shouldRebuild: (previous, next) =>
-            previous['within'] != next['within'] || previous['out'] != next['out'],
-            builder: (context, speciesCounts, child) {
-              final int withinCount = speciesCounts['within'] ?? 0;
-              final int outCount = speciesCounts['out'] ?? 0;
-
-              String speciesText = "$withinCount ${S.current.speciesCount(withinCount)}";
-              if (outCount > 0) {
-                speciesText += " + $outCount ${S.current.outOfSample.toLowerCase()}";
-              }
-
-              return Text(speciesText);
-            },
-          ),
-        ],
-      ),
+      subtitle: buildItemSubtitle(inventory, context),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -1159,7 +1104,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
               builder: (context, intervalWithoutSpecies, child) {
                 return intervalWithoutSpecies > 0
                   ? Badge.count(count: intervalWithoutSpecies)
-                  : SizedBox.shrink();
+                  : const SizedBox.shrink();
               }
             ),
           ),
@@ -1168,12 +1113,8 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
             visible: _isShowingActiveInventories && inventory.duration > 0,
             child: IconButton(
               icon: Icon(inventory.isPaused
-                ? Theme.of(context).brightness == Brightness.light
-                  ? Icons.play_arrow_outlined
-                  : Icons.play_arrow
-                : Theme.of(context).brightness == Brightness.light
-                  ? Icons.pause_outlined
-                  : Icons.pause),
+                ? Icons.play_arrow
+                : Icons.pause),
               tooltip: inventory.isPaused
                 ? S.of(context).resume
                 : S.of(context).pause,
@@ -1211,6 +1152,58 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
         });
       },
       onLongPress: () => _showBottomSheet(context, inventory),
+    );
+  }
+
+  Column buildItemSubtitle(Inventory inventory, BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Show the inventory type
+        Text('${inventoryTypeFriendlyNames[inventory.type]}', overflow: TextOverflow.ellipsis,),
+        // Show the inventory locality
+        if (inventory.localityName != null && inventory.localityName!.isNotEmpty)
+          Text(inventory.localityName!, overflow: TextOverflow.ellipsis,),
+        // Show the inventory timer duration if active
+        if (_isShowingActiveInventories && inventory.duration > 0)
+          Text(S.of(context).inventoryDuration(inventory.duration)),
+        // Show the date and time of the inventory
+        if (!_isShowingActiveInventories)
+          Text('${DateFormat('dd/MM/yyyy HH:mm:ss').format(inventory.startTime!)} - ${DateFormat('HH:mm:ss').format(inventory.endTime!)}'),
+        // Show the species count
+        Selector<SpeciesProvider, Map<String, int>>(
+          selector: (context, speciesProvider) {
+            final speciesList = speciesProvider.getSpeciesForInventory(inventory.id);
+            int speciesWithinCount = 0;
+            int speciesOutOfCount = 0;
+
+            for (final species in speciesList) {
+              if (species.isOutOfInventory) {
+                speciesOutOfCount++;
+              } else {
+                speciesWithinCount++;
+              }
+            }
+            return {
+              'within': speciesWithinCount,
+              'out': speciesOutOfCount,
+            };
+          },
+          shouldRebuild: (previous, next) =>
+            previous['within'] != next['within'] || previous['out'] != next['out'],
+          builder: (context, speciesCounts, child) {
+            final int withinCount = speciesCounts['within'] ?? 0;
+            final int outCount = speciesCounts['out'] ?? 0;
+
+            String speciesText = "$withinCount ${S.current.speciesCount(withinCount)}";
+            if (outCount > 0) {
+              speciesText += " + $outCount ${S.current.outOfSample.toLowerCase()}";
+            }
+
+            return Text(speciesText);
+          },
+        ),
+      ],
     );
   }
 
@@ -1273,7 +1266,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                         }
                       ),
                     ),
-                    Expanded(child: SizedBox.shrink()),
+                    Expanded(child: const SizedBox.shrink()),
                     // Show the pause/resume button for active inventories
                     Visibility(
                       visible: _isShowingActiveInventories && inventory.duration > 0,
@@ -1319,7 +1312,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                     ),
                   ],
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 // Show progress of the inventory timer
                 if (_isShowingActiveInventories && inventory.duration > 0)
                   ValueListenableBuilder<double>(
@@ -1355,7 +1348,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                       );
                     },
                   ),
-                Expanded(child: SizedBox.shrink()),
+                Expanded(child: const SizedBox.shrink()),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -1435,19 +1428,25 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
           builder: (BuildContext context) {
             return Container(
               padding: const EdgeInsets.all(16.0),
-              child: Column(
+              child: SingleChildScrollView(
+                child: Column(
                 mainAxisSize: MainAxisSize.min,
                 // crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   // Show the inventory ID
-                  ListTile(
-                    // leading: const Icon(Icons.info_outlined),
-                    title: Text(inventory.id),
-                    // subtitle: Text(S.of(context).inventoryId),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(inventory.id, style: TextTheme.of(context).bodyLarge,),
                   ),
-                  Divider(),
+                  // ListTile(
+                    // leading: const Icon(Icons.info_outlined),
+                    // title: Text(inventory.id),
+                    // subtitle: Text(S.of(context).inventoryId),
+                  // ),
+                  const Divider(),
+
                   GridView.count(
-                    crossAxisCount: 4,
+                    crossAxisCount: MediaQuery.sizeOf(context).width < 600 ? 4 : 5,
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     children: <Widget>[
@@ -1489,7 +1488,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                     Navigator.of(context).pop();
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
-                                        content: Text('ID do inventário atualizado com sucesso!'),
+                                        content: Text(S.current.inventoryIdUpdated),
                                         backgroundColor: Colors.green,
                                       ),
                                     );
@@ -1543,37 +1542,11 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                           S.of(context).delete, () {
                             Navigator.of(context).pop();
                             // Ask for user confirmation
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog.adaptive(
-                                  title: Text(S.of(context).confirmDelete),
-                                  content: Text(S.of(context).confirmDeleteMessage(1, "male", S.of(context).inventory(1))),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop(false);
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: Text(S.of(context).cancel),
-                                    ),
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop(true);
-                                        Navigator.of(context).pop();
-                                        // Call the function to delete species
-                                        inventoryProvider.removeInventory(inventory.id);
-                                      },
-                                      child: Text(S.of(context).delete),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
+                            _confirmDelete(context, inventory);
                           }, color: Theme.of(context).colorScheme.error),
                     ],
                   ),
-                  Divider(),
+                  // Divider(),
                   Row(
                     children: [
                       const SizedBox(width: 8.0),
@@ -1589,7 +1562,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                             children: [
                               const SizedBox(width: 16.0),
                               ActionChip(
-                                label: Text('CSV'),
+                                label: const Text('CSV'),
                                 onPressed: () async {
                                   Navigator.of(context).pop();
                                   final locale = Localizations.localeOf(
@@ -1610,7 +1583,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                               ),
                               const SizedBox(width: 8.0),
                               ActionChip(
-                                label: Text('Excel'),
+                                label: const Text('Excel'),
                                 onPressed: () async {
                                   Navigator.of(context).pop();
                                   final locale = Localizations.localeOf(
@@ -1632,7 +1605,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                               ),
                               const SizedBox(width: 8.0),
                               ActionChip(
-                                label: Text('JSON'),
+                                label: const Text('JSON'),
                                 onPressed: () async {
                                   Navigator.of(context).pop();
                                   exportInventoryToJson(
@@ -1641,7 +1614,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                               ),
                               const SizedBox(width: 8.0),
                               ActionChip(
-                                label: Text('KML'),
+                                label: const Text('KML'),
                                 onPressed: () async {
                                   Navigator.of(context).pop();
                                   exportInventoryToKml(context, inventory);
@@ -1656,6 +1629,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                   ),
                 ],
               ),
+              ),
             );
           },
         ),
@@ -1663,4 +1637,95 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
       },
     );
   }
+
+  void _confirmDelete(BuildContext context, Inventory inventory) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog.adaptive(
+          title: Text(S.of(context).confirmDelete),
+          content: Text(S.of(context).confirmDeleteMessage(1, "male", S.of(context).inventory(1))),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false);
+                // Navigator.of(context).pop();
+              },
+              child: Text(S.of(context).cancel),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true);
+                // Navigator.of(context).pop();
+                // Call the function to delete species
+                inventoryProvider.removeInventory(inventory.id);
+              },
+              child: Text(S.of(context).delete, style: TextStyle(color: ThemeData().colorScheme.error)),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showMoreOptionsBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: BottomSheet(
+            onClosing: () {},
+            builder: (BuildContext context) {
+              return Container(
+                padding: const EdgeInsets.all(16.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    // crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      GridView.count(
+                        crossAxisCount: MediaQuery.sizeOf(context).width < 600 ? 4 : 5,
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        children: <Widget>[
+                          if (!_isShowingActiveInventories)
+                            buildGridMenuItem(
+                                context, Icons.library_add_check_outlined, S.of(context).selectAll,
+                                    () async {
+                                  Navigator.of(context).pop();
+                                  final filteredInventories = _filterInventories(inventoryProvider.finishedInventories);
+                                  setState(() {
+                                    selectedInventories = filteredInventories
+                                        .map((inventory) => inventory.id)
+                                        .toSet();
+                                  });
+                                }),
+                          // Action to import inventories from JSON
+                          buildGridMenuItem(
+                              context, Icons.file_open_outlined, S.of(context).import,
+                                  () async {
+                                Navigator.of(context).pop();
+                                await importInventoryFromJson(context);
+                                await inventoryProvider.fetchInventories(context);
+                              }),
+                          // Action to export all finished inventories to JSON
+                          buildGridMenuItem(
+                              context, Icons.share_outlined, S.of(context).exportAll,
+                                  () async {
+                                Navigator.of(context).pop();
+                                await exportAllInventoriesToJson(context, inventoryProvider);
+                              }),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
 }
+

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../providers/inventory_provider.dart';
 import '../../data/models/inventory.dart';
+import '../../core/core_consts.dart';
 import '../../utils/utils.dart';
 import '../../generated/l10n.dart';
 

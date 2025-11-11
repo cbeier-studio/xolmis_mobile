@@ -22,7 +22,6 @@ class JournalsScreen extends StatefulWidget {
 class JournalsScreenState extends State<JournalsScreen> {
   late FieldJournalProvider journalProvider;
   final _searchController = TextEditingController();
-  bool _isSearchBarVisible = false;
   String _searchQuery = '';
   Set<int> selectedJournals = {};
   JournalSortField _sortField = JournalSortField.creationDate;
@@ -63,7 +62,8 @@ class JournalsScreenState extends State<JournalsScreen> {
           builder: (BuildContext context, StateSetter setModalState) {
             return Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Column(
+              child: SingleChildScrollView(
+                child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -118,8 +118,8 @@ class JournalsScreenState extends State<JournalsScreen> {
                   const SizedBox(height: 8),
                   SegmentedButton<SortOrder>(
                     segments: [
-                      ButtonSegment(value: SortOrder.ascending, label: Text(S.of(context).ascending), icon: Icon(Icons.south_outlined)),
-                      ButtonSegment(value: SortOrder.descending, label: Text(S.of(context).descending), icon: Icon(Icons.north_outlined)),
+                      ButtonSegment(value: SortOrder.ascending, label: Text(S.of(context).ascending), icon: const Icon(Icons.south_outlined)),
+                      ButtonSegment(value: SortOrder.descending, label: Text(S.of(context).descending), icon: const Icon(Icons.north_outlined)),
                     ],
                     selected: {_sortOrder},
                     showSelectedIcon: false,
@@ -133,6 +133,7 @@ class JournalsScreenState extends State<JournalsScreen> {
                     },
                   ),
                 ],
+              ),
               ),
             );
           },
@@ -253,7 +254,7 @@ class JournalsScreenState extends State<JournalsScreen> {
                 });
               },
             )
-                : SizedBox.shrink(),
+                : const SizedBox.shrink(),
           ],
           onChanged: (query) {
             setState(() {
@@ -269,12 +270,12 @@ class JournalsScreenState extends State<JournalsScreen> {
               widget.scaffoldKey.currentState?.openDrawer();
             },
           ),
-        ) : SizedBox.shrink(),
+        ) : const SizedBox.shrink(),
         actions: [
           MenuAnchor(
             builder: (context, controller, child) {
               return IconButton(
-                icon: Icon(Icons.more_vert_outlined),
+                icon: const Icon(Icons.more_vert_outlined),
                 onPressed: () {
                   if (controller.isOpen) {
                     controller.close();
@@ -287,7 +288,7 @@ class JournalsScreenState extends State<JournalsScreen> {
             menuChildren: [
               // Action to select all journal entries
               MenuItemButton(
-                leadingIcon: Icon(Icons.library_add_check_outlined),
+                leadingIcon: const Icon(Icons.library_add_check_outlined),
                 onPressed: () {
                   final filteredJournals = _filterJournalEntries(journalProvider.journalEntries);
                   setState(() {
@@ -318,9 +319,10 @@ class JournalsScreenState extends State<JournalsScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(S.of(context).noJournalEntriesFound),
-                          SizedBox(height: 8),
-                          IconButton.filled(
-                            icon: Icon(Icons.refresh_outlined),
+                          const SizedBox(height: 8),
+                          FilledButton.icon(
+                            label: Text(S.of(context).refresh),
+                            icon: const Icon(Icons.refresh_outlined),
                             onPressed: () async {
                               await journalProvider.fetchJournalEntries();
                             },
@@ -408,16 +410,16 @@ class JournalsScreenState extends State<JournalsScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             IconButton(
-              icon: Icon(Icons.delete_outlined),
+              icon: const Icon(Icons.delete_outlined),
               tooltip: S.of(context).delete,
               color: Colors.red,
               onPressed: _deleteSelectedEntries,
             ),
-            VerticalDivider(),
+            const VerticalDivider(),
             // MenuAnchor(
             //   builder: (context, controller, child) {
             //     return IconButton(
-            //       icon: Icon(Icons.file_upload_outlined),
+            //       icon: const Icon(Icons.file_upload_outlined),
             //       tooltip: S.of(context).exportWhat(
             //           S.of(context).specimens(2).toLowerCase()),
             //       onPressed: () {
@@ -434,20 +436,20 @@ class JournalsScreenState extends State<JournalsScreen> {
             //       onPressed: () {
             //         _exportSelectedSpecimensToCsv();
             //       },
-            //       child: Text('CSV'),
+            //       child: const Text('CSV'),
             //     ),
             //     MenuItemButton(
             //       onPressed: () {
             //         _exportSelectedSpecimensToJson();
             //       },
-            //       child: Text('JSON'),
+            //       child: const Text('JSON'),
             //     ),
             //   ],
             // ),
-            // VerticalDivider(),
+            // const VerticalDivider(),
             // Option to clear the selected specimens
             IconButton(
-              icon: Icon(Icons.clear_outlined),
+              icon: const Icon(Icons.clear_outlined),
               tooltip: S.current.clearSelection,
               onPressed: () {
                 setState(() {
@@ -587,15 +589,20 @@ class JournalsScreenState extends State<JournalsScreen> {
           builder: (BuildContext context) {
             return Container(
               padding: const EdgeInsets.all(16.0),
-              child: Column(
+              child: SingleChildScrollView(
+                child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  ListTile(
-                    title: Text(journalEntry.title, overflow: TextOverflow.fade,),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(journalEntry.title, style: TextTheme.of(context).bodyLarge,),
                   ),
-                  Divider(),
+                  // ListTile(
+                  //   title: Text(journalEntry.title, overflow: TextOverflow.fade,),
+                  // ),
+                  const Divider(),
                   GridView.count(
-                    crossAxisCount: 4,
+                    crossAxisCount: MediaQuery.sizeOf(context).width < 600 ? 4 : 5,
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     children: <Widget>[
@@ -647,6 +654,7 @@ class JournalsScreenState extends State<JournalsScreen> {
                     ],
                   ),
                 ],
+              ),
               ),
             );
           },

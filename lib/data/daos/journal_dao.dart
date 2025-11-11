@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 
+import '../../core/core_consts.dart';
 import '../models/journal.dart';
 import '../database/database_helper.dart';
 
@@ -84,13 +85,4 @@ class FieldJournalDao {
     final db = await _dbHelper.database;
     await db?.delete('field_journal', where: 'id = ?', whereArgs: [entryId]);
   }
-}
-
-class DatabaseInsertException implements Exception {
-  final String message;
-
-  DatabaseInsertException(this.message);
-
-  @override
-  String toString() => 'DatabaseInsertException: $message';
 }

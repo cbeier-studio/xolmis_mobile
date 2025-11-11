@@ -1,25 +1,21 @@
-// lib/services/inventory_completion_service.dart
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart'; // Para configurações
+import 'package:shared_preferences/shared_preferences.dart';
 
-// Importe seus modelos e providers necessários
-import '../../data/models/inventory.dart';
-import '../providers/inventory_provider.dart'; // Exemplo
-import '../data/daos/inventory_dao.dart'; // Exemplo
-// Importe suas telas de adição de vegetação/tempo e strings S.of(context)
+import '../core/core_consts.dart';
+import '../data/models/inventory.dart';
+import '../providers/inventory_provider.dart';
+import '../data/daos/inventory_dao.dart';
+
 import '../screens/inventory/add_vegetation_screen.dart';
 import '../screens/inventory/add_weather_screen.dart';
-import '../generated/l10n.dart'; // Ou onde quer que S esteja
-
-// Enum para as ações do diálogo de aviso (pode ser movido para um arquivo comum se usado em mais lugares)
-enum ConditionalAction { add, ignore, cancelDialog }
+import '../generated/l10n.dart';
 
 class InventoryCompletionService {
-  final BuildContext context; // Precisa do contexto para navegação, diálogos, ScaffoldMessenger
+  final BuildContext context;
   final Inventory inventory;
   final InventoryProvider inventoryProvider;
   final InventoryDao inventoryDao;
-  // Adicione quaisquer outros providers ou repositórios necessários, ex: VegetationRepository
+  // Add other providers or DAOs necessary
 
   InventoryCompletionService({
     required this.context,
@@ -28,7 +24,7 @@ class InventoryCompletionService {
     required this.inventoryDao,
   });
 
-  // Função para realmente finalizar o inventário
+  // Function to really finish the inventory
   Future<void> _finalizeInventory(BuildContext context) async {
     inventory.stopTimer(context, inventoryDao);
     inventoryProvider.updateInventory(inventory);
@@ -40,9 +36,9 @@ class InventoryCompletionService {
     // }
   }
 
-  // Helper para mostrar o diálogo de aviso condicional (pode ser estático se não depender de membros da classe)
+  // Helper to show a dialog of conditional reminder
   static Future<ConditionalAction?> _showConditionalReminderDialog(
-      BuildContext dialogContext, // Usa o contexto específico do diálogo
+      BuildContext dialogContext,
           {
         required String title,
         required String content,
@@ -74,7 +70,7 @@ class InventoryCompletionService {
     );
   }
 
-  // Função principal para processar os avisos e finalizar
+  // Function to process the reminders and finish
   Future<void> processConditionalRemindersAndFinalize(BuildContext context) async {
     bool proceedToFinalize = true;
 
@@ -82,16 +78,15 @@ class InventoryCompletionService {
     final bool remindVegetationEmpty = prefs.getBool('remindVegetationEmpty') ?? false;
     final bool remindWeatherEmpty = prefs.getBool('remindWeatherEmpty') ?? false;
 
-    // Adapte estas verificações à estrutura do seu objeto 'inventory'
-    bool isVegetationListEmpty = inventory.vegetationList.isEmpty; // Supondo que inventory.vegetationList existe
-    bool isWeatherListEmpty = inventory.weatherList.isEmpty;   // Supondo que inventory.weatherList existe
+    bool isVegetationListEmpty = inventory.vegetationList.isEmpty;
+    bool isWeatherListEmpty = inventory.weatherList.isEmpty;
 
-    // 1. Aviso de Vegetação
+    // 1. Vegetation reminder
     if (remindVegetationEmpty && isVegetationListEmpty) {
       final vegetationAction = await _showConditionalReminderDialog(
-        context, // Usa o contexto principal para o diálogo
-        title: S.of(context).warningTitle, // "Aviso" ou mais específico
-        content: S.of(context).missingVegetationData, // "Dados de vegetação estão faltando..."
+        context,
+        title: S.of(context).warningTitle,
+        content: S.of(context).missingVegetationData,
       );
 
       if (vegetationAction == ConditionalAction.add) {
@@ -107,16 +102,16 @@ class InventoryCompletionService {
         }
       } else if (vegetationAction == ConditionalAction.cancelDialog) {
         proceedToFinalize = false;
-        return; // Interrompe o processo
+        return;
       }
     }
 
-    // 2. Aviso de Tempo
+    // 2. Weather reminder
     if (proceedToFinalize && remindWeatherEmpty && isWeatherListEmpty) {
       final weatherAction = await _showConditionalReminderDialog(
         context,
         title: S.of(context).warningTitle,
-        content: S.of(context).missingWeatherData, // "Dados do tempo estão faltando..."
+        content: S.of(context).missingWeatherData,
       );
 
       if (weatherAction == ConditionalAction.add) {
@@ -132,11 +127,11 @@ class InventoryCompletionService {
         }
       } else if (weatherAction == ConditionalAction.cancelDialog) {
         proceedToFinalize = false;
-        return; // Interrompe o processo
+        return;
       }
     }
 
-    // 3. Finalizar o inventário
+    // 3. Finish the inventory
     if (proceedToFinalize) {
       if (context.mounted) {
         await _finalizeInventory(context);
@@ -144,7 +139,7 @@ class InventoryCompletionService {
     }
   }
 
-  // Função pública para iniciar o processo de finalização (chamada pela UI)
+  // Function to start the process of finishing the inventory
   Future<void> attemptFinishInventory(BuildContext context) async {
     final bool? confirmedFinish = await showDialog<bool>(
       context: context,

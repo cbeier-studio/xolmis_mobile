@@ -1352,6 +1352,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get sampleTime => 'Hora da coleta';
 
   @override
+  String get refresh => 'Recarregar';
+
+  @override
   String get precipitationNone => 'Nenhuma';
 
   @override
@@ -2909,6 +2912,9 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get sampleTime => 'Hora da coleta';
+
+  @override
+  String get refresh => 'Recarregar';
 
   @override
   String get precipitationNone => 'Nenhuma';

@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 
+import '../../core/core_consts.dart';
 import '../models/specimen.dart';
 import '../database/database_helper.dart';
 
@@ -194,13 +195,4 @@ class SpecimenDao {
       return [];
     }
   }
-}
-
-class DatabaseInsertException implements Exception {
-  final String message;
-
-  DatabaseInsertException(this.message);
-
-  @override
-  String toString() => 'DatabaseInsertException: $message';
 }

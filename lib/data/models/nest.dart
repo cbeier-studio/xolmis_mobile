@@ -1,28 +1,6 @@
-import '../../generated/l10n.dart';
+import '../../core/core_consts.dart';
 
 // Egg class
-
-enum EggShapeType {
-  estSpherical,
-  estElliptical,
-  estOval,
-  estPyriform,
-  estConical,
-  estBiconical,
-  estCylindrical,
-  estLongitudinal,
-}
-
-Map<EggShapeType, String> eggShapeTypeFriendlyNames = {
-  EggShapeType.estSpherical: S.current.eggShapeSpherical,
-  EggShapeType.estElliptical: S.current.eggShapeElliptical,
-  EggShapeType.estOval: S.current.eggShapeOval,
-  EggShapeType.estPyriform: S.current.eggShapePyriform,
-  EggShapeType.estConical: S.current.eggShapeConical,
-  EggShapeType.estBiconical: S.current.eggShapeBiconical,
-  EggShapeType.estCylindrical: S.current.eggShapeCylindrical,
-  EggShapeType.estLongitudinal: S.current.eggShapeLongitudinal,
-};
 
 class Egg {
   int? id;
@@ -129,38 +107,6 @@ class Egg {
 }
 
 // Nest revision class
-
-enum NestStageType {
-  stgUnknown,
-  stgBuilding,
-  stgLaying,
-  stgIncubating,
-  stgHatching,
-  stgNestling,
-  stgInactive,
-}
-
-Map<NestStageType, String> nestStageTypeFriendlyNames = {
-  NestStageType.stgUnknown: S.current.nestStageUnknown,
-  NestStageType.stgBuilding: S.current.nestStageBuilding,
-  NestStageType.stgLaying: S.current.nestStageLaying,
-  NestStageType.stgIncubating: S.current.nestStageIncubating,
-  NestStageType.stgHatching: S.current.nestStageHatching,
-  NestStageType.stgNestling: S.current.nestStageNestling,
-  NestStageType.stgInactive: S.current.nestStageInactive,
-};
-
-enum NestStatusType {
-  nstUnknown,
-  nstActive,
-  nstInactive,
-}
-
-Map<NestStatusType, String> nestStatusTypeFriendlyNames = {
-  NestStatusType.nstUnknown: S.current.nestStatusUnknown,
-  NestStatusType.nstActive: S.current.nestStatusActive,
-  NestStatusType.nstInactive: S.current.nestStatusInactive,
-};
 
 class NestRevision {
   int? id;
@@ -283,18 +229,6 @@ class NestRevision {
 }
 
 // Nest class
-
-enum NestFateType {
-  fatUnknown,
-  fatSuccess,
-  fatLost,
-}
-
-Map<NestFateType, String> nestFateTypeFriendlyNames = {
-  NestFateType.fatUnknown: S.current.nestFateUnknown,
-  NestFateType.fatSuccess: S.current.nestFateSuccess,
-  NestFateType.fatLost: S.current.nestFateLost,
-};
 
 class Nest {
   int? id;

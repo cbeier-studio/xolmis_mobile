@@ -2244,6 +2244,12 @@ abstract class AppLocalizations {
   /// **'Sample time'**
   String get sampleTime;
 
+  /// Refresh button label
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get refresh;
+
   /// No description provided for @precipitationNone.
   ///
   /// In en, this message translates to:

@@ -17,16 +17,8 @@ import 'screens/specimen/specimens_screen.dart';
 import 'screens/settings/settings_screen.dart';
 import 'screens/statistics/statistics_screen.dart';
 
+import 'core/core_consts.dart';
 import 'generated/l10n.dart';
-
-const double kTabletBreakpoint = 600.0;
-const double kDesktopBreakpoint = 800.0;
-const double kSideSheetWidth = 400.0;
-
-enum BadgeProviderType {
-  inventory,
-  nest,
-}
 
 class MainScreen extends StatefulWidget {
 

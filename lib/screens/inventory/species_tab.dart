@@ -128,8 +128,8 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
       SnackBar(
         content: Row(
           children: [
-            Icon(Icons.info_outlined, color: Colors.blue),
-            SizedBox(width: 8),
+            const Icon(Icons.info_outlined, color: Colors.blue),
+            const SizedBox(width: 8),
             Text(S.of(context).errorSpeciesAlreadyExists),
           ],
         ),
@@ -376,10 +376,17 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                           tooltip: S.of(context).sortBy,
                           onPressed: () => _showSortOptionsBottomSheet(),
                         ),
-                        MenuAnchor(
+                        MediaQuery.sizeOf(context).width < 600
+                            ? IconButton(
+                          icon: const Icon(Icons.more_vert_outlined),
+                          onPressed: () {
+                            _showMoreOptionsBottomSheet(context);
+                          },
+                        )
+                            : MenuAnchor(
                           builder: (context, controller, child) {
                             return IconButton(
-                              icon: Icon(Icons.more_vert_outlined),
+                              icon: const Icon(Icons.more_vert_outlined),
                               // tooltip: S.of(context).exportWhat(S.of(context).inventory(1)),
                               onPressed: () {
                                 if (controller.isOpen) {
@@ -537,15 +544,23 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
           builder: (BuildContext context) {
             return Container(
               padding: const EdgeInsets.all(16.0),
-              child: Column(
+              child: SingleChildScrollView(
+                child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  ListTile(
-                    title: Text(species.name, style: TextStyle(fontStyle: FontStyle.italic),),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(species.name,
+                      style: TextTheme.of(context).bodyLarge?.copyWith(fontStyle: FontStyle.italic),
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
-                  Divider(),
+                  // ListTile(
+                  //   title: Text(species.name, style: TextStyle(fontStyle: FontStyle.italic),),
+                  // ),
+                  const Divider(),
                   GridView.count(
-                    crossAxisCount: 4,
+                    crossAxisCount: MediaQuery.sizeOf(context).width < 600 ? 4 : 5,
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     children: <Widget>[
@@ -575,7 +590,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                             context, Icons.content_paste_go_outlined, S.of(context).removeSpeciesFromSample,
                                 () async {
                               Navigator.of(context).pop();
-                              _removeSpeciesToSample(context, species);
+                              _removeSpeciesFromSample(context, species);
                             }),
                         buildGridMenuItem(context, Icons.add_location_outlined,
                             S.of(context).addPoi, () async {
@@ -625,6 +640,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                   ),
                 ],
               ),
+              ),
             );
           },
           ),
@@ -642,7 +658,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
   }
 
   // Remove the species from the sample
-  void _removeSpeciesToSample(BuildContext context, Species species) {
+  void _removeSpeciesFromSample(BuildContext context, Species species) {
     final speciesProvider = Provider.of<SpeciesProvider>(context, listen: false);
 
     species.isOutOfInventory = true;
@@ -658,7 +674,8 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
           builder: (BuildContext context, StateSetter setModalState) {
             return Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Column(
+              child: SingleChildScrollView(
+                child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -716,8 +733,64 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                   ),
                 ],
               ),
+              ),
             );
           },
+          ),
+        );
+      },
+    );
+  }
+
+  void _showMoreOptionsBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: BottomSheet(
+            onClosing: () {},
+            builder: (BuildContext context) {
+              return Container(
+                padding: const EdgeInsets.all(16.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    // crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      GridView.count(
+                        crossAxisCount: MediaQuery.sizeOf(context).width < 600 ? 4 : 5,
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        children: <Widget>[
+                          buildGridMenuItem(
+                              context, Icons.show_chart_outlined, S.of(context).speciesAccumulationCurve,
+                                  () async {
+                                Navigator.of(context).pop();
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => SpeciesChartScreen(
+                                        inventory: widget.inventory),
+                                  ),
+                                );
+                              }),
+                          // Action to import nests from JSON
+                          buildGridMenuItem(
+                              context, Icons.add_box_outlined, S.of(context).addSpecies,
+                                  () async {
+                                Navigator.of(context).pop();
+                                _showAddSpeciesDialog(
+                                    context,
+                                    widget.speciesDao,
+                                    widget.inventoryDao);
+                              }),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
           ),
         );
       },
