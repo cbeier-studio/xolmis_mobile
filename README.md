@@ -1,6 +1,6 @@
 # Xolmis mobile
 
-Xolmis' mobile companion. Collect ornithological data in the field, such as bird lists and counts, nest monitoring and collected specimens. It is your digital field notebook.
+Collect ornithological data in the field, such as bird lists and counts, nest monitoring and collected specimens. Use it as your digital field notebook.
 
 > [!WARNING]
 > This project is in the early stages of development, so expect bugs and breaking changes.
@@ -11,28 +11,36 @@ Xolmis' mobile companion. Collect ornithological data in the field, such as bird
 
 Here is a list of the main features:
 
-- [x] Creation of bird lists, optionally counting the number os individuals per species. Types of lists:
+- [x] Creation of bird lists, without repeating species. Types available:
   - [x] Free Qualitative List.
   - [x] Timed Qualitative List.
   - [x] Interval Qualitative List.
   - [x] Mackinnon List.
-  - [x] Transection Count.
+  - [x] Transect Count.
   - [x] Point Count.
   - [x] Banding.
-  - [x] Casual observation.  
+  - [x] Casual observation.
+- [x] Creation of detection (bird individuals or groups) lists, allowing to repeat species (e.g. using Distance method). Types available:
+  - [x] Detection Transect.
+  - [x] Detection Point Count.
+  - [ ] Spot mapping.
 - [x] Use the location services of the device to collect points of interest for species.
 - [x] Collect vegetation data (Alianza del Pastizal protocols) within a list.
 - [x] Collect weather data within a list.
-- [x] Record nests and eggs monitoring.
+- [x] Record nests and eggs data.
+  - [ ] Record parental care on nests.
 - [x] Record specimens collected.
-- [x] Export data to CSV or JSON files.
+- [x] Export data to CSV, Excel or JSON files.
+- [x] Export geographical coordinates to KML file.
 - [x] Field journal and notes.
 - [ ] Collect quali-quantitative data of captured birds.
 - [x] Attach images to the data (vegetation, nests, and specimens).
-- [ ] Task lists.
 - [x] Integration with Xolmis desktop (via text files).
 - [x] Statistics view.
+- [x] Backup and restore data.
 
 ## How to contribute
 
 You can create [pull requests](https://github.com/cbeier-studio/xolmis_mobile/pulls) directly and give feedback using the [GitHub Issues](https://github.com/cbeier-studio/xolmis_mobile/issues). All suggestions, bugs reported and general issues are much appreciated.
+
+See the [Developer Wiki](https://github.com/cbeier-studio/xolmis_mobile/wiki) for more details.
