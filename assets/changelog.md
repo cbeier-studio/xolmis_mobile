@@ -19,6 +19,7 @@
 * Species accumulation chart in inventory details.
 * Species accumulation chart for selected inventories.
 * Chart comparing the number of species between inventories.
+* Now the user can select the country of species search (Brazil and Uruguay available, more countries to come).
 
 ### Improvements
 
@@ -37,6 +38,7 @@
 * Added refresh button to inventories, nests and specimens lists when they are empty.
 * About screen refactored, with the addition of sponsors.
 * Search bar moved to the screen header.
+* Update species names to Clements/eBird taxonomy version 2025.
 
 ### Technical/Dependencies
 

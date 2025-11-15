@@ -19,6 +19,7 @@
 * Gráfico de acumulação de espécies nos detalhes do inventário.
 * Gráfico de acumulação de espécies para inventários selecionados.
 * Gráfico comparando número de espécies entre inventários selecionados.
+* Agora o usuário pode selecionar o país da busca de espécies (Brasil e Uruguai disponíveis, mais países em breve).
 
 ### Melhorias
 
@@ -37,6 +38,7 @@
 * Adicionado botão para atualizar as listas de inventários, ninhos e espécimes se estiverem vazias.
 * Tela com informações sobre o app reformulada, com adição dos patrocinadores.
 * Barra de pesquisa movida para o cabeçalho da tela.
+* Atualiza nomes de espécies para taxonomia de Clements/eBird versão 2025.
 
 ### Técnico/Dependências
 
