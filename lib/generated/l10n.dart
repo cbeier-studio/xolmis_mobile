@@ -3725,6 +3725,16 @@ class S {
     return Intl.message('Brazil', name: 'countryBrazil', desc: '', args: []);
   }
 
+  /// `Paraguay`
+  String get countryParaguay {
+    return Intl.message(
+      'Paraguay',
+      name: 'countryParaguay',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Uruguay`
   String get countryUruguay {
     return Intl.message('Uruguay', name: 'countryUruguay', desc: '', args: []);

@@ -472,6 +472,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       value: SupportedCountry.BR,
                     ),
                     RadioListTile<SupportedCountry>(
+                      title: Text(S.current.countryParaguay),
+                      value: SupportedCountry.PY,
+                    ),
+                    RadioListTile<SupportedCountry>(
                       title: Text(S.current.countryUruguay),
                       value: SupportedCountry.UY,
                     ),

@@ -17,6 +17,7 @@ class DatabaseInsertException implements Exception {
 
 enum SupportedCountry {
   BR, // Brazil
+  PY, // Paraguay
   UY, // Uruguay
 }
 
@@ -24,6 +25,10 @@ final Map<SupportedCountry, CountryMetadata> countryMetadata = {
   SupportedCountry.BR: CountryMetadata(
     name: S.current.countryBrazil,
     isoCode: 'BR',
+  ),
+  SupportedCountry.PY: CountryMetadata(
+    name: S.current.countryParaguay,
+    isoCode: 'PY',
   ),
   SupportedCountry.UY: CountryMetadata(
     name: S.current.countryUruguay,

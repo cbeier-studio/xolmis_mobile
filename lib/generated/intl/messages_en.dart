@@ -198,6 +198,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "count": MessageLookupByLibrary.simpleMessage("Count"),
     "country": MessageLookupByLibrary.simpleMessage("Country"),
     "countryBrazil": MessageLookupByLibrary.simpleMessage("Brazil"),
+    "countryParaguay": MessageLookupByLibrary.simpleMessage("Paraguay"),
     "countryUruguay": MessageLookupByLibrary.simpleMessage("Uruguay"),
     "createBackup": MessageLookupByLibrary.simpleMessage("Create backup"),
     "creationTime": MessageLookupByLibrary.simpleMessage("Creation time"),
