@@ -15,6 +15,29 @@ class DatabaseInsertException implements Exception {
   String toString() => 'DatabaseInsertException: $message';
 }
 
+enum SupportedCountry {
+  BR, // Brazil
+  UY, // Uruguay
+}
+
+final Map<SupportedCountry, CountryMetadata> countryMetadata = {
+  SupportedCountry.BR: CountryMetadata(
+    name: S.current.countryBrazil,
+    isoCode: 'BR',
+  ),
+  SupportedCountry.UY: CountryMetadata(
+    name: S.current.countryUruguay,
+    isoCode: 'UY',
+  ),
+};
+
+class CountryMetadata {
+  final String name;
+  final String isoCode;
+
+  CountryMetadata({required this.name, required this.isoCode});
+}
+
 enum BadgeProviderType {
   inventory,
   nest,

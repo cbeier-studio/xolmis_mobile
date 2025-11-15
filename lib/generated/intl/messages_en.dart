@@ -196,6 +196,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Could not get GPS location",
     ),
     "count": MessageLookupByLibrary.simpleMessage("Count"),
+    "country": MessageLookupByLibrary.simpleMessage("Country"),
+    "countryBrazil": MessageLookupByLibrary.simpleMessage("Brazil"),
+    "countryUruguay": MessageLookupByLibrary.simpleMessage("Uruguay"),
     "createBackup": MessageLookupByLibrary.simpleMessage("Create backup"),
     "creationTime": MessageLookupByLibrary.simpleMessage("Creation time"),
     "dangerZone": MessageLookupByLibrary.simpleMessage("Danger zone"),
@@ -788,6 +791,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "speciesPerListTitle": MessageLookupByLibrary.simpleMessage(
       "Species per list",
     ),
+    "speciesSearch": MessageLookupByLibrary.simpleMessage("Species search"),
     "speciesUpgradeFailed": MessageLookupByLibrary.simpleMessage(
       "Species upgrade failed",
     ),

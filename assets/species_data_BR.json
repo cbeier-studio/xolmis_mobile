@@ -1,0 +1,5978 @@
+[
+  {
+    "scientificName" : "Rhea americana"
+  },
+  {
+    "scientificName" : "Taoniscus nanus"
+  },
+  {
+    "scientificName" : "Nothura boraquira"
+  },
+  {
+    "scientificName" : "Nothura minor"
+  },
+  {
+    "scientificName" : "Nothura maculosa"
+  },
+  {
+    "scientificName" : "Nothura boraquira/maculosa"
+  },
+  {
+    "scientificName" : "Rhynchotus rufescens"
+  },
+  {
+    "scientificName" : "Tinamus major"
+  },
+  {
+    "scientificName" : "Tinamus solitarius"
+  },
+  {
+    "scientificName" : "Tinamus tao"
+  },
+  {
+    "scientificName" : "Tinamus guttatus"
+  },
+  {
+    "scientificName" : "Crypturellus cinereus"
+  },
+  {
+    "scientificName" : "Crypturellus parvirostris"
+  },
+  {
+    "scientificName" : "Crypturellus tataupa"
+  },
+  {
+    "scientificName" : "Crypturellus obsoletus"
+  },
+  {
+    "scientificName" : "Crypturellus variegatus"
+  },
+  {
+    "scientificName" : "Crypturellus bartletti"
+  },
+  {
+    "scientificName" : "Crypturellus brevirostris"
+  },
+  {
+    "scientificName" : "Crypturellus soui"
+  },
+  {
+    "scientificName" : "Crypturellus undulatus"
+  },
+  {
+    "scientificName" : "Crypturellus noctivagus"
+  },
+  {
+    "scientificName" : "Crypturellus atrocapillus"
+  },
+  {
+    "scientificName" : "Crypturellus erythropus"
+  },
+  {
+    "scientificName" : "Crypturellus duidae"
+  },
+  {
+    "scientificName" : "Crypturellus strigulosus"
+  },
+  {
+    "scientificName" : "Crypturellus sp."
+  },
+  {
+    "scientificName" : "Anhima cornuta"
+  },
+  {
+    "scientificName" : "Chauna torquata"
+  },
+  {
+    "scientificName" : "Dendrocygna viduata"
+  },
+  {
+    "scientificName" : "Dendrocygna autumnalis"
+  },
+  {
+    "scientificName" : "Dendrocygna bicolor"
+  },
+  {
+    "scientificName" : "Dendrocygna sp."
+  },
+  {
+    "scientificName" : "Cygnus melancoryphus"
+  },
+  {
+    "scientificName" : "Coscoroba coscoroba"
+  },
+  {
+    "scientificName" : "Sarkidiornis sylvicola"
+  },
+  {
+    "scientificName" : "Oressochen jubatus"
+  },
+  {
+    "scientificName" : "Tadorna ferruginea"
+  },
+  {
+    "scientificName" : "Tadorna tadorna"
+  },
+  {
+    "scientificName" : "Cairina moschata"
+  },
+  {
+    "scientificName" : "Callonetta leucophrys"
+  },
+  {
+    "scientificName" : "Amazonetta brasiliensis"
+  },
+  {
+    "scientificName" : "Spatula versicolor"
+  },
+  {
+    "scientificName" : "Spatula discors"
+  },
+  {
+    "scientificName" : "Spatula cyanoptera"
+  },
+  {
+    "scientificName" : "Spatula discors/cyanoptera"
+  },
+  {
+    "scientificName" : "Spatula platalea"
+  },
+  {
+    "scientificName" : "Mareca sibilatrix"
+  },
+  {
+    "scientificName" : "Anas bahamensis"
+  },
+  {
+    "scientificName" : "Anas acuta"
+  },
+  {
+    "scientificName" : "Anas georgica"
+  },
+  {
+    "scientificName" : "Anas flavirostris"
+  },
+  {
+    "scientificName" : "Anas sp."
+  },
+  {
+    "scientificName" : "Netta erythrophthalma"
+  },
+  {
+    "scientificName" : "Netta peposaca"
+  },
+  {
+    "scientificName" : "Mergus octosetaceus"
+  },
+  {
+    "scientificName" : "Heteronetta atricapilla"
+  },
+  {
+    "scientificName" : "Nomonyx dominicus"
+  },
+  {
+    "scientificName" : "Oxyura vittata"
+  },
+  {
+    "scientificName" : "Pipile jacutinga"
+  },
+  {
+    "scientificName" : "Pipile cumanensis"
+  },
+  {
+    "scientificName" : "Pipile grayi"
+  },
+  {
+    "scientificName" : "Pipile cujubi"
+  },
+  {
+    "scientificName" : "Penelope obscura"
+  },
+  {
+    "scientificName" : "Penelope pileata"
+  },
+  {
+    "scientificName" : "Penelope ochrogaster"
+  },
+  {
+    "scientificName" : "Penelope jacucaca"
+  },
+  {
+    "scientificName" : "Penelope superciliaris"
+  },
+  {
+    "scientificName" : "Penelope obscura/superciliaris"
+  },
+  {
+    "scientificName" : "Penelope marail"
+  },
+  {
+    "scientificName" : "Penelope jacquacu"
+  },
+  {
+    "scientificName" : "Penelope sp."
+  },
+  {
+    "scientificName" : "Nothocrax urumutum"
+  },
+  {
+    "scientificName" : "Mitu tomentosum"
+  },
+  {
+    "scientificName" : "Mitu tuberosum"
+  },
+  {
+    "scientificName" : "Crax globulosa"
+  },
+  {
+    "scientificName" : "Crax blumenbachii"
+  },
+  {
+    "scientificName" : "Crax alector"
+  },
+  {
+    "scientificName" : "Crax fasciolata"
+  },
+  {
+    "scientificName" : "Ortalis motmot"
+  },
+  {
+    "scientificName" : "Ortalis ruficeps"
+  },
+  {
+    "scientificName" : "Ortalis canicollis"
+  },
+  {
+    "scientificName" : "Ortalis guttata"
+  },
+  {
+    "scientificName" : "Ortalis superciliaris"
+  },
+  {
+    "scientificName" : "Ortalis araucuan"
+  },
+  {
+    "scientificName" : "Ortalis squamata"
+  },
+  {
+    "scientificName" : "Colinus cristatus"
+  },
+  {
+    "scientificName" : "Odontophorus gujanensis"
+  },
+  {
+    "scientificName" : "Odontophorus capueira"
+  },
+  {
+    "scientificName" : "Odontophorus stellatus"
+  },
+  {
+    "scientificName" : "Columba livia"
+  },
+  {
+    "scientificName" : "Patagioenas cayennensis"
+  },
+  {
+    "scientificName" : "Patagioenas speciosa"
+  },
+  {
+    "scientificName" : "Patagioenas picazuro"
+  },
+  {
+    "scientificName" : "Patagioenas maculosa"
+  },
+  {
+    "scientificName" : "Patagioenas fasciata"
+  },
+  {
+    "scientificName" : "Patagioenas plumbea"
+  },
+  {
+    "scientificName" : "Patagioenas subvinacea"
+  },
+  {
+    "scientificName" : "Patagioenas sp."
+  },
+  {
+    "scientificName" : "Columbina passerina"
+  },
+  {
+    "scientificName" : "Columbina minuta"
+  },
+  {
+    "scientificName" : "Columbina talpacoti"
+  },
+  {
+    "scientificName" : "Columbina passerina/talpacoti"
+  },
+  {
+    "scientificName" : "Columbina squammata"
+  },
+  {
+    "scientificName" : "Columbina picui"
+  },
+  {
+    "scientificName" : "Columbina cyanopis"
+  },
+  {
+    "scientificName" : "Columbina sp."
+  },
+  {
+    "scientificName" : "Claravis pretiosa"
+  },
+  {
+    "scientificName" : "Paraclaravis geoffroyi"
+  },
+  {
+    "scientificName" : "Uropelia campestris"
+  },
+  {
+    "scientificName" : "Geotrygon montana"
+  },
+  {
+    "scientificName" : "Geotrygon violacea"
+  },
+  {
+    "scientificName" : "Leptotila verreauxi"
+  },
+  {
+    "scientificName" : "Leptotila rufaxilla"
+  },
+  {
+    "scientificName" : "Leptotila sp."
+  },
+  {
+    "scientificName" : "Zenaida auriculata"
+  },
+  {
+    "scientificName" : "Guira guira"
+  },
+  {
+    "scientificName" : "Crotophaga major"
+  },
+  {
+    "scientificName" : "Crotophaga ani"
+  },
+  {
+    "scientificName" : "Tapera naevia"
+  },
+  {
+    "scientificName" : "Dromococcyx phasianellus"
+  },
+  {
+    "scientificName" : "Dromococcyx pavoninus"
+  },
+  {
+    "scientificName" : "Neomorphus geoffroyi"
+  },
+  {
+    "scientificName" : "Neomorphus squamiger"
+  },
+  {
+    "scientificName" : "Neomorphus rufipennis"
+  },
+  {
+    "scientificName" : "Neomorphus pucheranii"
+  },
+  {
+    "scientificName" : "Coccycua minuta"
+  },
+  {
+    "scientificName" : "Coccycua cinerea"
+  },
+  {
+    "scientificName" : "Piaya cayana"
+  },
+  {
+    "scientificName" : "Piaya melanogaster"
+  },
+  {
+    "scientificName" : "Piaya cayana/melanogaster"
+  },
+  {
+    "scientificName" : "Coccyzus melacoryphus"
+  },
+  {
+    "scientificName" : "Coccyzus americanus"
+  },
+  {
+    "scientificName" : "Coccyzus euleri"
+  },
+  {
+    "scientificName" : "Coccyzus americanus/euleri"
+  },
+  {
+    "scientificName" : "Coccyzus minor"
+  },
+  {
+    "scientificName" : "Coccyzus erythropthalmus"
+  },
+  {
+    "scientificName" : "Coccyzus americanus/erythropthalmus"
+  },
+  {
+    "scientificName" : "Coccyzus sp."
+  },
+  {
+    "scientificName" : "Cuculidae sp."
+  },
+  {
+    "scientificName" : "Chordeiles nacunda"
+  },
+  {
+    "scientificName" : "Chordeiles pusillus"
+  },
+  {
+    "scientificName" : "Chordeiles rupestris"
+  },
+  {
+    "scientificName" : "Chordeiles acutipennis"
+  },
+  {
+    "scientificName" : "Chordeiles minor"
+  },
+  {
+    "scientificName" : "Lurocalis semitorquatus"
+  },
+  {
+    "scientificName" : "Nyctiprogne leucopyga"
+  },
+  {
+    "scientificName" : "Nyctiprogne vielliardi"
+  },
+  {
+    "scientificName" : "Nyctipolus nigrescens"
+  },
+  {
+    "scientificName" : "Nyctipolus hirundinaceus"
+  },
+  {
+    "scientificName" : "Nyctidromus albicollis"
+  },
+  {
+    "scientificName" : "Tepuiornis whitelyi"
+  },
+  {
+    "scientificName" : "Setopagis parvula"
+  },
+  {
+    "scientificName" : "Antiurus maculicaudus"
+  },
+  {
+    "scientificName" : "Systellura longirostris"
+  },
+  {
+    "scientificName" : "Eleothreptus candicans"
+  },
+  {
+    "scientificName" : "Eleothreptus anomalus"
+  },
+  {
+    "scientificName" : "Hydropsalis cayennensis"
+  },
+  {
+    "scientificName" : "Hydropsalis climacocerca"
+  },
+  {
+    "scientificName" : "Hydropsalis torquata"
+  },
+  {
+    "scientificName" : "Hydropsalis forcipata"
+  },
+  {
+    "scientificName" : "Hydropsalis sp."
+  },
+  {
+    "scientificName" : "Nyctiphrynus ocellatus"
+  },
+  {
+    "scientificName" : "Antrostomus rufus"
+  },
+  {
+    "scientificName" : "Antrostomus sericocaudatus"
+  },
+  {
+    "scientificName" : "Caprimulgidae sp."
+  },
+  {
+    "scientificName" : "Phyllaemulor bracteatus"
+  },
+  {
+    "scientificName" : "Nyctibius grandis"
+  },
+  {
+    "scientificName" : "Nyctibius aethereus"
+  },
+  {
+    "scientificName" : "Nyctibius griseus"
+  },
+  {
+    "scientificName" : "Nyctibius leucopterus"
+  },
+  {
+    "scientificName" : "Nyctibiidae sp."
+  },
+  {
+    "scientificName" : "Steatornis caripensis"
+  },
+  {
+    "scientificName" : "Cypseloides niger"
+  },
+  {
+    "scientificName" : "Cypseloides fumigatus"
+  },
+  {
+    "scientificName" : "Cypseloides cryptus"
+  },
+  {
+    "scientificName" : "Cypseloides senex"
+  },
+  {
+    "scientificName" : "Cypseloides sp."
+  },
+  {
+    "scientificName" : "Streptoprocne phelpsi"
+  },
+  {
+    "scientificName" : "Streptoprocne zonaris"
+  },
+  {
+    "scientificName" : "Streptoprocne biscutata"
+  },
+  {
+    "scientificName" : "Streptoprocne sp."
+  },
+  {
+    "scientificName" : "Chaetura cinereiventris"
+  },
+  {
+    "scientificName" : "Chaetura spinicaudus"
+  },
+  {
+    "scientificName" : "Chaetura egregia"
+  },
+  {
+    "scientificName" : "Chaetura pelagica"
+  },
+  {
+    "scientificName" : "Chaetura chapmani"
+  },
+  {
+    "scientificName" : "Chaetura meridionalis"
+  },
+  {
+    "scientificName" : "Chaetura brachyura"
+  },
+  {
+    "scientificName" : "Chaetura sp."
+  },
+  {
+    "scientificName" : "Tachymarptis melba"
+  },
+  {
+    "scientificName" : "Apus apus"
+  },
+  {
+    "scientificName" : "Aeronautes montivagus"
+  },
+  {
+    "scientificName" : "Panyptila cayennensis"
+  },
+  {
+    "scientificName" : "Tachornis squamata"
+  },
+  {
+    "scientificName" : "Topaza pella"
+  },
+  {
+    "scientificName" : "Topaza pyra"
+  },
+  {
+    "scientificName" : "Florisuga mellivora"
+  },
+  {
+    "scientificName" : "Florisuga fusca"
+  },
+  {
+    "scientificName" : "Ramphodon naevius"
+  },
+  {
+    "scientificName" : "Glaucis dohrnii"
+  },
+  {
+    "scientificName" : "Glaucis hirsutus"
+  },
+  {
+    "scientificName" : "Threnetes leucurus"
+  },
+  {
+    "scientificName" : "Threnetes niger"
+  },
+  {
+    "scientificName" : "Anopetia gounellei"
+  },
+  {
+    "scientificName" : "Phaethornis hispidus"
+  },
+  {
+    "scientificName" : "Phaethornis philippii"
+  },
+  {
+    "scientificName" : "Phaethornis bourcieri"
+  },
+  {
+    "scientificName" : "Phaethornis superciliosus"
+  },
+  {
+    "scientificName" : "Phaethornis malaris"
+  },
+  {
+    "scientificName" : "Phaethornis squalidus"
+  },
+  {
+    "scientificName" : "Phaethornis rupurumii"
+  },
+  {
+    "scientificName" : "Phaethornis aethopygus"
+  },
+  {
+    "scientificName" : "Phaethornis idaliae"
+  },
+  {
+    "scientificName" : "Phaethornis nattereri"
+  },
+  {
+    "scientificName" : "Phaethornis atrimentalis"
+  },
+  {
+    "scientificName" : "Phaethornis griseogularis"
+  },
+  {
+    "scientificName" : "Phaethornis ruber"
+  },
+  {
+    "scientificName" : "Phaethornis subochraceus"
+  },
+  {
+    "scientificName" : "Phaethornis augusti"
+  },
+  {
+    "scientificName" : "Phaethornis pretrei"
+  },
+  {
+    "scientificName" : "Phaethornis eurynome"
+  },
+  {
+    "scientificName" : "Doryfera johannae"
+  },
+  {
+    "scientificName" : "Augastes scutatus"
+  },
+  {
+    "scientificName" : "Augastes lumachella"
+  },
+  {
+    "scientificName" : "Colibri serrirostris"
+  },
+  {
+    "scientificName" : "Colibri delphinae"
+  },
+  {
+    "scientificName" : "Heliactin bilophus"
+  },
+  {
+    "scientificName" : "Heliothryx auritus"
+  },
+  {
+    "scientificName" : "Polytmus guainumbi"
+  },
+  {
+    "scientificName" : "Polytmus theresiae"
+  },
+  {
+    "scientificName" : "Avocettula recurvirostris"
+  },
+  {
+    "scientificName" : "Chrysolampis mosquitus"
+  },
+  {
+    "scientificName" : "Anthracothorax nigricollis"
+  },
+  {
+    "scientificName" : "Anthracothorax viridigula"
+  },
+  {
+    "scientificName" : "Discosura langsdorffi"
+  },
+  {
+    "scientificName" : "Discosura longicaudus"
+  },
+  {
+    "scientificName" : "Lophornis ornatus"
+  },
+  {
+    "scientificName" : "Lophornis gouldii"
+  },
+  {
+    "scientificName" : "Lophornis magnificus"
+  },
+  {
+    "scientificName" : "Lophornis verreauxii"
+  },
+  {
+    "scientificName" : "Lophornis chalybeus"
+  },
+  {
+    "scientificName" : "Lophornis pavoninus"
+  },
+  {
+    "scientificName" : "Heliodoxa xanthogonys"
+  },
+  {
+    "scientificName" : "Heliodoxa schreibersii"
+  },
+  {
+    "scientificName" : "Heliodoxa aurescens"
+  },
+  {
+    "scientificName" : "Heliodoxa rubricauda"
+  },
+  {
+    "scientificName" : "Heliomaster longirostris"
+  },
+  {
+    "scientificName" : "Heliomaster squamosus"
+  },
+  {
+    "scientificName" : "Heliomaster furcifer"
+  },
+  {
+    "scientificName" : "Calliphlox amethystina"
+  },
+  {
+    "scientificName" : "Chlorostilbon mellisugus"
+  },
+  {
+    "scientificName" : "Chlorostilbon lucidus"
+  },
+  {
+    "scientificName" : "Stephanoxis lalandi"
+  },
+  {
+    "scientificName" : "Stephanoxis loddigesii"
+  },
+  {
+    "scientificName" : "Campylopterus largipennis"
+  },
+  {
+    "scientificName" : "Campylopterus calcirupicola"
+  },
+  {
+    "scientificName" : "Campylopterus diamantinensis"
+  },
+  {
+    "scientificName" : "Campylopterus hyperythrus"
+  },
+  {
+    "scientificName" : "Campylopterus duidae"
+  },
+  {
+    "scientificName" : "Thalurania glaucopis"
+  },
+  {
+    "scientificName" : "Thalurania watertonii"
+  },
+  {
+    "scientificName" : "Thalurania furcata"
+  },
+  {
+    "scientificName" : "Eupetomena macroura"
+  },
+  {
+    "scientificName" : "Eupetomena cirrochloris"
+  },
+  {
+    "scientificName" : "Talaphorus chlorocercus"
+  },
+  {
+    "scientificName" : "Saucerottia cupreicauda"
+  },
+  {
+    "scientificName" : "Chrysuronia versicolor"
+  },
+  {
+    "scientificName" : "Chrysuronia oenone"
+  },
+  {
+    "scientificName" : "Chrysuronia brevirostris"
+  },
+  {
+    "scientificName" : "Chrysuronia leucogaster"
+  },
+  {
+    "scientificName" : "Leucochloris albicollis"
+  },
+  {
+    "scientificName" : "Chionomesa fimbriata"
+  },
+  {
+    "scientificName" : "Chionomesa lactea"
+  },
+  {
+    "scientificName" : "Chionomesa fimbriata/lactea"
+  },
+  {
+    "scientificName" : "Hylocharis sapphirina"
+  },
+  {
+    "scientificName" : "Hylocharis chrysura"
+  },
+  {
+    "scientificName" : "Elliotomyia chionogaster"
+  },
+  {
+    "scientificName" : "Chlorestes cyanus"
+  },
+  {
+    "scientificName" : "Chlorestes notata"
+  },
+  {
+    "scientificName" : "Rallus longirostris"
+  },
+  {
+    "scientificName" : "Crex crex"
+  },
+  {
+    "scientificName" : "Pardirallus maculatus"
+  },
+  {
+    "scientificName" : "Pardirallus nigricans"
+  },
+  {
+    "scientificName" : "Pardirallus sanguinolentus"
+  },
+  {
+    "scientificName" : "Mustelirallus albicollis"
+  },
+  {
+    "scientificName" : "Mustelirallus erythrops"
+  },
+  {
+    "scientificName" : "Amaurolimnas concolor"
+  },
+  {
+    "scientificName" : "Aramides ypecaha"
+  },
+  {
+    "scientificName" : "Aramides mangle"
+  },
+  {
+    "scientificName" : "Aramides cajaneus"
+  },
+  {
+    "scientificName" : "Aramides saracura"
+  },
+  {
+    "scientificName" : "Aramides sp."
+  },
+  {
+    "scientificName" : "Porphyriops melanops"
+  },
+  {
+    "scientificName" : "Gallinula galeata"
+  },
+  {
+    "scientificName" : "Fulica rufifrons"
+  },
+  {
+    "scientificName" : "Fulica armillata"
+  },
+  {
+    "scientificName" : "Fulica leucoptera"
+  },
+  {
+    "scientificName" : "Fulica sp."
+  },
+  {
+    "scientificName" : "Porphyrio alleni"
+  },
+  {
+    "scientificName" : "Porphyrio martinica"
+  },
+  {
+    "scientificName" : "Porphyrio flavirostris"
+  },
+  {
+    "scientificName" : "Gallinula/Fulica/Porphyrio sp."
+  },
+  {
+    "scientificName" : "Laterallus spilopterus"
+  },
+  {
+    "scientificName" : "Rufirallus schomburgkii"
+  },
+  {
+    "scientificName" : "Rufirallus viridis"
+  },
+  {
+    "scientificName" : "Rufirallus fasciatus"
+  },
+  {
+    "scientificName" : "Rufirallus leucopyrrhus"
+  },
+  {
+    "scientificName" : "Rufirallus xenopterus"
+  },
+  {
+    "scientificName" : "Anurolimnas castaneiceps"
+  },
+  {
+    "scientificName" : "Laterallus notatus"
+  },
+  {
+    "scientificName" : "Laterallus flaviventer"
+  },
+  {
+    "scientificName" : "Laterallus melanophaius"
+  },
+  {
+    "scientificName" : "Rufirallus leucopyrrhus/Laterallus melanophaius"
+  },
+  {
+    "scientificName" : "Laterallus exilis"
+  },
+  {
+    "scientificName" : "Laterallus jamaicensis"
+  },
+  {
+    "scientificName" : "Laterallus spiloptera"
+  },
+  {
+    "scientificName" : "Heliornis fulica"
+  },
+  {
+    "scientificName" : "Aramus guarauna"
+  },
+  {
+    "scientificName" : "Psophia crepitans"
+  },
+  {
+    "scientificName" : "Psophia leucoptera"
+  },
+  {
+    "scientificName" : "Psophia viridis"
+  },
+  {
+    "scientificName" : "Psophia sp."
+  },
+  {
+    "scientificName" : "Chionis albus"
+  },
+  {
+    "scientificName" : "Hesperoburhinus bistriatus"
+  },
+  {
+    "scientificName" : "Himantopus mexicanus"
+  },
+  {
+    "scientificName" : "Haematopus palliatus"
+  },
+  {
+    "scientificName" : "Pluvialis squatarola"
+  },
+  {
+    "scientificName" : "Pluvialis dominica"
+  },
+  {
+    "scientificName" : "Pluvialis sp."
+  },
+  {
+    "scientificName" : "Oreopholus ruficollis"
+  },
+  {
+    "scientificName" : "Hoploxypterus cayanus"
+  },
+  {
+    "scientificName" : "Zonibyx modestus"
+  },
+  {
+    "scientificName" : "Charadrius semipalmatus"
+  },
+  {
+    "scientificName" : "Vanellus chilensis"
+  },
+  {
+    "scientificName" : "Anarhynchus wilsonia"
+  },
+  {
+    "scientificName" : "Anarhynchus collaris"
+  },
+  {
+    "scientificName" : "Anarhynchus falklandicus"
+  },
+  {
+    "scientificName" : "Anarhynchus sp."
+  },
+  {
+    "scientificName" : "Thinocorus rumicivorus"
+  },
+  {
+    "scientificName" : "Nycticryphes semicollaris"
+  },
+  {
+    "scientificName" : "Jacana jacana"
+  },
+  {
+    "scientificName" : "Bartramia longicauda"
+  },
+  {
+    "scientificName" : "Numenius phaeopus"
+  },
+  {
+    "scientificName" : "Numenius hudsonicus/phaeopus"
+  },
+  {
+    "scientificName" : "Numenius borealis"
+  },
+  {
+    "scientificName" : "Numenius sp."
+  },
+  {
+    "scientificName" : "Limosa lapponica"
+  },
+  {
+    "scientificName" : "Limosa haemastica"
+  },
+  {
+    "scientificName" : "Limosa fedoa"
+  },
+  {
+    "scientificName" : "Limnodromus griseus"
+  },
+  {
+    "scientificName" : "Gallinago undulata"
+  },
+  {
+    "scientificName" : "Gallinago paraguaiae"
+  },
+  {
+    "scientificName" : "Gallinago sp."
+  },
+  {
+    "scientificName" : "Phalaropus tricolor"
+  },
+  {
+    "scientificName" : "Phalaropus lobatus"
+  },
+  {
+    "scientificName" : "Xenus cinereus"
+  },
+  {
+    "scientificName" : "Actitis macularius"
+  },
+  {
+    "scientificName" : "Tringa solitaria"
+  },
+  {
+    "scientificName" : "Actitis macularius/Tringa solitaria"
+  },
+  {
+    "scientificName" : "Tringa flavipes"
+  },
+  {
+    "scientificName" : "Tringa semipalmata"
+  },
+  {
+    "scientificName" : "Tringa nebularia"
+  },
+  {
+    "scientificName" : "Tringa melanoleuca"
+  },
+  {
+    "scientificName" : "Tringa flavipes/melanoleuca"
+  },
+  {
+    "scientificName" : "Tringa sp."
+  },
+  {
+    "scientificName" : "Arenaria interpres"
+  },
+  {
+    "scientificName" : "Calidris canutus"
+  },
+  {
+    "scientificName" : "Calidris pugnax"
+  },
+  {
+    "scientificName" : "Calidris ferruginea"
+  },
+  {
+    "scientificName" : "Calidris himantopus"
+  },
+  {
+    "scientificName" : "Calidris subruficollis"
+  },
+  {
+    "scientificName" : "Calidris alba"
+  },
+  {
+    "scientificName" : "Calidris bairdii"
+  },
+  {
+    "scientificName" : "Calidris minuta"
+  },
+  {
+    "scientificName" : "Calidris fuscicollis"
+  },
+  {
+    "scientificName" : "Calidris minutilla"
+  },
+  {
+    "scientificName" : "Calidris melanotos"
+  },
+  {
+    "scientificName" : "Calidris mauri"
+  },
+  {
+    "scientificName" : "Calidris pusilla"
+  },
+  {
+    "scientificName" : "Calidris sp."
+  },
+  {
+    "scientificName" : "Glareola pratincola"
+  },
+  {
+    "scientificName" : "Stercorarius longicaudus"
+  },
+  {
+    "scientificName" : "Stercorarius parasiticus"
+  },
+  {
+    "scientificName" : "Stercorarius pomarinus"
+  },
+  {
+    "scientificName" : "Stercorarius chilensis"
+  },
+  {
+    "scientificName" : "Stercorarius antarcticus"
+  },
+  {
+    "scientificName" : "Stercorarius maccormicki"
+  },
+  {
+    "scientificName" : "Xema sabini"
+  },
+  {
+    "scientificName" : "Chroicocephalus maculipennis"
+  },
+  {
+    "scientificName" : "Chroicocephalus cirrocephalus"
+  },
+  {
+    "scientificName" : "Chroicocephalus maculipennis/cirrocephalus"
+  },
+  {
+    "scientificName" : "Leucophaeus modestus"
+  },
+  {
+    "scientificName" : "Leucophaeus atricilla"
+  },
+  {
+    "scientificName" : "Leucophaeus pipixcan"
+  },
+  {
+    "scientificName" : "Leucophaeus atricilla/pipixcan"
+  },
+  {
+    "scientificName" : "Larus atlanticus"
+  },
+  {
+    "scientificName" : "Larus dominicanus"
+  },
+  {
+    "scientificName" : "Larus fuscus"
+  },
+  {
+    "scientificName" : "Larus sp."
+  },
+  {
+    "scientificName" : "Rynchops niger"
+  },
+  {
+    "scientificName" : "Gygis alba"
+  },
+  {
+    "scientificName" : "Anous stolidus"
+  },
+  {
+    "scientificName" : "Anous minutus"
+  },
+  {
+    "scientificName" : "Onychoprion fuscatus"
+  },
+  {
+    "scientificName" : "Sternula antillarum"
+  },
+  {
+    "scientificName" : "Sternula superciliaris"
+  },
+  {
+    "scientificName" : "Sternula sp."
+  },
+  {
+    "scientificName" : "Phaetusa simplex"
+  },
+  {
+    "scientificName" : "Gelochelidon nilotica"
+  },
+  {
+    "scientificName" : "Chlidonias niger"
+  },
+  {
+    "scientificName" : "Chlidonias leucopterus"
+  },
+  {
+    "scientificName" : "Sterna trudeaui"
+  },
+  {
+    "scientificName" : "Sterna paradisaea"
+  },
+  {
+    "scientificName" : "Sterna hirundinacea"
+  },
+  {
+    "scientificName" : "Sterna vittata"
+  },
+  {
+    "scientificName" : "Sterna hirundo"
+  },
+  {
+    "scientificName" : "Sterna dougallii"
+  },
+  {
+    "scientificName" : "Sterna sp."
+  },
+  {
+    "scientificName" : "Thalasseus sandvicensis"
+  },
+  {
+    "scientificName" : "Thalasseus maximus"
+  },
+  {
+    "scientificName" : "Phoenicopterus chilensis"
+  },
+  {
+    "scientificName" : "Phoenicopterus ruber"
+  },
+  {
+    "scientificName" : "Phoenicopterus roseus"
+  },
+  {
+    "scientificName" : "Phoenicoparrus andinus"
+  },
+  {
+    "scientificName" : "Phoenicoparrus jamesi"
+  },
+  {
+    "scientificName" : "Rollandia rolland"
+  },
+  {
+    "scientificName" : "Tachybaptus dominicus"
+  },
+  {
+    "scientificName" : "Podilymbus podiceps"
+  },
+  {
+    "scientificName" : "Podiceps major"
+  },
+  {
+    "scientificName" : "Podiceps occipitalis"
+  },
+  {
+    "scientificName" : "Opisthocomus hoazin"
+  },
+  {
+    "scientificName" : "Eurypyga helias"
+  },
+  {
+    "scientificName" : "Phaethon lepturus"
+  },
+  {
+    "scientificName" : "Phaethon aethereus"
+  },
+  {
+    "scientificName" : "Spheniscus magellanicus"
+  },
+  {
+    "scientificName" : "Diomedea sanfordi"
+  },
+  {
+    "scientificName" : "Diomedea epomophora"
+  },
+  {
+    "scientificName" : "Thalassarche chlororhynchos"
+  },
+  {
+    "scientificName" : "Thalassarche melanophris"
+  },
+  {
+    "scientificName" : "Oceanites oceanicus"
+  },
+  {
+    "scientificName" : "Fregetta grallaria"
+  },
+  {
+    "scientificName" : "Fregetta tropica"
+  },
+  {
+    "scientificName" : "Hydrobates leucorhous"
+  },
+  {
+    "scientificName" : "Macronectes giganteus"
+  },
+  {
+    "scientificName" : "Macronectes halli"
+  },
+  {
+    "scientificName" : "Fulmarus glacialoides"
+  },
+  {
+    "scientificName" : "Daption capense"
+  },
+  {
+    "scientificName" : "Aphrodroma brevirostris"
+  },
+  {
+    "scientificName" : "Pterodroma arminjoniana"
+  },
+  {
+    "scientificName" : "Pterodroma feae"
+  },
+  {
+    "scientificName" : "Pterodroma mollis"
+  },
+  {
+    "scientificName" : "Pterodroma incerta"
+  },
+  {
+    "scientificName" : "Pachyptila desolata"
+  },
+  {
+    "scientificName" : "Pachyptila belcheri"
+  },
+  {
+    "scientificName" : "Bulweria bulwerii"
+  },
+  {
+    "scientificName" : "Procellaria aequinoctialis"
+  },
+  {
+    "scientificName" : "Procellaria conspicillata"
+  },
+  {
+    "scientificName" : "Calonectris borealis"
+  },
+  {
+    "scientificName" : "Calonectris edwardsii"
+  },
+  {
+    "scientificName" : "Ardenna gravis"
+  },
+  {
+    "scientificName" : "Ardenna grisea"
+  },
+  {
+    "scientificName" : "Puffinus puffinus"
+  },
+  {
+    "scientificName" : "Puffinus lherminieri"
+  },
+  {
+    "scientificName" : "Ciconia maguari"
+  },
+  {
+    "scientificName" : "Jabiru mycteria"
+  },
+  {
+    "scientificName" : "Mycteria americana"
+  },
+  {
+    "scientificName" : "Ciconiidae sp."
+  },
+  {
+    "scientificName" : "Fregata aquila"
+  },
+  {
+    "scientificName" : "Fregata magnificens"
+  },
+  {
+    "scientificName" : "Fregata ariel"
+  },
+  {
+    "scientificName" : "Morus serrator"
+  },
+  {
+    "scientificName" : "Sula sula"
+  },
+  {
+    "scientificName" : "Sula leucogaster"
+  },
+  {
+    "scientificName" : "Sula dactylatra"
+  },
+  {
+    "scientificName" : "Anhinga anhinga"
+  },
+  {
+    "scientificName" : "Nannopterum brasilianum"
+  },
+  {
+    "scientificName" : "Eudocimus ruber"
+  },
+  {
+    "scientificName" : "Plegadis chihi"
+  },
+  {
+    "scientificName" : "Cercibis oxycerca"
+  },
+  {
+    "scientificName" : "Mesembrinibis cayennensis"
+  },
+  {
+    "scientificName" : "Phimosus infuscatus"
+  },
+  {
+    "scientificName" : "Plegadis chihi/Phimosus infuscatus"
+  },
+  {
+    "scientificName" : "Theristicus caerulescens"
+  },
+  {
+    "scientificName" : "Theristicus caudatus"
+  },
+  {
+    "scientificName" : "Theristicus sp."
+  },
+  {
+    "scientificName" : "Platalea ajaja"
+  },
+  {
+    "scientificName" : "Tigrisoma lineatum"
+  },
+  {
+    "scientificName" : "Tigrisoma fasciatum"
+  },
+  {
+    "scientificName" : "Cochlearius cochlearius"
+  },
+  {
+    "scientificName" : "Agamia agami"
+  },
+  {
+    "scientificName" : "Zebrilus undulatus"
+  },
+  {
+    "scientificName" : "Botaurus pinnatus"
+  },
+  {
+    "scientificName" : "Botaurus involucris"
+  },
+  {
+    "scientificName" : "Botaurus exilis"
+  },
+  {
+    "scientificName" : "Nyctanassa violacea"
+  },
+  {
+    "scientificName" : "Nycticorax nycticorax"
+  },
+  {
+    "scientificName" : "Nyctanassa violacea/Nycticorax nycticorax"
+  },
+  {
+    "scientificName" : "Pilherodius pileatus"
+  },
+  {
+    "scientificName" : "Syrigma sibilatrix"
+  },
+  {
+    "scientificName" : "Egretta caerulea"
+  },
+  {
+    "scientificName" : "Egretta tricolor"
+  },
+  {
+    "scientificName" : "Egretta thula"
+  },
+  {
+    "scientificName" : "Egretta garzetta"
+  },
+  {
+    "scientificName" : "Egretta gularis"
+  },
+  {
+    "scientificName" : "Egretta sp."
+  },
+  {
+    "scientificName" : "Butorides striata"
+  },
+  {
+    "scientificName" : "Ardeola ralloides"
+  },
+  {
+    "scientificName" : "Ardea ibis"
+  },
+  {
+    "scientificName" : "Ardea alba"
+  },
+  {
+    "scientificName" : "Ardea cinerea"
+  },
+  {
+    "scientificName" : "Ardea cocoi"
+  },
+  {
+    "scientificName" : "Ardea purpurea"
+  },
+  {
+    "scientificName" : "Ardea sp."
+  },
+  {
+    "scientificName" : "Ardeidae sp."
+  },
+  {
+    "scientificName" : "Egretta/Ardea sp."
+  },
+  {
+    "scientificName" : "Pelecanus occidentalis"
+  },
+  {
+    "scientificName" : "Sarcoramphus papa"
+  },
+  {
+    "scientificName" : "Coragyps atratus"
+  },
+  {
+    "scientificName" : "Cathartes aura"
+  },
+  {
+    "scientificName" : "Cathartes burrovianus"
+  },
+  {
+    "scientificName" : "Cathartes melambrotus"
+  },
+  {
+    "scientificName" : "Pandion haliaetus"
+  },
+  {
+    "scientificName" : "Gampsonyx swainsonii"
+  },
+  {
+    "scientificName" : "Elanus leucurus"
+  },
+  {
+    "scientificName" : "Chondrohierax uncinatus"
+  },
+  {
+    "scientificName" : "Leptodon cayanensis"
+  },
+  {
+    "scientificName" : "Leptodon forbesi"
+  },
+  {
+    "scientificName" : "Elanoides forficatus"
+  },
+  {
+    "scientificName" : "Spizaetus tyrannus"
+  },
+  {
+    "scientificName" : "Spizaetus melanoleucus"
+  },
+  {
+    "scientificName" : "Spizaetus ornatus"
+  },
+  {
+    "scientificName" : "Spizaetus sp."
+  },
+  {
+    "scientificName" : "Morphnus guianensis"
+  },
+  {
+    "scientificName" : "Harpia harpyja"
+  },
+  {
+    "scientificName" : "Accipiter poliogaster"
+  },
+  {
+    "scientificName" : "Accipiter striatus"
+  },
+  {
+    "scientificName" : "Astur bicolor"
+  },
+  {
+    "scientificName" : "Circus buffoni"
+  },
+  {
+    "scientificName" : "Circus cinereus"
+  },
+  {
+    "scientificName" : "Circus sp."
+  },
+  {
+    "scientificName" : "Microspizias superciliosus"
+  },
+  {
+    "scientificName" : "Harpagus bidentatus"
+  },
+  {
+    "scientificName" : "Harpagus diodon"
+  },
+  {
+    "scientificName" : "Ictinia mississippiensis"
+  },
+  {
+    "scientificName" : "Ictinia plumbea"
+  },
+  {
+    "scientificName" : "Ictinia mississippiensis/plumbea"
+  },
+  {
+    "scientificName" : "Geranospiza caerulescens"
+  },
+  {
+    "scientificName" : "Busarellus nigricollis"
+  },
+  {
+    "scientificName" : "Rostrhamus sociabilis"
+  },
+  {
+    "scientificName" : "Helicolestes hamatus"
+  },
+  {
+    "scientificName" : "Buteogallus schistaceus"
+  },
+  {
+    "scientificName" : "Buteogallus aequinoctialis"
+  },
+  {
+    "scientificName" : "Buteogallus meridionalis"
+  },
+  {
+    "scientificName" : "Buteogallus lacernulatus"
+  },
+  {
+    "scientificName" : "Buteogallus urubitinga"
+  },
+  {
+    "scientificName" : "Buteogallus solitarius"
+  },
+  {
+    "scientificName" : "Buteogallus coronatus"
+  },
+  {
+    "scientificName" : "Buteogallus sp."
+  },
+  {
+    "scientificName" : "Rupornis magnirostris"
+  },
+  {
+    "scientificName" : "Parabuteo unicinctus"
+  },
+  {
+    "scientificName" : "Parabuteo leucorrhous"
+  },
+  {
+    "scientificName" : "Geranoaetus albicaudatus"
+  },
+  {
+    "scientificName" : "Geranoaetus melanoleucus"
+  },
+  {
+    "scientificName" : "Geranoaetus sp."
+  },
+  {
+    "scientificName" : "Pseudastur albicollis"
+  },
+  {
+    "scientificName" : "Pseudastur polionotus"
+  },
+  {
+    "scientificName" : "Leucopternis melanops"
+  },
+  {
+    "scientificName" : "Leucopternis kuhli"
+  },
+  {
+    "scientificName" : "Buteo nitidus"
+  },
+  {
+    "scientificName" : "Buteo platypterus"
+  },
+  {
+    "scientificName" : "Buteo albonotatus"
+  },
+  {
+    "scientificName" : "Buteo brachyurus"
+  },
+  {
+    "scientificName" : "Buteo swainsoni"
+  },
+  {
+    "scientificName" : "Buteo sp."
+  },
+  {
+    "scientificName" : "Geranoaetus/Buteo sp."
+  },
+  {
+    "scientificName" : "Buteo/eagle sp."
+  },
+  {
+    "scientificName" : "Accipitridae sp. (hawk sp.)"
+  },
+  {
+    "scientificName" : "Accipitridae sp. (eagle sp.)"
+  },
+  {
+    "scientificName" : "Tyto furcata"
+  },
+  {
+    "scientificName" : "Megascops choliba"
+  },
+  {
+    "scientificName" : "Megascops roraimae"
+  },
+  {
+    "scientificName" : "Megascops sanctaecatarinae"
+  },
+  {
+    "scientificName" : "Megascops watsonii"
+  },
+  {
+    "scientificName" : "Megascops atricapilla"
+  },
+  {
+    "scientificName" : "Megascops sp."
+  },
+  {
+    "scientificName" : "Lophostrix cristata"
+  },
+  {
+    "scientificName" : "Pulsatrix perspicillata"
+  },
+  {
+    "scientificName" : "Pulsatrix koeniswaldiana"
+  },
+  {
+    "scientificName" : "Pulsatrix sp."
+  },
+  {
+    "scientificName" : "Bubo virginianus"
+  },
+  {
+    "scientificName" : "Glaucidium hardyi"
+  },
+  {
+    "scientificName" : "Glaucidium minutissimum"
+  },
+  {
+    "scientificName" : "Glaucidium brasilianum"
+  },
+  {
+    "scientificName" : "Glaucidium sp."
+  },
+  {
+    "scientificName" : "Athene cunicularia"
+  },
+  {
+    "scientificName" : "Strix virgata"
+  },
+  {
+    "scientificName" : "Strix huhula"
+  },
+  {
+    "scientificName" : "Strix hylophila"
+  },
+  {
+    "scientificName" : "Strix sp."
+  },
+  {
+    "scientificName" : "Asio clamator"
+  },
+  {
+    "scientificName" : "Asio stygius"
+  },
+  {
+    "scientificName" : "Asio flammeus"
+  },
+  {
+    "scientificName" : "Asio sp."
+  },
+  {
+    "scientificName" : "Glaucidium/Aegolius sp. (pygmy-owl/saw-whet owl sp.)"
+  },
+  {
+    "scientificName" : "Aegolius harrisii"
+  },
+  {
+    "scientificName" : "Pharomachrus pavoninus"
+  },
+  {
+    "scientificName" : "Trogon melanurus"
+  },
+  {
+    "scientificName" : "Trogon viridis"
+  },
+  {
+    "scientificName" : "Trogon violaceus"
+  },
+  {
+    "scientificName" : "Trogon ramonianus"
+  },
+  {
+    "scientificName" : "Trogon curucui"
+  },
+  {
+    "scientificName" : "Trogon surrucura"
+  },
+  {
+    "scientificName" : "Trogon rufus"
+  },
+  {
+    "scientificName" : "Trogon chrysochloros"
+  },
+  {
+    "scientificName" : "Trogon collaris"
+  },
+  {
+    "scientificName" : "Trogon personatus"
+  },
+  {
+    "scientificName" : "Momotus momota"
+  },
+  {
+    "scientificName" : "Baryphthengus martii"
+  },
+  {
+    "scientificName" : "Baryphthengus ruficapillus"
+  },
+  {
+    "scientificName" : "Electron platyrhynchum"
+  },
+  {
+    "scientificName" : "Momotidae sp."
+  },
+  {
+    "scientificName" : "Megaceryle torquata"
+  },
+  {
+    "scientificName" : "Chloroceryle amazona"
+  },
+  {
+    "scientificName" : "Chloroceryle aenea"
+  },
+  {
+    "scientificName" : "Chloroceryle americana"
+  },
+  {
+    "scientificName" : "Chloroceryle inda"
+  },
+  {
+    "scientificName" : "Chloroceryle sp."
+  },
+  {
+    "scientificName" : "Notharchus hyperrhynchus"
+  },
+  {
+    "scientificName" : "Notharchus macrorhynchos"
+  },
+  {
+    "scientificName" : "Notharchus swainsoni"
+  },
+  {
+    "scientificName" : "Notharchus ordii"
+  },
+  {
+    "scientificName" : "Notharchus tectus"
+  },
+  {
+    "scientificName" : "Bucco macrodactylus"
+  },
+  {
+    "scientificName" : "Bucco tamatia"
+  },
+  {
+    "scientificName" : "Bucco capensis"
+  },
+  {
+    "scientificName" : "Nystalus obamai"
+  },
+  {
+    "scientificName" : "Nystalus striolatus"
+  },
+  {
+    "scientificName" : "Nystalus chacuru"
+  },
+  {
+    "scientificName" : "Nystalus maculatus"
+  },
+  {
+    "scientificName" : "Malacoptila fusca"
+  },
+  {
+    "scientificName" : "Malacoptila semicincta"
+  },
+  {
+    "scientificName" : "Malacoptila striata"
+  },
+  {
+    "scientificName" : "Malacoptila rufa"
+  },
+  {
+    "scientificName" : "Micromonacha lanceolata"
+  },
+  {
+    "scientificName" : "Nonnula rubecula"
+  },
+  {
+    "scientificName" : "Nonnula sclateri"
+  },
+  {
+    "scientificName" : "Nonnula ruficapilla"
+  },
+  {
+    "scientificName" : "Nonnula amaurocephala"
+  },
+  {
+    "scientificName" : "Monasa atra"
+  },
+  {
+    "scientificName" : "Monasa nigrifrons"
+  },
+  {
+    "scientificName" : "Monasa morphoeus"
+  },
+  {
+    "scientificName" : "Monasa flavirostris"
+  },
+  {
+    "scientificName" : "Monasa sp."
+  },
+  {
+    "scientificName" : "Chelidoptera tenebrosa"
+  },
+  {
+    "scientificName" : "Bucconidae sp."
+  },
+  {
+    "scientificName" : "Galbalcyrhynchus leucotis"
+  },
+  {
+    "scientificName" : "Galbalcyrhynchus purusianus"
+  },
+  {
+    "scientificName" : "Brachygalba albogularis"
+  },
+  {
+    "scientificName" : "Brachygalba lugubris"
+  },
+  {
+    "scientificName" : "Jacamaralcyon tridactyla"
+  },
+  {
+    "scientificName" : "Galbula albirostris"
+  },
+  {
+    "scientificName" : "Galbula cyanicollis"
+  },
+  {
+    "scientificName" : "Galbula ruficauda"
+  },
+  {
+    "scientificName" : "Galbula galbula"
+  },
+  {
+    "scientificName" : "Galbula tombacea"
+  },
+  {
+    "scientificName" : "Galbula cyanescens"
+  },
+  {
+    "scientificName" : "Galbula chalcothorax"
+  },
+  {
+    "scientificName" : "Galbula leucogastra"
+  },
+  {
+    "scientificName" : "Galbula dea"
+  },
+  {
+    "scientificName" : "Galbula sp."
+  },
+  {
+    "scientificName" : "Jacamerops aureus"
+  },
+  {
+    "scientificName" : "Capito aurovirens"
+  },
+  {
+    "scientificName" : "Capito dayi"
+  },
+  {
+    "scientificName" : "Capito brunneipectus"
+  },
+  {
+    "scientificName" : "Capito niger"
+  },
+  {
+    "scientificName" : "Capito auratus"
+  },
+  {
+    "scientificName" : "Eubucco richardsoni"
+  },
+  {
+    "scientificName" : "Eubucco tucinkae"
+  },
+  {
+    "scientificName" : "Aulacorhynchus albivitta"
+  },
+  {
+    "scientificName" : "Aulacorhynchus whitelianus"
+  },
+  {
+    "scientificName" : "Pteroglossus bailloni"
+  },
+  {
+    "scientificName" : "Pteroglossus viridis"
+  },
+  {
+    "scientificName" : "Pteroglossus inscriptus"
+  },
+  {
+    "scientificName" : "Pteroglossus aracari"
+  },
+  {
+    "scientificName" : "Pteroglossus castanotis"
+  },
+  {
+    "scientificName" : "Pteroglossus pluricinctus"
+  },
+  {
+    "scientificName" : "Pteroglossus azara"
+  },
+  {
+    "scientificName" : "Pteroglossus beauharnaisii"
+  },
+  {
+    "scientificName" : "Pteroglossus bitorquatus"
+  },
+  {
+    "scientificName" : "Selenidera piperivora"
+  },
+  {
+    "scientificName" : "Selenidera reinwardtii"
+  },
+  {
+    "scientificName" : "Selenidera nattereri"
+  },
+  {
+    "scientificName" : "Selenidera gouldii"
+  },
+  {
+    "scientificName" : "Selenidera maculirostris"
+  },
+  {
+    "scientificName" : "Ramphastos toco"
+  },
+  {
+    "scientificName" : "Ramphastos tucanus"
+  },
+  {
+    "scientificName" : "Ramphastos vitellinus"
+  },
+  {
+    "scientificName" : "Ramphastos dicolorus"
+  },
+  {
+    "scientificName" : "Picumnus aurifrons"
+  },
+  {
+    "scientificName" : "Picumnus lafresnayi"
+  },
+  {
+    "scientificName" : "Picumnus exilis"
+  },
+  {
+    "scientificName" : "Picumnus spilogaster"
+  },
+  {
+    "scientificName" : "Picumnus pygmaeus"
+  },
+  {
+    "scientificName" : "Picumnus varzeae"
+  },
+  {
+    "scientificName" : "Picumnus cirratus"
+  },
+  {
+    "scientificName" : "Picumnus temminckii"
+  },
+  {
+    "scientificName" : "Picumnus albosquamatus"
+  },
+  {
+    "scientificName" : "Picumnus fuscus"
+  },
+  {
+    "scientificName" : "Picumnus rufiventris"
+  },
+  {
+    "scientificName" : "Picumnus limae"
+  },
+  {
+    "scientificName" : "Picumnus nebulosus"
+  },
+  {
+    "scientificName" : "Picumnus castelnau"
+  },
+  {
+    "scientificName" : "Picumnus subtilis"
+  },
+  {
+    "scientificName" : "Picumnus sp."
+  },
+  {
+    "scientificName" : "Melanerpes candidus"
+  },
+  {
+    "scientificName" : "Melanerpes cruentatus"
+  },
+  {
+    "scientificName" : "Melanerpes flavifrons"
+  },
+  {
+    "scientificName" : "Melanerpes cactorum"
+  },
+  {
+    "scientificName" : "Melanerpes sp."
+  },
+  {
+    "scientificName" : "Veniliornis kirkii"
+  },
+  {
+    "scientificName" : "Veniliornis cassini"
+  },
+  {
+    "scientificName" : "Veniliornis spilogaster"
+  },
+  {
+    "scientificName" : "Veniliornis mixtus"
+  },
+  {
+    "scientificName" : "Veniliornis passerinus"
+  },
+  {
+    "scientificName" : "Veniliornis affinis"
+  },
+  {
+    "scientificName" : "Veniliornis passerinus/affinis"
+  },
+  {
+    "scientificName" : "Veniliornis maculifrons"
+  },
+  {
+    "scientificName" : "Veniliornis sp."
+  },
+  {
+    "scientificName" : "Campephilus rubricollis"
+  },
+  {
+    "scientificName" : "Campephilus robustus"
+  },
+  {
+    "scientificName" : "Campephilus melanoleucos"
+  },
+  {
+    "scientificName" : "Campephilus leucopogon"
+  },
+  {
+    "scientificName" : "Campephilus sp."
+  },
+  {
+    "scientificName" : "Dryocopus lineatus"
+  },
+  {
+    "scientificName" : "Campephilus sp./Dryocopus lineatus"
+  },
+  {
+    "scientificName" : "Celeus torquatus"
+  },
+  {
+    "scientificName" : "Celeus galeatus"
+  },
+  {
+    "scientificName" : "Celeus undatus"
+  },
+  {
+    "scientificName" : "Celeus flavus"
+  },
+  {
+    "scientificName" : "Celeus spectabilis"
+  },
+  {
+    "scientificName" : "Celeus obrieni"
+  },
+  {
+    "scientificName" : "Celeus ochraceus"
+  },
+  {
+    "scientificName" : "Celeus elegans"
+  },
+  {
+    "scientificName" : "Celeus lugubris"
+  },
+  {
+    "scientificName" : "Celeus flavescens"
+  },
+  {
+    "scientificName" : "Celeus sp."
+  },
+  {
+    "scientificName" : "Piculus leucolaemus"
+  },
+  {
+    "scientificName" : "Piculus flavigula"
+  },
+  {
+    "scientificName" : "Piculus chrysochloros"
+  },
+  {
+    "scientificName" : "Piculus aurulentus"
+  },
+  {
+    "scientificName" : "Piculus sp."
+  },
+  {
+    "scientificName" : "Colaptes rubiginosus"
+  },
+  {
+    "scientificName" : "Colaptes punctigula"
+  },
+  {
+    "scientificName" : "Colaptes melanochloros"
+  },
+  {
+    "scientificName" : "Colaptes campestris"
+  },
+  {
+    "scientificName" : "Colaptes sp."
+  },
+  {
+    "scientificName" : "Cariama cristata"
+  },
+  {
+    "scientificName" : "Herpetotheres cachinnans"
+  },
+  {
+    "scientificName" : "Micrastur buckleyi"
+  },
+  {
+    "scientificName" : "Micrastur semitorquatus"
+  },
+  {
+    "scientificName" : "Micrastur mirandollei"
+  },
+  {
+    "scientificName" : "Micrastur ruficollis"
+  },
+  {
+    "scientificName" : "Micrastur mintoni"
+  },
+  {
+    "scientificName" : "Micrastur gilvicollis"
+  },
+  {
+    "scientificName" : "Micrastur sp."
+  },
+  {
+    "scientificName" : "Caracara plancus"
+  },
+  {
+    "scientificName" : "Ibycter americanus"
+  },
+  {
+    "scientificName" : "Daptrius chimachima"
+  },
+  {
+    "scientificName" : "Daptrius ater"
+  },
+  {
+    "scientificName" : "Daptrius chimango"
+  },
+  {
+    "scientificName" : "Falco sparverius"
+  },
+  {
+    "scientificName" : "Falco columbarius"
+  },
+  {
+    "scientificName" : "Falco femoralis"
+  },
+  {
+    "scientificName" : "Falco rufigularis"
+  },
+  {
+    "scientificName" : "Falco deiroleucus"
+  },
+  {
+    "scientificName" : "Falco peregrinus"
+  },
+  {
+    "scientificName" : "Falco sp."
+  },
+  {
+    "scientificName" : "Accipitriformes/Falconiformes sp."
+  },
+  {
+    "scientificName" : "Touit huetii"
+  },
+  {
+    "scientificName" : "Touit purpuratus"
+  },
+  {
+    "scientificName" : "Touit melanonotus"
+  },
+  {
+    "scientificName" : "Touit surdus"
+  },
+  {
+    "scientificName" : "Nannopsittaca panychlora"
+  },
+  {
+    "scientificName" : "Nannopsittaca dachilleae"
+  },
+  {
+    "scientificName" : "Myiopsitta monachus"
+  },
+  {
+    "scientificName" : "Brotogeris sanctithomae"
+  },
+  {
+    "scientificName" : "Brotogeris tirica"
+  },
+  {
+    "scientificName" : "Brotogeris versicolurus"
+  },
+  {
+    "scientificName" : "Brotogeris chiriri"
+  },
+  {
+    "scientificName" : "Brotogeris cyanoptera"
+  },
+  {
+    "scientificName" : "Brotogeris chrysoptera"
+  },
+  {
+    "scientificName" : "Pionopsitta pileata"
+  },
+  {
+    "scientificName" : "Triclaria malachitacea"
+  },
+  {
+    "scientificName" : "Pyrilia barrabandi"
+  },
+  {
+    "scientificName" : "Pyrilia caica"
+  },
+  {
+    "scientificName" : "Pyrilia aurantiocephala"
+  },
+  {
+    "scientificName" : "Pyrilia vulturina"
+  },
+  {
+    "scientificName" : "Pionus fuscus"
+  },
+  {
+    "scientificName" : "Pionus maximiliani"
+  },
+  {
+    "scientificName" : "Pionus menstruus"
+  },
+  {
+    "scientificName" : "Graydidascalus brachyurus"
+  },
+  {
+    "scientificName" : "Alipiopsitta xanthops"
+  },
+  {
+    "scientificName" : "Amazona festiva"
+  },
+  {
+    "scientificName" : "Amazona vinacea"
+  },
+  {
+    "scientificName" : "Amazona pretrei"
+  },
+  {
+    "scientificName" : "Amazona autumnalis"
+  },
+  {
+    "scientificName" : "Amazona dufresniana"
+  },
+  {
+    "scientificName" : "Amazona rhodocorytha"
+  },
+  {
+    "scientificName" : "Amazona ochrocephala"
+  },
+  {
+    "scientificName" : "Amazona aestiva"
+  },
+  {
+    "scientificName" : "Amazona farinosa"
+  },
+  {
+    "scientificName" : "Amazona kawalli"
+  },
+  {
+    "scientificName" : "Amazona brasiliensis"
+  },
+  {
+    "scientificName" : "Amazona amazonica"
+  },
+  {
+    "scientificName" : "Amazona sp."
+  },
+  {
+    "scientificName" : "Forpus modestus"
+  },
+  {
+    "scientificName" : "Forpus crassirostris"
+  },
+  {
+    "scientificName" : "Forpus xanthopterygius"
+  },
+  {
+    "scientificName" : "Forpus passerinus"
+  },
+  {
+    "scientificName" : "Pionites melanocephalus"
+  },
+  {
+    "scientificName" : "Pionites leucogaster"
+  },
+  {
+    "scientificName" : "Deroptyus accipitrinus"
+  },
+  {
+    "scientificName" : "Pyrrhura cruentata"
+  },
+  {
+    "scientificName" : "Pyrrhura devillei"
+  },
+  {
+    "scientificName" : "Pyrrhura frontalis"
+  },
+  {
+    "scientificName" : "Pyrrhura lepida"
+  },
+  {
+    "scientificName" : "Pyrrhura perlata"
+  },
+  {
+    "scientificName" : "Pyrrhura molinae"
+  },
+  {
+    "scientificName" : "Pyrrhura pfrimeri"
+  },
+  {
+    "scientificName" : "Pyrrhura griseipectus"
+  },
+  {
+    "scientificName" : "Pyrrhura leucotis"
+  },
+  {
+    "scientificName" : "Pyrrhura picta"
+  },
+  {
+    "scientificName" : "Pyrrhura amazonum"
+  },
+  {
+    "scientificName" : "Pyrrhura lucianii"
+  },
+  {
+    "scientificName" : "Pyrrhura roseifrons"
+  },
+  {
+    "scientificName" : "Pyrrhura egregia"
+  },
+  {
+    "scientificName" : "Pyrrhura melanura"
+  },
+  {
+    "scientificName" : "Pyrrhura rupicola"
+  },
+  {
+    "scientificName" : "Pyrrhura sp."
+  },
+  {
+    "scientificName" : "Anodorhynchus hyacinthinus"
+  },
+  {
+    "scientificName" : "Anodorhynchus leari"
+  },
+  {
+    "scientificName" : "Eupsittula aurea"
+  },
+  {
+    "scientificName" : "Eupsittula pertinax"
+  },
+  {
+    "scientificName" : "Eupsittula cactorum"
+  },
+  {
+    "scientificName" : "Aratinga weddellii"
+  },
+  {
+    "scientificName" : "Aratinga nenday"
+  },
+  {
+    "scientificName" : "Aratinga solstitialis"
+  },
+  {
+    "scientificName" : "Aratinga maculata"
+  },
+  {
+    "scientificName" : "Aratinga jandaya"
+  },
+  {
+    "scientificName" : "Aratinga auricapillus"
+  },
+  {
+    "scientificName" : "Cyanopsitta spixii"
+  },
+  {
+    "scientificName" : "Orthopsittaca manilatus"
+  },
+  {
+    "scientificName" : "Primolius maracana"
+  },
+  {
+    "scientificName" : "Primolius couloni"
+  },
+  {
+    "scientificName" : "Primolius auricollis"
+  },
+  {
+    "scientificName" : "Ara ararauna"
+  },
+  {
+    "scientificName" : "Ara severus"
+  },
+  {
+    "scientificName" : "Ara macao"
+  },
+  {
+    "scientificName" : "Ara chloropterus"
+  },
+  {
+    "scientificName" : "Ara macao/chloropterus"
+  },
+  {
+    "scientificName" : "Ara sp."
+  },
+  {
+    "scientificName" : "Guaruba guarouba"
+  },
+  {
+    "scientificName" : "Thectocercus acuticaudatus"
+  },
+  {
+    "scientificName" : "Diopsittaca nobilis"
+  },
+  {
+    "scientificName" : "Psittacara leucophthalmus"
+  },
+  {
+    "scientificName" : "Psittacara sp."
+  },
+  {
+    "scientificName" : "Eupsittula/Aratinga/Thectocercus/Psittacara sp."
+  },
+  {
+    "scientificName" : "Psittaciformes sp. (parakeet sp.)"
+  },
+  {
+    "scientificName" : "Psittaciformes sp. (parrot sp.)"
+  },
+  {
+    "scientificName" : "Euchrepomis humeralis"
+  },
+  {
+    "scientificName" : "Euchrepomis spodioptila"
+  },
+  {
+    "scientificName" : "Cymbilaimus lineatus"
+  },
+  {
+    "scientificName" : "Cymbilaimus sanctaemariae"
+  },
+  {
+    "scientificName" : "Hypoedaleus guttatus"
+  },
+  {
+    "scientificName" : "Batara cinerea"
+  },
+  {
+    "scientificName" : "Mackenziaena leachii"
+  },
+  {
+    "scientificName" : "Mackenziaena severa"
+  },
+  {
+    "scientificName" : "Frederickena viridis"
+  },
+  {
+    "scientificName" : "Frederickena unduliger"
+  },
+  {
+    "scientificName" : "Taraba major"
+  },
+  {
+    "scientificName" : "Sakesphorus canadensis"
+  },
+  {
+    "scientificName" : "Sakesphorus luctuosus"
+  },
+  {
+    "scientificName" : "Sakesphoroides cristatus"
+  },
+  {
+    "scientificName" : "Radinopsyche sellowi"
+  },
+  {
+    "scientificName" : "Biatas nigropectus"
+  },
+  {
+    "scientificName" : "Thamnophilus doliatus"
+  },
+  {
+    "scientificName" : "Thamnophilus ruficapillus"
+  },
+  {
+    "scientificName" : "Thamnophilus torquatus"
+  },
+  {
+    "scientificName" : "Thamnophilus ruficapillus/torquatus"
+  },
+  {
+    "scientificName" : "Thamnophilus palliatus"
+  },
+  {
+    "scientificName" : "Thamnophilus schistaceus"
+  },
+  {
+    "scientificName" : "Thamnophilus murinus"
+  },
+  {
+    "scientificName" : "Thamnophilus cryptoleucus"
+  },
+  {
+    "scientificName" : "Thamnophilus nigrocinereus"
+  },
+  {
+    "scientificName" : "Thamnophilus punctatus"
+  },
+  {
+    "scientificName" : "Thamnophilus stictocephalus"
+  },
+  {
+    "scientificName" : "Thamnophilus sticturus"
+  },
+  {
+    "scientificName" : "Thamnophilus pelzelni"
+  },
+  {
+    "scientificName" : "Thamnophilus ambiguus"
+  },
+  {
+    "scientificName" : "Thamnophilus caerulescens"
+  },
+  {
+    "scientificName" : "Thamnophilus aethiops"
+  },
+  {
+    "scientificName" : "Thamnophilus melanothorax"
+  },
+  {
+    "scientificName" : "Thamnophilus amazonicus"
+  },
+  {
+    "scientificName" : "Thamnophilus insignis"
+  },
+  {
+    "scientificName" : "Thamnophilus divisorius"
+  },
+  {
+    "scientificName" : "Thamnophilus sp."
+  },
+  {
+    "scientificName" : "Rhopias gularis"
+  },
+  {
+    "scientificName" : "Megastictus margaritatus"
+  },
+  {
+    "scientificName" : "Neoctantes niger"
+  },
+  {
+    "scientificName" : "Clytoctantes atrogularis"
+  },
+  {
+    "scientificName" : "Thamnophilidae sp. (antshrike sp.)"
+  },
+  {
+    "scientificName" : "Dysithamnus stictothorax"
+  },
+  {
+    "scientificName" : "Dysithamnus mentalis"
+  },
+  {
+    "scientificName" : "Dysithamnus xanthopterus"
+  },
+  {
+    "scientificName" : "Dysithamnus plumbeus"
+  },
+  {
+    "scientificName" : "Dysithamnus sp."
+  },
+  {
+    "scientificName" : "Thamnomanes ardesiacus"
+  },
+  {
+    "scientificName" : "Thamnomanes saturninus"
+  },
+  {
+    "scientificName" : "Thamnomanes caesius"
+  },
+  {
+    "scientificName" : "Thamnomanes schistogynus"
+  },
+  {
+    "scientificName" : "Isleria hauxwelli"
+  },
+  {
+    "scientificName" : "Isleria guttata"
+  },
+  {
+    "scientificName" : "Pygiptila stellaris"
+  },
+  {
+    "scientificName" : "Epinecrophylla gutturalis"
+  },
+  {
+    "scientificName" : "Epinecrophylla leucophthalma"
+  },
+  {
+    "scientificName" : "Epinecrophylla haematonota"
+  },
+  {
+    "scientificName" : "Epinecrophylla amazonica"
+  },
+  {
+    "scientificName" : "Epinecrophylla ornata"
+  },
+  {
+    "scientificName" : "Epinecrophylla erythrura"
+  },
+  {
+    "scientificName" : "Myrmotherula brachyura"
+  },
+  {
+    "scientificName" : "Myrmotherula ignota"
+  },
+  {
+    "scientificName" : "Myrmotherula ambigua"
+  },
+  {
+    "scientificName" : "Myrmotherula sclateri"
+  },
+  {
+    "scientificName" : "Myrmotherula surinamensis"
+  },
+  {
+    "scientificName" : "Myrmotherula multostriata"
+  },
+  {
+    "scientificName" : "Myrmotherula cherriei"
+  },
+  {
+    "scientificName" : "Myrmotherula klagesi"
+  },
+  {
+    "scientificName" : "Myrmotherula axillaris"
+  },
+  {
+    "scientificName" : "Myrmotherula minor"
+  },
+  {
+    "scientificName" : "Myrmotherula longipennis"
+  },
+  {
+    "scientificName" : "Myrmotherula urosticta"
+  },
+  {
+    "scientificName" : "Myrmotherula iheringi"
+  },
+  {
+    "scientificName" : "Myrmotherula unicolor"
+  },
+  {
+    "scientificName" : "Myrmotherula snowi"
+  },
+  {
+    "scientificName" : "Myrmotherula behni"
+  },
+  {
+    "scientificName" : "Myrmotherula menetriesii"
+  },
+  {
+    "scientificName" : "Myrmotherula assimilis"
+  },
+  {
+    "scientificName" : "Dichrozona cincta"
+  },
+  {
+    "scientificName" : "Myrmorchilus strigilatus"
+  },
+  {
+    "scientificName" : "Herpsilochmus pileatus"
+  },
+  {
+    "scientificName" : "Herpsilochmus atricapillus"
+  },
+  {
+    "scientificName" : "Herpsilochmus praedictus"
+  },
+  {
+    "scientificName" : "Herpsilochmus stotzi"
+  },
+  {
+    "scientificName" : "Herpsilochmus sticturus"
+  },
+  {
+    "scientificName" : "Herpsilochmus stictocephalus"
+  },
+  {
+    "scientificName" : "Herpsilochmus dorsimaculatus"
+  },
+  {
+    "scientificName" : "Herpsilochmus roraimae"
+  },
+  {
+    "scientificName" : "Herpsilochmus pectoralis"
+  },
+  {
+    "scientificName" : "Herpsilochmus longirostris"
+  },
+  {
+    "scientificName" : "Herpsilochmus frater"
+  },
+  {
+    "scientificName" : "Herpsilochmus rufimarginatus"
+  },
+  {
+    "scientificName" : "Microrhopias quixensis"
+  },
+  {
+    "scientificName" : "Formicivora iheringi"
+  },
+  {
+    "scientificName" : "Formicivora erythronotos"
+  },
+  {
+    "scientificName" : "Formicivora grisea"
+  },
+  {
+    "scientificName" : "Formicivora intermedia/grisea"
+  },
+  {
+    "scientificName" : "Formicivora serrana"
+  },
+  {
+    "scientificName" : "Formicivora melanogaster"
+  },
+  {
+    "scientificName" : "Formicivora rufa"
+  },
+  {
+    "scientificName" : "Formicivora grantsaui"
+  },
+  {
+    "scientificName" : "Formicivora acutirostris"
+  },
+  {
+    "scientificName" : "Thamnophilidae sp. (antwren sp.)"
+  },
+  {
+    "scientificName" : "Drymophila ferruginea"
+  },
+  {
+    "scientificName" : "Drymophila rubricollis"
+  },
+  {
+    "scientificName" : "Drymophila genei"
+  },
+  {
+    "scientificName" : "Drymophila ochropyga"
+  },
+  {
+    "scientificName" : "Drymophila malura"
+  },
+  {
+    "scientificName" : "Drymophila squamata"
+  },
+  {
+    "scientificName" : "Drymophila devillei"
+  },
+  {
+    "scientificName" : "Drymophila sp."
+  },
+  {
+    "scientificName" : "Hypocnemis cantator"
+  },
+  {
+    "scientificName" : "Hypocnemis flavescens"
+  },
+  {
+    "scientificName" : "Hypocnemis peruviana"
+  },
+  {
+    "scientificName" : "Hypocnemis subflava"
+  },
+  {
+    "scientificName" : "Hypocnemis ochrogyna"
+  },
+  {
+    "scientificName" : "Hypocnemis striata"
+  },
+  {
+    "scientificName" : "Hypocnemis rondoni"
+  },
+  {
+    "scientificName" : "Hypocnemis hypoxantha"
+  },
+  {
+    "scientificName" : "Terenura sicki"
+  },
+  {
+    "scientificName" : "Terenura maculata"
+  },
+  {
+    "scientificName" : "Cercomacroides laeta"
+  },
+  {
+    "scientificName" : "Cercomacroides tyrannina"
+  },
+  {
+    "scientificName" : "Cercomacroides serva"
+  },
+  {
+    "scientificName" : "Cercomacroides nigrescens"
+  },
+  {
+    "scientificName" : "Cercomacroides fuscicauda"
+  },
+  {
+    "scientificName" : "Cercomacra manu"
+  },
+  {
+    "scientificName" : "Cercomacra cinerascens"
+  },
+  {
+    "scientificName" : "Cercomacra brasiliana"
+  },
+  {
+    "scientificName" : "Cercomacra melanaria"
+  },
+  {
+    "scientificName" : "Cercomacra ferdinandi"
+  },
+  {
+    "scientificName" : "Cercomacra carbonaria"
+  },
+  {
+    "scientificName" : "Pyriglena maura"
+  },
+  {
+    "scientificName" : "Pyriglena similis"
+  },
+  {
+    "scientificName" : "Pyriglena leuconota"
+  },
+  {
+    "scientificName" : "Pyriglena atra"
+  },
+  {
+    "scientificName" : "Pyriglena leucoptera"
+  },
+  {
+    "scientificName" : "Rhopornis ardesiacus"
+  },
+  {
+    "scientificName" : "Myrmoborus leucophrys"
+  },
+  {
+    "scientificName" : "Myrmoborus lugubris"
+  },
+  {
+    "scientificName" : "Myrmoborus myotherinus"
+  },
+  {
+    "scientificName" : "Myrmoborus melanurus"
+  },
+  {
+    "scientificName" : "Myrmoborus lophotes"
+  },
+  {
+    "scientificName" : "Hypocnemoides melanopogon"
+  },
+  {
+    "scientificName" : "Hypocnemoides maculicauda"
+  },
+  {
+    "scientificName" : "Myrmochanes hemileucus"
+  },
+  {
+    "scientificName" : "Sclateria naevia"
+  },
+  {
+    "scientificName" : "Percnostola rufifrons"
+  },
+  {
+    "scientificName" : "Myrmelastes schistaceus"
+  },
+  {
+    "scientificName" : "Myrmelastes saturatus"
+  },
+  {
+    "scientificName" : "Myrmelastes hyperythrus"
+  },
+  {
+    "scientificName" : "Myrmelastes leucostigma"
+  },
+  {
+    "scientificName" : "Myrmelastes humaythae"
+  },
+  {
+    "scientificName" : "Myrmelastes rufifacies"
+  },
+  {
+    "scientificName" : "Myrmelastes caurensis"
+  },
+  {
+    "scientificName" : "Myrmeciza longipes"
+  },
+  {
+    "scientificName" : "Sciaphylax hemimelaena"
+  },
+  {
+    "scientificName" : "Myrmoderus ferrugineus"
+  },
+  {
+    "scientificName" : "Myrmoderus ruficauda"
+  },
+  {
+    "scientificName" : "Myrmoderus loricatus"
+  },
+  {
+    "scientificName" : "Myrmoderus squamosus"
+  },
+  {
+    "scientificName" : "Akletos melanoceps"
+  },
+  {
+    "scientificName" : "Akletos goeldii"
+  },
+  {
+    "scientificName" : "Hafferia fortis"
+  },
+  {
+    "scientificName" : "Aprositornis disjuncta"
+  },
+  {
+    "scientificName" : "Myrmophylax atrothorax"
+  },
+  {
+    "scientificName" : "Ammonastes pelzelni"
+  },
+  {
+    "scientificName" : "Myrmornis torquata"
+  },
+  {
+    "scientificName" : "Pithys albifrons"
+  },
+  {
+    "scientificName" : "Gymnopithys leucaspis"
+  },
+  {
+    "scientificName" : "Gymnopithys rufigula"
+  },
+  {
+    "scientificName" : "Oneillornis salvini"
+  },
+  {
+    "scientificName" : "Rhegmatorhina gymnops"
+  },
+  {
+    "scientificName" : "Rhegmatorhina berlepschi"
+  },
+  {
+    "scientificName" : "Rhegmatorhina hoffmannsi"
+  },
+  {
+    "scientificName" : "Rhegmatorhina cristata"
+  },
+  {
+    "scientificName" : "Rhegmatorhina melanosticta"
+  },
+  {
+    "scientificName" : "Hylophylax naevius"
+  },
+  {
+    "scientificName" : "Hylophylax punctulatus"
+  },
+  {
+    "scientificName" : "Willisornis poecilinotus"
+  },
+  {
+    "scientificName" : "Willisornis vidua"
+  },
+  {
+    "scientificName" : "Thamnophilidae sp. (antbird sp.)"
+  },
+  {
+    "scientificName" : "Phlegopsis nigromaculata"
+  },
+  {
+    "scientificName" : "Phlegopsis erythroptera"
+  },
+  {
+    "scientificName" : "Phlegopsis borbae"
+  },
+  {
+    "scientificName" : "Melanopareia torquata"
+  },
+  {
+    "scientificName" : "Conopophaga melanogaster"
+  },
+  {
+    "scientificName" : "Conopophaga melanops"
+  },
+  {
+    "scientificName" : "Conopophaga aurita"
+  },
+  {
+    "scientificName" : "Conopophaga snethlageae"
+  },
+  {
+    "scientificName" : "Conopophaga peruviana"
+  },
+  {
+    "scientificName" : "Conopophaga cearae"
+  },
+  {
+    "scientificName" : "Conopophaga roberti"
+  },
+  {
+    "scientificName" : "Conopophaga lineata"
+  },
+  {
+    "scientificName" : "Grallaria varia"
+  },
+  {
+    "scientificName" : "Grallaria guatimalensis"
+  },
+  {
+    "scientificName" : "Grallaria eludens"
+  },
+  {
+    "scientificName" : "Grallaria sp."
+  },
+  {
+    "scientificName" : "Cryptopezus nattereri"
+  },
+  {
+    "scientificName" : "Hylopezus macularius"
+  },
+  {
+    "scientificName" : "Hylopezus paraensis"
+  },
+  {
+    "scientificName" : "Hylopezus whittakeri"
+  },
+  {
+    "scientificName" : "Hylopezus ochroleucus"
+  },
+  {
+    "scientificName" : "Myrmothera berlepschi"
+  },
+  {
+    "scientificName" : "Myrmothera campanisona"
+  },
+  {
+    "scientificName" : "Myrmothera subcanescens"
+  },
+  {
+    "scientificName" : "Myrmothera simplex"
+  },
+  {
+    "scientificName" : "Grallaricula nana"
+  },
+  {
+    "scientificName" : "Liosceles thoracicus"
+  },
+  {
+    "scientificName" : "Psilorhamphus guttatus"
+  },
+  {
+    "scientificName" : "Merulaxis ater"
+  },
+  {
+    "scientificName" : "Merulaxis stresemanni"
+  },
+  {
+    "scientificName" : "Eleoscytalopus indigoticus"
+  },
+  {
+    "scientificName" : "Eleoscytalopus psychopompus"
+  },
+  {
+    "scientificName" : "Scytalopus iraiensis"
+  },
+  {
+    "scientificName" : "Scytalopus diamantinensis"
+  },
+  {
+    "scientificName" : "Scytalopus novacapitalis"
+  },
+  {
+    "scientificName" : "Scytalopus petrophilus"
+  },
+  {
+    "scientificName" : "Scytalopus pachecoi"
+  },
+  {
+    "scientificName" : "Scytalopus gonzagai"
+  },
+  {
+    "scientificName" : "Scytalopus speluncae"
+  },
+  {
+    "scientificName" : "Scytalopus sp."
+  },
+  {
+    "scientificName" : "Formicarius colma"
+  },
+  {
+    "scientificName" : "Formicarius analis"
+  },
+  {
+    "scientificName" : "Formicarius rufifrons"
+  },
+  {
+    "scientificName" : "Formicarius sp."
+  },
+  {
+    "scientificName" : "Chamaeza campanisona"
+  },
+  {
+    "scientificName" : "Chamaeza nobilis"
+  },
+  {
+    "scientificName" : "Chamaeza meruloides"
+  },
+  {
+    "scientificName" : "Chamaeza ruficauda"
+  },
+  {
+    "scientificName" : "Chamaeza sp."
+  },
+  {
+    "scientificName" : "Formicarius/Chamaeza sp."
+  },
+  {
+    "scientificName" : "Sclerurus obscurior"
+  },
+  {
+    "scientificName" : "Sclerurus rufigularis"
+  },
+  {
+    "scientificName" : "Sclerurus caudacutus"
+  },
+  {
+    "scientificName" : "Sclerurus albigularis"
+  },
+  {
+    "scientificName" : "Sclerurus scansor"
+  },
+  {
+    "scientificName" : "Sclerurus sp."
+  },
+  {
+    "scientificName" : "Geositta cunicularia"
+  },
+  {
+    "scientificName" : "Geositta poeciloptera"
+  },
+  {
+    "scientificName" : "Geositta sp."
+  },
+  {
+    "scientificName" : "Certhiasomus stictolaemus"
+  },
+  {
+    "scientificName" : "Sittasomus griseicapillus"
+  },
+  {
+    "scientificName" : "Deconychura longicauda"
+  },
+  {
+    "scientificName" : "Deconychura pallida"
+  },
+  {
+    "scientificName" : "Dendrocincla merula"
+  },
+  {
+    "scientificName" : "Dendrocincla fuliginosa"
+  },
+  {
+    "scientificName" : "Dendrocincla turdina"
+  },
+  {
+    "scientificName" : "Glyphorynchus spirurus"
+  },
+  {
+    "scientificName" : "Dendrexetastes rufigula"
+  },
+  {
+    "scientificName" : "Nasica longirostris"
+  },
+  {
+    "scientificName" : "Dendrocolaptes certhia"
+  },
+  {
+    "scientificName" : "Dendrocolaptes picumnus"
+  },
+  {
+    "scientificName" : "Dendrocolaptes hoffmannsi"
+  },
+  {
+    "scientificName" : "Dendrocolaptes platyrostris"
+  },
+  {
+    "scientificName" : "Hylexetastes stresemanni"
+  },
+  {
+    "scientificName" : "Hylexetastes perrotii"
+  },
+  {
+    "scientificName" : "Hylexetastes uniformis"
+  },
+  {
+    "scientificName" : "Xiphocolaptes promeropirhynchus"
+  },
+  {
+    "scientificName" : "Xiphocolaptes falcirostris"
+  },
+  {
+    "scientificName" : "Xiphocolaptes albicollis"
+  },
+  {
+    "scientificName" : "Xiphocolaptes major"
+  },
+  {
+    "scientificName" : "Xiphorhynchus obsoletus"
+  },
+  {
+    "scientificName" : "Xiphorhynchus atlanticus"
+  },
+  {
+    "scientificName" : "Xiphorhynchus fuscus"
+  },
+  {
+    "scientificName" : "Xiphorhynchus pardalotus"
+  },
+  {
+    "scientificName" : "Xiphorhynchus ocellatus"
+  },
+  {
+    "scientificName" : "Xiphorhynchus elegans"
+  },
+  {
+    "scientificName" : "Xiphorhynchus spixii"
+  },
+  {
+    "scientificName" : "Xiphorhynchus guttatus"
+  },
+  {
+    "scientificName" : "Dendroplex picus"
+  },
+  {
+    "scientificName" : "Dendroplex kienerii"
+  },
+  {
+    "scientificName" : "Campylorhamphus trochilirostris"
+  },
+  {
+    "scientificName" : "Campylorhamphus falcularius"
+  },
+  {
+    "scientificName" : "Campylorhamphus procurvoides"
+  },
+  {
+    "scientificName" : "Campylorhamphus probatus"
+  },
+  {
+    "scientificName" : "Campylorhamphus multostriatus"
+  },
+  {
+    "scientificName" : "Drymornis bridgesii"
+  },
+  {
+    "scientificName" : "Lepidocolaptes souleyetii"
+  },
+  {
+    "scientificName" : "Lepidocolaptes angustirostris"
+  },
+  {
+    "scientificName" : "Lepidocolaptes squamatus"
+  },
+  {
+    "scientificName" : "Lepidocolaptes falcinellus"
+  },
+  {
+    "scientificName" : "Lepidocolaptes duidae"
+  },
+  {
+    "scientificName" : "Lepidocolaptes albolineatus"
+  },
+  {
+    "scientificName" : "Lepidocolaptes fatimalimae"
+  },
+  {
+    "scientificName" : "Lepidocolaptes fuscicapillus"
+  },
+  {
+    "scientificName" : "Xenops tenuirostris"
+  },
+  {
+    "scientificName" : "Xenops genibarbis"
+  },
+  {
+    "scientificName" : "Xenops minutus"
+  },
+  {
+    "scientificName" : "Xenops rutilans"
+  },
+  {
+    "scientificName" : "Berlepschia rikeri"
+  },
+  {
+    "scientificName" : "Microxenops milleri"
+  },
+  {
+    "scientificName" : "Tarphonomus certhioides"
+  },
+  {
+    "scientificName" : "Furnarius figulus"
+  },
+  {
+    "scientificName" : "Furnarius leucopus"
+  },
+  {
+    "scientificName" : "Furnarius torridus"
+  },
+  {
+    "scientificName" : "Furnarius minor"
+  },
+  {
+    "scientificName" : "Furnarius rufus"
+  },
+  {
+    "scientificName" : "Furnarius sp."
+  },
+  {
+    "scientificName" : "Lochmias nematura"
+  },
+  {
+    "scientificName" : "Phleocryptes melanops"
+  },
+  {
+    "scientificName" : "Limnornis curvirostris"
+  },
+  {
+    "scientificName" : "Cinclodes pabsti"
+  },
+  {
+    "scientificName" : "Cinclodes fuscus"
+  },
+  {
+    "scientificName" : "Cinclodes sp."
+  },
+  {
+    "scientificName" : "Anabazenops dorsalis"
+  },
+  {
+    "scientificName" : "Anabazenops fuscus"
+  },
+  {
+    "scientificName" : "Megaxenops parnaguae"
+  },
+  {
+    "scientificName" : "Cichlocolaptes leucophrus"
+  },
+  {
+    "scientificName" : "Cichlocolaptes mazarbarnetti"
+  },
+  {
+    "scientificName" : "Heliobletus contaminatus"
+  },
+  {
+    "scientificName" : "Neophilydor erythrocercum"
+  },
+  {
+    "scientificName" : "Philydor novaesi"
+  },
+  {
+    "scientificName" : "Philydor atricapillus"
+  },
+  {
+    "scientificName" : "Philydor pyrrhodes"
+  },
+  {
+    "scientificName" : "Philydor sp."
+  },
+  {
+    "scientificName" : "Anabacerthia ruficaudata"
+  },
+  {
+    "scientificName" : "Anabacerthia amaurotis"
+  },
+  {
+    "scientificName" : "Anabacerthia lichtensteini"
+  },
+  {
+    "scientificName" : "Anabacerthia sp."
+  },
+  {
+    "scientificName" : "Syndactyla rufosuperciliata"
+  },
+  {
+    "scientificName" : "Syndactyla dimidiata"
+  },
+  {
+    "scientificName" : "Syndactyla roraimae"
+  },
+  {
+    "scientificName" : "Syndactyla ucayalae"
+  },
+  {
+    "scientificName" : "Ancistrops strigilatus"
+  },
+  {
+    "scientificName" : "Dendroma rufa"
+  },
+  {
+    "scientificName" : "Dendroma erythroptera"
+  },
+  {
+    "scientificName" : "Clibanornis rectirostris"
+  },
+  {
+    "scientificName" : "Clibanornis dendrocolaptoides"
+  },
+  {
+    "scientificName" : "Clibanornis rubiginosus"
+  },
+  {
+    "scientificName" : "Automolus rufipileatus"
+  },
+  {
+    "scientificName" : "Automolus melanopezus"
+  },
+  {
+    "scientificName" : "Automolus ochrolaemus"
+  },
+  {
+    "scientificName" : "Automolus subulatus"
+  },
+  {
+    "scientificName" : "Automolus infuscatus"
+  },
+  {
+    "scientificName" : "Automolus paraensis"
+  },
+  {
+    "scientificName" : "Automolus lammi"
+  },
+  {
+    "scientificName" : "Automolus leucophthalmus"
+  },
+  {
+    "scientificName" : "Furnariidae sp. (foliage-gleaner sp.)"
+  },
+  {
+    "scientificName" : "Leptasthenura platensis"
+  },
+  {
+    "scientificName" : "Leptasthenura striolata"
+  },
+  {
+    "scientificName" : "Leptasthenura setaria"
+  },
+  {
+    "scientificName" : "Leptasthenura sp."
+  },
+  {
+    "scientificName" : "Phacellodomus rufifrons"
+  },
+  {
+    "scientificName" : "Phacellodomus sibilatrix"
+  },
+  {
+    "scientificName" : "Phacellodomus striaticollis"
+  },
+  {
+    "scientificName" : "Phacellodomus ruber"
+  },
+  {
+    "scientificName" : "Phacellodomus erythrophthalmus"
+  },
+  {
+    "scientificName" : "Phacellodomus ferrugineigula"
+  },
+  {
+    "scientificName" : "Phacellodomus erythrophthalmus/ferrugineigula"
+  },
+  {
+    "scientificName" : "Phacellodomus sp."
+  },
+  {
+    "scientificName" : "Anumbius annumbi"
+  },
+  {
+    "scientificName" : "Coryphistera alaudina"
+  },
+  {
+    "scientificName" : "Asthenes baeri"
+  },
+  {
+    "scientificName" : "Asthenes luizae"
+  },
+  {
+    "scientificName" : "Asthenes hudsoni"
+  },
+  {
+    "scientificName" : "Asthenes moreirae"
+  },
+  {
+    "scientificName" : "Asthenes pyrrholeuca"
+  },
+  {
+    "scientificName" : "Acrobatornis fonsecai"
+  },
+  {
+    "scientificName" : "Metopothrix aurantiaca"
+  },
+  {
+    "scientificName" : "Roraimia adusta"
+  },
+  {
+    "scientificName" : "Thripophaga gutturata"
+  },
+  {
+    "scientificName" : "Thripophaga macroura"
+  },
+  {
+    "scientificName" : "Thripophaga fusciceps"
+  },
+  {
+    "scientificName" : "Limnoctites rectirostris"
+  },
+  {
+    "scientificName" : "Limnornis curvirostris/Limnoctites rectirostris"
+  },
+  {
+    "scientificName" : "Limnoctites sulphuriferus"
+  },
+  {
+    "scientificName" : "Cranioleuca vulpina"
+  },
+  {
+    "scientificName" : "Cranioleuca vulpecula"
+  },
+  {
+    "scientificName" : "Cranioleuca pyrrhophia"
+  },
+  {
+    "scientificName" : "Cranioleuca obsoleta"
+  },
+  {
+    "scientificName" : "Cranioleuca pallida"
+  },
+  {
+    "scientificName" : "Cranioleuca semicinerea"
+  },
+  {
+    "scientificName" : "Cranioleuca demissa"
+  },
+  {
+    "scientificName" : "Cranioleuca muelleri"
+  },
+  {
+    "scientificName" : "Cranioleuca sp."
+  },
+  {
+    "scientificName" : "Spartonoica maluroides"
+  },
+  {
+    "scientificName" : "Pseudoseisura cristata"
+  },
+  {
+    "scientificName" : "Pseudoseisura unirufa"
+  },
+  {
+    "scientificName" : "Pseudoseisura lophotes"
+  },
+  {
+    "scientificName" : "Certhiaxis cinnamomeus"
+  },
+  {
+    "scientificName" : "Certhiaxis mustelinus"
+  },
+  {
+    "scientificName" : "Certhiaxis cinnamomeus/mustelinus"
+  },
+  {
+    "scientificName" : "Mazaria propinqua"
+  },
+  {
+    "scientificName" : "Schoeniophylax phryganophilus"
+  },
+  {
+    "scientificName" : "Synallaxis scutata"
+  },
+  {
+    "scientificName" : "Synallaxis cinerascens"
+  },
+  {
+    "scientificName" : "Synallaxis gujanensis"
+  },
+  {
+    "scientificName" : "Synallaxis albilora"
+  },
+  {
+    "scientificName" : "Synallaxis simoni"
+  },
+  {
+    "scientificName" : "Synallaxis hellmayri"
+  },
+  {
+    "scientificName" : "Synallaxis ruficapilla"
+  },
+  {
+    "scientificName" : "Synallaxis cinerea"
+  },
+  {
+    "scientificName" : "Synallaxis infuscata"
+  },
+  {
+    "scientificName" : "Synallaxis macconnelli"
+  },
+  {
+    "scientificName" : "Synallaxis hypospodia"
+  },
+  {
+    "scientificName" : "Synallaxis spixi"
+  },
+  {
+    "scientificName" : "Synallaxis albigularis"
+  },
+  {
+    "scientificName" : "Synallaxis albescens"
+  },
+  {
+    "scientificName" : "Synallaxis frontalis"
+  },
+  {
+    "scientificName" : "Synallaxis kollari"
+  },
+  {
+    "scientificName" : "Synallaxis rutilans"
+  },
+  {
+    "scientificName" : "Synallaxis cherriei"
+  },
+  {
+    "scientificName" : "Furnariidae sp. (spinetail sp.)"
+  },
+  {
+    "scientificName" : "Furnariidae sp."
+  },
+  {
+    "scientificName" : "Tyranneutes stolzmanni"
+  },
+  {
+    "scientificName" : "Tyranneutes virescens"
+  },
+  {
+    "scientificName" : "Neopelma pallescens"
+  },
+  {
+    "scientificName" : "Neopelma chrysocephalum"
+  },
+  {
+    "scientificName" : "Neopelma aurifrons"
+  },
+  {
+    "scientificName" : "Neopelma sulphureiventer"
+  },
+  {
+    "scientificName" : "Protopelma chrysolophum"
+  },
+  {
+    "scientificName" : "Chiroxiphia bokermanni"
+  },
+  {
+    "scientificName" : "Chiroxiphia galeata"
+  },
+  {
+    "scientificName" : "Chiroxiphia pareola"
+  },
+  {
+    "scientificName" : "Chiroxiphia caudata"
+  },
+  {
+    "scientificName" : "Ilicura militaris"
+  },
+  {
+    "scientificName" : "Corapipo gutturalis"
+  },
+  {
+    "scientificName" : "Xenopipo uniformis"
+  },
+  {
+    "scientificName" : "Xenopipo atronitens"
+  },
+  {
+    "scientificName" : "Lepidothrix coronata"
+  },
+  {
+    "scientificName" : "Lepidothrix nattereri"
+  },
+  {
+    "scientificName" : "Lepidothrix vilasboasi"
+  },
+  {
+    "scientificName" : "Lepidothrix iris"
+  },
+  {
+    "scientificName" : "Lepidothrix suavissima"
+  },
+  {
+    "scientificName" : "Lepidothrix serena"
+  },
+  {
+    "scientificName" : "Heterocercus aurantiivertex"
+  },
+  {
+    "scientificName" : "Heterocercus flavivertex"
+  },
+  {
+    "scientificName" : "Heterocercus linteatus"
+  },
+  {
+    "scientificName" : "Manacus manacus"
+  },
+  {
+    "scientificName" : "Pipra aureola"
+  },
+  {
+    "scientificName" : "Pipra filicauda"
+  },
+  {
+    "scientificName" : "Pipra fasciicauda"
+  },
+  {
+    "scientificName" : "Machaeropterus striolatus"
+  },
+  {
+    "scientificName" : "Machaeropterus regulus"
+  },
+  {
+    "scientificName" : "Machaeropterus pyrocephalus"
+  },
+  {
+    "scientificName" : "Pseudopipra pipra"
+  },
+  {
+    "scientificName" : "Ceratopipra cornuta"
+  },
+  {
+    "scientificName" : "Ceratopipra erythrocephala"
+  },
+  {
+    "scientificName" : "Ceratopipra rubrocapilla"
+  },
+  {
+    "scientificName" : "Ceratopipra chloromeros"
+  },
+  {
+    "scientificName" : "Carpornis cucullata"
+  },
+  {
+    "scientificName" : "Carpornis melanocephala"
+  },
+  {
+    "scientificName" : "Pipreola whitelyi"
+  },
+  {
+    "scientificName" : "Phytotoma rutila"
+  },
+  {
+    "scientificName" : "Phibalura flavirostris"
+  },
+  {
+    "scientificName" : "Phoenicircus carnifex"
+  },
+  {
+    "scientificName" : "Phoenicircus nigricollis"
+  },
+  {
+    "scientificName" : "Rupicola rupicola"
+  },
+  {
+    "scientificName" : "Haematoderus militaris"
+  },
+  {
+    "scientificName" : "Querula purpurata"
+  },
+  {
+    "scientificName" : "Pyroderus scutatus"
+  },
+  {
+    "scientificName" : "Cephalopterus ornatus"
+  },
+  {
+    "scientificName" : "Perissocephalus tricolor"
+  },
+  {
+    "scientificName" : "Cotinga maynana"
+  },
+  {
+    "scientificName" : "Cotinga cotinga"
+  },
+  {
+    "scientificName" : "Cotinga maculata"
+  },
+  {
+    "scientificName" : "Cotinga cayana"
+  },
+  {
+    "scientificName" : "Cotinga sp."
+  },
+  {
+    "scientificName" : "Lipaugus streptophorus"
+  },
+  {
+    "scientificName" : "Lipaugus vociferans"
+  },
+  {
+    "scientificName" : "Lipaugus lanioides"
+  },
+  {
+    "scientificName" : "Lipaugus ater"
+  },
+  {
+    "scientificName" : "Lipaugus conditus"
+  },
+  {
+    "scientificName" : "Procnias albus"
+  },
+  {
+    "scientificName" : "Procnias averano"
+  },
+  {
+    "scientificName" : "Procnias nudicollis"
+  },
+  {
+    "scientificName" : "Porphyrolaema porphyrolaema"
+  },
+  {
+    "scientificName" : "Xipholena punicea"
+  },
+  {
+    "scientificName" : "Xipholena lamellipennis"
+  },
+  {
+    "scientificName" : "Xipholena atropurpurea"
+  },
+  {
+    "scientificName" : "Gymnoderus foetidus"
+  },
+  {
+    "scientificName" : "Conioptilon mcilhennyi"
+  },
+  {
+    "scientificName" : "Tityra cayana"
+  },
+  {
+    "scientificName" : "Tityra inquisitor"
+  },
+  {
+    "scientificName" : "Tityra leucura"
+  },
+  {
+    "scientificName" : "Tityra semifasciata"
+  },
+  {
+    "scientificName" : "Schiffornis major"
+  },
+  {
+    "scientificName" : "Schiffornis olivacea"
+  },
+  {
+    "scientificName" : "Schiffornis turdina"
+  },
+  {
+    "scientificName" : "Schiffornis virescens"
+  },
+  {
+    "scientificName" : "Laniocera hypopyrra"
+  },
+  {
+    "scientificName" : "Iodopleura isabellae"
+  },
+  {
+    "scientificName" : "Iodopleura fusca"
+  },
+  {
+    "scientificName" : "Iodopleura pipra"
+  },
+  {
+    "scientificName" : "Laniisoma elegans"
+  },
+  {
+    "scientificName" : "Xenopsaris albinucha"
+  },
+  {
+    "scientificName" : "Pachyramphus viridis"
+  },
+  {
+    "scientificName" : "Pachyramphus rufus"
+  },
+  {
+    "scientificName" : "Pachyramphus castaneus"
+  },
+  {
+    "scientificName" : "Pachyramphus polychopterus"
+  },
+  {
+    "scientificName" : "Pachyramphus marginatus"
+  },
+  {
+    "scientificName" : "Pachyramphus surinamus"
+  },
+  {
+    "scientificName" : "Pachyramphus minor"
+  },
+  {
+    "scientificName" : "Pachyramphus validus"
+  },
+  {
+    "scientificName" : "Pachyramphus sp."
+  },
+  {
+    "scientificName" : "Oxyruncus cristatus"
+  },
+  {
+    "scientificName" : "Onychorhynchus coronatus"
+  },
+  {
+    "scientificName" : "Onychorhynchus swainsoni"
+  },
+  {
+    "scientificName" : "Terenotriccus erythrurus"
+  },
+  {
+    "scientificName" : "Myiobius barbatus"
+  },
+  {
+    "scientificName" : "Myiobius atricaudus"
+  },
+  {
+    "scientificName" : "Piprites chloris"
+  },
+  {
+    "scientificName" : "Piprites pileata"
+  },
+  {
+    "scientificName" : "Neopipo cinnamomea"
+  },
+  {
+    "scientificName" : "Platyrinchus saturatus"
+  },
+  {
+    "scientificName" : "Platyrinchus mystaceus"
+  },
+  {
+    "scientificName" : "Platyrinchus coronatus"
+  },
+  {
+    "scientificName" : "Platyrinchus platyrhynchos"
+  },
+  {
+    "scientificName" : "Platyrinchus leucoryphus"
+  },
+  {
+    "scientificName" : "Tachuris rubrigastra"
+  },
+  {
+    "scientificName" : "Mionectes oleagineus"
+  },
+  {
+    "scientificName" : "Mionectes macconnelli"
+  },
+  {
+    "scientificName" : "Mionectes roraimae"
+  },
+  {
+    "scientificName" : "Mionectes rufiventris"
+  },
+  {
+    "scientificName" : "Mionectes sp."
+  },
+  {
+    "scientificName" : "Leptopogon amaurocephalus"
+  },
+  {
+    "scientificName" : "Pogonotriccus difficilis"
+  },
+  {
+    "scientificName" : "Pogonotriccus eximius"
+  },
+  {
+    "scientificName" : "Pogonotriccus paulista"
+  },
+  {
+    "scientificName" : "Pogonotriccus chapmani"
+  },
+  {
+    "scientificName" : "Phylloscartes oustaleti"
+  },
+  {
+    "scientificName" : "Phylloscartes virescens"
+  },
+  {
+    "scientificName" : "Phylloscartes ventralis"
+  },
+  {
+    "scientificName" : "Phylloscartes beckeri"
+  },
+  {
+    "scientificName" : "Phylloscartes kronei"
+  },
+  {
+    "scientificName" : "Phylloscartes sylviolus"
+  },
+  {
+    "scientificName" : "Phylloscartes ceciliae"
+  },
+  {
+    "scientificName" : "Phylloscartes roquettei"
+  },
+  {
+    "scientificName" : "Phylloscartes nigrifrons"
+  },
+  {
+    "scientificName" : "Phylloscartes sp."
+  },
+  {
+    "scientificName" : "Corythopis torquatus"
+  },
+  {
+    "scientificName" : "Corythopis delalandi"
+  },
+  {
+    "scientificName" : "Myiornis auricularis"
+  },
+  {
+    "scientificName" : "Myiornis albiventris"
+  },
+  {
+    "scientificName" : "Myiornis ecaudatus"
+  },
+  {
+    "scientificName" : "Lophotriccus vitiosus"
+  },
+  {
+    "scientificName" : "Lophotriccus eulophotes"
+  },
+  {
+    "scientificName" : "Lophotriccus galeatus"
+  },
+  {
+    "scientificName" : "Atalotriccus pilaris"
+  },
+  {
+    "scientificName" : "Hemitriccus minor"
+  },
+  {
+    "scientificName" : "Hemitriccus cohnhafti"
+  },
+  {
+    "scientificName" : "Hemitriccus flammulatus"
+  },
+  {
+    "scientificName" : "Hemitriccus diops"
+  },
+  {
+    "scientificName" : "Hemitriccus obsoletus"
+  },
+  {
+    "scientificName" : "Hemitriccus josephinae"
+  },
+  {
+    "scientificName" : "Hemitriccus zosterops"
+  },
+  {
+    "scientificName" : "Hemitriccus griseipectus"
+  },
+  {
+    "scientificName" : "Hemitriccus orbitatus"
+  },
+  {
+    "scientificName" : "Hemitriccus iohannis"
+  },
+  {
+    "scientificName" : "Hemitriccus striaticollis"
+  },
+  {
+    "scientificName" : "Hemitriccus nidipendulus"
+  },
+  {
+    "scientificName" : "Hemitriccus margaritaceiventer"
+  },
+  {
+    "scientificName" : "Hemitriccus inornatus"
+  },
+  {
+    "scientificName" : "Hemitriccus minimus"
+  },
+  {
+    "scientificName" : "Hemitriccus mirandae"
+  },
+  {
+    "scientificName" : "Hemitriccus kaempferi"
+  },
+  {
+    "scientificName" : "Hemitriccus furcatus"
+  },
+  {
+    "scientificName" : "Poecilotriccus albifacies"
+  },
+  {
+    "scientificName" : "Poecilotriccus capitalis"
+  },
+  {
+    "scientificName" : "Poecilotriccus senex"
+  },
+  {
+    "scientificName" : "Poecilotriccus russatus"
+  },
+  {
+    "scientificName" : "Poecilotriccus plumbeiceps"
+  },
+  {
+    "scientificName" : "Poecilotriccus fumifrons"
+  },
+  {
+    "scientificName" : "Poecilotriccus latirostris"
+  },
+  {
+    "scientificName" : "Poecilotriccus sylvia"
+  },
+  {
+    "scientificName" : "Poecilotriccus sp."
+  },
+  {
+    "scientificName" : "Taeniotriccus andrei"
+  },
+  {
+    "scientificName" : "Todirostrum maculatum"
+  },
+  {
+    "scientificName" : "Todirostrum poliocephalum"
+  },
+  {
+    "scientificName" : "Todirostrum cinereum"
+  },
+  {
+    "scientificName" : "Todirostrum pictum"
+  },
+  {
+    "scientificName" : "Todirostrum chrysocrotaphum"
+  },
+  {
+    "scientificName" : "Cnipodectes subbrunneus"
+  },
+  {
+    "scientificName" : "Cnipodectes superrufus"
+  },
+  {
+    "scientificName" : "Rhynchocyclus aequinoctialis"
+  },
+  {
+    "scientificName" : "Rhynchocyclus olivaceus"
+  },
+  {
+    "scientificName" : "Tolmomyias sulphurescens"
+  },
+  {
+    "scientificName" : "Tolmomyias assimilis"
+  },
+  {
+    "scientificName" : "Tolmomyias poliocephalus"
+  },
+  {
+    "scientificName" : "Tolmomyias viridiceps"
+  },
+  {
+    "scientificName" : "Tolmomyias flaviventris"
+  },
+  {
+    "scientificName" : "Hirundinea ferruginea"
+  },
+  {
+    "scientificName" : "Ornithion inerme"
+  },
+  {
+    "scientificName" : "Camptostoma obsoletum"
+  },
+  {
+    "scientificName" : "Suiriri suiriri"
+  },
+  {
+    "scientificName" : "Nesotriccus murinus"
+  },
+  {
+    "scientificName" : "Capsiempis flaveola"
+  },
+  {
+    "scientificName" : "Polystictus pectoralis"
+  },
+  {
+    "scientificName" : "Polystictus superciliaris"
+  },
+  {
+    "scientificName" : "Culicivora caudacuta"
+  },
+  {
+    "scientificName" : "Pseudocolopteryx sclateri"
+  },
+  {
+    "scientificName" : "Pseudocolopteryx acutipennis"
+  },
+  {
+    "scientificName" : "Pseudocolopteryx flaviventris"
+  },
+  {
+    "scientificName" : "Pseudocolopteryx sp."
+  },
+  {
+    "scientificName" : "Tyrannulus elatus"
+  },
+  {
+    "scientificName" : "Myiopagis gaimardii"
+  },
+  {
+    "scientificName" : "Myiopagis cinerea"
+  },
+  {
+    "scientificName" : "Myiopagis caniceps"
+  },
+  {
+    "scientificName" : "Myiopagis flavivertex"
+  },
+  {
+    "scientificName" : "Myiopagis viridicata"
+  },
+  {
+    "scientificName" : "Elaenia cristata"
+  },
+  {
+    "scientificName" : "Elaenia ruficeps"
+  },
+  {
+    "scientificName" : "Elaenia sordida"
+  },
+  {
+    "scientificName" : "Elaenia dayi"
+  },
+  {
+    "scientificName" : "Elaenia flavogaster"
+  },
+  {
+    "scientificName" : "Elaenia parvirostris"
+  },
+  {
+    "scientificName" : "Elaenia pelzelni"
+  },
+  {
+    "scientificName" : "Elaenia spectabilis"
+  },
+  {
+    "scientificName" : "Elaenia ridleyana"
+  },
+  {
+    "scientificName" : "Elaenia mesoleuca"
+  },
+  {
+    "scientificName" : "Elaenia chiriquensis"
+  },
+  {
+    "scientificName" : "Elaenia albiceps"
+  },
+  {
+    "scientificName" : "Elaenia parvirostris/albiceps"
+  },
+  {
+    "scientificName" : "Elaenia olivina"
+  },
+  {
+    "scientificName" : "Elaenia sp."
+  },
+  {
+    "scientificName" : "Serpophaga hypoleuca"
+  },
+  {
+    "scientificName" : "Serpophaga nigricans"
+  },
+  {
+    "scientificName" : "Serpophaga subcristata"
+  },
+  {
+    "scientificName" : "Serpophaga griseicapilla"
+  },
+  {
+    "scientificName" : "Serpophaga subcristata/griseicapilla"
+  },
+  {
+    "scientificName" : "Serpophaga sp."
+  },
+  {
+    "scientificName" : "Phyllomyias virescens"
+  },
+  {
+    "scientificName" : "Phyllomyias reiseri"
+  },
+  {
+    "scientificName" : "Phyllomyias fasciatus"
+  },
+  {
+    "scientificName" : "Phyllomyias griseiceps"
+  },
+  {
+    "scientificName" : "Phyllomyias griseocapilla"
+  },
+  {
+    "scientificName" : "Phyllomyias sp."
+  },
+  {
+    "scientificName" : "Acrochordopus burmeisteri"
+  },
+  {
+    "scientificName" : "Zimmerius chicomendesi"
+  },
+  {
+    "scientificName" : "Zimmerius acer"
+  },
+  {
+    "scientificName" : "Zimmerius gracilipes"
+  },
+  {
+    "scientificName" : "Euscarthmus meloryphus"
+  },
+  {
+    "scientificName" : "Euscarthmus rufomarginatus"
+  },
+  {
+    "scientificName" : "Stigmatura napensis"
+  },
+  {
+    "scientificName" : "Stigmatura bahiae"
+  },
+  {
+    "scientificName" : "Stigmatura budytoides"
+  },
+  {
+    "scientificName" : "Inezia inornata"
+  },
+  {
+    "scientificName" : "Inezia subflava"
+  },
+  {
+    "scientificName" : "Inezia caudata"
+  },
+  {
+    "scientificName" : "Myiophobus roraimae"
+  },
+  {
+    "scientificName" : "Myiophobus fasciatus"
+  },
+  {
+    "scientificName" : "Lathrotriccus euleri"
+  },
+  {
+    "scientificName" : "Contopus cooperi"
+  },
+  {
+    "scientificName" : "Contopus fumigatus"
+  },
+  {
+    "scientificName" : "Contopus nigrescens"
+  },
+  {
+    "scientificName" : "Contopus cinereus"
+  },
+  {
+    "scientificName" : "Contopus sordidulus"
+  },
+  {
+    "scientificName" : "Contopus virens"
+  },
+  {
+    "scientificName" : "Cnemotriccus fuscatus"
+  },
+  {
+    "scientificName" : "Empidonax alnorum"
+  },
+  {
+    "scientificName" : "Guyramemua affine"
+  },
+  {
+    "scientificName" : "Suiriri suiriri/Guyramemua affine"
+  },
+  {
+    "scientificName" : "Sublegatus obscurior"
+  },
+  {
+    "scientificName" : "Sublegatus modestus"
+  },
+  {
+    "scientificName" : "Pyrocephalus rubinus"
+  },
+  {
+    "scientificName" : "Lessonia rufa"
+  },
+  {
+    "scientificName" : "Knipolegus orenocensis"
+  },
+  {
+    "scientificName" : "Knipolegus poecilocercus"
+  },
+  {
+    "scientificName" : "Knipolegus franciscanus"
+  },
+  {
+    "scientificName" : "Knipolegus lophotes"
+  },
+  {
+    "scientificName" : "Knipolegus nigerrimus"
+  },
+  {
+    "scientificName" : "Knipolegus cyanirostris"
+  },
+  {
+    "scientificName" : "Knipolegus striaticeps"
+  },
+  {
+    "scientificName" : "Knipolegus hudsoni"
+  },
+  {
+    "scientificName" : "Hymenops perspicillatus"
+  },
+  {
+    "scientificName" : "Ochthornis littoralis"
+  },
+  {
+    "scientificName" : "Satrapa icterophrys"
+  },
+  {
+    "scientificName" : "Syrtidicola fluviatilis"
+  },
+  {
+    "scientificName" : "Muscisaxicola maculirostris"
+  },
+  {
+    "scientificName" : "Muscisaxicola maclovianus"
+  },
+  {
+    "scientificName" : "Muscisaxicola sp."
+  },
+  {
+    "scientificName" : "Xolmis velatus"
+  },
+  {
+    "scientificName" : "Xolmis irupero"
+  },
+  {
+    "scientificName" : "Nengetus cinereus"
+  },
+  {
+    "scientificName" : "Neoxolmis coronatus"
+  },
+  {
+    "scientificName" : "Neoxolmis rufiventris"
+  },
+  {
+    "scientificName" : "Agriornis murinus"
+  },
+  {
+    "scientificName" : "Agriornis sp."
+  },
+  {
+    "scientificName" : "Arundinicola leucocephala"
+  },
+  {
+    "scientificName" : "Fluvicola pica"
+  },
+  {
+    "scientificName" : "Fluvicola albiventer"
+  },
+  {
+    "scientificName" : "Fluvicola nengeta"
+  },
+  {
+    "scientificName" : "Muscipipra vetula"
+  },
+  {
+    "scientificName" : "Gubernetes yetapa"
+  },
+  {
+    "scientificName" : "Heteroxolmis dominicana"
+  },
+  {
+    "scientificName" : "Alectrurus tricolor"
+  },
+  {
+    "scientificName" : "Alectrurus risora"
+  },
+  {
+    "scientificName" : "Colonia colonus"
+  },
+  {
+    "scientificName" : "Ramphotrigon megacephalum"
+  },
+  {
+    "scientificName" : "Ramphotrigon ruficauda"
+  },
+  {
+    "scientificName" : "Ramphotrigon fuscicauda"
+  },
+  {
+    "scientificName" : "Attila phoenicurus"
+  },
+  {
+    "scientificName" : "Attila cinnamomeus"
+  },
+  {
+    "scientificName" : "Attila citriniventris"
+  },
+  {
+    "scientificName" : "Attila bolivianus"
+  },
+  {
+    "scientificName" : "Attila rufus"
+  },
+  {
+    "scientificName" : "Attila spadiceus"
+  },
+  {
+    "scientificName" : "Attila sp."
+  },
+  {
+    "scientificName" : "Sirystes albocinereus"
+  },
+  {
+    "scientificName" : "Sirystes subcanescens"
+  },
+  {
+    "scientificName" : "Sirystes sibilator"
+  },
+  {
+    "scientificName" : "Casiornis rufus"
+  },
+  {
+    "scientificName" : "Casiornis fuscus"
+  },
+  {
+    "scientificName" : "Rhytipterna simplex"
+  },
+  {
+    "scientificName" : "Rhytipterna immunda"
+  },
+  {
+    "scientificName" : "Myiarchus tuberculifer"
+  },
+  {
+    "scientificName" : "Myiarchus swainsoni"
+  },
+  {
+    "scientificName" : "Myiarchus ferox"
+  },
+  {
+    "scientificName" : "Myiarchus tyrannulus"
+  },
+  {
+    "scientificName" : "Myiarchus sp."
+  },
+  {
+    "scientificName" : "Machetornis rixosa"
+  },
+  {
+    "scientificName" : "Philohydor lictor"
+  },
+  {
+    "scientificName" : "Pitangus sulphuratus"
+  },
+  {
+    "scientificName" : "Megarynchus pitangua"
+  },
+  {
+    "scientificName" : "Myiozetetes cayanensis"
+  },
+  {
+    "scientificName" : "Myiozetetes similis"
+  },
+  {
+    "scientificName" : "Myiozetetes cayanensis/similis"
+  },
+  {
+    "scientificName" : "Myiozetetes granadensis"
+  },
+  {
+    "scientificName" : "Myiozetetes luteiventris"
+  },
+  {
+    "scientificName" : "Conopias parvus"
+  },
+  {
+    "scientificName" : "Conopias trivirgatus"
+  },
+  {
+    "scientificName" : "Myiodynastes maculatus"
+  },
+  {
+    "scientificName" : "Myiodynastes luteiventris"
+  },
+  {
+    "scientificName" : "Legatus leucophaius"
+  },
+  {
+    "scientificName" : "Empidonomus varius"
+  },
+  {
+    "scientificName" : "Empidonomus aurantioatrocristatus"
+  },
+  {
+    "scientificName" : "Tyrannopsis sulphurea"
+  },
+  {
+    "scientificName" : "Tyrannus albogularis"
+  },
+  {
+    "scientificName" : "Tyrannus melancholicus"
+  },
+  {
+    "scientificName" : "Tyrannus albogularis/melancholicus"
+  },
+  {
+    "scientificName" : "Tyrannus sp. (yellow-bellied)"
+  },
+  {
+    "scientificName" : "Tyrannus tyrannus"
+  },
+  {
+    "scientificName" : "Tyrannus dominicensis"
+  },
+  {
+    "scientificName" : "Tyrannus savana"
+  },
+  {
+    "scientificName" : "Tyrannus sp."
+  },
+  {
+    "scientificName" : "Cyclarhis gujanensis"
+  },
+  {
+    "scientificName" : "Hylophilus amaurocephalus"
+  },
+  {
+    "scientificName" : "Hylophilus poicilotis"
+  },
+  {
+    "scientificName" : "Hylophilus pectoralis"
+  },
+  {
+    "scientificName" : "Hylophilus semicinereus"
+  },
+  {
+    "scientificName" : "Hylophilus brunneiceps"
+  },
+  {
+    "scientificName" : "Hylophilus thoracicus"
+  },
+  {
+    "scientificName" : "Vireolanius leucotis"
+  },
+  {
+    "scientificName" : "Tunchiornis ochraceiceps"
+  },
+  {
+    "scientificName" : "Pachysylvia hypoxantha"
+  },
+  {
+    "scientificName" : "Pachysylvia muscicapina"
+  },
+  {
+    "scientificName" : "Vireo sclateri"
+  },
+  {
+    "scientificName" : "Vireo olivaceus"
+  },
+  {
+    "scientificName" : "Vireo chivi"
+  },
+  {
+    "scientificName" : "Vireo gracilirostris"
+  },
+  {
+    "scientificName" : "Vireo flavoviridis"
+  },
+  {
+    "scientificName" : "Vireo altiloquus"
+  },
+  {
+    "scientificName" : "Cyanocorax caeruleus"
+  },
+  {
+    "scientificName" : "Cyanocorax violaceus"
+  },
+  {
+    "scientificName" : "Cyanocorax cyanomelas"
+  },
+  {
+    "scientificName" : "Cyanocorax cristatellus"
+  },
+  {
+    "scientificName" : "Cyanocorax heilprini"
+  },
+  {
+    "scientificName" : "Cyanocorax cayanus"
+  },
+  {
+    "scientificName" : "Cyanocorax chrysops"
+  },
+  {
+    "scientificName" : "Cyanocorax cyanopogon"
+  },
+  {
+    "scientificName" : "Cyanocorax sp."
+  },
+  {
+    "scientificName" : "Corvus splendens"
+  },
+  {
+    "scientificName" : "Corvus macrorhynchos"
+  },
+  {
+    "scientificName" : "Donacobius atricapilla"
+  },
+  {
+    "scientificName" : "Riparia riparia"
+  },
+  {
+    "scientificName" : "Tachycineta albiventer"
+  },
+  {
+    "scientificName" : "Tachycineta leucorrhoa"
+  },
+  {
+    "scientificName" : "Tachycineta leucopyga"
+  },
+  {
+    "scientificName" : "Progne subis"
+  },
+  {
+    "scientificName" : "Progne dominicensis"
+  },
+  {
+    "scientificName" : "Progne chalybea"
+  },
+  {
+    "scientificName" : "Progne elegans"
+  },
+  {
+    "scientificName" : "Progne subis/elegans"
+  },
+  {
+    "scientificName" : "Progne chalybea/elegans"
+  },
+  {
+    "scientificName" : "Progne tapera"
+  },
+  {
+    "scientificName" : "Progne sp."
+  },
+  {
+    "scientificName" : "Stelgidopteryx ruficollis"
+  },
+  {
+    "scientificName" : "Atticora tibialis"
+  },
+  {
+    "scientificName" : "Atticora fasciata"
+  },
+  {
+    "scientificName" : "Pygochelidon cyanoleuca"
+  },
+  {
+    "scientificName" : "Pygochelidon melanoleuca"
+  },
+  {
+    "scientificName" : "Alopochelidon fucata"
+  },
+  {
+    "scientificName" : "Hirundo rustica"
+  },
+  {
+    "scientificName" : "Petrochelidon pyrrhonota"
+  },
+  {
+    "scientificName" : "Hirundinidae sp."
+  },
+  {
+    "scientificName" : "Microbates collaris"
+  },
+  {
+    "scientificName" : "Ramphocaenus melanurus"
+  },
+  {
+    "scientificName" : "Ramphocaenus sticturus"
+  },
+  {
+    "scientificName" : "Polioptila guianensis"
+  },
+  {
+    "scientificName" : "Polioptila facilis"
+  },
+  {
+    "scientificName" : "Polioptila attenboroughi"
+  },
+  {
+    "scientificName" : "Polioptila paraensis"
+  },
+  {
+    "scientificName" : "Polioptila dumicola"
+  },
+  {
+    "scientificName" : "Polioptila lactea"
+  },
+  {
+    "scientificName" : "Polioptila plumbea"
+  },
+  {
+    "scientificName" : "Polioptila sp."
+  },
+  {
+    "scientificName" : "Microcerculus marginatus"
+  },
+  {
+    "scientificName" : "Microcerculus ustulatus"
+  },
+  {
+    "scientificName" : "Microcerculus bambla"
+  },
+  {
+    "scientificName" : "Odontorchilus cinereus"
+  },
+  {
+    "scientificName" : "Troglodytes musculus"
+  },
+  {
+    "scientificName" : "Troglodytes rufulus"
+  },
+  {
+    "scientificName" : "Cistothorus platensis"
+  },
+  {
+    "scientificName" : "Campylorhynchus griseus"
+  },
+  {
+    "scientificName" : "Campylorhynchus turdinus"
+  },
+  {
+    "scientificName" : "Pheugopedius genibarbis"
+  },
+  {
+    "scientificName" : "Pheugopedius coraya"
+  },
+  {
+    "scientificName" : "Cantorchilus leucotis"
+  },
+  {
+    "scientificName" : "Cantorchilus longirostris"
+  },
+  {
+    "scientificName" : "Cantorchilus guarayanus"
+  },
+  {
+    "scientificName" : "Cantorchilus griseus"
+  },
+  {
+    "scientificName" : "Henicorhina leucosticta"
+  },
+  {
+    "scientificName" : "Cyphorhinus arada"
+  },
+  {
+    "scientificName" : "Sturnus vulgaris"
+  },
+  {
+    "scientificName" : "Mimus saturninus"
+  },
+  {
+    "scientificName" : "Mimus triurus"
+  },
+  {
+    "scientificName" : "Mimus gilvus"
+  },
+  {
+    "scientificName" : "Catharus aurantiirostris"
+  },
+  {
+    "scientificName" : "Catharus fuscescens"
+  },
+  {
+    "scientificName" : "Catharus minimus"
+  },
+  {
+    "scientificName" : "Catharus ustulatus"
+  },
+  {
+    "scientificName" : "Catharus sp."
+  },
+  {
+    "scientificName" : "Cichlopsis leucogenys"
+  },
+  {
+    "scientificName" : "Turdus leucops"
+  },
+  {
+    "scientificName" : "Turdus olivater"
+  },
+  {
+    "scientificName" : "Turdus amaurochalinus"
+  },
+  {
+    "scientificName" : "Turdus ignobilis"
+  },
+  {
+    "scientificName" : "Turdus arthuri"
+  },
+  {
+    "scientificName" : "Turdus flavipes"
+  },
+  {
+    "scientificName" : "Turdus subalaris"
+  },
+  {
+    "scientificName" : "Turdus murinus"
+  },
+  {
+    "scientificName" : "Turdus lawrencii"
+  },
+  {
+    "scientificName" : "Turdus albicollis"
+  },
+  {
+    "scientificName" : "Turdus leucomelas"
+  },
+  {
+    "scientificName" : "Turdus hauxwelli"
+  },
+  {
+    "scientificName" : "Turdus fumigatus"
+  },
+  {
+    "scientificName" : "Turdus rufiventris"
+  },
+  {
+    "scientificName" : "Turdus nudigenis"
+  },
+  {
+    "scientificName" : "Turdus sanchezorum"
+  },
+  {
+    "scientificName" : "Turdus sp."
+  },
+  {
+    "scientificName" : "Erithacus rubecula"
+  },
+  {
+    "scientificName" : "Estrilda astrild"
+  },
+  {
+    "scientificName" : "Passer domesticus"
+  },
+  {
+    "scientificName" : "Motacilla flava"
+  },
+  {
+    "scientificName" : "Anthus chii"
+  },
+  {
+    "scientificName" : "Anthus furcatus"
+  },
+  {
+    "scientificName" : "Anthus correndera"
+  },
+  {
+    "scientificName" : "Anthus nattereri"
+  },
+  {
+    "scientificName" : "Anthus hellmayri"
+  },
+  {
+    "scientificName" : "Anthus sp."
+  },
+  {
+    "scientificName" : "Chlorophonia cyanocephala"
+  },
+  {
+    "scientificName" : "Chlorophonia cyanea"
+  },
+  {
+    "scientificName" : "Euphonia plumbea"
+  },
+  {
+    "scientificName" : "Euphonia chlorotica"
+  },
+  {
+    "scientificName" : "Euphonia finschi"
+  },
+  {
+    "scientificName" : "Euphonia chrysopasta"
+  },
+  {
+    "scientificName" : "Euphonia minuta"
+  },
+  {
+    "scientificName" : "Euphonia chalybea"
+  },
+  {
+    "scientificName" : "Euphonia violacea"
+  },
+  {
+    "scientificName" : "Euphonia laniirostris"
+  },
+  {
+    "scientificName" : "Euphonia xanthogaster"
+  },
+  {
+    "scientificName" : "Euphonia cayennensis"
+  },
+  {
+    "scientificName" : "Euphonia rufiventris"
+  },
+  {
+    "scientificName" : "Euphonia pectoralis"
+  },
+  {
+    "scientificName" : "Euphonia sp."
+  },
+  {
+    "scientificName" : "Carduelis carduelis"
+  },
+  {
+    "scientificName" : "Spinus yarrellii"
+  },
+  {
+    "scientificName" : "Spinus magellanicus"
+  },
+  {
+    "scientificName" : "Ammodramus humeralis"
+  },
+  {
+    "scientificName" : "Ammodramus aurifrons"
+  },
+  {
+    "scientificName" : "Ammodramus humeralis/aurifrons"
+  },
+  {
+    "scientificName" : "Arremonops conirostris"
+  },
+  {
+    "scientificName" : "Arremon taciturnus"
+  },
+  {
+    "scientificName" : "Arremon franciscanus"
+  },
+  {
+    "scientificName" : "Arremon semitorquatus"
+  },
+  {
+    "scientificName" : "Arremon flavirostris"
+  },
+  {
+    "scientificName" : "Zonotrichia capensis"
+  },
+  {
+    "scientificName" : "Atlapetes personatus"
+  },
+  {
+    "scientificName" : "Dolichonyx oryzivorus"
+  },
+  {
+    "scientificName" : "Sturnella magna"
+  },
+  {
+    "scientificName" : "Leistes militaris"
+  },
+  {
+    "scientificName" : "Leistes superciliaris"
+  },
+  {
+    "scientificName" : "Psarocolius angustifrons"
+  },
+  {
+    "scientificName" : "Psarocolius viridis"
+  },
+  {
+    "scientificName" : "Psarocolius decumanus"
+  },
+  {
+    "scientificName" : "Psarocolius bifasciatus"
+  },
+  {
+    "scientificName" : "Cacicus solitarius"
+  },
+  {
+    "scientificName" : "Cacicus chrysopterus"
+  },
+  {
+    "scientificName" : "Cacicus koepckeae"
+  },
+  {
+    "scientificName" : "Cacicus cela"
+  },
+  {
+    "scientificName" : "Cacicus latirostris"
+  },
+  {
+    "scientificName" : "Cacicus haemorrhous"
+  },
+  {
+    "scientificName" : "Cacicus oseryi"
+  },
+  {
+    "scientificName" : "Cacicus sp."
+  },
+  {
+    "scientificName" : "Icterus cayanensis"
+  },
+  {
+    "scientificName" : "Icterus pyrrhopterus"
+  },
+  {
+    "scientificName" : "Icterus jamacaii"
+  },
+  {
+    "scientificName" : "Icterus croconotus"
+  },
+  {
+    "scientificName" : "Icterus nigrogularis"
+  },
+  {
+    "scientificName" : "Icterus galbula"
+  },
+  {
+    "scientificName" : "Icterus sp."
+  },
+  {
+    "scientificName" : "Molothrus rufoaxillaris"
+  },
+  {
+    "scientificName" : "Molothrus bonariensis"
+  },
+  {
+    "scientificName" : "Molothrus rufoaxillaris/bonariensis"
+  },
+  {
+    "scientificName" : "Molothrus oryzivorus"
+  },
+  {
+    "scientificName" : "Quiscalus lugubris"
+  },
+  {
+    "scientificName" : "Lampropsar tanagrinus"
+  },
+  {
+    "scientificName" : "Gymnomystax mexicanus"
+  },
+  {
+    "scientificName" : "Macroagelaius imthurni"
+  },
+  {
+    "scientificName" : "Amblyramphus holosericeus"
+  },
+  {
+    "scientificName" : "Anumara forbesi"
+  },
+  {
+    "scientificName" : "Gnorimopsar chopi"
+  },
+  {
+    "scientificName" : "Agelaioides badius"
+  },
+  {
+    "scientificName" : "Agelaioides fringillarius"
+  },
+  {
+    "scientificName" : "Agelaioides badius/fringillarius"
+  },
+  {
+    "scientificName" : "Agelasticus cyanopus"
+  },
+  {
+    "scientificName" : "Agelasticus thilius"
+  },
+  {
+    "scientificName" : "Chrysomus ruficapillus"
+  },
+  {
+    "scientificName" : "Chrysomus icterocephalus"
+  },
+  {
+    "scientificName" : "Xanthopsar flavus"
+  },
+  {
+    "scientificName" : "Pseudoleistes guirahuro"
+  },
+  {
+    "scientificName" : "Pseudoleistes virescens"
+  },
+  {
+    "scientificName" : "Parkesia noveboracensis"
+  },
+  {
+    "scientificName" : "Mniotilta varia"
+  },
+  {
+    "scientificName" : "Leiothlypis peregrina"
+  },
+  {
+    "scientificName" : "Geothlypis aequinoctialis"
+  },
+  {
+    "scientificName" : "Geothlypis velata"
+  },
+  {
+    "scientificName" : "Setophaga ruticilla"
+  },
+  {
+    "scientificName" : "Setophaga tigrina"
+  },
+  {
+    "scientificName" : "Setophaga cerulea"
+  },
+  {
+    "scientificName" : "Setophaga pitiayumi"
+  },
+  {
+    "scientificName" : "Setophaga fusca"
+  },
+  {
+    "scientificName" : "Setophaga petechia"
+  },
+  {
+    "scientificName" : "Setophaga striata"
+  },
+  {
+    "scientificName" : "Setophaga virens"
+  },
+  {
+    "scientificName" : "Basileuterus culicivorus"
+  },
+  {
+    "scientificName" : "Myiothlypis leucophrys"
+  },
+  {
+    "scientificName" : "Myiothlypis flaveola"
+  },
+  {
+    "scientificName" : "Myiothlypis leucoblephara"
+  },
+  {
+    "scientificName" : "Myiothlypis fulvicauda"
+  },
+  {
+    "scientificName" : "Myiothlypis rivularis"
+  },
+  {
+    "scientificName" : "Myiothlypis bivittata"
+  },
+  {
+    "scientificName" : "Cardellina canadensis"
+  },
+  {
+    "scientificName" : "Myioborus miniatus"
+  },
+  {
+    "scientificName" : "Myioborus castaneocapilla"
+  },
+  {
+    "scientificName" : "Mitrospingus oleagineus"
+  },
+  {
+    "scientificName" : "Lamprospiza melanoleuca"
+  },
+  {
+    "scientificName" : "Orthogonys chloricterus"
+  },
+  {
+    "scientificName" : "Piranga flava"
+  },
+  {
+    "scientificName" : "Piranga rubra"
+  },
+  {
+    "scientificName" : "Piranga olivacea"
+  },
+  {
+    "scientificName" : "Habia rubica"
+  },
+  {
+    "scientificName" : "Periporphyrus erythromelas"
+  },
+  {
+    "scientificName" : "Caryothraustes canadensis"
+  },
+  {
+    "scientificName" : "Pheucticus aureoventris"
+  },
+  {
+    "scientificName" : "Granatellus pelzelni"
+  },
+  {
+    "scientificName" : "Amaurospiza moesta"
+  },
+  {
+    "scientificName" : "Cyanoloxia glaucocaerulea"
+  },
+  {
+    "scientificName" : "Cyanoloxia rothschildii"
+  },
+  {
+    "scientificName" : "Cyanoloxia brissonii"
+  },
+  {
+    "scientificName" : "Cyanoloxia glaucocaerulea/brissonii"
+  },
+  {
+    "scientificName" : "Orchesticus abeillei"
+  },
+  {
+    "scientificName" : "Paroaria coronata"
+  },
+  {
+    "scientificName" : "Paroaria dominicana"
+  },
+  {
+    "scientificName" : "Paroaria gularis"
+  },
+  {
+    "scientificName" : "Paroaria baeri"
+  },
+  {
+    "scientificName" : "Paroaria gularis/baeri"
+  },
+  {
+    "scientificName" : "Paroaria capitata"
+  },
+  {
+    "scientificName" : "Paroaria sp."
+  },
+  {
+    "scientificName" : "Schistochlamys melanopis"
+  },
+  {
+    "scientificName" : "Schistochlamys ruficapillus"
+  },
+  {
+    "scientificName" : "Cissopis leverianus"
+  },
+  {
+    "scientificName" : "Neothraupis fasciata"
+  },
+  {
+    "scientificName" : "Conothraupis speculigera"
+  },
+  {
+    "scientificName" : "Conothraupis mesoleuca"
+  },
+  {
+    "scientificName" : "Compsothraupis loricata"
+  },
+  {
+    "scientificName" : "Nemosia pileata"
+  },
+  {
+    "scientificName" : "Nemosia rourei"
+  },
+  {
+    "scientificName" : "Thlypopsis sordida"
+  },
+  {
+    "scientificName" : "Thlypopsis pyrrhocoma"
+  },
+  {
+    "scientificName" : "Microspingus lateralis"
+  },
+  {
+    "scientificName" : "Microspingus cabanisi"
+  },
+  {
+    "scientificName" : "Microspingus melanoleucus"
+  },
+  {
+    "scientificName" : "Microspingus cinereus"
+  },
+  {
+    "scientificName" : "Trichothraupis melanops"
+  },
+  {
+    "scientificName" : "Eucometis penicillata"
+  },
+  {
+    "scientificName" : "Loriotus cristatus"
+  },
+  {
+    "scientificName" : "Loriotus rufiventer"
+  },
+  {
+    "scientificName" : "Loriotus luctuosus"
+  },
+  {
+    "scientificName" : "Tachyphonus surinamus"
+  },
+  {
+    "scientificName" : "Tachyphonus coronatus"
+  },
+  {
+    "scientificName" : "Tachyphonus rufus"
+  },
+  {
+    "scientificName" : "Tachyphonus phoenicius"
+  },
+  {
+    "scientificName" : "Lanio fulvus"
+  },
+  {
+    "scientificName" : "Lanio versicolor"
+  },
+  {
+    "scientificName" : "Ramphocelus bresilius"
+  },
+  {
+    "scientificName" : "Ramphocelus carbo"
+  },
+  {
+    "scientificName" : "Ramphocelus nigrogularis"
+  },
+  {
+    "scientificName" : "Cyanicterus cyanicterus"
+  },
+  {
+    "scientificName" : "Stephanophorus diadematus"
+  },
+  {
+    "scientificName" : "Pipraeidea melanonota"
+  },
+  {
+    "scientificName" : "Rauenia bonariensis"
+  },
+  {
+    "scientificName" : "Thraupis episcopus"
+  },
+  {
+    "scientificName" : "Thraupis sayaca"
+  },
+  {
+    "scientificName" : "Thraupis cyanoptera"
+  },
+  {
+    "scientificName" : "Thraupis ornata"
+  },
+  {
+    "scientificName" : "Thraupis palmarum"
+  },
+  {
+    "scientificName" : "Thraupis sp."
+  },
+  {
+    "scientificName" : "Ixothraupis varia"
+  },
+  {
+    "scientificName" : "Ixothraupis guttata"
+  },
+  {
+    "scientificName" : "Ixothraupis xanthogastra"
+  },
+  {
+    "scientificName" : "Ixothraupis punctata"
+  },
+  {
+    "scientificName" : "Stilpnia cyanoptera"
+  },
+  {
+    "scientificName" : "Stilpnia peruviana"
+  },
+  {
+    "scientificName" : "Stilpnia preciosa"
+  },
+  {
+    "scientificName" : "Stilpnia cayana"
+  },
+  {
+    "scientificName" : "Stilpnia nigrocincta"
+  },
+  {
+    "scientificName" : "Stilpnia cyanicollis"
+  },
+  {
+    "scientificName" : "Stilpnia sp."
+  },
+  {
+    "scientificName" : "Tangara mexicana"
+  },
+  {
+    "scientificName" : "Tangara brasiliensis"
+  },
+  {
+    "scientificName" : "Tangara chilensis"
+  },
+  {
+    "scientificName" : "Tangara velia"
+  },
+  {
+    "scientificName" : "Tangara callophrys"
+  },
+  {
+    "scientificName" : "Tangara seledon"
+  },
+  {
+    "scientificName" : "Tangara fastuosa"
+  },
+  {
+    "scientificName" : "Tangara cyanocephala"
+  },
+  {
+    "scientificName" : "Tangara desmaresti"
+  },
+  {
+    "scientificName" : "Tangara cyanoventris"
+  },
+  {
+    "scientificName" : "Tangara gyrola"
+  },
+  {
+    "scientificName" : "Tangara schrankii"
+  },
+  {
+    "scientificName" : "Tangara sp."
+  },
+  {
+    "scientificName" : "Tangara/Stilpnia sp."
+  },
+  {
+    "scientificName" : "Tersina viridis"
+  },
+  {
+    "scientificName" : "Dacnis albiventris"
+  },
+  {
+    "scientificName" : "Dacnis lineata"
+  },
+  {
+    "scientificName" : "Dacnis flaviventer"
+  },
+  {
+    "scientificName" : "Dacnis nigripes"
+  },
+  {
+    "scientificName" : "Dacnis cayana"
+  },
+  {
+    "scientificName" : "Cyanerpes nitidus"
+  },
+  {
+    "scientificName" : "Cyanerpes caeruleus"
+  },
+  {
+    "scientificName" : "Cyanerpes cyaneus"
+  },
+  {
+    "scientificName" : "Chlorophanes spiza"
+  },
+  {
+    "scientificName" : "Hemithraupis guira"
+  },
+  {
+    "scientificName" : "Hemithraupis ruficapilla"
+  },
+  {
+    "scientificName" : "Hemithraupis flavicollis"
+  },
+  {
+    "scientificName" : "Conirostrum bicolor"
+  },
+  {
+    "scientificName" : "Conirostrum margaritae"
+  },
+  {
+    "scientificName" : "Conirostrum speciosum"
+  },
+  {
+    "scientificName" : "Diglossa major"
+  },
+  {
+    "scientificName" : "Haplospiza unicolor"
+  },
+  {
+    "scientificName" : "Rhopospina fruticeti"
+  },
+  {
+    "scientificName" : "Rhopospina caerulescens"
+  },
+  {
+    "scientificName" : "Cypsnagra hirundinacea"
+  },
+  {
+    "scientificName" : "Donacospiza albifrons"
+  },
+  {
+    "scientificName" : "Castanozoster thoracicus"
+  },
+  {
+    "scientificName" : "Poospiza nigrorufa"
+  },
+  {
+    "scientificName" : "Microspingus/Poospizopsis/Castanozoster/Poospiza sp."
+  },
+  {
+    "scientificName" : "Sicalis citrina"
+  },
+  {
+    "scientificName" : "Sicalis columbiana"
+  },
+  {
+    "scientificName" : "Sicalis flaveola"
+  },
+  {
+    "scientificName" : "Sicalis luteola"
+  },
+  {
+    "scientificName" : "Sicalis sp."
+  },
+  {
+    "scientificName" : "Emberizoides herbicola"
+  },
+  {
+    "scientificName" : "Emberizoides ypiranganus"
+  },
+  {
+    "scientificName" : "Emberizoides herbicola/ypiranganus"
+  },
+  {
+    "scientificName" : "Embernagra platensis"
+  },
+  {
+    "scientificName" : "Embernagra longicauda"
+  },
+  {
+    "scientificName" : "Volatinia jacarina"
+  },
+  {
+    "scientificName" : "Sporophila bouvronides"
+  },
+  {
+    "scientificName" : "Sporophila lineola"
+  },
+  {
+    "scientificName" : "Sporophila leucoptera"
+  },
+  {
+    "scientificName" : "Sporophila castaneiventris"
+  },
+  {
+    "scientificName" : "Sporophila minuta"
+  },
+  {
+    "scientificName" : "Sporophila nigrorufa"
+  },
+  {
+    "scientificName" : "Sporophila bouvreuil"
+  },
+  {
+    "scientificName" : "Sporophila pileata"
+  },
+  {
+    "scientificName" : "Sporophila hypoxantha"
+  },
+  {
+    "scientificName" : "Sporophila ruficollis"
+  },
+  {
+    "scientificName" : "Sporophila iberaensis"
+  },
+  {
+    "scientificName" : "Sporophila palustris"
+  },
+  {
+    "scientificName" : "Sporophila hypochroma"
+  },
+  {
+    "scientificName" : "Sporophila cinnamomea"
+  },
+  {
+    "scientificName" : "Sporophila melanogaster"
+  },
+  {
+    "scientificName" : "Sporophila angolensis"
+  },
+  {
+    "scientificName" : "Sporophila maximiliani"
+  },
+  {
+    "scientificName" : "Sporophila crassirostris"
+  },
+  {
+    "scientificName" : "Sporophila intermedia"
+  },
+  {
+    "scientificName" : "Sporophila americana"
+  },
+  {
+    "scientificName" : "Sporophila fringilloides"
+  },
+  {
+    "scientificName" : "Sporophila luctuosa"
+  },
+  {
+    "scientificName" : "Sporophila nigricollis"
+  },
+  {
+    "scientificName" : "Sporophila ardesiaca"
+  },
+  {
+    "scientificName" : "Sporophila caerulescens"
+  },
+  {
+    "scientificName" : "Sporophila schistacea"
+  },
+  {
+    "scientificName" : "Sporophila falcirostris"
+  },
+  {
+    "scientificName" : "Sporophila frontalis"
+  },
+  {
+    "scientificName" : "Sporophila plumbea"
+  },
+  {
+    "scientificName" : "Sporophila beltoni"
+  },
+  {
+    "scientificName" : "Sporophila collaris"
+  },
+  {
+    "scientificName" : "Sporophila albogularis"
+  },
+  {
+    "scientificName" : "Sporophila sp."
+  },
+  {
+    "scientificName" : "Catamenia homochroa"
+  },
+  {
+    "scientificName" : "Charitospiza eucosma"
+  },
+  {
+    "scientificName" : "Coryphaspiza melanotis"
+  },
+  {
+    "scientificName" : "Coryphospingus pileatus"
+  },
+  {
+    "scientificName" : "Coryphospingus cucullatus"
+  },
+  {
+    "scientificName" : "Gubernatrix cristata"
+  },
+  {
+    "scientificName" : "Coereba flaveola"
+  },
+  {
+    "scientificName" : "Asemospiza fuliginosa"
+  },
+  {
+    "scientificName" : "Parkerthraustes humeralis"
+  },
+  {
+    "scientificName" : "Saltatricula atricollis"
+  },
+  {
+    "scientificName" : "Saltator maximus"
+  },
+  {
+    "scientificName" : "Saltator olivascens"
+  },
+  {
+    "scientificName" : "Saltator coerulescens"
+  },
+  {
+    "scientificName" : "Saltator similis"
+  },
+  {
+    "scientificName" : "Saltator maxillosus"
+  },
+  {
+    "scientificName" : "Saltator aurantiirostris"
+  },
+  {
+    "scientificName" : "Saltator grossus"
+  },
+  {
+    "scientificName" : "Saltator fuliginosus"
+  },
+  {
+    "scientificName" : "Saltator sp."
+  },
+  {
+    "scientificName" : "Thraupidae sp."
+  }
+]

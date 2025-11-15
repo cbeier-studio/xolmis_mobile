@@ -2017,6 +2017,18 @@
       "type": "text",
       "description": "Message when species upgrade fails"
     },
+  "country": "Country",
+    "@country": {
+      "type": "text",
+      "description": "Country field label"
+    },
+  "speciesSearch": "Species search",
+    "@forSpeciesSearch": {
+      "type": "text",
+      "description": "Species search section label"
+    },
+  "countryBrazil": "Brazil",
+  "countryUruguay": "Uruguay",
     "precipitationNone": "None",
     "precipitationFog": "Fog",
     "precipitationMist": "Mist",

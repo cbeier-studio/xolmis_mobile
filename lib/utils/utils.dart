@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../data/models/inventory.dart';
 import '../data/daos/inventory_dao.dart';
@@ -18,11 +19,47 @@ List<String> allSpeciesNames = [];
 
 void Function(String)? onInventoryStopped;
 
+Future<SupportedCountry> getCountrySetting() async {
+  final prefs = await SharedPreferences.getInstance();
+  final countryCode = prefs.getString('user_country');
+
+  // Converte a string 'BR' de volta para o enum SupportedCountry.BR
+  // O valor padrão é Brasil se nada for encontrado.
+  return SupportedCountry.values.firstWhere(
+        (e) => e.name == countryCode,
+    orElse: () => SupportedCountry.BR,
+  );
+}
+
 Future<List<String>> loadSpeciesSearchData() async {
-  final jsonString = await rootBundle.loadString('assets/species_data.json');
-  final jsonData = json.decode(jsonString) as List<dynamic>;
-  return jsonData.map((species) => species['scientificName'].toString())
-      .toList();
+  try {
+    final selectedCountry = await getCountrySetting();
+    final countryCode = selectedCountry.name;
+
+    final filePath = 'assets/species_data_$countryCode.json';
+    debugPrint('Carregando dados de espécies do arquivo: $filePath');
+
+    // Carrega o conteúdo do arquivo JSON do bundle de assets.
+    final jsonString = await rootBundle.loadString(filePath);
+
+    // Decodifica o JSON e o converte para uma lista de strings.
+    final jsonData = json.decode(jsonString) as List<dynamic>;
+    final speciesList = jsonData.map((species) => species['scientificName'].toString()).toList();
+
+    debugPrint('Dados de espécies carregados com sucesso. Total: ${speciesList.length} espécies.');
+    return speciesList;
+
+  } on FlutterError catch (e) {
+    // Trata especificamente o erro de arquivo não encontrado.
+    debugPrint('ERRO: Não foi possível carregar o arquivo de dados de espécies. Verifique se o arquivo está no local correto e declarado no pubspec.yaml. Detalhes: $e');
+    // Retorna uma lista vazia para evitar que o app quebre.
+    return [];
+  } catch (e) {
+    // Trata outros erros (ex: JSON malformado, erro de tipo).
+    debugPrint('ERRO: Ocorreu um erro inesperado ao carregar ou processar os dados de espécies: $e');
+    // Retorna uma lista vazia como fallback seguro.
+    return [];
+  }
 }
 
 bool speciesMatchesQuery(String speciesName, String query) {

@@ -2262,6 +2262,30 @@ abstract class AppLocalizations {
   /// **'Species upgrade failed'**
   String get speciesUpgradeFailed;
 
+  /// Country field label
+  ///
+  /// In en, this message translates to:
+  /// **'Country'**
+  String get country;
+
+  /// No description provided for @speciesSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Species search'**
+  String get speciesSearch;
+
+  /// No description provided for @countryBrazil.
+  ///
+  /// In en, this message translates to:
+  /// **'Brazil'**
+  String get countryBrazil;
+
+  /// No description provided for @countryUruguay.
+  ///
+  /// In en, this message translates to:
+  /// **'Uruguay'**
+  String get countryUruguay;
+
   /// No description provided for @precipitationNone.
   ///
   /// In en, this message translates to:

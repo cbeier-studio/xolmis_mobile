@@ -1357,6 +1357,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get speciesUpgradeFailed => 'Species upgrade failed';
 
   @override
+  String get country => 'Country';
+
+  @override
+  String get speciesSearch => 'Species search';
+
+  @override
+  String get countryBrazil => 'Brazil';
+
+  @override
+  String get countryUruguay => 'Uruguay';
+
+  @override
   String get precipitationNone => 'None';
 
   @override

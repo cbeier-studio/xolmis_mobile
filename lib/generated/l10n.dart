@@ -3700,6 +3700,36 @@ class S {
     );
   }
 
+  /// `Country`
+  String get country {
+    return Intl.message(
+      'Country',
+      name: 'country',
+      desc: 'Country field label',
+      args: [],
+    );
+  }
+
+  /// `Species search`
+  String get speciesSearch {
+    return Intl.message(
+      'Species search',
+      name: 'speciesSearch',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Brazil`
+  String get countryBrazil {
+    return Intl.message('Brazil', name: 'countryBrazil', desc: '', args: []);
+  }
+
+  /// `Uruguay`
+  String get countryUruguay {
+    return Intl.message('Uruguay', name: 'countryUruguay', desc: '', args: []);
+  }
+
   /// `None`
   String get precipitationNone {
     return Intl.message('None', name: 'precipitationNone', desc: '', args: []);

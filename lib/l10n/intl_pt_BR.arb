@@ -1456,6 +1456,18 @@
     "type": "text",
     "description": "Message when species upgrade fails"
   },
+  "country": "País",
+  "@country": {
+    "type": "text",
+    "description": "Country field label"
+  },
+  "speciesSearch": "Busca de espécies",
+  "@forSpeciesSearch": {
+    "type": "text",
+    "description": "Species search section label"
+  },
+  "countryBrazil": "Brasil",
+  "countryUruguay": "Uruguai",
     "precipitationNone": "Nenhuma",
     "precipitationFog": "Névoa",
     "precipitationMist": "Neblina",

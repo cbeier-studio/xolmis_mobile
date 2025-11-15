@@ -1361,6 +1361,18 @@ class AppLocalizationsPt extends AppLocalizations {
   String get speciesUpgradeFailed => 'Falha ao atualizar espécies';
 
   @override
+  String get country => 'País';
+
+  @override
+  String get speciesSearch => 'Busca de espécies';
+
+  @override
+  String get countryBrazil => 'Brasil';
+
+  @override
+  String get countryUruguay => 'Uruguai';
+
+  @override
   String get precipitationNone => 'Nenhuma';
 
   @override
@@ -2927,6 +2939,18 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get speciesUpgradeFailed => 'Falha ao atualizar espécies';
+
+  @override
+  String get country => 'País';
+
+  @override
+  String get speciesSearch => 'Busca de espécies';
+
+  @override
+  String get countryBrazil => 'Brasil';
+
+  @override
+  String get countryUruguay => 'Uruguai';
 
   @override
   String get precipitationNone => 'Nenhuma';

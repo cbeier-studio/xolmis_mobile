@@ -1,5 +1,4 @@
 import 'dart:core';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -9,12 +8,13 @@ import 'package:about/about.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:file_picker/file_picker.dart';
-// import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:intl/intl.dart';
+
+import '../../core/core_consts.dart';
 import '../../utils/backup_utils.dart';
 import '../../generated/l10n.dart';
+import '../../utils/utils.dart';
 import '../../utils/themes.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -35,6 +35,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool _formatNumbers = true;
   bool _remindVegetationEmpty = false;
   bool _remindWeatherEmpty = false;
+  SupportedCountry _userCountry = SupportedCountry.BR;
   PackageInfo? _packageInfo;
 
   @override
@@ -52,7 +53,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   // Load the settings from SharedPreferences
   Future<void> _loadSettings() async {
     final prefs = await SharedPreferences.getInstance();
-    setState(() {
+    setState(() async {
       _themeMode = ThemeMode.values[prefs.getInt('themeMode') ?? 0];
       _maxSimultaneousInventories =
           prefs.getInt('maxSimultaneousInventories') ?? 2;
@@ -64,6 +65,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       _formatNumbers = prefs.getBool('formatNumbers') ?? true;
       _remindVegetationEmpty = prefs.getBool('remindVegetationEmpty') ?? false;
       _remindWeatherEmpty = prefs.getBool('remindWeatherEmpty') ?? false;
+      _userCountry = await getCountrySetting();
     });
   }
 
@@ -83,6 +85,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     await prefs.setBool('formatNumbers', _formatNumbers);
     await prefs.setBool('remindVegetationEmpty', _remindVegetationEmpty);
     await prefs.setBool('remindWeatherEmpty', _remindWeatherEmpty);
+    await prefs.setString('user_country', _userCountry.name);
   }
 
   @override
@@ -112,6 +115,37 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         _observerAbbreviation = newObserver;
                       });
                       _saveSettings();
+                    }
+                  },
+                ),
+              ],
+            ),
+            SettingsSection(
+              title: Text(S.of(context).speciesSearch),
+              tiles: [
+                SettingsTile.navigation(
+                  leading: const Icon(Icons.language_outlined),
+                  title: Text(S.current.country),
+                  value: Text(countryMetadata[_userCountry]?.name ?? ''),
+                  onPressed: (context) async {
+                    // Abre o novo diálogo de seleção de país
+                    final SupportedCountry? newCountry =
+                        await showCountrySelectionDialog(context);
+
+                    // Se o usuário selecionou um novo país e o valor é diferente
+                    if (newCountry != null && newCountry != _userCountry) {
+                      setState(() {
+                        _userCountry = newCountry;
+                      });
+                      // Salva a nova configuração
+                      await _saveSettings();
+
+                      // Recarrega os dados de espécies com base no novo país
+                      List<String> preloadedSpeciesNames =
+                          await loadSpeciesSearchData();
+                      preloadedSpeciesNames.sort((a, b) => a.compareTo(b));
+                      // Atualiza a lista global de espécies
+                      allSpeciesNames = List.from(preloadedSpeciesNames);
                     }
                   },
                 ),
@@ -404,6 +438,62 @@ class _SettingsScreenState extends State<SettingsScreen> {
               child: Text(S.of(context).save),
             ),
           ],
+        );
+      },
+    );
+  }
+
+  /// Builds and shows a dialog for selecting the user's country.
+  Future<SupportedCountry?> showCountrySelectionDialog(
+    BuildContext context,
+  ) async {
+    SupportedCountry? tempSelectedCountry = _userCountry;
+
+    return await showDialog<SupportedCountry>(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog.adaptive(
+              title: Text(S.current.country),
+              contentPadding: const EdgeInsets.only(top: 20.0),
+              content: RadioGroup<SupportedCountry>(
+                groupValue: tempSelectedCountry,
+                onChanged: (SupportedCountry? value) {
+                  setDialogState(() {
+                    tempSelectedCountry = value;
+                  });
+                },
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    RadioListTile<SupportedCountry>(
+                      title: Text(S.current.countryBrazil),
+                      value: SupportedCountry.BR,
+                    ),
+                    RadioListTile<SupportedCountry>(
+                      title: Text(S.current.countryUruguay),
+                      value: SupportedCountry.UY,
+                    ),
+                  ],
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: Text(S.of(context).cancel),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  child: Text(S.of(context).save),
+                  onPressed: () {
+                    Navigator.of(context).pop(tempSelectedCountry);
+                  },
+                ),
+              ],
+            );
+          },
         );
       },
     );
