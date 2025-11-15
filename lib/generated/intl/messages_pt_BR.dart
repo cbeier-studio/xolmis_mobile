@@ -826,7 +826,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Acumulado de espécies",
     ),
     "speciesAccumulationCurve": MessageLookupByLibrary.simpleMessage(
-      "Curva de acumulação de espécies",
+      "Acumulação de espécies",
     ),
     "speciesAcronym": m33,
     "speciesCount": m34,

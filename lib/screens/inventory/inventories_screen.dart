@@ -1709,12 +1709,41 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                 await inventoryProvider.fetchInventories(context);
                               }),
                           // Action to export all finished inventories to JSON
-                          buildGridMenuItem(
-                              context, Icons.share_outlined, S.of(context).exportAll,
-                                  () async {
-                                Navigator.of(context).pop();
-                                await exportAllInventoriesToJson(context, inventoryProvider);
-                              }),
+                          // buildGridMenuItem(
+                          //     context, Icons.share_outlined, S.of(context).exportAll,
+                          //         () async {
+                          //       Navigator.of(context).pop();
+                          //       await exportAllInventoriesToJson(context, inventoryProvider);
+                          //     }),
+                        ],
+                      ),
+                      Divider(),
+                      Row(
+                        children: [
+                          const SizedBox(width: 8.0),
+                          Text(S.current.exportAll, style: TextTheme
+                              .of(context)
+                              .bodyMedium,),
+                          // Icon(Icons.share_outlined),
+                          Expanded(
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child:
+                              Row(
+                                children: [
+                                  const SizedBox(width: 16.0),
+                                  ActionChip(
+                                    label: const Text('JSON'),
+                                    onPressed: () async {
+                                      Navigator.of(context).pop();
+                                      await exportAllInventoriesToJson(context, inventoryProvider);
+                                    },
+                                  ),
+                                  const SizedBox(width: 8.0),
+                                ],
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ],

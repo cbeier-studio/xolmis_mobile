@@ -354,7 +354,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get totalIndividuals => 'Total de indivíduos';
 
   @override
-  String get speciesAccumulationCurve => 'Curva de acumulação de espécies';
+  String get speciesAccumulationCurve => 'Acumulação de espécies';
 
   @override
   String get speciesAccumulated => 'Acumulado de espécies';
@@ -1353,6 +1353,9 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get refresh => 'Recarregar';
+
+  @override
+  String get inventoryIdUpdated => 'ID do inventário atualizada com sucesso!';
 
   @override
   String get precipitationNone => 'Nenhuma';
@@ -1916,7 +1919,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get totalIndividuals => 'Total de indivíduos';
 
   @override
-  String get speciesAccumulationCurve => 'Curva de acumulação de espécies';
+  String get speciesAccumulationCurve => 'Acumulação de espécies';
 
   @override
   String get speciesAccumulated => 'Acumulado de espécies';
@@ -2915,6 +2918,9 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get refresh => 'Recarregar';
+
+  @override
+  String get inventoryIdUpdated => 'ID do inventário atualizada com sucesso!';
 
   @override
   String get precipitationNone => 'Nenhuma';

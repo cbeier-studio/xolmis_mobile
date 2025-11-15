@@ -353,7 +353,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get totalIndividuals => 'Total Individuals';
 
   @override
-  String get speciesAccumulationCurve => 'Species accumulation curve';
+  String get speciesAccumulationCurve => 'Species accumulation';
 
   @override
   String get speciesAccumulated => 'Species accumulated';
@@ -1349,6 +1349,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get refresh => 'Refresh';
+
+  @override
+  String get inventoryIdUpdated => 'Inventory ID updated successfully!';
 
   @override
   String get precipitationNone => 'None';

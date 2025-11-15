@@ -259,6 +259,7 @@ class _MainScreenState extends State<MainScreen> {
                   // Text(S.current.settings),
                 ],
               ),
+              groupAlignment: 0.0,
               destinations: railDestinations,
               selectedIndex: _selectedIndex,
               labelType: NavigationRailLabelType.all,

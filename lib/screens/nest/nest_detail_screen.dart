@@ -268,10 +268,17 @@ class NestDetailScreenState extends State<NestDetailScreen> {
                       : const Icon(Icons.flag_outlined),
                 ),
               if (widget.nest.isActive == false)
-                MenuAnchor(
+                MediaQuery.sizeOf(context).width < 600
+                    ? IconButton(
+                  icon: const Icon(Icons.more_vert_outlined),
+                  onPressed: () {
+                    _showMoreOptionsBottomSheet(context, widget.nest);
+                  },
+                )
+                    : MenuAnchor(
                   builder: (context, controller, child) {
                     return IconButton(
-                      icon: Icon(Icons.share_outlined),
+                      icon: Icon(Icons.more_vert_outlined),
                       onPressed: () {
                         if (controller.isOpen) {
                           controller.close();
@@ -300,7 +307,7 @@ class NestDetailScreenState extends State<NestDetailScreen> {
                       child: const Text('CSV'),
                     ),
                     // Option to export the selected nest to Excel
-                    TextButton(
+                    MenuItemButton(
                       onPressed: () async {
                         Navigator.of(context).pop();
                         final locale = Localizations.localeOf(context);
@@ -504,6 +511,123 @@ class NestDetailScreenState extends State<NestDetailScreen> {
               child: Text(S.of(context).close),
             ),
           ],
+        );
+      },
+    );
+  }
+
+  void _showMoreOptionsBottomSheet(BuildContext context, Nest nest) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: BottomSheet(
+            onClosing: () {},
+            builder: (BuildContext context) {
+              return Container(
+                padding: const EdgeInsets.all(16.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    // crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      // Show the inventory ID
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(nest.fieldNumber ?? '', style: TextTheme.of(context).bodyLarge,),
+                      ),
+                      const Divider(),
+
+                      // GridView.count(
+                      //   crossAxisCount: MediaQuery.sizeOf(context).width < 600 ? 4 : 5,
+                      //   shrinkWrap: true,
+                      //   physics: const NeverScrollableScrollPhysics(),
+                      //   children: <Widget>[
+                      //     buildGridMenuItem(context, Icons.delete_outlined,
+                      //         S.of(context).delete, () {
+                      //           Navigator.of(context).pop();
+                      //           // Ask for user confirmation
+                      //           _confirmDelete(context, inventory);
+                      //         }, color: Theme.of(context).colorScheme.error),
+                      //   ],
+                      // ),
+                      // Divider(),
+                      Row(
+                        children: [
+                          const SizedBox(width: 8.0),
+                          Text(S.current.export, style: TextTheme
+                              .of(context)
+                              .bodyMedium,),
+                          // Icon(Icons.share_outlined),
+                          Expanded(
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child:
+                              Row(
+                                children: [
+                                  const SizedBox(width: 16.0),
+                                  ActionChip(
+                                    label: const Text('CSV'),
+                                    onPressed: () async {
+                                      Navigator.of(context).pop();
+                                      final locale = Localizations.localeOf(context);
+                                      final csvFile = await exportNestToCsv(context, nest, locale);
+                                      // Share the file using share_plus
+                                      await SharePlus.instance.share(
+                                        ShareParams(
+                                          files: [XFile(csvFile, mimeType: 'text/csv')],
+                                          text: S.current.nestExported(1),
+                                          subject: S.current.nestData(1),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  const SizedBox(width: 8.0),
+                                  ActionChip(
+                                    label: const Text('Excel'),
+                                    onPressed: () async {
+                                      Navigator.of(context).pop();
+                                      final locale = Localizations.localeOf(context);
+                                      final excelFile = await exportNestToExcel(context, nest, locale);
+                                      // Share the file using share_plus
+                                      await SharePlus.instance.share(
+                                        ShareParams(
+                                            files: [XFile(excelFile, mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')],
+                                            text: S.current.nestExported(1),
+                                            subject: S.current.nestData(1)
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  const SizedBox(width: 8.0),
+                                  ActionChip(
+                                    label: const Text('JSON'),
+                                    onPressed: () async {
+                                      Navigator.of(context).pop();
+                                      exportNestToJson(context, nest);
+                                    },
+                                  ),
+                                  const SizedBox(width: 8.0),
+                                  ActionChip(
+                                    label: const Text('KML'),
+                                    onPressed: () async {
+                                      Navigator.of(context).pop();
+                                      exportNestToKml(context, nest);
+                                    },
+                                  ),
+                                  const SizedBox(width: 8.0),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
         );
       },
     );

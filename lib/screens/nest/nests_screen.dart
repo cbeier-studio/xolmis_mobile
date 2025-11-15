@@ -1275,12 +1275,41 @@ class NestsScreenState extends State<NestsScreen> {
                                 await importNestsFromJson(context);
                                 await nestProvider.fetchNests();
                               }),
-                          buildGridMenuItem(
-                              context, Icons.share_outlined, S.of(context).exportAll,
-                                  () async {
-                                Navigator.of(context).pop();
-                                await exportAllInactiveNestsToJson(context);
-                              }),
+                          // buildGridMenuItem(
+                          //     context, Icons.share_outlined, S.of(context).exportAll,
+                          //         () async {
+                          //       Navigator.of(context).pop();
+                          //       await exportAllInactiveNestsToJson(context);
+                          //     }),
+                        ],
+                      ),
+                      Divider(),
+                      Row(
+                        children: [
+                          const SizedBox(width: 8.0),
+                          Text(S.current.exportAll, style: TextTheme
+                              .of(context)
+                              .bodyMedium,),
+                          // Icon(Icons.share_outlined),
+                          Expanded(
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child:
+                              Row(
+                                children: [
+                                  const SizedBox(width: 16.0),
+                                  ActionChip(
+                                    label: const Text('JSON'),
+                                    onPressed: () async {
+                                      Navigator.of(context).pop();
+                                      await exportAllInactiveNestsToJson(context);
+                                    },
+                                  ),
+                                  const SizedBox(width: 8.0),
+                                ],
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ],

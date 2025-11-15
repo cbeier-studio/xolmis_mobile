@@ -40,6 +40,7 @@
 
 ### Technical/Dependencies
 
+* Upgraded to Flutter 3.38 and Dart 3.10.
 * Migrated `PopupMenuButton` and `showMenu` to `MenuAnchor`.
 * Replaced `showSearch` for `SearchAnchor`.
 

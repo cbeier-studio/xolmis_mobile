@@ -1106,24 +1106,69 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                                 await importSpecimensFromJson(context);
                                 await specimenProvider.fetchSpecimens();
                               }),
-                          buildGridMenuItem(
-                              context, Icons.share_outlined, '${S.of(context).exportAll} (CSV)',
-                                  () async {
-                                Navigator.of(context).pop();
-                                exportAllSpecimensToCsv(context, _showPending ? specimenProvider.pendingSpecimens : specimenProvider.archivedSpecimens);
-                              }),
-                          buildGridMenuItem(
-                              context, Icons.share_outlined, '${S.of(context).exportAll} (Excel)',
-                                  () async {
-                                Navigator.of(context).pop();
-                                exportAllSpecimensToExcel(context, _showPending ? specimenProvider.pendingSpecimens : specimenProvider.archivedSpecimens);
-                              }),
-                          buildGridMenuItem(
-                              context, Icons.share_outlined, '${S.of(context).exportAll} (JSON)',
-                                  () async {
-                                Navigator.of(context).pop();
-                                exportAllSpecimensToJson(context, _showPending ? specimenProvider.pendingSpecimens : specimenProvider.archivedSpecimens);
-                              }),
+                          // buildGridMenuItem(
+                          //     context, Icons.share_outlined, '${S.of(context).exportAll} (CSV)',
+                          //         () async {
+                          //       Navigator.of(context).pop();
+                          //       exportAllSpecimensToCsv(context, _showPending ? specimenProvider.pendingSpecimens : specimenProvider.archivedSpecimens);
+                          //     }),
+                          // buildGridMenuItem(
+                          //     context, Icons.share_outlined, '${S.of(context).exportAll} (Excel)',
+                          //         () async {
+                          //       Navigator.of(context).pop();
+                          //       exportAllSpecimensToExcel(context, _showPending ? specimenProvider.pendingSpecimens : specimenProvider.archivedSpecimens);
+                          //     }),
+                          // buildGridMenuItem(
+                          //     context, Icons.share_outlined, '${S.of(context).exportAll} (JSON)',
+                          //         () async {
+                          //       Navigator.of(context).pop();
+                          //       exportAllSpecimensToJson(context, _showPending ? specimenProvider.pendingSpecimens : specimenProvider.archivedSpecimens);
+                          //     }),
+                        ],
+                      ),
+                      Divider(),
+                      Row(
+                        children: [
+                          const SizedBox(width: 8.0),
+                          Text(S.current.exportAll, style: TextTheme
+                              .of(context)
+                              .bodyMedium,),
+                          // Icon(Icons.share_outlined),
+                          Expanded(
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child:
+                              Row(
+                                children: [
+                                  const SizedBox(width: 16.0),
+                                  ActionChip(
+                                    label: const Text('CSV'),
+                                    onPressed: () async {
+                                      Navigator.of(context).pop();
+                                      exportAllSpecimensToCsv(context, _showPending ? specimenProvider.pendingSpecimens : specimenProvider.archivedSpecimens);
+                                    },
+                                  ),
+                                  const SizedBox(width: 8.0),
+                                  ActionChip(
+                                    label: const Text('Excel'),
+                                    onPressed: () async {
+                                      Navigator.of(context).pop();
+                                      exportAllSpecimensToExcel(context, _showPending ? specimenProvider.pendingSpecimens : specimenProvider.archivedSpecimens);
+                                    },
+                                  ),
+                                  const SizedBox(width: 8.0),
+                                  ActionChip(
+                                    label: const Text('JSON'),
+                                    onPressed: () async {
+                                      Navigator.of(context).pop();
+                                      exportAllSpecimensToJson(context, _showPending ? specimenProvider.pendingSpecimens : specimenProvider.archivedSpecimens);
+                                    },
+                                  ),
+                                  const SizedBox(width: 8.0),
+                                ],
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ],

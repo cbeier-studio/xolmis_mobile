@@ -272,7 +272,14 @@ class JournalsScreenState extends State<JournalsScreen> {
           ),
         ) : const SizedBox.shrink(),
         actions: [
-          MenuAnchor(
+          MediaQuery.sizeOf(context).width < 600
+              ? IconButton(
+            icon: const Icon(Icons.more_vert_outlined),
+            onPressed: () {
+              _showMoreOptionsBottomSheet(context);
+            },
+          )
+              : MenuAnchor(
             builder: (context, controller, child) {
               return IconButton(
                 icon: const Icon(Icons.more_vert_outlined),
@@ -658,6 +665,51 @@ class JournalsScreenState extends State<JournalsScreen> {
               ),
             );
           },
+          ),
+        );
+      },
+    );
+  }
+
+  void _showMoreOptionsBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: BottomSheet(
+            onClosing: () {},
+            builder: (BuildContext context) {
+              return Container(
+                padding: const EdgeInsets.all(16.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    // crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      GridView.count(
+                        crossAxisCount: MediaQuery.sizeOf(context).width < 600 ? 4 : 5,
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        children: <Widget>[
+                          buildGridMenuItem(
+                              context, Icons.library_add_check_outlined, S.of(context).selectAll,
+                                  () async {
+                                Navigator.of(context).pop();
+                                final filteredJournals = _filterJournalEntries(journalProvider.journalEntries);
+                                setState(() {
+                                  selectedJournals = filteredJournals
+                                      .map((journal) => journal.id)
+                                      .whereType<int>()
+                                      .toSet();
+                                });
+                              }),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
           ),
         );
       },

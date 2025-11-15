@@ -606,7 +606,7 @@ abstract class AppLocalizations {
   /// Title of report option to show species accumulation curve
   ///
   /// In en, this message translates to:
-  /// **'Species accumulation curve'**
+  /// **'Species accumulation'**
   String get speciesAccumulationCurve;
 
   /// Species accumulated field label
@@ -2249,6 +2249,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Refresh'**
   String get refresh;
+
+  /// Message when inventory ID is updated successfully
+  ///
+  /// In en, this message translates to:
+  /// **'Inventory ID updated successfully!'**
+  String get inventoryIdUpdated;
 
   /// No description provided for @precipitationNone.
   ///

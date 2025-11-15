@@ -896,10 +896,10 @@ class S {
     );
   }
 
-  /// `Species accumulation curve`
+  /// `Species accumulation`
   String get speciesAccumulationCurve {
     return Intl.message(
-      'Species accumulation curve',
+      'Species accumulation',
       name: 'speciesAccumulationCurve',
       desc: 'Title of report option to show species accumulation curve',
       args: [],
