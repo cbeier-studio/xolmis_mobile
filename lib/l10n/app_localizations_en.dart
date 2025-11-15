@@ -1354,6 +1354,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get inventoryIdUpdated => 'Inventory ID updated successfully!';
 
   @override
+  String get speciesUpgradeFailed => 'Species upgrade failed';
+
+  @override
   String get precipitationNone => 'None';
 
   @override

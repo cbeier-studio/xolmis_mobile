@@ -1451,6 +1451,11 @@
     "type": "text",
     "description": "Message when inventory ID is updated successfully"
   },
+  "speciesUpgradeFailed": "Falha ao atualizar espécies",
+  "@speciesUpgradeFailed": {
+    "type": "text",
+    "description": "Message when species upgrade fails"
+  },
   "precipitationNone": "Nenhuma",
     "precipitationFog": "Névoa",
     "precipitationMist": "Neblina",

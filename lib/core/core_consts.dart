@@ -4,6 +4,8 @@ const double kTabletBreakpoint = 600.0;
 const double kDesktopBreakpoint = 800.0;
 const double kSideSheetWidth = 400.0;
 
+const int kCurrentSpeciesUpdateVersion = 2025;
+
 class DatabaseInsertException implements Exception {
   final String message;
 

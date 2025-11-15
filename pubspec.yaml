@@ -109,6 +109,7 @@ flutter:
     - assets/changelog.md
     - assets/changelog-pt.md
     - assets/license.md
+    - assets/updates/species_update_2025.json
 
 
 flutter_launcher_icons:

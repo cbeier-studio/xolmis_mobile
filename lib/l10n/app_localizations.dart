@@ -2256,6 +2256,12 @@ abstract class AppLocalizations {
   /// **'Inventory ID updated successfully!'**
   String get inventoryIdUpdated;
 
+  /// Message when species upgrade fails
+  ///
+  /// In en, this message translates to:
+  /// **'Species upgrade failed'**
+  String get speciesUpgradeFailed;
+
   /// No description provided for @precipitationNone.
   ///
   /// In en, this message translates to:

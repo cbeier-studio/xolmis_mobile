@@ -1358,6 +1358,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get inventoryIdUpdated => 'ID do inventário atualizada com sucesso!';
 
   @override
+  String get speciesUpgradeFailed => 'Falha ao atualizar espécies';
+
+  @override
   String get precipitationNone => 'Nenhuma';
 
   @override
@@ -2921,6 +2924,9 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get inventoryIdUpdated => 'ID do inventário atualizada com sucesso!';
+
+  @override
+  String get speciesUpgradeFailed => 'Falha ao atualizar espécies';
 
   @override
   String get precipitationNone => 'Nenhuma';

@@ -844,6 +844,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "speciesPerListTitle": MessageLookupByLibrary.simpleMessage(
       "Espécies por lista",
     ),
+    "speciesUpgradeFailed": MessageLookupByLibrary.simpleMessage(
+      "Falha ao atualizar espécies",
+    ),
     "specimenBlood": MessageLookupByLibrary.simpleMessage("Sangue"),
     "specimenBones": MessageLookupByLibrary.simpleMessage("Ossos"),
     "specimenClaw": MessageLookupByLibrary.simpleMessage("Garra"),

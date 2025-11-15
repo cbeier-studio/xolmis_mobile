@@ -1,0 +1,15 @@
+[
+  { "oldName": "Macropsalis forcipata", "newName": "Hydropsalis forcipata" },
+  { "oldName": "Coturnicops notatus", "newName": "Laterallus notatus" },
+  { "oldName": "Laterallus leucopyrrhus", "newName": "Rufirallus leucopyrrhus" },
+  { "oldName": "Hapalocrex flaviventer", "newName": "Laterallus flaviventer" },
+  { "oldName": "Porzana spiloptera", "newName": "Laterallus spiloptera" },
+  { "oldName": "Himantopus melanurus", "newName": "Himantopus mexicanus" },
+  { "oldName": "Ixobrychus exilis", "newName": "Botaurus exilis" },
+  { "oldName": "Ixobrychus involucris", "newName": "Botaurus involucris" },
+  { "oldName": "Bubulcus ibis", "newName": "Ardea ibis" },
+  { "oldName": "Accipiter bicolor", "newName": "Astur bicolor" },
+  { "oldName": "Dryobates spilogaster", "newName": "Veniliornis spilogaster" },
+  { "oldName": "Dryobates mixtus", "newName": "Veniliornis mixtus" },
+  { "oldName": "Phyllomyias burmeisteri", "newName": "Acrochordopus burmeisteri" }
+]

@@ -4,9 +4,9 @@ import 'package:path/path.dart';
 
 
 class DatabaseHelper {
-  static final DatabaseHelper _instance = DatabaseHelper._internal();
+  static final DatabaseHelper instance = DatabaseHelper._internal();
 
-  factory DatabaseHelper() => _instance;
+  factory DatabaseHelper() => instance;
 
   DatabaseHelper._internal();
 

@@ -3690,6 +3690,16 @@ class S {
     );
   }
 
+  /// `Species upgrade failed`
+  String get speciesUpgradeFailed {
+    return Intl.message(
+      'Species upgrade failed',
+      name: 'speciesUpgradeFailed',
+      desc: 'Message when species upgrade fails',
+      args: [],
+    );
+  }
+
   /// `None`
   String get precipitationNone {
     return Intl.message('None', name: 'precipitationNone', desc: '', args: []);
