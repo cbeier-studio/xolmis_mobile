@@ -36,7 +36,7 @@ Future<List<String>> loadSpeciesSearchData() async {
     final selectedCountry = await getCountrySetting();
     final countryCode = selectedCountry.name;
 
-    final filePath = 'assets/species_data_$countryCode.json';
+    final filePath = 'assets/checklists/species_data_$countryCode.json';
     debugPrint('Carregando dados de espécies do arquivo: $filePath');
 
     // Carrega o conteúdo do arquivo JSON do bundle de assets.

@@ -3720,6 +3720,16 @@ class S {
     );
   }
 
+  /// `Argentina`
+  String get countryArgentina {
+    return Intl.message(
+      'Argentina',
+      name: 'countryArgentina',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Brazil`
   String get countryBrazil {
     return Intl.message('Brazil', name: 'countryBrazil', desc: '', args: []);

@@ -1466,6 +1466,7 @@
     "type": "text",
     "description": "Species search section label"
   },
+  "countryArgentina": "Argentina",
   "countryBrazil": "Brasil",
   "countryParaguay": "Paraguai",
   "countryUruguay": "Uruguai",

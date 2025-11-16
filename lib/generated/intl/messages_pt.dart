@@ -209,6 +209,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "count": MessageLookupByLibrary.simpleMessage("Contagem"),
     "country": MessageLookupByLibrary.simpleMessage("País"),
+    "countryArgentina": MessageLookupByLibrary.simpleMessage("Argentina"),
     "countryBrazil": MessageLookupByLibrary.simpleMessage("Brasil"),
     "countryParaguay": MessageLookupByLibrary.simpleMessage("Paraguai"),
     "countryUruguay": MessageLookupByLibrary.simpleMessage("Uruguai"),

@@ -457,7 +457,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             return AlertDialog.adaptive(
               title: Text(S.current.country),
               contentPadding: const EdgeInsets.only(top: 20.0),
-              content: RadioGroup<SupportedCountry>(
+              content: SingleChildScrollView(
+                child: RadioGroup<SupportedCountry>(
                 groupValue: tempSelectedCountry,
                 onChanged: (SupportedCountry? value) {
                   setDialogState(() {
@@ -466,21 +467,28 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 },
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    RadioListTile<SupportedCountry>(
-                      title: Text(S.current.countryBrazil),
-                      value: SupportedCountry.BR,
-                    ),
-                    RadioListTile<SupportedCountry>(
-                      title: Text(S.current.countryParaguay),
-                      value: SupportedCountry.PY,
-                    ),
-                    RadioListTile<SupportedCountry>(
-                      title: Text(S.current.countryUruguay),
-                      value: SupportedCountry.UY,
-                    ),
-                  ],
+                  children:
+                    SupportedCountry.values.map((country) {
+                      return RadioListTile<SupportedCountry>(
+                        title: Text(countryMetadata[country]?.name ?? ''),
+                        value: country,
+                      );
+                    }).toList(),
+                    // RadioListTile<SupportedCountry>(
+                    //   title: Text(S.current.countryBrazil),
+                    //   value: SupportedCountry.BR,
+                    // ),
+                    // RadioListTile<SupportedCountry>(
+                    //   title: Text(S.current.countryParaguay),
+                    //   value: SupportedCountry.PY,
+                    // ),
+                    // RadioListTile<SupportedCountry>(
+                    //   title: Text(S.current.countryUruguay),
+                    //   value: SupportedCountry.UY,
+                    // ),
+
                 ),
+              ),
               ),
               actions: <Widget>[
                 TextButton(

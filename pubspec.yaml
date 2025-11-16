@@ -103,9 +103,10 @@ flutter:
   assets:
     - assets/license.txt
     - assets/species_data.json
-    - assets/species_data_BR.json
-    - assets/species_data_PY.json
-    - assets/species_data_UY.json
+    - assets/checklists/species_data_AR.json
+    - assets/checklists/species_data_BR.json
+    - assets/checklists/species_data_PY.json
+    - assets/checklists/species_data_UY.json
     - assets/xolmis_icon.png
     - assets/xolmis_icon_monochrome.png
     - assets/alianza_del_pastizal_logo.png

@@ -2280,6 +2280,12 @@ abstract class AppLocalizations {
   /// **'Brazil'**
   String get countryBrazil;
 
+  /// No description provided for @countryParaguay.
+  ///
+  /// In en, this message translates to:
+  /// **'Paraguay'**
+  String get countryParaguay;
+
   /// No description provided for @countryUruguay.
   ///
   /// In en, this message translates to:

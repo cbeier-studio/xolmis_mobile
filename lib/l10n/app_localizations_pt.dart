@@ -1370,6 +1370,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get countryBrazil => 'Brasil';
 
   @override
+  String get countryParaguay => 'Paraguai';
+
+  @override
   String get countryUruguay => 'Uruguai';
 
   @override
@@ -2948,6 +2951,9 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get countryBrazil => 'Brasil';
+
+  @override
+  String get countryParaguay => 'Paraguai';
 
   @override
   String get countryUruguay => 'Uruguai';

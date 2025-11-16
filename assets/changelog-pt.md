@@ -19,7 +19,7 @@
 * Gráfico de acumulação de espécies nos detalhes do inventário.
 * Gráfico de acumulação de espécies para inventários selecionados.
 * Gráfico comparando número de espécies entre inventários selecionados.
-* Agora o usuário pode selecionar o país da busca de espécies (Brasil e Uruguai disponíveis, mais países em breve).
+* Agora o usuário pode selecionar o país da busca de espécies (Argentina, Brasil, Paraguai e Uruguai disponíveis, mais países em breve).
 
 ### Melhorias
 
