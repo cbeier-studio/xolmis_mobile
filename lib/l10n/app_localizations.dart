@@ -2274,6 +2274,12 @@ abstract class AppLocalizations {
   /// **'Species search'**
   String get speciesSearch;
 
+  /// No description provided for @countryArgentina.
+  ///
+  /// In en, this message translates to:
+  /// **'Argentina'**
+  String get countryArgentina;
+
   /// No description provided for @countryBrazil.
   ///
   /// In en, this message translates to:

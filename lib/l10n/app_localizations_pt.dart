@@ -1367,6 +1367,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get speciesSearch => 'Busca de espécies';
 
   @override
+  String get countryArgentina => 'Argentina';
+
+  @override
   String get countryBrazil => 'Brasil';
 
   @override
@@ -2948,6 +2951,9 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get speciesSearch => 'Busca de espécies';
+
+  @override
+  String get countryArgentina => 'Argentina';
 
   @override
   String get countryBrazil => 'Brasil';

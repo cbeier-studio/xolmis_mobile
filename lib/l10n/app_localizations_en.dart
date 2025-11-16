@@ -1363,6 +1363,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get speciesSearch => 'Species search';
 
   @override
+  String get countryArgentina => 'Argentina';
+
+  @override
   String get countryBrazil => 'Brazil';
 
   @override
