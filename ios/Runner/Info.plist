@@ -52,5 +52,9 @@
 	<true/>
 	<key>NSLocationWhenInUseUsageDescription</key>
     <string>Este aplicativo precisa acessar sua localização para registrar as coordenadas geográficas do inventário.</string>
+	<key>NSCameraUsageDescription</key>
+    <string>We need access to your camera to take photos and videos.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+    <string>We need access to your photo library to select and save images.</string>
 </dict>
 </plist>
