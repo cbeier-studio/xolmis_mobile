@@ -169,7 +169,7 @@ class NestDetailScreenState extends State<NestDetailScreen> {
                     // Show dialog with the DropdownButton
                     await showDialog<NestFateType>(
                       context: context,
-                      builder: (context) => AlertDialog.adaptive(
+                      builder: (context) => AlertDialog(
                         title: Text(S.of(context).confirmFate),
                         content: DropdownButtonFormField<NestFateType>(
                           initialValue: selectedNestFate,
@@ -463,7 +463,7 @@ class NestDetailScreenState extends State<NestDetailScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog.adaptive(
+        return AlertDialog(
           title: Text(S.of(context).nestInfo),
           content: SingleChildScrollView(
             child: ListBody(

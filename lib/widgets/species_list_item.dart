@@ -209,7 +209,7 @@ class SpeciesListItemState extends State<SpeciesListItem> {
       context: context,
       builder: (BuildContext context) {
         int currentCount = widget.species.count;
-        return AlertDialog.adaptive(
+        return AlertDialog(
           title: Text(S.of(context).editCount),
           content: StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {

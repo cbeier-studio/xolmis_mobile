@@ -343,7 +343,7 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog.adaptive(
+        return AlertDialog(
           title: Text(S.of(context).speciesInfo),
           content: SingleChildScrollView(
             child: ListBody(
@@ -400,7 +400,7 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog.adaptive(
+        return AlertDialog(
           title: Text(S.of(context).editNotes),
           content: TextField(
             controller: notesController,

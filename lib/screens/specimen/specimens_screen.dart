@@ -840,7 +840,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
               Positioned(
                 top: 8,
                 right: 8,
-                child: Checkbox.adaptive(
+                child: Checkbox(
                   value: isSelected,
                   onChanged: (bool? value) {
                     setState(() {
@@ -867,7 +867,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
     final isSelected =
         selectedSpecimens.contains(specimen.id);
     return ListTile(
-      leading: Checkbox.adaptive(
+      leading: Checkbox(
         value: isSelected,
         onChanged: (bool? value) {
           setState(() {

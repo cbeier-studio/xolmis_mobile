@@ -131,7 +131,7 @@ class AppLocalizationsPt extends AppLocalizations {
       other: '$howMany minutos',
       one: '1 minuto',
     );
-    return '$_temp0 de duração';
+    return '$_temp0';
   }
 
   @override
@@ -1717,7 +1717,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
       other: '$howMany minutos',
       one: '1 minuto',
     );
-    return '$_temp0 de duração';
+    return '$_temp0';
   }
 
   @override

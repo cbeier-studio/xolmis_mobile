@@ -131,7 +131,7 @@ class AppLocalizationsEn extends AppLocalizations {
       other: '$howMany minutes',
       one: '1 minute',
     );
-    return '$_temp0 of duration';
+    return '$_temp0';
   }
 
   @override

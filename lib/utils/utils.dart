@@ -250,7 +250,7 @@ Future<Position?> _showManualCoordinatesDialog(BuildContext context) {
     context: context,
     barrierDismissible: false,
     builder: (dialogContext) {
-      return AlertDialog.adaptive(
+      return AlertDialog(
         title: Text(S.of(dialogContext).enterCoordinates),
         content: Form(
           key: formKey,

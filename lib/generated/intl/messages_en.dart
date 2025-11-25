@@ -81,7 +81,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "${Intl.plural(howMany, one: 'Inventory data', other: 'Inventories data')}";
 
   static String m21(howMany) =>
-      "${Intl.plural(howMany, one: '1 minute', other: '${howMany} minutes')} of duration";
+      "${Intl.plural(howMany, one: '1 minute', other: '${howMany} minutes')}";
 
   static String m22(howMany) =>
       "${Intl.plural(howMany, one: 'Inventory exported!', other: 'Inventories exported!')}";

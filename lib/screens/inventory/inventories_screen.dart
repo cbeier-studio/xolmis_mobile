@@ -1072,7 +1072,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
         // Show checkbox to select inventories if not active
         Visibility(
           visible: !_isShowingActiveInventories,
-          child: Checkbox.adaptive(
+          child: Checkbox(
             value: isSelected,
             onChanged: (bool? value) {
               setState(() {
@@ -1297,7 +1297,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                     // Show checkbox to select inventories if not active
                     Visibility(
                       visible: !_isShowingActiveInventories,
-                      child: Checkbox.adaptive(
+                      child: Checkbox(
                         value: isSelected,
                         onChanged: (bool? value) {
                           setState(() {

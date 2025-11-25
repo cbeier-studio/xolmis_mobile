@@ -53,10 +53,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
   // Load the settings from SharedPreferences
   Future<void> _loadSettings() async {
     final prefs = await SharedPreferences.getInstance();
-    setState(() async {
+    _userCountry = await getCountrySetting();
+    setState(() {
       _themeMode = ThemeMode.values[prefs.getInt('themeMode') ?? 0];
       _maxSimultaneousInventories =
-          prefs.getInt('maxSimultaneousInventories') ?? 2;
+          prefs.getInt('maxSimultaneousInventories') ?? 3;
       _maxSpeciesMackinnon = prefs.getInt('maxSpeciesMackinnon') ?? 10;
       _pointCountsDuration = prefs.getInt('pointCountsDuration') ?? 8;
       _cumulativeTimeDuration = prefs.getInt('cumulativeTimeDuration') ?? 45;
@@ -65,7 +66,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
       _formatNumbers = prefs.getBool('formatNumbers') ?? true;
       _remindVegetationEmpty = prefs.getBool('remindVegetationEmpty') ?? false;
       _remindWeatherEmpty = prefs.getBool('remindWeatherEmpty') ?? false;
-      _userCountry = await getCountrySetting();
     });
   }
 
@@ -416,7 +416,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       context: context,
       builder: (BuildContext context) {
         String observer = '';
-        return AlertDialog.adaptive(
+        return AlertDialog(
           title: Text(S.of(context).observer),
           content: TextField(
             textCapitalization: TextCapitalization.characters,
@@ -454,7 +454,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       builder: (BuildContext context) {
         return StatefulBuilder(
           builder: (context, setDialogState) {
-            return AlertDialog.adaptive(
+            return AlertDialog(
               title: Text(S.current.country),
               contentPadding: const EdgeInsets.only(top: 20.0),
               content: SingleChildScrollView(
@@ -865,7 +865,7 @@ class _NumberPickerDialogState extends State<NumberPickerDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog.adaptive(
+    return AlertDialog(
       title: Text(widget.title),
       content: NumberPicker(
         value: _currentValue,

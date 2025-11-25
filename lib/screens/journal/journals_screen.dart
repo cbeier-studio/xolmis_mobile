@@ -524,7 +524,7 @@ class JournalsScreenState extends State<JournalsScreen> {
               Positioned(
                 top: 8,
                 right: 8,
-                child: Checkbox.adaptive(
+                child: Checkbox(
                   value: isSelected,
                   onChanged: (bool? value) {
                     setState(() {
@@ -550,7 +550,7 @@ class JournalsScreenState extends State<JournalsScreen> {
     final entry = filteredEntries[index];
     final isSelected = selectedJournals.contains(entry.id);
     return ListTile(
-      leading: Checkbox.adaptive(
+      leading: Checkbox(
         value: isSelected,
         onChanged: (bool? value) {
           setState(() {

@@ -233,7 +233,7 @@ class _AppImageScreenState extends State<AppImageScreen> {
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog.adaptive(
+        return AlertDialog(
           title: Text(S.of(context).addImage),
           content: SingleChildScrollView(
             child: Form(
@@ -429,7 +429,7 @@ class _AppImageScreenState extends State<AppImageScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog.adaptive(
+        return AlertDialog(
           title: Text(S.of(context).editNotes),
           content: TextField(
             controller: notesController,

@@ -318,7 +318,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
       context: context,
       builder: (BuildContext context) {
         String speciesName = '';
-        return AlertDialog.adaptive(
+        return AlertDialog(
           title: Text(S.of(context).addSpecies),
           content: TextField(
             textCapitalization: TextCapitalization.sentences,

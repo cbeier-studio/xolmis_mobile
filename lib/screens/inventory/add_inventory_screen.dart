@@ -112,7 +112,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                               context: context,
                               builder: (BuildContext context) {
                                 String acronym = '';
-                                return AlertDialog.adaptive(
+                                return AlertDialog(
                                   title: Text(S.of(context).generateId),
                                   content: TextField(
                                     maxLength: 10,

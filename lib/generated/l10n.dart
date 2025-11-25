@@ -303,10 +303,12 @@ class S {
     );
   }
 
-  /// `{howMany, plural, one{1 minute} other{{howMany} minutes}} of duration`
+  /// `{howMany, plural, one{1 minute} other{{howMany} minutes}}`
   String inventoryDuration(int howMany) {
-    return Intl.message(
-      '${Intl.plural(howMany, one: '1 minute', other: '$howMany minutes')} of duration',
+    return Intl.plural(
+      howMany,
+      one: '1 minute',
+      other: '$howMany minutes',
       name: 'inventoryDuration',
       desc: 'Time duration in minutes in settings screen',
       args: [howMany],
@@ -3715,7 +3717,7 @@ class S {
     return Intl.message(
       'Species search',
       name: 'speciesSearch',
-      desc: '',
+      desc: 'Species search section label',
       args: [],
     );
   }

@@ -252,7 +252,7 @@ abstract class AppLocalizations {
   /// Time duration in minutes in settings screen
   ///
   /// In en, this message translates to:
-  /// **'{howMany, plural, one{1 minute} other{{howMany} minutes}} of duration'**
+  /// **'{howMany, plural, one{1 minute} other{{howMany} minutes}}'**
   String inventoryDuration(int howMany);
 
   /// Timed qualitative lists option in settings
@@ -2268,7 +2268,7 @@ abstract class AppLocalizations {
   /// **'Country'**
   String get country;
 
-  /// No description provided for @speciesSearch.
+  /// Species search section label
   ///
   /// In en, this message translates to:
   /// **'Species search'**

@@ -79,7 +79,7 @@
     "speciesPerListTitle": "Espécies por lista",
     "pointCounts": "Pontos de contagem",
     "durationMin": "Duração (min)",
-    "inventoryDuration": "{howMany, plural, one{1 minuto} other{{howMany} minutos}} de duração",
+    "inventoryDuration": "{howMany, plural, one{1 minuto} other{{howMany} minutos}}",
     "@inventoryDuration": {
         "type": "text",
         "description": "Time duration in minutes",
@@ -1462,7 +1462,7 @@
     "description": "Country field label"
   },
   "speciesSearch": "Busca de espécies",
-  "@forSpeciesSearch": {
+  "@speciesSearch": {
     "type": "text",
     "description": "Species search section label"
   },

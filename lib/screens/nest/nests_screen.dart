@@ -875,7 +875,7 @@ class NestsScreenState extends State<NestsScreen> {
           // Show checkbox if showing inactive nests
           Visibility(
         visible: !_showActive,
-        child: Checkbox.adaptive(
+        child: Checkbox(
           value: isSelected,
           onChanged: (bool? value) {
             setState(() {
@@ -950,7 +950,7 @@ class NestsScreenState extends State<NestsScreen> {
                     // Show checkbox to select inventories if not active
                     Visibility(
                       visible: !_showActive,
-                      child: Checkbox.adaptive(
+                      child: Checkbox(
                         value: isSelected,
                         onChanged: (bool? value) {
                           setState(() {
@@ -984,7 +984,7 @@ class NestsScreenState extends State<NestsScreen> {
                     // Show dialog with the DropdownButton
                     await showDialog<NestFateType>(
                       context: context,
-                      builder: (context) => AlertDialog.adaptive(
+                      builder: (context) => AlertDialog(
                         title: Text(S.of(context).confirmFate),
                         content: DropdownButtonFormField<NestFateType>(
                           value: selectedNestFate,

@@ -144,7 +144,7 @@
         "type": "text",
         "description": "Title of dialog to inform inventory duration in minutes"
     },
-    "inventoryDuration": "{howMany, plural, one{1 minute} other{{howMany} minutes}} of duration",
+    "inventoryDuration": "{howMany, plural, one{1 minute} other{{howMany} minutes}}",
     "@inventoryDuration": {
         "type": "text",
         "description": "Time duration in minutes in settings screen",
@@ -2023,7 +2023,7 @@
       "description": "Country field label"
     },
   "speciesSearch": "Species search",
-    "@forSpeciesSearch": {
+    "@speciesSearch": {
       "type": "text",
       "description": "Species search section label"
     },
