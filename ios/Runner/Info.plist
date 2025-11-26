@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
@@ -29,7 +31,9 @@
 	<key>NSCameraUsageDescription</key>
 	<string>We need access to your camera to take photos and videos.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Este aplicativo precisa acessar sua localização para registrar as coordenadas geográficas do inventário.</string>
+	<string>We need to access your location to get geographical coordinates for your records.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>We need to access your location to get geographical coordinates for your records.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>We need access to your photo library to select and save images.</string>
 	<key>PermissionGroupNotification</key>
@@ -39,7 +43,6 @@
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
-		<string>processing</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
