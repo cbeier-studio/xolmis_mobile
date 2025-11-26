@@ -743,6 +743,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "sampleTime": MessageLookupByLibrary.simpleMessage("Sample time"),
     "save": MessageLookupByLibrary.simpleMessage("Save"),
     "selectAll": MessageLookupByLibrary.simpleMessage("Select all"),
+    "selectInventoryToView": MessageLookupByLibrary.simpleMessage(
+      "Select an inventory to view its details",
+    ),
     "selectInventoryType": MessageLookupByLibrary.simpleMessage(
       "Please, select an inventory type",
     ),

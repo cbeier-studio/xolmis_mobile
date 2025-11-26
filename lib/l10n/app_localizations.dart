@@ -2274,6 +2274,12 @@ abstract class AppLocalizations {
   /// **'Species search'**
   String get speciesSearch;
 
+  /// Message shown when no inventory is selected
+  ///
+  /// In en, this message translates to:
+  /// **'Select an inventory to view its details'**
+  String get selectInventoryToView;
+
   /// No description provided for @countryArgentina.
   ///
   /// In en, this message translates to:

@@ -3722,6 +3722,16 @@ class S {
     );
   }
 
+  /// `Select an inventory to view its details`
+  String get selectInventoryToView {
+    return Intl.message(
+      'Select an inventory to view its details',
+      name: 'selectInventoryToView',
+      desc: 'Message shown when no inventory is selected',
+      args: [],
+    );
+  }
+
   /// `Argentina`
   String get countryArgentina {
     return Intl.message(

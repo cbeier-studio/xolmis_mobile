@@ -1367,6 +1367,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String get speciesSearch => 'Busca de espécies';
 
   @override
+  String get selectInventoryToView =>
+      'Selecione um inventário para ver os detalhes';
+
+  @override
   String get countryArgentina => 'Argentina';
 
   @override
@@ -2951,6 +2955,10 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get speciesSearch => 'Busca de espécies';
+
+  @override
+  String get selectInventoryToView =>
+      'Selecione um inventário para ver os detalhes';
 
   @override
   String get countryArgentina => 'Argentina';

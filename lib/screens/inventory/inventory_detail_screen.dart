@@ -35,6 +35,7 @@ class InventoryDetailScreen extends StatefulWidget {
   final PoiDao poiDao;
   final VegetationDao vegetationDao;
   final WeatherDao weatherDao;
+  final bool isEmbedded;
 
   const InventoryDetailScreen({
     super.key,
@@ -44,6 +45,7 @@ class InventoryDetailScreen extends StatefulWidget {
     required this.poiDao,
     required this.vegetationDao,
     required this.weatherDao,
+    this.isEmbedded = false,
   });
 
   @override
@@ -166,8 +168,296 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
     }
   }
 
+  Widget _buildTopArea(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // Title + actions row
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(widget.inventory.id,
+                    style: Theme.of(context).textTheme.titleMedium),
+              ),
+              // Pause/Resume button (only when active)
+              if (!widget.inventory.isFinished && widget.inventory.duration > 0)
+                Consumer<InventoryProvider>(
+                  builder: (context, inventoryProvider, child) {
+                    final inventory = widget.inventory;
+                    return IconButton(
+                      icon: Icon(inventory.isPaused ? Icons.play_arrow_outlined : Icons.pause_outlined),
+                      tooltip: inventory.isPaused ? S.of(context).resume : S.of(context).pause,
+                      onPressed: () {
+                        if (inventory.isPaused) {
+                          inventoryProvider.resumeInventoryTimer(context, inventory, widget.inventoryDao);
+                        } else {
+                          inventoryProvider.pauseInventoryTimer(inventory, widget.inventoryDao);
+                        }
+                        inventoryProvider.updateInventory(inventory);
+                      },
+                    );
+                  },
+                )
+              else
+                const SizedBox.shrink(),
+              // Finish button
+              Visibility(
+                visible: !widget.inventory.isFinished,
+                child: IconButton.filled(
+                  onPressed: () async {
+                    setState(() {
+                      _isSubmitting = true;
+                    });
+                    final completionService = InventoryCompletionService(
+                      context: context,
+                      inventory: widget.inventory,
+                      inventoryProvider: Provider.of<InventoryProvider>(context, listen: false),
+                      inventoryDao: widget.inventoryDao,
+                    );
+                    await completionService.attemptFinishInventory(context);
+                    if (!widget.isEmbedded) {
+                      Navigator.pop(context, true);
+                    }
+                    setState(() {
+                      _isSubmitting = false;
+                    });
+                  },
+                  style: IconButton.styleFrom(
+                    foregroundColor: Theme.of(context).brightness == Brightness.light
+                        ? Colors.white
+                        : Colors.deepPurple,
+                  ),
+                  icon: _isSubmitting
+                      ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2))
+                      : const Icon(Icons.flag_outlined),
+                ),
+              ),
+              // More / export menu
+              Visibility(
+                visible: widget.inventory.isFinished,
+                child: MediaQuery.sizeOf(context).width < 600
+                    ? IconButton(
+                        icon: const Icon(Icons.more_vert_outlined),
+                        onPressed: () {
+                          _showMoreOptionsBottomSheet(context, widget.inventory);
+                        },
+                      )
+                    : MenuAnchor(
+                        builder: (context, controller, child) {
+                          return IconButton(
+                            icon: const Icon(Icons.more_vert_outlined),
+                            tooltip: S.of(context).exportWhat(S.of(context).inventory(1)),
+                            onPressed: () {
+                              if (controller.isOpen) {
+                                controller.close();
+                              } else {
+                                controller.open();
+                              }
+                            },
+                          );
+                        },
+                        menuChildren: [
+                          MenuItemButton(
+                            leadingIcon: const Icon(Icons.share_outlined),
+                            onPressed: () async {
+                              final locale = Localizations.localeOf(context);
+                              final csvFile = await exportInventoryToCsv(context, widget.inventory, locale);
+                              await SharePlus.instance.share(ShareParams(
+                                files: [XFile(csvFile, mimeType: 'text/csv')],
+                                text: S.current.inventoryExported(1),
+                                subject: S.current.inventoryData(1),
+                              ));
+                            },
+                            child: Text('${S.current.export} CSV'),
+                          ),
+                          MenuItemButton(
+                            leadingIcon: const Icon(Icons.share_outlined),
+                            onPressed: () async {
+                              final locale = Localizations.localeOf(context);
+                              final excelFile = await exportInventoryToExcel(context, widget.inventory, locale);
+                              await SharePlus.instance.share(ShareParams(
+                                files: [XFile(excelFile, mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')],
+                                text: S.current.inventoryExported(1),
+                                subject: S.current.inventoryData(1),
+                              ));
+                            },
+                            child: Text('${S.current.export} Excel'),
+                          ),
+                          MenuItemButton(
+                            leadingIcon: const Icon(Icons.share_outlined),
+                            onPressed: () {
+                              exportInventoryToJson(context, widget.inventory, true);
+                            },
+                            child: Text('${S.current.export} JSON'),
+                          ),
+                          MenuItemButton(
+                            leadingIcon: const Icon(Icons.share_outlined),
+                            onPressed: () {
+                              exportInventoryToKml(context, widget.inventory);
+                            },
+                            child: Text('${S.current.export} KML'),
+                          ),
+                        ],
+                      ),
+              ),
+            ],
+          ),
+        ),
+        // Inventory summary row (type, duration, max species)
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('${inventoryTypeFriendlyNames[widget.inventory.type]}'),
+            if (widget.inventory.duration > 0) ...[
+              const SizedBox(width: 8.0),
+              Text(': ${widget.inventory.duration} ${S.of(context).minutes(widget.inventory.duration)}'),
+            ],
+            if (widget.inventory.maxSpecies > 0) ...[
+              const SizedBox(width: 8.0),
+              Text(': ${widget.inventory.maxSpecies} ${S.of(context).speciesAcronym(widget.inventory.maxSpecies)}'),
+            ],
+          ],
+        ),
+        // Progress indicator if active
+        if (widget.inventory.duration > 0 && !widget.inventory.isFinished)
+          ValueListenableBuilder<double>(
+            valueListenable: widget.inventory.elapsedTimeNotifier,
+            builder: (context, elapsedTime, child) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: LinearProgressIndicator(
+                  value: widget.inventory.isPaused ? null : elapsedTime / (widget.inventory.duration * 60),
+                  backgroundColor: Theme.of(context).brightness == Brightness.light ? Colors.grey[300] : Colors.black,
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    widget.inventory.isPaused ? Colors.amber
+                        : Theme.of(context).brightness == Brightness.light ? Colors.deepPurple : Colors.deepPurpleAccent,
+                  ),
+                ),
+              );
+            },
+          ),
+        // TabBar
+        TabBar(
+          controller: _tabController,
+          tabs: [
+            Consumer<SpeciesProvider>(
+              builder: (context, speciesProvider, child) {
+                final speciesList = speciesProvider.getSpeciesForInventory(widget.inventory.id);
+                return speciesList.isNotEmpty
+                    ? Badge.count(
+                        backgroundColor: Colors.deepPurple[100],
+                        textColor: Colors.deepPurple[800],
+                        alignment: AlignmentDirectional.centerEnd,
+                        offset: const Offset(24, -8),
+                        count: speciesList.length,
+                        child: Tab(text: S.of(context).species(2)),
+                      )
+                    : Tab(text: S.of(context).species(2));
+              },
+            ),
+            Consumer<VegetationProvider>(
+              builder: (context, vegetationProvider, child) {
+                final vegetationList = vegetationProvider.getVegetationForInventory(widget.inventory.id);
+                return vegetationList.isNotEmpty
+                    ? Badge.count(
+                        backgroundColor: Colors.deepPurple[100],
+                        textColor: Colors.deepPurple[800],
+                        alignment: AlignmentDirectional.centerEnd,
+                        offset: const Offset(24, -8),
+                        count: vegetationList.length,
+                        child: Tab(text: S.of(context).vegetation),
+                      )
+                    : Tab(text: S.of(context).vegetation);
+              },
+            ),
+            Consumer<WeatherProvider>(
+              builder: (context, weatherProvider, child) {
+                final weatherList = weatherProvider.getWeatherForInventory(widget.inventory.id);
+                return weatherList.isNotEmpty
+                    ? Badge.count(
+                        backgroundColor: Colors.deepPurple[100],
+                        textColor: Colors.deepPurple[800],
+                        alignment: AlignmentDirectional.centerEnd,
+                        offset: const Offset(24, -8),
+                        count: weatherList.length,
+                        child: Tab(text: S.of(context).weather),
+                      )
+                    : Tab(text: S.of(context).weather);
+              },
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    // If embedded, return widget without Scaffold/AppBar
+    if (widget.isEmbedded) {
+      return SafeArea(
+        child: Column(
+          children: [
+            _buildTopArea(context),
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                dragStartBehavior: DragStartBehavior.down,
+                children: [
+                  SpeciesTab(
+                    inventory: widget.inventory,
+                    speciesDao: widget.speciesDao,
+                    inventoryDao: widget.inventoryDao,
+                  ),
+                  VegetationTab(inventory: widget.inventory),
+                  WeatherTab(inventory: widget.inventory),
+                ],
+              ),
+            ),
+            // Floating actions in embedded mode: show FAB aligned bottom-right
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: FabMenuM3E(
+                  controller: fabController,
+                  alignment: Alignment.bottomRight,
+                  direction: FabMenuDirection.up,
+                  overlay: false,
+                  primaryFab: FabM3E(
+                      icon: fabController.isOpen ? const Icon(Icons.close) : const Icon(Icons.add),
+                      onPressed: fabController.toggle),
+                  items: [
+                    FabMenuItem(
+                      icon: Theme.of(context).brightness == Brightness.light
+                          ? const Icon(Icons.local_florist_outlined)
+                          : const Icon(Icons.local_florist),
+                      label: Text(S.of(context).vegetationData),
+                      onPressed: () {
+                        _showAddVegetationScreen(context);
+                      },
+                    ),
+                    FabMenuItem(
+                      icon: Theme.of(context).brightness == Brightness.light
+                          ? const Icon(Icons.wb_sunny_outlined)
+                          : const Icon(Icons.wb_sunny),
+                      label: Text(S.of(context).weatherData),
+                      onPressed: () {
+                        _showAddWeatherScreen(context);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    // Not embedded: original Scaffold with AppBar
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.inventory.id),

@@ -1363,6 +1363,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get speciesSearch => 'Species search';
 
   @override
+  String get selectInventoryToView => 'Select an inventory to view its details';
+
+  @override
   String get countryArgentina => 'Argentina';
 
   @override

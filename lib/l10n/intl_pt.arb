@@ -1466,6 +1466,11 @@
     "type": "text",
     "description": "Species search section label"
   },
+  "selectInventoryToView": "Selecione um inventário para ver os detalhes",
+    "@selectInventoryToView": {
+      "type": "text",
+      "description": "Message shown when no inventory is selected"
+    },
   "countryArgentina": "Argentina",
   "countryBrazil": "Brasil",
   "countryParaguay": "Paraguai",

@@ -42,6 +42,7 @@
 
 ### Técnico/Dependências
 
+* Suporte ao iOS e iPadOS.
 * Atualizado para Flutter 3.38 e Dart 3.10.
 * Migrados `PopupMenuButton` e `showMenu` para `MenuAnchor`.
 * Substituído `showSearch` por `SearchAnchor`.
