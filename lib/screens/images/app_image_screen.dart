@@ -23,6 +23,7 @@ class AppImageScreen extends StatefulWidget {
   final int? eggId;
   final int? specimenId;
   final int? nestRevisionId;
+  final bool isEmbedded;
 
   const AppImageScreen({
     super.key,
@@ -30,6 +31,7 @@ class AppImageScreen extends StatefulWidget {
     this.eggId,
     this.specimenId,
     this.nestRevisionId,
+    this.isEmbedded = false,
   });
 
   @override
@@ -136,8 +138,86 @@ class _AppImageScreenState extends State<AppImageScreen> {
     }
   }
 
+  Widget _buildTopArea(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // Title + actions row
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(S.of(context).images(2),
+                    style: Theme.of(context).textTheme.titleLarge),
+              ),
+              IconButton(
+                onPressed: () async {
+                  // Request permission to access the camera and photos
+          final permissionsGranted = await _requestPermissions();
+          if (!mounted) return;
+
+          if (permissionsGranted) {
+            _notesController.clear(); // Clear notes before showing dialog
+            _showAddImageDialog();
+          }
+                }, 
+                icon: Icon(Theme.of(context).brightness == Brightness.light ? Icons.add_a_photo_outlined : Icons.add_a_photo),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    // If embedded, return widget without Scaffold/AppBar
+    if (widget.isEmbedded) {
+      return SafeArea(
+        child: Column(
+          children: [
+            _buildTopArea(context),
+            Expanded(
+              child: Consumer<AppImageProvider>(
+          builder: (context, appImageProvider, child) {
+            final images = appImageProvider.images;
+            if (images.isEmpty) {
+              return Center(
+                child: Text(S.of(context).noImagesFound),
+              );
+            } else {
+              return LayoutBuilder(
+                builder: (BuildContext context, BoxConstraints constraints) {
+                  final screenWidth = constraints.maxWidth;
+                  final isLargeScreen = screenWidth > 600;
+
+                  if (isLargeScreen) {
+                    // If the screen is large, show a constrained box
+                    return Align(
+                      alignment: Alignment.topCenter,
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 840),
+                        child: SingleChildScrollView(
+                          child: _buildGridView(images),
+                        ),
+                      ),
+                    );
+                  } else {
+                    return _buildGridView(images);
+                  }
+                },
+              );
+            }
+          }
+        ),
+            ),
+          ],
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(S.of(context).images(2)),

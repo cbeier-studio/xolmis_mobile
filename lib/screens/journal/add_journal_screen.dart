@@ -20,11 +20,13 @@ import '../../utils/utils.dart';
 class AddJournalScreen extends StatefulWidget {
   final FieldJournal? journalEntry;
   final bool isEditing;
+  final bool isEmbedded;
 
   const AddJournalScreen({
     super.key,
     this.journalEntry,
     this.isEditing = false,
+    this.isEmbedded = false,
   });
 
   @override
@@ -67,8 +69,194 @@ class AddJournalScreenState extends State<AddJournalScreen> {
     super.dispose();
   }
 
+  Widget _buildTopArea(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // Title + actions row
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(S.of(context).newJournalEntry,
+                    style: Theme.of(context).textTheme.titleLarge),
+              ),
+              IconButton(
+            icon: const Icon(Icons.add_location_alt_outlined),
+            tooltip: S.of(context).addCoordinates,
+            onPressed: () async {
+              Position? position = await getPosition(context);
+              if (position != null) {
+                final selection = _notesController.selection;
+                final positionText = '${position.longitude}; ${position.latitude}';
+                _notesController.replaceText(
+                  selection.baseOffset,
+                  0,
+                  positionText,
+                  selection: TextSelection.collapsed(offset: selection.baseOffset + positionText.length),
+                );
+              }              
+            },
+          ),
+          MenuAnchor(
+            builder: (context, controller, child) {
+              return IconButton(
+                icon: const Icon(Icons.add_a_photo_outlined),
+                tooltip: S.of(context).addImage,
+                onPressed: () {
+                  if (controller.isOpen) {
+                    controller.close();
+                  } else {
+                    controller.open();
+                  }
+                },
+              );
+            },
+            menuChildren: [
+              MenuItemButton(
+                onPressed: () async {
+                  final picker = ImagePicker();
+                  final pickedFile = await picker.pickImage(source: ImageSource.camera);
+                  if (pickedFile != null) {
+                    // Save the image to the app's documents directory
+                    final directory = await getApplicationDocumentsDirectory();
+                    final fileName = path.basename(pickedFile.path);
+                    final savedImage = await File(pickedFile.path).copy('${directory.path}/$fileName');
+      
+                    final selection = _notesController.selection;
+                    _notesController.replaceText(
+                      selection.baseOffset,
+                      selection.extentOffset - selection.baseOffset,
+                      EmbeddableObject('image', inline: false, data: {
+                        'source_type': kIsWeb ? 'url' : 'file',
+                        'source': savedImage.path,
+                      }),
+                    );
+                    _notesController.replaceText(
+                      selection.baseOffset + 1,
+                      0,
+                      '\n',
+                      selection: TextSelection.collapsed(
+                          offset: selection.baseOffset + 2),
+                    );
+                  }
+                },
+                child: Text(S.current.camera),
+              ),
+              MenuItemButton(
+                onPressed: () async {
+                  final picker = ImagePicker();
+                  final image = await picker.pickImage(source: ImageSource.gallery);
+                  if (image != null) {
+                    final selection = _notesController.selection;
+                    _notesController.replaceText(
+                      selection.baseOffset,
+                      selection.extentOffset - selection.baseOffset,
+                      EmbeddableObject('image', inline: false, data: {
+                        'source_type': kIsWeb ? 'url' : 'file',
+                        'source': image.path,
+                      }),
+                    );
+                    _notesController.replaceText(
+                      selection.baseOffset + 1,
+                      0,
+                      '\n',
+                      selection: TextSelection.collapsed(
+                          offset: selection.baseOffset + 2),
+                    );
+                  }
+                },
+                child: Text(S.current.gallery),
+              ),
+            ],
+          ),
+          _isSubmitting
+                          ? const SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          year2023: false,
+                        ),
+                      )
+                          : FilledButton(
+                        onPressed: _submitForm,
+                        child: Text(S.of(context).save),
+                      ),
+            ],
+          ),
+        ),
+        
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    // If embedded, return widget without Scaffold/AppBar
+    if (widget.isEmbedded) {
+      return SafeArea(
+        child: Column(
+          children: [
+            _buildTopArea(context),
+            Expanded(
+              child: Column(
+            children: [
+              Form(
+                key: _formKey,
+                child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: TextFormField(
+                          controller: _titleController,
+                          textCapitalization: TextCapitalization.sentences,
+                          decoration: InputDecoration(
+                            labelText: '${S.of(context).title} *',
+                            border: OutlineInputBorder(),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return S.of(context).insertTitle;
+                            }
+                            return null;
+                          },
+                        ),
+                ),
+              ),
+                        // const SizedBox(height: 16.0),
+                Expanded(
+                  child: FleatherEditor(
+                    controller: _notesController,
+                    focusNode: _focusNode,
+                    editorKey: _editorKey,
+                    
+                    padding: EdgeInsets.only(
+                      left: 16,
+                      right: 16,
+                      bottom: MediaQuery.of(context).padding.bottom,
+                    ),
+                    onLaunchUrl: _launchUrl,
+                    maxContentWidth: 800,
+                    embedBuilder: _embedBuilder,
+                    spellCheckConfiguration: SpellCheckConfiguration(
+                        spellCheckService: DefaultSpellCheckService(),
+                        misspelledSelectionColor: Colors.red,
+                        misspelledTextStyle:
+                            DefaultTextStyle.of(context).style),
+                  ),
+                ),
+                FleatherToolbar.basic(
+                    controller: _notesController, editorKey: _editorKey),
+              
+            ],   
+                  ),
+            ),
+            
+          ],
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(S.of(context).newJournalEntry),
@@ -302,7 +490,9 @@ class AddJournalScreenState extends State<AddJournalScreen> {
         try {
           await journalProvider.updateJournalEntry(updatedEntry);
 
-          Navigator.pop(context);
+          if (!widget.isEmbedded) {
+            Navigator.pop(context);
+          }
         } catch (error) {
           if (kDebugMode) {
             print('Error saving field journal entry: $error');

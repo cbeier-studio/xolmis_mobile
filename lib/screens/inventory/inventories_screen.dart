@@ -272,7 +272,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
   }
 
   // Show the dialog to add a new inventory
-  Future<void> _showAddInventoryScreen(BuildContext context) async {
+  Future<void> showAddInventoryScreen(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
     final String observerAbbreviation = prefs.getString('observerAcronym') ?? '';
 
@@ -625,20 +625,22 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     final isLargeScreen = screenWidth >= 600;
 
     return Scaffold(
-      appBar: AppBar(
+      appBar: isLargeScreen == false ? AppBar(
         title: SearchBar(
           controller: _searchController,
           hintText: S.of(context).inventories,
           elevation: WidgetStateProperty.all(0),
-          // leading: const Icon(Icons.search_outlined),
+          leading: MediaQuery.sizeOf(context).width < 600
+            ? Builder(
+                builder: (context) => IconButton(
+                  icon: const Icon(Icons.menu_outlined),
+                  onPressed: () {
+                    widget.scaffoldKey.currentState?.openDrawer();
+                  },
+                ),
+              )
+            : const SizedBox.shrink(),
           trailing: [
-            IconButton(
-              icon: const Icon(Icons.sort_outlined),
-              tooltip: S.of(context).sortBy,
-              onPressed: () {
-                _showSortOptionsBottomSheet();
-              },
-            ),
             _searchController.text.isNotEmpty
                 ? IconButton(
               icon: const Icon(Icons.clear_outlined),
@@ -650,6 +652,19 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
               },
             )
                 : const SizedBox.shrink(),
+            IconButton(
+              icon: const Icon(Icons.sort_outlined),
+              tooltip: S.of(context).sortBy,
+              onPressed: () {
+                _showSortOptionsBottomSheet();
+              },
+            ),
+            IconButton(
+        icon: const Icon(Icons.more_vert_outlined),
+        onPressed: () {
+          _showMoreOptionsBottomSheet(context);
+        },
+      ),
           ],
           onChanged: (query) {
             setState(() {
@@ -658,73 +673,9 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
           },
         ),
         // title: Text(S.of(context).inventories),
-        leading: MediaQuery.sizeOf(context).width < 600
-            ? Builder(
-                builder: (context) => IconButton(
-                  icon: const Icon(Icons.menu_outlined),
-                  onPressed: () {
-                    widget.scaffoldKey.currentState?.openDrawer();
-                  },
-                ),
-              )
-            : const SizedBox.shrink(),
-        actions: [
-          MediaQuery.sizeOf(context).width < 600
-          ? IconButton(
-        icon: const Icon(Icons.more_vert_outlined),
-        onPressed: () {
-          _showMoreOptionsBottomSheet(context);
-        },
-      )
-          : MenuAnchor(
-            builder: (context, controller, child) {
-              return IconButton(
-                icon: const Icon(Icons.more_vert_outlined),
-                onPressed: () {
-                  if (controller.isOpen) {
-                    controller.close();
-                  } else {
-                    controller.open();
-                  }
-                },
-              );
-            },
-            menuChildren: [
-              // Action to select all inventories
-              if (!_isShowingActiveInventories)
-                MenuItemButton(
-                  leadingIcon: const Icon(Icons.library_add_check_outlined),
-                  onPressed: () {
-                    final filteredInventories = _filterInventories(inventoryProvider.finishedInventories);
-                    setState(() {
-                      selectedInventories = filteredInventories
-                          .map((inventory) => inventory.id)
-                          .toSet();
-                    });
-                  },
-                  child: Text(S.of(context).selectAll),
-                ),
-              // Action to import inventories from JSON
-              MenuItemButton(
-                leadingIcon: const Icon(Icons.file_open_outlined),
-                onPressed: () async {
-                  await importInventoryFromJson(context);
-                  await inventoryProvider.fetchInventories(context);
-                },
-                child: Text(S.of(context).import),
-              ),
-              // Action to export all finished inventories to JSON
-              MenuItemButton(
-                leadingIcon: const Icon(Icons.share_outlined),
-                onPressed: () async {
-                  await exportAllInventoriesToJson(context, inventoryProvider);
-                },
-                child: Text(S.of(context).exportAll),
-              ),
-            ],
-          ),
-        ],
-      ),
+        
+        
+      ) : null,
       body: LayoutBuilder(
         builder: (context, constraints) {
           // On large screens we show a split screen master/detail
@@ -734,13 +685,14 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                 // Left: list (takes 40% width)
                 Container(
                   width: constraints.maxWidth * 0.45, // adjust ratio as needed
-                  decoration: BoxDecoration(
-                    border: Border(
-                      right: BorderSide(color: Theme.of(context).dividerColor),
-                    ),
-                  ),
+                  //decoration: BoxDecoration(
+                  //  border: Border(
+                  //    right: BorderSide(color: Theme.of(context).dividerColor),
+                  //  ),
+                  //),
                   child: _buildListPane(context, isLargeScreen),
                 ),
+                VerticalDivider(),
                 // Right: detail pane
                 Expanded(
                   child: _buildDetailPane(context),
@@ -761,7 +713,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
       floatingActionButton: FloatingActionButton(
         tooltip: S.of(context).newInventory,
         onPressed: () {
-          _showAddInventoryScreen(context);
+          showAddInventoryScreen(context);
         },
         child: const Icon(Icons.add_outlined),
       ),
@@ -934,6 +886,87 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     return Column(
         children: [
           Padding(
+            padding: const EdgeInsets.fromLTRB(16.0, 24.0, 16.0, 0.0),
+            child: isLargeScreen ? SearchBar(
+          controller: _searchController,
+          hintText: S.of(context).inventories,
+          elevation: WidgetStateProperty.all(0),
+          // leading: const Icon(Icons.search_outlined),
+          trailing: [
+            _searchController.text.isNotEmpty
+                ? IconButton(
+              icon: const Icon(Icons.clear_outlined),
+              onPressed: () {
+                setState(() {
+                  _searchQuery = '';
+                  _searchController.clear();
+                });
+              },
+            )
+                : const SizedBox.shrink(),
+            IconButton(
+              icon: const Icon(Icons.sort_outlined),
+              tooltip: S.of(context).sortBy,
+              onPressed: () {
+                _showSortOptionsBottomSheet();
+              },
+            ),
+            MenuAnchor(
+            builder: (context, controller, child) {
+              return IconButton(
+                icon: const Icon(Icons.more_vert_outlined),
+                onPressed: () {
+                  if (controller.isOpen) {
+                    controller.close();
+                  } else {
+                    controller.open();
+                  }
+                },
+              );
+            },
+            menuChildren: [
+              // Action to select all inventories
+              if (!_isShowingActiveInventories)
+                MenuItemButton(
+                  leadingIcon: const Icon(Icons.library_add_check_outlined),
+                  onPressed: () {
+                    final filteredInventories = _filterInventories(inventoryProvider.finishedInventories);
+                    setState(() {
+                      selectedInventories = filteredInventories
+                          .map((inventory) => inventory.id)
+                          .toSet();
+                    });
+                  },
+                  child: Text(S.of(context).selectAll),
+                ),
+              // Action to import inventories from JSON
+              MenuItemButton(
+                leadingIcon: const Icon(Icons.file_open_outlined),
+                onPressed: () async {
+                  await importInventoryFromJson(context);
+                  await inventoryProvider.fetchInventories(context);
+                },
+                child: Text(S.of(context).import),
+              ),
+              // Action to export all finished inventories to JSON
+              MenuItemButton(
+                leadingIcon: const Icon(Icons.share_outlined),
+                onPressed: () async {
+                  await exportAllInventoriesToJson(context, inventoryProvider);
+                },
+                child: Text(S.of(context).exportAll),
+              ),
+            ],
+          ),
+          ],
+          onChanged: (query) {
+            setState(() {
+              _searchQuery = query;
+            });
+          },
+        ) : null,
+          ),
+          Padding(
             padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
             child: LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
@@ -1016,9 +1049,6 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
               Expanded(
                 child: LayoutBuilder(builder:
                     (BuildContext context, BoxConstraints constraints) {
-                  final screenWidth = constraints.maxWidth;
-                  final isLargeScreen = screenWidth > 600;
-
                     return ListView.separated(
                       separatorBuilder: (context, index) => Divider(),
                       shrinkWrap: true,

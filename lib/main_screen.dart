@@ -296,6 +296,7 @@ class _MainScreenState extends State<MainScreen> {
         children: [
           if (useSideNavRail || useFixedNavDrawer)
             NavigationRail(
+              scrollable: true,
               trailingAtBottom: true,
               trailing: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -322,6 +323,8 @@ class _MainScreenState extends State<MainScreen> {
                 });
               },
             ),
+          if (useSideNavRail || useFixedNavDrawer)
+            VerticalDivider(),
           Expanded(
             child: _navItems[_selectedIndex].screenBuilder.call(
               context,

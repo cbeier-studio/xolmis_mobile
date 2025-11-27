@@ -202,6 +202,18 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                 )
               else
                 const SizedBox.shrink(),
+              IconButton(
+                onPressed: () {
+                  _showAddVegetationScreen(context);
+                }, 
+                icon: Icon(Theme.of(context).brightness == Brightness.light ? Icons.local_florist_outlined : Icons.local_florist),
+              ),
+              IconButton(
+                onPressed: () {
+                  _showAddWeatherScreen(context);
+                }, 
+                icon: Icon(Theme.of(context).brightness == Brightness.light ? Icons.wb_sunny_outlined : Icons.wb_sunny),
+              ),
               // Finish button
               Visibility(
                 visible: !widget.inventory.isFinished,
@@ -306,6 +318,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
           ),
         ),
         // Inventory summary row (type, duration, max species)
+        if (!widget.isEmbedded)
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -321,7 +334,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
           ],
         ),
         // Progress indicator if active
-        if (widget.inventory.duration > 0 && !widget.inventory.isFinished)
+        if (!widget.isEmbedded && widget.inventory.duration > 0 && !widget.inventory.isFinished)
           ValueListenableBuilder<double>(
             valueListenable: widget.inventory.elapsedTimeNotifier,
             builder: (context, elapsedTime, child) {

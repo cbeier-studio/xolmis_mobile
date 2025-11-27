@@ -101,21 +101,10 @@ class _NestRevisionsTabState extends State<NestRevisionsTab>
                       widget.nest.id ?? 0,
                     );
                   },
-                  child: LayoutBuilder(
-                    builder: (
-                      BuildContext context,
-                      BoxConstraints constraints,
-                    ) {
-                      final screenWidth = constraints.maxWidth;
-                      final isLargeScreen = screenWidth > 600;
-
-                      if (isLargeScreen) {
-                        return revisionGridTileItem(constraints, revisionList);
-                      } else {
-                        return _buildListView(revisionList);
-                      }
-                    },
-                  ),
+                  child: _buildListView(revisionList),
+                      
+                    
+                  
                 );
               }
             },

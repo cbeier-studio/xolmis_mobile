@@ -38,6 +38,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
   Set<int> selectedSpecimens = {};
   SortOrder _sortOrder = SortOrder.descending;
   SpecimenSortField _sortField = SpecimenSortField.sampleTime;
+  Specimen? _selectedSpecimen;
 
   @override
   void initState() {
@@ -410,21 +411,24 @@ class SpecimensScreenState extends State<SpecimensScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final isLargeScreen = screenWidth >= 600;
+
     return Scaffold(
-      appBar: AppBar(
+      appBar: !isLargeScreen ? AppBar(
         title: SearchBar(
           controller: _searchController,
           hintText: S.of(context).specimens(2),
           elevation: WidgetStateProperty.all(0),
-          // leading: const Icon(Icons.search_outlined),
+          leading: MediaQuery.sizeOf(context).width < 600 ? Builder(
+          builder: (context) => IconButton(
+            icon: const Icon(Icons.menu_outlined),
+            onPressed: () {
+              widget.scaffoldKey.currentState?.openDrawer();
+            },
+          ),
+        ) : const SizedBox.shrink(),
           trailing: [
-            IconButton(
-              icon: const Icon(Icons.sort_outlined),
-              tooltip: S.of(context).sortBy,
-              onPressed: () {
-                _showSortOptionsBottomSheet();
-              },
-            ),
             _searchController.text.isNotEmpty
                 ? IconButton(
               icon: const Icon(Icons.clear_outlined),
@@ -436,24 +440,15 @@ class SpecimensScreenState extends State<SpecimensScreen> {
               },
             )
                 : const SizedBox.shrink(),
-          ],
-          onChanged: (query) {
-            setState(() {
-              _searchQuery = query;
-            });
-          },
-        ),
-        // title: Text(S.of(context).specimens(2)),
-        leading: MediaQuery.sizeOf(context).width < 600 ? Builder(
-          builder: (context) => IconButton(
-            icon: const Icon(Icons.menu_outlined),
-            onPressed: () {
-              widget.scaffoldKey.currentState?.openDrawer();
-            },
-          ),
-        ) : const SizedBox.shrink(),
-        actions: [
-          MediaQuery.sizeOf(context).width < 600
+            IconButton(
+              icon: const Icon(Icons.sort_outlined),
+              tooltip: S.of(context).sortBy,
+              onPressed: () {
+                _showSortOptionsBottomSheet();
+              },
+            ),
+            
+            MediaQuery.sizeOf(context).width < 600
               ? IconButton(
             icon: const Icon(Icons.more_vert_outlined),
             onPressed: () {
@@ -522,129 +517,45 @@ class SpecimensScreenState extends State<SpecimensScreen> {
               ),
             ],
           ),
-        ],
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
-            child: LayoutBuilder(
-              builder: (BuildContext context, BoxConstraints constraints) {
-                final screenWidth = constraints.maxWidth;
-                final buttonWidth = screenWidth < 600 ? screenWidth : 400.0;
-
-                // Show the segmented button to toggle between active and inactive nests
-                return SizedBox(
-                  width: buttonWidth,
-                  child: SegmentedButton<bool>(
-                    segments: [
-                      ButtonSegment(value: true, label: Text(S.of(context).pending)),
-                      ButtonSegment(value: false, label: Text(S.of(context).archived)),
-                    ],
-                    selected: {_showPending},
-                    onSelectionChanged: (Set<bool> newSelection) {
-                      setState(() {
-                        selectedSpecimens.clear();
-                        _showPending = newSelection.first;
-                      });
-                      // nestProvider.notifyListeners();
-                    },
-                  ),
-                );
-              },
-            ),
-          ),
-          Expanded(
-            child: Consumer<SpecimenProvider>(
-                builder: (context, specimenProvider, child) {
-              final filteredSpecimens =
-                  _filterSpecimens(_showPending 
-                    ? specimenProvider.pendingSpecimens
-                    : specimenProvider.archivedSpecimens);
-
-              if (_showPending && specimenProvider.pendingSpecimens.isEmpty ||
-                  !_showPending && specimenProvider.archivedSpecimens.isEmpty) {
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(S.of(context).noSpecimenCollected),
-                      const SizedBox(height: 8),
-                      FilledButton.icon(
-                        label: Text(S.of(context).refresh),
-                        icon: const Icon(Icons.refresh_outlined),
-                        onPressed: () async {
-                          await specimenProvider.fetchSpecimens();
-                        }, 
-                      )
-                    ],
-                  ),
-                );
-              }
-
-              return RefreshIndicator(
-                onRefresh: () async {
-                  await specimenProvider.fetchSpecimens();
-                },
-                child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
-                child: Text(
-                  '${filteredSpecimens.length} ${S.of(context).specimens(filteredSpecimens.length).toLowerCase()}',
-                  // style: TextStyle(fontSize: 16,),
+          ],
+          onChanged: (query) {
+            setState(() {
+              _searchQuery = query;
+            });
+          },
+        ),
+        // title: Text(S.of(context).specimens(2)),
+        
+        
+      ) : null,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          // On large screens we show a split screen master/detail
+          if (isLargeScreen) {
+            return Row(
+              children: [
+                // Left: list (takes 40% width)
+                Container(
+                  width: constraints.maxWidth * 0.45, // adjust ratio as needed
+                  //decoration: BoxDecoration(
+                  //  border: Border(
+                  //    right: BorderSide(color: Theme.of(context).dividerColor),
+                  //  ),
+                  //),
+                  child: _buildListPane(context, isLargeScreen),
                 ),
-              ),
-              Expanded(
-                child: LayoutBuilder(builder:
-                    (BuildContext context, BoxConstraints constraints) {
-                  final screenWidth = constraints.maxWidth;
-                  final isLargeScreen = screenWidth > 600;
-
-                  if (isLargeScreen) {
-                    final double minWidth = 300;
-                    int crossAxisCountCalculated =
-                        (constraints.maxWidth / minWidth).floor();
-                    return SingleChildScrollView(
-                      child: Align(
-                        alignment: Alignment.topCenter,
-                        child: ConstrainedBox(
-                          constraints: const BoxConstraints(maxWidth: 840),
-                          child: GridView.builder(
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: crossAxisCountCalculated,
-                              childAspectRatio: 1,
-                            ),
-                            physics: const NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: filteredSpecimens.length,
-                            itemBuilder: (context, index) {
-                              return specimenGridTileItem(filteredSpecimens, index, context);
-                            },
-                          ),
-                        ),
-                      ),
-                    );
-                  } else {
-                    return ListView.separated(
-                      separatorBuilder: (context, index) => Divider(),
-                      shrinkWrap: true,
-                      itemCount: filteredSpecimens.length,
-                      itemBuilder: (context, index) {
-                        return specimenListTileItem(filteredSpecimens, index, context);
-                      },
-                    );
-                  }
-                }),
-              ),
-            ],
+                VerticalDivider(),
+                // Right: detail pane
+                Expanded(
+                  child: _buildDetailPane(context),
                 ),
-              );
-            }),
-          ),
-        ],
+              ],
+            );
+          } else {
+            // Small screens: keep current column layout
+            return _buildListPane(context, isLargeScreen);
+          }
+        },
       ),
       floatingActionButtonLocation: selectedSpecimens.isNotEmpty 
         ? FloatingActionButtonLocation.endContained 
@@ -737,135 +648,218 @@ class SpecimensScreenState extends State<SpecimensScreen> {
     );
   }
 
-  GridTile specimenGridTileItem(List<Specimen> filteredSpecimens, int index, BuildContext context) {
-    final specimen = filteredSpecimens[index];
-    final isSelected =
-        selectedSpecimens.contains(specimen.id);
-    return GridTile(
-      child: InkWell(
-        onLongPress: () =>
-            _showBottomSheet(context, specimen),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AppImageScreen(
-                specimenId: specimen.id,
-              ),
+  Widget _buildListPane(BuildContext context, bool isLargeScreen) {
+    return Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16.0, 24.0, 16.0, 0.0),
+            child: isLargeScreen ? SearchBar(
+          controller: _searchController,
+          hintText: S.of(context).specimens(1),
+          elevation: WidgetStateProperty.all(0),
+          // leading: const Icon(Icons.search_outlined),
+          trailing: [
+            _searchController.text.isNotEmpty
+                ? IconButton(
+              icon: const Icon(Icons.clear_outlined),
+              onPressed: () {
+                setState(() {
+                  _searchQuery = '';
+                  _searchController.clear();
+                });
+              },
+            )
+                : const SizedBox.shrink(),
+            IconButton(
+              icon: const Icon(Icons.sort_outlined),
+              tooltip: S.of(context).sortBy,
+              onPressed: () {
+                _showSortOptionsBottomSheet();
+              },
             ),
-          );
-        },
-        child: Card.outlined(
-          child: Stack(
-            children: [
-              Column(
-                mainAxisAlignment:
-                    MainAxisAlignment.end,
-                crossAxisAlignment:
-                    CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child:
-                        FutureBuilder<List<AppImage>>(
-                      future: Provider.of<
-                                  AppImageProvider>(
-                              context,
-                              listen: false)
-                          .fetchImagesForSpecimen(
-                              specimen.id!),
-                      builder: (context, snapshot) {
-                        if (snapshot
-                                .connectionState ==
-                            ConnectionState.waiting) {
-                          return const CircularProgressIndicator(year2023: false,);
-                        } else if (snapshot
-                            .hasError) {
-                          return const Icon(
-                              Icons.error);
-                        } else if (snapshot.hasData &&
-                            snapshot
-                                .data!.isNotEmpty) {
-                          return ClipRRect(
-                            borderRadius:
-                                BorderRadius.vertical(
-                                    top: Radius
-                                        .circular(
-                                            12.0)),
-                            child: Image.file(
-                              File(snapshot.data!
-                                  .first.imagePath),
-                              width: double.infinity,
-                              fit: BoxFit.cover,
-                            ),
-                          );
-                        } else {
-                          return const Center(
-                              child: Icon(Icons
-                                  .hide_image_outlined));
-                        }
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.all(16.0),
-                    child: Column(
-                      mainAxisAlignment:
-                          MainAxisAlignment.end,
-                      crossAxisAlignment:
-                          CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          specimen.fieldNumber,
-                          style: TextTheme.of(context).bodyLarge,
-                        ),
-                        Text(
-                            '${specimenTypeFriendlyNames[specimen.type]}'),
-                        Text(
-                          specimen.speciesName!,
-                          style: const TextStyle(
-                              fontStyle:
-                                  FontStyle.italic),
-                        ),
-                        Text(specimen.locality!, overflow: TextOverflow.ellipsis,),
-                        Text(DateFormat(
-                                'dd/MM/yyyy HH:mm:ss')
-                            .format(specimen
-                                .sampleTime!)),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              Positioned(
-                top: 8,
-                right: 8,
-                child: Checkbox(
-                  value: isSelected,
-                  onChanged: (bool? value) {
+            MenuAnchor(
+            builder: (context, controller, child) {
+              return IconButton(
+                icon: const Icon(Icons.more_vert_outlined),
+                onPressed: () {
+                  if (controller.isOpen) {
+                    controller.close();
+                  } else {
+                    controller.open();
+                  }
+                },
+              );
+            },
+            menuChildren: [
+              // Action to select all specimens
+                MenuItemButton(
+                  leadingIcon: const Icon(Icons.library_add_check_outlined),
+                  onPressed: () {
+                    final filteredSpecimens = _filterSpecimens(_showPending 
+                        ? specimenProvider.pendingSpecimens
+                        : specimenProvider.archivedSpecimens);
                     setState(() {
-                      if (value == true) {
-                        selectedSpecimens
-                            .add(specimen.id!);
-                      } else {
-                        selectedSpecimens
-                            .remove(specimen.id);
-                      }
+                      selectedSpecimens = filteredSpecimens
+                          .map((specimen) => specimen.id)
+                          .whereType<int>()
+                          .toSet();
                     });
                   },
+                  child: Text(S.of(context).selectAll),
                 ),
+              // Action to import specimens from JSON
+              MenuItemButton(
+                leadingIcon: const Icon(Icons.file_open_outlined),
+                onPressed: () async {
+                  await importSpecimensFromJson(context);
+                  await specimenProvider.fetchSpecimens();
+                },
+                child: Text(S.of(context).import),
+              ),
+              MenuItemButton(
+                leadingIcon: const Icon(Icons.share_outlined),
+                onPressed: () {
+                  exportAllSpecimensToCsv(context, _showPending ? specimenProvider.pendingSpecimens : specimenProvider.archivedSpecimens);
+                },
+                child: Text('${S.of(context).exportAll} (CSV)'),
+              ),
+              MenuItemButton(
+                leadingIcon: const Icon(Icons.share_outlined),
+                onPressed: () {
+                  exportAllSpecimensToExcel(context, _showPending ? specimenProvider.pendingSpecimens : specimenProvider.archivedSpecimens);
+                },
+                child: Text('${S.of(context).exportAll} (Excel)'),
+              ),
+              MenuItemButton(
+                leadingIcon: const Icon(Icons.share_outlined),
+                onPressed: () {
+                  exportAllSpecimensToJson(context, _showPending ? specimenProvider.pendingSpecimens : specimenProvider.archivedSpecimens);
+                },
+                child: Text('${S.of(context).exportAll} (JSON)'),
               ),
             ],
           ),
-        ),
-      ),
+          ],
+          onChanged: (query) {
+            setState(() {
+              _searchQuery = query;
+            });
+          },
+        ) : null,
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
+            child: LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+                final screenWidth = constraints.maxWidth;
+                final buttonWidth = screenWidth < 600 ? screenWidth : 400.0;
+
+                return SizedBox(
+                  width: buttonWidth,
+                  child: SegmentedButton<bool>(
+                    segments: [
+                      ButtonSegment(value: true, label: Text(S.of(context).pending)),
+                      ButtonSegment(value: false, label: Text(S.of(context).archived)),
+                    ],
+                    selected: {_showPending},
+                    onSelectionChanged: (Set<bool> newSelection) {
+                      setState(() {
+                        selectedSpecimens.clear();
+                        _showPending = newSelection.first;
+                      });
+                      // nestProvider.notifyListeners();
+                    },
+                  ),
+                );
+              },
+            ),
+          ),
+          Expanded(
+              child: Consumer<SpecimenProvider>(
+                builder: (context, specimenProvider, child) {
+              final filteredSpecimens =
+                  _filterSpecimens(_showPending 
+                    ? specimenProvider.pendingSpecimens
+                    : specimenProvider.archivedSpecimens);
+
+              if (_showPending && specimenProvider.pendingSpecimens.isEmpty ||
+                  !_showPending && specimenProvider.archivedSpecimens.isEmpty) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(S.of(context).noSpecimenCollected),
+                      const SizedBox(height: 8),
+                      FilledButton.icon(
+                        label: Text(S.of(context).refresh),
+                        icon: const Icon(Icons.refresh_outlined),
+                        onPressed: () async {
+                          await specimenProvider.fetchSpecimens();
+                        }, 
+                      )
+                    ],
+                  ),
+                );
+              }
+
+              return RefreshIndicator(
+                onRefresh: () async {
+                  await specimenProvider.fetchSpecimens();
+                },
+                child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
+                child: Text(
+                  '${filteredSpecimens.length} ${S.of(context).specimens(filteredSpecimens.length).toLowerCase()}',
+                  // style: TextStyle(fontSize: 16,),
+                ),
+              ),
+              Expanded(
+                child: ListView.separated(
+                      separatorBuilder: (context, index) => Divider(),
+                      shrinkWrap: true,
+                      itemCount: filteredSpecimens.length,
+                      itemBuilder: (context, index) {
+                        return specimenListTileItem(filteredSpecimens, index, context);
+                      },
+                    )
+                  
+                
+              ),
+            ],
+                ),
+              );
+            }),
+          ),
+        ],
+      );
+  }
+
+  Widget _buildDetailPane(BuildContext context) {
+    if (_selectedSpecimen == null) {
+      // Placeholder when nothing selected
+      return Center(
+        child: Text(S.of(context).selectInventoryToView),
+      );
+    }
+
+    // Show InventoryDetailScreen in-place for the selected inventory
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: AppImageScreen(
+              specimenId: _selectedSpecimen!.id,
+              isEmbedded: true,
+            ),
     );
   }
 
   ListTile specimenListTileItem(List<Specimen> filteredSpecimens, int index, BuildContext context) {
     final specimen = filteredSpecimens[index];
-    final isSelected =
-        selectedSpecimens.contains(specimen.id);
+    final isSelected = selectedSpecimens.contains(specimen.id);
+    final isLargeScreen = MediaQuery.sizeOf(context).width >= 600;
+
     return ListTile(
       leading: Checkbox(
         value: isSelected,
@@ -925,6 +919,11 @@ class SpecimensScreenState extends State<SpecimensScreen> {
       onLongPress: () =>
           _showBottomSheet(context, specimen),
       onTap: () {
+        if (isLargeScreen) {
+          setState(() {
+            _selectedSpecimen = specimen;
+          });
+        } else {
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -933,6 +932,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
             ),
           ),
         );
+        }
       },
     );
   }

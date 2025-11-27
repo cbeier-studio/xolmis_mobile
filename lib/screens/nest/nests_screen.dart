@@ -37,6 +37,7 @@ class NestsScreenState extends State<NestsScreen> {
   Set<int> selectedNests = {}; // Set of selected nests
   SortOrder _sortOrder = SortOrder.descending; // Default sort order
   NestSortField _sortField = NestSortField.foundTime; // Default sort field
+  Nest? _selectedNest;
 
   @override
   void initState() {
@@ -547,21 +548,25 @@ class NestsScreenState extends State<NestsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final isLargeScreen = screenWidth >= 600;
+
     return Scaffold(
-      appBar: AppBar(
+      appBar: !isLargeScreen ? AppBar(
         title: SearchBar(
           controller: _searchController,
           hintText: S.of(context).nests,
           elevation: WidgetStateProperty.all(0),
-          // leading: const Icon(Icons.search_outlined),
+          leading: MediaQuery.sizeOf(context).width < 600 ? Builder(
+          builder: (context) => IconButton(
+            icon: const Icon(Icons.menu_outlined),
+            onPressed: () {
+              widget.scaffoldKey.currentState?.openDrawer();
+            },
+          ),
+        ) : const SizedBox.shrink(),
           trailing: [
-            IconButton(
-              icon: const Icon(Icons.sort_outlined),
-              tooltip: S.of(context).sortBy,
-              onPressed: () {
-                _showSortOptionsBottomSheet();
-              },
-            ),
+            
             _searchController.text.isNotEmpty
                 ? IconButton(
               icon: const Icon(Icons.clear_outlined),
@@ -573,6 +578,19 @@ class NestsScreenState extends State<NestsScreen> {
               },
             )
                 : const SizedBox.shrink(),
+                IconButton(
+              icon: const Icon(Icons.sort_outlined),
+              tooltip: S.of(context).sortBy,
+              onPressed: () {
+                _showSortOptionsBottomSheet();
+              },
+            ),
+            IconButton(
+            icon: const Icon(Icons.more_vert_outlined),
+            onPressed: () {
+              _showMoreOptionsBottomSheet(context);
+            },
+          )
           ],
           onChanged: (query) {
             setState(() {
@@ -581,23 +599,151 @@ class NestsScreenState extends State<NestsScreen> {
           },
         ),
         // title: Text(S.of(context).nests),
-        leading: MediaQuery.sizeOf(context).width < 600 ? Builder(
-          builder: (context) => IconButton(
-            icon: const Icon(Icons.menu_outlined),
-            onPressed: () {
-              widget.scaffoldKey.currentState?.openDrawer();
-            },
-          ),
-        ) : const SizedBox.shrink(),
-        actions: [
-          MediaQuery.sizeOf(context).width < 600
-              ? IconButton(
-            icon: const Icon(Icons.more_vert_outlined),
-            onPressed: () {
-              _showMoreOptionsBottomSheet(context);
-            },
-          )
-              : MenuAnchor(
+        
+        
+      ) : null,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          // On large screens we show a split screen master/detail
+          if (isLargeScreen) {
+            return Row(
+              children: [
+                // Left: list (takes 40% width)
+                Container(
+                  width: constraints.maxWidth * 0.45, // adjust ratio as needed
+                  //decoration: BoxDecoration(
+                  //  border: Border(
+                  //    right: BorderSide(color: Theme.of(context).dividerColor),
+                  //  ),
+                  //),
+                  child: _buildListPane(context, isLargeScreen),
+                ),
+                VerticalDivider(),
+                // Right: detail pane
+                Expanded(
+                  child: _buildDetailPane(context),
+                ),
+              ],
+            );
+          } else {
+            // Small screens: keep current column layout
+            return _buildListPane(context, isLargeScreen);
+          }
+        },
+      ),
+      // Show the FAB at the end of the screen
+      floatingActionButtonLocation: selectedNests.isNotEmpty && !_showActive
+        ? FloatingActionButtonLocation.endContained 
+        : FloatingActionButtonLocation.endFloat,
+      // FAB to add a new nest
+      floatingActionButton: FloatingActionButton(
+        tooltip: S.of(context).newNest,
+        onPressed: () {
+          _showAddNestScreen(context);
+        },
+        child: const Icon(Icons.add_outlined),
+      ),
+      // Show the bottom app bar if there are selected nests
+      bottomNavigationBar: selectedNests.isNotEmpty && !_showActive
+          ? BottomAppBar(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  // Option to delete the selected nests
+                  IconButton(
+                    icon: const Icon(Icons.delete_outlined),
+                    tooltip: S.of(context).delete,
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? Colors.red
+                        : Colors.redAccent,
+                    onPressed: _deleteSelectedNests,
+                  ),
+                  const VerticalDivider(),
+                  // Option to export the selected nests
+                  MenuAnchor(
+                    builder: (context, controller, child) {
+                      return IconButton(
+                        icon: const Icon(Icons.share_outlined),
+                        tooltip:
+                            S.of(context).exportWhat(S.of(context).nest(2)),
+                        onPressed: () {
+                          if (controller.isOpen) {
+                            controller.close();
+                          } else {
+                            controller.open();
+                          }
+                        },
+                      );
+                    },
+                    menuChildren: [
+                      MenuItemButton(
+                        onPressed: () {
+                          _exportSelectedNestsToCsv(context);
+                        },
+                        child: const Text('CSV'),
+                      ),
+                      MenuItemButton(
+                        onPressed: () {
+                          _exportSelectedNestsToExcel(context);
+                        },
+                        child: const Text('Excel'),
+                      ),
+                      MenuItemButton(
+                        onPressed: () {
+                          _exportSelectedNestsToJson(context);
+                        },
+                        child: const Text('JSON'),
+                      ),
+                    ],
+                  ),
+                  const VerticalDivider(),
+                  // Option to clear the selected nests
+                  IconButton(
+                    icon: const Icon(Icons.clear_outlined),
+                    tooltip: S.current.clearSelection,
+                    onPressed: () {
+                      setState(() {
+                        selectedNests.clear();
+                      });
+                    },
+                  ),                  
+                ],
+              ),
+            )
+          : null,
+    );
+  }
+
+  Widget _buildListPane(BuildContext context, bool isLargeScreen) {
+    return Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16.0, 24.0, 16.0, 0.0),
+            child: isLargeScreen ? SearchBar(
+          controller: _searchController,
+          hintText: S.of(context).nests,
+          elevation: WidgetStateProperty.all(0),
+          // leading: const Icon(Icons.search_outlined),
+          trailing: [
+            _searchController.text.isNotEmpty
+                ? IconButton(
+              icon: const Icon(Icons.clear_outlined),
+              onPressed: () {
+                setState(() {
+                  _searchQuery = '';
+                  _searchController.clear();
+                });
+              },
+            )
+                : const SizedBox.shrink(),
+            IconButton(
+              icon: const Icon(Icons.sort_outlined),
+              tooltip: S.of(context).sortBy,
+              onPressed: () {
+                _showSortOptionsBottomSheet();
+              },
+            ),
+            MenuAnchor(
             builder: (context, controller, child) {
               return IconButton(
                 icon: const Icon(Icons.more_vert_outlined),
@@ -644,10 +790,14 @@ class NestsScreenState extends State<NestsScreen> {
               ),
             ],
           ),
-        ],
-      ),
-      body: Column(
-        children: [
+          ],
+          onChanged: (query) {
+            setState(() {
+              _searchQuery = query;
+            });
+          },
+        ) : null,
+          ),
           Padding(
             padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
             child: LayoutBuilder(
@@ -655,7 +805,6 @@ class NestsScreenState extends State<NestsScreen> {
                 final screenWidth = constraints.maxWidth;
                 final buttonWidth = screenWidth < 600 ? screenWidth : 400.0;
 
-                // Show the segmented button to toggle between active and inactive nests
                 return SizedBox(
                   width: buttonWidth,
                   child: SegmentedButton<bool>(
@@ -676,8 +825,7 @@ class NestsScreenState extends State<NestsScreen> {
             ),
           ),
           Expanded(
-            child:
-                Consumer<NestProvider>(builder: (context, nestProvider, child) {
+              child: Consumer<NestProvider>(builder: (context, nestProvider, child) {
               // Filter the nests based on the active/inactive status
               final filteredNests = _filterNests(_showActive
                   ? nestProvider.activeNests
@@ -766,95 +914,34 @@ class NestsScreenState extends State<NestsScreen> {
                 ),
               );
             }),
-          ),
+            ),
         ],
+      );
+  }
+
+  Widget _buildDetailPane(BuildContext context) {
+    if (_selectedNest == null) {
+      // Placeholder when nothing selected
+      return Center(
+        child: Text(S.of(context).selectInventoryToView),
+      );
+    }
+
+    // Show InventoryDetailScreen in-place for the selected inventory
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: NestDetailScreen(
+        nest: _selectedNest!,
+        isEmbedded: true,
       ),
-      // Show the FAB at the end of the screen
-      floatingActionButtonLocation: selectedNests.isNotEmpty && !_showActive
-        ? FloatingActionButtonLocation.endContained 
-        : FloatingActionButtonLocation.endFloat,
-      // FAB to add a new nest
-      floatingActionButton: FloatingActionButton(
-        tooltip: S.of(context).newNest,
-        onPressed: () {
-          _showAddNestScreen(context);
-        },
-        child: const Icon(Icons.add_outlined),
-      ),
-      // Show the bottom app bar if there are selected nests
-      bottomNavigationBar: selectedNests.isNotEmpty && !_showActive
-          ? BottomAppBar(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  // Option to delete the selected nests
-                  IconButton(
-                    icon: const Icon(Icons.delete_outlined),
-                    tooltip: S.of(context).delete,
-                    color: Theme.of(context).brightness == Brightness.light
-                        ? Colors.red
-                        : Colors.redAccent,
-                    onPressed: _deleteSelectedNests,
-                  ),
-                  const VerticalDivider(),
-                  // Option to export the selected nests
-                  MenuAnchor(
-                    builder: (context, controller, child) {
-                      return IconButton(
-                        icon: const Icon(Icons.share_outlined),
-                        tooltip:
-                            S.of(context).exportWhat(S.of(context).nest(2)),
-                        onPressed: () {
-                          if (controller.isOpen) {
-                            controller.close();
-                          } else {
-                            controller.open();
-                          }
-                        },
-                      );
-                    },
-                    menuChildren: [
-                      MenuItemButton(
-                        onPressed: () {
-                          _exportSelectedNestsToCsv(context);
-                        },
-                        child: const Text('CSV'),
-                      ),
-                      MenuItemButton(
-                        onPressed: () {
-                          _exportSelectedNestsToExcel(context);
-                        },
-                        child: const Text('Excel'),
-                      ),
-                      MenuItemButton(
-                        onPressed: () {
-                          _exportSelectedNestsToJson(context);
-                        },
-                        child: const Text('JSON'),
-                      ),
-                    ],
-                  ),
-                  const VerticalDivider(),
-                  // Option to clear the selected nests
-                  IconButton(
-                    icon: const Icon(Icons.clear_outlined),
-                    tooltip: S.current.clearSelection,
-                    onPressed: () {
-                      setState(() {
-                        selectedNests.clear();
-                      });
-                    },
-                  ),                  
-                ],
-              ),
-            )
-          : null,
     );
   }
 
   ListTile nestListTileItem(List<Nest> filteredNests, int index, BuildContext context, NestProvider nestProvider) {
     final nest = filteredNests[index];
     final isSelected = selectedNests.contains(nest.id);
+    final isLargeScreen = MediaQuery.sizeOf(context).width >= 600;
+
     return ListTile(
       title: Text(nest.fieldNumber!),
       subtitle: Column(
@@ -897,6 +984,11 @@ class NestsScreenState extends State<NestsScreen> {
               : const Icon(Icons.help, color: Colors.grey),
       onLongPress: () => _showBottomSheet(context, nest),
       onTap: () {
+        if (isLargeScreen) {
+          setState(() {
+            _selectedNest = nest;
+          });
+        } else {
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -909,6 +1001,7 @@ class NestsScreenState extends State<NestsScreen> {
             nestProvider.fetchNests();
           }
         });
+        }
       },
     );
   }

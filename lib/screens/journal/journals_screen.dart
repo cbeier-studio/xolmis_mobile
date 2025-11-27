@@ -26,6 +26,7 @@ class JournalsScreenState extends State<JournalsScreen> {
   Set<int> selectedJournals = {};
   JournalSortField _sortField = JournalSortField.creationDate;
   SortOrder _sortOrder = SortOrder.descending;
+  FieldJournal? _selectedJournalEntry;
 
   @override
   void initState() {
@@ -229,21 +230,24 @@ class JournalsScreenState extends State<JournalsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final isLargeScreen = screenWidth >= 600;
+
     return Scaffold(
-      appBar: AppBar(
+      appBar: !isLargeScreen ? AppBar(
         title: SearchBar(
           controller: _searchController,
           hintText: S.of(context).fieldJournal,
           elevation: WidgetStateProperty.all(0),
-          // leading: const Icon(Icons.search_outlined),
+          leading: MediaQuery.sizeOf(context).width < 600 ? Builder(
+          builder: (context) => IconButton(
+            icon: const Icon(Icons.menu_outlined),
+            onPressed: () {
+              widget.scaffoldKey.currentState?.openDrawer();
+            },
+          ),
+        ) : const SizedBox.shrink(),
           trailing: [
-            IconButton(
-              icon: const Icon(Icons.sort_outlined),
-              tooltip: S.of(context).sortBy,
-              onPressed: () {
-                _showSortOptionsBottomSheet();
-              },
-            ),
             _searchController.text.isNotEmpty
                 ? IconButton(
               icon: const Icon(Icons.clear_outlined),
@@ -253,26 +257,16 @@ class JournalsScreenState extends State<JournalsScreen> {
                   _searchController.clear();
                 });
               },
-            )
-                : const SizedBox.shrink(),
-          ],
-          onChanged: (query) {
-            setState(() {
-              _searchQuery = query;
-            });
-          },
-        ),
-        // title: Text(S.of(context).fieldJournal),
-        leading: MediaQuery.sizeOf(context).width < 600 ? Builder(
-          builder: (context) => IconButton(
-            icon: const Icon(Icons.menu_outlined),
-            onPressed: () {
-              widget.scaffoldKey.currentState?.openDrawer();
-            },
-          ),
-        ) : const SizedBox.shrink(),
-        actions: [
-          MediaQuery.sizeOf(context).width < 600
+            ) : const SizedBox.shrink(),
+            IconButton(
+              icon: const Icon(Icons.sort_outlined),
+              tooltip: S.of(context).sortBy,
+              onPressed: () {
+                _showSortOptionsBottomSheet();
+              },
+            ),
+            
+              MediaQuery.sizeOf(context).width < 600
               ? IconButton(
             icon: const Icon(Icons.more_vert_outlined),
             onPressed: () {
@@ -309,97 +303,47 @@ class JournalsScreenState extends State<JournalsScreen> {
               ),
             ],
           ),
+          ],
+          onChanged: (query) {
+            setState(() {
+              _searchQuery = query;
+            });
+          },
+        ),
+        // title: Text(S.of(context).fieldJournal),
+        
+        actions: [
+          
         ],
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: Consumer<FieldJournalProvider>(
-                builder: (context, journalProvider, child) {
-                  final filteredEntries =
-                  _filterJournalEntries(journalProvider.journalEntries);
-
-                  if (filteredEntries.isEmpty) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(S.of(context).noJournalEntriesFound),
-                          const SizedBox(height: 8),
-                          FilledButton.icon(
-                            label: Text(S.of(context).refresh),
-                            icon: const Icon(Icons.refresh_outlined),
-                            onPressed: () async {
-                              await journalProvider.fetchJournalEntries();
-                            },
-                          )
-                        ],
-                      ),
-                    );
-                  }
-
-                  return RefreshIndicator(
-                    onRefresh: () async {
-                      await journalProvider.fetchJournalEntries();
-                    },
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0),
-                          child: Text(
-                            '${filteredEntries.length} ${S.of(context).journalEntries(filteredEntries.length).toLowerCase()}',
-                          ),
-                        ),
-                        Expanded(
-                          child: LayoutBuilder(builder:
-                              (BuildContext context, BoxConstraints constraints) {
-                            final screenWidth = constraints.maxWidth;
-                            final isLargeScreen = screenWidth > 600;
-
-                            if (isLargeScreen) {
-                              final double minWidth = 300;
-                              int crossAxisCountCalculated =
-                              (constraints.maxWidth / minWidth).floor();
-                              return SingleChildScrollView(
-                                child: Align(
-                                  alignment: Alignment.topCenter,
-                                  child: ConstrainedBox(
-                                    constraints: const BoxConstraints(maxWidth: 840),
-                                    child: GridView.builder(
-                                      gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: crossAxisCountCalculated,
-                                        childAspectRatio: 1,
-                                      ),
-                                      physics: const NeverScrollableScrollPhysics(),
-                                      shrinkWrap: true,
-                                      itemCount: filteredEntries.length,
-                                      itemBuilder: (context, index) {
-                                        return journalGridTileItem(filteredEntries, index, context);
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              );
-                            } else {
-                              return ListView.separated(
-                                separatorBuilder: (context, index) => Divider(),
-                                shrinkWrap: true,
-                                itemCount: filteredEntries.length,
-                                itemBuilder: (context, index) {
-                                  return journalListTileItem(filteredEntries, index, context);
-                                },
-                              );
-                            }
-                          }),
-                        ),
-                      ],
-                    ),
-                  );
-                }),
-          ),
-        ],
+      ) : null,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          // On large screens we show a split screen master/detail
+          if (isLargeScreen) {
+            return Row(
+              children: [
+                // Left: list (takes 40% width)
+                Container(
+                  width: constraints.maxWidth * 0.45, // adjust ratio as needed
+                  //decoration: BoxDecoration(
+                  //  border: Border(
+                  //    right: BorderSide(color: Theme.of(context).dividerColor),
+                  //  ),
+                  //),
+                  child: _buildListPane(context, isLargeScreen),
+                ),
+                VerticalDivider(),
+                // Right: detail pane
+                Expanded(
+                  child: _buildDetailPane(context),
+                ),
+              ],
+            );
+          } else {
+            // Small screens: keep current column layout
+            return _buildListPane(context, isLargeScreen);
+          }
+        },
       ),
       floatingActionButtonLocation: selectedJournals.isNotEmpty
           ? FloatingActionButtonLocation.endContained
@@ -471,84 +415,160 @@ class JournalsScreenState extends State<JournalsScreen> {
     );
   }
 
-  GridTile journalGridTileItem(List<FieldJournal> filteredEntries, int index, BuildContext context) {
-    final entry = filteredEntries[index];
-    final isSelected =
-    selectedJournals.contains(entry.id);
-    return GridTile(
-      child: InkWell(
-        onLongPress: () =>
-            _showBottomSheet(context, entry),
-        onTap: () {
-          Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => AddJournalScreen(
-              journalEntry: entry,
-              isEditing: true,
+  Widget _buildListPane(BuildContext context, bool isLargeScreen) {
+    return Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16.0, 24.0, 16.0, 0.0),
+            child: isLargeScreen ? SearchBar(
+          controller: _searchController,
+          hintText: S.of(context).fieldJournal,
+          elevation: WidgetStateProperty.all(0),
+          // leading: const Icon(Icons.search_outlined),
+          trailing: [
+            _searchController.text.isNotEmpty
+                ? IconButton(
+              icon: const Icon(Icons.clear_outlined),
+              onPressed: () {
+                setState(() {
+                  _searchQuery = '';
+                  _searchController.clear();
+                });
+              },
+            )
+                : const SizedBox.shrink(),
+            IconButton(
+              icon: const Icon(Icons.sort_outlined),
+              tooltip: S.of(context).sortBy,
+              onPressed: () {
+                _showSortOptionsBottomSheet();
+              },
             ),
-          ),
-        );
-        },
-        child: Card.outlined(
-          child: Stack(
-            children: [
-              Column(
-                mainAxisAlignment:
-                MainAxisAlignment.end,
-                crossAxisAlignment:
-                CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding:
-                    const EdgeInsets.all(16.0),
-                    child: Column(
-                      mainAxisAlignment:
-                      MainAxisAlignment.end,
-                      crossAxisAlignment:
-                      CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          entry.title,
-                          style: TextTheme.of(context).bodyLarge,
-                        ),
-                        Text(DateFormat(
-                            'dd/MM/yyyy HH:mm:ss')
-                            .format(entry
-                            .creationDate!)),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              Positioned(
-                top: 8,
-                right: 8,
-                child: Checkbox(
-                  value: isSelected,
-                  onChanged: (bool? value) {
-                    setState(() {
-                      if (value == true) {
-                        selectedJournals
-                            .add(entry.id!);
-                      } else {
-                        selectedJournals
-                            .remove(entry.id);
-                      }
-                    });
-                  },
-                ),
+            MenuAnchor(
+            builder: (context, controller, child) {
+              return IconButton(
+                icon: const Icon(Icons.more_vert_outlined),
+                onPressed: () {
+                  if (controller.isOpen) {
+                    controller.close();
+                  } else {
+                    controller.open();
+                  }
+                },
+              );
+            },
+            menuChildren: [
+              // Action to select all journal entries
+              MenuItemButton(
+                leadingIcon: const Icon(Icons.library_add_check_outlined),
+                onPressed: () {
+                  final filteredJournals = _filterJournalEntries(journalProvider.journalEntries);
+                  setState(() {
+                    selectedJournals = filteredJournals
+                        .map((journal) => journal.id)
+                        .whereType<int>()
+                        .toSet();
+                  });
+                },
+                child: Text(S.of(context).selectAll),
               ),
             ],
           ),
-        ),
-      ),
+          ],
+          onChanged: (query) {
+            setState(() {
+              _searchQuery = query;
+            });
+          },
+        ) : null,
+          ),
+          Expanded(
+              child: Consumer<FieldJournalProvider>(
+                builder: (context, journalProvider, child) {
+                  final filteredEntries =
+                  _filterJournalEntries(journalProvider.journalEntries);
+
+                  if (filteredEntries.isEmpty) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(S.of(context).noJournalEntriesFound),
+                          const SizedBox(height: 8),
+                          FilledButton.icon(
+                            label: Text(S.of(context).refresh),
+                            icon: const Icon(Icons.refresh_outlined),
+                            onPressed: () async {
+                              await journalProvider.fetchJournalEntries();
+                            },
+                          )
+                        ],
+                      ),
+                    );
+                  }
+
+                  return RefreshIndicator(
+                    onRefresh: () async {
+                      await journalProvider.fetchJournalEntries();
+                    },
+                child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
+                child: Text(
+                  '${filteredEntries.length} ${S.of(context).journalEntries(filteredEntries.length).toLowerCase()}',
+                  // style: TextStyle(fontSize: 16,),
+                ),
+              ),
+              Expanded(
+                child: LayoutBuilder(builder:
+                    (BuildContext context, BoxConstraints constraints) {
+                    return ListView.separated(
+                                separatorBuilder: (context, index) => Divider(),
+                                shrinkWrap: true,
+                                itemCount: filteredEntries.length,
+                                itemBuilder: (context, index) {
+                                  return journalListTileItem(filteredEntries, index, context);
+                                },
+                              );
+                  
+                }),
+              ),
+            ],
+                )
+                  );
+              }
+            
+          ))
+        ],
+      );
+  }
+
+  Widget _buildDetailPane(BuildContext context) {
+    if (_selectedJournalEntry == null) {
+      // Placeholder when nothing selected
+      return Center(
+        child: Text(S.of(context).selectInventoryToView),
+      );
+    }
+
+    // Show InventoryDetailScreen in-place for the selected inventory
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: AddJournalScreen(
+              journalEntry: _selectedJournalEntry,
+              isEditing: true,
+              isEmbedded: true,
+            ),
     );
   }
 
   ListTile journalListTileItem(List<FieldJournal> filteredEntries, int index, BuildContext context) {
     final entry = filteredEntries[index];
     final isSelected = selectedJournals.contains(entry.id);
+    final isLargeScreen = MediaQuery.sizeOf(context).width >= 600;
+
     return ListTile(
       leading: Checkbox(
         value: isSelected,
@@ -573,6 +593,11 @@ class JournalsScreenState extends State<JournalsScreen> {
       onLongPress: () =>
           _showBottomSheet(context, entry),
       onTap: () {
+        if (isLargeScreen) {
+          setState(() {
+            _selectedJournalEntry = entry;
+          });
+        } else {
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -582,6 +607,7 @@ class JournalsScreenState extends State<JournalsScreen> {
             ),
           ),
         );
+        }
       },
     );
   }
