@@ -1364,9 +1364,10 @@ class NestsScreenState extends State<NestsScreen> {
                           buildGridMenuItem(
                               context, Icons.file_open_outlined, S.of(context).import,
                                   () async {
-                                Navigator.of(context).pop();
+                                
                                 await importNestsFromJson(context);
                                 await nestProvider.fetchNests();
+                                Navigator.of(context).pop();
                               }),
                           // buildGridMenuItem(
                           //     context, Icons.share_outlined, S.of(context).exportAll,

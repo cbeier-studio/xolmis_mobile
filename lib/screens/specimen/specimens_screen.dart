@@ -1102,9 +1102,10 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                           buildGridMenuItem(
                               context, Icons.file_open_outlined, S.of(context).import,
                                   () async {
-                                Navigator.of(context).pop();
+                                
                                 await importSpecimensFromJson(context);
                                 await specimenProvider.fetchSpecimens();
+                                Navigator.of(context).pop();
                               }),
                           // buildGridMenuItem(
                           //     context, Icons.share_outlined, '${S.of(context).exportAll} (CSV)',

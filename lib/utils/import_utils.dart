@@ -27,12 +27,21 @@ Future<void> importInventoryFromJson(BuildContext context) async {
       allowedExtensions: ['json'],
     );
 
-    if (result != null && result.files.single.path != null) {
-      final filePath = result.files.single.path!;
-      final file = File(filePath);
+    // Se nenhum arquivo foi selecionado, sai sem erro
+    if (result == null || result.files.single.path == null) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(S.current.noFileSelected ?? 'Nenhum arquivo selecionado')),
+        );
+      }
+      return;
+    }
 
-      // Show a loading dialog
-      if (!context.mounted) return;
+    final filePath = result.files.single.path!;
+    final file = File(filePath);
+
+    // Show a loading dialog (apenas se context está montado)
+    if (context.mounted) {
       showDialog(
         context: context,
         barrierDismissible: false,
@@ -43,7 +52,7 @@ Future<void> importInventoryFromJson(BuildContext context) async {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  CircularProgressIndicator(year2023: false,),
+                  CircularProgressIndicator(),
                   SizedBox(width: 16),
                   Text(S.current.importingInventory),
                 ],
@@ -53,86 +62,132 @@ Future<void> importInventoryFromJson(BuildContext context) async {
         },
       );
       isDialogShown = true;
+    }
 
-      // Read the JSON file
-      final jsonString = await file.readAsString();
-      final jsonData = jsonDecode(jsonString);
+    // Read the JSON file (funciona mesmo com context desmontado)
+    final jsonString = await file.readAsString();
+    final jsonData = jsonDecode(jsonString);
 
-      final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
-      List<Inventory> inventoriesToImport = [];
+    // Obter o provider ANTES de tentar usar context
+    late InventoryProvider inventoryProvider;
+    if (context.mounted) {
+      inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
+    } else {
+      // Se context foi desmontado, não podemos usar o provider
+      // Fechar diálogo se foi mostrado e sair
+      if (isDialogShown && context.mounted) {
+        Navigator.of(context).pop();
+      }
+      debugPrint('Context foi desmontado durante a leitura do arquivo');
+      return;
+    }
 
-      if (jsonData is List) {
-        // Case 1: JSON is an array of inventories
-        totalInventoriesToImport = jsonData.length;
-        for (final item in jsonData) {
+    List<Inventory> inventoriesToImport = [];
+
+    if (jsonData is List) {
+      // Case 1: JSON is an array of inventories
+      totalInventoriesToImport = jsonData.length;
+      for (final item in jsonData) {
+        if (item is Map<String, dynamic>) {
+          try {
+            inventoriesToImport.add(Inventory.fromJson(item));
+          } catch (e) {
+            importErrors.add("Erro ao parsear item do array: ${e.toString()} \nItem: $item");
+          }
+        } else {
+          importErrors.add("Item inesperado no array JSON: $item");
+        }
+      }
+    } else if (jsonData is Map<String, dynamic>) {
+      // Case 2: JSON is an inventory only (or have a key "inventories")
+      if (jsonData.containsKey('inventories') && jsonData['inventories'] is List) {
+        // Subcase 2.1: JSON have a key "inventories" and it's a list
+        final List<dynamic> inventoriesJsonList = jsonData['inventories'];
+        totalInventoriesToImport = inventoriesJsonList.length;
+        for (final item in inventoriesJsonList) {
           if (item is Map<String, dynamic>) {
             try {
               inventoriesToImport.add(Inventory.fromJson(item));
             } catch (e) {
-              importErrors.add("Erro ao parsear item do array: ${e.toString()} \nItem: $item");
+              importErrors.add("Erro ao parsear item da lista 'inventories': ${e.toString()} \nItem: $item");
             }
           } else {
-            importErrors.add("Item inesperado no array JSON: $item");
-          }
-        }
-      } else if (jsonData is Map<String, dynamic>) {
-        // Case 2: JSON is an inventory only (or have a key "inventories")
-        if (jsonData.containsKey('inventories') && jsonData['inventories'] is List) {
-          // Subcase 2.1: JSON have a key "inventories" and it's a list
-          final List<dynamic> inventoriesJsonList = jsonData['inventories'];
-          totalInventoriesToImport = inventoriesJsonList.length;
-          for (final item in inventoriesJsonList) {
-            if (item is Map<String, dynamic>) {
-              try {
-                inventoriesToImport.add(Inventory.fromJson(item));
-              } catch (e) {
-                importErrors.add("Erro ao parsear item da lista 'inventories': ${e.toString()} \nItem: $item");
-              }
-            } else {
-              importErrors.add("Item inesperado na lista 'inventories': $item");
-            }
-          }
-        } else {
-          // Subcase 2.2: JSON is an inventory only
-          totalInventoriesToImport = 1;
-          try {
-            inventoriesToImport.add(Inventory.fromJson(jsonData));
-          } catch (e) {
-            importErrors.add("Erro ao parsear objeto JSON único: ${e.toString()}");
+            importErrors.add("Item inesperado na lista 'inventories': $item");
           }
         }
       } else {
-        throw FormatException(S.current.invalidJsonFormatExpectedObjectOrArray);
+        // Subcase 2.2: JSON is an inventory only
+        totalInventoriesToImport = 1;
+        try {
+          inventoriesToImport.add(Inventory.fromJson(jsonData));
+        } catch (e) {
+          importErrors.add("Erro ao parsear objeto JSON único: ${e.toString()}");
+        }
       }
+    } else {
+      throw FormatException(S.current.invalidJsonFormatExpectedObjectOrArray);
+    }
 
-      if (!context.mounted) return;
-      // Save the inventory to the database
-      for (final inventory in inventoriesToImport) {
+    // If there were no items in the JSON at all
+    if (totalInventoriesToImport == 0) {
+      if (isDialogShown && context.mounted) {
+        Navigator.of(context).pop();
+        isDialogShown = false;
+      }
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Nenhum inventário encontrado no arquivo selecionado.')),
+        );
+      }
+      return;
+    }
+
+    // If the file had items but none parsed into valid Inventory objects
+    if (inventoriesToImport.isEmpty) {
+      if (isDialogShown && context.mounted) {
+        Navigator.of(context).pop();
+        isDialogShown = false;
+      }
+      if (context.mounted) {
+        final errorCount = importErrors.length;
+        final message = errorCount > 0
+            ? S.current.importCompletedWithErrors(0, errorCount)
+            : 'Nenhum inventário válido encontrado no JSON.';
+        if (importErrors.isNotEmpty) debugPrint("Import errors: \n${importErrors.join('\n')}");
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(message), duration: Duration(seconds: 4)),
+        );
+      }
+      return;
+    }
+
+    // Save the inventory to the database
+    for (final inventory in inventoriesToImport) {
+      try {
         final success = await inventoryProvider.importInventory(inventory);
         if (success) {
           successfullyImportedCount++;
         } else {
           importErrors.add("${S.current.failedToImportInventoryWithId(inventory.id)}");
         }
+      } catch (e) {
+        importErrors.add("Erro ao importar inventory ${inventory.id}: ${e.toString()}");
       }
+    }
 
-      // Close the loading dialog
-      if (isDialogShown) {
-        if (context.mounted) {
-          Navigator.of(context).pop();
-        }
-        isDialogShown = false; // Dialog is now closed
-      }
+    // Close the loading dialog
+    if (isDialogShown && context.mounted) {
+      Navigator.of(context).pop();
+      isDialogShown = false;
+    }
 
-      if (!context.mounted) return;
-
-      // Show import summary
+    // Show import summary (apenas se context está montado)
+    if (context.mounted) {
       String summaryMessage;
       if (importErrors.isEmpty) {
         summaryMessage = S.current.inventoriesImportedSuccessfully(successfullyImportedCount);
       } else {
         summaryMessage = S.current.importCompletedWithErrors(successfullyImportedCount, importErrors.length);
-        // Opcional: mostrar os erros detalhados em um diálogo de expansão ou log
         debugPrint("Import errors: \n${importErrors.join('\n')}");
       }
 
@@ -142,40 +197,35 @@ Future<void> importInventoryFromJson(BuildContext context) async {
           duration: Duration(seconds: importErrors.isEmpty ? 2 : 5),
         ),
       );
-    } else {
-      if (isDialogShown && context.mounted) Navigator.of(context).pop();
-      isDialogShown = false;
-      if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(S.current.noFileSelected)),
-      );
     }
   } catch (error) {
     debugPrint('Error importing inventory: $error');
-    if (isDialogShown && context.mounted) Navigator.of(context).pop();
-    isDialogShown = false;
-
-    if (!context.mounted) return;
-    String errorMessage = '${S.current.errorImportingInventory}: ${error.toString()}';
-    if (error is FormatException) {
-      errorMessage = S.current.errorImportingInventoryWithFormatError(error.message);
+    if (isDialogShown && context.mounted) {
+      Navigator.of(context).pop();
+      isDialogShown = false;
     }
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            Icon(Icons.error_outlined, color: Colors.red),
-            SizedBox(width: 8),
-            Text(errorMessage),
-          ],
+    if (context.mounted) {
+      String errorMessage = '${S.current.errorImportingInventory}: ${error.toString()}';
+      if (error is FormatException) {
+        errorMessage = S.current.errorImportingInventoryWithFormatError(error.message);
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              Icon(Icons.error_outlined, color: Colors.red),
+              SizedBox(width: 8),
+              Text(errorMessage),
+            ],
+          ),
+          duration: Duration(seconds: 5),
         ),
-        duration: Duration(seconds: 5),
-      ),
-    );
+      );
+    }
   } finally {
-    // Ensure the dialog is always closed if it was shown and an error occurred,
-    // or if the function returned early while the dialog was up.
+    // Ensure the dialog is always closed if it was shown
     if (isDialogShown && context.mounted) {
       Navigator.of(context).pop();
     }

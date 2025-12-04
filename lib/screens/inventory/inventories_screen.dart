@@ -1560,9 +1560,10 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                           buildGridMenuItem(
                               context, Icons.file_open_outlined, S.of(context).import,
                                   () async {
-                                Navigator.of(context).pop();
+                                
                                 await importInventoryFromJson(context);
                                 await inventoryProvider.fetchInventories(context);
+                                Navigator.of(context).pop();
                               }),
                           // Action to export all finished inventories to JSON
                           // buildGridMenuItem(
