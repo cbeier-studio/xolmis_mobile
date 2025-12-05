@@ -651,8 +651,9 @@ class SpecimensScreenState extends State<SpecimensScreen> {
   Widget _buildListPane(BuildContext context, bool isLargeScreen) {
     return Column(
         children: [
+          if (isLargeScreen) const SizedBox(height: 16.0),
           Padding(
-            padding: const EdgeInsets.fromLTRB(16.0, 24.0, 16.0, 0.0),
+            padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
             child: isLargeScreen ? SearchBar(
           controller: _searchController,
           hintText: S.of(context).specimens(1),

@@ -1,6 +1,6 @@
-# Xolmis mobile
+# Xolmis Mobile
 
-Collect ornithological data in the field, such as bird lists and counts, nest monitoring and collected specimens. Use it as your digital field notebook.
+Xolmis Mobile is designed for fieldwork, enabling researchers and citizen scientists to record ornithological data directly on their mobile devices. Collect ornithological data such as bird lists and counts, nest monitoring and collected specimens. Use it as your digital field notebook.
 
 > [!WARNING]
 > This project is in the early stages of development, so expect bugs and breaking changes.
@@ -44,3 +44,13 @@ Here is a list of the main features:
 You can create [pull requests](https://github.com/cbeier-studio/xolmis_mobile/pulls) directly and give feedback using the [GitHub Issues](https://github.com/cbeier-studio/xolmis_mobile/issues). All suggestions, bugs reported and general issues are much appreciated.
 
 See the [Developer Wiki](https://github.com/cbeier-studio/xolmis_mobile/wiki) for more details.
+
+## Acknowledgements
+
+Xolmis is developed to support ornithological research, conservation, and citizen science.  
+We thank all contributors, institutions, and communities engaged in bird monitoring and ecological studies.
+Special thanks to our sponsors!
+
+### Platinum Sponsor
+
+[![Alianza del Pastizal - Platinum Sponsor](/assets/alianza_del_pastizal_logo.png)](http://www.alianzadelpastizal.org.br)
