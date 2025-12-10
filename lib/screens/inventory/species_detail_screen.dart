@@ -170,20 +170,7 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
                           child: pois.isEmpty
                             // Show message when there are no POIs
                               ? Center(child: Text(S.of(context).noPoiFound),)
-                              : LayoutBuilder(
-                              builder: (BuildContext context, BoxConstraints constraints) {
-                                final screenWidth = constraints.maxWidth;
-                                final isLargeScreen = screenWidth > 600;
-
-                                if (isLargeScreen) {
-                                  // Show grid view for large screens
-                                  return _buildGridView(pois);
-                                } else {
-                                  // Show list view for small screens
-                                  return _buildListView(pois, poiProvider);
-                                }
-                              }
-                          ),
+                              : _buildListView(pois, poiProvider)
                         ), 
                     ],
                   ),                     

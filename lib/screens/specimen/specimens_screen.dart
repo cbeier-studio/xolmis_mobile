@@ -826,8 +826,6 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                         return specimenListTileItem(filteredSpecimens, index, context);
                       },
                     )
-                  
-                
               ),
             ],
                 ),
