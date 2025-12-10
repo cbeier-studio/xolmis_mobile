@@ -324,13 +324,40 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
           children: [
             Text('${inventoryTypeFriendlyNames[widget.inventory.type]}'),
             if (widget.inventory.duration > 0) ...[
-              const SizedBox(width: 8.0),
+              // const SizedBox(width: 8.0),
               Text(': ${widget.inventory.duration} ${S.of(context).minutes(widget.inventory.duration)}'),
+              // Show the remaining time
+              if (!widget.inventory.isFinished)
+                ValueListenableBuilder<double>(
+                  valueListenable: widget.inventory.elapsedTimeNotifier,
+                  builder: (context, elapsedTime, child) {
+                    final remainingTime = (widget.inventory.duration * 60) - elapsedTime;
+                    final minutes = (remainingTime / 60).floor();
+                    final seconds = (remainingTime % 60).floor();
+                    return Text(
+                      ' (${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')})',
+                      style: TextStyle(color: Theme.of(context).colorScheme.primary),
+                    );
+                  },
+                ),
             ],
             if (widget.inventory.maxSpecies > 0) ...[
-              const SizedBox(width: 8.0),
+              // const SizedBox(width: 8.0),
               Text(': ${widget.inventory.maxSpecies} ${S.of(context).speciesAcronym(widget.inventory.maxSpecies)}'),
             ],
+            const SizedBox(width: 8.0,),
+            // Show the number of intervals without species for qualitative inventories
+            Visibility(
+              visible: widget.inventory.type == InventoryType.invIntervalQualitative && !widget.inventory.isFinished,
+              child: ValueListenableBuilder<int>(
+                  valueListenable: widget.inventory.intervalWithoutSpeciesNotifier,
+                  builder: (context, intervalWithoutSpecies, child) {
+                    return intervalWithoutSpecies > 0
+                        ? Badge.count(count: intervalWithoutSpecies)
+                        : const SizedBox.shrink();
+                  }
+              ),
+            ),
           ],
         ),
         // Progress indicator if active
@@ -607,17 +634,52 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
           // const SizedBox(width: 8.0,),
         ],
         bottom: PreferredSize( // Wrap TabBar and LinearProgressIndicator in PreferredSize
-          preferredSize: const Size.fromHeight(kToolbarHeight + 4.0), // Adjust height as needed
+          preferredSize: const Size.fromHeight(kToolbarHeight + 24.0), // Adjust height as needed
           child: Column(
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text('${inventoryTypeFriendlyNames[widget.inventory.type]}'),
-                    if (widget.inventory.duration > 0) Text(': ${widget.inventory.duration} ${S.of(context).minutes(widget.inventory.duration)}'),
-                    if (widget.inventory.maxSpecies > 0) Text(': ${widget.inventory.maxSpecies} ${S.of(context).speciesAcronym(widget.inventory.maxSpecies)}'),
+                    if (widget.inventory.duration > 0) ...[
+                      Text(': ${widget.inventory.duration} ${S.of(context).minutes(widget.inventory.duration)}'),
+                      // Show the remaining time
+                      if (!widget.inventory.isFinished)
+                        ValueListenableBuilder<double>(
+                          valueListenable: widget.inventory.elapsedTimeNotifier,
+                          builder: (context, elapsedTime, child) {
+                            final remainingTime = (widget.inventory.duration * 60) - elapsedTime;
+                            // Do not show if the time is negative
+                            if (remainingTime < 0) return const SizedBox.shrink();
+
+                            final minutes = (remainingTime / 60).floor();
+                            final seconds = (remainingTime % 60).floor();
+                            return Text(
+                              ' (${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')})',
+                              style: TextStyle(color: Theme.of(context).colorScheme.primary),
+                            );
+                          },
+                        ),
+                    ],
+                    if (widget.inventory.maxSpecies > 0) ...[
+                      Text(': ${widget.inventory.maxSpecies} ${S.of(context).speciesAcronym(widget.inventory.maxSpecies)}'),
+                    ],
+                    const SizedBox(width: 8.0,),
+                    // Show the number of intervals without species for qualitative inventories
+                    Visibility(
+                      visible: widget.inventory.type == InventoryType.invIntervalQualitative && !widget.inventory.isFinished,
+                      child: ValueListenableBuilder<int>(
+                          valueListenable: widget.inventory.intervalWithoutSpeciesNotifier,
+                          builder: (context, intervalWithoutSpecies, child) {
+                            return intervalWithoutSpecies > 0
+                                ? Badge.count(count: intervalWithoutSpecies)
+                                : const SizedBox.shrink();
+                          }
+                      ),
+                    ),
                   ],
                 ),
+              const SizedBox(height: 8.0,),
               widget.inventory.duration > 0 && !widget.inventory.isFinished
                   ? ValueListenableBuilder<double>(
                 valueListenable: widget.inventory.elapsedTimeNotifier,
