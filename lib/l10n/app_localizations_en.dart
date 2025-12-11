@@ -231,8 +231,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get confirmFinish => 'Confirm finish';
 
   @override
-  String get confirmFinishMessage =>
-      'Are you sure you want to finish this inventory?';
+  String confirmFinishMessage(String which) {
+    return 'Are you sure you want to finish this inventory ($which)?';
+  }
 
   @override
   String get confirmAutoFinishMessage =>

@@ -594,18 +594,19 @@ class NestsScreenState extends State<NestsScreen> {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.sizeOf(context).width;
-    final isLargeScreen = screenWidth >= 600;
+    final isSplitScreen = screenWidth >= kTabletBreakpoint;
+    final isMenuShown = screenWidth < kDesktopBreakpoint;
 
     return Scaffold(
       appBar:
-          !isLargeScreen
+          !isSplitScreen
               ? AppBar(
                 title: SearchBar(
                   controller: _searchController,
                   hintText: S.of(context).nests,
                   elevation: WidgetStateProperty.all(0),
                   leading:
-                      MediaQuery.sizeOf(context).width < 600
+                      isMenuShown
                           ? Builder(
                             builder:
                                 (context) => IconButton(
@@ -656,7 +657,7 @@ class NestsScreenState extends State<NestsScreen> {
       body: LayoutBuilder(
         builder: (context, constraints) {
           // On large screens we show a split screen master/detail
-          if (isLargeScreen) {
+          if (isSplitScreen) {
             return Row(
               children: [
                 // Left: list (takes 40% width)
@@ -668,7 +669,7 @@ class NestsScreenState extends State<NestsScreen> {
                   //    right: BorderSide(color: Theme.of(context).dividerColor),
                   //  ),
                   //),
-                  child: _buildListPane(context, isLargeScreen),
+                  child: _buildListPane(context, isSplitScreen, isMenuShown),
                 ),
                 VerticalDivider(),
                 // Right: detail pane
@@ -677,7 +678,7 @@ class NestsScreenState extends State<NestsScreen> {
             );
           } else {
             // Small screens: keep current column layout
-            return _buildListPane(context, isLargeScreen);
+            return _buildListPane(context, isSplitScreen, isMenuShown);
           }
         },
       ),
@@ -768,19 +769,28 @@ class NestsScreenState extends State<NestsScreen> {
     );
   }
 
-  Widget _buildListPane(BuildContext context, bool isLargeScreen) {
+  Widget _buildListPane(BuildContext context, bool isSplitScreen, bool isMenuShown) {
     return Column(
       children: [
-        if (isLargeScreen) const SizedBox(height: 16.0),
+        if (isSplitScreen) const SizedBox(height: 16.0),
         Padding(
           padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
           child:
-              isLargeScreen
+              isSplitScreen
                   ? SearchBar(
                     controller: _searchController,
                     hintText: S.of(context).nests,
                     elevation: WidgetStateProperty.all(0),
-                    // leading: const Icon(Icons.search_outlined),
+                leading: isMenuShown
+                    ? Builder(
+                  builder: (context) => IconButton(
+                    icon: const Icon(Icons.menu_outlined),
+                    onPressed: () {
+                      widget.scaffoldKey.currentState?.openDrawer();
+                    },
+                  ),
+                )
+                    : const SizedBox.shrink(),
                     trailing: [
                       _searchController.text.isNotEmpty
                           ? IconButton(

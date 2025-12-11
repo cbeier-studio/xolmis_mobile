@@ -262,8 +262,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.sizeOf(context).width;
-    final useSideNavRail =
-        screenWidth >= kTabletBreakpoint && screenWidth < kDesktopBreakpoint;
+    final useSideNavRail = screenWidth >= kDesktopBreakpoint;
     final useFixedNavDrawer = screenWidth >= kDesktopBreakpoint;
 
     // Generate NavigationRailDestinations

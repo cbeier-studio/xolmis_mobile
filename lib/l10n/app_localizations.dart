@@ -408,8 +408,8 @@ abstract class AppLocalizations {
   /// Message asking confirmation to finish an inventory
   ///
   /// In en, this message translates to:
-  /// **'Are you sure you want to finish this inventory?'**
-  String get confirmFinishMessage;
+  /// **'Are you sure you want to finish this inventory ({which})?'**
+  String confirmFinishMessage(String which);
 
   /// Message asking confirmation to finish an inventory automatically
   ///

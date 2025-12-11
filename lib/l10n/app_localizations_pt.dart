@@ -231,8 +231,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get confirmFinish => 'Confirmar encerramento';
 
   @override
-  String get confirmFinishMessage =>
-      'Tem certeza que deseja encerrar este inventário?';
+  String confirmFinishMessage(String which) {
+    return 'Tem certeza que deseja encerrar este inventário ($which)?';
+  }
 
   @override
   String get confirmAutoFinishMessage =>
@@ -1821,8 +1822,9 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get confirmFinish => 'Confirmar encerramento';
 
   @override
-  String get confirmFinishMessage =>
-      'Tem certeza que deseja encerrar este inventário?';
+  String confirmFinishMessage(String which) {
+    return 'Tem certeza que deseja encerrar este inventário ($which)?';
+  }
 
   @override
   String get confirmAutoFinishMessage =>

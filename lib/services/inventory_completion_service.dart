@@ -146,7 +146,7 @@ class InventoryCompletionService {
       builder: (BuildContext dialogContext) {
         return AlertDialog.adaptive(
           title: Text(S.of(dialogContext).confirmFinish),
-          content: Text(S.of(dialogContext).confirmFinishMessage),
+          content: Text(S.of(dialogContext).confirmFinishMessage(inventory.id)),
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.of(dialogContext).pop(false),

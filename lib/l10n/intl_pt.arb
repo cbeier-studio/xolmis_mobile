@@ -160,7 +160,17 @@
         }
     },
     "confirmFinish": "Confirmar encerramento",
-    "confirmFinishMessage": "Tem certeza que deseja encerrar este inventário?",
+    "confirmFinishMessage": "Tem certeza que deseja encerrar este inventário ({which})?",
+  "@confirmFinishMessage": {
+    "type": "text",
+    "description": "Message asking confirmation to finish an inventory",
+    "placeholders": {
+      "which": {
+        "type": "String",
+        "description": "ID of inventory that will be finished"
+      }
+    }
+  },
     "confirmAutoFinishMessage": "Inventário automaticamente encerrado. Você deseja mantê-lo ativo ou finalizar este inventário?",
     "@confirmAutoFinishMessage": {
         "type": "text",

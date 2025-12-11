@@ -561,13 +561,13 @@ class S {
     );
   }
 
-  /// `Are you sure you want to finish this inventory?`
-  String get confirmFinishMessage {
+  /// `Are you sure you want to finish this inventory ({which})?`
+  String confirmFinishMessage(String which) {
     return Intl.message(
-      'Are you sure you want to finish this inventory?',
+      'Are you sure you want to finish this inventory ($which)?',
       name: 'confirmFinishMessage',
       desc: 'Message asking confirmation to finish an inventory',
-      args: [],
+      args: [which],
     );
   }
 

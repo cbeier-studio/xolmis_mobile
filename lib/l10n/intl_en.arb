@@ -293,10 +293,16 @@
         "type": "text",
         "description": "Title of dialog to confirm finishing an inventory"
     },
-    "confirmFinishMessage": "Are you sure you want to finish this inventory?",
+    "confirmFinishMessage": "Are you sure you want to finish this inventory ({which})?",
     "@confirmFinishMessage": {
         "type": "text",
-        "description": "Message asking confirmation to finish an inventory"
+        "description": "Message asking confirmation to finish an inventory",
+        "placeholders": {
+            "which": {
+                "type": "String",
+                "description": "ID of inventory that will be finished"
+            }
+        }
     },
     "confirmAutoFinishMessage": "Inventory automatically finished. Do you want to keep active or finish this inventory?",
     "@confirmAutoFinishMessage": {
