@@ -119,10 +119,10 @@ class _MainScreenState extends State<MainScreen> {
     await _checkForSpeciesUpdate();
 
     try {
-      Provider.of<InventoryProvider>(
-        context,
-        listen: false,
-      ).fetchInventories(context);
+      // Provider.of<InventoryProvider>(
+      //   context,
+      //   listen: false,
+      // ).fetchInventories(context);
       Provider.of<NestProvider>(context, listen: false).fetchNests();
       Provider.of<SpecimenProvider>(context, listen: false).fetchSpecimens();
       Provider.of<FieldJournalProvider>(

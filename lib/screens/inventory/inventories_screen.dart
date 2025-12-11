@@ -107,7 +107,12 @@ class _InventoriesScreenState extends State<InventoriesScreen> with WidgetsBindi
   }
 
   // Function to synchronize and restart the timers
-  void _resumeAllActiveTimers() async { // Tornando a função async
+  void _resumeAllActiveTimers() async {
+    if (!mounted) return; // Verificação de segurança
+
+    // 1. BUSCA os dados do banco de dados primeiro.
+    await inventoryProvider.fetchInventories(context);
+
     for (var inventory in inventoryProvider.activeInventories) {
       // Ignore if the inventory is paused or finished
       if (inventory.isPaused || inventory.isFinished) continue;

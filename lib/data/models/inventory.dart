@@ -895,7 +895,7 @@ class Inventory with ChangeNotifier {
               _autoFinished = true;
             }
 
-            if (isAutoFinished()) {
+            if (isAutoFinished() && !isFinished) {
               await stopTimer(context, inventoryDao);
               // If finished automatically, show a notification
               await showNotification(flutterLocalNotificationsPlugin);
