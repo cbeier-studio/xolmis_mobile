@@ -136,5 +136,19 @@ class SpeciesDao {
     }).toList();
   }
 
+  Future<DateTime?> getLastSpeciesTimeByInventory(String inventoryId) async {
+    final db = await _dbHelper.database;
+    final result = await db?.query(
+      'species', // nome da sua tabela de espécies
+      where: 'inventoryId = ?',
+      whereArgs: [inventoryId],
+      orderBy: 'sampleTime DESC', // ou o nome da sua coluna de data/hora
+      limit: 1,
+    );
+    if (result!.isNotEmpty) {
+      return DateTime.parse(result.first['sampleTime'] as String);
+    }
+    return null;
+  }
 
 }

@@ -808,6 +808,14 @@ class Inventory with ChangeNotifier {
     notifyListeners();
   }
 
+  // Update current interval values
+  void updateIntervalsWithoutNewSpecies(int newInterval) {
+    intervalsWithoutNewSpecies = newInterval;
+    intervalWithoutSpeciesNotifier.value = intervalsWithoutNewSpecies;
+    intervalWithoutSpeciesNotifier.notifyListeners();
+    notifyListeners();
+  }
+
   // Update if inventory is finished
   void updateIsFinished(bool newIsFinished) {
     isFinished = newIsFinished;
