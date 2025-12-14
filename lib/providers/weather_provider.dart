@@ -11,6 +11,10 @@ class WeatherProvider with ChangeNotifier {
 
   final Map<String, List<Weather>> _weatherMap = {};
 
+  void refreshState() {
+    notifyListeners();
+  }
+
   // Load weather records for an inventory ID
   Future<void> loadWeatherForInventory(String inventoryId) async {
     try {

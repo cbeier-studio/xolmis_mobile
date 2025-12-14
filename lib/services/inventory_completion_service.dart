@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../core/core_consts.dart';
 import '../data/models/inventory.dart';
 import '../providers/inventory_provider.dart';
+import '../providers/vegetation_provider.dart';
+import '../providers/weather_provider.dart';
 import '../data/daos/inventory_dao.dart';
 
 import '../screens/inventory/add_vegetation_screen.dart';
@@ -74,6 +77,9 @@ class InventoryCompletionService {
   Future<void> processConditionalRemindersAndFinalize(BuildContext context) async {
     bool proceedToFinalize = true;
 
+    final VegetationProvider vegetationProvider = context.read<VegetationProvider>();
+    final WeatherProvider weatherProvider = context.read<WeatherProvider>();
+
     final prefs = await SharedPreferences.getInstance();
     final bool remindVegetationEmpty = prefs.getBool('remindVegetationEmpty') ?? false;
     final bool remindWeatherEmpty = prefs.getBool('remindWeatherEmpty') ?? false;
@@ -96,7 +102,8 @@ class InventoryCompletionService {
             MaterialPageRoute(builder: (_) => AddVegetationDataScreen(inventory: inventory)),
           );
           if (vegetationAdded != null && vegetationAdded) {
-            await inventoryProvider.fetchInventories(context);
+            await vegetationProvider.loadVegetationForInventory(inventory.id);
+            // await inventoryProvider.fetchInventories(context);
             proceedToFinalize = true;
           }
         }
@@ -121,7 +128,8 @@ class InventoryCompletionService {
             MaterialPageRoute(builder: (_) => AddWeatherScreen(inventory: inventory)),
           );
           if (weatherAdded != null && weatherAdded) {
-            await inventoryProvider.fetchInventories(context);
+            await weatherProvider.loadWeatherForInventory(inventory.id);
+            // await inventoryProvider.fetchInventories(context);
             proceedToFinalize = true;
           }
         }

@@ -23,7 +23,7 @@ class DatabaseHelper {
     String path = join(await getDatabasesPath(), 'xolmis_database.db');
     return await openDatabase(
       path,
-      version: 20, // Increase the version number
+      version: 21, // Increase the version number
       onCreate: _createTables,
       onUpgrade: _upgradeTables,
       onConfigure: (db) {
@@ -53,6 +53,8 @@ class DatabaseHelper {
           currentInterval INTEGER,
           intervalsWithoutNewSpecies INTEGER,
           currentIntervalSpeciesCount INTEGER,
+          totalPausedTimeInSeconds REAL,
+          pauseStartTime TEXT,
           localityName TEXT,
           totalObservers INTEGER,
           notes TEXT,
@@ -404,6 +406,14 @@ class DatabaseHelper {
     if (oldVersion < 20) {
       db.execute(
         'ALTER TABLE weather ADD COLUMN windDirection TEXT',
+      );
+    }
+    if (oldVersion < 21) {
+      db.execute(
+        'ALTER TABLE inventories ADD COLUMN totalPausedTimeInSeconds REAL',
+      );
+      db.execute(
+        'ALTER TABLE inventories ADD COLUMN pauseStartTime TEXT',
       );
     }
   }

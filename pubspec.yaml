@@ -49,11 +49,11 @@ dependencies:
   permission_handler: ^12.0.1  
   geolocator: ^14.0.2
   package_info_plus: ^8.3.1
-  workmanager: 
-    git:
-      url: https://github.com/fluttercommunity/flutter_workmanager.git
-      path: workmanager
-      ref: main    
+#  workmanager: ^0.9.0+3
+#    git:
+#      url: https://github.com/fluttercommunity/flutter_workmanager.git
+#      path: workmanager
+#      ref: main
   device_info_plus: ^12.2.0
   url_launcher: ^6.3.2
 #  equations: ^5.0.2

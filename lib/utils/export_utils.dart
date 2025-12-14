@@ -178,7 +178,7 @@ Future<List<List>> buildInventoryRows(Inventory inventory, Locale locale) async 
   const List<String> inventoryHeaders = ['ID','Type','Duration',
     'Max of species','Start date','Start time','End date','End time',
     'Locality','Start longitude','Start latitude','End longitude',
-    'End latitude','Total of observers','Intervals','Notes','Discarded'];
+    'End latitude','Total of observers','Intervals','Paused time (seconds)','Notes','Discarded'];
   const List<String> speciesHeaders = ['SPECIES', 'Count', 'Time', 'Out of sample',
     'Distance', 'Flight height', 'Flight direction', 'Notes'];
   const List<String> vegetationHeaders = ['Date/Time','Latitude','Longitude',
@@ -212,6 +212,7 @@ Future<List<List>> buildInventoryRows(Inventory inventory, Locale locale) async 
     inventory.endLatitude != null ? formatNumbers ? numberFormat.format(inventory.endLatitude) : inventory.endLatitude : '',
     inventory.totalObservers ?? '',
     inventory.currentInterval ?? '',
+    inventory.totalPausedTimeInSeconds ?? '',
     inventory.notes ?? '',
     inventory.isDiscarded ? 'Yes' : 'No',
   ]);

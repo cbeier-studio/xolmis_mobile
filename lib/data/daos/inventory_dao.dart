@@ -59,9 +59,7 @@ class InventoryDao {
   Future<bool> importInventory(Inventory inventory) async {
     final db = await _dbHelper.database;
     if (db == null) {
-      if (kDebugMode) {
-        print('Database instance is null. Cannot import inventory.');
-      }
+      debugPrint('[DAO] !!! ERROR importing inventory: Database instance is null.');
       return false;
     }
 
@@ -177,9 +175,9 @@ class InventoryDao {
         where: 'id = ?',
         whereArgs: [inventory.id],
       );
-      debugPrint('Inventory updated: ${inventory.id}');
+      debugPrint('[DAO] Inventory updated: ${inventory.id}');
     } catch (e) {
-      debugPrint('Error updating inventory: $e');
+      debugPrint('[DAO] !!! ERROR updating inventory: $e');
     }
   }
 
@@ -233,7 +231,7 @@ class InventoryDao {
 
     // 1. Check if database connection is available
     if (db == null) {
-      debugPrint('Error: Database connection is not available.');
+      debugPrint('[DAO] !!! ERROR changing inventory ID: Database connection is not available.');
       throw Exception('Database connection is not available.');
     }
 
@@ -252,6 +250,7 @@ class InventoryDao {
 
         // 4. Crucial check: if main record was not found, stop transaction
         if (inventoryUpdated == 0) {
+          debugPrint('[DAO] !!! ERROR changing inventory ID: Inventory with old ID "$oldId" not found. Transaction rolled back.');
           throw Exception('Inventory with old ID "$oldId" not found. Transaction rolled back.');
         }
 
@@ -279,16 +278,16 @@ class InventoryDao {
       });
       await db.execute('PRAGMA foreign_keys = ON;');
 
-      debugPrint('Successfully changed inventory ID from "$oldId" to "$newId"');
+      debugPrint('[DAO] ...Successfully changed inventory ID from "$oldId" to "$newId"');
 
     } on DatabaseException catch (e, s) {
       // 6. Capture database errors (e.g.: constraint violation)
-      debugPrint('Database error changing inventory ID: $e');
+      debugPrint('[DAO] !!! DATABASE ERROR changing inventory ID: $e');
       debugPrint('Stack trace: $s');
       throw Exception('Failed to change inventory ID due to a database error: $e');
     } catch (e) {
       // 7. Capture other errors
-      debugPrint('Generic error changing inventory ID: $e');
+      debugPrint('[DAO] !!! ERROR changing inventory ID: $e');
       rethrow;
     }
   }
@@ -322,44 +321,18 @@ class InventoryDao {
         List<Species> speciesList = await _speciesDao.getSpeciesByInventory(map['id'], false);
         List<Vegetation> vegetationList = await _vegetationDao.getVegetationByInventory(map['id']);
         List<Weather> weatherList = await _weatherDao.getWeatherByInventory(map['id']);
-        // Create Inventory instance using the main constructor
-        // Inventory inventory = Inventory(
-        //   id: map['id'],
-        //   type: InventoryType.values[map['type']],
-        //   duration: map['duration'],
-        //   maxSpecies: map['maxSpecies'],
-        //   isPaused: map['isPaused'] == 1,
-        //   isFinished: map['isFinished'] == 1,
-        //   elapsedTime: map['elapsedTime'],
-        //   startTime: map['startTime'] != null ? DateTime.parse(map['startTime']) : null,
-        //   endTime: map['endTime'] != null ? DateTime.parse(map['endTime']) : null,
-        //   startLongitude: map['startLongitude'],
-        //   startLatitude: map['startLatitude'],
-        //   endLongitude: map['endLongitude'],
-        //   endLatitude: map['endLatitude'],
-        //   currentInterval: map['currentInterval'] ?? 1,
-        //   intervalsWithoutNewSpecies: map['intervalsWithoutNewSpecies'] ?? 0,
-        //   currentIntervalSpeciesCount: map['currentIntervalSpeciesCount'] ?? 0,
-        //   localityName: map['localityName'],
-        //   notes: map['notes'],
-        //   isDiscarded: map['isDiscarded'] == 1,
-        //   speciesList: speciesList,
-        //   vegetationList: vegetationList,
-        //   weatherList: weatherList,
-        // );
+
         Inventory inventory = Inventory.fromMap(map, speciesList, vegetationList, weatherList);
 
         return inventory;
       }).toList());
 
-      if (kDebugMode) {
-        print('Loaded inventories: ${inventories.length}');
-      }
+      debugPrint('[DAO] Loaded inventories: ${inventories.length}');
+
       return inventories;
     } catch (e) {
-      if (kDebugMode) {
-        print('Error loading inventories: $e');
-      }
+      debugPrint('[DAO] !!! ERROR loading inventories: $e');
+
       // Handle the error, e.g.: return an empty list or rethrow exception
       return []; // Or rethrow;
     }
@@ -426,10 +399,10 @@ class InventoryDao {
 
       final localities = results.map((row) => row['localityName'] as String).toList();
       
-      debugPrint('Distinct localities from inventories: $localities');
+      debugPrint('[DAO] Distinct localities from inventories: $localities');
       return localities;
     } catch (e, s) {
-      debugPrint('Error fetching inventories distinct localities: $e\n$s');
+      debugPrint('[DAO] !!! ERROR fetching inventories distinct localities: $e\n$s');
       return [];
     }
   }

@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:workmanager/workmanager.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -37,30 +36,6 @@ import 'utils/utils.dart';
 import 'utils/themes.dart';
 import 'generated/l10n.dart';
 
-const String keepAwakeTaskName = "wakeup";
-
-// Run an empty task just to maintain Xolmis awake
-@pragma('vm:entry-point')
-void callbackDispatcher() {
-  WidgetsFlutterBinding.ensureInitialized();
-  Workmanager().executeTask((task, inputData) async {
-    try {
-      switch (task) {
-        case "wakeup":
-          debugPrint('Xolmis awakened by WorkManager (KeepAwake Task)');
-          break;
-        default:
-          debugPrint("Unknown task: $task");
-          break;
-      }
-      return Future.value(true); // Successful execution
-    } catch (e, s) {
-      debugPrint('WorkManager error: $e\n$s');
-      return Future.value(false);
-    }
-  });
-}
-
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
   FlutterLocalNotificationsPlugin();
 
@@ -75,12 +50,6 @@ Future<void> main() async {
       final license = await rootBundle.loadString('assets/license.txt');
       yield LicenseEntryWithLineBreaks(['xolmis'], license);
     });
-
-    // Start the work manager
-    Workmanager().initialize(
-      callbackDispatcher,
-      isInDebugMode: false,
-    );
 
     // Start the notification service
     const AndroidInitializationSettings initializationSettingsAndroid =
@@ -109,6 +78,23 @@ Future<void> main() async {
     final appImageDao = AppImageDao(databaseHelper);
     final journalDao = FieldJournalDao(databaseHelper);
 
+    final appImageProvider = AppImageProvider(appImageDao);
+    final poiProvider = PoiProvider(poiDao);
+    final speciesProvider = SpeciesProvider(speciesDao);
+    final vegetationProvider = VegetationProvider(vegetationDao);
+    final weatherProvider = WeatherProvider(weatherDao);
+    final nestRevisionProvider = NestRevisionProvider(nestRevisionDao);
+    final eggProvider = EggProvider(eggDao);
+    final specimenProvider = SpecimenProvider(specimenDao);
+    final inventoryProvider = InventoryProvider(
+      inventoryDao,
+      speciesProvider,
+      vegetationProvider,
+      weatherProvider,
+    );
+    final nestProvider = NestProvider(nestDao);
+    final journalProvider = FieldJournalProvider(journalDao);
+
     // Preload the species names list
     List<String> preloadedSpeciesNames = await loadSpeciesSearchData();
     preloadedSpeciesNames.sort((a, b) => a.compareTo(b));
@@ -126,6 +112,19 @@ Future<void> main() async {
       specimenDao: specimenDao,
       appImageDao: appImageDao,
       journalDao: journalDao,
+
+      inventoryProvider: inventoryProvider,
+      speciesProvider: speciesProvider,
+      poiProvider: poiProvider,
+      vegetationProvider: vegetationProvider,
+      weatherProvider: weatherProvider,
+      nestProvider: nestProvider,
+      nestRevisionProvider: nestRevisionProvider,
+      eggProvider: eggProvider,
+      specimenProvider: specimenProvider,
+      appImageProvider: appImageProvider,
+      journalProvider: journalProvider,
+
       preloadedSpeciesNames: preloadedSpeciesNames,
     );
 
@@ -162,6 +161,17 @@ class AppDependencies {
   final SpecimenDao specimenDao;
   final AppImageDao appImageDao;
   final FieldJournalDao journalDao;
+  final InventoryProvider inventoryProvider;
+  final SpeciesProvider speciesProvider;
+  final PoiProvider poiProvider;
+  final VegetationProvider vegetationProvider;
+  final WeatherProvider weatherProvider;
+  final NestProvider nestProvider;
+  final NestRevisionProvider nestRevisionProvider;
+  final EggProvider eggProvider;
+  final SpecimenProvider specimenProvider;
+  final AppImageProvider appImageProvider;
+  final FieldJournalProvider journalProvider;
   final List<String> preloadedSpeciesNames;
 
   AppDependencies({
@@ -176,6 +186,17 @@ class AppDependencies {
     required this.specimenDao,
     required this.appImageDao,
     required this.journalDao,
+    required this.inventoryProvider,
+    required this.speciesProvider,
+    required this.poiProvider,
+    required this.vegetationProvider,
+    required this.weatherProvider,
+    required this.nestProvider,
+    required this.nestRevisionProvider,
+    required this.eggProvider,
+    required this.specimenProvider,
+    required this.appImageProvider,
+    required this.journalProvider,
     this.preloadedSpeciesNames = const [],
   });
 }
@@ -192,30 +213,23 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => FieldJournalProvider(dependencies.journalDao)),
-        ChangeNotifierProvider(create: (context) => AppImageProvider(dependencies.appImageDao)),
-        ChangeNotifierProvider(create: (context) => SpecimenProvider(dependencies.specimenDao)),
-        ChangeNotifierProvider(create: (context) => NestRevisionProvider(dependencies.nestRevisionDao)),
-        ChangeNotifierProvider(create: (context) => EggProvider(dependencies.eggDao)),
-        ChangeNotifierProvider(create: (context) => PoiProvider(dependencies.poiDao)),
-        ChangeNotifierProvider(create: (context) => SpeciesProvider(dependencies.speciesDao)),
-        ChangeNotifierProvider(create: (context) => VegetationProvider(dependencies.vegetationDao)),
-        ChangeNotifierProvider(create: (context) => WeatherProvider(dependencies.weatherDao)),
-        ChangeNotifierProvider(
-          create: (context) => InventoryProvider(
-            dependencies.inventoryDao,
-            context.read<SpeciesProvider>(),
-            context.read<VegetationProvider>(),
-            context.read<WeatherProvider>(),
-          ),
-        ),
-        ChangeNotifierProvider(create: (_) => NestProvider(dependencies.nestDao)),
-        Provider(create: (_) => dependencies.inventoryDao),
-        Provider(create: (_) => dependencies.speciesDao),
-        Provider(create: (_) => dependencies.poiDao),
-        Provider(create: (_) => dependencies.vegetationDao),
-        Provider(create: (_) => dependencies.weatherDao),
-        Provider(create: (_) => dependencies.journalDao),
+        ChangeNotifierProvider.value(value: dependencies.journalProvider),
+        ChangeNotifierProvider.value(value: dependencies.appImageProvider),
+        ChangeNotifierProvider.value(value: dependencies.specimenProvider),
+        ChangeNotifierProvider.value(value: dependencies.nestRevisionProvider),
+        ChangeNotifierProvider.value(value: dependencies.eggProvider),
+        ChangeNotifierProvider.value(value: dependencies.poiProvider),
+        ChangeNotifierProvider.value(value: dependencies.speciesProvider),
+        ChangeNotifierProvider.value(value: dependencies.vegetationProvider),
+        ChangeNotifierProvider.value(value: dependencies.weatherProvider),
+        ChangeNotifierProvider.value(value: dependencies.inventoryProvider),
+        ChangeNotifierProvider.value(value: dependencies.nestProvider),
+        Provider.value(value: dependencies.inventoryDao),
+        Provider.value(value: dependencies.speciesDao),
+        Provider.value(value: dependencies.poiDao),
+        Provider.value(value: dependencies.vegetationDao),
+        Provider.value(value: dependencies.weatherDao),
+        Provider.value(value: dependencies.journalDao),
       ],
       child: Consumer<ThemeModel>(
         builder: (context, themeModel, child) {

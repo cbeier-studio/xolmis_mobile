@@ -11,6 +11,10 @@ class VegetationProvider with ChangeNotifier {
 
   final Map<String, List<Vegetation>> _vegetationMap = {};
 
+  void refreshState() {
+    notifyListeners();
+  }
+
   // Load vegetation records for an inventory ID
   Future<void> loadVegetationForInventory(String inventoryId) async {
     try {

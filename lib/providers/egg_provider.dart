@@ -12,6 +12,10 @@ class EggProvider with ChangeNotifier {
 
   final Map<int, List<Egg>> _eggMap = {};
 
+  void refreshState() {
+    notifyListeners();
+  }
+
   // Load list of eggs for a nest ID
   Future<void> loadEggForNest(int nestId) async {
     try {

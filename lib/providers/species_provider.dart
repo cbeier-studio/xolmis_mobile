@@ -15,6 +15,10 @@ class SpeciesProvider with ChangeNotifier {
   final Map<String, List<Species>> _speciesMap = {};
   final ValueNotifier<int> individualsCountNotifier = ValueNotifier<int>(0);
 
+  void refreshState() {
+    notifyListeners();
+  }
+
   // Get list of all inventory IDs
   List<String> getAllInventoryIds() {
     return _speciesMap.keys.toList();

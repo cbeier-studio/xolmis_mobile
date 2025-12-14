@@ -14,6 +14,10 @@ class FieldJournalProvider with ChangeNotifier {
 
   int get entriesCount => journalEntries.length;
 
+  void refreshState() {
+    notifyListeners();
+  }
+
   // Load list of all field journal entries
   Future<void> fetchJournalEntries() async {
     _journalEntries = await _journalDao.getJournalEntries();

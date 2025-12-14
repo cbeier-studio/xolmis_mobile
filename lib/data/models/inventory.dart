@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
@@ -579,6 +580,8 @@ class Inventory with ChangeNotifier {
   final ValueNotifier<int> _intervalWithoutSpeciesNotifier = ValueNotifier<int>(0);
   ValueNotifier<int> get intervalWithoutSpeciesNotifier => _intervalWithoutSpeciesNotifier;
   int currentIntervalSpeciesCount = 0;
+  double totalPausedTimeInSeconds = 0;
+  DateTime? pauseStartTime;
 
   Inventory({
     required this.id,
@@ -604,6 +607,8 @@ class Inventory with ChangeNotifier {
     this.currentInterval = 1,
     this.intervalsWithoutNewSpecies = 0,
     this.currentIntervalSpeciesCount = 0,
+    this.totalPausedTimeInSeconds = 0,
+    this.pauseStartTime,
   }) {
     if (duration == 0) {
       elapsedTime = 0;
@@ -636,6 +641,10 @@ class Inventory with ChangeNotifier {
         currentInterval = map['currentInterval'] ?? 1,
         intervalsWithoutNewSpecies = map['intervalsWithoutNewSpecies'] ?? 0,
         currentIntervalSpeciesCount = map['currentIntervalSpeciesCount'] ?? 0,
+        totalPausedTimeInSeconds = map['totalPausedTimeInSeconds'] ?? 0,
+        pauseStartTime = map['pauseStartTime'] != null
+            ? DateTime.parse(map['pauseStartTime'])
+            : null,
         this.speciesList = speciesList,
         this.vegetationList = vegetationList,
         this.weatherList = weatherList;
@@ -657,6 +666,8 @@ class Inventory with ChangeNotifier {
     int? currentInterval,
     int? intervalsWithoutNewSpecies,
     int? currentIntervalSpeciesCount,
+    double? totalPausedTimeInSeconds,
+    DateTime? pauseStartTime,
     String? localityName,
     int? totalObservers,
     String? notes,
@@ -682,6 +693,8 @@ class Inventory with ChangeNotifier {
       currentInterval: currentInterval ?? this.currentInterval,
       intervalsWithoutNewSpecies: intervalsWithoutNewSpecies ?? this.intervalsWithoutNewSpecies,
       currentIntervalSpeciesCount: currentIntervalSpeciesCount ?? this.currentIntervalSpeciesCount,
+      totalPausedTimeInSeconds: totalPausedTimeInSeconds ?? this.totalPausedTimeInSeconds,
+      pauseStartTime: pauseStartTime ?? this.pauseStartTime,
       localityName: localityName ?? this.localityName,
       totalObservers: totalObservers ?? this.totalObservers,
       notes: notes ?? this.notes,
@@ -710,6 +723,8 @@ class Inventory with ChangeNotifier {
       'currentInterval': currentInterval,
       'intervalsWithoutNewSpecies': intervalsWithoutNewSpecies,
       'currentIntervalSpeciesCount': currentIntervalSpeciesCount,
+      'totalPausedTimeInSeconds': totalPausedTimeInSeconds,
+      'pauseStartTime': pauseStartTime?.toIso8601String(),
       'localityName': localityName,
       'totalObservers': totalObservers,
       'notes': notes,
@@ -736,6 +751,8 @@ class Inventory with ChangeNotifier {
         'currentInterval: $currentInterval, '
         'intervalsWithoutNewSpecies: $intervalsWithoutNewSpecies, '
         'currentIntervalSpeciesCount: $currentIntervalSpeciesCount, '
+        'totalPausedTimeInSeconds: $totalPausedTimeInSeconds, '
+        'pauseStartTime: $pauseStartTime, '
         'localityName: $localityName, '
         'totalObservers: $totalObservers, '
         'notes: $notes, '
@@ -761,6 +778,8 @@ class Inventory with ChangeNotifier {
       'currentInterval': currentInterval,
       'intervalsWithoutNewSpecies': intervalsWithoutNewSpecies,
       'currentIntervalSpeciesCount': currentIntervalSpeciesCount,
+      'totalPausedTimeInSeconds': totalPausedTimeInSeconds,
+      'pauseStartTime': pauseStartTime?.toIso8601String(),
       'speciesList': speciesList.map((species) => species.toJson()).toList(),
       'vegetationList': vegetationList.map((vegetation) => vegetation.toJson()).toList(),
       'weatherList': weatherList.map((weather) => weather.toJson()).toList(),
@@ -786,6 +805,8 @@ class Inventory with ChangeNotifier {
       currentInterval: json['currentInterval'],
       intervalsWithoutNewSpecies: json['intervalsWithoutNewSpecies'],
       currentIntervalSpeciesCount: json['currentIntervalSpeciesCount'],
+      totalPausedTimeInSeconds: json['totalPausedTimeInSeconds'],
+      pauseStartTime: json['pauseStartTime'] != null ? DateTime.parse(json['pauseStartTime']) : null,
       speciesList: (json['speciesList'] as List).map((item) => Species.fromJson(item)).toList(),
       vegetationList: (json['vegetationList'] as List).map((item) => Vegetation.fromJson(item)).toList(),
       weatherList: (json['weatherList'] as List).map((item) => Weather.fromJson(item)).toList(),
@@ -829,11 +850,10 @@ class Inventory with ChangeNotifier {
 
   // Start the inventory timer
   Future<void> startTimer(BuildContext context, InventoryDao inventoryDao) async {
-    if (kDebugMode) {
-      print('startTimer called');
-    }
+    debugPrint('START_TIMER_CALLED for inventory $id. Current state: isFinished=$isFinished, isPaused=$isPaused, duration=$duration');
     // If duration was not defined, do not start the timer
     if (duration == 0) {
+      debugPrint('...START_TIMER_ABORTED for $id: duration is 0.');
       updateElapsedTime(0.0);
       return;
     }
@@ -843,12 +863,23 @@ class Inventory with ChangeNotifier {
       updateCurrentInterval(currentInterval);
 
       // Cancel any existing timer before starting a new one
+      debugPrint('...Cancelling existing timer for $id before starting new one.');
       _timer?.cancel();
       _timer = null;
 
+      debugPrint('...SUCCESS: Starting new timer for $id with 5-second interval.');
       _timer = Stream<void>.periodic(const Duration(seconds: 5)).listen((_) async {
         // Only process things if inventory is not paused or finished
         if (!isPaused && !isFinished) {
+          if (pauseStartTime != null) {
+            // 1. Calculate the pause duration that just finished.
+            final pauseDuration = DateTime.now().difference(pauseStartTime!).inSeconds.toDouble();
+            // 2. Accumulate this duration in the total paused time.
+            totalPausedTimeInSeconds += pauseDuration;
+            // 3. Clear the `pauseStartTime`, because the pause finished.
+            pauseStartTime = null;
+          }
+
           if (elapsedTime == 0) {
             updateElapsedTime(0);
             // If elapsed time is zero, update it in the database
@@ -856,11 +887,15 @@ class Inventory with ChangeNotifier {
           }
 
           // Update the elapsed time every 5 seconds
+          final oldElapsedTime = elapsedTime;
           updateElapsedTime(elapsedTime += 5);
+          debugPrint('TIMER_TICK for $id: elapsedTime changed from $oldElapsedTime to $elapsedTime.');
           await inventoryDao.updateInventoryElapsedTime(id, elapsedTime);
 
           // Elapsed time reach the defined duration
           if (elapsedTime >= duration * 60 && !isFinished) {
+            debugPrint('TIMER_TICK for $id: Interval duration reached! (elapsedTime: $elapsedTime >= ${duration * 60})');
+
             // If inventory type is intervaled
             if (type == InventoryType.invIntervalQualitative) {
               // Increment the currentInterval counter
@@ -885,6 +920,7 @@ class Inventory with ChangeNotifier {
               if (intervalsWithoutNewSpecies == 3) {
                 // If 3 intervals without species is reached, finish inventory
                 _autoFinished = true;
+                debugPrint('!!! AUTO-FINISH condition met for $id: intervalsWithoutNewSpecies is 3.');
               } else {
                 // Else, reset elapsed time for new interval
                 updateElapsedTime(0.0);
@@ -893,9 +929,11 @@ class Inventory with ChangeNotifier {
             } else {
               // If other type of timed inventory, finish inventory if duration is reached
               _autoFinished = true;
+              debugPrint('!!! AUTO-FINISH condition met for $id: Timed inventory duration reached.');
             }
 
             if (isAutoFinished() && !isFinished) {
+              debugPrint('>>> Calling stopTimer() automatically for $id...');
               await stopTimer(context, inventoryDao);
               // If finished automatically, show a notification
               await showNotification(flutterLocalNotificationsPlugin);
@@ -912,13 +950,17 @@ class Inventory with ChangeNotifier {
 
   // Pause the inventory timer
   Future<void> pauseTimer(InventoryDao inventoryDao) async {
-    if (kDebugMode) {
-      print('pauseTimer called');
+    if (isPaused) {
+      debugPrint('PAUSE IGNORED for $id: Already paused.');
+      return;
     }
+    debugPrint('PAUSING inventory $id...');
     _timer?.pause();
     // _timer = null;
     isPaused = true;
+    pauseStartTime = DateTime.now();
     elapsedTimeNotifier.value = elapsedTime;
+    debugPrint('...PAUSED inventory $id at $pauseStartTime. Current elapsedTime: $elapsedTime');
     elapsedTimeNotifier.notifyListeners();
     notifyListeners();
     await inventoryDao.updateInventory(this);
@@ -926,15 +968,37 @@ class Inventory with ChangeNotifier {
 
   // Resume the inventory timer
   Future<void> resumeTimer(BuildContext context, InventoryDao inventoryDao) async {
-    if (kDebugMode) {
-      print('resumeTimer called');
+    if (!isPaused) {
+      debugPrint('RESUME IGNORED for $id: Not currently paused.');
+      return;
     }
+    debugPrint('RESUMING inventory $id...');
+
     if (isPaused) {
-      _timer?.resume();
       isPaused = false;
+      if (_timer?.isPaused == true) {
+        if (pauseStartTime != null) {
+          // 1. Calculate the pause duration that just finished.
+          final pauseDuration = DateTime.now().difference(pauseStartTime!).inSeconds.toDouble();
+          debugPrint('...Calculated pause duration for $id: $pauseDuration seconds.');
+          // 2. Accumulate this duration in the total paused time.
+          totalPausedTimeInSeconds += pauseDuration;
+          debugPrint('...New totalPausedTimeInSeconds for $id: $totalPausedTimeInSeconds seconds.');
+          // 3. Clear the `pauseStartTime`, because the pause finished.
+          pauseStartTime = null;
+        }
+        // If the timer was paused, resume it
+        debugPrint('...Resuming existing timer for $id.');
+        _timer?.resume();
+      } else {
+        // If not paused, start it again
+        debugPrint('...No existing timer found for $id, calling startTimer() to recreate it.');
+        startTimer(context, inventoryDao);
+      }
     } else {
       // If not paused, it means it was stopped.
       // We need to start it again.
+      debugPrint('...No existing timer found for $id, calling startTimer() to recreate it.');
       startTimer(context, inventoryDao);
     }
     elapsedTimeNotifier.value = elapsedTime.toDouble();
@@ -945,9 +1009,11 @@ class Inventory with ChangeNotifier {
 
   // Stop the timer and finish the inventory
   Future<void> stopTimer(BuildContext context, InventoryDao inventoryDao) async {
-    if (kDebugMode) {
-      print('stopTimer called');
+    if (isFinished) {
+      debugPrint('STOP_TIMER_IGNORED for $id: Already finished.');
+      return;
     }
+    debugPrint('STOPPING_TIMER for inventory $id...');
 
     _timer?.cancel();
     _timer = null;

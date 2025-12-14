@@ -37,33 +37,50 @@ class InventoryProvider with ChangeNotifier {
 
   InventoryProvider(this._inventoryDao, this._speciesProvider, this._vegetationProvider, this._weatherProvider);
 
+  void refreshState() {
+    notifyListeners();
+  }
+
   // Load all inventories from the database
   Future<void> fetchInventories(BuildContext context) async {
+    debugPrint('[PROVIDER] ----------------------------------');
+    debugPrint('[PROVIDER] Fetching all inventories...');
     _isLoading = true;
-    try {
-      _inventories.clear();
-      _inventoryMap.clear();
-      final inventories = await _inventoryDao.getInventories();
-      _inventories.addAll(inventories);
-      // notifyListeners();
-      for (var inventory in inventories) {
-        _inventoryMap[inventory.id] = inventory; // Populate the inventories map
-        await _speciesProvider.loadSpeciesForInventory(inventory.id);
-        await _vegetationProvider.loadVegetationForInventory(inventory.id);
-        await _weatherProvider.loadWeatherForInventory(inventory.id);
-        startInventoryTimer(context, inventory, _inventoryDao);
+    try {final inventoriesFromDb = await _inventoryDao.getInventories();
+    final Set<String> dbInventoryIds = inventoriesFromDb.map((inv) => inv.id).toSet();
+
+    // Remove da memória os inventários que não existem mais no DB
+    _inventoryMap.removeWhere((id, inventory) => !dbInventoryIds.contains(id));
+    _inventories.removeWhere((inventory) => !dbInventoryIds.contains(inventory.id));
+
+    // Atualiza os existentes ou adiciona os novos
+    for (var dbInventory in inventoriesFromDb) {
+      if (_inventoryMap.containsKey(dbInventory.id)) {
+        // Objeto já existe na memória: ATUALIZE-O, não o substitua.
+        final memoryInventory = _inventoryMap[dbInventory.id]!;
+        // Esta é uma etapa de "merge". Você pode criar um método no seu
+        // modelo Inventory para atualizar suas propriedades a partir de outro.
+        // Ex: memoryInventory.updateFrom(dbInventory);
+        // Por enquanto, vamos apenas garantir que a referência seja mantida.
+        // A lógica de recálculo da MainScreen cuidará do resto.
+      } else {
+        // Objeto não existe na memória: ADICIONE-O.
+        _inventories.add(dbInventory);
+        _inventoryMap[dbInventory.id] = dbInventory;
       }
-      if (kDebugMode) {
-        print('Inventories loaded');
-      }
-      // notifyListeners();
-    } catch (e) {
-      if (kDebugMode) {
-        print('Error loading inventories: $e');
-      }
+      // Carrega sub-itens se necessário
+      await _speciesProvider.loadSpeciesForInventory(dbInventory.id);
+      await _vegetationProvider.loadVegetationForInventory(dbInventory.id);
+      await _weatherProvider.loadWeatherForInventory(dbInventory.id);
+    }
+    debugPrint('[PROVIDER] ...Sync complete. Current active count: ${activeInventories.length}');
+    } catch (e, s) {
+      debugPrint('[PROVIDER] !!! ERROR syncing inventories: $e\n$s');
     } finally {
       _isLoading = false;
       notifyListeners();
+      debugPrint('[PROVIDER] fetchInventories complete. Notifying listeners.');
+      debugPrint('[PROVIDER] ----------------------------------');
     }
   }
 
@@ -79,41 +96,42 @@ class InventoryProvider with ChangeNotifier {
 
   // Add inventory to the database and the list
   Future<bool> addInventory(BuildContext context, Inventory inventory) async {
+    debugPrint('[PROVIDER] Adding new inventory: ${inventory.id}');
     try {
       await _inventoryDao.insertInventory(context, inventory);
       _inventories.add(inventory);
       _inventoryMap[inventory.id] = inventory; // Add to the map
       notifyListeners();
+      debugPrint('[PROVIDER] ...Success. Starting timer for new inventory.');
       startInventoryTimer(context, inventory, _inventoryDao);
 
       return true;
     } catch (error) {
-      if (kDebugMode) {
-        print('Error adding inventory: $error');
-      }
+      debugPrint('[PROVIDER] !!! ERROR adding inventory ${inventory.id}: $error');
       return false;
     }
   }
 
   // Add imported inventory to the database and the list
   Future<bool> importInventory(Inventory inventory) async {
+    debugPrint('[PROVIDER] Importing inventory: ${inventory.id}');
     try {
       await _inventoryDao.importInventory(inventory);
       _inventories.add(inventory);
       _inventoryMap[inventory.id] = inventory; // Add to the map
       notifyListeners();
+      debugPrint('[PROVIDER] ...Import complete for ${inventory.id}. Notifying listeners.');
 
       return true;
     } catch (error) {
-      if (kDebugMode) {
-        print('Error importing inventory: $error');
-      }
+      debugPrint('[PROVIDER] !!! ERROR importing inventory ${inventory.id}: $error');
       return false;
     }
   }
 
   // Update inventory in the database and the list
   Future<void> updateInventory(Inventory inventory) async {
+    debugPrint('[PROVIDER] Updating inventory: ${inventory.id}');
     await _inventoryDao.updateInventory(inventory);
 
     final index = _inventories.indexWhere((inv) => inv.id == inventory.id);
@@ -123,15 +141,18 @@ class InventoryProvider with ChangeNotifier {
     // Ensure the map also has the updated instance, though if instances are shared, this might be redundant.
     _inventoryMap[inventory.id] = inventory;
     notifyListeners();
+    debugPrint('[PROVIDER] ...Update complete for ${inventory.id}. Notifying listeners.');
   }
 
   // Remove inventory from the database and the list
   void removeInventory(String id) async {
+    debugPrint('[PROVIDER] Removing inventory: $id');
     await _inventoryDao.deleteInventory(id);
 
     _inventories.removeWhere((inventory) => inventory.id == id);
     _inventoryMap.remove(id);
     notifyListeners();
+    debugPrint('[PROVIDER] ...Removal complete for $id. Notifying listeners.');
   }
 
   // Get an active inventory by ID
@@ -142,14 +163,18 @@ class InventoryProvider with ChangeNotifier {
   // Start inventory timer
   void startInventoryTimer(BuildContext context, Inventory inventory, InventoryDao inventoryDao) {
     if (inventory.duration > 0 && !inventory.isFinished && !inventory.isPaused) {
+      debugPrint('[PROVIDER] Commanding START timer for ${inventory.id}');
       inventory.startTimer(context, inventoryDao);
       updateInventory(inventory);
       // notifyListeners();
+    } else {
+      debugPrint('[PROVIDER] SKIPPED commanding START timer for ${inventory.id} (isFinished=${inventory.isFinished}, isPaused=${inventory.isPaused})');
     }
   }
 
   // Pause inventory timer
   void pauseInventoryTimer(Inventory inventory, InventoryDao inventoryDao) {
+    debugPrint('[PROVIDER] Commanding PAUSE timer for ${inventory.id}');
     inventory.pauseTimer(inventoryDao);
     updateInventory(inventory);
     // notifyListeners();
@@ -157,6 +182,7 @@ class InventoryProvider with ChangeNotifier {
 
   // Resume inventory timer
   void resumeInventoryTimer(BuildContext context, Inventory inventory, InventoryDao inventoryDao) {
+    debugPrint('[PROVIDER] Commanding RESUME timer for ${inventory.id}');
     inventory.resumeTimer(context, inventoryDao);
     updateInventory(inventory);
     // notifyListeners();
@@ -165,8 +191,14 @@ class InventoryProvider with ChangeNotifier {
   // Update the ID in the database and the list
   Future<void> changeInventoryId(BuildContext context, String oldId, String newId) async {
     await _inventoryDao.changeInventoryId(oldId, newId);
-    await fetchInventories(context);
-    // notifyListeners();
+    // await fetchInventories(context);
+    final inventory = _inventoryMap[oldId];
+    if (inventory != null) {
+      _inventoryMap.remove(oldId);
+      inventory.id = newId;
+      _inventoryMap[newId] = inventory;
+    }
+    notifyListeners();
   }
 
   // Update the elapsed time in the database and the list

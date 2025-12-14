@@ -45,7 +45,7 @@ class InventoriesScreen extends StatefulWidget {
   State<InventoriesScreen> createState() => _InventoriesScreenState();
 }
 
-class _InventoriesScreenState extends State<InventoriesScreen> with WidgetsBindingObserver {
+class _InventoriesScreenState extends State<InventoriesScreen> {
   late InventoryProvider inventoryProvider;
   late InventoryDao inventoryDao;
   late SpeciesDao speciesDao;
@@ -63,6 +63,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> with WidgetsBindi
   @override
   void initState() {
     super.initState();
+    debugPrint('[SCREEN] initState: InventoriesScreen is initializing.');
     inventoryProvider = context.read<InventoryProvider>();
     inventoryDao = context.read<InventoryDao>();
     speciesDao = context.read<SpeciesDao>();
@@ -71,138 +72,18 @@ class _InventoriesScreenState extends State<InventoriesScreen> with WidgetsBindi
     weatherDao = context.read<WeatherDao>();
     _selectedInventory = null;
 
-    // Register the observer to listen to changes in the app state
-    WidgetsBinding.instance.addObserver(this);
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Future.delayed(Duration.zero, ()
-      {
-        // Synchronize and restart the timers when start the screen
-        _resumeAllActiveTimers();
-      });
-    });
     onInventoryStopped = (inventoryId) {
       // When an inventory is stopped, update the inventory list
-      inventoryProvider.fetchInventories(context);
+      inventoryProvider.refreshState();
+      // inventoryProvider.fetchInventories(context);
     };
   }
 
   @override
   void dispose() {
-    // Remove the observer to avoid memory leaks
-    WidgetsBinding.instance.removeObserver(this);
     onInventoryStopped = null;
     super.dispose();
-  }
-
-  // Method to handle changes in app state
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-    // If the app was resumed (came back to foreground)
-    if (state == AppLifecycleState.resumed) {
-      // Synchronize and restart all active timers
-      _resumeAllActiveTimers();
-    }
-  }
-
-  // Function to synchronize and restart the timers
-  void _resumeAllActiveTimers() async {
-    if (!mounted) return; // Verificação de segurança
-
-    // 1. BUSCA os dados do banco de dados primeiro.
-    await inventoryProvider.fetchInventories(context);
-
-    for (var inventory in inventoryProvider.activeInventories) {
-      // Ignore if the inventory is paused or finished
-      if (inventory.isPaused || inventory.isFinished) continue;
-
-      // Logic for inventories with intervals (invIntervalQualitative)
-      if (inventory.type == InventoryType.invIntervalQualitative) {
-        // Ensures that the duration and start time of inventory exist to calculate
-        if (inventory.duration > 0 && inventory.startTime != null) {
-          final now = DateTime.now();
-
-          // 1. Calculate the total elapsed time since the start of the inventory.
-          final totalElapsedTimeInSeconds = now.difference(inventory.startTime!).inSeconds.toDouble();
-          final intervalDurationInSeconds = (inventory.duration * 60).toDouble();
-
-          // 2. Determine in which interval the inventory should be now.
-          final preciseCurrentInterval = (totalElapsedTimeInSeconds / intervalDurationInSeconds).floor() + 1;
-
-          // 3. Calculate the elapsed time of the CURRENT interval.
-          final timeOfCompletedIntervals = (preciseCurrentInterval - 1) * intervalDurationInSeconds;
-          final elapsedTimeOfCurrentInterval = totalElapsedTimeInSeconds - timeOfCompletedIntervals;
-
-          // 4. Find the date/time of last added species in the inventory.
-          final lastSpeciesTime = await speciesDao.getLastSpeciesTimeByInventory(inventory.id);
-          final referenceTimeForNewSpecies = lastSpeciesTime ?? inventory.startTime!;
-
-          // 5. Calculate the elapsed time since the last species added (or inventory start).
-          final timeSinceLastNewSpecies = now.difference(referenceTimeForNewSpecies).inSeconds.toDouble();
-
-          // 6. Subtract the time of the current interval to isolate only the time od the completed intervals.
-          // This ensures that the current interval is not counted.
-          final timeCoveringOnlyPastIntervals = timeSinceLastNewSpecies - elapsedTimeOfCurrentInterval;
-
-          // 7. Calculate how many COMPLETED intervals elapsed since the last species added.
-          // We use `max(0, ...)` to avoid negative results if a species will be added in the current interval.
-          final preciseIntervalsWithoutNewSpecies = (timeCoveringOnlyPastIntervals / intervalDurationInSeconds).floor().clamp(0, 100);
-
-          // 8. Update the complete state of inventory with recalculated values.
-          inventory.updateCurrentInterval(preciseCurrentInterval);
-          inventory.updateElapsedTime(elapsedTimeOfCurrentInterval);
-          inventory.updateIntervalsWithoutNewSpecies(preciseIntervalsWithoutNewSpecies);
-
-          // Checks if the finishing condition was reached while the app was in background
-          if (inventory.intervalsWithoutNewSpecies >= 3) {
-            final completionService = InventoryCompletionService(
-                context: context,
-                inventory: inventory,
-                inventoryProvider: inventoryProvider,
-                inventoryDao: inventoryDao,
-            );
-            await completionService.attemptFinishInventory(context);
-
-            continue;
-          }
-        }
-
-        // Restart the Stream.periodic for the UI
-        inventory.startTimer(context, inventoryDao);
-
-        // Logic for other inventories with duration (timer)
-      } else if (inventory.duration > 0) {
-        if (inventory.startTime != null) {
-          // Recalc the total elapsed time to fix the discrepancy
-          final now = DateTime.now();
-          final preciseElapsedTime = now.difference(inventory.startTime!).inSeconds.toDouble();
-
-          // Update the notifier of total elapsed time
-          inventory.updateElapsedTime(preciseElapsedTime);
-
-          // Checks if the finishing condition was reached while the app was in background
-          if (inventory.elapsedTime >= (inventory.duration * 60)) {
-            final completionService = InventoryCompletionService(
-              context: context,
-              inventory: inventory,
-              inventoryProvider: inventoryProvider,
-              inventoryDao: inventoryDao,
-            );
-            await completionService.attemptFinishInventory(context);
-
-            continue;
-          }
-        }
-        // Restart the Stream.periodic for the UI
-        inventory.startTimer(context, inventoryDao);
-      }
-    }
-
-    // Force the UI to rebuild
-    if (mounted) {
-      setState(() {});
-    }
   }
 
   void onInventoryUpdated(Inventory inventory) {
@@ -448,7 +329,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> with WidgetsBindi
         ).then((newInventory) {
           // Update the inventory list
           if (newInventory != null) {
-            inventoryProvider.notifyListeners();
+            inventoryProvider.refreshState();
           }
         });
       } else {
@@ -459,7 +340,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> with WidgetsBindi
         ).then((newInventory) {
           // Update the inventory list
           if (newInventory != null) {
-            inventoryProvider.notifyListeners();
+            inventoryProvider.refreshState();
           }
         });
       }
@@ -1067,6 +948,9 @@ class _InventoriesScreenState extends State<InventoriesScreen> with WidgetsBindi
                 onPressed: () async {
                   await importInventoryFromJson(context);
                   await inventoryProvider.fetchInventories(context);
+                  for (var inventory in inventoryProvider.activeInventories) {
+                    inventoryProvider.startInventoryTimer(context, inventory, inventoryDao);
+                  }
                 },
                 child: Text(S.of(context).import),
               ),
@@ -1124,6 +1008,9 @@ class _InventoriesScreenState extends State<InventoriesScreen> with WidgetsBindi
               child: RefreshIndicator(
             onRefresh: () async {
               await inventoryProvider.fetchInventories(context);
+              for (var inventory in inventoryProvider.activeInventories) {
+                inventoryProvider.startInventoryTimer(context, inventory, inventoryDao);
+              }
             },
             child: Consumer<InventoryProvider>(
                 builder: (context, inventoryProvider, child) {
@@ -1149,6 +1036,9 @@ class _InventoriesScreenState extends State<InventoriesScreen> with WidgetsBindi
                         icon: const Icon(Icons.refresh_outlined),
                         onPressed: () async {
                           await inventoryProvider.fetchInventories(context);
+                          for (var inventory in inventoryProvider.activeInventories) {
+                            inventoryProvider.startInventoryTimer(context, inventory, inventoryDao);
+                          }
                         }, 
                       )
                     ],
@@ -1335,7 +1225,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> with WidgetsBindi
           ),
         ).then((result) {
           if (result == true) {
-            inventoryProvider.notifyListeners();
+            inventoryProvider.refreshState();
           }
         });
       }
@@ -1685,6 +1575,9 @@ class _InventoriesScreenState extends State<InventoriesScreen> with WidgetsBindi
                                 
                                 await importInventoryFromJson(context);
                                 await inventoryProvider.fetchInventories(context);
+                                for (var inventory in inventoryProvider.activeInventories) {
+                                  inventoryProvider.startInventoryTimer(context, inventory, inventoryDao);
+                                }
                                 Navigator.of(context).pop();
                               }),
                           // Action to export all finished inventories to JSON

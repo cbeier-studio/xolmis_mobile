@@ -11,6 +11,10 @@ class PoiProvider with ChangeNotifier {
 
   final Map<int, List<Poi>> _poiMap = {};
 
+  void refreshState() {
+    notifyListeners();
+  }
+
   // Load list of POIs for a species ID
   Future<void> loadPoisForSpecies(int speciesId) async {
     try {

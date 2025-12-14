@@ -11,6 +11,10 @@ class NestRevisionProvider with ChangeNotifier {
 
   final Map<int, List<NestRevision>> _nestRevisionMap = {};
 
+  void refreshState() {
+    notifyListeners();
+  }
+
   // Load list of nest revisions for a nest ID
   Future<void> loadRevisionForNest(int nestId) async {
     try {

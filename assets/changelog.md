@@ -46,9 +46,11 @@
 * Upgraded to Flutter 3.38 and Dart 3.10.
 * Migrated `PopupMenuButton` and `showMenu` to `MenuAnchor`.
 * Replaced `showSearch` for `SearchAnchor`.
+* Removed `workmanager` dependency.
 
 ### Bug Fixes
 
+* Fixed issue that were finishing timed inventories unexpectedly.
 * The species list of an inventory was not updated properly after adding or removing species.
 * The numeric fields now accept only the expected digits and decimal separator.
 * Better formatting of exported CSV files.

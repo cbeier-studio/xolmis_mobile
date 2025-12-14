@@ -18,6 +18,10 @@ class NestProvider with ChangeNotifier {
   // Get number of active nests
   int get nestsCount => activeNests.length;
 
+  void refreshState() {
+    notifyListeners();
+  }
+
   // Load list of all nests
   Future<void> fetchNests() async {
     _nests = await _nestDao.getNests();
@@ -75,9 +79,7 @@ class NestProvider with ChangeNotifier {
       _nests[index] = nest;
       notifyListeners();
     } else {
-      if (kDebugMode) {
-        print('Nest not found in the list');
-      }
+      debugPrint('Nest with id ${nest.id} not found in the memory list to update.');
     }
   }
 

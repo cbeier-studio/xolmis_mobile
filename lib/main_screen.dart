@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:side_sheet/side_sheet.dart';
-import 'package:workmanager/workmanager.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,8 +11,12 @@ import 'providers/specimen_provider.dart';
 import 'providers/journal_provider.dart';
 
 import 'data/database/database_helper.dart';
+import 'data/daos/inventory_dao.dart';
+import 'data/daos/species_dao.dart';
 import 'services/species_update_service.dart';
+import 'services/inventory_completion_service.dart';
 
+import 'main.dart';
 import 'screens/inventory/inventories_screen.dart';
 import 'screens/journal/journals_screen.dart';
 import 'screens/nest/nests_screen.dart';
@@ -49,15 +52,35 @@ class _NavigationItem {
   });
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late final List<_NavigationItem> _navItems;
   int _selectedIndex = 0;
   String _appVersion = '';
+  late InventoryProvider inventoryProvider;
+  late InventoryDao inventoryDao;
+  late SpeciesDao speciesDao;
 
   @override
   void initState() {
     super.initState();
+
+    inventoryProvider = context.read<InventoryProvider>();
+    inventoryDao = context.read<InventoryDao>();
+    speciesDao = context.read<SpeciesDao>();
+
+    // Register the observer to listen to changes in the app state
+    WidgetsBinding.instance.addObserver(this);
+    debugPrint('[MAIN_SCREEN] initState: WidgetsBindingObserver registered.');
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      debugPrint('[MAIN_SCREEN] initState: addPostFrameCallback triggered. Scheduling _resumeAllActiveTimers.');
+      Future.delayed(Duration.zero, ()
+      {
+        // Synchronize and restart the timers when start the screen
+        _resumeAllActiveTimers();
+      });
+    });
 
     // Initialize _navItems here if labels depend on S.of(context)
     // Or make labelBuilder accept S instance if _navItems is static/final top-level
@@ -112,7 +135,6 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   void _initializeApp() async {
-    scheduleKeepAwakeTask();
     _requestNotificationPermission();
     _fetchAppVersion();
 
@@ -149,21 +171,174 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   void dispose() {
+    // Remove the observer to avoid memory leaks
+    debugPrint('[MAIN_SCREEN] dispose: InventoriesScreen is being disposed.');
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
-  void scheduleKeepAwakeTask() {
-    Workmanager().registerPeriodicTask(
-      "keepAwakeTask", // Um identificador único para sua tarefa
-      "wakeup", // O nome da tarefa. Deve coincidir com o nome no dispatcher
-      frequency: Duration(
-        minutes: 15,
-      ), // Idealmente, ajuste isso para 15 minutos (mínimo)
-      constraints: Constraints(
-        networkType: NetworkType.notRequired,
-        requiresBatteryNotLow: false,
-      ),
-    );
+  // Method to handle changes in app state
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    debugPrint('[MAIN_SCREEN] App Lifecycle Changed: $state');
+    // If the app was resumed (came back to foreground)
+    if (state == AppLifecycleState.resumed) {
+      // Synchronize and restart all active timers
+      debugPrint('[MAIN_SCREEN] App Resumed! Triggering _resumeAllActiveTimers...');
+      _resumeAllActiveTimers();
+    }
+  }
+
+  // Function to synchronize and restart the timers
+  void _resumeAllActiveTimers() async {
+    if (!mounted) {
+      debugPrint('[RESUME_LOGIC] _resumeAllActiveTimers ABORTED: Screen not mounted.');
+      return;
+    }
+    debugPrint('[RESUME_LOGIC] ----------------------------------');
+    debugPrint('[RESUME_LOGIC] Starting _resumeAllActiveTimers...');
+
+    // 1. BUSCA os dados do banco de dados primeiro.
+    debugPrint('[RESUME_LOGIC] Step 1: Calling fetchInventories...');
+    await inventoryProvider.fetchInventories(context);
+    debugPrint('[RESUME_LOGIC] ...Step 1 Complete: fetchInventories finished.');
+
+    debugPrint('[RESUME_LOGIC] Step 2: Starting loop through ${inventoryProvider.activeInventories.length} active inventories to recalculate state.');
+    for (var inventory in inventoryProvider.activeInventories) {
+      debugPrint('[RESUME_LOGIC]  -> Processing inventory: ${inventory.id}');
+      // Ignore if the inventory is paused or finished
+      if (inventory.isPaused || inventory.isFinished) {
+        debugPrint('[RESUME_LOGIC]  -> SKIPPED ${inventory.id}: isPaused=${inventory.isPaused}, isFinished=${inventory.isFinished}');
+        continue;
+      }
+
+      if (inventory.startTime == null) {
+        debugPrint('[RESUME_LOGIC]  -> SKIPPED ${inventory.id}: startTime is null.');
+        continue;
+      }
+
+      final netActiveTimeInSeconds = DateTime.now().difference(inventory.startTime!).inSeconds.toDouble()
+          - inventory.totalPausedTimeInSeconds;
+
+      // Logic for inventories with intervals (invIntervalQualitative)
+      if (inventory.type == InventoryType.invIntervalQualitative) {
+        // Ensures that the duration and start time of inventory exist to calculate
+        if (inventory.duration > 0 && inventory.startTime != null) {
+          final now = DateTime.now();
+
+          // 1. Calculate the total elapsed time since the start of the inventory.
+          // final totalElapsedTimeInSeconds = now.difference(inventory.startTime!).inSeconds.toDouble();
+          final intervalDurationInSeconds = (inventory.duration * 60).toDouble();
+
+          // 2. Determine in which interval the inventory should be now.
+          final preciseCurrentInterval = (netActiveTimeInSeconds / intervalDurationInSeconds).floor() + 1;
+
+          // 3. Calculate the elapsed time of the CURRENT interval.
+          final timeOfCompletedIntervals = (preciseCurrentInterval - 1) * intervalDurationInSeconds;
+          final elapsedTimeOfCurrentInterval = netActiveTimeInSeconds - timeOfCompletedIntervals;
+
+          // 4. Find the date/time of last added species in the inventory.
+          int recalculatedSpeciesCount = 0;
+          int preciseIntervalsWithoutNewSpecies = 0;
+
+          final lastSpeciesTime = await speciesDao.getLastSpeciesTimeByInventory(inventory.id);
+
+          if (lastSpeciesTime != null) {
+            // Calcula o tempo líquido ATÉ a última espécie
+            // (Esta aproximação é geralmente suficiente)
+            final grossSecondsToLastSpecies = lastSpeciesTime.difference(inventory.startTime!).inSeconds;
+            final netSecondsToLastSpecies = grossSecondsToLastSpecies - inventory.totalPausedTimeInSeconds;
+
+            // Calcula em qual intervalo a última espécie foi registrada
+            final intervalOfLastSpecies = (netSecondsToLastSpecies / intervalDurationInSeconds).floor() + 1;
+
+            if (intervalOfLastSpecies == preciseCurrentInterval) {
+              // Se a última espécie foi neste intervalo, sabemos que o contador de espécies é >= 1.
+              // Não precisamos saber o número exato, apenas que não é zero.
+              recalculatedSpeciesCount = 1;
+              // Como uma espécie foi adicionada no intervalo atual, o contador de intervalos
+              // sem espécies novas é, por definição, 0.
+              preciseIntervalsWithoutNewSpecies = 0;
+            } else {
+              // A última espécie foi em um intervalo anterior.
+              // O contador para o intervalo ATUAL é 0.
+              recalculatedSpeciesCount = 0;
+              // A sua fórmula brilhante para calcular os intervalos completos que se passaram.
+              preciseIntervalsWithoutNewSpecies = preciseCurrentInterval - intervalOfLastSpecies - 1;
+            }
+          } else {
+            // Nenhuma espécie foi adicionada ainda.
+            recalculatedSpeciesCount = 0;
+            // Todos os intervalos concluídos até agora não tiveram espécies.
+            preciseIntervalsWithoutNewSpecies = preciseCurrentInterval - 1;
+          }
+
+          // Garante que o contador nunca seja negativo
+          preciseIntervalsWithoutNewSpecies = preciseIntervalsWithoutNewSpecies < 0 ? 0 : preciseIntervalsWithoutNewSpecies;
+
+          // 8. Update the complete state of inventory with recalculated values.
+          inventory.updateCurrentInterval(preciseCurrentInterval);
+          inventory.updateElapsedTime(elapsedTimeOfCurrentInterval);
+          inventory.updateIntervalsWithoutNewSpecies(preciseIntervalsWithoutNewSpecies);
+          inventory.currentIntervalSpeciesCount = recalculatedSpeciesCount;
+          debugPrint('[RESUME_LOGIC]  -> Recalculated state for ${inventory.id}: elapsedTime=${inventory.elapsedTime.toStringAsFixed(2)}, currentInterval=${inventory.currentInterval}, intervalsWithoutNewSpecies=${inventory.intervalsWithoutNewSpecies}');
+
+          // Checks if the finishing condition was reached while the app was in background
+          if (inventory.intervalsWithoutNewSpecies >= 3) {
+            debugPrint('[RESUME_LOGIC] !!! FINISH CONDITION MET for ${inventory.id} during resume. intervalsWithoutNewSpecies is ${inventory.intervalsWithoutNewSpecies}.');
+            await inventory.stopTimer(context, inventoryDao);
+            await inventory.showNotification(flutterLocalNotificationsPlugin);
+            // final completionService = InventoryCompletionService(
+            //   context: context,
+            //   inventory: inventory,
+            //   inventoryProvider: inventoryProvider,
+            //   inventoryDao: inventoryDao,
+            // );
+            // await completionService.attemptFinishInventory(context);
+            debugPrint('[RESUME_LOGIC]  -> Inventory ${inventory.id} finished by completion service.');
+            continue;
+          }
+        }
+
+        // Restart the Stream.periodic for the UI
+        inventoryProvider.startInventoryTimer(context, inventory, inventoryDao);
+
+        // Logic for other inventories with duration (timer)
+      } else if (inventory.duration > 0) {
+
+        // Update the notifier of total elapsed time
+        inventory.updateElapsedTime(netActiveTimeInSeconds);
+        debugPrint('[RESUME_LOGIC]  -> Recalculated state for ${inventory.id}: elapsedTime=${inventory.elapsedTime.toStringAsFixed(2)}, currentInterval=${inventory.currentInterval}, intervalsWithoutNewSpecies=${inventory.intervalsWithoutNewSpecies}');
+
+        // Checks if the finishing condition was reached while the app was in background
+        if (inventory.elapsedTime >= (inventory.duration * 60)) {
+          debugPrint('[RESUME_LOGIC] !!! FINISH CONDITION MET for ${inventory.id} during resume. elapsedTime is ${inventory.elapsedTime / 60} minutes.');
+          await inventory.stopTimer(context, inventoryDao);
+          await inventory.showNotification(flutterLocalNotificationsPlugin);
+          // final completionService = InventoryCompletionService(
+          //   context: context,
+          //   inventory: inventory,
+          //   inventoryProvider: inventoryProvider,
+          //   inventoryDao: inventoryDao,
+          // );
+          // await completionService.attemptFinishInventory(context);
+          debugPrint('[RESUME_LOGIC]  -> Inventory ${inventory.id} finished by completion service.');
+          continue;
+        }
+
+        // Restart the Stream.periodic for the UI
+        inventoryProvider.startInventoryTimer(context, inventory, inventoryDao);
+      }
+    }
+
+    // Force the UI to rebuild
+    if (mounted) {
+      debugPrint('[RESUME_LOGIC] Step 3: Recalculation loop finished. Calling setState() to rebuild UI.');
+      setState(() {});
+    }
+    debugPrint('[RESUME_LOGIC] _resumeAllActiveTimers finished.');
+    debugPrint('[RESUME_LOGIC] ----------------------------------');
   }
 
   Future<void> _requestNotificationPermission() async {

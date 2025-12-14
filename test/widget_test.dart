@@ -14,16 +14,17 @@ import 'package:xolmis/main.dart';
 
 import 'package:xolmis/data/database/database_helper.dart';
 
-// import 'package:xolmis/data/database/repositories/inventory_repository.dart';
-// import 'package:xolmis/data/database/repositories/species_repository.dart';
-// import 'package:xolmis/data/database/repositories/poi_repository.dart';
-// import 'package:xolmis/data/database/repositories/vegetation_repository.dart';
-// import 'package:xolmis/data/database/repositories/weather_repository.dart';
-// import 'package:xolmis/data/database/repositories/nest_repository.dart';
-// import 'package:xolmis/data/database/repositories/nest_revision_repository.dart';
-// import 'package:xolmis/data/database/repositories/egg_repository.dart';
-// import 'package:xolmis/data/database/repositories/specimen_repository.dart';
-// import 'package:xolmis/data/database/repositories/app_image_repository.dart';
+import 'package:xolmis/providers/inventory_provider.dart';
+import 'package:xolmis/providers/species_provider.dart';
+import 'package:xolmis/providers/poi_provider.dart';
+import 'package:xolmis/providers/vegetation_provider.dart';
+import 'package:xolmis/providers/weather_provider.dart';
+import 'package:xolmis/providers/nest_provider.dart';
+import 'package:xolmis/providers/nest_revision_provider.dart';
+import 'package:xolmis/providers/egg_provider.dart';
+import 'package:xolmis/providers/specimen_provider.dart';
+import 'package:xolmis/providers/app_image_provider.dart';
+import 'package:xolmis/providers/journal_provider.dart';
 
 import 'package:xolmis/data/daos/egg_dao.dart';
 import 'package:xolmis/data/daos/inventory_dao.dart';
@@ -51,17 +52,17 @@ void main() async {
   late AppImageDao appImageDao;
   late FieldJournalDao journalDao;
 
-  // late InventoryRepository inventoryRepository;
-  // late SpeciesRepository speciesRepository;
-  // late PoiRepository poiRepository;
-  // late VegetationRepository vegetationRepository;
-  // late WeatherRepository weatherRepository;
-  // late NestRepository nestRepository;
-  // late NestRevisionRepository nestRevisionRepository;
-  // late EggRepository eggRepository;
-  // late SpecimenRepository specimenRepository;
-  // late AppImageRepository appImageRepository;
-  // late FieldJournalRepository journalRepository;
+  late InventoryProvider inventoryProvider;
+  late SpeciesProvider speciesProvider;
+  late PoiProvider poiProvider;
+  late VegetationProvider vegetationProvider;
+  late WeatherProvider weatherProvider;
+  late NestProvider nestProvider;
+  late NestRevisionProvider nestRevisionProvider;
+  late EggProvider eggProvider;
+  late SpecimenProvider specimenProvider;
+  late AppImageProvider appImageProvider;
+  late FieldJournalProvider journalProvider;
 
   late AppDependencies dependencies;
 
@@ -81,17 +82,17 @@ void main() async {
     appImageDao = AppImageDao(databaseHelper);
     journalDao = FieldJournalDao(databaseHelper);
 
-    // poiRepository = PoiRepository(poiDao);
-    // speciesRepository = SpeciesRepository(speciesDao);
-    // vegetationRepository = VegetationRepository(vegetationDao);
-    // weatherRepository = WeatherRepository(weatherDao);
-    // inventoryRepository = InventoryRepository(inventoryDao);
-    // eggRepository = EggRepository(eggDao);
-    // nestRevisionRepository = NestRevisionRepository(nestRevisionDao);
-    // nestRepository = NestRepository(nestDao);
-    // specimenRepository = SpecimenRepository(specimenDao);
-    // appImageRepository = AppImageRepository(appImageDao);
-    // journalRepository = FieldJournalRepository(journalDao);
+    poiProvider = PoiProvider(poiDao);
+    speciesProvider = SpeciesProvider(speciesDao);
+    vegetationProvider = VegetationProvider(vegetationDao);
+    weatherProvider = WeatherProvider(weatherDao);
+    inventoryProvider = InventoryProvider(inventoryDao, speciesProvider, vegetationProvider, weatherProvider);
+    eggProvider = EggProvider(eggDao);
+    nestRevisionProvider = NestRevisionProvider(nestRevisionDao);
+    nestProvider = NestProvider(nestDao);
+    specimenProvider = SpecimenProvider(specimenDao);
+    appImageProvider = AppImageProvider(appImageDao);
+    journalProvider = FieldJournalProvider(journalDao);
 
     dependencies = AppDependencies(
       inventoryDao: inventoryDao,
@@ -104,7 +105,18 @@ void main() async {
       eggDao: eggDao,
       specimenDao: specimenDao,
       appImageDao: appImageDao,
-      journalDao: journalDao
+      journalDao: journalDao,
+      inventoryProvider: inventoryProvider,
+      speciesProvider: speciesProvider,
+      poiProvider: poiProvider,
+      vegetationProvider: vegetationProvider,
+      weatherProvider: weatherProvider,
+      nestProvider: nestProvider,
+      nestRevisionProvider: nestRevisionProvider,
+      eggProvider: eggProvider,
+      specimenProvider: specimenProvider,
+      appImageProvider: appImageProvider,
+      journalProvider: journalProvider,
     );    
   });
 

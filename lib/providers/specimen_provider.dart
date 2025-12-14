@@ -18,6 +18,10 @@ class SpecimenProvider with ChangeNotifier {
 
   int get specimensCount => pendingSpecimens.length;
 
+  void refreshState() {
+    notifyListeners();
+  }
+
   // Load list of all specimens
   Future<void> fetchSpecimens() async {
     _specimens = await _specimenDao.getSpecimens();

@@ -11,6 +11,10 @@ class AppImageProvider with ChangeNotifier {
 
   List<AppImage> get images => _images;
 
+  void refreshState() {
+    notifyListeners();
+  }
+
   Future<List<AppImage>> fetchImagesForVegetation(int vegetationId) async {
     _images = await _appImageDao.getImagesForVegetation(vegetationId);
     notifyListeners();
