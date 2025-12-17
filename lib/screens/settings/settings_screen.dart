@@ -644,16 +644,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final Uri url = Uri.parse('https://github.com/cbeier-studio/xolmis_mobile/issues');
 
     // Verifica se o dispositivo pode abrir a URL antes de tentar
-    if (await canLaunchUrl(url)) {
+    try  {
       await launchUrl(url, mode: LaunchMode.externalApplication);
-    } else {
+    } catch (e) {
       // Se não puder abrir, mostra uma mensagem de erro para o usuário
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Could not launch $url')),
         );
       }
-      debugPrint('[SETTINGS] !!! ERROR: Could not launch $url');
+      debugPrint('[SETTINGS] !!! ERROR: Could not launch $url: $e');
     }
   }
 
