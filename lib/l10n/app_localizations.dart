@@ -1002,7 +1002,7 @@ abstract class AppLocalizations {
   /// Nest fate field label
   ///
   /// In en, this message translates to:
-  /// **'Nest fate *'**
+  /// **'Nest fate'**
   String get nestFate;
 
   /// Error message when inactivating nest
@@ -1647,11 +1647,11 @@ abstract class AppLocalizations {
   /// **'recorded species'**
   String get recordedSpecies;
 
-  /// Top 10 most recorded species card title in statistics
+  /// Top most recorded species card title in statistics
   ///
   /// In en, this message translates to:
-  /// **'Top 10 most recorded species'**
-  String get topTenSpecies;
+  /// **'Top {howMany} most recorded species'**
+  String topSpecies(int howMany);
 
   /// Survey hours card title in statistics
   ///
@@ -1662,7 +1662,7 @@ abstract class AppLocalizations {
   /// Average survey hours card title in statistics
   ///
   /// In en, this message translates to:
-  /// **'survey hours per inventory'**
+  /// **'average survey hours'**
   String get averageSurveyHours;
 
   /// Pending segmented button label in specimens
@@ -1955,6 +1955,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Backup not found'**
   String get errorBackupNotFound;
+
+  /// Restore button label
+  ///
+  /// In en, this message translates to:
+  /// **'Restore'**
+  String get restore;
+
+  /// Restore backup confirmation dialog text
+  ///
+  /// In en, this message translates to:
+  /// **'Current data will be replaced by the backup and some data could be lost. Are you sure you want to proceed?'**
+  String get restoreBackupConfirmation;
 
   /// Restore backup settings tile title
   ///
@@ -2279,6 +2291,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Select an inventory to view its details'**
   String get selectInventoryToView;
+
+  /// Suggest a feature or report an issue button label
+  ///
+  /// In en, this message translates to:
+  /// **'Suggest a feature or report an issue'**
+  String get suggestFeatureOrReportIssue;
+
+  /// Localities surveyed field label
+  ///
+  /// In en, this message translates to:
+  /// **'{howMany, plural, one{locality} other{localities}} surveyed'**
+  String localitiesSurveyed(int howMany);
+
+  /// Days surveyed field label
+  ///
+  /// In en, this message translates to:
+  /// **'{howMany, plural, one{day} other{days}} surveyed'**
+  String daysSurveyed(int howMany);
+
+  /// POIs recorded field label
+  ///
+  /// In en, this message translates to:
+  /// **'{howMany, plural, one{POI} other{POIs}} recorded'**
+  String poisRecorded(int howMany);
+
+  /// See all button label
+  ///
+  /// In en, this message translates to:
+  /// **'See all'**
+  String get seeAll;
+
+  /// Apparent success rate field label
+  ///
+  /// In en, this message translates to:
+  /// **'apparent success rate'**
+  String get apparentSuccessRate;
+
+  /// Nidoparasitism rate field label
+  ///
+  /// In en, this message translates to:
+  /// **'nidoparasitism rate'**
+  String get nidoparasitismRate;
+
+  /// Detection rate field label
+  ///
+  /// In en, this message translates to:
+  /// **'detection rate'**
+  String get detectionRate;
+
+  /// Species richness field label
+  ///
+  /// In en, this message translates to:
+  /// **'Species richness'**
+  String get speciesRichness;
+
+  /// Total richness field label
+  ///
+  /// In en, this message translates to:
+  /// **'total richness'**
+  String get totalRichness;
+
+  /// Average richness field label
+  ///
+  /// In en, this message translates to:
+  /// **'average richness'**
+  String get averageRichness;
 
   /// No description provided for @countryArgentina.
   ///

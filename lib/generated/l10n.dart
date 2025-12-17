@@ -1573,10 +1573,10 @@ class S {
     );
   }
 
-  /// `Nest fate *`
+  /// `Nest fate`
   String get nestFate {
     return Intl.message(
-      'Nest fate *',
+      'Nest fate',
       name: 'nestFate',
       desc: 'Nest fate field label',
       args: [],
@@ -2679,13 +2679,13 @@ class S {
     );
   }
 
-  /// `Top 10 most recorded species`
-  String get topTenSpecies {
+  /// `Top {howMany} most recorded species`
+  String topSpecies(int howMany) {
     return Intl.message(
-      'Top 10 most recorded species',
-      name: 'topTenSpecies',
-      desc: 'Top 10 most recorded species card title in statistics',
-      args: [],
+      'Top $howMany most recorded species',
+      name: 'topSpecies',
+      desc: 'Top most recorded species card title in statistics',
+      args: [howMany],
     );
   }
 
@@ -2699,10 +2699,10 @@ class S {
     );
   }
 
-  /// `survey hours per inventory`
+  /// `average survey hours`
   String get averageSurveyHours {
     return Intl.message(
-      'survey hours per inventory',
+      'average survey hours',
       name: 'averageSurveyHours',
       desc: 'Average survey hours card title in statistics',
       args: [],
@@ -3188,6 +3188,26 @@ class S {
       'Backup not found',
       name: 'errorBackupNotFound',
       desc: 'Error message when backup is not found',
+      args: [],
+    );
+  }
+
+  /// `Restore`
+  String get restore {
+    return Intl.message(
+      'Restore',
+      name: 'restore',
+      desc: 'Restore button label',
+      args: [],
+    );
+  }
+
+  /// `Current data will be replaced by the backup and some data could be lost. Are you sure you want to proceed?`
+  String get restoreBackupConfirmation {
+    return Intl.message(
+      'Current data will be replaced by the backup and some data could be lost. Are you sure you want to proceed?',
+      name: 'restoreBackupConfirmation',
+      desc: 'Restore backup confirmation dialog text',
       args: [],
     );
   }
@@ -3728,6 +3748,116 @@ class S {
       'Select an inventory to view its details',
       name: 'selectInventoryToView',
       desc: 'Message shown when no inventory is selected',
+      args: [],
+    );
+  }
+
+  /// `Suggest a feature or report an issue`
+  String get suggestFeatureOrReportIssue {
+    return Intl.message(
+      'Suggest a feature or report an issue',
+      name: 'suggestFeatureOrReportIssue',
+      desc: 'Suggest a feature or report an issue button label',
+      args: [],
+    );
+  }
+
+  /// `{howMany, plural, one{locality} other{localities}} surveyed`
+  String localitiesSurveyed(int howMany) {
+    return Intl.message(
+      '${Intl.plural(howMany, one: 'locality', other: 'localities')} surveyed',
+      name: 'localitiesSurveyed',
+      desc: 'Localities surveyed field label',
+      args: [howMany],
+    );
+  }
+
+  /// `{howMany, plural, one{day} other{days}} surveyed`
+  String daysSurveyed(int howMany) {
+    return Intl.message(
+      '${Intl.plural(howMany, one: 'day', other: 'days')} surveyed',
+      name: 'daysSurveyed',
+      desc: 'Days surveyed field label',
+      args: [howMany],
+    );
+  }
+
+  /// `{howMany, plural, one{POI} other{POIs}} recorded`
+  String poisRecorded(int howMany) {
+    return Intl.message(
+      '${Intl.plural(howMany, one: 'POI', other: 'POIs')} recorded',
+      name: 'poisRecorded',
+      desc: 'POIs recorded field label',
+      args: [howMany],
+    );
+  }
+
+  /// `See all`
+  String get seeAll {
+    return Intl.message(
+      'See all',
+      name: 'seeAll',
+      desc: 'See all button label',
+      args: [],
+    );
+  }
+
+  /// `apparent success rate`
+  String get apparentSuccessRate {
+    return Intl.message(
+      'apparent success rate',
+      name: 'apparentSuccessRate',
+      desc: 'Apparent success rate field label',
+      args: [],
+    );
+  }
+
+  /// `nidoparasitism rate`
+  String get nidoparasitismRate {
+    return Intl.message(
+      'nidoparasitism rate',
+      name: 'nidoparasitismRate',
+      desc: 'Nidoparasitism rate field label',
+      args: [],
+    );
+  }
+
+  /// `detection rate`
+  String get detectionRate {
+    return Intl.message(
+      'detection rate',
+      name: 'detectionRate',
+      desc: 'Detection rate field label',
+      args: [],
+    );
+  }
+
+  /// `Species richness`
+  String get speciesRichness {
+    return Intl.message(
+      'Species richness',
+      name: 'speciesRichness',
+      desc: 'Species richness field label',
+      args: [],
+    );
+  }
+
+  /// `total richness`
+  String get totalRichness {
+    return Intl.message(
+      'total richness',
+      name: 'totalRichness',
+      desc: 'Total richness field label',
+      args: [],
+    );
+  }
+
+  /// `average richness`
+  String get averageRichness {
+    return Intl.message(
+      'average richness',
+      name: 'averageRichness',
+      desc: 'Average richness field label',
       args: [],
     );
   }

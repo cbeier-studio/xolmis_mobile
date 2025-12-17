@@ -585,7 +585,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get confirmFate => 'Confirm fate';
 
   @override
-  String get nestFate => 'Nest fate *';
+  String get nestFate => 'Nest fate';
 
   @override
   String errorInactivatingNest(String errorMessage) {
@@ -1022,13 +1022,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get recordedSpecies => 'recorded species';
 
   @override
-  String get topTenSpecies => 'Top 10 most recorded species';
+  String topSpecies(int howMany) {
+    return 'Top $howMany most recorded species';
+  }
 
   @override
   String get surveyHours => 'survey hours';
 
   @override
-  String get averageSurveyHours => 'survey hours per inventory';
+  String get averageSurveyHours => 'average survey hours';
 
   @override
   String get pending => 'Pending';
@@ -1195,6 +1197,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorBackupNotFound => 'Backup not found';
+
+  @override
+  String get restore => 'Restore';
+
+  @override
+  String get restoreBackupConfirmation =>
+      'Current data will be replaced by the backup and some data could be lost. Are you sure you want to proceed?';
 
   @override
   String get restoreBackup => 'Restore backup';
@@ -1365,6 +1374,64 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get selectInventoryToView => 'Select an inventory to view its details';
+
+  @override
+  String get suggestFeatureOrReportIssue =>
+      'Suggest a feature or report an issue';
+
+  @override
+  String localitiesSurveyed(int howMany) {
+    String _temp0 = intl.Intl.pluralLogic(
+      howMany,
+      locale: localeName,
+      other: 'localities',
+      one: 'locality',
+    );
+    return '$_temp0 surveyed';
+  }
+
+  @override
+  String daysSurveyed(int howMany) {
+    String _temp0 = intl.Intl.pluralLogic(
+      howMany,
+      locale: localeName,
+      other: 'days',
+      one: 'day',
+    );
+    return '$_temp0 surveyed';
+  }
+
+  @override
+  String poisRecorded(int howMany) {
+    String _temp0 = intl.Intl.pluralLogic(
+      howMany,
+      locale: localeName,
+      other: 'POIs',
+      one: 'POI',
+    );
+    return '$_temp0 recorded';
+  }
+
+  @override
+  String get seeAll => 'See all';
+
+  @override
+  String get apparentSuccessRate => 'apparent success rate';
+
+  @override
+  String get nidoparasitismRate => 'nidoparasitism rate';
+
+  @override
+  String get detectionRate => 'detection rate';
+
+  @override
+  String get speciesRichness => 'Species richness';
+
+  @override
+  String get totalRichness => 'total richness';
+
+  @override
+  String get averageRichness => 'average richness';
 
   @override
   String get countryArgentina => 'Argentina';

@@ -835,7 +835,7 @@
         "type": "text",
         "description": "Title of dialog to confirm nest fate"
     },
-    "nestFate": "Nest fate *",
+    "nestFate": "Nest fate",
     "@nestFate": {
         "type": "text",
         "description": "Nest fate field label"
@@ -1460,17 +1460,22 @@
         "type": "text",
         "description": "Recorded species card title in statistics"
     },
-    "topTenSpecies": "Top 10 most recorded species",
-    "@topTenSpecies": {
+    "topSpecies": "Top {howMany} most recorded species",
+    "@topSpecies": {
         "type": "text",
-        "description": "Top 10 most recorded species card title in statistics"
+        "description": "Top most recorded species card title in statistics",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
     },
     "surveyHours": "survey hours",
     "@surveyHours": {
         "type": "text",
         "description": "Survey hours card title in statistics"
     },
-    "averageSurveyHours": "survey hours per inventory",
+    "averageSurveyHours": "average survey hours",
     "@averageSurveyHours": {
         "type": "text",
         "description": "Average survey hours card title in statistics"
@@ -1753,6 +1758,16 @@
         "type": "text",
         "description": "Error message when backup is not found"
     },
+    "restore": "Restore",
+    "@restore": {
+        "type": "text",
+        "description": "Restore button label"
+    },
+  "restoreBackupConfirmation": "Current data will be replaced by the backup and some data could be lost. Are you sure you want to proceed?",
+  "@restoreBackupConfirmation": {
+    "type": "text",
+    "description": "Restore backup confirmation dialog text"
+  },
     "restoreBackup": "Restore backup",
     "@restoreBackup": {
         "type": "text",
@@ -2037,6 +2052,79 @@
     "@selectInventoryToView": {
       "type": "text",
       "description": "Message shown when no inventory is selected"
+    },
+  "suggestFeatureOrReportIssue": "Suggest a feature or report an issue",
+    "@suggestFeatureOrReportIssue": {
+      "type": "text",
+      "description": "Suggest a feature or report an issue button label"
+    },
+  "localitiesSurveyed": "{howMany, plural, one{locality} other{localities}} surveyed",
+    "@localitiesSurveyed": {
+      "type": "text",
+      "description": "Localities surveyed field label",
+      "placeholders": {
+        "howMany": {
+          "type": "int",
+          "description": "Number of localities"
+        }
+      }
+    },
+    "daysSurveyed": "{howMany, plural, one{day} other{days}} surveyed",
+    "@daysSurveyed": {
+      "type": "text",
+      "description": "Days surveyed field label",
+      "placeholders": {
+        "howMany": {
+          "type": "int",
+          "description": "Number of days"
+        }
+      }
+    },
+  "poisRecorded": "{howMany, plural, one{POI} other{POIs}} recorded",
+    "@poisRecorded": {
+      "type": "text",
+      "description": "POIs recorded field label",
+      "placeholders": {
+        "howMany": {
+          "type": "int",
+          "description": "Number of POIs"
+        }
+      }
+    },
+  "seeAll": "See all",
+    "@seeAll": {
+      "type": "text",
+      "description": "See all button label"
+    },
+    "apparentSuccessRate": "apparent success rate",
+    "@apparentSuccessRate": {
+      "type": "text",
+      "description": "Apparent success rate field label"
+    },
+    "nidoparasitismRate": "nidoparasitism rate",
+    "@nidoparasitismRate": {
+      "type": "text",
+      "description": "Nidoparasitism rate field label"
+    },
+  "detectionRate": "detection rate",
+    "@detectionRate": {
+      "type": "text",
+      "description": "Detection rate field label"
+    },
+  "speciesRichness": "Species richness",
+    "@speciesRichness": {
+      "type": "text",
+      "description": "Species richness field label"
+    },
+  "totalRichness": "total richness",
+    "@totalRichness": {
+      "type": "text",
+      "description": "Total richness field label"
+    },
+  "averageRichness": "average richness",
+    "@averageRichness": {
+      "type": "text",
+      "description": "Average richness field label"
     },
   "countryArgentina": "Argentina",
   "countryBrazil": "Brazil",

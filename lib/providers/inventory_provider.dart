@@ -27,6 +27,7 @@ class InventoryProvider with ChangeNotifier {
 
   // Get the number of active inventories
   int get inventoriesCount => activeInventories.length;
+  int get allInventoriesCount => _inventories.length;
 
   final SpeciesProvider _speciesProvider;
   final VegetationProvider _vegetationProvider;
@@ -302,6 +303,40 @@ class InventoryProvider with ChangeNotifier {
 
     return (totalNonOverlappingDuration.inMinutes / inventories.length) / 60.0; // Convert to hours
   }
+  // Get total sampling days from all inventories
+  Future<int> getTotalSamplingDays() async {
+    final allInventories = await _inventoryDao.getInventories();
+    final inventories = allInventories.where((inventory) => inventory.isFinished).toList();
+
+    // Sort inventories by start time
+    inventories.sort((a, b) => a.startTime!.compareTo(b.startTime!));
+
+    int totalDays = 0;
+    DateTime? coveredUntil; // The end of the currently covered time range  
+    for (final inventory in inventories) {
+      if (inventory.startTime == null || inventory.endTime == null) {
+        continue; // Skip inventories with missing start or end times
+      }
+
+      DateTime inventoryStartDate = DateTime(inventory.startTime!.year, inventory.startTime!.month, inventory.startTime!.day);
+      DateTime inventoryEndDate = DateTime(inventory.endTime!.year, inventory.endTime!.month, inventory.endTime!.day);
+
+      if (coveredUntil == null || inventoryStartDate.isAfter(coveredUntil)) {
+        // No overlap: Add the entire duration in days
+        totalDays += inventoryEndDate.difference(inventoryStartDate).inDays + 1;
+        coveredUntil = inventoryEndDate;
+      } else {
+        // Overlap: Add only the non-overlapping portion
+        if (inventoryEndDate.isAfter(coveredUntil)) {
+          totalDays += inventoryEndDate.difference(coveredUntil).inDays;
+          coveredUntil = inventoryEndDate;
+        }
+      }
+    }
+
+    return totalDays;
+  }
+
 
   // Get list of distinct localities for autocomplete
   Future<List<String>> getDistinctLocalities() {

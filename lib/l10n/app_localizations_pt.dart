@@ -1024,13 +1024,15 @@ class AppLocalizationsPt extends AppLocalizations {
   String get recordedSpecies => 'espécies registradas';
 
   @override
-  String get topTenSpecies => 'Top 10 espécies mais registradas';
+  String topSpecies(int howMany) {
+    return 'Top $howMany espécies mais registradas';
+  }
 
   @override
   String get surveyHours => 'horas de amostragem';
 
   @override
-  String get averageSurveyHours => 'horas de amostragem por inventário';
+  String get averageSurveyHours => 'média de horas de amostragem';
 
   @override
   String get pending => 'Pendentes';
@@ -1198,6 +1200,13 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get errorBackupNotFound => 'Backup não encontrado';
+
+  @override
+  String get restore => 'Restaurar';
+
+  @override
+  String get restoreBackupConfirmation =>
+      'Os dado atuais serão substituídos pelos dados do backup e alguns dados podem ser perdidos. Deseja prosseguir?';
 
   @override
   String get restoreBackup => 'Restaurar backup';
@@ -1370,6 +1379,64 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get selectInventoryToView =>
       'Selecione um inventário para ver os detalhes';
+
+  @override
+  String get suggestFeatureOrReportIssue =>
+      'Sugerir recurso ou reportar problema';
+
+  @override
+  String localitiesSurveyed(int howMany) {
+    String _temp0 = intl.Intl.pluralLogic(
+      howMany,
+      locale: localeName,
+      other: 'localidades amostradas',
+      one: 'localidade amostrada',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String daysSurveyed(int howMany) {
+    String _temp0 = intl.Intl.pluralLogic(
+      howMany,
+      locale: localeName,
+      other: 'dias amostrados',
+      one: 'dia amostrado',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String poisRecorded(int howMany) {
+    String _temp0 = intl.Intl.pluralLogic(
+      howMany,
+      locale: localeName,
+      other: 'POIs registrados',
+      one: 'POI registrado',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get seeAll => 'Ver tudo';
+
+  @override
+  String get apparentSuccessRate => 'taxa de sucesso aparente';
+
+  @override
+  String get nidoparasitismRate => 'taxa de nidoparasitismo';
+
+  @override
+  String get detectionRate => 'taxa de detecção';
+
+  @override
+  String get speciesRichness => 'Riqueza de espécies';
+
+  @override
+  String get totalRichness => 'riqueza total';
+
+  @override
+  String get averageRichness => 'riqueza média';
 
   @override
   String get countryArgentina => 'Argentina';
@@ -2615,13 +2682,15 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get recordedSpecies => 'espécies registradas';
 
   @override
-  String get topTenSpecies => 'Top 10 espécies mais registradas';
+  String topSpecies(int howMany) {
+    return 'Top $howMany espécies mais registradas';
+  }
 
   @override
   String get surveyHours => 'horas de amostragem';
 
   @override
-  String get averageSurveyHours => 'horas de amostragem por inventário';
+  String get averageSurveyHours => 'média de horas de amostragem';
 
   @override
   String get pending => 'Pendentes';
@@ -2789,6 +2858,13 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get errorBackupNotFound => 'Backup não encontrado';
+
+  @override
+  String get restore => 'Restaurar';
+
+  @override
+  String get restoreBackupConfirmation =>
+      'Os dado atuais serão substituídos pelos dados do backup e alguns dados podem ser perdidos. Deseja prosseguir?';
 
   @override
   String get restoreBackup => 'Restaurar backup';
@@ -2961,6 +3037,64 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   @override
   String get selectInventoryToView =>
       'Selecione um inventário para ver os detalhes';
+
+  @override
+  String get suggestFeatureOrReportIssue =>
+      'Sugerir recurso ou reportar problema';
+
+  @override
+  String localitiesSurveyed(int howMany) {
+    String _temp0 = intl.Intl.pluralLogic(
+      howMany,
+      locale: localeName,
+      other: 'localidades amostradas',
+      one: 'localidade amostrada',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String daysSurveyed(int howMany) {
+    String _temp0 = intl.Intl.pluralLogic(
+      howMany,
+      locale: localeName,
+      other: 'dias amostrados',
+      one: 'dia amostrado',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String poisRecorded(int howMany) {
+    String _temp0 = intl.Intl.pluralLogic(
+      howMany,
+      locale: localeName,
+      other: 'POIs registrados',
+      one: 'POI registrado',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get seeAll => 'Ver tudo';
+
+  @override
+  String get apparentSuccessRate => 'taxa de sucesso aparente';
+
+  @override
+  String get nidoparasitismRate => 'taxa de nidoparasitismo';
+
+  @override
+  String get detectionRate => 'taxa de detecção';
+
+  @override
+  String get speciesRichness => 'Riqueza de espécies';
+
+  @override
+  String get totalRichness => 'riqueza total';
+
+  @override
+  String get averageRichness => 'riqueza média';
 
   @override
   String get countryArgentina => 'Argentina';

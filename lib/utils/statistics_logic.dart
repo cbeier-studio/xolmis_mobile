@@ -1,3 +1,4 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -9,6 +10,8 @@ import '../providers/inventory_provider.dart';
 
 import '../core/core_consts.dart';
 import '../generated/l10n.dart';
+import '../providers/nest_provider.dart';
+import '../providers/specimen_provider.dart';
 
 class MonthOccurrence {
   final int month;
@@ -115,6 +118,27 @@ Future<List<String>> getRecordedSpeciesList() async {
   return sortedSpecies;
 }
 
+Future<List<String>> getRecordedLocalitiesList(BuildContext context) async {
+  final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
+  final nestProvider = Provider.of<NestProvider>(context, listen: false);
+  final specimenProvider = Provider.of<SpecimenProvider>(context, listen: false);
+
+  final localitiesFromInventories = await inventoryProvider.getDistinctLocalities();
+  final localitiesFromNests = await nestProvider.getDistinctLocalities();
+  final localitiesFromSpecimens = await specimenProvider.getDistinctLocalities();
+
+  final allLocalities = <String>{
+    ...localitiesFromInventories,
+    ...localitiesFromNests,
+    ...localitiesFromSpecimens,
+  };
+
+  List<String> sortedLocalities = allLocalities.toList();
+  sortedLocalities.sort((a, b) => a.compareTo(b));
+
+  return sortedLocalities;
+}
+
 // Get the total number of species with records in any table
 Future<int> getTotalSpeciesWithRecords() async {
   final speciesFromSpecies = await _getDistinctSpeciesFromTable('species');
@@ -133,12 +157,7 @@ Future<int> getTotalSpeciesWithRecords() async {
 }
 
 // Get the top 10 species with the most records
-Future<List<MapEntry<String, int>>> getTop10SpeciesWithMostRecords(
-  List<Species> inventories,
-    List<Nest> nests,
-    List<Egg> eggs,
-    List<Specimen> specimens
-) async {
+Future<List<MapEntry<String, int>>> getTopSpeciesWithMostRecords(int count) async {
   final speciesFromSpecies = await _getDistinctSpeciesFromTable('species');
   final speciesFromNests = await _getDistinctSpeciesFromTable('nests');
   final speciesFromEggs = await _getDistinctSpeciesFromTable('eggs');
@@ -156,7 +175,7 @@ Future<List<MapEntry<String, int>>> getTop10SpeciesWithMostRecords(
 
   // Count species from species list
   for (final species in allSpeciesList) {
-    int countTotal = await getTotalsForSpecies(species, inventories, nests, eggs, specimens);
+    int countTotal = await getTotalsForSpecies(species);
     speciesCounts[species] = countTotal;
   }
 
@@ -164,7 +183,11 @@ Future<List<MapEntry<String, int>>> getTop10SpeciesWithMostRecords(
   final sortedSpecies = speciesCounts.entries.toList()
     ..sort((a, b) => b.value.compareTo(a.value));
 
-  return sortedSpecies.take(10).toList();
+  if (count <= 0) {
+    return sortedSpecies;
+  } else {
+    return sortedSpecies.take(count).toList();
+  }
 }
 
 Map<int, int> getOccurrencesByMonth(
@@ -290,12 +313,7 @@ Map<String, int> getTotalsByRecordType(List<Species> inventories,
   };
 }
 
-Future<int> getTotalsForSpecies(
-    String speciesName,
-    List<Species> inventories,
-    List<Nest> nests,
-    List<Egg> eggs,
-    List<Specimen> specimens) async {
+Future<int> getTotalsForSpecies(String speciesName) async {
       final DatabaseHelper _dbHelper;
   _dbHelper = DatabaseHelper();
   final db = await _dbHelper.database;
@@ -342,6 +360,27 @@ Future<int> getTotalsForSpecies(
         debugPrint('Error querying database: $e');
         return 0; 
       }
+}
+
+Future<int> getTotalNestsWithNidoparasitism() async {
+      final DatabaseHelper dbHelper;
+  dbHelper = DatabaseHelper();
+  final db = await dbHelper.database;
+  if (db == null) {
+    debugPrint('Error: Database is null.');
+    return 0;
+  }
+  try {
+    final List<Map<String, dynamic>> results = await db.query(
+      'nest_revisions',
+      columns: ['COUNT(DISTINCT nestId) AS count'],
+      where: 'eggsParasite > 0 OR nestlingsParasite > 0',
+    );
+    return results[0]['count'] as int;
+  } catch (e) {
+    debugPrint('Error querying database: $e');
+    return 0; 
+  }
 }
 
     // Get a list of specimen types and the number of records per type
@@ -395,4 +434,38 @@ Map<String, int> getNestFateCounts(List<Nest> nests) {
   }
 
   return nestFateCounts;
+}
+
+List<FlSpot> prepareAccumulatedSpeciesData(List<Inventory> selectedInventories) {
+  final speciesSet = <String>{};
+  final accumulatedSpeciesData = <FlSpot>[];
+
+  for (var i = 0; i < selectedInventories.length; i++) {
+    final inventory = selectedInventories[i];
+    // inventory.speciesList.where((species) => speciesSet.add(species.name));
+    for (final species in inventory.speciesList) {
+      speciesSet.add(species.name);
+    }
+    accumulatedSpeciesData.add(FlSpot(i.toDouble(), speciesSet.length.toDouble()));
+  }
+
+  return accumulatedSpeciesData;
+}
+
+List<FlSpot> prepareAccumulatedSpeciesWithinSample(List<Inventory> selectedInventories) {
+  final speciesSet = <String>{};
+  final accumulatedSpeciesData = <FlSpot>[];
+
+  for (var i = 0; i < selectedInventories.length; i++) {
+    final inventory = selectedInventories[i];
+    // inventory.speciesList.where((species) => speciesSet.add(species.name));
+    for (final species in inventory.speciesList) {
+      if (!species.isOutOfInventory) {
+        speciesSet.add(species.name);
+      }
+    }
+    accumulatedSpeciesData.add(FlSpot(i.toDouble(), speciesSet.length.toDouble()));
+  }
+
+  return accumulatedSpeciesData;
 }

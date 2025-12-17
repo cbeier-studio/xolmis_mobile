@@ -903,17 +903,22 @@
         "type": "text",
         "description": "Recorded species card title in statistics"
     },
-    "topTenSpecies": "Top 10 espécies mais registradas",
-    "@topTenSpecies": {
-        "type": "text",
-        "description": "Top 10 most recorded species card title in statistics"
-    },
+  "topSpecies": "Top {howMany} espécies mais registradas",
+  "@topSpecies": {
+    "type": "text",
+    "description": "Top most recorded species card title in statistics",
+    "placeholders": {
+      "howMany": {
+        "type": "int"
+      }
+    }
+  },
     "surveyHours": "horas de amostragem",
     "@surveyHours": {
         "type": "text",
         "description": "Survey hours card title in statistics"
     },
-    "averageSurveyHours": "horas de amostragem por inventário",
+    "averageSurveyHours": "média de horas de amostragem",
     "@averageSurveyHours": {
         "type": "text",
         "description": "Average survey hours card title in statistics"
@@ -1196,6 +1201,16 @@
         "type": "text",
         "description": "Error message when backup is not found"
     },
+  "restore": "Restaurar",
+  "@restore": {
+    "type": "text",
+    "description": "Restore button label"
+  },
+  "restoreBackupConfirmation": "Os dado atuais serão substituídos pelos dados do backup e alguns dados podem ser perdidos. Deseja prosseguir?",
+  "@restoreBackupConfirmation": {
+    "type": "text",
+    "description": "Restore backup confirmation dialog text"
+  },
     "restoreBackup": "Restaurar backup",
     "@restoreBackup": {
         "type": "text",
@@ -1481,6 +1496,79 @@
       "type": "text",
       "description": "Message shown when no inventory is selected"
     },
+  "suggestFeatureOrReportIssue": "Sugerir recurso ou reportar problema",
+  "@suggestFeatureOrReportIssue": {
+    "type": "text",
+    "description": "Suggest a feature or report an issue button label"
+  },
+  "localitiesSurveyed": "{howMany, plural, one{localidade amostrada} other{localidades amostradas}}",
+  "@localitiesSurveyed": {
+    "type": "text",
+    "description": "Localities surveyed field label",
+    "placeholders": {
+      "howMany": {
+        "type": "int",
+        "description": "Number of localities"
+      }
+    }
+  },
+  "daysSurveyed": "{howMany, plural, one{dia amostrado} other{dias amostrados}}",
+    "@daysSurveyed": {
+      "type": "text",
+      "description": "Days surveyed field label",
+      "placeholders": {
+        "howMany": {
+          "type": "int",
+          "description": "Number of days"
+        }
+      }
+    },
+  "poisRecorded": "{howMany, plural, one{POI registrado} other{POIs registrados}}",
+  "@poisRecorded": {
+    "type": "text",
+    "description": "POIs recorded field label",
+    "placeholders": {
+      "howMany": {
+        "type": "int",
+        "description": "Number of POIs"
+      }
+    }
+  },
+  "seeAll": "Ver tudo",
+  "@seeAll": {
+    "type": "text",
+    "description": "See all button label"
+  },
+  "apparentSuccessRate": "taxa de sucesso aparente",
+    "@apparentSuccessRate": {
+      "type": "text",
+      "description": "Apparent success rate field label"
+    },
+    "nidoparasitismRate": "taxa de nidoparasitismo",
+    "@nidoparasitismRate": {
+      "type": "text",
+      "description": "Nidoparasitism rate field label"
+    },
+  "detectionRate": "taxa de detecção",
+  "@detectionRate": {
+    "type": "text",
+    "description": "Detection rate field label"
+  },
+  "speciesRichness": "Riqueza de espécies",
+  "@speciesRichness": {
+    "type": "text",
+    "description": "Species richness field label"
+  },
+  "totalRichness": "riqueza total",
+  "@totalRichness": {
+    "type": "text",
+    "description": "Total richness field label"
+  },
+  "averageRichness": "riqueza média",
+  "@averageRichness": {
+    "type": "text",
+    "description": "Average richness field label"
+  },
   "countryArgentina": "Argentina",
   "countryBrazil": "Brasil",
   "countryParaguay": "Paraguai",

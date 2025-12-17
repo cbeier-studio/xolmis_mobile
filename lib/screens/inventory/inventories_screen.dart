@@ -19,6 +19,7 @@ import '../../providers/inventory_provider.dart';
 import '../../providers/species_provider.dart';
 
 import '../../widgets/timer_progress_indicator.dart';
+import '../statistics/stats_inventories_screen.dart';
 import 'add_inventory_screen.dart';
 import 'edit_inventory_screen.dart';
 import 'inventory_detail_screen.dart';
@@ -796,45 +797,64 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                         child: Text(S.current.reportSpeciesByInventory),
                       ),
                       if (selectedInventories.length > 1)
-                      MenuItemButton(
-                        onPressed: () {
-                          final inventories = selectedInventories
-                              .map((id) =>
-                                  inventoryProvider.getInventoryById(id))
-                              .toList();
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => MackinnonChartScreen(
-                                selectedInventories:
-                                    inventories.whereType<Inventory>().toList(),
+                        MenuItemButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => StatsInventoriesScreen(
+                                  inventories: selectedInventories
+                                      .map((id) =>
+                                          inventoryProvider.getInventoryById(id))
+                                      .whereType<Inventory>()
+                                      .toList(),
+                                ),
                               ),
-                            ),
-                          );
-                        },
-                        leadingIcon: const Icon(Icons.show_chart_outlined),
-                        child: Text(S.current.speciesAccumulationCurve),
-                      ),
-                      if (selectedInventories.length > 1)
-                      MenuItemButton(
-                        onPressed: () {
-                          final inventories = selectedInventories
-                              .map((id) =>
-                                  inventoryProvider.getInventoryById(id))
-                              .toList();
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => SpeciesCountChartScreen(
-                                selectedInventories:
-                                    inventories.whereType<Inventory>().toList(),
-                              ),
-                            ),
-                          );
-                        },
-                        leadingIcon: const Icon(Icons.bar_chart_outlined),
-                        child: Text(S.current.speciesCounted),
-                      ),
+                            );
+                          },
+                          leadingIcon: const Icon(Icons.insert_chart_outlined),
+                          child: Text(S.current.statistics),
+                        ),
+                      // if (selectedInventories.length > 1)
+                      // MenuItemButton(
+                      //   onPressed: () {
+                      //     final inventories = selectedInventories
+                      //         .map((id) =>
+                      //             inventoryProvider.getInventoryById(id))
+                      //         .toList();
+                      //     Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //         builder: (context) => MackinnonChartScreen(
+                      //           selectedInventories:
+                      //               inventories.whereType<Inventory>().toList(),
+                      //         ),
+                      //       ),
+                      //     );
+                      //   },
+                      //   leadingIcon: const Icon(Icons.show_chart_outlined),
+                      //   child: Text(S.current.speciesAccumulationCurve),
+                      // ),
+                      // if (selectedInventories.length > 1)
+                      // MenuItemButton(
+                      //   onPressed: () {
+                      //     final inventories = selectedInventories
+                      //         .map((id) =>
+                      //             inventoryProvider.getInventoryById(id))
+                      //         .toList();
+                      //     Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //         builder: (context) => SpeciesCountChartScreen(
+                      //           selectedInventories:
+                      //               inventories.whereType<Inventory>().toList(),
+                      //         ),
+                      //       ),
+                      //     );
+                      //   },
+                      //   leadingIcon: const Icon(Icons.bar_chart_outlined),
+                      //   child: Text(S.current.speciesCounted),
+                      // ),
                       // if (selectedInventories.length > 1)
                       // MenuItemButton(
                       //   onPressed: () {

@@ -14,7 +14,6 @@ import 'data/database/database_helper.dart';
 import 'data/daos/inventory_dao.dart';
 import 'data/daos/species_dao.dart';
 import 'services/species_update_service.dart';
-import 'services/inventory_completion_service.dart';
 
 import 'main.dart';
 import 'screens/inventory/inventories_screen.dart';
@@ -22,7 +21,7 @@ import 'screens/journal/journals_screen.dart';
 import 'screens/nest/nests_screen.dart';
 import 'screens/specimen/specimens_screen.dart';
 import 'screens/settings/settings_screen.dart';
-import 'screens/statistics/statistics_screen.dart';
+import 'screens/statistics/stats_screen.dart';
 
 import 'core/core_consts.dart';
 import 'generated/l10n.dart';
@@ -127,7 +126,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
         selectedIcon: Icons.assessment,
         screenBuilder:
             (context, scaffoldKey) =>
-                StatisticsScreen(scaffoldKey: scaffoldKey),
+                StatsScreen(scaffoldKey: scaffoldKey),
       ),
     ];
 

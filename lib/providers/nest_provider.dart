@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:xolmis/core/core_consts.dart';
 
 import '../data/models/nest.dart';
 import '../data/daos/nest_dao.dart';
@@ -15,8 +16,12 @@ class NestProvider with ChangeNotifier {
   List<Nest> get activeNests => _nests.where((nest) => nest.isActive).toList();
   // Get list of inactive nests
   List<Nest> get inactiveNests => _nests.where((nest) => !nest.isActive).toList();
+  List<Nest> get successNests => _nests.where((nest) => nest.nestFate == NestFateType.fatSuccess).toList();
   // Get number of active nests
   int get nestsCount => activeNests.length;
+  int get inactiveNestsCount => inactiveNests.length;
+  int get allNestsCount => nests.length;
+  int get successNestsCount => successNests.length;
 
   void refreshState() {
     notifyListeners();

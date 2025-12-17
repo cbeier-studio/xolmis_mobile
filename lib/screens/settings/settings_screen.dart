@@ -10,6 +10,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/core_consts.dart';
 import '../../utils/backup_utils.dart';
@@ -361,6 +362,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   title: Text(S.of(context).about),
                   onPressed: (context) => buildShowAboutPage(context),
                 ),
+                SettingsTile.navigation(
+                  leading: const Icon(Icons.feedback_outlined),
+                  title: Text(S.of(context).suggestFeatureOrReportIssue),
+                  onPressed: (context) => _openFeedbackUrl(),
+                ),
               ],
             ),
             SettingsSection(
@@ -377,7 +383,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   leading: const Icon(Icons.settings_backup_restore_outlined),
                   title: Text(S.current.restoreBackup),
                   onPressed: (context) async {
-                    await runBackupRestore(context);
+                    // 1. Mostra o diálogo de aviso e aguarda a confirmação do usuário.
+                    final bool userConfirmed = await _showRestoreConfirmationDialog(context);
+
+                    // 2. Prossiga com a restauração apenas se o usuário confirmou.
+                    if (userConfirmed) {
+                      // A verificação `mounted` é uma boa prática em `async` callbacks.
+                      if (context.mounted) {
+                        await runBackupRestore(context);
+                      }
+                    }
                   },
                 ),
               ],
@@ -624,6 +639,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  /// Abre a URL para feedback, com tratamento de erros.
+  void _openFeedbackUrl() async {
+    final Uri url = Uri.parse('https://github.com/cbeier-studio/xolmis_mobile/issues');
+
+    // Verifica se o dispositivo pode abrir a URL antes de tentar
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url, mode: LaunchMode.externalApplication);
+    } else {
+      // Se não puder abrir, mostra uma mensagem de erro para o usuário
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Could not launch $url')),
+        );
+      }
+      debugPrint('[SETTINGS] !!! ERROR: Could not launch $url');
+    }
+  }
+
   Future<void> runCreateBackup(BuildContext context) async {
     bool isDialogShown = false;
     try {
@@ -699,6 +732,44 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
       );
     }
+  }
+
+  /// Mostra um diálogo de aviso antes de restaurar o backup.
+  /// Retorna `true` se o usuário confirmar, `false` caso contrário.
+  Future<bool> _showRestoreConfirmationDialog(BuildContext context) async {
+    // `showDialog` retorna o valor passado para `Navigator.of(context).pop()`
+    final bool? confirmed = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false, // O usuário deve pressionar um dos botões
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(S.current.warningTitle),
+          content: Text(S.current.restoreBackupConfirmation),
+          actions: <Widget>[
+            // Botão para cancelar a ação
+            TextButton(
+              child: Text(S.of(context).cancel),
+              onPressed: () {
+                Navigator.of(context).pop(false); // Retorna 'false'
+              },
+            ),
+            // Botão para confirmar a ação, com destaque
+            TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: Theme.of(context).colorScheme.error,
+              ),
+              child: Text(S.current.restore),
+              onPressed: () {
+                Navigator.of(context).pop(true); // Retorna 'true'
+              },
+            ),
+          ],
+        );
+      },
+    );
+    // Se o usuário fechar o diálogo de outra forma, `confirmed` pode ser null.
+    // Tratamos null como `false`.
+    return confirmed ?? false;
   }
 
   Future<void> runBackupRestore(BuildContext context) async {

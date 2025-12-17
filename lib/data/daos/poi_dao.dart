@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:sqflite/sqflite.dart';
 
 import '../models/inventory.dart';
 import '../database/database_helper.dart';
@@ -52,5 +53,13 @@ class PoiDao {
   Future<void> deletePoi(int poiId) async {
     final db = await _dbHelper.database;
     await db?.delete('pois', where: 'id = ?', whereArgs: [poiId]);
+  }
+
+  Future<int> countAllPois() async {
+    final db = await _dbHelper.database;
+    // `Sqflite.firstIntValue` é uma forma eficiente de obter um único valor numérico, como uma contagem.
+    // Ele executa 'SELECT COUNT(*) FROM pois' e retorna o resultado.
+    final result = await db?.rawQuery('SELECT COUNT(*) FROM pois');
+    return Sqflite.firstIntValue(result!) ?? 0;
   }
 }

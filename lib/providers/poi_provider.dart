@@ -7,11 +7,21 @@ import '../data/daos/poi_dao.dart';
 class PoiProvider with ChangeNotifier {
   final PoiDao _poiDao;
 
+  int _allPoisCount = 0;
+
   PoiProvider(this._poiDao);
+
+  int get allPoisCount => _allPoisCount;
 
   final Map<int, List<Poi>> _poiMap = {};
 
   void refreshState() {
+    notifyListeners();
+  }
+
+  /// Metodo mais eficiente que apenas busca a contagem.
+  Future<void> fetchPoisCount() async {
+    _allPoisCount = await _poiDao.countAllPois();
     notifyListeners();
   }
 
