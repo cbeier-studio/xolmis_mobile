@@ -26,6 +26,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
   late List<FlSpot> accumulatedSpeciesWithinSampleData = [];
   late List<String> combinedSpeciesList = [];
   late double averageSpeciesCount = 0;
+  late int distinctLocalitiesCount = 0;
 
   @override
   void initState() {
@@ -46,6 +47,10 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
     accumulatedSpeciesWithinSampleData = prepareAccumulatedSpeciesWithinSample(widget.inventories);
     combinedSpeciesList = _getSpeciesList(widget.inventories);
     averageSpeciesCount = combinedSpeciesList.length / widget.inventories.length;
+
+    final allLocalities = widget.inventories.map((inventory) => inventory.localityName).toList();
+    final distinctLocalities = allLocalities.toSet();
+    distinctLocalitiesCount = distinctLocalities.length;
   }
 
   List<String> _getSpeciesList(List<Inventory> inventories) {
@@ -69,6 +74,56 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    // Number of selected inventories
+                    Expanded(child:
+                    Card(
+                      surfaceTintColor: Colors.deepPurple,
+                      child: Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.inventories.length.toString(),
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.primary,
+                                fontWeight: Theme.of(context).textTheme.headlineSmall?.fontWeight,
+                                fontSize: Theme.of(context).textTheme.headlineSmall?.fontSize,
+                              ),
+                            ),
+                            Text(S.current.selectedInventories),
+                          ],
+                        ),
+                      ),
+                    ),
+                    ),
+                    // Localities surveyed
+                    Expanded(child:
+                    Card(
+                      child: Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              distinctLocalitiesCount.toString(),
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.primary,
+                                fontWeight: Theme.of(context).textTheme.headlineSmall?.fontWeight,
+                                fontSize: Theme.of(context).textTheme.headlineSmall?.fontSize,
+                              ),
+                            ),
+                            Text(S.current.localitiesSurveyed(distinctLocalitiesCount)),
+                          ],
+                        ),
+                      ),
+                    ),
+                    ),
+                  ],
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -334,11 +389,11 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
             ),
             const SizedBox(height: 8),
             SizedBox(
-              height: 200,
+              height: 150,
               child: BarChart(
                 BarChartData(
                   alignment: BarChartAlignment.spaceAround,
-                  maxY: (widget.inventories.map((inventory) => inventory.speciesList.length).reduce((a, b) => a > b ? a : b) / 10).ceil() * 10.0,
+                  // maxY: (widget.inventories.map((inventory) => inventory.speciesList.length).reduce((a, b) => a > b ? a : b) / 10).ceil() * 10.0,
                   barTouchData: BarTouchData(
                     enabled: true,
                     touchTooltipData: BarTouchTooltipData(
@@ -376,25 +431,26 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                     bottomTitles: AxisTitles(
                       // axisNameWidget: Text(S.current.inventories),
                       sideTitles: SideTitles(
-                        showTitles: false,
+                        showTitles: true,
                         getTitlesWidget: (value, meta) {
-                          final index = value.toInt();
-                          if (index >= 0 && index < widget.inventories.length) {
-                            final parts = widget.inventories[index].id.split('-');
-                            final listNumber = parts.length > 1
-                                ? parts.last
-                                : widget.inventories[index].id;
-                            return Text(listNumber);
-                          } else {
-                            return Text('');
-                          }
+                          final index = value.toInt() + 1;
+                          return Text('$index');
+                          // if (index >= 0 && index < widget.inventories.length) {
+                          //   final parts = widget.inventories[index].id.split('-');
+                          //   final listNumber = parts.length > 1
+                          //       ? parts.last
+                          //       : widget.inventories[index].id;
+                          //   return Text(listNumber);
+                          // } else {
+                          //   return Text('');
+                          // }
                         },
                       ),
                     ),
                     leftTitles: AxisTitles(
                       // axisNameWidget: Text(S.current.speciesCounted),
                       sideTitles: SideTitles(
-                        showTitles: true,
+                        showTitles: false,
                         interval: 10,
                         reservedSize: 40,
                         getTitlesWidget: (value, meta) {
@@ -417,8 +473,11 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                       barRods: [
                         BarChartRodData(
                           toY: inventory.speciesList.length.toDouble(),
-                          width: 16,
-                          borderRadius: BorderRadius.circular(4),
+                          width: 12,
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(6),
+                            topRight: Radius.circular(6),
+                          ),
                           color: Theme.of(context).brightness == Brightness.light
                               ? Colors.deepPurple
                               : Colors.deepPurple[200],
@@ -436,12 +495,12 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                           color: Colors.grey,
                         width: 1,
                       ),
-                        left: BorderSide(
-                          color: Colors.grey,
-                          width: 1,
-                        ),
-                        top: BorderSide.none,
-                        right: BorderSide.none,
+                        // left: BorderSide(
+                        //   color: Colors.grey,
+                        //   width: 1,
+                        // ),
+                        // top: BorderSide.none,
+                        // right: BorderSide.none,
                     ),
                   ),
                 ),

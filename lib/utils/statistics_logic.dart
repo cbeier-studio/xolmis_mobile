@@ -469,3 +469,51 @@ List<FlSpot> prepareAccumulatedSpeciesWithinSample(List<Inventory> selectedInven
 
   return accumulatedSpeciesData;
 }
+
+/// Agrupa o número total de registros de uma espécie por hora do dia (0-23).
+Map<int, int> getAllOccurrencesByHourOfDay(
+    List<Species> speciesList,
+    List<Nest> nestList,
+    List<Egg> eggList,
+    List<Specimen> specimenList,
+    ) {
+  // Cria um mapa para armazenar a contagem de cada hora, inicializando todas com 0.
+  final Map<int, int> occurrences = { for (var i = 0; i < 24; i++) i: 0 };
+
+  // Combina todos os registros que têm um 'sampleTime' em uma única lista.
+  final allRecordsWithTime = [
+    ...speciesList.where((s) => s.sampleTime != null).map((s) => s.sampleTime!),
+    ...nestList.where((n) => n.foundTime != null).map((n) => n.foundTime!),
+    ...eggList.where((e) => e.sampleTime != null).map((e) => e.sampleTime!),
+    ...specimenList.where((sp) => sp.sampleTime != null).map((sp) => sp.sampleTime!),
+  ];
+
+  // Para cada registro, incrementa a contagem para a hora correspondente.
+  for (final time in allRecordsWithTime) {
+    final hour = time.hour;
+    occurrences[hour] = (occurrences[hour] ?? 0) + 1;
+  }
+
+  return occurrences;
+}
+
+/// Agrupa o número total de registros de uma espécie por hora do dia (0-23).
+Map<int, int> getOccurrencesByHourOfDay(
+    List<Species> speciesList,
+    ) {
+  // Cria um mapa para armazenar a contagem de cada hora, inicializando todas com 0.
+  final Map<int, int> occurrences = { for (var i = 0; i < 24; i++) i: 0 };
+
+  // Combina todos os registros que têm um 'sampleTime' em uma única lista.
+  final allRecordsWithTime = [
+    ...speciesList.where((s) => s.sampleTime != null).map((s) => s.sampleTime!),
+  ];
+
+  // Para cada registro, incrementa a contagem para a hora correspondente.
+  for (final time in allRecordsWithTime) {
+    final hour = time.hour;
+    occurrences[hour] = (occurrences[hour] ?? 0) + 1;
+  }
+
+  return occurrences;
+}

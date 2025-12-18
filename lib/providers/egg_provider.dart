@@ -16,6 +16,16 @@ class EggProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<List<Egg>> getAllEggs() async {
+    try {
+      final eggList = await _eggDao.getAllEggs();
+      return eggList;
+    } catch (e) {
+      debugPrint('Error loading all eggs: $e');
+      return [];
+    }
+  }
+
   // Load list of eggs for a nest ID
   Future<void> loadEggForNest(int nestId) async {
     try {

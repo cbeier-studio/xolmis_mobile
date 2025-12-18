@@ -1439,6 +1439,21 @@ class AppLocalizationsPt extends AppLocalizations {
   String get averageRichness => 'riqueza média';
 
   @override
+  String get relativeFrequency => 'frequência relativa';
+
+  @override
+  String get relativeAbundance => 'abundância relativa';
+
+  @override
+  String get recordsByHour => 'Registros por hora';
+
+  @override
+  String get totalAbundance => 'abundância total';
+
+  @override
+  String get selectedInventories => 'inventários selecionados';
+
+  @override
   String get countryArgentina => 'Argentina';
 
   @override
@@ -3095,6 +3110,21 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get averageRichness => 'riqueza média';
+
+  @override
+  String get relativeFrequency => 'frequência relativa';
+
+  @override
+  String get relativeAbundance => 'abundância relativa';
+
+  @override
+  String get recordsByHour => 'Registros por hora';
+
+  @override
+  String get totalAbundance => 'abundância total';
+
+  @override
+  String get selectedInventories => 'inventários selecionados';
 
   @override
   String get countryArgentina => 'Argentina';

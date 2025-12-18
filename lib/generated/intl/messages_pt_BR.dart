@@ -780,12 +780,19 @@ class MessageLookup extends MessageLookupByLibrary {
     "recordedSpecies": MessageLookupByLibrary.simpleMessage(
       "espécies registradas",
     ),
+    "recordsByHour": MessageLookupByLibrary.simpleMessage("Registros por hora"),
     "recordsPerMonth": MessageLookupByLibrary.simpleMessage(
       "Registros por mês",
     ),
     "recordsPerYear": MessageLookupByLibrary.simpleMessage("Registros por ano"),
     "refresh": MessageLookupByLibrary.simpleMessage("Recarregar"),
     "refreshList": MessageLookupByLibrary.simpleMessage("Atualizar"),
+    "relativeAbundance": MessageLookupByLibrary.simpleMessage(
+      "abundância relativa",
+    ),
+    "relativeFrequency": MessageLookupByLibrary.simpleMessage(
+      "frequência relativa",
+    ),
     "relativeHumidity": MessageLookupByLibrary.simpleMessage(
       "Umidade relativa",
     ),
@@ -832,6 +839,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "selectSpeciesToShowStats": MessageLookupByLibrary.simpleMessage(
       "Selecione uma espécie para ver as estatísticas",
+    ),
+    "selectedInventories": MessageLookupByLibrary.simpleMessage(
+      "inventários selecionados",
     ),
     "sendBackupTo": MessageLookupByLibrary.simpleMessage(
       "Enviar backup para...",
@@ -934,6 +944,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "title": MessageLookupByLibrary.simpleMessage("Título"),
     "topSpecies": m44,
+    "totalAbundance": MessageLookupByLibrary.simpleMessage("abundância total"),
     "totalIndividuals": MessageLookupByLibrary.simpleMessage(
       "Total de indivíduos",
     ),

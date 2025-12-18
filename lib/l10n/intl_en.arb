@@ -2126,6 +2126,31 @@
       "type": "text",
       "description": "Average richness field label"
     },
+  "relativeFrequency": "relative frequency",
+    "@relativeFrequency": {
+      "type": "text",
+      "description": "Relative frequency field label"
+    },
+  "relativeAbundance": "relative abundance",
+    "@relativeAbundance": {
+      "type": "text",
+      "description": "Relative abundance field label"
+    },
+  "recordsByHour": "Records by hour",
+    "@recordsByHour": {
+      "type": "text",
+      "description": "Records by hour field label"
+    },
+  "totalAbundance": "total abundance",
+    "@totalAbundance": {
+      "type": "text",
+      "description": "Total abundance field label"
+    },
+  "selectedInventories": "selected inventories",
+    "@selectedInventories": {
+      "type": "text",
+      "description": "Selected inventories field label"
+    },
   "countryArgentina": "Argentina",
   "countryBrazil": "Brazil",
   "countryParaguay": "Paraguay",

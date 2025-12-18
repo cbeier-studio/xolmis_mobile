@@ -1434,6 +1434,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get averageRichness => 'average richness';
 
   @override
+  String get relativeFrequency => 'relative frequency';
+
+  @override
+  String get relativeAbundance => 'relative abundance';
+
+  @override
+  String get recordsByHour => 'Records by hour';
+
+  @override
+  String get totalAbundance => 'total abundance';
+
+  @override
+  String get selectedInventories => 'selected inventories';
+
+  @override
   String get countryArgentina => 'Argentina';
 
   @override

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:xolmis/providers/inventory_provider.dart';
 import 'package:xolmis/providers/nest_provider.dart';
 import 'package:xolmis/providers/poi_provider.dart';
+import 'package:xolmis/providers/species_provider.dart';
 
 import '../../generated/l10n.dart';
 
@@ -14,6 +15,7 @@ import 'all_species_records_screen.dart';
 
 class StatsGeneralTab extends StatefulWidget {
   final InventoryProvider inventoryProvider;
+  final SpeciesProvider speciesProvider;
   final PoiProvider poiProvider;
   final NestProvider nestProvider;
   final EggProvider eggProvider;
@@ -23,6 +25,7 @@ class StatsGeneralTab extends StatefulWidget {
   const StatsGeneralTab({
     super.key,
     required this.inventoryProvider,
+    required this.speciesProvider,
     required this.poiProvider,
     required this.nestProvider,
     required this.eggProvider,
@@ -46,6 +49,7 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
   late List<PieChartSectionData> specimenTypeSections = [];
   late List<PieChartSectionData> nestFateSections = [];
   late Future<List<MapEntry<String, int>>> _topSpeciesFuture = Future.value([]);
+  late Map<int, int> recordsPerHour = {};
   int _touchedIndexSpecimenType = -1;
   int _touchedIndexNestFate = -1;
 
@@ -71,6 +75,13 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
       totalInventoryHours = await widget.inventoryProvider.getTotalSamplingHours();
       averageInventoryHours = await widget.inventoryProvider.getAverageSamplingHours();
       totalNestsWithNidoparasitism = await getTotalNestsWithNidoparasitism();
+
+      final allSpeciesRecords = await widget.speciesProvider.getAllSpeciesRecords();
+      final allNestsList = await widget.nestProvider.nests;
+      final allSpecimenList = await widget.specimenProvider.specimens;
+      final allEggsList = await widget.eggProvider.getAllEggs();
+      recordsPerHour = await getAllOccurrencesByHourOfDay(allSpeciesRecords, allNestsList, allEggsList, allSpecimenList);
+
       final specimenTypeCounts = await getSpecimenTypeCounts();
       specimenTypeSections = specimenTypeCounts.entries.map((entry) {
         return PieChartSectionData(
@@ -435,6 +446,111 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
                   ),
                 ],
               ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Expanded(child:
+                // Nest fate per species
+                Card(
+                  child: Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Column(
+                      children: [
+                        Text(
+                          S.current.recordsByHour,
+                          style: TextTheme.of(context).titleMedium,
+                        ),
+                        const SizedBox(height: 8,),
+                        recordsPerHour.isNotEmpty ?
+                        SizedBox(
+                          height: 150,
+                          child: BarChart(
+                            BarChartData(
+                              alignment: BarChartAlignment.spaceAround,
+                              gridData: FlGridData(show: false),
+                              borderData: FlBorderData(
+                                show: true,
+                                border: Border(
+                                  bottom: BorderSide(color: Colors.grey.withValues(alpha: 0.5), width: 1),
+                                ),
+                              ),
+                              barTouchData: BarTouchData(
+                                enabled: true,
+                                touchTooltipData: BarTouchTooltipData(
+                                    fitInsideHorizontally: true,
+                                    fitInsideVertically: true,
+                                    getTooltipColor: (spot) => Colors.white.withValues(alpha: 0.8),
+                                    getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                                      final hour = group.x.toInt();
+                                      final value = rod.toY.toInt();
+                                      if (value == 0) {
+                                        return null;
+                                      }
+                                      return BarTooltipItem(
+                                        '', // String principal vazia, usamos os children
+                                        const TextStyle(),
+                                        children: [
+                                          TextSpan(
+                                            text: '$value\n',
+                                            style: const TextStyle(
+                                              color: Colors.blue,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                          TextSpan(
+                                            text: '${hour.toString().padLeft(2, '0')} h',
+                                            style: const TextStyle(
+                                              color: Colors.black87,
+                                              fontWeight: FontWeight.normal,
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    }
+                                ),
+                              ),
+                              titlesData: FlTitlesData(
+                                show: true,
+                                bottomTitles: AxisTitles(
+                                  sideTitles: SideTitles(
+                                    showTitles: true,
+                                    reservedSize: 30,
+                                    getTitlesWidget: (value, meta) {
+                                      // Mostra os títulos do eixo X em intervalos (0, 6, 12, 18, 23) para não poluir.
+                                      final hour = value.toInt();
+                                      if (hour % 3 == 0 || hour == 23) {
+                                        return Padding(
+                                          padding: const EdgeInsets.only(top: 8.0),
+                                          child: Text(hour.toString().padLeft(2, '0')),
+                                        );
+                                      }
+                                      return const Text('');
+                                    },
+                                  ),
+                                ),
+                                leftTitles: AxisTitles(
+                                  sideTitles: SideTitles(showTitles: false, reservedSize: 28),
+                                ),
+                                topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                                rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                              ),
+                              // Usa a nova função para obter os dados do histograma
+                              barGroups: createBarGroupsFromOccurrencesMap(
+                                recordsPerHour,
+                                12,
+                              ),
+                            ),
+                          ),
+                        ) : Text(S.current.noDataAvailable),
+                      ],
+                    ),
+                  ),
+                ),
+                ),
+              ],
+            ),
               SizedBox(height: 16),
               Text(
                 S.current.inventories,
@@ -876,5 +992,28 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
         ),
       ),
     );
+  }
+
+  List<BarChartGroupData> createBarGroupsFromOccurrencesMap(Map<int, int> monthlyOccurrences, double barWidth,) {
+    final List<BarChartGroupData> barGroups = [];
+    monthlyOccurrences.forEach((month, count) {
+      barGroups.add(
+        BarChartGroupData(
+          x: month, // month is the value of X axis
+          barRods: [
+            BarChartRodData(
+              toY: count.toDouble(), // record count is the value of Y axis
+              color: Colors.blue,
+              width: barWidth,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(6),
+                topRight: Radius.circular(6),
+              ),
+            ),
+          ],
+        ),
+      );
+    });
+    return barGroups;
   }
 }

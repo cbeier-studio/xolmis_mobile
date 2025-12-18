@@ -53,6 +53,15 @@ class SpeciesProvider with ChangeNotifier {
     return await _speciesDao.getAllRecordsBySpecies(speciesName);
   }
 
+  Future<List<Species>> getAllSpeciesRecords() async {
+    return await _speciesDao.getAllSpeciesRecords();
+  }
+
+  /// Retorna o número total de registros de espécies no banco de dados.
+  Future<int> getTotalRecordsOfAllSpecies() async {
+    return await _speciesDao.countAllSpeciesRecords();
+  }
+
   // Add species to the database and the list
   Future<void> addSpecies(BuildContext context, String inventoryId, Species species) async {
     await _speciesDao.insertSpecies(inventoryId, species);

@@ -84,6 +84,7 @@ class StatsScreenState extends State<StatsScreen> with SingleTickerProviderState
               eggProvider: eggProvider,
               specimenProvider: specimenProvider,
               inventoryProvider: inventoryProvider,
+              speciesProvider: speciesProvider,
               poiProvider: poiProvider,
               allSpeciesList: allSpeciesList,
             ),

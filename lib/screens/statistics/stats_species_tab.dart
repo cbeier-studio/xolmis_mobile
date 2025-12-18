@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../core/core_consts.dart';
 import '../../data/models/inventory.dart';
 import '../../data/models/nest.dart';
 import '../../data/models/specimen.dart';
@@ -41,13 +42,17 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
   List<Specimen> specimenList = [];
   String? selectedSpecies;
   int totalRecordsPerSpecies = 0;
-  double detectionRate = 0.0;
+  double relativeFrequency = 0.0;
+  double relativeAbundance = 0.0;
+  int totalAbundance = 0;
   int totalPoisCount = 0;
   bool isLoadingSpecies = false;
   int _touchedIndexNestFate = -1;
   int _touchedIndexTotals = -1;
   List<PieChartSectionData> totalsSections = [];
   List<String> recordedSpeciesNames = [];
+  int totalSuccessNests = 0;
+  int totalNestsWithNidoparasitism = 0;
   List<PieChartSectionData> nestFateSections = [];
 
   @override
@@ -74,10 +79,22 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
       EggProvider eggProvider,
       SpecimenProvider specimenProvider,
       ) async {
+    setState(() {
+      isLoadingSpecies = true;
+    });
+
+    try {
     allSpeciesList = await speciesProvider.getAllRecordsBySpecies(
       selectedSpecies ?? '',
     );
     nestList = await nestProvider.getNestsBySpecies(selectedSpecies ?? '');
+    totalSuccessNests = nestList.where((nest) => nest.nestFate == NestFateType.fatSuccess).length;
+    totalNestsWithNidoparasitism = nestList.where((nest) {
+      // Para cada ninho, verifique se *alguma* de suas revisões tem parasitismo.
+      return nest.revisionsList!.any((revision) =>
+      (revision.eggsParasite ?? 0) > 0 || (revision.nestlingsParasite ?? 0) > 0
+      );
+    }).length;
     eggList = await eggProvider.getEggsBySpecies(selectedSpecies ?? '');
     specimenList = await specimenProvider.getSpecimensBySpecies(
       selectedSpecies ?? '',
@@ -86,13 +103,25 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
     totalPoisCount = (allSpeciesList.map((s) => s.pois.length).fold(0,(a, b) => a + b));
 
     final totalInventories = widget.inventoryProvider.allInventoriesCount;
+    final totalRecordsOfAllSpecies = await speciesProvider.getTotalRecordsOfAllSpecies();
 
     if (totalInventories > 0) {
       final inventoryIdsWithSpecies = allSpeciesList.map((s) => s.inventoryId).toSet();
-      detectionRate = (inventoryIdsWithSpecies.length / totalInventories) * 100;
+      relativeFrequency = (inventoryIdsWithSpecies.length / totalInventories) * 100;
     } else {
-      detectionRate = 0.0;
+      relativeFrequency = 0.0;
     }
+    final totalRecordsForSelectedSpecies = allSpeciesList.length;
+    if (totalRecordsOfAllSpecies > 0) {
+      relativeAbundance = (totalRecordsForSelectedSpecies / totalRecordsOfAllSpecies) * 100;
+    } else {
+      relativeAbundance = 0.0;
+    }
+    int individualsRecorded = allSpeciesList.fold(0, (sum, species) {
+      return sum + species.count;
+    });
+    totalAbundance = individualsRecorded;
+
     totalRecordsPerSpecies =
         allSpeciesList.length +
             nestList.length +
@@ -127,6 +156,15 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
             // titleStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
           );
         }).toList();
+    } catch (e, s) {
+      debugPrint('[STATS_SPECIES_TAB] Error loading data lists: $e\n$s');
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoadingSpecies = false;
+        });
+      }
+    }
   }
 
   String getRecordFriendlyName(String recordType, BuildContext context) {
@@ -395,12 +433,17 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
                             ),
                             const SizedBox(height: 8,),
                             SizedBox(
-                              height: 200,
+                              height: 150,
                               child: BarChart(
                                 BarChartData(
                                   alignment: BarChartAlignment.spaceAround,
                                   gridData: FlGridData(show: false),
-                                  borderData: FlBorderData(show: false),
+                                  borderData: FlBorderData(
+                                    show: true,
+                                    border: Border(
+                                      bottom: BorderSide(color: Colors.grey.withValues(alpha: 0.5), width: 1),
+                                    ),
+                                  ),
                                   barTouchData: BarTouchData(
                                     enabled: true,
                                     touchTooltipData: BarTouchTooltipData(
@@ -451,7 +494,7 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
                                       eggList,
                                       specimenList,
                                       selectedSpecies,
-                                    ),
+                                    ), 16,
                                   ),
                                 ),
                               ),
@@ -479,12 +522,17 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
                             ),
                             const SizedBox(height: 8,),
                             SizedBox(
-                              height: 200,
+                              height: 150,
                               child: BarChart(
                                 BarChartData(
                                   alignment: BarChartAlignment.spaceAround,
                                   gridData: FlGridData(show: false),
-                                  borderData: FlBorderData(show: false),
+                                  borderData: FlBorderData(
+                                    show: true,
+                                    border: Border(
+                                      bottom: BorderSide(color: Colors.grey.withValues(alpha: 0.5), width: 1),
+                                    ),
+                                  ),
                                   barTouchData: BarTouchData(
                                       enabled: true,
                                       touchTooltipData: BarTouchTooltipData(
@@ -559,14 +607,14 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  totalPoisCount.toString(),
+                                  relativeAbundance.toStringAsFixed(1),
                                   style: TextStyle(
                                     color: Theme.of(context).colorScheme.primary,
                                     fontWeight: Theme.of(context).textTheme.headlineSmall?.fontWeight,
                                     fontSize: Theme.of(context).textTheme.headlineSmall?.fontSize,
                                   ),
                                 ),
-                                Text(S.current.poisRecorded(totalPoisCount)),
+                                Text(S.current.relativeAbundance),
                               ],
                             ),
                           ),
@@ -581,14 +629,191 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  detectionRate.toStringAsFixed(1),
+                                  relativeFrequency.toStringAsFixed(1),
                                   style: TextStyle(
                                     color: Theme.of(context).colorScheme.primary,
                                     fontWeight: Theme.of(context).textTheme.headlineSmall?.fontWeight,
                                     fontSize: Theme.of(context).textTheme.headlineSmall?.fontSize,
                                   ),
                                 ),
-                                Text(S.current.detectionRate),
+                                Text(S.current.relativeFrequency),
+                              ],
+                            ),
+                          ),
+                        ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        // Apparent success rate
+                        Expanded(child:
+                        Card(
+                          child: Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  totalAbundance.toString(),
+                                  style: TextStyle(
+                                    color: Theme.of(context).colorScheme.primary,
+                                    fontWeight: Theme.of(context).textTheme.headlineSmall?.fontWeight,
+                                    fontSize: Theme.of(context).textTheme.headlineSmall?.fontSize,
+                                  ),
+                                ),
+                                Text(S.current.totalAbundance),
+                              ],
+                            ),
+                          ),
+                        ),
+                        ),
+                        // Nidoparasitism rate
+                        Expanded(child:
+                        Card(
+                          child: Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  totalPoisCount.toString(),
+                                  style: TextStyle(
+                                    color: Theme.of(context).colorScheme.primary,
+                                    fontWeight: Theme.of(context).textTheme.headlineSmall?.fontWeight,
+                                    fontSize: Theme.of(context).textTheme.headlineSmall?.fontSize,
+                                  ),
+                                ),
+                                Text(S.current.poisRecorded(totalPoisCount)),
+                              ],
+                            ),
+                          ),
+                        ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Expanded(child:
+                        // Nest fate per species
+                        Card(
+                          child: Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: Column(
+                              children: [
+                                Text(
+                                  S.current.recordsByHour,
+                                  style: TextTheme.of(context).titleMedium,
+                                ),
+                                const SizedBox(height: 8,),
+                                allSpeciesList.isNotEmpty ?
+                                    SizedBox(
+                                      height: 150,
+                                      child: BarChart(
+                                        BarChartData(
+                                          alignment: BarChartAlignment.spaceAround,
+                                          gridData: FlGridData(show: false),
+                                          borderData: FlBorderData(
+                                            show: true,
+                                            border: Border(
+                                              bottom: BorderSide(color: Colors.grey.withValues(alpha: 0.5), width: 1),
+                                            ),
+                                          ),
+                                          barTouchData: BarTouchData(
+                                            enabled: true,
+                                            touchTooltipData: BarTouchTooltipData(
+                                              fitInsideHorizontally: true,
+                                              fitInsideVertically: true,
+                                              getTooltipColor: (spot) => Colors.white.withValues(alpha: 0.8),
+                                              getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                                                final hour = group.x.toInt();
+                                                final value = rod.toY.toInt();
+                                                if (value == 0) {
+                                                  return null;
+                                                }
+                                                return BarTooltipItem(
+                                                    '', // String principal vazia, usamos os children
+                                                    const TextStyle(),
+                                                    children: [
+                                                      TextSpan(
+                                                        text: '$value\n',
+                                                        style: const TextStyle(
+                                                          color: Colors.blue,
+                                                          fontWeight: FontWeight.bold,
+                                                          fontSize: 16,
+                                                        ),
+                                                      ),
+                                                      TextSpan(
+                                                    text: '${hour.toString().padLeft(2, '0')} h',
+                                                style: const TextStyle(
+                                                color: Colors.black87,
+                                                  fontWeight: FontWeight.normal,
+                                                fontSize: 12,
+                                                ),
+                                                ),
+                                                ],
+                                                );
+                                              }
+                                            ),
+                                          ),
+                                          titlesData: FlTitlesData(
+                                            show: true,
+                                            bottomTitles: AxisTitles(
+                                              sideTitles: SideTitles(
+                                                showTitles: true,
+                                                reservedSize: 30,
+                                                getTitlesWidget: (value, meta) {
+                                                  // Mostra os títulos do eixo X em intervalos (0, 6, 12, 18, 23) para não poluir.
+                                                  final hour = value.toInt();
+                                                  if (hour % 3 == 0 || hour == 23) {
+                                                    return Padding(
+                                                      padding: const EdgeInsets.only(top: 8.0),
+                                                      child: Text(hour.toString().padLeft(2, '0')),
+                                                    );
+                                                  }
+                                                  return const Text('');
+                                                },
+                                              ),
+                                            ),
+                                            leftTitles: AxisTitles(
+                                              sideTitles: SideTitles(showTitles: false, reservedSize: 28),
+                                            ),
+                                            topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                                            rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                                          ),
+                                          // Usa a nova função para obter os dados do histograma
+                                          barGroups: createBarGroupsFromOccurrencesMap(
+                                            getOccurrencesByHourOfDay(
+                                              allSpeciesList,
+                                            ), 12,
+                                          ),
+                                        ),
+                                      ),
+                                    ) : Text(S.current.noDataAvailable),
+                                // SizedBox(height: 8.0),
+                                // Row(
+                                //   mainAxisAlignment:
+                                //   MainAxisAlignment.spaceEvenly,
+                                //   children: <Widget>[
+                                //     Indicator(
+                                //       color: Colors.grey,
+                                //       text: S.current.nestFateUnknown,
+                                //       isSquare: false,
+                                //     ),
+                                //     Indicator(
+                                //       color: Colors.red,
+                                //       text: S.current.nestFateLost,
+                                //       isSquare: false,
+                                //     ),
+                                //     Indicator(
+                                //       color: Colors.blue,
+                                //       text: S.current.nestFateSuccess,
+                                //       isSquare: false,
+                                //     ),
+                                //   ],
+                                // ),
                               ],
                             ),
                           ),
@@ -600,6 +825,55 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
                     Text(
                       S.current.nests,
                       style: TextTheme.of(context).titleLarge,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        // Apparent success rate
+                        Expanded(child:
+                        Card(
+                          child: Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  (totalSuccessNests / widget.nestProvider.inactiveNestsCount * 100).toStringAsFixed(1),
+                                  style: TextStyle(
+                                    color: Theme.of(context).colorScheme.primary,
+                                    fontWeight: Theme.of(context).textTheme.headlineSmall?.fontWeight,
+                                    fontSize: Theme.of(context).textTheme.headlineSmall?.fontSize,
+                                  ),
+                                ),
+                                Text(S.current.apparentSuccessRate),
+                              ],
+                            ),
+                          ),
+                        ),
+                        ),
+                        // Nidoparasitism rate
+                        Expanded(child:
+                        Card(
+                          child: Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  (totalNestsWithNidoparasitism / widget.nestProvider.allNestsCount * 100).toStringAsFixed(1),
+                                  style: TextStyle(
+                                    color: Theme.of(context).colorScheme.primary,
+                                    fontWeight: Theme.of(context).textTheme.headlineSmall?.fontWeight,
+                                    fontSize: Theme.of(context).textTheme.headlineSmall?.fontSize,
+                                  ),
+                                ),
+                                Text(S.current.nidoparasitismRate),
+                              ],
+                            ),
+                          ),
+                        ),
+                        ),
+                      ],
                     ),
     Row(
     mainAxisAlignment: MainAxisAlignment.start,
@@ -727,7 +1001,7 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
     );
   }
 
-  List<BarChartGroupData> createBarGroupsFromOccurrencesMap(Map<int, int> monthlyOccurrences,) {
+  List<BarChartGroupData> createBarGroupsFromOccurrencesMap(Map<int, int> monthlyOccurrences, double barWidth,) {
     final List<BarChartGroupData> barGroups = [];
     monthlyOccurrences.forEach((month, count) {
       barGroups.add(
@@ -737,7 +1011,7 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
             BarChartRodData(
               toY: count.toDouble(), // record count is the value of Y axis
               color: Colors.blue,
-              width: 16,
+              width: barWidth,
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(6),
                 topRight: Radius.circular(6),

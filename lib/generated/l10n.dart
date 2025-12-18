@@ -3862,6 +3862,56 @@ class S {
     );
   }
 
+  /// `relative frequency`
+  String get relativeFrequency {
+    return Intl.message(
+      'relative frequency',
+      name: 'relativeFrequency',
+      desc: 'Relative frequency field label',
+      args: [],
+    );
+  }
+
+  /// `relative abundance`
+  String get relativeAbundance {
+    return Intl.message(
+      'relative abundance',
+      name: 'relativeAbundance',
+      desc: 'Relative abundance field label',
+      args: [],
+    );
+  }
+
+  /// `Records by hour`
+  String get recordsByHour {
+    return Intl.message(
+      'Records by hour',
+      name: 'recordsByHour',
+      desc: 'Records by hour field label',
+      args: [],
+    );
+  }
+
+  /// `total abundance`
+  String get totalAbundance {
+    return Intl.message(
+      'total abundance',
+      name: 'totalAbundance',
+      desc: 'Total abundance field label',
+      args: [],
+    );
+  }
+
+  /// `selected inventories`
+  String get selectedInventories {
+    return Intl.message(
+      'selected inventories',
+      name: 'selectedInventories',
+      desc: 'Selected inventories field label',
+      args: [],
+    );
+  }
+
   /// `Argentina`
   String get countryArgentina {
     return Intl.message(

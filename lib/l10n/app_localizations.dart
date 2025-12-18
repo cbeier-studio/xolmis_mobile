@@ -2358,6 +2358,36 @@ abstract class AppLocalizations {
   /// **'average richness'**
   String get averageRichness;
 
+  /// Relative frequency field label
+  ///
+  /// In en, this message translates to:
+  /// **'relative frequency'**
+  String get relativeFrequency;
+
+  /// Relative abundance field label
+  ///
+  /// In en, this message translates to:
+  /// **'relative abundance'**
+  String get relativeAbundance;
+
+  /// Records by hour field label
+  ///
+  /// In en, this message translates to:
+  /// **'Records by hour'**
+  String get recordsByHour;
+
+  /// Total abundance field label
+  ///
+  /// In en, this message translates to:
+  /// **'total abundance'**
+  String get totalAbundance;
+
+  /// Selected inventories field label
+  ///
+  /// In en, this message translates to:
+  /// **'selected inventories'**
+  String get selectedInventories;
+
   /// No description provided for @countryArgentina.
   ///
   /// In en, this message translates to:

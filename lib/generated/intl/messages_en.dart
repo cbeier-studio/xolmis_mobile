@@ -734,12 +734,19 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "recordTime": MessageLookupByLibrary.simpleMessage("Record time"),
     "recordedSpecies": MessageLookupByLibrary.simpleMessage("recorded species"),
+    "recordsByHour": MessageLookupByLibrary.simpleMessage("Records by hour"),
     "recordsPerMonth": MessageLookupByLibrary.simpleMessage(
       "Records per month",
     ),
     "recordsPerYear": MessageLookupByLibrary.simpleMessage("Records per year"),
     "refresh": MessageLookupByLibrary.simpleMessage("Refresh"),
     "refreshList": MessageLookupByLibrary.simpleMessage("Refresh"),
+    "relativeAbundance": MessageLookupByLibrary.simpleMessage(
+      "relative abundance",
+    ),
+    "relativeFrequency": MessageLookupByLibrary.simpleMessage(
+      "relative frequency",
+    ),
     "relativeHumidity": MessageLookupByLibrary.simpleMessage(
       "Relative humidity",
     ),
@@ -784,6 +791,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "selectSpecies": MessageLookupByLibrary.simpleMessage("Select a species"),
     "selectSpeciesToShowStats": MessageLookupByLibrary.simpleMessage(
       "Select a species to show the statistics",
+    ),
+    "selectedInventories": MessageLookupByLibrary.simpleMessage(
+      "selected inventories",
     ),
     "sendBackupTo": MessageLookupByLibrary.simpleMessage("Send backup to..."),
     "settings": MessageLookupByLibrary.simpleMessage("Settings"),
@@ -870,6 +880,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "title": MessageLookupByLibrary.simpleMessage("Title"),
     "topSpecies": m44,
+    "totalAbundance": MessageLookupByLibrary.simpleMessage("total abundance"),
     "totalIndividuals": MessageLookupByLibrary.simpleMessage(
       "Total Individuals",
     ),

@@ -104,6 +104,14 @@ class SpeciesDao {
     }).toList();
   }
 
+  /// Conta o número total de registros na tabela de espécies.
+  Future<int> countAllSpeciesRecords() async {
+    final db = await _dbHelper.database;
+    final result = await db?.rawQuery('SELECT COUNT(*) FROM species');
+    final count = result?.first['COUNT(*)'] ?? 0;
+    return (count as int);
+  }
+
   // Get list of all records of a species
   Future<List<Species>> getAllRecordsBySpecies(String speciesName) async {
     final db = await _dbHelper.database;
@@ -122,6 +130,35 @@ class SpeciesDao {
     ) ?? [];
 
     // Get the species POIs 
+    final poisBySpeciesId = <int, List<Poi>>{};
+    for (final poiMap in poisMaps) {
+      final speciesId = poiMap['speciesId'] as int;
+      poisBySpeciesId.putIfAbsent(speciesId, () => []);
+      poisBySpeciesId[speciesId]!.add(Poi.fromMap(poiMap));
+    }
+
+    return speciesMaps.map((map) {
+      final speciesId = map['id'] as int;
+      final pois = poisBySpeciesId[speciesId] ?? [];
+      return Species.fromMap(map, pois);
+    }).toList();
+  }
+
+  Future<List<Species>> getAllSpeciesRecords() async {
+    final db = await _dbHelper.database;
+    final speciesMaps = await db?.query(
+      'species',
+    ) ?? [];
+
+    if (speciesMaps.isEmpty) return [];
+
+    final speciesIds = speciesMaps.map((map) => map['id'] as int).toList();
+    final poisMaps = await db?.query(
+      'pois',
+      where: 'speciesId IN (${speciesIds.join(',')})',
+    ) ?? [];
+
+    // Get the species POIs
     final poisBySpeciesId = <int, List<Poi>>{};
     for (final poiMap in poisMaps) {
       final speciesId = poiMap['speciesId'] as int;

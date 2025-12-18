@@ -27,6 +27,16 @@ class EggDao {
     egg.id = id;
   }
 
+  Future<List<Egg>> getAllEggs() async {
+    final db = await _dbHelper.database;
+    final List<Map<String, dynamic>> maps = await db?.query(
+      'eggs',
+    ) ?? [];
+    return List.generate(maps.length, (i) {
+      return Egg.fromMap(maps[i]);
+    });
+  }
+
   // Get list of eggs for a nest ID
   Future<List<Egg>> getEggsForNest(int nestId) async {
     final db = await _dbHelper.database;
