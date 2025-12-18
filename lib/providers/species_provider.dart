@@ -27,18 +27,15 @@ class SpeciesProvider with ChangeNotifier {
   // Load list of species for an inventory ID
   Future<void> loadSpeciesForInventory(String inventoryId) async {
     if (inventoryId.isEmpty) {
-      if (kDebugMode) {
-        print('Invalid inventoryId: empty or null');
-      }
+      debugPrint('[PROVIDER] !!! Invalid inventoryId: empty or null');
       return;
     }
     try {
       final speciesList = await _speciesDao.getSpeciesByInventory(inventoryId, false);
       _speciesMap[inventoryId] = speciesList;
+      debugPrint('[PROVIDER] Loaded ${speciesList.length} species for inventory $inventoryId');
     } catch (e) {
-      if (kDebugMode) {
-        print('Error loading species for inventory $inventoryId: $e');
-      }
+      debugPrint('[PROVIDER] !!! ERROR loading species list for inventory $inventoryId: $e');
     } finally {
       notifyListeners();
     }
@@ -64,21 +61,25 @@ class SpeciesProvider with ChangeNotifier {
 
   // Add species to the database and the list
   Future<void> addSpecies(BuildContext context, String inventoryId, Species species) async {
+    debugPrint('[PROVIDER] Adding species ${species.name} to inventory $inventoryId');
     await _speciesDao.insertSpecies(inventoryId, species);
     
     // Check if the species list is empty for the inventory ID
     if (_speciesMap[inventoryId] == null) {
+      debugPrint('[PROVIDER] Initializing species list for inventory $inventoryId');
       _speciesMap[inventoryId] = [];
     }
     // Check if the species already exists in the list
     if (_speciesMap[inventoryId]!.any((s) => s.name == species.name)) {
+      debugPrint('[PROVIDER] Species ${species.name} already exists in inventory $inventoryId');
       return; // Species already exists, no need to add
     }
     // Add the species to the list
+    debugPrint('[PROVIDER] Adding species ${species.name} to local list for inventory $inventoryId');
     _speciesMap[inventoryId]!.add(species);
     
-    // _speciesMap[inventoryId] = await _speciesRepository.getSpeciesByInventory(inventoryId);
     if (context.mounted) {
+      debugPrint('[PROVIDER] Updating species count for inventory $inventoryId');
       Provider.of<InventoryProvider>(context, listen: false).updateSpeciesCount(inventoryId);
     }
     notifyListeners();
@@ -86,10 +87,12 @@ class SpeciesProvider with ChangeNotifier {
 
   // Update species in the database and the list
   Future<void> updateSpecies(String inventoryId, Species species) async {
+    debugPrint('[PROVIDER] Updating species ${species.name} in inventory $inventoryId');
     await _speciesDao.updateSpecies(species);
     // Update the species in the list
     final speciesList = _speciesMap[inventoryId];
     if (speciesList != null) {
+      debugPrint('[PROVIDER] Updating species ${species.name} in local list for inventory $inventoryId');
       final index = speciesList.indexWhere((s) => s.id == species.id);
       if (index != -1) {
         speciesList[index] = species;
@@ -103,10 +106,12 @@ class SpeciesProvider with ChangeNotifier {
 
   // Remove species from database and from list
   Future<void> removeSpecies(BuildContext context, String inventoryId, int speciesId) async {
+    debugPrint('[PROVIDER] Removing species $speciesId from inventory $inventoryId');
     await _speciesDao.deleteSpecies(speciesId);
     // Remove the species from the list
     final speciesList = _speciesMap[inventoryId];
     if (speciesList != null) {
+      debugPrint('[PROVIDER] Removing species $speciesId from local list for inventory $inventoryId');
       speciesList.removeWhere((s) => s.id == speciesId);
     }
 
@@ -114,15 +119,18 @@ class SpeciesProvider with ChangeNotifier {
     notifyListeners();
 
     if (context.mounted) {
+      debugPrint('[PROVIDER] Updating species count for inventory $inventoryId');
       Provider.of<InventoryProvider>(context, listen: false).updateSpeciesCount(inventoryId);
     }
   }
 
   Future<void> removeSpeciesFromInventory(BuildContext context, String inventoryId, String speciesName) async {
+    debugPrint('[PROVIDER] Removing species $speciesName from inventory $inventoryId');
     await _speciesDao.deleteSpeciesFromInventory(inventoryId, speciesName);
     // Remove the species from the list
     final speciesList = _speciesMap[inventoryId];
     if (speciesList != null) {
+      debugPrint('[PROVIDER] Removing species $speciesName from local list for inventory $inventoryId');
       speciesList.removeWhere((s) => s.name == speciesName);
     }
 
@@ -130,6 +138,7 @@ class SpeciesProvider with ChangeNotifier {
     notifyListeners();
 
     if (context.mounted) {
+      debugPrint('[PROVIDER] Updating species count for inventory $inventoryId');
       Provider.of<InventoryProvider>(context, listen: false).updateSpeciesCount(inventoryId);
     }
   }

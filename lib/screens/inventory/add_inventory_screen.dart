@@ -11,9 +11,10 @@ import '../../generated/l10n.dart';
 class AddInventoryScreen extends StatefulWidget {
   final String? initialInventoryId;
   final InventoryType? initialInventoryType;
+  final String? initialLocalityName;
   final int? initialMaxSpecies;
 
-  const AddInventoryScreen({super.key, this.initialInventoryId, this.initialInventoryType, this.initialMaxSpecies});
+  const AddInventoryScreen({super.key, this.initialInventoryId, this.initialInventoryType, this.initialLocalityName, this.initialMaxSpecies});
 
   @override
   AddInventoryScreenState createState() => AddInventoryScreenState();
@@ -38,7 +39,9 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
     _maxSpeciesController.text = widget.initialMaxSpecies?.toString() ?? '';
     _totalObserversController.text = '1';
     _localityNameController = TextEditingController();
+    _localityNameController.text = widget.initialLocalityName ?? '';
     _fieldLocalityEditingController = TextEditingController();
+    _fieldLocalityEditingController.text = widget.initialLocalityName ?? '';
   }
 
   @override
@@ -174,6 +177,9 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                     ),
                     const SizedBox(height: 16.0),
                     Autocomplete<String>(
+                      initialValue: widget.initialLocalityName != null
+                          ? TextEditingValue(text: widget.initialLocalityName!)
+                          : TextEditingValue.empty,
                       optionsBuilder:
                           (TextEditingValue textEditingValue) async {
                         if (textEditingValue.text.isEmpty) {
@@ -198,12 +204,12 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                           TextEditingController fieldTextEditingController,
                           FocusNode fieldFocusNode,
                           VoidCallback onFieldSubmitted) {
-                        _fieldLocalityEditingController = fieldTextEditingController;
+                        // _fieldLocalityEditingController = fieldTextEditingController;
                         // if (widget.isEditing && !_isSubmitting) {
                         //   _fieldLocalityEditingController.text = widget.inventory?.localityName ?? '';
                         // }
                         return TextFormField(
-                          controller: _fieldLocalityEditingController,
+                          controller: fieldTextEditingController,
                           focusNode: fieldFocusNode,
                           textCapitalization: TextCapitalization.words,
                           decoration: InputDecoration(
@@ -218,6 +224,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                             return null;
                           },
                           onFieldSubmitted: (String value) {
+                            _localityNameController.text = value;
                             onFieldSubmitted();
                           },
                         );

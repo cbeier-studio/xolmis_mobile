@@ -139,11 +139,17 @@ String getNextInventoryId(String currentId) {
 }
 
 void checkMackinnonCompletion(BuildContext context, Inventory inventory, InventoryDao inventoryDao) {
+  if (inventory.type != InventoryType.invMackinnonList) {
+    return;
+  }
+
   final speciesProvider = Provider.of<SpeciesProvider>(context, listen: false);
   final speciesList = speciesProvider.getSpeciesForInventory(inventory.id);
   // print('speciesList: ${speciesList.length} ; maxSpecies: ${inventory.maxSpecies}');
   if (inventory.type == InventoryType.invMackinnonList &&
-      speciesList.length == inventory.maxSpecies - 1) {
+      speciesList.length == inventory.maxSpecies) {
+        debugPrint('[UTILS] Mackinnon list completed for inventory ${inventory.id}');
+    // Navigator.of(context).pop();
     _showMackinnonDialog(context, inventory, inventoryDao);
   }
 }
@@ -152,7 +158,7 @@ void _showMackinnonDialog(BuildContext context, Inventory inventory, InventoryDa
   showDialog(
     context: context,
     builder: (context) {
-      return AlertDialog.adaptive(
+      return AlertDialog(
         title: Text(S.current.listFinished),
         content: Text(S.current.listFinishedMessage),
         actions: [
@@ -171,6 +177,7 @@ void _showMackinnonDialog(BuildContext context, Inventory inventory, InventoryDa
                 MaterialPageRoute(builder: (context) => AddInventoryScreen(
                   initialInventoryId: nextInventoryId,
                   initialInventoryType: InventoryType.invMackinnonList,
+                  initialLocalityName: inventory.localityName,
                   initialMaxSpecies: maxSpecies,
                 )
                 ),

@@ -38,6 +38,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
       widget.inventory.type == InventoryType.invPointDetection ? SpeciesSortField.time : SpeciesSortField.name;
   late SortOrder _sortOrder = widget.inventory.type == InventoryType.invTransectDetection ||
       widget.inventory.type == InventoryType.invPointDetection ? SortOrder.descending : SortOrder.ascending;
+  SearchController? _searchController;
 
   @override
   bool get wantKeepAlive => true;
@@ -94,12 +95,8 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     }
 
     // Insert the new species in the database
-    await speciesDao.insertSpecies(widget.inventory.id, newSpecies!);
-    
-    // Check is Mackinnon list was completed and ask to start the next list
-    setState(() {
-      checkMackinnonCompletion(context, widget.inventory, inventoryDao);
-    });
+    await speciesProvider.addSpecies(context, widget.inventory.id, newSpecies!);
+    // await speciesDao.insertSpecies(widget.inventory.id, newSpecies!);
 
     if (!widget.inventory.isFinished) {
       // If the inventory is not finished, add the species to other active inventories
@@ -116,6 +113,9 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
         _restartInventoryTimer(inventoryProvider, widget.inventory, inventoryDao);
       }
     }
+
+    // Check is Mackinnon list was completed and ask to start the next list
+    // checkMackinnonCompletion(context, widget.inventory, inventoryDao);    
 
     // Update the inventory in the database
     // await inventoryRepository.updateInventory(widget.inventory);
@@ -205,6 +205,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     final speciesProvider = Provider.of<SpeciesProvider>(context, listen: false);
     await speciesProvider.loadSpeciesForInventory(inventoryId);
     widget.inventory.speciesList = speciesProvider.getSpeciesForInventory(inventoryId);
+    debugPrint('[SPECIES_TAB] Species list reloaded for inventory $inventoryId with ${widget.inventory.speciesList.length} species');
   }
 
   // Delete the selected species from the list
@@ -361,8 +362,11 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
             child: SearchAnchor(
               isFullScreen: MediaQuery.of(context).size.width < 600,
               builder: (context, controller) {
+                _searchController = controller;
                 return TextField(
                   controller: controller,
+                  autocorrect: false,
+                  enableSuggestions: false,
                   decoration: InputDecoration(
                     filled: true,
                     hintText: '${S.of(context).addSpecies}...',
@@ -446,14 +450,30 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                     return ListTile(
                       title: Text(species),
                       onTap: () async {
+                        debugPrint('[SPECIES_TAB] Selected species from search suggestions: $species');
                         await _addSpeciesToInventory(species, speciesDao, inventoryDao);
                         controller.closeView(species);
                         controller.clear();
+                        checkMackinnonCompletion(context, widget.inventory, inventoryDao);
                       },
                     );
                   }).toList();
                 }
               },
+              // viewOnSubmitted: (value) async {
+              //   final query = value.trim();
+              //   if (query.isEmpty) return;
+              //   final matches = List<String>.from(allSpeciesNames)
+              //       .where((species) => speciesMatchesQuery(
+              //           species, query.toLowerCase()))
+              //       .toList();
+              //   if (matches.isEmpty) return;
+              //   final first = matches.first;
+              //   await _addSpeciesToInventory(first, speciesDao, inventoryDao);
+              //   _searchController?.closeView(first);
+              //   _searchController?.clear();
+              //   checkMackinnonCompletion(context, widget.inventory, inventoryDao);
+              // },
             ),
           ),
         ),
