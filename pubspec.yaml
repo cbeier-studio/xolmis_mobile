@@ -3,7 +3,7 @@ description: "Collect ornithological data in the field."
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.2+101
+version: 1.0.3+101
 
 environment:
   sdk: ^3.7.0

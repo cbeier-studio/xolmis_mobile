@@ -1,5 +1,16 @@
 # Log de alterações
 
+## 1.0.3
+
+### Melhorias
+
+* Telas de estatísticas refatoradas e expandidas.
+
+### Correções
+
+* Corrigida tela que ficava vazia após apagar um item.
+* Corrigidas listas de Mackinnon não finalizando corretamente.
+
 ## 1.0.2
 
 ### Novas funcionalidades

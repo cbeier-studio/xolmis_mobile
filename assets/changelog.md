@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.0.3
+
+### Improvements
+
+* Refactored and expanded statistics screens.
+
+### Bug fixes
+
+* Fixed screen going blank after deleting an item.
+* Fixed Mackinnon lists not finishing properly.
+
 ## 1.0.2
 
 ### New Features
