@@ -1013,14 +1013,14 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                                     TextButton(
                                       onPressed: () {
                                         Navigator.of(context).pop(false);
-                                        Navigator.of(context).pop();
+                                        // Navigator.of(context).pop();
                                       },
                                       child: Text(S.of(context).cancel),
                                     ),
                                     TextButton(
                                       onPressed: () {
                                         Navigator.of(context).pop(true);
-                                        Navigator.of(context).pop();
+                                        // Navigator.of(context).pop();
                                         // Call the function to delete species
                                         specimenProvider.removeSpecimen(specimen);
                                       },
@@ -1051,8 +1051,8 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                               ActionChip(
                                 label: const Text('KML'),
                                 onPressed: () async {
-                                  Navigator.of(context).pop();
                                   exportSpecimenToKml(context, specimen);
+                                  Navigator.of(context).pop();
                                 },
                               ),
                               const SizedBox(width: 8.0),

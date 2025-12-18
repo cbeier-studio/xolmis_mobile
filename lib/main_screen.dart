@@ -551,7 +551,8 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
               Theme.of(context).brightness == Brightness.light
                   ? const Icon(Icons.settings_outlined)
                   : const Icon(Icons.settings),
-          title: Text(S.of(context).settings),
+          title: Text(S.of(context).settings,
+              style: textTheme.bodyMedium),
           contentPadding: const EdgeInsets.symmetric(horizontal: 24.0),
           onTap: () => _navigateToSettings(context),
         ),

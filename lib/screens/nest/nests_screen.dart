@@ -1140,7 +1140,7 @@ class NestsScreenState extends State<NestsScreen> {
                                       TextButton(
                                         onPressed: () {
                                           Navigator.of(context).pop(true);
-                                          Navigator.of(context).pop();
+                                          // Navigator.of(context).pop();
                                           // Call the function to delete species
                                           Provider.of<NestProvider>(
                                             context,
@@ -1175,8 +1175,7 @@ class NestsScreenState extends State<NestsScreen> {
                                   const SizedBox(width: 16.0),
                                   ActionChip(
                                     label: const Text('CSV'),
-                                    onPressed: () async {
-                                      Navigator.of(context).pop();
+                                    onPressed: () async {                             
                                       final locale = Localizations.localeOf(
                                         context,
                                       );
@@ -1198,13 +1197,13 @@ class NestsScreenState extends State<NestsScreen> {
                                           subject: S.current.nestData(1),
                                         ),
                                       );
+                                      Navigator.of(context).pop();
                                     },
                                   ),
                                   const SizedBox(width: 8.0),
                                   ActionChip(
                                     label: const Text('Excel'),
-                                    onPressed: () async {
-                                      Navigator.of(context).pop();
+                                    onPressed: () async {                                      
                                       final locale = Localizations.localeOf(
                                         context,
                                       );
@@ -1227,22 +1226,23 @@ class NestsScreenState extends State<NestsScreen> {
                                           subject: S.current.nestData(1),
                                         ),
                                       );
+                                      Navigator.of(context).pop();
                                     },
                                   ),
                                   const SizedBox(width: 8.0),
                                   ActionChip(
                                     label: const Text('JSON'),
-                                    onPressed: () async {
-                                      Navigator.of(context).pop();
+                                    onPressed: () async {                                      
                                       exportNestToJson(context, nest);
+                                      Navigator.of(context).pop();
                                     },
                                   ),
                                   const SizedBox(width: 8.0),
                                   ActionChip(
                                     label: const Text('KML'),
                                     onPressed: () async {
-                                      Navigator.of(context).pop();
                                       exportNestToKml(context, nest);
+                                      Navigator.of(context).pop();
                                     },
                                   ),
                                   const SizedBox(width: 8.0),

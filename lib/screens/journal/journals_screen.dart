@@ -677,14 +677,14 @@ class JournalsScreenState extends State<JournalsScreen> {
                                     TextButton(
                                       onPressed: () {
                                         Navigator.of(context).pop(false);
-                                        Navigator.of(context).pop();
+                                        // Navigator.of(context).pop();
                                       },
                                       child: Text(S.of(context).cancel),
                                     ),
                                     TextButton(
                                       onPressed: () {
                                         Navigator.of(context).pop(true);
-                                        Navigator.of(context).pop();
+                                        // Navigator.of(context).pop();
                                         // Call the function to delete species
                                         journalProvider.removeJournalEntry(journalEntry);
                                       },
