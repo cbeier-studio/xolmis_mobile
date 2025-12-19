@@ -31,8 +31,6 @@ import '../../utils/export_utils.dart';
 import '../../utils/import_utils.dart';
 import '../../services/inventory_completion_service.dart';
 import '../../generated/l10n.dart';
-import '../statistics/mackinnon_chart_screen.dart';
-import '../statistics/species_count_chart_screen.dart';
 
 class InventoriesScreen extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
