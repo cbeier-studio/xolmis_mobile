@@ -146,6 +146,7 @@ class SpeciesListItemState extends State<SpeciesListItem> {
                       if (context.mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
+                            showCloseIcon: true,
                             content: Row(
                               children: [
                                 const Icon(Icons.error_outlined, color: Colors.red),

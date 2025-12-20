@@ -222,23 +222,35 @@ class SpecimensScreenState extends State<SpecimensScreen> {
 
     if (observerAbbreviation.isEmpty) {
       if (context.mounted) {
-        showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog.adaptive(
-              title: Text(S.of(context).warningTitle),
-              content: Text(S.of(context).observerAbbreviationMissing),
-              actions: <Widget>[
-                TextButton(
-                  child: Text(S.of(context).ok),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
+        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            showCloseIcon: true,
+                            content: Row(
+              children: [
+                Icon(Icons.warning_amber_outlined, color: Colors.orange),
+                SizedBox(width: 8),
+                Text(S.of(context).observerAbbreviationMissing),
               ],
-            );
-          },
-        );
+            ),
+                          ),
+                        );
+        // showDialog(
+        //   context: context,
+        //   builder: (context) {
+        //     return AlertDialog.adaptive(
+        //       title: Text(S.of(context).warningTitle),
+        //       content: Text(S.of(context).observerAbbreviationMissing),
+        //       actions: <Widget>[
+        //         TextButton(
+        //           child: Text(S.of(context).ok),
+        //           onPressed: () {
+        //             Navigator.of(context).pop();
+        //           },
+        //         ),
+        //       ],
+        //     );
+        //   },
+        // );
       }
       return;
     }

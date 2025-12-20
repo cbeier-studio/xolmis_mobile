@@ -157,6 +157,8 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
           // Ensure widget is still in the tree
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
+              persist: true,
+              showCloseIcon: true,
               content: Text(
                 "Error during initial provider fetch invocation: $e\n$s",
               ),
@@ -613,6 +615,8 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
+            persist: true,
+            showCloseIcon: true,
             content: Text(S.of(context).speciesUpgradeFailed),
             backgroundColor: Theme.of(context).colorScheme.error,
           ),

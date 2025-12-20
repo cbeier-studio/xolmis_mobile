@@ -45,13 +45,7 @@ class _WeatherTabState extends State<WeatherTab>
             return AlertDialog.adaptive(
               title: Text(S.of(context).confirmDelete),
               content: Text(
-                S
-                    .of(context)
-                    .confirmDeleteMessage(
-                      1,
-                      "male",
-                      S.of(context).weatherRecord,
-                    ),
+                S.of(context).confirmDeleteMessage(1, "male", S.of(context).weatherRecord,),
               ),
               actions: <Widget>[
                 TextButton(

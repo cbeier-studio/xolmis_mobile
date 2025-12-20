@@ -265,23 +265,35 @@ class NestsScreenState extends State<NestsScreen> {
 
     if (observerAbbreviation.isEmpty) {
       if (context.mounted) {
-        showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog.adaptive(
-              title: Text(S.of(context).warningTitle),
-              content: Text(S.of(context).observerAbbreviationMissing),
-              actions: <Widget>[
-                TextButton(
-                  child: Text(S.of(context).ok),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
+        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            showCloseIcon: true,
+                            content: Row(
+              children: [
+                Icon(Icons.warning_amber_outlined, color: Colors.orange),
+                SizedBox(width: 8),
+                Text(S.of(context).observerAbbreviationMissing),
               ],
-            );
-          },
-        );
+            ),
+                          ),
+                        );
+        // showDialog(
+        //   context: context,
+        //   builder: (context) {
+        //     return AlertDialog.adaptive(
+        //       title: Text(S.of(context).warningTitle),
+        //       content: Text(S.of(context).observerAbbreviationMissing),
+        //       actions: <Widget>[
+        //         TextButton(
+        //           child: Text(S.of(context).ok),
+        //           onPressed: () {
+        //             Navigator.of(context).pop();
+        //           },
+        //         ),
+        //       ],
+        //     );
+        //   },
+        // );
       }
       return;
     }
@@ -405,29 +417,41 @@ class NestsScreenState extends State<NestsScreen> {
       });
     } catch (error) {
       if (!context.mounted) return;
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Row(
+      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            showCloseIcon: true,
+                            content: Row(
               children: [
-                const Icon(Icons.error_outlined, color: Colors.red),
-                const SizedBox(width: 10),
-                Text(S.current.errorTitle),
+                Icon(Icons.error_outlined, color: Colors.red),
+                SizedBox(width: 8),
+                Text(S.of(context).errorExportingNest(2, error.toString())),
               ],
             ),
-            content: SingleChildScrollView(
-              child: Text(S.current.errorExportingNest(2, error.toString())),
-            ),
-            actions: [
-              TextButton(
-                child: Text(S.of(context).ok),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
-            ],
-          );
-        },
-      );
+                          ),
+                        );
+      // showDialog(
+      //   context: context,
+      //   builder: (context) {
+      //     return AlertDialog(
+      //       title: Row(
+      //         children: [
+      //           const Icon(Icons.error_outlined, color: Colors.red),
+      //           const SizedBox(width: 10),
+      //           Text(S.current.errorTitle),
+      //         ],
+      //       ),
+      //       content: SingleChildScrollView(
+      //         child: Text(S.current.errorExportingNest(2, error.toString())),
+      //       ),
+      //       actions: [
+      //         TextButton(
+      //           child: Text(S.of(context).ok),
+      //           onPressed: () => Navigator.of(context).pop(),
+      //         ),
+      //       ],
+      //     );
+      //   },
+      // );
     }
   }
 
@@ -482,29 +506,41 @@ class NestsScreenState extends State<NestsScreen> {
       });
     } catch (error) {
       if (!context.mounted) return;
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Row(
+      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            showCloseIcon: true,
+                            content: Row(
               children: [
-                const Icon(Icons.error_outlined, color: Colors.red),
-                const SizedBox(width: 10),
-                Text(S.current.errorTitle),
+                Icon(Icons.error_outlined, color: Colors.red),
+                SizedBox(width: 8),
+                Text(S.of(context).errorExportingNest(2, error.toString())),
               ],
             ),
-            content: SingleChildScrollView(
-              child: Text(S.current.errorExportingNest(2, error.toString())),
-            ),
-            actions: [
-              TextButton(
-                child: Text(S.of(context).ok),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
-            ],
-          );
-        },
-      );
+                          ),
+                        );
+      // showDialog(
+      //   context: context,
+      //   builder: (context) {
+      //     return AlertDialog(
+      //       title: Row(
+      //         children: [
+      //           const Icon(Icons.error_outlined, color: Colors.red),
+      //           const SizedBox(width: 10),
+      //           Text(S.current.errorTitle),
+      //         ],
+      //       ),
+      //       content: SingleChildScrollView(
+      //         child: Text(S.current.errorExportingNest(2, error.toString())),
+      //       ),
+      //       actions: [
+      //         TextButton(
+      //           child: Text(S.of(context).ok),
+      //           onPressed: () => Navigator.of(context).pop(),
+      //         ),
+      //       ],
+      //     );
+      //   },
+      // );
     }
   }
 
@@ -565,29 +601,41 @@ class NestsScreenState extends State<NestsScreen> {
       });
     } catch (error) {
       if (!context.mounted) return;
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Row(
+      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            showCloseIcon: true,
+                            content: Row(
               children: [
-                const Icon(Icons.error_outlined, color: Colors.red),
-                const SizedBox(width: 10),
-                Text(S.current.errorTitle),
+                Icon(Icons.error_outlined, color: Colors.red),
+                SizedBox(width: 8),
+                Text(S.of(context).errorExportingNest(2, error.toString())),
               ],
             ),
-            content: SingleChildScrollView(
-              child: Text(S.current.errorExportingNest(2, error.toString())),
-            ),
-            actions: [
-              TextButton(
-                child: Text(S.of(context).ok),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
-            ],
-          );
-        },
-      );
+                          ),
+                        );
+      // showDialog(
+      //   context: context,
+      //   builder: (context) {
+      //     return AlertDialog(
+      //       title: Row(
+      //         children: [
+      //           const Icon(Icons.error_outlined, color: Colors.red),
+      //           const SizedBox(width: 10),
+      //           Text(S.current.errorTitle),
+      //         ],
+      //       ),
+      //       content: SingleChildScrollView(
+      //         child: Text(S.current.errorExportingNest(2, error.toString())),
+      //       ),
+      //       actions: [
+      //         TextButton(
+      //           child: Text(S.of(context).ok),
+      //           onPressed: () => Navigator.of(context).pop(),
+      //         ),
+      //       ],
+      //     );
+      //   },
+      // );
     }
   }
 

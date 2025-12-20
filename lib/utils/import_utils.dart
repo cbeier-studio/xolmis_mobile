@@ -460,7 +460,7 @@ Future<void> importSpecimensFromJson(BuildContext context) async {
     if (!context.mounted) return;
     String errorMessage = '${S.current.errorImportingSpecimens}: ${error.toString()}';
     if (error is FormatException) errorMessage = S.current.errorImportingSpecimensWithFormatError(error.message);
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Row(children: [Icon(Icons.error_outlined, color: Colors.red), SizedBox(width: 8), Text(errorMessage)]), duration: Duration(seconds: 5)));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(showCloseIcon: true, content: Row(children: [Icon(Icons.error_outlined, color: Colors.red), SizedBox(width: 8), Text(errorMessage)]), duration: Duration(seconds: 5)));
   } finally {
     if (isDialogShown && context.mounted) Navigator.of(context).pop();
   }

@@ -814,23 +814,35 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
         if (success) {
           if (mounted) {
-            showDialog(
-              context: context,
-              builder: (BuildContext dialogContext) {
-                return AlertDialog.adaptive(
-                  title: Text(S.of(dialogContext).restoreBackup),
-                  content: Text(S.of(dialogContext).backupRestoredSuccessfully),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text(S.of(context).ok),
-                    ),
-                  ],
-                );
-              },
-            );
+            ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            showCloseIcon: true,
+                            content: Row(
+              children: [
+                Icon(Icons.info_outlined, color: Colors.blue),
+                SizedBox(width: 8),
+                Text(S.of(context).backupRestoredSuccessfully),
+              ],
+            ),
+                          ),
+                        );
+            // showDialog(
+            //   context: context,
+            //   builder: (BuildContext dialogContext) {
+            //     return AlertDialog.adaptive(
+            //       title: Text(S.of(dialogContext).restoreBackup),
+            //       content: Text(S.of(dialogContext).backupRestoredSuccessfully),
+            //       actions: [
+            //         TextButton(
+            //           onPressed: () {
+            //             Navigator.of(context).pop();
+            //           },
+            //           child: Text(S.of(context).ok),
+            //         ),
+            //       ],
+            //     );
+            //   },
+            // );
           }
         } else {
           if (isDialogShown && mounted) {

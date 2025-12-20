@@ -269,23 +269,35 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
 
     if (observerAbbreviation.isEmpty) {
       if (context.mounted) {
-        showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog.adaptive(
-              title: Text(S.of(context).warningTitle),
-              content: Text(S.of(context).observerAbbreviationMissing),
-              actions: <Widget>[
-                TextButton(
-                  child: Text(S.of(context).ok),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            showCloseIcon: true,
+            content: Row(
+              children: [
+                Icon(Icons.warning_amber_outlined, color: Colors.orange),
+                SizedBox(width: 8),
+                Text(S.of(context).observerAbbreviationMissing),
               ],
-            );
-          },
+            ),
+          ),
         );
+        // showDialog(
+        //   context: context,
+        //   builder: (context) {
+        //     return AlertDialog.adaptive(
+        //       title: Text(S.of(context).warningTitle),
+        //       content: Text(S.of(context).observerAbbreviationMissing),
+        //       actions: <Widget>[
+        //         TextButton(
+        //           child: Text(S.of(context).ok),
+        //           onPressed: () {
+        //             Navigator.of(context).pop();
+        //           },
+        //         ),
+        //       ],
+        //     );
+        //   },
+        // );
       }
       return;
     }
@@ -296,6 +308,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
+            showCloseIcon: true,
             content: Row(
               children: [
                 Icon(Icons.info_outlined, color: Colors.blue),
@@ -419,31 +432,43 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
       });
     } catch (error) {
       if (!context.mounted) return;
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Row(
-              children: [
-                const Icon(Icons.error_outlined, color: Colors.red),
-                const SizedBox(width: 10),
-                Text(S.current.errorTitle),
-              ],
-            ),
-            content: SingleChildScrollView(
-              child: Text(
-                S.current.errorExportingInventory(2, error.toString()),
-              ),
-            ),
-            actions: [
-              TextButton(
-                child: Text(S.of(context).ok),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          showCloseIcon: true,
+          content: Row(
+            children: [
+              Icon(Icons.error_outlined, color: Colors.red),
+              SizedBox(width: 8),
+              Expanded(child: Text(S.current.errorExportingInventory(2, error.toString()))),
             ],
-          );
-        },
+          ),
+        ),
       );
+      // showDialog(
+      //   context: context,
+      //   builder: (context) {
+      //     return AlertDialog(
+      //       title: Row(
+      //         children: [
+      //           const Icon(Icons.error_outlined, color: Colors.red),
+      //           const SizedBox(width: 10),
+      //           Text(S.current.errorTitle),
+      //         ],
+      //       ),
+      //       content: SingleChildScrollView(
+      //         child: Text(
+      //           S.current.errorExportingInventory(2, error.toString()),
+      //         ),
+      //       ),
+      //       actions: [
+      //         TextButton(
+      //           child: Text(S.of(context).ok),
+      //           onPressed: () => Navigator.of(context).pop(),
+      //         ),
+      //       ],
+      //     );
+      //   },
+      // );
     }
   }
 
@@ -497,29 +522,41 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
       });
     } catch (error) {
       if (!context.mounted) return;
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Row(
-              children: [
-                const Icon(Icons.error_outlined, color: Colors.red),
-                const SizedBox(width: 10),
-                Text(S.current.errorTitle),
-              ],
-            ),
-            content: SingleChildScrollView(
-              child: Text(S.current.errorExportingInventory(2, error.toString())),
-            ),
-            actions: [
-              TextButton(
-                child: Text(S.of(context).ok),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          showCloseIcon: true,
+          content: Row(
+            children: [
+              Icon(Icons.error_outlined, color: Colors.red),
+              SizedBox(width: 8),
+              Expanded(child: Text(S.current.errorExportingInventory(2, error.toString()))),
             ],
-          );
-        },
+          ),
+        ),
       );
+      // showDialog(
+      //   context: context,
+      //   builder: (context) {
+      //     return AlertDialog(
+      //       title: Row(
+      //         children: [
+      //           const Icon(Icons.error_outlined, color: Colors.red),
+      //           const SizedBox(width: 10),
+      //           Text(S.current.errorTitle),
+      //         ],
+      //       ),
+      //       content: SingleChildScrollView(
+      //         child: Text(S.current.errorExportingInventory(2, error.toString())),
+      //       ),
+      //       actions: [
+      //         TextButton(
+      //           child: Text(S.of(context).ok),
+      //           onPressed: () => Navigator.of(context).pop(),
+      //         ),
+      //       ],
+      //     );
+      //   },
+      // );
     } finally {
       if (context.mounted) {
         Navigator.of(context).pop(); // Dismiss the loading dialog
@@ -578,31 +615,43 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
       });
     } catch (error) {
       if (!context.mounted) return;
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Row(
-              children: [
-                const Icon(Icons.error_outlined, color: Colors.red),
-                const SizedBox(width: 10),
-                Text(S.current.errorTitle),
-              ],
-            ),
-            content: SingleChildScrollView(
-              child: Text(
-                S.current.errorExportingInventory(2, error.toString()),
-              ),
-            ),
-            actions: [
-              TextButton(
-                child: Text(S.of(context).ok),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          showCloseIcon: true,
+          content: Row(
+            children: [
+              Icon(Icons.error_outlined, color: Colors.red),
+              SizedBox(width: 8),
+              Expanded(child: Text(S.current.errorExportingInventory(2, error.toString()))),
             ],
-          );
-        },
+          ),
+        ),
       );
+      // showDialog(
+      //   context: context,
+      //   builder: (context) {
+      //     return AlertDialog(
+      //       title: Row(
+      //         children: [
+      //           const Icon(Icons.error_outlined, color: Colors.red),
+      //           const SizedBox(width: 10),
+      //           Text(S.current.errorTitle),
+      //         ],
+      //       ),
+      //       content: SingleChildScrollView(
+      //         child: Text(
+      //           S.current.errorExportingInventory(2, error.toString()),
+      //         ),
+      //       ),
+      //       actions: [
+      //         TextButton(
+      //           child: Text(S.of(context).ok),
+      //           onPressed: () => Navigator.of(context).pop(),
+      //         ),
+      //       ],
+      //     );
+      //   },
+      // );
     } finally {
       if (context.mounted) {
         Navigator.of(context).pop(); // Dismiss the loading dialog
@@ -1355,7 +1404,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                       SnackBar(
                                         content: Row(
                                           children: [
-                                            const Icon(Icons.error_outline, color: Colors.orange),
+                                            const Icon(Icons.warning_amber_outlined, color: Colors.orange),
                                             const SizedBox(width: 8),
                                             Text(S.of(context).inventoryIdAlreadyExists),
                                           ],

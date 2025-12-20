@@ -179,23 +179,35 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                   onPressed: () async {
                     if (widget.nest.revisionsList != null && widget.nest.revisionsList!.isEmpty) {
                       if (context.mounted) {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog.adaptive(
-                              title: Text(S.of(context).warningTitle),
-                              content: Text(S.of(context).nestRevisionsMissing),
-                              actions: <Widget>[
-                                TextButton(
-                                  child: Text(S.of(context).ok),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                              ],
-                            );
-                          },
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            showCloseIcon: true,
+                            content: Row(
+              children: [
+                Icon(Icons.warning_amber_outlined, color: Colors.orange),
+                SizedBox(width: 8),
+                Text(S.of(context).nestRevisionsMissing),
+              ],
+            ),
+                          ),
                         );
+                        // showDialog(
+                        //   context: context,
+                        //   builder: (context) {
+                        //     return AlertDialog.adaptive(
+                        //       title: Text(S.of(context).warningTitle),
+                        //       content: Text(S.of(context).nestRevisionsMissing),
+                        //       actions: <Widget>[
+                        //         TextButton(
+                        //           child: Text(S.of(context).ok),
+                        //           onPressed: () {
+                        //             Navigator.of(context).pop();
+                        //           },
+                        //         ),
+                        //       ],
+                        //     );
+                        //   },
+                        // );
                       }
                       return;
                     }
@@ -503,23 +515,35 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                   onPressed: () async {
                     if (widget.nest.revisionsList != null && widget.nest.revisionsList!.isEmpty) {
                       if (context.mounted) {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog.adaptive(
-                              title: Text(S.of(context).warningTitle),
-                              content: Text(S.of(context).nestRevisionsMissing),
-                              actions: <Widget>[
-                                TextButton(
-                                  child: Text(S.of(context).ok),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                              ],
-                            );
-                          },
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            showCloseIcon: true,
+                            content: Row(
+              children: [
+                Icon(Icons.warning_amber_outlined, color: Colors.orange),
+                SizedBox(width: 8),
+                Text(S.of(context).nestRevisionsMissing),
+              ],
+            ),
+                          ),
                         );
+                        // showDialog(
+                        //   context: context,
+                        //   builder: (context) {
+                        //     return AlertDialog.adaptive(
+                        //       title: Text(S.of(context).warningTitle),
+                        //       content: Text(S.of(context).nestRevisionsMissing),
+                        //       actions: <Widget>[
+                        //         TextButton(
+                        //           child: Text(S.of(context).ok),
+                        //           onPressed: () {
+                        //             Navigator.of(context).pop();
+                        //           },
+                        //         ),
+                        //       ],
+                        //     );
+                        //   },
+                        // );
                       }
                       return;
                     }

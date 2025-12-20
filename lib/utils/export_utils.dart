@@ -89,30 +89,44 @@ Future<void> exportAllInventoriesToJson(BuildContext context, InventoryProvider 
       ),
     );
   } catch (error) {
-    if (!context.mounted) return;
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Row(
-            children: [
-              const Icon(Icons.error_outlined, color: Colors.red),
-              const SizedBox(width: 10),
-              Text(S.current.errorTitle),
-            ],
-          ),
-          content: SingleChildScrollView(
-            child: Text(S.current.errorExportingInventory(1, error.toString())),
-          ),
-          actions: [
-            TextButton(
-              child: Text(S.of(context).ok),
-              onPressed: () => Navigator.of(context).pop(),
+    if (context.mounted) {
+    ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            showCloseIcon: true,
+                            content: Row(
+              children: [
+                Icon(Icons.error_outlined, color: Colors.red),
+                SizedBox(width: 8),
+                Text(S.of(context).errorExportingInventory(1, error.toString())),
+              ],
             ),
-          ],
-        );
-      },
-    );
+                          ),
+                        );
+    // showDialog(
+    //   context: context,
+    //   builder: (context) {
+    //     return AlertDialog(
+    //       title: Row(
+    //         children: [
+    //           const Icon(Icons.error_outlined, color: Colors.red),
+    //           const SizedBox(width: 10),
+    //           Text(S.current.errorTitle),
+    //         ],
+    //       ),
+    //       content: SingleChildScrollView(
+    //         child: Text(S.current.errorExportingInventory(1, error.toString())),
+    //       ),
+    //       actions: [
+    //         TextButton(
+    //           child: Text(S.of(context).ok),
+    //           onPressed: () => Navigator.of(context).pop(),
+    //         ),
+    //       ],
+    //     );
+    //   },
+    // );
+    }
+    return;
   } finally {
     // Ensure the dialog is always closed if it was shown and an error occurred,
     // or if the function returned early while the dialog was up.
@@ -146,30 +160,44 @@ Future<void> exportInventoryToJson(BuildContext context, Inventory inventory, bo
       );
     }
   } catch (error) {
-    if (!context.mounted) return;
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Row(
-            children: [
-              const Icon(Icons.error_outlined, color: Colors.red),
-              const SizedBox(width: 10),
-              Text(S.current.errorTitle),
-            ],
-          ),
-          content: SingleChildScrollView(
-            child: Text(S.current.errorExportingInventory(1, error.toString())),
-          ),
-          actions: [
-            TextButton(
-              child: Text(S.of(context).ok),
-              onPressed: () => Navigator.of(context).pop(),
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            showCloseIcon: true,
+                            content: Row(
+              children: [
+                Icon(Icons.error_outlined, color: Colors.red),
+                SizedBox(width: 8),
+                Text(S.of(context).errorExportingInventory(1, error.toString())),
+              ],
             ),
-          ],
-        );
-      },
-    );
+                          ),
+                        );
+    // showDialog(
+    //   context: context,
+    //   builder: (context) {
+    //     return AlertDialog(
+    //       title: Row(
+    //         children: [
+    //           const Icon(Icons.error_outlined, color: Colors.red),
+    //           const SizedBox(width: 10),
+    //           Text(S.current.errorTitle),
+    //         ],
+    //       ),
+    //       content: SingleChildScrollView(
+    //         child: Text(S.current.errorExportingInventory(1, error.toString())),
+    //       ),
+    //       actions: [
+    //         TextButton(
+    //           child: Text(S.of(context).ok),
+    //           onPressed: () => Navigator.of(context).pop(),
+    //         ),
+    //       ],
+    //     );
+    //   },
+    // );
+    }
+    return;
   }
 }
 
@@ -361,30 +389,43 @@ Future<String> exportInventoryToExcel(BuildContext context, Inventory inventory,
       // throw Exception('Failed to generate Excel file.');
     // }
   } catch (error) {
-    if (!context.mounted) return '';
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Row(
-            children: [
-              const Icon(Icons.error_outlined, color: Colors.red),
-              const SizedBox(width: 10),
-              Text(S.current.errorTitle),
-            ],
-          ),
-          content: SingleChildScrollView(
-            child: Text(S.current.errorExportingInventory(1, error.toString())),
-          ),
-          actions: [
-            TextButton(
-              child: Text(S.of(context).ok),
-              onPressed: () => Navigator.of(context).pop(),
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            showCloseIcon: true,
+                            content: Row(
+              children: [
+                Icon(Icons.error_outlined, color: Colors.red),
+                SizedBox(width: 8),
+                Text(S.of(context).errorExportingInventory(1, error.toString())),
+              ],
             ),
-          ],
-        );
-      },
-    );
+                          ),
+                        );
+    }
+    // showDialog(
+    //   context: context,
+    //   builder: (context) {
+    //     return AlertDialog(
+    //       title: Row(
+    //         children: [
+    //           const Icon(Icons.error_outlined, color: Colors.red),
+    //           const SizedBox(width: 10),
+    //           Text(S.current.errorTitle),
+    //         ],
+    //       ),
+    //       content: SingleChildScrollView(
+    //         child: Text(S.current.errorExportingInventory(1, error.toString())),
+    //       ),
+    //       actions: [
+    //         TextButton(
+    //           child: Text(S.of(context).ok),
+    //           onPressed: () => Navigator.of(context).pop(),
+    //         ),
+    //       ],
+    //     );
+    //   },
+    // );
     return '';
   }
 }
@@ -409,30 +450,43 @@ Future<String> exportInventoryToCsv(BuildContext context, Inventory inventory, L
       throw Exception('Failed to generate CSV file.');
     }
   } catch (error) {
-    if (!context.mounted) return '';
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Row(
-            children: [
-              const Icon(Icons.error_outlined, color: Colors.red),
-              const SizedBox(width: 10),
-              Text(S.current.errorTitle),
-            ],
-          ),
-          content: SingleChildScrollView(
-            child: Text(S.current.errorExportingInventory(1, error.toString())),
-          ),
-          actions: [
-            TextButton(
-              child: Text(S.of(context).ok),
-              onPressed: () => Navigator.of(context).pop(),
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            showCloseIcon: true,
+                            content: Row(
+              children: [
+                Icon(Icons.error_outlined, color: Colors.red),
+                SizedBox(width: 8),
+                Text(S.of(context).errorExportingInventory(1, error.toString())),
+              ],
             ),
-          ],
-        );
-      },
-    );
+                          ),
+                        );
+    }
+    // showDialog(
+    //   context: context,
+    //   builder: (context) {
+    //     return AlertDialog(
+    //       title: Row(
+    //         children: [
+    //           const Icon(Icons.error_outlined, color: Colors.red),
+    //           const SizedBox(width: 10),
+    //           Text(S.current.errorTitle),
+    //         ],
+    //       ),
+    //       content: SingleChildScrollView(
+    //         child: Text(S.current.errorExportingInventory(1, error.toString())),
+    //       ),
+    //       actions: [
+    //         TextButton(
+    //           child: Text(S.of(context).ok),
+    //           onPressed: () => Navigator.of(context).pop(),
+    //         ),
+    //       ],
+    //     );
+    //   },
+    // );
     return '';
   }
 }
@@ -477,17 +531,30 @@ Future<void> exportInventoryToKml(BuildContext context, Inventory inventory) asy
     }
 
     if (gpx.wpts.isEmpty) {
-      if (!context.mounted) return;
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text(S.current.warningTitle),
-          content: Text(S.current.noPoisToExport),
-          actions: [
-            TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(S.current.ok)),
-          ],
-        ),
-      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            showCloseIcon: true,
+                            content: Row(
+              children: [
+                Icon(Icons.warning_amber_outlined, color: Colors.orange),
+                SizedBox(width: 8),
+                Text(S.of(context).noPoisToExport),
+              ],
+            ),
+                          ),
+                        );
+      }
+      // showDialog(
+      //   context: context,
+      //   builder: (context) => AlertDialog(
+      //     title: Text(S.current.warningTitle),
+      //     content: Text(S.current.noPoisToExport),
+      //     actions: [
+      //       TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(S.current.ok)),
+      //     ],
+      //   ),
+      // );
       return;
     }
 
@@ -506,17 +573,31 @@ Future<void> exportInventoryToKml(BuildContext context, Inventory inventory) asy
       ),
     );
   } catch (error) {
-    if (!context.mounted) return;
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(S.current.errorTitle),
-        content: Text(S.current.errorExportingInventory(1, error.toString())),
-        actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(S.current.ok)),
-        ],
-      ),
-    );
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            showCloseIcon: true,
+                            content: Row(
+              children: [
+                Icon(Icons.error_outlined, color: Colors.red),
+                SizedBox(width: 8),
+                Text(S.of(context).errorExportingInventory(1, error.toString())),
+              ],
+            ),
+                          ),
+                        );
+    }
+    // showDialog(
+    //   context: context,
+    //   builder: (context) => AlertDialog(
+    //     title: Text(S.current.errorTitle),
+    //     content: Text(S.current.errorExportingInventory(1, error.toString())),
+    //     actions: [
+    //       TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(S.current.ok)),
+    //     ],
+    //   ),
+    // );
+    return;
   }
 }
 
@@ -525,7 +606,7 @@ Future<void> exportAllInactiveNestsToJson(BuildContext context) async {
 
   try {
     // Show a loading dialog
-      if (!context.mounted) return;
+      if (context.mounted) {
       showDialog(
         context: context,
         barrierDismissible: false,
@@ -546,6 +627,7 @@ Future<void> exportAllInactiveNestsToJson(BuildContext context) async {
         },
       );
       isDialogShown = true;
+      }
 
     final nestProvider = Provider.of<NestProvider>(context, listen: false);
     final inactiveNests = nestProvider.inactiveNests;
@@ -572,30 +654,44 @@ Future<void> exportAllInactiveNestsToJson(BuildContext context) async {
       ),
     );
   } catch (error) {
-    if (!context.mounted) return;
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Row(
-            children: [
-              const Icon(Icons.error_outlined, color: Colors.red),
-              const SizedBox(width: 10),
-              Text(S.current.errorTitle),
-            ],
-          ),
-          content: SingleChildScrollView(
-            child: Text(S.current.errorExportingNest(1, error.toString())),
-          ),
-          actions: [
-            TextButton(
-              child: Text(S.of(context).ok),
-              onPressed: () => Navigator.of(context).pop(),
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            showCloseIcon: true,
+                            content: Row(
+              children: [
+                Icon(Icons.error_outlined, color: Colors.red),
+                SizedBox(width: 8),
+                Text(S.of(context).errorExportingInventory(1, error.toString())),
+              ],
             ),
-          ],
-        );
-      },
-    );
+                          ),
+                        );
+    }
+    // showDialog(
+    //   context: context,
+    //   builder: (context) {
+    //     return AlertDialog(
+    //       title: Row(
+    //         children: [
+    //           const Icon(Icons.error_outlined, color: Colors.red),
+    //           const SizedBox(width: 10),
+    //           Text(S.current.errorTitle),
+    //         ],
+    //       ),
+    //       content: SingleChildScrollView(
+    //         child: Text(S.current.errorExportingNest(1, error.toString())),
+    //       ),
+    //       actions: [
+    //         TextButton(
+    //           child: Text(S.of(context).ok),
+    //           onPressed: () => Navigator.of(context).pop(),
+    //         ),
+    //       ],
+    //     );
+    //   },
+    // );
+    return;
   } finally {
     // Ensure the dialog is always closed if it was shown and an error occurred,
     // or if the function returned early while the dialog was up.
@@ -626,30 +722,44 @@ Future<void> exportNestToJson(BuildContext context, Nest nest) async {
       ),
     );
   } catch (error) {
-    if (!context.mounted) return;
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Row(
-            children: [
-              const Icon(Icons.error_outlined, color: Colors.red),
-              const SizedBox(width: 10),
-              Text(S.current.errorTitle),
-            ],
-          ),
-          content: SingleChildScrollView(
-            child: Text(S.current.errorExportingNest(1, error.toString())),
-          ),
-          actions: [
-            TextButton(
-              child: Text(S.of(context).ok),
-              onPressed: () => Navigator.of(context).pop(),
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            showCloseIcon: true,
+                            content: Row(
+              children: [
+                Icon(Icons.error_outlined, color: Colors.red),
+                SizedBox(width: 8),
+                Text(S.of(context).errorExportingNest(1, error.toString())),
+              ],
             ),
-          ],
-        );
-      },
-    );
+                          ),
+                        );
+    }
+    // showDialog(
+    //   context: context,
+    //   builder: (context) {
+    //     return AlertDialog(
+    //       title: Row(
+    //         children: [
+    //           const Icon(Icons.error_outlined, color: Colors.red),
+    //           const SizedBox(width: 10),
+    //           Text(S.current.errorTitle),
+    //         ],
+    //       ),
+    //       content: SingleChildScrollView(
+    //         child: Text(S.current.errorExportingNest(1, error.toString())),
+    //       ),
+    //       actions: [
+    //         TextButton(
+    //           child: Text(S.of(context).ok),
+    //           onPressed: () => Navigator.of(context).pop(),
+    //         ),
+    //       ],
+    //     );
+    //   },
+    // );
+    return;
   }
 }
 
@@ -672,30 +782,43 @@ Future<String> exportNestToCsv(BuildContext context, Nest nest, Locale locale) a
       throw Exception('Failed to generate CSV file.');
     }    
   } catch (error) {
-    if (!context.mounted) return '';
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Row(
-            children: [
-              const Icon(Icons.error_outlined, color: Colors.red),
-              const SizedBox(width: 10),
-              Text(S.current.errorTitle),
-            ],
-          ),
-          content: SingleChildScrollView(
-            child: Text(S.current.errorExportingNest(1, error.toString())),
-          ),
-          actions: [
-            TextButton(
-              child: Text(S.of(context).ok),
-              onPressed: () => Navigator.of(context).pop(),
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            showCloseIcon: true,
+                            content: Row(
+              children: [
+                Icon(Icons.error_outlined, color: Colors.red),
+                SizedBox(width: 8),
+                Text(S.of(context).errorExportingNest(1, error.toString())),
+              ],
             ),
-          ],
-        );
-      },
-    );
+                          ),
+                        );
+    }
+    // showDialog(
+    //   context: context,
+    //   builder: (context) {
+    //     return AlertDialog(
+    //       title: Row(
+    //         children: [
+    //           const Icon(Icons.error_outlined, color: Colors.red),
+    //           const SizedBox(width: 10),
+    //           Text(S.current.errorTitle),
+    //         ],
+    //       ),
+    //       content: SingleChildScrollView(
+    //         child: Text(S.current.errorExportingNest(1, error.toString())),
+    //       ),
+    //       actions: [
+    //         TextButton(
+    //           child: Text(S.of(context).ok),
+    //           onPressed: () => Navigator.of(context).pop(),
+    //         ),
+    //       ],
+    //     );
+    //   },
+    // );
     return '';
   }
 }
@@ -729,29 +852,41 @@ Future<String> exportNestToExcel(BuildContext context, Nest nest, Locale locale)
     }
   } catch (error) {
     if (!context.mounted) return '';
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Row(
-            children: [
-              const Icon(Icons.error_outlined, color: Colors.red),
-              const SizedBox(width: 10),
-              Text(S.current.errorTitle),
-            ],
-          ),
-          content: SingleChildScrollView(
-            child: Text(S.current.errorExportingNest(1, error.toString())),
-          ),
-          actions: [
-            TextButton(
-              child: Text(S.of(context).ok),
-              onPressed: () => Navigator.of(context).pop(),
+    ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            showCloseIcon: true,
+                            content: Row(
+              children: [
+                Icon(Icons.error_outlined, color: Colors.red),
+                SizedBox(width: 8),
+                Text(S.of(context).errorExportingNest(1, error.toString())),
+              ],
             ),
-          ],
-        );
-      },
-    );
+                          ),
+                        );
+    // showDialog(
+    //   context: context,
+    //   builder: (context) {
+    //     return AlertDialog(
+    //       title: Row(
+    //         children: [
+    //           const Icon(Icons.error_outlined, color: Colors.red),
+    //           const SizedBox(width: 10),
+    //           Text(S.current.errorTitle),
+    //         ],
+    //       ),
+    //       content: SingleChildScrollView(
+    //         child: Text(S.current.errorExportingNest(1, error.toString())),
+    //       ),
+    //       actions: [
+    //         TextButton(
+    //           child: Text(S.of(context).ok),
+    //           onPressed: () => Navigator.of(context).pop(),
+    //         ),
+    //       ],
+    //     );
+    //   },
+    // );
     return '';
   }
 }
@@ -843,16 +978,28 @@ Future<void> exportNestToKml(BuildContext context, Nest nest) async {
 
     if (gpx.wpts.isEmpty) {
       if (!context.mounted) return;
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text(S.current.warningTitle),
-          content: Text(S.current.noPoisToExport),
-          actions: [
-            TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(S.current.ok)),
-          ],
-        ),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            showCloseIcon: true,
+                            content: Row(
+              children: [
+                Icon(Icons.warning_amber_outlined, color: Colors.orange),
+                SizedBox(width: 8),
+                Text(S.of(context).noPoisToExport),
+              ],
+            ),
+                          ),
+                        );
+      // showDialog(
+      //   context: context,
+      //   builder: (context) => AlertDialog(
+      //     title: Text(S.current.warningTitle),
+      //     content: Text(S.current.noPoisToExport),
+      //     actions: [
+      //       TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(S.current.ok)),
+      //     ],
+      //   ),
+      // );
       return;
     }
 
@@ -872,16 +1019,29 @@ Future<void> exportNestToKml(BuildContext context, Nest nest) async {
     );
   } catch (error) {
     if (!context.mounted) return;
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(S.current.errorTitle),
-        content: Text(S.current.errorExportingNest(1, error.toString())),
-        actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(S.current.ok)),
-        ],
-      ),
-    );
+    ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            showCloseIcon: true,
+                            content: Row(
+              children: [
+                Icon(Icons.error_outlined, color: Colors.red),
+                SizedBox(width: 8),
+                Text(S.of(context).errorExportingNest(1, error.toString())),
+              ],
+            ),
+                          ),
+                        );
+    // showDialog(
+    //   context: context,
+    //   builder: (context) => AlertDialog(
+    //     title: Text(S.current.errorTitle),
+    //     content: Text(S.current.errorExportingNest(1, error.toString())),
+    //     actions: [
+    //       TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(S.current.ok)),
+    //     ],
+    //   ),
+    // );
+    return;
   }
 }
 
@@ -938,29 +1098,41 @@ Future<void> exportAllSpecimensToJson(BuildContext context, List<Specimen> speci
     );
   } catch (error) {
     if (!context.mounted) return;
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Row(
-            children: [
-              const Icon(Icons.error_outlined, color: Colors.red),
-              const SizedBox(width: 10),
-              Text(S.current.errorTitle),
-            ],
-          ),
-          content: SingleChildScrollView(
-            child: Text(S.current.errorExportingSpecimen(1, error.toString())),
-          ),
-          actions: [
-            TextButton(
-              child: Text(S.of(context).ok),
-              onPressed: () => Navigator.of(context).pop(),
+    ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            showCloseIcon: true,
+                            content: Row(
+              children: [
+                Icon(Icons.error_outlined, color: Colors.red),
+                SizedBox(width: 8),
+                Text(S.of(context).errorExportingSpecimen(1, error.toString())),
+              ],
             ),
-          ],
-        );
-      },
-    );
+                          ),
+                        );
+    // showDialog(
+    //   context: context,
+    //   builder: (context) {
+    //     return AlertDialog(
+    //       title: Row(
+    //         children: [
+    //           const Icon(Icons.error_outlined, color: Colors.red),
+    //           const SizedBox(width: 10),
+    //           Text(S.current.errorTitle),
+    //         ],
+    //       ),
+    //       content: SingleChildScrollView(
+    //         child: Text(S.current.errorExportingSpecimen(1, error.toString())),
+    //       ),
+    //       actions: [
+    //         TextButton(
+    //           child: Text(S.of(context).ok),
+    //           onPressed: () => Navigator.of(context).pop(),
+    //         ),
+    //       ],
+    //     );
+    //   },
+    // );
   } finally {
     // Ensure the dialog is always closed if it was shown and an error occurred,
     // or if the function returned early while the dialog was up.
@@ -1030,29 +1202,41 @@ Future<void> exportAllSpecimensToCsv(BuildContext context, List<Specimen> specim
     );
   } catch (error) {
     if (!context.mounted) return;
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Row(
-            children: [
-              const Icon(Icons.error_outlined, color: Colors.red),
-              const SizedBox(width: 10),
-              Text(S.current.errorTitle),
-            ],
-          ),
-          content: SingleChildScrollView(
-            child: Text(S.current.errorExportingSpecimen(1, error.toString())),
-          ),
-          actions: [
-            TextButton(
-              child: Text(S.of(context).ok),
-              onPressed: () => Navigator.of(context).pop(),
+    ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            showCloseIcon: true,
+                            content: Row(
+              children: [
+                Icon(Icons.error_outlined, color: Colors.red),
+                SizedBox(width: 8),
+                Text(S.of(context).errorExportingSpecimen(1, error.toString())),
+              ],
             ),
-          ],
-        );
-      },
-    );
+                          ),
+                        );
+    // showDialog(
+    //   context: context,
+    //   builder: (context) {
+    //     return AlertDialog(
+    //       title: Row(
+    //         children: [
+    //           const Icon(Icons.error_outlined, color: Colors.red),
+    //           const SizedBox(width: 10),
+    //           Text(S.current.errorTitle),
+    //         ],
+    //       ),
+    //       content: SingleChildScrollView(
+    //         child: Text(S.current.errorExportingSpecimen(1, error.toString())),
+    //       ),
+    //       actions: [
+    //         TextButton(
+    //           child: Text(S.of(context).ok),
+    //           onPressed: () => Navigator.of(context).pop(),
+    //         ),
+    //       ],
+    //     );
+    //   },
+    // );
   } finally {
     // Ensure the dialog is always closed if it was shown and an error occurred,
     // or if the function returned early while the dialog was up.
@@ -1136,29 +1320,41 @@ Future<void> exportAllSpecimensToExcel(BuildContext context, List<Specimen> spec
     );
   } catch (error) {
     if (!context.mounted) return;
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Row(
-            children: [
-              const Icon(Icons.error_outlined, color: Colors.red),
-              const SizedBox(width: 10),
-              Text(S.current.errorTitle),
-            ],
-          ),
-          content: SingleChildScrollView(
-            child: Text(S.current.errorExportingSpecimen(1, error.toString())),
-          ),
-          actions: [
-            TextButton(
-              child: Text(S.of(context).ok),
-              onPressed: () => Navigator.of(context).pop(),
+    ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            showCloseIcon: true,
+                            content: Row(
+              children: [
+                Icon(Icons.error_outlined, color: Colors.red),
+                SizedBox(width: 8),
+                Text(S.of(context).errorExportingSpecimen(1, error.toString())),
+              ],
             ),
-          ],
-        );
-      },
-    );
+                          ),
+                        );
+    // showDialog(
+    //   context: context,
+    //   builder: (context) {
+    //     return AlertDialog(
+    //       title: Row(
+    //         children: [
+    //           const Icon(Icons.error_outlined, color: Colors.red),
+    //           const SizedBox(width: 10),
+    //           Text(S.current.errorTitle),
+    //         ],
+    //       ),
+    //       content: SingleChildScrollView(
+    //         child: Text(S.current.errorExportingSpecimen(1, error.toString())),
+    //       ),
+    //       actions: [
+    //         TextButton(
+    //           child: Text(S.of(context).ok),
+    //           onPressed: () => Navigator.of(context).pop(),
+    //         ),
+    //       ],
+    //     );
+    //   },
+    // );
   } finally {
     // Ensure the dialog is always closed if it was shown and an error occurred,
     // or if the function returned early while the dialog was up.
@@ -1214,16 +1410,28 @@ Future<void> exportSpecimenToKml(BuildContext context, Specimen specimen) async 
 
     if (gpx.wpts.isEmpty) {
       if (!context.mounted) return;
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text(S.current.warningTitle),
-          content: Text(S.current.noPoisToExport),
-          actions: [
-            TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(S.current.ok)),
-          ],
-        ),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            showCloseIcon: true,
+                            content: Row(
+              children: [
+                Icon(Icons.warning_amber_outlined, color: Colors.orange),
+                SizedBox(width: 8),
+                Text(S.of(context).noPoisToExport),
+              ],
+            ),
+                          ),
+                        );
+      // showDialog(
+      //   context: context,
+      //   builder: (context) => AlertDialog(
+      //     title: Text(S.current.warningTitle),
+      //     content: Text(S.current.noPoisToExport),
+      //     actions: [
+      //       TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(S.current.ok)),
+      //     ],
+      //   ),
+      // );
       return;
     }
 
@@ -1243,15 +1451,27 @@ Future<void> exportSpecimenToKml(BuildContext context, Specimen specimen) async 
     );
   } catch (error) {
     if (!context.mounted) return;
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(S.current.errorTitle),
-        content: Text(S.current.errorExportingSpecimen(1, error.toString())),
-        actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(S.current.ok)),
-        ],
-      ),
-    );
+    ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            showCloseIcon: true,
+                            content: Row(
+              children: [
+                Icon(Icons.error_outlined, color: Colors.red),
+                SizedBox(width: 8),
+                Text(S.of(context).errorExportingSpecimen(1, error.toString())),
+              ],
+            ),
+                          ),
+                        );
+    // showDialog(
+    //   context: context,
+    //   builder: (context) => AlertDialog(
+    //     title: Text(S.current.errorTitle),
+    //     content: Text(S.current.errorExportingSpecimen(1, error.toString())),
+    //     actions: [
+    //       TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(S.current.ok)),
+    //     ],
+    //   ),
+    // );
   }
 }
