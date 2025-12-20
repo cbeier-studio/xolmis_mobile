@@ -13,6 +13,7 @@ class InventoryProvider with ChangeNotifier {
   final List<Inventory> _inventories = [];
   final Map<String, Inventory> _inventoryMap = {};
   final ValueNotifier<int> speciesCountNotifier = ValueNotifier<int>(0);
+  final ValueNotifier<bool> inventoryFinishedNotifier = ValueNotifier<bool>(false);
   // Flag to indicate that data is loading
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -141,6 +142,8 @@ class InventoryProvider with ChangeNotifier {
     }
     // Ensure the map also has the updated instance, though if instances are shared, this might be redundant.
     _inventoryMap[inventory.id] = inventory;
+    
+    inventoryFinishedNotifier.value = inventory.isFinished;
     notifyListeners();
     debugPrint('[PROVIDER] ...Update complete for ${inventory.id}. Notifying listeners.');
   }

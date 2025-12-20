@@ -317,6 +317,64 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
             ],
           ),
         ),
+        if (widget.isEmbedded)
+        SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child:
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  if (!widget.inventory.isFinished) ...[
+                    const SizedBox(width: 8.0,),
+                  ActionChip(
+                    label: Text('${S.current.addButton} ${S.of(context).vegetationData.toLowerCase()}'), 
+                    avatar: const Icon(Icons.local_florist_outlined),
+                    onPressed: () {
+                      _showAddVegetationScreen(context);
+                    },
+                  ),
+                  const SizedBox(width: 8.0,),
+                  ActionChip(
+                    label: Text('${S.current.addButton} ${S.of(context).weatherData.toLowerCase()}'), 
+                    avatar: const Icon(Icons.wb_sunny_outlined),
+                    onPressed: () {
+                      _showAddWeatherScreen(context);
+                    },
+                  ),
+                  const SizedBox(width: 8.0,),
+                  ],
+                  if (widget.inventory.isFinished) ...[
+                    const SizedBox(width: 8.0,),
+                  ActionChip(
+                    label: Text('${S.current.export} CSV'), 
+                    avatar: const Icon(Icons.share_outlined),
+                    onPressed: () {
+                      final locale = Localizations.localeOf(context);
+                      exportInventoryToCsv(context, widget.inventory, locale).then((csvFile) async {
+                        // Share the file using share_plus
+                        await SharePlus.instance.share(
+                          ShareParams(
+                            files: [XFile(csvFile, mimeType: 'text/csv')],
+                            text: S.current.inventoryExported(1),
+                            subject: S.current.inventoryData(1),
+                          ),
+                        );
+                      });
+                    },
+                  ),
+                  const SizedBox(width: 8.0,),
+                  ActionChip(
+                    label: Text('${S.current.export} JSON'), 
+                    avatar: const Icon(Icons.share_outlined),
+                    onPressed: () {
+                      exportInventoryToJson(context, widget.inventory, true);
+                    },
+                  ),
+                  const SizedBox(width: 8.0,),
+                  ],
+                ],
+              ),
+              ),
         // Inventory summary row (type, duration, max species)
         if (!widget.isEmbedded)
         Row(
@@ -440,7 +498,12 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
       return SafeArea(
         child: Column(
           children: [
-            _buildTopArea(context),
+            ValueListenableBuilder<bool>(
+              valueListenable: widget.inventory.isFinishedNotifier, // supondo que exista
+              builder: (context, isFinished, child) {
+                return _buildTopArea(context);
+              },
+            ),
             Expanded(
               child: TabBarView(
                 controller: _tabController,
@@ -634,9 +697,68 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
           // const SizedBox(width: 8.0,),
         ],
         bottom: PreferredSize( // Wrap TabBar and LinearProgressIndicator in PreferredSize
-          preferredSize: const Size.fromHeight(kToolbarHeight + 24.0), // Adjust height as needed
-          child: Column(
+          preferredSize: const Size.fromHeight((kToolbarHeight * 2) + 24.0), // Adjust height as needed
+          child: ValueListenableBuilder<bool>(
+  valueListenable: widget.inventory.isFinishedNotifier, // supondo que exista
+  builder: (context, isFinished, child) {
+    return Column(
             children: [
+               SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child:
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const SizedBox(width: 8.0,),
+                  if (!widget.inventory.isFinished) ...[
+                  ActionChip(
+                    label: Text('${S.current.addButton} ${S.of(context).vegetationData.toLowerCase()}'), 
+                    avatar: const Icon(Icons.local_florist_outlined),
+                    onPressed: () {
+                      _showAddVegetationScreen(context);
+                    },
+                  ),
+                  const SizedBox(width: 8.0,),
+                  ActionChip(
+                    label: Text('${S.current.addButton} ${S.of(context).weatherData.toLowerCase()}'), 
+                    avatar: const Icon(Icons.wb_sunny_outlined),
+                    onPressed: () {
+                      _showAddWeatherScreen(context);
+                    },
+                  ),
+                  ],
+                  if (widget.inventory.isFinished) ...[
+                  ActionChip(
+                    label: Text('${S.current.export} CSV'), 
+                    avatar: const Icon(Icons.share_outlined),
+                    onPressed: () {
+                      final locale = Localizations.localeOf(context);
+                      exportInventoryToCsv(context, widget.inventory, locale).then((csvFile) async {
+                        // Share the file using share_plus
+                        await SharePlus.instance.share(
+                          ShareParams(
+                            files: [XFile(csvFile, mimeType: 'text/csv')],
+                            text: S.current.inventoryExported(1),
+                            subject: S.current.inventoryData(1),
+                          ),
+                        );
+                      });
+                    },
+                  ),
+                  const SizedBox(width: 8.0,),
+                  ActionChip(
+                    label: Text('${S.current.export} JSON'), 
+                    avatar: const Icon(Icons.share_outlined),
+                    onPressed: () {
+                      exportInventoryToJson(context, widget.inventory, true);
+                    },
+                  ),
+                  ],
+                  const SizedBox(width: 8.0,),
+                ],
+              ),
+              ),         
+              const SizedBox(height: 8.0,),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -757,6 +879,8 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                 ],
               ),
             ],
+          );
+  },
           ),
         ),
       ),
