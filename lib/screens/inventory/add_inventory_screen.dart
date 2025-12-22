@@ -522,6 +522,8 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
+              persist: true,
+              showCloseIcon: true,
               content: Row(
                 children: [
                   Icon(Icons.error_outlined, color: Colors.red),

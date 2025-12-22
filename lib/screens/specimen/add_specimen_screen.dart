@@ -287,11 +287,11 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
 
           Navigator.pop(context);
         } catch (error) {
-          if (kDebugMode) {
-            print('Error saving specimen: $error');
-          }
+          debugPrint('Error saving specimen: $error');
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
+              persist: true,
+              showCloseIcon: true,
               content: Row(
                 children: [
                   Icon(Icons.error_outlined, color: Colors.red),
@@ -341,6 +341,8 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
+                persist: true,
+              showCloseIcon: true,
                 content: Row(
                   children: [
                     Icon(Icons.error_outlined, color: Colors.red),

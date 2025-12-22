@@ -31,7 +31,9 @@ Future<void> importInventoryFromJson(BuildContext context) async {
     if (result == null || result.files.single.path == null) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(S.current.noFileSelected ?? 'Nenhum arquivo selecionado')),
+          SnackBar(
+            showCloseIcon: true,
+            content: Text(S.current.noFileSelected)),
         );
       }
       return;
@@ -78,7 +80,7 @@ Future<void> importInventoryFromJson(BuildContext context) async {
       if (isDialogShown && context.mounted) {
         Navigator.of(context).pop();
       }
-      debugPrint('Context foi desmontado durante a leitura do arquivo');
+      debugPrint('Context unmounted during file reading');
       return;
     }
 
@@ -92,10 +94,10 @@ Future<void> importInventoryFromJson(BuildContext context) async {
           try {
             inventoriesToImport.add(Inventory.fromJson(item));
           } catch (e) {
-            importErrors.add("Erro ao parsear item do array: ${e.toString()} \nItem: $item");
+            importErrors.add(S.current.errorParsingArrayItem(item.toString(), e.toString()));
           }
         } else {
-          importErrors.add("Item inesperado no array JSON: $item");
+          importErrors.add(S.current.errorUnexpectedArrayItem(item.toString()));
         }
       }
     } else if (jsonData is Map<String, dynamic>) {
@@ -109,10 +111,10 @@ Future<void> importInventoryFromJson(BuildContext context) async {
             try {
               inventoriesToImport.add(Inventory.fromJson(item));
             } catch (e) {
-              importErrors.add("Erro ao parsear item da lista 'inventories': ${e.toString()} \nItem: $item");
+              importErrors.add(S.current.errorParsingInventoriesArrayItem(item.toString(), e.toString()));
             }
           } else {
-            importErrors.add("Item inesperado na lista 'inventories': $item");
+            importErrors.add(S.current.errorUnexpectedInventoriesArrayItem(item.toString()));
           }
         }
       } else {
@@ -121,7 +123,7 @@ Future<void> importInventoryFromJson(BuildContext context) async {
         try {
           inventoriesToImport.add(Inventory.fromJson(jsonData));
         } catch (e) {
-          importErrors.add("Erro ao parsear objeto JSON único: ${e.toString()}");
+          importErrors.add(S.current.errorParsingObject(e.toString()));
         }
       }
     } else {
@@ -136,7 +138,9 @@ Future<void> importInventoryFromJson(BuildContext context) async {
       }
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Nenhum inventário encontrado no arquivo selecionado.')),
+          SnackBar(
+            showCloseIcon: true,
+            content: Text(S.current.noInventoriesFoundInFile)),
         );
       }
       return;
@@ -152,10 +156,12 @@ Future<void> importInventoryFromJson(BuildContext context) async {
         final errorCount = importErrors.length;
         final message = errorCount > 0
             ? S.current.importCompletedWithErrors(0, errorCount)
-            : 'Nenhum inventário válido encontrado no JSON.';
+            : S.current.noValidInventoriesFoundInFile;
         if (importErrors.isNotEmpty) debugPrint("Import errors: \n${importErrors.join('\n')}");
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(message), duration: Duration(seconds: 4)),
+          SnackBar(
+            showCloseIcon: true,
+            content: Text(message), duration: Duration(seconds: 4)),
         );
       }
       return;
@@ -168,10 +174,10 @@ Future<void> importInventoryFromJson(BuildContext context) async {
         if (success) {
           successfullyImportedCount++;
         } else {
-          importErrors.add("${S.current.failedToImportInventoryWithId(inventory.id)}");
+          importErrors.add(S.current.failedToImportInventoryWithId(inventory.id));
         }
       } catch (e) {
-        importErrors.add("Erro ao importar inventory ${inventory.id}: ${e.toString()}");
+        importErrors.add(S.current.errorImportingInventoryWithId(inventory.id, e.toString()));
       }
     }
 
@@ -193,6 +199,7 @@ Future<void> importInventoryFromJson(BuildContext context) async {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
+          showCloseIcon: true,
           content: Text(summaryMessage),
           duration: Duration(seconds: importErrors.isEmpty ? 2 : 5),
         ),
@@ -213,6 +220,8 @@ Future<void> importInventoryFromJson(BuildContext context) async {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
+          persist: true,
+              showCloseIcon: true,
           content: Row(
             children: [
               Icon(Icons.error_outlined, color: Colors.red),
@@ -286,10 +295,10 @@ Future<void> importNestsFromJson(BuildContext context) async {
             try {
               nestsToImport.add(Nest.fromJson(item));
             } catch (e) {
-              importErrors.add("Erro ao parsear item do array: ${e.toString()} \nItem: $item");
+              importErrors.add(S.current.errorParsingArrayItem(item.toString(), e.toString()));
             }
           } else {
-            importErrors.add("Item inesperado no array JSON: $item");
+            importErrors.add(S.current.errorUnexpectedArrayItem(item.toString()));
           }
         }
       } else if (jsonData is Map<String, dynamic> && jsonData.containsKey('nests') && jsonData['nests'] is List) {
@@ -300,10 +309,10 @@ Future<void> importNestsFromJson(BuildContext context) async {
             try {
               nestsToImport.add(Nest.fromJson(item)); // Alterado para Nest.fromJson
             } catch (e) {
-              importErrors.add("Erro ao parsear item da lista 'nests': ${e.toString()} \nItem: $item");
+              importErrors.add(S.current.errorParsingNestsArrayItem(e.toString(), item.toString()));
             }
           } else {
-            importErrors.add("Item inesperado na lista 'nests': $item");
+            importErrors.add(S.current.errorUnexpectedNestsArrayItem(item.toString()));
           }
         }
       } else {
@@ -317,7 +326,7 @@ Future<void> importNestsFromJson(BuildContext context) async {
         if (success) {
           successfullyImportedCount++;
         } else {
-          importErrors.add("${S.current.failedToImportNestWithId(nest.id!)}");
+          importErrors.add(S.current.failedToImportNestWithId(nest.id!));
         }
       }
 
@@ -343,7 +352,16 @@ Future<void> importNestsFromJson(BuildContext context) async {
     if (!context.mounted) return;
     String errorMessage = '${S.current.errorImportingNests}: ${error.toString()}';
     if (error is FormatException) errorMessage = S.current.errorImportingNestsWithFormatError(error.message);
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Row(children: [Icon(Icons.error_outlined, color: Colors.red), SizedBox(width: 8), Text(errorMessage)]), duration: Duration(seconds: 5)));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        persist: true,
+        showCloseIcon: true,
+        content: Row(children: [
+          Icon(Icons.error_outlined, color: Colors.red), 
+          SizedBox(width: 8), 
+          Text(errorMessage)]), 
+        )
+        );
   } finally {
     if (isDialogShown && context.mounted) Navigator.of(context).pop();
   }
@@ -403,10 +421,10 @@ Future<void> importSpecimensFromJson(BuildContext context) async {
             try {
               specimensToImport.add(Specimen.fromJson(item));
             } catch (e) {
-              importErrors.add("Erro ao parsear item do array: ${e.toString()} \nItem: $item");
+              importErrors.add(S.current.errorParsingArrayItem(item.toString(), e.toString()));
             }
           } else {
-            importErrors.add("Item inesperado no array JSON: $item");
+            importErrors.add(S.current.errorUnexpectedArrayItem(item.toString()));
           }
         }
       } else if (jsonData is Map<String, dynamic> && jsonData.containsKey('specimens') && jsonData['specimens'] is List) {
@@ -417,10 +435,10 @@ Future<void> importSpecimensFromJson(BuildContext context) async {
             try {
               specimensToImport.add(Specimen.fromJson(item));
             } catch (e) {
-              importErrors.add("Erro ao parsear item da lista 'specimens': ${e.toString()} \nItem: $item");
+              importErrors.add(S.current.errorParsingSpecimensArrayItem(item.toString(), e.toString()));
             }
           } else {
-            importErrors.add("Item inesperado na lista 'specimens': $item");
+            importErrors.add(S.current.errorUnexpectedSpecimensArrayItem(item.toString()));
           }
         }
       } else {
@@ -434,7 +452,7 @@ Future<void> importSpecimensFromJson(BuildContext context) async {
         if (success) {
           successfullyImportedCount++;
         } else {
-          importErrors.add("${S.current.failedToImportSpecimenWithId(specimen.id!)}");
+          importErrors.add(S.current.failedToImportSpecimenWithId(specimen.id!));
         }
       }
 
@@ -460,7 +478,16 @@ Future<void> importSpecimensFromJson(BuildContext context) async {
     if (!context.mounted) return;
     String errorMessage = '${S.current.errorImportingSpecimens}: ${error.toString()}';
     if (error is FormatException) errorMessage = S.current.errorImportingSpecimensWithFormatError(error.message);
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(showCloseIcon: true, content: Row(children: [Icon(Icons.error_outlined, color: Colors.red), SizedBox(width: 8), Text(errorMessage)]), duration: Duration(seconds: 5)));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        persist: true,
+        showCloseIcon: true, 
+        content: Row(children: [
+          Icon(Icons.error_outlined, color: Colors.red), 
+          SizedBox(width: 8), 
+          Text(errorMessage)]), 
+          )
+          );
   } finally {
     if (isDialogShown && context.mounted) Navigator.of(context).pop();
   }

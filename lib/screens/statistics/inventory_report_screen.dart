@@ -25,7 +25,7 @@ class InventoryReportScreen extends StatelessWidget {
         actions: [
           // Option to export the report to a CSV file
           IconButton(
-            icon: Icon(Icons.file_upload_outlined),
+            icon: Icon(Icons.share_outlined),
             onPressed: () async {
               await _exportReportToCsv(context, reportData);
             },
@@ -207,7 +207,10 @@ class InventoryReportScreen extends StatelessWidget {
     } catch (error) {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Row(
+      SnackBar(
+        persist: true,
+              showCloseIcon: true,
+        content: Row(
         children: [
           Icon(Icons.error_outlined, color: Colors.red),
           SizedBox(width: 8),

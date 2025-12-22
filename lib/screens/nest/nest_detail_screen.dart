@@ -280,9 +280,11 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                                   Navigator.pop(context, selectedNestFate);
                                   Navigator.pop(context);
                                 } catch (error) {
-                                  // Handle errors
+                                  if (!context.mounted) return;
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
+                                      persist: true,
+                                      showCloseIcon: true,
                                       content: Text(S.of(context).errorInactivatingNest(error.toString())),
                                     ),
                                   );
@@ -619,6 +621,8 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                                   // Handle errors
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
+                                      persist: true,
+                                      showCloseIcon: true,
                                       content: Text(S.of(context).errorInactivatingNest(error.toString())),
                                     ),
                                   );

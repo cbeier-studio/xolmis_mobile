@@ -376,6 +376,8 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
+            persist: true,
+            showCloseIcon: true,
             content: Row(
               children: [
                 const Icon(Icons.error_outlined, color: Colors.red),

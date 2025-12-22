@@ -266,6 +266,8 @@ class AddEggScreenState extends State<AddEggScreen> {
           }
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
+              persist: true,
+              showCloseIcon: true,
               content: Row(
                 children: [
                   Icon(Icons.error_outlined, color: Colors.red),
@@ -314,6 +316,8 @@ class AddEggScreenState extends State<AddEggScreen> {
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
+                persist: true,
+                showCloseIcon: true,
                 content: Row(
                   children: [
                     Icon(Icons.error_outlined, color: Colors.red),

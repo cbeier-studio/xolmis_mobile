@@ -3912,6 +3912,131 @@ class S {
     );
   }
 
+  /// `Error parsing array item: {errorMessage} \nItem: {item}`
+  String errorParsingArrayItem(String item, String errorMessage) {
+    return Intl.message(
+      'Error parsing array item: $errorMessage \nItem: $item',
+      name: 'errorParsingArrayItem',
+      desc: 'Error message when parsing array item fails',
+      args: [item, errorMessage],
+    );
+  }
+
+  /// `Unexpected item in JSON array: {item}`
+  String errorUnexpectedArrayItem(String item) {
+    return Intl.message(
+      'Unexpected item in JSON array: $item',
+      name: 'errorUnexpectedArrayItem',
+      desc: 'Error message when unexpected array item is encountered',
+      args: [item],
+    );
+  }
+
+  /// `Error parsing 'inventories' array item: {errorMessage} \nItem: {item}`
+  String errorParsingInventoriesArrayItem(String item, String errorMessage) {
+    return Intl.message(
+      'Error parsing \'inventories\' array item: $errorMessage \nItem: $item',
+      name: 'errorParsingInventoriesArrayItem',
+      desc: 'Error message when parsing inventories array item fails',
+      args: [item, errorMessage],
+    );
+  }
+
+  /// `Unexpected item in 'inventories' JSON array: {item}`
+  String errorUnexpectedInventoriesArrayItem(String item) {
+    return Intl.message(
+      'Unexpected item in \'inventories\' JSON array: $item',
+      name: 'errorUnexpectedInventoriesArrayItem',
+      desc:
+          'Error message when unexpected inventories array item is encountered',
+      args: [item],
+    );
+  }
+
+  /// `Error parsing object: {errorMessage}`
+  String errorParsingObject(String errorMessage) {
+    return Intl.message(
+      'Error parsing object: $errorMessage',
+      name: 'errorParsingObject',
+      desc: 'Error message when parsing object fails',
+      args: [errorMessage],
+    );
+  }
+
+  /// `No inventories found in the imported file.`
+  String get noInventoriesFoundInFile {
+    return Intl.message(
+      'No inventories found in the imported file.',
+      name: 'noInventoriesFoundInFile',
+      desc: 'Message shown when no inventories are found in the imported file',
+      args: [],
+    );
+  }
+
+  /// `No valid inventories found in the imported file.`
+  String get noValidInventoriesFoundInFile {
+    return Intl.message(
+      'No valid inventories found in the imported file.',
+      name: 'noValidInventoriesFoundInFile',
+      desc:
+          'Message shown when no valid inventories are found in the imported file',
+      args: [],
+    );
+  }
+
+  /// `Error importing inventory {inventoryId}: {errorMessage}`
+  String errorImportingInventoryWithId(
+    String inventoryId,
+    String errorMessage,
+  ) {
+    return Intl.message(
+      'Error importing inventory $inventoryId: $errorMessage',
+      name: 'errorImportingInventoryWithId',
+      desc: 'Error message when importing inventory fails',
+      args: [inventoryId, errorMessage],
+    );
+  }
+
+  /// `Error parsing 'nests' array item: {errorMessage} \nItem: {item}`
+  String errorParsingNestsArrayItem(String item, String errorMessage) {
+    return Intl.message(
+      'Error parsing \'nests\' array item: $errorMessage \nItem: $item',
+      name: 'errorParsingNestsArrayItem',
+      desc: 'Error message when parsing nests array item fails',
+      args: [item, errorMessage],
+    );
+  }
+
+  /// `Unexpected item in 'nests' JSON array: {item}`
+  String errorUnexpectedNestsArrayItem(String item) {
+    return Intl.message(
+      'Unexpected item in \'nests\' JSON array: $item',
+      name: 'errorUnexpectedNestsArrayItem',
+      desc: 'Error message when unexpected nests array item is encountered',
+      args: [item],
+    );
+  }
+
+  /// `Error parsing 'specimens' array item: {errorMessage} \nItem: {item}`
+  String errorParsingSpecimensArrayItem(String item, String errorMessage) {
+    return Intl.message(
+      'Error parsing \'specimens\' array item: $errorMessage \nItem: $item',
+      name: 'errorParsingSpecimensArrayItem',
+      desc: 'Error message when parsing specimens array item fails',
+      args: [item, errorMessage],
+    );
+  }
+
+  /// `Unexpected item in 'specimens' JSON array: {item}`
+  String errorUnexpectedSpecimensArrayItem(String item) {
+    return Intl.message(
+      'Unexpected item in \'specimens\' JSON array: $item',
+      name: 'errorUnexpectedSpecimensArrayItem',
+      desc: 'Error message when unexpected specimens array item is encountered',
+      args: [item],
+    );
+  }
+
   /// `Argentina`
   String get countryArgentina {
     return Intl.message(

@@ -51,7 +51,7 @@ class InventoryCompletionService {
       context: dialogContext,
       barrierDismissible: false,
       builder: (BuildContext alertContext) {
-        return AlertDialog.adaptive(
+        return AlertDialog(
           title: Text(title),
           content: Text(content),
           actions: <Widget>[

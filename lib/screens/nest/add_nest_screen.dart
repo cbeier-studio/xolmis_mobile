@@ -443,6 +443,8 @@ class AddNestScreenState extends State<AddNestScreen> {
           }
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
+              persist: true,
+              showCloseIcon: true,
               content: Row(
                 children: [
                   Icon(Icons.error_outlined, color: Colors.red),
@@ -497,6 +499,8 @@ class AddNestScreenState extends State<AddNestScreen> {
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
+                persist: true,
+                showCloseIcon: true,
                 content: Row(
                   children: [
                     Icon(Icons.error_outlined, color: Colors.red),

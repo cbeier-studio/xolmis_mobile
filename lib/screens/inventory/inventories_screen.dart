@@ -434,6 +434,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
+          persist: true,
           showCloseIcon: true,
           content: Row(
             children: [
@@ -524,6 +525,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
+          persist: true,
           showCloseIcon: true,
           content: Row(
             children: [
@@ -617,6 +619,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
+          persist: true,
           showCloseIcon: true,
           content: Row(
             children: [
@@ -1433,6 +1436,8 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                   if (context.mounted) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
+                                        persist: true,
+                                        showCloseIcon: true,
                                         content: Text('Update ID failed: $e'),
                                         backgroundColor: Theme.of(context).colorScheme.error,
                                       ),

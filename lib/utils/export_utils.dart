@@ -92,6 +92,7 @@ Future<void> exportAllInventoriesToJson(BuildContext context, InventoryProvider 
     if (context.mounted) {
     ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
+                            persist: true,
                             showCloseIcon: true,
                             content: Row(
               children: [
@@ -163,6 +164,7 @@ Future<void> exportInventoryToJson(BuildContext context, Inventory inventory, bo
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
+                            persist: true,
                             showCloseIcon: true,
                             content: Row(
               children: [
@@ -392,6 +394,7 @@ Future<String> exportInventoryToExcel(BuildContext context, Inventory inventory,
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
+                            persist: true,
                             showCloseIcon: true,
                             content: Row(
               children: [
@@ -453,6 +456,7 @@ Future<String> exportInventoryToCsv(BuildContext context, Inventory inventory, L
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
+                            persist: true,
                             showCloseIcon: true,
                             content: Row(
               children: [
@@ -576,6 +580,7 @@ Future<void> exportInventoryToKml(BuildContext context, Inventory inventory) asy
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
+                            persist: true,
                             showCloseIcon: true,
                             content: Row(
               children: [
@@ -657,6 +662,7 @@ Future<void> exportAllInactiveNestsToJson(BuildContext context) async {
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
+                            persist: true,
                             showCloseIcon: true,
                             content: Row(
               children: [
@@ -725,6 +731,7 @@ Future<void> exportNestToJson(BuildContext context, Nest nest) async {
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
+                            persist: true,
                             showCloseIcon: true,
                             content: Row(
               children: [
@@ -785,6 +792,7 @@ Future<String> exportNestToCsv(BuildContext context, Nest nest, Locale locale) a
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
+                            persist: true,
                             showCloseIcon: true,
                             content: Row(
               children: [
@@ -854,6 +862,7 @@ Future<String> exportNestToExcel(BuildContext context, Nest nest, Locale locale)
     if (!context.mounted) return '';
     ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
+                            persist: true,
                             showCloseIcon: true,
                             content: Row(
               children: [
@@ -1021,6 +1030,7 @@ Future<void> exportNestToKml(BuildContext context, Nest nest) async {
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
+                            persist: true,
                             showCloseIcon: true,
                             content: Row(
               children: [
@@ -1100,6 +1110,7 @@ Future<void> exportAllSpecimensToJson(BuildContext context, List<Specimen> speci
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
+                            persist: true,
                             showCloseIcon: true,
                             content: Row(
               children: [
@@ -1204,6 +1215,7 @@ Future<void> exportAllSpecimensToCsv(BuildContext context, List<Specimen> specim
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
+                            persist: true,
                             showCloseIcon: true,
                             content: Row(
               children: [
@@ -1322,6 +1334,7 @@ Future<void> exportAllSpecimensToExcel(BuildContext context, List<Specimen> spec
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
+                            persist: true,
                             showCloseIcon: true,
                             content: Row(
               children: [
@@ -1453,6 +1466,7 @@ Future<void> exportSpecimenToKml(BuildContext context, Specimen specimen) async 
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
+                            persist: true,
                             showCloseIcon: true,
                             content: Row(
               children: [

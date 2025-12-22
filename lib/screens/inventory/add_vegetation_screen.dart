@@ -326,6 +326,8 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
+            persist: true,
+            showCloseIcon: true,
             content: Row(
               children: [
                 const Icon(Icons.error_outlined, color: Colors.red),

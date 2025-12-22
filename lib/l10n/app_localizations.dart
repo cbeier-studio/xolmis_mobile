@@ -2388,6 +2388,78 @@ abstract class AppLocalizations {
   /// **'selected inventories'**
   String get selectedInventories;
 
+  /// Error message when parsing array item fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error parsing array item: {errorMessage} \nItem: {item}'**
+  String errorParsingArrayItem(String item, String errorMessage);
+
+  /// Error message when unexpected array item is encountered
+  ///
+  /// In en, this message translates to:
+  /// **'Unexpected item in JSON array: {item}'**
+  String errorUnexpectedArrayItem(String item);
+
+  /// Error message when parsing inventories array item fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error parsing \'inventories\' array item: {errorMessage} \nItem: {item}'**
+  String errorParsingInventoriesArrayItem(String item, String errorMessage);
+
+  /// Error message when unexpected inventories array item is encountered
+  ///
+  /// In en, this message translates to:
+  /// **'Unexpected item in \'inventories\' JSON array: {item}'**
+  String errorUnexpectedInventoriesArrayItem(String item);
+
+  /// Error message when parsing object fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error parsing object: {errorMessage}'**
+  String errorParsingObject(String errorMessage);
+
+  /// Message shown when no inventories are found in the imported file
+  ///
+  /// In en, this message translates to:
+  /// **'No inventories found in the imported file.'**
+  String get noInventoriesFoundInFile;
+
+  /// Message shown when no valid inventories are found in the imported file
+  ///
+  /// In en, this message translates to:
+  /// **'No valid inventories found in the imported file.'**
+  String get noValidInventoriesFoundInFile;
+
+  /// Error message when importing inventory fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error importing inventory {inventoryId}: {errorMessage}'**
+  String errorImportingInventoryWithId(String inventoryId, String errorMessage);
+
+  /// Error message when parsing nests array item fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error parsing \'nests\' array item: {errorMessage} \nItem: {item}'**
+  String errorParsingNestsArrayItem(String item, String errorMessage);
+
+  /// Error message when unexpected nests array item is encountered
+  ///
+  /// In en, this message translates to:
+  /// **'Unexpected item in \'nests\' JSON array: {item}'**
+  String errorUnexpectedNestsArrayItem(String item);
+
+  /// Error message when parsing specimens array item fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error parsing \'specimens\' array item: {errorMessage} \nItem: {item}'**
+  String errorParsingSpecimensArrayItem(String item, String errorMessage);
+
+  /// Error message when unexpected specimens array item is encountered
+  ///
+  /// In en, this message translates to:
+  /// **'Unexpected item in \'specimens\' JSON array: {item}'**
+  String errorUnexpectedSpecimensArrayItem(String item);
+
   /// No description provided for @countryArgentina.
   ///
   /// In en, this message translates to:

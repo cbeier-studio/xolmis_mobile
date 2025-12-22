@@ -638,6 +638,8 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                                 if (context.mounted) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
+                                      persist: true,
+                                      showCloseIcon: true,
                                       content: Row(
                                         children: [
                                           const Icon(Icons.error_outlined,

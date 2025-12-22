@@ -1594,6 +1594,146 @@
     "type": "text",
     "description": "Selected inventories field label"
   },
+  "errorParsingArrayItem": "Erro ao analisar item do array: {errorMessage} \nItem: {item}",
+    "@errorParsingArrayItem": {
+      "type": "text",
+      "description": "Error message when parsing array item fails",
+      "placeholders": {
+        "item": {
+          "type": "String",
+          "description": "Array item"
+        },
+        "errorMessage": {
+          "type": "String",
+            "description": "Error message"
+        }
+      }
+    },
+    "errorUnexpectedArrayItem": "Item inesperado no array JSON: {item}",
+    "@errorUnexpectedArrayItem": {
+      "type": "text",
+      "description": "Error message when unexpected array item is encountered",
+        "placeholders": {
+            "item": {
+            "type": "String",
+            "description": "Array item"
+            }
+        }
+    },
+    "errorParsingInventoriesArrayItem": "Erro ao analisar item do array 'inventories': {errorMessage} \nItem: {item}",
+    "@errorParsingInventoriesArrayItem": {
+      "type": "text",
+      "description": "Error message when parsing inventories array item fails",
+      "placeholders": {
+        "item": {
+          "type": "String",
+          "description": "Array item"
+        },
+        "errorMessage": {
+          "type": "String",
+            "description": "Error message"
+        }
+      }
+    },
+    "errorUnexpectedInventoriesArrayItem": "Item inesperado no array JSON 'inventories': {item}",
+    "@errorUnexpectedInventoriesArrayItem": {
+      "type": "text",
+      "description": "Error message when unexpected inventories array item is encountered", 
+        "placeholders": {
+            "item": {
+            "type": "String",
+            "description": "Array item"
+            }
+        }
+    },
+    "errorParsingObject": "Erro ao analisar objeto: {errorMessage}",
+    "@errorParsingObject": {
+      "type": "text",
+      "description": "Error message when parsing object fails",
+      "placeholders": {
+        "errorMessage": {
+          "type": "String",
+            "description": "Error message"
+        }
+      }
+    },
+    "noInventoriesFoundInFile": "Nenhum inventário encontrado no arquivo importado.",
+    "@noInventoriesFoundInFile": {
+      "type": "text",
+      "description": "Message shown when no inventories are found in the imported file"
+    },
+    "noValidInventoriesFoundInFile": "Nenhum inventário válido encontrado no arquivo importado.",
+    "@noValidInventoriesFoundInFile": {
+      "type": "text",
+      "description": "Message shown when no valid inventories are found in the imported file"
+    },
+    "errorImportingInventoryWithId": "Erro ao importar inventário {inventoryId}: {errorMessage}",
+    "@errorImportingInventoryWithId": {
+      "type": "text",
+      "description": "Error message when importing inventory fails",
+      "placeholders": {
+        "inventoryId": {
+          "type": "String",
+          "description": "Inventory ID"
+        },
+        "errorMessage": {
+          "type": "String",
+            "description": "Error message"
+        }
+      }
+    },
+    "errorParsingNestsArrayItem": "Erro ao analisar item do array 'nests': {errorMessage} \nItem: {item}",
+    "@errorParsingNestsArrayItem": {
+      "type": "text",
+      "description": "Error message when parsing nests array item fails",
+      "placeholders": {
+        "item": {
+          "type": "String",
+          "description": "Array item"
+        },
+        "errorMessage": {
+          "type": "String",
+            "description": "Error message"
+        }
+      }
+    },
+    "errorUnexpectedNestsArrayItem": "Item inesperado no array JSON 'nests': {item}",
+    "@errorUnexpectedNestsArrayItem": {
+      "type": "text",
+      "description": "Error message when unexpected nests array item is encountered", 
+        "placeholders": {
+            "item": {
+            "type": "String",
+            "description": "Array item"
+            }
+        }
+    },
+    "errorParsingSpecimensArrayItem": "Error parsing 'specimens' array item: {errorMessage} \nItem: {item}",
+    "@errorParsingSpecimensArrayItem": {
+      "type": "text",
+      "description": "Error message when parsing specimens array item fails",
+      "placeholders": {
+        "item": {
+          "type": "String",
+          "description": "Array item"
+        },
+        "errorMessage": {
+          "type": "String",
+            "description": "Error message"
+        }
+      }
+    },
+    "errorUnexpectedSpecimensArrayItem": "Item inesperado no array JSON 'specimens': {item}",
+    "@errorUnexpectedSpecimensArrayItem": {
+      "type": "text",
+      "description": "Error message when unexpected specimens array item is encountered", 
+        "placeholders": {
+            "item": {
+            "type": "String",
+            "description": "Array item"
+            }
+        }
+    },
   "countryArgentina": "Argentina",
   "countryBrazil": "Brasil",
   "countryParaguay": "Paraguai",

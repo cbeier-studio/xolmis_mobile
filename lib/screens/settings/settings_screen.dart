@@ -719,7 +719,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
         }
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text(S.current.errorBackupNotFound)));
+        ).showSnackBar(
+          SnackBar(
+            persist: true,
+              showCloseIcon: true,
+            content: Text(S.current.errorBackupNotFound)
+            )
+            );
       }
     } catch (e) {
       if (isDialogShown && mounted) {
@@ -728,6 +734,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
       }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
+          persist: true,
+              showCloseIcon: true,
           content: Text('${S.current.errorCreatingBackup}: ${e.toString()}'),
         ),
       );
@@ -743,7 +751,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       barrierDismissible: false, // O usuário deve pressionar um dos botões
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(S.current.warningTitle),
+          title: Text(S.current.restoreBackup),
           content: Text(S.current.restoreBackupConfirmation),
           actions: <Widget>[
             // Botão para cancelar a ação
@@ -850,7 +858,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
             isDialogShown = false;
           }
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(S.current.errorRestoringBackup)),
+            SnackBar(
+              persist: true,
+              showCloseIcon: true,
+              content: Text(S.current.errorRestoringBackup)),
           );
         }
       } catch (e) {
@@ -860,6 +871,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
         }
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
+            persist: true,
+              showCloseIcon: true,
             content: Text('${S.current.errorRestoringBackup}: ${e.toString()}'),
           ),
         );

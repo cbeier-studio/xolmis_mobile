@@ -419,6 +419,7 @@ class NestsScreenState extends State<NestsScreen> {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
+                            persist: true,
                             showCloseIcon: true,
                             content: Row(
               children: [
@@ -508,6 +509,7 @@ class NestsScreenState extends State<NestsScreen> {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
+                            persist: true,
                             showCloseIcon: true,
                             content: Row(
               children: [
@@ -603,6 +605,7 @@ class NestsScreenState extends State<NestsScreen> {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
+                            persist: true,
                             showCloseIcon: true,
                             content: Row(
               children: [

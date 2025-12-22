@@ -262,6 +262,8 @@ class AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
           }
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
+              persist: true,
+              showCloseIcon: true,
               content: Row(
                 children: [
                   Icon(Icons.error_outlined, color: Colors.red),
@@ -300,6 +302,8 @@ class AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
           }
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
+              persist: true,
+              showCloseIcon: true,
               content: Row(
                 children: [
                   Icon(Icons.error_outlined, color: Colors.red),

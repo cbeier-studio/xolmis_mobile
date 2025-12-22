@@ -1449,6 +1449,67 @@ class AppLocalizationsEn extends AppLocalizations {
   String get selectedInventories => 'selected inventories';
 
   @override
+  String errorParsingArrayItem(String item, String errorMessage) {
+    return 'Error parsing array item: $errorMessage \nItem: $item';
+  }
+
+  @override
+  String errorUnexpectedArrayItem(String item) {
+    return 'Unexpected item in JSON array: $item';
+  }
+
+  @override
+  String errorParsingInventoriesArrayItem(String item, String errorMessage) {
+    return 'Error parsing \'inventories\' array item: $errorMessage \nItem: $item';
+  }
+
+  @override
+  String errorUnexpectedInventoriesArrayItem(String item) {
+    return 'Unexpected item in \'inventories\' JSON array: $item';
+  }
+
+  @override
+  String errorParsingObject(String errorMessage) {
+    return 'Error parsing object: $errorMessage';
+  }
+
+  @override
+  String get noInventoriesFoundInFile =>
+      'No inventories found in the imported file.';
+
+  @override
+  String get noValidInventoriesFoundInFile =>
+      'No valid inventories found in the imported file.';
+
+  @override
+  String errorImportingInventoryWithId(
+    String inventoryId,
+    String errorMessage,
+  ) {
+    return 'Error importing inventory $inventoryId: $errorMessage';
+  }
+
+  @override
+  String errorParsingNestsArrayItem(String item, String errorMessage) {
+    return 'Error parsing \'nests\' array item: $errorMessage \nItem: $item';
+  }
+
+  @override
+  String errorUnexpectedNestsArrayItem(String item) {
+    return 'Unexpected item in \'nests\' JSON array: $item';
+  }
+
+  @override
+  String errorParsingSpecimensArrayItem(String item, String errorMessage) {
+    return 'Error parsing \'specimens\' array item: $errorMessage \nItem: $item';
+  }
+
+  @override
+  String errorUnexpectedSpecimensArrayItem(String item) {
+    return 'Unexpected item in \'specimens\' JSON array: $item';
+  }
+
+  @override
   String get countryArgentina => 'Argentina';
 
   @override
