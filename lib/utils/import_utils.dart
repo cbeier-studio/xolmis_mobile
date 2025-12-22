@@ -244,7 +244,7 @@ Future<void> importInventoryFromJson(BuildContext context) async {
 Future<void> importNestsFromJson(BuildContext context) async {
   bool isDialogShown = false;
   int successfullyImportedCount = 0;
-  int totalNestsToImport = 0;
+  // int totalNestsToImport = 0;
   List<String> importErrors = [];
 
   try {
@@ -289,7 +289,7 @@ Future<void> importNestsFromJson(BuildContext context) async {
       List<Nest> nestsToImport = [];
 
       if (jsonData is List) {
-        totalNestsToImport = jsonData.length;
+        // totalNestsToImport = jsonData.length;
         for (final item in jsonData) {
           if (item is Map<String, dynamic>) {
             try {
@@ -303,7 +303,7 @@ Future<void> importNestsFromJson(BuildContext context) async {
         }
       } else if (jsonData is Map<String, dynamic> && jsonData.containsKey('nests') && jsonData['nests'] is List) {
         final List<dynamic> nestsJsonList = jsonData['nests'];
-        totalNestsToImport = nestsJsonList.length;
+        // totalNestsToImport = nestsJsonList.length;
         for (final item in nestsJsonList) {
           if (item is Map<String, dynamic>) {
             try {
@@ -342,7 +342,7 @@ Future<void> importNestsFromJson(BuildContext context) async {
 
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(summaryMessage)));
     } else {
-      if (isDialogShown && context.mounted) Navigator.of(context).pop();
+      // if (isDialogShown && context.mounted) Navigator.of(context).pop();
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(S.current.noFileSelected)));
     }
@@ -370,7 +370,7 @@ Future<void> importNestsFromJson(BuildContext context) async {
 Future<void> importSpecimensFromJson(BuildContext context) async {
   bool isDialogShown = false;
   int successfullyImportedCount = 0;
-  int totalSpecimensToImport = 0;
+  // int totalSpecimensToImport = 0;
   List<String> importErrors = [];
 
   try {
@@ -415,7 +415,7 @@ Future<void> importSpecimensFromJson(BuildContext context) async {
       List<Specimen> specimensToImport = [];
 
       if (jsonData is List) {
-        totalSpecimensToImport = jsonData.length;
+        // totalSpecimensToImport = jsonData.length;
         for (final item in jsonData) {
           if (item is Map<String, dynamic>) {
             try {
@@ -429,7 +429,7 @@ Future<void> importSpecimensFromJson(BuildContext context) async {
         }
       } else if (jsonData is Map<String, dynamic> && jsonData.containsKey('specimens') && jsonData['specimens'] is List) {
         final List<dynamic> specimensJsonList = jsonData['specimens'];
-        totalSpecimensToImport = specimensJsonList.length;
+        // totalSpecimensToImport = specimensJsonList.length;
         for (final item in specimensJsonList) {
           if (item is Map<String, dynamic>) {
             try {
@@ -468,7 +468,7 @@ Future<void> importSpecimensFromJson(BuildContext context) async {
 
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(summaryMessage)));
     } else {
-      if (isDialogShown && context.mounted) Navigator.of(context).pop();
+      // if (isDialogShown && context.mounted) Navigator.of(context).pop();
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(S.current.noFileSelected)));
     }

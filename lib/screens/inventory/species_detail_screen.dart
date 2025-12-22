@@ -250,52 +250,52 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
   }
 
   // Build a grid view for large screens
-  Widget _buildGridView(List<Poi> pois) {
-    return Align(
-      alignment: Alignment.topCenter,
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 840),
-        child: GridView.builder(
-          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: 200,
-            // mainAxisSpacing: 16,
-            // crossAxisSpacing: 16,
-            childAspectRatio: 1,
-          ),
-          shrinkWrap: true,
-          itemCount: pois.length,
-          itemBuilder: (context, index) {
-            final poi = pois[index];
-            return GridTile(
-              child: InkWell(
-                onLongPress: () => _showBottomSheet(context, poi),
-                child: Card.outlined(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,                       
-                      children: [
-                        const Icon(Icons.location_on_outlined),
-                        Expanded(child: const SizedBox.shrink()),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('${poi.latitude}'),
-                            Text('${poi.longitude}'),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            );
-          },
-        ),
-      ),
-    );
-  }
+  // Widget _buildGridView(List<Poi> pois) {
+  //   return Align(
+  //     alignment: Alignment.topCenter,
+  //     child: ConstrainedBox(
+  //       constraints: const BoxConstraints(maxWidth: 840),
+  //       child: GridView.builder(
+  //         gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+  //           maxCrossAxisExtent: 200,
+  //           // mainAxisSpacing: 16,
+  //           // crossAxisSpacing: 16,
+  //           childAspectRatio: 1,
+  //         ),
+  //         shrinkWrap: true,
+  //         itemCount: pois.length,
+  //         itemBuilder: (context, index) {
+  //           final poi = pois[index];
+  //           return GridTile(
+  //             child: InkWell(
+  //               onLongPress: () => _showBottomSheet(context, poi),
+  //               child: Card.outlined(
+  //                 child: Padding(
+  //                   padding: const EdgeInsets.all(16.0),
+  //                   child: Column(
+  //                     crossAxisAlignment: CrossAxisAlignment.start,                       
+  //                     children: [
+  //                       const Icon(Icons.location_on_outlined),
+  //                       Expanded(child: const SizedBox.shrink()),
+  //                       Column(
+  //                         mainAxisAlignment: MainAxisAlignment.end,
+  //                         crossAxisAlignment: CrossAxisAlignment.start,
+  //                         children: [
+  //                           Text('${poi.latitude}'),
+  //                           Text('${poi.longitude}'),
+  //                         ],
+  //                       ),
+  //                     ],
+  //                   ),
+  //                 ),
+  //               ),
+  //             ),
+  //           );
+  //         },
+  //       ),
+  //     ),
+  //   );
+  // }
 
   // Build a list view for small screens
   Widget _buildListView(List<Poi> pois, PoiProvider poiProvider) {

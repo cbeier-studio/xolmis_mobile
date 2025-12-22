@@ -38,7 +38,7 @@ class _NavigationItem {
   final IconData icon;
   final IconData selectedIcon;
   final Widget Function(BuildContext, GlobalKey<ScaffoldState>) screenBuilder;
-  final int Function(BuildContext)? countSelector; // Optional: for badges
+  // final int Function(BuildContext)? countSelector; // Optional: for badges
   final BadgeProviderType? badgeProviderType;
 
   _NavigationItem({
@@ -46,7 +46,7 @@ class _NavigationItem {
     required this.icon,
     required this.selectedIcon,
     required this.screenBuilder,
-    this.countSelector,
+    // this.countSelector,
     this.badgeProviderType,
   });
 }
@@ -226,7 +226,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
       if (inventory.type == InventoryType.invIntervalQualitative) {
         // Ensures that the duration and start time of inventory exist to calculate
         if (inventory.duration > 0 && inventory.startTime != null) {
-          final now = DateTime.now();
+          // final now = DateTime.now();
 
           // 1. Calculate the total elapsed time since the start of the inventory.
           // final totalElapsedTimeInSeconds = now.difference(inventory.startTime!).inSeconds.toDouble();
@@ -269,9 +269,9 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
               preciseIntervalsWithoutNewSpecies = preciseCurrentInterval - intervalOfLastSpecies - 1;
             }
           } else {
-            // Nenhuma espécie foi adicionada ainda.
+            // No species have been added yet.
             recalculatedSpeciesCount = 0;
-            // Todos os intervalos concluídos até agora não tiveram espécies.
+            // All finished intervals up to now have had no species.
             preciseIntervalsWithoutNewSpecies = preciseCurrentInterval - 1;
           }
 
@@ -444,7 +444,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
     // Generate NavigationRailDestinations
     List<NavigationRailDestination> railDestinations =
         _navItems.asMap().entries.map((entry) {
-          int idx = entry.key;
+          // int idx = entry.key;
           _NavigationItem item = entry.value;
 
           return NavigationRailDestination(
@@ -588,7 +588,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
 
       if (lastUpdateVersion < kCurrentSpeciesUpdateVersion) {
         debugPrint(
-            'Iniciando atualização de espécies: da versão $lastUpdateVersion para ${kCurrentSpeciesUpdateVersion}');
+            'Iniciando atualização de espécies: da versão $lastUpdateVersion para $kCurrentSpeciesUpdateVersion');
 
         // Injeta a instância do DatabaseHelper no serviço
         final speciesUpdater =
@@ -602,7 +602,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
         await prefs.setInt(
             'speciesUpdateVersion', kCurrentSpeciesUpdateVersion);
 
-        debugPrint('Atualização de espécies para o ano ${kCurrentSpeciesUpdateVersion} concluída com sucesso.');
+        debugPrint('Atualização de espécies para o ano $kCurrentSpeciesUpdateVersion concluída com sucesso.');
         debugPrint(summary.toString());
       } else {
         debugPrint(

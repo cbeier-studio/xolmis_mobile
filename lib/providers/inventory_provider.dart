@@ -60,6 +60,19 @@ class InventoryProvider with ChangeNotifier {
       if (_inventoryMap.containsKey(dbInventory.id)) {
         // Objeto já existe na memória: ATUALIZE-O, não o substitua.
         final memoryInventory = _inventoryMap[dbInventory.id]!;
+        memoryInventory.currentInterval = dbInventory.currentInterval;
+        memoryInventory.elapsedTime = dbInventory.elapsedTime;
+        memoryInventory.isFinished = dbInventory.isFinished;
+        memoryInventory.isPaused = dbInventory.isPaused;
+        memoryInventory.startTime = dbInventory.startTime;
+        memoryInventory.endTime = dbInventory.endTime;
+        memoryInventory.duration = dbInventory.duration;
+        memoryInventory.localityName = dbInventory.localityName;
+        memoryInventory.currentIntervalSpeciesCount = dbInventory.currentIntervalSpeciesCount;
+        memoryInventory.totalPausedTimeInSeconds = dbInventory.totalPausedTimeInSeconds;
+        memoryInventory.pauseStartTime = dbInventory.pauseStartTime;
+        memoryInventory.intervalsWithoutNewSpecies = dbInventory.intervalsWithoutNewSpecies;
+        memoryInventory.isDiscarded = dbInventory.isDiscarded;
         // Esta é uma etapa de "merge". Você pode criar um método no seu
         // modelo Inventory para atualizar suas propriedades a partir de outro.
         // Ex: memoryInventory.updateFrom(dbInventory);

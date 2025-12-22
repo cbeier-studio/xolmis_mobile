@@ -769,7 +769,7 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
                                           ),
                                           // Mostra o nome do tipo de registro ao tocar, ou o valor numérico caso contrário
                                           title: isTouched
-                                              ? getNestFateFriendlyName(getNestFateFromColor(color!), context) // Função para obter o nome amigável
+                                              ? getNestFateFriendlyName(getNestFateFromColor(color), context) // Função para obter o nome amigável
                                               : sectionData.value.toInt().toString(),
                                         );
                                       }).toList(),
@@ -879,7 +879,7 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
                                           ),
                                           // Mostra o nome do tipo de registro ao tocar, ou o valor numérico caso contrário
                                           title: isTouched
-                                              ? getSpecimenTypeFriendlyName(getSpecimenTypeFromColor(color!), context) // Função para obter o nome amigável
+                                              ? getSpecimenTypeFriendlyName(getSpecimenTypeFromColor(color), context) // Função para obter o nome amigável
                                               : sectionData.value.toInt().toString(),
                                         );
                                       }).toList(),

@@ -17,7 +17,6 @@ import '../../providers/poi_provider.dart';
 import '../../providers/vegetation_provider.dart';
 import '../../providers/weather_provider.dart';
 
-import '../../utils/utils.dart';
 import 'add_vegetation_screen.dart';
 import 'add_weather_screen.dart';
 import 'species_tab.dart';

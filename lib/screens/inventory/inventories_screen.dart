@@ -103,7 +103,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
       }
 
       // Helper function for comparing strings via a map lookup.
-      int compareMappedStrings(InventoryType aKey, InventoryType bKey) {
+      int compareMappedStrings(InventoryType? aKey, InventoryType? bKey) {
         final aValue = aKey != null ? inventoryTypeFriendlyNames[aKey] : null;
         final bValue = bKey != null ? inventoryTypeFriendlyNames[bKey] : null;
         return compareNullables(aValue, bValue);

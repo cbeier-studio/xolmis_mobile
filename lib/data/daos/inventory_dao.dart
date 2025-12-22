@@ -90,7 +90,7 @@ class InventoryDao {
           );
           species.id = speciesId; // Update object with new DB-generated ID
 
-          if (speciesId == null) {
+          if (speciesId <= 0) {
             // If species insertion failed, the transaction will roll back.
             // We can throw an exception to ensure rollback.
             throw Exception('Failed to insert species: ${species.toString()}');
@@ -104,7 +104,7 @@ class InventoryDao {
               conflictAlgorithm: ConflictAlgorithm.replace,
             );
             poi.id = poiId; // Update object with new DB-generated ID
-            if (poiId == null) {
+            if (poiId <= 0) {
               throw Exception('Failed to insert POI: ${poi.toString()}');
             }
           }
@@ -118,7 +118,7 @@ class InventoryDao {
             conflictAlgorithm: ConflictAlgorithm.replace,
           );
           vegetation.id = vegetationId; // Update object with new DB-generated ID
-          if (vegetationId == null) {
+          if (vegetationId <= 0) {
             throw Exception('Failed to insert vegetation: ${vegetation.toString()}');
           }
         }
@@ -131,12 +131,12 @@ class InventoryDao {
             conflictAlgorithm: ConflictAlgorithm.replace,
           );
           weather.id = weatherId; // Update object with new DB-generated ID
-          if (weatherId == null) {
+          if (weatherId <= 0) {
             throw Exception('Failed to insert weather: ${weather.toString()}');
           }
         }
 
-        return recordId != null && recordId > 0;
+        return recordId > 0;
       });
     } on DatabaseException catch (e) {
       if (kDebugMode) {

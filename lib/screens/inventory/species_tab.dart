@@ -38,7 +38,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
       widget.inventory.type == InventoryType.invPointDetection ? SpeciesSortField.time : SpeciesSortField.name;
   late SortOrder _sortOrder = widget.inventory.type == InventoryType.invTransectDetection ||
       widget.inventory.type == InventoryType.invPointDetection ? SortOrder.descending : SortOrder.ascending;
-  SearchController? _searchController;
+  // SearchController? _searchController;
 
   @override
   bool get wantKeepAlive => true;
@@ -362,7 +362,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
             child: SearchAnchor(
               isFullScreen: MediaQuery.of(context).size.width < 600,
               builder: (context, controller) {
-                _searchController = controller;
+                // _searchController = controller;
                 return TextField(
                   controller: controller,
                   autocorrect: false,

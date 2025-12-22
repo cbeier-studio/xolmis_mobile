@@ -60,7 +60,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
       }
 
       // Helper function for comparing strings via a map lookup.
-      int compareMappedStrings(SpecimenType aKey, SpecimenType bKey) {
+      int compareMappedStrings(SpecimenType? aKey, SpecimenType? bKey) {
         final aValue = aKey != null ? specimenTypeFriendlyNames[aKey] : null;
         final bValue = bKey != null ? specimenTypeFriendlyNames[bKey] : null;
         return compareNullables(aValue, bValue);

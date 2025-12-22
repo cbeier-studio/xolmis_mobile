@@ -240,9 +240,9 @@ Future<List<List>> buildInventoryRows(Inventory inventory, Locale locale) async 
     inventory.startLatitude != null ? formatNumbers ? numberFormat.format(inventory.startLatitude) : inventory.startLatitude : '',
     inventory.endLongitude != null ? formatNumbers ? numberFormat.format(inventory.endLongitude) : inventory.endLongitude : '',
     inventory.endLatitude != null ? formatNumbers ? numberFormat.format(inventory.endLatitude) : inventory.endLatitude : '',
-    inventory.totalObservers ?? '',
-    inventory.currentInterval ?? '',
-    inventory.totalPausedTimeInSeconds ?? '',
+    inventory.totalObservers == 0 ? '' : inventory.totalObservers,
+    inventory.currentInterval == 0 ? '' : inventory.currentInterval,
+    inventory.totalPausedTimeInSeconds == 0 ? '' : inventory.totalPausedTimeInSeconds,
     inventory.notes ?? '',
     inventory.isDiscarded ? 'Yes' : 'No',
   ]);

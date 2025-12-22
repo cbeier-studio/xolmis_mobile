@@ -60,7 +60,7 @@ class NestsScreenState extends State<NestsScreen> {
       }
 
       // Helper function for comparing strings via a map lookup.
-      int compareMappedStrings(NestFateType aKey, NestFateType bKey) {
+      int compareMappedStrings(NestFateType? aKey, NestFateType? bKey) {
         final aValue = aKey != null ? nestFateTypeFriendlyNames[aKey] : null;
         final bValue = bKey != null ? nestFateTypeFriendlyNames[bKey] : null;
         return compareNullables(aValue, bValue);
