@@ -221,6 +221,10 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
                                 }
                                 return null;
                               },
+                              onChanged: (value) {
+                                _localityNameController.text = value;
+                                _fieldLocalityEditingController.text = value;
+                              },
                               onFieldSubmitted: (String value) {
                                 onFieldSubmitted();
                               },

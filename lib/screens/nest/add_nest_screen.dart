@@ -208,12 +208,12 @@ class AddNestScreenState extends State<AddNestScreen> {
                           TextEditingController fieldTextEditingController,
                           FocusNode fieldFocusNode,
                           VoidCallback onFieldSubmitted) {
-                        _fieldLocalityEditingController = fieldTextEditingController;
-                        if (widget.isEditing && !_isSubmitting) {
-                          _fieldLocalityEditingController.text = widget.nest?.localityName ?? '';
-                        }
+                        // _fieldLocalityEditingController = fieldTextEditingController;
+                        // if (widget.isEditing && !_isSubmitting) {
+                        //   _fieldLocalityEditingController.text = widget.nest?.localityName ?? '';
+                        // }
                         return TextFormField(
-                          controller: _fieldLocalityEditingController,
+                          controller: fieldTextEditingController,
                           focusNode: fieldFocusNode,
                           textCapitalization: TextCapitalization.words,
                           decoration: InputDecoration(
@@ -227,7 +227,13 @@ class AddNestScreenState extends State<AddNestScreen> {
                             }
                             return null;
                           },
+                          onChanged: (value) {
+                            _fieldLocalityEditingController.text = value;
+                            _localityNameController.text = value;
+                          },
                           onFieldSubmitted: (String value) {
+                            _fieldLocalityEditingController.text = value;
+                            _localityNameController.text = value;
                             onFieldSubmitted();
                           },
                         );
@@ -288,12 +294,12 @@ class AddNestScreenState extends State<AddNestScreen> {
                           TextEditingController fieldTextEditingController,
                           FocusNode fieldFocusNode,
                           VoidCallback onFieldSubmitted) {
-                        _fieldSupportEditingController = fieldTextEditingController;
-                        if (widget.isEditing && !_isSubmitting) {
-                          _fieldSupportEditingController.text = widget.nest?.support ?? '';
-                        }
+                        // _fieldSupportEditingController = fieldTextEditingController;
+                        // if (widget.isEditing && !_isSubmitting) {
+                        //   _fieldSupportEditingController.text = widget.nest?.support ?? '';
+                        // }
                         return TextFormField(
-                          controller: _fieldSupportEditingController,
+                          controller: fieldTextEditingController,
                           focusNode: fieldFocusNode,
                           textCapitalization: TextCapitalization.sentences,
                           decoration: InputDecoration(
@@ -308,7 +314,13 @@ class AddNestScreenState extends State<AddNestScreen> {
                             }
                             return null;
                           },
+                          onChanged: (value) {
+                            _fieldSupportEditingController.text = value;
+                            _supportController.text = value;
+                          },
                           onFieldSubmitted: (String value) {
+                            _fieldSupportEditingController.text = value;
+                            _supportController.text = value;
                             onFieldSubmitted();
                           },
                         );

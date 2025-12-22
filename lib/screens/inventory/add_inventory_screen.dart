@@ -204,10 +204,6 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                           TextEditingController fieldTextEditingController,
                           FocusNode fieldFocusNode,
                           VoidCallback onFieldSubmitted) {
-                        // _fieldLocalityEditingController = fieldTextEditingController;
-                        // if (widget.isEditing && !_isSubmitting) {
-                        //   _fieldLocalityEditingController.text = widget.inventory?.localityName ?? '';
-                        // }
                         return TextFormField(
                           controller: fieldTextEditingController,
                           focusNode: fieldFocusNode,
@@ -222,6 +218,9 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                               return S.of(context).insertLocality;
                             }
                             return null;
+                          },
+                          onChanged: (value) {
+                            _localityNameController.text = value;
                           },
                           onFieldSubmitted: (String value) {
                             _localityNameController.text = value;
@@ -472,7 +471,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
       final newInventory = Inventory(
         id: _idController.text,
         type: _selectedType,
-        localityName: _fieldLocalityEditingController.text,
+        localityName: _localityNameController.text,
         duration: int.tryParse(_durationController.text) ?? 0,
         maxSpecies: int.tryParse(_maxSpeciesController.text) ?? 0,
         totalObservers: int.tryParse(_totalObserversController.text) ?? 1,
