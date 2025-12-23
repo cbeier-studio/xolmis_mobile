@@ -2,14 +2,20 @@
 
 ## 1.0.3
 
+### Novas funcionalidades
+
+* Adicionadas sugestões de ações na tela de detalhes do inventário (experimental).
+
 ### Melhorias
 
 * Telas de estatísticas refatoradas e expandidas.
+* Padronização das mensagens de erro e avisos.
 
 ### Correções
 
 * Corrigida tela que ficava vazia após apagar um item.
 * Corrigidas listas de Mackinnon não finalizando corretamente.
+* Corrigido problema que não salvava o valor informado em campos com autocompletar.
 
 ## 1.0.2
 

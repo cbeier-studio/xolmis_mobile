@@ -2,14 +2,20 @@
 
 ## 1.0.3
 
+### New features
+
+* Added action suggestions in the inventory details screen (experimental).
+
 ### Improvements
 
 * Refactored and expanded statistics screens.
+* Standardized error and warning messages.
 
 ### Bug fixes
 
 * Fixed screen going blank after deleting an item.
 * Fixed Mackinnon lists not finishing properly.
+* Fixed issue that did not save informed values in fields with autocompletion.
 
 ## 1.0.2
 

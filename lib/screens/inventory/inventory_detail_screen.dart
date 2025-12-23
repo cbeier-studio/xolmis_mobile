@@ -323,10 +323,35 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
+                  const SizedBox(width: 8.0,),
                   if (!widget.inventory.isFinished) ...[
-                    const SizedBox(width: 8.0,),
+                    if (widget.inventory.duration <= 0) ...[
+                      ActionChip(
+                    label: Text(S.current.finish), 
+                    avatar: const Icon(Icons.flag_outlined),
+                    onPressed: () async {
+                      setState(() {
+                      _isSubmitting = true;
+                    });
+                    final completionService = InventoryCompletionService(
+                      context: context,
+                      inventory: widget.inventory,
+                      inventoryProvider: Provider.of<InventoryProvider>(context, listen: false),
+                      inventoryDao: widget.inventoryDao,
+                    );
+                    await completionService.attemptFinishInventory(context);
+                    if (!widget.isEmbedded) {
+                      Navigator.pop(context, true);
+                    }
+                    setState(() {
+                      _isSubmitting = false;
+                    });
+                    },
+                  ),
+                  const SizedBox(width: 8.0,),
+                    ],
                   ActionChip(
-                    label: Text('${S.current.addButton} ${S.of(context).vegetationData.toLowerCase()}'), 
+                    label: Text('${S.current.addButton} ${S.of(context).vegetation.toLowerCase()}'), 
                     avatar: const Icon(Icons.local_florist_outlined),
                     onPressed: () {
                       _showAddVegetationScreen(context);
@@ -334,7 +359,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                   ),
                   const SizedBox(width: 8.0,),
                   ActionChip(
-                    label: Text('${S.current.addButton} ${S.of(context).weatherData.toLowerCase()}'), 
+                    label: Text('${S.current.addButton} ${S.of(context).weather.toLowerCase()}'), 
                     avatar: const Icon(Icons.wb_sunny_outlined),
                     onPressed: () {
                       _showAddWeatherScreen(context);
@@ -369,8 +394,8 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                       exportInventoryToJson(context, widget.inventory, true);
                     },
                   ),
-                  const SizedBox(width: 8.0,),
                   ],
+                  const SizedBox(width: 8.0,),
                 ],
               ),
               ),
@@ -710,8 +735,33 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                 children: [
                   const SizedBox(width: 8.0,),
                   if (!widget.inventory.isFinished) ...[
+                    if (widget.inventory.duration <= 0) ...[
+                      ActionChip(
+                    label: Text(S.current.finish), 
+                    avatar: const Icon(Icons.flag_outlined),
+                    onPressed: () async {
+                      setState(() {
+                      _isSubmitting = true;
+                    });
+                    final completionService = InventoryCompletionService(
+                      context: context,
+                      inventory: widget.inventory,
+                      inventoryProvider: Provider.of<InventoryProvider>(context, listen: false),
+                      inventoryDao: widget.inventoryDao,
+                    );
+                    await completionService.attemptFinishInventory(context);
+                    if (!widget.isEmbedded) {
+                      Navigator.pop(context, true);
+                    }
+                    setState(() {
+                      _isSubmitting = false;
+                    });
+                    },
+                  ),
+                  const SizedBox(width: 8.0,),
+                    ],
                   ActionChip(
-                    label: Text('${S.current.addButton} ${S.of(context).vegetationData.toLowerCase()}'), 
+                    label: Text('${S.current.addButton} ${S.of(context).vegetation.toLowerCase()}'), 
                     avatar: const Icon(Icons.local_florist_outlined),
                     onPressed: () {
                       _showAddVegetationScreen(context);
@@ -719,7 +769,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                   ),
                   const SizedBox(width: 8.0,),
                   ActionChip(
-                    label: Text('${S.current.addButton} ${S.of(context).weatherData.toLowerCase()}'), 
+                    label: Text('${S.current.addButton} ${S.of(context).weather.toLowerCase()}'), 
                     avatar: const Icon(Icons.wb_sunny_outlined),
                     onPressed: () {
                       _showAddWeatherScreen(context);
