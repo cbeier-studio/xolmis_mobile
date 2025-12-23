@@ -560,6 +560,7 @@ class Inventory with ChangeNotifier {
   double? endLatitude;
   String? localityName;
   int totalObservers;
+  String? observer;
   String? notes;
   bool isDiscarded;
   List<Species> speciesList;
@@ -598,6 +599,7 @@ class Inventory with ChangeNotifier {
     this.endLatitude,
     this.localityName,
     this.totalObservers = 1,
+    this.observer,
     this.notes,
     this.isDiscarded = false,
     this.speciesList = const [],
@@ -635,6 +637,7 @@ class Inventory with ChangeNotifier {
         endLatitude = map['endLatitude'] ?? 0,
         localityName = map['localityName'],
         totalObservers = map['totalObservers'] ?? 1,
+        observer = map['observer'],
         notes = map['notes'],
         isDiscarded = map['isDiscarded'] == 1,
         currentInterval = map['currentInterval'] ?? 1,
@@ -669,6 +672,7 @@ class Inventory with ChangeNotifier {
     DateTime? pauseStartTime,
     String? localityName,
     int? totalObservers,
+    String? observer,
     String? notes,
     bool? isDiscarded,
     List<Species>? speciesList,
@@ -696,6 +700,7 @@ class Inventory with ChangeNotifier {
       pauseStartTime: pauseStartTime ?? this.pauseStartTime,
       localityName: localityName ?? this.localityName,
       totalObservers: totalObservers ?? this.totalObservers,
+      observer: observer ?? this.observer,
       notes: notes ?? this.notes,
       isDiscarded: isDiscarded ?? this.isDiscarded,
       speciesList: speciesList ?? this.speciesList,
@@ -726,6 +731,7 @@ class Inventory with ChangeNotifier {
       'pauseStartTime': pauseStartTime?.toIso8601String(),
       'localityName': localityName,
       'totalObservers': totalObservers,
+      'observer': observer,
       'notes': notes,
       'isDiscarded': isDiscarded ? 1 : 0,
     };
@@ -754,6 +760,7 @@ class Inventory with ChangeNotifier {
         'pauseStartTime: $pauseStartTime, '
         'localityName: $localityName, '
         'totalObservers: $totalObservers, '
+        'observer: $observer, '
         'notes: $notes, '
         'isDiscarded: $isDiscarded }';
   }
@@ -772,6 +779,7 @@ class Inventory with ChangeNotifier {
       'endLatitude': endLatitude,
       'localityName': localityName,
       'totalObservers': totalObservers,
+      'observer': observer,
       'notes': notes,
       'isDiscarded': isDiscarded,
       'currentInterval': currentInterval,
@@ -799,6 +807,7 @@ class Inventory with ChangeNotifier {
       endLatitude: json['endLatitude'] ?? 0,
       localityName: json['localityName'],
       totalObservers: json['totalObservers'] ?? 1,
+      observer: json['observer'],
       notes: json['notes'],
       isDiscarded: json['isDiscarded'] ?? false,
       currentInterval: json['currentInterval'],

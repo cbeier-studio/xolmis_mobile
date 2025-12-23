@@ -5,6 +5,7 @@
 ### New features
 
 * Added action suggestions in the inventory details screen (experimental).
+* Added Observer field to inventories.
 
 ### Improvements
 

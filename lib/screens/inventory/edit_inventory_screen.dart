@@ -19,6 +19,7 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
   late final TextEditingController _localityNameController;
   late final TextEditingController _notesController;
   late final TextEditingController _totalObserversController;
+  late final TextEditingController _observerController;
   late bool _isDiscarded;
   late TextEditingController fieldLocalityEditingController;
 
@@ -34,6 +35,7 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
     _localityNameController = TextEditingController(text: widget.inventory.localityName);
     _notesController = TextEditingController(text: widget.inventory.notes);
     _totalObserversController = TextEditingController(text: widget.inventory.totalObservers.toString());
+    _observerController = TextEditingController(text: widget.inventory.observer);
     _isDiscarded = widget.inventory.isDiscarded;
   }
 
@@ -44,6 +46,7 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
     _localityNameController.dispose();
     _notesController.dispose();
     _totalObserversController.dispose();
+    _observerController.dispose();
     super.dispose();
   }
 
@@ -57,6 +60,7 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
         id: _idController.text,
         localityName: fieldLocalityEditingController.text,
         totalObservers: int.tryParse(_totalObserversController.text),
+        observer: _observerController.text.toUpperCase(),
         notes: _notesController.text.isNotEmpty ? _notesController.text : null,
         isDiscarded: _isDiscarded,
       );
@@ -181,6 +185,9 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
                   },
                 ),
                 SizedBox(height: 8),
+                Row(children: [
+                  Expanded(
+                    child:
                 TextFormField(
                   controller: _totalObserversController,
                   keyboardType: TextInputType.number,
@@ -219,6 +226,26 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
                     }
                     return null;
                   },
+                ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: TextFormField(
+                      controller: _observerController,
+                      textCapitalization: TextCapitalization.characters,
+                      decoration: InputDecoration(
+                        labelText: S.of(context).observer,
+                        border: OutlineInputBorder(),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return S.current.insertObserver;
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                ],
                 ),
                 SizedBox(height: 8),
                 TextFormField(

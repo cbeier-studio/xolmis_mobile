@@ -1510,6 +1510,9 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get insertObserver => 'Insert observer';
+
+  @override
   String get countryArgentina => 'Argentina';
 
   @override

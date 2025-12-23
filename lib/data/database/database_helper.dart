@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -23,7 +24,7 @@ class DatabaseHelper {
     String path = join(await getDatabasesPath(), 'xolmis_database.db');
     return await openDatabase(
       path,
-      version: 21, // Increase the version number
+      version: 22, // Increase the version number
       onCreate: _createTables,
       onUpgrade: _upgradeTables,
       onConfigure: (db) {
@@ -57,6 +58,7 @@ class DatabaseHelper {
           pauseStartTime TEXT,
           localityName TEXT,
           totalObservers INTEGER,
+          observer TEXT,
           notes TEXT,
           isDiscarded INTEGER
         )
@@ -212,7 +214,8 @@ class DatabaseHelper {
   }
 
   // Update SQLite database structure based on DB version
-  void _upgradeTables(Database db, int oldVersion, int newVersion) {
+  void _upgradeTables(Database db, int oldVersion, int newVersion) async {
+    final prefs = await SharedPreferences.getInstance();
     if (oldVersion < 2) {
       db.execute(
         'ALTER TABLE inventories ADD COLUMN maxSpecies INTEGER',
@@ -414,6 +417,17 @@ class DatabaseHelper {
       );
       db.execute(
         'ALTER TABLE inventories ADD COLUMN pauseStartTime TEXT',
+      );
+    }
+    if (oldVersion < 22) {
+      db.execute(
+        'ALTER TABLE inventories ADD COLUMN observer TEXT',
+      );
+      final observerAbbrev = prefs.getString('observerAcronym') ?? '';
+      db.update(
+        'inventories',
+        {'observer': observerAbbrev},
+        where: 'observer IS NULL',        
       );
     }
   }

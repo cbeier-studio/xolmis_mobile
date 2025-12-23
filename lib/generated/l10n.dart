@@ -4037,6 +4037,16 @@ class S {
     );
   }
 
+  /// `Insert observer`
+  String get insertObserver {
+    return Intl.message(
+      'Insert observer',
+      name: 'insertObserver',
+      desc: 'Insert observer button label',
+      args: [],
+    );
+  }
+
   /// `Argentina`
   String get countryArgentina {
     return Intl.message(

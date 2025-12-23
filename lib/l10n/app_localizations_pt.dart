@@ -1515,6 +1515,9 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
+  String get insertObserver => 'Insira o observador';
+
+  @override
   String get countryArgentina => 'Argentina';
 
   @override
@@ -3247,6 +3250,9 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String errorUnexpectedSpecimensArrayItem(String item) {
     return 'Item inesperado no array JSON \'specimens\': $item';
   }
+
+  @override
+  String get insertObserver => 'Insira o observador';
 
   @override
   String get countryArgentina => 'Argentina';

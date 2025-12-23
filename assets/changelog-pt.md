@@ -5,6 +5,7 @@
 ### Novas funcionalidades
 
 * Adicionadas sugestões de ações na tela de detalhes do inventário (experimental).
+* Adicionado campo Observador nos inventários.
 
 ### Melhorias
 

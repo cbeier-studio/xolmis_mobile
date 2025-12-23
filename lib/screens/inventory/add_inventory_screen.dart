@@ -467,6 +467,8 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
       _isSubmitting = true;
     });
 
+    final prefs = await SharedPreferences.getInstance();
+    final observerAbbrev = prefs.getString('observerAcronym') ?? '';
     if (_formKey.currentState!.validate()) {
       final newInventory = Inventory(
         id: _idController.text,
@@ -475,6 +477,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
         duration: int.tryParse(_durationController.text) ?? 0,
         maxSpecies: int.tryParse(_maxSpeciesController.text) ?? 0,
         totalObservers: int.tryParse(_totalObserversController.text) ?? 1,
+        observer: observerAbbrev,
         speciesList: [],
         vegetationList: [],
         weatherList: [],

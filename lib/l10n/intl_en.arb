@@ -2291,6 +2291,11 @@
             }
         }
     },
+    "insertObserver": "Insert observer",
+    "@insertObserver": {
+      "type": "text",
+      "description": "Insert observer button label"
+    },
   "countryArgentina": "Argentina",
   "countryBrazil": "Brazil",
   "countryParaguay": "Paraguay",

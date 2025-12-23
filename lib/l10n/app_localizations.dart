@@ -2460,6 +2460,12 @@ abstract class AppLocalizations {
   /// **'Unexpected item in \'specimens\' JSON array: {item}'**
   String errorUnexpectedSpecimensArrayItem(String item);
 
+  /// Insert observer button label
+  ///
+  /// In en, this message translates to:
+  /// **'Insert observer'**
+  String get insertObserver;
+
   /// No description provided for @countryArgentina.
   ///
   /// In en, this message translates to:

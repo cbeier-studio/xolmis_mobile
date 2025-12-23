@@ -568,6 +568,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "insertNestSupport": MessageLookupByLibrary.simpleMessage(
       "Por favor, insira o suporte do ninho",
     ),
+    "insertObserver": MessageLookupByLibrary.simpleMessage(
+      "Insira o observador",
+    ),
     "insertProportion": MessageLookupByLibrary.simpleMessage(
       "Insira a proporção",
     ),
