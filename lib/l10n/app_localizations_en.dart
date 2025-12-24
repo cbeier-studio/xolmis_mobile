@@ -1524,6 +1524,21 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get clearFilters => 'Clear filters';
+
+  @override
+  String get newVegetation => 'New vegetation record';
+
+  @override
+  String get newWeather => 'New weather record';
+
+  @override
+  String get newRevision => 'New revision';
+
+  @override
+  String get newEgg => 'New egg';
+
+  @override
   String get countryArgentina => 'Argentina';
 
   @override

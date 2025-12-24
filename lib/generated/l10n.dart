@@ -4057,6 +4057,56 @@ class S {
     );
   }
 
+  /// `Clear filters`
+  String get clearFilters {
+    return Intl.message(
+      'Clear filters',
+      name: 'clearFilters',
+      desc: 'Clear filters button label',
+      args: [],
+    );
+  }
+
+  /// `New vegetation record`
+  String get newVegetation {
+    return Intl.message(
+      'New vegetation record',
+      name: 'newVegetation',
+      desc: 'New vegetation button label',
+      args: [],
+    );
+  }
+
+  /// `New weather record`
+  String get newWeather {
+    return Intl.message(
+      'New weather record',
+      name: 'newWeather',
+      desc: 'New weather button label',
+      args: [],
+    );
+  }
+
+  /// `New revision`
+  String get newRevision {
+    return Intl.message(
+      'New revision',
+      name: 'newRevision',
+      desc: 'New revision button label',
+      args: [],
+    );
+  }
+
+  /// `New egg`
+  String get newEgg {
+    return Intl.message(
+      'New egg',
+      name: 'newEgg',
+      desc: 'New egg button label',
+      args: [],
+    );
+  }
+
   /// `Argentina`
   String get countryArgentina {
     return Intl.message(

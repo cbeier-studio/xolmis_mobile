@@ -218,9 +218,28 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
         widget.nestProvider.nestsCount == 0 &&
         widget.specimenProvider.specimensCount == 0) {
       return Center(
-        child: Text(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+          Icon(
+          Icons.insert_chart_outlined,
+          size: 48,
+          color: Theme.of(context).colorScheme.surfaceDim,
+        ),
+        const SizedBox(height: 8),
+        Text(
           S.current.noDataAvailable,
           style: Theme.of(context).textTheme.titleMedium,
+        ),
+            SizedBox(height: 16),
+            ActionChip(
+                label: Text(S.of(context).refresh),
+                avatar: Icon(Icons.refresh_outlined),
+                onPressed: () async {
+                  await _loadData();
+                }
+            )
+        ],
         ),
       );
     }

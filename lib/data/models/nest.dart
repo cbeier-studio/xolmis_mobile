@@ -245,6 +245,7 @@ class Nest {
   String? male;
   String? female;
   String? helpers;
+  String? observer;
   bool isActive;
   List<NestRevision>? revisionsList;
   List<Egg>? eggsList;
@@ -264,6 +265,7 @@ class Nest {
     this.male,
     this.female,
     this.helpers,
+    this.observer,
     this.isActive = true,
     this.revisionsList = const [],
     this.eggsList = const [],
@@ -285,6 +287,7 @@ class Nest {
       'male': male,
       'female': female,
       'helpers': helpers,
+      'observer': observer,
       'isActive': isActive ? 1 : 0,
     };
   }
@@ -305,6 +308,7 @@ class Nest {
       'male': male,
       'female': female,
       'helpers': helpers,
+      'observer': observer,
       'isActive': isActive,
       'revisionsList': revisionsList?.map((nestRevision) => nestRevision.toJson()).toList(),
       'eggsList': eggsList?.map((egg) => egg.toJson()).toList(),
@@ -327,6 +331,7 @@ class Nest {
       male: json['male'],
       female: json['female'],
       helpers: json['helpers'],
+      observer: json['observer'],
       isActive: json['isActive'] == 1,
       revisionsList: (json['revisionsList'] as List).map((item) => NestRevision.fromJson(item)).toList(),
       eggsList: (json['eggsList'] as List).map((item) => Egg.fromJson(item)).toList(),
@@ -349,6 +354,7 @@ class Nest {
       male: map['male'],
       female: map['female'],
       helpers: map['helpers'],
+      observer: map['observer'],
       isActive: map['isActive'] == 1,
       revisionsList: revisionsList,
       eggsList: eggsList,
@@ -370,6 +376,7 @@ class Nest {
     String? male,
     String? female,
     String? helpers,
+    String? observer,
     bool? isActive,
     List<NestRevision>? revisionsList,
     List<Egg>? eggsList,
@@ -389,6 +396,7 @@ class Nest {
       male: male ?? this.male,
       female: female ?? this.female,
       helpers: helpers ?? this.helpers,
+      observer: observer ?? this.observer,
       isActive: isActive ?? this.isActive,
       revisionsList: revisionsList ?? this.revisionsList,
       eggsList: eggsList ?? this.eggsList,

@@ -905,7 +905,7 @@ Future<String> exportNestToExcel(BuildContext context, Nest nest, Locale locale)
 Future<List<List>> buildNestRows(Nest nest, Locale locale) async {
   const nestHeaders = ['Field number','Species','Locality','Longitude','Latitude',
     'Date found','Support','Height above ground','Male','Female','Helpers',
-    'Last date','Fate'];
+    'Last date','Observer','Fate'];
   const revisionHeaders = ['Date/Time','Status','Phase','Host eggs','Host nestlings',
     'Nidoparasite eggs','Nidoparasite nestlings','Has Philornis larvae','Notes'];
   const eggHeaders = ['Date/Time','Field number','Species','Egg shape',
@@ -928,6 +928,7 @@ Future<List<List>> buildNestRows(Nest nest, Locale locale) async {
     nest.female,
     nest.helpers,
     nest.lastTime != null ? DateFormat('dd/MM/yyyy HH:mm:ss').format(nest.lastTime!) : '',
+    nest.observer,
     nestFateTypeFriendlyNames[nest.nestFate] ?? '',
   ]);
   
@@ -1380,7 +1381,7 @@ Future<void> exportAllSpecimensToExcel(BuildContext context, List<Specimen> spec
 
 // Add specimens data to CSV rows
 Future<List<List>> buildSpecimensRows(List<Specimen> specimenList, Locale locale) async {
-  const specimenHeaders = ['Date/Time','Field number','Species','Type','Locality',
+  const specimenHeaders = ['Date/Time','Field number','Observer','Species','Type','Locality',
     'Longitude','Latitude','Notes'];
   final numberFormat = NumberFormat.decimalPattern(locale.toString())..maximumFractionDigits = 7;
   List<List<dynamic>> rows = [];
@@ -1392,6 +1393,7 @@ Future<List<List>> buildSpecimensRows(List<Specimen> specimenList, Locale locale
     rows.add([
       specimen.sampleTime != null ? DateFormat('dd/MM/yyyy HH:mm:ss').format(specimen.sampleTime!) : '',
       specimen.fieldNumber,
+      specimen.observer,
       specimen.speciesName,
       specimenTypeFriendlyNames[specimen.type] ?? '',
       specimen.locality,

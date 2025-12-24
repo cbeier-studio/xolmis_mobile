@@ -2307,6 +2307,31 @@
         }
       }
     },
+  "clearFilters": "Clear filters",
+  "@clearFilters": {
+    "type": "text",
+    "description": "Clear filters button label"
+  },
+  "newVegetation": "New vegetation record",
+  "@newVegetation": {
+    "type": "text",
+    "description": "New vegetation button label"
+  },
+  "newWeather": "New weather record",
+  "@newWeather": {
+    "type": "text",
+    "description": "New weather button label"
+  },
+  "newRevision": "New revision",
+  "@newRevision": {
+    "type": "text",
+    "description": "New revision button label"
+  },
+  "newEgg": "New egg",
+  "@newEgg": {
+    "type": "text",
+    "description": "New egg button label"
+  },
   "countryArgentina": "Argentina",
   "countryBrazil": "Brazil",
   "countryParaguay": "Paraguay",

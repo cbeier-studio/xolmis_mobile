@@ -194,18 +194,31 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Icon(
+              Icons.insert_chart_outlined,
+              size: 48,
+              color: Theme.of(context).colorScheme.surfaceDim,
+            ),
+            const SizedBox(height: 8),
             Text(
               S.current.noDataAvailable,
               style: Theme.of(context).textTheme.titleMedium,
             ),
             SizedBox(height: 16),
-            FilledButton.icon(
+            ActionChip(
               label: Text(S.of(context).refresh),
-              icon: const Icon(Icons.refresh_outlined),
+              avatar: Icon(Icons.refresh_outlined),
               onPressed: () async {
                 await _loadGeneralData();
-              },
-            ),
+              }
+            )
+            // FilledButton.icon(
+            //   label: Text(S.of(context).refresh),
+            //   icon: const Icon(Icons.refresh_outlined),
+            //   onPressed: () async {
+            //     await _loadGeneralData();
+            //   },
+            // ),
           ],
         ),
       );

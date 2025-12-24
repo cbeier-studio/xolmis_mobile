@@ -63,6 +63,42 @@ class _WeatherTabState extends State<WeatherTab>
         false;
   }
 
+  void _showAddWeatherScreen(BuildContext context) {
+    final weatherProvider = Provider.of<WeatherProvider>(context, listen: false);
+    if (MediaQuery.sizeOf(context).width > 600) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16.0),
+            ),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 400),
+              child: AddWeatherScreen(inventory: widget.inventory),
+            ),
+          );
+        },
+      ).then((newWeather) {
+        // Reload the weather list
+        if (newWeather != null) {
+          weatherProvider.getWeatherForInventory(widget.inventory.id);
+        }
+      });
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => AddWeatherScreen(inventory: widget.inventory),
+        ),
+      ).then((newWeather) {
+        // Reload the weather list
+        if (newWeather != null) {
+          weatherProvider.getWeatherForInventory(widget.inventory.id);
+        }
+      });
+    }
+  }
+
   Widget _buildWeatherList() {
     return Column(
       children: [
@@ -76,7 +112,26 @@ class _WeatherTabState extends State<WeatherTab>
                 return Center(
                   child: Padding(
                     padding: EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 16.0),
-                    child: Text(S.of(context).noWeatherFound),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.wb_sunny_outlined,
+                          size: 48,
+                          color: Theme.of(context).colorScheme.surfaceDim,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(S.of(context).noWeatherFound),
+                        const SizedBox(height: 8),
+                        ActionChip(
+                          label: Text(S.of(context).newWeather),
+                          avatar: const Icon(Icons.add_outlined),
+                          onPressed: () {
+                            _showAddWeatherScreen(context);
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 );
               } else {

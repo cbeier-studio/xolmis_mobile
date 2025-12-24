@@ -1750,6 +1750,31 @@
         }
       }
     },
+  "clearFilters": "Limpar filtros",
+  "@clearFilters": {
+    "type": "text",
+    "description": "Clear filters button label"
+  },
+  "newVegetation": "Novo registro de vegetação",
+  "@newVegetation": {
+    "type": "text",
+    "description": "New vegetation button label"
+  },
+  "newWeather": "Novo registro do tempo",
+  "@newWeather": {
+    "type": "text",
+    "description": "New weather button label"
+  },
+  "newRevision": "Nova revisão",
+  "@newRevision": {
+    "type": "text",
+    "description": "New revision button label"
+  },
+  "newEgg": "Novo ovo",
+  "@newEgg": {
+    "type": "text",
+    "description": "New egg button label"
+  },
   "countryArgentina": "Argentina",
   "countryBrazil": "Brasil",
   "countryParaguay": "Paraguai",

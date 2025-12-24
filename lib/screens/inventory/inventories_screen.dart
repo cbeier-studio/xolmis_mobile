@@ -272,13 +272,14 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             showCloseIcon: true,
-            content: Row(
-              children: [
-                Icon(Icons.warning_amber_outlined, color: Colors.orange),
-                SizedBox(width: 8),
-                Text(S.of(context).observerAbbreviationMissing),
-              ],
-            ),
+            content:
+            // Row(
+            //   children: [
+            //     Icon(Icons.warning_amber_outlined, color: Colors.orange),
+            //     SizedBox(width: 8),
+                Text(S.of(context).observerAbbreviationMissing, softWrap: true,),
+            //   ],
+            // ),
           ),
         );
         // showDialog(
@@ -1099,18 +1100,69 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      Icon(
+                        Icons.list_alt_outlined,
+                        size: 48,
+                        color: Theme.of(context).colorScheme.surfaceDim,
+                      ),
+                      const SizedBox(height: 8),
                       Text(S.of(context).noInventoriesFound),
                       const SizedBox(height: 8),
-                      FilledButton.icon(
+                      ActionChip(
+                        label: Text(S.of(context).newInventory),
+                        avatar: const Icon(Icons.add_outlined),
+                        onPressed: () {
+                          showAddInventoryScreen(context);
+                        },
+                      ),
+                      if (!_isShowingActiveInventories) ...[
+                        const SizedBox(height: 8),
+                        ActionChip(
+                          label: Text(S.of(context).import),
+                          avatar: const Icon(Icons.file_open_outlined),
+                          onPressed: () async {
+                            await importInventoryFromJson(context);
+                            await inventoryProvider.fetchInventories(context);
+                            for (var inventory in inventoryProvider.activeInventories) {
+                              inventoryProvider.startInventoryTimer(context, inventory, inventoryDao);
+                            }
+                          },
+                        ),
+                      ],
+                      if (_searchQuery.isNotEmpty) ...[
+                        const SizedBox(height: 8),
+                        ActionChip(
+                          label: Text(S.of(context).clearFilters),
+                          avatar: const Icon(Icons.search_off_outlined),
+                          onPressed: () async {
+                            setState(() {
+                              _searchQuery = '';
+                              _searchController.clear();
+                            });
+                          }
+                        ),
+                      ],
+                      const SizedBox(height: 8),
+                      ActionChip(
                         label: Text(S.of(context).refresh),
-                        icon: const Icon(Icons.refresh_outlined),
+                        avatar: const Icon(Icons.refresh_outlined),
                         onPressed: () async {
                           await inventoryProvider.fetchInventories(context);
                           for (var inventory in inventoryProvider.activeInventories) {
                             inventoryProvider.startInventoryTimer(context, inventory, inventoryDao);
                           }
-                        }, 
-                      )
+                        },
+                      ),
+                      // FilledButton.icon(
+                      //   label: Text(S.of(context).refresh),
+                      //   icon: const Icon(Icons.refresh_outlined),
+                      //   onPressed: () async {
+                      //     await inventoryProvider.fetchInventories(context);
+                      //     for (var inventory in inventoryProvider.activeInventories) {
+                      //       inventoryProvider.startInventoryTimer(context, inventory, inventoryDao);
+                      //     }
+                      //   }, 
+                      // )
                     ],
                   ),
                 );

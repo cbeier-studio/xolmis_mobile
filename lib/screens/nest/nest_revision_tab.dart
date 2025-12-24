@@ -77,6 +77,42 @@ class _NestRevisionsTabState extends State<NestRevisionsTab>
         false;
   }
 
+  void _showAddRevisionScreen(BuildContext context) {
+    final revisionProvider = Provider.of<NestRevisionProvider>(context, listen: false);
+    if (MediaQuery.sizeOf(context).width > 600) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16.0),
+            ),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 400),
+              child: AddNestRevisionScreen(nest: widget.nest),
+            ),
+          );
+        },
+      ).then((newRevision) {
+        // Reload the nest revision list
+        if (newRevision != null) {
+          revisionProvider.getRevisionForNest(widget.nest.id!);
+        }
+      });
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => AddNestRevisionScreen(nest: widget.nest),
+        ),
+      ).then((newRevision) {
+        // Reload the nest revision list
+        if (newRevision != null) {
+          revisionProvider.getRevisionForNest(widget.nest.id!);
+        }
+      });
+    }
+  }
+
   Widget _buildNestRevisionList() {
     return Column(
       children: [
@@ -91,7 +127,26 @@ class _NestRevisionsTabState extends State<NestRevisionsTab>
                 return Center(
                   child: Padding(
                     padding: EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 16.0),
-                    child: Text(S.of(context).noRevisionsFound),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.beenhere_outlined,
+                          size: 48,
+                          color: Theme.of(context).colorScheme.surfaceDim,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(S.of(context).noRevisionsFound),
+                        const SizedBox(height: 8),
+                        ActionChip(
+                          label: Text(S.of(context).newRevision),
+                          avatar: const Icon(Icons.add_outlined),
+                          onPressed: () {
+                            _showAddRevisionScreen(context);
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 );
               } else {

@@ -185,7 +185,18 @@ class _AppImageScreenState extends State<AppImageScreen> {
             final images = appImageProvider.images;
             if (images.isEmpty) {
               return Center(
-                child: Text(S.of(context).noImagesFound),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.image_outlined,
+                      size: 48,
+                      color: Theme.of(context).colorScheme.surfaceDim,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(S.of(context).noImagesFound),
+                  ],
+                ),
               );
             } else {
               return LayoutBuilder(
@@ -228,7 +239,26 @@ class _AppImageScreenState extends State<AppImageScreen> {
             final images = appImageProvider.images;
             if (images.isEmpty) {
               return Center(
-                child: Text(S.of(context).noImagesFound),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.image_outlined,
+                      size: 48,
+                      color: Theme.of(context).colorScheme.surfaceDim,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(S.of(context).noImagesFound),
+                    const SizedBox(height: 8),
+                    ActionChip(
+                      label: Text(S.of(context).addImage),
+                      avatar: const Icon(Icons.add_outlined),
+                      onPressed: () {
+                        _showAddImageDialog();
+                      },
+                    ),
+                  ],
+                ),
               );
             } else {
               return LayoutBuilder(

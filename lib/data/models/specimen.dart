@@ -11,6 +11,7 @@ class Specimen {
   double? latitude;
   String? locality;
   String? speciesName;
+  String? observer;
   String? notes;
   bool isPending;
 
@@ -23,6 +24,7 @@ class Specimen {
     this.latitude,
     this.locality,
     this.speciesName,
+    this.observer,
     this.notes,
     this.isPending = true,
   });
@@ -37,6 +39,7 @@ class Specimen {
       'latitude': latitude,
       'locality': locality,
       'speciesName': speciesName,
+      'observer': observer,
       'notes': notes,
       'isPending': isPending ? 1 : 0,
     };
@@ -52,6 +55,7 @@ class Specimen {
       'latitude': latitude,
       'locality': locality,
       'speciesName': speciesName,
+      'observer': observer,
       'notes': notes,
       'isPending': isPending,
     };
@@ -67,6 +71,7 @@ class Specimen {
       latitude: json['latitude'],
       locality: json['locality'],
       speciesName: json['speciesName'],
+      observer: json['observer'],
       notes: json['notes'],
       isPending: json['isPending'] == 1,
     );
@@ -82,6 +87,7 @@ class Specimen {
       latitude: map['latitude']?.toDouble(),
       locality: map['locality'],
       speciesName: map['speciesName'],
+      observer: map['observer'],
       notes: map['notes'],
       isPending: map['isPending'] == 1,
     );
@@ -96,6 +102,7 @@ class Specimen {
     double? latitude,
     String? locality,
     String? speciesName,
+    String? observer,
     String? notes,
     bool? isPending,
   }) {
@@ -108,6 +115,7 @@ class Specimen {
       latitude: latitude ?? this.latitude,
       locality: locality ?? this.locality,
       speciesName: speciesName ?? this.speciesName,
+      observer: observer ?? this.observer,
       notes: notes ?? this.notes,
       isPending: isPending ?? this.isPending,
     );

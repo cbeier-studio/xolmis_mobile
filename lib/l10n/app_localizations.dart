@@ -2472,6 +2472,36 @@ abstract class AppLocalizations {
   /// **'selected {howMany, plural, one{nest} other{nests}}'**
   String selectedNests(int howMany);
 
+  /// Clear filters button label
+  ///
+  /// In en, this message translates to:
+  /// **'Clear filters'**
+  String get clearFilters;
+
+  /// New vegetation button label
+  ///
+  /// In en, this message translates to:
+  /// **'New vegetation record'**
+  String get newVegetation;
+
+  /// New weather button label
+  ///
+  /// In en, this message translates to:
+  /// **'New weather record'**
+  String get newWeather;
+
+  /// New revision button label
+  ///
+  /// In en, this message translates to:
+  /// **'New revision'**
+  String get newRevision;
+
+  /// New egg button label
+  ///
+  /// In en, this message translates to:
+  /// **'New egg'**
+  String get newEgg;
+
   /// No description provided for @countryArgentina.
   ///
   /// In en, this message translates to:

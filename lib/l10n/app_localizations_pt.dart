@@ -1529,6 +1529,21 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
+  String get clearFilters => 'Limpar filtros';
+
+  @override
+  String get newVegetation => 'Novo registro de vegetação';
+
+  @override
+  String get newWeather => 'Novo registro do tempo';
+
+  @override
+  String get newRevision => 'Nova revisão';
+
+  @override
+  String get newEgg => 'Novo ovo';
+
+  @override
   String get countryArgentina => 'Argentina';
 
   @override
@@ -3275,6 +3290,21 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
     );
     return '$_temp0';
   }
+
+  @override
+  String get clearFilters => 'Limpar filtros';
+
+  @override
+  String get newVegetation => 'Novo registro de vegetação';
+
+  @override
+  String get newWeather => 'Novo registro do tempo';
+
+  @override
+  String get newRevision => 'Nova revisão';
+
+  @override
+  String get newEgg => 'Novo ovo';
 
   @override
   String get countryArgentina => 'Argentina';

@@ -818,15 +818,58 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      Icon(
+                        Icons.local_offer_outlined,
+                        size: 48,
+                        color: Theme.of(context).colorScheme.surfaceDim,
+                      ),
+                      const SizedBox(height: 8),
                       Text(S.of(context).noSpecimenCollected),
                       const SizedBox(height: 8),
-                      FilledButton.icon(
+                      ActionChip(
+                        label: Text(S.of(context).newSpecimen),
+                        avatar: const Icon(Icons.add_outlined),
+                        onPressed: () {
+                          _showAddSpecimenScreen(context);
+                        },
+                      ),
+                        const SizedBox(height: 8),
+                        ActionChip(
+                          label: Text(S.of(context).import),
+                          avatar: const Icon(Icons.file_open_outlined),
+                          onPressed: () async {
+                            await importSpecimensFromJson(context);
+                            await specimenProvider.fetchSpecimens();
+                          },
+                        ),
+                      if (_searchQuery.isNotEmpty) ...[
+                        const SizedBox(height: 8),
+                        ActionChip(
+                            label: Text(S.of(context).clearFilters),
+                            avatar: const Icon(Icons.search_off_outlined),
+                            onPressed: () async {
+                              setState(() {
+                                _searchQuery = '';
+                                _searchController.clear();
+                              });
+                            }
+                        ),
+                      ],
+                      const SizedBox(height: 8),
+                      ActionChip(
                         label: Text(S.of(context).refresh),
-                        icon: const Icon(Icons.refresh_outlined),
+                        avatar: const Icon(Icons.refresh_outlined),
                         onPressed: () async {
                           await specimenProvider.fetchSpecimens();
-                        }, 
-                      )
+                        },
+                      ),
+                      // FilledButton.icon(
+                      //   label: Text(S.of(context).refresh),
+                      //   icon: const Icon(Icons.refresh_outlined),
+                      //   onPressed: () async {
+                      //     await specimenProvider.fetchSpecimens();
+                      //   },
+                      // )
                     ],
                   ),
                 );

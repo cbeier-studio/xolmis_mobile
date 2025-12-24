@@ -219,6 +219,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "camera": MessageLookupByLibrary.simpleMessage("Camera"),
     "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
     "changelog": MessageLookupByLibrary.simpleMessage("Changelog"),
+    "clearFilters": MessageLookupByLibrary.simpleMessage("Clear filters"),
     "clearSelection": MessageLookupByLibrary.simpleMessage("Clear selection"),
     "close": MessageLookupByLibrary.simpleMessage("Close"),
     "cloudCover": MessageLookupByLibrary.simpleMessage("Cloud cover"),
@@ -675,13 +676,19 @@ class MessageLookup extends MessageLookupByLibrary {
     "nestling": m42,
     "nests": MessageLookupByLibrary.simpleMessage("Nests"),
     "nestsImportedSuccessfully": m43,
+    "newEgg": MessageLookupByLibrary.simpleMessage("New egg"),
     "newInventory": MessageLookupByLibrary.simpleMessage("New inventory"),
     "newJournalEntry": MessageLookupByLibrary.simpleMessage(
       "New journal entry",
     ),
     "newNest": MessageLookupByLibrary.simpleMessage("New nest"),
     "newPoi": MessageLookupByLibrary.simpleMessage("New POI"),
+    "newRevision": MessageLookupByLibrary.simpleMessage("New revision"),
     "newSpecimen": MessageLookupByLibrary.simpleMessage("New specimen"),
+    "newVegetation": MessageLookupByLibrary.simpleMessage(
+      "New vegetation record",
+    ),
+    "newWeather": MessageLookupByLibrary.simpleMessage("New weather record"),
     "nidoparasite": MessageLookupByLibrary.simpleMessage("Nidoparasite"),
     "nidoparasitismRate": MessageLookupByLibrary.simpleMessage(
       "nidoparasitism rate",

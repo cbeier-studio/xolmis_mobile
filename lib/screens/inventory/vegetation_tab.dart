@@ -64,6 +64,42 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
     ) ?? false;
   }
 
+  void _showAddVegetationScreen(BuildContext context) {
+    final vegetationProvider = Provider.of<VegetationProvider>(context, listen: false);
+    if (MediaQuery.sizeOf(context).width > 600) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16.0),
+            ),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 400),
+              child: AddVegetationDataScreen(inventory: widget.inventory),
+            ),
+          );
+        },
+      ).then((newVegetation) async {
+        // Reload the vegetation list
+        if (newVegetation != null) {
+          await vegetationProvider.loadVegetationForInventory(widget.inventory.id);
+        }
+      });
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => AddVegetationDataScreen(inventory: widget.inventory),
+        ),
+      ).then((newVegetation) async {
+        // Reload the vegetation list
+        if (newVegetation != null) {
+          await vegetationProvider.loadVegetationForInventory(widget.inventory.id);
+        }
+      });
+    }
+  }
+
   Widget _buildVegetationList() {
     return Column(
       children: [
@@ -76,7 +112,26 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
                     return Center(
                       child: Padding(
                         padding: EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 16.0),
-                        child: Text(S.of(context).noVegetationFound),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.local_florist_outlined,
+                              size: 48,
+                              color: Theme.of(context).colorScheme.surfaceDim,
+                            ),
+                            const SizedBox(height: 8),
+                            Text(S.of(context).noVegetationFound),
+                            const SizedBox(height: 8),
+                            ActionChip(
+                              label: Text(S.of(context).newVegetation),
+                              avatar: const Icon(Icons.add_outlined),
+                              onPressed: () {
+                                _showAddVegetationScreen(context);
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   } else {

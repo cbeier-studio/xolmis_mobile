@@ -8,6 +8,7 @@ class FieldJournal {
   String? notes;
   final DateTime? creationDate;
   final DateTime? lastModifiedDate;
+  String? observer;
 
   FieldJournal({
     this.id,
@@ -15,6 +16,7 @@ class FieldJournal {
     this.notes,
     this.creationDate,
     this.lastModifiedDate,
+    this.observer,
   });
 
   factory FieldJournal.fromMap(Map<String, dynamic> map) {
@@ -28,6 +30,7 @@ class FieldJournal {
       lastModifiedDate: map['lastModifiedDate'] != null
           ? DateTime.parse(map['lastModifiedDate'])
           : null,
+      observer: map['observer'],
     );
   }
 
@@ -38,6 +41,7 @@ class FieldJournal {
       'notes': notes,
       'creationDate': creationDate?.toIso8601String(),
       'lastModifiedDate': lastModifiedDate?.toIso8601String(),
+      'observer': observer,
     };
   }
 
@@ -47,6 +51,7 @@ class FieldJournal {
     String? notes,
     DateTime? creationDate,
     DateTime? lastModifiedDate,
+    String? observer,
   }) {
     return FieldJournal(
       id: id ?? this.id,
@@ -54,6 +59,7 @@ class FieldJournal {
       notes: notes ?? this.notes,
       creationDate: creationDate ?? this.creationDate,
       lastModifiedDate: lastModifiedDate ?? this.lastModifiedDate,
+      observer: observer ?? this.observer,
     );
   }
 
@@ -64,7 +70,9 @@ class FieldJournal {
         'title: $title, '
         'notes: $notes, '
         'creationDate: $creationDate, '
-        'lastModifiedDate: $lastModifiedDate}';
+        'lastModifiedDate: $lastModifiedDate, '
+        'observer: $observer'
+        '}';
   }
 
   Map<String, dynamic> toJson() {
@@ -74,6 +82,7 @@ class FieldJournal {
       'notes': notes,
       'creationDate': creationDate?.toIso8601String(),
       'lastModifiedDate': lastModifiedDate?.toIso8601String(),
+      'observer': observer,
     };
   }
 
@@ -84,6 +93,7 @@ class FieldJournal {
       notes: json['notes'],
       creationDate: json['creationDate'] != null ? DateTime.parse(json['creationDate']) : null,
       lastModifiedDate: json['lastModifiedDate'] != null ? DateTime.parse(json['lastModifiedDate']) : null,
+      observer: json['observer'],
     );
   }
 }

@@ -71,6 +71,49 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
         false;
   }
 
+  Future<void> _showAddEggScreen(BuildContext context) async {
+    final eggProvider = Provider.of<EggProvider>(context, listen: false);
+    int nextNumber = await eggProvider.getNextSequentialNumber(widget.nest.fieldNumber!);
+    if (MediaQuery.sizeOf(context).width > 600) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16.0),
+            ),
+            child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 400),
+                child: AddEggScreen(
+                  nest: widget.nest,
+                  initialFieldNumber: '${widget.nest.fieldNumber}-${nextNumber.toString().padLeft(2, '0')}',
+                  initialSpeciesName: widget.nest.speciesName,)
+            ),
+          );
+        },
+      ).then((newEgg) {
+        // Reload the egg list
+        if (newEgg != null) {
+          eggProvider.getEggForNest(widget.nest.id!);
+        }
+      });
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => AddEggScreen(
+          nest: widget.nest,
+          initialFieldNumber: '${widget.nest.fieldNumber}-${nextNumber.toString().padLeft(2, '0')}',
+          initialSpeciesName: widget.nest.speciesName,)
+        ),
+      ).then((newEgg) {
+        // Reload the egg list
+        if (newEgg != null) {
+          eggProvider.getEggForNest(widget.nest.id!);
+        }
+      });
+    }
+  }
+
   Widget _buildEggList() {
     return Column(
       children: [
@@ -82,7 +125,26 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
                 return Center(
                   child: Padding(
                     padding: EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 16.0),
-                    child: Text(S.of(context).noEggsFound),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.egg_outlined,
+                          size: 48,
+                          color: Theme.of(context).colorScheme.surfaceDim,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(S.of(context).noEggsFound),
+                        const SizedBox(height: 8),
+                        ActionChip(
+                          label: Text(S.of(context).newEgg),
+                          avatar: const Icon(Icons.add_outlined),
+                          onPressed: () {
+                            _showAddEggScreen(context);
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 );
               } else {

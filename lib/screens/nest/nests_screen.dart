@@ -992,15 +992,59 @@ class NestsScreenState extends State<NestsScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      Icon(
+                        Icons.egg_outlined,
+                        size: 48,
+                        color: Theme.of(context).colorScheme.surfaceDim,
+                      ),
+                      const SizedBox(height: 8),
                       Text(S.of(context).noNestsFound),
                       const SizedBox(height: 8),
-                      FilledButton.icon(
+                      ActionChip(
+                        label: Text(S.of(context).newNest),
+                        avatar: const Icon(Icons.add_outlined),
+                        onPressed: () {
+                          _showAddNestScreen(context);
+                        },
+                      ),
+                      if (!_showActive) ...[
+                        const SizedBox(height: 8),
+                        ActionChip(
+                          label: Text(S.of(context).import),
+                          avatar: const Icon(Icons.file_open_outlined),
+                          onPressed: () async {
+                            await importNestsFromJson(context);
+                          },
+                        ),
+                      ],
+                      if (_searchQuery.isNotEmpty) ...[
+                        const SizedBox(height: 8),
+                        ActionChip(
+                            label: Text(S.of(context).clearFilters),
+                            avatar: const Icon(Icons.search_off_outlined),
+                            onPressed: () async {
+                              setState(() {
+                                _searchQuery = '';
+                                _searchController.clear();
+                              });
+                            }
+                        ),
+                      ],
+                      const SizedBox(height: 8),
+                      ActionChip(
                         label: Text(S.of(context).refresh),
-                        icon: const Icon(Icons.refresh_outlined),
+                        avatar: const Icon(Icons.refresh_outlined),
                         onPressed: () async {
                           await nestProvider.fetchNests();
                         },
                       ),
+                      // FilledButton.icon(
+                      //   label: Text(S.of(context).refresh),
+                      //   icon: const Icon(Icons.refresh_outlined),
+                      //   onPressed: () async {
+                      //     await nestProvider.fetchNests();
+                      //   },
+                      // ),
                     ],
                   ),
                 );

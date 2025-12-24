@@ -39,6 +39,13 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
   late SortOrder _sortOrder = widget.inventory.type == InventoryType.invTransectDetection ||
       widget.inventory.type == InventoryType.invPointDetection ? SortOrder.descending : SortOrder.ascending;
   // SearchController? _searchController;
+  final SearchController _searchController = SearchController(); // Crie o controller aqui
+
+  @override
+  void dispose() {
+    _searchController.dispose(); // Faça o dispose do controller
+    super.dispose();
+  }
 
   @override
   bool get wantKeepAlive => true;
@@ -360,6 +367,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 840),
             child: SearchAnchor(
+              searchController: _searchController,
               isFullScreen: MediaQuery.of(context).size.width < 600,
               builder: (context, controller) {
                 // _searchController = controller;
@@ -506,7 +514,26 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
 
         if (speciesList.isEmpty) {
           return Center(
-            child: Text(S.of(context).noSpeciesFound),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.checklist_outlined,
+                  size: 48,
+                  color: Theme.of(context).colorScheme.surfaceDim,
+                ),
+                const SizedBox(height: 8),
+                Text(S.of(context).noSpeciesFound),
+                const SizedBox(height: 8),
+                ActionChip(
+                  label: Text(S.of(context).addSpecies),
+                  avatar: const Icon(Icons.add_outlined),
+                  onPressed: () {
+                    _searchController.openView();
+                  },
+                ),
+              ],
+            ),
           );
         } else {
           return LayoutBuilder(

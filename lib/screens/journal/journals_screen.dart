@@ -505,15 +505,49 @@ class JournalsScreenState extends State<JournalsScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
+                          Icon(
+                            Icons.note_outlined,
+                            size: 48,
+                            color: Theme.of(context).colorScheme.surfaceDim,
+                          ),
+                          const SizedBox(height: 8),
                           Text(S.of(context).noJournalEntriesFound),
                           const SizedBox(height: 8),
-                          FilledButton.icon(
+                          ActionChip(
+                            label: Text(S.of(context).newJournalEntry),
+                            avatar: const Icon(Icons.add_outlined),
+                            onPressed: () {
+                              _showAddJournalScreen(context);
+                            },
+                          ),
+                          if (_searchQuery.isNotEmpty) ...[
+                            const SizedBox(height: 8),
+                            ActionChip(
+                                label: Text(S.of(context).clearFilters),
+                                avatar: const Icon(Icons.search_off_outlined),
+                                onPressed: () async {
+                                  setState(() {
+                                    _searchQuery = '';
+                                    _searchController.clear();
+                                  });
+                                }
+                            ),
+                          ],
+                          const SizedBox(height: 8),
+                          ActionChip(
                             label: Text(S.of(context).refresh),
-                            icon: const Icon(Icons.refresh_outlined),
+                            avatar: const Icon(Icons.refresh_outlined),
                             onPressed: () async {
                               await journalProvider.fetchJournalEntries();
                             },
-                          )
+                          ),
+                          // FilledButton.icon(
+                          //   label: Text(S.of(context).refresh),
+                          //   icon: const Icon(Icons.refresh_outlined),
+                          //   onPressed: () async {
+                          //     await journalProvider.fetchJournalEntries();
+                          //   },
+                          // )
                         ],
                       ),
                     );
