@@ -125,6 +125,7 @@ class DatabaseHelper {
           heightAboveGround REAL,
           foundTime TEXT,
           lastTime TEXT,
+          observer TEXT,
           nestFate INTEGER,
           male TEXT,
           female TEXT,
@@ -172,6 +173,7 @@ class DatabaseHelper {
           latitude REAL,
           locality TEXT,
           speciesName TEXT,
+          observer TEXT,
           notes TEXT,
           isPending INTEGER DEFAULT 1
         )
@@ -208,7 +210,8 @@ class DatabaseHelper {
         title TEXT NOT NULL,
         notes TEXT,
         creationDate TEXT,
-        lastModifiedDate TEXT
+        lastModifiedDate TEXT,
+        observer TEXT
       )
     ''');
   }
@@ -426,6 +429,30 @@ class DatabaseHelper {
       final observerAbbrev = prefs.getString('observerAcronym') ?? '';
       db.update(
         'inventories',
+        {'observer': observerAbbrev},
+        where: 'observer IS NULL',        
+      );
+      db.execute(
+        'ALTER TABLE nests ADD COLUMN observer TEXT',
+      );
+      db.update(
+        'nests',
+        {'observer': observerAbbrev},
+        where: 'observer IS NULL',        
+      );
+      db.execute(
+        'ALTER TABLE specimens ADD COLUMN observer TEXT',
+      );
+      db.update(
+        'specimens',
+        {'observer': observerAbbrev},
+        where: 'observer IS NULL',        
+      );
+      db.execute(
+        'ALTER TABLE field_journal ADD COLUMN observer TEXT',
+      );
+      db.update(
+        'field_journal',
         {'observer': observerAbbrev},
         where: 'observer IS NULL',        
       );
