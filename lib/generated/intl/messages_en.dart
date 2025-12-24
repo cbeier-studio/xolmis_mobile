@@ -152,29 +152,32 @@ class MessageLookup extends MessageLookupByLibrary {
       "${Intl.plural(howMany, one: 'Revision', other: 'Revisions')}";
 
   static String m46(howMany) =>
-      "${Intl.plural(howMany, one: 'Species', other: 'Species')}";
+      "selected ${Intl.plural(howMany, one: 'nest', other: 'nests')}";
 
   static String m47(howMany) =>
-      "${Intl.plural(howMany, one: 'sp.', other: 'spp.')}";
+      "${Intl.plural(howMany, one: 'Species', other: 'Species')}";
 
   static String m48(howMany) =>
-      "${Intl.plural(howMany, zero: 'species', one: 'species', other: 'species')}";
+      "${Intl.plural(howMany, one: 'sp.', other: 'spp.')}";
 
   static String m49(howMany) =>
-      "${Intl.plural(howMany, one: '1 species', other: '${howMany} species')} per list";
+      "${Intl.plural(howMany, zero: 'species', one: 'species', other: 'species')}";
 
   static String m50(howMany) =>
-      "${Intl.plural(howMany, one: 'Specimen data', other: 'Specimens data')}";
+      "${Intl.plural(howMany, one: '1 species', other: '${howMany} species')} per list";
 
   static String m51(howMany) =>
-      "${Intl.plural(howMany, one: 'Specimen exported!', other: 'Specimens exported!')}";
+      "${Intl.plural(howMany, one: 'Specimen data', other: 'Specimens data')}";
 
   static String m52(howMany) =>
+      "${Intl.plural(howMany, one: 'Specimen exported!', other: 'Specimens exported!')}";
+
+  static String m53(howMany) =>
       "${Intl.plural(howMany, one: 'Specimen', other: 'Specimens')}";
 
-  static String m53(howMany) => "Specimens imported successfully: ${howMany}";
+  static String m54(howMany) => "Specimens imported successfully: ${howMany}";
 
-  static String m54(howMany) => "Top ${howMany} most recorded species";
+  static String m55(howMany) => "Top ${howMany} most recorded species";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -839,6 +842,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "selectedInventories": MessageLookupByLibrary.simpleMessage(
       "selected inventories",
     ),
+    "selectedNests": m46,
     "sendBackupTo": MessageLookupByLibrary.simpleMessage("Send backup to..."),
     "settings": MessageLookupByLibrary.simpleMessage("Settings"),
     "shareImage": MessageLookupByLibrary.simpleMessage("Share image"),
@@ -861,20 +865,20 @@ class MessageLookup extends MessageLookupByLibrary {
     "sortByTime": MessageLookupByLibrary.simpleMessage("Sort by Time"),
     "sortByTitle": MessageLookupByLibrary.simpleMessage("Sort by Title"),
     "sortDescending": MessageLookupByLibrary.simpleMessage("Sort descending"),
-    "species": m46,
+    "species": m47,
     "speciesAccumulated": MessageLookupByLibrary.simpleMessage(
       "Species accumulated",
     ),
     "speciesAccumulationCurve": MessageLookupByLibrary.simpleMessage(
       "Species accumulation",
     ),
-    "speciesAcronym": m47,
-    "speciesCount": m48,
+    "speciesAcronym": m48,
+    "speciesCount": m49,
     "speciesCounted": MessageLookupByLibrary.simpleMessage("Species counted"),
     "speciesInfo": MessageLookupByLibrary.simpleMessage("Species information"),
     "speciesName": MessageLookupByLibrary.simpleMessage("Species name"),
     "speciesNotes": MessageLookupByLibrary.simpleMessage("Species notes"),
-    "speciesPerList": m49,
+    "speciesPerList": m50,
     "speciesPerListTitle": MessageLookupByLibrary.simpleMessage(
       "Species per list",
     ),
@@ -886,9 +890,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "specimenBlood": MessageLookupByLibrary.simpleMessage("Blood"),
     "specimenBones": MessageLookupByLibrary.simpleMessage("Bones"),
     "specimenClaw": MessageLookupByLibrary.simpleMessage("Claw"),
-    "specimenData": m50,
+    "specimenData": m51,
     "specimenEgg": MessageLookupByLibrary.simpleMessage("Egg"),
-    "specimenExported": m51,
+    "specimenExported": m52,
     "specimenFeathers": MessageLookupByLibrary.simpleMessage("Feathers"),
     "specimenFeces": MessageLookupByLibrary.simpleMessage("Feces"),
     "specimenNest": MessageLookupByLibrary.simpleMessage("Nest"),
@@ -903,8 +907,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "specimenWholeCarcass": MessageLookupByLibrary.simpleMessage(
       "Whole carcass",
     ),
-    "specimens": m52,
-    "specimensImportedSuccessfully": m53,
+    "specimens": m53,
+    "specimensImportedSuccessfully": m54,
     "startInventory": MessageLookupByLibrary.simpleMessage("Start inventory"),
     "startNextList": MessageLookupByLibrary.simpleMessage("Start next list"),
     "startTime": MessageLookupByLibrary.simpleMessage("Start time"),
@@ -923,7 +927,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Timed qualitative lists",
     ),
     "title": MessageLookupByLibrary.simpleMessage("Title"),
-    "topSpecies": m54,
+    "topSpecies": m55,
     "totalAbundance": MessageLookupByLibrary.simpleMessage("total abundance"),
     "totalIndividuals": MessageLookupByLibrary.simpleMessage(
       "Total Individuals",

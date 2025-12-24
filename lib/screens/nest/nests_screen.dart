@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/models/nest.dart';
 import '../../providers/nest_provider.dart';
 
+import '../statistics/stats_nests_screen.dart';
 import 'add_nest_screen.dart';
 import 'nest_detail_screen.dart';
 
@@ -801,6 +802,25 @@ class NestsScreenState extends State<NestsScreen> {
                           child: const Text('JSON'),
                         ),
                       ],
+                    ),
+                    if (selectedNests.length > 1)
+                    IconButton(
+                      icon: const Icon(Icons.insert_chart_outlined),
+                      tooltip: S.of(context).statistics,
+                      onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => StatsNestsScreen(
+                                  nests: selectedNests
+                                      .map((id) =>
+                                          nestProvider.getNestById(id))
+                                      .whereType<Nest>()
+                                      .toList(),
+                                ),
+                              ),
+                            );
+                          },
                     ),
                     const VerticalDivider(),
                     // Option to clear the selected nests

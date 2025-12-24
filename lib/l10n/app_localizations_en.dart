@@ -1513,6 +1513,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get insertObserver => 'Insert observer';
 
   @override
+  String selectedNests(int howMany) {
+    String _temp0 = intl.Intl.pluralLogic(
+      howMany,
+      locale: localeName,
+      other: 'nests',
+      one: 'nest',
+    );
+    return 'selected $_temp0';
+  }
+
+  @override
   String get countryArgentina => 'Argentina';
 
   @override

@@ -4047,6 +4047,16 @@ class S {
     );
   }
 
+  /// `selected {howMany, plural, one{nest} other{nests}}`
+  String selectedNests(int howMany) {
+    return Intl.message(
+      'selected ${Intl.plural(howMany, one: 'nest', other: 'nests')}',
+      name: 'selectedNests',
+      desc: 'Selected nests field label',
+      args: [howMany],
+    );
+  }
+
   /// `Argentina`
   String get countryArgentina {
     return Intl.message(

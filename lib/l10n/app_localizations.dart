@@ -2466,6 +2466,12 @@ abstract class AppLocalizations {
   /// **'Insert observer'**
   String get insertObserver;
 
+  /// Selected nests field label
+  ///
+  /// In en, this message translates to:
+  /// **'selected {howMany, plural, one{nest} other{nests}}'**
+  String selectedNests(int howMany);
+
   /// No description provided for @countryArgentina.
   ///
   /// In en, this message translates to:

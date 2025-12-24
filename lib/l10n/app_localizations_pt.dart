@@ -1518,6 +1518,17 @@ class AppLocalizationsPt extends AppLocalizations {
   String get insertObserver => 'Insira o observador';
 
   @override
+  String selectedNests(int howMany) {
+    String _temp0 = intl.Intl.pluralLogic(
+      howMany,
+      locale: localeName,
+      other: 'ninhos selecionados',
+      one: 'ninho selecionado',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get countryArgentina => 'Argentina';
 
   @override
@@ -3253,6 +3264,17 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get insertObserver => 'Insira o observador';
+
+  @override
+  String selectedNests(int howMany) {
+    String _temp0 = intl.Intl.pluralLogic(
+      howMany,
+      locale: localeName,
+      other: 'ninhos selecionados',
+      one: 'ninho selecionado',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get countryArgentina => 'Argentina';

@@ -2296,6 +2296,17 @@
       "type": "text",
       "description": "Insert observer button label"
     },
+    "selectedNests": "selected {howMany, plural, one{nest} other{nests}}",
+    "@selectedNests": {
+      "type": "text",
+      "description": "Selected nests field label",
+      "placeholders": {
+        "howMany": {
+          "type": "int",
+          "description": "Number of nests"
+        }
+      }
+    },
   "countryArgentina": "Argentina",
   "countryBrazil": "Brazil",
   "countryParaguay": "Paraguay",
