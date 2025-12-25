@@ -327,12 +327,18 @@ class _AppImageScreenState extends State<AppImageScreen> {
     } else {
       if (cameraStatus.isPermanentlyDenied || photosStatus.isPermanentlyDenied) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(S.current.permissionDeniedPermanently)),
+          SnackBar(
+            backgroundColor: Theme.of(context).colorScheme.error,
+              content: Text(S.current.permissionDeniedPermanently)
+          ),
         );
         openAppSettings();
       } else if (cameraStatus.isDenied || photosStatus.isDenied) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(S.current.permissionDenied)),
+          SnackBar(
+            backgroundColor: Theme.of(context).colorScheme.error,
+              content: Text(S.current.permissionDenied)
+          ),
         );
       }
       return false;

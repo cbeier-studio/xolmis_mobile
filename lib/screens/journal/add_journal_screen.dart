@@ -501,13 +501,8 @@ class AddJournalScreenState extends State<AddJournalScreen> {
             SnackBar(
               persist: true,
               showCloseIcon: true,
-              content: Row(
-                children: [
-                  Icon(Icons.error_outlined, color: Colors.red),
-                  SizedBox(width: 8),
-                  Text(S.current.errorSavingJournalEntry),
-                ],
-              ),
+              backgroundColor: Theme.of(context).colorScheme.error,
+              content: Text(S.current.errorSavingJournalEntry),
             ),
           );
         }
@@ -536,13 +531,8 @@ class AddJournalScreenState extends State<AddJournalScreen> {
               SnackBar(
                 persist: true,
                 showCloseIcon: true,
-                content: Row(
-                  children: [
-                    Icon(Icons.error_outlined, color: Colors.red),
-                    SizedBox(width: 8),
-                    Text(S.current.errorSavingJournalEntry),
-                  ],
-                ),
+                backgroundColor: Theme.of(context).colorScheme.error,
+                content: Text(S.current.errorSavingJournalEntry),
               ),
             );
           

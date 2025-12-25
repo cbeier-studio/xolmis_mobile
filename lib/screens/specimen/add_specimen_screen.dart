@@ -296,13 +296,8 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
             SnackBar(
               persist: true,
               showCloseIcon: true,
-              content: Row(
-                children: [
-                  Icon(Icons.error_outlined, color: Colors.red),
-                  SizedBox(width: 8),
-                  Text(S.current.errorSavingSpecimen),
-                ],
-              ),
+              backgroundColor: Theme.of(context).colorScheme.error,
+              content: Text(S.current.errorSavingSpecimen),
             ),
           );
         }
@@ -333,13 +328,8 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
           if (error.toString().contains(S.current.errorSpecimenAlreadyExists)) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Row(
-                  children: [
-                    Icon(Icons.info_outlined, color: Colors.blue),
-                    SizedBox(width: 8),
-                    Text(S.current.errorSpecimenAlreadyExists),
-                  ],
-                ),
+                backgroundColor: Colors.amber,
+                content: Text(S.current.errorSpecimenAlreadyExists),
               ),
             );
           } else {
@@ -347,13 +337,8 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
               SnackBar(
                 persist: true,
               showCloseIcon: true,
-                content: Row(
-                  children: [
-                    Icon(Icons.error_outlined, color: Colors.red),
-                    SizedBox(width: 8),
-                    Text(S.current.errorSavingSpecimen),
-                  ],
-                ),
+                backgroundColor: Theme.of(context).colorScheme.error,
+                content: Text(S.current.errorSavingSpecimen),
               ),
             );
           }

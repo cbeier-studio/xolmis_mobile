@@ -133,13 +133,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
   void _showSpeciesAlreadyExistsMessage() {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Row(
-          children: [
-            const Icon(Icons.info_outlined, color: Colors.blue),
-            const SizedBox(width: 8),
-            Text(S.of(context).errorSpeciesAlreadyExists),
-          ],
-        ),
+        content: Text(S.of(context).errorSpeciesAlreadyExists),
       ),
     );
   }
@@ -667,14 +661,8 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                                     SnackBar(
                                       persist: true,
                                       showCloseIcon: true,
-                                      content: Row(
-                                        children: [
-                                          const Icon(Icons.error_outlined,
-                                              color: Colors.red),
-                                          const SizedBox(width: 8),
-                                          Text(S.of(context).errorGettingLocation),
-                                        ],
-                                      ),
+                                      backgroundColor: Theme.of(context).colorScheme.error,
+                                      content: Text(S.of(context).errorGettingLocation),
                                     ),
                                   );
                                 }

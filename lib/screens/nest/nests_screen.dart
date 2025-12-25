@@ -269,13 +269,8 @@ class NestsScreenState extends State<NestsScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             showCloseIcon: true,
-                            content: Row(
-              children: [
-                Icon(Icons.warning_amber_outlined, color: Colors.orange),
-                SizedBox(width: 8),
-                Text(S.of(context).observerAbbreviationMissing),
-              ],
-            ),
+                            backgroundColor: Colors.amber,
+                            content: Text(S.of(context).observerAbbreviationMissing),
                           ),
                         );
         // showDialog(
@@ -422,13 +417,8 @@ class NestsScreenState extends State<NestsScreen> {
                           SnackBar(
                             persist: true,
                             showCloseIcon: true,
-                            content: Row(
-              children: [
-                Icon(Icons.error_outlined, color: Colors.red),
-                SizedBox(width: 8),
-                Text(S.of(context).errorExportingNest(2, error.toString())),
-              ],
-            ),
+                            backgroundColor: Theme.of(context).colorScheme.error,
+                            content: Text(S.of(context).errorExportingNest(2, error.toString())),
                           ),
                         );
       // showDialog(
@@ -512,13 +502,8 @@ class NestsScreenState extends State<NestsScreen> {
                           SnackBar(
                             persist: true,
                             showCloseIcon: true,
-                            content: Row(
-              children: [
-                Icon(Icons.error_outlined, color: Colors.red),
-                SizedBox(width: 8),
-                Text(S.of(context).errorExportingNest(2, error.toString())),
-              ],
-            ),
+                            backgroundColor: Theme.of(context).colorScheme.error,
+                            content: Text(S.of(context).errorExportingNest(2, error.toString())),
                           ),
                         );
       // showDialog(
@@ -608,13 +593,8 @@ class NestsScreenState extends State<NestsScreen> {
                           SnackBar(
                             persist: true,
                             showCloseIcon: true,
-                            content: Row(
-              children: [
-                Icon(Icons.error_outlined, color: Colors.red),
-                SizedBox(width: 8),
-                Text(S.of(context).errorExportingNest(2, error.toString())),
-              ],
-            ),
+                            backgroundColor: Theme.of(context).colorScheme.error,
+                            content: Text(S.of(context).errorExportingNest(2, error.toString())),
                           ),
                         );
       // showDialog(
@@ -813,8 +793,8 @@ class NestsScreenState extends State<NestsScreen> {
                               MaterialPageRoute(
                                 builder: (context) => StatsNestsScreen(
                                   nests: selectedNests
-                                      .map((id) =>
-                                          nestProvider.getNestById(id))
+                                      .map((id) async =>
+                                          await nestProvider.getNestById(id))
                                       .whereType<Nest>()
                                       .toList(),
                                 ),
@@ -924,6 +904,7 @@ class NestsScreenState extends State<NestsScreen> {
                             },
                             child: Text(S.of(context).import),
                           ),
+                          if (nestProvider.inactiveNests.isNotEmpty) ...[
                           MenuItemButton(
                             leadingIcon: const Icon(Icons.share_outlined),
                             onPressed: () async {
@@ -931,6 +912,7 @@ class NestsScreenState extends State<NestsScreen> {
                             },
                             child: Text(S.of(context).exportAll),
                           ),
+                          ],
                         ],
                       ),
                     ],
@@ -1437,6 +1419,7 @@ class NestsScreenState extends State<NestsScreen> {
                           //     }),
                         ],
                       ),
+                      if (nestProvider.inactiveNests.isNotEmpty) ...[
                       Divider(),
                       Row(
                         children: [
@@ -1468,6 +1451,7 @@ class NestsScreenState extends State<NestsScreen> {
                           ),
                         ],
                       ),
+                      ],
                     ],
                   ),
                 ),

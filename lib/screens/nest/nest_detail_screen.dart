@@ -182,13 +182,8 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             showCloseIcon: true,
-                            content: Row(
-              children: [
-                Icon(Icons.warning_amber_outlined, color: Colors.orange),
-                SizedBox(width: 8),
-                Text(S.of(context).nestRevisionsMissing),
-              ],
-            ),
+                            backgroundColor: Colors.amber,
+                            content: Text(S.of(context).nestRevisionsMissing),
                           ),
                         );
                         // showDialog(
@@ -285,6 +280,7 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                                     SnackBar(
                                       persist: true,
                                       showCloseIcon: true,
+                                      backgroundColor: Theme.of(context).colorScheme.error,
                                       content: Text(S.of(context).errorInactivatingNest(error.toString())),
                                     ),
                                   );
@@ -520,13 +516,8 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             showCloseIcon: true,
-                            content: Row(
-              children: [
-                Icon(Icons.warning_amber_outlined, color: Colors.orange),
-                SizedBox(width: 8),
-                Text(S.of(context).nestRevisionsMissing),
-              ],
-            ),
+                            backgroundColor: Colors.amber,
+                            content: Text(S.of(context).nestRevisionsMissing),
                           ),
                         );
                         // showDialog(
@@ -623,6 +614,7 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                                     SnackBar(
                                       persist: true,
                                       showCloseIcon: true,
+                                      backgroundColor: Theme.of(context).colorScheme.error,
                                       content: Text(S.of(context).errorInactivatingNest(error.toString())),
                                     ),
                                   );

@@ -159,6 +159,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
             SnackBar(
               persist: true,
               showCloseIcon: true,
+              backgroundColor: Theme.of(context).colorScheme.error,
               content: Text(
                 "Error during initial provider fetch invocation: $e\n$s",
               ),

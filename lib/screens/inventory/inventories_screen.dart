@@ -272,14 +272,8 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             showCloseIcon: true,
-            content:
-            // Row(
-            //   children: [
-            //     Icon(Icons.warning_amber_outlined, color: Colors.orange),
-            //     SizedBox(width: 8),
-                Text(S.of(context).observerAbbreviationMissing, softWrap: true,),
-            //   ],
-            // ),
+            backgroundColor: Colors.amber,
+            content: Text(S.of(context).observerAbbreviationMissing, softWrap: true,),
           ),
         );
         // showDialog(
@@ -310,13 +304,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             showCloseIcon: true,
-            content: Row(
-              children: [
-                Icon(Icons.info_outlined, color: Colors.blue),
-                SizedBox(width: 8),
-                Text(S.of(context).simultaneousLimitReached),
-              ],
-            ),
+            content: Text(S.of(context).simultaneousLimitReached),
           ),
         );
       }
@@ -437,13 +425,8 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
         SnackBar(
           persist: true,
           showCloseIcon: true,
-          content: Row(
-            children: [
-              Icon(Icons.error_outlined, color: Colors.red),
-              SizedBox(width: 8),
-              Expanded(child: Text(S.current.errorExportingInventory(2, error.toString()))),
-            ],
-          ),
+          backgroundColor: Theme.of(context).colorScheme.error,
+          content: Text(S.current.errorExportingInventory(2, error.toString())),
         ),
       );
       // showDialog(
@@ -528,13 +511,8 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
         SnackBar(
           persist: true,
           showCloseIcon: true,
-          content: Row(
-            children: [
-              Icon(Icons.error_outlined, color: Colors.red),
-              SizedBox(width: 8),
-              Expanded(child: Text(S.current.errorExportingInventory(2, error.toString()))),
-            ],
-          ),
+          backgroundColor: Theme.of(context).colorScheme.error,
+          content: Text(S.current.errorExportingInventory(2, error.toString())),
         ),
       );
       // showDialog(
@@ -622,13 +600,8 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
         SnackBar(
           persist: true,
           showCloseIcon: true,
-          content: Row(
-            children: [
-              Icon(Icons.error_outlined, color: Colors.red),
-              SizedBox(width: 8),
-              Expanded(child: Text(S.current.errorExportingInventory(2, error.toString()))),
-            ],
-          ),
+          backgroundColor: Theme.of(context).colorScheme.error,
+          content: Text(S.current.errorExportingInventory(2, error.toString())),
         ),
       );
       // showDialog(
@@ -1025,6 +998,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                 },
                 child: Text(S.of(context).import),
               ),
+              if (inventoryProvider.finishedInventories.isNotEmpty) ...[
               // Action to export all finished inventories to JSON
               MenuItemButton(
                 leadingIcon: const Icon(Icons.share_outlined),
@@ -1033,6 +1007,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                 },
                 child: Text(S.of(context).exportAll),
               ),
+              ],
             ],
           ),
           ],
@@ -1457,13 +1432,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                   if (context.mounted) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
-                                        content: Row(
-                                          children: [
-                                            const Icon(Icons.warning_amber_outlined, color: Colors.orange),
-                                            const SizedBox(width: 8),
-                                            Text(S.of(context).inventoryIdAlreadyExists),
-                                          ],
-                                        ),
+                                        content: Text(S.of(context).inventoryIdAlreadyExists),
                                       ),
                                     );
                                   }
@@ -1713,6 +1682,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                           //     }),
                         ],
                       ),
+                      if (inventoryProvider.finishedInventories.isNotEmpty) ...[
                       Divider(),
                       Row(
                         children: [
@@ -1742,6 +1712,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                           ),
                         ],
                       ),
+                      ],
                     ],
                   ),
                 ),

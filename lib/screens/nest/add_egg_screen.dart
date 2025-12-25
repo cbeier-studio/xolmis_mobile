@@ -268,13 +268,8 @@ class AddEggScreenState extends State<AddEggScreen> {
             SnackBar(
               persist: true,
               showCloseIcon: true,
-              content: Row(
-                children: [
-                  Icon(Icons.error_outlined, color: Colors.red),
-                  SizedBox(width: 8),
-                  Text(S.current.errorSavingEgg),
-                ],
-              ),
+              backgroundColor: Theme.of(context).colorScheme.error,
+              content: Text(S.current.errorSavingEgg),
             ),
           );
         }
@@ -304,13 +299,8 @@ class AddEggScreenState extends State<AddEggScreen> {
           if (error.toString().contains(S.current.errorEggAlreadyExists)) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Row(
-                  children: [
-                    Icon(Icons.info_outlined, color: Colors.blue),
-                    SizedBox(width: 8),
-                    Text(S.current.errorEggAlreadyExists),
-                  ],
-                ),
+                backgroundColor: Colors.amber,
+                content: Text(S.current.errorEggAlreadyExists),
               ),
             );
           } else {
@@ -318,13 +308,8 @@ class AddEggScreenState extends State<AddEggScreen> {
               SnackBar(
                 persist: true,
                 showCloseIcon: true,
-                content: Row(
-                  children: [
-                    Icon(Icons.error_outlined, color: Colors.red),
-                    SizedBox(width: 8),
-                    Text(S.current.errorSavingEgg),
-                  ],
-                ),
+                backgroundColor: Theme.of(context).colorScheme.error,
+                content: Text(S.current.errorSavingEgg),
               ),
             );
           }

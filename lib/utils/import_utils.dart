@@ -161,6 +161,9 @@ Future<void> importInventoryFromJson(BuildContext context) async {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             showCloseIcon: true,
+            backgroundColor: errorCount > 0
+              ? Theme.of(context).colorScheme.error
+              : Colors.green,
             content: Text(message), duration: Duration(seconds: 4)),
         );
       }
@@ -200,6 +203,9 @@ Future<void> importInventoryFromJson(BuildContext context) async {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           showCloseIcon: true,
+          backgroundColor: importErrors.isNotEmpty
+            ? Theme.of(context).colorScheme.error
+            : Colors.green,
           content: Text(summaryMessage),
           duration: Duration(seconds: importErrors.isEmpty ? 2 : 5),
         ),
@@ -222,13 +228,8 @@ Future<void> importInventoryFromJson(BuildContext context) async {
         SnackBar(
           persist: true,
               showCloseIcon: true,
-          content: Row(
-            children: [
-              Icon(Icons.error_outlined, color: Colors.red),
-              SizedBox(width: 8),
-              Text(errorMessage),
-            ],
-          ),
+          backgroundColor: Theme.of(context).colorScheme.error,
+          content: Text(errorMessage),
           duration: Duration(seconds: 5),
         ),
       );
@@ -340,11 +341,22 @@ Future<void> importNestsFromJson(BuildContext context) async {
           : S.current.importCompletedWithErrors(successfullyImportedCount, importErrors.length);
       if (importErrors.isNotEmpty) debugPrint("Import errors: \n${importErrors.join('\n')}");
 
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(summaryMessage)));
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: importErrors.isNotEmpty
+              ? Theme.of(context).colorScheme.error
+              : Colors.green,
+              content: Text(summaryMessage)
+          )
+      );
     } else {
       // if (isDialogShown && context.mounted) Navigator.of(context).pop();
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(S.current.noFileSelected)));
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text(S.current.noFileSelected)
+          )
+      );
     }
   } catch (error) {
     if (isDialogShown && context.mounted) Navigator.of(context).pop();
@@ -356,10 +368,8 @@ Future<void> importNestsFromJson(BuildContext context) async {
       SnackBar(
         persist: true,
         showCloseIcon: true,
-        content: Row(children: [
-          Icon(Icons.error_outlined, color: Colors.red), 
-          SizedBox(width: 8), 
-          Text(errorMessage)]), 
+        backgroundColor: Theme.of(context).colorScheme.error,
+        content: Text(errorMessage),
         )
         );
   } finally {
@@ -466,11 +476,22 @@ Future<void> importSpecimensFromJson(BuildContext context) async {
           : S.current.importCompletedWithErrors(successfullyImportedCount, importErrors.length);
       if (importErrors.isNotEmpty) debugPrint("Import errors: \n${importErrors.join('\n')}");
 
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(summaryMessage)));
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: importErrors.isNotEmpty
+              ? Theme.of(context).colorScheme.error
+              : Colors.green,
+              content: Text(summaryMessage)
+          )
+      );
     } else {
       // if (isDialogShown && context.mounted) Navigator.of(context).pop();
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(S.current.noFileSelected)));
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text(S.current.noFileSelected)
+          )
+      );
     }
   } catch (error) {
     if (isDialogShown && context.mounted) Navigator.of(context).pop();
@@ -481,11 +502,9 @@ Future<void> importSpecimensFromJson(BuildContext context) async {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         persist: true,
-        showCloseIcon: true, 
-        content: Row(children: [
-          Icon(Icons.error_outlined, color: Colors.red), 
-          SizedBox(width: 8), 
-          Text(errorMessage)]), 
+        showCloseIcon: true,
+        backgroundColor: Theme.of(context).colorScheme.error,
+        content: Text(errorMessage),
           )
           );
   } finally {

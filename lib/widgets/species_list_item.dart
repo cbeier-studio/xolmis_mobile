@@ -148,13 +148,8 @@ class SpeciesListItemState extends State<SpeciesListItem> {
                           SnackBar(
                             persist: true,
                             showCloseIcon: true,
-                            content: Row(
-                              children: [
-                                const Icon(Icons.error_outlined, color: Colors.red),
-                                const SizedBox(width: 8),
-                                Text(S.of(context).errorGettingLocation),
-                              ],
-                            ),
+                            backgroundColor: Theme.of(context).colorScheme.error,
+                            content: Text(S.of(context).errorGettingLocation),
                           ),
                         );
                       }

@@ -708,6 +708,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         if (result.status == ShareResultStatus.success) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
+              backgroundColor: Colors.green,
               content: Text(S.current.backupCreatedAndSharedSuccessfully),
             ),
           );
@@ -723,6 +724,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           SnackBar(
             persist: true,
               showCloseIcon: true,
+            backgroundColor: Theme.of(context).colorScheme.error,
             content: Text(S.current.errorBackupNotFound)
             )
             );
@@ -736,6 +738,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         SnackBar(
           persist: true,
               showCloseIcon: true,
+          backgroundColor: Theme.of(context).colorScheme.error,
           content: Text('${S.current.errorCreatingBackup}: ${e.toString()}'),
         ),
       );
@@ -825,13 +828,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             showCloseIcon: true,
-                            content: Row(
-              children: [
-                Icon(Icons.info_outlined, color: Colors.blue),
-                SizedBox(width: 8),
-                Text(S.of(context).backupRestoredSuccessfully),
-              ],
-            ),
+                            backgroundColor: Colors.green,
+                            content: Text(S.of(context).backupRestoredSuccessfully),
                           ),
                         );
             // showDialog(
@@ -861,6 +859,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             SnackBar(
               persist: true,
               showCloseIcon: true,
+              backgroundColor: Theme.of(context).colorScheme.error,
               content: Text(S.current.errorRestoringBackup)),
           );
         }
@@ -873,6 +872,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           SnackBar(
             persist: true,
               showCloseIcon: true,
+            backgroundColor: Theme.of(context).colorScheme.error,
             content: Text('${S.current.errorRestoringBackup}: ${e.toString()}'),
           ),
         );

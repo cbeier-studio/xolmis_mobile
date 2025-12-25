@@ -378,13 +378,8 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
           SnackBar(
             persist: true,
             showCloseIcon: true,
-            content: Row(
-              children: [
-                const Icon(Icons.error_outlined, color: Colors.red),
-                const SizedBox(width: 8),
-                Text(S.of(context).errorSavingWeather), // Use S.of(context)
-              ],
-            ),
+            backgroundColor: Theme.of(context).colorScheme.error,
+            content: Text(S.of(context).errorSavingWeather),
           ),
         );
       }

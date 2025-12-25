@@ -225,13 +225,8 @@ class SpecimensScreenState extends State<SpecimensScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             showCloseIcon: true,
-                            content: Row(
-              children: [
-                Icon(Icons.warning_amber_outlined, color: Colors.orange),
-                SizedBox(width: 8),
-                Text(S.of(context).observerAbbreviationMissing),
-              ],
-            ),
+                            backgroundColor: Colors.amber,
+                            content: Text(S.of(context).observerAbbreviationMissing),
                           ),
                         );
         // showDialog(
@@ -361,13 +356,8 @@ class SpecimensScreenState extends State<SpecimensScreen> {
         SnackBar(
           persist: true,
               showCloseIcon: true,
-          content: Row(
-            children: [
-              Icon(Icons.error_outlined, color: Colors.red),
-              const SizedBox(width: 8),
-              Text(S.current.errorExportingSpecimen(2, error.toString())),
-            ],
-          ),
+          backgroundColor: Theme.of(context).colorScheme.error,
+          content: Text(S.current.errorExportingSpecimen(2, error.toString())),
         ),
       );
     }
@@ -388,13 +378,8 @@ class SpecimensScreenState extends State<SpecimensScreen> {
         SnackBar(
           persist: true,
               showCloseIcon: true,
-          content: Row(
-            children: [
-              Icon(Icons.error_outlined, color: Colors.red),
-              const SizedBox(width: 8),
-              Text(S.current.errorExportingSpecimen(2, error.toString())),
-            ],
-          ),
+          backgroundColor: Theme.of(context).colorScheme.error,
+          content: Text(S.current.errorExportingSpecimen(2, error.toString())),
         ),
       );
     }
@@ -415,13 +400,8 @@ class SpecimensScreenState extends State<SpecimensScreen> {
         SnackBar(
           persist: true,
               showCloseIcon: true,
-          content: Row(
-            children: [
-              Icon(Icons.error_outlined, color: Colors.red),
-              const SizedBox(width: 8),
-              Text(S.current.errorExportingSpecimen(2, error.toString())),
-            ],
-          ),
+          backgroundColor: Theme.of(context).colorScheme.error,
+          content: Text(S.current.errorExportingSpecimen(2, error.toString())),
         ),
       );
     }
@@ -745,6 +725,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                 },
                 child: Text(S.of(context).import),
               ),
+              if (specimenProvider.specimens.isNotEmpty) ...[
               MenuItemButton(
                 leadingIcon: const Icon(Icons.share_outlined),
                 onPressed: () {
@@ -766,6 +747,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                 },
                 child: Text('${S.of(context).exportAll} (JSON)'),
               ),
+              ],
             ],
           ),
           ],
@@ -1197,6 +1179,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                           //     }),
                         ],
                       ),
+                      if (specimenProvider.specimens.isNotEmpty) ...[
                       Divider(),
                       Row(
                         children: [
@@ -1242,6 +1225,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                           ),
                         ],
                       ),
+                      ],
                     ],
                   ),
                 ),

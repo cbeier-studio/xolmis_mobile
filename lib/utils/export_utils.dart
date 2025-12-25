@@ -94,13 +94,8 @@ Future<void> exportAllInventoriesToJson(BuildContext context, InventoryProvider 
                           SnackBar(
                             persist: true,
                             showCloseIcon: true,
-                            content: Row(
-              children: [
-                Icon(Icons.error_outlined, color: Colors.red),
-                SizedBox(width: 8),
-                Text(S.of(context).errorExportingInventory(1, error.toString())),
-              ],
-            ),
+                            backgroundColor: Theme.of(context).colorScheme.error,
+                            content: Text(S.of(context).errorExportingInventory(1, error.toString())),
                           ),
                         );
     // showDialog(
@@ -166,13 +161,8 @@ Future<void> exportInventoryToJson(BuildContext context, Inventory inventory, bo
                           SnackBar(
                             persist: true,
                             showCloseIcon: true,
-                            content: Row(
-              children: [
-                Icon(Icons.error_outlined, color: Colors.red),
-                SizedBox(width: 8),
-                Text(S.of(context).errorExportingInventory(1, error.toString())),
-              ],
-            ),
+                            backgroundColor: Theme.of(context).colorScheme.error,
+                            content: Text(S.of(context).errorExportingInventory(1, error.toString())),
                           ),
                         );
     // showDialog(
@@ -397,13 +387,8 @@ Future<String> exportInventoryToExcel(BuildContext context, Inventory inventory,
                           SnackBar(
                             persist: true,
                             showCloseIcon: true,
-                            content: Row(
-              children: [
-                Icon(Icons.error_outlined, color: Colors.red),
-                SizedBox(width: 8),
-                Text(S.of(context).errorExportingInventory(1, error.toString())),
-              ],
-            ),
+                            backgroundColor: Theme.of(context).colorScheme.error,
+                            content: Text(S.of(context).errorExportingInventory(1, error.toString())),
                           ),
                         );
     }
@@ -459,13 +444,8 @@ Future<String> exportInventoryToCsv(BuildContext context, Inventory inventory, L
                           SnackBar(
                             persist: true,
                             showCloseIcon: true,
-                            content: Row(
-              children: [
-                Icon(Icons.error_outlined, color: Colors.red),
-                SizedBox(width: 8),
-                Text(S.of(context).errorExportingInventory(1, error.toString())),
-              ],
-            ),
+                            backgroundColor: Theme.of(context).colorScheme.error,
+                            content: Text(S.of(context).errorExportingInventory(1, error.toString())),
                           ),
                         );
     }
@@ -540,13 +520,7 @@ Future<void> exportInventoryToKml(BuildContext context, Inventory inventory) asy
         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             showCloseIcon: true,
-                            content: Row(
-              children: [
-                Icon(Icons.warning_amber_outlined, color: Colors.orange),
-                SizedBox(width: 8),
-                Text(S.of(context).noPoisToExport),
-              ],
-            ),
+                            content: Text(S.of(context).noPoisToExport),
                           ),
                         );
       }
@@ -583,13 +557,8 @@ Future<void> exportInventoryToKml(BuildContext context, Inventory inventory) asy
                           SnackBar(
                             persist: true,
                             showCloseIcon: true,
-                            content: Row(
-              children: [
-                Icon(Icons.error_outlined, color: Colors.red),
-                SizedBox(width: 8),
-                Text(S.of(context).errorExportingInventory(1, error.toString())),
-              ],
-            ),
+                            backgroundColor: Theme.of(context).colorScheme.error,
+                            content: Text(S.of(context).errorExportingInventory(1, error.toString())),
                           ),
                         );
     }
@@ -665,13 +634,8 @@ Future<void> exportAllInactiveNestsToJson(BuildContext context) async {
                           SnackBar(
                             persist: true,
                             showCloseIcon: true,
-                            content: Row(
-              children: [
-                Icon(Icons.error_outlined, color: Colors.red),
-                SizedBox(width: 8),
-                Text(S.of(context).errorExportingInventory(1, error.toString())),
-              ],
-            ),
+                            backgroundColor: Theme.of(context).colorScheme.error,
+                            content: Text(S.of(context).errorExportingInventory(1, error.toString())),
                           ),
                         );
     }
@@ -734,13 +698,8 @@ Future<void> exportNestToJson(BuildContext context, Nest nest) async {
                           SnackBar(
                             persist: true,
                             showCloseIcon: true,
-                            content: Row(
-              children: [
-                Icon(Icons.error_outlined, color: Colors.red),
-                SizedBox(width: 8),
-                Text(S.of(context).errorExportingNest(1, error.toString())),
-              ],
-            ),
+                            backgroundColor: Theme.of(context).colorScheme.error,
+                            content: Text(S.of(context).errorExportingNest(1, error.toString())),
                           ),
                         );
     }
@@ -795,13 +754,8 @@ Future<String> exportNestToCsv(BuildContext context, Nest nest, Locale locale) a
                           SnackBar(
                             persist: true,
                             showCloseIcon: true,
-                            content: Row(
-              children: [
-                Icon(Icons.error_outlined, color: Colors.red),
-                SizedBox(width: 8),
-                Text(S.of(context).errorExportingNest(1, error.toString())),
-              ],
-            ),
+                            backgroundColor: Theme.of(context).colorScheme.error,
+                            content: Text(S.of(context).errorExportingNest(1, error.toString())),
                           ),
                         );
     }
@@ -865,13 +819,8 @@ Future<String> exportNestToExcel(BuildContext context, Nest nest, Locale locale)
                           SnackBar(
                             persist: true,
                             showCloseIcon: true,
-                            content: Row(
-              children: [
-                Icon(Icons.error_outlined, color: Colors.red),
-                SizedBox(width: 8),
-                Text(S.of(context).errorExportingNest(1, error.toString())),
-              ],
-            ),
+                            backgroundColor: Theme.of(context).colorScheme.error,
+                            content: Text(S.of(context).errorExportingNest(1, error.toString())),
                           ),
                         );
     // showDialog(
@@ -992,13 +941,7 @@ Future<void> exportNestToKml(BuildContext context, Nest nest) async {
       ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             showCloseIcon: true,
-                            content: Row(
-              children: [
-                Icon(Icons.warning_amber_outlined, color: Colors.orange),
-                SizedBox(width: 8),
-                Text(S.of(context).noPoisToExport),
-              ],
-            ),
+                            content: Text(S.of(context).noPoisToExport),
                           ),
                         );
       // showDialog(
@@ -1034,13 +977,8 @@ Future<void> exportNestToKml(BuildContext context, Nest nest) async {
                           SnackBar(
                             persist: true,
                             showCloseIcon: true,
-                            content: Row(
-              children: [
-                Icon(Icons.error_outlined, color: Colors.red),
-                SizedBox(width: 8),
-                Text(S.of(context).errorExportingNest(1, error.toString())),
-              ],
-            ),
+                            backgroundColor: Theme.of(context).colorScheme.error,
+                            content: Text(S.of(context).errorExportingNest(1, error.toString())),
                           ),
                         );
     // showDialog(
@@ -1114,13 +1052,8 @@ Future<void> exportAllSpecimensToJson(BuildContext context, List<Specimen> speci
                           SnackBar(
                             persist: true,
                             showCloseIcon: true,
-                            content: Row(
-              children: [
-                Icon(Icons.error_outlined, color: Colors.red),
-                SizedBox(width: 8),
-                Text(S.of(context).errorExportingSpecimen(1, error.toString())),
-              ],
-            ),
+                            backgroundColor: Theme.of(context).colorScheme.error,
+                            content: Text(S.of(context).errorExportingSpecimen(1, error.toString())),
                           ),
                         );
     // showDialog(
@@ -1219,13 +1152,8 @@ Future<void> exportAllSpecimensToCsv(BuildContext context, List<Specimen> specim
                           SnackBar(
                             persist: true,
                             showCloseIcon: true,
-                            content: Row(
-              children: [
-                Icon(Icons.error_outlined, color: Colors.red),
-                SizedBox(width: 8),
-                Text(S.of(context).errorExportingSpecimen(1, error.toString())),
-              ],
-            ),
+                            backgroundColor: Theme.of(context).colorScheme.error,
+                            content: Text(S.of(context).errorExportingSpecimen(1, error.toString())),
                           ),
                         );
     // showDialog(
@@ -1338,13 +1266,8 @@ Future<void> exportAllSpecimensToExcel(BuildContext context, List<Specimen> spec
                           SnackBar(
                             persist: true,
                             showCloseIcon: true,
-                            content: Row(
-              children: [
-                Icon(Icons.error_outlined, color: Colors.red),
-                SizedBox(width: 8),
-                Text(S.of(context).errorExportingSpecimen(1, error.toString())),
-              ],
-            ),
+                            backgroundColor: Theme.of(context).colorScheme.error,
+                            content: Text(S.of(context).errorExportingSpecimen(1, error.toString())),
                           ),
                         );
     // showDialog(
@@ -1429,13 +1352,7 @@ Future<void> exportSpecimenToKml(BuildContext context, Specimen specimen) async 
       ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             showCloseIcon: true,
-                            content: Row(
-              children: [
-                Icon(Icons.warning_amber_outlined, color: Colors.orange),
-                SizedBox(width: 8),
-                Text(S.of(context).noPoisToExport),
-              ],
-            ),
+                            content: Text(S.of(context).noPoisToExport),
                           ),
                         );
       // showDialog(
@@ -1471,13 +1388,8 @@ Future<void> exportSpecimenToKml(BuildContext context, Specimen specimen) async 
                           SnackBar(
                             persist: true,
                             showCloseIcon: true,
-                            content: Row(
-              children: [
-                Icon(Icons.error_outlined, color: Colors.red),
-                SizedBox(width: 8),
-                Text(S.of(context).errorExportingSpecimen(1, error.toString())),
-              ],
-            ),
+                            backgroundColor: Theme.of(context).colorScheme.error,
+                            content: Text(S.of(context).errorExportingSpecimen(1, error.toString())),
                           ),
                         );
     // showDialog(
