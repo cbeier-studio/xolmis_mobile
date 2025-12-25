@@ -1775,6 +1775,17 @@
     "type": "text",
     "description": "New egg button label"
   },
+  "observers": "{howMany, plural, one{observador} other{observadores}}",
+  "@observers": {
+    "type": "text",
+    "description": "Observers field label",
+    "placeholders": {
+      "howMany": {
+        "type": "int",
+        "description": "Number of observers"
+      }
+    }
+  },
   "countryArgentina": "Argentina",
   "countryBrazil": "Brasil",
   "countryParaguay": "Paraguai",

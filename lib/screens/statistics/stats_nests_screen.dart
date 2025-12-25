@@ -23,6 +23,7 @@ class StatsNestsScreenState extends State<StatsNestsScreen> {
   late EggProvider eggProvider;
   late List<String> combinedSpeciesList = [];
   late int distinctLocalitiesCount = 0;
+  late int distinctObserversCount = 0;
   int totalSuccessNests = 0;
   int totalNestsWithNidoparasitism = 0;
   List<PieChartSectionData> nestFateSections = [];
@@ -54,6 +55,10 @@ class StatsNestsScreenState extends State<StatsNestsScreen> {
     final allLocalities = widget.nests.map((nest) => nest.localityName).toList();
     final distinctLocalities = allLocalities.toSet();
     distinctLocalitiesCount = distinctLocalities.length;
+
+    final allObservers = widget.nests.map((nest) => nest.observer).toList();
+    final distinctObservers = allObservers.toSet();
+    distinctObserversCount = distinctObservers.length;
 
     nestFateSections =
         getNestFateCounts(
@@ -189,8 +194,20 @@ class StatsNestsScreenState extends State<StatsNestsScreen> {
                     Card(
                       child: Padding(
                         padding: EdgeInsets.all(8.0),
-                        child: 
-                          const SizedBox(width: 8,)
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              distinctObserversCount.toString(),
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.primary,
+                                fontWeight: Theme.of(context).textTheme.headlineSmall?.fontWeight,
+                                fontSize: Theme.of(context).textTheme.headlineSmall?.fontSize,
+                              ),
+                            ),
+                            Text(S.current.observers(distinctObserversCount)),
+                          ],
+                        ),
                       ),
                     ),
                     ),

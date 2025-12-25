@@ -4107,6 +4107,18 @@ class S {
     );
   }
 
+  /// `{howMany, plural, one{observer} other{observers}}`
+  String observers(int howMany) {
+    return Intl.plural(
+      howMany,
+      one: 'observer',
+      other: 'observers',
+      name: 'observers',
+      desc: 'Observers field label',
+      args: [howMany],
+    );
+  }
+
   /// `Argentina`
   String get countryArgentina {
     return Intl.message(
