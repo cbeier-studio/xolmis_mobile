@@ -7,6 +7,7 @@
 * Added action suggestions when a list is empty (experimental).
 * Added action suggestions in the inventory details screen (experimental).
 * Added Observer field to inventories, nests, specimens and field journal.
+* Added filters for inventories.
 
 ### Improvements
 

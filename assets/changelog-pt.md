@@ -7,6 +7,7 @@
 * Adicionadas sugestões de ações quando uma lista estiver vazia (experimental).
 * Adicionadas sugestões de ações na tela de detalhes do inventário (experimental).
 * Adicionado campo Observador nos inventários, ninhos, espécimes e diário de campo.
+* Adicionadas filtros para inventários.
 
 ### Melhorias
 
