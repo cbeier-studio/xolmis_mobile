@@ -53,6 +53,16 @@ enum BadgeProviderType {
   nest,
 }
 
+enum DateFilter {
+  today,
+  yesterday,
+  last7Days,
+  last30Days,
+  last90Days,
+  last180Days,
+  last365Days,
+}
+
 enum SortOrder {
   ascending,
   descending,

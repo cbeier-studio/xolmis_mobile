@@ -1786,6 +1786,66 @@
       }
     }
   },
+  "allTypes": "Todos os tipos",
+  "@allTypes": {
+    "type": "text",
+    "description": "All types option in type filter"
+  },
+  "allLocalities": "Todas as localidades",
+  "@allLocalities": {
+    "type": "text",
+    "description": "All localities option in locality filter"
+  },
+  "date": "Data",
+  "@date": {
+    "type": "text",
+    "description": "Date field label"
+  },
+  "allDates": "Todas as datas",
+  "@allDates": {
+    "type": "text",
+    "description": "All dates option in date filter"
+  },
+  "today": "Hoje",
+  "@today": {
+    "type": "text",
+    "description": "Today option in date filter"
+  },
+  "yesterday": "Ontem",
+  "@yesterday": {
+    "type": "text",
+    "description": "Yesterday option in date filter"
+  },
+    "last7Days": "Última semana",
+    "@last7Days": {
+      "type": "text",
+      "description": "Last 7 days option in date filter"
+    },
+    "last30Days": "Último mês",
+    "@last30Days": {
+      "type": "text",
+      "description": "Last 30 days option in date filter"
+    },
+    "last90Days": "Últimos 3 meses",
+    "@last90Days": {
+      "type": "text",
+      "description": "Last 90 days option in date filter"
+    },
+    "last180Days": "Últimos 6 meses",
+    "@last180Days": {
+      "type": "text",
+      "description": "Last 180 days option in date filter"
+    },
+    "last365Days": "Último ano",
+    "@last365Days": {
+      "type": "text",
+      "description": "Last 365 days option in date filter"
+    },
+    "type": "Tipo",
+    "@type": {
+      "type": "text",
+      "description": "Type field label"
+  },
   "countryArgentina": "Argentina",
   "countryBrazil": "Brasil",
   "countryParaguay": "Paraguai",

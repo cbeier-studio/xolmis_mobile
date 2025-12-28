@@ -196,6 +196,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "addSpeciesToSample": MessageLookupByLibrary.simpleMessage(
       "Add to the sample",
     ),
+    "allDates": MessageLookupByLibrary.simpleMessage("All dates"),
+    "allLocalities": MessageLookupByLibrary.simpleMessage("All localities"),
+    "allTypes": MessageLookupByLibrary.simpleMessage("All types"),
     "apparentSuccessRate": MessageLookupByLibrary.simpleMessage(
       "apparent success rate",
     ),
@@ -258,6 +261,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "dataDeleted": MessageLookupByLibrary.simpleMessage(
       "App data deleted successfully!",
     ),
+    "date": MessageLookupByLibrary.simpleMessage("Date"),
     "daysSurveyed": m3,
     "decreaseIndividuals": MessageLookupByLibrary.simpleMessage(
       "Decrease individuals count",
@@ -622,6 +626,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "inventoryType": MessageLookupByLibrary.simpleMessage("Inventory type"),
     "journalEntries": m36,
     "keepRunning": MessageLookupByLibrary.simpleMessage("Keep active"),
+    "last180Days": MessageLookupByLibrary.simpleMessage("Last 6 months"),
+    "last30Days": MessageLookupByLibrary.simpleMessage("Last month"),
+    "last365Days": MessageLookupByLibrary.simpleMessage("Last year"),
+    "last7Days": MessageLookupByLibrary.simpleMessage("Last week"),
+    "last90Days": MessageLookupByLibrary.simpleMessage("Last 3 months"),
     "lastModifiedTime": MessageLookupByLibrary.simpleMessage(
       "Last modified time",
     ),
@@ -938,6 +947,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Timed qualitative lists",
     ),
     "title": MessageLookupByLibrary.simpleMessage("Title"),
+    "today": MessageLookupByLibrary.simpleMessage("Today"),
     "topSpecies": m56,
     "totalAbundance": MessageLookupByLibrary.simpleMessage("total abundance"),
     "totalIndividuals": MessageLookupByLibrary.simpleMessage(
@@ -953,6 +963,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Species within sample",
     ),
     "trees": MessageLookupByLibrary.simpleMessage("Trees"),
+    "type": MessageLookupByLibrary.simpleMessage("Type"),
     "vegetation": MessageLookupByLibrary.simpleMessage("Vegetation"),
     "vegetationData": MessageLookupByLibrary.simpleMessage("Vegetation data"),
     "viewLicense": MessageLookupByLibrary.simpleMessage("View License"),
@@ -969,5 +980,6 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "withinSample": MessageLookupByLibrary.simpleMessage("Within the sample"),
     "yes": MessageLookupByLibrary.simpleMessage("Yes"),
+    "yesterday": MessageLookupByLibrary.simpleMessage("Yesterday"),
   };
 }

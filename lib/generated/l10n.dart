@@ -4119,6 +4119,126 @@ class S {
     );
   }
 
+  /// `All types`
+  String get allTypes {
+    return Intl.message(
+      'All types',
+      name: 'allTypes',
+      desc: 'All types option in type filter',
+      args: [],
+    );
+  }
+
+  /// `All localities`
+  String get allLocalities {
+    return Intl.message(
+      'All localities',
+      name: 'allLocalities',
+      desc: 'All localities option in locality filter',
+      args: [],
+    );
+  }
+
+  /// `Date`
+  String get date {
+    return Intl.message(
+      'Date',
+      name: 'date',
+      desc: 'Date field label',
+      args: [],
+    );
+  }
+
+  /// `All dates`
+  String get allDates {
+    return Intl.message(
+      'All dates',
+      name: 'allDates',
+      desc: 'All dates option in date filter',
+      args: [],
+    );
+  }
+
+  /// `Today`
+  String get today {
+    return Intl.message(
+      'Today',
+      name: 'today',
+      desc: 'Today option in date filter',
+      args: [],
+    );
+  }
+
+  /// `Yesterday`
+  String get yesterday {
+    return Intl.message(
+      'Yesterday',
+      name: 'yesterday',
+      desc: 'Yesterday option in date filter',
+      args: [],
+    );
+  }
+
+  /// `Last week`
+  String get last7Days {
+    return Intl.message(
+      'Last week',
+      name: 'last7Days',
+      desc: 'Last 7 days option in date filter',
+      args: [],
+    );
+  }
+
+  /// `Last month`
+  String get last30Days {
+    return Intl.message(
+      'Last month',
+      name: 'last30Days',
+      desc: 'Last 30 days option in date filter',
+      args: [],
+    );
+  }
+
+  /// `Last 3 months`
+  String get last90Days {
+    return Intl.message(
+      'Last 3 months',
+      name: 'last90Days',
+      desc: 'Last 90 days option in date filter',
+      args: [],
+    );
+  }
+
+  /// `Last 6 months`
+  String get last180Days {
+    return Intl.message(
+      'Last 6 months',
+      name: 'last180Days',
+      desc: 'Last 180 days option in date filter',
+      args: [],
+    );
+  }
+
+  /// `Last year`
+  String get last365Days {
+    return Intl.message(
+      'Last year',
+      name: 'last365Days',
+      desc: 'Last 365 days option in date filter',
+      args: [],
+    );
+  }
+
+  /// `Type`
+  String get type {
+    return Intl.message(
+      'Type',
+      name: 'type',
+      desc: 'Type field label',
+      args: [],
+    );
+  }
+
   /// `Argentina`
   String get countryArgentina {
     return Intl.message(

@@ -1544,6 +1544,53 @@ class AppLocalizationsPt extends AppLocalizations {
   String get newEgg => 'Novo ovo';
 
   @override
+  String observers(int howMany) {
+    String _temp0 = intl.Intl.pluralLogic(
+      howMany,
+      locale: localeName,
+      other: 'observadores',
+      one: 'observador',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get allTypes => 'Todos os tipos';
+
+  @override
+  String get allLocalities => 'Todas as localidades';
+
+  @override
+  String get date => 'Data';
+
+  @override
+  String get allDates => 'Todas as datas';
+
+  @override
+  String get today => 'Hoje';
+
+  @override
+  String get yesterday => 'Ontem';
+
+  @override
+  String get last7Days => 'Última semana';
+
+  @override
+  String get last30Days => 'Último mês';
+
+  @override
+  String get last90Days => 'Últimos 3 meses';
+
+  @override
+  String get last180Days => 'Últimos 6 meses';
+
+  @override
+  String get last365Days => 'Último ano';
+
+  @override
+  String get type => 'Tipo';
+
+  @override
   String get countryArgentina => 'Argentina';
 
   @override
@@ -3305,6 +3352,53 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get newEgg => 'Novo ovo';
+
+  @override
+  String observers(int howMany) {
+    String _temp0 = intl.Intl.pluralLogic(
+      howMany,
+      locale: localeName,
+      other: 'observadores',
+      one: 'observador',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get allTypes => 'Todos os tipos';
+
+  @override
+  String get allLocalities => 'Todas as localidades';
+
+  @override
+  String get date => 'Data';
+
+  @override
+  String get allDates => 'Todas as datas';
+
+  @override
+  String get today => 'Hoje';
+
+  @override
+  String get yesterday => 'Ontem';
+
+  @override
+  String get last7Days => 'Última semana';
+
+  @override
+  String get last30Days => 'Último mês';
+
+  @override
+  String get last90Days => 'Últimos 3 meses';
+
+  @override
+  String get last180Days => 'Últimos 6 meses';
+
+  @override
+  String get last365Days => 'Último ano';
+
+  @override
+  String get type => 'Tipo';
 
   @override
   String get countryArgentina => 'Argentina';

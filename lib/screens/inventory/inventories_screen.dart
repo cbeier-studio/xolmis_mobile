@@ -54,10 +54,23 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
   final _searchController = TextEditingController();
   bool _isShowingActiveInventories = true; // Default to show active inventories
   String _searchQuery = ''; // Default search query
+  InventoryType? _selectedInventoryType;
+  String? _selectedLocality;
+  DateFilter? _selectedDateFilter;
   Set<String> selectedInventories = {}; // Set of selected inventories
   SortOrder _sortOrder = SortOrder.descending; // Default sort order
   InventorySortField _sortField = InventorySortField.startTime; // Default sort field
   Inventory? _selectedInventory;
+
+  static final Map<DateFilter, String> _dateFilterLabels = {
+    DateFilter.today: S.current.today,
+    DateFilter.yesterday: S.current.yesterday,
+    DateFilter.last7Days: S.current.last7Days,
+    DateFilter.last30Days: S.current.last30Days,
+    DateFilter.last90Days: S.current.last90Days,
+    DateFilter.last180Days: S.current.last180Days,
+    DateFilter.last365Days: S.current.last365Days,
+  };
 
   @override
   void initState() {
@@ -88,6 +101,35 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
   void onInventoryUpdated(Inventory inventory) {
     inventoryProvider.updateInventory(inventory);
   }
+
+  bool _isWithinDateFilter(DateTime? date, DateFilter? filter) {
+  if (date == null || filter == null) return true; // sem filtro ou data nula
+  final now = DateTime.now();
+  final todayStart = DateTime(now.year, now.month, now.day);
+  final yesterdayStart = todayStart.subtract(const Duration(days: 1));
+  final weekStart = todayStart.subtract(const Duration(days: 7));
+  final monthStart = todayStart.subtract(const Duration(days: 30));
+  final last90Start = todayStart.subtract(const Duration(days: 90));
+  final last180Start = todayStart.subtract(const Duration(days: 180));
+  final last365Start = todayStart.subtract(const Duration(days: 365));
+
+  switch (filter) {
+    case DateFilter.today:
+      return date.isAfter(todayStart) || date.isAtSameMomentAs(todayStart);
+    case DateFilter.yesterday:
+      return (date.isAfter(yesterdayStart) || date.isAtSameMomentAs(yesterdayStart)) &&  date.isBefore(todayStart);
+    case DateFilter.last7Days:
+      return date.isAfter(weekStart) || date.isAtSameMomentAs(weekStart);
+    case DateFilter.last30Days:
+      return date.isAfter(monthStart) || date.isAtSameMomentAs(monthStart);
+    case DateFilter.last90Days:
+      return date.isAfter(last90Start) || date.isAtSameMomentAs(last90Start);
+    case DateFilter.last180Days:
+      return date.isAfter(last180Start) || date.isAtSameMomentAs(last180Start);
+    case DateFilter.last365Days:
+      return date.isAfter(last365Start) || date.isAtSameMomentAs(last365Start);
+  }
+}
 
   // Sort the inventories by the selected field and order
   List<Inventory> _sortInventories(List<Inventory> inventories) {
@@ -250,16 +292,49 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     );
   }
 
+  List<String> _getUniqueLocalities() {
+  final inventories = _isShowingActiveInventories
+      ? inventoryProvider.activeInventories
+      : inventoryProvider.finishedInventories;
+  
+  final localities = inventories
+      .where((inv) => inv.localityName != null && inv.localityName!.isNotEmpty)
+      .map((inv) => inv.localityName!)
+      .toSet()
+      .toList();
+  
+  localities.sort();
+  return localities;
+}
+
   // Filter the inventories by the search query
   List<Inventory> _filterInventories(List<Inventory> inventories) {
-    if (_searchQuery.isEmpty) {
-      return _sortInventories(inventories);
+    List<Inventory> filtered = inventories;
+
+  // Filtro por tipo de inventário
+  if (_selectedInventoryType != null) {
+    filtered = filtered.where((inv) => inv.type == _selectedInventoryType).toList();
+  }
+
+  // Filtro por localidade
+  if (_selectedLocality != null) {
+    filtered = filtered.where((inv) => inv.localityName == _selectedLocality).toList();
+  }
+
+  // Filtro por data (usa startTime)
+    if (_selectedDateFilter != null) {
+      filtered = filtered.where((inv) => _isWithinDateFilter(inv.startTime, _selectedDateFilter)).toList();
     }
-    List<Inventory> filteredInventories = inventories.where((inventory) =>
+
+  // Filtro por busca textual
+  if (_searchQuery.isNotEmpty) {
+    filtered = filtered.where((inventory) =>
       inventory.id.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-      inventory.localityName!.toLowerCase().contains(_searchQuery.toLowerCase())
+      (inventory.localityName?.toLowerCase().contains(_searchQuery.toLowerCase()) ?? false)
     ).toList();
-    return _sortInventories(filteredInventories);
+  }
+
+  return _sortInventories(filtered);
   }
 
   // Show the dialog to add a new inventory
@@ -1049,6 +1124,154 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                 );
               },
             ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 8.0),
+            child:
+          Row(
+            children: [
+          Expanded(
+            child:
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              MenuAnchor(
+                builder: (context, controller, child) {
+                  return FilterChip(
+                    label: Text(
+                      _selectedDateFilter != null
+                        ? _dateFilterLabels[_selectedDateFilter] ?? S.of(context).date
+                        : S.of(context).date,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    onSelected: (selected) {
+                      if (selected) {
+                        controller.open();
+                      } else {
+                        setState(() {
+                          _selectedDateFilter = null;
+                        });
+                      }
+                    },
+                    selected: _selectedDateFilter != null,
+                  );
+                },
+                menuChildren: [
+                  // MenuItemButton(
+                  //   onPressed: () {
+                  //     setState(() {
+                  //       _selectedDateFilter = null;
+                  //     });
+                  //   },
+                  //   child: Text(S.of(context).allDates),
+                  // ),
+                  ...DateFilter.values.map((filter) {
+                    return MenuItemButton(
+                      onPressed: () {
+                        setState(() {
+                          _selectedDateFilter = filter;
+                        });
+                      },
+                      child: Text(_dateFilterLabels[filter]!),
+                    );
+                  }),
+                ],
+              ),
+              const SizedBox(width: 8.0),
+              MenuAnchor(
+  builder: (context, controller, child) {
+    return FilterChip(
+      label: Text(_selectedInventoryType != null 
+        ? inventoryTypeFriendlyNames[_selectedInventoryType] ?? S.current.type
+        : S.current.type
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      onSelected: (selected) {
+        if (selected) {
+          controller.open();
+        } else {
+          setState(() {
+            _selectedInventoryType = null;
+          });
+        }
+      },
+      selected: _selectedInventoryType != null,
+    );
+  },
+  menuChildren: [
+    // MenuItemButton(
+    //   onPressed: () {
+    //     setState(() {
+    //       _selectedInventoryType = null;
+    //     });
+    //   },
+    //   child: Text(S.current.allTypes),
+    // ),
+    ...InventoryType.values.map((type) {
+      return MenuItemButton(
+        onPressed: () {
+          setState(() {
+            _selectedInventoryType = type;
+          });
+        },
+        child: Text(inventoryTypeFriendlyNames[type] ?? type.toString()),
+      );
+    }),
+  ],
+),
+const SizedBox(width: 8.0),
+             MenuAnchor(
+  builder: (context, controller, child) {
+    return FilterChip(
+      label: Text(_selectedLocality ?? S.current.locality),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      onSelected: (selected) {
+        if (selected) {
+          controller.open();
+        } else {
+          setState(() {
+            _selectedLocality = null;
+          });
+        }
+      },
+      selected: _selectedLocality != null,
+    );
+  },
+  menuChildren: [
+    // MenuItemButton(
+    //   onPressed: () {
+    //     setState(() {
+    //       _selectedLocality = null;
+    //     });
+    //   },
+    //   child: Text(S.current.allLocalities),
+    // ),
+    ..._getUniqueLocalities().map((locality) {
+      return MenuItemButton(
+        onPressed: () {
+          setState(() {
+            _selectedLocality = locality;
+          });
+        },
+        child: Text(locality),
+      );
+    }),
+  ],
+), 
+            ],
+          ),
+          ),
+          ),
+            ],
+          ),
           ),
           Expanded(
               child: RefreshIndicator(

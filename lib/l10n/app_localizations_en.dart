@@ -1539,6 +1539,53 @@ class AppLocalizationsEn extends AppLocalizations {
   String get newEgg => 'New egg';
 
   @override
+  String observers(int howMany) {
+    String _temp0 = intl.Intl.pluralLogic(
+      howMany,
+      locale: localeName,
+      other: 'observers',
+      one: 'observer',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get allTypes => 'All types';
+
+  @override
+  String get allLocalities => 'All localities';
+
+  @override
+  String get date => 'Date';
+
+  @override
+  String get allDates => 'All dates';
+
+  @override
+  String get today => 'Today';
+
+  @override
+  String get yesterday => 'Yesterday';
+
+  @override
+  String get last7Days => 'Last week';
+
+  @override
+  String get last30Days => 'Last month';
+
+  @override
+  String get last90Days => 'Last 3 months';
+
+  @override
+  String get last180Days => 'Last 6 months';
+
+  @override
+  String get last365Days => 'Last year';
+
+  @override
+  String get type => 'Type';
+
+  @override
   String get countryArgentina => 'Argentina';
 
   @override

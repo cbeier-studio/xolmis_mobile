@@ -2502,6 +2502,84 @@ abstract class AppLocalizations {
   /// **'New egg'**
   String get newEgg;
 
+  /// Observers field label
+  ///
+  /// In en, this message translates to:
+  /// **'{howMany, plural, one{observer} other{observers}}'**
+  String observers(int howMany);
+
+  /// All types option in type filter
+  ///
+  /// In en, this message translates to:
+  /// **'All types'**
+  String get allTypes;
+
+  /// All localities option in locality filter
+  ///
+  /// In en, this message translates to:
+  /// **'All localities'**
+  String get allLocalities;
+
+  /// Date field label
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get date;
+
+  /// All dates option in date filter
+  ///
+  /// In en, this message translates to:
+  /// **'All dates'**
+  String get allDates;
+
+  /// Today option in date filter
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get today;
+
+  /// Yesterday option in date filter
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get yesterday;
+
+  /// Last 7 days option in date filter
+  ///
+  /// In en, this message translates to:
+  /// **'Last week'**
+  String get last7Days;
+
+  /// Last 30 days option in date filter
+  ///
+  /// In en, this message translates to:
+  /// **'Last month'**
+  String get last30Days;
+
+  /// Last 90 days option in date filter
+  ///
+  /// In en, this message translates to:
+  /// **'Last 3 months'**
+  String get last90Days;
+
+  /// Last 180 days option in date filter
+  ///
+  /// In en, this message translates to:
+  /// **'Last 6 months'**
+  String get last180Days;
+
+  /// Last 365 days option in date filter
+  ///
+  /// In en, this message translates to:
+  /// **'Last year'**
+  String get last365Days;
+
+  /// Type field label
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get type;
+
   /// No description provided for @countryArgentina.
   ///
   /// In en, this message translates to:

@@ -202,6 +202,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "addSpeciesToSample": MessageLookupByLibrary.simpleMessage(
       "Incluir na amostra",
     ),
+    "allDates": MessageLookupByLibrary.simpleMessage("Todas as datas"),
+    "allLocalities": MessageLookupByLibrary.simpleMessage(
+      "Todas as localidades",
+    ),
+    "allTypes": MessageLookupByLibrary.simpleMessage("Todos os tipos"),
     "apparentSuccessRate": MessageLookupByLibrary.simpleMessage(
       "taxa de sucesso aparente",
     ),
@@ -270,6 +275,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "dataDeleted": MessageLookupByLibrary.simpleMessage(
       "Dados do aplicativo apagados com sucesso!",
     ),
+    "date": MessageLookupByLibrary.simpleMessage("Data"),
     "daysSurveyed": m3,
     "decreaseIndividuals": MessageLookupByLibrary.simpleMessage(
       "Diminuir contagem de indivíduos",
@@ -654,6 +660,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "inventoryType": MessageLookupByLibrary.simpleMessage("Tipo de inventário"),
     "journalEntries": m36,
     "keepRunning": MessageLookupByLibrary.simpleMessage("Manter ativo"),
+    "last180Days": MessageLookupByLibrary.simpleMessage("Últimos 6 meses"),
+    "last30Days": MessageLookupByLibrary.simpleMessage("Último mês"),
+    "last365Days": MessageLookupByLibrary.simpleMessage("Último ano"),
+    "last7Days": MessageLookupByLibrary.simpleMessage("Última semana"),
+    "last90Days": MessageLookupByLibrary.simpleMessage("Últimos 3 meses"),
     "lastModifiedTime": MessageLookupByLibrary.simpleMessage(
       "Última modificação",
     ),
@@ -1006,6 +1017,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Listas qualitativas temporizadas",
     ),
     "title": MessageLookupByLibrary.simpleMessage("Título"),
+    "today": MessageLookupByLibrary.simpleMessage("Hoje"),
     "topSpecies": m56,
     "totalAbundance": MessageLookupByLibrary.simpleMessage("abundância total"),
     "totalIndividuals": MessageLookupByLibrary.simpleMessage(
@@ -1021,6 +1033,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Espécies na amostra",
     ),
     "trees": MessageLookupByLibrary.simpleMessage("Árvores"),
+    "type": MessageLookupByLibrary.simpleMessage("Tipo"),
     "vegetation": MessageLookupByLibrary.simpleMessage("Vegetação"),
     "vegetationData": MessageLookupByLibrary.simpleMessage(
       "Dados de vegetação",
@@ -1039,5 +1052,6 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "withinSample": MessageLookupByLibrary.simpleMessage("Dentro da amostra"),
     "yes": MessageLookupByLibrary.simpleMessage("Sim"),
+    "yesterday": MessageLookupByLibrary.simpleMessage("Ontem"),
   };
 }
