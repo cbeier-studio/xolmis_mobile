@@ -23,16 +23,61 @@ class JournalsScreenState extends State<JournalsScreen> {
   late FieldJournalProvider journalProvider;
   final _searchController = TextEditingController();
   String _searchQuery = '';
+  String? _selectedObserver;
+  DateFilter? _selectedDateFilter;
   Set<int> selectedJournals = {};
   JournalSortField _sortField = JournalSortField.creationDate;
   SortOrder _sortOrder = SortOrder.descending;
   FieldJournal? _selectedJournalEntry;
+
+  static final Map<DateFilter, String> _dateFilterLabels = {
+    DateFilter.today: S.current.today,
+    DateFilter.yesterday: S.current.yesterday,
+    DateFilter.last7Days: S.current.last7Days,
+    DateFilter.last30Days: S.current.last30Days,
+    DateFilter.last90Days: S.current.last90Days,
+    DateFilter.last180Days: S.current.last180Days,
+    DateFilter.last365Days: S.current.last365Days,
+  };
 
   @override
   void initState() {
     super.initState();
     journalProvider = context.read<FieldJournalProvider>();
     journalProvider.fetchJournalEntries();
+  }
+
+  bool _isWithinDateFilter(DateTime? date, DateFilter? filter) {
+    if (date == null || filter == null) return true; // sem filtro ou data nula
+    final now = DateTime.now();
+    final todayStart = DateTime(now.year, now.month, now.day);
+    final yesterdayStart = todayStart.subtract(const Duration(days: 1));
+    final weekStart = todayStart.subtract(const Duration(days: 7));
+    final monthStart = todayStart.subtract(const Duration(days: 30));
+    final last90Start = todayStart.subtract(const Duration(days: 90));
+    final last180Start = todayStart.subtract(const Duration(days: 180));
+    final last365Start = todayStart.subtract(const Duration(days: 365));
+
+    switch (filter) {
+      case DateFilter.today:
+        return date.isAfter(todayStart) || date.isAtSameMomentAs(todayStart);
+      case DateFilter.yesterday:
+        return (date.isAfter(yesterdayStart) ||
+                date.isAtSameMomentAs(yesterdayStart)) &&
+            date.isBefore(todayStart);
+      case DateFilter.last7Days:
+        return date.isAfter(weekStart) || date.isAtSameMomentAs(weekStart);
+      case DateFilter.last30Days:
+        return date.isAfter(monthStart) || date.isAtSameMomentAs(monthStart);
+      case DateFilter.last90Days:
+        return date.isAfter(last90Start) || date.isAtSameMomentAs(last90Start);
+      case DateFilter.last180Days:
+        return date.isAfter(last180Start) ||
+            date.isAtSameMomentAs(last180Start);
+      case DateFilter.last365Days:
+        return date.isAfter(last365Start) ||
+            date.isAtSameMomentAs(last365Start);
+    }
   }
 
   List<FieldJournal> _sortJournalEntries(List<FieldJournal> journalEntries) {
@@ -144,14 +189,51 @@ class JournalsScreenState extends State<JournalsScreen> {
     );
   }
 
+  List<String> _getUniqueObservers() {
+    final entries =
+        journalProvider.journalEntries;
+
+    final observers =
+        entries
+            .where(
+              (entry) => entry.observer != null && entry.observer!.isNotEmpty,
+            )
+            .map((entry) => entry.observer!)
+            .toSet()
+            .toList();
+
+    observers.sort();
+    return observers;
+  }
+
   List<FieldJournal> _filterJournalEntries(List<FieldJournal> journalEntries) {
-    if (_searchQuery.isEmpty) {
-      return _sortJournalEntries(journalEntries);
+    List<FieldJournal> filtered = journalEntries;
+
+    // Filtro por data (usa startTime)
+    if (_selectedDateFilter != null) {
+      filtered =
+          filtered
+              .where(
+                (entry) =>
+                    _isWithinDateFilter(entry.creationDate, _selectedDateFilter),
+              )
+              .toList();
     }
-    List<FieldJournal> filteredEntries = journalEntries.where((entry) =>
-      entry.title.toLowerCase().contains(_searchQuery.toLowerCase())
-    ).toList();
-    return _sortJournalEntries(filteredEntries);
+
+    // Filtro por busca textual
+    if (_searchQuery.isNotEmpty) {
+      filtered =
+          filtered
+              .where(
+                (entry) =>
+                    entry.title.toLowerCase().contains(
+                      _searchQuery.toLowerCase(),
+                    )
+              )
+              .toList();
+    }
+
+    return _sortJournalEntries(filtered);
   }
 
   void _showAddJournalScreen(BuildContext context) {
@@ -493,6 +575,115 @@ class JournalsScreenState extends State<JournalsScreen> {
           },
         ) : null,
           ),
+          Padding(
+          padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 8.0),
+          child: Row(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      MenuAnchor(
+                        builder: (context, controller, child) {
+                          return FilterChip(
+                            label: Text(
+                              _selectedDateFilter != null
+                                  ? _dateFilterLabels[_selectedDateFilter] ??
+                                      S.of(context).date
+                                  : S.of(context).date,
+                            ),
+                            avatar: _selectedDateFilter == null ? Icon(Icons.calendar_today_outlined) : null,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                            visualDensity: VisualDensity.compact,
+                            onSelected: (selected) {
+                              if (selected) {
+                                controller.open();
+                              } else {
+                                setState(() {
+                                  _selectedDateFilter = null;
+                                });
+                              }
+                            },
+                            selected: _selectedDateFilter != null,
+                          );
+                        },
+                        menuChildren: [
+                          // MenuItemButton(
+                          //   onPressed: () {
+                          //     setState(() {
+                          //       _selectedDateFilter = null;
+                          //     });
+                          //   },
+                          //   child: Text(S.of(context).allDates),
+                          // ),
+                          ...DateFilter.values.map((filter) {
+                            return MenuItemButton(
+                              onPressed: () {
+                                setState(() {
+                                  _selectedDateFilter = filter;
+                                });
+                              },
+                              child: Text(_dateFilterLabels[filter]!),
+                            );
+                          }),
+                        ],
+                      ),
+                      const SizedBox(width: 8.0),
+                      MenuAnchor(
+                        builder: (context, controller, child) {
+                          return FilterChip(
+                            label: Text(
+                              _selectedObserver ?? S.current.observer,
+                            ),
+                            avatar: _selectedObserver == null ? Icon(Icons.person_outlined) : null,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                            visualDensity: VisualDensity.compact,
+                            onSelected: (selected) {
+                              if (selected) {
+                                controller.open();
+                              } else {
+                                setState(() {
+                                  _selectedObserver = null;
+                                });
+                              }
+                            },
+                            selected: _selectedObserver != null,
+                          );
+                        },
+                        menuChildren: [
+                          // MenuItemButton(
+                          //   onPressed: () {
+                          //     setState(() {
+                          //       _selectedObserver = null;
+                          //     });
+                          //   },
+                          //   child: Text(S.current.allObservers),
+                          // ),
+                          ..._getUniqueObservers().map((observer) {
+                            return MenuItemButton(
+                              onPressed: () {
+                                setState(() {
+                                  _selectedObserver = observer;
+                                });
+                              },
+                              child: Text(observer),
+                            );
+                          }),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
           Expanded(
               child: Consumer<FieldJournalProvider>(
                 builder: (context, journalProvider, child) {

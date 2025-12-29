@@ -34,17 +34,64 @@ class SpecimensScreenState extends State<SpecimensScreen> {
   late SpecimenProvider specimenProvider;
   final _searchController = TextEditingController();
   String _searchQuery = '';
+  String? _selectedSpecies;
+  String? _selectedLocality;
+  String? _selectedObserver;
+  DateFilter? _selectedDateFilter;
   bool _showPending = true; // Show pending specimens by default
   Set<int> selectedSpecimens = {};
   SortOrder _sortOrder = SortOrder.descending;
   SpecimenSortField _sortField = SpecimenSortField.sampleTime;
   Specimen? _selectedSpecimen;
 
+  static final Map<DateFilter, String> _dateFilterLabels = {
+    DateFilter.today: S.current.today,
+    DateFilter.yesterday: S.current.yesterday,
+    DateFilter.last7Days: S.current.last7Days,
+    DateFilter.last30Days: S.current.last30Days,
+    DateFilter.last90Days: S.current.last90Days,
+    DateFilter.last180Days: S.current.last180Days,
+    DateFilter.last365Days: S.current.last365Days,
+  };
+
   @override
   void initState() {
     super.initState();
     specimenProvider = context.read<SpecimenProvider>();
     specimenProvider.fetchSpecimens();
+  }
+
+  bool _isWithinDateFilter(DateTime? date, DateFilter? filter) {
+    if (date == null || filter == null) return true; // sem filtro ou data nula
+    final now = DateTime.now();
+    final todayStart = DateTime(now.year, now.month, now.day);
+    final yesterdayStart = todayStart.subtract(const Duration(days: 1));
+    final weekStart = todayStart.subtract(const Duration(days: 7));
+    final monthStart = todayStart.subtract(const Duration(days: 30));
+    final last90Start = todayStart.subtract(const Duration(days: 90));
+    final last180Start = todayStart.subtract(const Duration(days: 180));
+    final last365Start = todayStart.subtract(const Duration(days: 365));
+
+    switch (filter) {
+      case DateFilter.today:
+        return date.isAfter(todayStart) || date.isAtSameMomentAs(todayStart);
+      case DateFilter.yesterday:
+        return (date.isAfter(yesterdayStart) ||
+                date.isAtSameMomentAs(yesterdayStart)) &&
+            date.isBefore(todayStart);
+      case DateFilter.last7Days:
+        return date.isAfter(weekStart) || date.isAtSameMomentAs(weekStart);
+      case DateFilter.last30Days:
+        return date.isAfter(monthStart) || date.isAtSameMomentAs(monthStart);
+      case DateFilter.last90Days:
+        return date.isAfter(last90Start) || date.isAtSameMomentAs(last90Start);
+      case DateFilter.last180Days:
+        return date.isAfter(last180Start) ||
+            date.isAtSameMomentAs(last180Start);
+      case DateFilter.last365Days:
+        return date.isAfter(last365Start) ||
+            date.isAtSameMomentAs(last365Start);
+    }
   }
 
   List<Specimen> _sortSpecimens(List<Specimen> specimens) {
@@ -204,16 +251,112 @@ class SpecimensScreenState extends State<SpecimensScreen> {
     );
   }
 
+  List<String> _getUniqueSpecies() {
+    final nests =
+        _showPending
+            ? specimenProvider.pendingSpecimens
+            : specimenProvider.archivedSpecimens;
+
+    final species =
+        nests
+            .where(
+              (nest) => nest.speciesName != null && nest.speciesName!.isNotEmpty,
+            )
+            .map((inv) => inv.speciesName!)
+            .toSet()
+            .toList();
+
+    species.sort();
+    return species;
+  }
+
+  List<String> _getUniqueLocalities() {
+    final nests =
+        _showPending
+            ? specimenProvider.pendingSpecimens
+            : specimenProvider.archivedSpecimens;
+
+    final localities =
+        nests
+            .where(
+              (nest) => nest.locality != null && nest.locality!.isNotEmpty,
+            )
+            .map((inv) => inv.locality!)
+            .toSet()
+            .toList();
+
+    localities.sort();
+    return localities;
+  }
+
+  List<String> _getUniqueObservers() {
+    final nests =
+        _showPending
+            ? specimenProvider.pendingSpecimens
+            : specimenProvider.archivedSpecimens;
+
+    final observers =
+        nests
+            .where(
+              (nest) => nest.observer != null && nest.observer!.isNotEmpty,
+            )
+            .map((nest) => nest.observer!)
+            .toSet()
+            .toList();
+
+    observers.sort();
+    return observers;
+  }
+
   List<Specimen> _filterSpecimens(List<Specimen> specimens) {
-    if (_searchQuery.isEmpty) {
-      return specimens;
+    List<Specimen> filtered = specimens;
+
+    // Filtro por espécie
+    if (_selectedSpecies != null) {
+      filtered =
+          filtered.where((specimen) => specimen.speciesName == _selectedSpecies).toList();
     }
-    List<Specimen> filteredSpecimens = specimens.where((specimen) =>
-      specimen.fieldNumber.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-      specimen.speciesName!.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-      specimen.locality!.toLowerCase().contains(_searchQuery.toLowerCase())
-    ).toList();
-    return _sortSpecimens(filteredSpecimens);
+
+    // Filtro por localidade
+    if (_selectedLocality != null) {
+      filtered =
+          filtered
+              .where((specimen) => specimen.locality == _selectedLocality)
+              .toList();
+    }
+
+    // Filtro por data (usa startTime)
+    if (_selectedDateFilter != null) {
+      filtered =
+          filtered
+              .where(
+                (specimen) =>
+                    _isWithinDateFilter(specimen.sampleTime, _selectedDateFilter),
+              )
+              .toList();
+    }
+
+    // Filtro por busca textual
+    if (_searchQuery.isNotEmpty) {
+      filtered =
+          filtered
+              .where(
+                (specimen) =>
+                    specimen.fieldNumber.toLowerCase().contains(
+                      _searchQuery.toLowerCase(),
+                    ) ||
+                  specimen.speciesName!.toLowerCase().contains(
+                    _searchQuery.toLowerCase(),
+                  ) ||
+                    (specimen.locality?.toLowerCase().contains(
+                          _searchQuery.toLowerCase(),
+                        ) ??
+                        false),
+              )
+              .toList();
+    }
+
+    return _sortSpecimens(filtered);
   }
 
   void _showAddSpecimenScreen(BuildContext context) async {
@@ -785,6 +928,204 @@ class SpecimensScreenState extends State<SpecimensScreen> {
               },
             ),
           ),
+          Padding(
+          padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 8.0),
+          child: Row(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      MenuAnchor(
+                        builder: (context, controller, child) {
+                          return FilterChip(
+                            label: Text(
+                              _selectedDateFilter != null
+                                  ? _dateFilterLabels[_selectedDateFilter] ??
+                                      S.of(context).date
+                                  : S.of(context).date,
+                            ),
+                            avatar: _selectedDateFilter == null ? Icon(Icons.calendar_today_outlined) : null,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                            visualDensity: VisualDensity.compact,
+                            onSelected: (selected) {
+                              if (selected) {
+                                controller.open();
+                              } else {
+                                setState(() {
+                                  _selectedDateFilter = null;
+                                });
+                              }
+                            },
+                            selected: _selectedDateFilter != null,
+                          );
+                        },
+                        menuChildren: [
+                          // MenuItemButton(
+                          //   onPressed: () {
+                          //     setState(() {
+                          //       _selectedDateFilter = null;
+                          //     });
+                          //   },
+                          //   child: Text(S.of(context).allDates),
+                          // ),
+                          ...DateFilter.values.map((filter) {
+                            return MenuItemButton(
+                              onPressed: () {
+                                setState(() {
+                                  _selectedDateFilter = filter;
+                                });
+                              },
+                              child: Text(_dateFilterLabels[filter]!),
+                            );
+                          }),
+                        ],
+                      ),
+                      const SizedBox(width: 8.0),
+                      MenuAnchor(
+                        builder: (context, controller, child) {
+                          return FilterChip(
+                            label: Text(
+                              _selectedSpecies ?? S.current.species(1),
+                            ),
+                            avatar: _selectedSpecies == null ? Icon(Icons.account_tree_outlined) : null,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                            onSelected: (selected) {
+                              if (selected) {
+                                controller.open();
+                              } else {
+                                setState(() {
+                                  _selectedSpecies = null;
+                                });
+                              }
+                            },
+                            selected: _selectedSpecies != null,
+                          );
+                        },
+                        menuChildren: [
+                          // MenuItemButton(
+                          //   onPressed: () {
+                          //     setState(() {
+                          //       _selectedSpecies = null;
+                          //     });
+                          //   },
+                          //   child: Text(S.current.allTypes),
+                          // ),
+                          ..._getUniqueSpecies().map((species) {
+                            return MenuItemButton(
+                              onPressed: () {
+                                setState(() {
+                                  _selectedSpecies = species;
+                                });
+                              },
+                              child: Text(species),
+                            );
+                          }),
+                        ],
+                      ),
+                      const SizedBox(width: 8.0),
+                      MenuAnchor(
+                        builder: (context, controller, child) {
+                          return FilterChip(
+                            label: Text(
+                              _selectedLocality ?? S.current.locality,
+                            ),
+                            avatar: _selectedLocality == null ? Icon(Icons.location_on_outlined) : null,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                            visualDensity: VisualDensity.compact,
+                            onSelected: (selected) {
+                              if (selected) {
+                                controller.open();
+                              } else {
+                                setState(() {
+                                  _selectedLocality = null;
+                                });
+                              }
+                            },
+                            selected: _selectedLocality != null,
+                          );
+                        },
+                        menuChildren: [
+                          // MenuItemButton(
+                          //   onPressed: () {
+                          //     setState(() {
+                          //       _selectedLocality = null;
+                          //     });
+                          //   },
+                          //   child: Text(S.current.allLocalities),
+                          // ),
+                          ..._getUniqueLocalities().map((locality) {
+                            return MenuItemButton(
+                              onPressed: () {
+                                setState(() {
+                                  _selectedLocality = locality;
+                                });
+                              },
+                              child: Text(locality),
+                            );
+                          }),
+                        ],
+                      ),
+                      const SizedBox(width: 8.0),
+                      MenuAnchor(
+                        builder: (context, controller, child) {
+                          return FilterChip(
+                            label: Text(
+                              _selectedObserver ?? S.current.observer,
+                            ),
+                            avatar: _selectedObserver == null ? Icon(Icons.person_outlined) : null,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                            visualDensity: VisualDensity.compact,
+                            onSelected: (selected) {
+                              if (selected) {
+                                controller.open();
+                              } else {
+                                setState(() {
+                                  _selectedObserver = null;
+                                });
+                              }
+                            },
+                            selected: _selectedObserver != null,
+                          );
+                        },
+                        menuChildren: [
+                          // MenuItemButton(
+                          //   onPressed: () {
+                          //     setState(() {
+                          //       _selectedObserver = null;
+                          //     });
+                          //   },
+                          //   child: Text(S.current.allObservers),
+                          // ),
+                          ..._getUniqueObservers().map((observer) {
+                            return MenuItemButton(
+                              onPressed: () {
+                                setState(() {
+                                  _selectedObserver = observer;
+                                });
+                              },
+                              child: Text(observer),
+                            );
+                          }),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
           Expanded(
               child: Consumer<SpecimenProvider>(
                 builder: (context, specimenProvider, child) {

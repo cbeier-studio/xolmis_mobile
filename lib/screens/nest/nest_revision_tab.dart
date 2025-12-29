@@ -42,7 +42,7 @@ class _NestRevisionsTabState extends State<NestRevisionsTab>
       Provider.of<NestRevisionProvider>(
         context,
         listen: false,
-      ).removeNestRevision(widget.nest.id!, revision.id!);
+      ).removeNestRevision(context, widget.nest.id!, revision.id!);
     }
   }
 

@@ -4,10 +4,10 @@
 
 ### Novas funcionalidades
 
-* Adicionadas sugestões de ações quando uma lista estiver vazia (experimental).
-* Adicionadas sugestões de ações na tela de detalhes do inventário (experimental).
+* Adicionadas sugestões de ações quando uma lista estiver vazia.
+* Adicionadas sugestões de ações na tela de detalhes do inventário e do ninho (experimental).
 * Adicionado campo Observador nos inventários, ninhos, espécimes e diário de campo.
-* Adicionadas filtros para inventários.
+* Adicionados filtros para inventários, ninhos, espécimes e diário de campo.
 
 ### Melhorias
 

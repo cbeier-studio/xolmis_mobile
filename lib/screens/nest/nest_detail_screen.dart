@@ -672,7 +672,6 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                     // Option to export the selected nest to CSV
                     MenuItemButton(
                       onPressed: () async {
-                        Navigator.of(context).pop();
                         final locale = Localizations.localeOf(context);
                         final csvFile = await exportNestToCsv(context, widget.nest, locale);
                         // Share the file using share_plus
@@ -683,13 +682,13 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                             subject: S.current.nestData(1),
                           ),
                         );
+                        Navigator.of(context).pop();
                       },
                       child: const Text('CSV'),
                     ),
                     // Option to export the selected nest to Excel
                     MenuItemButton(
                       onPressed: () async {
-                        Navigator.of(context).pop();
                         final locale = Localizations.localeOf(context);
                         final excelFile = await exportNestToExcel(context, widget.nest, locale);
                         // Share the file using share_plus
@@ -700,22 +699,23 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                             subject: S.current.nestData(1)
                           ),
                         );
+                        Navigator.of(context).pop();
                       },
                       child: const Text('Excel'),
                     ),
                     // Option to export the selected nest to JSON
                     MenuItemButton(
                       onPressed: () {
-                        Navigator.of(context).pop();
                         exportNestToJson(context, widget.nest);
+                        Navigator.of(context).pop();
                       },
                       child: const Text('JSON'),
                     ),
                     // Option to export the selected nest to JSON
                     MenuItemButton(
                       onPressed: () {
-                        Navigator.of(context).pop();
                         exportNestToKml(context, widget.nest);
+                        Navigator.of(context).pop();
                       },
                       child: const Text('KML'),
                     ),
@@ -724,9 +724,169 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
               // const SizedBox(width: 8.0,),
             ],
             bottom: PreferredSize(
-              preferredSize: const Size.fromHeight(kToolbarHeight + 4.0), // Adjust height as needed
-              child: Column(
+              preferredSize: const Size.fromHeight((kToolbarHeight * 2) + 16.0), // Adjust height as needed
+              child: ValueListenableBuilder<bool>(
+  valueListenable: widget.nest.isInactiveNotifier, // supondo que exista
+  builder: (context, isInactive, child) {
+    return Column(
                   children: [
+                    SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child:
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const SizedBox(width: 8.0,),
+                  if (widget.nest.isActive) ...[
+                    Consumer<NestRevisionProvider>(
+  builder: (context, revisionProvider, _) {
+    final hasRevisions = revisionProvider.getRevisionForNest(widget.nest.id!).isNotEmpty;
+    if (!hasRevisions) return const SizedBox.shrink();
+    return ActionChip(
+                    label: Text(S.current.finish), 
+                    avatar: const Icon(Icons.flag_outlined),
+                    onPressed: () async {
+                      NestFateType? selectedNestFate;
+
+                    // Show dialog with the DropdownButton
+                    await showDialog<NestFateType>(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: Text(S.of(context).confirmFate),
+                        content: DropdownButtonFormField<NestFateType>(
+                          initialValue: selectedNestFate,
+                          decoration: InputDecoration(
+                            labelText: S.of(context).nestFate,
+                            helperText: S.of(context).requiredField,
+                            border: OutlineInputBorder(),
+                          ),
+                          onChanged: (NestFateType? newValue) {
+                            setState(() {
+                              selectedNestFate = newValue;
+                            });
+                          },
+                          items: NestFateType.values.map((NestFateType fate) {
+                            return DropdownMenuItem<NestFateType>(
+                              value: fate,
+                              child: Row(
+                                children: [
+                                  fate == NestFateType.fatSuccess
+                                      ? const Icon(Icons.check_circle, color: Colors.green)
+                                      : fate == NestFateType.fatLost
+                                      ? const Icon(Icons.cancel, color: Colors.red)
+                                      : const Icon(Icons.help, color: Colors.grey),
+                                  const SizedBox(width: 8),
+                                  Text(nestFateTypeFriendlyNames[fate]!),
+                                ],
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: Text(S.of(context).cancel),
+                          ),
+                          TextButton(
+                            onPressed: () async {
+                              if (selectedNestFate != null) {
+                                setState(() {
+                                  _isSubmitting = true;
+                                });
+
+                                try {
+                                  // Update nest with fate, lastTime and isActive = false
+                                  widget.nest.nestFate = selectedNestFate;
+                                  widget.nest.lastTime = DateTime.now();
+                                  widget.nest.isActive = false;
+
+                                  // Save changes to database using the provider
+                                  await Provider.of<NestProvider>(context, listen: false)
+                                      .updateNest(widget.nest);
+
+                                  // ScaffoldMessenger.of(context).showSnackBar(
+                                  //   const SnackBar(
+                                  //     content: Text('Ninho desativado com sucesso!'),
+                                  //   ),
+                                  // );
+
+                                  // Close screen of nest details
+                                  Navigator.pop(context, selectedNestFate);
+                                  Navigator.pop(context);
+                                } catch (error) {
+                                  // Handle errors
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      persist: true,
+                                      showCloseIcon: true,
+                                      backgroundColor: Theme.of(context).colorScheme.error,
+                                      content: Text(S.of(context).errorInactivatingNest(error.toString())),
+                                    ),
+                                  );
+                                } finally {
+                                  setState(() {
+                                    _isSubmitting = false;
+                                  });
+                                }
+                              }
+                            },
+                            child: Text(S.of(context).save),
+                          ),
+                        ],
+                      ),
+                    );
+                    },
+                  );
+  },
+                    ),
+                    const SizedBox(width: 8.0,),
+                  ActionChip(
+                    label: Text('${S.current.addButton} ${S.of(context).revision(1).toLowerCase()}'), 
+                    avatar: const Icon(Icons.beenhere_outlined),
+                    onPressed: () {
+                      _showAddRevisionScreen(context);
+                    },
+                  ),
+                  const SizedBox(width: 8.0,),
+                  ActionChip(
+                    label: Text('${S.current.addButton} ${S.of(context).egg(1).toLowerCase()}'), 
+                    avatar: const Icon(Icons.egg_outlined),
+                    onPressed: () {
+                      _showAddEggScreen(context);
+                    },
+                  ),
+                  ],
+                  if (!widget.nest.isActive) ...[
+                  ActionChip(
+                    label: Text('${S.current.export} CSV'), 
+                    avatar: const Icon(Icons.share_outlined),
+                    onPressed: () async {
+                      final locale = Localizations.localeOf(context);
+                        final csvFile = await exportNestToCsv(context, widget.nest, locale);
+                        // Share the file using share_plus
+                        await SharePlus.instance.share(
+                          ShareParams(
+                            files: [XFile(csvFile, mimeType: 'text/csv')],
+                            text: S.current.nestExported(1),
+                            subject: S.current.nestData(1),
+                          ),
+                        );
+                    },
+                  ),
+                  const SizedBox(width: 8.0,),
+                  ActionChip(
+                    label: Text('${S.current.export} JSON'), 
+                    avatar: const Icon(Icons.share_outlined),
+                    onPressed: () {
+                      exportNestToJson(context, widget.nest);
+                    },
+                  ),
+                  ],
+                  const SizedBox(width: 8.0,),
+                ],
+              ),
+              ),         
+              const SizedBox(height: 8.0,),
                     Text(
                       widget.nest.speciesName!,
                       style: const TextStyle(fontStyle: FontStyle.italic),
@@ -769,8 +929,10 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                       ],
                     ),
                   ]
-              ),
-            )
+              );
+  },
+            ),
+        ),
         ),
         body: TabBarView(
           controller: _tabController,

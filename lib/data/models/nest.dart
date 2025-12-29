@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 import '../../core/core_consts.dart';
 
 // Egg class
@@ -230,7 +232,7 @@ class NestRevision {
 
 // Nest class
 
-class Nest {
+class Nest with ChangeNotifier {
   int? id;
   String? fieldNumber;
   String? speciesName;
@@ -247,6 +249,8 @@ class Nest {
   String? helpers;
   String? observer;
   bool isActive;
+  final ValueNotifier<bool> _isInactiveNotifier = ValueNotifier<bool>(false);
+  ValueNotifier<bool> get isInactiveNotifier => _isInactiveNotifier;
   List<NestRevision>? revisionsList;
   List<Egg>? eggsList;
 

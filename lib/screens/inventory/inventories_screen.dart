@@ -1297,6 +1297,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20.0),
                             ),
+                            visualDensity: VisualDensity.compact,
                             onSelected: (selected) {
                               if (selected) {
                                 controller.open();
@@ -1344,6 +1345,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20.0),
                             ),
+                            visualDensity: VisualDensity.compact,
                             onSelected: (selected) {
                               if (selected) {
                                 controller.open();
@@ -1391,6 +1393,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20.0),
                             ),
+                            visualDensity: VisualDensity.compact,
                             onSelected: (selected) {
                               if (selected) {
                                 controller.open();
@@ -1435,6 +1438,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20.0),
                             ),
+                            visualDensity: VisualDensity.compact,
                             onSelected: (selected) {
                               if (selected) {
                                 controller.open();

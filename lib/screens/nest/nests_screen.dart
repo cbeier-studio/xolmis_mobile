@@ -35,16 +35,64 @@ class NestsScreenState extends State<NestsScreen> {
   final _searchController = TextEditingController();
   bool _showActive = true; // Show active nests by default
   String _searchQuery = ''; // Empty search query by default
+  NestFateType? _selectedFate;
+  String? _selectedSpecies;
+  String? _selectedLocality;
+  String? _selectedObserver;
+  DateFilter? _selectedDateFilter;
   Set<int> selectedNests = {}; // Set of selected nests
   SortOrder _sortOrder = SortOrder.descending; // Default sort order
   NestSortField _sortField = NestSortField.foundTime; // Default sort field
   Nest? _selectedNest;
+
+  static final Map<DateFilter, String> _dateFilterLabels = {
+    DateFilter.today: S.current.today,
+    DateFilter.yesterday: S.current.yesterday,
+    DateFilter.last7Days: S.current.last7Days,
+    DateFilter.last30Days: S.current.last30Days,
+    DateFilter.last90Days: S.current.last90Days,
+    DateFilter.last180Days: S.current.last180Days,
+    DateFilter.last365Days: S.current.last365Days,
+  };
 
   @override
   void initState() {
     super.initState();
     nestProvider = context.read<NestProvider>();
     nestProvider.fetchNests();
+  }
+
+  bool _isWithinDateFilter(DateTime? date, DateFilter? filter) {
+    if (date == null || filter == null) return true; // sem filtro ou data nula
+    final now = DateTime.now();
+    final todayStart = DateTime(now.year, now.month, now.day);
+    final yesterdayStart = todayStart.subtract(const Duration(days: 1));
+    final weekStart = todayStart.subtract(const Duration(days: 7));
+    final monthStart = todayStart.subtract(const Duration(days: 30));
+    final last90Start = todayStart.subtract(const Duration(days: 90));
+    final last180Start = todayStart.subtract(const Duration(days: 180));
+    final last365Start = todayStart.subtract(const Duration(days: 365));
+
+    switch (filter) {
+      case DateFilter.today:
+        return date.isAfter(todayStart) || date.isAtSameMomentAs(todayStart);
+      case DateFilter.yesterday:
+        return (date.isAfter(yesterdayStart) ||
+                date.isAtSameMomentAs(yesterdayStart)) &&
+            date.isBefore(todayStart);
+      case DateFilter.last7Days:
+        return date.isAfter(weekStart) || date.isAtSameMomentAs(weekStart);
+      case DateFilter.last30Days:
+        return date.isAfter(monthStart) || date.isAtSameMomentAs(monthStart);
+      case DateFilter.last90Days:
+        return date.isAfter(last90Start) || date.isAtSameMomentAs(last90Start);
+      case DateFilter.last180Days:
+        return date.isAfter(last180Start) ||
+            date.isAtSameMomentAs(last180Start);
+      case DateFilter.last365Days:
+        return date.isAfter(last365Start) ||
+            date.isAtSameMomentAs(last365Start);
+    }
   }
 
   // Sort the nests by the selected field
@@ -235,27 +283,119 @@ class NestsScreenState extends State<NestsScreen> {
     );
   }
 
-  // Filter the nests based on the search query
-  List<Nest> _filterNests(List<Nest> nests) {
-    if (_searchQuery.isEmpty) {
-      return _sortNests(nests);
-    }
-    List<Nest> filteredNests =
+  List<String> _getUniqueSpecies() {
+    final nests =
+        _showActive
+            ? nestProvider.activeNests
+            : nestProvider.inactiveNests;
+
+    final species =
         nests
             .where(
-              (nest) =>
-                  nest.fieldNumber!.toLowerCase().contains(
-                    _searchQuery.toLowerCase(),
-                  ) ||
+              (nest) => nest.speciesName != null && nest.speciesName!.isNotEmpty,
+            )
+            .map((inv) => inv.speciesName!)
+            .toSet()
+            .toList();
+
+    species.sort();
+    return species;
+  }
+
+  List<String> _getUniqueLocalities() {
+    final nests =
+        _showActive
+            ? nestProvider.activeNests
+            : nestProvider.inactiveNests;
+
+    final localities =
+        nests
+            .where(
+              (nest) => nest.localityName != null && nest.localityName!.isNotEmpty,
+            )
+            .map((inv) => inv.localityName!)
+            .toSet()
+            .toList();
+
+    localities.sort();
+    return localities;
+  }
+
+  List<String> _getUniqueObservers() {
+    final nests =
+        _showActive
+            ? nestProvider.activeNests
+            : nestProvider.inactiveNests;
+
+    final observers =
+        nests
+            .where(
+              (nest) => nest.observer != null && nest.observer!.isNotEmpty,
+            )
+            .map((nest) => nest.observer!)
+            .toSet()
+            .toList();
+
+    observers.sort();
+    return observers;
+  }
+
+  // Filter the nests based on the search query
+  List<Nest> _filterNests(List<Nest> nests) {
+    List<Nest> filtered = nests;
+
+    // Filtro por destino do ninho
+    if (_selectedFate != null) {
+      filtered =
+          filtered.where((nest) => nest.nestFate == _selectedFate).toList();
+    }
+
+    // Filtro por espécie
+    if (_selectedSpecies != null) {
+      filtered =
+          filtered.where((nest) => nest.speciesName == _selectedSpecies).toList();
+    }
+
+    // Filtro por localidade
+    if (_selectedLocality != null) {
+      filtered =
+          filtered
+              .where((nest) => nest.localityName == _selectedLocality)
+              .toList();
+    }
+
+    // Filtro por data (usa startTime)
+    if (_selectedDateFilter != null) {
+      filtered =
+          filtered
+              .where(
+                (nest) =>
+                    _isWithinDateFilter(nest.foundTime, _selectedDateFilter),
+              )
+              .toList();
+    }
+
+    // Filtro por busca textual
+    if (_searchQuery.isNotEmpty) {
+      filtered =
+          filtered
+              .where(
+                (nest) =>
+                    nest.fieldNumber!.toLowerCase().contains(
+                      _searchQuery.toLowerCase(),
+                    ) ||
                   nest.speciesName!.toLowerCase().contains(
                     _searchQuery.toLowerCase(),
                   ) ||
-                  nest.localityName!.toLowerCase().contains(
-                    _searchQuery.toLowerCase(),
-                  ),
-            )
-            .toList();
-    return _sortNests(filteredNests);
+                    (nest.localityName?.toLowerCase().contains(
+                          _searchQuery.toLowerCase(),
+                        ) ??
+                        false),
+              )
+              .toList();
+    }
+
+    return _sortNests(filtered);
   }
 
   // Show the add nest screen
@@ -954,6 +1094,256 @@ class NestsScreenState extends State<NestsScreen> {
                 ),
               );
             },
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 8.0),
+          child: Row(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      MenuAnchor(
+                        builder: (context, controller, child) {
+                          return FilterChip(
+                            label: Text(
+                              _selectedDateFilter != null
+                                  ? _dateFilterLabels[_selectedDateFilter] ??
+                                      S.of(context).date
+                                  : S.of(context).date,
+                            ),
+                            avatar: _selectedDateFilter == null ? Icon(Icons.calendar_today_outlined) : null,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                            visualDensity: VisualDensity.compact,
+                            onSelected: (selected) {
+                              if (selected) {
+                                controller.open();
+                              } else {
+                                setState(() {
+                                  _selectedDateFilter = null;
+                                });
+                              }
+                            },
+                            selected: _selectedDateFilter != null,
+                          );
+                        },
+                        menuChildren: [
+                          // MenuItemButton(
+                          //   onPressed: () {
+                          //     setState(() {
+                          //       _selectedDateFilter = null;
+                          //     });
+                          //   },
+                          //   child: Text(S.of(context).allDates),
+                          // ),
+                          ...DateFilter.values.map((filter) {
+                            return MenuItemButton(
+                              onPressed: () {
+                                setState(() {
+                                  _selectedDateFilter = filter;
+                                });
+                              },
+                              child: Text(_dateFilterLabels[filter]!),
+                            );
+                          }),
+                        ],
+                      ),
+                      const SizedBox(width: 8.0),
+                      MenuAnchor(
+                        builder: (context, controller, child) {
+                          return FilterChip(
+                            label: Text(
+                              _selectedFate != null
+                                  ? nestFateTypeFriendlyNames[_selectedFate] ??
+                                      S.current.nestFate
+                                  : S.current.nestFate,
+                            ),
+                            avatar: _selectedFate == null ? Icon(Icons.category_outlined) : null,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                            visualDensity: VisualDensity.compact,
+                            onSelected: (selected) {
+                              if (selected) {
+                                controller.open();
+                              } else {
+                                setState(() {
+                                  _selectedFate = null;
+                                });
+                              }
+                            },
+                            selected: _selectedFate != null,
+                          );
+                        },
+                        menuChildren: [
+                          // MenuItemButton(
+                          //   onPressed: () {
+                          //     setState(() {
+                          //       _selectedFate = null;
+                          //     });
+                          //   },
+                          //   child: Text(S.current.allTypes),
+                          // ),
+                          ...NestFateType.values.map((fate) {
+                            return MenuItemButton(
+                              onPressed: () {
+                                setState(() {
+                                  _selectedFate = fate;
+                                });
+                              },
+                              child: Text(
+                                nestFateTypeFriendlyNames[fate] ??
+                                    fate.toString(),
+                              ),
+                            );
+                          }),
+                        ],
+                      ),
+                      const SizedBox(width: 8.0),
+                      MenuAnchor(
+                        builder: (context, controller, child) {
+                          return FilterChip(
+                            label: Text(
+                              _selectedSpecies ?? S.current.species(1),
+                            ),
+                            avatar: _selectedSpecies == null ? Icon(Icons.account_tree_outlined) : null,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                            visualDensity: VisualDensity.compact,
+                            onSelected: (selected) {
+                              if (selected) {
+                                controller.open();
+                              } else {
+                                setState(() {
+                                  _selectedSpecies = null;
+                                });
+                              }
+                            },
+                            selected: _selectedSpecies != null,
+                          );
+                        },
+                        menuChildren: [
+                          // MenuItemButton(
+                          //   onPressed: () {
+                          //     setState(() {
+                          //       _selectedSpecies = null;
+                          //     });
+                          //   },
+                          //   child: Text(S.current.allTypes),
+                          // ),
+                          ..._getUniqueSpecies().map((species) {
+                            return MenuItemButton(
+                              onPressed: () {
+                                setState(() {
+                                  _selectedSpecies = species;
+                                });
+                              },
+                              child: Text(species),
+                            );
+                          }),
+                        ],
+                      ),
+                      const SizedBox(width: 8.0),
+                      MenuAnchor(
+                        builder: (context, controller, child) {
+                          return FilterChip(
+                            label: Text(
+                              _selectedLocality ?? S.current.locality,
+                            ),
+                            avatar: _selectedLocality == null ? Icon(Icons.location_on_outlined) : null,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                            visualDensity: VisualDensity.compact,
+                            onSelected: (selected) {
+                              if (selected) {
+                                controller.open();
+                              } else {
+                                setState(() {
+                                  _selectedLocality = null;
+                                });
+                              }
+                            },
+                            selected: _selectedLocality != null,
+                          );
+                        },
+                        menuChildren: [
+                          // MenuItemButton(
+                          //   onPressed: () {
+                          //     setState(() {
+                          //       _selectedLocality = null;
+                          //     });
+                          //   },
+                          //   child: Text(S.current.allLocalities),
+                          // ),
+                          ..._getUniqueLocalities().map((locality) {
+                            return MenuItemButton(
+                              onPressed: () {
+                                setState(() {
+                                  _selectedLocality = locality;
+                                });
+                              },
+                              child: Text(locality),
+                            );
+                          }),
+                        ],
+                      ),
+                      const SizedBox(width: 8.0),
+                      MenuAnchor(
+                        builder: (context, controller, child) {
+                          return FilterChip(
+                            label: Text(
+                              _selectedObserver ?? S.current.observer,
+                            ),
+                            avatar: _selectedObserver == null ? Icon(Icons.person_outlined) : null,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                            visualDensity: VisualDensity.compact,
+                            onSelected: (selected) {
+                              if (selected) {
+                                controller.open();
+                              } else {
+                                setState(() {
+                                  _selectedObserver = null;
+                                });
+                              }
+                            },
+                            selected: _selectedObserver != null,
+                          );
+                        },
+                        menuChildren: [
+                          // MenuItemButton(
+                          //   onPressed: () {
+                          //     setState(() {
+                          //       _selectedObserver = null;
+                          //     });
+                          //   },
+                          //   child: Text(S.current.allObservers),
+                          // ),
+                          ..._getUniqueObservers().map((observer) {
+                            return MenuItemButton(
+                              onPressed: () {
+                                setState(() {
+                                  _selectedObserver = observer;
+                                });
+                              },
+                              child: Text(observer),
+                            );
+                          }),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
         Expanded(

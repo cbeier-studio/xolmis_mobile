@@ -253,7 +253,7 @@ class AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
         );
 
         try {
-          await revisionProvider.updateNestRevision(updatedRevision);
+          await revisionProvider.updateNestRevision(context, updatedRevision);
 
           Navigator.pop(context);
         } catch (error) {

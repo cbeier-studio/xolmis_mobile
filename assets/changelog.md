@@ -4,10 +4,10 @@
 
 ### New features
 
-* Added action suggestions when a list is empty (experimental).
-* Added action suggestions in the inventory details screen (experimental).
+* Added action suggestions when a list is empty.
+* Added action suggestions in the inventory details and nest details screens (experimental).
 * Added Observer field to inventories, nests, specimens and field journal.
-* Added filters for inventories.
+* Added filters for inventories, nests, specimens and field journal.
 
 ### Improvements
 

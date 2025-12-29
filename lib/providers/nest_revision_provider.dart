@@ -1,8 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../data/models/nest.dart';
 import '../data/daos/nest_revision_dao.dart';
+import 'nest_provider.dart';
 
 class NestRevisionProvider with ChangeNotifier {
   final NestRevisionDao _nestRevisionDao;
@@ -40,6 +42,9 @@ class NestRevisionProvider with ChangeNotifier {
     nestRevision.nestId = nestId;
     await _nestRevisionDao.insertNestRevision(nestRevision);
 
+    final nestProvider = Provider.of<NestProvider>(context, listen: false);
+    nestProvider.nests.firstWhere((nest) => nest.id == nestId).revisionsList?.add(nestRevision); 
+
     // Add the nest revision to the list of the provider
     _nestRevisionMap[nestId] = await _nestRevisionDao.getNestRevisionsForNest(nestId);
 
@@ -47,8 +52,12 @@ class NestRevisionProvider with ChangeNotifier {
   }
 
   // Update nestRevision in the database and the list
-  Future<void> updateNestRevision(NestRevision nestRevision) async {
+  Future<void> updateNestRevision(BuildContext context, NestRevision nestRevision) async {
     await _nestRevisionDao.updateNestRevision(nestRevision);
+
+    final nestProvider = Provider.of<NestProvider>(context, listen: false);
+    nestProvider.nests.firstWhere((nest) => nest.id == nestRevision.nestId).revisionsList?.removeWhere((r) => r.id == nestRevision.id);
+    nestProvider.nests.firstWhere((nest) => nest.id == nestRevision.nestId).revisionsList?.add(nestRevision);
 
     _nestRevisionMap[nestRevision.nestId!] = await _nestRevisionDao.getNestRevisionsForNest(nestRevision.nestId!);
 
@@ -56,8 +65,11 @@ class NestRevisionProvider with ChangeNotifier {
   }
 
   // Remove nest revision from database and from list
-  Future<void> removeNestRevision(int nestId, int nestRevisionId) async {
+  Future<void> removeNestRevision(BuildContext context, int nestId, int nestRevisionId) async {
     await _nestRevisionDao.deleteNestRevision(nestRevisionId);
+
+    final nestProvider = Provider.of<NestProvider>(context, listen: false);
+    nestProvider.nests.firstWhere((nest) => nest.id == nestId).revisionsList?.removeWhere((r) => r.id == nestRevisionId);
 
     _nestRevisionMap[nestId] = await _nestRevisionDao.getNestRevisionsForNest(nestId);
     notifyListeners();
