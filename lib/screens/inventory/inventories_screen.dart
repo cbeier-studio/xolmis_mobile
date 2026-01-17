@@ -2056,8 +2056,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                   const SizedBox(width: 16.0),
                                   ActionChip(
                                     label: const Text('CSV'),
-                                    onPressed: () async {
-                                      Navigator.of(context).pop();
+                                    onPressed: () async {                                      
                                       final locale = Localizations.localeOf(
                                         context,
                                       );
@@ -2080,13 +2079,15 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                           subject: S.current.inventoryData(1),
                                         ),
                                       );
+                                      if (context.mounted) {
+                                        Navigator.of(context).pop();
+                                      }
                                     },
                                   ),
                                   const SizedBox(width: 8.0),
                                   ActionChip(
                                     label: const Text('Excel'),
-                                    onPressed: () async {
-                                      Navigator.of(context).pop();
+                                    onPressed: () async {                                  
                                       final locale = Localizations.localeOf(
                                         context,
                                       );
@@ -2110,26 +2111,29 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                           subject: S.current.inventoryData(1),
                                         ),
                                       );
+                                      if (context.mounted) {
+                                        Navigator.of(context).pop();
+                                      }
                                     },
                                   ),
                                   const SizedBox(width: 8.0),
                                   ActionChip(
                                     label: const Text('JSON'),
-                                    onPressed: () async {
-                                      Navigator.of(context).pop();
+                                    onPressed: () async {                                      
                                       exportInventoryToJson(
                                         context,
                                         inventory,
                                         true,
                                       );
+                                      Navigator.of(context).pop();
                                     },
                                   ),
                                   const SizedBox(width: 8.0),
                                   ActionChip(
                                     label: const Text('KML'),
-                                    onPressed: () async {
-                                      Navigator.of(context).pop();
+                                    onPressed: () async {                                      
                                       exportInventoryToKml(context, inventory);
+                                      Navigator.of(context).pop();
                                     },
                                   ),
                                   const SizedBox(width: 8.0),
