@@ -398,6 +398,7 @@ class InventoryDao {
       );
 
       final localities = results.map((row) => row['localityName'] as String).toList();
+      localities.sort();
       
       debugPrint('[DAO] Distinct localities from inventories: $localities');
       return localities;

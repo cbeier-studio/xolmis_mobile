@@ -187,6 +187,7 @@ class SpecimenDao {
       );
 
       final localities = results.map((row) => row['locality'] as String).toList();
+      localities.sort();
       
       debugPrint('Distinct localities from specimens: $localities');
       return localities;

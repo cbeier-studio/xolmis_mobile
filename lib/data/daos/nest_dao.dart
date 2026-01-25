@@ -250,6 +250,7 @@ class NestDao {
       );
 
       final localities = results.map((row) => row['localityName'] as String).toList();
+      localities.sort();
       
       debugPrint('Distinct localities from nests: $localities');
       return localities;
@@ -276,6 +277,7 @@ class NestDao {
       );
 
       final supports = results.map((row) => row['support'] as String).toList();
+      supports.sort();
 
       debugPrint('Distinct supports from nests: $supports');
       return supports;

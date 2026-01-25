@@ -768,8 +768,8 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
       await SharePlus.instance.share(
         ShareParams(
           files: excelFiles,
-          text: S.current.inventoryExported(2),
-          subject: S.current.inventoryData(2),
+          text: S.current.inventoryExported(excelFiles.length),
+          subject: S.current.inventoryData(excelFiles.length),
         ),
       );
 
