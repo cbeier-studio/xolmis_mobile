@@ -22,9 +22,9 @@ dependencies:
   side_sheet: ^1.0.4+1
   fab_m3e: ^0.1.1
   m3e_design: ^0.2.1
-  settings_ui: ^2.0.2
+  settings_ui: ^3.0.1
   fleather: ^1.26.0
-  fl_chart: ^1.1.1
+  fl_chart: ^1.2.0
   numberpicker: ^2.1.2
   image_picker: ^1.2.1
   file_picker: ^10.3.6

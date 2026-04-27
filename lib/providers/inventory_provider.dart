@@ -359,4 +359,15 @@ class InventoryProvider with ChangeNotifier {
     return _inventoryDao.getDistinctLocalities();
   }
 
+  Future<List<String>> get allSpeciesInInventories async {
+    final speciesSet = <String>{};
+    final allInventories = await _inventoryDao.getInventories();
+    for (var inv in allInventories) {
+      for (var record in inv.speciesList) {
+        speciesSet.add(record.name);
+      }
+    }
+    return speciesSet.toList()..sort();
+  }
+
 }

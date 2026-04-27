@@ -54,6 +54,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
   InventoryType? _selectedInventoryType;
   String? _selectedLocality;
   String? _selectedObserver;
+  String? _selectedSpeciesFilter;
   DateFilter? _selectedDateFilter;
   Set<String> selectedInventories = {}; // Set of selected inventories
   SortOrder _sortOrder = SortOrder.descending; // Default sort order
@@ -131,6 +132,15 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
         return date.isAfter(last365Start) ||
             date.isAtSameMomentAs(last365Start);
     }
+  }
+
+  List<Inventory> _getFilteredInventories(List<Inventory> allInventories) {
+    if (_selectedSpeciesFilter == null) return allInventories;
+
+    return allInventories.where((inventory) {
+      // Verifica se o inventário contém a espécie selecionada
+      return inventory.speciesList.any((r) => r.name == _selectedSpeciesFilter);
+    }).toList();
   }
 
   // Sort the inventories by the selected field and order
@@ -348,6 +358,20 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     return observers;
   }
 
+  List<String> _getUniqueSpecies() {
+    final inventories =
+    _isShowingActiveInventories
+        ? inventoryProvider.activeInventories
+        : inventoryProvider.finishedInventories;
+
+    return inventories
+        .expand((inv) => inv.speciesList) // Flatten all species lists into one stream
+        .map((s) => s.name)               // Extract just the names
+        .toSet()                          // Ensure uniqueness
+        .toList()                         // Convert back to list for sorting
+      ..sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase())); // Case-insensitive sort
+  }
+
   // Filter the inventories by the search query
   List<Inventory> _filterInventories(List<Inventory> inventories) {
     List<Inventory> filtered = inventories;
@@ -363,6 +387,14 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
       filtered =
           filtered
               .where((inv) => inv.localityName == _selectedLocality)
+              .toList();
+    }
+
+    // Filtro por espécie
+    if (_selectedSpeciesFilter != null) {
+      filtered =
+          filtered
+              .where((inv) => inv.speciesList.any((s) => s.name == _selectedSpeciesFilter))
               .toList();
     }
 
@@ -1468,6 +1500,57 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                 });
                               },
                               child: Text(observer),
+                            );
+                          }),
+                        ],
+                      ),
+                      const SizedBox(width: 8.0),
+                      MenuAnchor(
+                        builder: (context, controller, child) {
+                          return FilterChip(
+                            label: Text(
+                              _selectedSpeciesFilter != null
+                                  ? _selectedSpeciesFilter ??
+                                  S.current.species(1)
+                                  : S.current.species(1),
+                            ),
+                            avatar: _selectedSpeciesFilter == null ? Icon(Icons.account_tree_outlined) : null,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                            visualDensity: VisualDensity.compact,
+                            onSelected: (selected) {
+                              if (selected) {
+                                controller.open();
+                              } else {
+                                setState(() {
+                                  _selectedSpeciesFilter = null;
+                                });
+                              }
+                            },
+                            selected: _selectedSpeciesFilter != null,
+                          );
+                        },
+                        menuChildren: [
+                          // MenuItemButton(
+                          //   onPressed: () {
+                          //     setState(() {
+                          //       _selectedInventoryType = null;
+                          //     });
+                          //   },
+                          //   child: Text(S.current.allTypes),
+                          // ),
+                          ..._getUniqueSpecies().map((species) {
+                            return MenuItemButton(
+                              onPressed: () {
+                                setState(() {
+                                  _selectedSpeciesFilter = species;
+                                });
+                              },
+                              child: Text(
+                                inventoryTypeFriendlyNames[species] ??
+                                    species.toString(),
+                              ),
                             );
                           }),
                         ],
