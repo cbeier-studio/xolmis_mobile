@@ -46,7 +46,18 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
     accumulatedSpeciesData = prepareAccumulatedSpeciesData(widget.inventories);
     accumulatedSpeciesWithinSampleData = prepareAccumulatedSpeciesWithinSample(widget.inventories);
     combinedSpeciesList = _getSpeciesList(widget.inventories);
-    averageSpeciesCount = combinedSpeciesList.length / widget.inventories.length;
+    if (widget.inventories.isNotEmpty) {
+      // Usamos .map((s) => s.name).toSet() para garantir que espécies duplicadas
+      // no mesmo inventário contem como apenas 1 na riqueza total daquele inventário.
+      int totalRichnessSum = widget.inventories.fold(0, (sum, inv) {
+        final uniqueSpeciesCount = inv.speciesList.map((s) => s.name).toSet().length;
+        return sum + uniqueSpeciesCount;
+      });
+
+      averageSpeciesCount = totalRichnessSum / widget.inventories.length;
+    } else {
+      averageSpeciesCount = 0;
+    }
 
     final allLocalities = widget.inventories.map((inventory) => inventory.localityName).toList();
     final distinctLocalities = allLocalities.toSet();
