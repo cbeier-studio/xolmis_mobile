@@ -146,8 +146,48 @@ class InventoryReportScreen extends StatelessWidget {
 
   // Build the rows for the DataTable
   List<DataRow> _buildRows(List<String> speciesList, List<List<dynamic>> reportData) {
-    return reportData.map((row) {
-      return DataRow(cells: row.map((cell) => DataCell(Text(cell.toString()))).toList());
+    return reportData.asMap().entries.map((entry) {
+      int rowIndex = entry.key;
+      List<dynamic> row = entry.value;
+
+      // Ignora a última linha (que é o total de espécies) para o destaque
+      bool isTotalRow = rowIndex == reportData.length - 1;
+
+      int? firstOccurrenceIndex;
+      if (!isTotalRow) {
+        // Encontra o índice da primeira coluna (após o nome da espécie) que não está vazia
+        for (int i = 1; i < row.length - 1; i++) {
+          if (row[i].toString().isNotEmpty) {
+            firstOccurrenceIndex = i;
+            break;
+          }
+        }
+      }
+
+      return DataRow(
+        cells: row.asMap().entries.map((cellEntry) {
+          int colIndex = cellEntry.key;
+          String cellValue = cellEntry.value.toString();
+
+          // Estilo padrão
+          TextStyle style = const TextStyle();
+
+          // Aplica o destaque se for a primeira ocorrência
+          if (colIndex == firstOccurrenceIndex) {
+            style = const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.blue, // Ou a cor de sua preferência
+            );
+          }
+
+          return DataCell(
+            Text(
+              cellValue,
+              style: style,
+            ),
+          );
+        }).toList(),
+      );
     }).toList();
   }
 
