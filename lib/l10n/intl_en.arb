@@ -2398,6 +2398,11 @@
       "type": "text",
       "description": "Last 365 days option in date filter"
     },
+    "dateInterval": "Date interval",
+    "@dateInterval": {
+      "type": "text",
+      "description": "Date interval field label"
+    },
     "type": "Type",
     "@type": {
       "type": "text",

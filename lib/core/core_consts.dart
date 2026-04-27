@@ -61,6 +61,7 @@ enum DateFilter {
   last90Days,
   last180Days,
   last365Days,
+  customRange,
 }
 
 enum SortOrder {

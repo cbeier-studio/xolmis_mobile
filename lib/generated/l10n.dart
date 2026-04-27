@@ -4229,6 +4229,16 @@ class S {
     );
   }
 
+  /// `Date interval`
+  String get dateInterval {
+    return Intl.message(
+      'Date interval',
+      name: 'dateInterval',
+      desc: 'Date interval field label',
+      args: [],
+    );
+  }
+
   /// `Type`
   String get type {
     return Intl.message(

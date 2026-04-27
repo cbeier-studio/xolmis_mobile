@@ -2574,6 +2574,12 @@ abstract class AppLocalizations {
   /// **'Last year'**
   String get last365Days;
 
+  /// Date interval field label
+  ///
+  /// In en, this message translates to:
+  /// **'Date interval'**
+  String get dateInterval;
+
   /// Type field label
   ///
   /// In en, this message translates to:

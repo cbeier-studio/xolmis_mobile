@@ -276,6 +276,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Dados do aplicativo apagados com sucesso!",
     ),
     "date": MessageLookupByLibrary.simpleMessage("Data"),
+    "dateInterval": MessageLookupByLibrary.simpleMessage("Intervalo de datas"),
     "daysSurveyed": m3,
     "decreaseIndividuals": MessageLookupByLibrary.simpleMessage(
       "Diminuir contagem de indivíduos",

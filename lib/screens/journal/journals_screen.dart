@@ -25,6 +25,7 @@ class JournalsScreenState extends State<JournalsScreen> {
   String _searchQuery = '';
   String? _selectedObserver;
   DateFilter? _selectedDateFilter;
+  DateTimeRange? _selectedDateRange;
   Set<int> selectedJournals = {};
   JournalSortField _sortField = JournalSortField.creationDate;
   SortOrder _sortOrder = SortOrder.descending;
@@ -38,6 +39,7 @@ class JournalsScreenState extends State<JournalsScreen> {
     DateFilter.last90Days: S.current.last90Days,
     DateFilter.last180Days: S.current.last180Days,
     DateFilter.last365Days: S.current.last365Days,
+    DateFilter.customRange: S.current.dateInterval,
   };
 
   @override
@@ -77,6 +79,13 @@ class JournalsScreenState extends State<JournalsScreen> {
       case DateFilter.last365Days:
         return date.isAfter(last365Start) ||
             date.isAtSameMomentAs(last365Start);
+      case DateFilter.customRange:
+        if (_selectedDateRange == null) return true;
+        // Ajuste para incluir o dia inteiro da data final (até 23:59:59)
+        final endOfDay = _selectedDateRange!.end.add(const Duration(days: 1));
+        return (date.isAfter(_selectedDateRange!.start) ||
+            date.isAtSameMomentAs(_selectedDateRange!.start)) &&
+            date.isBefore(endOfDay);
     }
   }
 
@@ -587,14 +596,20 @@ class JournalsScreenState extends State<JournalsScreen> {
                     children: [
                       MenuAnchor(
                         builder: (context, controller, child) {
+                          String label;
+                          if (_selectedDateFilter == DateFilter.customRange && _selectedDateRange != null) {
+                            final start = DateFormat('dd/MM/yyyy').format(_selectedDateRange!.start);
+                            final end = DateFormat('dd/MM/yyyy').format(_selectedDateRange!.end);
+                            label = "$start - $end";
+                          } else {
+                            label = _selectedDateFilter != null
+                                ? _dateFilterLabels[_selectedDateFilter]!
+                                : S.of(context).date;
+                          }
+
                           return FilterChip(
-                            label: Text(
-                              _selectedDateFilter != null
-                                  ? _dateFilterLabels[_selectedDateFilter] ??
-                                      S.of(context).date
-                                  : S.of(context).date,
-                            ),
-                            avatar: _selectedDateFilter == null ? Icon(Icons.calendar_today_outlined) : null,
+                            label: Text(label),
+                            avatar: _selectedDateFilter == null ? const Icon(Icons.calendar_today_outlined) : null,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20.0),
                             ),
@@ -605,6 +620,7 @@ class JournalsScreenState extends State<JournalsScreen> {
                               } else {
                                 setState(() {
                                   _selectedDateFilter = null;
+                                  _selectedDateRange = null;
                                 });
                               }
                             },
@@ -612,20 +628,28 @@ class JournalsScreenState extends State<JournalsScreen> {
                           );
                         },
                         menuChildren: [
-                          // MenuItemButton(
-                          //   onPressed: () {
-                          //     setState(() {
-                          //       _selectedDateFilter = null;
-                          //     });
-                          //   },
-                          //   child: Text(S.of(context).allDates),
-                          // ),
                           ...DateFilter.values.map((filter) {
                             return MenuItemButton(
-                              onPressed: () {
-                                setState(() {
-                                  _selectedDateFilter = filter;
-                                });
+                              onPressed: () async {
+                                if (filter == DateFilter.customRange) {
+                                  final DateTimeRange? picked = await showDateRangePicker(
+                                    context: context,
+                                    firstDate: DateTime(2020),
+                                    lastDate: DateTime.now().add(const Duration(days: 365)),
+                                    initialDateRange: _selectedDateRange,
+                                  );
+                                  if (picked != null) {
+                                    setState(() {
+                                      _selectedDateFilter = filter;
+                                      _selectedDateRange = picked;
+                                    });
+                                  }
+                                } else {
+                                  setState(() {
+                                    _selectedDateFilter = filter;
+                                    _selectedDateRange = null;
+                                  });
+                                }
                               },
                               child: Text(_dateFilterLabels[filter]!),
                             );

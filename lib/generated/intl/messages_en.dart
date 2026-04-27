@@ -262,6 +262,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "App data deleted successfully!",
     ),
     "date": MessageLookupByLibrary.simpleMessage("Date"),
+    "dateInterval": MessageLookupByLibrary.simpleMessage("Date interval"),
     "daysSurveyed": m3,
     "decreaseIndividuals": MessageLookupByLibrary.simpleMessage(
       "Decrease individuals count",

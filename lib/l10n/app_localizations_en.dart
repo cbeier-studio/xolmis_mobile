@@ -1583,6 +1583,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get last365Days => 'Last year';
 
   @override
+  String get dateInterval => 'Date interval';
+
+  @override
   String get type => 'Type';
 
   @override

@@ -1588,6 +1588,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get last365Days => 'Último ano';
 
   @override
+  String get dateInterval => 'Intervalo de datas';
+
+  @override
   String get type => 'Tipo';
 
   @override
@@ -3396,6 +3399,9 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get last365Days => 'Último ano';
+
+  @override
+  String get dateInterval => 'Intervalo de datas';
 
   @override
   String get type => 'Tipo';
