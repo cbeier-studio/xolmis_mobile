@@ -64,7 +64,7 @@ Future<void> exportAllInventoriesToJson(BuildContext context, InventoryProvider 
       'source': kExportSource,
       'schema': 'inventories',
       'schemaVersion': kExportSchemaVersion,
-      'inventories': finishedInventories.map((inventory) => inventory.toJson()).toList(),
+      'records': finishedInventories.map((inventory) => inventory.toJson()).toList(),
     };
     var encoder = JsonEncoder.withIndent("  ");
     final jsonString = encoder.convert(jsonData);
@@ -146,7 +146,7 @@ Future<void> exportInventoryToJson(BuildContext context, Inventory inventory, bo
       'source': kExportSource,
       'schema': 'inventories',
       'schemaVersion': kExportSchemaVersion,
-      'inventories': [inventory.toJson()],
+      'records': [inventory.toJson()],
     };
     
     var encoder = JsonEncoder.withIndent("  ");
@@ -624,7 +624,7 @@ Future<void> exportAllInactiveNestsToJson(BuildContext context) async {
       'source': kExportSource,
       'schema': 'nests',
       'schemaVersion': kExportSchemaVersion,
-      'nests': inactiveNests.map((nest) => nest.toJson()).toList(),
+      'records': inactiveNests.map((nest) => nest.toJson()).toList(),
     };
     final jsonString = jsonEncode(jsonData);
 
@@ -698,7 +698,7 @@ Future<void> exportNestToJson(BuildContext context, Nest nest) async {
       'source': kExportSource,
       'schema': 'nests',
       'schemaVersion': kExportSchemaVersion,
-      'nests': [nest.toJson()],
+      'records': [nest.toJson()],
     };
     final jsonString = jsonEncode(jsonData);
 
@@ -1052,7 +1052,7 @@ Future<void> exportAllSpecimensToJson(BuildContext context, List<Specimen> speci
       'source': kExportSource,
       'schema': 'specimens',
       'schemaVersion': kExportSchemaVersion,
-      'specimens': specimenList.map((specimen) => specimen.toJson()).toList(),
+      'records': specimenList.map((specimen) => specimen.toJson()).toList(),
     };
     final jsonString = jsonEncode(jsonData);
 

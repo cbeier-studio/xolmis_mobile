@@ -96,9 +96,9 @@ Future<void> importInventoryFromJson(BuildContext context) async {
 
     List<Inventory> inventoriesToImport = [];
 
-    if (jsonData is Map<String, dynamic> && jsonData.containsKey('inventories') && jsonData['inventories'] is List) {
+    if (jsonData is Map<String, dynamic> && jsonData.containsKey('records') && jsonData['records'] is List) {
       // Case: JSON has a key "inventories" and it's a list
-      final List<dynamic> inventoriesJsonList = jsonData['inventories'];
+      final List<dynamic> inventoriesJsonList = jsonData['records'];
       totalInventoriesToImport = inventoriesJsonList.length;
       for (final item in inventoriesJsonList) {
         if (item is Map<String, dynamic>) {
@@ -283,8 +283,8 @@ Future<void> importNestsFromJson(BuildContext context) async {
       final nestProvider = Provider.of<NestProvider>(context, listen: false);
       List<Nest> nestsToImport = [];
 
-      if (jsonData is Map<String, dynamic> && jsonData.containsKey('nests') && jsonData['nests'] is List) {
-        final List<dynamic> nestsJsonList = jsonData['nests'];
+      if (jsonData is Map<String, dynamic> && jsonData.containsKey('records') && jsonData['records'] is List) {
+        final List<dynamic> nestsJsonList = jsonData['records'];
         for (final item in nestsJsonList) {
           if (item is Map<String, dynamic>) {
             try {
@@ -413,8 +413,8 @@ Future<void> importSpecimensFromJson(BuildContext context) async {
       final specimenProvider = Provider.of<SpecimenProvider>(context, listen: false);
       List<Specimen> specimensToImport = [];
 
-      if (jsonData is Map<String, dynamic> && jsonData.containsKey('specimens') && jsonData['specimens'] is List) {
-        final List<dynamic> specimensJsonList = jsonData['specimens'];
+      if (jsonData is Map<String, dynamic> && jsonData.containsKey('records') && jsonData['records'] is List) {
+        final List<dynamic> specimensJsonList = jsonData['records'];
         for (final item in specimensJsonList) {
           if (item is Map<String, dynamic>) {
             try {
