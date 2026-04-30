@@ -488,7 +488,12 @@ class SpecimensScreenState extends State<SpecimensScreen> {
       final specimenProvider = Provider.of<SpecimenProvider>(context, listen: false);
       final specimens = await Future.wait(selectedSpecimens.map((id) => specimenProvider.getSpecimenById(id)));
 
-      final jsonString = jsonEncode(specimens.map((specimen) => specimen.toJson()).toList());
+      final jsonString = jsonEncode({
+        'source': kExportSource,
+        'schema': 'specimens',
+        'schemaVersion': kExportSchemaVersion,
+        'specimens': specimens.map((specimen) => specimen.toJson()).toList(),
+      });
 
       final now = DateTime.now();
       final formatter = DateFormat('yyyyMMdd_HHmmss');

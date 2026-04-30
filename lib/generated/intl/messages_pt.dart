@@ -597,10 +597,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "intervaledQualitativeLists": MessageLookupByLibrary.simpleMessage(
       "Listas qualitativas por intervalo",
     ),
-    "invalidJsonFormatExpectedObjectOrArray":
-        MessageLookupByLibrary.simpleMessage(
-          "Formato JSON inválido. Esperado um objeto ou uma lista.",
-        ),
+    "invalidJsonFormatExpectedObjectOrArray": MessageLookupByLibrary.simpleMessage(
+      "Formato JSON inválido. Esperado um objeto com os metadados e chaves de dados obrigatórios.",
+    ),
+    "invalidJsonSchema": MessageLookupByLibrary.simpleMessage(
+      "Esquema do JSON inválido.",
+    ),
+    "invalidJsonSource": MessageLookupByLibrary.simpleMessage(
+      "Origem do JSON inválida. Esperada: Xolmis Mobile.",
+    ),
     "invalidLatitude": MessageLookupByLibrary.simpleMessage(
       "Latitude inválida",
     ),

@@ -543,9 +543,12 @@ class NestsScreenState extends State<NestsScreen> {
         selectedNests.map((id) => nestProvider.getNestById(id)),
       );
 
-      final jsonString = jsonEncode(
-        nests.map((nest) => nest.toJson()).toList(),
-      );
+      final jsonString = jsonEncode({
+        'source': kExportSource,
+        'schema': 'nests',
+        'schemaVersion': kExportSchemaVersion,
+        'nests': nests.map((nest) => nest.toJson()).toList(),
+      });
 
       final now = DateTime.now();
       final formatter = DateFormat('yyyyMMdd_HHmmss');

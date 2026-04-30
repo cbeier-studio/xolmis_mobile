@@ -21,6 +21,9 @@ import '../providers/nest_provider.dart';
 import '../core/core_consts.dart';
 import '../generated/l10n.dart';
 
+const String kExportSource = 'Xolmis Mobile';
+const String kExportSchemaVersion = '1';
+
 Future<bool> requestStoragePermission() async {
   var status = await Permission.storage.status;
   if (!status.isGranted) {
@@ -57,7 +60,12 @@ Future<void> exportAllInventoriesToJson(BuildContext context, InventoryProvider 
       isDialogShown = true;
 
     final finishedInventories = inventoryProvider.finishedInventories;
-    final jsonData = finishedInventories.map((inventory) => inventory.toJson()).toList();
+    final jsonData = {
+      'source': kExportSource,
+      'schema': 'inventories',
+      'schemaVersion': kExportSchemaVersion,
+      'inventories': finishedInventories.map((inventory) => inventory.toJson()).toList(),
+    };
     var encoder = JsonEncoder.withIndent("  ");
     final jsonString = encoder.convert(jsonData);
     // final jsonString = jsonEncode(jsonData);
@@ -134,7 +142,13 @@ Future<void> exportAllInventoriesToJson(BuildContext context, InventoryProvider 
 
 Future<void> exportInventoryToJson(BuildContext context, Inventory inventory, bool shareIt) async {
   try {
-    final jsonData = inventory.toJson();
+    final jsonData = {
+      'source': kExportSource,
+      'schema': 'inventories',
+      'schemaVersion': kExportSchemaVersion,
+      'inventories': [inventory.toJson()],
+    };
+    
     var encoder = JsonEncoder.withIndent("  ");
     final jsonString = encoder.convert(jsonData);
     // final jsonString = jsonEncode(jsonData);
@@ -606,7 +620,12 @@ Future<void> exportAllInactiveNestsToJson(BuildContext context) async {
 
     final nestProvider = Provider.of<NestProvider>(context, listen: false);
     final inactiveNests = nestProvider.inactiveNests;
-    final jsonData = inactiveNests.map((nest) => nest.toJson()).toList();
+    final jsonData = {
+      'source': kExportSource,
+      'schema': 'nests',
+      'schemaVersion': kExportSchemaVersion,
+      'nests': inactiveNests.map((nest) => nest.toJson()).toList(),
+    };
     final jsonString = jsonEncode(jsonData);
 
     Directory tempDir = await getTemporaryDirectory();
@@ -675,8 +694,13 @@ Future<void> exportAllInactiveNestsToJson(BuildContext context) async {
 Future<void> exportNestToJson(BuildContext context, Nest nest) async {
   try {
     // 1. Create a list of data
-    final nestJson = nest.toJson();
-    final jsonString = jsonEncode(nestJson);
+    final jsonData = {
+      'source': kExportSource,
+      'schema': 'nests',
+      'schemaVersion': kExportSchemaVersion,
+      'nests': [nest.toJson()],
+    };
+    final jsonString = jsonEncode(jsonData);
 
     // 2. Create the file in a temporary directory
     Directory tempDir = await getTemporaryDirectory();
@@ -1024,7 +1048,12 @@ Future<void> exportAllSpecimensToJson(BuildContext context, List<Specimen> speci
 
     // final specimenProvider = Provider.of<SpecimenProvider>(context, listen: false);
     // final specimenList = specimenProvider.specimens;
-    final jsonData = specimenList.map((specimen) => specimen.toJson()).toList();
+    final jsonData = {
+      'source': kExportSource,
+      'schema': 'specimens',
+      'schemaVersion': kExportSchemaVersion,
+      'specimens': specimenList.map((specimen) => specimen.toJson()).toList(),
+    };
     final jsonString = jsonEncode(jsonData);
 
     Directory tempDir = await getTemporaryDirectory();

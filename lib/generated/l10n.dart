@@ -4249,6 +4249,26 @@ class S {
     );
   }
 
+  /// `Invalid JSON source. Expected: Xolmis Mobile.`
+  String get invalidJsonSource {
+    return Intl.message(
+      'Invalid JSON source. Expected: Xolmis Mobile.',
+      name: 'invalidJsonSource',
+      desc: 'Invalid JSON file source error message',
+      args: [],
+    );
+  }
+
+  /// `Invalid JSON schema.`
+  String get invalidJsonSchema {
+    return Intl.message(
+      'Invalid JSON schema.',
+      name: 'invalidJsonSchema',
+      desc: 'Invalid JSON file schema error message',
+      args: [],
+    );
+  }
+
   /// `Argentina`
   String get countryArgentina {
     return Intl.message(

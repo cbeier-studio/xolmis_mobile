@@ -1851,6 +1851,16 @@
       "type": "text",
       "description": "Type field label"
   },
+  "invalidJsonSource": "Origem do JSON inválida. Esperada: Xolmis Mobile.",
+  "@invalidJsonSource": {
+    "type": "text",
+    "description": "Invalid JSON file source error message"
+  },
+  "invalidJsonSchema": "Esquema do JSON inválido.",
+  "@invalidJsonSchema": {
+    "type": "text",
+    "description": "Invalid JSON file schema error message"
+  },
   "countryArgentina": "Argentina",
   "countryBrazil": "Brasil",
   "countryParaguay": "Paraguai",

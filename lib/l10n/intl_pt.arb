@@ -1126,7 +1126,7 @@
             }
         }
     },
-    "invalidJsonFormatExpectedObjectOrArray": "Formato JSON inválido. Esperado um objeto ou uma lista.",
+    "invalidJsonFormatExpectedObjectOrArray": "Formato JSON inválido. Esperado um objeto com os metadados e chaves de dados obrigatórios.",
     "@invalidJsonFormatExpectedObjectOrArray": {
         "type": "text",
         "description": "Message when the JSON format is invalid"
@@ -1850,6 +1850,16 @@
     "@type": {
       "type": "text",
       "description": "Type field label"
+  },
+  "invalidJsonSource": "Origem do JSON inválida. Esperada: Xolmis Mobile.",
+  "@invalidJsonSource": {
+    "type": "text",
+    "description": "Invalid JSON file source error message"
+  },
+  "invalidJsonSchema": "Esquema do JSON inválido.",
+  "@invalidJsonSchema": {
+    "type": "text",
+    "description": "Invalid JSON file schema error message"
   },
   "countryArgentina": "Argentina",
   "countryBrazil": "Brasil",

@@ -13,6 +13,7 @@ import '../data/models/specimen.dart';
 import '../providers/inventory_provider.dart';
 import '../providers/nest_provider.dart';
 import '../providers/specimen_provider.dart';
+import 'export_utils.dart';
 
 Future<void> importInventoryFromJson(BuildContext context) async {
   bool isDialogShown = false;
@@ -70,6 +71,15 @@ Future<void> importInventoryFromJson(BuildContext context) async {
     final jsonString = await file.readAsString();
     final jsonData = jsonDecode(jsonString);
 
+    if (jsonData is Map<String, dynamic>) {
+      if (jsonData['source'] != kExportSource) {
+        throw FormatException(S.current.invalidJsonSource);
+      }
+      if (jsonData['schema'] != 'inventories') {
+        throw FormatException(S.current.invalidJsonSchema);
+      }
+    }
+
     // Obter o provider ANTES de tentar usar context
     late InventoryProvider inventoryProvider;
     if (context.mounted) {
@@ -86,44 +96,19 @@ Future<void> importInventoryFromJson(BuildContext context) async {
 
     List<Inventory> inventoriesToImport = [];
 
-    if (jsonData is List) {
-      // Case 1: JSON is an array of inventories
-      totalInventoriesToImport = jsonData.length;
-      for (final item in jsonData) {
+    if (jsonData is Map<String, dynamic> && jsonData.containsKey('inventories') && jsonData['inventories'] is List) {
+      // Case: JSON has a key "inventories" and it's a list
+      final List<dynamic> inventoriesJsonList = jsonData['inventories'];
+      totalInventoriesToImport = inventoriesJsonList.length;
+      for (final item in inventoriesJsonList) {
         if (item is Map<String, dynamic>) {
           try {
             inventoriesToImport.add(Inventory.fromJson(item));
           } catch (e) {
-            importErrors.add(S.current.errorParsingArrayItem(item.toString(), e.toString()));
+            importErrors.add(S.current.errorParsingInventoriesArrayItem(item.toString(), e.toString()));
           }
         } else {
-          importErrors.add(S.current.errorUnexpectedArrayItem(item.toString()));
-        }
-      }
-    } else if (jsonData is Map<String, dynamic>) {
-      // Case 2: JSON is an inventory only (or have a key "inventories")
-      if (jsonData.containsKey('inventories') && jsonData['inventories'] is List) {
-        // Subcase 2.1: JSON have a key "inventories" and it's a list
-        final List<dynamic> inventoriesJsonList = jsonData['inventories'];
-        totalInventoriesToImport = inventoriesJsonList.length;
-        for (final item in inventoriesJsonList) {
-          if (item is Map<String, dynamic>) {
-            try {
-              inventoriesToImport.add(Inventory.fromJson(item));
-            } catch (e) {
-              importErrors.add(S.current.errorParsingInventoriesArrayItem(item.toString(), e.toString()));
-            }
-          } else {
-            importErrors.add(S.current.errorUnexpectedInventoriesArrayItem(item.toString()));
-          }
-        }
-      } else {
-        // Subcase 2.2: JSON is an inventory only
-        totalInventoriesToImport = 1;
-        try {
-          inventoriesToImport.add(Inventory.fromJson(jsonData));
-        } catch (e) {
-          importErrors.add(S.current.errorParsingObject(e.toString()));
+          importErrors.add(S.current.errorUnexpectedInventoriesArrayItem(item.toString()));
         }
       }
     } else {
@@ -286,25 +271,20 @@ Future<void> importNestsFromJson(BuildContext context) async {
       final jsonString = await file.readAsString();
       final jsonData = jsonDecode(jsonString);
 
+      if (jsonData is Map<String, dynamic>) {
+        if (jsonData['source'] != kExportSource) {
+          throw FormatException(S.current.invalidJsonSource);
+        }
+        if (jsonData['schema'] != 'nests') {
+          throw FormatException(S.current.invalidJsonSchema);
+        }
+      }
+
       final nestProvider = Provider.of<NestProvider>(context, listen: false);
       List<Nest> nestsToImport = [];
 
-      if (jsonData is List) {
-        // totalNestsToImport = jsonData.length;
-        for (final item in jsonData) {
-          if (item is Map<String, dynamic>) {
-            try {
-              nestsToImport.add(Nest.fromJson(item));
-            } catch (e) {
-              importErrors.add(S.current.errorParsingArrayItem(item.toString(), e.toString()));
-            }
-          } else {
-            importErrors.add(S.current.errorUnexpectedArrayItem(item.toString()));
-          }
-        }
-      } else if (jsonData is Map<String, dynamic> && jsonData.containsKey('nests') && jsonData['nests'] is List) {
+      if (jsonData is Map<String, dynamic> && jsonData.containsKey('nests') && jsonData['nests'] is List) {
         final List<dynamic> nestsJsonList = jsonData['nests'];
-        // totalNestsToImport = nestsJsonList.length;
         for (final item in nestsJsonList) {
           if (item is Map<String, dynamic>) {
             try {
@@ -421,25 +401,20 @@ Future<void> importSpecimensFromJson(BuildContext context) async {
       final jsonString = await file.readAsString();
       final jsonData = jsonDecode(jsonString);
 
+      if (jsonData is Map<String, dynamic>) {
+        if (jsonData['source'] != kExportSource) {
+          throw FormatException(S.current.invalidJsonSource);
+        }
+        if (jsonData['schema'] != 'specimens') {
+          throw FormatException(S.current.invalidJsonSchema);
+        }
+      }
+
       final specimenProvider = Provider.of<SpecimenProvider>(context, listen: false);
       List<Specimen> specimensToImport = [];
 
-      if (jsonData is List) {
-        // totalSpecimensToImport = jsonData.length;
-        for (final item in jsonData) {
-          if (item is Map<String, dynamic>) {
-            try {
-              specimensToImport.add(Specimen.fromJson(item));
-            } catch (e) {
-              importErrors.add(S.current.errorParsingArrayItem(item.toString(), e.toString()));
-            }
-          } else {
-            importErrors.add(S.current.errorUnexpectedArrayItem(item.toString()));
-          }
-        }
-      } else if (jsonData is Map<String, dynamic> && jsonData.containsKey('specimens') && jsonData['specimens'] is List) {
+      if (jsonData is Map<String, dynamic> && jsonData.containsKey('specimens') && jsonData['specimens'] is List) {
         final List<dynamic> specimensJsonList = jsonData['specimens'];
-        // totalSpecimensToImport = specimensJsonList.length;
         for (final item in specimensJsonList) {
           if (item is Map<String, dynamic>) {
             try {

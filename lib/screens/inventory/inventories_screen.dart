@@ -606,9 +606,12 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
               .map((id) => inventoryProvider.getInventoryById(id))
               .toList();
 
-      final jsonString = jsonEncode(
-        inventories.map((inventory) => inventory?.toJson()).toList(),
-      );
+      final jsonString = jsonEncode({
+        'source': kExportSource,
+        'schema': 'inventories',
+        'schemaVersion': kExportSchemaVersion,
+        'inventories': inventories.map((inventory) => inventory?.toJson()).toList(),
+      });
 
       final now = DateTime.now();
       final formatter = DateFormat('yyyyMMdd_HHmmss');

@@ -601,6 +601,12 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage(
           "Formato JSON inválido. Esperado um objeto ou uma lista.",
         ),
+    "invalidJsonSchema": MessageLookupByLibrary.simpleMessage(
+      "Esquema do JSON inválido.",
+    ),
+    "invalidJsonSource": MessageLookupByLibrary.simpleMessage(
+      "Origem do JSON inválida. Esperada: Xolmis Mobile.",
+    ),
     "invalidLatitude": MessageLookupByLibrary.simpleMessage(
       "Latitude inválida",
     ),
