@@ -492,7 +492,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
         'source': kExportSource,
         'schema': 'specimens',
         'schemaVersion': kExportSchemaVersion,
-        'specimens': specimens.map((specimen) => specimen.toJson()).toList(),
+        'records': specimens.map((specimen) => specimen.toJson()).toList(),
       });
 
       final now = DateTime.now();

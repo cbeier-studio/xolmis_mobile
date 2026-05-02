@@ -2586,6 +2586,18 @@ abstract class AppLocalizations {
   /// **'Type'**
   String get type;
 
+  /// Invalid JSON file source error message
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid JSON source. Expected: Xolmis Mobile.'**
+  String get invalidJsonSource;
+
+  /// Invalid JSON file schema error message
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid JSON schema.'**
+  String get invalidJsonSchema;
+
   /// No description provided for @countryArgentina.
   ///
   /// In en, this message translates to:

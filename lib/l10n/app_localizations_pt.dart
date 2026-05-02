@@ -1159,7 +1159,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get invalidJsonFormatExpectedObjectOrArray =>
-      'Formato JSON inválido. Esperado um objeto ou uma lista.';
+      'Formato JSON inválido. Esperado um objeto com os metadados e chaves de dados obrigatórios.';
 
   @override
   String get importingNests => 'Importando ninhos';
@@ -1592,6 +1592,13 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get type => 'Tipo';
+
+  @override
+  String get invalidJsonSource =>
+      'Origem do JSON inválida. Esperada: Xolmis Mobile.';
+
+  @override
+  String get invalidJsonSchema => 'Esquema do JSON inválido.';
 
   @override
   String get countryArgentina => 'Argentina';
@@ -3405,6 +3412,13 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get type => 'Tipo';
+
+  @override
+  String get invalidJsonSource =>
+      'Origem do JSON inválida. Esperada: Xolmis Mobile.';
+
+  @override
+  String get invalidJsonSchema => 'Esquema do JSON inválido.';
 
   @override
   String get countryArgentina => 'Argentina';

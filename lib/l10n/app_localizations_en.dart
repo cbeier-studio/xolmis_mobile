@@ -1589,6 +1589,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get type => 'Type';
 
   @override
+  String get invalidJsonSource =>
+      'Invalid JSON source. Expected: Xolmis Mobile.';
+
+  @override
+  String get invalidJsonSchema => 'Invalid JSON schema.';
+
+  @override
   String get countryArgentina => 'Argentina';
 
   @override

@@ -610,7 +610,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
         'source': kExportSource,
         'schema': 'inventories',
         'schemaVersion': kExportSchemaVersion,
-        'inventories': inventories.map((inventory) => inventory?.toJson()).toList(),
+        'records': inventories.map((inventory) => inventory?.toJson()).toList(),
       });
 
       final now = DateTime.now();

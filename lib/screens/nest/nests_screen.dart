@@ -547,7 +547,7 @@ class NestsScreenState extends State<NestsScreen> {
         'source': kExportSource,
         'schema': 'nests',
         'schemaVersion': kExportSchemaVersion,
-        'nests': nests.map((nest) => nest.toJson()).toList(),
+        'records': nests.map((nest) => nest.toJson()).toList(),
       });
 
       final now = DateTime.now();
