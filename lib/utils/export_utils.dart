@@ -590,6 +590,330 @@ Future<void> exportInventoryToKml(BuildContext context, Inventory inventory) asy
   }
 }
 
+Future<void> exportSelectedInventoriesToJson(BuildContext context, List<Inventory> inventories) async {
+  try {
+    final jsonData = {
+      'source': kExportSource,
+      'schema': 'inventories',
+      'schemaVersion': kExportSchemaVersion,
+      'records': inventories.map((inventory) => inventory.toJson()).toList(),
+    };
+    var encoder = JsonEncoder.withIndent("  ");
+    final jsonString = encoder.convert(jsonData);
+
+    final now = DateTime.now();
+    final formatter = DateFormat('yyyyMMdd_HHmmss');
+    final formattedDate = formatter.format(now);
+
+    Directory tempDir = await getTemporaryDirectory();
+    final filePath = '${tempDir.path}/selected_inventories_$formattedDate.json';
+    final file = File(filePath);
+    await file.writeAsString(jsonString);
+
+    await SharePlus.instance.share(
+      ShareParams(
+        files: [XFile(filePath, mimeType: 'application/json')],
+        text: S.current.inventoryExported(inventories.length),
+        subject: S.current.inventoryData(inventories.length),
+      ),
+    );
+  } catch (error) {
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          persist: true,
+          showCloseIcon: true,
+          backgroundColor: Theme.of(context).colorScheme.error,
+          content: Text(S.of(context).errorExportingInventory(inventories.length, error.toString())),
+        ),
+      );
+    }
+  }
+}
+
+Future<void> exportSelectedInventoriesToCsv(BuildContext context, List<Inventory> inventories) async {
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return Dialog(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(year2023: false),
+              SizedBox(width: 16),
+              Text(S.current.exportingPleaseWait),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+  try {
+    final locale = Localizations.localeOf(context);
+    List<XFile> csvFiles = [];
+
+    for (final inventory in inventories) {
+      final filePath = await exportInventoryToCsv(context, inventory, locale);
+      if (filePath.isNotEmpty) {
+        csvFiles.add(XFile(filePath, mimeType: 'text/csv'));
+      }
+    }
+
+    if (csvFiles.isNotEmpty) {
+      await SharePlus.instance.share(
+        ShareParams(
+          files: csvFiles,
+          text: S.current.inventoryExported(inventories.length),
+          subject: S.current.inventoryData(inventories.length),
+        ),
+      );
+    }
+  } catch (error) {
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          persist: true,
+          showCloseIcon: true,
+          backgroundColor: Theme.of(context).colorScheme.error,
+          content: Text(S.of(context).errorExportingInventory(inventories.length, error.toString())),
+        ),
+      );
+    }
+  } finally {
+    if (context.mounted) {
+      Navigator.of(context).pop();
+    }
+  }
+}
+
+Future<void> exportSelectedInventoriesToExcel(BuildContext context, List<Inventory> inventories) async {
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return Dialog(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(year2023: false),
+              SizedBox(width: 16),
+              Text(S.current.exportingPleaseWait),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+  try {
+    final locale = Localizations.localeOf(context);
+    List<XFile> excelFiles = [];
+
+    for (final inventory in inventories) {
+      final filePath = await exportInventoryToExcel(context, inventory, locale);
+      if (filePath.isNotEmpty) {
+        excelFiles.add(
+          XFile(
+            filePath,
+            mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+          ),
+        );
+      }
+    }
+
+    if (excelFiles.isNotEmpty) {
+      await SharePlus.instance.share(
+        ShareParams(
+          files: excelFiles,
+          text: S.current.inventoryExported(inventories.length),
+          subject: S.current.inventoryData(inventories.length),
+        ),
+      );
+    }
+  } catch (error) {
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          persist: true,
+          showCloseIcon: true,
+          backgroundColor: Theme.of(context).colorScheme.error,
+          content: Text(S.of(context).errorExportingInventory(inventories.length, error.toString())),
+        ),
+      );
+    }
+  } finally {
+    if (context.mounted) {
+      Navigator.of(context).pop();
+    }
+  }
+}
+
+Future<void> exportSelectedNestsToJson(BuildContext context, List<Nest> nests) async {
+  try {
+    final jsonData = {
+      'source': kExportSource,
+      'schema': 'nests',
+      'schemaVersion': kExportSchemaVersion,
+      'records': nests.map((nest) => nest.toJson()).toList(),
+    };
+    var encoder = JsonEncoder.withIndent("  ");
+    final jsonString = encoder.convert(jsonData);
+
+    final now = DateTime.now();
+    final formatter = DateFormat('yyyyMMdd_HHmmss');
+    final formattedDate = formatter.format(now);
+
+    Directory tempDir = await getTemporaryDirectory();
+    final filePath = '${tempDir.path}/selected_nests_$formattedDate.json';
+    final file = File(filePath);
+    await file.writeAsString(jsonString);
+
+    await SharePlus.instance.share(
+      ShareParams(
+        files: [XFile(filePath, mimeType: 'application/json')],
+        text: S.current.nestExported(nests.length),
+        subject: S.current.nestData(nests.length),
+      ),
+    );
+  } catch (error) {
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          persist: true,
+          showCloseIcon: true,
+          backgroundColor: Theme.of(context).colorScheme.error,
+          content: Text(S.of(context).errorExportingNest(nests.length, error.toString())),
+        ),
+      );
+    }
+  }
+}
+
+Future<void> exportSelectedNestsToCsv(BuildContext context, List<Nest> nests) async {
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return Dialog(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(year2023: false),
+              SizedBox(width: 16),
+              Text(S.current.exportingPleaseWait),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+  try {
+    final locale = Localizations.localeOf(context);
+    List<XFile> csvFiles = [];
+
+    for (final nest in nests) {
+      final filePath = await exportNestToCsv(context, nest, locale);
+      if (filePath.isNotEmpty) {
+        csvFiles.add(XFile(filePath, mimeType: 'text/csv'));
+      }
+    }
+
+    if (csvFiles.isNotEmpty) {
+      await SharePlus.instance.share(
+        ShareParams(
+          files: csvFiles,
+          text: S.current.nestExported(nests.length),
+          subject: S.current.nestData(nests.length),
+        ),
+      );
+    }
+  } catch (error) {
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          persist: true,
+          showCloseIcon: true,
+          backgroundColor: Theme.of(context).colorScheme.error,
+          content: Text(S.of(context).errorExportingNest(nests.length, error.toString())),
+        ),
+      );
+    }
+  } finally {
+    if (context.mounted) {
+      Navigator.of(context).pop();
+    }
+  }
+}
+
+Future<void> exportSelectedNestsToExcel(BuildContext context, List<Nest> nests) async {
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return Dialog(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(year2023: false),
+              SizedBox(width: 16),
+              Text(S.current.exportingPleaseWait),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+  try {
+    final locale = Localizations.localeOf(context);
+    List<XFile> excelFiles = [];
+
+    for (final nest in nests) {
+      final filePath = await exportNestToExcel(context, nest, locale);
+      if (filePath.isNotEmpty) {
+        excelFiles.add(
+          XFile(
+            filePath,
+            mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+          ),
+        );
+      }
+    }
+
+    if (excelFiles.isNotEmpty) {
+      await SharePlus.instance.share(
+        ShareParams(
+          files: excelFiles,
+          text: S.current.nestExported(nests.length),
+          subject: S.current.nestData(nests.length),
+        ),
+      );
+    }
+  } catch (error) {
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          persist: true,
+          showCloseIcon: true,
+          backgroundColor: Theme.of(context).colorScheme.error,
+          content: Text(S.of(context).errorExportingNest(nests.length, error.toString())),
+        ),
+      );
+    }
+  } finally {
+    if (context.mounted) {
+      Navigator.of(context).pop();
+    }
+  }
+}
+
 Future<void> exportAllInactiveNestsToJson(BuildContext context) async {
   bool isDialogShown = false;
 
@@ -1111,6 +1435,204 @@ Future<void> exportAllSpecimensToJson(BuildContext context, List<Specimen> speci
   } finally {
     // Ensure the dialog is always closed if it was shown and an error occurred,
     // or if the function returned early while the dialog was up.
+    if (isDialogShown && context.mounted) {
+      Navigator.of(context).pop();
+    }
+  }
+}
+
+Future<void> exportSelectedSpecimensToJson(BuildContext context, List<Specimen> specimenList) async {
+  try {
+    final jsonData = {
+      'source': kExportSource,
+      'schema': 'specimens',
+      'schemaVersion': kExportSchemaVersion,
+      'records': specimenList.map((specimen) => specimen.toJson()).toList(),
+    };
+    var encoder = JsonEncoder.withIndent("  ");
+    final jsonString = encoder.convert(jsonData);
+
+    final now = DateTime.now();
+    final formatter = DateFormat('yyyyMMdd_HHmmss');
+    final formattedDate = formatter.format(now);
+
+    Directory tempDir = await getTemporaryDirectory();
+    final filePath = '${tempDir.path}/selected_specimens_$formattedDate.json';
+    final file = File(filePath);
+    await file.writeAsString(jsonString);
+
+    await SharePlus.instance.share(
+      ShareParams(
+        files: [XFile(filePath, mimeType: 'application/json')],
+        text: S.current.specimenExported(specimenList.length),
+        subject: S.current.specimenData(specimenList.length),
+      ),
+    );
+  } catch (error) {
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        persist: true,
+        showCloseIcon: true,
+        backgroundColor: Theme.of(context).colorScheme.error,
+        content: Text(S.of(context).errorExportingSpecimen(specimenList.length, error.toString())),
+      ),
+    );
+  }
+}
+
+Future<void> exportSelectedSpecimensToCsv(BuildContext context, List<Specimen> specimenList) async {
+  bool isDialogShown = false;
+
+  try {
+    if (!context.mounted) return;
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircularProgressIndicator(year2023: false),
+                SizedBox(width: 16),
+                Text(S.current.exporting),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+    isDialogShown = true;
+
+    final locale = Localizations.localeOf(context);
+    List<List<dynamic>> rows = await buildSpecimensRows(specimenList, locale);
+    String csv = const ListToCsvConverter().convert(rows, fieldDelimiter: ';', convertNullTo: '');
+
+    final now = DateTime.now();
+    final formatter = DateFormat('yyyyMMdd_HHmmss');
+    final formattedDate = formatter.format(now);
+
+    Directory tempDir = await getTemporaryDirectory();
+    final filePath = '${tempDir.path}/selected_specimens_$formattedDate.csv';
+    final file = File(filePath);
+    await file.writeAsString(csv);
+
+    if (isDialogShown) {
+      if (context.mounted) {
+        Navigator.of(context).pop();
+      }
+      isDialogShown = false;
+    }
+
+    await SharePlus.instance.share(
+      ShareParams(
+        files: [XFile(filePath, mimeType: 'text/csv')],
+        text: S.current.specimenExported(specimenList.length),
+        subject: S.current.specimenData(specimenList.length),
+      ),
+    );
+  } catch (error) {
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        persist: true,
+        showCloseIcon: true,
+        backgroundColor: Theme.of(context).colorScheme.error,
+        content: Text(S.of(context).errorExportingSpecimen(specimenList.length, error.toString())),
+      ),
+    );
+  } finally {
+    if (isDialogShown && context.mounted) {
+      Navigator.of(context).pop();
+    }
+  }
+}
+
+Future<void> exportSelectedSpecimensToExcel(BuildContext context, List<Specimen> specimenList) async {
+  bool isDialogShown = false;
+
+  try {
+    if (!context.mounted) return;
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircularProgressIndicator(year2023: false),
+                SizedBox(width: 16),
+                Text(S.current.exporting),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+    isDialogShown = true;
+
+    final locale = Localizations.localeOf(context);
+    List<List<dynamic>> rows = await buildSpecimensRows(specimenList, locale);
+    List<List<CellValue>> cellRows = convertRowsToCellValues(rows);
+
+    final excel = Excel.createExcel();
+    final Sheet sheet = excel['Sheet1'];
+
+    for (List<CellValue> row in cellRows) {
+      sheet.appendRow(row);
+    }
+
+    final now = DateTime.now();
+    final formatter = DateFormat('yyyyMMdd_HHmmss');
+    final formattedDate = formatter.format(now);
+
+    var fileBytes = excel.save();
+    Directory tempDir = await getTemporaryDirectory();
+    final filePath = '${tempDir.path}/selected_specimens_$formattedDate.xlsx';
+    if (fileBytes != null) {
+      File(filePath)
+        ..create(recursive: true)
+        ..writeAsBytes(fileBytes);
+
+      if (isDialogShown) {
+        if (context.mounted) {
+          Navigator.of(context).pop();
+        }
+        isDialogShown = false;
+      }
+    } else {
+      throw Exception('Failed to generate Excel file.');
+    }
+
+    await SharePlus.instance.share(
+      ShareParams(
+        files: [
+          XFile(
+            filePath,
+            mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+          ),
+        ],
+        text: S.current.specimenExported(specimenList.length),
+        subject: S.current.specimenData(specimenList.length),
+      ),
+    );
+  } catch (error) {
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        persist: true,
+        showCloseIcon: true,
+        backgroundColor: Theme.of(context).colorScheme.error,
+        content: Text(S.of(context).errorExportingSpecimen(specimenList.length, error.toString())),
+      ),
+    );
+  } finally {
     if (isDialogShown && context.mounted) {
       Navigator.of(context).pop();
     }

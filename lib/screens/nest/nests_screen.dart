@@ -1,8 +1,4 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
@@ -535,254 +531,6 @@ class NestsScreenState extends State<NestsScreen> {
     );
   }
 
-  // Export all the selected nests to JSON
-  Future<void> _exportSelectedNestsToJson(BuildContext context) async {
-    try {
-      final nestProvider = Provider.of<NestProvider>(context, listen: false);
-      final nests = await Future.wait(
-        selectedNests.map((id) => nestProvider.getNestById(id)),
-      );
-
-      final jsonString = jsonEncode({
-        'source': kExportSource,
-        'schema': 'nests',
-        'schemaVersion': kExportSchemaVersion,
-        'records': nests.map((nest) => nest.toJson()).toList(),
-      });
-
-      final now = DateTime.now();
-      final formatter = DateFormat('yyyyMMdd_HHmmss');
-      final formattedDate = formatter.format(now);
-
-      final directory = await getApplicationDocumentsDirectory();
-      final filePath = '${directory.path}/selected_nests_$formattedDate.json';
-      final file = File(filePath);
-      await file.writeAsString(jsonString);
-
-      // Share the file using share_plus
-      await SharePlus.instance.share(
-        ShareParams(
-          files: [XFile(filePath, mimeType: 'application/json')],
-          text: S.current.nestExported(2),
-          subject: S.current.nestData(2),
-        ),
-      );
-
-      setState(() {
-        selectedNests.clear();
-      });
-    } catch (error) {
-      if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            persist: true,
-                            showCloseIcon: true,
-                            backgroundColor: Theme.of(context).colorScheme.error,
-                            content: Text(S.of(context).errorExportingNest(2, error.toString())),
-                          ),
-                        );
-      // showDialog(
-      //   context: context,
-      //   builder: (context) {
-      //     return AlertDialog(
-      //       title: Row(
-      //         children: [
-      //           const Icon(Icons.error_outlined, color: Colors.red),
-      //           const SizedBox(width: 10),
-      //           Text(S.current.errorTitle),
-      //         ],
-      //       ),
-      //       content: SingleChildScrollView(
-      //         child: Text(S.current.errorExportingNest(2, error.toString())),
-      //       ),
-      //       actions: [
-      //         TextButton(
-      //           child: Text(S.of(context).ok),
-      //           onPressed: () => Navigator.of(context).pop(),
-      //         ),
-      //       ],
-      //     );
-      //   },
-      // );
-    }
-  }
-
-  // Export all the selected nests to CSV
-  void _exportSelectedNestsToCsv(BuildContext context) async {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return Dialog(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                CircularProgressIndicator(),
-                const SizedBox(width: 16),
-                Text(S.current.exportingPleaseWait),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-    try {
-      final nestProvider = Provider.of<NestProvider>(context, listen: false);
-      final nests = await Future.wait(
-        selectedNests.map((id) => nestProvider.getNestById(id)),
-      );
-      final locale = Localizations.localeOf(context);
-      List<XFile> csvFiles = [];
-
-      if (nests.isNotEmpty) {
-        for (final nest in nests) {
-          final filePath = await exportNestToCsv(context, nest, locale);
-
-          csvFiles.add(XFile(filePath, mimeType: 'text/csv'));
-        }
-      }
-
-      // Share the file using share_plus
-      await SharePlus.instance.share(
-        ShareParams(
-          files: csvFiles,
-          text: S.current.nestExported(2),
-          subject: S.current.nestData(2),
-        ),
-      );
-
-      setState(() {
-        selectedNests.clear();
-      });
-    } catch (error) {
-      if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            persist: true,
-                            showCloseIcon: true,
-                            backgroundColor: Theme.of(context).colorScheme.error,
-                            content: Text(S.of(context).errorExportingNest(2, error.toString())),
-                          ),
-                        );
-      // showDialog(
-      //   context: context,
-      //   builder: (context) {
-      //     return AlertDialog(
-      //       title: Row(
-      //         children: [
-      //           const Icon(Icons.error_outlined, color: Colors.red),
-      //           const SizedBox(width: 10),
-      //           Text(S.current.errorTitle),
-      //         ],
-      //       ),
-      //       content: SingleChildScrollView(
-      //         child: Text(S.current.errorExportingNest(2, error.toString())),
-      //       ),
-      //       actions: [
-      //         TextButton(
-      //           child: Text(S.of(context).ok),
-      //           onPressed: () => Navigator.of(context).pop(),
-      //         ),
-      //       ],
-      //     );
-      //   },
-      // );
-    }
-  }
-
-  // Export all the selected nests to Excel
-  void _exportSelectedNestsToExcel(BuildContext context) async {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return Dialog(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                CircularProgressIndicator(),
-                const SizedBox(width: 16),
-                Text(S.current.exportingPleaseWait),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-    try {
-      final nestProvider = Provider.of<NestProvider>(context, listen: false);
-      final nests = await Future.wait(
-        selectedNests.map((id) => nestProvider.getNestById(id)),
-      );
-      final locale = Localizations.localeOf(context);
-      List<XFile> excelFiles = [];
-
-      if (nests.isNotEmpty) {
-        for (final nest in nests) {
-          final filePath = await exportNestToExcel(context, nest, locale);
-
-          excelFiles.add(
-            XFile(
-              filePath,
-              mimeType:
-                  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            ),
-          );
-        }
-      }
-
-      // Share the file using share_plus
-      await SharePlus.instance.share(
-        ShareParams(
-          files: excelFiles,
-          text: S.current.nestExported(2),
-          subject: S.current.nestData(2),
-        ),
-      );
-
-      setState(() {
-        selectedNests.clear();
-      });
-    } catch (error) {
-      if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            persist: true,
-                            showCloseIcon: true,
-                            backgroundColor: Theme.of(context).colorScheme.error,
-                            content: Text(S.of(context).errorExportingNest(2, error.toString())),
-                          ),
-                        );
-      // showDialog(
-      //   context: context,
-      //   builder: (context) {
-      //     return AlertDialog(
-      //       title: Row(
-      //         children: [
-      //           const Icon(Icons.error_outlined, color: Colors.red),
-      //           const SizedBox(width: 10),
-      //           Text(S.current.errorTitle),
-      //         ],
-      //       ),
-      //       content: SingleChildScrollView(
-      //         child: Text(S.current.errorExportingNest(2, error.toString())),
-      //       ),
-      //       actions: [
-      //         TextButton(
-      //           child: Text(S.of(context).ok),
-      //           onPressed: () => Navigator.of(context).pop(),
-      //         ),
-      //       ],
-      //     );
-      //   },
-      // );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.sizeOf(context).width;
@@ -924,20 +672,41 @@ class NestsScreenState extends State<NestsScreen> {
                       },
                       menuChildren: [
                         MenuItemButton(
-                          onPressed: () {
-                            _exportSelectedNestsToCsv(context);
+                          onPressed: () async {
+                            final nests = await Future.wait(
+                              selectedNests.map((id) => nestProvider.getNestById(id)),
+                            );
+                            await exportSelectedNestsToCsv(context, nests);
+                            if (!mounted) return;
+                            setState(() {
+                              selectedNests.clear();
+                            });
                           },
                           child: const Text('CSV'),
                         ),
                         MenuItemButton(
-                          onPressed: () {
-                            _exportSelectedNestsToExcel(context);
+                          onPressed: () async {
+                            final nests = await Future.wait(
+                              selectedNests.map((id) => nestProvider.getNestById(id)),
+                            );
+                            await exportSelectedNestsToExcel(context, nests);
+                            if (!mounted) return;
+                            setState(() {
+                              selectedNests.clear();
+                            });
                           },
                           child: const Text('Excel'),
                         ),
                         MenuItemButton(
-                          onPressed: () {
-                            _exportSelectedNestsToJson(context);
+                          onPressed: () async {
+                            final nests = await Future.wait(
+                              selectedNests.map((id) => nestProvider.getNestById(id)),
+                            );
+                            await exportSelectedNestsToJson(context, nests);
+                            if (!mounted) return;
+                            setState(() {
+                              selectedNests.clear();
+                            });
                           },
                           child: const Text('JSON'),
                         ),

@@ -594,291 +594,6 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     );
   }
 
-  // Export all selected inventories to JSON
-  void _exportSelectedInventoriesToJson(BuildContext context) async {
-    try {
-      final inventoryProvider = Provider.of<InventoryProvider>(
-        context,
-        listen: false,
-      );
-      final inventories =
-          selectedInventories
-              .map((id) => inventoryProvider.getInventoryById(id))
-              .toList();
-
-      final jsonString = jsonEncode({
-        'source': kExportSource,
-        'schema': 'inventories',
-        'schemaVersion': kExportSchemaVersion,
-        'records': inventories.map((inventory) => inventory?.toJson()).toList(),
-      });
-
-      final now = DateTime.now();
-      final formatter = DateFormat('yyyyMMdd_HHmmss');
-      final formattedDate = formatter.format(now);
-
-      final directory = await getApplicationDocumentsDirectory();
-      final filePath =
-          '${directory.path}/selected_inventories_$formattedDate.json';
-      final file = File(filePath);
-      await file.writeAsString(jsonString);
-
-      // Share the file using share_plus
-      await SharePlus.instance.share(
-        ShareParams(
-          files: [XFile(filePath, mimeType: 'application/json')],
-          text: S.current.inventoryExported(2),
-          subject: S.current.inventoryData(2),
-        ),
-      );
-
-      // Clear the selected inventories
-      setState(() {
-        selectedInventories.clear();
-      });
-    } catch (error) {
-      if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          persist: true,
-          showCloseIcon: true,
-          backgroundColor: Theme.of(context).colorScheme.error,
-          content: Text(S.current.errorExportingInventory(2, error.toString())),
-        ),
-      );
-      // showDialog(
-      //   context: context,
-      //   builder: (context) {
-      //     return AlertDialog(
-      //       title: Row(
-      //         children: [
-      //           const Icon(Icons.error_outlined, color: Colors.red),
-      //           const SizedBox(width: 10),
-      //           Text(S.current.errorTitle),
-      //         ],
-      //       ),
-      //       content: SingleChildScrollView(
-      //         child: Text(
-      //           S.current.errorExportingInventory(2, error.toString()),
-      //         ),
-      //       ),
-      //       actions: [
-      //         TextButton(
-      //           child: Text(S.of(context).ok),
-      //           onPressed: () => Navigator.of(context).pop(),
-      //         ),
-      //       ],
-      //     );
-      //   },
-      // );
-    }
-  }
-
-  // Export all selected inventories to CSV
-  void _exportSelectedInventoriesToCsv(BuildContext context) async {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return Dialog(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                CircularProgressIndicator(),
-                SizedBox(width: 16),
-                Text(S.current.exportingPleaseWait),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-    try {
-      final inventoryProvider = Provider.of<InventoryProvider>(
-        context,
-        listen: false,
-      );
-      final inventories =
-          selectedInventories
-              .map((id) => inventoryProvider.getInventoryById(id))
-              .toList();
-      final locale = Localizations.localeOf(context);
-      List<XFile> csvFiles = [];
-
-      if (inventories.isNotEmpty) {
-        for (final inventory in inventories) {
-          final filePath = await exportInventoryToCsv(
-            context,
-            inventory!,
-            locale,
-          );
-
-          csvFiles.add(XFile(filePath, mimeType: 'text/csv'));
-        }
-      }
-
-      // Share the file using share_plus
-      await SharePlus.instance.share(
-        ShareParams(
-          files: csvFiles,
-          text: S.current.inventoryExported(2),
-          subject: S.current.inventoryData(2),
-        ),
-      );
-
-      // Clear the selected inventories
-      setState(() {
-        selectedInventories.clear();
-      });
-    } catch (error) {
-      if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          persist: true,
-          showCloseIcon: true,
-          backgroundColor: Theme.of(context).colorScheme.error,
-          content: Text(S.current.errorExportingInventory(2, error.toString())),
-        ),
-      );
-      // showDialog(
-      //   context: context,
-      //   builder: (context) {
-      //     return AlertDialog(
-      //       title: Row(
-      //         children: [
-      //           const Icon(Icons.error_outlined, color: Colors.red),
-      //           const SizedBox(width: 10),
-      //           Text(S.current.errorTitle),
-      //         ],
-      //       ),
-      //       content: SingleChildScrollView(
-      //         child: Text(S.current.errorExportingInventory(2, error.toString())),
-      //       ),
-      //       actions: [
-      //         TextButton(
-      //           child: Text(S.of(context).ok),
-      //           onPressed: () => Navigator.of(context).pop(),
-      //         ),
-      //       ],
-      //     );
-      //   },
-      // );
-    } finally {
-      if (context.mounted) {
-        Navigator.of(context).pop(); // Dismiss the loading dialog
-      }
-    }
-  }
-
-  // Export all selected inventories to Excel
-  void _exportSelectedInventoriesToExcel(BuildContext context) async {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return Dialog(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                CircularProgressIndicator(),
-                SizedBox(width: 16),
-                Text(S.current.exportingPleaseWait),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-    try {
-      final inventoryProvider = Provider.of<InventoryProvider>(
-        context,
-        listen: false,
-      );
-      final inventories =
-          selectedInventories
-              .map((id) => inventoryProvider.getInventoryById(id))
-              .toList();
-      final locale = Localizations.localeOf(context);
-      List<XFile> excelFiles = [];
-
-      if (inventories.isNotEmpty) {
-        for (final inventory in inventories) {
-          // 1. Create a list of data
-          final filePath = await exportInventoryToExcel(
-            context,
-            inventory!,
-            locale,
-          );
-
-          excelFiles.add(
-            XFile(
-              filePath,
-              mimeType:
-                  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            ),
-          );
-        }
-      }
-
-      // Share the file using share_plus
-      await SharePlus.instance.share(
-        ShareParams(
-          files: excelFiles,
-          text: S.current.inventoryExported(excelFiles.length),
-          subject: S.current.inventoryData(excelFiles.length),
-        ),
-      );
-
-      // Clear the selected inventories
-      setState(() {
-        selectedInventories.clear();
-      });
-    } catch (error) {
-      if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          persist: true,
-          showCloseIcon: true,
-          backgroundColor: Theme.of(context).colorScheme.error,
-          content: Text(S.current.errorExportingInventory(2, error.toString())),
-        ),
-      );
-      // showDialog(
-      //   context: context,
-      //   builder: (context) {
-      //     return AlertDialog(
-      //       title: Row(
-      //         children: [
-      //           const Icon(Icons.error_outlined, color: Colors.red),
-      //           const SizedBox(width: 10),
-      //           Text(S.current.errorTitle),
-      //         ],
-      //       ),
-      //       content: SingleChildScrollView(
-      //         child: Text(
-      //           S.current.errorExportingInventory(2, error.toString()),
-      //         ),
-      //       ),
-      //       actions: [
-      //         TextButton(
-      //           child: Text(S.of(context).ok),
-      //           onPressed: () => Navigator.of(context).pop(),
-      //         ),
-      //       ],
-      //     );
-      //   },
-      // );
-    } finally {
-      if (context.mounted) {
-        Navigator.of(context).pop(); // Dismiss the loading dialog
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.sizeOf(context).width;
@@ -1015,20 +730,41 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                       },
                       menuChildren: [
                         MenuItemButton(
-                          onPressed: () {
-                            _exportSelectedInventoriesToCsv(context);
+                          onPressed: () async {
+                            final inventories = selectedInventories
+                                .map((id) => inventoryProvider.getInventoryById(id))
+                                .whereType<Inventory>()
+                                .toList();
+                            await exportSelectedInventoriesToCsv(context, inventories);
+                            setState(() {
+                              selectedInventories.clear();
+                            });
                           },
                           child: const Text('CSV'),
                         ),
                         MenuItemButton(
-                          onPressed: () {
-                            _exportSelectedInventoriesToExcel(context);
+                          onPressed: () async {
+                            final inventories = selectedInventories
+                                .map((id) => inventoryProvider.getInventoryById(id))
+                                .whereType<Inventory>()
+                                .toList();
+                            await exportSelectedInventoriesToExcel(context, inventories);
+                            setState(() {
+                              selectedInventories.clear();
+                            });
                           },
                           child: const Text('Excel'),
                         ),
                         MenuItemButton(
-                          onPressed: () {
-                            _exportSelectedInventoriesToJson(context);
+                          onPressed: () async {
+                            final inventories = selectedInventories
+                                .map((id) => inventoryProvider.getInventoryById(id))
+                                .whereType<Inventory>()
+                                .toList();
+                            await exportSelectedInventoriesToJson(context, inventories);
+                            setState(() {
+                              selectedInventories.clear();
+                            });
                           },
                           child: const Text('JSON'),
                         ),

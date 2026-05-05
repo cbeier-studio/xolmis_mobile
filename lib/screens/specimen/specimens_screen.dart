@@ -1,11 +1,8 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/models/specimen.dart';
@@ -483,95 +480,6 @@ class SpecimensScreenState extends State<SpecimensScreen> {
     );
   }
 
-  void _exportSelectedSpecimensToJson(BuildContext context) async {
-    try {
-      final specimenProvider = Provider.of<SpecimenProvider>(context, listen: false);
-      final specimens = await Future.wait(selectedSpecimens.map((id) => specimenProvider.getSpecimenById(id)));
-
-      final jsonString = jsonEncode({
-        'source': kExportSource,
-        'schema': 'specimens',
-        'schemaVersion': kExportSchemaVersion,
-        'records': specimens.map((specimen) => specimen.toJson()).toList(),
-      });
-
-      final now = DateTime.now();
-      final formatter = DateFormat('yyyyMMdd_HHmmss');
-      final formattedDate = formatter.format(now);
-
-      final directory = await getApplicationDocumentsDirectory();
-      final filePath = '${directory.path}/selected_specimens_$formattedDate.json';
-      final file = File(filePath);
-      await file.writeAsString(jsonString);
-
-      // Share the file using share_plus
-      await SharePlus.instance.share(
-        ShareParams(
-          files: [XFile(filePath, mimeType: 'application/json')], 
-          text: S.current.specimenExported(2), 
-          subject: S.current.specimenData(2)
-        ),
-      );
-
-      setState(() {
-        selectedSpecimens.clear();
-      });
-    } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          persist: true,
-              showCloseIcon: true,
-          backgroundColor: Theme.of(context).colorScheme.error,
-          content: Text(S.current.errorExportingSpecimen(2, error.toString())),
-        ),
-      );
-    }
-  }
-
-  void _exportSelectedSpecimensToCsv(BuildContext context) async {
-    try {
-      final specimenProvider = Provider.of<SpecimenProvider>(context, listen: false);
-      final specimens = await Future.wait(selectedSpecimens.map((id) => specimenProvider.getSpecimenById(id)));
-            
-      await exportAllSpecimensToCsv(context, specimens);
-
-      setState(() {
-        selectedSpecimens.clear();
-      });
-    } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          persist: true,
-              showCloseIcon: true,
-          backgroundColor: Theme.of(context).colorScheme.error,
-          content: Text(S.current.errorExportingSpecimen(2, error.toString())),
-        ),
-      );
-    }
-  }
-
-  void _exportSelectedSpecimensToExcel(BuildContext context) async {
-    try {
-      final specimenProvider = Provider.of<SpecimenProvider>(context, listen: false);
-      final specimens = await Future.wait(selectedSpecimens.map((id) => specimenProvider.getSpecimenById(id)));
-            
-      await exportAllSpecimensToExcel(context, specimens);
-
-      setState(() {
-        selectedSpecimens.clear();
-      });
-    } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          persist: true,
-              showCloseIcon: true,
-          backgroundColor: Theme.of(context).colorScheme.error,
-          content: Text(S.current.errorExportingSpecimen(2, error.toString())),
-        ),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.sizeOf(context).width;
@@ -760,20 +668,41 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                     },
                     menuChildren: [
                       MenuItemButton(
-                        onPressed: () {
-                          _exportSelectedSpecimensToCsv(context);
+                        onPressed: () async {
+                          final specimens = await Future.wait(
+                            selectedSpecimens.map((id) => specimenProvider.getSpecimenById(id)),
+                          );
+                          await exportSelectedSpecimensToCsv(context, specimens);
+                          if (!mounted) return;
+                          setState(() {
+                            selectedSpecimens.clear();
+                          });
                         },
                         child: const Text('CSV'),
                       ),
                       MenuItemButton(
-                        onPressed: () {
-                          _exportSelectedSpecimensToExcel(context);
+                        onPressed: () async {
+                          final specimens = await Future.wait(
+                            selectedSpecimens.map((id) => specimenProvider.getSpecimenById(id)),
+                          );
+                          await exportSelectedSpecimensToExcel(context, specimens);
+                          if (!mounted) return;
+                          setState(() {
+                            selectedSpecimens.clear();
+                          });
                         },
                         child: const Text('Excel'),
                       ),
                       MenuItemButton(
-                        onPressed: () {
-                          _exportSelectedSpecimensToJson(context);
+                        onPressed: () async {
+                          final specimens = await Future.wait(
+                            selectedSpecimens.map((id) => specimenProvider.getSpecimenById(id)),
+                          );
+                          await exportSelectedSpecimensToJson(context, specimens);
+                          if (!mounted) return;
+                          setState(() {
+                            selectedSpecimens.clear();
+                          });
                         },
                         child: const Text('JSON'),
                       ),
