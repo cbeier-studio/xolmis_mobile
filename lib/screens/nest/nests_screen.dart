@@ -1302,6 +1302,8 @@ class NestsScreenState extends State<NestsScreen> {
           Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(nest.foundTime!)),
         ],
       ),
+      selected: isSelected,
+      selectedTileColor: Theme.of(context).colorScheme.primaryContainer,
       leading:
       // Show checkbox if showing inactive nests
       Visibility(

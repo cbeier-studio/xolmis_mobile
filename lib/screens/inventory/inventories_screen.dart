@@ -1586,6 +1586,8 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
       ),
       title: Text(inventory.id),
       subtitle: buildItemSubtitle(inventory, context),
+      selected: isSelected,
+      selectedTileColor: Theme.of(context).colorScheme.primaryContainer,
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [

@@ -1275,6 +1275,8 @@ class SpecimensScreenState extends State<SpecimensScreen> {
               .format(specimen.sampleTime!)),
         ],
       ),
+      selected: isSelected,
+      selectedTileColor: Theme.of(context).colorScheme.primaryContainer,
       onLongPress: () =>
           _showBottomSheet(context, specimen),
       onTap: () {

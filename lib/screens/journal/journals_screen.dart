@@ -850,6 +850,8 @@ class JournalsScreenState extends State<JournalsScreen> {
               .format(entry.creationDate!)),
         ],
       ),
+      selected: isSelected,
+      selectedTileColor: Theme.of(context).colorScheme.primaryContainer,
       onLongPress: () =>
           _showBottomSheet(context, entry),
       onTap: () {
