@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -24,7 +25,7 @@ class DatabaseHelper {
     String path = join(await getDatabasesPath(), 'xolmis_database.db');
     return await openDatabase(
       path,
-      version: 22, // Increase the version number
+      version: 23, // Increase the version number
       onCreate: _createTables,
       onUpgrade: _upgradeTables,
       onConfigure: (db) {
@@ -214,11 +215,26 @@ class DatabaseHelper {
         observer TEXT
       )
     ''');
+
+    _createPerformanceIndexes(db);
+
+    debugPrint('Database created with version $version');
+  }
+
+  // Create indexes used by frequent joins, filters and ordering.
+  void _createPerformanceIndexes(Database db) {
+    db.execute('CREATE INDEX IF NOT EXISTS idx_species_name ON species(name)');
+    db.execute('CREATE INDEX IF NOT EXISTS idx_inventories_is_finished ON inventories(isFinished)');
+    db.execute('CREATE INDEX IF NOT EXISTS idx_species_is_out_of_inventory ON species(isOutOfInventory)');
+    db.execute('CREATE INDEX IF NOT EXISTS idx_nests_found_time ON nests(foundTime DESC)');
+    db.execute('CREATE INDEX IF NOT EXISTS idx_nests_species_name ON nests(speciesName)');
+    db.execute('CREATE INDEX IF NOT EXISTS idx_nests_field_number ON nests(fieldNumber)');
   }
 
   // Update SQLite database structure based on DB version
   void _upgradeTables(Database db, int oldVersion, int newVersion) async {
     final prefs = await SharedPreferences.getInstance();
+    debugPrint('Upgrading database from version $oldVersion to $newVersion');
     if (oldVersion < 2) {
       db.execute(
         'ALTER TABLE inventories ADD COLUMN maxSpecies INTEGER',
@@ -456,6 +472,9 @@ class DatabaseHelper {
         {'observer': observerAbbrev},
         where: 'observer IS NULL',        
       );
+    }
+    if (oldVersion < 23) {
+      _createPerformanceIndexes(db);
     }
   }
 
