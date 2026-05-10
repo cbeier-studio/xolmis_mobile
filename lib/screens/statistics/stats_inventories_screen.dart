@@ -47,11 +47,11 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
     accumulatedSpeciesWithinSampleData = prepareAccumulatedSpeciesWithinSample(widget.inventories);
     combinedSpeciesList = _getSpeciesList(widget.inventories);
     if (widget.inventories.isNotEmpty) {
-      // Usamos .map((s) => s.name).toSet() para garantir que espécies duplicadas
-      // no mesmo inventário contem como apenas 1 na riqueza total daquele inventário.
+      // Use speciesCount if available (from lazy loading), otherwise count from speciesList
       int totalRichnessSum = widget.inventories.fold(0, (sum, inv) {
-        final uniqueSpeciesCount = inv.speciesList.map((s) => s.name).toSet().length;
-        return sum + uniqueSpeciesCount;
+        // Prefer speciesCount if it's non-zero, otherwise use speciesList.length
+        final count = inv.speciesCount > 0 ? inv.speciesCount : inv.speciesList.map((s) => s.name).toSet().length;
+        return sum + count;
       });
 
       averageSpeciesCount = totalRichnessSum / widget.inventories.length;
@@ -483,7 +483,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                       x: index,
                       barRods: [
                         BarChartRodData(
-                          toY: inventory.speciesList.length.toDouble(),
+                          toY: (inventory.speciesCount > 0 ? inventory.speciesCount : inventory.speciesList.length).toDouble(),
                           width: 12,
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(6),

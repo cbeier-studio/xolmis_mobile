@@ -201,10 +201,17 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
     debugPrint('[RESUME_LOGIC] ----------------------------------');
     debugPrint('[RESUME_LOGIC] Starting _resumeAllActiveTimers...');
 
-    // 1. BUSCA os dados do banco de dados primeiro.
-    debugPrint('[RESUME_LOGIC] Step 1: Calling fetchInventories...');
-    await inventoryProvider.fetchInventories(context);
-    debugPrint('[RESUME_LOGIC] ...Step 1 Complete: fetchInventories finished.');
+    // 1. Fetch lightweight summary quickly
+    debugPrint('[RESUME_LOGIC] Step 1: Calling fetchInventoriesSummary...');
+    await inventoryProvider.fetchInventoriesSummary(context);
+    debugPrint('[RESUME_LOGIC] ...Step 1 Complete: fetchInventoriesSummary finished.');
+
+    // 2. Load complete details ONLY for active inventories (usually few)
+    debugPrint('[RESUME_LOGIC] Step 1.5: Loading complete details for ${inventoryProvider.activeInventories.length} active inventories...');
+    for (var inventory in inventoryProvider.activeInventories) {
+      await inventoryProvider.loadInventoryDetails(inventory.id);
+    }
+    debugPrint('[RESUME_LOGIC] ...Step 1.5 Complete: Details loaded for active inventories.');
 
     debugPrint('[RESUME_LOGIC] Step 2: Starting loop through ${inventoryProvider.activeInventories.length} active inventories to recalculate state.');
     for (var inventory in inventoryProvider.activeInventories) {

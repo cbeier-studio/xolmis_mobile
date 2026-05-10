@@ -407,4 +407,163 @@ class InventoryDao {
       return [];
     }
   }
+
+  // 1. Consulta RÁPIDA: só dados do inventário, sem sublistas, MAS com count de espécies
+  Future<List<Inventory>> getInventoriesSummary() async {
+    final db = await _dbHelper.database;
+    try {
+      // JOIN LEFT com COUNT de espécies para preencher especiesCount
+      final List<Map<String, dynamic>> maps = await db?.rawQuery('''
+        SELECT 
+          i.*,
+          COUNT(s.id) as speciesCount,
+          COUNT(CASE WHEN s.isOutOfInventory = 0 THEN 1 END) as speciesWithinCount,
+          COUNT(CASE WHEN s.isOutOfInventory = 1 THEN 1 END) as speciesOutOfInventoryCount
+        FROM inventories i
+        LEFT JOIN species s ON s.inventoryId = i.id
+        GROUP BY i.id
+      ''') ?? [];
+
+      List<Inventory> inventories = maps.map((map) {
+        final speciesCount = map['speciesCount'] as int? ?? 0;
+        final speciesWithinCount = map['speciesWithinCount'] as int? ?? 0;
+        final speciesOutOfInventoryCount =
+            map['speciesOutOfInventoryCount'] as int? ?? 0;
+        // Cria inventário sem especies/vegetação/clima
+        return Inventory.fromMap(
+          map,
+          [],
+          [],
+          [],
+          speciesCount: speciesCount,
+          speciesWithinCount: speciesWithinCount,
+          speciesOutOfInventoryCount: speciesOutOfInventoryCount,
+        );
+      }).toList();
+
+      debugPrint('[DAO] Loaded inventories summary: ${inventories.length}');
+      return inventories;
+    } catch (e) {
+      debugPrint('[DAO] !!! ERROR loading inventories summary: $e');
+      return [];
+    }
+  }
+
+  // 2. Filtro por espécie VIA SQL (sem carregar tudo na memória)
+  Future<List<Inventory>> getInventoriesBySpecies(String speciesName) async {
+    final db = await _dbHelper.database;
+    try {
+      // SQL query que busca direto: inventários que contêm a espécie
+      final List<Map<String, dynamic>> maps = await db?.rawQuery('''
+        SELECT DISTINCT i.* 
+        FROM inventories i
+        INNER JOIN species s ON s.inventoryId = i.id
+        WHERE s.name = ?
+      ''', [speciesName]) ?? [];
+
+      List<Inventory> inventories = [];
+      for (var map in maps) {
+        // Para a lista de filtro, pode carregar só a espécie filtrada
+        List<Species> filteredSpecies = await _speciesDao.getSpeciesByInventory(map['id'], false);
+        inventories.add(Inventory.fromMap(map, filteredSpecies, [], []));
+      }
+
+      debugPrint('[DAO] Loaded ${inventories.length} inventories with species: $speciesName');
+      return inventories;
+    } catch (e) {
+      debugPrint('[DAO] !!! ERROR loading inventories by species: $e');
+      return [];
+    }
+  }
+
+  // 3. Estatísticas diretamente em SQL (sem carregar dados)
+  Future<double> getTotalSamplingHours_SQL() async {
+    final db = await _dbHelper.database;
+    try {
+      // Cálculo direto no DB, bem mais rápido
+      final result = await db?.rawQuery('''
+        SELECT 
+          SUM((julianday(endTime) - julianday(startTime)) * 24) as totalHours
+        FROM inventories
+        WHERE isFinished = 1 AND endTime IS NOT NULL AND startTime IS NOT NULL
+      ''');
+
+      if (result != null && result.isNotEmpty) {
+        final hours = result.first['totalHours'] as double? ?? 0.0;
+        debugPrint('[DAO] Total sampling hours (SQL): $hours');
+        return hours;
+      }
+      return 0.0;
+    } catch (e) {
+      debugPrint('[DAO] !!! ERROR calculating sampling hours: $e');
+      return 0.0;
+    }
+  }
+
+  // 4. Dias de amostragem via SQL
+  Future<int> getTotalSamplingDays_SQL() async {
+    final db = await _dbHelper.database;
+    try {
+      // Conta dias distintos quando houver inventários finalizados
+      final result = await db?.rawQuery('''
+        SELECT COUNT(DISTINCT date(startTime)) as totalDays
+        FROM inventories
+        WHERE isFinished = 1 AND startTime IS NOT NULL
+      ''');
+
+      if (result != null && result.isNotEmpty) {
+        final days = result.first['totalDays'] as int? ?? 0;
+        debugPrint('[DAO] Total sampling days (SQL): $days');
+        return days;
+      }
+      return 0;
+    } catch (e) {
+      debugPrint('[DAO] !!! ERROR calculating sampling days: $e');
+      return 0;
+    }
+  }
+
+  // 5. Média de horas via SQL
+  Future<double> getAverageSamplingHours_SQL() async {
+    final db = await _dbHelper.database;
+    try {
+      final result = await db?.rawQuery('''
+        SELECT 
+          AVG((julianday(endTime) - julianday(startTime)) * 24) as avgHours
+        FROM inventories
+        WHERE isFinished = 1 AND endTime IS NOT NULL AND startTime IS NOT NULL
+      ''');
+
+      if (result != null && result.isNotEmpty) {
+        final hours = result.first['avgHours'] as double? ?? 0.0;
+        debugPrint('[DAO] Average sampling hours (SQL): $hours');
+        return hours;
+      }
+      return 0.0;
+    } catch (e) {
+      debugPrint('[DAO] !!! ERROR calculating average sampling hours: $e');
+      return 0.0;
+    }
+  }
+
+  // 6. Espécies únicas presentes em inventários (para o dropdown do filtro)
+  Future<List<String>> getUniqueSpeciesNames() async {
+    final db = await _dbHelper.database;
+    try {
+      final result = await db?.rawQuery('''
+        SELECT DISTINCT s.name 
+        FROM species s
+        INNER JOIN inventories i ON s.inventoryId = i.id
+        ORDER BY s.name ASC
+      ''') ?? [];
+
+      final speciesNames = result.map((r) => r['name'] as String).toList();
+      debugPrint('[DAO] Found ${speciesNames.length} unique species');
+      return speciesNames;
+    } catch (e) {
+      debugPrint('[DAO] !!! ERROR fetching unique species: $e');
+      return [];
+    }
+  }
 }
+

@@ -618,6 +618,9 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                         );
                         if (editedSpecies != null && editedSpecies is Species) {
                           await speciesProvider.updateSpecies(widget.inventory.id, editedSpecies);
+                          if (context.mounted) {
+                            context.read<InventoryProvider>().updateSpeciesCount(widget.inventory.id);
+                          }
                         }
                       }),
                       if (species.isOutOfInventory)
@@ -692,6 +695,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
 
     species.isOutOfInventory = false;
     speciesProvider.updateSpecies(species.inventoryId, species);
+    context.read<InventoryProvider>().updateSpeciesCount(species.inventoryId);
   }
 
   // Remove the species from the sample
@@ -700,6 +704,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
 
     species.isOutOfInventory = true;
     speciesProvider.updateSpecies(species.inventoryId, species);
+    context.read<InventoryProvider>().updateSpeciesCount(species.inventoryId);
   }
 
   void _showSortOptionsBottomSheet() {

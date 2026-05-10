@@ -564,6 +564,9 @@ class Inventory with ChangeNotifier {
   String? notes;
   bool isDiscarded;
   List<Species> speciesList;
+  int speciesCount = 0; // Cached count of all species records
+  int speciesWithinCount = 0; // Cached count of species inside sample
+  int speciesOutOfInventoryCount = 0; // Cached count of species outside sample
   List<Vegetation> vegetationList;
   List<Weather> weatherList;
   StreamSubscription<void>? _timer;
@@ -603,6 +606,9 @@ class Inventory with ChangeNotifier {
     this.notes,
     this.isDiscarded = false,
     this.speciesList = const [],
+    this.speciesCount = 0,
+    this.speciesWithinCount = 0,
+    this.speciesOutOfInventoryCount = 0,
     this.vegetationList = const [],
     this.weatherList = const [],
     this.currentInterval = 1,
@@ -611,13 +617,22 @@ class Inventory with ChangeNotifier {
     this.totalPausedTimeInSeconds = 0,
     this.pauseStartTime,
   }) {
+    if (speciesList.isNotEmpty && speciesCount == 0) {
+      speciesCount = speciesList.length;
+      speciesOutOfInventoryCount =
+          speciesList.where((s) => s.isOutOfInventory).length;
+      speciesWithinCount = speciesCount - speciesOutOfInventoryCount;
+    }
     if (duration == 0) {
       elapsedTime = 0;
     }
   }
 
   Inventory.fromMap(Map<String, dynamic> map, List<Species> speciesList,
-      List<Vegetation> vegetationList, List<Weather> weatherList)
+      List<Vegetation> vegetationList, List<Weather> weatherList,
+      {int speciesCount = 0,
+      int speciesWithinCount = 0,
+      int speciesOutOfInventoryCount = 0})
       : id = map['id'],
         type = InventoryType.values[map['type']],
         duration = map['duration'],
@@ -647,9 +662,23 @@ class Inventory with ChangeNotifier {
         pauseStartTime = map['pauseStartTime'] != null
             ? DateTime.parse(map['pauseStartTime'])
             : null,
-        this.speciesList = speciesList,
-        this.vegetationList = vegetationList,
-        this.weatherList = weatherList;
+        speciesList = speciesList,
+        speciesCount = speciesCount,
+        speciesWithinCount = speciesWithinCount,
+        speciesOutOfInventoryCount = speciesOutOfInventoryCount,
+        vegetationList = vegetationList,
+        weatherList = weatherList {
+    if (this.speciesCount == 0 && speciesList.isNotEmpty) {
+      this.speciesCount = speciesList.length;
+    }
+    if (this.speciesOutOfInventoryCount == 0 && speciesList.isNotEmpty) {
+      this.speciesOutOfInventoryCount =
+          speciesList.where((s) => s.isOutOfInventory).length;
+    }
+    if (this.speciesWithinCount == 0 && this.speciesCount > 0) {
+      this.speciesWithinCount = this.speciesCount - this.speciesOutOfInventoryCount;
+    }
+  }
 
   Inventory copyWith({
     String? id,
@@ -676,6 +705,9 @@ class Inventory with ChangeNotifier {
     String? notes,
     bool? isDiscarded,
     List<Species>? speciesList,
+    int? speciesCount,
+    int? speciesWithinCount,
+    int? speciesOutOfInventoryCount,
     List<Vegetation>? vegetationList,
     List<Weather>? weatherList,
   }) {
@@ -704,6 +736,10 @@ class Inventory with ChangeNotifier {
       notes: notes ?? this.notes,
       isDiscarded: isDiscarded ?? this.isDiscarded,
       speciesList: speciesList ?? this.speciesList,
+      speciesCount: speciesCount ?? this.speciesCount,
+      speciesWithinCount: speciesWithinCount ?? this.speciesWithinCount,
+      speciesOutOfInventoryCount:
+          speciesOutOfInventoryCount ?? this.speciesOutOfInventoryCount,
       vegetationList: vegetationList ?? this.vegetationList,
       weatherList: weatherList ?? this.weatherList,
     );

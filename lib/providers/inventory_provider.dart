@@ -68,6 +68,10 @@ class InventoryProvider with ChangeNotifier {
         memoryInventory.endTime = dbInventory.endTime;
         memoryInventory.duration = dbInventory.duration;
         memoryInventory.localityName = dbInventory.localityName;
+        memoryInventory.speciesCount = dbInventory.speciesCount;
+        memoryInventory.speciesWithinCount = dbInventory.speciesWithinCount;
+        memoryInventory.speciesOutOfInventoryCount =
+            dbInventory.speciesOutOfInventoryCount;
         memoryInventory.currentIntervalSpeciesCount = dbInventory.currentIntervalSpeciesCount;
         memoryInventory.totalPausedTimeInSeconds = dbInventory.totalPausedTimeInSeconds;
         memoryInventory.pauseStartTime = dbInventory.pauseStartTime;
@@ -246,8 +250,14 @@ class InventoryProvider with ChangeNotifier {
   void updateSpeciesCount(String inventoryId) {
     final inventory = getInventoryById(inventoryId);
     if (inventory != null) {
-      speciesCountNotifier.value = inventory.speciesList.length;
-      // speciesCountNotifier.notifyListeners();
+      final speciesList = _speciesProvider.getSpeciesForInventory(inventoryId);
+      inventory.speciesCount = speciesList.length;
+      inventory.speciesOutOfInventoryCount =
+          speciesList.where((s) => s.isOutOfInventory).length;
+      inventory.speciesWithinCount =
+          inventory.speciesCount - inventory.speciesOutOfInventoryCount;
+      speciesCountNotifier.value = inventory.speciesCount;
+      notifyListeners();
     }
   }
 
@@ -256,101 +266,18 @@ class InventoryProvider with ChangeNotifier {
     return _inventoryDao.getNextSequentialNumber(local, observer, ano, mes, dia, typeChar);
   }
 
-  // Calculate the total sampling hours from all inventories
+  // Calculate the total sampling hours from all inventories (via SQL - much faster)
   Future<double> getTotalSamplingHours() async {
-    final allInventories = await _inventoryDao.getInventories();
-    final inventories = allInventories.where((inventory) => inventory.isFinished).toList();
-
-    // Sort inventories by start time
-    inventories.sort((a, b) => a.startTime!.compareTo(b.startTime!));
-
-    Duration totalNonOverlappingDuration = Duration.zero;
-    DateTime? coveredUntil; // The end of the currently covered time range
-
-    for (final inventory in inventories) {
-      if (inventory.startTime == null || inventory.endTime == null) {
-        continue; // Skip inventories with missing start or end times
-      }
-
-      if (coveredUntil == null || inventory.startTime!.isAfter(coveredUntil)) {
-        // No overlap: Add the entire duration
-        totalNonOverlappingDuration += inventory.endTime!.difference(inventory.startTime!);
-        coveredUntil = inventory.endTime;
-      } else {
-        // Overlap: Add only the non-overlapping portion
-        if (inventory.endTime!.isAfter(coveredUntil)) {
-          totalNonOverlappingDuration += inventory.endTime!.difference(coveredUntil);
-          coveredUntil = inventory.endTime;
-        }
-      }
-    }
-
-    return totalNonOverlappingDuration.inMinutes / 60.0; // Convert to hours
+    return await _inventoryDao.getTotalSamplingHours_SQL();
   }
 
-  // Calculate the average sampling hours from all inventories
+  // Calculate the average sampling hours from all inventories (via SQL - much faster)
   Future<double> getAverageSamplingHours() async {
-    final allInventories = await _inventoryDao.getInventories();
-    final inventories = allInventories.where((inventory) => inventory.isFinished).toList();
-
-    // Sort inventories by start time
-    inventories.sort((a, b) => a.startTime!.compareTo(b.startTime!));
-
-    Duration totalNonOverlappingDuration = Duration.zero;
-    DateTime? coveredUntil; // The end of the currently covered time range
-
-    for (final inventory in inventories) {
-      if (inventory.startTime == null || inventory.endTime == null) {
-        continue; // Skip inventories with missing start or end times
-      }
-
-      if (coveredUntil == null || inventory.startTime!.isAfter(coveredUntil)) {
-        // No overlap: Add the entire duration
-        totalNonOverlappingDuration += inventory.endTime!.difference(inventory.startTime!);
-        coveredUntil = inventory.endTime;
-      } else {
-        // Overlap: Add only the non-overlapping portion
-        if (inventory.endTime!.isAfter(coveredUntil)) {
-          totalNonOverlappingDuration += inventory.endTime!.difference(coveredUntil);
-          coveredUntil = inventory.endTime;
-        }
-      }
-    }
-
-    return (totalNonOverlappingDuration.inMinutes / inventories.length) / 60.0; // Convert to hours
+    return await _inventoryDao.getAverageSamplingHours_SQL();
   }
-  // Get total sampling days from all inventories
+  // Get total sampling days from all inventories (via SQL - much faster)
   Future<int> getTotalSamplingDays() async {
-    final allInventories = await _inventoryDao.getInventories();
-    final inventories = allInventories.where((inventory) => inventory.isFinished).toList();
-
-    // Sort inventories by start time
-    inventories.sort((a, b) => a.startTime!.compareTo(b.startTime!));
-
-    int totalDays = 0;
-    DateTime? coveredUntil; // The end of the currently covered time range  
-    for (final inventory in inventories) {
-      if (inventory.startTime == null || inventory.endTime == null) {
-        continue; // Skip inventories with missing start or end times
-      }
-
-      DateTime inventoryStartDate = DateTime(inventory.startTime!.year, inventory.startTime!.month, inventory.startTime!.day);
-      DateTime inventoryEndDate = DateTime(inventory.endTime!.year, inventory.endTime!.month, inventory.endTime!.day);
-
-      if (coveredUntil == null || inventoryStartDate.isAfter(coveredUntil)) {
-        // No overlap: Add the entire duration in days
-        totalDays += inventoryEndDate.difference(inventoryStartDate).inDays + 1;
-        coveredUntil = inventoryEndDate;
-      } else {
-        // Overlap: Add only the non-overlapping portion
-        if (inventoryEndDate.isAfter(coveredUntil)) {
-          totalDays += inventoryEndDate.difference(coveredUntil).inDays;
-          coveredUntil = inventoryEndDate;
-        }
-      }
-    }
-
-    return totalDays;
+    return await _inventoryDao.getTotalSamplingDays_SQL();
   }
 
 
@@ -370,4 +297,87 @@ class InventoryProvider with ChangeNotifier {
     return speciesSet.toList()..sort();
   }
 
+  // Load inventories with lightweight summary (no sub-entities)
+  Future<void> fetchInventoriesSummary(BuildContext context) async {
+    debugPrint('[PROVIDER] Fetching inventories summary (lightweight)...');
+    _isLoading = true;
+    try {
+      final inventoriesFromDb = await _inventoryDao.getInventoriesSummary();
+      final Set<String> dbInventoryIds = inventoriesFromDb.map((inv) => inv.id).toSet();
+
+      _inventoryMap.removeWhere((id, inventory) => !dbInventoryIds.contains(id));
+      _inventories.removeWhere((inventory) => !dbInventoryIds.contains(inventory.id));
+
+      for (var dbInventory in inventoriesFromDb) {
+        if (_inventoryMap.containsKey(dbInventory.id)) {
+          final memoryInventory = _inventoryMap[dbInventory.id]!;
+          memoryInventory.currentInterval = dbInventory.currentInterval;
+          memoryInventory.elapsedTime = dbInventory.elapsedTime;
+          memoryInventory.isFinished = dbInventory.isFinished;
+          memoryInventory.isPaused = dbInventory.isPaused;
+          memoryInventory.startTime = dbInventory.startTime;
+          memoryInventory.endTime = dbInventory.endTime;
+          memoryInventory.duration = dbInventory.duration;
+          memoryInventory.localityName = dbInventory.localityName;
+          memoryInventory.speciesCount = dbInventory.speciesCount;
+          memoryInventory.speciesWithinCount = dbInventory.speciesWithinCount;
+          memoryInventory.speciesOutOfInventoryCount =
+              dbInventory.speciesOutOfInventoryCount;
+          memoryInventory.currentIntervalSpeciesCount = dbInventory.currentIntervalSpeciesCount;
+          memoryInventory.totalPausedTimeInSeconds = dbInventory.totalPausedTimeInSeconds;
+          memoryInventory.pauseStartTime = dbInventory.pauseStartTime;
+          memoryInventory.intervalsWithoutNewSpecies = dbInventory.intervalsWithoutNewSpecies;
+          memoryInventory.isDiscarded = dbInventory.isDiscarded;
+        } else {
+          _inventories.add(dbInventory);
+          _inventoryMap[dbInventory.id] = dbInventory;
+        }
+      }
+      debugPrint('[PROVIDER] Summary sync complete. Count: ${activeInventories.length}');
+    } catch (e, s) {
+      debugPrint('[PROVIDER] !!! ERROR syncing inventories summary: $e\n$s');
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+      debugPrint('[PROVIDER] fetchInventoriesSummary complete.');
+    }
+  }
+
+  // Load complete details for a specific inventory (used on-demand)
+  Future<void> loadInventoryDetails(String inventoryId) async {
+    try {
+      final inventory = await _inventoryDao.getInventoryById(inventoryId);
+      final index = _inventories.indexWhere((inv) => inv.id == inventoryId);
+      if (index != -1) {
+        _inventories[index] = inventory;
+      }
+      _inventoryMap[inventoryId] = inventory;
+      notifyListeners();
+      debugPrint('[PROVIDER] Loaded complete details for inventory: $inventoryId');
+    } catch (e) {
+      debugPrint('[PROVIDER] !!! ERROR loading inventory details: $e');
+    }
+  }
+
+  // Load complete details for multiple inventories (used for statistics)
+  Future<List<Inventory>> loadInventoriesDetails(List<String> inventoryIds) async {
+    try {
+      final inventories = <Inventory>[];
+      for (var id in inventoryIds) {
+        final inventory = await _inventoryDao.getInventoryById(id);
+        final index = _inventories.indexWhere((inv) => inv.id == id);
+        if (index != -1) {
+          _inventories[index] = inventory;
+        }
+        _inventoryMap[id] = inventory;
+        inventories.add(inventory);
+      }
+      notifyListeners();
+      debugPrint('[PROVIDER] Loaded complete details for ${inventories.length} inventories');
+      return inventories;
+    } catch (e) {
+      debugPrint('[PROVIDER] !!! ERROR loading inventory details: $e');
+      return [];
+    }
+  }
 }

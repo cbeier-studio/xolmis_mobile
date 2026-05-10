@@ -16,7 +16,6 @@ import '../../data/daos/vegetation_dao.dart';
 import '../../data/daos/weather_dao.dart';
 
 import '../../providers/inventory_provider.dart';
-import '../../providers/species_provider.dart';
 
 import '../../widgets/timer_progress_indicator.dart';
 import '../statistics/stats_inventories_screen.dart';
@@ -89,7 +88,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     onInventoryStopped = (inventoryId) {
       // When an inventory is stopped, update the inventory list
       inventoryProvider.refreshState();
-      // inventoryProvider.fetchInventories(context);
+      // inventoryProvider.fetchInventoriesSummary(context);
     };
   }
 
@@ -373,12 +372,23 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
         ? inventoryProvider.activeInventories
         : inventoryProvider.finishedInventories;
 
-    return inventories
-        .expand((inv) => inv.speciesList) // Flatten all species lists into one stream
-        .map((s) => s.name)               // Extract just the names
-        .toSet()                          // Ensure uniqueness
-        .toList()                         // Convert back to list for sorting
-      ..sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase())); // Case-insensitive sort
+    // Se houver inventários com speciesList carregado, use-os
+    final inventoriesWithSpecies = inventories.where((inv) => inv.speciesList.isNotEmpty).toList();
+    if (inventoriesWithSpecies.isNotEmpty) {
+      return inventoriesWithSpecies
+          .expand((inv) => inv.speciesList)
+          .map((s) => s.name)
+          .toSet()
+          .toList()
+        ..sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
+    }
+    // Caso contrário, retorne vazio (será carregado via FutureBuilder quando filtrar)
+    return [];
+  }
+
+  // New async method to load unique species from DB
+  Future<List<String>> _getUniqueSpeciesFromDB() async {
+    return await inventoryDao.getUniqueSpeciesNames();
   }
 
   // Filter the inventories by the search query
@@ -816,16 +826,25 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                 context,
                                 MaterialPageRoute(
                                   builder:
-                                      (context) => StatsInventoriesScreen(
-                                        inventories:
-                                            selectedInventories
-                                                .map(
-                                                  (id) => inventoryProvider
-                                                      .getInventoryById(id),
-                                                )
-                                                .whereType<Inventory>()
-                                                .toList(),
-                                      ),
+                                      (context) {
+                                        // Get selected inventory IDs and pre-load full details
+                                        final selectedIds = selectedInventories.toList();
+                                        return FutureBuilder<List<Inventory>>(
+                                          future: inventoryProvider.loadInventoriesDetails(selectedIds),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
+                                              return StatsInventoriesScreen(
+                                                inventories: snapshot.data ?? [],
+                                              );
+                                            } else {
+                                              return Scaffold(
+                                                appBar: AppBar(title: Text(S.of(context).statistics)),
+                                                body: const Center(child: CircularProgressIndicator()),
+                                              );
+                                            }
+                                          },
+                                        );
+                                      },
                                 ),
                               );
                             },
@@ -996,22 +1015,22 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                               child: Text(S.of(context).selectAll),
                             ),
                           // Action to import inventories from JSON
-                          MenuItemButton(
-                            leadingIcon: const Icon(Icons.file_open_outlined),
-                            onPressed: () async {
-                              await importInventoryFromJson(context);
-                              await inventoryProvider.fetchInventories(context);
-                              for (var inventory
-                                  in inventoryProvider.activeInventories) {
-                                inventoryProvider.startInventoryTimer(
-                                  context,
-                                  inventory,
-                                  inventoryDao,
-                                );
-                              }
-                            },
-                            child: Text(S.of(context).import),
-                          ),
+                           MenuItemButton(
+                             leadingIcon: const Icon(Icons.file_open_outlined),
+                             onPressed: () async {
+                               await importInventoryFromJson(context);
+                               await inventoryProvider.fetchInventoriesSummary(context);
+                               for (var inventory
+                                   in inventoryProvider.activeInventories) {
+                                 inventoryProvider.startInventoryTimer(
+                                   context,
+                                   inventory,
+                                   inventoryDao,
+                                 );
+                               }
+                             },
+                             child: Text(S.of(context).import),
+                           ),
                           if (inventoryProvider
                               .finishedInventories
                               .isNotEmpty) ...[
@@ -1311,27 +1330,41 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                           );
                         },
                         menuChildren: [
-                          // MenuItemButton(
-                          //   onPressed: () {
-                          //     setState(() {
-                          //       _selectedInventoryType = null;
-                          //     });
-                          //   },
-                          //   child: Text(S.current.allTypes),
-                          // ),
-                          ..._getUniqueSpecies().map((species) {
-                            return MenuItemButton(
-                              onPressed: () {
-                                setState(() {
-                                  _selectedSpeciesFilter = species;
-                                });
-                              },
-                              child: Text(
-                                inventoryTypeFriendlyNames[species] ??
-                                    species.toString(),
-                              ),
-                            );
-                          }),
+                          // Load species dynamically from DB to avoid empty speciesList
+                          FutureBuilder<List<String>>(
+                            future: _getUniqueSpeciesFromDB(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                                return Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: snapshot.data!.map((species) {
+                                    return MenuItemButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          _selectedSpeciesFilter = species;
+                                        });
+                                      },
+                                      child: Text(species),
+                                    );
+                                  }).toList(),
+                                );
+                              } else if (snapshot.hasError) {
+                                return MenuItemButton(
+                                  onPressed: () {},
+                                  child: Text('Erro ao carregar'),
+                                );
+                              } else {
+                                return Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(strokeWidth: 2),
+                                  ),
+                                );
+                              }
+                            },
+                          ),
                         ],
                       ),
                     ],
@@ -1342,17 +1375,17 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
           ),
         ),
         Expanded(
-          child: RefreshIndicator(
-            onRefresh: () async {
-              await inventoryProvider.fetchInventories(context);
-              for (var inventory in inventoryProvider.activeInventories) {
-                inventoryProvider.startInventoryTimer(
-                  context,
-                  inventory,
-                  inventoryDao,
-                );
-              }
-            },
+           child: RefreshIndicator(
+             onRefresh: () async {
+               await inventoryProvider.fetchInventoriesSummary(context);
+               for (var inventory in inventoryProvider.activeInventories) {
+                 inventoryProvider.startInventoryTimer(
+                   context,
+                   inventory,
+                   inventoryDao,
+                 );
+               }
+             },
             child: Consumer<InventoryProvider>(
               builder: (context, inventoryProvider, child) {
                 if (inventoryProvider.isLoading) {
@@ -1393,7 +1426,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                             avatar: const Icon(Icons.file_open_outlined),
                             onPressed: () async {
                               await importInventoryFromJson(context);
-                              await inventoryProvider.fetchInventories(context);
+                              await inventoryProvider.fetchInventoriesSummary(context);
                               for (var inventory
                                   in inventoryProvider.activeInventories) {
                                 inventoryProvider.startInventoryTimer(
@@ -1423,7 +1456,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                           label: Text(S.of(context).refresh),
                           avatar: const Icon(Icons.refresh_outlined),
                           onPressed: () async {
-                            await inventoryProvider.fetchInventories(context);
+                            await inventoryProvider.fetchInventoriesSummary(context);
                             for (var inventory
                                 in inventoryProvider.activeInventories) {
                               inventoryProvider.startInventoryTimer(
@@ -1687,36 +1720,17 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
             '${DateFormat('dd/MM/yyyy HH:mm:ss').format(inventory.startTime!)} - ${DateFormat('HH:mm:ss').format(inventory.endTime!)}',
           ),
         // Show the species count
-        Selector<SpeciesProvider, Map<String, int>>(
-          selector: (context, speciesProvider) {
-            final speciesList = speciesProvider.getSpeciesForInventory(
-              inventory.id,
-            );
-            int speciesWithinCount = 0;
-            int speciesOutOfCount = 0;
-
-            for (final species in speciesList) {
-              if (species.isOutOfInventory) {
-                speciesOutOfCount++;
-              } else {
-                speciesWithinCount++;
-              }
-            }
-            return {'within': speciesWithinCount, 'out': speciesOutOfCount};
-          },
-          shouldRebuild:
-              (previous, next) =>
-                  previous['within'] != next['within'] ||
-                  previous['out'] != next['out'],
-          builder: (context, speciesCounts, child) {
-            final int withinCount = speciesCounts['within'] ?? 0;
-            final int outCount = speciesCounts['out'] ?? 0;
+        Builder(
+          builder: (context) {
+            final int outCount = inventory.speciesOutOfInventoryCount;
+            final int withinCount =
+                (inventory.speciesCount - outCount).clamp(0, inventory.speciesCount);
 
             String speciesText =
-                "$withinCount ${S.current.speciesCount(withinCount)}";
+                '$withinCount ${S.current.speciesCount(withinCount)}';
             if (outCount > 0) {
               speciesText +=
-                  " + $outCount ${S.current.outOfSample.toLowerCase()}";
+                  ' + $outCount ${S.current.outOfSample.toLowerCase()}';
             }
 
             return Text(speciesText);
@@ -2101,7 +2115,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                             S.of(context).import,
                             () async {
                               await importInventoryFromJson(context);
-                              await inventoryProvider.fetchInventories(context);
+                              await inventoryProvider.fetchInventoriesSummary(context);
                               for (var inventory
                                   in inventoryProvider.activeInventories) {
                                 inventoryProvider.startInventoryTimer(
