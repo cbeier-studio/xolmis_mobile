@@ -253,6 +253,8 @@ class Nest with ChangeNotifier {
   ValueNotifier<bool> get isInactiveNotifier => _isInactiveNotifier;
   List<NestRevision>? revisionsList;
   List<Egg>? eggsList;
+  int revisionCount;
+  int eggCount;
 
   Nest({
     this.id,
@@ -271,9 +273,12 @@ class Nest with ChangeNotifier {
     this.helpers,
     this.observer,
     this.isActive = true,
-    this.revisionsList = const [],
-    this.eggsList = const [],
-  });
+    List<NestRevision>? revisionsList,
+    List<Egg>? eggsList,
+    this.revisionCount = 0,
+    this.eggCount = 0,
+  }) : revisionsList = revisionsList ?? [],
+       eggsList = eggsList ?? [];
 
   Map<String, dynamic> toMap() {
     return {
@@ -339,6 +344,8 @@ class Nest with ChangeNotifier {
       isActive: json['isActive'] == 1,
       revisionsList: (json['revisionsList'] as List).map((item) => NestRevision.fromJson(item)).toList(),
       eggsList: (json['eggsList'] as List).map((item) => Egg.fromJson(item)).toList(),
+      revisionCount: json['revisionCount']?.toInt() ?? 0,
+      eggCount: json['eggCount']?.toInt() ?? 0,
     );
   }
 
@@ -362,6 +369,8 @@ class Nest with ChangeNotifier {
       isActive: map['isActive'] == 1,
       revisionsList: revisionsList,
       eggsList: eggsList,
+      revisionCount: map['revisionCount']?.toInt() ?? 0,
+      eggCount: map['eggCount']?.toInt() ?? 0,
     );
   }
 
@@ -384,6 +393,8 @@ class Nest with ChangeNotifier {
     bool? isActive,
     List<NestRevision>? revisionsList,
     List<Egg>? eggsList,
+    int? revisionCount,
+    int? eggCount,
   }) {
     return Nest(
       id: id ?? this.id,
@@ -404,6 +415,8 @@ class Nest with ChangeNotifier {
       isActive: isActive ?? this.isActive,
       revisionsList: revisionsList ?? this.revisionsList,
       eggsList: eggsList ?? this.eggsList,
+      revisionCount: revisionCount ?? this.revisionCount,
+      eggCount: eggCount ?? this.eggCount,
     );
   }
 }

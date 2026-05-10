@@ -41,6 +41,7 @@ class NestsScreenState extends State<NestsScreen> {
   SortOrder _sortOrder = SortOrder.descending; // Default sort order
   NestSortField _sortField = NestSortField.foundTime; // Default sort field
   Nest? _selectedNest;
+  late ScrollController _scrollController;
 
   static final Map<DateFilter, String> _dateFilterLabels = {
     DateFilter.today: S.current.today,
@@ -57,7 +58,16 @@ class NestsScreenState extends State<NestsScreen> {
   void initState() {
     super.initState();
     nestProvider = context.read<NestProvider>();
-    nestProvider.fetchNests();
+    _scrollController = ScrollController();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      nestProvider.fetchNestsSummary();
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   bool _isWithinDateFilter(DateTime? date, DateFilter? filter) {
@@ -462,23 +472,23 @@ class NestsScreenState extends State<NestsScreen> {
             ),
           );
         },
-      ).then((newNest) {
-        // Reload the nest list
-        if (newNest != null) {
-          nestProvider.fetchNests();
-        }
-      });
-    } else {
-      // Show the screen on small screens
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const AddNestScreen()),
-      ).then((newNest) {
-        // Reload the nest list
-        if (newNest != null) {
-          nestProvider.fetchNests();
-        }
-      });
+       ).then((newNest) {
+         // Reload the nest list
+         if (newNest != null) {
+           nestProvider.fetchNestsSummary();
+         }
+       });
+     } else {
+       // Show the screen on small screens
+       Navigator.push(
+         context,
+         MaterialPageRoute(builder: (context) => const AddNestScreen()),
+       ).then((newNest) {
+         // Reload the nest list
+         if (newNest != null) {
+           nestProvider.fetchNestsSummary();
+         }
+       });
     }
   }
 
@@ -716,19 +726,30 @@ class NestsScreenState extends State<NestsScreen> {
                     IconButton(
                       icon: const Icon(Icons.insert_chart_outlined),
                       tooltip: S.of(context).statistics,
-                      onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => StatsNestsScreen(
-                                  nests: selectedNests
-                                      .map((id) async =>
-                                          await nestProvider.getNestById(id))
-                                      .whereType<Nest>()
-                                      .toList(),
+                      onPressed: () async {
+                            // Pre-load full details for selected nests before opening stats
+                            for (var nestId in selectedNests) {
+                              await nestProvider.loadNestDetails(nestId);
+                            }
+
+                            // Get fully loaded nests
+                            final selectedNestsList = selectedNests
+                                .map((id) => nestProvider.nests.firstWhere(
+                                  (n) => n.id == id,
+                                  orElse: () => Nest(id: id),
+                                ))
+                                .toList();
+
+                            if (mounted) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => StatsNestsScreen(
+                                    nests: selectedNestsList,
+                                  ),
                                 ),
-                              ),
-                            );
+                              );
+                            }
                           },
                     ),
                     const VerticalDivider(),
@@ -824,15 +845,15 @@ class NestsScreenState extends State<NestsScreen> {
                               },
                               child: Text(S.of(context).selectAll),
                             ),
-                          // Action to import nests from JSON
-                          MenuItemButton(
-                            leadingIcon: const Icon(Icons.file_open_outlined),
-                            onPressed: () async {
-                              await importNestsFromJson(context);
-                              await nestProvider.fetchNests();
-                            },
-                            child: Text(S.of(context).import),
-                          ),
+                           // Action to import nests from JSON
+                            MenuItemButton(
+                              leadingIcon: const Icon(Icons.file_open_outlined),
+                              onPressed: () async {
+                                await importNestsFromJson(context);
+                                await nestProvider.fetchNestsSummary();
+                              },
+                              child: Text(S.of(context).import),
+                            ),
                           if (nestProvider.inactiveNests.isNotEmpty) ...[
                           MenuItemButton(
                             leadingIcon: const Icon(Icons.share_outlined),
@@ -1207,13 +1228,13 @@ class NestsScreenState extends State<NestsScreen> {
                         ),
                       ],
                       const SizedBox(height: 8),
-                      ActionChip(
-                        label: Text(S.of(context).refresh),
-                        avatar: const Icon(Icons.refresh_outlined),
-                        onPressed: () async {
-                          await nestProvider.fetchNests();
-                        },
-                      ),
+                       ActionChip(
+                         label: Text(S.of(context).refresh),
+                         avatar: const Icon(Icons.refresh_outlined),
+                         onPressed: () async {
+                           await nestProvider.fetchNestsSummary();
+                         },
+                       ),
                       // FilledButton.icon(
                       //   label: Text(S.of(context).refresh),
                       //   icon: const Icon(Icons.refresh_outlined),
@@ -1226,38 +1247,56 @@ class NestsScreenState extends State<NestsScreen> {
                 );
               }
 
-              return RefreshIndicator(
-                onRefresh: () async {
-                  // Refresh the nests
-                  await nestProvider.fetchNests();
-                },
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
-                      child: Text(
-                        '${filteredNests.length} ${S.of(context).nest(filteredNests.length)}',
-                        // style: TextStyle(fontSize: 16,),
-                      ),
-                    ),
-                    Expanded(
-                      child: ListView.separated(
-                        separatorBuilder: (context, index) => Divider(),
-                        shrinkWrap: true,
-                        itemCount: filteredNests.length,
-                        itemBuilder: (context, index) {
-                          return nestListTileItem(
-                            filteredNests,
-                            index,
-                            context,
-                            nestProvider,
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              );
+               return RefreshIndicator(
+                  onRefresh: () async {
+                    // Refresh the nests with summary data
+                    await nestProvider.fetchNestsSummary();
+                  },
+                 child: Column(
+                   children: [
+                     Padding(
+                       padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
+                       child: Text(
+                         '${filteredNests.length} ${S.of(context).nest(filteredNests.length)}',
+                         // style: TextStyle(fontSize: 16,),
+                       ),
+                     ),
+                     Expanded(
+                       child: ListView.separated(
+                         controller: _scrollController,
+                         separatorBuilder: (context, index) {
+                           // Show loading indicator as separator when loading
+                           if (index == filteredNests.length && nestProvider.isLoading) {
+                             return SizedBox(
+                               height: 50,
+                               child: Center(
+                                 child: CircularProgressIndicator(strokeWidth: 2),
+                               ),
+                             );
+                           }
+                           return Divider();
+                         },
+                         shrinkWrap: true,
+                         itemCount: filteredNests.length + (nestProvider.isLoading ? 1 : 0),
+                         itemBuilder: (context, index) {
+                           // Show loading indicator at the end
+                           if (index == filteredNests.length) {
+                             return Center(
+                               child: CircularProgressIndicator(strokeWidth: 2),
+                             );
+                           }
+                           return nestListTileItem(
+                             filteredNests,
+                             index,
+                             context,
+                             nestProvider,
+                           );
+                         },
+                       ),
+                     ),
+                   ],
+                 ),
+               );
             },
           ),
         ),
@@ -1340,11 +1379,11 @@ class NestsScreenState extends State<NestsScreen> {
             MaterialPageRoute(
               builder: (context) => NestDetailScreen(nest: nest),
             ),
-          ).then((result) {
-            if (result == true) {
-              nestProvider.fetchNests();
-            }
-          });
+           ).then((result) {
+             if (result == true) {
+               nestProvider.fetchNestsSummary();
+             }
+           });
         }
       },
     );
@@ -1599,14 +1638,14 @@ class NestsScreenState extends State<NestsScreen> {
                           // Action to import nests from JSON
                           buildGridMenuItem(
                             context,
-                            Icons.file_open_outlined,
-                            S.of(context).import,
-                            () async {
-                              await importNestsFromJson(context);
-                              await nestProvider.fetchNests();
-                              Navigator.of(context).pop();
-                            },
-                          ),
+                             Icons.file_open_outlined,
+                             S.of(context).import,
+                             () async {
+                               await importNestsFromJson(context);
+                               await nestProvider.fetchNestsSummary();
+                               Navigator.of(context).pop();
+                             },
+                           ),
                           // buildGridMenuItem(
                           //     context, Icons.share_outlined, S.of(context).exportAll,
                           //         () async {

@@ -23,11 +23,60 @@ class NestProvider with ChangeNotifier {
   int get allNestsCount => nests.length;
   int get successNestsCount => successNests.length;
 
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+
   void refreshState() {
     notifyListeners();
   }
 
-  // Load list of all nests
+  // Load lazy: only summary data without sublists
+  Future<void> fetchNestsSummary() async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final nestsFromDb = await _nestDao.getNestsSummary();
+      // Merge with existing in-memory state
+      for (var dbNest in nestsFromDb) {
+        int? index = _nests.indexWhere((n) => n.id == dbNest.id);
+        if (index != -1 && index != null) {
+          // Update counts only
+          _nests[index].revisionCount = dbNest.revisionCount;
+          _nests[index].eggCount = dbNest.eggCount;
+        } else {
+          _nests.add(dbNest);
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error fetching nests summary: $e');
+      }
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  // Load full details for a single nest (for detail views or stats)
+  Future<void> loadNestDetails(int nestId) async {
+    try {
+      final fullNest = await _nestDao.getNestWithDetails(nestId);
+      final index = _nests.indexWhere((n) => n.id == nestId);
+      if (index != -1) {
+        _nests[index] = fullNest;
+      } else {
+        _nests.add(fullNest);
+      }
+      notifyListeners();
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error loading nest details: $e');
+      }
+    }
+  }
+
+  // Load list of all nests (for backward compatibility)
   Future<void> fetchNests() async {
     _nests = await _nestDao.getNests();
     notifyListeners();
@@ -112,6 +161,11 @@ class NestProvider with ChangeNotifier {
   // Get list of distinct nest supports for autocomplete
   Future<List<String>> getDistinctSupports() {
     return _nestDao.getDistinctSupports();
+  }
+
+  // Get distinct species names for filter
+  Future<List<String>> getUniqueSpeciesNames() {
+    return _nestDao.getUniqueSpeciesNames();
   }
 
 }

@@ -123,6 +123,53 @@ class NestDao {
     }
   }
 
+  // Get paginated list of nests (for lazy loading)
+  Future<List<Nest>> getNestsPaged(int offset, int limit) async {
+    final db = await _dbHelper.database;
+    try {
+      final List<Map<String, dynamic>> maps = await db?.query(
+        'nests',
+        offset: offset,
+        limit: limit,
+        orderBy: 'foundTime DESC',
+      ) ?? [];
+
+      List<Nest> nests = await Future.wait(maps.map((map) async {
+        List<NestRevision> revisionsList = await _nestRevisionDao.getNestRevisionsForNest(map['id']);
+        List<Egg> eggsList = await _eggDao.getEggsForNest(map['id']);
+        Nest nest = Nest.fromMap(map, revisionsList, eggsList);
+        return nest;
+      }).toList());
+
+      if (kDebugMode) {
+        print('Loaded ${nests.length} nests (offset: $offset, limit: $limit)');
+      }
+      return nests;
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error loading paginated nests: $e');
+      }
+      return [];
+    }
+  }
+
+  // Get total count of nests
+  Future<int> getNestsCount() async {
+    final db = await _dbHelper.database;
+    try {
+      final result = await db?.rawQuery('SELECT COUNT(*) as count FROM nests') ?? [];
+      if (result.isNotEmpty) {
+        return (result.first['count'] as int?) ?? 0;
+      }
+      return 0;
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error counting nests: $e');
+      }
+      return 0;
+    }
+  }
+
   // Get list of all nests of a species
   Future<List<Nest>> getNestsBySpecies(String speciesName) async {
     final db = await _dbHelper.database;
@@ -260,30 +307,117 @@ class NestDao {
     }
   }
 
-  // Get list of distinct nest supports for autocomplete
-  Future<List<String>> getDistinctSupports() async {
-    try {
-      final db = await _dbHelper.database;
+   // Get list of distinct nest supports for autocomplete
+   Future<List<String>> getDistinctSupports() async {
+     try {
+       final db = await _dbHelper.database;
 
-      if (db == null) {
-        throw Exception('Database is not available');
-      }
+       if (db == null) {
+         throw Exception('Database is not available');
+       }
 
-      final List<Map<String, Object?>> results = await db.query(
-        'nests',
-        distinct: true,
-        columns: ['support'],
-        where: 'support IS NOT NULL', // Ensure we only retrieve non-null supports
-      );
+       final List<Map<String, Object?>> results = await db.query(
+         'nests',
+         distinct: true,
+         columns: ['support'],
+         where: 'support IS NOT NULL', // Ensure we only retrieve non-null supports
+       );
 
-      final supports = results.map((row) => row['support'] as String).toList();
-      supports.sort();
+       final supports = results.map((row) => row['support'] as String).toList();
+       supports.sort();
 
-      debugPrint('Distinct supports from nests: $supports');
-      return supports;
-    } catch (e, s) {
-      debugPrint('Error fetching nests distinct supports: $e\n$s');
-      return [];
-    }
-  }
+       debugPrint('Distinct supports from nests: $supports');
+       return supports;
+     } catch (e, s) {
+       debugPrint('Error fetching nests distinct supports: $e\n$s');
+       return [];
+     }
+   }
+
+   // Get list of nests with summary data (no sublists, but with count aggregates)
+   Future<List<Nest>> getNestsSummary() async {
+     final db = await _dbHelper.database;
+     try {
+       final result = await db?.rawQuery('''
+         SELECT 
+           n.*,
+           COUNT(DISTINCT nr.id) as revisionCount,
+           COUNT(DISTINCT e.id) as eggCount
+         FROM nests n
+         LEFT JOIN nest_revisions nr ON nr.nestId = n.id
+         LEFT JOIN eggs e ON e.nestId = n.id
+         GROUP BY n.id
+         ORDER BY n.foundTime DESC
+       ''');
+
+       if (result == null) return [];
+
+       return result.map((map) {
+         return Nest(
+           id: (map['id'] as int?),
+           fieldNumber: map['fieldNumber'] as String?,
+           speciesName: map['speciesName'] as String?,
+           localityName: map['localityName'] as String?,
+           longitude: (map['longitude'] as double?),
+           latitude: (map['latitude'] as double?),
+           support: map['support'] as String?,
+           heightAboveGround: (map['heightAboveGround'] as double?),
+           foundTime: map['foundTime'] != null ? DateTime.parse(map['foundTime'] as String) : null,
+           lastTime: map['lastTime'] != null ? DateTime.parse(map['lastTime'] as String) : null,
+           nestFate: map['nestFate'] != null ? NestFateType.values[map['nestFate'] as int] : NestFateType.fatUnknown,
+           male: map['male'] as String?,
+           female: map['female'] as String?,
+           helpers: map['helpers'] as String?,
+           observer: map['observer'] as String?,
+           isActive: (map['isActive'] as int?) == 1,
+           revisionsList: [],
+           eggsList: [],
+           revisionCount: ((map['revisionCount'] as int?) ?? 0),
+           eggCount: ((map['eggCount'] as int?) ?? 0),
+         );
+       }).toList();
+     } catch (e) {
+       if (kDebugMode) {
+         print('Error loading nests summary: $e');
+       }
+       return [];
+     }
+   }
+
+   // Load full details for a single nest (for detail views or stats)
+   Future<Nest> getNestWithDetails(int nestId) async {
+     final db = await _dbHelper.database;
+     final List<Map<String, dynamic>> maps = await db?.query(
+         'nests',
+         where: 'id = ?',
+         whereArgs: [nestId]
+     ) ?? [];
+     if (maps.isNotEmpty) {
+       final map = maps.first;
+       List<NestRevision> revisionsList = await _nestRevisionDao.getNestRevisionsForNest(map['id']);
+       List<Egg> eggsList = await _eggDao.getEggsForNest(map['id']);
+       return Nest.fromMap(map, revisionsList, eggsList);
+     } else {
+       throw Exception('Nest not found with ID $nestId');
+     }
+   }
+
+   // Get distinct species names for filter
+   Future<List<String>> getUniqueSpeciesNames() async {
+     final db = await _dbHelper.database;
+     try {
+       final result = await db?.query(
+         'nests',
+         distinct: true,
+         columns: ['speciesName'],
+         where: 'speciesName IS NOT NULL',
+       );
+       return result?.map((row) => row['speciesName'] as String).toList() ?? [];
+     } catch (e) {
+       if (kDebugMode) {
+         print('Error fetching unique nest species: $e');
+       }
+       return [];
+     }
+   }
 }

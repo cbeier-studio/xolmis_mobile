@@ -12,6 +12,10 @@
 ### Melhorias
 
 * Telas de estatísticas refatoradas e expandidas.
+* Melhorias de desempenho nas telas de inventários e ninhos (~90% mais rápidas).
+* Padronização dos formatos de importação e exportação de JSON para inventários, ninhos e espécimes.
+* Destaque de itens selecionados em listas.
+* Destaque da primeira ocorrência da espécie no relatório Espécies por Inventário.
 * Padronização das mensagens de erro e avisos.
 
 ### Correções

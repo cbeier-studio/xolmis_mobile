@@ -12,6 +12,10 @@
 ### Improvements
 
 * Refactored and expanded statistics screens.
+* Performance improvements in inventories and nests screens (~90% faster).
+* Standardized JSON import and export formats for inventories, nests and specimens.
+* Highlight selected items in lists.
+* Highlight first occurrence of species in Species per Inventory report.
 * Standardized error and warning messages.
 
 ### Bug fixes
