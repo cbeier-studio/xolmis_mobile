@@ -450,6 +450,29 @@ class InventoryDao {
   }
 
   // 2. Filtro por espécie VIA SQL (sem carregar tudo na memória)
+  Future<Set<String>> getInventoryIdsBySpecies(String speciesName) async {
+    final db = await _dbHelper.database;
+    try {
+      final List<Map<String, dynamic>> maps =
+      await db?.query(
+          'species',
+          columns: ['inventoryId'],
+          where: 'name = ?',
+          whereArgs: [speciesName],
+          distinct: true,
+      ) ?? [];
+
+      return maps
+          .map((m) => m['inventoryId'] as String?)
+          .whereType<String>()
+          .toSet();
+    } catch (e) {
+      debugPrint('[DAO] !!! ERROR fetching inventory IDs by species: $e');
+      return <String>{};
+    }
+  }
+
+  // 2b. Filtro por espécie VIA SQL (carregando inventários completos)
   Future<List<Inventory>> getInventoriesBySpecies(String speciesName) async {
     final db = await _dbHelper.database;
     try {

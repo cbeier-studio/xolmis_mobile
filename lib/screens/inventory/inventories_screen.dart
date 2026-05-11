@@ -54,6 +54,8 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
   String? _selectedLocality;
   String? _selectedObserver;
   String? _selectedSpeciesFilter;
+  Set<String>? _speciesFilteredInventoryIds;
+  bool _isSpeciesFilterLoading = false;
   DateFilter? _selectedDateFilter;
   DateTimeRange? _selectedDateRange;
   Set<String> selectedInventories = {}; // Set of selected inventories
@@ -391,6 +393,24 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     return await inventoryDao.getUniqueSpeciesNames();
   }
 
+  Future<void> _applySpeciesFilter(String speciesName) async {
+    setState(() {
+      _selectedSpeciesFilter = speciesName;
+      _speciesFilteredInventoryIds = null;
+      _isSpeciesFilterLoading = true;
+    });
+
+    final ids = await inventoryDao.getInventoryIdsBySpecies(speciesName);
+    if (!mounted || _selectedSpeciesFilter != speciesName) {
+      return;
+    }
+
+    setState(() {
+      _speciesFilteredInventoryIds = ids;
+      _isSpeciesFilterLoading = false;
+    });
+  }
+
   // Filter the inventories by the search query
   List<Inventory> _filterInventories(List<Inventory> inventories) {
     List<Inventory> filtered = inventories;
@@ -419,10 +439,8 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
 
     // Filtro por espécie
     if (_selectedSpeciesFilter != null) {
-      filtered =
-          filtered
-              .where((inv) => inv.speciesList.any((s) => s.name == _selectedSpeciesFilter))
-              .toList();
+      final ids = _speciesFilteredInventoryIds ?? <String>{};
+      filtered = filtered.where((inv) => ids.contains(inv.id)).toList();
     }
 
     // Filtro por data (usa startTime)
@@ -1323,6 +1341,8 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                               } else {
                                 setState(() {
                                   _selectedSpeciesFilter = null;
+                                  _speciesFilteredInventoryIds = null;
+                                  _isSpeciesFilterLoading = false;
                                 });
                               }
                             },
@@ -1340,9 +1360,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                   children: snapshot.data!.map((species) {
                                     return MenuItemButton(
                                       onPressed: () {
-                                        setState(() {
-                                          _selectedSpeciesFilter = species;
-                                        });
+                                        _applySpeciesFilter(species);
                                       },
                                       child: Text(species),
                                     );
@@ -1389,6 +1407,13 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
             child: Consumer<InventoryProvider>(
               builder: (context, inventoryProvider, child) {
                 if (inventoryProvider.isLoading) {
+                  return const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: CircularProgressIndicator(year2023: false),
+                    ),
+                  );
+                } else if (_selectedSpeciesFilter != null && _isSpeciesFilterLoading) {
                   return const Center(
                     child: Padding(
                       padding: EdgeInsets.all(16.0),
