@@ -2489,5 +2489,30 @@
     "specimenSwab": "Swab",
     "specimenTissues": "Tissues",
     "specimenFeces": "Feces",
-    "specimenRegurgite": "Regurgite"
+    "specimenRegurgite": "Regurgite",
+  "selectedSpecimens": "{howMany, plural, one{selected specimen} other{selected specimens}}",
+  "@selectedSpecimens": {
+    "placeholders": {
+      "howMany": {
+        "type": "int"
+      }
+    },
+    "description": "Number of selected specimens"
+  },
+  "specimensByType": "Specimens by type",
+  "@specimensByType": {
+    "description": "Chart title: specimens grouped by type"
+  },
+  "specimensBySpecies": "Specimens by species",
+  "@specimensBySpecies": {
+    "description": "Chart title: specimens grouped by species"
+  },
+  "specimensByLocality": "Specimens by locality",
+  "@specimensByLocality": {
+    "description": "Chart title: specimens grouped by locality"
+  },
+  "collectionsByHourOfDay": "Collections by hour of day",
+  "@collectionsByHourOfDay": {
+    "description": "Chart title: specimen collections by hour of day"
+  }
 }

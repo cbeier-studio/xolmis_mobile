@@ -16,6 +16,7 @@ import '../../utils/import_utils.dart';
 import 'add_specimen_screen.dart';
 import '../images/app_image_screen.dart';
 import '../../utils/export_utils.dart';
+import '../statistics/stats_specimens_screen.dart';
 import '../../generated/l10n.dart';
 
 class SpecimensScreen extends StatefulWidget {
@@ -708,6 +709,37 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                       ),
                     ],
                   ),
+                  if (selectedSpecimens.length > 1)
+                    IconButton(
+                      icon: const Icon(Icons.insert_chart_outlined),
+                      tooltip: S.of(context).statistics,
+                      onPressed: () async {
+
+                        // Get fully loaded nests
+                        final selectedNestsList = selectedSpecimens
+                            .map((id) => specimenProvider.specimens.firstWhere(
+                              (n) => n.id == id,
+                          orElse: () => Specimen(id: id),
+                        ))
+                            .toList();
+
+                        if (mounted) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => StatsSpecimensScreen(
+                                specimens: selectedSpecimens
+                                    .map((id) => specimenProvider.specimens.firstWhere(
+                                      (n) => n.id == id,
+                                  orElse: () => Specimen(id: id),
+                                ))
+                                    .toList(),
+                              ),
+                            ),
+                          );
+                        }
+                      },
+                    ),
                   if (_showPending)
                     IconButton(
                       icon: const Icon(Icons.archive_outlined),

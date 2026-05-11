@@ -158,29 +158,32 @@ class MessageLookup extends MessageLookupByLibrary {
       "selected ${Intl.plural(howMany, one: 'nest', other: 'nests')}";
 
   static String m48(howMany) =>
-      "${Intl.plural(howMany, one: 'Species', other: 'Species')}";
+      "${Intl.plural(howMany, one: 'selected specimen', other: 'selected specimens')}";
 
   static String m49(howMany) =>
-      "${Intl.plural(howMany, one: 'sp.', other: 'spp.')}";
+      "${Intl.plural(howMany, one: 'Species', other: 'Species')}";
 
   static String m50(howMany) =>
-      "${Intl.plural(howMany, zero: 'species', one: 'species', other: 'species')}";
+      "${Intl.plural(howMany, one: 'sp.', other: 'spp.')}";
 
   static String m51(howMany) =>
-      "${Intl.plural(howMany, one: '1 species', other: '${howMany} species')} per list";
+      "${Intl.plural(howMany, zero: 'species', one: 'species', other: 'species')}";
 
   static String m52(howMany) =>
-      "${Intl.plural(howMany, one: 'Specimen data', other: 'Specimens data')}";
+      "${Intl.plural(howMany, one: '1 species', other: '${howMany} species')} per list";
 
   static String m53(howMany) =>
-      "${Intl.plural(howMany, one: 'Specimen exported!', other: 'Specimens exported!')}";
+      "${Intl.plural(howMany, one: 'Specimen data', other: 'Specimens data')}";
 
   static String m54(howMany) =>
+      "${Intl.plural(howMany, one: 'Specimen exported!', other: 'Specimens exported!')}";
+
+  static String m55(howMany) =>
       "${Intl.plural(howMany, one: 'Specimen', other: 'Specimens')}";
 
-  static String m55(howMany) => "Specimens imported successfully: ${howMany}";
+  static String m56(howMany) => "Specimens imported successfully: ${howMany}";
 
-  static String m56(howMany) => "Top ${howMany} most recorded species";
+  static String m57(howMany) => "Top ${howMany} most recorded species";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -231,6 +234,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "cloudCover": MessageLookupByLibrary.simpleMessage("Cloud cover"),
     "cloudCoverRangeError": MessageLookupByLibrary.simpleMessage(
       "Cloud cover must be between 0 and 100",
+    ),
+    "collectionsByHourOfDay": MessageLookupByLibrary.simpleMessage(
+      "Collections by hour of day",
     ),
     "confirmAutoFinishMessage": MessageLookupByLibrary.simpleMessage(
       "Inventory automatically finished. Do you want to keep active or finish this inventory?",
@@ -870,6 +876,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "selected inventories",
     ),
     "selectedNests": m47,
+    "selectedSpecimens": m48,
     "sendBackupTo": MessageLookupByLibrary.simpleMessage("Send backup to..."),
     "settings": MessageLookupByLibrary.simpleMessage("Settings"),
     "shareImage": MessageLookupByLibrary.simpleMessage("Share image"),
@@ -892,20 +899,20 @@ class MessageLookup extends MessageLookupByLibrary {
     "sortByTime": MessageLookupByLibrary.simpleMessage("Sort by Time"),
     "sortByTitle": MessageLookupByLibrary.simpleMessage("Sort by Title"),
     "sortDescending": MessageLookupByLibrary.simpleMessage("Sort descending"),
-    "species": m48,
+    "species": m49,
     "speciesAccumulated": MessageLookupByLibrary.simpleMessage(
       "Species accumulated",
     ),
     "speciesAccumulationCurve": MessageLookupByLibrary.simpleMessage(
       "Species accumulation",
     ),
-    "speciesAcronym": m49,
-    "speciesCount": m50,
+    "speciesAcronym": m50,
+    "speciesCount": m51,
     "speciesCounted": MessageLookupByLibrary.simpleMessage("Species counted"),
     "speciesInfo": MessageLookupByLibrary.simpleMessage("Species information"),
     "speciesName": MessageLookupByLibrary.simpleMessage("Species name"),
     "speciesNotes": MessageLookupByLibrary.simpleMessage("Species notes"),
-    "speciesPerList": m51,
+    "speciesPerList": m52,
     "speciesPerListTitle": MessageLookupByLibrary.simpleMessage(
       "Species per list",
     ),
@@ -917,9 +924,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "specimenBlood": MessageLookupByLibrary.simpleMessage("Blood"),
     "specimenBones": MessageLookupByLibrary.simpleMessage("Bones"),
     "specimenClaw": MessageLookupByLibrary.simpleMessage("Claw"),
-    "specimenData": m52,
+    "specimenData": m53,
     "specimenEgg": MessageLookupByLibrary.simpleMessage("Egg"),
-    "specimenExported": m53,
+    "specimenExported": m54,
     "specimenFeathers": MessageLookupByLibrary.simpleMessage("Feathers"),
     "specimenFeces": MessageLookupByLibrary.simpleMessage("Feces"),
     "specimenNest": MessageLookupByLibrary.simpleMessage("Nest"),
@@ -934,8 +941,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "specimenWholeCarcass": MessageLookupByLibrary.simpleMessage(
       "Whole carcass",
     ),
-    "specimens": m54,
-    "specimensImportedSuccessfully": m55,
+    "specimens": m55,
+    "specimensByLocality": MessageLookupByLibrary.simpleMessage(
+      "Specimens by locality",
+    ),
+    "specimensBySpecies": MessageLookupByLibrary.simpleMessage(
+      "Specimens by species",
+    ),
+    "specimensByType": MessageLookupByLibrary.simpleMessage(
+      "Specimens by type",
+    ),
+    "specimensImportedSuccessfully": m56,
     "startInventory": MessageLookupByLibrary.simpleMessage("Start inventory"),
     "startNextList": MessageLookupByLibrary.simpleMessage("Start next list"),
     "startTime": MessageLookupByLibrary.simpleMessage("Start time"),
@@ -955,7 +971,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "title": MessageLookupByLibrary.simpleMessage("Title"),
     "today": MessageLookupByLibrary.simpleMessage("Today"),
-    "topSpecies": m56,
+    "topSpecies": m57,
     "totalAbundance": MessageLookupByLibrary.simpleMessage("total abundance"),
     "totalIndividuals": MessageLookupByLibrary.simpleMessage(
       "Total Individuals",

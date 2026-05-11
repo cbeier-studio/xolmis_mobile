@@ -3029,6 +3029,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Regurgite'**
   String get specimenRegurgite;
+
+  /// Number of selected specimens
+  ///
+  /// In en, this message translates to:
+  /// **'{howMany, plural, one{selected specimen} other{selected specimens}}'**
+  String selectedSpecimens(int howMany);
+
+  /// Chart title: specimens grouped by type
+  ///
+  /// In en, this message translates to:
+  /// **'Specimens by type'**
+  String get specimensByType;
+
+  /// Chart title: specimens grouped by species
+  ///
+  /// In en, this message translates to:
+  /// **'Specimens by species'**
+  String get specimensBySpecies;
+
+  /// Chart title: specimens grouped by locality
+  ///
+  /// In en, this message translates to:
+  /// **'Specimens by locality'**
+  String get specimensByLocality;
+
+  /// Chart title: specimen collections by hour of day
+  ///
+  /// In en, this message translates to:
+  /// **'Collections by hour of day'**
+  String get collectionsByHourOfDay;
 }
 
 class _AppLocalizationsDelegate

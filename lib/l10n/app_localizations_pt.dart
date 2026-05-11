@@ -1822,6 +1822,29 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get specimenRegurgite => 'Regurgito';
+
+  @override
+  String selectedSpecimens(int howMany) {
+    String _temp0 = intl.Intl.pluralLogic(
+      howMany,
+      locale: localeName,
+      other: 'espécimes selecionados',
+      one: 'espécime selecionado',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get specimensByType => 'Espécimes por tipo';
+
+  @override
+  String get specimensBySpecies => 'Espécimes por espécie';
+
+  @override
+  String get specimensByLocality => 'Espécimes por localidade';
+
+  @override
+  String get collectionsByHourOfDay => 'Coletas por hora do dia';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -3642,4 +3665,27 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get specimenRegurgite => 'Regurgito';
+
+  @override
+  String selectedSpecimens(int howMany) {
+    String _temp0 = intl.Intl.pluralLogic(
+      howMany,
+      locale: localeName,
+      other: 'espécimes selecionados',
+      one: 'espécime selecionado',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get specimensByType => 'Espécimes por tipo';
+
+  @override
+  String get specimensBySpecies => 'Espécimes por espécie';
+
+  @override
+  String get specimensByLocality => 'Espécimes por localidade';
+
+  @override
+  String get collectionsByHourOfDay => 'Coletas por hora do dia';
 }

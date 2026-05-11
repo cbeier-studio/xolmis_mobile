@@ -4863,6 +4863,58 @@ class S {
       args: [],
     );
   }
+
+  /// `{howMany, plural, one{selected specimen} other{selected specimens}}`
+  String selectedSpecimens(int howMany) {
+    return Intl.plural(
+      howMany,
+      one: 'selected specimen',
+      other: 'selected specimens',
+      name: 'selectedSpecimens',
+      desc: 'Number of selected specimens',
+      args: [howMany],
+    );
+  }
+
+  /// `Specimens by type`
+  String get specimensByType {
+    return Intl.message(
+      'Specimens by type',
+      name: 'specimensByType',
+      desc: 'Chart title: specimens grouped by type',
+      args: [],
+    );
+  }
+
+  /// `Specimens by species`
+  String get specimensBySpecies {
+    return Intl.message(
+      'Specimens by species',
+      name: 'specimensBySpecies',
+      desc: 'Chart title: specimens grouped by species',
+      args: [],
+    );
+  }
+
+  /// `Specimens by locality`
+  String get specimensByLocality {
+    return Intl.message(
+      'Specimens by locality',
+      name: 'specimensByLocality',
+      desc: 'Chart title: specimens grouped by locality',
+      args: [],
+    );
+  }
+
+  /// `Collections by hour of day`
+  String get collectionsByHourOfDay {
+    return Intl.message(
+      'Collections by hour of day',
+      name: 'collectionsByHourOfDay',
+      desc: 'Chart title: specimen collections by hour of day',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

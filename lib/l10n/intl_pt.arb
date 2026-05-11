@@ -1932,5 +1932,30 @@
     "specimenSwab": "Swab",
     "specimenTissues": "Tecidos",
     "specimenFeces": "Fezes",
-    "specimenRegurgite": "Regurgito"
+    "specimenRegurgite": "Regurgito",
+  "selectedSpecimens": "{howMany, plural, one{espécime selecionado} other{espécimes selecionados}}",
+  "@selectedSpecimens": {
+    "placeholders": {
+      "howMany": {
+        "type": "int"
+      }
+    },
+    "description": "Número de espécimes selecionados"
+  },
+  "specimensByType": "Espécimes por tipo",
+  "@specimensByType": {
+    "description": "Título do gráfico: espécimes agrupados por tipo"
+  },
+  "specimensBySpecies": "Espécimes por espécie",
+  "@specimensBySpecies": {
+    "description": "Título do gráfico: espécimes agrupados por espécie"
+  },
+  "specimensByLocality": "Espécimes por localidade",
+  "@specimensByLocality": {
+    "description": "Título do gráfico: espécimes agrupados por localidade"
+  },
+  "collectionsByHourOfDay": "Coletas por hora do dia",
+  "@collectionsByHourOfDay": {
+    "description": "Título do gráfico: coletas de espécimes por hora do dia"
+  }
 }

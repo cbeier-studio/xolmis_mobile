@@ -517,3 +517,53 @@ Map<int, int> getOccurrencesByHourOfDay(
 
   return occurrences;
 }
+
+/// Returns specimen counts grouped by [SpecimenType] for a given specimen list.
+Map<SpecimenType, int> getSpecimenTypeCountsFromList(List<Specimen> specimens) {
+  final Map<SpecimenType, int> counts = {};
+  for (final specimen in specimens) {
+    counts[specimen.type] = (counts[specimen.type] ?? 0) + 1;
+  }
+  return counts;
+}
+
+/// Returns specimen counts per species name, sorted descending by count.
+List<MapEntry<String, int>> getSpecimensBySpecies(List<Specimen> specimens) {
+  final Map<String, int> counts = {};
+  for (final specimen in specimens) {
+    final name = specimen.speciesName ?? '';
+    if (name.isNotEmpty) {
+      counts[name] = (counts[name] ?? 0) + 1;
+    }
+  }
+  final sorted = counts.entries.toList()
+    ..sort((a, b) => b.value.compareTo(a.value));
+  return sorted;
+}
+
+/// Returns specimen counts per locality name, sorted descending by count.
+List<MapEntry<String, int>> getSpecimensByLocality(List<Specimen> specimens) {
+  final Map<String, int> counts = {};
+  for (final specimen in specimens) {
+    final locality = specimen.locality ?? '';
+    if (locality.isNotEmpty) {
+      counts[locality] = (counts[locality] ?? 0) + 1;
+    }
+  }
+  final sorted = counts.entries.toList()
+    ..sort((a, b) => b.value.compareTo(a.value));
+  return sorted;
+}
+
+/// Returns specimen counts grouped by hour of day (0-23).
+Map<int, int> getSpecimensByHourOfDay(List<Specimen> specimens) {
+  final Map<int, int> occurrences = { for (var i = 0; i < 24; i++) i: 0 };
+  for (final specimen in specimens) {
+    if (specimen.sampleTime != null) {
+      final hour = specimen.sampleTime!.hour;
+      occurrences[hour] = (occurrences[hour] ?? 0) + 1;
+    }
+  }
+  return occurrences;
+}
+

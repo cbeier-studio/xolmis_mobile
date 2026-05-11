@@ -44,7 +44,8 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
     _localityNameController = TextEditingController(text: widget.specimen?.locality ?? '');
     _fieldLocalityEditingController = TextEditingController(text: widget.specimen?.locality ?? '');
     _notesController = TextEditingController();
-    
+    _loadObserverAcronym();
+
     if (widget.isEditing) {
       _selectedType = widget.specimen!.type;
       _fieldNumberController.text = widget.specimen!.fieldNumber;
@@ -56,6 +57,14 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
       _nextFieldNumber();
       _getCurrentLocation();
     }
+  }
+
+  Future<void> _loadObserverAcronym() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (!mounted) return;
+    setState(() {
+      _observerAcronym = prefs.getString('observerAcronym') ?? '';
+    });
   }
 
   Future<void> _nextFieldNumber() async {
@@ -284,6 +293,9 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
           locality: _fieldLocalityEditingController.text,
           notes: _notesController.text,
           type: _selectedType,
+          observer: (widget.specimen?.observer?.trim().isNotEmpty ?? false)
+              ? widget.specimen!.observer
+              : (_observerAcronym.isEmpty ? null : _observerAcronym),
         );
 
         try {
@@ -312,6 +324,7 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
           notes: _notesController.text,
           type: _selectedType,
           sampleTime: DateTime.now(),
+          observer: _observerAcronym.isEmpty ? null : _observerAcronym,
         );
 
         setState(() {

@@ -1816,4 +1816,27 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get specimenRegurgite => 'Regurgite';
+
+  @override
+  String selectedSpecimens(int howMany) {
+    String _temp0 = intl.Intl.pluralLogic(
+      howMany,
+      locale: localeName,
+      other: 'selected specimens',
+      one: 'selected specimen',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get specimensByType => 'Specimens by type';
+
+  @override
+  String get specimensBySpecies => 'Specimens by species';
+
+  @override
+  String get specimensByLocality => 'Specimens by locality';
+
+  @override
+  String get collectionsByHourOfDay => 'Collections by hour of day';
 }
