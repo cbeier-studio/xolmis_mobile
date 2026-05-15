@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:xolmis/providers/inventory_provider.dart';
 import 'package:xolmis/providers/nest_provider.dart';
 import 'package:xolmis/providers/poi_provider.dart';
@@ -8,6 +9,8 @@ import 'package:xolmis/providers/species_provider.dart';
 import '../../generated/l10n.dart';
 
 import '../../data/models/inventory.dart';
+import '../../data/models/nest.dart';
+import '../../data/models/specimen.dart';
 import '../../providers/egg_provider.dart';
 import '../../providers/specimen_provider.dart';
 import '../../utils/statistics_logic.dart';
@@ -50,6 +53,9 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
   late List<PieChartSectionData> nestFateSections = [];
   late Future<List<MapEntry<String, int>>> _topSpeciesFuture = Future.value([]);
   late Map<int, int> recordsPerHour = {};
+  late Map<int, int> recordsByMonth = {};
+  late Map<int, int> speciesRichnessByMonth = {};
+  late Map<int, int> speciesRichnessByYear = {};
   int _touchedIndexSpecimenType = -1;
   int _touchedIndexNestFate = -1;
 
@@ -77,10 +83,14 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
       totalNestsWithNidoparasitism = await getTotalNestsWithNidoparasitism();
 
       final allSpeciesRecords = await widget.speciesProvider.getAllSpeciesRecords();
-      final allNestsList = await widget.nestProvider.nests;
-      final allSpecimenList = await widget.specimenProvider.specimens;
+      final allNestsList = widget.nestProvider.nests;
+      final allSpecimenList = widget.specimenProvider.specimens;
       final allEggsList = await widget.eggProvider.getAllEggs();
-      recordsPerHour = await getAllOccurrencesByHourOfDay(allSpeciesRecords, allNestsList, allEggsList, allSpecimenList);
+      recordsPerHour = getAllOccurrencesByHourOfDay(allSpeciesRecords, allNestsList, allEggsList, allSpecimenList);
+
+      recordsByMonth = _getRecordsByMonthGlobal(allSpeciesRecords, allNestsList, allEggsList, allSpecimenList);
+      speciesRichnessByMonth = _getSpeciesRichnessPerMonthGlobal(allSpeciesRecords, allNestsList, allEggsList, allSpecimenList);
+      speciesRichnessByYear = _getSpeciesRichnessPerYearGlobal(allSpeciesRecords, allNestsList, allEggsList, allSpecimenList);
 
       final specimenTypeCounts = await getSpecimenTypeCounts();
       specimenTypeSections = specimenTypeCounts.entries.map((entry) {
@@ -181,6 +191,242 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
     if (color == Colors.red) return 'lost';
     if (color == Colors.blue) return 'success';
     return '';
+  }
+
+  /// Returns total records grouped by month of year (1-12), ignoring the year.
+  /// Combines species from inventories, nests, eggs, and specimens.
+  Map<int, int> _getRecordsByMonthGlobal(
+    List<Species> speciesList,
+    List<Nest> nestList,
+    List<Egg> eggList,
+    List<Specimen> specimenList,
+  ) {
+    final Map<int, int> recordsByMonth = { for (var i = 1; i <= 12; i++) i: 0 };
+
+    // Add species records
+    for (final species in speciesList) {
+      final DateTime? recordTime = species.sampleTime;
+      if (recordTime != null) {
+        final month = recordTime.month;
+        recordsByMonth[month] = (recordsByMonth[month] ?? 0) + 1;
+      }
+    }
+
+    // Add nest records
+    for (final nest in nestList) {
+      if (nest.foundTime != null) {
+        final month = nest.foundTime!.month;
+        recordsByMonth[month] = (recordsByMonth[month] ?? 0) + 1;
+      }
+    }
+
+    // Add egg records
+    for (final egg in eggList) {
+      if (egg.sampleTime != null) {
+        final month = egg.sampleTime!.month;
+        recordsByMonth[month] = (recordsByMonth[month] ?? 0) + 1;
+      }
+    }
+
+    // Add specimen records
+    for (final specimen in specimenList) {
+      if (specimen.sampleTime != null) {
+        final month = specimen.sampleTime!.month;
+        recordsByMonth[month] = (recordsByMonth[month] ?? 0) + 1;
+      }
+    }
+
+    return recordsByMonth;
+  }
+
+  /// Returns distinct species richness grouped by month of year (1-12), ignoring the year.
+  /// Combines species from inventories, nests, eggs, and specimens.
+  Map<int, int> _getSpeciesRichnessPerMonthGlobal(
+    List<Species> speciesList,
+    List<Nest> nestList,
+    List<Egg> eggList,
+    List<Specimen> specimenList,
+  ) {
+    final Map<int, Set<String>> speciesByMonth = { for (var i = 1; i <= 12; i++) i: <String>{} };
+
+    // Add species records
+    for (final species in speciesList) {
+      final DateTime? recordTime = species.sampleTime;
+      if (recordTime != null) {
+        final month = recordTime.month;
+        if (species.name.isNotEmpty) {
+          speciesByMonth[month]?.add(species.name);
+        }
+      }
+    }
+
+    // Add nest species
+    for (final nest in nestList) {
+      if (nest.foundTime != null && nest.speciesName != null && nest.speciesName!.isNotEmpty) {
+        final month = nest.foundTime!.month;
+        speciesByMonth[month]?.add(nest.speciesName!);
+      }
+    }
+
+    // Add egg species
+    for (final egg in eggList) {
+      if (egg.sampleTime != null && egg.speciesName != null && egg.speciesName!.isNotEmpty) {
+        final month = egg.sampleTime!.month;
+        speciesByMonth[month]?.add(egg.speciesName!);
+      }
+    }
+
+    // Add specimen species
+    for (final specimen in specimenList) {
+      if (specimen.sampleTime != null && specimen.speciesName != null && specimen.speciesName!.isNotEmpty) {
+        final month = specimen.sampleTime!.month;
+        speciesByMonth[month]?.add(specimen.speciesName!);
+      }
+    }
+
+    // Convert sets to counts
+    return speciesByMonth.map((month, species) => MapEntry(month, species.length));
+  }
+
+  /// Returns distinct species richness grouped by year.
+  /// Combines species from inventories, nests, eggs, and specimens.
+  Map<int, int> _getSpeciesRichnessPerYearGlobal(
+    List<Species> speciesList,
+    List<Nest> nestList,
+    List<Egg> eggList,
+    List<Specimen> specimenList,
+  ) {
+    final Map<int, Set<String>> speciesByYear = <int, Set<String>>{};
+
+    // Add species records
+    for (final species in speciesList) {
+      final DateTime? recordTime = species.sampleTime;
+      if (recordTime != null) {
+        final year = recordTime.year;
+        if (!speciesByYear.containsKey(year)) {
+          speciesByYear[year] = <String>{};
+        }
+        if (species.name.isNotEmpty) {
+          speciesByYear[year]?.add(species.name);
+        }
+      }
+    }
+
+    // Add nest species
+    for (final nest in nestList) {
+      if (nest.foundTime != null && nest.speciesName != null && nest.speciesName!.isNotEmpty) {
+        final year = nest.foundTime!.year;
+        if (!speciesByYear.containsKey(year)) {
+          speciesByYear[year] = <String>{};
+        }
+        speciesByYear[year]?.add(nest.speciesName!);
+      }
+    }
+
+    // Add egg species
+    for (final egg in eggList) {
+      if (egg.sampleTime != null && egg.speciesName != null && egg.speciesName!.isNotEmpty) {
+        final year = egg.sampleTime!.year;
+        if (!speciesByYear.containsKey(year)) {
+          speciesByYear[year] = <String>{};
+        }
+        speciesByYear[year]?.add(egg.speciesName!);
+      }
+    }
+
+    // Add specimen species
+    for (final specimen in specimenList) {
+      if (specimen.sampleTime != null && specimen.speciesName != null && specimen.speciesName!.isNotEmpty) {
+        final year = specimen.sampleTime!.year;
+        if (!speciesByYear.containsKey(year)) {
+          speciesByYear[year] = <String>{};
+        }
+        speciesByYear[year]?.add(specimen.speciesName!);
+      }
+    }
+
+    // Convert sets to counts
+    return speciesByYear.map((year, species) => MapEntry(year, species.length));
+  }
+
+  /// Helper method to create bar groups from month occurrences map
+  List<BarChartGroupData> _createBarGroupsFromMonthOccurrencesMap(
+    Map<int, int> monthlyOccurrences,
+    double barWidth,
+    Color barColor,
+  ) {
+    final List<BarChartGroupData> barGroups = [];
+    monthlyOccurrences.forEach((month, count) {
+      barGroups.add(
+        BarChartGroupData(
+          x: month,
+          barRods: [
+            BarChartRodData(
+              toY: count.toDouble(),
+              color: barColor,
+              width: barWidth,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(6),
+                topRight: Radius.circular(6),
+              ),
+            ),
+          ],
+        ),
+      );
+    });
+    return barGroups;
+  }
+
+  /// Helper method to create bar groups from year occurrences map
+  List<BarChartGroupData> _createBarGroupsFromYearOccurrencesMap(
+    Map<int, int> yearlyOccurrences,
+    double barWidth,
+    Color barColor,
+  ) {
+    final List<BarChartGroupData> barGroups = [];
+    // Sort years to display them in chronological order
+    final sortedYears = yearlyOccurrences.keys.toList()..sort();
+
+    for (var i = 0; i < sortedYears.length; i++) {
+      final year = sortedYears[i];
+      final count = yearlyOccurrences[year] ?? 0;
+      barGroups.add(
+        BarChartGroupData(
+          x: i,
+          barRods: [
+            BarChartRodData(
+              toY: count.toDouble(),
+              color: barColor,
+              width: barWidth,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(6),
+                topRight: Radius.circular(6),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+    return barGroups;
+  }
+
+  /// Helper method to get full month name
+  String _getMonthName(int month) {
+    try {
+      return DateFormat('MMMM').format(DateTime(0, month));
+    } catch (e) {
+      return '';
+    }
+  }
+
+  /// Helper method to get abbreviated month name (first letter uppercase)
+  String _getMonthAbbrName(int month) {
+    try {
+      String monthAbbreviation = DateFormat('MMM').format(DateTime(0, month));
+      return monthAbbreviation[0].toUpperCase();
+    } catch (e) {
+      return '';
+    }
   }
 
   @override
@@ -562,13 +808,358 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
                   ),
                 ),
                 ),
-              ],
-            ),
-              SizedBox(height: 16),
-              Text(
-                S.current.inventories,
-                style: TextTheme.of(context).titleLarge,
-              ),
+               ],
+             ),
+               Row(
+                 mainAxisAlignment: MainAxisAlignment.start,
+                 children: [
+                   Expanded(
+                     child: Card(
+                       child: Padding(
+                         padding: EdgeInsets.all(16.0),
+                         child: Column(
+                           children: [
+                             Text(
+                               S.current.recordsPerMonth,
+                               style: TextTheme.of(context).titleMedium,
+                             ),
+                             const SizedBox(height: 8),
+                             SizedBox(
+                               height: 150,
+                               child: BarChart(
+                                 BarChartData(
+                                   alignment: BarChartAlignment.spaceAround,
+                                   gridData: FlGridData(show: false),
+                                   borderData: FlBorderData(
+                                     show: true,
+                                     border: Border(
+                                       bottom: BorderSide(
+                                         color: Colors.grey.withValues(alpha: 0.5),
+                                         width: 1,
+                                       ),
+                                     ),
+                                   ),
+                                   barTouchData: BarTouchData(
+                                     enabled: true,
+                                     touchTooltipData: BarTouchTooltipData(
+                                       fitInsideHorizontally: true,
+                                       fitInsideVertically: true,
+                                       getTooltipColor: (spot) =>
+                                           Colors.white.withValues(alpha: 0.8),
+                                       getTooltipItem:
+                                           (group, groupIndex, rod, rodIndex) {
+                                         final month = group.x.toInt();
+                                         final value = rod.toY.toInt();
+                                         if (value == 0) {
+                                           return null;
+                                         }
+                                         return BarTooltipItem(
+                                           '',
+                                           const TextStyle(),
+                                           children: [
+                                             TextSpan(
+                                               text: '$value\n',
+                                               style: const TextStyle(
+                                                 color: Colors.blue,
+                                                 fontWeight: FontWeight.bold,
+                                                 fontSize: 16,
+                                               ),
+                                             ),
+                                             TextSpan(
+                                               text: _getMonthName(month),
+                                               style: const TextStyle(
+                                                 color: Colors.black87,
+                                                 fontWeight: FontWeight.normal,
+                                                 fontSize: 12,
+                                               ),
+                                             ),
+                                           ],
+                                         );
+                                       },
+                                     ),
+                                   ),
+                                   titlesData: FlTitlesData(
+                                     show: true,
+                                     bottomTitles: AxisTitles(
+                                       sideTitles: SideTitles(
+                                         showTitles: true,
+                                         reservedSize: 30,
+                                         getTitlesWidget: (value, meta) {
+                                           final month = value.toInt();
+                                           return Padding(
+                                             padding: const EdgeInsets.only(top: 8.0),
+                                             child: Text(
+                                               _getMonthAbbrName(month),
+                                             ),
+                                           );
+                                         },
+                                       ),
+                                     ),
+                                     leftTitles: AxisTitles(
+                                       sideTitles: SideTitles(
+                                         showTitles: false,
+                                         reservedSize: 28,
+                                       ),
+                                     ),
+                                     topTitles: const AxisTitles(
+                                       sideTitles: SideTitles(showTitles: false),
+                                     ),
+                                     rightTitles: const AxisTitles(
+                                       sideTitles: SideTitles(showTitles: false),
+                                     ),
+                                   ),
+                                   barGroups: _createBarGroupsFromMonthOccurrencesMap(
+                                     recordsByMonth,
+                                     14,
+                                     Colors.blue,
+                                   ),
+                                 ),
+                               ),
+                             ),
+                           ],
+                         ),
+                       ),
+                     ),
+                   ),
+                 ],
+               ),
+               Row(
+                 mainAxisAlignment: MainAxisAlignment.start,
+                 children: [
+                   Expanded(
+                     child: Card(
+                       child: Padding(
+                         padding: EdgeInsets.all(16.0),
+                         child: Column(
+                           children: [
+                             Text(
+                               S.current.speciesRichnessPerMonth,
+                               style: TextTheme.of(context).titleMedium,
+                             ),
+                             const SizedBox(height: 8),
+                             SizedBox(
+                               height: 150,
+                               child: BarChart(
+                                 BarChartData(
+                                   alignment: BarChartAlignment.spaceAround,
+                                   gridData: FlGridData(show: false),
+                                   borderData: FlBorderData(
+                                     show: true,
+                                     border: Border(
+                                       bottom: BorderSide(
+                                         color: Colors.grey.withValues(alpha: 0.5),
+                                         width: 1,
+                                       ),
+                                     ),
+                                   ),
+                                   barTouchData: BarTouchData(
+                                     enabled: true,
+                                     touchTooltipData: BarTouchTooltipData(
+                                       fitInsideHorizontally: true,
+                                       fitInsideVertically: true,
+                                       getTooltipColor: (spot) =>
+                                           Colors.white.withValues(alpha: 0.8),
+                                       getTooltipItem:
+                                           (group, groupIndex, rod, rodIndex) {
+                                         final month = group.x.toInt();
+                                         final value = rod.toY.toInt();
+                                         if (value == 0) {
+                                           return null;
+                                         }
+                                         return BarTooltipItem(
+                                           '',
+                                           const TextStyle(),
+                                           children: [
+                                             TextSpan(
+                                               text: '$value\n',
+                                               style: const TextStyle(
+                                                 color: Colors.deepPurple,
+                                                 fontWeight: FontWeight.bold,
+                                                 fontSize: 16,
+                                               ),
+                                             ),
+                                             TextSpan(
+                                               text: _getMonthName(month),
+                                               style: const TextStyle(
+                                                 color: Colors.black87,
+                                                 fontWeight: FontWeight.normal,
+                                                 fontSize: 12,
+                                               ),
+                                             ),
+                                           ],
+                                         );
+                                       },
+                                     ),
+                                   ),
+                                   titlesData: FlTitlesData(
+                                     show: true,
+                                     bottomTitles: AxisTitles(
+                                       sideTitles: SideTitles(
+                                         showTitles: true,
+                                         reservedSize: 30,
+                                         getTitlesWidget: (value, meta) {
+                                           final month = value.toInt();
+                                           return Padding(
+                                             padding: const EdgeInsets.only(top: 8.0),
+                                             child: Text(
+                                               _getMonthAbbrName(month),
+                                             ),
+                                           );
+                                         },
+                                       ),
+                                     ),
+                                     leftTitles: AxisTitles(
+                                       sideTitles: SideTitles(
+                                         showTitles: false,
+                                         reservedSize: 28,
+                                       ),
+                                     ),
+                                     topTitles: const AxisTitles(
+                                       sideTitles: SideTitles(showTitles: false),
+                                     ),
+                                     rightTitles: const AxisTitles(
+                                       sideTitles: SideTitles(showTitles: false),
+                                     ),
+                                   ),
+                                   barGroups: _createBarGroupsFromMonthOccurrencesMap(
+                                     speciesRichnessByMonth,
+                                     14,
+                                     Colors.deepPurple,
+                                   ),
+                                 ),
+                               ),
+                             ),
+                           ],
+                         ),
+                       ),
+                     ),
+                   ),
+                  ],
+                ),
+               Row(
+                 mainAxisAlignment: MainAxisAlignment.start,
+                 children: [
+                   Expanded(
+                     child: Card(
+                       child: Padding(
+                         padding: EdgeInsets.all(16.0),
+                         child: Column(
+                           children: [
+                             Text(
+                               S.current.speciesRichnessPerYear,
+                               style: TextTheme.of(context).titleMedium,
+                             ),
+                             const SizedBox(height: 8),
+                             speciesRichnessByYear.isNotEmpty ?
+                             SizedBox(
+                               height: 150,
+                               child: BarChart(
+                                 BarChartData(
+                                   alignment: BarChartAlignment.spaceAround,
+                                   gridData: FlGridData(show: false),
+                                   borderData: FlBorderData(
+                                     show: true,
+                                     border: Border(
+                                       bottom: BorderSide(
+                                         color: Colors.grey.withValues(alpha: 0.5),
+                                         width: 1,
+                                       ),
+                                     ),
+                                   ),
+                                   barTouchData: BarTouchData(
+                                     enabled: true,
+                                     touchTooltipData: BarTouchTooltipData(
+                                       fitInsideHorizontally: true,
+                                       fitInsideVertically: true,
+                                       getTooltipColor: (spot) =>
+                                           Colors.white.withValues(alpha: 0.8),
+                                       getTooltipItem:
+                                           (group, groupIndex, rod, rodIndex) {
+                                         final sortedYears = speciesRichnessByYear.keys.toList()..sort();
+                                         final year = sortedYears[groupIndex];
+                                         final value = rod.toY.toInt();
+                                         if (value == 0) {
+                                           return null;
+                                         }
+                                         return BarTooltipItem(
+                                           '',
+                                           const TextStyle(),
+                                           children: [
+                                             TextSpan(
+                                               text: '$value\n',
+                                               style: const TextStyle(
+                                                 color: Colors.teal,
+                                                 fontWeight: FontWeight.bold,
+                                                 fontSize: 16,
+                                               ),
+                                             ),
+                                             TextSpan(
+                                               text: year.toString(),
+                                               style: const TextStyle(
+                                                 color: Colors.black87,
+                                                 fontWeight: FontWeight.normal,
+                                                 fontSize: 12,
+                                               ),
+                                             ),
+                                           ],
+                                         );
+                                       },
+                                     ),
+                                   ),
+                                   titlesData: FlTitlesData(
+                                     show: true,
+                                     bottomTitles: AxisTitles(
+                                       sideTitles: SideTitles(
+                                         showTitles: true,
+                                         reservedSize: 30,
+                                         getTitlesWidget: (value, meta) {
+                                           final sortedYears = speciesRichnessByYear.keys.toList()..sort();
+                                           final index = value.toInt();
+                                           if (index >= 0 && index < sortedYears.length) {
+                                             return Padding(
+                                               padding: const EdgeInsets.only(top: 8.0),
+                                               child: Text(
+                                                 sortedYears[index].toString(),
+                                               ),
+                                             );
+                                           }
+                                           return const Text('');
+                                         },
+                                       ),
+                                     ),
+                                     leftTitles: AxisTitles(
+                                       sideTitles: SideTitles(
+                                         showTitles: false,
+                                         reservedSize: 28,
+                                       ),
+                                     ),
+                                     topTitles: const AxisTitles(
+                                       sideTitles: SideTitles(showTitles: false),
+                                     ),
+                                     rightTitles: const AxisTitles(
+                                       sideTitles: SideTitles(showTitles: false),
+                                     ),
+                                   ),
+                                   barGroups: _createBarGroupsFromYearOccurrencesMap(
+                                     speciesRichnessByYear,
+                                     14,
+                                     Colors.teal,
+                                   ),
+                                 ),
+                               ),
+                             ) : Text(S.current.noDataAvailable),
+                           ],
+                         ),
+                       ),
+                     ),
+                   ),
+                 ],
+               ),
+               SizedBox(height: 16),
+               Text(
+                 S.current.inventories,
+                 style: TextTheme.of(context).titleLarge,
+               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [

@@ -4915,6 +4915,26 @@ class S {
       args: [],
     );
   }
+
+  /// `Species richness per month`
+  String get speciesRichnessPerMonth {
+    return Intl.message(
+      'Species richness per month',
+      name: 'speciesRichnessPerMonth',
+      desc: 'Chart title: species richness per month',
+      args: [],
+    );
+  }
+
+  /// `Species richness per year`
+  String get speciesRichnessPerYear {
+    return Intl.message(
+      'Species richness per year',
+      name: 'speciesRichnessPerYear',
+      desc: 'Chart title: species richness per year',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

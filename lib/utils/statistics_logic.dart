@@ -158,36 +158,56 @@ Future<int> getTotalSpeciesWithRecords() async {
 
 // Get the top 10 species with the most records
 Future<List<MapEntry<String, int>>> getTopSpeciesWithMostRecords(int count) async {
-  final speciesFromSpecies = await _getDistinctSpeciesFromTable('species');
-  final speciesFromNests = await _getDistinctSpeciesFromTable('nests');
-  final speciesFromEggs = await _getDistinctSpeciesFromTable('eggs');
-  final speciesFromSpecimens = await _getDistinctSpeciesFromTable('specimens');
-
-  final speciesCounts = <String, int>{};
-
-  final allSpeciesSet = <String>{
-    ...speciesFromSpecies,
-    ...speciesFromNests,
-    ...speciesFromEggs,
-    ...speciesFromSpecimens,
-  };
-  List<String> allSpeciesList = allSpeciesSet.toList();
-
-  // Count species from species list
-  for (final species in allSpeciesList) {
-    int countTotal = await getTotalsForSpecies(species);
-    speciesCounts[species] = countTotal;
+  final dbHelper = DatabaseHelper();
+  final db = await dbHelper.database;
+  if (db == null) {
+    debugPrint('Error: Database is null.');
+    return [];
   }
 
-  // Sort by count in descending order and take the top 10
-  final sortedSpecies = speciesCounts.entries.toList()
-    ..sort((a, b) => b.value.compareTo(a.value));
+  final shouldLimit = count > 0;
+  final limitClause = shouldLimit ? 'LIMIT $count' : '';
 
-  if (count <= 0) {
-    return sortedSpecies;
-  } else {
-    return sortedSpecies.take(count).toList();
-  }
+  // Single query: aggregate counts across all sources, then rank globally.
+  final result = await db.rawQuery('''
+    SELECT species_name, SUM(total_count) AS total_count
+    FROM (
+      SELECT name AS species_name, COUNT(*) AS total_count
+      FROM species
+      WHERE name IS NOT NULL AND TRIM(name) != ''
+      GROUP BY name
+
+      UNION ALL
+
+      SELECT speciesName AS species_name, COUNT(*) AS total_count
+      FROM nests
+      WHERE speciesName IS NOT NULL AND TRIM(speciesName) != ''
+      GROUP BY speciesName
+
+      UNION ALL
+
+      SELECT speciesName AS species_name, COUNT(*) AS total_count
+      FROM eggs
+      WHERE speciesName IS NOT NULL AND TRIM(speciesName) != ''
+      GROUP BY speciesName
+
+      UNION ALL
+
+      SELECT speciesName AS species_name, COUNT(*) AS total_count
+      FROM specimens
+      WHERE speciesName IS NOT NULL AND TRIM(speciesName) != ''
+      GROUP BY speciesName
+    ) grouped
+    GROUP BY species_name
+    ORDER BY total_count DESC, species_name ASC
+    $limitClause
+  ''');
+
+  return result.map((row) {
+    final species = row['species_name'] as String;
+    final total = row['total_count'] as int;
+    return MapEntry(species, total);
+  }).toList();
 }
 
 Map<int, int> getOccurrencesByMonth(
@@ -567,3 +587,43 @@ Map<int, int> getSpecimensByHourOfDay(List<Specimen> specimens) {
   return occurrences;
 }
 
+/// Returns total records grouped by month of year (1-12), ignoring the year.
+/// Combines species from inventories, nests, and specimens.
+Map<int, int> getRecordsByMonthFromInventories(List<Inventory> inventories) {
+  final Map<int, int> recordsByMonth = { for (var i = 1; i <= 12; i++) i: 0 };
+
+  for (final inventory in inventories) {
+    // Add species records
+    for (final species in inventory.speciesList) {
+      final DateTime? recordTime = species.sampleTime ?? inventory.startTime;
+      if (recordTime != null) {
+        final month = recordTime.month;
+        recordsByMonth[month] = (recordsByMonth[month] ?? 0) + 1;
+      }
+    }
+  }
+
+  return recordsByMonth;
+}
+
+/// Returns distinct species richness grouped by month of year (1-12), ignoring the year.
+/// Combines species from inventories, nests, and specimens.
+Map<int, int> getSpeciesRichnessPerMonth(List<Inventory> inventories) {
+  final Map<int, Set<String>> speciesByMonth = { for (var i = 1; i <= 12; i++) i: <String>{} };
+
+  for (final inventory in inventories) {
+    // Add species records
+    for (final species in inventory.speciesList) {
+      final DateTime? recordTime = species.sampleTime ?? inventory.startTime;
+      if (recordTime != null) {
+        final month = recordTime.month;
+        if (species.name.isNotEmpty) {
+          speciesByMonth[month]?.add(species.name);
+        }
+      }
+    }
+  }
+
+  // Convert sets to counts
+  return speciesByMonth.map((month, species) => MapEntry(month, species.length));
+}

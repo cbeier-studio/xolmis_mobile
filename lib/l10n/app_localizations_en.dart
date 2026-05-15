@@ -1839,4 +1839,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get collectionsByHourOfDay => 'Collections by hour of day';
+
+  @override
+  String get speciesRichnessPerMonth => 'Species richness per month';
+
+  @override
+  String get speciesRichnessPerYear => 'Species richness per year';
 }

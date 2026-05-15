@@ -980,6 +980,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "speciesRichness": MessageLookupByLibrary.simpleMessage(
       "Riqueza de espécies",
     ),
+    "speciesRichnessPerMonth": MessageLookupByLibrary.simpleMessage(
+      "Riqueza de espécies por mês",
+    ),
+    "speciesRichnessPerYear": MessageLookupByLibrary.simpleMessage(
+      "Riqueza de espécies por ano",
+    ),
     "speciesSearch": MessageLookupByLibrary.simpleMessage("Busca de espécies"),
     "speciesUpgradeFailed": MessageLookupByLibrary.simpleMessage(
       "Falha ao atualizar espécies",

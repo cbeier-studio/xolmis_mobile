@@ -1957,5 +1957,13 @@
   "collectionsByHourOfDay": "Coletas por hora do dia",
   "@collectionsByHourOfDay": {
     "description": "Título do gráfico: coletas de espécimes por hora do dia"
+  },
+  "speciesRichnessPerMonth": "Riqueza de espécies por mês",
+  "@speciesRichnessPerMonth": {
+    "description": "Chart title: species richness per month"
+  },
+  "speciesRichnessPerYear": "Riqueza de espécies por ano",
+  "@speciesRichnessPerYear": {
+    "description": "Chart title: species richness per year"
   }
 }

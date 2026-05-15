@@ -27,6 +27,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
   late List<String> combinedSpeciesList = [];
   late double averageSpeciesCount = 0;
   late int distinctLocalitiesCount = 0;
+  late Map<int, int> recordsPerHour = {};
 
   @override
   void initState() {
@@ -62,6 +63,36 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
     final allLocalities = widget.inventories.map((inventory) => inventory.localityName).toList();
     final distinctLocalities = allLocalities.toSet();
     distinctLocalitiesCount = distinctLocalities.length;
+
+    recordsPerHour = _getOccurrencesByHourOfDayWithFallback(widget.inventories);
+  }
+
+  // Uses species.sampleTime when available, otherwise falls back to inventory.startTime.
+  Map<int, int> _getOccurrencesByHourOfDayWithFallback(
+    List<Inventory> inventories,
+  ) {
+    final Map<int, int> occurrences = {for (var i = 0; i < 24; i++) i: 0};
+
+    for (final inventory in inventories) {
+      for (final species in inventory.speciesList) {
+        final DateTime? recordTime = species.sampleTime ?? inventory.startTime;
+        if (recordTime != null) {
+          final hour = recordTime.hour;
+          occurrences[hour] = (occurrences[hour] ?? 0) + 1;
+        }
+      }
+    }
+
+    return occurrences;
+  }
+
+  // ...existing code...
+  double _responsiveChartWidth(
+    double availableWidth, {
+    required double pixelsPerInventory,
+  }) {
+    final calculatedWidth = widget.inventories.length * pixelsPerInventory;
+    return calculatedWidth > availableWidth ? calculatedWidth : availableWidth;
   }
 
   List<String> _getSpeciesList(List<Inventory> inventories) {
@@ -72,6 +103,32 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
       }
     }
     return speciesSet.toList()..sort();
+  }
+
+  List<BarChartGroupData> _createBarGroupsFromOccurrencesMap(
+    Map<int, int> hourlyOccurrences,
+    double barWidth,
+  ) {
+    final List<BarChartGroupData> barGroups = [];
+    hourlyOccurrences.forEach((hour, count) {
+      barGroups.add(
+        BarChartGroupData(
+          x: hour,
+          barRods: [
+            BarChartRodData(
+              toY: count.toDouble(),
+              color: Colors.blue,
+              width: barWidth,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(6),
+                topRight: Radius.circular(6),
+              ),
+            ),
+          ],
+        ),
+      );
+    });
+    return barGroups;
   }
 
   @override
@@ -200,8 +257,20 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                               const SizedBox(height: 8,),
                               SizedBox(
                                 height: 400,
-                                child: LineChart(
-                                  LineChartData(
+                                child: LayoutBuilder(
+                                  builder: (context, constraints) {
+                                    final chartWidth = _responsiveChartWidth(
+                                      constraints.maxWidth - 16,
+                                      pixelsPerInventory: 20,
+                                    );
+                                    return SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      padding: EdgeInsetsGeometry.fromLTRB(0, 8, 8, 8),
+                                      child: SizedBox(
+                                        width: chartWidth,
+                                        height: 400,
+                                        child: LineChart(
+                                          LineChartData(
                                     // minX: 0,
                                     maxX:
                                         widget.inventories.length.toDouble() -
@@ -375,6 +444,128 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                                     },
                                       ),
                                     ),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Card(
+                        child: Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: Column(
+                            children: [
+                              Text(
+                                S.current.recordsByHour,
+                                style: TextTheme.of(context).titleMedium,
+                              ),
+                              const SizedBox(height: 8),
+                              SizedBox(
+                                height: 150,
+                                child: BarChart(
+                                  BarChartData(
+                                    alignment: BarChartAlignment.spaceAround,
+                                    gridData: FlGridData(show: false),
+                                    borderData: FlBorderData(
+                                      show: true,
+                                      border: Border(
+                                        bottom: BorderSide(
+                                          color: Colors.grey.withValues(alpha: 0.5),
+                                          width: 1,
+                                        ),
+                                      ),
+                                    ),
+                                    barTouchData: BarTouchData(
+                                      enabled: true,
+                                      touchTooltipData: BarTouchTooltipData(
+                                        fitInsideHorizontally: true,
+                                        fitInsideVertically: true,
+                                        getTooltipColor: (spot) =>
+                                            Colors.white.withValues(alpha: 0.8),
+                                        getTooltipItem:
+                                            (group, groupIndex, rod, rodIndex) {
+                                          final hour = group.x.toInt();
+                                          final value = rod.toY.toInt();
+                                          if (value == 0) {
+                                            return null;
+                                          }
+                                          return BarTooltipItem(
+                                            '',
+                                            const TextStyle(),
+                                            children: [
+                                              TextSpan(
+                                                text: '$value\n',
+                                                style: const TextStyle(
+                                                  color: Colors.blue,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16,
+                                                ),
+                                              ),
+                                              TextSpan(
+                                                text:
+                                                    '${hour.toString().padLeft(2, '0')} h',
+                                                style: const TextStyle(
+                                                  color: Colors.black87,
+                                                  fontWeight: FontWeight.normal,
+                                                  fontSize: 12,
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                    titlesData: FlTitlesData(
+                                      show: true,
+                                      bottomTitles: AxisTitles(
+                                        sideTitles: SideTitles(
+                                          showTitles: true,
+                                          reservedSize: 30,
+                                          getTitlesWidget: (value, meta) {
+                                            final hour = value.toInt();
+                                            if (hour % 3 == 0 || hour == 23) {
+                                              return Padding(
+                                                padding: const EdgeInsets.only(top: 8.0),
+                                                child: Text(
+                                                  hour
+                                                      .toString()
+                                                      .padLeft(2, '0'),
+                                                ),
+                                              );
+                                            }
+                                            return const Text('');
+                                          },
+                                        ),
+                                      ),
+                                      leftTitles: AxisTitles(
+                                        sideTitles: SideTitles(
+                                          showTitles: false,
+                                          reservedSize: 28,
+                                        ),
+                                      ),
+                                      topTitles: const AxisTitles(
+                                        sideTitles: SideTitles(showTitles: false),
+                                      ),
+                                      rightTitles: const AxisTitles(
+                                        sideTitles: SideTitles(showTitles: false),
+                                      ),
+                                    ),
+                                    barGroups: _createBarGroupsFromOccurrencesMap(
+                                      recordsPerHour,
+                                      12,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -385,24 +576,35 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                     ),
                   ],
                 ),
-            Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-            Expanded(
-            child: Card(
-            child: Padding(
-                padding: EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-              Text(
-              S.current.speciesRichness,
-              style: TextTheme.of(context).titleMedium,
-            ),
+                 Row(
+                   mainAxisAlignment: MainAxisAlignment.start,
+                   children: [
+             Expanded(
+             child: Card(
+             child: Padding(
+                 padding: EdgeInsets.all(16.0),
+             child: Column(
+               children: [
+               Text(
+               S.current.speciesRichness,
+               style: TextTheme.of(context).titleMedium,
+             ),
             const SizedBox(height: 8),
             SizedBox(
               height: 150,
-              child: BarChart(
-                BarChartData(
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final chartWidth = _responsiveChartWidth(
+                    constraints.maxWidth,
+                    pixelsPerInventory: 20,
+                  );
+                  return SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: SizedBox(
+                      width: chartWidth,
+                      height: 150,
+                      child: BarChart(
+                        BarChartData(
                   alignment: BarChartAlignment.spaceAround,
                   // maxY: (widget.inventories.map((inventory) => inventory.speciesList.length).reduce((a, b) => a > b ? a : b) / 10).ceil() * 10.0,
                   barTouchData: BarTouchData(
@@ -514,7 +716,11 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                         // right: BorderSide.none,
                     ),
                   ),
-                ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
               ],

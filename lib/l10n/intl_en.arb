@@ -2514,5 +2514,13 @@
   "collectionsByHourOfDay": "Collections by hour of day",
   "@collectionsByHourOfDay": {
     "description": "Chart title: specimen collections by hour of day"
-  }
+  },
+    "speciesRichnessPerMonth": "Species richness per month",
+    "@speciesRichnessPerMonth": {
+        "description": "Chart title: species richness per month"
+    },
+    "speciesRichnessPerYear": "Species richness per year",
+    "@speciesRichnessPerYear": {
+        "description": "Chart title: species richness per year"
+    }
 }

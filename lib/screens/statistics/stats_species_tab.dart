@@ -214,9 +214,9 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
   Widget build(BuildContext context) {
     super.build(context);
 
-    if (widget.speciesProvider.getAllInventoryIds().isEmpty &&
-        widget.nestProvider.nestsCount == 0 &&
-        widget.specimenProvider.specimensCount == 0) {
+    if (widget.inventoryProvider.allInventoriesCount == 0 &&
+        widget.nestProvider.allNestsCount == 0 &&
+        widget.specimenProvider.specimens.isEmpty) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

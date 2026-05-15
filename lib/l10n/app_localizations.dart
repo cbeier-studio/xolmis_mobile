@@ -3059,6 +3059,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Collections by hour of day'**
   String get collectionsByHourOfDay;
+
+  /// Chart title: species richness per month
+  ///
+  /// In en, this message translates to:
+  /// **'Species richness per month'**
+  String get speciesRichnessPerMonth;
+
+  /// Chart title: species richness per year
+  ///
+  /// In en, this message translates to:
+  /// **'Species richness per year'**
+  String get speciesRichnessPerYear;
 }
 
 class _AppLocalizationsDelegate

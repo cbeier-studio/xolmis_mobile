@@ -1845,6 +1845,12 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get collectionsByHourOfDay => 'Coletas por hora do dia';
+
+  @override
+  String get speciesRichnessPerMonth => 'Riqueza de espécies por mês';
+
+  @override
+  String get speciesRichnessPerYear => 'Riqueza de espécies por ano';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -3688,4 +3694,10 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get collectionsByHourOfDay => 'Coletas por hora do dia';
+
+  @override
+  String get speciesRichnessPerMonth => 'Riqueza de espécies por mês';
+
+  @override
+  String get speciesRichnessPerYear => 'Riqueza de espécies por ano';
 }
