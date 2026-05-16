@@ -8,6 +8,7 @@
 * Added action suggestions in the inventory details and nest details screens (experimental).
 * Added Observer field to inventories, nests, specimens and field journal.
 * Added filters for inventories, nests, specimens and field journal.
+* Temporary files and database cleanup on app start.
 
 ### Improvements
 
@@ -23,6 +24,7 @@
 * Fixed screen going blank after deleting an item.
 * Fixed Mackinnon lists not finishing properly.
 * Fixed issue that did not save informed values in fields with autocompletion.
+* Fixed inconsistency in temporary paths for export and backup.
 
 ## 1.0.2
 

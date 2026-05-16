@@ -144,7 +144,7 @@ class NestProvider with ChangeNotifier {
     }
 
     await _nestDao.deleteNest(nest.id!);
-    _nests.remove(nest);
+    _nests.removeWhere((item) => item.id == nest.id);
     notifyListeners();
   }
 

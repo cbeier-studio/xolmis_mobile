@@ -303,7 +303,7 @@ class JournalsScreenState extends State<JournalsScreen> {
                 // Call the function to delete species
                 for (final id in selectedJournals) {
                   final entry = await journalProvider.getJournalEntryById(id);
-                  journalProvider.removeJournalEntry(entry);
+                  await journalProvider.removeJournalEntry(entry);
                 }
                 setState(() {
                   selectedJournals.clear();
@@ -933,11 +933,11 @@ class JournalsScreenState extends State<JournalsScreen> {
                                       child: Text(S.of(context).cancel),
                                     ),
                                     TextButton(
-                                      onPressed: () {
+                                      onPressed: () async {
                                         Navigator.of(context).pop(true);
                                         // Navigator.of(context).pop();
                                         // Call the function to delete species
-                                        journalProvider.removeJournalEntry(journalEntry);
+                                        await journalProvider.removeJournalEntry(journalEntry);
                                       },
                                       child: Text(S.of(context).delete),
                                     ),

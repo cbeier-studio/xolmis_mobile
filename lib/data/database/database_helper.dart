@@ -8,6 +8,9 @@ import 'package:path/path.dart';
 class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._internal();
 
+  static const String _kLastVacuumRunAtKey = 'lastVacuumRunAt';
+  static const Duration _vacuumInterval = Duration(days: 30);
+
   factory DatabaseHelper() => instance;
 
   DatabaseHelper._internal();
@@ -478,10 +481,38 @@ class DatabaseHelper {
     }
   }
 
+  Future<void> runMonthlyVacuumIfNeeded() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final lastRunAtRaw = prefs.getString(_kLastVacuumRunAtKey);
+      final now = DateTime.now();
+
+      if (lastRunAtRaw != null) {
+        final lastRunAt = DateTime.tryParse(lastRunAtRaw);
+        if (lastRunAt != null && now.difference(lastRunAt) < _vacuumInterval) {
+          debugPrint('[DB_MAINTENANCE] VACUUM skipped. Last run at: $lastRunAtRaw');
+          return;
+        }
+      }
+
+      final db = await database;
+      if (db == null) {
+        debugPrint('[DB_MAINTENANCE] VACUUM skipped. Database is not available.');
+        return;
+      }
+
+      debugPrint('[DB_MAINTENANCE] Starting VACUUM...');
+      await db.execute('VACUUM');
+      await prefs.setString(_kLastVacuumRunAtKey, now.toIso8601String());
+      debugPrint('[DB_MAINTENANCE] VACUUM finished successfully.');
+    } catch (e, s) {
+      debugPrint('[DB_MAINTENANCE] VACUUM failed: $e\n$s');
+    }
+  }
+
   Future<void> closeDatabase() async {
     final db = await database;
     await db?.close();
   }
 
 }
-

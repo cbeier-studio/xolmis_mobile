@@ -660,7 +660,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Future<void> runCreateBackup(BuildContext context) async {
     bool isDialogShown = false;
     try {
-      final directory = await getDownloadsDirectory();
+      final directory = await getTemporaryDirectory();
       final now = DateTime.now();
       final formatter = DateFormat('yyyyMMdd_HHmmss');
       final formattedDate = formatter.format(now);

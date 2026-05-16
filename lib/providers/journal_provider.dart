@@ -58,7 +58,7 @@ class FieldJournalProvider with ChangeNotifier {
     }
 
     await _journalDao.deleteJournalEntry(journalEntry.id!);
-    _journalEntries.remove(journalEntry);
+    _journalEntries.removeWhere((item) => item.id == journalEntry.id);
     notifyListeners();
   }
 

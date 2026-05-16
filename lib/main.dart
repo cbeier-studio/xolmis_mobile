@@ -32,6 +32,7 @@ import 'providers/app_image_provider.dart';
 import 'providers/journal_provider.dart';
 
 import 'main_screen.dart';
+import 'utils/backup_utils.dart';
 import 'utils/utils.dart';
 import 'utils/themes.dart';
 import 'generated/l10n.dart';
@@ -43,6 +44,9 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   try {
+    // Remove temporary export/backup artifacts from previous sessions.
+    await clearAppTemporaryDirectory();
+
     // All initialization logic is moved here, before runApp is called.
 
     // Register the Xolmis license
@@ -63,6 +67,7 @@ Future<void> main() async {
     // Initialize the database
     final databaseHelper = DatabaseHelper();
     await databaseHelper.initDatabase();
+    await databaseHelper.runMonthlyVacuumIfNeeded();
 
     // Create the DAOs
     final poiDao = PoiDao(databaseHelper);

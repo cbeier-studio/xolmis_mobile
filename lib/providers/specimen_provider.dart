@@ -96,7 +96,7 @@ class SpecimenProvider with ChangeNotifier {
     }
 
     await _specimenDao.deleteSpecimen(specimen.id!);
-    _specimens.remove(specimen);
+    _specimens.removeWhere((item) => item.id == specimen.id);
     notifyListeners();
   }
 

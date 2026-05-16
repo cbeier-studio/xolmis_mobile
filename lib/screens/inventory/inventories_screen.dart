@@ -603,10 +603,10 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
               child: Text(S.of(context).cancel),
             ),
             TextButton(
-              onPressed: () {
+              onPressed: () async {
                 // Call the function to delete species
                 for (final id in selectedInventories) {
-                  inventoryProvider.removeInventory(id);
+                  await inventoryProvider.removeInventory(id);
                 }
                 setState(() {
                   selectedInventories.clear();
@@ -2077,11 +2077,11 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
               child: Text(S.of(context).cancel),
             ),
             TextButton(
-              onPressed: () {
+              onPressed: () async {
                 Navigator.of(context).pop(true);
                 // Navigator.of(context).pop();
                 // Call the function to delete species
-                inventoryProvider.removeInventory(inventory.id);
+                await inventoryProvider.removeInventory(inventory.id);
               },
               child: Text(
                 S.of(context).delete,

@@ -525,7 +525,7 @@ class NestsScreenState extends State<NestsScreen> {
                 // Call the function to delete species
                 for (final id in selectedNests) {
                   final nest = await nestProvider.getNestById(id);
-                  nestProvider.removeNest(nest);
+                  await nestProvider.removeNest(nest);
                 }
                 setState(() {
                   selectedNests.clear();
@@ -1470,11 +1470,11 @@ class NestsScreenState extends State<NestsScreen> {
                                         child: Text(S.of(context).cancel),
                                       ),
                                       TextButton(
-                                        onPressed: () {
+                                        onPressed: () async {
                                           Navigator.of(context).pop(true);
                                           // Navigator.of(context).pop();
                                           // Call the function to delete species
-                                          Provider.of<NestProvider>(
+                                          await Provider.of<NestProvider>(
                                             context,
                                             listen: false,
                                           ).removeNest(nest);

@@ -465,7 +465,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                 // Call the function to delete species
                 for (final id in selectedSpecimens) {
                   final specimen = await specimenProvider.getSpecimenById(id);
-                  specimenProvider.removeSpecimen(specimen);
+                  await specimenProvider.removeSpecimen(specimen);
                 }
                 setState(() {
                   selectedSpecimens.clear();
@@ -1402,11 +1402,11 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                                       child: Text(S.of(context).cancel),
                                     ),
                                     TextButton(
-                                      onPressed: () {
+                                      onPressed: () async {
                                         Navigator.of(context).pop(true);
                                         // Navigator.of(context).pop();
                                         // Call the function to delete species
-                                        specimenProvider.removeSpecimen(specimen);
+                                        await specimenProvider.removeSpecimen(specimen);
                                       },
                                       child: Text(S.of(context).delete),
                                     ),

@@ -8,6 +8,7 @@
 * Adicionadas sugestões de ações na tela de detalhes do inventário e do ninho (experimental).
 * Adicionado campo Observador nos inventários, ninhos, espécimes e diário de campo.
 * Adicionados filtros para inventários, ninhos, espécimes e diário de campo.
+* Limpeza de arquivos temporários e banco de dados ao iniciar o app.
 
 ### Melhorias
 
@@ -23,6 +24,7 @@
 * Corrigida tela que ficava vazia após apagar um item.
 * Corrigidas listas de Mackinnon não finalizando corretamente.
 * Corrigido problema que não salvava o valor informado em campos com autocompletar.
+* Corrigida inconsistência nos caminhos temporários de exportação e backup.
 
 ## 1.0.2
 

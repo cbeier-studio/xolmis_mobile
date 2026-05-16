@@ -166,7 +166,7 @@ class InventoryProvider with ChangeNotifier {
   }
 
   // Remove inventory from the database and the list
-  void removeInventory(String id) async {
+  Future<void> removeInventory(String id) async {
     debugPrint('[PROVIDER] Removing inventory: $id');
     await _inventoryDao.deleteInventory(id);
 

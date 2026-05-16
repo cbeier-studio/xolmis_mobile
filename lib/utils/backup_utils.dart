@@ -7,6 +7,36 @@ import 'package:sqflite/sqflite.dart';
 
 import '../data/database/database_helper.dart';
 
+Future<void> clearAppTemporaryDirectory() async {
+  debugPrint('[TEMP_CLEANUP] Starting temporary directory cleanup...');
+
+  try {
+    final tempDir = await getTemporaryDirectory();
+    debugPrint('[TEMP_CLEANUP] Temporary directory: ${tempDir.path}');
+
+    if (!await tempDir.exists()) {
+      debugPrint('[TEMP_CLEANUP] Temporary directory does not exist. Nothing to clean.');
+      return;
+    }
+
+    int deletedCount = 0;
+
+    await for (final entity in tempDir.list(followLinks: false)) {
+      try {
+        await entity.delete(recursive: true);
+        deletedCount++;
+        debugPrint('[TEMP_CLEANUP] Deleted: ${entity.path}');
+      } catch (e) {
+        debugPrint('[TEMP_CLEANUP] Failed to delete: ${entity.path}. Error: $e');
+      }
+    }
+
+    debugPrint('[TEMP_CLEANUP] Cleanup finished. Deleted entities: $deletedCount');
+  } catch (e) {
+    debugPrint('[TEMP_CLEANUP] Failed to clear app temporary directory: $e');
+  }
+}
+
 Future<bool> backupDatabase(String filePath) async {
   try {
     final dbHelper = DatabaseHelper();
