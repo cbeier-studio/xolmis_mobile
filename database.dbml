@@ -1,0 +1,192 @@
+Project xolmis_mobile {
+    database_type: "sqlite"
+}
+
+Table inventories {
+    id text [primary key]
+    type integer
+    duration integer
+    maxSpecies integer
+    isPaused integer
+    isFinished integer
+    elapsedTime real
+    startTime text
+    endTime text
+    startLongitude real
+    startLatitude real
+    endLongitude real
+    endLatitude real
+    currentInterval integer
+    intervalsWithoutNewSpecies integer
+    currentIntervalSpeciesCount integer
+    totalPausedTimeInSeconds real
+    pauseStartTime text
+    localityName text
+    totalObservers integer
+    observer text
+    notes text
+    isDiscarded integer
+
+    indexes {
+        isFinished [name: 'idx_inventories_is_finished']
+    }
+}
+
+Table species {
+    id integer [primary key, increment]
+    inventoryId text [not null]
+    name text
+    isOutOfInventory integer
+    count integer
+    distance real
+    flightHeight real
+    flightDirection text
+    notes text
+    sampleTime text
+
+    indexes {
+        name [name: 'idx_species_name']
+        isOutOfInventory [name: 'idx_species_out_of_inventory']
+    }
+}
+
+Ref: species.inventoryId > inventories.id [delete: cascade]
+
+Table vegetation {
+    id integer [primary key, increment]
+    inventoryId text [not null]
+    sampleTime text [not null]
+    longitude real
+    latitude real
+    herbsProportion integer
+    herbsDistribution integer
+    herbsHeight integer
+    shrubsProportion integer
+    shrubsDistribution integer
+    shrubsHeight integer
+    treesProportion integer
+    treesDistribution integer
+    treesHeight integer
+    notes text
+}
+
+Ref: vegetation.inventoryId > inventories.id [delete: cascade]
+
+Table weather {
+    id integer [primary key, increment]
+    inventoryId integer [not null] // incorrect type
+    sampleTime text [not null]
+    cloudCover integer
+    precipitation integer
+    temperature real
+    windSpeed integer
+    windDirection text
+    atmosphericPressure real
+    relativeHumidity real
+}
+
+Ref: weather.inventoryId > inventories.id [delete: cascade]
+
+Table nests {
+    id integer [primary key, increment]
+    fieldNumber text
+    speciesName text
+    localityName text
+    longitude real
+    latitude real
+    support text
+    heightAboveGround real
+    foundTime text
+    lastTime text
+    observer text
+    nestFate integer
+    male text
+    female text
+    helpers text
+    isActive integer
+
+    indexes {
+        foundTime [name: 'idx_nests_found_time', note: 'DESC']
+        speciesName [name: 'idx_nests_species_name']
+        fieldNumber [name: 'idx_nests_field_number']
+    }
+}
+
+Table eggs {
+    id integer [primary key, increment]
+    nestId integer
+    sampleTime text
+    fieldNumber text
+    eggShape integer
+    width real
+    length real
+    mass real
+    speciesName text
+}
+
+Ref: eggs.nestId > nests.id [delete: cascade]
+
+Table nest_revisions {
+    id integer [primary key, increment]
+    nestId integer
+    sampleTime text
+    nestStatus integer
+    nestStage integer
+    eggsHost integer
+    nestlingsHost integer
+    eggsParasite integer
+    nestlingsParasite integer
+    hasPhilornisLarvae integer
+    notes text
+}
+
+Ref: nest_revisions.nestId > nests.id [delete: cascade]
+
+Table specimens {
+    id integer [primary key, increment]
+    sampleTime text
+    fieldNumber text
+    type integer
+    longitude real
+    latitude real
+    locality text
+    speciesName text
+    observer text
+    notes text
+    isPending integer [default: 1]
+}
+
+Table pois {
+    id integer [primary key, increment]
+    speciesId integer [not null]
+    sampleTime text
+    longitude real
+    latitude real
+    notes text
+}
+
+Ref: pois.speciesId > species.id [delete: cascade]
+
+Table images {
+    id integer [primary key, increment]
+    imagePath text [not null]
+    notes text
+    vegetationId integer
+    eggId integer
+    specimenId integer
+    nestRevisionId integer
+}
+
+Ref: images.vegetationId > vegetation.id [delete: cascade]
+Ref: images.eggId > eggs.id [delete: cascade]
+Ref: images.specimenId > specimens.id [delete: cascade]
+Ref: images.nestRevisionId > nest_revisions.id [delete: cascade]
+
+Table field_journal {
+    id integer [primary key, increment]
+    title text [not null]
+    notes text
+    creationDate text
+    lastModifiedDate text
+    observer text
+}
