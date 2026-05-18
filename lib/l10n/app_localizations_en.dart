@@ -1376,6 +1376,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get selectInventoryToView => 'Select an inventory to view its details';
 
   @override
+  String get selectNestToView => 'Select a nest to view its details';
+
+  @override
+  String get selectSpecimenToView => 'Select a specimen to view its details';
+
+  @override
+  String get selectJournalToView => 'Select a note to view its details';
+
+  @override
   String get suggestFeatureOrReportIssue =>
       'Suggest a feature or report an issue';
 

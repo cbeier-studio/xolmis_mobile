@@ -368,20 +368,33 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
   }
 
   void _navigateToSettings(BuildContext context) {
-    final screenWidth = MediaQuery.sizeOf(context).width;
-    if (screenWidth > kTabletBreakpoint) {
-      // Or a more specific breakpoint for SideSheet
-      SideSheet.right(
-        context: context,
-        width: kSideSheetWidth,
-        body: const SettingsScreen(),
-      );
-    } else {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const SettingsScreen()),
-      );
+    final rootContext = _scaffoldKey.currentContext ?? context;
+    final screenWidth = MediaQuery.sizeOf(rootContext).width;
+    final shouldUseSideSheet = screenWidth >= kTabletBreakpoint;
+    final isDrawerOpen = _scaffoldKey.currentState?.isDrawerOpen ?? false;
+    final settingsSheetWidth =
+        (screenWidth * 0.38).clamp(420.0, 620.0);
+
+    if (isDrawerOpen) {
+      Navigator.of(context).pop();
     }
+
+    if (shouldUseSideSheet) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        SideSheet.right(
+          context: rootContext,
+          width: settingsSheetWidth,
+          body: const SettingsScreen(),
+        );
+      });
+      return;
+    }
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const SettingsScreen()),
+    );
   }
 
   Future<void> _fetchAppVersion() async {
@@ -499,7 +512,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
               groupAlignment: 0.0,
               destinations: railDestinations,
               selectedIndex: _selectedIndex,
-              labelType: NavigationRailLabelType.all,
+              labelType: NavigationRailLabelType.none,
               onDestinationSelected: (int index) {
                 setState(() {
                   _selectedIndex = index;

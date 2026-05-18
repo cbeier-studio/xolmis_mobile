@@ -1496,6 +1496,21 @@
       "type": "text",
       "description": "Message shown when no inventory is selected"
     },
+  "selectNestToView": "Selecione um ninho para ver os detalhes",
+  "@selectNestToView": {
+    "type": "text",
+    "description": "Message shown when no nest is selected"
+  },
+  "selectSpecimenToView": "Selecione um espécime para ver os detalhes",
+  "@selectSpecimenToView": {
+    "type": "text",
+    "description": "Message shown when no specimen is selected"
+  },
+  "selectJournalToView": "Selecione uma nota para ver os detalhes",
+  "@selectJournalToView": {
+    "type": "text",
+    "description": "Message shown when no note is selected"
+  },
   "suggestFeatureOrReportIssue": "Sugerir recurso ou reportar problema",
   "@suggestFeatureOrReportIssue": {
     "type": "text",

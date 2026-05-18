@@ -3752,6 +3752,36 @@ class S {
     );
   }
 
+  /// `Select a nest to view its details`
+  String get selectNestToView {
+    return Intl.message(
+      'Select a nest to view its details',
+      name: 'selectNestToView',
+      desc: 'Message shown when no nest is selected',
+      args: [],
+    );
+  }
+
+  /// `Select a specimen to view its details`
+  String get selectSpecimenToView {
+    return Intl.message(
+      'Select a specimen to view its details',
+      name: 'selectSpecimenToView',
+      desc: 'Message shown when no specimen is selected',
+      args: [],
+    );
+  }
+
+  /// `Select a note to view its details`
+  String get selectJournalToView {
+    return Intl.message(
+      'Select a note to view its details',
+      name: 'selectJournalToView',
+      desc: 'Message shown when no note is selected',
+      args: [],
+    );
+  }
+
   /// `Suggest a feature or report an issue`
   String get suggestFeatureOrReportIssue {
     return Intl.message(

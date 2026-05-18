@@ -1381,6 +1381,16 @@ class AppLocalizationsPt extends AppLocalizations {
       'Selecione um inventário para ver os detalhes';
 
   @override
+  String get selectNestToView => 'Selecione um ninho para ver os detalhes';
+
+  @override
+  String get selectSpecimenToView =>
+      'Selecione um espécime para ver os detalhes';
+
+  @override
+  String get selectJournalToView => 'Selecione uma nota para ver os detalhes';
+
+  @override
   String get suggestFeatureOrReportIssue =>
       'Sugerir recurso ou reportar problema';
 
@@ -3228,6 +3238,16 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   @override
   String get selectInventoryToView =>
       'Selecione um inventário para ver os detalhes';
+
+  @override
+  String get selectNestToView => 'Selecione um ninho para ver os detalhes';
+
+  @override
+  String get selectSpecimenToView =>
+      'Selecione um espécime para ver os detalhes';
+
+  @override
+  String get selectJournalToView => 'Selecione uma nota para ver os detalhes';
 
   @override
   String get suggestFeatureOrReportIssue =>

@@ -421,6 +421,36 @@ class NestsScreenState extends State<NestsScreen> {
     return _sortNests(filtered);
   }
 
+  Nest? _getEffectiveSelectedNest(
+    List<Nest> filteredNests,
+    bool isSplitScreen,
+  ) {
+    if (!isSplitScreen || filteredNests.isEmpty) {
+      return _selectedNest;
+    }
+
+    if (_selectedNest == null) {
+      return filteredNests.first;
+    }
+
+    final selectedIndex = filteredNests.indexWhere(
+      (nest) => nest.id == _selectedNest!.id,
+    );
+
+    if (selectedIndex == -1) {
+      return filteredNests.first;
+    }
+
+    return filteredNests[selectedIndex];
+  }
+
+  int? _getEffectiveSelectedNestId(
+    List<Nest> filteredNests,
+    bool isSplitScreen,
+  ) {
+    return _getEffectiveSelectedNest(filteredNests, isSplitScreen)?.id;
+  }
+
   // Show the add nest screen
   void _showAddNestScreen(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
@@ -608,17 +638,13 @@ class NestsScreenState extends State<NestsScreen> {
         builder: (context, constraints) {
           // On large screens we show a split screen master/detail
           if (isSplitScreen) {
+            final leftPaneWidth =
+                (constraints.maxWidth * 0.4).clamp(kSideSheetWidth, 520.0);
             return Row(
               children: [
-                // Left: list (takes 40% width)
+                // Left: list pane with bounded width for better readability.
                 Container(
-                  width: constraints.maxWidth * 0.45,
-                  // adjust ratio as needed
-                  //decoration: BoxDecoration(
-                  //  border: Border(
-                  //    right: BorderSide(color: Theme.of(context).dividerColor),
-                  //  ),
-                  //),
+                  width: leftPaneWidth,
                   child: _buildListPane(context, isSplitScreen, isMenuShown),
                 ),
                 VerticalDivider(),
@@ -1181,6 +1207,22 @@ class NestsScreenState extends State<NestsScreen> {
                     : nestProvider.inactiveNests,
               );
 
+              final effectiveSelectedNest = _getEffectiveSelectedNest(
+                filteredNests,
+                isSplitScreen,
+              );
+
+              if (isSplitScreen &&
+                  effectiveSelectedNest != null &&
+                  _selectedNest?.id != effectiveSelectedNest.id) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (!mounted) return;
+                  setState(() {
+                    _selectedNest = effectiveSelectedNest;
+                  });
+                });
+              }
+
               // Show a message if no nests are found
               if (_showActive && nestProvider.activeNests.isEmpty ||
                   !_showActive && nestProvider.inactiveNests.isEmpty) {
@@ -1307,13 +1349,19 @@ class NestsScreenState extends State<NestsScreen> {
   Widget _buildDetailPane(BuildContext context) {
     if (_selectedNest == null) {
       // Placeholder when nothing selected
-      return Center(child: Text(S.of(context).selectInventoryToView));
+      return Center(child: Text(S.of(context).selectNestToView));
     }
 
     // Show InventoryDetailScreen in-place for the selected inventory
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: NestDetailScreen(nest: _selectedNest!, isEmbedded: true),
+    return Align(
+      alignment: Alignment.topCenter,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 960),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: NestDetailScreen(nest: _selectedNest!, isEmbedded: true),
+        ),
+      ),
     );
   }
 
@@ -1325,7 +1373,12 @@ class NestsScreenState extends State<NestsScreen> {
   ) {
     final nest = filteredNests[index];
     final isSelected = selectedNests.contains(nest.id);
-    final isLargeScreen = MediaQuery.sizeOf(context).width >= 600;
+    final isLargeScreen = MediaQuery.sizeOf(context).width >= kTabletBreakpoint;
+    final selectedNestId = _getEffectiveSelectedNestId(
+      filteredNests,
+      isLargeScreen,
+    );
+    final isDetailSelected = selectedNestId == nest.id;
 
     return ListTile(
       title: Text(nest.fieldNumber!),
@@ -1341,8 +1394,11 @@ class NestsScreenState extends State<NestsScreen> {
           Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(nest.foundTime!)),
         ],
       ),
-      selected: isSelected,
-      selectedTileColor: Theme.of(context).colorScheme.primaryContainer,
+      selected: isLargeScreen ? isDetailSelected : isSelected,
+      selectedTileColor:
+          isLargeScreen
+              ? Theme.of(context).colorScheme.secondaryContainer
+              : Theme.of(context).colorScheme.primaryContainer,
       leading:
       // Show checkbox if showing inactive nests
       Visibility(
@@ -1428,16 +1484,35 @@ class NestsScreenState extends State<NestsScreen> {
                             S.current.edit,
                             () {
                               Navigator.of(context).pop();
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder:
-                                      (context) => AddNestScreen(
-                                        nest: nest,
-                                        isEditing: true,
+                              if (MediaQuery.sizeOf(context).width > 600) {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return Dialog(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(16.0),
                                       ),
-                                ),
-                              );
+                                      child: ConstrainedBox(
+                                        constraints: const BoxConstraints(maxWidth: 400),
+                                        child: AddNestScreen(
+                                          nest: nest,
+                                          isEditing: true,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              } else {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => AddNestScreen(
+                                      nest: nest,
+                                      isEditing: true,
+                                    ),
+                                  ),
+                                );
+                              }
                             },
                           ),
                           buildGridMenuItem(

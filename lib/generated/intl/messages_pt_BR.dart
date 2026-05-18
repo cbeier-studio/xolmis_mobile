@@ -916,7 +916,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "selectInventoryType": MessageLookupByLibrary.simpleMessage(
       "Por favor, selecione um tipo de inventário",
     ),
+    "selectJournalToView": MessageLookupByLibrary.simpleMessage(
+      "Selecione uma nota para ver os detalhes",
+    ),
     "selectMode": MessageLookupByLibrary.simpleMessage("Selecione o modo"),
+    "selectNestToView": MessageLookupByLibrary.simpleMessage(
+      "Selecione um ninho para ver os detalhes",
+    ),
     "selectPrecipitation": MessageLookupByLibrary.simpleMessage(
       "Selecione uma precipitação",
     ),
@@ -925,6 +931,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "selectSpeciesToShowStats": MessageLookupByLibrary.simpleMessage(
       "Selecione uma espécie para ver as estatísticas",
+    ),
+    "selectSpecimenToView": MessageLookupByLibrary.simpleMessage(
+      "Selecione um espécime para ver os detalhes",
     ),
     "selectedInventories": MessageLookupByLibrary.simpleMessage(
       "inventários selecionados",

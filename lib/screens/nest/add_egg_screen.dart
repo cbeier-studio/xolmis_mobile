@@ -71,6 +71,16 @@ class AddEggScreenState extends State<AddEggScreen> {
   }
 
   @override
+  void dispose() {
+    _fieldNumberController.dispose();
+    _speciesNameController.dispose();
+    _widthController.dispose();
+    _lengthController.dispose();
+    _massController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
@@ -246,6 +256,10 @@ class AddEggScreenState extends State<AddEggScreen> {
     final eggProvider = Provider.of<EggProvider>(context, listen: false);
 
     if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isSubmitting = true;
+      });
+
       if (widget.isEditing) {
         final updatedEgg = widget.egg!.copyWith(
           fieldNumber: _fieldNumberController.text,
@@ -256,25 +270,35 @@ class AddEggScreenState extends State<AddEggScreen> {
           mass: double.tryParse(_massController.text),
         );
 
-        try {        
+        try {
           await eggProvider.updateEgg(updatedEgg);
 
-          Navigator.pop(context);
+          if (mounted) {
+            Navigator.pop(context, true);
+          }
         } catch (error) {
           if (kDebugMode) {
             print('Error saving egg: $error');
           }
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              persist: true,
-              showCloseIcon: true,
-              backgroundColor: Theme.of(context).colorScheme.error,
-              content: Text(S.current.errorSavingEgg),
-            ),
-          );
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                persist: true,
+                showCloseIcon: true,
+                backgroundColor: Theme.of(context).colorScheme.error,
+                content: Text(S.current.errorSavingEgg),
+              ),
+            );
+          }
+        } finally {
+          if (mounted && _isSubmitting) {
+            setState(() {
+              _isSubmitting = false;
+            });
+          }
         }
       } else {
-        // Create Nest object with form data
+        // Create Egg object with form data
         final newEgg = Egg(
           fieldNumber: _fieldNumberController.text,
           speciesName: _speciesNameController.text,
@@ -285,33 +309,39 @@ class AddEggScreenState extends State<AddEggScreen> {
           sampleTime: DateTime.now(),
         );
 
-        setState(() {
-          _isSubmitting = false;
-        });
-
         try {
           await eggProvider.addEgg(context, widget.nest.id!, newEgg);
-          Navigator.pop(context);          
+          if (mounted) {
+            Navigator.pop(context, true);
+          }
         } catch (error) {
           if (kDebugMode) {
             print('Error adding egg: $error');
           }
-          if (error.toString().contains(S.current.errorEggAlreadyExists)) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                backgroundColor: Colors.amber,
-                content: Text(S.current.errorEggAlreadyExists),
-              ),
-            );
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                persist: true,
-                showCloseIcon: true,
-                backgroundColor: Theme.of(context).colorScheme.error,
-                content: Text(S.current.errorSavingEgg),
-              ),
-            );
+          if (mounted) {
+            if (error.toString().contains(S.current.errorEggAlreadyExists)) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  backgroundColor: Colors.amber,
+                  content: Text(S.current.errorEggAlreadyExists),
+                ),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  persist: true,
+                  showCloseIcon: true,
+                  backgroundColor: Theme.of(context).colorScheme.error,
+                  content: Text(S.current.errorSavingEgg),
+                ),
+              );
+            }
+          }
+        } finally {
+          if (mounted && _isSubmitting) {
+            setState(() {
+              _isSubmitting = false;
+            });
           }
         }
       }

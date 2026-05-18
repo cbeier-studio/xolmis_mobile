@@ -95,6 +95,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
       appBar: AppBar(title: Text(S.of(context).settings)),
       body: SafeArea(
         child: SettingsList(
+          // side_sheet keeps the original MediaQuery width from the root route.
+          // Disable automatic 810px centering/padding so content fills the sheet.
+          contentPadding: EdgeInsets.zero,
+          crossAxisAlignment: CrossAxisAlignment.start,
           lightTheme: SettingsThemeData(
             settingsListBackground: ThemeData.light().scaffoldBackgroundColor,
             titleTextColor: Colors.deepPurple,

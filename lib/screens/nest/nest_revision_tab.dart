@@ -172,11 +172,11 @@ class _NestRevisionsTabState extends State<NestRevisionsTab>
   void _showBottomSheet(BuildContext context, NestRevision revision) {
     showModalBottomSheet(
       context: context,
-      builder: (BuildContext context) {
+      builder: (BuildContext bottomSheetContext) {
         return SafeArea(
           child: BottomSheet(
           onClosing: () {},
-          builder: (BuildContext context) {
+          builder: (BuildContext innerContext) {
             return Container(
               padding: const EdgeInsets.all(16.0),
               child: SingleChildScrollView(
@@ -187,42 +187,25 @@ class _NestRevisionsTabState extends State<NestRevisionsTab>
                     alignment: Alignment.centerLeft,
                     child: Text(
                       DateFormat('dd/MM/yyyy HH:mm:ss',).format(revision.sampleTime!),
-                      style: TextTheme.of(context).bodyLarge,
+                      style: TextTheme.of(innerContext).bodyLarge,
                     ),
                   ),
-                  // ListTile(
-                  //   title: Text(
-                  //     DateFormat(
-                  //       'dd/MM/yyyy HH:mm:ss',
-                  //     ).format(revision.sampleTime!),
-                  //   ),
-                  // ),
                   const Divider(),
                   GridView.count(
-                    crossAxisCount: MediaQuery.sizeOf(context).width < 600 ? 4 : 5,
+                    crossAxisCount: MediaQuery.sizeOf(innerContext).width < 600 ? 4 : 5,
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     children: <Widget>[
                       buildGridMenuItem(
-                          context, Icons.edit_outlined, S.current.edit, () {
-                        Navigator.of(context).pop();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder:
-                                (context) => AddNestRevisionScreen(
-                              nest: widget.nest,
-                              nestRevision: revision,
-                              isEditing: true,
-                            ),
-                          ),
-                        );
+                          innerContext, Icons.edit_outlined, S.current.edit, () {
+                        Navigator.of(innerContext).pop();
+                        _showEditRevisionScreen(context, revision);
                       }),
-                      buildGridMenuItem(context, Icons.delete_outlined,
-                          S.of(context).delete, () async {
-                            Navigator.of(context).pop();
+                      buildGridMenuItem(innerContext, Icons.delete_outlined,
+                          S.of(innerContext).delete, () async {
+                            Navigator.of(innerContext).pop();
                             await _deleteNestRevision(revision);
-                          }, color: Theme.of(context).colorScheme.error),
+                          }, color: Theme.of(innerContext).colorScheme.error),
                     ],
                   ),
                 ],
@@ -234,6 +217,49 @@ class _NestRevisionsTabState extends State<NestRevisionsTab>
         );
       },
     );
+  }
+
+  void _showEditRevisionScreen(BuildContext context, NestRevision revision) {
+    final revisionProvider = Provider.of<NestRevisionProvider>(context, listen: false);
+    if (MediaQuery.sizeOf(context).width > 600) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16.0),
+            ),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 400),
+              child: AddNestRevisionScreen(
+                nest: widget.nest,
+                nestRevision: revision,
+                isEditing: true,
+              ),
+            ),
+          );
+        },
+      ).then((result) {
+        if (result != null) {
+          revisionProvider.getRevisionForNest(widget.nest.id!);
+        }
+      });
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => AddNestRevisionScreen(
+            nest: widget.nest,
+            nestRevision: revision,
+            isEditing: true,
+          ),
+        ),
+      ).then((result) {
+        if (result != null) {
+          revisionProvider.getRevisionForNest(widget.nest.id!);
+        }
+      });
+    }
   }
 
   Widget _buildListView(List<NestRevision> revisionList) {

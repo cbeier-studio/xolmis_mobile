@@ -245,6 +245,37 @@ class JournalsScreenState extends State<JournalsScreen> {
     return _sortJournalEntries(filtered);
   }
 
+  FieldJournal? _getEffectiveSelectedJournalEntry(
+    List<FieldJournal> filteredEntries,
+    bool isSplitScreen,
+  ) {
+    if (!isSplitScreen || filteredEntries.isEmpty) {
+      return _selectedJournalEntry;
+    }
+
+    if (_selectedJournalEntry == null) {
+      return filteredEntries.first;
+    }
+
+    final selectedIndex = filteredEntries.indexWhere(
+      (entry) => entry.id == _selectedJournalEntry!.id,
+    );
+
+    if (selectedIndex == -1) {
+      return filteredEntries.first;
+    }
+
+    return filteredEntries[selectedIndex];
+  }
+
+  int? _getEffectiveSelectedJournalEntryId(
+    List<FieldJournal> filteredEntries,
+    bool isSplitScreen,
+  ) {
+    return _getEffectiveSelectedJournalEntry(filteredEntries, isSplitScreen)
+        ?.id;
+  }
+
   void _showAddJournalScreen(BuildContext context) {
     if (MediaQuery.sizeOf(context).width > 600) {
       showDialog(
@@ -412,16 +443,13 @@ class JournalsScreenState extends State<JournalsScreen> {
         builder: (context, constraints) {
           // On large screens we show a split screen master/detail
           if (isSplitScreen) {
+            final leftPaneWidth =
+                (constraints.maxWidth * 0.4).clamp(kSideSheetWidth, 520.0);
             return Row(
               children: [
-                // Left: list (takes 40% width)
+                // Left: list pane with bounded width for better readability.
                 Container(
-                  width: constraints.maxWidth * 0.45, // adjust ratio as needed
-                  //decoration: BoxDecoration(
-                  //  border: Border(
-                  //    right: BorderSide(color: Theme.of(context).dividerColor),
-                  //  ),
-                  //),
+                  width: leftPaneWidth,
                   child: _buildListPane(context, isSplitScreen, isMenuShown),
                 ),
                 VerticalDivider(),
@@ -585,7 +613,7 @@ class JournalsScreenState extends State<JournalsScreen> {
         ) : null,
           ),
           Padding(
-          padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 8.0),
+          padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
           child: Row(
             children: [
               Expanded(
@@ -714,6 +742,23 @@ class JournalsScreenState extends State<JournalsScreen> {
                   final filteredEntries =
                   _filterJournalEntries(journalProvider.journalEntries);
 
+                  final effectiveSelectedEntry =
+                      _getEffectiveSelectedJournalEntry(
+                        filteredEntries,
+                        isSplitScreen,
+                      );
+
+                  if (isSplitScreen &&
+                      effectiveSelectedEntry != null &&
+                      _selectedJournalEntry?.id != effectiveSelectedEntry.id) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      if (!mounted) return;
+                      setState(() {
+                        _selectedJournalEntry = effectiveSelectedEntry;
+                      });
+                    });
+                  }
+
                   if (filteredEntries.isEmpty) {
                     return Center(
                       child: Column(
@@ -809,25 +854,36 @@ class JournalsScreenState extends State<JournalsScreen> {
     if (_selectedJournalEntry == null) {
       // Placeholder when nothing selected
       return Center(
-        child: Text(S.of(context).selectInventoryToView),
+        child: Text(S.of(context).selectJournalToView),
       );
     }
 
     // Show InventoryDetailScreen in-place for the selected inventory
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: AddJournalScreen(
-              journalEntry: _selectedJournalEntry,
-              isEditing: true,
-              isEmbedded: true,
-            ),
+    return Align(
+      alignment: Alignment.topCenter,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 960),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: AddJournalScreen(
+            journalEntry: _selectedJournalEntry,
+            isEditing: true,
+            isEmbedded: true,
+          ),
+        ),
+      ),
     );
   }
 
   ListTile journalListTileItem(List<FieldJournal> filteredEntries, int index, BuildContext context) {
     final entry = filteredEntries[index];
     final isSelected = selectedJournals.contains(entry.id);
-    final isLargeScreen = MediaQuery.sizeOf(context).width >= 600;
+    final isLargeScreen = MediaQuery.sizeOf(context).width >= kTabletBreakpoint;
+    final selectedJournalId = _getEffectiveSelectedJournalEntryId(
+      filteredEntries,
+      isLargeScreen,
+    );
+    final isDetailSelected = selectedJournalId == entry.id;
 
     return ListTile(
       leading: Checkbox(
@@ -850,8 +906,11 @@ class JournalsScreenState extends State<JournalsScreen> {
               .format(entry.creationDate!)),
         ],
       ),
-      selected: isSelected,
-      selectedTileColor: Theme.of(context).colorScheme.primaryContainer,
+      selected: isLargeScreen ? isDetailSelected : isSelected,
+      selectedTileColor:
+          isLargeScreen
+              ? Theme.of(context).colorScheme.secondaryContainer
+              : Theme.of(context).colorScheme.primaryContainer,
       onLongPress: () =>
           _showBottomSheet(context, entry),
       onTap: () {

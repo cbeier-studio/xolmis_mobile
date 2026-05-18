@@ -374,6 +374,36 @@ class SpecimensScreenState extends State<SpecimensScreen> {
     return _sortSpecimens(filtered);
   }
 
+  Specimen? _getEffectiveSelectedSpecimen(
+    List<Specimen> filteredSpecimens,
+    bool isSplitScreen,
+  ) {
+    if (!isSplitScreen || filteredSpecimens.isEmpty) {
+      return _selectedSpecimen;
+    }
+
+    if (_selectedSpecimen == null) {
+      return filteredSpecimens.first;
+    }
+
+    final selectedIndex = filteredSpecimens.indexWhere(
+      (specimen) => specimen.id == _selectedSpecimen!.id,
+    );
+
+    if (selectedIndex == -1) {
+      return filteredSpecimens.first;
+    }
+
+    return filteredSpecimens[selectedIndex];
+  }
+
+  int? _getEffectiveSelectedSpecimenId(
+    List<Specimen> filteredSpecimens,
+    bool isSplitScreen,
+  ) {
+    return _getEffectiveSelectedSpecimen(filteredSpecimens, isSplitScreen)?.id;
+  }
+
   void _showAddSpecimenScreen(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
     final String observerAbbreviation = prefs.getString('observerAcronym') ?? '';
@@ -605,16 +635,13 @@ class SpecimensScreenState extends State<SpecimensScreen> {
         builder: (context, constraints) {
           // On large screens we show a split screen master/detail
           if (isSplitScreen) {
+            final leftPaneWidth =
+                (constraints.maxWidth * 0.4).clamp(kSideSheetWidth, 520.0);
             return Row(
               children: [
-                // Left: list (takes 40% width)
+                // Left: list pane with bounded width for better readability.
                 Container(
-                  width: constraints.maxWidth * 0.45, // adjust ratio as needed
-                  //decoration: BoxDecoration(
-                  //  border: Border(
-                  //    right: BorderSide(color: Theme.of(context).dividerColor),
-                  //  ),
-                  //),
+                  width: leftPaneWidth,
                   child: _buildListPane(context, isSplitScreen, isMenuShown),
                 ),
                 VerticalDivider(),
@@ -1132,6 +1159,22 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                     ? specimenProvider.pendingSpecimens
                     : specimenProvider.archivedSpecimens);
 
+              final effectiveSelectedSpecimen = _getEffectiveSelectedSpecimen(
+                filteredSpecimens,
+                isSplitScreen,
+              );
+
+              if (isSplitScreen &&
+                  effectiveSelectedSpecimen != null &&
+                  _selectedSpecimen?.id != effectiveSelectedSpecimen.id) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (!mounted) return;
+                  setState(() {
+                    _selectedSpecimen = effectiveSelectedSpecimen;
+                  });
+                });
+              }
+
               if (_showPending && specimenProvider.pendingSpecimens.isEmpty ||
                   !_showPending && specimenProvider.archivedSpecimens.isEmpty) {
                 return Center(
@@ -1232,24 +1275,35 @@ class SpecimensScreenState extends State<SpecimensScreen> {
     if (_selectedSpecimen == null) {
       // Placeholder when nothing selected
       return Center(
-        child: Text(S.of(context).selectInventoryToView),
+        child: Text(S.of(context).selectSpecimenToView),
       );
     }
 
     // Show InventoryDetailScreen in-place for the selected inventory
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: AppImageScreen(
-              specimenId: _selectedSpecimen!.id,
-              isEmbedded: true,
-            ),
+    return Align(
+      alignment: Alignment.topCenter,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 960),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: AppImageScreen(
+            specimenId: _selectedSpecimen!.id,
+            isEmbedded: true,
+          ),
+        ),
+      ),
     );
   }
 
   ListTile specimenListTileItem(List<Specimen> filteredSpecimens, int index, BuildContext context) {
     final specimen = filteredSpecimens[index];
     final isSelected = selectedSpecimens.contains(specimen.id);
-    final isLargeScreen = MediaQuery.sizeOf(context).width >= 600;
+    final isLargeScreen = MediaQuery.sizeOf(context).width >= kTabletBreakpoint;
+    final selectedSpecimenId = _getEffectiveSelectedSpecimenId(
+      filteredSpecimens,
+      isLargeScreen,
+    );
+    final isDetailSelected = selectedSpecimenId == specimen.id;
 
     return ListTile(
       leading: Checkbox(
@@ -1307,8 +1361,11 @@ class SpecimensScreenState extends State<SpecimensScreen> {
               .format(specimen.sampleTime!)),
         ],
       ),
-      selected: isSelected,
-      selectedTileColor: Theme.of(context).colorScheme.primaryContainer,
+      selected: isLargeScreen ? isDetailSelected : isSelected,
+      selectedTileColor:
+          isLargeScreen
+              ? Theme.of(context).colorScheme.secondaryContainer
+              : Theme.of(context).colorScheme.primaryContainer,
       onLongPress: () =>
           _showBottomSheet(context, specimen),
       onTap: () {
@@ -1360,15 +1417,35 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                       buildGridMenuItem(
                           context, Icons.edit_outlined, S.current.edit, () {
                         Navigator.of(context).pop();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AddSpecimenScreen(
-                              specimen: specimen,
-                              isEditing: true,
+                        if (MediaQuery.sizeOf(context).width > 600) {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return Dialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16.0),
+                                ),
+                                child: ConstrainedBox(
+                                  constraints: const BoxConstraints(maxWidth: 400),
+                                  child: AddSpecimenScreen(
+                                    specimen: specimen,
+                                    isEditing: true,
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        } else {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AddSpecimenScreen(
+                                specimen: specimen,
+                                isEditing: true,
+                              ),
                             ),
-                          ),
-                        );
+                          );
+                        }
                       }),
                       if (_showPending)
                       buildGridMenuItem(context, Icons.archive_outlined,

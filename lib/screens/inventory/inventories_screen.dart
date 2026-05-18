@@ -482,6 +482,37 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     return _sortInventories(filtered);
   }
 
+  Inventory? _getEffectiveSelectedInventory(
+    List<Inventory> filteredInventories,
+    bool isSplitScreen,
+  ) {
+    if (!isSplitScreen || filteredInventories.isEmpty) {
+      return _selectedInventory;
+    }
+
+    if (_selectedInventory == null) {
+      return filteredInventories.first;
+    }
+
+    final selectedIndex = filteredInventories.indexWhere(
+      (inventory) => inventory.id == _selectedInventory!.id,
+    );
+
+    if (selectedIndex == -1) {
+      return filteredInventories.first;
+    }
+
+    return filteredInventories[selectedIndex];
+  }
+
+  String? _getEffectiveSelectedInventoryId(
+    List<Inventory> filteredInventories,
+    bool isSplitScreen,
+  ) {
+    return _getEffectiveSelectedInventory(filteredInventories, isSplitScreen)
+        ?.id;
+  }
+
   // Show the dialog to add a new inventory
   Future<void> showAddInventoryScreen(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
@@ -689,24 +720,21 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
         builder: (context, constraints) {
           // On large screens we show a split screen master/detail
           if (isSplitScreen) {
-            return Row(
-              children: [
-                // Left: list (takes 40% width)
-                Container(
-                  width: constraints.maxWidth * 0.45, // adjust ratio as needed
-                  //decoration: BoxDecoration(
-                  //  border: Border(
-                  //    right: BorderSide(color: Theme.of(context).dividerColor),
-                  //  ),
-                  //),
-                  child: _buildListPane(context, isSplitScreen, isMenuShown),
-                ),
-                VerticalDivider(),
-                // Right: detail pane
-                Expanded(child: _buildDetailPane(context)),
-              ],
-            );
-          } else {
+            final leftPaneWidth =
+                (constraints.maxWidth * 0.4).clamp(kSideSheetWidth, 520.0);
+             return Row(
+               children: [
+                // Left: list pane with bounded width for better readability.
+                 Container(
+                  width: leftPaneWidth,
+                   child: _buildListPane(context, isSplitScreen, isMenuShown),
+                 ),
+                 VerticalDivider(),
+                 // Right: detail pane
+                 Expanded(child: _buildDetailPane(context)),
+               ],
+             );
+           } else {
             // Small screens: keep current column layout
             return _buildListPane(context, isSplitScreen, isMenuShown);
           }
@@ -1511,6 +1539,23 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                         ? inventoryProvider.activeInventories
                         : inventoryProvider.finishedInventories,
                   );
+                  final effectiveSelectedInventory =
+                      _getEffectiveSelectedInventory(
+                        filteredInventories,
+                        isSplitScreen,
+                      );
+
+                  if (isSplitScreen &&
+                      effectiveSelectedInventory != null &&
+                      _selectedInventory?.id != effectiveSelectedInventory.id) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      if (!mounted) return;
+                      setState(() {
+                        _selectedInventory = effectiveSelectedInventory;
+                      });
+                    });
+                  }
+
                   return Column(
                     children: [
                       Padding(
@@ -1560,16 +1605,22 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     }
 
     // Show InventoryDetailScreen in-place for the selected inventory
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: InventoryDetailScreen(
-        inventory: _selectedInventory!,
-        speciesDao: speciesDao,
-        inventoryDao: inventoryDao,
-        poiDao: poiDao,
-        vegetationDao: vegetationDao,
-        weatherDao: weatherDao,
-        isEmbedded: true,
+    return Align(
+      alignment: Alignment.topCenter,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 960),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: InventoryDetailScreen(
+            inventory: _selectedInventory!,
+            speciesDao: speciesDao,
+            inventoryDao: inventoryDao,
+            poiDao: poiDao,
+            vegetationDao: vegetationDao,
+            weatherDao: weatherDao,
+            isEmbedded: true,
+          ),
+        ),
       ),
     );
   }
@@ -1582,7 +1633,12 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
   ) {
     final inventory = filteredInventories[index];
     final isSelected = selectedInventories.contains(inventory.id);
-    final isLargeScreen = MediaQuery.sizeOf(context).width >= 600;
+    final isLargeScreen = MediaQuery.sizeOf(context).width >= kTabletBreakpoint;
+    final selectedInventoryId = _getEffectiveSelectedInventoryId(
+      filteredInventories,
+      isLargeScreen,
+    );
+    final isDetailSelected = selectedInventoryId == inventory.id;
 
     return ListTile(
       // Show progress of the inventory timer
@@ -1644,8 +1700,11 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
       ),
       title: Text(inventory.id),
       subtitle: buildItemSubtitle(inventory, context),
-      selected: isSelected,
-      selectedTileColor: Theme.of(context).colorScheme.primaryContainer,
+      selected: isLargeScreen ? isDetailSelected : isSelected,
+      selectedTileColor:
+          isLargeScreen
+              ? Theme.of(context).colorScheme.secondaryContainer
+              : Theme.of(context).colorScheme.primaryContainer,
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -1807,17 +1866,33 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                             S.current.edit,
                             () async {
                               Navigator.of(context).pop();
-                              final editedInventory = await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder:
-                                      (context) => EditInventoryScreen(
-                                        inventory: inventory,
+                              Inventory? editedInventory;
+                              if (MediaQuery.sizeOf(context).width > 600) {
+                                editedInventory = await showDialog<Inventory>(
+                                  context: context,
+                                  builder: (context) {
+                                    return Dialog(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(16.0),
                                       ),
-                                ),
-                              );
-                              if (editedInventory != null &&
-                                  editedInventory is Inventory) {
+                                      child: ConstrainedBox(
+                                        constraints: const BoxConstraints(maxWidth: 400),
+                                        child: EditInventoryScreen(inventory: inventory),
+                                      ),
+                                    );
+                                  },
+                                );
+                              } else {
+                                editedInventory = await Navigator.push<Inventory>(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => EditInventoryScreen(
+                                      inventory: inventory,
+                                    ),
+                                  ),
+                                );
+                              }
+                              if (editedInventory != null) {
                                 if (inventory.id != editedInventory.id) {
                                   final idExists = await inventoryProvider
                                       .inventoryIdExists(editedInventory.id);

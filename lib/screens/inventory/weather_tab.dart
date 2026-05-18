@@ -157,11 +157,11 @@ class _WeatherTabState extends State<WeatherTab>
   void _showBottomSheet(BuildContext context, Weather weather) {
     showModalBottomSheet(
       context: context,
-      builder: (BuildContext context) {
+      builder: (BuildContext bottomSheetContext) {
         return SafeArea(
           child: BottomSheet(
             onClosing: () {},
-            builder: (BuildContext context) {
+            builder: (BuildContext innerContext) {
               return Container(
                 padding: const EdgeInsets.all(16.0),
                 child: SingleChildScrollView(
@@ -172,50 +172,33 @@ class _WeatherTabState extends State<WeatherTab>
                       alignment: Alignment.centerLeft,
                       child: Text(
                         DateFormat('dd/MM/yyyy HH:mm:ss',).format(weather.sampleTime!),
-                        style: TextTheme.of(context).bodyLarge,
+                        style: TextTheme.of(innerContext).bodyLarge,
                       ),
                     ),
-                    // ListTile(
-                    //   title: Text(
-                    //     DateFormat(
-                    //       'dd/MM/yyyy HH:mm:ss',
-                    //     ).format(weather.sampleTime!),
-                    //   ),
-                    // ),
                     const Divider(),
                     GridView.count(
-                      crossAxisCount: MediaQuery.sizeOf(context).width < 600 ? 4 : 5,
+                      crossAxisCount: MediaQuery.sizeOf(innerContext).width < 600 ? 4 : 5,
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       children: <Widget>[
                         buildGridMenuItem(
-                          context,
+                          innerContext,
                           Icons.edit_outlined,
                           S.current.edit,
                           () {
-                            Navigator.of(context).pop();
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder:
-                                    (context) => AddWeatherScreen(
-                                      inventory: widget.inventory,
-                                      weather: weather,
-                                      isEditing: true,
-                                    ),
-                              ),
-                            );
+                            Navigator.of(innerContext).pop();
+                            _showEditWeatherScreen(context, weather);
                           },
                         ),
                         buildGridMenuItem(
-                          context,
+                          innerContext,
                           Icons.delete_outlined,
-                          S.of(context).delete,
+                          S.of(innerContext).delete,
                           () async {
-                            Navigator.of(context).pop();
+                            Navigator.of(innerContext).pop();
                             await _deleteWeather(weather);
                           },
-                          color: Theme.of(context).colorScheme.error,
+                          color: Theme.of(innerContext).colorScheme.error,
                         ),
                       ],
                     ),
@@ -228,6 +211,49 @@ class _WeatherTabState extends State<WeatherTab>
         );
       },
     );
+  }
+
+  void _showEditWeatherScreen(BuildContext context, Weather weather) {
+    final weatherProvider = Provider.of<WeatherProvider>(context, listen: false);
+    if (MediaQuery.sizeOf(context).width > 600) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16.0),
+            ),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 400),
+              child: AddWeatherScreen(
+                inventory: widget.inventory,
+                weather: weather,
+                isEditing: true,
+              ),
+            ),
+          );
+        },
+      ).then((result) {
+        if (result != null) {
+          weatherProvider.getWeatherForInventory(widget.inventory.id);
+        }
+      });
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => AddWeatherScreen(
+            inventory: widget.inventory,
+            weather: weather,
+            isEditing: true,
+          ),
+        ),
+      ).then((result) {
+        if (result != null) {
+          weatherProvider.getWeatherForInventory(widget.inventory.id);
+        }
+      });
+    }
   }
 
   Widget _buildListView(List<Weather> weatherList) {

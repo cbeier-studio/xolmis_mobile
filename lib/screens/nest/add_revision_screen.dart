@@ -45,6 +45,7 @@ class AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
     _nestlingsParasiteController = TextEditingController();
     _notesController = TextEditingController();
 
+
     if (widget.isEditing) {
       _notesController.text = widget.nestRevision!.notes!;
       _selectedNestStatus = widget.nestRevision!.nestStatus;
@@ -55,6 +56,16 @@ class AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
       _eggsParasiteController.text = widget.nestRevision!.eggsParasite != null ? widget.nestRevision!.eggsParasite.toString() : '';
       _nestlingsParasiteController.text = widget.nestRevision!.nestlingsParasite != null ? widget.nestRevision!.nestlingsParasite.toString() : '';
     }
+  }
+
+  @override
+  void dispose() {
+    _eggsHostController.dispose();
+    _nestlingsHostController.dispose();
+    _eggsParasiteController.dispose();
+    _nestlingsParasiteController.dispose();
+    _notesController.dispose();
+    super.dispose();
   }
 
   @override
@@ -240,6 +251,10 @@ class AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
     final revisionProvider = Provider.of<NestRevisionProvider>(context, listen: false);
 
     if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isSubmitting = true;
+      });
+
       if (widget.isEditing) {
         final updatedRevision = widget.nestRevision!.copyWith(
           eggsHost: int.tryParse(_eggsHostController.text),
@@ -255,22 +270,32 @@ class AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
         try {
           await revisionProvider.updateNestRevision(context, updatedRevision);
 
-          Navigator.pop(context);
+          if (mounted) {
+            Navigator.pop(context, true);
+          }
         } catch (error) {
           if (kDebugMode) {
             print('Error saving nest revision: $error');
           }
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              persist: true,
-              showCloseIcon: true,
-              backgroundColor: Theme.of(context).colorScheme.error,
-              content: Text(S.current.errorSavingRevision),
-            ),
-          );
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                persist: true,
+                showCloseIcon: true,
+                backgroundColor: Theme.of(context).colorScheme.error,
+                content: Text(S.current.errorSavingRevision),
+              ),
+            );
+          }
+        } finally {
+          if (mounted && _isSubmitting) {
+            setState(() {
+              _isSubmitting = false;
+            });
+          }
         }
       } else {
-        // Create Nest object with form data
+        // Create NestRevision object with form data
         final newRevision = NestRevision(
           eggsHost: int.tryParse(_eggsHostController.text),
           nestlingsHost: int.tryParse(_nestlingsHostController.text),
@@ -283,26 +308,32 @@ class AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
           hasPhilornisLarvae: _hasPhilornisLarvae,
         );
 
-        setState(() {
-          _isSubmitting = false;
-        });
-
         try {
           await revisionProvider.addNestRevision(
               context, widget.nest.id!, newRevision);
-          Navigator.pop(context);
+          if (mounted) {
+            Navigator.pop(context, true);
+          }
         } catch (error) {
           if (kDebugMode) {
             print('Error adding nest revision: $error');
           }
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              persist: true,
-              showCloseIcon: true,
-              backgroundColor: Theme.of(context).colorScheme.error,
-              content: Text(S.current.errorSavingRevision),
-            ),
-          );
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                persist: true,
+                showCloseIcon: true,
+                backgroundColor: Theme.of(context).colorScheme.error,
+                content: Text(S.current.errorSavingRevision),
+              ),
+            );
+          }
+        } finally {
+          if (mounted && _isSubmitting) {
+            setState(() {
+              _isSubmitting = false;
+            });
+          }
         }
       }
     } else {

@@ -168,11 +168,11 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
   void _showBottomSheet(BuildContext context, Egg egg) {
     showModalBottomSheet(
       context: context,
-      builder: (BuildContext context) {
+      builder: (BuildContext bottomSheetContext) {
         return SafeArea(
           child: BottomSheet(
           onClosing: () {},
-          builder: (BuildContext context) {
+          builder: (BuildContext innerContext) {
             return Container(
               padding: const EdgeInsets.all(16.0),
               child: SingleChildScrollView(
@@ -181,35 +181,24 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
                 children: <Widget>[
                   Align(
                     alignment: Alignment.centerLeft,
-                    child: Text(egg.fieldNumber!, style: TextTheme.of(context).bodyLarge,),
+                    child: Text(egg.fieldNumber!, style: TextTheme.of(innerContext).bodyLarge,),
                   ),
-                  // ListTile(title: Text(egg.fieldNumber!)),
                   const Divider(),
                   GridView.count(
-                    crossAxisCount: MediaQuery.sizeOf(context).width < 600 ? 4 : 5,
+                    crossAxisCount: MediaQuery.sizeOf(innerContext).width < 600 ? 4 : 5,
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     children: <Widget>[
                       buildGridMenuItem(
-                          context, Icons.edit_outlined, S.current.edit, () {
-                        Navigator.of(context).pop();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder:
-                                (context) => AddEggScreen(
-                              nest: widget.nest,
-                              egg: egg,
-                              isEditing: true,
-                            ),
-                          ),
-                        );
+                          innerContext, Icons.edit_outlined, S.current.edit, () {
+                        Navigator.of(innerContext).pop();
+                        _showEditEggScreen(context, egg);
                       }),
-                      buildGridMenuItem(context, Icons.delete_outlined,
-                          S.of(context).delete, () async {
-                            Navigator.of(context).pop();
+                      buildGridMenuItem(innerContext, Icons.delete_outlined,
+                          S.of(innerContext).delete, () async {
+                            Navigator.of(innerContext).pop();
                             await _deleteEgg(egg);
-                          }, color: Theme.of(context).colorScheme.error),
+                          }, color: Theme.of(innerContext).colorScheme.error),
                     ],
                   ),
                 ],
@@ -221,6 +210,49 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
         );
       },
     );
+  }
+
+  void _showEditEggScreen(BuildContext context, Egg egg) {
+    final eggProvider = Provider.of<EggProvider>(context, listen: false);
+    if (MediaQuery.sizeOf(context).width > 600) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16.0),
+            ),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 400),
+              child: AddEggScreen(
+                nest: widget.nest,
+                egg: egg,
+                isEditing: true,
+              ),
+            ),
+          );
+        },
+      ).then((result) {
+        if (result != null) {
+          eggProvider.getEggForNest(widget.nest.id!);
+        }
+      });
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => AddEggScreen(
+            nest: widget.nest,
+            egg: egg,
+            isEditing: true,
+          ),
+        ),
+      ).then((result) {
+        if (result != null) {
+          eggProvider.getEggForNest(widget.nest.id!);
+        }
+      });
+    }
   }
 
   Widget _buildListView(List<Egg> eggList) {

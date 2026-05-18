@@ -2292,6 +2292,24 @@ abstract class AppLocalizations {
   /// **'Select an inventory to view its details'**
   String get selectInventoryToView;
 
+  /// Message shown when no nest is selected
+  ///
+  /// In en, this message translates to:
+  /// **'Select a nest to view its details'**
+  String get selectNestToView;
+
+  /// Message shown when no specimen is selected
+  ///
+  /// In en, this message translates to:
+  /// **'Select a specimen to view its details'**
+  String get selectSpecimenToView;
+
+  /// Message shown when no note is selected
+  ///
+  /// In en, this message translates to:
+  /// **'Select a note to view its details'**
+  String get selectJournalToView;
+
   /// Suggest a feature or report an issue button label
   ///
   /// In en, this message translates to:
