@@ -10,6 +10,7 @@ import '../../providers/nest_provider.dart';
 import '../statistics/stats_nests_screen.dart';
 import 'add_nest_screen.dart';
 import 'nest_detail_screen.dart';
+import '../../widgets/filter_selection_bottom_sheet.dart';
 
 import '../../core/core_consts.dart';
 import '../../utils/utils.dart';
@@ -105,7 +106,7 @@ class NestsScreenState extends State<NestsScreen> {
         // Ajuste para incluir o dia inteiro da data final (até 23:59:59)
         final endOfDay = _selectedDateRange!.end.add(const Duration(days: 1));
         return (date.isAfter(_selectedDateRange!.start) ||
-            date.isAtSameMomentAs(_selectedDateRange!.start)) &&
+                date.isAtSameMomentAs(_selectedDateRange!.start)) &&
             date.isBefore(endOfDay);
     }
   }
@@ -300,14 +301,13 @@ class NestsScreenState extends State<NestsScreen> {
 
   List<String> _getUniqueSpecies() {
     final nests =
-        _showActive
-            ? nestProvider.activeNests
-            : nestProvider.inactiveNests;
+        _showActive ? nestProvider.activeNests : nestProvider.inactiveNests;
 
     final species =
         nests
             .where(
-              (nest) => nest.speciesName != null && nest.speciesName!.isNotEmpty,
+              (nest) =>
+                  nest.speciesName != null && nest.speciesName!.isNotEmpty,
             )
             .map((inv) => inv.speciesName!)
             .toSet()
@@ -319,14 +319,13 @@ class NestsScreenState extends State<NestsScreen> {
 
   List<String> _getUniqueLocalities() {
     final nests =
-        _showActive
-            ? nestProvider.activeNests
-            : nestProvider.inactiveNests;
+        _showActive ? nestProvider.activeNests : nestProvider.inactiveNests;
 
     final localities =
         nests
             .where(
-              (nest) => nest.localityName != null && nest.localityName!.isNotEmpty,
+              (nest) =>
+                  nest.localityName != null && nest.localityName!.isNotEmpty,
             )
             .map((inv) => inv.localityName!)
             .toSet()
@@ -338,21 +337,60 @@ class NestsScreenState extends State<NestsScreen> {
 
   List<String> _getUniqueObservers() {
     final nests =
-        _showActive
-            ? nestProvider.activeNests
-            : nestProvider.inactiveNests;
+        _showActive ? nestProvider.activeNests : nestProvider.inactiveNests;
 
     final observers =
         nests
-            .where(
-              (nest) => nest.observer != null && nest.observer!.isNotEmpty,
-            )
+            .where((nest) => nest.observer != null && nest.observer!.isNotEmpty)
             .map((nest) => nest.observer!)
             .toSet()
             .toList();
 
     observers.sort();
     return observers;
+  }
+
+  Future<FilterSelectionResult<String>?> _showStringFilterBottomSheet({
+    required String title,
+    required List<String> items,
+    bool useSpeciesSearch = false,
+  }) {
+    return showFilterSelectionBottomSheet<String>(
+      context: context,
+      title: title,
+      items: items,
+      itemLabel: (item) => item,
+      matchesQuery:
+          useSpeciesSearch
+              ? (item, query, label) => speciesMatchesQuery(label, query)
+              : null,
+      clearActionLabel: S.current.clearSelection,
+    );
+  }
+
+  Future<void> _selectSpeciesFromBottomSheet() async {
+    final result = await _showStringFilterBottomSheet(
+      title: S.current.species(1),
+      items: _getUniqueSpecies(),
+      useSpeciesSearch: true,
+    );
+    if (!mounted || result == null) return;
+
+    setState(() {
+      _selectedSpecies = result.cleared ? null : result.selectedItem;
+    });
+  }
+
+  Future<void> _selectLocalityFromBottomSheet() async {
+    final result = await _showStringFilterBottomSheet(
+      title: S.current.locality,
+      items: _getUniqueLocalities(),
+    );
+    if (!mounted || result == null) return;
+
+    setState(() {
+      _selectedLocality = result.cleared ? null : result.selectedItem;
+    });
   }
 
   // Filter the nests based on the search query
@@ -368,7 +406,9 @@ class NestsScreenState extends State<NestsScreen> {
     // Filtro por espécie
     if (_selectedSpecies != null) {
       filtered =
-          filtered.where((nest) => nest.speciesName == _selectedSpecies).toList();
+          filtered
+              .where((nest) => nest.speciesName == _selectedSpecies)
+              .toList();
     }
 
     // Filtro por localidade
@@ -382,9 +422,7 @@ class NestsScreenState extends State<NestsScreen> {
     // Filtro por observador
     if (_selectedObserver != null) {
       filtered =
-          filtered
-              .where((nest) => nest.observer == _selectedObserver)
-              .toList();
+          filtered.where((nest) => nest.observer == _selectedObserver).toList();
     }
 
     // Filtro por data (usa startTime)
@@ -407,9 +445,9 @@ class NestsScreenState extends State<NestsScreen> {
                     nest.fieldNumber!.toLowerCase().contains(
                       _searchQuery.toLowerCase(),
                     ) ||
-                  nest.speciesName!.toLowerCase().contains(
-                    _searchQuery.toLowerCase(),
-                  ) ||
+                    nest.speciesName!.toLowerCase().contains(
+                      _searchQuery.toLowerCase(),
+                    ) ||
                     (nest.localityName?.toLowerCase().contains(
                           _searchQuery.toLowerCase(),
                         ) ??
@@ -460,12 +498,12 @@ class NestsScreenState extends State<NestsScreen> {
     if (observerAbbreviation.isEmpty) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            showCloseIcon: true,
-                            backgroundColor: Colors.amber,
-                            content: Text(S.of(context).observerAbbreviationMissing),
-                          ),
-                        );
+          SnackBar(
+            showCloseIcon: true,
+            backgroundColor: Colors.amber,
+            content: Text(S.of(context).observerAbbreviationMissing),
+          ),
+        );
         // showDialog(
         //   context: context,
         //   builder: (context) {
@@ -502,23 +540,23 @@ class NestsScreenState extends State<NestsScreen> {
             ),
           );
         },
-       ).then((newNest) {
-         // Reload the nest list
-         if (newNest != null) {
-           nestProvider.fetchNestsSummary();
-         }
-       });
-     } else {
-       // Show the screen on small screens
-       Navigator.push(
-         context,
-         MaterialPageRoute(builder: (context) => const AddNestScreen()),
-       ).then((newNest) {
-         // Reload the nest list
-         if (newNest != null) {
-           nestProvider.fetchNestsSummary();
-         }
-       });
+      ).then((newNest) {
+        // Reload the nest list
+        if (newNest != null) {
+          nestProvider.fetchNestsSummary();
+        }
+      });
+    } else {
+      // Show the screen on small screens
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const AddNestScreen()),
+      ).then((newNest) {
+        // Reload the nest list
+        if (newNest != null) {
+          nestProvider.fetchNestsSummary();
+        }
+      });
     }
   }
 
@@ -638,8 +676,10 @@ class NestsScreenState extends State<NestsScreen> {
         builder: (context, constraints) {
           // On large screens we show a split screen master/detail
           if (isSplitScreen) {
-            final leftPaneWidth =
-                (constraints.maxWidth * 0.4).clamp(kSideSheetWidth, 520.0);
+            final leftPaneWidth = (constraints.maxWidth * 0.4).clamp(
+              kSideSheetWidth,
+              520.0,
+            );
             return Row(
               children: [
                 // Left: list pane with bounded width for better readability.
@@ -710,7 +750,9 @@ class NestsScreenState extends State<NestsScreen> {
                         MenuItemButton(
                           onPressed: () async {
                             final nests = await Future.wait(
-                              selectedNests.map((id) => nestProvider.getNestById(id)),
+                              selectedNests.map(
+                                (id) => nestProvider.getNestById(id),
+                              ),
                             );
                             await exportSelectedNestsToCsv(context, nests);
                             if (!mounted) return;
@@ -723,7 +765,9 @@ class NestsScreenState extends State<NestsScreen> {
                         MenuItemButton(
                           onPressed: () async {
                             final nests = await Future.wait(
-                              selectedNests.map((id) => nestProvider.getNestById(id)),
+                              selectedNests.map(
+                                (id) => nestProvider.getNestById(id),
+                              ),
                             );
                             await exportSelectedNestsToExcel(context, nests);
                             if (!mounted) return;
@@ -736,7 +780,9 @@ class NestsScreenState extends State<NestsScreen> {
                         MenuItemButton(
                           onPressed: () async {
                             final nests = await Future.wait(
-                              selectedNests.map((id) => nestProvider.getNestById(id)),
+                              selectedNests.map(
+                                (id) => nestProvider.getNestById(id),
+                              ),
                             );
                             await exportSelectedNestsToJson(context, nests);
                             if (!mounted) return;
@@ -749,35 +795,39 @@ class NestsScreenState extends State<NestsScreen> {
                       ],
                     ),
                     if (selectedNests.length > 1)
-                    IconButton(
-                      icon: const Icon(Icons.insert_chart_outlined),
-                      tooltip: S.of(context).statistics,
-                      onPressed: () async {
-                            // Pre-load full details for selected nests before opening stats
-                            for (var nestId in selectedNests) {
-                              await nestProvider.loadNestDetails(nestId);
-                            }
+                      IconButton(
+                        icon: const Icon(Icons.insert_chart_outlined),
+                        tooltip: S.of(context).statistics,
+                        onPressed: () async {
+                          // Pre-load full details for selected nests before opening stats
+                          for (var nestId in selectedNests) {
+                            await nestProvider.loadNestDetails(nestId);
+                          }
 
-                            // Get fully loaded nests
-                            final selectedNestsList = selectedNests
-                                .map((id) => nestProvider.nests.firstWhere(
-                                  (n) => n.id == id,
-                                  orElse: () => Nest(id: id),
-                                ))
-                                .toList();
+                          // Get fully loaded nests
+                          final selectedNestsList =
+                              selectedNests
+                                  .map(
+                                    (id) => nestProvider.nests.firstWhere(
+                                      (n) => n.id == id,
+                                      orElse: () => Nest(id: id),
+                                    ),
+                                  )
+                                  .toList();
 
-                            if (mounted) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => StatsNestsScreen(
-                                    nests: selectedNestsList,
-                                  ),
-                                ),
-                              );
-                            }
-                          },
-                    ),
+                          if (mounted) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (context) => StatsNestsScreen(
+                                      nests: selectedNestsList,
+                                    ),
+                              ),
+                            );
+                          }
+                        },
+                      ),
                     const VerticalDivider(),
                     // Option to clear the selected nests
                     IconButton(
@@ -796,7 +846,11 @@ class NestsScreenState extends State<NestsScreen> {
     );
   }
 
-  Widget _buildListPane(BuildContext context, bool isSplitScreen, bool isMenuShown) {
+  Widget _buildListPane(
+    BuildContext context,
+    bool isSplitScreen,
+    bool isMenuShown,
+  ) {
     return Column(
       children: [
         if (isSplitScreen) const SizedBox(height: 16.0),
@@ -808,16 +862,19 @@ class NestsScreenState extends State<NestsScreen> {
                     controller: _searchController,
                     hintText: S.of(context).nests,
                     elevation: WidgetStateProperty.all(0),
-                leading: isMenuShown
-                    ? Builder(
-                  builder: (context) => IconButton(
-                    icon: const Icon(Icons.menu_outlined),
-                    onPressed: () {
-                      widget.scaffoldKey.currentState?.openDrawer();
-                    },
-                  ),
-                )
-                    : const SizedBox.shrink(),
+                    leading:
+                        isMenuShown
+                            ? Builder(
+                              builder:
+                                  (context) => IconButton(
+                                    icon: const Icon(Icons.menu_outlined),
+                                    onPressed: () {
+                                      widget.scaffoldKey.currentState
+                                          ?.openDrawer();
+                                    },
+                                  ),
+                            )
+                            : const SizedBox.shrink(),
                     trailing: [
                       _searchController.text.isNotEmpty
                           ? IconButton(
@@ -871,23 +928,23 @@ class NestsScreenState extends State<NestsScreen> {
                               },
                               child: Text(S.of(context).selectAll),
                             ),
-                           // Action to import nests from JSON
-                            MenuItemButton(
-                              leadingIcon: const Icon(Icons.file_open_outlined),
-                              onPressed: () async {
-                                await importNestsFromJson(context);
-                                await nestProvider.fetchNestsSummary();
-                              },
-                              child: Text(S.of(context).import),
-                            ),
-                          if (nestProvider.inactiveNests.isNotEmpty) ...[
+                          // Action to import nests from JSON
                           MenuItemButton(
-                            leadingIcon: const Icon(Icons.share_outlined),
+                            leadingIcon: const Icon(Icons.file_open_outlined),
                             onPressed: () async {
-                              await exportAllInactiveNestsToJson(context);
+                              await importNestsFromJson(context);
+                              await nestProvider.fetchNestsSummary();
                             },
-                            child: Text(S.of(context).exportAll),
+                            child: Text(S.of(context).import),
                           ),
+                          if (nestProvider.inactiveNests.isNotEmpty) ...[
+                            MenuItemButton(
+                              leadingIcon: const Icon(Icons.share_outlined),
+                              onPressed: () async {
+                                await exportAllInactiveNestsToJson(context);
+                              },
+                              child: Text(S.of(context).exportAll),
+                            ),
                           ],
                         ],
                       ),
@@ -945,19 +1002,28 @@ class NestsScreenState extends State<NestsScreen> {
                       MenuAnchor(
                         builder: (context, controller, child) {
                           String label;
-                          if (_selectedDateFilter == DateFilter.customRange && _selectedDateRange != null) {
-                            final start = DateFormat('dd/MM/yyyy').format(_selectedDateRange!.start);
-                            final end = DateFormat('dd/MM/yyyy').format(_selectedDateRange!.end);
+                          if (_selectedDateFilter == DateFilter.customRange &&
+                              _selectedDateRange != null) {
+                            final start = DateFormat(
+                              'dd/MM/yyyy',
+                            ).format(_selectedDateRange!.start);
+                            final end = DateFormat(
+                              'dd/MM/yyyy',
+                            ).format(_selectedDateRange!.end);
                             label = "$start - $end";
                           } else {
-                            label = _selectedDateFilter != null
-                                ? _dateFilterLabels[_selectedDateFilter]!
-                                : S.of(context).date;
+                            label =
+                                _selectedDateFilter != null
+                                    ? _dateFilterLabels[_selectedDateFilter]!
+                                    : S.of(context).date;
                           }
 
                           return FilterChip(
                             label: Text(label),
-                            avatar: _selectedDateFilter == null ? const Icon(Icons.calendar_today_outlined) : null,
+                            avatar:
+                                _selectedDateFilter == null
+                                    ? const Icon(Icons.calendar_today_outlined)
+                                    : null,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20.0),
                             ),
@@ -980,12 +1046,15 @@ class NestsScreenState extends State<NestsScreen> {
                             return MenuItemButton(
                               onPressed: () async {
                                 if (filter == DateFilter.customRange) {
-                                  final DateTimeRange? picked = await showDateRangePicker(
-                                    context: context,
-                                    firstDate: DateTime(2020),
-                                    lastDate: DateTime.now().add(const Duration(days: 365)),
-                                    initialDateRange: _selectedDateRange,
-                                  );
+                                  final DateTimeRange? picked =
+                                      await showDateRangePicker(
+                                        context: context,
+                                        firstDate: DateTime(2020),
+                                        lastDate: DateTime.now().add(
+                                          const Duration(days: 365),
+                                        ),
+                                        initialDateRange: _selectedDateRange,
+                                      );
                                   if (picked != null) {
                                     setState(() {
                                       _selectedDateFilter = filter;
@@ -1014,7 +1083,10 @@ class NestsScreenState extends State<NestsScreen> {
                                       S.current.nestFate
                                   : S.current.nestFate,
                             ),
-                            avatar: _selectedFate == null ? Icon(Icons.category_outlined) : null,
+                            avatar:
+                                _selectedFate == null
+                                    ? Icon(Icons.category_outlined)
+                                    : null,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20.0),
                             ),
@@ -1056,94 +1128,48 @@ class NestsScreenState extends State<NestsScreen> {
                         ],
                       ),
                       const SizedBox(width: 8.0),
-                      MenuAnchor(
-                        builder: (context, controller, child) {
-                          return FilterChip(
-                            label: Text(
-                              _selectedSpecies ?? S.current.species(1),
-                            ),
-                            avatar: _selectedSpecies == null ? Icon(Icons.account_tree_outlined) : null,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
-                            visualDensity: VisualDensity.compact,
-                            onSelected: (selected) {
-                              if (selected) {
-                                controller.open();
-                              } else {
-                                setState(() {
-                                  _selectedSpecies = null;
-                                });
-                              }
-                            },
-                            selected: _selectedSpecies != null,
-                          );
+                      FilterChip(
+                        label: Text(_selectedSpecies ?? S.current.species(1)),
+                        avatar:
+                            _selectedSpecies == null
+                                ? const Icon(Icons.account_tree_outlined)
+                                : null,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        visualDensity: VisualDensity.compact,
+                        selected: _selectedSpecies != null,
+                        onSelected: (selected) async {
+                          if (selected) {
+                            await _selectSpeciesFromBottomSheet();
+                          } else {
+                            setState(() {
+                              _selectedSpecies = null;
+                            });
+                          }
                         },
-                        menuChildren: [
-                          // MenuItemButton(
-                          //   onPressed: () {
-                          //     setState(() {
-                          //       _selectedSpecies = null;
-                          //     });
-                          //   },
-                          //   child: Text(S.current.allTypes),
-                          // ),
-                          ..._getUniqueSpecies().map((species) {
-                            return MenuItemButton(
-                              onPressed: () {
-                                setState(() {
-                                  _selectedSpecies = species;
-                                });
-                              },
-                              child: Text(species),
-                            );
-                          }),
-                        ],
                       ),
                       const SizedBox(width: 8.0),
-                      MenuAnchor(
-                        builder: (context, controller, child) {
-                          return FilterChip(
-                            label: Text(
-                              _selectedLocality ?? S.current.locality,
-                            ),
-                            avatar: _selectedLocality == null ? Icon(Icons.location_on_outlined) : null,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
-                            visualDensity: VisualDensity.compact,
-                            onSelected: (selected) {
-                              if (selected) {
-                                controller.open();
-                              } else {
-                                setState(() {
-                                  _selectedLocality = null;
-                                });
-                              }
-                            },
-                            selected: _selectedLocality != null,
-                          );
+                      FilterChip(
+                        label: Text(_selectedLocality ?? S.current.locality),
+                        avatar:
+                            _selectedLocality == null
+                                ? const Icon(Icons.location_on_outlined)
+                                : null,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        visualDensity: VisualDensity.compact,
+                        selected: _selectedLocality != null,
+                        onSelected: (selected) async {
+                          if (selected) {
+                            await _selectLocalityFromBottomSheet();
+                          } else {
+                            setState(() {
+                              _selectedLocality = null;
+                            });
+                          }
                         },
-                        menuChildren: [
-                          // MenuItemButton(
-                          //   onPressed: () {
-                          //     setState(() {
-                          //       _selectedLocality = null;
-                          //     });
-                          //   },
-                          //   child: Text(S.current.allLocalities),
-                          // ),
-                          ..._getUniqueLocalities().map((locality) {
-                            return MenuItemButton(
-                              onPressed: () {
-                                setState(() {
-                                  _selectedLocality = locality;
-                                });
-                              },
-                              child: Text(locality),
-                            );
-                          }),
-                        ],
                       ),
                       const SizedBox(width: 8.0),
                       MenuAnchor(
@@ -1152,7 +1178,10 @@ class NestsScreenState extends State<NestsScreen> {
                             label: Text(
                               _selectedObserver ?? S.current.observer,
                             ),
-                            avatar: _selectedObserver == null ? Icon(Icons.person_outlined) : null,
+                            avatar:
+                                _selectedObserver == null
+                                    ? Icon(Icons.person_outlined)
+                                    : null,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20.0),
                             ),
@@ -1259,24 +1288,24 @@ class NestsScreenState extends State<NestsScreen> {
                       if (_searchQuery.isNotEmpty) ...[
                         const SizedBox(height: 8),
                         ActionChip(
-                            label: Text(S.of(context).clearFilters),
-                            avatar: const Icon(Icons.search_off_outlined),
-                            onPressed: () async {
-                              setState(() {
-                                _searchQuery = '';
-                                _searchController.clear();
-                              });
-                            }
+                          label: Text(S.of(context).clearFilters),
+                          avatar: const Icon(Icons.search_off_outlined),
+                          onPressed: () async {
+                            setState(() {
+                              _searchQuery = '';
+                              _searchController.clear();
+                            });
+                          },
                         ),
                       ],
                       const SizedBox(height: 8),
-                       ActionChip(
-                         label: Text(S.of(context).refresh),
-                         avatar: const Icon(Icons.refresh_outlined),
-                         onPressed: () async {
-                           await nestProvider.fetchNestsSummary();
-                         },
-                       ),
+                      ActionChip(
+                        label: Text(S.of(context).refresh),
+                        avatar: const Icon(Icons.refresh_outlined),
+                        onPressed: () async {
+                          await nestProvider.fetchNestsSummary();
+                        },
+                      ),
                       // FilledButton.icon(
                       //   label: Text(S.of(context).refresh),
                       //   icon: const Icon(Icons.refresh_outlined),
@@ -1289,56 +1318,61 @@ class NestsScreenState extends State<NestsScreen> {
                 );
               }
 
-               return RefreshIndicator(
-                  onRefresh: () async {
-                    // Refresh the nests with summary data
-                    await nestProvider.fetchNestsSummary();
-                  },
-                 child: Column(
-                   children: [
-                     Padding(
-                       padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
-                       child: Text(
-                         '${filteredNests.length} ${S.of(context).nest(filteredNests.length)}',
-                         // style: TextStyle(fontSize: 16,),
-                       ),
-                     ),
-                     Expanded(
-                       child: ListView.separated(
-                         controller: _scrollController,
-                         separatorBuilder: (context, index) {
-                           // Show loading indicator as separator when loading
-                           if (index == filteredNests.length && nestProvider.isLoading) {
-                             return SizedBox(
-                               height: 50,
-                               child: Center(
-                                 child: CircularProgressIndicator(strokeWidth: 2),
-                               ),
-                             );
-                           }
-                           return Divider();
-                         },
-                         shrinkWrap: true,
-                         itemCount: filteredNests.length + (nestProvider.isLoading ? 1 : 0),
-                         itemBuilder: (context, index) {
-                           // Show loading indicator at the end
-                           if (index == filteredNests.length) {
-                             return Center(
-                               child: CircularProgressIndicator(strokeWidth: 2),
-                             );
-                           }
-                           return nestListTileItem(
-                             filteredNests,
-                             index,
-                             context,
-                             nestProvider,
-                           );
-                         },
-                       ),
-                     ),
-                   ],
-                 ),
-               );
+              return RefreshIndicator(
+                onRefresh: () async {
+                  // Refresh the nests with summary data
+                  await nestProvider.fetchNestsSummary();
+                },
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
+                      child: Text(
+                        '${filteredNests.length} ${S.of(context).nest(filteredNests.length)}',
+                        // style: TextStyle(fontSize: 16,),
+                      ),
+                    ),
+                    Expanded(
+                      child: ListView.separated(
+                        controller: _scrollController,
+                        separatorBuilder: (context, index) {
+                          // Show loading indicator as separator when loading
+                          if (index == filteredNests.length &&
+                              nestProvider.isLoading) {
+                            return SizedBox(
+                              height: 50,
+                              child: Center(
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              ),
+                            );
+                          }
+                          return Divider();
+                        },
+                        shrinkWrap: true,
+                        itemCount:
+                            filteredNests.length +
+                            (nestProvider.isLoading ? 1 : 0),
+                        itemBuilder: (context, index) {
+                          // Show loading indicator at the end
+                          if (index == filteredNests.length) {
+                            return Center(
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            );
+                          }
+                          return nestListTileItem(
+                            filteredNests,
+                            index,
+                            context,
+                            nestProvider,
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              );
             },
           ),
         ),
@@ -1435,11 +1469,11 @@ class NestsScreenState extends State<NestsScreen> {
             MaterialPageRoute(
               builder: (context) => NestDetailScreen(nest: nest),
             ),
-           ).then((result) {
-             if (result == true) {
-               nestProvider.fetchNestsSummary();
-             }
-           });
+          ).then((result) {
+            if (result == true) {
+              nestProvider.fetchNestsSummary();
+            }
+          });
         }
       },
     );
@@ -1490,10 +1524,14 @@ class NestsScreenState extends State<NestsScreen> {
                                   builder: (context) {
                                     return Dialog(
                                       shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(16.0),
+                                        borderRadius: BorderRadius.circular(
+                                          16.0,
+                                        ),
                                       ),
                                       child: ConstrainedBox(
-                                        constraints: const BoxConstraints(maxWidth: 400),
+                                        constraints: const BoxConstraints(
+                                          maxWidth: 400,
+                                        ),
                                         child: AddNestScreen(
                                           nest: nest,
                                           isEditing: true,
@@ -1506,10 +1544,11 @@ class NestsScreenState extends State<NestsScreen> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => AddNestScreen(
-                                      nest: nest,
-                                      isEditing: true,
-                                    ),
+                                    builder:
+                                        (context) => AddNestScreen(
+                                          nest: nest,
+                                          isEditing: true,
+                                        ),
                                   ),
                                 );
                               }
@@ -1582,7 +1621,7 @@ class NestsScreenState extends State<NestsScreen> {
                                   const SizedBox(width: 16.0),
                                   ActionChip(
                                     label: const Text('CSV'),
-                                    onPressed: () async {                             
+                                    onPressed: () async {
                                       final locale = Localizations.localeOf(
                                         context,
                                       );
@@ -1610,7 +1649,7 @@ class NestsScreenState extends State<NestsScreen> {
                                   const SizedBox(width: 8.0),
                                   ActionChip(
                                     label: const Text('Excel'),
-                                    onPressed: () async {                                      
+                                    onPressed: () async {
                                       final locale = Localizations.localeOf(
                                         context,
                                       );
@@ -1639,7 +1678,7 @@ class NestsScreenState extends State<NestsScreen> {
                                   const SizedBox(width: 8.0),
                                   ActionChip(
                                     label: const Text('JSON'),
-                                    onPressed: () async {                                      
+                                    onPressed: () async {
                                       exportNestToJson(context, nest);
                                       Navigator.of(context).pop();
                                     },
@@ -1713,14 +1752,14 @@ class NestsScreenState extends State<NestsScreen> {
                           // Action to import nests from JSON
                           buildGridMenuItem(
                             context,
-                             Icons.file_open_outlined,
-                             S.of(context).import,
-                             () async {
-                               await importNestsFromJson(context);
-                               await nestProvider.fetchNestsSummary();
-                               Navigator.of(context).pop();
-                             },
-                           ),
+                            Icons.file_open_outlined,
+                            S.of(context).import,
+                            () async {
+                              await importNestsFromJson(context);
+                              await nestProvider.fetchNestsSummary();
+                              Navigator.of(context).pop();
+                            },
+                          ),
                           // buildGridMenuItem(
                           //     context, Icons.share_outlined, S.of(context).exportAll,
                           //         () async {
@@ -1730,37 +1769,37 @@ class NestsScreenState extends State<NestsScreen> {
                         ],
                       ),
                       if (nestProvider.inactiveNests.isNotEmpty) ...[
-                      Divider(),
-                      Row(
-                        children: [
-                          const SizedBox(width: 8.0),
-                          Text(
-                            S.current.exportAll,
-                            style: TextTheme.of(context).bodyMedium,
-                          ),
-                          // Icon(Icons.share_outlined),
-                          Expanded(
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Row(
-                                children: [
-                                  const SizedBox(width: 16.0),
-                                  ActionChip(
-                                    label: const Text('JSON'),
-                                    onPressed: () async {
-                                      Navigator.of(context).pop();
-                                      await exportAllInactiveNestsToJson(
-                                        context,
-                                      );
-                                    },
-                                  ),
-                                  const SizedBox(width: 8.0),
-                                ],
+                        Divider(),
+                        Row(
+                          children: [
+                            const SizedBox(width: 8.0),
+                            Text(
+                              S.current.exportAll,
+                              style: TextTheme.of(context).bodyMedium,
+                            ),
+                            // Icon(Icons.share_outlined),
+                            Expanded(
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: [
+                                    const SizedBox(width: 16.0),
+                                    ActionChip(
+                                      label: const Text('JSON'),
+                                      onPressed: () async {
+                                        Navigator.of(context).pop();
+                                        await exportAllInactiveNestsToJson(
+                                          context,
+                                        );
+                                      },
+                                    ),
+                                    const SizedBox(width: 8.0),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
+                          ],
+                        ),
                       ],
                     ],
                   ),

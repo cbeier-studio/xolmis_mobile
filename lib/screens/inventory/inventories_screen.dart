@@ -18,6 +18,7 @@ import '../../data/daos/weather_dao.dart';
 import '../../providers/inventory_provider.dart';
 
 import '../../widgets/timer_progress_indicator.dart';
+import '../../widgets/filter_selection_bottom_sheet.dart';
 import '../statistics/stats_inventories_screen.dart';
 import 'add_inventory_screen.dart';
 import 'edit_inventory_screen.dart';
@@ -139,7 +140,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
         // Ajuste para incluir o dia inteiro da data final (até 23:59:59)
         final endOfDay = _selectedDateRange!.end.add(const Duration(days: 1));
         return (date.isAfter(_selectedDateRange!.start) ||
-            date.isAtSameMomentAs(_selectedDateRange!.start)) &&
+                date.isAtSameMomentAs(_selectedDateRange!.start)) &&
             date.isBefore(endOfDay);
     }
   }
@@ -357,9 +358,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
 
     final observers =
         inventories
-            .where(
-              (inv) => inv.observer != null && inv.observer!.isNotEmpty,
-            )
+            .where((inv) => inv.observer != null && inv.observer!.isNotEmpty)
             .map((inv) => inv.observer!)
             .toSet()
             .toList();
@@ -368,29 +367,69 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     return observers;
   }
 
-  List<String> _getUniqueSpecies() {
-    final inventories =
-    _isShowingActiveInventories
-        ? inventoryProvider.activeInventories
-        : inventoryProvider.finishedInventories;
-
-    // Se houver inventários com speciesList carregado, use-os
-    final inventoriesWithSpecies = inventories.where((inv) => inv.speciesList.isNotEmpty).toList();
-    if (inventoriesWithSpecies.isNotEmpty) {
-      return inventoriesWithSpecies
-          .expand((inv) => inv.speciesList)
-          .map((s) => s.name)
-          .toSet()
-          .toList()
-        ..sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
-    }
-    // Caso contrário, retorne vazio (será carregado via FutureBuilder quando filtrar)
-    return [];
-  }
-
   // New async method to load unique species from DB
   Future<List<String>> _getUniqueSpeciesFromDB() async {
     return await inventoryDao.getUniqueSpeciesNames();
+  }
+
+  Future<FilterSelectionResult<String>?> _showStringFilterBottomSheet({
+    required String title,
+    required List<String> items,
+    bool useSpeciesSearch = false,
+  }) {
+    return showFilterSelectionBottomSheet<String>(
+      context: context,
+      title: title,
+      items: items,
+      itemLabel: (item) => item,
+      matchesQuery:
+          useSpeciesSearch
+              ? (item, query, label) => speciesMatchesQuery(label, query)
+              : null,
+      clearActionLabel: S.current.clearSelection,
+    );
+  }
+
+  Future<void> _selectLocalityFromBottomSheet() async {
+    final result = await _showStringFilterBottomSheet(
+      title: S.current.locality,
+      items: _getUniqueLocalities(),
+    );
+    if (!mounted || result == null) return;
+
+    setState(() {
+      if (result.cleared) {
+        _selectedLocality = null;
+      } else {
+        _selectedLocality = result.selectedItem;
+      }
+    });
+  }
+
+  Future<void> _selectSpeciesFromBottomSheet() async {
+    final species = await _getUniqueSpeciesFromDB();
+    if (!mounted) return;
+
+    final result = await _showStringFilterBottomSheet(
+      title: S.current.species(1),
+      items: species,
+      useSpeciesSearch: true,
+    );
+    if (!mounted || result == null) return;
+
+    if (result.cleared) {
+      setState(() {
+        _selectedSpeciesFilter = null;
+        _speciesFilteredInventoryIds = null;
+        _isSpeciesFilterLoading = false;
+      });
+      return;
+    }
+
+    final selectedSpecies = result.selectedItem;
+    if (selectedSpecies != null) {
+      await _applySpeciesFilter(selectedSpecies);
+    }
   }
 
   Future<void> _applySpeciesFilter(String speciesName) async {
@@ -432,9 +471,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     // Filtro por observador
     if (_selectedObserver != null) {
       filtered =
-          filtered
-              .where((inv) => inv.observer == _selectedObserver)
-              .toList();
+          filtered.where((inv) => inv.observer == _selectedObserver).toList();
     }
 
     // Filtro por espécie
@@ -445,19 +482,24 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
 
     // Filtro por data (usa startTime)
     if (_selectedDateFilter != null) {
-      if (_selectedDateFilter == DateFilter.customRange && _selectedDateRange != null) {
-        filtered = filtered.where((inv) {
-          return inv.startTime!.isAfter(_selectedDateRange!.start.subtract(const Duration(days: 1))) &&
-              inv.startTime!.isBefore(_selectedDateRange!.end.add(const Duration(days: 1)));
-        }).toList();
-      }
-      else {
+      if (_selectedDateFilter == DateFilter.customRange &&
+          _selectedDateRange != null) {
+        filtered =
+            filtered.where((inv) {
+              return inv.startTime!.isAfter(
+                    _selectedDateRange!.start.subtract(const Duration(days: 1)),
+                  ) &&
+                  inv.startTime!.isBefore(
+                    _selectedDateRange!.end.add(const Duration(days: 1)),
+                  );
+            }).toList();
+      } else {
         filtered =
             filtered
                 .where(
                   (inv) =>
-                  _isWithinDateFilter(inv.startTime, _selectedDateFilter),
-            )
+                      _isWithinDateFilter(inv.startTime, _selectedDateFilter),
+                )
                 .toList();
       }
     }
@@ -509,8 +551,10 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     List<Inventory> filteredInventories,
     bool isSplitScreen,
   ) {
-    return _getEffectiveSelectedInventory(filteredInventories, isSplitScreen)
-        ?.id;
+    return _getEffectiveSelectedInventory(
+      filteredInventories,
+      isSplitScreen,
+    )?.id;
   }
 
   // Show the dialog to add a new inventory
@@ -720,21 +764,23 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
         builder: (context, constraints) {
           // On large screens we show a split screen master/detail
           if (isSplitScreen) {
-            final leftPaneWidth =
-                (constraints.maxWidth * 0.4).clamp(kSideSheetWidth, 520.0);
-             return Row(
-               children: [
+            final leftPaneWidth = (constraints.maxWidth * 0.4).clamp(
+              kSideSheetWidth,
+              520.0,
+            );
+            return Row(
+              children: [
                 // Left: list pane with bounded width for better readability.
-                 Container(
+                Container(
                   width: leftPaneWidth,
-                   child: _buildListPane(context, isSplitScreen, isMenuShown),
-                 ),
-                 VerticalDivider(),
-                 // Right: detail pane
-                 Expanded(child: _buildDetailPane(context)),
-               ],
-             );
-           } else {
+                  child: _buildListPane(context, isSplitScreen, isMenuShown),
+                ),
+                VerticalDivider(),
+                // Right: detail pane
+                Expanded(child: _buildDetailPane(context)),
+              ],
+            );
+          } else {
             // Small screens: keep current column layout
             return _buildListPane(context, isSplitScreen, isMenuShown);
           }
@@ -787,11 +833,18 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                       menuChildren: [
                         MenuItemButton(
                           onPressed: () async {
-                            final inventories = selectedInventories
-                                .map((id) => inventoryProvider.getInventoryById(id))
-                                .whereType<Inventory>()
-                                .toList();
-                            await exportSelectedInventoriesToCsv(context, inventories);
+                            final inventories =
+                                selectedInventories
+                                    .map(
+                                      (id) => inventoryProvider
+                                          .getInventoryById(id),
+                                    )
+                                    .whereType<Inventory>()
+                                    .toList();
+                            await exportSelectedInventoriesToCsv(
+                              context,
+                              inventories,
+                            );
                             setState(() {
                               selectedInventories.clear();
                             });
@@ -800,11 +853,18 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                         ),
                         MenuItemButton(
                           onPressed: () async {
-                            final inventories = selectedInventories
-                                .map((id) => inventoryProvider.getInventoryById(id))
-                                .whereType<Inventory>()
-                                .toList();
-                            await exportSelectedInventoriesToExcel(context, inventories);
+                            final inventories =
+                                selectedInventories
+                                    .map(
+                                      (id) => inventoryProvider
+                                          .getInventoryById(id),
+                                    )
+                                    .whereType<Inventory>()
+                                    .toList();
+                            await exportSelectedInventoriesToExcel(
+                              context,
+                              inventories,
+                            );
                             setState(() {
                               selectedInventories.clear();
                             });
@@ -813,11 +873,18 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                         ),
                         MenuItemButton(
                           onPressed: () async {
-                            final inventories = selectedInventories
-                                .map((id) => inventoryProvider.getInventoryById(id))
-                                .whereType<Inventory>()
-                                .toList();
-                            await exportSelectedInventoriesToJson(context, inventories);
+                            final inventories =
+                                selectedInventories
+                                    .map(
+                                      (id) => inventoryProvider
+                                          .getInventoryById(id),
+                                    )
+                                    .whereType<Inventory>()
+                                    .toList();
+                            await exportSelectedInventoriesToJson(
+                              context,
+                              inventories,
+                            );
                             setState(() {
                               selectedInventories.clear();
                             });
@@ -871,26 +938,36 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder:
-                                      (context) {
-                                        // Get selected inventory IDs and pre-load full details
-                                        final selectedIds = selectedInventories.toList();
-                                        return FutureBuilder<List<Inventory>>(
-                                          future: inventoryProvider.loadInventoriesDetails(selectedIds),
-                                          builder: (context, snapshot) {
-                                            if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
-                                              return StatsInventoriesScreen(
-                                                inventories: snapshot.data ?? [],
-                                              );
-                                            } else {
-                                              return Scaffold(
-                                                appBar: AppBar(title: Text(S.of(context).statistics)),
-                                                body: const Center(child: CircularProgressIndicator()),
-                                              );
-                                            }
-                                          },
-                                        );
+                                  builder: (context) {
+                                    // Get selected inventory IDs and pre-load full details
+                                    final selectedIds =
+                                        selectedInventories.toList();
+                                    return FutureBuilder<List<Inventory>>(
+                                      future: inventoryProvider
+                                          .loadInventoriesDetails(selectedIds),
+                                      builder: (context, snapshot) {
+                                        if (snapshot.connectionState ==
+                                                ConnectionState.done &&
+                                            snapshot.hasData) {
+                                          return StatsInventoriesScreen(
+                                            inventories: snapshot.data ?? [],
+                                          );
+                                        } else {
+                                          return Scaffold(
+                                            appBar: AppBar(
+                                              title: Text(
+                                                S.of(context).statistics,
+                                              ),
+                                            ),
+                                            body: const Center(
+                                              child:
+                                                  CircularProgressIndicator(),
+                                            ),
+                                          );
+                                        }
                                       },
+                                    );
+                                  },
                                 ),
                               );
                             },
@@ -1061,22 +1138,24 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                               child: Text(S.of(context).selectAll),
                             ),
                           // Action to import inventories from JSON
-                           MenuItemButton(
-                             leadingIcon: const Icon(Icons.file_open_outlined),
-                             onPressed: () async {
-                               await importInventoryFromJson(context);
-                               await inventoryProvider.fetchInventoriesSummary(context);
-                               for (var inventory
-                                   in inventoryProvider.activeInventories) {
-                                 inventoryProvider.startInventoryTimer(
-                                   context,
-                                   inventory,
-                                   inventoryDao,
-                                 );
-                               }
-                             },
-                             child: Text(S.of(context).import),
-                           ),
+                          MenuItemButton(
+                            leadingIcon: const Icon(Icons.file_open_outlined),
+                            onPressed: () async {
+                              await importInventoryFromJson(context);
+                              await inventoryProvider.fetchInventoriesSummary(
+                                context,
+                              );
+                              for (var inventory
+                                  in inventoryProvider.activeInventories) {
+                                inventoryProvider.startInventoryTimer(
+                                  context,
+                                  inventory,
+                                  inventoryDao,
+                                );
+                              }
+                            },
+                            child: Text(S.of(context).import),
+                          ),
                           if (inventoryProvider
                               .finishedInventories
                               .isNotEmpty) ...[
@@ -1148,19 +1227,28 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                       MenuAnchor(
                         builder: (context, controller, child) {
                           String label;
-                          if (_selectedDateFilter == DateFilter.customRange && _selectedDateRange != null) {
-                            final start = DateFormat('dd/MM/yyyy').format(_selectedDateRange!.start);
-                            final end = DateFormat('dd/MM/yyyy').format(_selectedDateRange!.end);
+                          if (_selectedDateFilter == DateFilter.customRange &&
+                              _selectedDateRange != null) {
+                            final start = DateFormat(
+                              'dd/MM/yyyy',
+                            ).format(_selectedDateRange!.start);
+                            final end = DateFormat(
+                              'dd/MM/yyyy',
+                            ).format(_selectedDateRange!.end);
                             label = "$start - $end";
                           } else {
-                            label = _selectedDateFilter != null
-                                ? _dateFilterLabels[_selectedDateFilter]!
-                                : S.of(context).date;
+                            label =
+                                _selectedDateFilter != null
+                                    ? _dateFilterLabels[_selectedDateFilter]!
+                                    : S.of(context).date;
                           }
 
                           return FilterChip(
                             label: Text(label),
-                            avatar: _selectedDateFilter == null ? const Icon(Icons.calendar_today_outlined) : null,
+                            avatar:
+                                _selectedDateFilter == null
+                                    ? const Icon(Icons.calendar_today_outlined)
+                                    : null,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20.0),
                             ),
@@ -1183,12 +1271,15 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                             return MenuItemButton(
                               onPressed: () async {
                                 if (filter == DateFilter.customRange) {
-                                  final DateTimeRange? picked = await showDateRangePicker(
-                                    context: context,
-                                    firstDate: DateTime(2020),
-                                    lastDate: DateTime.now().add(const Duration(days: 365)),
-                                    initialDateRange: _selectedDateRange,
-                                  );
+                                  final DateTimeRange? picked =
+                                      await showDateRangePicker(
+                                        context: context,
+                                        firstDate: DateTime(2020),
+                                        lastDate: DateTime.now().add(
+                                          const Duration(days: 365),
+                                        ),
+                                        initialDateRange: _selectedDateRange,
+                                      );
                                   if (picked != null) {
                                     setState(() {
                                       _selectedDateFilter = filter;
@@ -1217,7 +1308,10 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                       S.current.type
                                   : S.current.type,
                             ),
-                            avatar: _selectedInventoryType == null ? Icon(Icons.category_outlined) : null,
+                            avatar:
+                                _selectedInventoryType == null
+                                    ? Icon(Icons.category_outlined)
+                                    : null,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20.0),
                             ),
@@ -1259,49 +1353,26 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                         ],
                       ),
                       const SizedBox(width: 8.0),
-                      MenuAnchor(
-                        builder: (context, controller, child) {
-                          return FilterChip(
-                            label: Text(
-                              _selectedLocality ?? S.current.locality,
-                            ),
-                            avatar: _selectedLocality == null ? Icon(Icons.location_on_outlined) : null,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
-                            visualDensity: VisualDensity.compact,
-                            onSelected: (selected) {
-                              if (selected) {
-                                controller.open();
-                              } else {
-                                setState(() {
-                                  _selectedLocality = null;
-                                });
-                              }
-                            },
-                            selected: _selectedLocality != null,
-                          );
+                      FilterChip(
+                        label: Text(_selectedLocality ?? S.current.locality),
+                        avatar:
+                            _selectedLocality == null
+                                ? const Icon(Icons.location_on_outlined)
+                                : null,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        visualDensity: VisualDensity.compact,
+                        selected: _selectedLocality != null,
+                        onSelected: (selected) async {
+                          if (selected) {
+                            await _selectLocalityFromBottomSheet();
+                          } else {
+                            setState(() {
+                              _selectedLocality = null;
+                            });
+                          }
                         },
-                        menuChildren: [
-                          // MenuItemButton(
-                          //   onPressed: () {
-                          //     setState(() {
-                          //       _selectedLocality = null;
-                          //     });
-                          //   },
-                          //   child: Text(S.current.allLocalities),
-                          // ),
-                          ..._getUniqueLocalities().map((locality) {
-                            return MenuItemButton(
-                              onPressed: () {
-                                setState(() {
-                                  _selectedLocality = locality;
-                                });
-                              },
-                              child: Text(locality),
-                            );
-                          }),
-                        ],
                       ),
                       const SizedBox(width: 8.0),
                       MenuAnchor(
@@ -1310,7 +1381,10 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                             label: Text(
                               _selectedObserver ?? S.current.observer,
                             ),
-                            avatar: _selectedObserver == null ? Icon(Icons.person_outlined) : null,
+                            avatar:
+                                _selectedObserver == null
+                                    ? Icon(Icons.person_outlined)
+                                    : null,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20.0),
                             ),
@@ -1349,69 +1423,30 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                         ],
                       ),
                       const SizedBox(width: 8.0),
-                      MenuAnchor(
-                        builder: (context, controller, child) {
-                          return FilterChip(
-                            label: Text(
-                              _selectedSpeciesFilter != null
-                                  ? _selectedSpeciesFilter ??
-                                  S.current.species(1)
-                                  : S.current.species(1),
-                            ),
-                            avatar: _selectedSpeciesFilter == null ? Icon(Icons.account_tree_outlined) : null,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
-                            visualDensity: VisualDensity.compact,
-                            onSelected: (selected) {
-                              if (selected) {
-                                controller.open();
-                              } else {
-                                setState(() {
-                                  _selectedSpeciesFilter = null;
-                                  _speciesFilteredInventoryIds = null;
-                                  _isSpeciesFilterLoading = false;
-                                });
-                              }
-                            },
-                            selected: _selectedSpeciesFilter != null,
-                          );
+                      FilterChip(
+                        label: Text(
+                          _selectedSpeciesFilter ?? S.current.species(1),
+                        ),
+                        avatar:
+                            _selectedSpeciesFilter == null
+                                ? const Icon(Icons.account_tree_outlined)
+                                : null,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        visualDensity: VisualDensity.compact,
+                        selected: _selectedSpeciesFilter != null,
+                        onSelected: (selected) async {
+                          if (selected) {
+                            await _selectSpeciesFromBottomSheet();
+                          } else {
+                            setState(() {
+                              _selectedSpeciesFilter = null;
+                              _speciesFilteredInventoryIds = null;
+                              _isSpeciesFilterLoading = false;
+                            });
+                          }
                         },
-                        menuChildren: [
-                          // Load species dynamically from DB to avoid empty speciesList
-                          FutureBuilder<List<String>>(
-                            future: _getUniqueSpeciesFromDB(),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                                return Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: snapshot.data!.map((species) {
-                                    return MenuItemButton(
-                                      onPressed: () {
-                                        _applySpeciesFilter(species);
-                                      },
-                                      child: Text(species),
-                                    );
-                                  }).toList(),
-                                );
-                              } else if (snapshot.hasError) {
-                                return MenuItemButton(
-                                  onPressed: () {},
-                                  child: Text('Erro ao carregar'),
-                                );
-                              } else {
-                                return Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: SizedBox(
-                                    height: 20,
-                                    width: 20,
-                                    child: CircularProgressIndicator(strokeWidth: 2),
-                                  ),
-                                );
-                              }
-                            },
-                          ),
-                        ],
                       ),
                     ],
                   ),
@@ -1421,17 +1456,17 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
           ),
         ),
         Expanded(
-           child: RefreshIndicator(
-             onRefresh: () async {
-               await inventoryProvider.fetchInventoriesSummary(context);
-               for (var inventory in inventoryProvider.activeInventories) {
-                 inventoryProvider.startInventoryTimer(
-                   context,
-                   inventory,
-                   inventoryDao,
-                 );
-               }
-             },
+          child: RefreshIndicator(
+            onRefresh: () async {
+              await inventoryProvider.fetchInventoriesSummary(context);
+              for (var inventory in inventoryProvider.activeInventories) {
+                inventoryProvider.startInventoryTimer(
+                  context,
+                  inventory,
+                  inventoryDao,
+                );
+              }
+            },
             child: Consumer<InventoryProvider>(
               builder: (context, inventoryProvider, child) {
                 if (inventoryProvider.isLoading) {
@@ -1441,7 +1476,8 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                       child: CircularProgressIndicator(year2023: false),
                     ),
                   );
-                } else if (_selectedSpeciesFilter != null && _isSpeciesFilterLoading) {
+                } else if (_selectedSpeciesFilter != null &&
+                    _isSpeciesFilterLoading) {
                   return const Center(
                     child: Padding(
                       padding: EdgeInsets.all(16.0),
@@ -1479,7 +1515,9 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                             avatar: const Icon(Icons.file_open_outlined),
                             onPressed: () async {
                               await importInventoryFromJson(context);
-                              await inventoryProvider.fetchInventoriesSummary(context);
+                              await inventoryProvider.fetchInventoriesSummary(
+                                context,
+                              );
                               for (var inventory
                                   in inventoryProvider.activeInventories) {
                                 inventoryProvider.startInventoryTimer(
@@ -1509,7 +1547,9 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                           label: Text(S.of(context).refresh),
                           avatar: const Icon(Icons.refresh_outlined),
                           onPressed: () async {
-                            await inventoryProvider.fetchInventoriesSummary(context);
+                            await inventoryProvider.fetchInventoriesSummary(
+                              context,
+                            );
                             for (var inventory
                                 in inventoryProvider.activeInventories) {
                               inventoryProvider.startInventoryTimer(
@@ -1807,8 +1847,10 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
         Builder(
           builder: (context) {
             final int outCount = inventory.speciesOutOfInventoryCount;
-            final int withinCount =
-                (inventory.speciesCount - outCount).clamp(0, inventory.speciesCount);
+            final int withinCount = (inventory.speciesCount - outCount).clamp(
+              0,
+              inventory.speciesCount,
+            );
 
             String speciesText =
                 '$withinCount ${S.current.speciesCount(withinCount)}';
@@ -1873,24 +1915,32 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                   builder: (context) {
                                     return Dialog(
                                       shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(16.0),
+                                        borderRadius: BorderRadius.circular(
+                                          16.0,
+                                        ),
                                       ),
                                       child: ConstrainedBox(
-                                        constraints: const BoxConstraints(maxWidth: 400),
-                                        child: EditInventoryScreen(inventory: inventory),
+                                        constraints: const BoxConstraints(
+                                          maxWidth: 400,
+                                        ),
+                                        child: EditInventoryScreen(
+                                          inventory: inventory,
+                                        ),
                                       ),
                                     );
                                   },
                                 );
                               } else {
-                                editedInventory = await Navigator.push<Inventory>(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => EditInventoryScreen(
-                                      inventory: inventory,
-                                    ),
-                                  ),
-                                );
+                                editedInventory =
+                                    await Navigator.push<Inventory>(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder:
+                                            (context) => EditInventoryScreen(
+                                              inventory: inventory,
+                                            ),
+                                      ),
+                                    );
                               }
                               if (editedInventory != null) {
                                 if (inventory.id != editedInventory.id) {
@@ -2034,7 +2084,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                   const SizedBox(width: 16.0),
                                   ActionChip(
                                     label: const Text('CSV'),
-                                    onPressed: () async {                                      
+                                    onPressed: () async {
                                       final locale = Localizations.localeOf(
                                         context,
                                       );
@@ -2065,7 +2115,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                   const SizedBox(width: 8.0),
                                   ActionChip(
                                     label: const Text('Excel'),
-                                    onPressed: () async {                                  
+                                    onPressed: () async {
                                       final locale = Localizations.localeOf(
                                         context,
                                       );
@@ -2097,7 +2147,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                   const SizedBox(width: 8.0),
                                   ActionChip(
                                     label: const Text('JSON'),
-                                    onPressed: () async {                                      
+                                    onPressed: () async {
                                       exportInventoryToJson(
                                         context,
                                         inventory,
@@ -2109,7 +2159,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                   const SizedBox(width: 8.0),
                                   ActionChip(
                                     label: const Text('KML'),
-                                    onPressed: () async {                                      
+                                    onPressed: () async {
                                       exportInventoryToKml(context, inventory);
                                       Navigator.of(context).pop();
                                     },
@@ -2215,7 +2265,9 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                             S.of(context).import,
                             () async {
                               await importInventoryFromJson(context);
-                              await inventoryProvider.fetchInventoriesSummary(context);
+                              await inventoryProvider.fetchInventoriesSummary(
+                                context,
+                              );
                               for (var inventory
                                   in inventoryProvider.activeInventories) {
                                 inventoryProvider.startInventoryTimer(

@@ -18,6 +18,7 @@ import '../images/app_image_screen.dart';
 import '../../utils/export_utils.dart';
 import '../statistics/stats_specimens_screen.dart';
 import '../../generated/l10n.dart';
+import '../../widgets/filter_selection_bottom_sheet.dart';
 
 class SpecimensScreen extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
@@ -96,7 +97,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
         // Ajuste para incluir o dia inteiro da data final (até 23:59:59)
         final endOfDay = _selectedDateRange!.end.add(const Duration(days: 1));
         return (date.isAfter(_selectedDateRange!.start) ||
-            date.isAtSameMomentAs(_selectedDateRange!.start)) &&
+                date.isAtSameMomentAs(_selectedDateRange!.start)) &&
             date.isBefore(endOfDay);
     }
   }
@@ -109,7 +110,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
       int compareNullables<T extends Comparable>(T? a, T? b) {
         if (a == null && b == null) return 0; // Both are equal
         if (a == null) return -1; // a is "smaller"
-        if (b == null) return 1;  // b is "smaller"
+        if (b == null) return 1; // b is "smaller"
         return a.compareTo(b);
       }
 
@@ -147,112 +148,129 @@ class SpecimensScreenState extends State<SpecimensScreen> {
       context: context,
       builder: (context) {
         return SafeArea(
-            child: StatefulBuilder(
-          builder: (BuildContext context, StateSetter setModalState) {
-            return Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: SingleChildScrollView(
-                child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(S.of(context).sortBy, style: Theme.of(context).textTheme.bodyLarge),
-                  const SizedBox(height: 8),
-                  Wrap(
-                    spacing: 8.0, // Space between chips
-                    children: <Widget>[
-                      ChoiceChip(
-                        label: Text(S.current.fieldNumber),
-                        showCheckmark: false,
-                        selected: _sortField == SpecimenSortField.fieldNumber,
-                        onSelected: (bool selected) {
-                          setModalState(() {
-                            _sortField = SpecimenSortField.fieldNumber;
-                          });
-                          setState(() {
-                            _sortField = SpecimenSortField.fieldNumber;
-                          });
-                        },
+          child: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setModalState) {
+              return Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        S.of(context).sortBy,
+                        style: Theme.of(context).textTheme.bodyLarge,
                       ),
-                      ChoiceChip(
-                        label: Text(S.current.sampleTime),
-                        showCheckmark: false,
-                        selected: _sortField == SpecimenSortField.sampleTime,
-                        onSelected: (bool selected) {
-                          setModalState(() {
-                            _sortField = SpecimenSortField.sampleTime;
-                          });
-                          setState(() {
-                            _sortField = SpecimenSortField.sampleTime;
-                          });
-                        },
+                      const SizedBox(height: 8),
+                      Wrap(
+                        spacing: 8.0, // Space between chips
+                        children: <Widget>[
+                          ChoiceChip(
+                            label: Text(S.current.fieldNumber),
+                            showCheckmark: false,
+                            selected:
+                                _sortField == SpecimenSortField.fieldNumber,
+                            onSelected: (bool selected) {
+                              setModalState(() {
+                                _sortField = SpecimenSortField.fieldNumber;
+                              });
+                              setState(() {
+                                _sortField = SpecimenSortField.fieldNumber;
+                              });
+                            },
+                          ),
+                          ChoiceChip(
+                            label: Text(S.current.sampleTime),
+                            showCheckmark: false,
+                            selected:
+                                _sortField == SpecimenSortField.sampleTime,
+                            onSelected: (bool selected) {
+                              setModalState(() {
+                                _sortField = SpecimenSortField.sampleTime;
+                              });
+                              setState(() {
+                                _sortField = SpecimenSortField.sampleTime;
+                              });
+                            },
+                          ),
+                          ChoiceChip(
+                            label: Text(S.current.species(1)),
+                            showCheckmark: false,
+                            selected: _sortField == SpecimenSortField.species,
+                            onSelected: (bool selected) {
+                              setModalState(() {
+                                _sortField = SpecimenSortField.species;
+                              });
+                              setState(() {
+                                _sortField = SpecimenSortField.species;
+                              });
+                            },
+                          ),
+                          ChoiceChip(
+                            label: Text(S.current.locality),
+                            showCheckmark: false,
+                            selected: _sortField == SpecimenSortField.locality,
+                            onSelected: (bool selected) {
+                              setModalState(() {
+                                _sortField = SpecimenSortField.locality;
+                              });
+                              setState(() {
+                                _sortField = SpecimenSortField.locality;
+                              });
+                            },
+                          ),
+                          ChoiceChip(
+                            label: Text(S.current.specimenType),
+                            showCheckmark: false,
+                            selected:
+                                _sortField == SpecimenSortField.specimenType,
+                            onSelected: (bool selected) {
+                              setModalState(() {
+                                _sortField = SpecimenSortField.specimenType;
+                              });
+                              setState(() {
+                                _sortField = SpecimenSortField.specimenType;
+                              });
+                            },
+                          ),
+                        ],
                       ),
-                      ChoiceChip(
-                        label: Text(S.current.species(1)),
-                        showCheckmark: false,
-                        selected: _sortField == SpecimenSortField.species,
-                        onSelected: (bool selected) {
-                          setModalState(() {
-                            _sortField = SpecimenSortField.species;
-                          });
-                          setState(() {
-                            _sortField = SpecimenSortField.species;
-                          });
-                        },
+                      const Divider(),
+                      Text(
+                        S.of(context).direction,
+                        style: Theme.of(context).textTheme.bodyLarge,
                       ),
-                      ChoiceChip(
-                        label: Text(S.current.locality),
-                        showCheckmark: false,
-                        selected: _sortField == SpecimenSortField.locality,
-                        onSelected: (bool selected) {
+                      const SizedBox(height: 8),
+                      SegmentedButton<SortOrder>(
+                        segments: [
+                          ButtonSegment(
+                            value: SortOrder.ascending,
+                            label: Text(S.of(context).ascending),
+                            icon: Icon(Icons.south_outlined),
+                          ),
+                          ButtonSegment(
+                            value: SortOrder.descending,
+                            label: Text(S.of(context).descending),
+                            icon: Icon(Icons.north_outlined),
+                          ),
+                        ],
+                        selected: {_sortOrder},
+                        showSelectedIcon: false,
+                        onSelectionChanged: (Set<SortOrder> newSelection) {
                           setModalState(() {
-                            _sortField = SpecimenSortField.locality;
+                            _sortOrder = newSelection.first;
                           });
                           setState(() {
-                            _sortField = SpecimenSortField.locality;
-                          });
-                        },
-                      ),
-                      ChoiceChip(
-                        label: Text(S.current.specimenType),
-                        showCheckmark: false,
-                        selected: _sortField == SpecimenSortField.specimenType,
-                        onSelected: (bool selected) {
-                          setModalState(() {
-                            _sortField = SpecimenSortField.specimenType;
-                          });
-                          setState(() {
-                            _sortField = SpecimenSortField.specimenType;
+                            _sortOrder = newSelection.first;
                           });
                         },
                       ),
                     ],
                   ),
-                  const Divider(),
-                  Text(S.of(context).direction, style: Theme.of(context).textTheme.bodyLarge),
-                  const SizedBox(height: 8),
-                  SegmentedButton<SortOrder>(
-                    segments: [
-                      ButtonSegment(value: SortOrder.ascending, label: Text(S.of(context).ascending), icon: Icon(Icons.south_outlined)),
-                      ButtonSegment(value: SortOrder.descending, label: Text(S.of(context).descending), icon: Icon(Icons.north_outlined)),
-                    ],
-                    selected: {_sortOrder},
-                    showSelectedIcon: false,
-                    onSelectionChanged: (Set<SortOrder> newSelection) {
-                      setModalState(() {
-                        _sortOrder = newSelection.first;
-                      });
-                      setState(() {
-                        _sortOrder = newSelection.first;
-                      });
-                    },
-                  ),
-                ],
-              ),
-              ),
-            );
-          },
-            ),
+                ),
+              );
+            },
+          ),
         );
       },
     );
@@ -267,7 +285,9 @@ class SpecimensScreenState extends State<SpecimensScreen> {
     final species =
         specimens
             .where(
-              (specimen) => specimen.speciesName != null && specimen.speciesName!.isNotEmpty,
+              (specimen) =>
+                  specimen.speciesName != null &&
+                  specimen.speciesName!.isNotEmpty,
             )
             .map((specimen) => specimen.speciesName!)
             .toSet()
@@ -286,7 +306,8 @@ class SpecimensScreenState extends State<SpecimensScreen> {
     final localities =
         specimens
             .where(
-              (specimen) => specimen.locality != null && specimen.locality!.isNotEmpty,
+              (specimen) =>
+                  specimen.locality != null && specimen.locality!.isNotEmpty,
             )
             .map((specimen) => specimen.locality!)
             .toSet()
@@ -305,7 +326,8 @@ class SpecimensScreenState extends State<SpecimensScreen> {
     final observers =
         specimens
             .where(
-              (specimen) => specimen.observer != null && specimen.observer!.isNotEmpty,
+              (specimen) =>
+                  specimen.observer != null && specimen.observer!.isNotEmpty,
             )
             .map((specimen) => specimen.observer!)
             .toSet()
@@ -315,13 +337,58 @@ class SpecimensScreenState extends State<SpecimensScreen> {
     return observers;
   }
 
+  Future<FilterSelectionResult<String>?> _showStringFilterBottomSheet({
+    required String title,
+    required List<String> items,
+    bool useSpeciesSearch = false,
+  }) {
+    return showFilterSelectionBottomSheet<String>(
+      context: context,
+      title: title,
+      items: items,
+      itemLabel: (item) => item,
+      matchesQuery:
+          useSpeciesSearch
+              ? (item, query, label) => speciesMatchesQuery(label, query)
+              : null,
+      clearActionLabel: S.current.clearSelection,
+    );
+  }
+
+  Future<void> _selectSpeciesFromBottomSheet() async {
+    final result = await _showStringFilterBottomSheet(
+      title: S.current.species(1),
+      items: _getUniqueSpecies(),
+      useSpeciesSearch: true,
+    );
+    if (!mounted || result == null) return;
+
+    setState(() {
+      _selectedSpecies = result.cleared ? null : result.selectedItem;
+    });
+  }
+
+  Future<void> _selectLocalityFromBottomSheet() async {
+    final result = await _showStringFilterBottomSheet(
+      title: S.current.locality,
+      items: _getUniqueLocalities(),
+    );
+    if (!mounted || result == null) return;
+
+    setState(() {
+      _selectedLocality = result.cleared ? null : result.selectedItem;
+    });
+  }
+
   List<Specimen> _filterSpecimens(List<Specimen> specimens) {
     List<Specimen> filtered = specimens;
 
     // Filtro por espécie
     if (_selectedSpecies != null) {
       filtered =
-          filtered.where((specimen) => specimen.speciesName == _selectedSpecies).toList();
+          filtered
+              .where((specimen) => specimen.speciesName == _selectedSpecies)
+              .toList();
     }
 
     // Filtro por localidade
@@ -345,8 +412,10 @@ class SpecimensScreenState extends State<SpecimensScreen> {
       filtered =
           filtered
               .where(
-                (specimen) =>
-                    _isWithinDateFilter(specimen.sampleTime, _selectedDateFilter),
+                (specimen) => _isWithinDateFilter(
+                  specimen.sampleTime,
+                  _selectedDateFilter,
+                ),
               )
               .toList();
     }
@@ -360,9 +429,9 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                     specimen.fieldNumber.toLowerCase().contains(
                       _searchQuery.toLowerCase(),
                     ) ||
-                  specimen.speciesName!.toLowerCase().contains(
-                    _searchQuery.toLowerCase(),
-                  ) ||
+                    specimen.speciesName!.toLowerCase().contains(
+                      _searchQuery.toLowerCase(),
+                    ) ||
                     (specimen.locality?.toLowerCase().contains(
                           _searchQuery.toLowerCase(),
                         ) ??
@@ -406,17 +475,18 @@ class SpecimensScreenState extends State<SpecimensScreen> {
 
   void _showAddSpecimenScreen(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
-    final String observerAbbreviation = prefs.getString('observerAcronym') ?? '';
+    final String observerAbbreviation =
+        prefs.getString('observerAcronym') ?? '';
 
     if (observerAbbreviation.isEmpty) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            showCloseIcon: true,
-                            backgroundColor: Colors.amber,
-                            content: Text(S.of(context).observerAbbreviationMissing),
-                          ),
-                        );
+          SnackBar(
+            showCloseIcon: true,
+            backgroundColor: Colors.amber,
+            content: Text(S.of(context).observerAbbreviationMissing),
+          ),
+        );
         // showDialog(
         //   context: context,
         //   builder: (context) {
@@ -472,16 +542,25 @@ class SpecimensScreenState extends State<SpecimensScreen> {
   }
 
   void _deleteSelectedSpecimens() async {
-    final specimenProvider = Provider.of<SpecimenProvider>(context, listen: false);
+    final specimenProvider = Provider.of<SpecimenProvider>(
+      context,
+      listen: false,
+    );
 
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog.adaptive(
           title: Text(S.of(context).confirmDelete),
-          content: Text(S
-              .of(context)
-              .confirmDeleteMessage(selectedSpecimens.length, "male", S.of(context).specimens(selectedSpecimens.length))),
+          content: Text(
+            S
+                .of(context)
+                .confirmDeleteMessage(
+                  selectedSpecimens.length,
+                  "male",
+                  S.of(context).specimens(selectedSpecimens.length),
+                ),
+          ),
           actions: <Widget>[
             TextButton(
               onPressed: () {
@@ -518,125 +597,154 @@ class SpecimensScreenState extends State<SpecimensScreen> {
     final isMenuShown = screenWidth < kDesktopBreakpoint;
 
     return Scaffold(
-      appBar: !isSplitScreen ? AppBar(
-        title: SearchBar(
-          controller: _searchController,
-          hintText: S.of(context).specimens(2),
-          elevation: WidgetStateProperty.all(0),
-          leading: isMenuShown ? Builder(
-          builder: (context) => IconButton(
-            icon: const Icon(Icons.menu_outlined),
-            onPressed: () {
-              widget.scaffoldKey.currentState?.openDrawer();
-            },
-          ),
-        ) : const SizedBox.shrink(),
-          trailing: [
-            _searchController.text.isNotEmpty
-                ? IconButton(
-              icon: const Icon(Icons.clear_outlined),
-              onPressed: () {
-                setState(() {
-                  _searchQuery = '';
-                  _searchController.clear();
-                });
-              },
-            )
-                : const SizedBox.shrink(),
-            IconButton(
-              icon: const Icon(Icons.sort_outlined),
-              tooltip: S.of(context).sortBy,
-              onPressed: () {
-                _showSortOptionsBottomSheet();
-              },
-            ),
-            
-            MediaQuery.sizeOf(context).width < 600
-              ? IconButton(
-            icon: const Icon(Icons.more_vert_outlined),
-            onPressed: () {
-              _showMoreOptionsBottomSheet(context);
-            },
-          )
-              : MenuAnchor(
-            builder: (context, controller, child) {
-              return IconButton(
-                icon: const Icon(Icons.more_vert_outlined),
-                onPressed: () {
-                  if (controller.isOpen) {
-                    controller.close();
-                  } else {
-                    controller.open();
-                  }
-                },
-              );
-            },
-            menuChildren: [
-              // Action to select all specimens
-                MenuItemButton(
-                  leadingIcon: const Icon(Icons.library_add_check_outlined),
-                  onPressed: () {
-                    final filteredSpecimens = _filterSpecimens(_showPending 
-                        ? specimenProvider.pendingSpecimens
-                        : specimenProvider.archivedSpecimens);
+      appBar:
+          !isSplitScreen
+              ? AppBar(
+                title: SearchBar(
+                  controller: _searchController,
+                  hintText: S.of(context).specimens(2),
+                  elevation: WidgetStateProperty.all(0),
+                  leading:
+                      isMenuShown
+                          ? Builder(
+                            builder:
+                                (context) => IconButton(
+                                  icon: const Icon(Icons.menu_outlined),
+                                  onPressed: () {
+                                    widget.scaffoldKey.currentState
+                                        ?.openDrawer();
+                                  },
+                                ),
+                          )
+                          : const SizedBox.shrink(),
+                  trailing: [
+                    _searchController.text.isNotEmpty
+                        ? IconButton(
+                          icon: const Icon(Icons.clear_outlined),
+                          onPressed: () {
+                            setState(() {
+                              _searchQuery = '';
+                              _searchController.clear();
+                            });
+                          },
+                        )
+                        : const SizedBox.shrink(),
+                    IconButton(
+                      icon: const Icon(Icons.sort_outlined),
+                      tooltip: S.of(context).sortBy,
+                      onPressed: () {
+                        _showSortOptionsBottomSheet();
+                      },
+                    ),
+
+                    MediaQuery.sizeOf(context).width < 600
+                        ? IconButton(
+                          icon: const Icon(Icons.more_vert_outlined),
+                          onPressed: () {
+                            _showMoreOptionsBottomSheet(context);
+                          },
+                        )
+                        : MenuAnchor(
+                          builder: (context, controller, child) {
+                            return IconButton(
+                              icon: const Icon(Icons.more_vert_outlined),
+                              onPressed: () {
+                                if (controller.isOpen) {
+                                  controller.close();
+                                } else {
+                                  controller.open();
+                                }
+                              },
+                            );
+                          },
+                          menuChildren: [
+                            // Action to select all specimens
+                            MenuItemButton(
+                              leadingIcon: const Icon(
+                                Icons.library_add_check_outlined,
+                              ),
+                              onPressed: () {
+                                final filteredSpecimens = _filterSpecimens(
+                                  _showPending
+                                      ? specimenProvider.pendingSpecimens
+                                      : specimenProvider.archivedSpecimens,
+                                );
+                                setState(() {
+                                  selectedSpecimens =
+                                      filteredSpecimens
+                                          .map((specimen) => specimen.id)
+                                          .whereType<int>()
+                                          .toSet();
+                                });
+                              },
+                              child: Text(S.of(context).selectAll),
+                            ),
+                            // Action to import specimens from JSON
+                            MenuItemButton(
+                              leadingIcon: const Icon(Icons.file_open_outlined),
+                              onPressed: () async {
+                                await importSpecimensFromJson(context);
+                                await specimenProvider.fetchSpecimens();
+                              },
+                              child: Text(S.of(context).import),
+                            ),
+                            MenuItemButton(
+                              leadingIcon: const Icon(Icons.share_outlined),
+                              onPressed: () {
+                                exportAllSpecimensToCsv(
+                                  context,
+                                  _showPending
+                                      ? specimenProvider.pendingSpecimens
+                                      : specimenProvider.archivedSpecimens,
+                                );
+                              },
+                              child: Text('${S.of(context).exportAll} (CSV)'),
+                            ),
+                            MenuItemButton(
+                              leadingIcon: const Icon(Icons.share_outlined),
+                              onPressed: () {
+                                exportAllSpecimensToExcel(
+                                  context,
+                                  _showPending
+                                      ? specimenProvider.pendingSpecimens
+                                      : specimenProvider.archivedSpecimens,
+                                );
+                              },
+                              child: Text('${S.of(context).exportAll} (Excel)'),
+                            ),
+                            MenuItemButton(
+                              leadingIcon: const Icon(Icons.share_outlined),
+                              onPressed: () {
+                                exportAllSpecimensToJson(
+                                  context,
+                                  _showPending
+                                      ? specimenProvider.pendingSpecimens
+                                      : specimenProvider.archivedSpecimens,
+                                );
+                              },
+                              child: Text('${S.of(context).exportAll} (JSON)'),
+                            ),
+                          ],
+                        ),
+                  ],
+                  onChanged: (query) {
                     setState(() {
-                      selectedSpecimens = filteredSpecimens
-                          .map((specimen) => specimen.id)
-                          .whereType<int>()
-                          .toSet();
+                      _searchQuery = query;
                     });
                   },
-                  child: Text(S.of(context).selectAll),
                 ),
-              // Action to import specimens from JSON
-              MenuItemButton(
-                leadingIcon: const Icon(Icons.file_open_outlined),
-                onPressed: () async {
-                  await importSpecimensFromJson(context);
-                  await specimenProvider.fetchSpecimens();
-                },
-                child: Text(S.of(context).import),
-              ),
-              MenuItemButton(
-                leadingIcon: const Icon(Icons.share_outlined),
-                onPressed: () {
-                  exportAllSpecimensToCsv(context, _showPending ? specimenProvider.pendingSpecimens : specimenProvider.archivedSpecimens);
-                },
-                child: Text('${S.of(context).exportAll} (CSV)'),
-              ),
-              MenuItemButton(
-                leadingIcon: const Icon(Icons.share_outlined),
-                onPressed: () {
-                  exportAllSpecimensToExcel(context, _showPending ? specimenProvider.pendingSpecimens : specimenProvider.archivedSpecimens);
-                },
-                child: Text('${S.of(context).exportAll} (Excel)'),
-              ),
-              MenuItemButton(
-                leadingIcon: const Icon(Icons.share_outlined),
-                onPressed: () {
-                  exportAllSpecimensToJson(context, _showPending ? specimenProvider.pendingSpecimens : specimenProvider.archivedSpecimens);
-                },
-                child: Text('${S.of(context).exportAll} (JSON)'),
-              ),
-            ],
-          ),
-          ],
-          onChanged: (query) {
-            setState(() {
-              _searchQuery = query;
-            });
-          },
-        ),
-        // title: Text(S.of(context).specimens(2)),
-        
-        
-      ) : null,
+
+                // title: Text(S.of(context).specimens(2)),
+              )
+              : null,
       body: LayoutBuilder(
         builder: (context, constraints) {
           // On large screens we show a split screen master/detail
           if (isSplitScreen) {
-            final leftPaneWidth =
-                (constraints.maxWidth * 0.4).clamp(kSideSheetWidth, 520.0);
+            final leftPaneWidth = (constraints.maxWidth * 0.4).clamp(
+              kSideSheetWidth,
+              520.0,
+            );
             return Row(
               children: [
                 // Left: list pane with bounded width for better readability.
@@ -646,9 +754,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                 ),
                 VerticalDivider(),
                 // Right: detail pane
-                Expanded(
-                  child: _buildDetailPane(context),
-                ),
+                Expanded(child: _buildDetailPane(context)),
               ],
             );
           } else {
@@ -657,9 +763,10 @@ class SpecimensScreenState extends State<SpecimensScreen> {
           }
         },
       ),
-      floatingActionButtonLocation: selectedSpecimens.isNotEmpty 
-        ? FloatingActionButtonLocation.endContained 
-        : FloatingActionButtonLocation.endFloat,
+      floatingActionButtonLocation:
+          selectedSpecimens.isNotEmpty
+              ? FloatingActionButtonLocation.endContained
+              : FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
         tooltip: S.of(context).newSpecimen,
         onPressed: () {
@@ -667,278 +774,345 @@ class SpecimensScreenState extends State<SpecimensScreen> {
         },
         child: const Icon(Icons.add_outlined),
       ),
-      bottomNavigationBar: selectedSpecimens.isNotEmpty
-          ? BottomAppBar(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.delete_outlined),
-                    tooltip: S.of(context).delete,
-                    color: Colors.red,
-                    onPressed: _deleteSelectedSpecimens,
-                  ),
-                  const VerticalDivider(),
-                  MenuAnchor(
-                    builder: (context, controller, child) {
-                      return IconButton(
-                        icon: const Icon(Icons.share_outlined),
-                        tooltip: S.of(context).exportWhat(
-                            S.of(context).specimens(2).toLowerCase()),
-                        onPressed: () {
-                          if (controller.isOpen) {
-                            controller.close();
-                          } else {
-                            controller.open();
+      bottomNavigationBar:
+          selectedSpecimens.isNotEmpty
+              ? BottomAppBar(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.delete_outlined),
+                      tooltip: S.of(context).delete,
+                      color: Colors.red,
+                      onPressed: _deleteSelectedSpecimens,
+                    ),
+                    const VerticalDivider(),
+                    MenuAnchor(
+                      builder: (context, controller, child) {
+                        return IconButton(
+                          icon: const Icon(Icons.share_outlined),
+                          tooltip: S
+                              .of(context)
+                              .exportWhat(
+                                S.of(context).specimens(2).toLowerCase(),
+                              ),
+                          onPressed: () {
+                            if (controller.isOpen) {
+                              controller.close();
+                            } else {
+                              controller.open();
+                            }
+                          },
+                        );
+                      },
+                      menuChildren: [
+                        MenuItemButton(
+                          onPressed: () async {
+                            final specimens = await Future.wait(
+                              selectedSpecimens.map(
+                                (id) => specimenProvider.getSpecimenById(id),
+                              ),
+                            );
+                            await exportSelectedSpecimensToCsv(
+                              context,
+                              specimens,
+                            );
+                            if (!mounted) return;
+                            setState(() {
+                              selectedSpecimens.clear();
+                            });
+                          },
+                          child: const Text('CSV'),
+                        ),
+                        MenuItemButton(
+                          onPressed: () async {
+                            final specimens = await Future.wait(
+                              selectedSpecimens.map(
+                                (id) => specimenProvider.getSpecimenById(id),
+                              ),
+                            );
+                            await exportSelectedSpecimensToExcel(
+                              context,
+                              specimens,
+                            );
+                            if (!mounted) return;
+                            setState(() {
+                              selectedSpecimens.clear();
+                            });
+                          },
+                          child: const Text('Excel'),
+                        ),
+                        MenuItemButton(
+                          onPressed: () async {
+                            final specimens = await Future.wait(
+                              selectedSpecimens.map(
+                                (id) => specimenProvider.getSpecimenById(id),
+                              ),
+                            );
+                            await exportSelectedSpecimensToJson(
+                              context,
+                              specimens,
+                            );
+                            if (!mounted) return;
+                            setState(() {
+                              selectedSpecimens.clear();
+                            });
+                          },
+                          child: const Text('JSON'),
+                        ),
+                      ],
+                    ),
+                    if (selectedSpecimens.length > 1)
+                      IconButton(
+                        icon: const Icon(Icons.insert_chart_outlined),
+                        tooltip: S.of(context).statistics,
+                        onPressed: () async {
+                          // Get fully loaded nests
+                          final selectedNestsList =
+                              selectedSpecimens
+                                  .map(
+                                    (id) =>
+                                        specimenProvider.specimens.firstWhere(
+                                          (n) => n.id == id,
+                                          orElse: () => Specimen(id: id),
+                                        ),
+                                  )
+                                  .toList();
+
+                          if (mounted) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (context) => StatsSpecimensScreen(
+                                      specimens:
+                                          selectedSpecimens
+                                              .map(
+                                                (id) => specimenProvider
+                                                    .specimens
+                                                    .firstWhere(
+                                                      (n) => n.id == id,
+                                                      orElse:
+                                                          () =>
+                                                              Specimen(id: id),
+                                                    ),
+                                              )
+                                              .toList(),
+                                    ),
+                              ),
+                            );
                           }
                         },
-                      );
-                    },
-                    menuChildren: [
-                      MenuItemButton(
+                      ),
+                    if (_showPending)
+                      IconButton(
+                        icon: const Icon(Icons.archive_outlined),
+                        tooltip: S.of(context).archiveSpecimen,
                         onPressed: () async {
-                          final specimens = await Future.wait(
-                            selectedSpecimens.map((id) => specimenProvider.getSpecimenById(id)),
-                          );
-                          await exportSelectedSpecimensToCsv(context, specimens);
-                          if (!mounted) return;
+                          for (final id in selectedSpecimens) {
+                            final specimen = await specimenProvider
+                                .getSpecimenById(id);
+                            specimen.isPending = false;
+                            specimenProvider.updateSpecimen(specimen);
+                          }
                           setState(() {
                             selectedSpecimens.clear();
                           });
                         },
-                        child: const Text('CSV'),
                       ),
-                      MenuItemButton(
-                        onPressed: () async {
-                          final specimens = await Future.wait(
-                            selectedSpecimens.map((id) => specimenProvider.getSpecimenById(id)),
-                          );
-                          await exportSelectedSpecimensToExcel(context, specimens);
-                          if (!mounted) return;
-                          setState(() {
-                            selectedSpecimens.clear();
-                          });
-                        },
-                        child: const Text('Excel'),
-                      ),
-                      MenuItemButton(
-                        onPressed: () async {
-                          final specimens = await Future.wait(
-                            selectedSpecimens.map((id) => specimenProvider.getSpecimenById(id)),
-                          );
-                          await exportSelectedSpecimensToJson(context, specimens);
-                          if (!mounted) return;
-                          setState(() {
-                            selectedSpecimens.clear();
-                          });
-                        },
-                        child: const Text('JSON'),
-                      ),
-                    ],
-                  ),
-                  if (selectedSpecimens.length > 1)
+                    const VerticalDivider(),
+                    // Option to clear the selected specimens
                     IconButton(
-                      icon: const Icon(Icons.insert_chart_outlined),
-                      tooltip: S.of(context).statistics,
-                      onPressed: () async {
-
-                        // Get fully loaded nests
-                        final selectedNestsList = selectedSpecimens
-                            .map((id) => specimenProvider.specimens.firstWhere(
-                              (n) => n.id == id,
-                          orElse: () => Specimen(id: id),
-                        ))
-                            .toList();
-
-                        if (mounted) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => StatsSpecimensScreen(
-                                specimens: selectedSpecimens
-                                    .map((id) => specimenProvider.specimens.firstWhere(
-                                      (n) => n.id == id,
-                                  orElse: () => Specimen(id: id),
-                                ))
-                                    .toList(),
-                              ),
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                  if (_showPending)
-                    IconButton(
-                      icon: const Icon(Icons.archive_outlined),
-                      tooltip: S.of(context).archiveSpecimen,
-                      onPressed: () async {
-                        for (final id in selectedSpecimens) {
-                          final specimen = await specimenProvider.getSpecimenById(id);
-                          specimen.isPending = false;
-                          specimenProvider.updateSpecimen(specimen);
-                        }
+                      icon: const Icon(Icons.clear_outlined),
+                      tooltip: S.current.clearSelection,
+                      onPressed: () {
                         setState(() {
                           selectedSpecimens.clear();
                         });
                       },
-                      ),
-                  const VerticalDivider(),
-                  // Option to clear the selected specimens
-                  IconButton(
-                    icon: const Icon(Icons.clear_outlined),
-                    tooltip: S.current.clearSelection,
-                    onPressed: () {
-                      setState(() {
-                        selectedSpecimens.clear();
-                      });
-                    },
-                  ),
-                ],
-              ),
-            )
-          : null,
+                    ),
+                  ],
+                ),
+              )
+              : null,
     );
   }
 
-  Widget _buildListPane(BuildContext context, bool isSplitScreen, bool isMenuShown) {
+  Widget _buildListPane(
+    BuildContext context,
+    bool isSplitScreen,
+    bool isMenuShown,
+  ) {
     return Column(
-        children: [
-          if (isSplitScreen) const SizedBox(height: 16.0),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
-            child: isSplitScreen ? SearchBar(
-          controller: _searchController,
-          hintText: S.of(context).specimens(1),
-          elevation: WidgetStateProperty.all(0),
-              leading: isMenuShown
-                  ? Builder(
-                builder: (context) => IconButton(
-                  icon: const Icon(Icons.menu_outlined),
-                  onPressed: () {
-                    widget.scaffoldKey.currentState?.openDrawer();
+      children: [
+        if (isSplitScreen) const SizedBox(height: 16.0),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
+          child:
+              isSplitScreen
+                  ? SearchBar(
+                    controller: _searchController,
+                    hintText: S.of(context).specimens(1),
+                    elevation: WidgetStateProperty.all(0),
+                    leading:
+                        isMenuShown
+                            ? Builder(
+                              builder:
+                                  (context) => IconButton(
+                                    icon: const Icon(Icons.menu_outlined),
+                                    onPressed: () {
+                                      widget.scaffoldKey.currentState
+                                          ?.openDrawer();
+                                    },
+                                  ),
+                            )
+                            : const SizedBox.shrink(),
+                    trailing: [
+                      _searchController.text.isNotEmpty
+                          ? IconButton(
+                            icon: const Icon(Icons.clear_outlined),
+                            onPressed: () {
+                              setState(() {
+                                _searchQuery = '';
+                                _searchController.clear();
+                              });
+                            },
+                          )
+                          : const SizedBox.shrink(),
+                      IconButton(
+                        icon: const Icon(Icons.sort_outlined),
+                        tooltip: S.of(context).sortBy,
+                        onPressed: () {
+                          _showSortOptionsBottomSheet();
+                        },
+                      ),
+                      MenuAnchor(
+                        builder: (context, controller, child) {
+                          return IconButton(
+                            icon: const Icon(Icons.more_vert_outlined),
+                            onPressed: () {
+                              if (controller.isOpen) {
+                                controller.close();
+                              } else {
+                                controller.open();
+                              }
+                            },
+                          );
+                        },
+                        menuChildren: [
+                          // Action to select all specimens
+                          MenuItemButton(
+                            leadingIcon: const Icon(
+                              Icons.library_add_check_outlined,
+                            ),
+                            onPressed: () {
+                              final filteredSpecimens = _filterSpecimens(
+                                _showPending
+                                    ? specimenProvider.pendingSpecimens
+                                    : specimenProvider.archivedSpecimens,
+                              );
+                              setState(() {
+                                selectedSpecimens =
+                                    filteredSpecimens
+                                        .map((specimen) => specimen.id)
+                                        .whereType<int>()
+                                        .toSet();
+                              });
+                            },
+                            child: Text(S.of(context).selectAll),
+                          ),
+                          // Action to import specimens from JSON
+                          MenuItemButton(
+                            leadingIcon: const Icon(Icons.file_open_outlined),
+                            onPressed: () async {
+                              await importSpecimensFromJson(context);
+                              await specimenProvider.fetchSpecimens();
+                            },
+                            child: Text(S.of(context).import),
+                          ),
+                          if (specimenProvider.specimens.isNotEmpty) ...[
+                            MenuItemButton(
+                              leadingIcon: const Icon(Icons.share_outlined),
+                              onPressed: () {
+                                exportAllSpecimensToCsv(
+                                  context,
+                                  _showPending
+                                      ? specimenProvider.pendingSpecimens
+                                      : specimenProvider.archivedSpecimens,
+                                );
+                              },
+                              child: Text('${S.of(context).exportAll} (CSV)'),
+                            ),
+                            MenuItemButton(
+                              leadingIcon: const Icon(Icons.share_outlined),
+                              onPressed: () {
+                                exportAllSpecimensToExcel(
+                                  context,
+                                  _showPending
+                                      ? specimenProvider.pendingSpecimens
+                                      : specimenProvider.archivedSpecimens,
+                                );
+                              },
+                              child: Text('${S.of(context).exportAll} (Excel)'),
+                            ),
+                            MenuItemButton(
+                              leadingIcon: const Icon(Icons.share_outlined),
+                              onPressed: () {
+                                exportAllSpecimensToJson(
+                                  context,
+                                  _showPending
+                                      ? specimenProvider.pendingSpecimens
+                                      : specimenProvider.archivedSpecimens,
+                                );
+                              },
+                              child: Text('${S.of(context).exportAll} (JSON)'),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ],
+                    onChanged: (query) {
+                      setState(() {
+                        _searchQuery = query;
+                      });
+                    },
+                  )
+                  : null,
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
+          child: LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+              final screenWidth = constraints.maxWidth;
+              final buttonWidth = screenWidth < 600 ? screenWidth : 400.0;
+
+              return SizedBox(
+                width: buttonWidth,
+                child: SegmentedButton<bool>(
+                  segments: [
+                    ButtonSegment(
+                      value: true,
+                      label: Text(S.of(context).pending),
+                    ),
+                    ButtonSegment(
+                      value: false,
+                      label: Text(S.of(context).archived),
+                    ),
+                  ],
+                  selected: {_showPending},
+                  onSelectionChanged: (Set<bool> newSelection) {
+                    setState(() {
+                      selectedSpecimens.clear();
+                      _showPending = newSelection.first;
+                    });
+                    // nestProvider.notifyListeners();
                   },
                 ),
-              )
-                  : const SizedBox.shrink(),
-          trailing: [
-            _searchController.text.isNotEmpty
-                ? IconButton(
-              icon: const Icon(Icons.clear_outlined),
-              onPressed: () {
-                setState(() {
-                  _searchQuery = '';
-                  _searchController.clear();
-                });
-              },
-            )
-                : const SizedBox.shrink(),
-            IconButton(
-              icon: const Icon(Icons.sort_outlined),
-              tooltip: S.of(context).sortBy,
-              onPressed: () {
-                _showSortOptionsBottomSheet();
-              },
-            ),
-            MenuAnchor(
-            builder: (context, controller, child) {
-              return IconButton(
-                icon: const Icon(Icons.more_vert_outlined),
-                onPressed: () {
-                  if (controller.isOpen) {
-                    controller.close();
-                  } else {
-                    controller.open();
-                  }
-                },
               );
             },
-            menuChildren: [
-              // Action to select all specimens
-                MenuItemButton(
-                  leadingIcon: const Icon(Icons.library_add_check_outlined),
-                  onPressed: () {
-                    final filteredSpecimens = _filterSpecimens(_showPending 
-                        ? specimenProvider.pendingSpecimens
-                        : specimenProvider.archivedSpecimens);
-                    setState(() {
-                      selectedSpecimens = filteredSpecimens
-                          .map((specimen) => specimen.id)
-                          .whereType<int>()
-                          .toSet();
-                    });
-                  },
-                  child: Text(S.of(context).selectAll),
-                ),
-              // Action to import specimens from JSON
-              MenuItemButton(
-                leadingIcon: const Icon(Icons.file_open_outlined),
-                onPressed: () async {
-                  await importSpecimensFromJson(context);
-                  await specimenProvider.fetchSpecimens();
-                },
-                child: Text(S.of(context).import),
-              ),
-              if (specimenProvider.specimens.isNotEmpty) ...[
-              MenuItemButton(
-                leadingIcon: const Icon(Icons.share_outlined),
-                onPressed: () {
-                  exportAllSpecimensToCsv(context, _showPending ? specimenProvider.pendingSpecimens : specimenProvider.archivedSpecimens);
-                },
-                child: Text('${S.of(context).exportAll} (CSV)'),
-              ),
-              MenuItemButton(
-                leadingIcon: const Icon(Icons.share_outlined),
-                onPressed: () {
-                  exportAllSpecimensToExcel(context, _showPending ? specimenProvider.pendingSpecimens : specimenProvider.archivedSpecimens);
-                },
-                child: Text('${S.of(context).exportAll} (Excel)'),
-              ),
-              MenuItemButton(
-                leadingIcon: const Icon(Icons.share_outlined),
-                onPressed: () {
-                  exportAllSpecimensToJson(context, _showPending ? specimenProvider.pendingSpecimens : specimenProvider.archivedSpecimens);
-                },
-                child: Text('${S.of(context).exportAll} (JSON)'),
-              ),
-              ],
-            ],
           ),
-          ],
-          onChanged: (query) {
-            setState(() {
-              _searchQuery = query;
-            });
-          },
-        ) : null,
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
-            child: LayoutBuilder(
-              builder: (BuildContext context, BoxConstraints constraints) {
-                final screenWidth = constraints.maxWidth;
-                final buttonWidth = screenWidth < 600 ? screenWidth : 400.0;
-
-                return SizedBox(
-                  width: buttonWidth,
-                  child: SegmentedButton<bool>(
-                    segments: [
-                      ButtonSegment(value: true, label: Text(S.of(context).pending)),
-                      ButtonSegment(value: false, label: Text(S.of(context).archived)),
-                    ],
-                    selected: {_showPending},
-                    onSelectionChanged: (Set<bool> newSelection) {
-                      setState(() {
-                        selectedSpecimens.clear();
-                        _showPending = newSelection.first;
-                      });
-                      // nestProvider.notifyListeners();
-                    },
-                  ),
-                );
-              },
-            ),
-          ),
-          Padding(
+        ),
+        Padding(
           padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 8.0),
           child: Row(
             children: [
@@ -951,19 +1125,28 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                       MenuAnchor(
                         builder: (context, controller, child) {
                           String label;
-                          if (_selectedDateFilter == DateFilter.customRange && _selectedDateRange != null) {
-                            final start = DateFormat('dd/MM/yyyy').format(_selectedDateRange!.start);
-                            final end = DateFormat('dd/MM/yyyy').format(_selectedDateRange!.end);
+                          if (_selectedDateFilter == DateFilter.customRange &&
+                              _selectedDateRange != null) {
+                            final start = DateFormat(
+                              'dd/MM/yyyy',
+                            ).format(_selectedDateRange!.start);
+                            final end = DateFormat(
+                              'dd/MM/yyyy',
+                            ).format(_selectedDateRange!.end);
                             label = "$start - $end";
                           } else {
-                            label = _selectedDateFilter != null
-                                ? _dateFilterLabels[_selectedDateFilter]!
-                                : S.of(context).date;
+                            label =
+                                _selectedDateFilter != null
+                                    ? _dateFilterLabels[_selectedDateFilter]!
+                                    : S.of(context).date;
                           }
 
                           return FilterChip(
                             label: Text(label),
-                            avatar: _selectedDateFilter == null ? const Icon(Icons.calendar_today_outlined) : null,
+                            avatar:
+                                _selectedDateFilter == null
+                                    ? const Icon(Icons.calendar_today_outlined)
+                                    : null,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20.0),
                             ),
@@ -986,12 +1169,15 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                             return MenuItemButton(
                               onPressed: () async {
                                 if (filter == DateFilter.customRange) {
-                                  final DateTimeRange? picked = await showDateRangePicker(
-                                    context: context,
-                                    firstDate: DateTime(2020),
-                                    lastDate: DateTime.now().add(const Duration(days: 365)),
-                                    initialDateRange: _selectedDateRange,
-                                  );
+                                  final DateTimeRange? picked =
+                                      await showDateRangePicker(
+                                        context: context,
+                                        firstDate: DateTime(2020),
+                                        lastDate: DateTime.now().add(
+                                          const Duration(days: 365),
+                                        ),
+                                        initialDateRange: _selectedDateRange,
+                                      );
                                   if (picked != null) {
                                     setState(() {
                                       _selectedDateFilter = filter;
@@ -1011,93 +1197,47 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                         ],
                       ),
                       const SizedBox(width: 8.0),
-                      MenuAnchor(
-                        builder: (context, controller, child) {
-                          return FilterChip(
-                            label: Text(
-                              _selectedSpecies ?? S.current.species(1),
-                            ),
-                            avatar: _selectedSpecies == null ? Icon(Icons.account_tree_outlined) : null,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
-                            onSelected: (selected) {
-                              if (selected) {
-                                controller.open();
-                              } else {
-                                setState(() {
-                                  _selectedSpecies = null;
-                                });
-                              }
-                            },
-                            selected: _selectedSpecies != null,
-                          );
+                      FilterChip(
+                        label: Text(_selectedSpecies ?? S.current.species(1)),
+                        avatar:
+                            _selectedSpecies == null
+                                ? const Icon(Icons.account_tree_outlined)
+                                : null,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        selected: _selectedSpecies != null,
+                        onSelected: (selected) async {
+                          if (selected) {
+                            await _selectSpeciesFromBottomSheet();
+                          } else {
+                            setState(() {
+                              _selectedSpecies = null;
+                            });
+                          }
                         },
-                        menuChildren: [
-                          // MenuItemButton(
-                          //   onPressed: () {
-                          //     setState(() {
-                          //       _selectedSpecies = null;
-                          //     });
-                          //   },
-                          //   child: Text(S.current.allTypes),
-                          // ),
-                          ..._getUniqueSpecies().map((species) {
-                            return MenuItemButton(
-                              onPressed: () {
-                                setState(() {
-                                  _selectedSpecies = species;
-                                });
-                              },
-                              child: Text(species),
-                            );
-                          }),
-                        ],
                       ),
                       const SizedBox(width: 8.0),
-                      MenuAnchor(
-                        builder: (context, controller, child) {
-                          return FilterChip(
-                            label: Text(
-                              _selectedLocality ?? S.current.locality,
-                            ),
-                            avatar: _selectedLocality == null ? Icon(Icons.location_on_outlined) : null,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
-                            visualDensity: VisualDensity.compact,
-                            onSelected: (selected) {
-                              if (selected) {
-                                controller.open();
-                              } else {
-                                setState(() {
-                                  _selectedLocality = null;
-                                });
-                              }
-                            },
-                            selected: _selectedLocality != null,
-                          );
+                      FilterChip(
+                        label: Text(_selectedLocality ?? S.current.locality),
+                        avatar:
+                            _selectedLocality == null
+                                ? const Icon(Icons.location_on_outlined)
+                                : null,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        visualDensity: VisualDensity.compact,
+                        selected: _selectedLocality != null,
+                        onSelected: (selected) async {
+                          if (selected) {
+                            await _selectLocalityFromBottomSheet();
+                          } else {
+                            setState(() {
+                              _selectedLocality = null;
+                            });
+                          }
                         },
-                        menuChildren: [
-                          // MenuItemButton(
-                          //   onPressed: () {
-                          //     setState(() {
-                          //       _selectedLocality = null;
-                          //     });
-                          //   },
-                          //   child: Text(S.current.allLocalities),
-                          // ),
-                          ..._getUniqueLocalities().map((locality) {
-                            return MenuItemButton(
-                              onPressed: () {
-                                setState(() {
-                                  _selectedLocality = locality;
-                                });
-                              },
-                              child: Text(locality),
-                            );
-                          }),
-                        ],
                       ),
                       const SizedBox(width: 8.0),
                       MenuAnchor(
@@ -1106,7 +1246,10 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                             label: Text(
                               _selectedObserver ?? S.current.observer,
                             ),
-                            avatar: _selectedObserver == null ? Icon(Icons.person_outlined) : null,
+                            avatar:
+                                _selectedObserver == null
+                                    ? Icon(Icons.person_outlined)
+                                    : null,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20.0),
                             ),
@@ -1151,13 +1294,14 @@ class SpecimensScreenState extends State<SpecimensScreen> {
             ],
           ),
         ),
-          Expanded(
-              child: Consumer<SpecimenProvider>(
-                builder: (context, specimenProvider, child) {
-              final filteredSpecimens =
-                  _filterSpecimens(_showPending 
+        Expanded(
+          child: Consumer<SpecimenProvider>(
+            builder: (context, specimenProvider, child) {
+              final filteredSpecimens = _filterSpecimens(
+                _showPending
                     ? specimenProvider.pendingSpecimens
-                    : specimenProvider.archivedSpecimens);
+                    : specimenProvider.archivedSpecimens,
+              );
 
               final effectiveSelectedSpecimen = _getEffectiveSelectedSpecimen(
                 filteredSpecimens,
@@ -1197,26 +1341,26 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                           _showAddSpecimenScreen(context);
                         },
                       ),
-                        const SizedBox(height: 8),
-                        ActionChip(
-                          label: Text(S.of(context).import),
-                          avatar: const Icon(Icons.file_open_outlined),
-                          onPressed: () async {
-                            await importSpecimensFromJson(context);
-                            await specimenProvider.fetchSpecimens();
-                          },
-                        ),
+                      const SizedBox(height: 8),
+                      ActionChip(
+                        label: Text(S.of(context).import),
+                        avatar: const Icon(Icons.file_open_outlined),
+                        onPressed: () async {
+                          await importSpecimensFromJson(context);
+                          await specimenProvider.fetchSpecimens();
+                        },
+                      ),
                       if (_searchQuery.isNotEmpty) ...[
                         const SizedBox(height: 8),
                         ActionChip(
-                            label: Text(S.of(context).clearFilters),
-                            avatar: const Icon(Icons.search_off_outlined),
-                            onPressed: () async {
-                              setState(() {
-                                _searchQuery = '';
-                                _searchController.clear();
-                              });
-                            }
+                          label: Text(S.of(context).clearFilters),
+                          avatar: const Icon(Icons.search_off_outlined),
+                          onPressed: () async {
+                            setState(() {
+                              _searchQuery = '';
+                              _searchController.clear();
+                            });
+                          },
                         ),
                       ],
                       const SizedBox(height: 8),
@@ -1244,39 +1388,42 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                   await specimenProvider.fetchSpecimens();
                 },
                 child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
-                child: Text(
-                  '${filteredSpecimens.length} ${S.of(context).specimens(filteredSpecimens.length).toLowerCase()}',
-                  // style: TextStyle(fontSize: 16,),
-                ),
-              ),
-              Expanded(
-                child: ListView.separated(
-                      separatorBuilder: (context, index) => Divider(),
-                      shrinkWrap: true,
-                      itemCount: filteredSpecimens.length,
-                      itemBuilder: (context, index) {
-                        return specimenListTileItem(filteredSpecimens, index, context);
-                      },
-                    )
-              ),
-            ],
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
+                      child: Text(
+                        '${filteredSpecimens.length} ${S.of(context).specimens(filteredSpecimens.length).toLowerCase()}',
+                        // style: TextStyle(fontSize: 16,),
+                      ),
+                    ),
+                    Expanded(
+                      child: ListView.separated(
+                        separatorBuilder: (context, index) => Divider(),
+                        shrinkWrap: true,
+                        itemCount: filteredSpecimens.length,
+                        itemBuilder: (context, index) {
+                          return specimenListTileItem(
+                            filteredSpecimens,
+                            index,
+                            context,
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               );
-            }),
+            },
           ),
-        ],
-      );
+        ),
+      ],
+    );
   }
 
   Widget _buildDetailPane(BuildContext context) {
     if (_selectedSpecimen == null) {
       // Placeholder when nothing selected
-      return Center(
-        child: Text(S.of(context).selectSpecimenToView),
-      );
+      return Center(child: Text(S.of(context).selectSpecimenToView));
     }
 
     // Show InventoryDetailScreen in-place for the selected inventory
@@ -1295,7 +1442,11 @@ class SpecimensScreenState extends State<SpecimensScreen> {
     );
   }
 
-  ListTile specimenListTileItem(List<Specimen> filteredSpecimens, int index, BuildContext context) {
+  ListTile specimenListTileItem(
+    List<Specimen> filteredSpecimens,
+    int index,
+    BuildContext context,
+  ) {
     final specimen = filteredSpecimens[index];
     final isSelected = selectedSpecimens.contains(specimen.id);
     final isLargeScreen = MediaQuery.sizeOf(context).width >= kTabletBreakpoint;
@@ -1319,17 +1470,16 @@ class SpecimensScreenState extends State<SpecimensScreen> {
         },
       ),
       trailing: FutureBuilder<List<AppImage>>(
-        future: Provider.of<AppImageProvider>(context,
-                listen: false)
-            .fetchImagesForSpecimen(specimen.id ?? 0),
+        future: Provider.of<AppImageProvider>(
+          context,
+          listen: false,
+        ).fetchImagesForSpecimen(specimen.id ?? 0),
         builder: (context, snapshot) {
-          if (snapshot.connectionState ==
-              ConnectionState.waiting) {
-            return const CircularProgressIndicator(year2023: false,);
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const CircularProgressIndicator(year2023: false);
           } else if (snapshot.hasError) {
             return const Icon(Icons.error);
-          } else if (snapshot.hasData &&
-              snapshot.data!.isNotEmpty) {
+          } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
             return ClipRRect(
               borderRadius: BorderRadius.circular(0),
               child: Image.file(
@@ -1345,20 +1495,18 @@ class SpecimensScreenState extends State<SpecimensScreen> {
         },
       ),
       title: Text(
-          '${specimen.fieldNumber} - ${specimenTypeFriendlyNames[specimen.type]}'),
+        '${specimen.fieldNumber} - ${specimenTypeFriendlyNames[specimen.type]}',
+      ),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             specimen.speciesName!,
-            style: const TextStyle(
-                fontStyle: FontStyle.italic),
+            style: const TextStyle(fontStyle: FontStyle.italic),
           ),
-          Text(specimen.locality!, overflow: TextOverflow.ellipsis,),
-          Text(
-              '${specimen.longitude}; ${specimen.latitude}'),
-          Text(DateFormat('dd/MM/yyyy HH:mm:ss')
-              .format(specimen.sampleTime!)),
+          Text(specimen.locality!, overflow: TextOverflow.ellipsis),
+          Text('${specimen.longitude}; ${specimen.latitude}'),
+          Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(specimen.sampleTime!)),
         ],
       ),
       selected: isLargeScreen ? isDetailSelected : isSelected,
@@ -1366,22 +1514,19 @@ class SpecimensScreenState extends State<SpecimensScreen> {
           isLargeScreen
               ? Theme.of(context).colorScheme.secondaryContainer
               : Theme.of(context).colorScheme.primaryContainer,
-      onLongPress: () =>
-          _showBottomSheet(context, specimen),
+      onLongPress: () => _showBottomSheet(context, specimen),
       onTap: () {
         if (isLargeScreen) {
           setState(() {
             _selectedSpecimen = specimen;
           });
         } else {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => AppImageScreen(
-              specimenId: specimen.id,
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AppImageScreen(specimenId: specimen.id),
             ),
-          ),
-        );
+          );
         }
       },
     );
@@ -1393,141 +1538,173 @@ class SpecimensScreenState extends State<SpecimensScreen> {
       builder: (BuildContext context) {
         return SafeArea(
           child: BottomSheet(
-          onClosing: () {},
-          builder: (BuildContext context) {
-            return Container(
-              padding: const EdgeInsets.all(16.0),
-              child: SingleChildScrollView(
-                child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(specimen.fieldNumber, style: TextTheme.of(context).bodyLarge,),
-                  ),
-                  // ListTile(
-                  //   title: Text(specimen.fieldNumber),
-                  // ),
-                  const Divider(),
-                  GridView.count(
-                    crossAxisCount: MediaQuery.sizeOf(context).width < 600 ? 4 : 5,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
+            onClosing: () {},
+            builder: (BuildContext context) {
+              return Container(
+                padding: const EdgeInsets.all(16.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      buildGridMenuItem(
-                          context, Icons.edit_outlined, S.current.edit, () {
-                        Navigator.of(context).pop();
-                        if (MediaQuery.sizeOf(context).width > 600) {
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return Dialog(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16.0),
-                                ),
-                                child: ConstrainedBox(
-                                  constraints: const BoxConstraints(maxWidth: 400),
-                                  child: AddSpecimenScreen(
-                                    specimen: specimen,
-                                    isEditing: true,
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          specimen.fieldNumber,
+                          style: TextTheme.of(context).bodyLarge,
+                        ),
+                      ),
+                      // ListTile(
+                      //   title: Text(specimen.fieldNumber),
+                      // ),
+                      const Divider(),
+                      GridView.count(
+                        crossAxisCount:
+                            MediaQuery.sizeOf(context).width < 600 ? 4 : 5,
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        children: <Widget>[
+                          buildGridMenuItem(
+                            context,
+                            Icons.edit_outlined,
+                            S.current.edit,
+                            () {
+                              Navigator.of(context).pop();
+                              if (MediaQuery.sizeOf(context).width > 600) {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return Dialog(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(
+                                          16.0,
+                                        ),
+                                      ),
+                                      child: ConstrainedBox(
+                                        constraints: const BoxConstraints(
+                                          maxWidth: 400,
+                                        ),
+                                        child: AddSpecimenScreen(
+                                          specimen: specimen,
+                                          isEditing: true,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              } else {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder:
+                                        (context) => AddSpecimenScreen(
+                                          specimen: specimen,
+                                          isEditing: true,
+                                        ),
                                   ),
-                                ),
+                                );
+                              }
+                            },
+                          ),
+                          if (_showPending)
+                            buildGridMenuItem(
+                              context,
+                              Icons.archive_outlined,
+                              S.current.archive,
+                              () {
+                                Navigator.of(context).pop();
+                                specimen.isPending = false;
+                                specimenProvider.updateSpecimen(specimen);
+                              },
+                            ),
+                          // buildGridMenuItem(
+                          //       context, Icons.share_outlined, 'KML',
+                          //           () async {
+                          //         Navigator.of(context).pop();
+                          //         exportSpecimenToKml(context, specimen);
+                          //       }),
+                          buildGridMenuItem(
+                            context,
+                            Icons.delete_outlined,
+                            S.of(context).delete,
+                            () {
+                              Navigator.of(context).pop();
+                              // Ask for user confirmation
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog.adaptive(
+                                    title: Text(S.of(context).confirmDelete),
+                                    content: Text(
+                                      S
+                                          .of(context)
+                                          .confirmDeleteMessage(
+                                            1,
+                                            "male",
+                                            S.of(context).specimens(1),
+                                          ),
+                                    ),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop(false);
+                                          // Navigator.of(context).pop();
+                                        },
+                                        child: Text(S.of(context).cancel),
+                                      ),
+                                      TextButton(
+                                        onPressed: () async {
+                                          Navigator.of(context).pop(true);
+                                          // Navigator.of(context).pop();
+                                          // Call the function to delete species
+                                          await specimenProvider.removeSpecimen(
+                                            specimen,
+                                          );
+                                        },
+                                        child: Text(S.of(context).delete),
+                                      ),
+                                    ],
+                                  );
+                                },
                               );
                             },
-                          );
-                        } else {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AddSpecimenScreen(
-                                specimen: specimen,
-                                isEditing: true,
+                            color: Theme.of(context).colorScheme.error,
+                          ),
+                        ],
+                      ),
+                      // Divider(),
+                      Row(
+                        children: [
+                          const SizedBox(width: 8.0),
+                          Text(
+                            S.current.export,
+                            style: TextTheme.of(context).bodyMedium,
+                          ),
+                          // Icon(Icons.share_outlined),
+                          Expanded(
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: [
+                                  const SizedBox(width: 16.0),
+                                  ActionChip(
+                                    label: const Text('KML'),
+                                    onPressed: () async {
+                                      exportSpecimenToKml(context, specimen);
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                  const SizedBox(width: 8.0),
+                                ],
                               ),
                             ),
-                          );
-                        }
-                      }),
-                      if (_showPending)
-                      buildGridMenuItem(context, Icons.archive_outlined,
-                          S.current.archive, () {
-                            Navigator.of(context).pop();
-                            specimen.isPending = false;
-                            specimenProvider.updateSpecimen(specimen);
-                          }),
-                      // buildGridMenuItem(
-                      //       context, Icons.share_outlined, 'KML',
-                      //           () async {
-                      //         Navigator.of(context).pop();
-                      //         exportSpecimenToKml(context, specimen);
-                      //       }),
-                      buildGridMenuItem(context, Icons.delete_outlined,
-                          S.of(context).delete, () {
-                            Navigator.of(context).pop();
-                            // Ask for user confirmation
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog.adaptive(
-                                  title: Text(S.of(context).confirmDelete),
-                                  content: Text(S.of(context).confirmDeleteMessage(1, "male", S.of(context).specimens(1))),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop(false);
-                                        // Navigator.of(context).pop();
-                                      },
-                                      child: Text(S.of(context).cancel),
-                                    ),
-                                    TextButton(
-                                      onPressed: () async {
-                                        Navigator.of(context).pop(true);
-                                        // Navigator.of(context).pop();
-                                        // Call the function to delete species
-                                        await specimenProvider.removeSpecimen(specimen);
-                                      },
-                                      child: Text(S.of(context).delete),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          }, color: Theme.of(context).colorScheme.error),
-                    ],
-                  ),
-                  // Divider(),
-                  Row(
-                    children: [
-                      const SizedBox(width: 8.0),
-                      Text(S.current.export, style: TextTheme
-                          .of(context)
-                          .bodyMedium,),
-                      // Icon(Icons.share_outlined),
-                      Expanded(
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child:
-                          Row(
-                            children: [
-                              const SizedBox(width: 16.0),
-                              ActionChip(
-                                label: const Text('KML'),
-                                onPressed: () async {
-                                  exportSpecimenToKml(context, specimen);
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                              const SizedBox(width: 8.0),
-                            ],
                           ),
-                        ),
+                        ],
                       ),
                     ],
                   ),
-                ],
-              ),
-              ),
-            );
-          },
+                ),
+              );
+            },
           ),
         );
       },
@@ -1550,33 +1727,42 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                     // crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       GridView.count(
-                        crossAxisCount: MediaQuery.sizeOf(context).width < 600 ? 4 : 5,
+                        crossAxisCount:
+                            MediaQuery.sizeOf(context).width < 600 ? 4 : 5,
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         children: <Widget>[
-                            buildGridMenuItem(
-                                context, Icons.library_add_check_outlined, S.of(context).selectAll,
-                                    () async {
-                                  Navigator.of(context).pop();
-                                  final filteredSpecimens = _filterSpecimens(_showPending
-                                      ? specimenProvider.pendingSpecimens
-                                      : specimenProvider.archivedSpecimens);
-                                  setState(() {
-                                    selectedSpecimens = filteredSpecimens
+                          buildGridMenuItem(
+                            context,
+                            Icons.library_add_check_outlined,
+                            S.of(context).selectAll,
+                            () async {
+                              Navigator.of(context).pop();
+                              final filteredSpecimens = _filterSpecimens(
+                                _showPending
+                                    ? specimenProvider.pendingSpecimens
+                                    : specimenProvider.archivedSpecimens,
+                              );
+                              setState(() {
+                                selectedSpecimens =
+                                    filteredSpecimens
                                         .map((specimen) => specimen.id)
                                         .whereType<int>()
                                         .toSet();
-                                  });
-                                }),
+                              });
+                            },
+                          ),
                           // Action to import nests from JSON
                           buildGridMenuItem(
-                              context, Icons.file_open_outlined, S.of(context).import,
-                                  () async {
-                                
-                                await importSpecimensFromJson(context);
-                                await specimenProvider.fetchSpecimens();
-                                Navigator.of(context).pop();
-                              }),
+                            context,
+                            Icons.file_open_outlined,
+                            S.of(context).import,
+                            () async {
+                              await importSpecimensFromJson(context);
+                              await specimenProvider.fetchSpecimens();
+                              Navigator.of(context).pop();
+                            },
+                          ),
                           // buildGridMenuItem(
                           //     context, Icons.share_outlined, '${S.of(context).exportAll} (CSV)',
                           //         () async {
@@ -1598,51 +1784,72 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                         ],
                       ),
                       if (specimenProvider.specimens.isNotEmpty) ...[
-                      Divider(),
-                      Row(
-                        children: [
-                          const SizedBox(width: 8.0),
-                          Text(S.current.exportAll, style: TextTheme
-                              .of(context)
-                              .bodyMedium,),
-                          // Icon(Icons.share_outlined),
-                          Expanded(
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child:
-                              Row(
-                                children: [
-                                  const SizedBox(width: 16.0),
-                                  ActionChip(
-                                    label: const Text('CSV'),
-                                    onPressed: () async {
-                                      Navigator.of(context).pop();
-                                      exportAllSpecimensToCsv(context, _showPending ? specimenProvider.pendingSpecimens : specimenProvider.archivedSpecimens);
-                                    },
-                                  ),
-                                  const SizedBox(width: 8.0),
-                                  ActionChip(
-                                    label: const Text('Excel'),
-                                    onPressed: () async {
-                                      Navigator.of(context).pop();
-                                      exportAllSpecimensToExcel(context, _showPending ? specimenProvider.pendingSpecimens : specimenProvider.archivedSpecimens);
-                                    },
-                                  ),
-                                  const SizedBox(width: 8.0),
-                                  ActionChip(
-                                    label: const Text('JSON'),
-                                    onPressed: () async {
-                                      Navigator.of(context).pop();
-                                      exportAllSpecimensToJson(context, _showPending ? specimenProvider.pendingSpecimens : specimenProvider.archivedSpecimens);
-                                    },
-                                  ),
-                                  const SizedBox(width: 8.0),
-                                ],
+                        Divider(),
+                        Row(
+                          children: [
+                            const SizedBox(width: 8.0),
+                            Text(
+                              S.current.exportAll,
+                              style: TextTheme.of(context).bodyMedium,
+                            ),
+                            // Icon(Icons.share_outlined),
+                            Expanded(
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: [
+                                    const SizedBox(width: 16.0),
+                                    ActionChip(
+                                      label: const Text('CSV'),
+                                      onPressed: () async {
+                                        Navigator.of(context).pop();
+                                        exportAllSpecimensToCsv(
+                                          context,
+                                          _showPending
+                                              ? specimenProvider
+                                                  .pendingSpecimens
+                                              : specimenProvider
+                                                  .archivedSpecimens,
+                                        );
+                                      },
+                                    ),
+                                    const SizedBox(width: 8.0),
+                                    ActionChip(
+                                      label: const Text('Excel'),
+                                      onPressed: () async {
+                                        Navigator.of(context).pop();
+                                        exportAllSpecimensToExcel(
+                                          context,
+                                          _showPending
+                                              ? specimenProvider
+                                                  .pendingSpecimens
+                                              : specimenProvider
+                                                  .archivedSpecimens,
+                                        );
+                                      },
+                                    ),
+                                    const SizedBox(width: 8.0),
+                                    ActionChip(
+                                      label: const Text('JSON'),
+                                      onPressed: () async {
+                                        Navigator.of(context).pop();
+                                        exportAllSpecimensToJson(
+                                          context,
+                                          _showPending
+                                              ? specimenProvider
+                                                  .pendingSpecimens
+                                              : specimenProvider
+                                                  .archivedSpecimens,
+                                        );
+                                      },
+                                    ),
+                                    const SizedBox(width: 8.0),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
+                          ],
+                        ),
                       ],
                     ],
                   ),
