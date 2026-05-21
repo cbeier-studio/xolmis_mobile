@@ -36,6 +36,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool _formatNumbers = true;
   bool _remindVegetationEmpty = false;
   bool _remindWeatherEmpty = false;
+  int _startupModuleIndex = StartupModule.inventories.index;
   SupportedCountry _userCountry = SupportedCountry.BR;
   PackageInfo? _packageInfo;
 
@@ -67,6 +68,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
       _formatNumbers = prefs.getBool('formatNumbers') ?? true;
       _remindVegetationEmpty = prefs.getBool('remindVegetationEmpty') ?? false;
       _remindWeatherEmpty = prefs.getBool('remindWeatherEmpty') ?? false;
+      _startupModuleIndex =
+          prefs.getInt(kStartupModulePreferenceKey) ??
+          StartupModule.inventories.index;
+
+      if (_startupModuleIndex < 0 ||
+          _startupModuleIndex >= StartupModule.values.length) {
+        _startupModuleIndex = StartupModule.inventories.index;
+      }
     });
   }
 
@@ -86,6 +95,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     await prefs.setBool('formatNumbers', _formatNumbers);
     await prefs.setBool('remindVegetationEmpty', _remindVegetationEmpty);
     await prefs.setBool('remindWeatherEmpty', _remindWeatherEmpty);
+    await prefs.setInt(kStartupModulePreferenceKey, _startupModuleIndex);
     await prefs.setString('user_country', _userCountry.name);
   }
 
@@ -340,6 +350,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
             SettingsSection(
               title: Text(S.of(context).general),
               tiles: [
+                SettingsTile.navigation(
+                  leading: const Icon(Icons.home_outlined),
+                  title: Text(S.of(context).startupModule),
+                  value: Text(_getStartupModuleLabel(context, _startupModuleIndex)),
+                  onPressed: (context) async {
+                    final selectedModule =
+                        await _showStartupModuleSelectionDialog(context);
+
+                    if (selectedModule != null &&
+                        selectedModule != _startupModuleIndex) {
+                      setState(() {
+                        _startupModuleIndex = selectedModule;
+                      });
+                      await _saveSettings();
+                    }
+                  },
+                ),
                 // Option to select the theme mode
                 SettingsTile.navigation(
                   leading: const Icon(Icons.contrast_outlined),
@@ -589,6 +616,69 @@ class _SettingsScreenState extends State<SettingsScreen> {
               },
             ),
           ],
+        );
+      },
+    );
+  }
+
+  String _getStartupModuleLabel(BuildContext context, int moduleIndex) {
+    switch (StartupModule.values[moduleIndex]) {
+      case StartupModule.inventories:
+        return S.of(context).inventories;
+      case StartupModule.nests:
+        return S.of(context).nests;
+      case StartupModule.specimens:
+        return S.of(context).specimens(2);
+      case StartupModule.fieldJournal:
+        return S.of(context).fieldJournal;
+      case StartupModule.statistics:
+        return S.of(context).statistics;
+    }
+  }
+
+  Future<int?> _showStartupModuleSelectionDialog(BuildContext context) async {
+    int tempSelectedModule = _startupModuleIndex;
+
+    return showDialog<int>(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              title: Text(S.of(context).startupModule),
+              content: SingleChildScrollView(
+                child: RadioGroup<int>(
+                  groupValue: tempSelectedModule,
+                  onChanged: (int? value) {
+                    if (value == null) return;
+                    setDialogState(() {
+                      tempSelectedModule = value;
+                    });
+                  },
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: List<Widget>.generate(
+                      StartupModule.values.length,
+                      (index) => RadioListTile<int>(
+                        title: Text(_getStartupModuleLabel(context, index)),
+                        value: index,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: Text(S.of(context).cancel),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+                TextButton(
+                  child: Text(S.of(context).save),
+                  onPressed: () => Navigator.of(context).pop(tempSelectedModule),
+                ),
+              ],
+            );
+          },
         );
       },
     );

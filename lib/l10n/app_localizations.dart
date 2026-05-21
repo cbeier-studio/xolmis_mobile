@@ -147,6 +147,12 @@ abstract class AppLocalizations {
   /// **'Appearance'**
   String get appearance;
 
+  /// Settings option to choose which module opens when the app starts
+  ///
+  /// In en, this message translates to:
+  /// **'Startup module'**
+  String get startupModule;
+
   /// Title of dialog to select the app mode
   ///
   /// In en, this message translates to:

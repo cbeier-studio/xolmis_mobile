@@ -1038,6 +1038,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Iniciar próxima lista",
     ),
     "startTime": MessageLookupByLibrary.simpleMessage("Hora inicial"),
+    "startupModule": MessageLookupByLibrary.simpleMessage("Módulo inicial"),
     "statistics": MessageLookupByLibrary.simpleMessage("Estatísticas"),
     "suggestFeatureOrReportIssue": MessageLookupByLibrary.simpleMessage(
       "Sugerir recurso ou reportar problema",

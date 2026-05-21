@@ -9,6 +9,7 @@
 * Added Observer field to inventories, nests, specimens and field journal.
 * Added filters for inventories, nests, specimens and field journal.
 * Temporary files and database cleanup on app start.
+* Added option to set module to open on app start.
 
 ### Improvements
 

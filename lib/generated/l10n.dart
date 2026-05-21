@@ -128,6 +128,16 @@ class S {
     );
   }
 
+  /// `Startup module`
+  String get startupModule {
+    return Intl.message(
+      'Startup module',
+      name: 'startupModule',
+      desc: 'Settings option to choose which module opens when the app starts',
+      args: [],
+    );
+  }
+
   /// `Select the mode`
   String get selectMode {
     return Intl.message(

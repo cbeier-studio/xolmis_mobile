@@ -970,6 +970,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "startInventory": MessageLookupByLibrary.simpleMessage("Start inventory"),
     "startNextList": MessageLookupByLibrary.simpleMessage("Start next list"),
     "startTime": MessageLookupByLibrary.simpleMessage("Start time"),
+    "startupModule": MessageLookupByLibrary.simpleMessage("Startup module"),
     "statistics": MessageLookupByLibrary.simpleMessage("Statistics"),
     "suggestFeatureOrReportIssue": MessageLookupByLibrary.simpleMessage(
       "Suggest a feature or report an issue",

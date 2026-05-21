@@ -5,6 +5,15 @@ const double kDesktopBreakpoint = 840.0;
 const double kSideSheetWidth = 360.0;
 
 const int kCurrentSpeciesUpdateVersion = 2025;
+const String kStartupModulePreferenceKey = 'startupModuleIndex';
+
+enum StartupModule {
+  inventories,
+  nests,
+  specimens,
+  fieldJournal,
+  statistics,
+}
 
 class DatabaseInsertException implements Exception {
   final String message;

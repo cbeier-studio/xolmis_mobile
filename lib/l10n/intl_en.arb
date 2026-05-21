@@ -44,6 +44,11 @@
         "type": "text",
         "description": "Appearance option in settings"
     },
+    "startupModule": "Startup module",
+    "@startupModule": {
+        "type": "text",
+        "description": "Settings option to choose which module opens when the app starts"
+    },
     "selectMode": "Select the mode",
     "@selectMode": {
         "type": "text",

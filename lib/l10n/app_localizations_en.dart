@@ -49,6 +49,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appearance => 'Appearance';
 
   @override
+  String get startupModule => 'Startup module';
+
+  @override
   String get selectMode => 'Select the mode';
 
   @override

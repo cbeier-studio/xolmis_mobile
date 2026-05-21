@@ -9,6 +9,7 @@
 * Adicionado campo Observador nos inventários, ninhos, espécimes e diário de campo.
 * Adicionados filtros para inventários, ninhos, espécimes e diário de campo.
 * Limpeza de arquivos temporários e banco de dados ao iniciar o app.
+* Adicionada opção para definir módulo a abrir ao iniciar o app.
 
 ### Melhorias
 

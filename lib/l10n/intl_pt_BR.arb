@@ -35,6 +35,11 @@
         "description": "General section in settings"
     },
     "appearance": "Aparência",
+    "startupModule": "Módulo inicial",
+    "@startupModule": {
+        "type": "text",
+        "description": "Opção para definir qual módulo abre ao iniciar o app"
+    },
     "selectMode": "Selecione o modo",
     "lightMode": "Claro",
     "darkMode": "Escuro",

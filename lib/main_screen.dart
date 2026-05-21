@@ -54,7 +54,7 @@ class _NavigationItem {
 class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late final List<_NavigationItem> _navItems;
-  int _selectedIndex = 0;
+  int _selectedIndex = StartupModule.inventories.index;
   String _appVersion = '';
   late InventoryProvider inventoryProvider;
   late InventoryDao inventoryDao;
@@ -130,7 +130,23 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
       ),
     ];
 
+    _loadStartupModulePreference();
     _initializeApp();
+  }
+
+  Future<void> _loadStartupModulePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedIndex = prefs.getInt(kStartupModulePreferenceKey);
+
+    if (savedIndex == null || savedIndex < 0 || savedIndex >= _navItems.length) {
+      return;
+    }
+
+    if (!mounted || _selectedIndex == savedIndex) return;
+
+    setState(() {
+      _selectedIndex = savedIndex;
+    });
   }
 
   void _initializeApp() async {

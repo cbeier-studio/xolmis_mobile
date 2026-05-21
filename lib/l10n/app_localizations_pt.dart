@@ -49,6 +49,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get appearance => 'Aparência';
 
   @override
+  String get startupModule => 'Módulo inicial';
+
+  @override
   String get selectMode => 'Selecione o modo';
 
   @override
@@ -1906,6 +1909,9 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get appearance => 'Aparência';
+
+  @override
+  String get startupModule => 'Módulo inicial';
 
   @override
   String get selectMode => 'Selecione o modo';
