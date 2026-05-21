@@ -16,7 +16,7 @@
 - Localized strings use `S.of(context)` / `S.current` from `lib/generated/l10n.dart`; enums map to user-facing labels in `lib/core/core_consts.dart`.
 - Do not hand-edit generated localization files under `lib/generated/` or `lib/generated/intl/`.
 - Species autocomplete data is asset-driven, not remote. `loadSpeciesSearchData()` reads `assets/checklists/species_data_<country>.json` based on `SharedPreferences['user_country']`.
-- Settings in `lib/screens/settings/settings_screen.dart` drive behavior across the app: observer acronym, country checklist, export number formatting, default durations, reminders, theme.
+- Settings in `lib/screens/settings/settings_screen.dart` drive behavior across the app: observer initials, country checklist, export number formatting, default durations, reminders, theme.
 - Many flows show errors via persistent `SnackBar`s rather than dialogs; preserve that style when extending existing screens.
 - Responsive layout uses shared breakpoints from `lib/core/core_consts.dart`: tablet `600`, desktop `840`, side sheet width `360`.
 
@@ -37,10 +37,10 @@
 ## Validation commands
 - Install/refresh deps: `flutter pub get`
 - Run static analysis: `flutter analyze`
-- Run the existing asset integrity test: `flutter test test/checklists_integrity_test.dart`
 - Launch locally: `flutter run`
 
 ## Current repo realities
 - `flutter analyze` currently reports many pre-existing infos/warnings, including generated localization files and async-context lint noise; do not assume a clean analyzer baseline.
-- The most meaningful existing automated check is `test/checklists_integrity_test.dart`, which verifies every supported-country species checklist asset exists and has the expected JSON structure.
+- The supported-country species checklist automated check is `test/checklists_integrity_test.dart`, which verifies every checklist asset exists and has the expected JSON structure.
+- The utils test suite in `test/utils/utils_test.dart` covers species name matching, string formatting, and statistics logic.
 
