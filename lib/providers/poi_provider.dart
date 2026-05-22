@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../data/models/inventory.dart';
@@ -19,7 +18,7 @@ class PoiProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  /// Metodo mais eficiente que apenas busca a contagem.
+  /// More efficient method that only gets the count of POIs.
   Future<void> fetchPoisCount() async {
     _allPoisCount = await _poiDao.countAllPois();
     notifyListeners();
@@ -32,9 +31,7 @@ class PoiProvider with ChangeNotifier {
       _poiMap[speciesId] = poiList;
       notifyListeners();
     } catch (e) {
-      if (kDebugMode) {
-        print('Error loading POIs for species $speciesId: $e');
-      }
+      debugPrint('Error loading POIs for species $speciesId: $e');
     }
   }
 

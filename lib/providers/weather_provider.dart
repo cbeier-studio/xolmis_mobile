@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../data/models/inventory.dart';
@@ -21,9 +20,7 @@ class WeatherProvider with ChangeNotifier {
       final weatherList = await _weatherDao.getWeatherByInventory(inventoryId);
       _weatherMap[inventoryId] = weatherList;
     } catch (e) {
-      if (kDebugMode) {
-        print('Error loading weather for inventory $inventoryId: $e');
-      }
+      debugPrint('Error loading weather for inventory $inventoryId: $e');
     } finally {
       notifyListeners();
     }
@@ -41,8 +38,6 @@ class WeatherProvider with ChangeNotifier {
 
     // Add the weather data to the list of the provider
     _weatherMap[inventoryId] = await _weatherDao.getWeatherByInventory(inventoryId);
-    // _weatherMap[inventoryId] = _weatherMap[inventoryId] ?? [];
-    // _weatherMap[inventoryId]!.add(weather);
 
     notifyListeners();
   }

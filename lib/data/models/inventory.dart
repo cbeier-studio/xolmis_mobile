@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
+
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
@@ -30,6 +30,7 @@ class Poi {
     this.notes,
   });
 
+  /// Creates a [Poi] instance from a SQLite row [map].
   factory Poi.fromMap(Map<String, dynamic> map) {
     return Poi(
       id: map['id'],
@@ -41,6 +42,7 @@ class Poi {
     );
   }
 
+  /// Returns a copy of this [Poi] with the specified fields replaced.
   Poi copyWith({int? id, int? speciesId, DateTime? sampleTime, double? longitude, double? latitude, String? notes}) {
     return Poi(
       id: id ?? this.id,
@@ -52,6 +54,8 @@ class Poi {
     );
   }
 
+  /// Converts this [Poi] to a SQLite-compatible map, using [speciesId] as the
+  /// foreign key value.
   Map<String, dynamic> toMap(int speciesId) {
     return {
       'id': id,
@@ -63,6 +67,7 @@ class Poi {
     };
   }
 
+  /// Converts this [Poi] to a JSON-compatible map for export.
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -74,6 +79,7 @@ class Poi {
     };
   }
 
+  /// Creates a [Poi] instance from a JSON map.
   factory Poi.fromJson(Map<String, dynamic> json) {
     return Poi(
       id: json['id'],
@@ -126,6 +132,8 @@ class Species {
     this.pois = const [],
   });
 
+  /// Creates a [Species] instance from a SQLite row [map], associating the
+  /// given [pois] list.
   factory Species.fromMap(Map<String, dynamic> map, List<Poi> pois) {
     return Species(
       id: map['id'],
@@ -144,6 +152,7 @@ class Species {
     );
   }
 
+  /// Returns a copy of this [Species] with the specified fields replaced.
   Species copyWith({
     int? id,
     String? inventoryId,
@@ -172,6 +181,8 @@ class Species {
     );
   }
 
+  /// Converts this [Species] to a SQLite-compatible map, using [inventoryId]
+  /// as the foreign key value.
   Map<String, dynamic> toMap(String inventoryId) {
     return {
       'id': id,
@@ -187,6 +198,8 @@ class Species {
     };
   }
 
+  /// Converts this [Species] to a JSON-compatible map for export, including
+  /// the nested [pois] list.
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -203,6 +216,7 @@ class Species {
     };
   }
 
+  /// Creates a [Species] instance from a JSON map, including nested [Poi]s.
   factory Species.fromJson(Map<String, dynamic> json) {
     return Species(
       id: json['id'],
@@ -272,6 +286,7 @@ class Vegetation {
     this.notes,
   });
 
+  /// Creates a [Vegetation] instance from a SQLite row [map].
   factory Vegetation.fromMap(Map<String, dynamic> map) {
     return Vegetation(
       id: map['id'],
@@ -294,6 +309,7 @@ class Vegetation {
     );
   }
 
+  /// Returns a copy of this [Vegetation] with the specified fields replaced.
   Vegetation copyWith({
     int? id,
     String? inventoryId,
@@ -330,6 +346,8 @@ class Vegetation {
     );
   }
 
+  /// Converts this [Vegetation] to a SQLite-compatible map, using [inventoryId]
+  /// as the foreign key value.
   Map<String, dynamic> toMap(String inventoryId) {
     return {
       'id': id,
@@ -350,6 +368,7 @@ class Vegetation {
     };
   }
 
+  /// Converts this [Vegetation] to a JSON-compatible map for export.
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -370,6 +389,7 @@ class Vegetation {
     };
   }
 
+  /// Creates a [Vegetation] instance from a JSON map.
   factory Vegetation.fromJson(Map<String, dynamic> json) {
     return Vegetation(
       id: json['id'],
@@ -438,6 +458,7 @@ class Weather {
     this.relativeHumidity,
   });
 
+  /// Creates a [Weather] instance from a SQLite row [map].
   factory Weather.fromMap(Map<String, dynamic> map) {
     return Weather(
       id: map['id'],
@@ -455,6 +476,7 @@ class Weather {
     );
   }
 
+  /// Returns a copy of this [Weather] with the specified fields replaced.
   Weather copyWith({
       int? id,
       String? inventoryId,
@@ -481,6 +503,8 @@ class Weather {
     );
   }
 
+  /// Converts this [Weather] to a SQLite-compatible map, using [inventoryId]
+  /// as the foreign key value.
   Map<String, dynamic> toMap(String inventoryId) {
     return {
       'id': id,
@@ -496,6 +520,7 @@ class Weather {
     };
   }
 
+  /// Converts this [Weather] to a JSON-compatible map for export.
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -511,6 +536,7 @@ class Weather {
     };
   }
 
+  /// Creates a [Weather] instance from a JSON map.
   factory Weather.fromJson(Map<String, dynamic> json) {
     return Weather(
       id: json['id'],
@@ -745,6 +771,9 @@ class Inventory with ChangeNotifier {
     );
   }
 
+  /// Converts this [Inventory] to a SQLite-compatible map. Sub-lists
+  /// ([speciesList], [vegetationList], [weatherList]) are NOT included; they
+  /// are persisted separately by their own DAOs.
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -801,6 +830,8 @@ class Inventory with ChangeNotifier {
         'isDiscarded: $isDiscarded }';
   }
 
+  /// Converts this [Inventory] to a JSON-compatible map for export, including
+  /// the nested [speciesList], [vegetationList], and [weatherList].
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -829,6 +860,8 @@ class Inventory with ChangeNotifier {
     };
   }
 
+  /// Creates an [Inventory] instance from a JSON map, including nested
+  /// [Species], [Vegetation], and [Weather] lists.
   factory Inventory.fromJson(Map<String, dynamic> json) {
     return Inventory(
       id: json['id'],
@@ -857,7 +890,7 @@ class Inventory with ChangeNotifier {
     );
   }
 
-  // Update elapsed time values
+  /// Updates [elapsedTime] and notifies all listeners and [ValueNotifier]s.
   void updateElapsedTime(double newElapsedTime) {
     elapsedTime = newElapsedTime;
     elapsedTimeNotifier.value = elapsedTime;
@@ -865,7 +898,7 @@ class Inventory with ChangeNotifier {
     notifyListeners();
   }
 
-  // Update current interval values
+  /// Updates [currentInterval] and notifies all listeners and [ValueNotifier]s.
   void updateCurrentInterval(int newInterval) {
     currentInterval = newInterval;
     currentIntervalNotifier.value = currentInterval;
@@ -873,7 +906,8 @@ class Inventory with ChangeNotifier {
     notifyListeners();
   }
 
-  // Update current interval values
+  /// Updates [intervalsWithoutNewSpecies] and notifies all listeners and
+  /// [ValueNotifier]s.
   void updateIntervalsWithoutNewSpecies(int newInterval) {
     intervalsWithoutNewSpecies = newInterval;
     intervalWithoutSpeciesNotifier.value = intervalsWithoutNewSpecies;
@@ -881,7 +915,9 @@ class Inventory with ChangeNotifier {
     notifyListeners();
   }
 
-  // Update if inventory is finished
+  /// Updates [isFinished] and notifies all listeners and [ValueNotifier]s.
+  ///
+  /// When [newIsFinished] is `false`, also resets the internal auto-finish flag.
   void updateIsFinished(bool newIsFinished) {
     isFinished = newIsFinished;
     if (newIsFinished == false) {
@@ -892,7 +928,15 @@ class Inventory with ChangeNotifier {
     notifyListeners();
   }
 
-  // Start the inventory timer
+  /// Starts the inventory countdown timer, ticking every 5 seconds.
+  ///
+  /// Does nothing if [duration] is `0`. On each tick, the elapsed time is
+  /// incremented and persisted via [inventoryDao]. For
+  /// [InventoryType.invIntervalQualitative] inventories, interval transitions
+  /// and the three-intervals-without-new-species auto-finish rule are also
+  /// evaluated. For other timed types the inventory finishes as soon as
+  /// `elapsedTime >= duration * 60`. When the inventory finishes automatically,
+  /// [stopTimer] is called and a local notification is shown.
   Future<void> startTimer(BuildContext context, InventoryDao inventoryDao) async {
     debugPrint('START_TIMER_CALLED for inventory $id. Current state: isFinished=$isFinished, isPaused=$isPaused, duration=$duration');
     // If duration was not defined, do not start the timer
@@ -981,9 +1025,8 @@ class Inventory with ChangeNotifier {
               await stopTimer(context, inventoryDao);
               // If finished automatically, show a notification
               await showNotification(flutterLocalNotificationsPlugin);
-              if (kDebugMode) {
-                print('stopTimer called automatically: $elapsedTime of ${duration * 60}');
-              }
+
+              debugPrint('stopTimer called automatically: $elapsedTime of ${duration * 60}');
             }
           }
         }
@@ -992,7 +1035,10 @@ class Inventory with ChangeNotifier {
     notifyListeners();
   }
 
-  // Pause the inventory timer
+  /// Pauses the running timer, recording the pause start time and persisting
+  /// the inventory state via [inventoryDao].
+  ///
+  /// Does nothing if the inventory is already paused.
   Future<void> pauseTimer(InventoryDao inventoryDao) async {
     if (isPaused) {
       debugPrint('PAUSE IGNORED for $id: Already paused.');
@@ -1000,7 +1046,6 @@ class Inventory with ChangeNotifier {
     }
     debugPrint('PAUSING inventory $id...');
     _timer?.pause();
-    // _timer = null;
     isPaused = true;
     pauseStartTime = DateTime.now();
     elapsedTimeNotifier.value = elapsedTime;
@@ -1010,7 +1055,12 @@ class Inventory with ChangeNotifier {
     await inventoryDao.updateInventory(this);
   }
 
-  // Resume the inventory timer
+  /// Resumes a paused timer, accumulating the paused duration into
+  /// [totalPausedTimeInSeconds] and persisting the inventory state via
+  /// [inventoryDao].
+  ///
+  /// Restarts the timer from scratch (via [startTimer]) if no paused timer
+  /// subscription exists. Does nothing if the inventory is not currently paused.
   Future<void> resumeTimer(BuildContext context, InventoryDao inventoryDao) async {
     if (!isPaused) {
       debugPrint('RESUME IGNORED for $id: Not currently paused.');
@@ -1051,7 +1101,10 @@ class Inventory with ChangeNotifier {
     await inventoryDao.updateInventory(this);
   }
 
-  // Stop the timer and finish the inventory
+  /// Stops the timer, marks the inventory as finished, records [endTime] and
+  /// end coordinates, and persists the final state via [inventoryDao].
+  ///
+  /// Does nothing if the inventory is already finished.
   Future<void> stopTimer(BuildContext context, InventoryDao inventoryDao) async {
     if (isFinished) {
       debugPrint('STOP_TIMER_IGNORED for $id: Already finished.');
@@ -1080,7 +1133,8 @@ class Inventory with ChangeNotifier {
     notifyListeners();
   }
 
-  // Show notification when inventory was finished automatically
+  /// Shows a local push notification informing the user that this inventory
+  /// was finished automatically.
   Future<void> showNotification(
       FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin) async {
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
@@ -1103,4 +1157,3 @@ class Inventory with ChangeNotifier {
         payload: 'item x');
   }
 }
-

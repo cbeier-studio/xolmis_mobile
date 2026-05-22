@@ -99,14 +99,6 @@ class AddNestScreenState extends State<AddNestScreen> {
     }
   }
 
-  // void _addSpeciesToNest(String speciesName) async {
-  //   // Empty
-  // }
-
-  // void _updateNest() async {
-  //   // Empty
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -145,7 +137,6 @@ class AddNestScreenState extends State<AddNestScreen> {
                           controller: _speciesNameController,
                           decoration: InputDecoration(
                             labelText: '${S.of(context).species(1)} *',
-                            // helperText: S.of(context).requiredField,
                             border: OutlineInputBorder(),
                           ),
                           readOnly: true,
@@ -208,17 +199,12 @@ class AddNestScreenState extends State<AddNestScreen> {
                           TextEditingController fieldTextEditingController,
                           FocusNode fieldFocusNode,
                           VoidCallback onFieldSubmitted) {
-                        // _fieldLocalityEditingController = fieldTextEditingController;
-                        // if (widget.isEditing && !_isSubmitting) {
-                        //   _fieldLocalityEditingController.text = widget.nest?.localityName ?? '';
-                        // }
                         return TextFormField(
                           controller: fieldTextEditingController,
                           focusNode: fieldFocusNode,
                           textCapitalization: TextCapitalization.words,
                           decoration: InputDecoration(
                             labelText: '${S.of(context).locality} *',
-                            // helperText: S.of(context).requiredField,
                             border: OutlineInputBorder(),
                           ),
                           validator: (value) {
@@ -294,17 +280,12 @@ class AddNestScreenState extends State<AddNestScreen> {
                           TextEditingController fieldTextEditingController,
                           FocusNode fieldFocusNode,
                           VoidCallback onFieldSubmitted) {
-                        // _fieldSupportEditingController = fieldTextEditingController;
-                        // if (widget.isEditing && !_isSubmitting) {
-                        //   _fieldSupportEditingController.text = widget.nest?.support ?? '';
-                        // }
                         return TextFormField(
                           controller: fieldTextEditingController,
                           focusNode: fieldFocusNode,
                           textCapitalization: TextCapitalization.sentences,
                           decoration: InputDecoration(
                             labelText: '${S.of(context).nestSupport} *',
-                            // helperText: S.of(context).requiredField,
                             hintText: S.of(context).plantSpeciesOrSupportType,
                             border: OutlineInputBorder(),
                           ),

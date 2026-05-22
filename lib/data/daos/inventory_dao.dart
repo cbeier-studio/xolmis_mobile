@@ -1,5 +1,4 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -19,7 +18,13 @@ class InventoryDao {
 
   InventoryDao(this._dbHelper, this._speciesDao, this._vegetationDao, this._weatherDao);
 
-  // Insert new inventory to database
+  /// Inserts a new [Inventory] record into the database.
+  ///
+  /// Automatically sets [Inventory.startTime] to the current date/time and,
+  /// if location permission is available, populates [Inventory.startLatitude]
+  /// and [Inventory.startLongitude] from the device's current position.
+  /// Uses [ConflictAlgorithm.replace] to handle duplicate entries.
+  /// Returns `true` on success, or `false` if a database or generic error occurs.
   Future<bool> insertInventory(BuildContext context, Inventory inventory) async {
     final db = await _dbHelper.database;
     try {
@@ -37,25 +42,29 @@ class InventoryDao {
       );
       return recordId != null && recordId > 0;
     } on DatabaseException catch (e) {
-      if (kDebugMode) {
-        print('Database error: $e');
-        print('Exception type: ${e.runtimeType}');
-        print('Detailed message: ${e.toString()}');
-      }
+      debugPrint('Database error: $e');
+      debugPrint('Exception type: ${e.runtimeType}');
+      debugPrint('Detailed message: ${e.toString()}');
       return false;
       // Handle the database error
     } catch (e) {
-      if (kDebugMode) {
-        print('Generic error: $e');
-        print('Exception type: ${e.runtimeType}');
-        print('Detailed message: ${e.toString()}');
-      }
+      debugPrint('Generic error: $e');
+      debugPrint('Exception type: ${e.runtimeType}');
+      debugPrint('Detailed message: ${e.toString()}');
       // Handle other errors
       return false;
     }
   }
 
-  // Insert an imported inventory to database
+  /// Imports an [Inventory] into the database inside a single transaction,
+  /// ignoring any pre-existing IDs on child records so the database assigns
+  /// new auto-incremented IDs.
+  ///
+  /// The imported inventory is always marked as finished. After inserting the
+  /// inventory, all associated [Species] (with their [Poi]s), [Vegetation], and
+  /// [Weather] records are inserted and linked to the inventory's ID.
+  /// The transaction is rolled back entirely if any insertion fails.
+  /// Returns `true` on success, or `false` if an error occurs.
   Future<bool> importInventory(Inventory inventory) async {
     final db = await _dbHelper.database;
     if (db == null) {
@@ -139,23 +148,19 @@ class InventoryDao {
         return recordId > 0;
       });
     } on DatabaseException catch (e) {
-      if (kDebugMode) {
-        print('Database error during importInventory transaction: $e');
-        print('Exception type: ${e.runtimeType}');
-        print('Detailed message: ${e.toString()}');
-      }
+      debugPrint('Database error during importInventory transaction: $e');
+      debugPrint('Exception type: ${e.runtimeType}');
+      debugPrint('Detailed message: ${e.toString()}');
       return false;
     } catch (e) {
-      if (kDebugMode) {
-        print('Generic error during importInventory transaction: $e');
-        print('Exception type: ${e.runtimeType}');
-        print('Detailed message: ${e.toString()}');
-      }
+      debugPrint('Generic error during importInventory transaction: $e');
+      debugPrint('Exception type: ${e.runtimeType}');
+      debugPrint('Detailed message: ${e.toString()}');
       return false;
     }
   }
 
-  // Delete the inventory from database
+  /// Deletes the [Inventory] record identified by [inventoryId] from the database.
   Future<void> deleteInventory(String? inventoryId) async {
     final db = await _dbHelper.database;
     await db?.delete(
@@ -165,7 +170,7 @@ class InventoryDao {
     );
   }
 
-  // Update inventory data in the database
+  /// Updates the database record for the given [inventory] using its [Inventory.id].
   Future<void> updateInventory(Inventory inventory) async {
     try {
       final db = await _dbHelper.database;
@@ -181,7 +186,8 @@ class InventoryDao {
     }
   }
 
-  // Update the elapsed time of the inventory in the database
+  /// Updates only the `elapsedTime` field of the inventory identified by
+  /// [inventoryId] to [elapsedTime].
   Future<void> updateInventoryElapsedTime(String inventoryId, double elapsedTime) async {
     final db = await _dbHelper.database;
     await db?.update(
@@ -192,7 +198,8 @@ class InventoryDao {
     );
   }
 
-  // Update the current interval of the inventory in the database
+  /// Updates only the `currentInterval` field of the inventory identified by
+  /// [inventoryId] to [currentInterval].
   Future<void> updateInventoryCurrentInterval(String inventoryId, int currentInterval) async {
     final db = await _dbHelper.database;
     await db?.update(
@@ -203,7 +210,8 @@ class InventoryDao {
     );
   }
 
-  // Update the number of intervals without new species of the inventory in the database
+  /// Updates only the `intervalsWithoutNewSpecies` field of the inventory
+  /// identified by [inventoryId] to [intervalsWithoutSpecies].
   Future<void> updateInventoryIntervalsWithoutSpecies(String inventoryId, int intervalsWithoutSpecies) async {
     final db = await _dbHelper.database;
     await db?.update(
@@ -214,7 +222,8 @@ class InventoryDao {
     );
   }
 
-  // Update the current interval species count of the inventory in the database
+  /// Updates only the `currentIntervalSpeciesCount` field of the inventory
+  /// identified by [inventoryId] to [speciesCount].
   Future<void> updateInventoryCurrentIntervalSpeciesCount(String inventoryId, int speciesCount) async {
     final db = await _dbHelper.database;
     await db?.update(
@@ -225,7 +234,14 @@ class InventoryDao {
     );
   }
 
-  // Update the ID of the inventory in the database
+  /// Renames an inventory's primary key from [oldId] to [newId], also updating
+  /// the `inventoryId` foreign key in the `species`, `vegetation`, and `weather`
+  /// tables inside a single transaction.
+  ///
+  /// Foreign-key enforcement is temporarily disabled during the operation to
+  /// allow the primary-key update without constraint violations.
+  /// Throws an [Exception] if the database is unavailable, if no inventory with
+  /// [oldId] is found, or if a database error occurs.
   Future<void> changeInventoryId(String oldId, String newId) async {
     final db = await _dbHelper.database;
 
@@ -292,8 +308,8 @@ class InventoryDao {
     }
   }
 
-
-  // Check if the ID already exists
+  /// Returns `true` if an inventory with the given [id] already exists in the
+  /// database (case-insensitive comparison).
   Future<bool> inventoryIdExists(String id) async {
     final db = await _dbHelper.database;
     final result = await db?.query(
@@ -304,14 +320,16 @@ class InventoryDao {
     return result!.isNotEmpty;
   }
 
-  // Get the number of active inventories
+  /// Returns the number of inventories that have not yet been finished
+  /// (`isFinished = 0`).
   Future<int> getActiveInventoriesCount() async {
     final db = await _dbHelper.database;
     final result = await db?.rawQuery('SELECT COUNT(*) FROM inventories WHERE isFinished = 0');
     return Sqflite.firstIntValue(result!) ?? 0;
   }
 
-  // Get list of all inventories
+  /// Returns all [Inventory] records from the database, each populated with
+  /// its associated [Species], [Vegetation], and [Weather] lists.
   Future<List<Inventory>> getInventories() async {
     final db = await _dbHelper.database;
     try {
@@ -338,7 +356,10 @@ class InventoryDao {
     }
   }
 
-  // Find and get inventory by ID
+  /// Returns the [Inventory] identified by [id], populated with its associated
+  /// [Species], [Vegetation], and [Weather] lists.
+  ///
+  /// Throws an [Exception] if no inventory with the given ID is found.
   Future<Inventory> getInventoryById(String id) async {
     final db = await _dbHelper.database;
     final List<Map<String, dynamic>> maps = await db?.query(
@@ -357,7 +378,13 @@ class InventoryDao {
     }
   }
 
-  // Concatenate the next inventory ID
+  /// Returns the next available sequential number for an inventory ID, based on
+  /// the optional locality [local], observer [observer], date components
+  /// ([ano], [mes], [dia]), and optional inventory type character [typeChar].
+  ///
+  /// The ID prefix is built as
+  /// `[<local>-]<observer>-<year><month><day>-[<typeChar>]`.
+  /// If no existing inventory matches the prefix, returns `1`.
   Future<int> getNextSequentialNumber(String? local, String observer, int ano, int mes, int dia, String? typeChar) async {
     final db = await _dbHelper.database;
 
@@ -381,7 +408,10 @@ class InventoryDao {
     }
   }
 
-  // Get list of distinct localities for autocomplete
+  /// Returns a sorted list of distinct locality names recorded across all
+  /// inventories, excluding `null` values.
+  ///
+  /// Returns an empty list if the database is unavailable or an error occurs.
   Future<List<String>> getDistinctLocalities() async {
     try {
       final db = await _dbHelper.database;
@@ -408,7 +438,10 @@ class InventoryDao {
     }
   }
 
-  // 1. Consulta RÁPIDA: só dados do inventário, sem sublistas, MAS com count de espécies
+  /// Returns a summary list of all [Inventory] records including aggregate
+  /// species counts (`speciesCount`, `speciesWithinCount`,
+  /// `speciesOutOfInventoryCount`), but without loading the full [Species],
+  /// [Vegetation], or [Weather] sub-lists.
   Future<List<Inventory>> getInventoriesSummary() async {
     final db = await _dbHelper.database;
     try {
@@ -449,7 +482,10 @@ class InventoryDao {
     }
   }
 
-  // 2. Filtro por espécie VIA SQL (sem carregar tudo na memória)
+  /// Returns the set of inventory IDs that contain at least one [Species]
+  /// record whose name matches [speciesName].
+  ///
+  /// Uses a direct SQL query to avoid loading all data into memory.
   Future<Set<String>> getInventoryIdsBySpecies(String speciesName) async {
     final db = await _dbHelper.database;
     try {
@@ -472,7 +508,8 @@ class InventoryDao {
     }
   }
 
-  // 2b. Filtro por espécie VIA SQL (carregando inventários completos)
+  /// Returns all [Inventory] records that contain at least one [Species] whose
+  /// name matches [speciesName], each populated with its full [Species] list.
   Future<List<Inventory>> getInventoriesBySpecies(String speciesName) async {
     final db = await _dbHelper.database;
     try {
@@ -499,7 +536,8 @@ class InventoryDao {
     }
   }
 
-  // 3. Estatísticas diretamente em SQL (sem carregar dados)
+  /// Returns the total number of sampling hours across all finished inventories,
+  /// calculated directly in SQL.
   Future<double> getTotalSamplingHours_SQL() async {
     final db = await _dbHelper.database;
     try {
@@ -523,7 +561,8 @@ class InventoryDao {
     }
   }
 
-  // 4. Dias de amostragem via SQL
+  /// Returns the total number of distinct sampling days across all finished
+  /// inventories, calculated directly in SQL.
   Future<int> getTotalSamplingDays_SQL() async {
     final db = await _dbHelper.database;
     try {
@@ -546,7 +585,8 @@ class InventoryDao {
     }
   }
 
-  // 5. Média de horas via SQL
+  /// Returns the average sampling duration in hours across all finished
+  /// inventories, calculated directly in SQL.
   Future<double> getAverageSamplingHours_SQL() async {
     final db = await _dbHelper.database;
     try {
@@ -569,7 +609,8 @@ class InventoryDao {
     }
   }
 
-  // 6. Espécies únicas presentes em inventários (para o dropdown do filtro)
+  /// Returns a sorted list of distinct species names recorded across all
+  /// inventories, suitable for use in filter dropdowns.
   Future<List<String>> getUniqueSpeciesNames() async {
     final db = await _dbHelper.database;
     try {
@@ -589,4 +630,3 @@ class InventoryDao {
     }
   }
 }
-

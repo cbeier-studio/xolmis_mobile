@@ -68,7 +68,6 @@ Future<void> exportAllInventoriesToJson(BuildContext context, InventoryProvider 
     };
     var encoder = JsonEncoder.withIndent("  ");
     final jsonString = encoder.convert(jsonData);
-    // final jsonString = jsonEncode(jsonData);
 
     // Get the current date and time
     final now = DateTime.now();
@@ -106,29 +105,6 @@ Future<void> exportAllInventoriesToJson(BuildContext context, InventoryProvider 
                             content: Text(S.of(context).errorExportingInventory(1, error.toString())),
                           ),
                         );
-    // showDialog(
-    //   context: context,
-    //   builder: (context) {
-    //     return AlertDialog(
-    //       title: Row(
-    //         children: [
-    //           const Icon(Icons.error_outlined, color: Colors.red),
-    //           const SizedBox(width: 10),
-    //           Text(S.current.errorTitle),
-    //         ],
-    //       ),
-    //       content: SingleChildScrollView(
-    //         child: Text(S.current.errorExportingInventory(1, error.toString())),
-    //       ),
-    //       actions: [
-    //         TextButton(
-    //           child: Text(S.of(context).ok),
-    //           onPressed: () => Navigator.of(context).pop(),
-    //         ),
-    //       ],
-    //     );
-    //   },
-    // );
     }
     return;
   } finally {
@@ -151,7 +127,6 @@ Future<void> exportInventoryToJson(BuildContext context, Inventory inventory, bo
     
     var encoder = JsonEncoder.withIndent("  ");
     final jsonString = encoder.convert(jsonData);
-    // final jsonString = jsonEncode(jsonData);
     
     // Create the file in a temporary folder
     Directory tempDir = await getTemporaryDirectory();
@@ -179,29 +154,6 @@ Future<void> exportInventoryToJson(BuildContext context, Inventory inventory, bo
                             content: Text(S.of(context).errorExportingInventory(1, error.toString())),
                           ),
                         );
-    // showDialog(
-    //   context: context,
-    //   builder: (context) {
-    //     return AlertDialog(
-    //       title: Row(
-    //         children: [
-    //           const Icon(Icons.error_outlined, color: Colors.red),
-    //           const SizedBox(width: 10),
-    //           Text(S.current.errorTitle),
-    //         ],
-    //       ),
-    //       content: SingleChildScrollView(
-    //         child: Text(S.current.errorExportingInventory(1, error.toString())),
-    //       ),
-    //       actions: [
-    //         TextButton(
-    //           child: Text(S.of(context).ok),
-    //           onPressed: () => Navigator.of(context).pop(),
-    //         ),
-    //       ],
-    //     );
-    //   },
-    // );
     }
     return;
   }
@@ -406,29 +358,6 @@ Future<String> exportInventoryToExcel(BuildContext context, Inventory inventory,
                           ),
                         );
     }
-    // showDialog(
-    //   context: context,
-    //   builder: (context) {
-    //     return AlertDialog(
-    //       title: Row(
-    //         children: [
-    //           const Icon(Icons.error_outlined, color: Colors.red),
-    //           const SizedBox(width: 10),
-    //           Text(S.current.errorTitle),
-    //         ],
-    //       ),
-    //       content: SingleChildScrollView(
-    //         child: Text(S.current.errorExportingInventory(1, error.toString())),
-    //       ),
-    //       actions: [
-    //         TextButton(
-    //           child: Text(S.of(context).ok),
-    //           onPressed: () => Navigator.of(context).pop(),
-    //         ),
-    //       ],
-    //     );
-    //   },
-    // );
     return '';
   }
 }
@@ -463,29 +392,6 @@ Future<String> exportInventoryToCsv(BuildContext context, Inventory inventory, L
                           ),
                         );
     }
-    // showDialog(
-    //   context: context,
-    //   builder: (context) {
-    //     return AlertDialog(
-    //       title: Row(
-    //         children: [
-    //           const Icon(Icons.error_outlined, color: Colors.red),
-    //           const SizedBox(width: 10),
-    //           Text(S.current.errorTitle),
-    //         ],
-    //       ),
-    //       content: SingleChildScrollView(
-    //         child: Text(S.current.errorExportingInventory(1, error.toString())),
-    //       ),
-    //       actions: [
-    //         TextButton(
-    //           child: Text(S.of(context).ok),
-    //           onPressed: () => Navigator.of(context).pop(),
-    //         ),
-    //       ],
-    //     );
-    //   },
-    // );
     return '';
   }
 }
@@ -538,16 +444,6 @@ Future<void> exportInventoryToKml(BuildContext context, Inventory inventory) asy
                           ),
                         );
       }
-      // showDialog(
-      //   context: context,
-      //   builder: (context) => AlertDialog(
-      //     title: Text(S.current.warningTitle),
-      //     content: Text(S.current.noPoisToExport),
-      //     actions: [
-      //       TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(S.current.ok)),
-      //     ],
-      //   ),
-      // );
       return;
     }
 
@@ -576,16 +472,6 @@ Future<void> exportInventoryToKml(BuildContext context, Inventory inventory) asy
                           ),
                         );
     }
-    // showDialog(
-    //   context: context,
-    //   builder: (context) => AlertDialog(
-    //     title: Text(S.current.errorTitle),
-    //     content: Text(S.current.errorExportingInventory(1, error.toString())),
-    //     actions: [
-    //       TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(S.current.ok)),
-    //     ],
-    //   ),
-    // );
     return;
   }
 }
@@ -982,29 +868,6 @@ Future<void> exportAllInactiveNestsToJson(BuildContext context) async {
                           ),
                         );
     }
-    // showDialog(
-    //   context: context,
-    //   builder: (context) {
-    //     return AlertDialog(
-    //       title: Row(
-    //         children: [
-    //           const Icon(Icons.error_outlined, color: Colors.red),
-    //           const SizedBox(width: 10),
-    //           Text(S.current.errorTitle),
-    //         ],
-    //       ),
-    //       content: SingleChildScrollView(
-    //         child: Text(S.current.errorExportingNest(1, error.toString())),
-    //       ),
-    //       actions: [
-    //         TextButton(
-    //           child: Text(S.of(context).ok),
-    //           onPressed: () => Navigator.of(context).pop(),
-    //         ),
-    //       ],
-    //     );
-    //   },
-    // );
     return;
   } finally {
     // Ensure the dialog is always closed if it was shown and an error occurred,
@@ -1051,29 +914,6 @@ Future<void> exportNestToJson(BuildContext context, Nest nest) async {
                           ),
                         );
     }
-    // showDialog(
-    //   context: context,
-    //   builder: (context) {
-    //     return AlertDialog(
-    //       title: Row(
-    //         children: [
-    //           const Icon(Icons.error_outlined, color: Colors.red),
-    //           const SizedBox(width: 10),
-    //           Text(S.current.errorTitle),
-    //         ],
-    //       ),
-    //       content: SingleChildScrollView(
-    //         child: Text(S.current.errorExportingNest(1, error.toString())),
-    //       ),
-    //       actions: [
-    //         TextButton(
-    //           child: Text(S.of(context).ok),
-    //           onPressed: () => Navigator.of(context).pop(),
-    //         ),
-    //       ],
-    //     );
-    //   },
-    // );
     return;
   }
 }
@@ -1107,29 +947,6 @@ Future<String> exportNestToCsv(BuildContext context, Nest nest, Locale locale) a
                           ),
                         );
     }
-    // showDialog(
-    //   context: context,
-    //   builder: (context) {
-    //     return AlertDialog(
-    //       title: Row(
-    //         children: [
-    //           const Icon(Icons.error_outlined, color: Colors.red),
-    //           const SizedBox(width: 10),
-    //           Text(S.current.errorTitle),
-    //         ],
-    //       ),
-    //       content: SingleChildScrollView(
-    //         child: Text(S.current.errorExportingNest(1, error.toString())),
-    //       ),
-    //       actions: [
-    //         TextButton(
-    //           child: Text(S.of(context).ok),
-    //           onPressed: () => Navigator.of(context).pop(),
-    //         ),
-    //       ],
-    //     );
-    //   },
-    // );
     return '';
   }
 }
@@ -1171,29 +988,6 @@ Future<String> exportNestToExcel(BuildContext context, Nest nest, Locale locale)
                             content: Text(S.of(context).errorExportingNest(1, error.toString())),
                           ),
                         );
-    // showDialog(
-    //   context: context,
-    //   builder: (context) {
-    //     return AlertDialog(
-    //       title: Row(
-    //         children: [
-    //           const Icon(Icons.error_outlined, color: Colors.red),
-    //           const SizedBox(width: 10),
-    //           Text(S.current.errorTitle),
-    //         ],
-    //       ),
-    //       content: SingleChildScrollView(
-    //         child: Text(S.current.errorExportingNest(1, error.toString())),
-    //       ),
-    //       actions: [
-    //         TextButton(
-    //           child: Text(S.of(context).ok),
-    //           onPressed: () => Navigator.of(context).pop(),
-    //         ),
-    //       ],
-    //     );
-    //   },
-    // );
     return '';
   }
 }
@@ -1292,16 +1086,6 @@ Future<void> exportNestToKml(BuildContext context, Nest nest) async {
                             content: Text(S.of(context).noPoisToExport),
                           ),
                         );
-      // showDialog(
-      //   context: context,
-      //   builder: (context) => AlertDialog(
-      //     title: Text(S.current.warningTitle),
-      //     content: Text(S.current.noPoisToExport),
-      //     actions: [
-      //       TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(S.current.ok)),
-      //     ],
-      //   ),
-      // );
       return;
     }
 
@@ -1329,16 +1113,6 @@ Future<void> exportNestToKml(BuildContext context, Nest nest) async {
                             content: Text(S.of(context).errorExportingNest(1, error.toString())),
                           ),
                         );
-    // showDialog(
-    //   context: context,
-    //   builder: (context) => AlertDialog(
-    //     title: Text(S.current.errorTitle),
-    //     content: Text(S.current.errorExportingNest(1, error.toString())),
-    //     actions: [
-    //       TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(S.current.ok)),
-    //     ],
-    //   ),
-    // );
     return;
   }
 }
@@ -1370,8 +1144,6 @@ Future<void> exportAllSpecimensToJson(BuildContext context, List<Specimen> speci
       );
       isDialogShown = true;
 
-    // final specimenProvider = Provider.of<SpecimenProvider>(context, listen: false);
-    // final specimenList = specimenProvider.specimens;
     final jsonData = {
       'source': kExportSource,
       'schema': 'specimens',
@@ -1409,29 +1181,6 @@ Future<void> exportAllSpecimensToJson(BuildContext context, List<Specimen> speci
                             content: Text(S.of(context).errorExportingSpecimen(1, error.toString())),
                           ),
                         );
-    // showDialog(
-    //   context: context,
-    //   builder: (context) {
-    //     return AlertDialog(
-    //       title: Row(
-    //         children: [
-    //           const Icon(Icons.error_outlined, color: Colors.red),
-    //           const SizedBox(width: 10),
-    //           Text(S.current.errorTitle),
-    //         ],
-    //       ),
-    //       content: SingleChildScrollView(
-    //         child: Text(S.current.errorExportingSpecimen(1, error.toString())),
-    //       ),
-    //       actions: [
-    //         TextButton(
-    //           child: Text(S.of(context).ok),
-    //           onPressed: () => Navigator.of(context).pop(),
-    //         ),
-    //       ],
-    //     );
-    //   },
-    // );
   } finally {
     // Ensure the dialog is always closed if it was shown and an error occurred,
     // or if the function returned early while the dialog was up.
@@ -1666,8 +1415,6 @@ Future<void> exportAllSpecimensToCsv(BuildContext context, List<Specimen> specim
       );
       isDialogShown = true;
 
-    // final specimenProvider = Provider.of<SpecimenProvider>(context, listen: false);
-    // final specimenList = specimenProvider.specimens;
     final locale = Localizations.localeOf(context);
 
     // 1. Create a list of data for the CSV
@@ -1707,29 +1454,6 @@ Future<void> exportAllSpecimensToCsv(BuildContext context, List<Specimen> specim
                             content: Text(S.of(context).errorExportingSpecimen(1, error.toString())),
                           ),
                         );
-    // showDialog(
-    //   context: context,
-    //   builder: (context) {
-    //     return AlertDialog(
-    //       title: Row(
-    //         children: [
-    //           const Icon(Icons.error_outlined, color: Colors.red),
-    //           const SizedBox(width: 10),
-    //           Text(S.current.errorTitle),
-    //         ],
-    //       ),
-    //       content: SingleChildScrollView(
-    //         child: Text(S.current.errorExportingSpecimen(1, error.toString())),
-    //       ),
-    //       actions: [
-    //         TextButton(
-    //           child: Text(S.of(context).ok),
-    //           onPressed: () => Navigator.of(context).pop(),
-    //         ),
-    //       ],
-    //     );
-    //   },
-    // );
   } finally {
     // Ensure the dialog is always closed if it was shown and an error occurred,
     // or if the function returned early while the dialog was up.
@@ -1821,29 +1545,6 @@ Future<void> exportAllSpecimensToExcel(BuildContext context, List<Specimen> spec
                             content: Text(S.of(context).errorExportingSpecimen(1, error.toString())),
                           ),
                         );
-    // showDialog(
-    //   context: context,
-    //   builder: (context) {
-    //     return AlertDialog(
-    //       title: Row(
-    //         children: [
-    //           const Icon(Icons.error_outlined, color: Colors.red),
-    //           const SizedBox(width: 10),
-    //           Text(S.current.errorTitle),
-    //         ],
-    //       ),
-    //       content: SingleChildScrollView(
-    //         child: Text(S.current.errorExportingSpecimen(1, error.toString())),
-    //       ),
-    //       actions: [
-    //         TextButton(
-    //           child: Text(S.of(context).ok),
-    //           onPressed: () => Navigator.of(context).pop(),
-    //         ),
-    //       ],
-    //     );
-    //   },
-    // );
   } finally {
     // Ensure the dialog is always closed if it was shown and an error occurred,
     // or if the function returned early while the dialog was up.
@@ -1906,16 +1607,6 @@ Future<void> exportSpecimenToKml(BuildContext context, Specimen specimen) async 
                             content: Text(S.of(context).noPoisToExport),
                           ),
                         );
-      // showDialog(
-      //   context: context,
-      //   builder: (context) => AlertDialog(
-      //     title: Text(S.current.warningTitle),
-      //     content: Text(S.current.noPoisToExport),
-      //     actions: [
-      //       TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(S.current.ok)),
-      //     ],
-      //   ),
-      // );
       return;
     }
 
@@ -1943,15 +1634,5 @@ Future<void> exportSpecimenToKml(BuildContext context, Specimen specimen) async 
                             content: Text(S.of(context).errorExportingSpecimen(1, error.toString())),
                           ),
                         );
-    // showDialog(
-    //   context: context,
-    //   builder: (context) => AlertDialog(
-    //     title: Text(S.current.errorTitle),
-    //     content: Text(S.current.errorExportingSpecimen(1, error.toString())),
-    //     actions: [
-    //       TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(S.current.ok)),
-    //     ],
-    //   ),
-    // );
   }
 }

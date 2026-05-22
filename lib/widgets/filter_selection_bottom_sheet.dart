@@ -162,7 +162,6 @@ class _FilterSelectionBottomSheetContentState<T>
                         : ListView.builder(
                           controller: scrollController,
                           itemCount: filteredItems.length,
-                          // separatorBuilder: (context, index) => const Divider(),
                           itemBuilder: (context, index) {
                             final item = filteredItems[index];
                             return ListTile(

@@ -487,23 +487,6 @@ class SpecimensScreenState extends State<SpecimensScreen> {
             content: Text(S.of(context).observerAbbreviationMissing),
           ),
         );
-        // showDialog(
-        //   context: context,
-        //   builder: (context) {
-        //     return AlertDialog.adaptive(
-        //       title: Text(S.of(context).warningTitle),
-        //       content: Text(S.of(context).observerAbbreviationMissing),
-        //       actions: <Widget>[
-        //         TextButton(
-        //           child: Text(S.of(context).ok),
-        //           onPressed: () {
-        //             Navigator.of(context).pop();
-        //           },
-        //         ),
-        //       ],
-        //     );
-        //   },
-        // );
       }
       return;
     }
@@ -565,7 +548,6 @@ class SpecimensScreenState extends State<SpecimensScreen> {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(false);
-                // Navigator.of(context).pop();
               },
               child: Text(S.of(context).cancel),
             ),
@@ -580,7 +562,6 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                   selectedSpecimens.clear();
                 });
                 Navigator.of(context).pop(true);
-                // Navigator.of(context).pop();
               },
               child: Text(S.of(context).delete),
             ),
@@ -733,8 +714,6 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                     });
                   },
                 ),
-
-                // title: Text(S.of(context).specimens(2)),
               )
               : null,
       body: LayoutBuilder(
@@ -867,18 +846,6 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                         icon: const Icon(Icons.insert_chart_outlined),
                         tooltip: S.of(context).statistics,
                         onPressed: () async {
-                          // Get fully loaded nests
-                          final selectedNestsList =
-                              selectedSpecimens
-                                  .map(
-                                    (id) =>
-                                        specimenProvider.specimens.firstWhere(
-                                          (n) => n.id == id,
-                                          orElse: () => Specimen(id: id),
-                                        ),
-                                  )
-                                  .toList();
-
                           if (mounted) {
                             Navigator.push(
                               context,
@@ -1105,7 +1072,6 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                       selectedSpecimens.clear();
                       _showPending = newSelection.first;
                     });
-                    // nestProvider.notifyListeners();
                   },
                 ),
               );
@@ -1267,14 +1233,6 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                           );
                         },
                         menuChildren: [
-                          // MenuItemButton(
-                          //   onPressed: () {
-                          //     setState(() {
-                          //       _selectedObserver = null;
-                          //     });
-                          //   },
-                          //   child: Text(S.current.allObservers),
-                          // ),
                           ..._getUniqueObservers().map((observer) {
                             return MenuItemButton(
                               onPressed: () {
@@ -1371,13 +1329,6 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                           await specimenProvider.fetchSpecimens();
                         },
                       ),
-                      // FilledButton.icon(
-                      //   label: Text(S.of(context).refresh),
-                      //   icon: const Icon(Icons.refresh_outlined),
-                      //   onPressed: () async {
-                      //     await specimenProvider.fetchSpecimens();
-                      //   },
-                      // )
                     ],
                   ),
                 );
@@ -1393,7 +1344,6 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                       padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
                       child: Text(
                         '${filteredSpecimens.length} ${S.of(context).specimens(filteredSpecimens.length).toLowerCase()}',
-                        // style: TextStyle(fontSize: 16,),
                       ),
                     ),
                     Expanded(
@@ -1553,9 +1503,6 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                           style: TextTheme.of(context).bodyLarge,
                         ),
                       ),
-                      // ListTile(
-                      //   title: Text(specimen.fieldNumber),
-                      // ),
                       const Divider(),
                       GridView.count(
                         crossAxisCount:
@@ -1616,12 +1563,6 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                                 specimenProvider.updateSpecimen(specimen);
                               },
                             ),
-                          // buildGridMenuItem(
-                          //       context, Icons.share_outlined, 'KML',
-                          //           () async {
-                          //         Navigator.of(context).pop();
-                          //         exportSpecimenToKml(context, specimen);
-                          //       }),
                           buildGridMenuItem(
                             context,
                             Icons.delete_outlined,
@@ -1647,14 +1588,12 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                                       TextButton(
                                         onPressed: () {
                                           Navigator.of(context).pop(false);
-                                          // Navigator.of(context).pop();
                                         },
                                         child: Text(S.of(context).cancel),
                                       ),
                                       TextButton(
                                         onPressed: () async {
                                           Navigator.of(context).pop(true);
-                                          // Navigator.of(context).pop();
                                           // Call the function to delete species
                                           await specimenProvider.removeSpecimen(
                                             specimen,
@@ -1679,7 +1618,6 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                             S.current.export,
                             style: TextTheme.of(context).bodyMedium,
                           ),
-                          // Icon(Icons.share_outlined),
                           Expanded(
                             child: SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
@@ -1724,7 +1662,6 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
-                    // crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       GridView.count(
                         crossAxisCount:
@@ -1763,24 +1700,6 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                               Navigator.of(context).pop();
                             },
                           ),
-                          // buildGridMenuItem(
-                          //     context, Icons.share_outlined, '${S.of(context).exportAll} (CSV)',
-                          //         () async {
-                          //       Navigator.of(context).pop();
-                          //       exportAllSpecimensToCsv(context, _showPending ? specimenProvider.pendingSpecimens : specimenProvider.archivedSpecimens);
-                          //     }),
-                          // buildGridMenuItem(
-                          //     context, Icons.share_outlined, '${S.of(context).exportAll} (Excel)',
-                          //         () async {
-                          //       Navigator.of(context).pop();
-                          //       exportAllSpecimensToExcel(context, _showPending ? specimenProvider.pendingSpecimens : specimenProvider.archivedSpecimens);
-                          //     }),
-                          // buildGridMenuItem(
-                          //     context, Icons.share_outlined, '${S.of(context).exportAll} (JSON)',
-                          //         () async {
-                          //       Navigator.of(context).pop();
-                          //       exportAllSpecimensToJson(context, _showPending ? specimenProvider.pendingSpecimens : specimenProvider.archivedSpecimens);
-                          //     }),
                         ],
                       ),
                       if (specimenProvider.specimens.isNotEmpty) ...[
@@ -1792,7 +1711,6 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                               S.current.exportAll,
                               style: TextTheme.of(context).bodyMedium,
                             ),
-                            // Icon(Icons.share_outlined),
                             Expanded(
                               child: SingleChildScrollView(
                                 scrollDirection: Axis.horizontal,

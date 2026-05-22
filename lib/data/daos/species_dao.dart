@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 import '../models/inventory.dart';
 import '../database/database_helper.dart';
@@ -10,7 +10,10 @@ class SpeciesDao {
 
   SpeciesDao(this._dbHelper, this._poiDao);
 
-  // Insert species to inventory in the database
+  /// Inserts a new [Species] record linked to [inventoryId] into the database.
+  ///
+  /// Sets [species.id] with the generated row ID upon success.
+  /// Returns the new row ID, or `0` if an error occurs.
   Future<int?> insertSpecies(String inventoryId, Species species) async {
     final db = await _dbHelper.database;
     try {
@@ -18,14 +21,12 @@ class SpeciesDao {
       species.id = id;
       return id;
     } catch (e) {
-      if (kDebugMode) {
-        print('Error inserting species: $e');
-      }
+      debugPrint('Error inserting species: $e');
       return 0;
     }
   }
 
-  // Update species data in the database
+  /// Updates the database record for the given [species] using its [Species.id].
   Future<void> updateSpecies(Species species) async {
     final db = await _dbHelper.database;
     await db?.update(
@@ -36,7 +37,7 @@ class SpeciesDao {
     );
   }
 
-  // Delete species from database finding by ID
+  /// Deletes the [Species] record identified by [speciesId] from the database.
   Future<void> deleteSpecies(int? speciesId) async {
     final db = await _dbHelper.database;
     await db?.delete(
@@ -46,7 +47,8 @@ class SpeciesDao {
     );
   }
 
-  // Delete species from database finding by inventory and name
+  /// Deletes the [Species] record matching both [inventoryId] and [speciesName]
+  /// from the database.
   Future<void> deleteSpeciesFromInventory(String inventoryId, String speciesName) async {
     final db = await _dbHelper.database;
     await db?.delete(
@@ -56,7 +58,10 @@ class SpeciesDao {
     );
   }
 
-  // Get species data by ID
+  /// Returns the [Species] identified by [id], populated with its associated
+  /// [Poi] list.
+  ///
+  /// Throws an [Exception] if no species with the given ID is found.
   Future<Species> getSpeciesById(int id) async {
     final db = await _dbHelper.database;
     final List<Map<String, dynamic>> maps = await db?.query(
@@ -72,7 +77,12 @@ class SpeciesDao {
     }
   }
 
-  // Get list of species from inventory
+  /// Returns all [Species] records belonging to the inventory identified by
+  /// [inventoryId], each populated with its associated [Poi] list.
+  ///
+  /// When [onlySpeciesInSample] is `true`, only records with
+  /// `isOutOfInventory = 0` are returned. POIs for all matching species are
+  /// fetched in a single batch query to avoid N+1 round trips.
   Future<List<Species>> getSpeciesByInventory(String inventoryId, bool onlySpeciesInSample) async {
     final db = await _dbHelper.database;
     final speciesMaps = await db?.query(
@@ -104,7 +114,7 @@ class SpeciesDao {
     }).toList();
   }
 
-  /// Conta o número total de registros na tabela de espécies.
+  /// Returns the total number of rows in the `species` table.
   Future<int> countAllSpeciesRecords() async {
     final db = await _dbHelper.database;
     final result = await db?.rawQuery('SELECT COUNT(*) FROM species');
@@ -112,7 +122,10 @@ class SpeciesDao {
     return (count as int);
   }
 
-  // Get list of all records of a species
+  /// Returns all [Species] records whose name matches [speciesName], each
+  /// populated with its associated [Poi] list.
+  ///
+  /// POIs for all matching species are fetched in a single batch query.
   Future<List<Species>> getAllRecordsBySpecies(String speciesName) async {
     final db = await _dbHelper.database;
     final speciesMaps = await db?.query(
@@ -144,6 +157,10 @@ class SpeciesDao {
     }).toList();
   }
 
+  /// Returns every [Species] record stored in the database, each populated
+  /// with its associated [Poi] list.
+  ///
+  /// POIs for all species are fetched in a single batch query.
   Future<List<Species>> getAllSpeciesRecords() async {
     final db = await _dbHelper.database;
     final speciesMaps = await db?.query(
@@ -173,13 +190,16 @@ class SpeciesDao {
     }).toList();
   }
 
+  /// Returns the `sampleTime` of the most recently recorded [Species] entry
+  /// for the inventory identified by [inventoryId], or `null` if no records
+  /// exist for that inventory.
   Future<DateTime?> getLastSpeciesTimeByInventory(String inventoryId) async {
     final db = await _dbHelper.database;
     final result = await db?.query(
-      'species', // nome da sua tabela de espécies
+      'species',
       where: 'inventoryId = ?',
       whereArgs: [inventoryId],
-      orderBy: 'sampleTime DESC', // ou o nome da sua coluna de data/hora
+      orderBy: 'sampleTime DESC',
       limit: 1,
     );
     if (result!.isNotEmpty) {

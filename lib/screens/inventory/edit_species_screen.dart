@@ -16,7 +16,6 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
   late final TextEditingController _countController;
   late final TextEditingController _distanceController;
   late final TextEditingController _flightHeightController;
-  // late final TextEditingController _flightDirectionController;
   late final TextEditingController _notesController;
   late bool _isOutOfInventory;
   String? _selectedFlightDirection;
@@ -30,7 +29,6 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
     _countController = TextEditingController(text: widget.species.count.toString());
     _distanceController = TextEditingController(text: widget.species.distance?.toString());
     _flightHeightController = TextEditingController(text: widget.species.flightHeight?.toString());
-    // _flightDirectionController = TextEditingController(text: widget.species.flightDirection);
     _notesController = TextEditingController(text: widget.species.notes);
     _isOutOfInventory = widget.species.isOutOfInventory;
     _selectedFlightDirection = widget.species.flightDirection;
@@ -42,7 +40,6 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
     _countController.dispose();
     _distanceController.dispose();
     _flightHeightController.dispose();
-    // _flightDirectionController.dispose();
     _notesController.dispose();
     super.dispose();
   }
@@ -61,9 +58,6 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
         notes: _notesController.text.isNotEmpty ? _notesController.text : null,
         isOutOfInventory: _isOutOfInventory,
       );
-
-      // final speciesProvider = Provider.of<SpeciesProvider>(context, listen: false);
-      // await speciesProvider.editSpecies(context, widget.inventory.id, updatedSpecies);
 
       // Retorna para a tela anterior com o objeto 'Species' atualizado
       Navigator.of(context).pop(updatedSpecies);
@@ -170,7 +164,6 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
                           labelText: S.current.flightDirection,
                           border: const OutlineInputBorder(),
                         ),
-                        // hint: Text(S.current.selectADirection),
                         isExpanded: true,
                         items: [
                           // Pontos Cardeais

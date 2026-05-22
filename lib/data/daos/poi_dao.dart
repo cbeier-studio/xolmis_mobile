@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../models/inventory.dart';
@@ -10,7 +10,10 @@ class PoiDao {
 
   PoiDao(this._dbHelper);
 
-  // Insert POI to database
+  /// Inserts a new [Poi] record into the database.
+  ///
+  /// Sets [poi.id] with the generated row ID upon success.
+  /// Returns the new row ID, or `0` if an error occurs.
   Future<int?> insertPoi(Poi poi) async {
     final db = await _dbHelper.database;
     try {
@@ -18,14 +21,12 @@ class PoiDao {
       poi.id = id;
       return id;
     } catch (e) {
-      if (kDebugMode) {
-        print('Error inserting POI: $e');
-      }
+      debugPrint('Error inserting POI: $e');
       return 0;
     }
   }
 
-  // Get list of POIs for a species ID
+  /// Returns all [Poi] records associated with the given [speciesId].
   Future<List<Poi>> getPoisForSpecies(int speciesId) async {
     final db = await _dbHelper.database;
     final List<Map<String, dynamic>> maps = await db?.query(
@@ -38,7 +39,7 @@ class PoiDao {
     });
   }
 
-  // Update POI data in the database
+  /// Updates the database record for the given [poi] using its [Poi.id].
   Future<void> updatePoi(Poi poi) async {
     final db = await _dbHelper.database;
     await db?.update(
@@ -49,16 +50,15 @@ class PoiDao {
     );
   }
 
-  // Delete POI from database
+  /// Deletes the [Poi] record identified by [poiId] from the database.
   Future<void> deletePoi(int poiId) async {
     final db = await _dbHelper.database;
     await db?.delete('pois', where: 'id = ?', whereArgs: [poiId]);
   }
 
+  /// Returns the total number of [Poi] records stored in the database.
   Future<int> countAllPois() async {
     final db = await _dbHelper.database;
-    // `Sqflite.firstIntValue` é uma forma eficiente de obter um único valor numérico, como uma contagem.
-    // Ele executa 'SELECT COUNT(*) FROM pois' e retorna o resultado.
     final result = await db?.rawQuery('SELECT COUNT(*) FROM pois');
     return Sqflite.firstIntValue(result!) ?? 0;
   }

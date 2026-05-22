@@ -141,9 +141,6 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
                             widget.inventory.id);
                       },
                       child: _buildListView(vegetationList),
-                            
-                          
-                      
                     );
                   }
                 }

@@ -1,9 +1,5 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -61,8 +57,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
   DateTimeRange? _selectedDateRange;
   Set<String> selectedInventories = {}; // Set of selected inventories
   SortOrder _sortOrder = SortOrder.descending; // Default sort order
-  InventorySortField _sortField =
-      InventorySortField.startTime; // Default sort field
+  InventorySortField _sortField = InventorySortField.startTime; // Default sort field
   Inventory? _selectedInventory;
 
   static final Map<DateFilter, String> _dateFilterLabels = {
@@ -91,7 +86,6 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     onInventoryStopped = (inventoryId) {
       // When an inventory is stopped, update the inventory list
       inventoryProvider.refreshState();
-      // inventoryProvider.fetchInventoriesSummary(context);
     };
   }
 
@@ -143,15 +137,6 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                 date.isAtSameMomentAs(_selectedDateRange!.start)) &&
             date.isBefore(endOfDay);
     }
-  }
-
-  List<Inventory> _getFilteredInventories(List<Inventory> allInventories) {
-    if (_selectedSpeciesFilter == null) return allInventories;
-
-    return allInventories.where((inventory) {
-      // Verifica se o inventário contém a espécie selecionada
-      return inventory.speciesList.any((r) => r.name == _selectedSpeciesFilter);
-    }).toList();
   }
 
   // Sort the inventories by the selected field and order
@@ -575,23 +560,6 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
             ),
           ),
         );
-        // showDialog(
-        //   context: context,
-        //   builder: (context) {
-        //     return AlertDialog.adaptive(
-        //       title: Text(S.of(context).warningTitle),
-        //       content: Text(S.of(context).observerAbbreviationMissing),
-        //       actions: <Widget>[
-        //         TextButton(
-        //           child: Text(S.of(context).ok),
-        //           onPressed: () {
-        //             Navigator.of(context).pop();
-        //           },
-        //         ),
-        //       ],
-        //     );
-        //   },
-        // );
       }
       return;
     }
@@ -673,7 +641,6 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(false);
-                // Navigator.of(context).pop();
               },
               child: Text(S.of(context).cancel),
             ),
@@ -687,7 +654,6 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                   selectedInventories.clear();
                 });
                 Navigator.of(context).pop(true);
-                // Navigator.of(context).pop();
               },
               child: Text(S.of(context).delete),
             ),
@@ -756,8 +722,6 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                     });
                   },
                 ),
-
-                // title: Text(S.of(context).inventories),
               )
               : null,
       body: LayoutBuilder(
@@ -976,66 +940,6 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                             ),
                             child: Text(S.current.statistics),
                           ),
-                        // if (selectedInventories.length > 1)
-                        // MenuItemButton(
-                        //   onPressed: () {
-                        //     final inventories = selectedInventories
-                        //         .map((id) =>
-                        //             inventoryProvider.getInventoryById(id))
-                        //         .toList();
-                        //     Navigator.push(
-                        //       context,
-                        //       MaterialPageRoute(
-                        //         builder: (context) => MackinnonChartScreen(
-                        //           selectedInventories:
-                        //               inventories.whereType<Inventory>().toList(),
-                        //         ),
-                        //       ),
-                        //     );
-                        //   },
-                        //   leadingIcon: const Icon(Icons.show_chart_outlined),
-                        //   child: Text(S.current.speciesAccumulationCurve),
-                        // ),
-                        // if (selectedInventories.length > 1)
-                        // MenuItemButton(
-                        //   onPressed: () {
-                        //     final inventories = selectedInventories
-                        //         .map((id) =>
-                        //             inventoryProvider.getInventoryById(id))
-                        //         .toList();
-                        //     Navigator.push(
-                        //       context,
-                        //       MaterialPageRoute(
-                        //         builder: (context) => SpeciesCountChartScreen(
-                        //           selectedInventories:
-                        //               inventories.whereType<Inventory>().toList(),
-                        //         ),
-                        //       ),
-                        //     );
-                        //   },
-                        //   leadingIcon: const Icon(Icons.bar_chart_outlined),
-                        //   child: Text(S.current.speciesCounted),
-                        // ),
-                        // if (selectedInventories.length > 1)
-                        // MenuItemButton(
-                        //   onPressed: () {
-                        //     final inventories = selectedInventories
-                        //         .map((id) =>
-                        //             inventoryProvider.getInventoryById(id))
-                        //         .toList();
-                        //     Navigator.push(
-                        //       context,
-                        //       MaterialPageRoute(
-                        //         builder: (context) => IndividualsCountChartScreen(
-                        //           selectedInventories:
-                        //               inventories.whereType<Inventory>().toList(),
-                        //         ),
-                        //       ),
-                        //     );
-                        //   },
-                        //   leadingIcon: const Icon(Icons.bar_chart_outlined),
-                        //   child: Text(S.current.individualsCounted),
-                        // ),
                       ],
                     ),
                     const VerticalDivider(),
@@ -1207,7 +1111,6 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                     setState(() {
                       _isShowingActiveInventories = newSelection.first;
                     });
-                    // inventoryProvider.notifyListeners();
                   },
                 ),
               );
@@ -1329,14 +1232,6 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                           );
                         },
                         menuChildren: [
-                          // MenuItemButton(
-                          //   onPressed: () {
-                          //     setState(() {
-                          //       _selectedInventoryType = null;
-                          //     });
-                          //   },
-                          //   child: Text(S.current.allTypes),
-                          // ),
                           ...InventoryType.values.map((type) {
                             return MenuItemButton(
                               onPressed: () {
@@ -1402,14 +1297,6 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                           );
                         },
                         menuChildren: [
-                          // MenuItemButton(
-                          //   onPressed: () {
-                          //     setState(() {
-                          //       _selectedObserver = null;
-                          //     });
-                          //   },
-                          //   child: Text(S.current.allObservers),
-                          // ),
                           ..._getUniqueObservers().map((observer) {
                             return MenuItemButton(
                               onPressed: () {
@@ -1560,16 +1447,6 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                             }
                           },
                         ),
-                        // FilledButton.icon(
-                        //   label: Text(S.of(context).refresh),
-                        //   icon: const Icon(Icons.refresh_outlined),
-                        //   onPressed: () async {
-                        //     await inventoryProvider.fetchInventories(context);
-                        //     for (var inventory in inventoryProvider.activeInventories) {
-                        //       inventoryProvider.startInventoryTimer(context, inventory, inventoryDao);
-                        //     }
-                        //   },
-                        // )
                       ],
                     ),
                   );
@@ -1602,7 +1479,6 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                         padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
                         child: Text(
                           '${filteredInventories.length} ${S.of(context).inventory(filteredInventories.length)}',
-                          // style: TextStyle(fontSize: 16,),
                         ),
                       ),
                       Expanded(
@@ -1879,7 +1755,6 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
-                    // crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       // Show the inventory ID
                       Align(
@@ -1889,11 +1764,6 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                           style: TextTheme.of(context).bodyLarge,
                         ),
                       ),
-                      // ListTile(
-                      // leading: const Icon(Icons.info_outlined),
-                      // title: Text(inventory.id),
-                      // subtitle: Text(S.of(context).inventoryId),
-                      // ),
                       const Divider(),
 
                       GridView.count(
@@ -2067,7 +1937,6 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                           ),
                         ],
                       ),
-                      // Divider(),
                       Row(
                         children: [
                           const SizedBox(width: 8.0),
@@ -2075,7 +1944,6 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                             S.current.export,
                             style: TextTheme.of(context).bodyMedium,
                           ),
-                          // Icon(Icons.share_outlined),
                           Expanded(
                             child: SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
@@ -2197,14 +2065,12 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(false);
-                // Navigator.of(context).pop();
               },
               child: Text(S.of(context).cancel),
             ),
             TextButton(
               onPressed: () async {
                 Navigator.of(context).pop(true);
-                // Navigator.of(context).pop();
                 // Call the function to delete species
                 await inventoryProvider.removeInventory(inventory.id);
               },
@@ -2232,7 +2098,6 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
-                    // crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       GridView.count(
                         crossAxisCount:
@@ -2279,13 +2144,6 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                               Navigator.of(context).pop();
                             },
                           ),
-                          // Action to export all finished inventories to JSON
-                          // buildGridMenuItem(
-                          //     context, Icons.share_outlined, S.of(context).exportAll,
-                          //         () async {
-                          //       Navigator.of(context).pop();
-                          //       await exportAllInventoriesToJson(context, inventoryProvider);
-                          //     }),
                         ],
                       ),
                       if (inventoryProvider.finishedInventories.isNotEmpty) ...[
@@ -2297,7 +2155,6 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                               S.current.exportAll,
                               style: TextTheme.of(context).bodyMedium,
                             ),
-                            // Icon(Icons.share_outlined),
                             Expanded(
                               child: SingleChildScrollView(
                                 scrollDirection: Axis.horizontal,

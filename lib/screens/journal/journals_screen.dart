@@ -325,7 +325,6 @@ class JournalsScreenState extends State<JournalsScreen> {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(false);
-                // Navigator.of(context).pop();
               },
               child: Text(S.of(context).cancel),
             ),
@@ -340,7 +339,6 @@ class JournalsScreenState extends State<JournalsScreen> {
                   selectedJournals.clear();
                 });
                 Navigator.of(context).pop(true);
-                // Navigator.of(context).pop();
               },
               child: Text(S.of(context).delete),
             ),
@@ -433,8 +431,6 @@ class JournalsScreenState extends State<JournalsScreen> {
             });
           },
         ),
-        // title: Text(S.of(context).fieldJournal),
-        
         actions: [
           
         ],
@@ -487,37 +483,6 @@ class JournalsScreenState extends State<JournalsScreen> {
               onPressed: _deleteSelectedEntries,
             ),
             const VerticalDivider(),
-            // MenuAnchor(
-            //   builder: (context, controller, child) {
-            //     return IconButton(
-            //       icon: const Icon(Icons.file_upload_outlined),
-            //       tooltip: S.of(context).exportWhat(
-            //           S.of(context).specimens(2).toLowerCase()),
-            //       onPressed: () {
-            //         if (controller.isOpen) {
-            //           controller.close();
-            //         } else {
-            //           controller.open();
-            //         }
-            //       },
-            //     );
-            //   },
-            //   menuChildren: [
-            //     MenuItemButton(
-            //       onPressed: () {
-            //         _exportSelectedSpecimensToCsv();
-            //       },
-            //       child: const Text('CSV'),
-            //     ),
-            //     MenuItemButton(
-            //       onPressed: () {
-            //         _exportSelectedSpecimensToJson();
-            //       },
-            //       child: const Text('JSON'),
-            //     ),
-            //   ],
-            // ),
-            // const VerticalDivider(),
             // Option to clear the selected specimens
             IconButton(
               icon: const Icon(Icons.clear_outlined),
@@ -709,14 +674,6 @@ class JournalsScreenState extends State<JournalsScreen> {
                           );
                         },
                         menuChildren: [
-                          // MenuItemButton(
-                          //   onPressed: () {
-                          //     setState(() {
-                          //       _selectedObserver = null;
-                          //     });
-                          //   },
-                          //   child: Text(S.current.allObservers),
-                          // ),
                           ..._getUniqueObservers().map((observer) {
                             return MenuItemButton(
                               onPressed: () {
@@ -801,13 +758,6 @@ class JournalsScreenState extends State<JournalsScreen> {
                               await journalProvider.fetchJournalEntries();
                             },
                           ),
-                          // FilledButton.icon(
-                          //   label: Text(S.of(context).refresh),
-                          //   icon: const Icon(Icons.refresh_outlined),
-                          //   onPressed: () async {
-                          //     await journalProvider.fetchJournalEntries();
-                          //   },
-                          // )
                         ],
                       ),
                     );
@@ -823,7 +773,6 @@ class JournalsScreenState extends State<JournalsScreen> {
                 padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
                 child: Text(
                   '${filteredEntries.length} ${S.of(context).journalEntries(filteredEntries.length).toLowerCase()}',
-                  // style: TextStyle(fontSize: 16,),
                 ),
               ),
               Expanded(
@@ -951,9 +900,6 @@ class JournalsScreenState extends State<JournalsScreen> {
                     alignment: Alignment.centerLeft,
                     child: Text(journalEntry.title, style: TextTheme.of(context).bodyLarge,),
                   ),
-                  // ListTile(
-                  //   title: Text(journalEntry.title, overflow: TextOverflow.fade,),
-                  // ),
                   const Divider(),
                   GridView.count(
                     crossAxisCount: MediaQuery.sizeOf(context).width < 600 ? 4 : 5,
@@ -987,14 +933,12 @@ class JournalsScreenState extends State<JournalsScreen> {
                                     TextButton(
                                       onPressed: () {
                                         Navigator.of(context).pop(false);
-                                        // Navigator.of(context).pop();
                                       },
                                       child: Text(S.of(context).cancel),
                                     ),
                                     TextButton(
                                       onPressed: () async {
                                         Navigator.of(context).pop(true);
-                                        // Navigator.of(context).pop();
                                         // Call the function to delete species
                                         await journalProvider.removeJournalEntry(journalEntry);
                                       },
@@ -1031,7 +975,6 @@ class JournalsScreenState extends State<JournalsScreen> {
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
-                    // crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       GridView.count(
                         crossAxisCount: MediaQuery.sizeOf(context).width < 600 ? 4 : 5,

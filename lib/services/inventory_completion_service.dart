@@ -18,7 +18,6 @@ class InventoryCompletionService {
   final Inventory inventory;
   final InventoryProvider inventoryProvider;
   final InventoryDao inventoryDao;
-  // Add other providers or DAOs necessary
 
   InventoryCompletionService({
     required this.context,
@@ -31,12 +30,6 @@ class InventoryCompletionService {
   Future<void> _finalizeInventory(BuildContext context) async {
     inventory.stopTimer(context, inventoryDao);
     inventoryProvider.updateInventory(inventory);
-    // inventoryProvider.notifyListeners();
-
-    // if (context.mounted) {
-    //   Navigator.of(context).pop(true);
-      // Navigator.of(context).pop();
-    // }
   }
 
   // Helper to show a dialog of conditional reminder
@@ -103,7 +96,6 @@ class InventoryCompletionService {
           );
           if (vegetationAdded != null && vegetationAdded) {
             await vegetationProvider.loadVegetationForInventory(inventory.id);
-            // await inventoryProvider.fetchInventories(context);
             proceedToFinalize = true;
           }
         }
@@ -129,7 +121,6 @@ class InventoryCompletionService {
           );
           if (weatherAdded != null && weatherAdded) {
             await weatherProvider.loadWeatherForInventory(inventory.id);
-            // await inventoryProvider.fetchInventories(context);
             proceedToFinalize = true;
           }
         }

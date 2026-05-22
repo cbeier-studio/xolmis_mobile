@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:xolmis/core/core_consts.dart';
 
 import '../data/models/nest.dart';
@@ -49,9 +49,7 @@ class NestProvider with ChangeNotifier {
         }
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('Error fetching nests summary: $e');
-      }
+      debugPrint('Error fetching nests summary: $e');
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -70,9 +68,7 @@ class NestProvider with ChangeNotifier {
       }
       notifyListeners();
     } catch (e) {
-      if (kDebugMode) {
-        print('Error loading nest details: $e');
-      }
+      debugPrint('Error loading nest details: $e');
     }
   }
 
@@ -117,9 +113,7 @@ class NestProvider with ChangeNotifier {
 
       return true;
     } catch (error) {
-      if (kDebugMode) {
-        print('Error importing nest: $error');
-      }
+      debugPrint('Error importing nest: $error');
       return false;
     }
   }

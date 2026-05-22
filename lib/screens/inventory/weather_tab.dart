@@ -142,9 +142,6 @@ class _WeatherTabState extends State<WeatherTab>
                     );
                   },
                   child: _buildListView(weatherList),
-                      
-                    
-                  
                 );
               }
             },
@@ -390,7 +387,6 @@ class WeatherListItemState extends State<WeatherListItem> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      // leading: const Icon(Icons.wb_sunny_outlined),
       title: Text(
         DateFormat('dd/MM/yyyy HH:mm:ss').format(widget.weather.sampleTime!),
       ),

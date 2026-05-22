@@ -153,9 +153,6 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
                     await eggProvider.getEggForNest(widget.nest.id ?? 0);
                   },
                   child: _buildListView(eggList),
-                      
-                    
-                  
                 );
               }
             },

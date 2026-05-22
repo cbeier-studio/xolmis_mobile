@@ -70,7 +70,6 @@ class StatsNestsScreenState extends State<StatsNestsScreen> {
             value: entry.value.toDouble(),
             color: getNestFateColor(entry.key),
             radius: 20,
-            // titleStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
           );
         }).toList();
   }

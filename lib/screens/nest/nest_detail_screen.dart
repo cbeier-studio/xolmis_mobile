@@ -105,7 +105,7 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
     if (MediaQuery.sizeOf(context).width > 600) {
       showDialog(
         context: context,
-        builder: (context) {
+        builder: (dialogContext) {
           return Dialog(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16.0),
@@ -186,23 +186,6 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                             content: Text(S.of(context).nestRevisionsMissing),
                           ),
                         );
-                        // showDialog(
-                        //   context: context,
-                        //   builder: (context) {
-                        //     return AlertDialog.adaptive(
-                        //       title: Text(S.of(context).warningTitle),
-                        //       content: Text(S.of(context).nestRevisionsMissing),
-                        //       actions: <Widget>[
-                        //         TextButton(
-                        //           child: Text(S.of(context).ok),
-                        //           onPressed: () {
-                        //             Navigator.of(context).pop();
-                        //           },
-                        //         ),
-                        //       ],
-                        //     );
-                        //   },
-                        // );
                       }
                       return;
                     }
@@ -264,12 +247,6 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                                   // Save changes to database using the provider
                                   await Provider.of<NestProvider>(context, listen: false)
                                       .updateNest(widget.nest);
-
-                                  // ScaffoldMessenger.of(context).showSnackBar(
-                                  //   const SnackBar(
-                                  //     content: Text('Ninho desativado com sucesso!'),
-                                  //   ),
-                                  // );
 
                                   // Close screen of nest details
                                   Navigator.pop(context, selectedNestFate);
@@ -377,7 +354,7 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                       },
                       child: const Text('JSON'),
                     ),
-                    // Option to export the selected nest to JSON
+                    // Option to export the selected nest to KML
                     MenuItemButton(
                       onPressed: () {
                         Navigator.of(context).pop();
@@ -520,23 +497,6 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                             content: Text(S.of(context).nestRevisionsMissing),
                           ),
                         );
-                        // showDialog(
-                        //   context: context,
-                        //   builder: (context) {
-                        //     return AlertDialog.adaptive(
-                        //       title: Text(S.of(context).warningTitle),
-                        //       content: Text(S.of(context).nestRevisionsMissing),
-                        //       actions: <Widget>[
-                        //         TextButton(
-                        //           child: Text(S.of(context).ok),
-                        //           onPressed: () {
-                        //             Navigator.of(context).pop();
-                        //           },
-                        //         ),
-                        //       ],
-                        //     );
-                        //   },
-                        // );
                       }
                       return;
                     }
@@ -598,12 +558,6 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                                   // Save changes to database using the provider
                                   await Provider.of<NestProvider>(context, listen: false)
                                       .updateNest(widget.nest);
-
-                                  // ScaffoldMessenger.of(context).showSnackBar(
-                                  //   const SnackBar(
-                                  //     content: Text('Ninho desativado com sucesso!'),
-                                  //   ),
-                                  // );
 
                                   // Close screen of nest details
                                   Navigator.pop(context, selectedNestFate);
@@ -711,7 +665,7 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                       },
                       child: const Text('JSON'),
                     ),
-                    // Option to export the selected nest to JSON
+                    // Option to export the selected nest to KML
                     MenuItemButton(
                       onPressed: () {
                         exportNestToKml(context, widget.nest);
@@ -721,7 +675,6 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                     ),
                   ],
                 ),
-              // const SizedBox(width: 8.0,),
             ],
             bottom: PreferredSize(
               preferredSize: const Size.fromHeight((kToolbarHeight * 2) + 16.0), // Adjust height as needed
@@ -803,12 +756,6 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                                   // Save changes to database using the provider
                                   await Provider.of<NestProvider>(context, listen: false)
                                       .updateNest(widget.nest);
-
-                                  // ScaffoldMessenger.of(context).showSnackBar(
-                                  //   const SnackBar(
-                                  //     content: Text('Ninho desativado com sucesso!'),
-                                  //   ),
-                                  // );
 
                                   // Close screen of nest details
                                   Navigator.pop(context, selectedNestFate);
@@ -972,33 +919,6 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
             ),
           ],
         ) : null,
-        // floatingActionButton: widget.nest.isActive
-        //     ? SpeedDial(
-        //   icon: Icons.add_outlined,
-        //   activeIcon: Icons.close_outlined,
-        //   spaceBetweenChildren: 8.0,
-        //   children: [
-        //     SpeedDialChild(
-        //       child: Theme.of(context).brightness == Brightness.light
-        //           ? const Icon(Icons.beenhere_outlined)
-        //           : const Icon(Icons.beenhere),
-        //       label: S.of(context).revision(1),
-        //       onTap: () {
-        //         _showAddRevisionScreen(context);
-        //       },
-        //     ),
-        //     SpeedDialChild(
-        //       child: Theme.of(context).brightness == Brightness.light
-        //           ? const Icon(Icons.egg_outlined)
-        //           : const Icon(Icons.egg),
-        //       label: S.of(context).egg(1),
-        //       onTap: () async {
-        //         await _showAddEggScreen(context);
-        //       },
-        //     ),
-        //   ],
-        // )
-        //     : null,
     );
   }
 
@@ -1072,7 +992,6 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
-                    // crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       // Show the inventory ID
                       Align(
@@ -1080,28 +999,12 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                         child: Text(nest.fieldNumber ?? '', style: TextTheme.of(context).bodyLarge,),
                       ),
                       const Divider(),
-
-                      // GridView.count(
-                      //   crossAxisCount: MediaQuery.sizeOf(context).width < 600 ? 4 : 5,
-                      //   shrinkWrap: true,
-                      //   physics: const NeverScrollableScrollPhysics(),
-                      //   children: <Widget>[
-                      //     buildGridMenuItem(context, Icons.delete_outlined,
-                      //         S.of(context).delete, () {
-                      //           Navigator.of(context).pop();
-                      //           // Ask for user confirmation
-                      //           _confirmDelete(context, inventory);
-                      //         }, color: Theme.of(context).colorScheme.error),
-                      //   ],
-                      // ),
-                      // Divider(),
                       Row(
                         children: [
                           const SizedBox(width: 8.0),
                           Text(S.current.export, style: TextTheme
                               .of(context)
                               .bodyMedium,),
-                          // Icon(Icons.share_outlined),
                           Expanded(
                             child: SingleChildScrollView(
                               scrollDirection: Axis.horizontal,

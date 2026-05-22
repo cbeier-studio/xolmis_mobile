@@ -47,8 +47,6 @@ Future<void> main() async {
     // Remove temporary export/backup artifacts from previous sessions.
     await clearAppTemporaryDirectory();
 
-    // All initialization logic is moved here, before runApp is called.
-
     // Register the Xolmis license
     LicenseRegistry.addLicense(() async* {
       final license = await rootBundle.loadString('assets/license.txt');

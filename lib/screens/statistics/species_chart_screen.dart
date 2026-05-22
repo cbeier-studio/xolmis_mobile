@@ -1,4 +1,3 @@
-// import 'package:equations/equations.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:xolmis/generated/l10n.dart';
@@ -31,7 +30,6 @@ class _SpeciesChartScreenState extends State<SpeciesChartScreen> {
   void _initializeChartData() {
     speciesAccumulationData = _prepareSpeciesAccumulationData(widget.inventory);
     _calculateChartBounds();
-    // _calculateTrendLine();
   }
 
   // Set the chart bounds
@@ -48,29 +46,6 @@ class _SpeciesChartScreenState extends State<SpeciesChartScreen> {
         .reduce((a, b) => a > b ? a : b)
         : 0.0;
   }
-
-  // EXPERIMENTAL
-  // Prepare the data for the trend line
-  // void _calculateTrendLine() {
-  //   if (speciesAccumulationData.isEmpty) {
-  //     trendLineSpots = [];
-  //     return;
-  //   }
-  //
-  //   final List<InterpolationNode> nodes = speciesAccumulationData
-  //       .map((point) => InterpolationNode(
-  //       x: point.interval.toDouble(), y: point.speciesCount.toDouble()))
-  //       .toList();
-  //
-  //   final splineInterpolation = PolynomialInterpolation(nodes: nodes);
-  //
-  //   trendLineSpots = [];
-  //   final step = (nodes.last.x - nodes.first.x) / 1000;
-  //   for (double x = nodes.first.x; x <= nodes.last.x; x += step) {
-  //     final y = splineInterpolation.compute(x);
-  //     trendLineSpots.add(FlSpot(x, y));
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +69,6 @@ class _SpeciesChartScreenState extends State<SpeciesChartScreen> {
                 axisNameWidget: Text(S.current.timeMinutes),
                 sideTitles: SideTitles(
                   showTitles: true,
-                  // interval: 3,
                   reservedSize: 40,
                   getTitlesWidget: (value, meta) {
                     final minutes = value.toInt();
@@ -137,21 +111,10 @@ class _SpeciesChartScreenState extends State<SpeciesChartScreen> {
                   color: Colors.deepPurpleAccent.withAlpha(30),
                 ),
               ),
-              // Show the trend/smoothed line
-              // LineChartBarData(
-              //   show: true,
-              //       spots: trendLineSpots,
-              //       isCurved: false,
-              //       color: Colors.red,
-              //       barWidth: 2,
-              //       isStrokeCapRound: true,
-              //       dotData: FlDotData(show: false),
-              //     ),
             ],
             lineTouchData: LineTouchData(
               handleBuiltInTouches: true,
               touchTooltipData: LineTouchTooltipData(
-                // tooltipBgColor: Colors.blueGrey.withOpacity(0.8),
                 tooltipBorderRadius: BorderRadius.all(Radius.circular(8)),
                 getTooltipItems: (List<LineBarSpot> touchedSpots) {
                   return touchedSpots.map((LineBarSpot touchedSpot) {

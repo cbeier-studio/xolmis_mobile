@@ -145,11 +145,9 @@ void checkMackinnonCompletion(BuildContext context, Inventory inventory, Invento
 
   final speciesProvider = Provider.of<SpeciesProvider>(context, listen: false);
   final speciesList = speciesProvider.getSpeciesForInventory(inventory.id);
-  // print('speciesList: ${speciesList.length} ; maxSpecies: ${inventory.maxSpecies}');
   if (inventory.type == InventoryType.invMackinnonList &&
       speciesList.length == inventory.maxSpecies) {
         debugPrint('[UTILS] Mackinnon list completed for inventory ${inventory.id}');
-    // Navigator.of(context).pop();
     _showMackinnonDialog(context, inventory, inventoryDao);
   }
 }
@@ -168,7 +166,6 @@ void _showMackinnonDialog(BuildContext context, Inventory inventory, InventoryDa
               // Finish the inventory and open the screen to add inventory
               var maxSpecies = inventory.maxSpecies;
               await inventory.stopTimer(context, inventoryDao);
-              // onInventoryUpdated(inventory);
               Navigator.pop(context, true);
               Navigator.of(context).pop();
               final nextInventoryId = getNextInventoryId(inventory.id);
@@ -189,7 +186,6 @@ void _showMackinnonDialog(BuildContext context, Inventory inventory, InventoryDa
             onPressed: () async {
               // Finish the inventory and go back to the Home screen
               await inventory.stopTimer(context, inventoryDao);
-              // onInventoryUpdated(inventory);
               Navigator.pop(context, true);
               Navigator.of(context).pop();
             },
@@ -424,7 +420,6 @@ Widget buildGridMenuItem(
       children: <Widget>[
         Icon(icon, color: itemColor),
         const SizedBox(height: 8,),
-        // IconButton(icon: Icon(icon, color: itemColor), onPressed: onTap),
         Text(label,
             textAlign: TextAlign.center, style: TextStyle(color: itemColor)),
       ],

@@ -230,7 +230,6 @@ Future<void> importInventoryFromJson(BuildContext context) async {
 Future<void> importNestsFromJson(BuildContext context) async {
   bool isDialogShown = false;
   int successfullyImportedCount = 0;
-  // int totalNestsToImport = 0;
   List<String> importErrors = [];
 
   try {
@@ -288,7 +287,7 @@ Future<void> importNestsFromJson(BuildContext context) async {
         for (final item in nestsJsonList) {
           if (item is Map<String, dynamic>) {
             try {
-              nestsToImport.add(Nest.fromJson(item)); // Alterado para Nest.fromJson
+              nestsToImport.add(Nest.fromJson(item));
             } catch (e) {
               importErrors.add(S.current.errorParsingNestsArrayItem(e.toString(), item.toString()));
             }
@@ -330,7 +329,6 @@ Future<void> importNestsFromJson(BuildContext context) async {
           )
       );
     } else {
-      // if (isDialogShown && context.mounted) Navigator.of(context).pop();
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -360,7 +358,6 @@ Future<void> importNestsFromJson(BuildContext context) async {
 Future<void> importSpecimensFromJson(BuildContext context) async {
   bool isDialogShown = false;
   int successfullyImportedCount = 0;
-  // int totalSpecimensToImport = 0;
   List<String> importErrors = [];
 
   try {
@@ -460,7 +457,6 @@ Future<void> importSpecimensFromJson(BuildContext context) async {
           )
       );
     } else {
-      // if (isDialogShown && context.mounted) Navigator.of(context).pop();
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

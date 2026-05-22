@@ -32,9 +32,7 @@ class EggProvider with ChangeNotifier {
       final eggList = await _eggDao.getEggsForNest(nestId);
       _eggMap[nestId] = eggList;
     } catch (e) {
-      if (kDebugMode) {
-        print('Error loading eggs for nest $nestId: $e');
-      }
+      debugPrint('Error loading eggs for nest $nestId: $e');
     } finally {
       notifyListeners();
     }
@@ -67,12 +65,10 @@ class EggProvider with ChangeNotifier {
 
     // Insert the egg in the database
     egg.nestId = nestId;
-    await _eggDao.insertEgg(egg); // Usar o repositório
+    await _eggDao.insertEgg(egg);
 
     // Add the egg to the list of the provider
     _eggMap[nestId] = await _eggDao.getEggsForNest(nestId);
-    // _eggMap[nestId] = _eggMap[nestId] ?? [];
-    // _eggMap[nestId]!.add(egg);
 
     notifyListeners();
   }
@@ -91,10 +87,7 @@ class EggProvider with ChangeNotifier {
     await _eggDao.deleteEgg(eggId);
 
     _eggMap[nestId] = await _eggDao.getEggsForNest(nestId);
-    // final eggList = _eggMap[nestId];
-    // if (eggList != null) {
-    //   eggList.removeWhere((e) => e.id == eggId);
-    // }
+
     notifyListeners();
   }
 }

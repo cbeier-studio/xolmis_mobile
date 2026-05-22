@@ -128,20 +128,7 @@ class SpeciesListItemState extends State<SpeciesListItem> {
                       // Insert the POI in the database
                       if (context.mounted) {
                         poiProvider.addPoi(context, widget.species.id!, poi);
-                        // poiProvider.notifyListeners();
                       }
-
-                      // ScaffoldMessenger.of(context).showSnackBar(
-                      //   SnackBar(
-                      //     content: Row(
-                      //       children: [
-                      //         const Icon(Icons.check_circle_outlined, color: Colors.green),
-                      //         const SizedBox(width: 8),
-                      //         const Text('POI inserido com sucesso!'),
-                      //       ],
-                      //     ),
-                      //   ),
-                      // );
                     } else {
                       if (context.mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(

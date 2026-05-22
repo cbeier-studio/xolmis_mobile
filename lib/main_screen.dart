@@ -38,7 +38,6 @@ class _NavigationItem {
   final IconData icon;
   final IconData selectedIcon;
   final Widget Function(BuildContext, GlobalKey<ScaffoldState>) screenBuilder;
-  // final int Function(BuildContext)? countSelector; // Optional: for badges
   final BadgeProviderType? badgeProviderType;
 
   _NavigationItem({
@@ -46,7 +45,6 @@ class _NavigationItem {
     required this.icon,
     required this.selectedIcon,
     required this.screenBuilder,
-    // this.countSelector,
     this.badgeProviderType,
   });
 }
@@ -100,14 +98,13 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
         selectedIcon: Icons.egg,
         screenBuilder:
             (context, scaffoldKey) => NestsScreen(scaffoldKey: scaffoldKey),
-        // countSelector: (context) => Provider.of<NestProvider>(context, listen: false).nestsCount,
         badgeProviderType: BadgeProviderType.nest,
       ),
       _NavigationItem(
         labelBuilder:
             (context) => S
                 .of(context)
-                .specimens(2), // Assuming plural '2' is for general case
+                .specimens(2),
         icon: Icons.local_offer_outlined,
         selectedIcon: Icons.local_offer,
         screenBuilder:
@@ -156,10 +153,6 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
     await _checkForSpeciesUpdate();
 
     try {
-      // Provider.of<InventoryProvider>(
-      //   context,
-      //   listen: false,
-      // ).fetchInventories(context);
       Provider.of<NestProvider>(context, listen: false).fetchNests();
       Provider.of<SpecimenProvider>(context, listen: false).fetchSpecimens();
       Provider.of<FieldJournalProvider>(
@@ -250,10 +243,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
       if (inventory.type == InventoryType.invIntervalQualitative) {
         // Ensures that the duration and start time of inventory exist to calculate
         if (inventory.duration > 0 && inventory.startTime != null) {
-          // final now = DateTime.now();
-
           // 1. Calculate the total elapsed time since the start of the inventory.
-          // final totalElapsedTimeInSeconds = now.difference(inventory.startTime!).inSeconds.toDouble();
           final intervalDurationInSeconds = (inventory.duration * 60).toDouble();
 
           // 2. Determine in which interval the inventory should be now.
@@ -314,13 +304,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
             debugPrint('[RESUME_LOGIC] !!! FINISH CONDITION MET for ${inventory.id} during resume. intervalsWithoutNewSpecies is ${inventory.intervalsWithoutNewSpecies}.');
             await inventory.stopTimer(context, inventoryDao);
             await inventory.showNotification(flutterLocalNotificationsPlugin);
-            // final completionService = InventoryCompletionService(
-            //   context: context,
-            //   inventory: inventory,
-            //   inventoryProvider: inventoryProvider,
-            //   inventoryDao: inventoryDao,
-            // );
-            // await completionService.attemptFinishInventory(context);
+
             debugPrint('[RESUME_LOGIC]  -> Inventory ${inventory.id} finished by completion service.');
             continue;
           }
@@ -341,13 +325,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
           debugPrint('[RESUME_LOGIC] !!! FINISH CONDITION MET for ${inventory.id} during resume. elapsedTime is ${inventory.elapsedTime / 60} minutes.');
           await inventory.stopTimer(context, inventoryDao);
           await inventory.showNotification(flutterLocalNotificationsPlugin);
-          // final completionService = InventoryCompletionService(
-          //   context: context,
-          //   inventory: inventory,
-          //   inventoryProvider: inventoryProvider,
-          //   inventoryDao: inventoryDao,
-          // );
-          // await completionService.attemptFinishInventory(context);
+
           debugPrint('[RESUME_LOGIC]  -> Inventory ${inventory.id} finished by completion service.');
           continue;
         }
@@ -481,7 +459,6 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
     // Generate NavigationRailDestinations
     List<NavigationRailDestination> railDestinations =
         _navItems.asMap().entries.map((entry) {
-          // int idx = entry.key;
           _NavigationItem item = entry.value;
 
           return NavigationRailDestination(
@@ -513,7 +490,6 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
               trailing: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  // Expanded(child: SizedBox.shrink()),
                   IconButton(
                     icon:
                         Theme.of(context).brightness == Brightness.light
@@ -521,8 +497,6 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
                             : const Icon(Icons.settings),
                     onPressed: () => _navigateToSettings(context),
                   ),
-                  // const SizedBox(height: 8),
-                  // Text(S.current.settings),
                 ],
               ),
               groupAlignment: 0.0,
@@ -616,7 +590,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
     );
   }
 
-  /// Verifica se uma atualização de nomenclatura de espécies é necessária e a executa.
+  /// Check if a species nomenclature update is necessary and run it.
   Future<void> _checkForSpeciesUpdate() async {
     try {
       final prefs = await SharedPreferences.getInstance();

@@ -1,8 +1,7 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 import '../data/models/journal.dart';
 import '../data/daos/journal_dao.dart';
-// import '../generated/l10n.dart';
 
 class FieldJournalProvider with ChangeNotifier {
   final FieldJournalDao _journalDao;
@@ -45,9 +44,7 @@ class FieldJournalProvider with ChangeNotifier {
       _journalEntries[index] = journalEntry;
       notifyListeners();
     } else {
-      if (kDebugMode) {
-        print('Field journal entry not found in the list');
-      }
+      debugPrint('Field journal entry not found in the list');
     }
   }
 

@@ -230,7 +230,6 @@ Map<int, int> getOccurrencesByMonth(
 
   // Check the list of species
   for (var specie in speciesList) {
-    // if (specie.id == species.id) {
     DateTime? speciesDate = specie.sampleTime;
 
     if (speciesDate == null) {
@@ -243,7 +242,6 @@ Map<int, int> getOccurrencesByMonth(
     if (speciesDate != null) {
       addOccurrence(speciesDate);
     }
-    // }
   }
 
   // Check the list of nests
@@ -462,7 +460,6 @@ List<FlSpot> prepareAccumulatedSpeciesData(List<Inventory> selectedInventories) 
 
   for (var i = 0; i < selectedInventories.length; i++) {
     final inventory = selectedInventories[i];
-    // inventory.speciesList.where((species) => speciesSet.add(species.name));
     for (final species in inventory.speciesList) {
       speciesSet.add(species.name);
     }
@@ -478,7 +475,6 @@ List<FlSpot> prepareAccumulatedSpeciesWithinSample(List<Inventory> selectedInven
 
   for (var i = 0; i < selectedInventories.length; i++) {
     final inventory = selectedInventories[i];
-    // inventory.speciesList.where((species) => speciesSet.add(species.name));
     for (final species in inventory.speciesList) {
       if (!species.isOutOfInventory) {
         speciesSet.add(species.name);

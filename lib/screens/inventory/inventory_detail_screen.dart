@@ -406,7 +406,6 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
           children: [
             Text('${inventoryTypeFriendlyNames[widget.inventory.type]}'),
             if (widget.inventory.duration > 0) ...[
-              // const SizedBox(width: 8.0),
               Text(': ${widget.inventory.duration} ${S.of(context).minutes(widget.inventory.duration)}'),
               // Show the remaining time
               if (!widget.inventory.isFinished)
@@ -424,7 +423,6 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                 ),
             ],
             if (widget.inventory.maxSpecies > 0) ...[
-              // const SizedBox(width: 8.0),
               Text(': ${widget.inventory.maxSpecies} ${S.of(context).speciesAcronym(widget.inventory.maxSpecies)}'),
             ],
             const SizedBox(width: 8.0,),
@@ -718,7 +716,6 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
               ],
             ),
           ),
-          // const SizedBox(width: 8.0,),
         ],
         bottom: PreferredSize( // Wrap TabBar and LinearProgressIndicator in PreferredSize
           preferredSize: const Size.fromHeight((kToolbarHeight * 2) + 24.0), // Adjust height as needed
@@ -996,7 +993,6 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
-                    // crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       // Show the inventory ID
                       Align(
@@ -1004,28 +1000,12 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                         child: Text(inventory.id, style: TextTheme.of(context).bodyLarge,),
                       ),
                       const Divider(),
-
-                      // GridView.count(
-                      //   crossAxisCount: MediaQuery.sizeOf(context).width < 600 ? 4 : 5,
-                      //   shrinkWrap: true,
-                      //   physics: const NeverScrollableScrollPhysics(),
-                      //   children: <Widget>[
-                      //     buildGridMenuItem(context, Icons.delete_outlined,
-                      //         S.of(context).delete, () {
-                      //           Navigator.of(context).pop();
-                      //           // Ask for user confirmation
-                      //           _confirmDelete(context, inventory);
-                      //         }, color: Theme.of(context).colorScheme.error),
-                      //   ],
-                      // ),
-                      // Divider(),
                       Row(
                         children: [
                           const SizedBox(width: 8.0),
                           Text(S.current.export, style: TextTheme
                               .of(context)
                               .bodyMedium,),
-                          // Icon(Icons.share_outlined),
                           Expanded(
                             child: SingleChildScrollView(
                               scrollDirection: Axis.horizontal,

@@ -306,7 +306,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
                 SettingsTile.switchTile(
                   title: Text(S.of(context).remindMissingVegetationData),
-                  // description: Text(S.of(context).formatNumbersDescription),
                   leading: const Icon(Icons.notification_important_outlined),
                   initialValue: _remindVegetationEmpty,
                   onToggle: (bool value) {
@@ -318,7 +317,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
                 SettingsTile.switchTile(
                   title: Text(S.of(context).remindMissingWeatherData),
-                  // description: Text(S.of(context).formatNumbersDescription),
                   leading: const Icon(Icons.notification_important_outlined),
                   initialValue: _remindWeatherEmpty,
                   onToggle: (bool value) {
@@ -428,29 +426,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ],
             ),
-            // SettingsSection(
-            //   title: Text(S.of(context).dangerZone,
-            //           style: TextStyle(color: Theme.of(context).brightness == Brightness.light
-            //               ? Colors.red
-            //               : Colors.redAccent,)),
-            //   tiles: [
-            //   // Option to delete app data
-            //   SettingsTile(
-            //       leading: Icon(
-            //         const Icons.delete_forever,
-            //         color: Theme.of(context).brightness == Brightness.light
-            //               ? Colors.red
-            //               : Colors.redAccent,
-            //       ),
-            //       title: Text(S.of(context).deleteAppData,
-            //           style: TextStyle(color: Theme.of(context).brightness == Brightness.light
-            //               ? Colors.red
-            //               : Colors.redAccent,)),
-            //       description: Text(S.of(context).deleteAppDataDescription),
-            //       onPressed: (context) {
-            //         _showDeleteConfirmationDialog(context);
-            //       }),
-            // ]),
           ],
         ),
       ),
@@ -520,19 +495,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         value: country,
                       );
                     }).toList(),
-                    // RadioListTile<SupportedCountry>(
-                    //   title: Text(S.current.countryBrazil),
-                    //   value: SupportedCountry.BR,
-                    // ),
-                    // RadioListTile<SupportedCountry>(
-                    //   title: Text(S.current.countryParaguay),
-                    //   value: SupportedCountry.PY,
-                    // ),
-                    // RadioListTile<SupportedCountry>(
-                    //   title: Text(S.current.countryUruguay),
-                    //   value: SupportedCountry.UY,
-                    // ),
-
                 ),
               ),
               ),
@@ -926,23 +888,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             content: Text(S.of(context).backupRestoredSuccessfully),
                           ),
                         );
-            // showDialog(
-            //   context: context,
-            //   builder: (BuildContext dialogContext) {
-            //     return AlertDialog.adaptive(
-            //       title: Text(S.of(dialogContext).restoreBackup),
-            //       content: Text(S.of(dialogContext).backupRestoredSuccessfully),
-            //       actions: [
-            //         TextButton(
-            //           onPressed: () {
-            //             Navigator.of(context).pop();
-            //           },
-            //           child: Text(S.of(context).ok),
-            //         ),
-            //       ],
-            //     );
-            //   },
-            // );
           }
         } else {
           if (isDialogShown && mounted) {
@@ -973,56 +918,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
       }
     }
   }
-
-  // Future<void> _showDeleteConfirmationDialog(BuildContext context) async {
-  //   return showDialog<void>(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog.adaptive(
-  //         title: Text(S.of(context).deleteData),
-  //         content: Text(S.of(context).deleteDataMessage),
-  //         actions: <Widget>[
-  //           TextButton(
-  //             child: Text(S.of(context).cancel),
-  //             onPressed: () {
-  //               Navigator.of(context).pop();
-  //             },
-  //           ),
-  //           TextButton(
-  //             child: Text(S.of(context).delete),
-  //             onPressed: () async {
-  //               // Delete the app data
-  //               await _deleteAppData();
-  //               Navigator.of(context).pop();
-  //               ScaffoldMessenger.of(context).showSnackBar(
-  //                 SnackBar(content: Text(S.of(context).dataDeleted)),
-  //               );
-  //             },
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
-
-  //   Future<void> _deleteAppData() async {
-  //     // 1. Get the database path
-  //     var databasesPath = await getDatabasesPath();
-  //     String path = join(databasesPath, 'xolmis_database.db');
-
-  //     DatabaseHelper databaseHelper = DatabaseHelper();
-  //     await databaseHelper.closeDatabase();
-
-  //     // 2. Delete the database file
-  //     await deleteDatabase(path);
-
-  //     // 3. Recreate the database
-
-  //     await databaseHelper.initDatabase();
-
-  //     // 4. Clear other app data, if necessary (ex: SharedPreferences)
-  //     // ...
-  //   }
 }
 
 // Auxiliary widget to select a number

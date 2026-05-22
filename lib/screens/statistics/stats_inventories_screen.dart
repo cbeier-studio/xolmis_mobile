@@ -86,7 +86,6 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
     return occurrences;
   }
 
-  // ...existing code...
   double _responsiveChartWidth(
     double availableWidth, {
     required double pixelsPerInventory,
@@ -271,14 +270,9 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                                         height: 400,
                                         child: LineChart(
                                           LineChartData(
-                                    // minX: 0,
                                     maxX:
                                         widget.inventories.length.toDouble() -
                                         1,
-                                    // minY: 0,
-                                    // maxY: accumulatedSpeciesData.isNotEmpty
-                                    //     ? accumulatedSpeciesData.map((data) => data.y).reduce((a, b) => a > b ? a : b)
-                                    //     : 0,
                                     lineBarsData: [
                                       LineChartBarData(
                                         spots: accumulatedSpeciesData,
@@ -319,9 +313,6 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                                     ],
                                     titlesData: FlTitlesData(
                                       bottomTitles: AxisTitles(
-                                        // axisNameWidget: Text(
-                                        //   S.current.inventories,
-                                        // ),
                                         sideTitles: SideTitles(
                                           showTitles: false,
                                           interval: 1,
@@ -347,9 +338,6 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                                         ),
                                       ),
                                       leftTitles: AxisTitles(
-                                        // axisNameWidget: Text(
-                                        //   S.current.speciesAccumulated,
-                                        // ),
                                         sideTitles: SideTitles(
                                           showTitles: true,
                                           interval: 5,
@@ -606,7 +594,6 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                       child: BarChart(
                         BarChartData(
                   alignment: BarChartAlignment.spaceAround,
-                  // maxY: (widget.inventories.map((inventory) => inventory.speciesList.length).reduce((a, b) => a > b ? a : b) / 10).ceil() * 10.0,
                   barTouchData: BarTouchData(
                     enabled: true,
                     touchTooltipData: BarTouchTooltipData(
@@ -617,7 +604,6 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                         final inventoryId = widget.inventories[groupIndex].id;
                         return BarTooltipItem(
                           '',
-                          // rod.toY.toString(),
                           TextStyle(
                             color: Colors.deepPurple,
                             fontWeight: FontWeight.bold,
@@ -642,26 +628,15 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                   titlesData: FlTitlesData(
                     show: true,
                     bottomTitles: AxisTitles(
-                      // axisNameWidget: Text(S.current.inventories),
                       sideTitles: SideTitles(
                         showTitles: true,
                         getTitlesWidget: (value, meta) {
                           final index = value.toInt() + 1;
                           return Text('$index');
-                          // if (index >= 0 && index < widget.inventories.length) {
-                          //   final parts = widget.inventories[index].id.split('-');
-                          //   final listNumber = parts.length > 1
-                          //       ? parts.last
-                          //       : widget.inventories[index].id;
-                          //   return Text(listNumber);
-                          // } else {
-                          //   return Text('');
-                          // }
                         },
                       ),
                     ),
                     leftTitles: AxisTitles(
-                      // axisNameWidget: Text(S.current.speciesCounted),
                       sideTitles: SideTitles(
                         showTitles: false,
                         interval: 10,
@@ -708,12 +683,6 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                           color: Colors.grey,
                         width: 1,
                       ),
-                        // left: BorderSide(
-                        //   color: Colors.grey,
-                        //   width: 1,
-                        // ),
-                        // top: BorderSide.none,
-                        // right: BorderSide.none,
                     ),
                   ),
                         ),

@@ -223,7 +223,6 @@ class AddJournalScreenState extends State<AddJournalScreen> {
                         ),
                 ),
               ),
-                        // const SizedBox(height: 16.0),
                 Expanded(
                   child: FleatherEditor(
                     controller: _notesController,
@@ -374,7 +373,6 @@ class AddJournalScreenState extends State<AddJournalScreen> {
                         ),
                 ),
               ),
-                        // const SizedBox(height: 16.0),
                 Expanded(
                   child: FleatherEditor(
                     controller: _notesController,
@@ -426,16 +424,6 @@ class AddJournalScreenState extends State<AddJournalScreen> {
   }
 
   Widget _embedBuilder(BuildContext context, EmbedNode node) {
-    // if (node.value.type == 'icon') {
-    //   final data = node.value.data;
-    //   // Icons.rocket_launch_outlined
-    //   return Icon(
-    //     IconData(int.parse(data['codePoint']), fontFamily: data['fontFamily']),
-    //     color: Color(int.parse(data['color'])),
-    //     size: 18,
-    //   );
-    // }
-
     if (node.value.type == 'image') {
       final sourceType = node.value.data['source_type'];
       ImageProvider? image;

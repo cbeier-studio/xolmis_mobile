@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../data/models/inventory.dart';
@@ -21,9 +20,7 @@ class VegetationProvider with ChangeNotifier {
       final vegetationList = await _vegetationDao.getVegetationByInventory(inventoryId);
       _vegetationMap[inventoryId] = vegetationList;
     } catch (e) {
-      if (kDebugMode) {
-        print('Error loading vegetation for inventory $inventoryId: $e');
-      }
+      debugPrint('Error loading vegetation for inventory $inventoryId: $e');
     } finally {
       notifyListeners();
     }

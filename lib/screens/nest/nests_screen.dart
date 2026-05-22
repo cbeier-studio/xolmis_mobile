@@ -504,23 +504,6 @@ class NestsScreenState extends State<NestsScreen> {
             content: Text(S.of(context).observerAbbreviationMissing),
           ),
         );
-        // showDialog(
-        //   context: context,
-        //   builder: (context) {
-        //     return AlertDialog.adaptive(
-        //       title: Text(S.of(context).warningTitle),
-        //       content: Text(S.of(context).observerAbbreviationMissing),
-        //       actions: <Widget>[
-        //         TextButton(
-        //           child: Text(S.of(context).ok),
-        //           onPressed: () {
-        //             Navigator.of(context).pop();
-        //           },
-        //         ),
-        //       ],
-        //     );
-        //   },
-        // );
       }
       return;
     }
@@ -563,7 +546,6 @@ class NestsScreenState extends State<NestsScreen> {
   // Delete all the selected nests
   void _deleteSelectedNests() async {
     final nestProvider = Provider.of<NestProvider>(context, listen: false);
-    // final nests = selectedNests.map((id) => nestProvider.getNestById(id)).toList();
 
     // Ask for user confirmation
     showDialog(
@@ -584,7 +566,6 @@ class NestsScreenState extends State<NestsScreen> {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(false);
-                // Navigator.of(context).pop();
               },
               child: Text(S.of(context).cancel),
             ),
@@ -599,7 +580,6 @@ class NestsScreenState extends State<NestsScreen> {
                   selectedNests.clear();
                 });
                 Navigator.of(context).pop(true);
-                // Navigator.of(context).pop();
               },
               child: Text(S.of(context).delete),
             ),
@@ -668,8 +648,6 @@ class NestsScreenState extends State<NestsScreen> {
                     });
                   },
                 ),
-
-                // title: Text(S.of(context).nests),
               )
               : null,
       body: LayoutBuilder(
@@ -982,7 +960,6 @@ class NestsScreenState extends State<NestsScreen> {
                     setState(() {
                       _showActive = newSelection.first;
                     });
-                    // nestProvider.notifyListeners();
                   },
                 ),
               );
@@ -1104,14 +1081,6 @@ class NestsScreenState extends State<NestsScreen> {
                           );
                         },
                         menuChildren: [
-                          // MenuItemButton(
-                          //   onPressed: () {
-                          //     setState(() {
-                          //       _selectedFate = null;
-                          //     });
-                          //   },
-                          //   child: Text(S.current.allTypes),
-                          // ),
                           ...NestFateType.values.map((fate) {
                             return MenuItemButton(
                               onPressed: () {
@@ -1199,14 +1168,6 @@ class NestsScreenState extends State<NestsScreen> {
                           );
                         },
                         menuChildren: [
-                          // MenuItemButton(
-                          //   onPressed: () {
-                          //     setState(() {
-                          //       _selectedObserver = null;
-                          //     });
-                          //   },
-                          //   child: Text(S.current.allObservers),
-                          // ),
                           ..._getUniqueObservers().map((observer) {
                             return MenuItemButton(
                               onPressed: () {
@@ -1306,13 +1267,6 @@ class NestsScreenState extends State<NestsScreen> {
                           await nestProvider.fetchNestsSummary();
                         },
                       ),
-                      // FilledButton.icon(
-                      //   label: Text(S.of(context).refresh),
-                      //   icon: const Icon(Icons.refresh_outlined),
-                      //   onPressed: () async {
-                      //     await nestProvider.fetchNests();
-                      //   },
-                      // ),
                     ],
                   ),
                 );
@@ -1329,7 +1283,6 @@ class NestsScreenState extends State<NestsScreen> {
                       padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
                       child: Text(
                         '${filteredNests.length} ${S.of(context).nest(filteredNests.length)}',
-                        // style: TextStyle(fontSize: 16,),
                       ),
                     ),
                     Expanded(
@@ -1502,9 +1455,6 @@ class NestsScreenState extends State<NestsScreen> {
                           style: TextTheme.of(context).bodyLarge,
                         ),
                       ),
-                      // ListTile(
-                      //   title: Text(nest.fieldNumber!),
-                      // ),
                       const Divider(),
                       GridView.count(
                         crossAxisCount:
@@ -1586,7 +1536,6 @@ class NestsScreenState extends State<NestsScreen> {
                                       TextButton(
                                         onPressed: () async {
                                           Navigator.of(context).pop(true);
-                                          // Navigator.of(context).pop();
                                           // Call the function to delete species
                                           await Provider.of<NestProvider>(
                                             context,
@@ -1612,7 +1561,6 @@ class NestsScreenState extends State<NestsScreen> {
                             S.current.export,
                             style: TextTheme.of(context).bodyMedium,
                           ),
-                          // Icon(Icons.share_outlined),
                           Expanded(
                             child: SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
@@ -1722,7 +1670,6 @@ class NestsScreenState extends State<NestsScreen> {
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
-                    // crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       GridView.count(
                         crossAxisCount:
@@ -1760,12 +1707,6 @@ class NestsScreenState extends State<NestsScreen> {
                               Navigator.of(context).pop();
                             },
                           ),
-                          // buildGridMenuItem(
-                          //     context, Icons.share_outlined, S.of(context).exportAll,
-                          //         () async {
-                          //       Navigator.of(context).pop();
-                          //       await exportAllInactiveNestsToJson(context);
-                          //     }),
                         ],
                       ),
                       if (nestProvider.inactiveNests.isNotEmpty) ...[
@@ -1777,7 +1718,6 @@ class NestsScreenState extends State<NestsScreen> {
                               S.current.exportAll,
                               style: TextTheme.of(context).bodyMedium,
                             ),
-                            // Icon(Icons.share_outlined),
                             Expanded(
                               child: SingleChildScrollView(
                                 scrollDirection: Axis.horizontal,

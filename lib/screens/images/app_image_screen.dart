@@ -121,7 +121,6 @@ class _AppImageScreenState extends State<AppImageScreen> {
         notes: _notesController.text,
       );
 
-      // final appImageProvider = Provider.of<AppImageProvider>(context, listen: false);
       if (widget.vegetationId != null) {
         await appImageProvider.addImageToVegetation(appImage, widget.vegetationId!);
       } else if (widget.eggId != null) {
@@ -444,14 +443,12 @@ class _AppImageScreenState extends State<AppImageScreen> {
                                     TextButton(
                                       onPressed: () {
                                         Navigator.of(context).pop(false);
-                                        // Navigator.of(context).pop();
                                       },
                                       child: Text(S.of(context).cancel),
                                     ),
                                     TextButton(
                                       onPressed: () {
                                         Navigator.of(context).pop(true);
-                                        // Navigator.of(context).pop();
                                         // Call the function to delete image
                                         if (appImage.id != null) appImageProvider.deleteImage(appImage.id!);
                                       },
@@ -515,7 +512,6 @@ class _AppImageScreenState extends State<AppImageScreen> {
                 await appImageProvider.updateImage(updatedImage);
                 if (!mounted) return;
                 Navigator.of(context).pop();
-                // setState(() {});
               },
             ),
           ],
@@ -564,7 +560,6 @@ class _AppImageScreenState extends State<AppImageScreen> {
             child: 
                 ClipRRect(
                   clipBehavior: Clip.hardEdge,
-                  // borderRadius: BorderRadius.circular(0.0),
                   child: image.imagePath.isNotEmpty ? Image.file(
                     File(image.imagePath),
                     fit: BoxFit.cover,

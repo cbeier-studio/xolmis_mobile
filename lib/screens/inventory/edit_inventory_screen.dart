@@ -65,9 +65,6 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
         isDiscarded: _isDiscarded,
       );
 
-      // final speciesProvider = Provider.of<SpeciesProvider>(context, listen: false);
-      // await speciesProvider.editSpecies(context, widget.inventory.id, updatedSpecies);
-
       // Retorna para a tela anterior com o objeto 'Species' atualizado
       Navigator.of(context).pop(updatedInventory);
     }
@@ -140,7 +137,6 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
                       textCapitalization: TextCapitalization.words,
                       decoration: InputDecoration(
                         labelText: '${S.of(context).locality} *',
-                        // helperText: S.of(context).requiredField,
                         border: OutlineInputBorder(),
                       ),
                       validator: (value) {

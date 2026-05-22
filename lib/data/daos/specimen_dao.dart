@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../core/core_consts.dart';
@@ -11,7 +11,12 @@ class SpecimenDao {
 
   SpecimenDao(this._dbHelper);
 
-  // Insert specimen into database
+  /// Inserts a new [Specimen] record into the database.
+  ///
+  /// Uses [ConflictAlgorithm.replace] to handle duplicate entries.
+  /// Sets [specimen.id] with the generated row ID upon success.
+  /// Throws a [DatabaseInsertException] if the generated ID is `null` or if a
+  /// database error occurs, and a generic [Exception] for any other error.
   Future<int> insertSpecimen(Specimen specimen) async {
     final db = await _dbHelper.database;
     try {
@@ -24,20 +29,20 @@ class SpecimenDao {
       return id;
     } on DatabaseException catch (e) {
       // Handle database exceptions
-      if (kDebugMode) {
-        print('Database error: $e');
-      }
+      debugPrint('Database error: $e');
       throw DatabaseInsertException('Failed to insert specimen: ${e.toString()}');
     } catch (e) {
       // Handle other exceptions
-      if (kDebugMode) {
-        print('Generic error: $e');
-      }
+      debugPrint('Generic error: $e');
       throw Exception('Failed to insert specimen: ${e.toString()}');
     }
   }
 
-  // Import specimen into database, ignoring id if present
+  /// Imports a [Specimen] into the database, ignoring any pre-existing ID so
+  /// that the database assigns a new auto-incremented ID.
+  ///
+  /// Sets [specimen.id] with the newly generated ID upon success.
+  /// Returns `true` on success, or `false` if an error occurs.
   Future<bool> importSpecimen(Specimen specimen) async {
     final db = await _dbHelper.database;
     try {
@@ -58,14 +63,14 @@ class SpecimenDao {
       }
       return true;
     } catch (e) {
-      if (kDebugMode) {
-        print('Error importing specimen: $e');
-      }
+      debugPrint('Error importing specimen: $e');
       return false;
     }
   }
 
-  // Get list of all specimens
+  /// Returns all [Specimen] records stored in the database.
+  ///
+  /// Returns an empty list if an error occurs.
   Future<List<Specimen>> getSpecimens() async {
     final db = await _dbHelper.database;
     try {
@@ -74,15 +79,13 @@ class SpecimenDao {
         return Specimen.fromMap(maps[i]);
       });
     } catch (e) {
-      if (kDebugMode) {
-        print('Error loading specimens: $e');
-      }
+      debugPrint('Error loading specimens: $e');
       // Handle the error, e.g.: return an empty list or rethrow exception
       return []; // Or rethrow;
     }
   }
 
-  // Get list of specimens by type
+  /// Returns all [Specimen] records whose type matches the given [type].
   Future<List<Specimen>> getSpecimensByType(SpecimenType type) async {
     final db = await _dbHelper.database;
     final maps = await db?.query('specimens',
@@ -92,7 +95,7 @@ class SpecimenDao {
     });
   }
 
-  // Get list of specimens by species
+  /// Returns all [Specimen] records whose `speciesName` matches [speciesName].
   Future<List<Specimen>> getSpecimensBySpecies(String speciesName) async {
     final db = await _dbHelper.database;
     final maps = await db?.query('specimens',
@@ -102,7 +105,9 @@ class SpecimenDao {
     });
   }
 
-  // Find and get a specimen by ID
+  /// Returns the [Specimen] identified by [specimenId].
+  ///
+  /// Throws an [Exception] if no specimen with the given ID is found.
   Future<Specimen> getSpecimenById(int specimenId) async {
     final db = await _dbHelper.database;
     final List<Map<String, dynamic>> maps = await db?.query(
@@ -118,7 +123,9 @@ class SpecimenDao {
     }
   }
 
-  // Update specimen data in the database
+  /// Updates the database record for the given [specimen] using its [Specimen.id].
+  ///
+  /// Returns the number of rows affected.
   Future<int?> updateSpecimen(Specimen specimen) async {
     final db = await _dbHelper.database;
     return await db?.update(
@@ -129,13 +136,14 @@ class SpecimenDao {
     );
   }
 
-  // Delete specimen from database
+  /// Deletes the [Specimen] record identified by [specimenId] from the database.
   Future<void> deleteSpecimen(int specimenId) async {
     final db = await _dbHelper.database;
     await db?.delete('specimens', where: 'id = ?', whereArgs: [specimenId]);
   }
 
-  // Check if a specimen field number already exists
+  /// Returns `true` if a specimen with the given [fieldNumber] already exists
+  /// in the database (case-insensitive comparison).
   Future<bool> specimenFieldNumberExists(String fieldNumber) async {
     final db = await _dbHelper.database;
     final result = await db?.query(
@@ -146,7 +154,11 @@ class SpecimenDao {
     return result!.isNotEmpty;
   }
 
-  // Get the next field number for new specimen
+  /// Returns the next available sequential number for a specimen field number,
+  /// based on the given observer [acronym], [ano] (year), and [mes] (month).
+  ///
+  /// The field number prefix is built as `<acronym><year><month padded to 2 digits>`.
+  /// If no existing specimen matches the prefix, returns `1`.
   Future<int> getNextSequentialNumber(String acronym, int ano, int mes) async {
     final db = await _dbHelper.database;
 
@@ -170,7 +182,10 @@ class SpecimenDao {
     }
   }
 
-  // Get list of distinct localities for autocomplete
+  /// Returns a sorted list of distinct locality names recorded across all
+  /// specimens, excluding `null` values.
+  ///
+  /// Returns an empty list if the database is unavailable or an error occurs.
   Future<List<String>> getDistinctLocalities() async {
     try {
       final db = await _dbHelper.database;

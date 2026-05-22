@@ -199,7 +199,6 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
                                   labelText: S.current.windDirection,
                                   border: const OutlineInputBorder(),
                                 ),
-                                // hint: Text(S.current.selectADirection),
                                 isExpanded: true,
                                 items: [
                                   // Pontos Cardeais
@@ -356,17 +355,6 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
 
         if (mounted) {
           Navigator.pop(context, true);
-          // ScaffoldMessenger.of(context).showSnackBar(
-          //   SnackBar(
-          //     content: Row(
-          //       children: [
-          //         Icon(Icons.check_circle_outlined, color: Colors.green),
-          //         SizedBox(width: 8),
-          //         Text(S.current.weatherDataAddedSuccessfully), // Use sua string traduzida
-          //       ],
-          //     ),
-          //   ),
-          // );
         }
       }
     } catch (error) {

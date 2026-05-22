@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../models/inventory.dart';
@@ -10,7 +10,11 @@ class WeatherDao {
 
   WeatherDao(this._dbHelper);
 
-  // Insert weather record into database
+  /// Inserts a new [Weather] record into the database.
+  ///
+  /// Uses [ConflictAlgorithm.replace] to handle duplicate entries.
+  /// Sets [weather.id] with the generated row ID upon success.
+  /// Returns the new row ID, or `0` if an error occurs.
   Future<int?> insertWeather(Weather weather) async {
     final db = await _dbHelper.database;
     try {
@@ -22,14 +26,12 @@ class WeatherDao {
       weather.id = id;
       return id;
     } catch (e) {
-      if (kDebugMode) {
-        print('Error inserting weather data: $e');
-      }
+      debugPrint('Error inserting weather data: $e');
       return 0;
     }
   }
 
-  // Update weather record in the database
+  /// Updates the database record for the given [weather] using its [Weather.id].
   Future<void> updateWeather(Weather weather) async {
     final db = await _dbHelper.database;
     await db?.update(
@@ -40,7 +42,7 @@ class WeatherDao {
     );
   }
 
-  // Delete weather record from database
+  /// Deletes the [Weather] record identified by [weatherId] from the database.
   Future<void> deleteWeather(int? weatherId) async {
     final db = await _dbHelper.database;
     await db?.delete(
@@ -50,7 +52,8 @@ class WeatherDao {
     );
   }
 
-  // Get list of weather records for inventory ID
+  /// Returns all [Weather] records associated with the inventory identified
+  /// by [inventoryId].
   Future<List<Weather>> getWeatherByInventory(String inventoryId) async {
     final db = await _dbHelper.database;
     final List<Map<String, dynamic>> maps = await db?.query(
@@ -58,9 +61,6 @@ class WeatherDao {
       where: 'inventoryId = ?',
       whereArgs: [inventoryId],
     ) ?? [];
-    // if (kDebugMode) {
-    //   print('Vegetation data loaded for inventory $inventoryId: ${maps.length}');
-    // }
     return List.generate(maps.length, (i) {
       return Weather.fromMap(maps[i]);
     });

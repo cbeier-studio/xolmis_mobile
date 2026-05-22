@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 import '../data/models/specimen.dart';
 import '../data/daos/specimen_dao.dart';
@@ -17,10 +17,6 @@ class SpecimenProvider with ChangeNotifier {
   List<Specimen> get archivedSpecimens => _specimens.where((specimen) => !specimen.isPending).toList();
 
   int get specimensCount => pendingSpecimens.length;
-
-  void refreshState() {
-    notifyListeners();
-  }
 
   // Load list of all specimens
   Future<void> fetchSpecimens() async {
@@ -67,9 +63,7 @@ class SpecimenProvider with ChangeNotifier {
 
       return true;
     } catch (error) {
-      if (kDebugMode) {
-        print('Error importing specimen: $error');
-      }
+      debugPrint('Error importing specimen: $error');
       return false;
     }
   }
@@ -83,9 +77,7 @@ class SpecimenProvider with ChangeNotifier {
       _specimens[index] = specimen;
       notifyListeners();
     } else {
-      if (kDebugMode) {
-        print('Specimen not found in the list');
-      }
+      debugPrint('Specimen not found in the list');
     }
   }
 

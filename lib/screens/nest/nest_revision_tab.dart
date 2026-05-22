@@ -157,9 +157,6 @@ class _NestRevisionsTabState extends State<NestRevisionsTab>
                     );
                   },
                   child: _buildListView(revisionList),
-                      
-                    
-                  
                 );
               }
             },

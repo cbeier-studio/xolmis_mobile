@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../data/models/inventory.dart';
@@ -51,14 +50,14 @@ class InventoryProvider with ChangeNotifier {
     try {final inventoriesFromDb = await _inventoryDao.getInventories();
     final Set<String> dbInventoryIds = inventoriesFromDb.map((inv) => inv.id).toSet();
 
-    // Remove da memória os inventários que não existem mais no DB
+    // Remove from memory the inventories that does not exist in DB anymore
     _inventoryMap.removeWhere((id, inventory) => !dbInventoryIds.contains(id));
     _inventories.removeWhere((inventory) => !dbInventoryIds.contains(inventory.id));
 
-    // Atualiza os existentes ou adiciona os novos
+    // Update existing or add new inventories
     for (var dbInventory in inventoriesFromDb) {
       if (_inventoryMap.containsKey(dbInventory.id)) {
-        // Objeto já existe na memória: ATUALIZE-O, não o substitua.
+        // Object already exists in memory: UPDATE IT, do not replace it.
         final memoryInventory = _inventoryMap[dbInventory.id]!;
         memoryInventory.currentInterval = dbInventory.currentInterval;
         memoryInventory.elapsedTime = dbInventory.elapsedTime;
@@ -70,24 +69,18 @@ class InventoryProvider with ChangeNotifier {
         memoryInventory.localityName = dbInventory.localityName;
         memoryInventory.speciesCount = dbInventory.speciesCount;
         memoryInventory.speciesWithinCount = dbInventory.speciesWithinCount;
-        memoryInventory.speciesOutOfInventoryCount =
-            dbInventory.speciesOutOfInventoryCount;
+        memoryInventory.speciesOutOfInventoryCount = dbInventory.speciesOutOfInventoryCount;
         memoryInventory.currentIntervalSpeciesCount = dbInventory.currentIntervalSpeciesCount;
         memoryInventory.totalPausedTimeInSeconds = dbInventory.totalPausedTimeInSeconds;
         memoryInventory.pauseStartTime = dbInventory.pauseStartTime;
         memoryInventory.intervalsWithoutNewSpecies = dbInventory.intervalsWithoutNewSpecies;
         memoryInventory.isDiscarded = dbInventory.isDiscarded;
-        // Esta é uma etapa de "merge". Você pode criar um método no seu
-        // modelo Inventory para atualizar suas propriedades a partir de outro.
-        // Ex: memoryInventory.updateFrom(dbInventory);
-        // Por enquanto, vamos apenas garantir que a referência seja mantida.
-        // A lógica de recálculo da MainScreen cuidará do resto.
       } else {
-        // Objeto não existe na memória: ADICIONE-O.
+        // Object does not exist in memory: ADD IT.
         _inventories.add(dbInventory);
         _inventoryMap[dbInventory.id] = dbInventory;
       }
-      // Carrega sub-itens se necessário
+      // Load subitems if necessary
       await _speciesProvider.loadSpeciesForInventory(dbInventory.id);
       await _vegetationProvider.loadVegetationForInventory(dbInventory.id);
       await _weatherProvider.loadWeatherForInventory(dbInventory.id);

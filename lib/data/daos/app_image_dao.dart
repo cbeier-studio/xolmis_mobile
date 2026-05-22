@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 import '../models/app_image.dart';
 import '../database/database_helper.dart';
@@ -9,7 +9,11 @@ class AppImageDao {
 
   AppImageDao(this._dbHelper);
 
-  // Insert image into database linked to a vegetation record
+  /// Inserts a new [AppImage] into the database linked to the [Vegetation]
+  /// record identified by [vegetationId].
+  ///
+  /// Sets [appImage.id] with the generated row ID upon success.
+  /// Returns the new row ID, or `0` if an error occurs.
   Future<int?> insertImageToVegetation(AppImage appImage, int vegetationId) async {
     final db = await _dbHelper.database;
     try {
@@ -18,14 +22,13 @@ class AppImageDao {
       appImage.id = id;
       return id;
     } catch (e) {
-      if (kDebugMode) {
-        print('Error inserting image to vegetation: $e');
-      }
+      debugPrint('Error inserting image to vegetation: $e');
       return 0;
     }
   }
 
-  // Get list of images linked to a vegetation record
+  /// Returns all [AppImage] records associated with the [Vegetation] record
+  /// identified by [vegetationId].
   Future<List<AppImage>> getImagesForVegetation(int vegetationId) async {
     final db = await _dbHelper.database;
     final List<Map<String, dynamic>> maps = await db?.query(
@@ -38,20 +41,22 @@ class AppImageDao {
     });
   }
 
-  // Insert image into database linked to a nest revision
+  /// Inserts a new [AppImage] into the database linked to the [NestRevision]
+  /// record identified by [revisionId].
+  ///
+  /// Logs a debug message if an error occurs.
   Future<void> insertImageToNestRevision(AppImage appImage, int revisionId) async {
     final db = await _dbHelper.database;
     try {
       final imageWithNestRevisionId = appImage.copyWith(nestRevisionId: revisionId);
       await db?.insert('images', imageWithNestRevisionId.toMap());
     } catch (e) {
-      if (kDebugMode) {
-        print('Error inserting image to nest revision: $e');
-      }
+      debugPrint('Error inserting image to nest revision: $e');
     }
   }
 
-  // Get list of images linked to a nest revision
+  /// Returns all [AppImage] records associated with the [NestRevision] record
+  /// identified by [revisionId].
   Future<List<AppImage>> getImagesForNestRevision(int revisionId) async {
     final db = await _dbHelper.database;
     final List<Map<String, dynamic>> maps = await db?.query(
@@ -64,20 +69,22 @@ class AppImageDao {
     });
   }
 
-  // Insert image into database linked to an egg
+  /// Inserts a new [AppImage] into the database linked to the [Egg] record
+  /// identified by [eggId].
+  ///
+  /// Logs a debug message if an error occurs.
   Future<void> insertImageToEgg(AppImage appImage, int eggId) async {
     final db = await _dbHelper.database;
     try {
       final imageWithEggId = appImage.copyWith(eggId: eggId);
       await db?.insert('images', imageWithEggId.toMap());
     } catch (e) {
-      if (kDebugMode) {
-        print('Error inserting image to egg: $e');
-      }
+      debugPrint('Error inserting image to egg: $e');
     }
   }
 
-  // Get list of images linked to an egg
+  /// Returns all [AppImage] records associated with the [Egg] record
+  /// identified by [eggId].
   Future<List<AppImage>> getImagesForEgg(int eggId) async {
     final db = await _dbHelper.database;
     final List<Map<String, dynamic>> maps = await db?.query(
@@ -90,20 +97,22 @@ class AppImageDao {
     });
   }
 
-  // Insert image into database linked to a specimen
+  /// Inserts a new [AppImage] into the database linked to the [Specimen] record
+  /// identified by [specimenId].
+  ///
+  /// Logs a debug message if an error occurs.
   Future<void> insertImageToSpecimen(AppImage appImage, int specimenId) async {
     final db = await _dbHelper.database;
     try {
       final imageWithSpecimenId = appImage.copyWith(specimenId: specimenId);
       await db?.insert('images', imageWithSpecimenId.toMap());
     } catch (e) {
-      if (kDebugMode) {
-        print('Error inserting image to specimen: $e');
-      }
+      debugPrint('Error inserting image to specimen: $e');
     }
   }
 
-  // Get list of images linked to a specimen
+  /// Returns all [AppImage] records associated with the [Specimen] record
+  /// identified by [specimenId].
   Future<List<AppImage>> getImagesForSpecimen(int specimenId) async {
     final db = await _dbHelper.database;
     final List<Map<String, dynamic>> maps = await db?.query(
@@ -116,7 +125,7 @@ class AppImageDao {
     });
   }
 
-  // Update image data in the database
+  /// Updates the database record for the given [appImage] using its [AppImage.id].
   Future<void> updateImage(AppImage appImage) async {
     final db = await _dbHelper.database;
     await db?.update(
@@ -127,7 +136,7 @@ class AppImageDao {
     );
   }
 
-  // Delete image from database
+  /// Deletes the [AppImage] record identified by [appImageId] from the database.
   Future<void> deleteImage(int appImageId) async {
     final db = await _dbHelper.database;
     await db?.delete('images', where: 'id = ?', whereArgs: [appImageId]);

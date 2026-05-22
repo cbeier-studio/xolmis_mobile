@@ -70,7 +70,6 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
 
   Future<void> _loadGeneralData() async {
     try {
-      // recordedSpeciesNames = await getRecordedSpeciesList();
       _topSpeciesFuture = getTopSpeciesWithMostRecords(5);
       totalDistinctSpecies = await getTotalSpeciesWithRecords();
       await widget.poiProvider.fetchPoisCount();
@@ -112,7 +111,6 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
             value: entry.value.toDouble(),
             color: getNestFateColor(entry.key),
             radius: 20,
-            // titleStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
           );
         }).toList();
 
@@ -458,13 +456,6 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
                 await _loadGeneralData();
               }
             )
-            // FilledButton.icon(
-            //   label: Text(S.of(context).refresh),
-            //   icon: const Icon(Icons.refresh_outlined),
-            //   onPressed: () async {
-            //     await _loadGeneralData();
-            //   },
-            // ),
           ],
         ),
       );
@@ -476,10 +467,6 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-              // Text(
-              //   S.current.species(2),
-              //   style: TextTheme.of(context).titleLarge,
-              // ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -1380,28 +1367,6 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
                                     ),
                                   ),
                             ) : Text(S.current.noDataAvailable),
-                            // SizedBox(height: 8.0),
-                            // Row(
-                            //   mainAxisAlignment:
-                            //   MainAxisAlignment.spaceEvenly,
-                            //   children: <Widget>[
-                            //     Indicator(
-                            //       color: Colors.grey,
-                            //       text: S.current.nestFateUnknown,
-                            //       isSquare: false,
-                            //     ),
-                            //     Indicator(
-                            //       color: Colors.red,
-                            //       text: S.current.nestFateLost,
-                            //       isSquare: false,
-                            //     ),
-                            //     Indicator(
-                            //       color: Colors.blue,
-                            //       text: S.current.nestFateSuccess,
-                            //       isSquare: false,
-                            //     ),
-                            //   ],
-                            // ),
                           ],
                         ),
                       ),
@@ -1432,10 +1397,6 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
                             specimenTypeSections.isNotEmpty ? Stack(
                               alignment: Alignment.center,
                               children: [
-                                // Text(
-                                //   totalRecordsPerSpecies.toString(),
-                                //   style: TextStyle(fontSize: 20),
-                                // ),
                                 SizedBox(
                                   height: 200,
                                   child: PieChart(
@@ -1492,99 +1453,6 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
                                 ),
                               ],
                             ) : Text(S.current.noDataAvailable),
-                            // SizedBox(height: 8.0),
-                            // Row(
-                            //   mainAxisAlignment:
-                            //       MainAxisAlignment.spaceEvenly,
-                            //   children: <Widget>[
-                            //     Indicator(
-                            //       color: Colors.blue,
-                            //       text: S.current.specimenWholeCarcass,
-                            //       isSquare: false,
-                            //     ),
-                            //     Indicator(
-                            //       color: Colors.orange,
-                            //       text: S.current.specimenPartialCarcass,
-                            //       isSquare: false,
-                            //     ),
-                            //
-                            //   ],
-                            // ),
-                            // Row(
-                            //   mainAxisAlignment:
-                            //       MainAxisAlignment.spaceEvenly,
-                            //   children: <Widget>[
-                            //     Indicator(
-                            //       color: Colors.green,
-                            //       text: S.current.specimenNest,
-                            //       isSquare: false,
-                            //     ),
-                            //     Indicator(
-                            //       color: Colors.purple,
-                            //       text: S.current.specimenBones,
-                            //       isSquare: false,
-                            //     ),
-                            //     Indicator(
-                            //       color: Colors.yellow,
-                            //       text: S.current.specimenEgg,
-                            //       isSquare: false,
-                            //     ),
-                            //     Indicator(
-                            //       color: Colors.cyan,
-                            //       text: S.current.specimenParasites,
-                            //       isSquare: false,
-                            //     ),
-                            //
-                            //   ],
-                            // ),
-                            // Row(
-                            //   mainAxisAlignment:
-                            //       MainAxisAlignment.spaceEvenly,
-                            //   children: <Widget>[
-                            //     Indicator(
-                            //       color: Colors.deepPurple,
-                            //       text: S.current.specimenFeathers,
-                            //       isSquare: false,
-                            //     ),
-                            //     Indicator(
-                            //       color: Colors.red,
-                            //       text: S.current.specimenBlood,
-                            //       isSquare: false,
-                            //     ),
-                            //     Indicator(
-                            //       color: Colors.teal,
-                            //       text: S.current.specimenClaw,
-                            //       isSquare: false,
-                            //     ),
-                            //     Indicator(
-                            //       color: Colors.amber,
-                            //       text: S.current.specimenSwab,
-                            //       isSquare: false,
-                            //     ),
-                            //
-                            //   ],
-                            // ),
-                            // Row(
-                            //   mainAxisAlignment:
-                            //       MainAxisAlignment.spaceEvenly,
-                            //   children: <Widget>[
-                            //     Indicator(
-                            //       color: Colors.lightGreen,
-                            //       text: S.current.specimenTissues,
-                            //       isSquare: false,
-                            //     ),
-                            //     Indicator(
-                            //       color: Colors.deepOrange,
-                            //       text: S.current.specimenFeces,
-                            //       isSquare: false,
-                            //     ),
-                            //     Indicator(
-                            //       color: Colors.pink,
-                            //       text: S.current.specimenRegurgite,
-                            //       isSquare: false,
-                            //     ),
-                            //   ],
-                            // ),
                           ],
                         ),
                       ),

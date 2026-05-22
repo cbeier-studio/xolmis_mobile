@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -23,9 +22,7 @@ class NestRevisionProvider with ChangeNotifier {
       final revisionList = await _nestRevisionDao.getNestRevisionsForNest(nestId);
       _nestRevisionMap[nestId] = revisionList;
     } catch (e) {
-      if (kDebugMode) {
-        print('Error loading revisions for nest $nestId: $e');
-      }
+      debugPrint('Error loading revisions for nest $nestId: $e');
     } finally {
       notifyListeners();
     }

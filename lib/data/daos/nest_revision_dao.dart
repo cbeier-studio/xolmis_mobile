@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../models/nest.dart';
@@ -10,7 +10,11 @@ class NestRevisionDao {
 
   NestRevisionDao(this._dbHelper);
 
-  // Insert nest revision into database
+  /// Inserts a new [NestRevision] record into the database.
+  ///
+  /// Uses [ConflictAlgorithm.replace] to handle duplicate entries.
+  /// Sets [nestRevision.id] with the generated row ID upon success.
+  /// Logs a debug message and returns early if the generated ID is `null`.
   Future<void> insertNestRevision(NestRevision nestRevision) async {
     final db = await _dbHelper.database;
     int? id = await db?.insert(
@@ -19,15 +23,13 @@ class NestRevisionDao {
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
     if (id == null) {
-      if (kDebugMode) {
-        print('Failed to insert nest revision: ID is null');
-      }
+      debugPrint('Failed to insert nest revision: ID is null');
       return;
     }
     nestRevision.id = id;
   }
 
-  // Get list of nest revisions for a nest ID
+  /// Returns all [NestRevision] records associated with the given [nestId].
   Future<List<NestRevision>> getNestRevisionsForNest(int nestId) async {
     final db = await _dbHelper.database;
     final List<Map<String, dynamic>> maps = await db?.query(
@@ -40,7 +42,7 @@ class NestRevisionDao {
     });
   }
 
-  // Update nest revision record in the database
+  /// Updates the database record for the given [nestRevision] using its [NestRevision.id].
   Future<void> updateNestRevision(NestRevision nestRevision) async {
     final db = await _dbHelper.database;
     await db?.update(
@@ -51,7 +53,7 @@ class NestRevisionDao {
     );
   }
 
-  // Delete nest revision from database
+  /// Deletes the [NestRevision] record identified by [nestRevisionId] from the database.
   Future<void> deleteNestRevision(int nestRevisionId) async {
     final db = await _dbHelper.database;
     await db?.delete('nest_revisions', where: 'id = ?', whereArgs: [nestRevisionId]);

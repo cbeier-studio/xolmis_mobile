@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../models/inventory.dart';
@@ -10,7 +10,11 @@ class VegetationDao {
 
   VegetationDao(this._dbHelper);
 
-  // Insert vegetation record in the database
+  /// Inserts a new [Vegetation] record into the database.
+  ///
+  /// Uses [ConflictAlgorithm.replace] to handle duplicate entries.
+  /// Sets [vegetation.id] with the generated row ID upon success.
+  /// Returns the new row ID, or `0` if an error occurs.
   Future<int?> insertVegetation(Vegetation vegetation) async {
     final db = await _dbHelper.database;
     try {
@@ -22,14 +26,12 @@ class VegetationDao {
       vegetation.id = id;
       return id;
     } catch (e) {
-      if (kDebugMode) {
-        print('Error inserting vegetation data: $e');
-      }
+      debugPrint('Error inserting vegetation data: $e');
       return 0;
     }
   }
 
-  // Update vegetation record in the database
+  /// Updates the database record for the given [vegetation] using its [Vegetation.id].
   Future<void> updateVegetation(Vegetation vegetation) async {
     final db = await _dbHelper.database;
     await db?.update(
@@ -40,7 +42,7 @@ class VegetationDao {
     );
   }
 
-  // Delete vegetation record from database
+  /// Deletes the [Vegetation] record identified by [vegetationId] from the database.
   Future<void> deleteVegetation(int? vegetationId) async {
     final db = await _dbHelper.database;
     await db?.delete(
@@ -50,7 +52,8 @@ class VegetationDao {
     );
   }
 
-  // Get list of vegetation record for inventory ID
+  /// Returns all [Vegetation] records associated with the inventory identified
+  /// by [inventoryId].
   Future<List<Vegetation>> getVegetationByInventory(String inventoryId) async {
     final db = await _dbHelper.database;
     final List<Map<String, dynamic>> maps = await db?.query(
@@ -58,9 +61,6 @@ class VegetationDao {
       where: 'inventoryId = ?',
       whereArgs: [inventoryId],
     ) ?? [];
-    // if (kDebugMode) {
-    //   print('Vegetation data loaded for inventory $inventoryId: ${maps.length}');
-    // }
     return List.generate(maps.length, (i) {
       return Vegetation.fromMap(maps[i]);
     });

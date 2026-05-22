@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -99,8 +98,6 @@ class SpeciesProvider with ChangeNotifier {
       }
     }
 
-    // _speciesMap[inventoryId] = await _speciesRepository.getSpeciesByInventory(inventoryId);
-
     notifyListeners();
   }
 
@@ -115,7 +112,6 @@ class SpeciesProvider with ChangeNotifier {
       speciesList.removeWhere((s) => s.id == speciesId);
     }
 
-    // _speciesMap[inventoryId] = await _speciesRepository.getSpeciesByInventory(inventoryId);
     notifyListeners();
 
     if (context.mounted) {
@@ -134,7 +130,6 @@ class SpeciesProvider with ChangeNotifier {
       speciesList.removeWhere((s) => s.name == speciesName);
     }
 
-    // _speciesMap[inventoryId] = await _speciesRepository.getSpeciesByInventory(inventoryId);
     notifyListeners();
 
     if (context.mounted) {
@@ -148,7 +143,6 @@ class SpeciesProvider with ChangeNotifier {
     // 1. Find the species in the list
     final speciesList = _speciesMap[species.inventoryId];
     if (speciesList == null) return;
-    // final speciesList = await _speciesRepository.getSpeciesByInventory(species.inventoryId);
     final index = speciesList.indexWhere((s) => s.id == species.id);
 
     if (index != -1) {

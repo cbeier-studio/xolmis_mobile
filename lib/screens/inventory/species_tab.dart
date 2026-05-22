@@ -38,12 +38,11 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
       widget.inventory.type == InventoryType.invPointDetection ? SpeciesSortField.time : SpeciesSortField.name;
   late SortOrder _sortOrder = widget.inventory.type == InventoryType.invTransectDetection ||
       widget.inventory.type == InventoryType.invPointDetection ? SortOrder.descending : SortOrder.ascending;
-  // SearchController? _searchController;
-  final SearchController _searchController = SearchController(); // Crie o controller aqui
+  final SearchController _searchController = SearchController();
 
   @override
   void dispose() {
-    _searchController.dispose(); // Faça o dispose do controller
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -103,7 +102,6 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
 
     // Insert the new species in the database
     await speciesProvider.addSpecies(context, widget.inventory.id, newSpecies!);
-    // await speciesDao.insertSpecies(widget.inventory.id, newSpecies!);
 
     if (!widget.inventory.isFinished) {
       // If the inventory is not finished, add the species to other active inventories
@@ -124,8 +122,6 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     // Check is Mackinnon list was completed and ask to start the next list
     // checkMackinnonCompletion(context, widget.inventory, inventoryDao);    
 
-    // Update the inventory in the database
-    // await inventoryRepository.updateInventory(widget.inventory);
     // Reload the species list for the current inventory
     await _updateSpeciesList(widget.inventory.id);
   }
@@ -364,7 +360,6 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
               searchController: _searchController,
               isFullScreen: MediaQuery.of(context).size.width < 600,
               builder: (context, controller) {
-                // _searchController = controller;
                 return TextField(
                   controller: controller,
                   autocorrect: false,
@@ -393,7 +388,6 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                           builder: (context, controller, child) {
                             return IconButton(
                               icon: const Icon(Icons.more_vert_outlined),
-                              // tooltip: S.of(context).exportWhat(S.of(context).inventory(1)),
                               onPressed: () {
                                 if (controller.isOpen) {
                                   controller.close();
@@ -462,20 +456,6 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                   }).toList();
                 }
               },
-              // viewOnSubmitted: (value) async {
-              //   final query = value.trim();
-              //   if (query.isEmpty) return;
-              //   final matches = List<String>.from(allSpeciesNames)
-              //       .where((species) => speciesMatchesQuery(
-              //           species, query.toLowerCase()))
-              //       .toList();
-              //   if (matches.isEmpty) return;
-              //   final first = matches.first;
-              //   await _addSpeciesToInventory(first, speciesDao, inventoryDao);
-              //   _searchController?.closeView(first);
-              //   _searchController?.clear();
-              //   checkMackinnonCompletion(context, widget.inventory, inventoryDao);
-              // },
             ),
           ),
         ),
@@ -596,9 +576,6 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  // ListTile(
-                  //   title: Text(species.name, style: TextStyle(fontStyle: FontStyle.italic),),
-                  // ),
                   const Divider(),
                   GridView.count(
                     crossAxisCount: MediaQuery.sizeOf(context).width < 600 ? 4 : 5,
@@ -656,7 +633,6 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                                 // Insert the POI in the database
                                 if (context.mounted) {
                                   poiProvider.addPoi(context, species.id!, poi);
-                                  // poiProvider.notifyListeners();
                                 }
                               } else {
                                 if (context.mounted) {
@@ -797,7 +773,6 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
-                    // crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       GridView.count(
                         crossAxisCount: MediaQuery.sizeOf(context).width < 600 ? 4 : 5,

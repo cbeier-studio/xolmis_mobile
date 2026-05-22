@@ -62,22 +62,6 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
         final poiProvider = Provider.of<PoiProvider>(context, listen: false);
         await poiProvider.addPoi(context, widget.species.id!, poi);
       }
-
-      // Update the UI
-      // poiProvider.notifyListeners();
-
-      // Show success message
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   SnackBar(
-      //     content: Row(
-      //       children: [
-      //         Icon(Icons.check_circle_outlined, color: Colors.green),
-      //         SizedBox(width: 8),
-      //         Text('POI inserido com sucesso!'),
-      //       ],
-      //     ),
-      //   ),
-      // );
     } else {
       if (mounted) {
         // Show error message
@@ -108,9 +92,6 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
         final poiProvider = Provider.of<PoiProvider>(context, listen: false);
         await poiProvider.removePoi(widget.species.id!, poi.id!);
       }
-
-      // Update the UI
-      // poiProvider.notifyListeners();
     }
   }
 
@@ -212,9 +193,6 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
                     alignment: Alignment.centerLeft,
                     child: Text('POI #${poi.id}', style: TextTheme.of(context).bodyLarge,),
                   ),
-                  // ListTile(
-                  //   title: Text('POI #${poi.id}',),
-                  // ),
                   const Divider(),
                   GridView.count(
                     crossAxisCount: MediaQuery.sizeOf(context).width < 600 ? 4 : 5,
@@ -243,54 +221,6 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
       },
     );
   }
-
-  // Build a grid view for large screens
-  // Widget _buildGridView(List<Poi> pois) {
-  //   return Align(
-  //     alignment: Alignment.topCenter,
-  //     child: ConstrainedBox(
-  //       constraints: const BoxConstraints(maxWidth: 840),
-  //       child: GridView.builder(
-  //         gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-  //           maxCrossAxisExtent: 200,
-  //           // mainAxisSpacing: 16,
-  //           // crossAxisSpacing: 16,
-  //           childAspectRatio: 1,
-  //         ),
-  //         shrinkWrap: true,
-  //         itemCount: pois.length,
-  //         itemBuilder: (context, index) {
-  //           final poi = pois[index];
-  //           return GridTile(
-  //             child: InkWell(
-  //               onLongPress: () => _showBottomSheet(context, poi),
-  //               child: Card.outlined(
-  //                 child: Padding(
-  //                   padding: const EdgeInsets.all(16.0),
-  //                   child: Column(
-  //                     crossAxisAlignment: CrossAxisAlignment.start,                       
-  //                     children: [
-  //                       const Icon(Icons.location_on_outlined),
-  //                       Expanded(child: const SizedBox.shrink()),
-  //                       Column(
-  //                         mainAxisAlignment: MainAxisAlignment.end,
-  //                         crossAxisAlignment: CrossAxisAlignment.start,
-  //                         children: [
-  //                           Text('${poi.latitude}'),
-  //                           Text('${poi.longitude}'),
-  //                         ],
-  //                       ),
-  //                     ],
-  //                   ),
-  //                 ),
-  //               ),
-  //             ),
-  //           );
-  //         },
-  //       ),
-  //     ),
-  //   );
-  // }
 
   // Build a list view for small screens
   Widget _buildListView(List<Poi> pois, PoiProvider poiProvider) {

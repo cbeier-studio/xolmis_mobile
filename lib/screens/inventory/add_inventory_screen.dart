@@ -76,7 +76,6 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                       initialValue: _selectedType,
                       decoration: InputDecoration(
                         labelText: '${S.of(context).inventoryType} *',
-                        // helperText: S.of(context).requiredField,
                         border: OutlineInputBorder(),
                       ),
                       items: InventoryType.values.map((type) {
@@ -210,7 +209,6 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                           textCapitalization: TextCapitalization.words,
                           decoration: InputDecoration(
                             labelText: '${S.of(context).locality} *',
-                            // helperText: S.of(context).requiredField,
                             border: OutlineInputBorder(),
                           ),
                           validator: (value) {
@@ -270,7 +268,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                             decoration: InputDecoration(
                               labelText: S.of(context).duration,
                               border: OutlineInputBorder(),
-                              suffixText: 'min', //S.of(context).minutes(2),
+                              suffixText: 'min',
                               prefixIcon: IconButton(
                                   onPressed: () {
                                     int count = int.tryParse(_durationController.text) ?? 1;
