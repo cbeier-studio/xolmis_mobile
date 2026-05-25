@@ -1150,10 +1150,10 @@ class Inventory with ChangeNotifier {
     const NotificationDetails platformChannelSpecifics =
     NotificationDetails(android: androidPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.show(
-        0,
-        'Inventário Encerrado',
-        'O inventário $id foi encerrado automaticamente.',
-        platformChannelSpecifics,
+        id: 0,
+        title: 'Inventário Encerrado',
+        body: 'O inventário $id foi encerrado automaticamente.',
+        notificationDetails: platformChannelSpecifics,
         payload: 'item x');
   }
 }

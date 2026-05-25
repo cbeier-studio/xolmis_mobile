@@ -60,7 +60,7 @@ Future<void> main() async {
         DarwinInitializationSettings();
     const InitializationSettings initializationSettings = InitializationSettings(
         android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
-    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+    await flutterLocalNotificationsPlugin.initialize(settings: initializationSettings);
 
     // Initialize the database
     final databaseHelper = DatabaseHelper();

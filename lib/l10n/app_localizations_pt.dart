@@ -16,12 +16,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String specimens(int howMany) {
-    String _temp0 = intl.Intl.pluralLogic(
-      howMany,
-      locale: localeName,
-      other: 'Espécimes',
-      one: 'Espécime',
-    );
+    String _temp0 = intl.Intl.pluralLogic(howMany, locale: localeName, other: 'Espécimes', one: 'Espécime');
     return '$_temp0';
   }
 
@@ -30,12 +25,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String journalEntries(int howMany) {
-    String _temp0 = intl.Intl.pluralLogic(
-      howMany,
-      locale: localeName,
-      other: 'Notas do diário',
-      one: 'Nota do diário',
-    );
+    String _temp0 = intl.Intl.pluralLogic(howMany, locale: localeName, other: 'Notas do diário', one: 'Nota do diário');
     return '$_temp0';
   }
 
@@ -83,12 +73,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String inventory(int howMany) {
-    String _temp0 = intl.Intl.pluralLogic(
-      howMany,
-      locale: localeName,
-      other: 'inventários',
-      one: 'inventário',
-    );
+    String _temp0 = intl.Intl.pluralLogic(howMany, locale: localeName, other: 'inventários', one: 'inventário');
     return '$_temp0';
   }
 
@@ -108,12 +93,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String speciesPerList(int howMany) {
-    String _temp0 = intl.Intl.pluralLogic(
-      howMany,
-      locale: localeName,
-      other: '$howMany espécies',
-      one: '1 espécie',
-    );
+    String _temp0 = intl.Intl.pluralLogic(howMany, locale: localeName, other: '$howMany espécies', one: '1 espécie');
     return '$_temp0 por lista';
   }
 
@@ -128,12 +108,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String inventoryDuration(int howMany) {
-    String _temp0 = intl.Intl.pluralLogic(
-      howMany,
-      locale: localeName,
-      other: '$howMany minutos',
-      one: '1 minuto',
-    );
+    String _temp0 = intl.Intl.pluralLogic(howMany, locale: localeName, other: '$howMany minutos', one: '1 minuto');
     return '$_temp0';
   }
 
@@ -176,8 +151,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get ok => 'OK';
 
   @override
-  String get simultaneousLimitReached =>
-      'Limite de inventários simultâneos atingido.';
+  String get simultaneousLimitReached => 'Limite de inventários simultâneos atingido.';
 
   @override
   String get sortByTime => 'Ordenar por tempo';
@@ -211,22 +185,9 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String confirmDeleteMessage(int howMany, String gender, String what) {
-    String _temp0 = intl.Intl.selectLogic(gender, {
-      'male': 'estes',
-      'female': 'estas',
-      'other': 'estes(as)',
-    });
-    String _temp1 = intl.Intl.selectLogic(gender, {
-      'male': 'este',
-      'female': 'esta',
-      'other': 'este(a)',
-    });
-    String _temp2 = intl.Intl.pluralLogic(
-      howMany,
-      locale: localeName,
-      other: '$_temp0',
-      one: '$_temp1',
-    );
+    String _temp0 = intl.Intl.selectLogic(gender, {'male': 'estes', 'female': 'estas', 'other': 'estes(as)'});
+    String _temp1 = intl.Intl.selectLogic(gender, {'male': 'este', 'female': 'esta', 'other': 'este(a)'});
+    String _temp2 = intl.Intl.pluralLogic(howMany, locale: localeName, other: '$_temp0', one: '$_temp1');
     return 'Tem certeza que deseja excluir $_temp2 $what?';
   }
 
@@ -295,8 +256,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get inventoryType => 'Tipo de inventário';
 
   @override
-  String get selectInventoryType =>
-      'Por favor, selecione um tipo de inventário';
+  String get selectInventoryType => 'Por favor, selecione um tipo de inventário';
 
   @override
   String get inventoryId => 'ID do Inventário';
@@ -318,12 +278,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String minutes(int howMany) {
-    String _temp0 = intl.Intl.pluralLogic(
-      howMany,
-      locale: localeName,
-      other: 'minutos',
-      one: 'minuto',
-    );
+    String _temp0 = intl.Intl.pluralLogic(howMany, locale: localeName, other: 'minutos', one: 'minuto');
     return '$_temp0';
   }
 
@@ -388,8 +343,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get importingInventory => 'Importando inventário...';
 
   @override
-  String get inventoryImportedSuccessfully =>
-      'Inventário importado com sucesso!';
+  String get inventoryImportedSuccessfully => 'Inventário importado com sucesso!';
 
   @override
   String get inventoryImportFailed => 'Falha ao importar inventário.';
@@ -462,23 +416,13 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String species(int howMany) {
-    String _temp0 = intl.Intl.pluralLogic(
-      howMany,
-      locale: localeName,
-      other: 'Espécies',
-      one: 'Espécie',
-    );
+    String _temp0 = intl.Intl.pluralLogic(howMany, locale: localeName, other: 'Espécies', one: 'Espécie');
     return '$_temp0';
   }
 
   @override
   String speciesAcronym(int howMany) {
-    String _temp0 = intl.Intl.pluralLogic(
-      howMany,
-      locale: localeName,
-      other: 'spp.',
-      one: 'sp.',
-    );
+    String _temp0 = intl.Intl.pluralLogic(howMany, locale: localeName, other: 'spp.', one: 'sp.');
     return '$_temp0';
   }
 
@@ -505,12 +449,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String individual(int howMany) {
-    String _temp0 = intl.Intl.pluralLogic(
-      howMany,
-      locale: localeName,
-      other: 'indivíduos',
-      one: 'indivíduo',
-    );
+    String _temp0 = intl.Intl.pluralLogic(howMany, locale: localeName, other: 'indivíduos', one: 'indivíduo');
     return '$_temp0';
   }
 
@@ -570,12 +509,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String nest(int howMany) {
-    String _temp0 = intl.Intl.pluralLogic(
-      howMany,
-      locale: localeName,
-      other: 'ninhos',
-      one: 'ninho',
-    );
+    String _temp0 = intl.Intl.pluralLogic(howMany, locale: localeName, other: 'ninhos', one: 'ninho');
     return '$_temp0';
   }
 
@@ -598,23 +532,13 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String revision(int howMany) {
-    String _temp0 = intl.Intl.pluralLogic(
-      howMany,
-      locale: localeName,
-      other: 'Revisões',
-      one: 'Revisão',
-    );
+    String _temp0 = intl.Intl.pluralLogic(howMany, locale: localeName, other: 'Revisões', one: 'Revisão');
     return '$_temp0';
   }
 
   @override
   String egg(int howMany) {
-    String _temp0 = intl.Intl.pluralLogic(
-      howMany,
-      locale: localeName,
-      other: 'Ovos',
-      one: 'Ovo',
-    );
+    String _temp0 = intl.Intl.pluralLogic(howMany, locale: localeName, other: 'Ovos', one: 'Ovo');
     return '$_temp0';
   }
 
@@ -662,12 +586,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String nestling(int howMany) {
-    String _temp0 = intl.Intl.pluralLogic(
-      howMany,
-      locale: localeName,
-      other: 'Ninhegos',
-      one: 'Ninhego',
-    );
+    String _temp0 = intl.Intl.pluralLogic(howMany, locale: localeName, other: 'Ninhegos', one: 'Ninhego');
     return '$_temp0';
   }
 
@@ -696,8 +615,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get weight => 'Peso';
 
   @override
-  String get errorEggAlreadyExists =>
-      'Já existe um ovo com este número de campo.';
+  String get errorEggAlreadyExists => 'Já existe um ovo com este número de campo.';
 
   @override
   String get errorSavingEgg => 'Erro ao salvar o ovo.';
@@ -709,8 +627,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get insertNestSupport => 'Por favor, insira o suporte do ninho';
 
   @override
-  String get errorNestAlreadyExists =>
-      'Já existe um ninho com este número de campo.';
+  String get errorNestAlreadyExists => 'Já existe um ninho com este número de campo.';
 
   @override
   String get errorSavingNest => 'Erro ao salvar o ninho.';
@@ -746,20 +663,14 @@ class AppLocalizationsPt extends AppLocalizations {
   String get specimenType => 'Tipo de espécime';
 
   @override
-  String get errorSpecimenAlreadyExists =>
-      'Já existe um espécime com este número de campo.';
+  String get errorSpecimenAlreadyExists => 'Já existe um espécime com este número de campo.';
 
   @override
   String get errorSavingSpecimen => 'Erro ao salvar o espécime.';
 
   @override
   String images(int howMany) {
-    String _temp0 = intl.Intl.pluralLogic(
-      howMany,
-      locale: localeName,
-      other: 'Imagens',
-      one: 'Imagem',
-    );
+    String _temp0 = intl.Intl.pluralLogic(howMany, locale: localeName, other: 'Imagens', one: 'Imagem');
     return '$_temp0';
   }
 
@@ -820,12 +731,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String errorExportingInventory(int howMany, String errorMessage) {
-    String _temp0 = intl.Intl.pluralLogic(
-      howMany,
-      locale: localeName,
-      other: 'os inventários',
-      one: 'o inventário',
-    );
+    String _temp0 = intl.Intl.pluralLogic(howMany, locale: localeName, other: 'os inventários', one: 'o inventário');
     return 'Erro ao exportar $_temp0: $errorMessage';
   }
 
@@ -853,12 +759,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String errorExportingNest(int howMany, String errorMessage) {
-    String _temp0 = intl.Intl.pluralLogic(
-      howMany,
-      locale: localeName,
-      other: 'os ninhos',
-      one: 'o ninho',
-    );
+    String _temp0 = intl.Intl.pluralLogic(howMany, locale: localeName, other: 'os ninhos', one: 'o ninho');
     return 'Erro ao exportar $_temp0: $errorMessage';
   }
 
@@ -886,12 +787,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String errorExportingSpecimen(int howMany, String errorMessage) {
-    String _temp0 = intl.Intl.pluralLogic(
-      howMany,
-      locale: localeName,
-      other: 'os espécimes',
-      one: 'o espécime',
-    );
+    String _temp0 = intl.Intl.pluralLogic(howMany, locale: localeName, other: 'os espécimes', one: 'o espécime');
     return 'Erro ao exportar $_temp0: $errorMessage';
   }
 
@@ -992,8 +888,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get insertTitle => 'Insira um título para a nota';
 
   @override
-  String get errorSavingJournalEntry =>
-      'Erro ao salvar a nota do diário de campo';
+  String get errorSavingJournalEntry => 'Erro ao salvar a nota do diário de campo';
 
   @override
   String get deleteJournalEntry => 'Apagar nota';
@@ -1005,8 +900,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get statistics => 'Estatísticas';
 
   @override
-  String get selectSpeciesToShowStats =>
-      'Selecione uma espécie para ver as estatísticas';
+  String get selectSpeciesToShowStats => 'Selecione uma espécie para ver as estatísticas';
 
   @override
   String get perSpecies => 'Por espécie';
@@ -1059,8 +953,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get plantSpeciesOrSupportType => 'Espécie vegetal ou tipo de suporte';
 
   @override
-  String get formatNumbersDescription =>
-      'Desmarque para formatar números com ponto como separador decimal';
+  String get formatNumbersDescription => 'Desmarque para formatar números com ponto como separador decimal';
 
   @override
   String get selectAll => 'Selecionar todos';
@@ -1081,8 +974,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get warningTitle => 'Aviso';
 
   @override
-  String get remindMissingVegetationData =>
-      'Lembrar dados faltantes de vegetação';
+  String get remindMissingVegetationData => 'Lembrar dados faltantes de vegetação';
 
   @override
   String get remindMissingWeatherData => 'Lembrar dados faltantes do tempo';
@@ -1100,15 +992,13 @@ class AppLocalizationsPt extends AppLocalizations {
   String get ignoreButton => 'Ignorar';
 
   @override
-  String get observerAbbreviationMissing =>
-      'Sigla do observador não encontrada. Adicione-a nas configurações.';
+  String get observerAbbreviationMissing => 'Sigla do observador não encontrada. Adicione-a nas configurações.';
 
   @override
   String get invalidNumericValue => 'Valor inválido';
 
   @override
-  String get nestRevisionsMissing =>
-      'Não há revisões para este ninho. Adicione ao menos uma revisão.';
+  String get nestRevisionsMissing => 'Não há revisões para este ninho. Adicione ao menos uma revisão.';
 
   @override
   String get editLocality => 'Editar localidade';
@@ -1148,10 +1038,7 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String importCompletedWithErrors(
-    int successfullyImportedCount,
-    int importErrorsCount,
-  ) {
+  String importCompletedWithErrors(int successfullyImportedCount, int importErrorsCount) {
     return 'Importação concluída com erros: $successfullyImportedCount com sucesso, $importErrorsCount erros';
   }
 
@@ -1195,8 +1082,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get sendBackupTo => 'Enviar backup para...';
 
   @override
-  String get backupCreatedAndSharedSuccessfully =>
-      'Backup criado e compartilhado com sucesso';
+  String get backupCreatedAndSharedSuccessfully => 'Backup criado e compartilhado com sucesso';
 
   @override
   String get errorCreatingBackup => 'Erro criando backup';
@@ -1215,8 +1101,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get restoreBackup => 'Restaurar backup';
 
   @override
-  String get backupRestoredSuccessfully =>
-      'Backup restaurado com sucesso! Reinicie o app para aplicar as alterações.';
+  String get backupRestoredSuccessfully => 'Backup restaurado com sucesso! Reinicie o app para aplicar as alterações.';
 
   @override
   String get errorRestoringBackup => 'Erro restaurando backup';
@@ -1252,8 +1137,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get cloudCoverRangeError => 'Nebulosidade deve estar entre 0 e 100';
 
   @override
-  String get relativeHumidityRangeError =>
-      'Umidade relativa deve estar entre 0 e 100';
+  String get relativeHumidityRangeError => 'Umidade relativa deve estar entre 0 e 100';
 
   @override
   String get atmosphericPressure => 'Pressão atmosférica';
@@ -1286,8 +1170,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get locationError => 'Erro de localização';
 
   @override
-  String get couldNotGetGpsLocation =>
-      'Não foi possível obter a localização do GPS';
+  String get couldNotGetGpsLocation => 'Não foi possível obter a localização do GPS';
 
   @override
   String get continueWithout => 'Continuar sem';
@@ -1380,22 +1263,19 @@ class AppLocalizationsPt extends AppLocalizations {
   String get speciesSearch => 'Busca de espécies';
 
   @override
-  String get selectInventoryToView =>
-      'Selecione um inventário para ver os detalhes';
+  String get selectInventoryToView => 'Selecione um inventário para ver os detalhes';
 
   @override
   String get selectNestToView => 'Selecione um ninho para ver os detalhes';
 
   @override
-  String get selectSpecimenToView =>
-      'Selecione um espécime para ver os detalhes';
+  String get selectSpecimenToView => 'Selecione um espécime para ver os detalhes';
 
   @override
   String get selectJournalToView => 'Selecione uma nota para ver os detalhes';
 
   @override
-  String get suggestFeatureOrReportIssue =>
-      'Sugerir recurso ou reportar problema';
+  String get suggestFeatureOrReportIssue => 'Sugerir recurso ou reportar problema';
 
   @override
   String localitiesSurveyed(int howMany) {
@@ -1410,12 +1290,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String daysSurveyed(int howMany) {
-    String _temp0 = intl.Intl.pluralLogic(
-      howMany,
-      locale: localeName,
-      other: 'dias amostrados',
-      one: 'dia amostrado',
-    );
+    String _temp0 = intl.Intl.pluralLogic(howMany, locale: localeName, other: 'dias amostrados', one: 'dia amostrado');
     return '$_temp0';
   }
 
@@ -1492,18 +1367,13 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String get noInventoriesFoundInFile =>
-      'Nenhum inventário encontrado no arquivo importado.';
+  String get noInventoriesFoundInFile => 'Nenhum inventário encontrado no arquivo importado.';
 
   @override
-  String get noValidInventoriesFoundInFile =>
-      'Nenhum inventário válido encontrado no arquivo importado.';
+  String get noValidInventoriesFoundInFile => 'Nenhum inventário válido encontrado no arquivo importado.';
 
   @override
-  String errorImportingInventoryWithId(
-    String inventoryId,
-    String errorMessage,
-  ) {
+  String errorImportingInventoryWithId(String inventoryId, String errorMessage) {
     return 'Erro ao importar inventário $inventoryId: $errorMessage';
   }
 
@@ -1558,12 +1428,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String observers(int howMany) {
-    String _temp0 = intl.Intl.pluralLogic(
-      howMany,
-      locale: localeName,
-      other: 'observadores',
-      one: 'observador',
-    );
+    String _temp0 = intl.Intl.pluralLogic(howMany, locale: localeName, other: 'observadores', one: 'observador');
     return '$_temp0';
   }
 
@@ -1607,8 +1472,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get type => 'Tipo';
 
   @override
-  String get invalidJsonSource =>
-      'Origem do JSON inválida. Esperada: Xolmis Mobile.';
+  String get invalidJsonSource => 'Origem do JSON inválida. Esperada: Xolmis Mobile.';
 
   @override
   String get invalidJsonSchema => 'Esquema do JSON inválido.';
@@ -1665,44 +1529,37 @@ class AppLocalizationsPt extends AppLocalizations {
   String get distributionOnePatch => 'Uma mancha';
 
   @override
-  String get distributionOnePatchFewSparseIndividuals =>
-      'Uma mancha e indivíduos isolados';
+  String get distributionOnePatchFewSparseIndividuals => 'Uma mancha e indivíduos isolados';
 
   @override
   String get distributionManySparseIndividuals => 'Vários indivíduos esparsos';
 
   @override
-  String get distributionOnePatchManySparseIndividuals =>
-      'Mancha e vários indivíduos isolados';
+  String get distributionOnePatchManySparseIndividuals => 'Mancha e vários indivíduos isolados';
 
   @override
   String get distributionFewPatches => 'Poucas manchas';
 
   @override
-  String get distributionFewPatchesSparseIndividuals =>
-      'Poucas manchas e indivíduos isolados';
+  String get distributionFewPatchesSparseIndividuals => 'Poucas manchas e indivíduos isolados';
 
   @override
   String get distributionManyPatches => 'Várias manchas equidistantes';
 
   @override
-  String get distributionManyPatchesSparseIndividuals =>
-      'Várias manchas e indivíduos dispersos';
+  String get distributionManyPatchesSparseIndividuals => 'Várias manchas e indivíduos dispersos';
 
   @override
-  String get distributionHighDensityIndividuals =>
-      'Indivíduos isolados em alta densidade';
+  String get distributionHighDensityIndividuals => 'Indivíduos isolados em alta densidade';
 
   @override
-  String get distributionContinuousCoverWithGaps =>
-      'Contínua com manchas sem cobertura';
+  String get distributionContinuousCoverWithGaps => 'Contínua com manchas sem cobertura';
 
   @override
   String get distributionContinuousDenseCover => 'Contínua e densa';
 
   @override
-  String get distributionContinuousDenseCoverWithEdge =>
-      'Contínua com borda separando estratos';
+  String get distributionContinuousDenseCoverWithEdge => 'Contínua com borda separando estratos';
 
   @override
   String get inventoryFreeQualitative => 'Lista Qualitativa Livre';
@@ -1878,12 +1735,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String specimens(int howMany) {
-    String _temp0 = intl.Intl.pluralLogic(
-      howMany,
-      locale: localeName,
-      other: 'Espécimes',
-      one: 'Espécime',
-    );
+    String _temp0 = intl.Intl.pluralLogic(howMany, locale: localeName, other: 'Espécimes', one: 'Espécime');
     return '$_temp0';
   }
 
@@ -1892,12 +1744,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String journalEntries(int howMany) {
-    String _temp0 = intl.Intl.pluralLogic(
-      howMany,
-      locale: localeName,
-      other: 'Notas do diário',
-      one: 'Nota do diário',
-    );
+    String _temp0 = intl.Intl.pluralLogic(howMany, locale: localeName, other: 'Notas do diário', one: 'Nota do diário');
     return '$_temp0';
   }
 
@@ -1945,12 +1792,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String inventory(int howMany) {
-    String _temp0 = intl.Intl.pluralLogic(
-      howMany,
-      locale: localeName,
-      other: 'inventários',
-      one: 'inventário',
-    );
+    String _temp0 = intl.Intl.pluralLogic(howMany, locale: localeName, other: 'inventários', one: 'inventário');
     return '$_temp0';
   }
 
@@ -1970,12 +1812,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String speciesPerList(int howMany) {
-    String _temp0 = intl.Intl.pluralLogic(
-      howMany,
-      locale: localeName,
-      other: '$howMany espécies',
-      one: '1 espécie',
-    );
+    String _temp0 = intl.Intl.pluralLogic(howMany, locale: localeName, other: '$howMany espécies', one: '1 espécie');
     return '$_temp0 por lista';
   }
 
@@ -1990,12 +1827,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String inventoryDuration(int howMany) {
-    String _temp0 = intl.Intl.pluralLogic(
-      howMany,
-      locale: localeName,
-      other: '$howMany minutos',
-      one: '1 minuto',
-    );
+    String _temp0 = intl.Intl.pluralLogic(howMany, locale: localeName, other: '$howMany minutos', one: '1 minuto');
     return '$_temp0';
   }
 
@@ -2038,8 +1870,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get ok => 'OK';
 
   @override
-  String get simultaneousLimitReached =>
-      'Limite de inventários simultâneos atingido.';
+  String get simultaneousLimitReached => 'Limite de inventários simultâneos atingido.';
 
   @override
   String get sortByTime => 'Ordenar por tempo';
@@ -2073,22 +1904,9 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String confirmDeleteMessage(int howMany, String gender, String what) {
-    String _temp0 = intl.Intl.selectLogic(gender, {
-      'male': 'estes',
-      'female': 'estas',
-      'other': 'estes(as)',
-    });
-    String _temp1 = intl.Intl.selectLogic(gender, {
-      'male': 'este',
-      'female': 'esta',
-      'other': 'este(a)',
-    });
-    String _temp2 = intl.Intl.pluralLogic(
-      howMany,
-      locale: localeName,
-      other: '$_temp0',
-      one: '$_temp1',
-    );
+    String _temp0 = intl.Intl.selectLogic(gender, {'male': 'estes', 'female': 'estas', 'other': 'estes(as)'});
+    String _temp1 = intl.Intl.selectLogic(gender, {'male': 'este', 'female': 'esta', 'other': 'este(a)'});
+    String _temp2 = intl.Intl.pluralLogic(howMany, locale: localeName, other: '$_temp0', one: '$_temp1');
     return 'Tem certeza que deseja excluir $_temp2 $what?';
   }
 
@@ -2157,8 +1975,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get inventoryType => 'Tipo de inventário';
 
   @override
-  String get selectInventoryType =>
-      'Por favor, selecione um tipo de inventário';
+  String get selectInventoryType => 'Por favor, selecione um tipo de inventário';
 
   @override
   String get inventoryId => 'ID do Inventário';
@@ -2180,12 +1997,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String minutes(int howMany) {
-    String _temp0 = intl.Intl.pluralLogic(
-      howMany,
-      locale: localeName,
-      other: 'minutos',
-      one: 'minuto',
-    );
+    String _temp0 = intl.Intl.pluralLogic(howMany, locale: localeName, other: 'minutos', one: 'minuto');
     return '$_temp0';
   }
 
@@ -2250,8 +2062,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get importingInventory => 'Importando inventário...';
 
   @override
-  String get inventoryImportedSuccessfully =>
-      'Inventário importado com sucesso!';
+  String get inventoryImportedSuccessfully => 'Inventário importado com sucesso!';
 
   @override
   String get inventoryImportFailed => 'Falha ao importar inventário.';
@@ -2324,23 +2135,13 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String species(int howMany) {
-    String _temp0 = intl.Intl.pluralLogic(
-      howMany,
-      locale: localeName,
-      other: 'Espécies',
-      one: 'Espécie',
-    );
+    String _temp0 = intl.Intl.pluralLogic(howMany, locale: localeName, other: 'Espécies', one: 'Espécie');
     return '$_temp0';
   }
 
   @override
   String speciesAcronym(int howMany) {
-    String _temp0 = intl.Intl.pluralLogic(
-      howMany,
-      locale: localeName,
-      other: 'spp.',
-      one: 'sp.',
-    );
+    String _temp0 = intl.Intl.pluralLogic(howMany, locale: localeName, other: 'spp.', one: 'sp.');
     return '$_temp0';
   }
 
@@ -2367,12 +2168,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String individual(int howMany) {
-    String _temp0 = intl.Intl.pluralLogic(
-      howMany,
-      locale: localeName,
-      other: 'indivíduos',
-      one: 'indivíduo',
-    );
+    String _temp0 = intl.Intl.pluralLogic(howMany, locale: localeName, other: 'indivíduos', one: 'indivíduo');
     return '$_temp0';
   }
 
@@ -2432,12 +2228,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String nest(int howMany) {
-    String _temp0 = intl.Intl.pluralLogic(
-      howMany,
-      locale: localeName,
-      other: 'ninhos',
-      one: 'ninho',
-    );
+    String _temp0 = intl.Intl.pluralLogic(howMany, locale: localeName, other: 'ninhos', one: 'ninho');
     return '$_temp0';
   }
 
@@ -2460,23 +2251,13 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String revision(int howMany) {
-    String _temp0 = intl.Intl.pluralLogic(
-      howMany,
-      locale: localeName,
-      other: 'Revisões',
-      one: 'Revisão',
-    );
+    String _temp0 = intl.Intl.pluralLogic(howMany, locale: localeName, other: 'Revisões', one: 'Revisão');
     return '$_temp0';
   }
 
   @override
   String egg(int howMany) {
-    String _temp0 = intl.Intl.pluralLogic(
-      howMany,
-      locale: localeName,
-      other: 'Ovos',
-      one: 'Ovo',
-    );
+    String _temp0 = intl.Intl.pluralLogic(howMany, locale: localeName, other: 'Ovos', one: 'Ovo');
     return '$_temp0';
   }
 
@@ -2524,12 +2305,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String nestling(int howMany) {
-    String _temp0 = intl.Intl.pluralLogic(
-      howMany,
-      locale: localeName,
-      other: 'Ninhegos',
-      one: 'Ninhego',
-    );
+    String _temp0 = intl.Intl.pluralLogic(howMany, locale: localeName, other: 'Ninhegos', one: 'Ninhego');
     return '$_temp0';
   }
 
@@ -2558,8 +2334,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get weight => 'Peso';
 
   @override
-  String get errorEggAlreadyExists =>
-      'Já existe um ovo com este número de campo.';
+  String get errorEggAlreadyExists => 'Já existe um ovo com este número de campo.';
 
   @override
   String get errorSavingEgg => 'Erro ao salvar o ovo.';
@@ -2571,8 +2346,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get insertNestSupport => 'Por favor, insira o suporte do ninho';
 
   @override
-  String get errorNestAlreadyExists =>
-      'Já existe um ninho com este número de campo.';
+  String get errorNestAlreadyExists => 'Já existe um ninho com este número de campo.';
 
   @override
   String get errorSavingNest => 'Erro ao salvar o ninho.';
@@ -2608,20 +2382,14 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get specimenType => 'Tipo de espécime';
 
   @override
-  String get errorSpecimenAlreadyExists =>
-      'Já existe um espécime com este número de campo.';
+  String get errorSpecimenAlreadyExists => 'Já existe um espécime com este número de campo.';
 
   @override
   String get errorSavingSpecimen => 'Erro ao salvar o espécime.';
 
   @override
   String images(int howMany) {
-    String _temp0 = intl.Intl.pluralLogic(
-      howMany,
-      locale: localeName,
-      other: 'Imagens',
-      one: 'Imagem',
-    );
+    String _temp0 = intl.Intl.pluralLogic(howMany, locale: localeName, other: 'Imagens', one: 'Imagem');
     return '$_temp0';
   }
 
@@ -2682,12 +2450,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String errorExportingInventory(int howMany, String errorMessage) {
-    String _temp0 = intl.Intl.pluralLogic(
-      howMany,
-      locale: localeName,
-      other: 'os inventários',
-      one: 'o inventário',
-    );
+    String _temp0 = intl.Intl.pluralLogic(howMany, locale: localeName, other: 'os inventários', one: 'o inventário');
     return 'Erro ao exportar $_temp0: $errorMessage';
   }
 
@@ -2715,12 +2478,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String errorExportingNest(int howMany, String errorMessage) {
-    String _temp0 = intl.Intl.pluralLogic(
-      howMany,
-      locale: localeName,
-      other: 'os ninhos',
-      one: 'o ninho',
-    );
+    String _temp0 = intl.Intl.pluralLogic(howMany, locale: localeName, other: 'os ninhos', one: 'o ninho');
     return 'Erro ao exportar $_temp0: $errorMessage';
   }
 
@@ -2748,12 +2506,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String errorExportingSpecimen(int howMany, String errorMessage) {
-    String _temp0 = intl.Intl.pluralLogic(
-      howMany,
-      locale: localeName,
-      other: 'os espécimes',
-      one: 'o espécime',
-    );
+    String _temp0 = intl.Intl.pluralLogic(howMany, locale: localeName, other: 'os espécimes', one: 'o espécime');
     return 'Erro ao exportar $_temp0: $errorMessage';
   }
 
@@ -2854,8 +2607,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get insertTitle => 'Insira um título para a nota';
 
   @override
-  String get errorSavingJournalEntry =>
-      'Erro ao salvar a nota do diário de campo';
+  String get errorSavingJournalEntry => 'Erro ao salvar a nota do diário de campo';
 
   @override
   String get deleteJournalEntry => 'Apagar nota';
@@ -2867,8 +2619,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get statistics => 'Estatísticas';
 
   @override
-  String get selectSpeciesToShowStats =>
-      'Selecione uma espécie para ver as estatísticas';
+  String get selectSpeciesToShowStats => 'Selecione uma espécie para ver as estatísticas';
 
   @override
   String get perSpecies => 'Por espécie';
@@ -2921,8 +2672,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get plantSpeciesOrSupportType => 'Espécie vegetal ou tipo de suporte';
 
   @override
-  String get formatNumbersDescription =>
-      'Desmarque para formatar números com ponto como separador decimal';
+  String get formatNumbersDescription => 'Desmarque para formatar números com ponto como separador decimal';
 
   @override
   String get selectAll => 'Selecionar todos';
@@ -2943,8 +2693,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get warningTitle => 'Aviso';
 
   @override
-  String get remindMissingVegetationData =>
-      'Lembrar dados faltantes de vegetação';
+  String get remindMissingVegetationData => 'Lembrar dados faltantes de vegetação';
 
   @override
   String get remindMissingWeatherData => 'Lembrar dados faltantes do tempo';
@@ -2962,15 +2711,13 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get ignoreButton => 'Ignorar';
 
   @override
-  String get observerAbbreviationMissing =>
-      'Sigla do observador não encontrada. Adicione-a nas configurações.';
+  String get observerAbbreviationMissing => 'Sigla do observador não encontrada. Adicione-a nas configurações.';
 
   @override
   String get invalidNumericValue => 'Valor inválido';
 
   @override
-  String get nestRevisionsMissing =>
-      'Não há revisões para este ninho. Adicione ao menos uma revisão.';
+  String get nestRevisionsMissing => 'Não há revisões para este ninho. Adicione ao menos uma revisão.';
 
   @override
   String get editLocality => 'Editar localidade';
@@ -3010,10 +2757,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   }
 
   @override
-  String importCompletedWithErrors(
-    int successfullyImportedCount,
-    int importErrorsCount,
-  ) {
+  String importCompletedWithErrors(int successfullyImportedCount, int importErrorsCount) {
     return 'Importação concluída com erros: $successfullyImportedCount com sucesso, $importErrorsCount erros';
   }
 
@@ -3023,8 +2767,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   }
 
   @override
-  String get invalidJsonFormatExpectedObjectOrArray =>
-      'Formato JSON inválido. Esperado um objeto ou uma lista.';
+  String get invalidJsonFormatExpectedObjectOrArray => 'Formato JSON inválido. Esperado um objeto ou uma lista.';
 
   @override
   String get importingNests => 'Importando ninhos';
@@ -3057,8 +2800,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get sendBackupTo => 'Enviar backup para...';
 
   @override
-  String get backupCreatedAndSharedSuccessfully =>
-      'Backup criado e compartilhado com sucesso';
+  String get backupCreatedAndSharedSuccessfully => 'Backup criado e compartilhado com sucesso';
 
   @override
   String get errorCreatingBackup => 'Erro criando backup';
@@ -3077,8 +2819,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get restoreBackup => 'Restaurar backup';
 
   @override
-  String get backupRestoredSuccessfully =>
-      'Backup restaurado com sucesso! Reinicie o app para aplicar as alterações.';
+  String get backupRestoredSuccessfully => 'Backup restaurado com sucesso! Reinicie o app para aplicar as alterações.';
 
   @override
   String get errorRestoringBackup => 'Erro restaurando backup';
@@ -3114,8 +2855,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get cloudCoverRangeError => 'Nebulosidade deve estar entre 0 e 100';
 
   @override
-  String get relativeHumidityRangeError =>
-      'Umidade relativa deve estar entre 0 e 100';
+  String get relativeHumidityRangeError => 'Umidade relativa deve estar entre 0 e 100';
 
   @override
   String get atmosphericPressure => 'Pressão atmosférica';
@@ -3148,8 +2888,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get locationError => 'Erro de localização';
 
   @override
-  String get couldNotGetGpsLocation =>
-      'Não foi possível obter a localização do GPS';
+  String get couldNotGetGpsLocation => 'Não foi possível obter a localização do GPS';
 
   @override
   String get continueWithout => 'Continuar sem';
@@ -3242,22 +2981,19 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get speciesSearch => 'Busca de espécies';
 
   @override
-  String get selectInventoryToView =>
-      'Selecione um inventário para ver os detalhes';
+  String get selectInventoryToView => 'Selecione um inventário para ver os detalhes';
 
   @override
   String get selectNestToView => 'Selecione um ninho para ver os detalhes';
 
   @override
-  String get selectSpecimenToView =>
-      'Selecione um espécime para ver os detalhes';
+  String get selectSpecimenToView => 'Selecione um espécime para ver os detalhes';
 
   @override
   String get selectJournalToView => 'Selecione uma nota para ver os detalhes';
 
   @override
-  String get suggestFeatureOrReportIssue =>
-      'Sugerir recurso ou reportar problema';
+  String get suggestFeatureOrReportIssue => 'Sugerir recurso ou reportar problema';
 
   @override
   String localitiesSurveyed(int howMany) {
@@ -3272,12 +3008,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String daysSurveyed(int howMany) {
-    String _temp0 = intl.Intl.pluralLogic(
-      howMany,
-      locale: localeName,
-      other: 'dias amostrados',
-      one: 'dia amostrado',
-    );
+    String _temp0 = intl.Intl.pluralLogic(howMany, locale: localeName, other: 'dias amostrados', one: 'dia amostrado');
     return '$_temp0';
   }
 
@@ -3354,18 +3085,13 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   }
 
   @override
-  String get noInventoriesFoundInFile =>
-      'Nenhum inventário encontrado no arquivo importado.';
+  String get noInventoriesFoundInFile => 'Nenhum inventário encontrado no arquivo importado.';
 
   @override
-  String get noValidInventoriesFoundInFile =>
-      'Nenhum inventário válido encontrado no arquivo importado.';
+  String get noValidInventoriesFoundInFile => 'Nenhum inventário válido encontrado no arquivo importado.';
 
   @override
-  String errorImportingInventoryWithId(
-    String inventoryId,
-    String errorMessage,
-  ) {
+  String errorImportingInventoryWithId(String inventoryId, String errorMessage) {
     return 'Erro ao importar inventário $inventoryId: $errorMessage';
   }
 
@@ -3420,12 +3146,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String observers(int howMany) {
-    String _temp0 = intl.Intl.pluralLogic(
-      howMany,
-      locale: localeName,
-      other: 'observadores',
-      one: 'observador',
-    );
+    String _temp0 = intl.Intl.pluralLogic(howMany, locale: localeName, other: 'observadores', one: 'observador');
     return '$_temp0';
   }
 
@@ -3469,8 +3190,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get type => 'Tipo';
 
   @override
-  String get invalidJsonSource =>
-      'Origem do JSON inválida. Esperada: Xolmis Mobile.';
+  String get invalidJsonSource => 'Origem do JSON inválida. Esperada: Xolmis Mobile.';
 
   @override
   String get invalidJsonSchema => 'Esquema do JSON inválido.';
@@ -3527,44 +3247,37 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get distributionOnePatch => 'Uma mancha';
 
   @override
-  String get distributionOnePatchFewSparseIndividuals =>
-      'Uma mancha e indivíduos isolados';
+  String get distributionOnePatchFewSparseIndividuals => 'Uma mancha e indivíduos isolados';
 
   @override
   String get distributionManySparseIndividuals => 'Vários indivíduos esparsos';
 
   @override
-  String get distributionOnePatchManySparseIndividuals =>
-      'Mancha e vários indivíduos isolados';
+  String get distributionOnePatchManySparseIndividuals => 'Mancha e vários indivíduos isolados';
 
   @override
   String get distributionFewPatches => 'Poucas manchas';
 
   @override
-  String get distributionFewPatchesSparseIndividuals =>
-      'Poucas manchas e indivíduos isolados';
+  String get distributionFewPatchesSparseIndividuals => 'Poucas manchas e indivíduos isolados';
 
   @override
   String get distributionManyPatches => 'Várias manchas equidistantes';
 
   @override
-  String get distributionManyPatchesSparseIndividuals =>
-      'Várias manchas e indivíduos dispersos';
+  String get distributionManyPatchesSparseIndividuals => 'Várias manchas e indivíduos dispersos';
 
   @override
-  String get distributionHighDensityIndividuals =>
-      'Indivíduos isolados em alta densidade';
+  String get distributionHighDensityIndividuals => 'Indivíduos isolados em alta densidade';
 
   @override
-  String get distributionContinuousCoverWithGaps =>
-      'Contínua com manchas sem cobertura';
+  String get distributionContinuousCoverWithGaps => 'Contínua com manchas sem cobertura';
 
   @override
   String get distributionContinuousDenseCover => 'Contínua e densa';
 
   @override
-  String get distributionContinuousDenseCoverWithEdge =>
-      'Contínua com borda separando estratos';
+  String get distributionContinuousDenseCoverWithEdge => 'Contínua com borda separando estratos';
 
   @override
   String get inventoryFreeQualitative => 'Lista Qualitativa Livre';

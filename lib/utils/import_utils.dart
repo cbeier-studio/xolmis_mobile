@@ -23,7 +23,7 @@ Future<void> importInventoryFromJson(BuildContext context) async {
   
   try {
     // Pick a JSON file
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
+    FilePickerResult? result = await FilePicker.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['json'],
     );
@@ -234,7 +234,7 @@ Future<void> importNestsFromJson(BuildContext context) async {
 
   try {
     // Pick a JSON file
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
+    FilePickerResult? result = await FilePicker.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['json'],
     );
@@ -362,7 +362,7 @@ Future<void> importSpecimensFromJson(BuildContext context) async {
 
   try {
     // Pick a JSON file
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
+    FilePickerResult? result = await FilePicker.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['json'],
     );

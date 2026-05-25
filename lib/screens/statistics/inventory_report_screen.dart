@@ -228,7 +228,7 @@ class InventoryReportScreen extends StatelessWidget {
 
       final headers = _buildColumns(selectedInventories).map((column) => column.label.toString()).toList();
       final csvData = [headers, ...reportData];
-      final csv = const ListToCsvConverter().convert(csvData);
+      final csv = Csv().encode(csvData);
       final directory = await getTemporaryDirectory();
       final path = '${directory?.path}/inventory_report_${DateTime.now().toIso8601String()}.csv';
       final file = File(path);

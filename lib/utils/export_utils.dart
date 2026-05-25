@@ -369,7 +369,7 @@ Future<String> exportInventoryToCsv(BuildContext context, Inventory inventory, L
     List<List<dynamic>> rows = await buildInventoryRows(inventory, locale);
 
     // 2. Convert the list of data to CSV
-    String csv = const ListToCsvConverter().convert(rows, fieldDelimiter: ';', convertNullTo: '');
+    String csv = Csv(fieldDelimiter: ';').encode(rows);
 
     // 3. Create the file in a temporary directory
     Directory tempDir = await getTemporaryDirectory();
@@ -924,7 +924,7 @@ Future<String> exportNestToCsv(BuildContext context, Nest nest, Locale locale) a
     List<List<dynamic>> rows = await buildNestRows(nest, locale);
 
     // 2. Convert the list of data to CSV
-    String csv = const ListToCsvConverter().convert(rows, fieldDelimiter: ';', convertNullTo: '');
+    String csv = Csv(fieldDelimiter: ';').encode(rows);
 
     // 3. Create the file in a temporary directory
     Directory tempDir = await getTemporaryDirectory();
@@ -1258,7 +1258,7 @@ Future<void> exportSelectedSpecimensToCsv(BuildContext context, List<Specimen> s
 
     final locale = Localizations.localeOf(context);
     List<List<dynamic>> rows = await buildSpecimensRows(specimenList, locale);
-    String csv = const ListToCsvConverter().convert(rows, fieldDelimiter: ';', convertNullTo: '');
+    String csv = Csv(fieldDelimiter: ';').encode(rows);
 
     final now = DateTime.now();
     final formatter = DateFormat('yyyyMMdd_HHmmss');
@@ -1421,7 +1421,7 @@ Future<void> exportAllSpecimensToCsv(BuildContext context, List<Specimen> specim
     List<List<dynamic>> rows = await buildSpecimensRows(specimenList, locale);
 
     // 2. Convert the list of data to CSV
-    String csv = const ListToCsvConverter().convert(rows, fieldDelimiter: ';', convertNullTo: '');
+    String csv = Csv(fieldDelimiter: ';').encode(rows);
 
     // 3. Create the file in a temporary directory
     Directory tempDir = await getTemporaryDirectory();

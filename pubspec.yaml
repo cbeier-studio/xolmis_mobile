@@ -14,28 +14,28 @@ dependencies:
   flutter_localizations: 
     sdk: flutter
   intl: ^0.20.2
-  intl_utils: ^2.8.12
+  intl_utils: ^2.8.14
 
   # UI dependencies
-  cupertino_icons: ^1.0.8
-  flutter_local_notifications: ^19.5.0
+  cupertino_icons: ^1.0.9
+  flutter_local_notifications: ^21.0.0
   side_sheet: ^1.0.4+1
   fab_m3e: ^0.1.1
   m3e_design: ^0.2.1
   settings_ui: ^3.0.1
-  fleather: ^1.26.0
+  fleather: ^1.27.0
   fl_chart: ^1.2.0
   numberpicker: ^2.1.2
-  image_picker: ^1.2.1
-  file_picker: ^10.3.6
-  share_plus: ^12.0.1
+  image_picker: ^1.2.2
+  file_picker: ^11.0.2
+  share_plus: ^12.0.2
   about: ^2.2.0
 #  timelines_plus: ^1.0.6
 
   # Data and persistence dependencies
-  sqflite: ^2.4.2
-  csv: ^6.0.0
-  shared_preferences: ^2.5.3
+  sqflite: ^2.4.2+1
+  csv: ^8.0.0
+  shared_preferences: ^2.5.5
   excel: ^4.0.6
   geoxml: ^2.6.2
   archive: ^3.6.1
@@ -48,15 +48,9 @@ dependencies:
   path_provider: ^2.1.5
   permission_handler: ^12.0.1  
   geolocator: ^14.0.2
-  package_info_plus: ^8.3.1
-#  workmanager: ^0.9.0+3
-#    git:
-#      url: https://github.com/fluttercommunity/flutter_workmanager.git
-#      path: workmanager
-#      ref: main
-  device_info_plus: ^12.2.0
+  package_info_plus: ^9.0.1
+  device_info_plus: ^12.4.0
   url_launcher: ^6.3.2
-#  equations: ^5.0.2
 
 dev_dependencies:
   flutter_test:
@@ -65,9 +59,6 @@ dev_dependencies:
   flutter_lints: ^6.0.0
 
   flutter_launcher_icons: ^0.14.4
-
-#dependency_overrides:
-#  vector_math: 2.2.0
 
 dependency_overrides:
   path_provider_foundation: 2.5.1
