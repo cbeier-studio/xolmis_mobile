@@ -24,6 +24,101 @@ import '../generated/l10n.dart';
 const String kExportSource = 'Xolmis Mobile';
 const String kExportSchemaVersion = '1';
 
+Future<Inventory> _ensureInventoryLoadedForExport(
+  BuildContext context,
+  Inventory inventory, {
+  InventoryProvider? inventoryProvider,
+}) async {
+  try {
+    final provider = inventoryProvider ??
+        Provider.of<InventoryProvider>(context, listen: false);
+    await provider.loadInventoryDetails(inventory.id);
+    return provider.getInventoryById(inventory.id) ?? inventory;
+  } catch (error) {
+    debugPrint('Error loading inventory details for export: $error');
+    return inventory;
+  }
+}
+
+Future<List<Inventory>> _ensureInventoriesLoadedForExport(
+  BuildContext context,
+  List<Inventory> inventories, {
+  InventoryProvider? inventoryProvider,
+}) async {
+  if (inventories.isEmpty) return inventories;
+
+  try {
+    final provider = inventoryProvider ??
+        Provider.of<InventoryProvider>(context, listen: false);
+    final loaded =
+        await provider.loadInventoriesDetails(inventories.map((i) => i.id).toList());
+
+    if (loaded.length == inventories.length) {
+      return loaded;
+    }
+
+    final loadedById = {for (final inventory in loaded) inventory.id: inventory};
+    return inventories
+        .map((inventory) => loadedById[inventory.id] ?? inventory)
+        .toList();
+  } catch (error) {
+    debugPrint('Error loading inventories details for export: $error');
+    return inventories;
+  }
+}
+
+Future<Nest> _ensureNestLoadedForExport(
+  BuildContext context,
+  Nest nest, {
+  NestProvider? nestProvider,
+}) async {
+  if (nest.id == null) return nest;
+
+  try {
+    final provider = nestProvider ?? Provider.of<NestProvider>(context, listen: false);
+    await provider.loadNestDetails(nest.id!);
+    for (final loadedNest in provider.nests) {
+      if (loadedNest.id == nest.id) {
+        return loadedNest;
+      }
+    }
+    return nest;
+  } catch (error) {
+    debugPrint('Error loading nest details for export: $error');
+    return nest;
+  }
+}
+
+Future<List<Nest>> _ensureNestsLoadedForExport(
+  BuildContext context,
+  List<Nest> nests, {
+  NestProvider? nestProvider,
+}) async {
+  if (nests.isEmpty) return nests;
+
+  try {
+    final provider = nestProvider ?? Provider.of<NestProvider>(context, listen: false);
+    for (final nest in nests) {
+      if (nest.id != null) {
+        await provider.loadNestDetails(nest.id!);
+      }
+    }
+
+    return nests.map((nest) {
+      if (nest.id == null) return nest;
+      for (final loadedNest in provider.nests) {
+        if (loadedNest.id == nest.id) {
+          return loadedNest;
+        }
+      }
+      return nest;
+    }).toList();
+  } catch (error) {
+    debugPrint('Error loading nests details for export: $error');
+    return nests;
+  }
+}
+
 Future<bool> requestStoragePermission() async {
   var status = await Permission.storage.status;
   if (!status.isGranted) {
@@ -59,7 +154,11 @@ Future<void> exportAllInventoriesToJson(BuildContext context, InventoryProvider 
       );
       isDialogShown = true;
 
-    final finishedInventories = inventoryProvider.finishedInventories;
+    final finishedInventories = await _ensureInventoriesLoadedForExport(
+      context,
+      inventoryProvider.finishedInventories,
+      inventoryProvider: inventoryProvider,
+    );
     final jsonData = {
       'source': kExportSource,
       'schema': 'inventories',
@@ -118,11 +217,13 @@ Future<void> exportAllInventoriesToJson(BuildContext context, InventoryProvider 
 
 Future<void> exportInventoryToJson(BuildContext context, Inventory inventory, bool shareIt) async {
   try {
+    final inventoryToExport =
+        await _ensureInventoryLoadedForExport(context, inventory);
     final jsonData = {
       'source': kExportSource,
       'schema': 'inventories',
       'schemaVersion': kExportSchemaVersion,
-      'records': [inventory.toJson()],
+      'records': [inventoryToExport.toJson()],
     };
     
     var encoder = JsonEncoder.withIndent("  ");
@@ -130,7 +231,7 @@ Future<void> exportInventoryToJson(BuildContext context, Inventory inventory, bo
     
     // Create the file in a temporary folder
     Directory tempDir = await getTemporaryDirectory();
-    final filePath = '${tempDir.path}/inventory_${inventory.id}.json';
+    final filePath = '${tempDir.path}/inventory_${inventoryToExport.id}.json';
     final file = File(filePath);
     await file.writeAsString(jsonString);
 
@@ -140,7 +241,7 @@ Future<void> exportInventoryToJson(BuildContext context, Inventory inventory, bo
         ShareParams(
           files: [XFile(filePath, mimeType: 'application/json')],
           text: S.current.inventoryExported(1),
-          subject: '${S.current.inventoryExported(1)} ${inventory.id}'
+          subject: '${S.current.inventoryExported(1)} ${inventoryToExport.id}'
         ),
       );
     }
@@ -323,8 +424,10 @@ List<List<CellValue>> convertRowsToCellValues(List<List<dynamic>> dynamicRows) {
 // Export an inventory to a Excel file, returns the file path
 Future<String> exportInventoryToExcel(BuildContext context, Inventory inventory, Locale locale) async {
   try {
+    final inventoryToExport =
+        await _ensureInventoryLoadedForExport(context, inventory);
     // 1. Create a list of data
-    List<List<dynamic>> rows = await buildInventoryRows(inventory, locale);
+    List<List<dynamic>> rows = await buildInventoryRows(inventoryToExport, locale);
     List<List<CellValue>> cellRows = convertRowsToCellValues(rows);
 
     // 2. Convert the list of data to Excel
@@ -338,7 +441,7 @@ Future<String> exportInventoryToExcel(BuildContext context, Inventory inventory,
     // 3. Create the file in a temporary directory
     var fileBytes = excel.save();
     Directory tempDir = await getTemporaryDirectory();
-    final filePath = '${tempDir.path}/inventory_${inventory.id}.xlsx';
+    final filePath = '${tempDir.path}/inventory_${inventoryToExport.id}.xlsx';
     // if (sheet.rows.isNotEmpty) {
       File(filePath)
         ..create(recursive: true)
@@ -365,15 +468,17 @@ Future<String> exportInventoryToExcel(BuildContext context, Inventory inventory,
 // Export an inventory to a CSV file
 Future<String> exportInventoryToCsv(BuildContext context, Inventory inventory, Locale locale) async {
   try {
-    // 1. Create a list of data 
-    List<List<dynamic>> rows = await buildInventoryRows(inventory, locale);
+    final inventoryToExport =
+        await _ensureInventoryLoadedForExport(context, inventory);
+    // 1. Create a list of data
+    List<List<dynamic>> rows = await buildInventoryRows(inventoryToExport, locale);
 
     // 2. Convert the list of data to CSV
     String csv = Csv(fieldDelimiter: ';').encode(rows);
 
     // 3. Create the file in a temporary directory
     Directory tempDir = await getTemporaryDirectory();
-    final filePath = '${tempDir.path}/inventory_${inventory.id}.csv';
+    final filePath = '${tempDir.path}/inventory_${inventoryToExport.id}.csv';
     if (csv.isNotEmpty) {
       final file = File(filePath);
       await file.writeAsString(csv);
@@ -398,30 +503,32 @@ Future<String> exportInventoryToCsv(BuildContext context, Inventory inventory, L
 
 Future<void> exportInventoryToKml(BuildContext context, Inventory inventory) async {
   try {
+    final inventoryToExport =
+        await _ensureInventoryLoadedForExport(context, inventory);
     final gpx = GeoXml();
     gpx.creator = 'Xolmis Mobile';
     gpx.metadata = Metadata(
-      name: 'Inventory ${inventory.id}',
-      desc: 'Points of Interest for Inventory ${inventory.id}',
-      time: inventory.startTime ?? DateTime.now(),
+      name: 'Inventory ${inventoryToExport.id}',
+      desc: 'Points of Interest for Inventory ${inventoryToExport.id}',
+      time: inventoryToExport.startTime ?? DateTime.now(),
     );
 
     gpx.wpts.add(Wpt(
-      lat: inventory.startLatitude,
-      lon: inventory.startLongitude,
-      name: '${inventory.id} - Start',
-      desc: inventoryTypeFriendlyNames[inventory.type] ?? '',
-      time: inventory.startTime ?? DateTime.now(),
+      lat: inventoryToExport.startLatitude,
+      lon: inventoryToExport.startLongitude,
+      name: '${inventoryToExport.id} - Start',
+      desc: inventoryTypeFriendlyNames[inventoryToExport.type] ?? '',
+      time: inventoryToExport.startTime ?? DateTime.now(),
     ));
     gpx.wpts.add(Wpt(
-      lat: inventory.endLatitude,
-      lon: inventory.endLongitude,
-      name: '${inventory.id} - End',
-      desc: inventoryTypeFriendlyNames[inventory.type] ?? '',
-      time: inventory.endTime ?? DateTime.now(),
+      lat: inventoryToExport.endLatitude,
+      lon: inventoryToExport.endLongitude,
+      name: '${inventoryToExport.id} - End',
+      desc: inventoryTypeFriendlyNames[inventoryToExport.type] ?? '',
+      time: inventoryToExport.endTime ?? DateTime.now(),
     ));
 
-    for (var species in inventory.speciesList) {
+    for (var species in inventoryToExport.speciesList) {
       if (species.pois.isNotEmpty) {
         for (var poi in species.pois) {
           gpx.wpts.add(Wpt(
@@ -450,7 +557,7 @@ Future<void> exportInventoryToKml(BuildContext context, Inventory inventory) asy
     final kmlString = KmlWriter(altitudeMode: AltitudeMode.clampToGround).asString(gpx, pretty: true);
 
     Directory tempDir = await getTemporaryDirectory();
-    final filePath = '${tempDir.path}/inventory_${inventory.id}_pois.kml';
+    final filePath = '${tempDir.path}/inventory_${inventoryToExport.id}_pois.kml';
     final file = File(filePath);
     await file.writeAsString(kmlString);
 
@@ -458,7 +565,7 @@ Future<void> exportInventoryToKml(BuildContext context, Inventory inventory) asy
       ShareParams(
         files: [XFile(filePath, mimeType: 'application/vnd.google-earth.kml+xml')],
         text: S.current.inventoryExported(1),
-        subject: '${S.current.inventoryExported(1)} ${inventory.id}',
+        subject: '${S.current.inventoryExported(1)} ${inventoryToExport.id}',
       ),
     );
   } catch (error) {
@@ -478,11 +585,13 @@ Future<void> exportInventoryToKml(BuildContext context, Inventory inventory) asy
 
 Future<void> exportSelectedInventoriesToJson(BuildContext context, List<Inventory> inventories) async {
   try {
+    final inventoriesToExport =
+        await _ensureInventoriesLoadedForExport(context, inventories);
     final jsonData = {
       'source': kExportSource,
       'schema': 'inventories',
       'schemaVersion': kExportSchemaVersion,
-      'records': inventories.map((inventory) => inventory.toJson()).toList(),
+      'records': inventoriesToExport.map((inventory) => inventory.toJson()).toList(),
     };
     var encoder = JsonEncoder.withIndent("  ");
     final jsonString = encoder.convert(jsonData);
@@ -640,11 +749,12 @@ Future<void> exportSelectedInventoriesToExcel(BuildContext context, List<Invento
 
 Future<void> exportSelectedNestsToJson(BuildContext context, List<Nest> nests) async {
   try {
+    final nestsToExport = await _ensureNestsLoadedForExport(context, nests);
     final jsonData = {
       'source': kExportSource,
       'schema': 'nests',
       'schemaVersion': kExportSchemaVersion,
-      'records': nests.map((nest) => nest.toJson()).toList(),
+      'records': nestsToExport.map((nest) => nest.toJson()).toList(),
     };
     var encoder = JsonEncoder.withIndent("  ");
     final jsonString = encoder.convert(jsonData);
@@ -829,7 +939,11 @@ Future<void> exportAllInactiveNestsToJson(BuildContext context) async {
       }
 
     final nestProvider = Provider.of<NestProvider>(context, listen: false);
-    final inactiveNests = nestProvider.inactiveNests;
+    final inactiveNests = await _ensureNestsLoadedForExport(
+      context,
+      nestProvider.inactiveNests,
+      nestProvider: nestProvider,
+    );
     final jsonData = {
       'source': kExportSource,
       'schema': 'nests',
@@ -880,18 +994,19 @@ Future<void> exportAllInactiveNestsToJson(BuildContext context) async {
 
 Future<void> exportNestToJson(BuildContext context, Nest nest) async {
   try {
+    final nestToExport = await _ensureNestLoadedForExport(context, nest);
     // 1. Create a list of data
     final jsonData = {
       'source': kExportSource,
       'schema': 'nests',
       'schemaVersion': kExportSchemaVersion,
-      'records': [nest.toJson()],
+      'records': [nestToExport.toJson()],
     };
     final jsonString = jsonEncode(jsonData);
 
     // 2. Create the file in a temporary directory
     Directory tempDir = await getTemporaryDirectory();
-    final filePath = '${tempDir.path}/nest_${nest.fieldNumber}.json';
+    final filePath = '${tempDir.path}/nest_${nestToExport.fieldNumber}.json';
     final file = File(filePath);
     await file.writeAsString(jsonString);
 
@@ -900,7 +1015,7 @@ Future<void> exportNestToJson(BuildContext context, Nest nest) async {
       ShareParams(
         files: [XFile(filePath, mimeType: 'application/json')], 
         text: S.current.nestExported(1), 
-        subject: '${S.current.nestData(1)} ${nest.fieldNumber}'
+        subject: '${S.current.nestData(1)} ${nestToExport.fieldNumber}'
       ),
     );
   } catch (error) {
@@ -920,15 +1035,16 @@ Future<void> exportNestToJson(BuildContext context, Nest nest) async {
 
 Future<String> exportNestToCsv(BuildContext context, Nest nest, Locale locale) async {
   try {
+    final nestToExport = await _ensureNestLoadedForExport(context, nest);
     // 1. Create a list of data for the CSV
-    List<List<dynamic>> rows = await buildNestRows(nest, locale);
+    List<List<dynamic>> rows = await buildNestRows(nestToExport, locale);
 
     // 2. Convert the list of data to CSV
     String csv = Csv(fieldDelimiter: ';').encode(rows);
 
     // 3. Create the file in a temporary directory
     Directory tempDir = await getTemporaryDirectory();
-    final filePath = '${tempDir.path}/nest_${nest.fieldNumber}.csv';
+    final filePath = '${tempDir.path}/nest_${nestToExport.fieldNumber}.csv';
     if (csv.isNotEmpty) {
       final file = File(filePath);
       await file.writeAsString(csv);
@@ -954,8 +1070,9 @@ Future<String> exportNestToCsv(BuildContext context, Nest nest, Locale locale) a
 // Export a nest to an Excel file, returns the file path
 Future<String> exportNestToExcel(BuildContext context, Nest nest, Locale locale) async {
   try {
+    final nestToExport = await _ensureNestLoadedForExport(context, nest);
     // 1. Create a list of data
-    List<List<dynamic>> rows = await buildNestRows(nest, locale);
+    List<List<dynamic>> rows = await buildNestRows(nestToExport, locale);
     List<List<CellValue>> cellRows = convertRowsToCellValues(rows);
 
     // 2. Convert the list of data to Excel
@@ -969,7 +1086,7 @@ Future<String> exportNestToExcel(BuildContext context, Nest nest, Locale locale)
     // 3. Create the file in a temporary directory
     var fileBytes = excel.save();
     Directory tempDir = await getTemporaryDirectory();
-    final filePath = '${tempDir.path}/nest_${nest.fieldNumber}.xlsx';
+    final filePath = '${tempDir.path}/nest_${nestToExport.fieldNumber}.xlsx';
     if (fileBytes != null) {
       File(filePath)
         ..create(recursive: true)
@@ -1062,20 +1179,21 @@ Future<List<List>> buildNestRows(Nest nest, Locale locale) async {
 
 Future<void> exportNestToKml(BuildContext context, Nest nest) async {
   try {
+    final nestToExport = await _ensureNestLoadedForExport(context, nest);
     final gpx = GeoXml();
     gpx.creator = 'Xolmis Mobile';
     gpx.metadata = Metadata(
-      name: 'Nest ${nest.fieldNumber}',
-      desc: 'Coordinates for Nest ${nest.fieldNumber}',
-      time: nest.foundTime ?? DateTime.now(),
+      name: 'Nest ${nestToExport.fieldNumber}',
+      desc: 'Coordinates for Nest ${nestToExport.fieldNumber}',
+      time: nestToExport.foundTime ?? DateTime.now(),
     );
 
           gpx.wpts.add(Wpt(
-            lat: nest.latitude,
-            lon: nest.longitude,
-            name: '${nest.fieldNumber} - ${nest.speciesName}',
-            desc: nest.localityName ?? '',
-            time: nest.foundTime ?? DateTime.now(),
+            lat: nestToExport.latitude,
+            lon: nestToExport.longitude,
+            name: '${nestToExport.fieldNumber} - ${nestToExport.speciesName}',
+            desc: nestToExport.localityName ?? '',
+            time: nestToExport.foundTime ?? DateTime.now(),
           ));
 
     if (gpx.wpts.isEmpty) {
@@ -1092,7 +1210,7 @@ Future<void> exportNestToKml(BuildContext context, Nest nest) async {
     final kmlString = KmlWriter(altitudeMode: AltitudeMode.clampToGround).asString(gpx, pretty: true);
 
     Directory tempDir = await getTemporaryDirectory();
-    final filePath = '${tempDir.path}/nest_${nest.fieldNumber}.kml';
+    final filePath = '${tempDir.path}/nest_${nestToExport.fieldNumber}.kml';
     final file = File(filePath);
     await file.writeAsString(kmlString);
 
@@ -1100,7 +1218,7 @@ Future<void> exportNestToKml(BuildContext context, Nest nest) async {
       ShareParams(
         files: [XFile(filePath, mimeType: 'application/vnd.google-earth.kml+xml')],
         text: S.current.nestExported(1),
-        subject: '${S.current.nestExported(1)} ${nest.fieldNumber}',
+        subject: '${S.current.nestExported(1)} ${nestToExport.fieldNumber}',
       ),
     );
   } catch (error) {
