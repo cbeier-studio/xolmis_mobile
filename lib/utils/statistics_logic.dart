@@ -250,7 +250,7 @@ Future<Map<int, int>> getOccurrencesByMonth(String? selectedSpecies) async {
         COUNT(*) AS count
       FROM species s
       LEFT JOIN inventories i ON s.inventoryId = i.id
-      WHERE COALESCE(s.sampleTime, i.startTime) IS NOT NULL
+      WHERE (s.sampleTime IS NOT NULL OR i.startTime IS NOT NULL)
         $speciesFilter
       GROUP BY month
     ''', speciesArgs);
@@ -337,7 +337,7 @@ Future<Map<int, int>> getOccurrencesByYear(String? selectedSpecies) async {
         COUNT(*) AS count
       FROM species s
       LEFT JOIN inventories i ON s.inventoryId = i.id
-      WHERE COALESCE(s.sampleTime, i.startTime) IS NOT NULL
+      WHERE (s.sampleTime IS NOT NULL OR i.startTime IS NOT NULL)
         $speciesFilter
       GROUP BY year
     ''', speciesArgs);
@@ -676,6 +676,153 @@ Map<int, int> getSpecimensByHourOfDay(List<Specimen> specimens) {
     }
   }
   return occurrences;
+}
+
+/// Returns distinct species richness grouped by month of year (1–12), querying
+/// the database directly across all record types ([Species], [Nest], [Egg],
+/// [Specimen]).
+///
+/// For [Species] records, [sampleTime] is used when available; otherwise the
+/// parent [Inventory.startTime] is used as a fallback via a LEFT JOIN.
+/// All 12 months are pre-initialised to zero.
+Future<Map<int, int>> getSpeciesRichnessPerMonthGlobal() async {
+  final Map<int, int> richnessByMonth = {for (var i = 1; i <= 12; i++) i: 0};
+
+  final db = await DatabaseHelper().database;
+  if (db == null) {
+    debugPrint('getSpeciesRichnessPerMonthGlobal: database is null.');
+    return richnessByMonth;
+  }
+
+  try {
+    final rows = await db.rawQuery('''
+      SELECT month, COUNT(DISTINCT species_name) AS count
+      FROM (
+        SELECT
+          CAST(strftime('%m', COALESCE(s.sampleTime, i.startTime)) AS INTEGER) AS month,
+          s.name AS species_name
+        FROM species s
+        LEFT JOIN inventories i ON s.inventoryId = i.id
+        WHERE (s.sampleTime IS NOT NULL OR i.startTime IS NOT NULL)
+          AND s.name IS NOT NULL AND TRIM(s.name) != ''
+
+        UNION ALL
+
+        SELECT
+          CAST(strftime('%m', foundTime) AS INTEGER) AS month,
+          speciesName AS species_name
+        FROM nests
+        WHERE foundTime IS NOT NULL
+          AND speciesName IS NOT NULL AND TRIM(speciesName) != ''
+
+        UNION ALL
+
+        SELECT
+          CAST(strftime('%m', sampleTime) AS INTEGER) AS month,
+          speciesName AS species_name
+        FROM eggs
+        WHERE sampleTime IS NOT NULL
+          AND speciesName IS NOT NULL AND TRIM(speciesName) != ''
+
+        UNION ALL
+
+        SELECT
+          CAST(strftime('%m', sampleTime) AS INTEGER) AS month,
+          speciesName AS species_name
+        FROM specimens
+        WHERE sampleTime IS NOT NULL
+          AND speciesName IS NOT NULL AND TRIM(speciesName) != ''
+      ) combined
+      WHERE month >= 1 AND month <= 12
+      GROUP BY month
+      ORDER BY month
+    ''');
+
+    for (final row in rows) {
+      final month = row['month'] as int?;
+      final count = (row['count'] as int?) ?? 0;
+      if (month != null && month >= 1 && month <= 12) {
+        richnessByMonth[month] = count;
+      }
+    }
+  } catch (e) {
+    debugPrint('Error in getSpeciesRichnessPerMonthGlobal: $e');
+  }
+
+  return richnessByMonth;
+}
+
+/// Returns distinct species richness grouped by year, querying the database
+/// directly across all record types ([Species], [Nest], [Egg], [Specimen]).
+///
+/// For [Species] records, [sampleTime] is used when available; otherwise the
+/// parent [Inventory.startTime] is used as a fallback via a LEFT JOIN.
+/// Years are not pre-initialised since the range is dynamic.
+Future<Map<int, int>> getSpeciesRichnessPerYearGlobal() async {
+  final Map<int, int> richnessByYear = {};
+
+  final db = await DatabaseHelper().database;
+  if (db == null) {
+    debugPrint('getSpeciesRichnessPerYearGlobal: database is null.');
+    return richnessByYear;
+  }
+
+  try {
+    final rows = await db.rawQuery('''
+      SELECT year, COUNT(DISTINCT species_name) AS count
+      FROM (
+        SELECT
+          CAST(strftime('%Y', COALESCE(s.sampleTime, i.startTime)) AS INTEGER) AS year,
+          s.name AS species_name
+        FROM species s
+        LEFT JOIN inventories i ON s.inventoryId = i.id
+        WHERE (s.sampleTime IS NOT NULL OR i.startTime IS NOT NULL)
+          AND s.name IS NOT NULL AND TRIM(s.name) != ''
+
+        UNION ALL
+
+        SELECT
+          CAST(strftime('%Y', foundTime) AS INTEGER) AS year,
+          speciesName AS species_name
+        FROM nests
+        WHERE foundTime IS NOT NULL
+          AND speciesName IS NOT NULL AND TRIM(speciesName) != ''
+
+        UNION ALL
+
+        SELECT
+          CAST(strftime('%Y', sampleTime) AS INTEGER) AS year,
+          speciesName AS species_name
+        FROM eggs
+        WHERE sampleTime IS NOT NULL
+          AND speciesName IS NOT NULL AND TRIM(speciesName) != ''
+
+        UNION ALL
+
+        SELECT
+          CAST(strftime('%Y', sampleTime) AS INTEGER) AS year,
+          speciesName AS species_name
+        FROM specimens
+        WHERE sampleTime IS NOT NULL
+          AND speciesName IS NOT NULL AND TRIM(speciesName) != ''
+      ) combined
+      WHERE year IS NOT NULL
+      GROUP BY year
+      ORDER BY year
+    ''');
+
+    for (final row in rows) {
+      final year = row['year'] as int?;
+      final count = (row['count'] as int?) ?? 0;
+      if (year != null) {
+        richnessByYear[year] = count;
+      }
+    }
+  } catch (e) {
+    debugPrint('Error in getSpeciesRichnessPerYearGlobal: $e');
+  }
+
+  return richnessByYear;
 }
 
 /// Returns total records grouped by month of year (1-12), ignoring the year.
