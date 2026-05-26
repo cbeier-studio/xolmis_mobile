@@ -79,7 +79,7 @@ Future<bool> restoreDatabase(String filePath) async {
     }
 
     final inputStream = InputFileStream(filePath);
-    final archive = ZipDecoder().decodeBuffer(inputStream);
+    final archive = ZipDecoder().decodeStream(inputStream);
 
     // Check if the database file exists in the archive
     final dbFileInArchive = archive.findFile('xolmis_database.db');

@@ -36,9 +36,12 @@ dependencies:
   sqflite: ^2.4.2+1
   csv: ^8.0.0
   shared_preferences: ^2.5.5
-  excel: ^4.0.6
+  excel:
+    git:
+      url: https://github.com/justkawal/excel.git
+      ref: 751dfc597c893a0b34eccfe6921f126e03a5c683
   geoxml: ^2.6.2
-  archive: ^3.6.1
+  archive: ^4.0.9
 
   # State management
   provider: ^6.1.5+1
