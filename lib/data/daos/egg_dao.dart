@@ -5,6 +5,7 @@ import '../models/nest.dart';
 import '../database/database_helper.dart';
 
 
+/// Provides database access for egg records linked to nests.
 class EggDao {
   final DatabaseHelper _dbHelper;
 

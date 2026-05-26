@@ -10,20 +10,24 @@ import '../../core/core_consts.dart';
 import '../../utils/utils.dart';
 import '../../generated/l10n.dart';
 
+/// Screen used to create or edit a specimen record.
 class AddSpecimenScreen extends StatefulWidget {
   final Specimen? specimen;
   final bool isEditing;
 
+  /// Creates a specimen form screen.
   const AddSpecimenScreen({
     super.key,
     this.specimen,
     this.isEditing = false,
   });
 
+  /// Creates the mutable state for [AddSpecimenScreen].
   @override
   AddSpecimenScreenState createState() => AddSpecimenScreenState();
 }
 
+/// State implementation for [AddSpecimenScreen].
 class AddSpecimenScreenState extends State<AddSpecimenScreen> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _fieldNumberController;
@@ -59,6 +63,7 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
     }
   }
 
+  /// Loads the observer acronym used to generate default specimen numbers.
   Future<void> _loadObserverAcronym() async {
     final prefs = await SharedPreferences.getInstance();
     if (!mounted) return;
@@ -67,6 +72,7 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
     });
   }
 
+  /// Generates the next available field number for a new specimen.
   Future<void> _nextFieldNumber() async {
     final specimenProvider = Provider.of<SpecimenProvider>(context, listen: false);
     final prefs = await SharedPreferences.getInstance();
@@ -82,6 +88,7 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
     _fieldNumberController.text = "$_observerAcronym$ano${mes.toString().padLeft(2, '0')}${numSeq.toString().padLeft(4, '0')}";
   }
 
+  /// Retrieves the current coordinates to prefill a new specimen location.
   Future<void> _getCurrentLocation() async {
     Position? position = await getPosition(context);
     if (position != null) {
@@ -271,6 +278,7 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
     );
   }
 
+  /// Validates the form and saves the specimen through the provider layer.
   void _submitForm() async {
     final specimenProvider = Provider.of<SpecimenProvider>(context, listen: false);
     setState(() {

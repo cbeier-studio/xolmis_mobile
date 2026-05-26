@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../data/models/inventory.dart';
 import '../data/daos/weather_dao.dart';
 
+/// Manages weather samples grouped by inventory identifier.
 class WeatherProvider with ChangeNotifier {
   final WeatherDao _weatherDao;
 
@@ -10,11 +11,12 @@ class WeatherProvider with ChangeNotifier {
 
   final Map<String, List<Weather>> _weatherMap = {};
 
+  /// Notifies listeners without changing provider state.
   void refreshState() {
     notifyListeners();
   }
 
-  // Load weather records for an inventory ID
+  /// Loads all weather samples associated with [inventoryId].
   Future<void> loadWeatherForInventory(String inventoryId) async {
     try {
       final weatherList = await _weatherDao.getWeatherByInventory(inventoryId);
@@ -26,12 +28,12 @@ class WeatherProvider with ChangeNotifier {
     }
   }
 
-  // Get weather records for an inventory ID from list
+  /// Returns the cached weather samples for [inventoryId].
   List<Weather> getWeatherForInventory(String inventoryId) {
     return _weatherMap[inventoryId] ?? [];
   }
 
-  // Add weather record to the database and the list
+  /// Persists [weather] for [inventoryId] and refreshes the local cache.
   Future<void> addWeather(BuildContext context, String inventoryId, Weather weather) async {
     // Insert the weather data in the database
     await _weatherDao.insertWeather(weather);
@@ -42,7 +44,7 @@ class WeatherProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // Update weather in the database and the list
+  /// Updates a weather sample in storage and refreshes the corresponding cache.
   Future<void> updateWeather(Weather weather) async {
     await _weatherDao.updateWeather(weather);
 
@@ -51,7 +53,7 @@ class WeatherProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // Remove weather record from database and from list
+  /// Deletes a weather sample from storage and removes it from the cache.
   Future<void> removeWeather(String inventoryId, int weatherId) async {
     await _weatherDao.deleteWeather(weatherId);
 

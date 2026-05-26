@@ -14,6 +14,7 @@ import '../../generated/l10n.dart';
 import 'stats_general_tab.dart';
 import 'stats_species_tab.dart';
 
+/// Top-level statistics screen with general and per-species tabs.
 class StatsScreen extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
 
@@ -23,6 +24,7 @@ class StatsScreen extends StatefulWidget {
   StatsScreenState createState() => StatsScreenState();
 }
 
+/// Initializes shared providers and coordinates statistics tabs.
 class StatsScreenState extends State<StatsScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
   late InventoryProvider inventoryProvider;

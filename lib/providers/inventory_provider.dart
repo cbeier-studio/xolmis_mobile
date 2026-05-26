@@ -7,42 +7,60 @@ import 'species_provider.dart';
 import 'vegetation_provider.dart';
 import 'weather_provider.dart';
 
+/// Manages inventory records, cached instances, and related timing state.
 class InventoryProvider with ChangeNotifier {
   final InventoryDao _inventoryDao;
   final List<Inventory> _inventories = [];
   final Map<String, Inventory> _inventoryMap = {};
+
+  /// Emits the last computed species count for an inventory.
   final ValueNotifier<int> speciesCountNotifier = ValueNotifier<int>(0);
+
+  /// Emits whether the last updated inventory is finished.
   final ValueNotifier<bool> inventoryFinishedNotifier = ValueNotifier<bool>(false);
   // Flag to indicate that data is loading
   bool _isLoading = false;
+
+  /// Whether the provider is currently loading inventory data.
   bool get isLoading => _isLoading;
 
-  // Get list of active inventories
+  /// Inventories that are still active.
   List<Inventory> get activeInventories =>
       _inventories.where((inventory) => !inventory.isFinished).toList();
 
-  // Get list of finished inventories
+  /// Inventories that have already finished.
   List<Inventory> get finishedInventories =>
       _inventories.where((inventory) => inventory.isFinished).toList();
 
-  // Get the number of active inventories
+  /// Number of active inventories.
   int get inventoriesCount => activeInventories.length;
+
+  /// Total number of cached inventories.
   int get allInventoriesCount => _inventories.length;
 
   final SpeciesProvider _speciesProvider;
   final VegetationProvider _vegetationProvider;
   final WeatherProvider _weatherProvider;
+  /// Access to the species provider used for inventory child records.
   SpeciesProvider get speciesProvider => _speciesProvider;
+
+  /// Access to the vegetation provider used for inventory child records.
   VegetationProvider get vegetationProvider => _vegetationProvider;
+
+  /// Access to the weather provider used for inventory child records.
   WeatherProvider get weatherProvider => _weatherProvider;
 
   InventoryProvider(this._inventoryDao, this._speciesProvider, this._vegetationProvider, this._weatherProvider);
 
+  /// Notifies listeners without changing provider state.
   void refreshState() {
     notifyListeners();
   }
 
-  // Load all inventories from the database
+  /// Loads all inventories from the database and synchronizes cached instances.
+  ///
+  /// Existing in-memory objects are updated in place so active timers and other
+  /// runtime state can survive refreshes.
   Future<void> fetchInventories(BuildContext context) async {
     debugPrint('[PROVIDER] ----------------------------------');
     debugPrint('[PROVIDER] Fetching all inventories...');
@@ -96,17 +114,19 @@ class InventoryProvider with ChangeNotifier {
     }
   }
 
-  // Get inventory data by ID
+  /// Returns the cached inventory identified by [id], if any.
   Inventory? getInventoryById(String id) {
     return _inventoryMap[id]; // Get the inventory from map
   }
 
-  // Check if an inventory ID already exists
+  /// Returns whether [id] already exists in persistent storage.
   Future<bool> inventoryIdExists(String id) async {
     return await _inventoryDao.inventoryIdExists(id);
   }
 
-  // Add inventory to the database and the list
+  /// Adds a new inventory, caches it, and starts its timer when applicable.
+  ///
+  /// Returns `true` when the insert succeeds and `false` otherwise.
   Future<bool> addInventory(BuildContext context, Inventory inventory) async {
     debugPrint('[PROVIDER] Adding new inventory: ${inventory.id}');
     try {
@@ -124,7 +144,9 @@ class InventoryProvider with ChangeNotifier {
     }
   }
 
-  // Add imported inventory to the database and the list
+  /// Imports an inventory record and caches it locally.
+  ///
+  /// Returns `true` when the import succeeds and `false` otherwise.
   Future<bool> importInventory(Inventory inventory) async {
     debugPrint('[PROVIDER] Importing inventory: ${inventory.id}');
     try {
@@ -141,7 +163,7 @@ class InventoryProvider with ChangeNotifier {
     }
   }
 
-  // Update inventory in the database and the list
+  /// Updates an inventory in storage and refreshes the cached instance.
   Future<void> updateInventory(Inventory inventory) async {
     debugPrint('[PROVIDER] Updating inventory: ${inventory.id}');
     await _inventoryDao.updateInventory(inventory);
@@ -158,7 +180,7 @@ class InventoryProvider with ChangeNotifier {
     debugPrint('[PROVIDER] ...Update complete for ${inventory.id}. Notifying listeners.');
   }
 
-  // Remove inventory from the database and the list
+  /// Deletes the inventory identified by [id] from storage and cache.
   Future<void> removeInventory(String id) async {
     debugPrint('[PROVIDER] Removing inventory: $id');
     await _inventoryDao.deleteInventory(id);
@@ -169,12 +191,14 @@ class InventoryProvider with ChangeNotifier {
     debugPrint('[PROVIDER] ...Removal complete for $id. Notifying listeners.');
   }
 
-  // Get an active inventory by ID
+  /// Returns an active inventory by identifier.
+  ///
+  /// Throws if no active inventory with [id] exists.
   Inventory getActiveInventoryById(String id) {
     return activeInventories.firstWhere((inventory) => inventory.id == id);
   }
 
-  // Start inventory timer
+  /// Starts the runtime timer for [inventory] when it is eligible to run.
   void startInventoryTimer(BuildContext context, Inventory inventory, InventoryDao inventoryDao) {
     if (inventory.duration > 0 && !inventory.isFinished && !inventory.isPaused) {
       debugPrint('[PROVIDER] Commanding START timer for ${inventory.id}');
@@ -186,7 +210,7 @@ class InventoryProvider with ChangeNotifier {
     }
   }
 
-  // Pause inventory timer
+  /// Pauses the runtime timer for [inventory].
   void pauseInventoryTimer(Inventory inventory, InventoryDao inventoryDao) {
     debugPrint('[PROVIDER] Commanding PAUSE timer for ${inventory.id}');
     inventory.pauseTimer(inventoryDao);
@@ -194,7 +218,7 @@ class InventoryProvider with ChangeNotifier {
     // notifyListeners();
   }
 
-  // Resume inventory timer
+  /// Resumes the runtime timer for [inventory].
   void resumeInventoryTimer(BuildContext context, Inventory inventory, InventoryDao inventoryDao) {
     debugPrint('[PROVIDER] Commanding RESUME timer for ${inventory.id}');
     inventory.resumeTimer(context, inventoryDao);
@@ -202,7 +226,7 @@ class InventoryProvider with ChangeNotifier {
     // notifyListeners();
   }
 
-  // Update the ID in the database and the list
+  /// Changes an inventory identifier in storage and updates cached references.
   Future<void> changeInventoryId(BuildContext context, String oldId, String newId) async {
     await _inventoryDao.changeInventoryId(oldId, newId);
     // await fetchInventories(context);
@@ -215,7 +239,7 @@ class InventoryProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // Update the elapsed time in the database and the list
+  /// Persists and caches the elapsed time for an inventory.
   Future<void> updateInventoryElapsedTime(String inventoryId, double elapsedTime) async {
     await _inventoryDao.updateInventoryElapsedTime(inventoryId, elapsedTime);
     _inventoryMap[inventoryId]?.elapsedTime = elapsedTime;
@@ -227,7 +251,7 @@ class InventoryProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // Update the current interval in the database and the list
+  /// Persists and caches the current interval for an inventory.
   Future<void> updateInventoryCurrentInterval(String inventoryId, int currentInterval) async {
     await _inventoryDao.updateInventoryCurrentInterval(inventoryId, currentInterval);
     _inventoryMap[inventoryId]?.currentInterval = currentInterval;
@@ -239,7 +263,7 @@ class InventoryProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // Update the species list count
+  /// Recalculates cached species counters for [inventoryId].
   void updateSpeciesCount(String inventoryId) {
     final inventory = getInventoryById(inventoryId);
     if (inventory != null) {
@@ -254,31 +278,32 @@ class InventoryProvider with ChangeNotifier {
     }
   }
 
-  // Concatenate the next inventory ID
+  /// Returns the next sequential inventory number for the given identifier parts.
   Future<int> getNextSequentialNumber(String? local, String observer, int ano, int mes, int dia, String? typeChar) {
     return _inventoryDao.getNextSequentialNumber(local, observer, ano, mes, dia, typeChar);
   }
 
-  // Calculate the total sampling hours from all inventories (via SQL - much faster)
+  /// Returns the total sampling hours across all inventories using SQL.
   Future<double> getTotalSamplingHours() async {
     return await _inventoryDao.getTotalSamplingHours_SQL();
   }
 
-  // Calculate the average sampling hours from all inventories (via SQL - much faster)
+  /// Returns the average sampling hours across all inventories using SQL.
   Future<double> getAverageSamplingHours() async {
     return await _inventoryDao.getAverageSamplingHours_SQL();
   }
-  // Get total sampling days from all inventories (via SQL - much faster)
+  /// Returns the total number of sampling days across all inventories using SQL.
   Future<int> getTotalSamplingDays() async {
     return await _inventoryDao.getTotalSamplingDays_SQL();
   }
 
 
-  // Get list of distinct localities for autocomplete
+  /// Returns distinct inventory localities for autocomplete suggestions.
   Future<List<String>> getDistinctLocalities() {
     return _inventoryDao.getDistinctLocalities();
   }
 
+  /// Returns all distinct species names found across persisted inventories.
   Future<List<String>> get allSpeciesInInventories async {
     final speciesSet = <String>{};
     final allInventories = await _inventoryDao.getInventories();
@@ -290,7 +315,7 @@ class InventoryProvider with ChangeNotifier {
     return speciesSet.toList()..sort();
   }
 
-  // Load inventories with lightweight summary (no sub-entities)
+  /// Loads lightweight inventory summaries without nested child collections.
   Future<void> fetchInventoriesSummary(BuildContext context) async {
     debugPrint('[PROVIDER] Fetching inventories summary (lightweight)...');
     _isLoading = true;
@@ -336,7 +361,7 @@ class InventoryProvider with ChangeNotifier {
     }
   }
 
-  // Load complete details for a specific inventory (used on-demand)
+  /// Loads complete details for a specific inventory on demand.
   Future<void> loadInventoryDetails(String inventoryId) async {
     try {
       final inventory = await _inventoryDao.getInventoryById(inventoryId);
@@ -352,7 +377,10 @@ class InventoryProvider with ChangeNotifier {
     }
   }
 
-  // Load complete details for multiple inventories (used for statistics)
+  /// Loads complete details for multiple inventories on demand.
+  ///
+  /// Returns the fully loaded inventory objects in the same order they are
+  /// retrieved from storage.
   Future<List<Inventory>> loadInventoriesDetails(List<String> inventoryIds) async {
     try {
       final inventories = <Inventory>[];

@@ -16,6 +16,7 @@ import '../statistics/species_chart_screen.dart';
 import '../../widgets/species_list_item.dart';
 import '../../generated/l10n.dart';
 
+/// Inventory tab that manages species records and related actions.
 class SpeciesTab extends StatefulWidget {
   final Inventory inventory;
   final SpeciesDao speciesDao;
@@ -27,6 +28,7 @@ class SpeciesTab extends StatefulWidget {
   State<SpeciesTab> createState() => _SpeciesTabState();
 }
 
+/// Holds filtering, sorting, and CRUD logic for species in one inventory.
 class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMixin {
   late SpeciesSortField _sortOption =
       widget.inventory.type == InventoryType.invTransectDetection ||
@@ -69,6 +71,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
   }
 
   // Add a species to the inventory
+  /// Adds a new species to the current inventory and persists it.
   Future<void> _addSpeciesToInventory(String speciesName, SpeciesDao speciesDao, InventoryDao inventoryDao) async {
     final speciesProvider = Provider.of<SpeciesProvider>(context, listen: false);
     final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);

@@ -10,6 +10,7 @@ import '../../core/core_consts.dart';
 import '../../utils/utils.dart';
 import '../../generated/l10n.dart';
 
+/// Form screen for creating or editing egg records of a nest.
 class AddEggScreen extends StatefulWidget {
   final Nest nest;
   final Egg? egg;
@@ -30,6 +31,7 @@ class AddEggScreen extends StatefulWidget {
   AddEggScreenState createState() => AddEggScreenState();
 }
 
+/// Manages egg form inputs, validation, and persistence.
 class AddEggScreenState extends State<AddEggScreen> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _fieldNumberController;

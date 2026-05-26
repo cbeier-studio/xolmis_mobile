@@ -8,6 +8,7 @@ import '../../utils/utils.dart';
 import '../../generated/l10n.dart';
 import 'add_weather_screen.dart';
 
+/// Inventory tab that lists weather records for the sampling period.
 class WeatherTab extends StatefulWidget {
   final Inventory inventory;
 
@@ -17,6 +18,7 @@ class WeatherTab extends StatefulWidget {
   State<WeatherTab> createState() => _WeatherTabState();
 }
 
+/// Manages weather list interactions and weather record CRUD flows.
 class _WeatherTabState extends State<WeatherTab>
     with AutomaticKeepAliveClientMixin {
   @override
@@ -28,6 +30,7 @@ class _WeatherTabState extends State<WeatherTab>
     return _buildWeatherList();
   }
 
+  /// Deletes a weather record after user confirmation.
   Future<void> _deleteWeather(Weather weather) async {
     final confirmed = await _showDeleteConfirmationDialog(context);
     if (confirmed) {
@@ -63,6 +66,7 @@ class _WeatherTabState extends State<WeatherTab>
         false;
   }
 
+  /// Opens the weather form as dialog or route depending on screen size.
   void _showAddWeatherScreen(BuildContext context) {
     final weatherProvider = Provider.of<WeatherProvider>(context, listen: false);
     if (MediaQuery.sizeOf(context).width > 600) {
@@ -269,6 +273,7 @@ class _WeatherTabState extends State<WeatherTab>
   }
 }
 
+/// Grid card representation of a single weather record.
 class WeatherGridItem extends StatefulWidget {
   final Weather weather;
   final VoidCallback onLongPress;
@@ -283,6 +288,7 @@ class WeatherGridItem extends StatefulWidget {
   WeatherGridItemState createState() => WeatherGridItemState();
 }
 
+/// State for hover and action controls in weather grid cards.
 class WeatherGridItemState extends State<WeatherGridItem> {
   @override
   Widget build(BuildContext context) {
@@ -369,6 +375,7 @@ class WeatherGridItemState extends State<WeatherGridItem> {
   }
 }
 
+/// List tile representation of a weather record.
 class WeatherListItem extends StatefulWidget {
   final Weather weather;
   final VoidCallback onLongPress;
@@ -383,6 +390,7 @@ class WeatherListItem extends StatefulWidget {
   WeatherListItemState createState() => WeatherListItemState();
 }
 
+/// State for compact weather list rows with contextual actions.
 class WeatherListItemState extends State<WeatherListItem> {
   @override
   Widget build(BuildContext context) {

@@ -8,6 +8,7 @@ import '../../generated/l10n.dart';
 import '../../providers/specimen_provider.dart';
 import '../../utils/statistics_logic.dart';
 
+/// Statistics screen for the selected specimen records.
 class StatsSpecimensScreen extends StatefulWidget {
   final List<Specimen> specimens;
 
@@ -17,6 +18,7 @@ class StatsSpecimensScreen extends StatefulWidget {
   StatsSpecimensScreenState createState() => StatsSpecimensScreenState();
 }
 
+/// Computes specimen metrics and renders type distribution charts.
 class StatsSpecimensScreenState extends State<StatsSpecimensScreen> {
   late SpecimenProvider specimenProvider;
   late List<String> combinedSpeciesList = [];
@@ -37,6 +39,7 @@ class StatsSpecimensScreenState extends State<StatsSpecimensScreen> {
     super.dispose();
   }
 
+  /// Loads distinct counts and grouped values used by the UI.
   Future<void> _loadData() async {
     final speciesList = _getSpeciesList(widget.specimens);
 
@@ -62,6 +65,7 @@ class StatsSpecimensScreenState extends State<StatsSpecimensScreen> {
     });
   }
 
+  /// Returns sorted distinct species names in the specimen list.
   List<String> _getSpeciesList(List<Specimen> specimens) {
     final speciesSet = <String>{};
     for (final specimen in specimens) {

@@ -8,6 +8,7 @@ import '../../generated/l10n.dart';
 import '../../core/core_consts.dart';
 import '../../utils/utils.dart';
 
+/// Form screen for creating or editing weather records.
 class AddWeatherScreen extends StatefulWidget {
   final Inventory inventory;
   final Weather? weather;
@@ -24,6 +25,7 @@ class AddWeatherScreen extends StatefulWidget {
   AddWeatherScreenState createState() => AddWeatherScreenState();
 }
 
+/// Holds weather form state and submits records through the provider.
 class AddWeatherScreenState extends State<AddWeatherScreen> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _cloudCoverController;

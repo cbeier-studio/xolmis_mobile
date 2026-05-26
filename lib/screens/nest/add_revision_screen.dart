@@ -8,6 +8,7 @@ import '../../providers/nest_revision_provider.dart';
 import '../../core/core_consts.dart';
 import '../../generated/l10n.dart';
 
+/// Form screen for creating or editing nest revision observations.
 class AddNestRevisionScreen extends StatefulWidget {
   final Nest nest;
   final NestRevision? nestRevision;
@@ -24,6 +25,7 @@ class AddNestRevisionScreen extends StatefulWidget {
   AddNestRevisionScreenState createState() => AddNestRevisionScreenState();
 }
 
+/// Tracks revision form state and submits updates through the provider.
 class AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _eggsHostController;

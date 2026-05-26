@@ -10,20 +10,24 @@ import '../screens/inventory/species_detail_screen.dart';
 import '../utils/utils.dart';
 import '../generated/l10n.dart';
 
+/// Displays a species record with count controls and POI shortcuts.
 class SpeciesListItem extends StatefulWidget {
   final Species species;
   final VoidCallback onLongPress;
 
+  /// Creates a tile for [species] and wires the long-press callback.
   const SpeciesListItem({
     super.key,
     required this.species,
     required this.onLongPress,
   });
 
+  /// Creates the mutable state for [SpeciesListItem].
   @override
   SpeciesListItemState createState() => SpeciesListItemState();
 }
 
+/// State implementation for [SpeciesListItem].
 class SpeciesListItemState extends State<SpeciesListItem> {
   bool _isAddingPoi = false;
 
@@ -163,6 +167,7 @@ class SpeciesListItemState extends State<SpeciesListItem> {
     );
   }
 
+  /// Builds the optional subtitle shown below the species name.
   Widget? _buildSubtitle() {
     final species = widget.species;
     final parts = <String>[];
@@ -188,6 +193,7 @@ class SpeciesListItemState extends State<SpeciesListItem> {
     );
   }
 
+  /// Shows a dialog that lets the user edit the species individual count.
   Future<void> _showEditCountDialog(BuildContext context) async {
     int? newCount = await showDialog<int>(
       context: context,

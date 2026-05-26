@@ -16,6 +16,7 @@ import '../../generated/l10n.dart';
 import 'add_vegetation_screen.dart';
 
 
+/// Inventory tab that lists vegetation samples and attached images.
 class VegetationTab extends StatefulWidget {
   final Inventory inventory;
 
@@ -25,6 +26,7 @@ class VegetationTab extends StatefulWidget {
   State<VegetationTab> createState() => _VegetationTabState();
 }
 
+/// Handles vegetation CRUD actions and responsive presentation.
 class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
@@ -35,6 +37,7 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
     return _buildVegetationList();
   }
 
+  /// Deletes a vegetation record after confirmation.
   Future<void> _deleteVegetation(Vegetation vegetation) async {
     final confirmed = await _showDeleteConfirmationDialog(context);
     if (confirmed) {
@@ -64,6 +67,7 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
     ) ?? false;
   }
 
+  /// Opens the vegetation form using dialog or full screen based on width.
   void _showAddVegetationScreen(BuildContext context) {
     final vegetationProvider = Provider.of<VegetationProvider>(context, listen: false);
     if (MediaQuery.sizeOf(context).width > 600) {

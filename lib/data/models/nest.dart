@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/core_consts.dart';
 
-// Egg class
-
+/// Represents an egg record associated with a nest.
 class Egg {
   int? id;
   int? nestId;
@@ -27,6 +26,7 @@ class Egg {
     this.speciesName,
   });
 
+  /// Converts this egg into a SQLite-compatible map.
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -41,6 +41,7 @@ class Egg {
     };
   }
 
+  /// Converts this egg into a JSON-compatible map.
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -55,6 +56,7 @@ class Egg {
     };
   }
 
+  /// Creates an [Egg] from a JSON map.
   factory Egg.fromJson(Map<String, dynamic> json) {
     return Egg(
       id: json['id'],
@@ -69,6 +71,7 @@ class Egg {
     );
   }
 
+  /// Creates an [Egg] from a SQLite row map.
   factory Egg.fromMap(Map<String, dynamic> map) {
     return Egg(
       id: map['id']?.toInt(),
@@ -83,6 +86,7 @@ class Egg {
     );
   }
 
+  /// Returns a copy of this egg with the provided fields replaced.
   Egg copyWith({
     int? id,
     int? nestId,
@@ -108,8 +112,7 @@ class Egg {
   }
 }
 
-// Nest revision class
-
+/// Represents a revision or follow-up visit for a nest.
 class NestRevision {
   int? id;
   int? nestId;
@@ -137,6 +140,7 @@ class NestRevision {
     this.notes,
   });
 
+  /// Converts this revision into a SQLite-compatible map.
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -153,6 +157,7 @@ class NestRevision {
     };
   }
 
+  /// Converts this revision into a JSON-compatible map.
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -169,6 +174,7 @@ class NestRevision {
     };
   }
 
+  /// Creates a [NestRevision] from a JSON map.
   factory NestRevision.fromJson(Map<String, dynamic> json) {
     return NestRevision(
       id: json['id'],
@@ -185,6 +191,7 @@ class NestRevision {
     );
   }
 
+  /// Creates a [NestRevision] from a SQLite row map.
   factory NestRevision.fromMap(Map<String, dynamic> map) {
     return NestRevision(
       id: map['id']?.toInt(),
@@ -201,6 +208,7 @@ class NestRevision {
     );
   }
 
+  /// Returns a copy of this revision with the provided fields replaced.
   NestRevision copyWith({
     int? id,
     int? nestId,
@@ -230,8 +238,7 @@ class NestRevision {
   }
 }
 
-// Nest class
-
+/// Represents a nest record together with its revisions and eggs.
 class Nest with ChangeNotifier {
   int? id;
   String? fieldNumber;
@@ -250,6 +257,7 @@ class Nest with ChangeNotifier {
   String? observer;
   bool isActive;
   final ValueNotifier<bool> _isInactiveNotifier = ValueNotifier<bool>(false);
+  /// Emits whether this nest is currently inactive.
   ValueNotifier<bool> get isInactiveNotifier => _isInactiveNotifier;
   List<NestRevision>? revisionsList;
   List<Egg>? eggsList;
@@ -280,6 +288,7 @@ class Nest with ChangeNotifier {
   }) : revisionsList = revisionsList ?? [],
        eggsList = eggsList ?? [];
 
+  /// Converts this nest into a SQLite-compatible map.
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -301,6 +310,7 @@ class Nest with ChangeNotifier {
     };
   }
 
+  /// Converts this nest into a JSON-compatible map, including nested data.
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -324,6 +334,7 @@ class Nest with ChangeNotifier {
     };
   }
 
+  /// Creates a [Nest] from a JSON map, including revisions and eggs.
   factory Nest.fromJson(Map<String, dynamic> json) {
     return Nest(
       id: json['id'],
@@ -349,6 +360,7 @@ class Nest with ChangeNotifier {
     );
   }
 
+  /// Creates a [Nest] from a SQLite row map and already loaded child lists.
   factory Nest.fromMap(Map<String, dynamic> map, List<NestRevision> revisionsList, List<Egg> eggsList) {
     return Nest(
       id: map['id']?.toInt(),
@@ -374,6 +386,7 @@ class Nest with ChangeNotifier {
     );
   }
 
+  /// Returns a copy of this nest with the provided fields replaced.
   Nest copyWith({
     int? id,
     String? fieldNumber,

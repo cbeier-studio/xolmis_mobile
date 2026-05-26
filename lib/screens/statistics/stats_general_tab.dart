@@ -16,6 +16,7 @@ import '../../providers/specimen_provider.dart';
 import '../../utils/statistics_logic.dart';
 import 'all_species_records_screen.dart';
 
+/// General statistics tab aggregating inventories, nests, and specimens.
 class StatsGeneralTab extends StatefulWidget {
   final InventoryProvider inventoryProvider;
   final SpeciesProvider speciesProvider;
@@ -40,6 +41,7 @@ class StatsGeneralTab extends StatefulWidget {
   State<StatsGeneralTab> createState() => _StatsGeneralTabState();
 }
 
+/// Loads and renders high-level project metrics and charts.
 class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAliveClientMixin {
   late int totalDistinctSpecies = 0;
   late int totalPoisCount = 0;
@@ -68,6 +70,7 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
     _loadGeneralData();
   }
 
+  /// Fetches all general statistics required by this tab.
   Future<void> _loadGeneralData() async {
     try {
       _topSpeciesFuture = getTopSpeciesWithMostRecords(5);

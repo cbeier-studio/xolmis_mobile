@@ -18,7 +18,9 @@ import '../../generated/l10n.dart';
 import '../../utils/utils.dart';
 import '../../utils/themes.dart';
 
+/// Displays user-configurable application settings and backup actions.
 class SettingsScreen extends StatefulWidget {
+  /// Creates the settings screen.
   const SettingsScreen({super.key});
 
   @override
@@ -47,12 +49,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _loadSettings();
   }
 
-  // Set the package info
+  /// Loads package metadata used by the about screen.
   Future<void> _setPackageInfo() async => PackageInfo.fromPlatform().then(
     (PackageInfo packageInfo) => setState(() => _packageInfo = packageInfo),
   );
 
-  // Load the settings from SharedPreferences
+  /// Loads persisted settings from shared preferences into local state.
   Future<void> _loadSettings() async {
     final prefs = await SharedPreferences.getInstance();
     _userCountry = await getCountrySetting();
@@ -79,7 +81,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     });
   }
 
-  // Save the settings to SharedPreferences
+  /// Persists the current in-memory settings to shared preferences.
   Future<void> _saveSettings() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt('themeMode', _themeMode.index);
@@ -432,6 +434,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  /// Shows a dialog to edit the observer abbreviation stored in settings.
   Future<String?> buildObserverDialog(BuildContext context) async {
     return await showDialog<String>(
       context: context,
@@ -519,6 +522,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  /// Shows a dialog for selecting the theme mode.
   Future<dynamic> buildThemeModeSelector(BuildContext context) {
     return showDialog(
       context: context,
@@ -583,6 +587,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  /// Returns the localized label for a startup module index.
   String _getStartupModuleLabel(BuildContext context, int moduleIndex) {
     switch (StartupModule.values[moduleIndex]) {
       case StartupModule.inventories:
@@ -598,6 +603,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
   }
 
+  /// Shows a dialog to choose which module opens on startup.
   Future<int?> _showStartupModuleSelectionDialog(BuildContext context) async {
     int tempSelectedModule = _startupModuleIndex;
 
@@ -646,6 +652,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  /// Shows the application about page with version and license information.
   Future<void> buildShowAboutPage(BuildContext context) {
     return showAboutPage(
       context: context,
@@ -695,7 +702,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  /// Abre a URL para feedback, com tratamento de erros.
+  /// Opens the feedback issue tracker URL and reports launch errors.
   void _openFeedbackUrl() async {
     final Uri url = Uri.parse('https://github.com/cbeier-studio/xolmis_mobile/issues');
 
@@ -713,6 +720,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
   }
 
+  /// Creates a ZIP backup and opens the share sheet for the generated file.
   Future<void> runCreateBackup(BuildContext context) async {
     bool isDialogShown = false;
     try {
@@ -801,8 +809,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
   }
 
-  /// Mostra um diálogo de aviso antes de restaurar o backup.
-  /// Retorna `true` se o usuário confirmar, `false` caso contrário.
+  /// Shows a confirmation dialog before starting the backup restore flow.
+  ///
+  /// Returns `true` when the user confirms and `false` otherwise.
   Future<bool> _showRestoreConfirmationDialog(BuildContext context) async {
     // `showDialog` retorna o valor passado para `Navigator.of(context).pop()`
     final bool? confirmed = await showDialog<bool>(
@@ -839,6 +848,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return confirmed ?? false;
   }
 
+  /// Restores app data from a backup ZIP selected by the user.
   Future<void> runBackupRestore(BuildContext context) async {
     final result = await FilePicker.pickFiles(
       type: FileType.custom,
@@ -920,13 +930,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 }
 
-// Auxiliary widget to select a number
+/// Dialog widget that lets the user pick a number from a bounded range.
 class NumberPickerDialog extends StatefulWidget {
   final int minValue;
   final int maxValue;
   final int initialValue;
   final String title;
 
+  /// Creates a number picker dialog.
   const NumberPickerDialog({
     super.key,
     required this.minValue,

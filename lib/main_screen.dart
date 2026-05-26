@@ -26,6 +26,7 @@ import 'screens/statistics/stats_screen.dart';
 import 'core/core_consts.dart';
 import 'generated/l10n.dart';
 
+/// Top-level shell that manages app navigation and startup orchestration.
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
@@ -33,6 +34,7 @@ class MainScreen extends StatefulWidget {
   State<MainScreen> createState() => _MainScreenState();
 }
 
+/// Configuration for one navigation destination in the main shell.
 class _NavigationItem {
   final String Function(BuildContext) labelBuilder;
   final IconData icon;
@@ -49,6 +51,7 @@ class _NavigationItem {
   });
 }
 
+/// State object that coordinates app lifecycle recovery and module navigation.
 class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late final List<_NavigationItem> _navItems;
@@ -131,6 +134,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
     _initializeApp();
   }
 
+  /// Loads the preferred startup module index from persisted settings.
   Future<void> _loadStartupModulePreference() async {
     final prefs = await SharedPreferences.getInstance();
     final savedIndex = prefs.getInt(kStartupModulePreferenceKey);
@@ -146,6 +150,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
     });
   }
 
+  /// Boots startup flows such as permissions, version info, and initial fetches.
   void _initializeApp() async {
     _requestNotificationPermission();
     _fetchAppVersion();
@@ -188,7 +193,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
     super.dispose();
   }
 
-  // Method to handle changes in app state
+  /// Handles lifecycle transitions to restore timers after app resume.
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
@@ -201,7 +206,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
     }
   }
 
-  // Function to synchronize and restart the timers
+  /// Rebuilds active inventory timer state after app lifecycle interruptions.
   void _resumeAllActiveTimers() async {
     if (!mounted) {
       debugPrint('[RESUME_LOGIC] _resumeAllActiveTimers ABORTED: Screen not mounted.');
@@ -344,6 +349,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
     debugPrint('[RESUME_LOGIC] ----------------------------------');
   }
 
+  /// Requests notification permission used for inventory completion alerts.
   Future<void> _requestNotificationPermission() async {
     final status = await Permission.notification.request();
     if (status.isGranted) {
@@ -361,6 +367,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
     }
   }
 
+  /// Opens settings as a side sheet on wide layouts or as a pushed screen otherwise.
   void _navigateToSettings(BuildContext context) {
     final rootContext = _scaffoldKey.currentContext ?? context;
     final screenWidth = MediaQuery.sizeOf(rootContext).width;
@@ -391,6 +398,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
     );
   }
 
+  /// Reads and formats the app version/build shown in the navigation drawer.
   Future<void> _fetchAppVersion() async {
     final packageInfo = await PackageInfo.fromPlatform();
     setState(() {
@@ -398,6 +406,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
     });
   }
 
+  /// Wraps a navigation widget with a reactive badge when applicable.
   Widget _buildBadgeWrapper(
     BuildContext context, {
     required Widget child,
@@ -522,6 +531,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
     );
   }
 
+  /// Builds the drawer used on compact layouts.
   NavigationDrawer _buildNavigationDrawer(BuildContext context) {
     final headerTextColor =
         Theme.of(context).brightness == Brightness.dark

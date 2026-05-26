@@ -13,6 +13,7 @@ import '../generated/l10n.dart';
 import '../providers/nest_provider.dart';
 import '../providers/specimen_provider.dart';
 
+/// Stores the number of occurrences recorded for a given month.
 class MonthOccurrence {
   final int month;
   final int occurrences;
@@ -28,7 +29,10 @@ final Map<String, Color> _recordTypeColors = {
   S.current.specimens(2): Colors.purple,
 };
 
-// Function to get the color for a given record type
+/// Returns the chart color associated with a localized record type label.
+///
+/// Falls back to [Colors.grey] when [recordType] is not present in the
+/// configured color map.
 Color getRecordColor(String recordType) {
   return _recordTypeColors[recordType] ??
       Colors.grey; // Default to grey if not found
@@ -51,7 +55,10 @@ final Map<String, Color> _specimenTypeColors = {
   S.current.specimenRegurgite: Colors.pink,
 };
 
-// Function to get the color for a given record type
+/// Returns the chart color associated with a localized specimen type label.
+///
+/// Falls back to [Colors.grey] when [specimenType] is not present in the
+/// configured color map.
 Color getSpecimenColor(String specimenType) {
   return _specimenTypeColors[specimenType] ??
       Colors.grey; // Default to grey if not found
@@ -64,13 +71,20 @@ final Map<String, Color> _nestFateTypeColors = {
   S.current.nestFateSuccess: Colors.blue,
 };
 
-// Function to get the color for a given nest fate type
+/// Returns the chart color associated with a localized nest fate label.
+///
+/// Falls back to [Colors.grey] when [fateType] is not present in the
+/// configured color map.
 Color getNestFateColor(String fateType) {
   return _nestFateTypeColors[fateType] ??
       Colors.grey; // Default to grey if not found
 }
 
-// Helper function to get distinct species names from a table
+/// Returns distinct species names stored in [tableName].
+///
+/// The helper reads from the `name` column for the `species` table and from
+/// `speciesName` for the remaining supported tables. It returns an empty list
+/// when the database is unavailable or when the query fails.
 Future<List<String>> _getDistinctSpeciesFromTable(String tableName) async {
   final DatabaseHelper dbHelper;
   dbHelper = DatabaseHelper();
@@ -98,7 +112,10 @@ Future<List<String>> _getDistinctSpeciesFromTable(String tableName) async {
   }
 }
 
-// Get a list of recorded species
+/// Returns all distinct species names recorded anywhere in the local database.
+///
+/// Species names are collected from the `species`, `nests`, `eggs`, and
+/// `specimens` tables, deduplicated, and sorted alphabetically.
 Future<List<String>> getRecordedSpeciesList() async {
   final speciesFromSpecies = await _getDistinctSpeciesFromTable('species');
   final speciesFromNests = await _getDistinctSpeciesFromTable('nests');
@@ -118,6 +135,11 @@ Future<List<String>> getRecordedSpeciesList() async {
   return sortedSpecies;
 }
 
+/// Returns all distinct locality names currently available through the feature
+/// providers.
+///
+/// Localities are gathered from inventories, nests, and specimens, then
+/// deduplicated and sorted alphabetically.
 Future<List<String>> getRecordedLocalitiesList(BuildContext context) async {
   final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
   final nestProvider = Provider.of<NestProvider>(context, listen: false);
@@ -139,7 +161,10 @@ Future<List<String>> getRecordedLocalitiesList(BuildContext context) async {
   return sortedLocalities;
 }
 
-// Get the total number of species with records in any table
+/// Returns the total number of distinct species that have records in any table.
+///
+/// This count is built from unique species names present in the `species`,
+/// `nests`, `eggs`, and `specimens` tables.
 Future<int> getTotalSpeciesWithRecords() async {
   final speciesFromSpecies = await _getDistinctSpeciesFromTable('species');
   final speciesFromNests = await _getDistinctSpeciesFromTable('nests');
@@ -156,7 +181,13 @@ Future<int> getTotalSpeciesWithRecords() async {
   return allSpecies.length;
 }
 
-// Get the top 10 species with the most records
+/// Returns the species with the highest total number of records across all
+/// supported tables.
+///
+/// Counts are aggregated from the `species`, `nests`, `eggs`, and `specimens`
+/// tables and sorted by descending total count, then alphabetically by species
+/// name. When [count] is greater than zero, the result is limited to that many
+/// entries; otherwise all ranked species are returned.
 Future<List<MapEntry<String, int>>> getTopSpeciesWithMostRecords(int count) async {
   final dbHelper = DatabaseHelper();
   final db = await dbHelper.database;
@@ -384,6 +415,10 @@ Future<Map<int, int>> getOccurrencesByYear(String? selectedSpecies) async {
   return occurrences;
 }
 
+/// Returns record totals grouped by localized record type label.
+///
+/// The resulting map contains counts for inventory species records, nests,
+/// eggs, and specimens using the translated labels expected by the charts.
 Map<String, int> getTotalsByRecordType(List<Species> inventories,
     List<Nest> nests, List<Egg> eggs, List<Specimen> specimens) {
   return {
@@ -394,6 +429,11 @@ Map<String, int> getTotalsByRecordType(List<Species> inventories,
   };
 }
 
+/// Returns the total number of records associated with [speciesName].
+///
+/// The total is computed by summing matches found in the `species`, `nests`,
+/// `eggs`, and `specimens` tables. Returns `0` if the database is unavailable
+/// or if any query fails.
 Future<int> getTotalsForSpecies(String speciesName) async {
       final DatabaseHelper _dbHelper;
   _dbHelper = DatabaseHelper();
@@ -443,6 +483,10 @@ Future<int> getTotalsForSpecies(String speciesName) async {
       }
 }
 
+/// Returns the number of distinct nests with evidence of nidoparasitism.
+///
+/// A nest is counted when at least one related `nest_revisions` row reports
+/// `eggsParasite > 0` or `nestlingsParasite > 0`.
 Future<int> getTotalNestsWithNidoparasitism() async {
       final DatabaseHelper dbHelper;
   dbHelper = DatabaseHelper();
@@ -464,7 +508,11 @@ Future<int> getTotalNestsWithNidoparasitism() async {
   }
 }
 
-    // Get a list of specimen types and the number of records per type
+    /// Returns specimen counts grouped by localized specimen type name.
+    ///
+    /// Values are read from the `specimens` table, grouped by the stored enum
+    /// index, and converted to user-facing labels via
+    /// [specimenTypeFriendlyNames].
     Future<Map<String, int>> getSpecimenTypeCounts() async {
       final DatabaseHelper dbHelper;
       dbHelper = DatabaseHelper();
@@ -502,6 +550,7 @@ Future<int> getTotalNestsWithNidoparasitism() async {
       }
     }
 
+/// Returns nest counts grouped by localized nest fate label.
 Map<String, int> getNestFateCounts(List<Nest> nests) {
   Map<String, int> nestFateCounts = {};
 
@@ -517,6 +566,11 @@ Map<String, int> getNestFateCounts(List<Nest> nests) {
   return nestFateCounts;
 }
 
+/// Builds an accumulated species-richness series for the provided inventories.
+///
+/// Each returned [FlSpot] uses the inventory index as the x-axis value and the
+/// cumulative number of distinct species observed up to that inventory as the
+/// y-axis value.
 List<FlSpot> prepareAccumulatedSpeciesData(List<Inventory> selectedInventories) {
   final speciesSet = <String>{};
   final accumulatedSpeciesData = <FlSpot>[];
@@ -532,6 +586,11 @@ List<FlSpot> prepareAccumulatedSpeciesData(List<Inventory> selectedInventories) 
   return accumulatedSpeciesData;
 }
 
+/// Builds an accumulated species-richness series using only in-sample records.
+///
+/// Species flagged as out of inventory are ignored. Each returned [FlSpot]
+/// uses the inventory index as the x-axis value and the cumulative number of
+/// distinct in-sample species as the y-axis value.
 List<FlSpot> prepareAccumulatedSpeciesWithinSample(List<Inventory> selectedInventories) {
   final speciesSet = <String>{};
   final accumulatedSpeciesData = <FlSpot>[];
@@ -608,7 +667,10 @@ Future<Map<int, int>> getAllOccurrencesByHourOfDay() async {
   return occurrences;
 }
 
-/// Agrupa o número total de registros de uma espécie por hora do dia (0-23).
+/// Returns species record counts grouped by hour of day (0–23).
+///
+/// Only [Species.sampleTime] values that are not null are counted. All 24
+/// hours are pre-initialised to zero.
 Map<int, int> getOccurrencesByHourOfDay(
     List<Species> speciesList,
     ) {
@@ -825,8 +887,11 @@ Future<Map<int, int>> getSpeciesRichnessPerYearGlobal() async {
   return richnessByYear;
 }
 
-/// Returns total records grouped by month of year (1-12), ignoring the year.
-/// Combines species from inventories, nests, and specimens.
+/// Returns total inventory species records grouped by month of year (1–12).
+///
+/// For each species entry, [Species.sampleTime] is used when available;
+/// otherwise the parent [Inventory.startTime] is used as a fallback. Years are
+/// intentionally ignored so all records for the same month are merged.
 Map<int, int> getRecordsByMonthFromInventories(List<Inventory> inventories) {
   final Map<int, int> recordsByMonth = { for (var i = 1; i <= 12; i++) i: 0 };
 
@@ -844,8 +909,11 @@ Map<int, int> getRecordsByMonthFromInventories(List<Inventory> inventories) {
   return recordsByMonth;
 }
 
-/// Returns distinct species richness grouped by month of year (1-12), ignoring the year.
-/// Combines species from inventories, nests, and specimens.
+/// Returns distinct inventory species richness grouped by month of year (1–12).
+///
+/// For each species entry, [Species.sampleTime] is used when available;
+/// otherwise the parent [Inventory.startTime] is used as a fallback. Years are
+/// intentionally ignored so all records for the same month are merged.
 Map<int, int> getSpeciesRichnessPerMonth(List<Inventory> inventories) {
   final Map<int, Set<String>> speciesByMonth = { for (var i = 1; i <= 12; i++) i: <String>{} };
 

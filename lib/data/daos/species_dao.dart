@@ -4,6 +4,7 @@ import '../models/inventory.dart';
 import '../database/database_helper.dart';
 import 'poi_dao.dart';
 
+/// Provides database access for species observations and their related POIs.
 class SpeciesDao {
   final DatabaseHelper _dbHelper;
   final PoiDao _poiDao;

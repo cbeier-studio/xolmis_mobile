@@ -1,7 +1,4 @@
-
-
-// Field journal class
-
+/// Represents a field journal entry stored locally by the app.
 class FieldJournal {
   late int? id;
   final String title;
@@ -19,6 +16,7 @@ class FieldJournal {
     this.observer,
   });
 
+  /// Creates a [FieldJournal] from a SQLite row map.
   factory FieldJournal.fromMap(Map<String, dynamic> map) {
     return FieldJournal(
       id: map['id'],
@@ -34,6 +32,7 @@ class FieldJournal {
     );
   }
 
+  /// Converts this journal entry into a SQLite-compatible map.
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -45,6 +44,7 @@ class FieldJournal {
     };
   }
 
+  /// Returns a copy of this journal entry with the provided fields replaced.
   FieldJournal copyWith({
     int? id,
     String? title,
@@ -75,6 +75,7 @@ class FieldJournal {
         '}';
   }
 
+  /// Converts this journal entry into a JSON-compatible map.
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -86,6 +87,7 @@ class FieldJournal {
     };
   }
 
+  /// Creates a [FieldJournal] from a JSON map.
   factory FieldJournal.fromJson(Map<String, dynamic> json) {
     return FieldJournal(
       id: json['id'],

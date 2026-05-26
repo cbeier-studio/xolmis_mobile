@@ -13,6 +13,7 @@ import '../screens/inventory/add_vegetation_screen.dart';
 import '../screens/inventory/add_weather_screen.dart';
 import '../generated/l10n.dart';
 
+/// Coordinates the finalization flow for inventories, including reminders.
 class InventoryCompletionService {
   final BuildContext context;
   final Inventory inventory;
@@ -26,13 +27,13 @@ class InventoryCompletionService {
     required this.inventoryDao,
   });
 
-  // Function to really finish the inventory
+  /// Stops and persists the inventory as finished.
   Future<void> _finalizeInventory(BuildContext context) async {
     inventory.stopTimer(context, inventoryDao);
     inventoryProvider.updateInventory(inventory);
   }
 
-  // Helper to show a dialog of conditional reminder
+  /// Shows a reminder dialog asking whether to add missing data or continue.
   static Future<ConditionalAction?> _showConditionalReminderDialog(
       BuildContext dialogContext,
           {
@@ -66,7 +67,10 @@ class InventoryCompletionService {
     );
   }
 
-  // Function to process the reminders and finish
+  /// Processes reminder rules and finalizes the inventory when allowed.
+  ///
+  /// Depending on the current settings, this method can prompt the user to add
+  /// missing vegetation or weather data before finishing the inventory.
   Future<void> processConditionalRemindersAndFinalize(BuildContext context) async {
     bool proceedToFinalize = true;
 
@@ -138,7 +142,7 @@ class InventoryCompletionService {
     }
   }
 
-  // Function to start the process of finishing the inventory
+  /// Starts the inventory finish flow by asking the user for confirmation.
   Future<void> attemptFinishInventory(BuildContext context) async {
     final bool? confirmedFinish = await showDialog<bool>(
       context: context,

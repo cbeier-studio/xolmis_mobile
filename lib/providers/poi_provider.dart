@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../data/models/inventory.dart';
 import '../data/daos/poi_dao.dart';
 
+/// Manages points of interest linked to species records.
 class PoiProvider with ChangeNotifier {
   final PoiDao _poiDao;
 
@@ -10,10 +11,12 @@ class PoiProvider with ChangeNotifier {
 
   PoiProvider(this._poiDao);
 
+  /// Returns the total number of POIs currently known in storage.
   int get allPoisCount => _allPoisCount;
 
   final Map<int, List<Poi>> _poiMap = {};
 
+  /// Notifies listeners without changing provider state.
   void refreshState() {
     notifyListeners();
   }
@@ -24,7 +27,7 @@ class PoiProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // Load list of POIs for a species ID
+  /// Loads all POIs associated with [speciesId] into the in-memory cache.
   Future<void> loadPoisForSpecies(int speciesId) async {
     try {
       final poiList = await _poiDao.getPoisForSpecies(speciesId);
@@ -35,12 +38,12 @@ class PoiProvider with ChangeNotifier {
     }
   }
 
-  // Get a POI list for a species
+  /// Returns the cached POIs for [speciesId].
   List<Poi> getPoisForSpecies(int speciesId) {
     return _poiMap[speciesId] ?? [];
   }
 
-  // Add POI to the database and the list
+  /// Persists [poi] for [speciesId] and updates the local cache.
   Future<void> addPoi(BuildContext context, int speciesId, Poi poi) async {
     // Insert the POI in the database
     await _poiDao.insertPoi(poi);
@@ -50,7 +53,7 @@ class PoiProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // Update POI in the database and the list
+  /// Updates a POI in storage and replaces the cached item when present.
   void updatePoi(int speciesId, Poi poi) async {
     await _poiDao.updatePoi(poi);
 
@@ -64,7 +67,7 @@ class PoiProvider with ChangeNotifier {
     }
   }
 
-  // Remove POI from database and from list
+  /// Deletes a POI from storage and removes it from the cached species list.
   Future<void> removePoi(int speciesId, int poiId) async {
     await _poiDao.deletePoi(poiId);
 

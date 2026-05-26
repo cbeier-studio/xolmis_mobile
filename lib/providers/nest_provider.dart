@@ -5,32 +5,49 @@ import '../data/models/nest.dart';
 import '../data/daos/nest_dao.dart';
 import '../generated/l10n.dart';
 
+/// Manages nest records and their cached summaries/details.
 class NestProvider with ChangeNotifier {
   final NestDao _nestDao;
 
   NestProvider(this._nestDao);
-  // List of all nests
+
+  /// All nests currently loaded in memory.
   List<Nest> _nests = [];
+
+  /// Returns every cached nest.
   List<Nest> get nests => _nests;
-  // Get list of active nests
+
+  /// Active nests that are still being monitored.
   List<Nest> get activeNests => _nests.where((nest) => nest.isActive).toList();
-  // Get list of inactive nests
+
+  /// Inactive nests whose monitoring has ended.
   List<Nest> get inactiveNests => _nests.where((nest) => !nest.isActive).toList();
+
+  /// Nests whose fate is recorded as successful.
   List<Nest> get successNests => _nests.where((nest) => nest.nestFate == NestFateType.fatSuccess).toList();
-  // Get number of active nests
+
+  /// Number of active nests.
   int get nestsCount => activeNests.length;
+
+  /// Number of inactive nests.
   int get inactiveNestsCount => inactiveNests.length;
+
+  /// Total number of cached nests.
   int get allNestsCount => nests.length;
+
+  /// Number of successful nests.
   int get successNestsCount => successNests.length;
 
   bool _isLoading = false;
+  /// Whether the provider is currently fetching nest data.
   bool get isLoading => _isLoading;
 
+  /// Notifies listeners without changing provider state.
   void refreshState() {
     notifyListeners();
   }
 
-  // Load lazy: only summary data without sublists
+  /// Loads lightweight nest summaries without nested child collections.
   Future<void> fetchNestsSummary() async {
     _isLoading = true;
     notifyListeners();
@@ -56,7 +73,10 @@ class NestProvider with ChangeNotifier {
     }
   }
 
-  // Load full details for a single nest (for detail views or stats)
+  /// Loads complete details for a single nest.
+  ///
+  /// This is typically used by detail screens and statistics flows that need
+  /// revisions and eggs.
   Future<void> loadNestDetails(int nestId) async {
     try {
       final fullNest = await _nestDao.getNestWithDetails(nestId);
@@ -72,28 +92,28 @@ class NestProvider with ChangeNotifier {
     }
   }
 
-  // Load list of all nests (for backward compatibility)
+  /// Loads the full list of nests from persistent storage.
   Future<void> fetchNests() async {
     _nests = await _nestDao.getNests();
     notifyListeners();
   }
 
-  // Get list of nests by species
+  /// Returns all nests matching [speciesName].
   Future<List<Nest>> getNestsBySpecies(String speciesName) async {
     return await _nestDao.getNestsBySpecies(speciesName);
   }
 
-  // Get nest data by ID
+  /// Returns the nest identified by [nestId].
   Future<Nest> getNestById(int nestId) async {
     return await _nestDao.getNestById(nestId);
   }
 
-  // Check if nest field number already exists
+  /// Returns whether [fieldNumber] is already in use by another nest.
   Future<bool> nestFieldNumberExists(String fieldNumber) async {
     return await _nestDao.nestFieldNumberExists(fieldNumber);
   }
 
-  // Add nest to the database and to the list
+  /// Adds a new nest after validating that its field number is unique.
   Future<void> addNest(Nest nest) async {
     if (await nestFieldNumberExists(nest.fieldNumber!)) {
       throw Exception(S.current.errorNestAlreadyExists);
@@ -104,7 +124,9 @@ class NestProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // Add imported nest to the database and the list
+  /// Imports an externally sourced nest record.
+  ///
+  /// Returns `true` when the import succeeds and `false` otherwise.
   Future<bool> importNest(Nest nest) async {
     try {
       await _nestDao.importNest(nest);
@@ -118,7 +140,7 @@ class NestProvider with ChangeNotifier {
     }
   }
 
-  // Update nest in the database and the list
+  /// Updates a nest in storage and replaces the cached instance.
   Future<void> updateNest(Nest nest) async {
     await _nestDao.updateNest(nest);
 
@@ -131,7 +153,9 @@ class NestProvider with ChangeNotifier {
     }
   }
 
-  // Remove nest from database and from list
+  /// Deletes [nest] from storage and removes it from the in-memory list.
+  ///
+  /// Throws an [ArgumentError] when the nest has no valid identifier.
   Future<void> removeNest(Nest nest) async {
     if (nest.id == null || nest.id! <= 0) {
       throw ArgumentError('Invalid nest ID: ${nest.id}');
@@ -142,22 +166,22 @@ class NestProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // Get the next field number
+  /// Returns the next sequential nest number for the given identifier parts.
   Future<int> getNextSequentialNumber(String acronym, int ano, int mes) async {
     return await _nestDao.getNextSequentialNumber(acronym, ano, mes);
   }
 
-  // Get list of distinct localities for autocomplete
+  /// Returns distinct nest localities for autocomplete suggestions.
   Future<List<String>> getDistinctLocalities() {
     return _nestDao.getDistinctLocalities();
   }
 
-  // Get list of distinct nest supports for autocomplete
+  /// Returns distinct nest supports for autocomplete suggestions.
   Future<List<String>> getDistinctSupports() {
     return _nestDao.getDistinctSupports();
   }
 
-  // Get distinct species names for filter
+  /// Returns distinct species names available in nest records.
   Future<List<String>> getUniqueSpeciesNames() {
     return _nestDao.getUniqueSpeciesNames();
   }

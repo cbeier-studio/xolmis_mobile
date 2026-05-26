@@ -37,9 +37,11 @@ import 'utils/utils.dart';
 import 'utils/themes.dart';
 import 'generated/l10n.dart';
 
+/// Shared notifications plugin instance used by inventory completion flows.
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
   FlutterLocalNotificationsPlugin();
 
+/// App entrypoint that initializes storage, services, providers, and UI.
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -152,6 +154,7 @@ Future<void> main() async {
   }
 }
 
+/// Immutable container that wires all DAOs and providers at startup.
 class AppDependencies {
   final InventoryDao inventoryDao;
   final SpeciesDao speciesDao;
@@ -177,6 +180,7 @@ class AppDependencies {
   final FieldJournalProvider journalProvider;
   final List<String> preloadedSpeciesNames;
 
+  /// Creates a dependency bundle passed to [MyApp].
   AppDependencies({
     required this.inventoryDao,
     required this.speciesDao,
@@ -204,9 +208,11 @@ class AppDependencies {
   });
 }
 
+/// Root widget that injects providers and configures app-level settings.
 class MyApp extends StatelessWidget {
   final AppDependencies dependencies;
 
+  /// Creates the root app widget.
   const MyApp({
     super.key,
     required this.dependencies,

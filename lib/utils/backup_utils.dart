@@ -7,6 +7,11 @@ import 'package:sqflite/sqflite.dart';
 
 import '../data/database/database_helper.dart';
 
+/// Deletes all files and directories inside the app temporary directory.
+///
+/// This helper is intended to remove transient files left by operations such as
+/// imports, exports, or archive extraction. Failures while deleting individual
+/// entries are logged with [debugPrint] and do not stop the remaining cleanup.
 Future<void> clearAppTemporaryDirectory() async {
   debugPrint('[TEMP_CLEANUP] Starting temporary directory cleanup...');
 
@@ -37,6 +42,15 @@ Future<void> clearAppTemporaryDirectory() async {
   }
 }
 
+/// Creates a ZIP backup containing the SQLite database and all indexed images.
+///
+/// The backup is written to [filePath]. Besides the main
+/// `xolmis_database.db` file, this method queries the `images` table and adds
+/// every existing image file referenced by `imagePath` so that the backup keeps
+/// database records and file-backed media in sync.
+///
+/// Returns `true` when the archive is created successfully and `false` if any
+/// error occurs during the process.
 Future<bool> backupDatabase(String filePath) async {
   try {
     final dbHelper = DatabaseHelper();
@@ -64,6 +78,18 @@ Future<bool> backupDatabase(String filePath) async {
   }
 }
 
+/// Restores a previously exported ZIP backup into local app storage.
+///
+/// The archive at [filePath] must contain `xolmis_database.db` plus any image
+/// files referenced by the database. The current database is closed and removed
+/// before extraction, then reopened after the restore completes.
+///
+/// After extraction, the method updates the `images` table so each stored
+/// `imagePath` points to the restored file inside the application documents
+/// directory.
+///
+/// Returns `true` if the database and related image files are restored
+/// successfully; otherwise returns `false`.
 Future<bool> restoreDatabase(String filePath) async {
   try {
     final dbHelper = DatabaseHelper();

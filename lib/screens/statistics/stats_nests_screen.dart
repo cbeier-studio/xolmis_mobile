@@ -9,6 +9,7 @@ import '../../providers/nest_provider.dart';
 import '../../providers/egg_provider.dart';
 import '../../utils/statistics_logic.dart';
 
+/// Statistics screen focused on the selected nests.
 class StatsNestsScreen extends StatefulWidget {
   final List<Nest> nests;
 
@@ -18,6 +19,7 @@ class StatsNestsScreen extends StatefulWidget {
   StatsNestsScreenState createState() => StatsNestsScreenState();
 }
 
+/// Computes nest metrics and renders distribution charts.
 class StatsNestsScreenState extends State<StatsNestsScreen> {
   late NestProvider nestProvider;
   late EggProvider eggProvider;
@@ -42,6 +44,7 @@ class StatsNestsScreenState extends State<StatsNestsScreen> {
     super.dispose();
   }
 
+  /// Loads nest-derived values used by cards and charts.
   Future<void> _loadData() async {
     combinedSpeciesList = _getSpeciesList(widget.nests);
     totalSuccessNests = widget.nests.where((nest) => nest.nestFate == NestFateType.fatSuccess).length;
@@ -74,6 +77,7 @@ class StatsNestsScreenState extends State<StatsNestsScreen> {
         }).toList();
   }
 
+  /// Returns sorted distinct species names present in the nest list.
   List<String> _getSpeciesList(List<Nest> nests) {
     final speciesSet = <String>{};
     for (final nest in nests) {

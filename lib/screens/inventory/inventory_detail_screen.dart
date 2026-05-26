@@ -27,6 +27,7 @@ import '../../utils/export_utils.dart';
 import '../../services/inventory_completion_service.dart';
 import '../../generated/l10n.dart';
 
+/// Detail screen for a single inventory with species, vegetation, and weather tabs.
 class InventoryDetailScreen extends StatefulWidget {
   final Inventory inventory;
   final SpeciesDao speciesDao;
@@ -51,6 +52,7 @@ class InventoryDetailScreen extends StatefulWidget {
   InventoryDetailScreenState createState() => InventoryDetailScreenState();
 }
 
+/// Coordinates tab state and detail-level actions for one inventory.
 class InventoryDetailScreenState extends State<InventoryDetailScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;

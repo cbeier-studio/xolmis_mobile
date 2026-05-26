@@ -15,6 +15,20 @@ import '../providers/nest_provider.dart';
 import '../providers/specimen_provider.dart';
 import 'export_utils.dart';
 
+/// Imports inventory records from an exported JSON file selected by the user.
+///
+/// The selected file must use the shared export envelope defined by
+/// `kExportSource` and contain the `inventories` schema. Valid records are
+/// deserialized into [Inventory] instances and imported through
+/// [InventoryProvider], while malformed entries are collected and reported in
+/// the final feedback shown to the user.
+///
+/// A modal progress dialog is displayed during the operation and completion or
+/// error states are surfaced with `SnackBar`s.
+///
+/// The [context] is used to obtain localized strings, access the provider, and
+/// show UI feedback. The method guards against using the context after it is no
+/// longer mounted.
 Future<void> importInventoryFromJson(BuildContext context) async {
   bool isDialogShown = false;
   int successfullyImportedCount = 0;
@@ -28,7 +42,7 @@ Future<void> importInventoryFromJson(BuildContext context) async {
       allowedExtensions: ['json'],
     );
 
-    // Se nenhum arquivo foi selecionado, sai sem erro
+    // If no file was selected, exit without error
     if (result == null || result.files.single.path == null) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -43,7 +57,7 @@ Future<void> importInventoryFromJson(BuildContext context) async {
     final filePath = result.files.single.path!;
     final file = File(filePath);
 
-    // Show a loading dialog (apenas se context está montado)
+    // Show a loading dialog
     if (context.mounted) {
       showDialog(
         context: context,
@@ -67,7 +81,7 @@ Future<void> importInventoryFromJson(BuildContext context) async {
       isDialogShown = true;
     }
 
-    // Read the JSON file (funciona mesmo com context desmontado)
+    // Read the JSON file
     final jsonString = await file.readAsString();
     final jsonData = jsonDecode(jsonString);
 
@@ -80,13 +94,13 @@ Future<void> importInventoryFromJson(BuildContext context) async {
       }
     }
 
-    // Obter o provider ANTES de tentar usar context
+    // Get the provider BEFORE trying to use context
     late InventoryProvider inventoryProvider;
     if (context.mounted) {
       inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
     } else {
-      // Se context foi desmontado, não podemos usar o provider
-      // Fechar diálogo se foi mostrado e sair
+      // If context was unmounted, we cannot use the provider
+      // Close dialog if shown and exit
       if (isDialogShown && context.mounted) {
         Navigator.of(context).pop();
       }
@@ -175,7 +189,7 @@ Future<void> importInventoryFromJson(BuildContext context) async {
       isDialogShown = false;
     }
 
-    // Show import summary (apenas se context está montado)
+    // Show import summary
     if (context.mounted) {
       String summaryMessage;
       if (importErrors.isEmpty) {
@@ -227,6 +241,15 @@ Future<void> importInventoryFromJson(BuildContext context) async {
   }
 }
 
+/// Imports nest records from an exported JSON file selected by the user.
+///
+/// The file must match the standard Xolmis export envelope and use the `nests`
+/// schema. Each valid item in `records` is converted into a [Nest] and saved
+/// through [NestProvider]. Entries that cannot be parsed or persisted are
+/// tracked and included in the import summary.
+///
+/// The [context] is used to access the provider, localized strings, and UI
+/// elements such as the progress dialog and result `SnackBar`s.
 Future<void> importNestsFromJson(BuildContext context) async {
   bool isDialogShown = false;
   int successfullyImportedCount = 0;
@@ -355,6 +378,15 @@ Future<void> importNestsFromJson(BuildContext context) async {
   }
 }
 
+/// Imports specimen records from an exported JSON file selected by the user.
+///
+/// The selected JSON file must contain the standard export envelope with the
+/// `specimens` schema. Each valid record is deserialized into a [Specimen] and
+/// imported via [SpecimenProvider], while invalid or failed records are logged
+/// and summarized for the user.
+///
+/// The [context] provides access to the provider tree, localized messages, and
+/// transient UI feedback such as dialogs and `SnackBar`s.
 Future<void> importSpecimensFromJson(BuildContext context) async {
   bool isDialogShown = false;
   int successfullyImportedCount = 0;

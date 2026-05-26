@@ -9,6 +9,7 @@ import '../../providers/poi_provider.dart';
 import '../../providers/species_provider.dart';
 import '../../utils/statistics_logic.dart';
 
+/// Statistics screen focused on a selected set of inventories.
 class StatsInventoriesScreen extends StatefulWidget {
   final List<Inventory> inventories;
 
@@ -18,6 +19,7 @@ class StatsInventoriesScreen extends StatefulWidget {
   StatsInventoriesScreenState createState() => StatsInventoriesScreenState();
 }
 
+/// Computes and displays inventory-specific indicators and charts.
 class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
   late InventoryProvider inventoryProvider;
   late SpeciesProvider speciesProvider;
@@ -43,6 +45,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
     super.dispose();
   }
 
+  /// Loads precomputed metrics and chart datasets for inventories.
   Future<void> _loadData() async {
     accumulatedSpeciesData = prepareAccumulatedSpeciesData(widget.inventories);
     accumulatedSpeciesWithinSampleData = prepareAccumulatedSpeciesWithinSample(widget.inventories);
@@ -68,6 +71,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
   }
 
   // Uses species.sampleTime when available, otherwise falls back to inventory.startTime.
+  /// Builds hourly occurrence counts using species time or inventory start time.
   Map<int, int> _getOccurrencesByHourOfDayWithFallback(
     List<Inventory> inventories,
   ) {
@@ -86,6 +90,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
     return occurrences;
   }
 
+  /// Returns a chart width that adapts to the number of inventories.
   double _responsiveChartWidth(
     double availableWidth, {
     required double pixelsPerInventory,

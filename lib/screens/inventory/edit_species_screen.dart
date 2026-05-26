@@ -4,6 +4,7 @@ import '../../data/models/inventory.dart';
 import '../../generated/l10n.dart';
 import '../../utils/utils.dart';
 
+/// Screen used to edit a species record inside an inventory.
 class EditSpeciesScreen extends StatefulWidget {
   final Species species;
   final bool allowDuplicatedSpeciesNames;
@@ -20,6 +21,7 @@ class EditSpeciesScreen extends StatefulWidget {
   State<EditSpeciesScreen> createState() => _EditSpeciesScreenState();
 }
 
+/// Manages editable species fields and autocomplete interactions.
 class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
   late final SearchController _nameController;
   late final TextEditingController _countController;
@@ -60,6 +62,7 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
     super.dispose();
   }
 
+  /// Restores the previous name when search closes without a selection.
   void _handleNameSearchState() {
     final isOpen = _nameController.isOpen;
 
@@ -84,6 +87,7 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
     _wasNameSearchOpen = isOpen;
   }
 
+  /// Opens the species search overlay and stores the previous value.
   void _openSpeciesNameSearch(SearchController controller) {
     if (controller.isOpen) {
       return;
@@ -95,6 +99,7 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
     controller.openView();
   }
 
+  /// Checks whether the typed name already exists in the same inventory.
   bool _hasDuplicatedName(String name) {
     if (widget.allowDuplicatedSpeciesNames) {
       return false;

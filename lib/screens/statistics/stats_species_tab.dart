@@ -15,6 +15,7 @@ import '../../providers/specimen_provider.dart';
 import '../../utils/statistics_logic.dart';
 import '../../utils/utils.dart';
 
+/// Per-species statistics tab with filters and species-level charts.
 class StatsSpeciesTab extends StatefulWidget {
   final InventoryProvider inventoryProvider;
   final SpeciesProvider speciesProvider;
@@ -35,6 +36,7 @@ class StatsSpeciesTab extends StatefulWidget {
   State<StatsSpeciesTab> createState() => _StatsSpeciesTabState();
 }
 
+/// Loads species-centric datasets and computes derived indicators.
 class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAliveClientMixin {
   final SearchController searchController = SearchController();
   List<Species> allSpeciesList = [];
@@ -67,6 +69,7 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
     _loadData();
   }
 
+  /// Loads the species names available for search and selection.
   Future<void> _loadData() async {
     try {
       recordedSpeciesNames = await getRecordedSpeciesList();
@@ -76,6 +79,7 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
     }
   }
 
+  /// Loads all records and metrics for the currently selected species.
   Future<void> loadDataLists(
     SpeciesProvider speciesProvider,
     NestProvider nestProvider,

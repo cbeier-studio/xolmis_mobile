@@ -5,6 +5,7 @@ import '../data/models/nest.dart';
 import '../data/daos/egg_dao.dart';
 import '../generated/l10n.dart';
 
+/// Manages egg records grouped by nest and keeps UI listeners synchronized.
 class EggProvider with ChangeNotifier {
   final EggDao _eggDao;
 
@@ -12,10 +13,14 @@ class EggProvider with ChangeNotifier {
 
   final Map<int, List<Egg>> _eggMap = {};
 
+  /// Notifies listeners without reloading any data.
   void refreshState() {
     notifyListeners();
   }
 
+  /// Returns all eggs stored in the database.
+  ///
+  /// An empty list is returned if loading fails.
   Future<List<Egg>> getAllEggs() async {
     try {
       final eggList = await _eggDao.getAllEggs();
@@ -26,7 +31,7 @@ class EggProvider with ChangeNotifier {
     }
   }
 
-  // Load list of eggs for a nest ID
+  /// Loads all eggs associated with [nestId] into the in-memory cache.
   Future<void> loadEggForNest(int nestId) async {
     try {
       final eggList = await _eggDao.getEggsForNest(nestId);
@@ -38,26 +43,27 @@ class EggProvider with ChangeNotifier {
     }
   }
 
-  // Get an egg for a nest from the list
+  /// Returns the cached eggs for [nestId].
   List<Egg> getEggForNest(int nestId) {
     return _eggMap[nestId] ?? [];
   }
 
-  // Get list of eggs by species
+  /// Returns all egg records matching [speciesName].
   Future<List<Egg>> getEggsBySpecies(String speciesName) async {
     return await _eggDao.getEggsBySpecies(speciesName);
   }
 
-  // Check if the egg field number already exists
+  /// Returns whether [fieldNumber] is already in use by another egg record.
   Future<bool> eggFieldNumberExists(String fieldNumber) async {
     return await _eggDao.eggFieldNumberExists(fieldNumber);
   }
 
+  /// Returns the next sequential egg number for a nest field number prefix.
   Future<int> getNextSequentialNumber(String nestFieldNumber) async {
     return await _eggDao.getNextSequentialNumber(nestFieldNumber);
   }
 
-  // Insert egg into database and to the list
+  /// Adds [egg] to [nestId] after validating its field number uniqueness.
   Future<void> addEgg(BuildContext context, int nestId, Egg egg) async {
     if (await eggFieldNumberExists(egg.fieldNumber!)) {
       throw Exception(S.current.errorEggAlreadyExists);
@@ -73,7 +79,7 @@ class EggProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // Update egg in the database and the list
+  /// Updates an egg record in persistent storage and refreshes the nest cache.
   Future<void> updateEgg(Egg egg) async {
     await _eggDao.updateEgg(egg);
 
@@ -82,7 +88,7 @@ class EggProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // Remove egg from database and from list
+  /// Removes an egg record from the database and refreshes the nest cache.
   Future<void> removeEgg(int nestId, int eggId) async {
     await _eggDao.deleteEgg(eggId);
 

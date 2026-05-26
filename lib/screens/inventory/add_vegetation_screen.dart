@@ -11,6 +11,7 @@ import '../../core/core_consts.dart';
 import '../../utils/utils.dart';
 import '../../generated/l10n.dart';
 
+/// Form screen for creating or editing vegetation measurements.
 class AddVegetationDataScreen extends StatefulWidget {
   final Inventory inventory;
   final Vegetation? vegetation;
@@ -27,6 +28,7 @@ class AddVegetationDataScreen extends StatefulWidget {
   AddVegetationDataScreenState createState() => AddVegetationDataScreenState();
 }
 
+/// Handles vegetation form state, validation, and persistence.
 class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
   final _formKey = GlobalKey<FormState>();
   DistributionType _selectedHerbsDistribution = DistributionType.disNone;

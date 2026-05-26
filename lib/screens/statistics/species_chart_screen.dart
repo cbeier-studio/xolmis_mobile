@@ -4,6 +4,7 @@ import 'package:xolmis/generated/l10n.dart';
 
 import '../../data/models/inventory.dart';
 
+/// Displays the species accumulation curve for a single inventory.
 class SpeciesChartScreen extends StatefulWidget {
   final Inventory inventory;
 
@@ -13,6 +14,7 @@ class SpeciesChartScreen extends StatefulWidget {
   State<SpeciesChartScreen> createState() => _SpeciesChartScreenState();
 }
 
+/// Prepares curve data and renders the species accumulation chart.
 class _SpeciesChartScreenState extends State<SpeciesChartScreen> {
   late List<SpeciesAccumulationData> speciesAccumulationData;
   List<FlSpot> trendLineSpots = [];
@@ -27,12 +29,14 @@ class _SpeciesChartScreenState extends State<SpeciesChartScreen> {
   }
 
   // Initialize the chart data
+  /// Initializes chart points and axis bounds.
   void _initializeChartData() {
     speciesAccumulationData = _prepareSpeciesAccumulationData(widget.inventory);
     _calculateChartBounds();
   }
 
   // Set the chart bounds
+  /// Calculates min/max axis values from accumulated points.
   void _calculateChartBounds() {
     minX = 0.0;
     maxX = speciesAccumulationData.isNotEmpty
@@ -141,6 +145,7 @@ class _SpeciesChartScreenState extends State<SpeciesChartScreen> {
   }
 
   // Prepare the data for the species accumulation curve
+  /// Aggregates species richness by 10-minute intervals.
   List<SpeciesAccumulationData> _prepareSpeciesAccumulationData(Inventory inventory) {
     final speciesAccumulationData = <SpeciesAccumulationData>[];
     final speciesByInterval = <int, Set<String>>{};
@@ -192,6 +197,7 @@ class _SpeciesChartScreenState extends State<SpeciesChartScreen> {
 }
 
 // Data class for the species accumulation curve
+/// Immutable point used by the accumulation curve.
 class SpeciesAccumulationData {
   final int interval;
   final int speciesCount;

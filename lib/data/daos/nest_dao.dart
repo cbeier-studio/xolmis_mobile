@@ -8,6 +8,7 @@ import 'nest_revision_dao.dart';
 import 'egg_dao.dart';
 
 
+/// Provides persistence helpers for nests and their related child records.
 class NestDao {
   final DatabaseHelper _dbHelper;
   final NestRevisionDao _nestRevisionDao;

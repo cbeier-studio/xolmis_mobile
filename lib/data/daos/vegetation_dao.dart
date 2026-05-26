@@ -5,6 +5,7 @@ import '../models/inventory.dart';
 import '../database/database_helper.dart';
 
 
+/// Provides database access for vegetation samples linked to inventories.
 class VegetationDao {
   final DatabaseHelper _dbHelper;
 

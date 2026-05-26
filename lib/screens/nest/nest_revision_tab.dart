@@ -16,6 +16,7 @@ import '../../generated/l10n.dart';
 
 import 'add_revision_screen.dart';
 
+/// Tab that lists revision visits for a nest.
 class NestRevisionsTab extends StatefulWidget {
   final Nest nest;
 
@@ -25,6 +26,7 @@ class NestRevisionsTab extends StatefulWidget {
   State<NestRevisionsTab> createState() => _NestRevisionsTabState();
 }
 
+/// Handles revision list interactions and CRUD flows.
 class _NestRevisionsTabState extends State<NestRevisionsTab>
     with AutomaticKeepAliveClientMixin {
   @override
@@ -36,6 +38,7 @@ class _NestRevisionsTabState extends State<NestRevisionsTab>
     return _buildNestRevisionList();
   }
 
+  /// Deletes a revision after confirmation.
   Future<void> _deleteNestRevision(NestRevision revision) async {
     final confirmed = await _showDeleteConfirmationDialog(context);
     if (confirmed) {
@@ -77,6 +80,7 @@ class _NestRevisionsTabState extends State<NestRevisionsTab>
         false;
   }
 
+  /// Opens the add-revision form and refreshes list on success.
   void _showAddRevisionScreen(BuildContext context) {
     final revisionProvider = Provider.of<NestRevisionProvider>(context, listen: false);
     if (MediaQuery.sizeOf(context).width > 600) {
@@ -275,6 +279,7 @@ class _NestRevisionsTabState extends State<NestRevisionsTab>
   }
 }
 
+/// Grid card representation of a nest revision.
 class NestRevisionGridItem extends StatelessWidget {
   const NestRevisionGridItem({super.key, required this.revision});
 
@@ -343,6 +348,7 @@ class NestRevisionGridItem extends StatelessWidget {
   }
 }
 
+/// List tile representation of a nest revision.
 class RevisionListItem extends StatefulWidget {
   final NestRevision nestRevision;
   final VoidCallback onLongPress;
@@ -357,6 +363,7 @@ class RevisionListItem extends StatefulWidget {
   RevisionListItemState createState() => RevisionListItemState();
 }
 
+/// State for revision list rows and contextual actions.
 class RevisionListItemState extends State<RevisionListItem> {
   @override
   Widget build(BuildContext context) {

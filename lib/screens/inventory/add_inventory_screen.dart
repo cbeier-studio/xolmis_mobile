@@ -8,6 +8,7 @@ import '../../core/core_consts.dart';
 import '../../utils/utils.dart';
 import '../../generated/l10n.dart';
 
+/// Form screen used to create a new inventory entry.
 class AddInventoryScreen extends StatefulWidget {
   final String? initialInventoryId;
   final InventoryType? initialInventoryType;
@@ -20,6 +21,7 @@ class AddInventoryScreen extends StatefulWidget {
   AddInventoryScreenState createState() => AddInventoryScreenState();
 }
 
+/// Stateful logic for validating and submitting a new inventory.
 class AddInventoryScreenState extends State<AddInventoryScreen> {
   final _formKey = GlobalKey<FormState>();
   final _idController = TextEditingController();

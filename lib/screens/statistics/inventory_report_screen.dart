@@ -8,6 +8,7 @@ import 'package:xolmis/generated/l10n.dart';
 
 import '../../data/models/inventory.dart';
 
+/// Builds a cross-inventory species report and allows CSV export.
 class InventoryReportScreen extends StatelessWidget {
   final List<Inventory> selectedInventories;
 
@@ -49,6 +50,7 @@ class InventoryReportScreen extends StatelessWidget {
   }
 
   // Load the species list from the selected inventories
+  /// Collects and sorts distinct species names from the selected inventories.
   List<String> _getSpeciesList(List<Inventory> inventories) {
     final speciesSet = <String>{};
     for (final inventory in inventories) {
@@ -60,6 +62,7 @@ class InventoryReportScreen extends StatelessWidget {
   }
 
   // Generate the report data
+  /// Creates table rows for species presence/abundance across inventories.
   List<List<dynamic>> _generateReportData(List<String> speciesSet, List<Inventory> inventories) {
     final reportData = <List<dynamic>>[];
 
@@ -127,6 +130,7 @@ class InventoryReportScreen extends StatelessWidget {
   }
 
   // Build the columns for the DataTable
+  /// Builds DataTable headers for species, inventories, and totals.
   List<DataColumn> _buildColumns(List<Inventory> inventories) {
     final columns = <DataColumn>[
       DataColumn(label: Text(S.current.species(2))),
@@ -145,6 +149,7 @@ class InventoryReportScreen extends StatelessWidget {
   }
 
   // Build the rows for the DataTable
+  /// Builds styled rows for the inventory species report table.
   List<DataRow> _buildRows(List<String> speciesList, List<List<dynamic>> reportData) {
     return reportData.asMap().entries.map((entry) {
       int rowIndex = entry.key;

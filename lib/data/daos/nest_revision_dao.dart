@@ -5,6 +5,7 @@ import '../models/nest.dart';
 import '../database/database_helper.dart';
 
 
+/// Provides database access for nest revision records.
 class NestRevisionDao {
   final DatabaseHelper _dbHelper;
 

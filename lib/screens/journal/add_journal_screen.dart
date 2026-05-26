@@ -17,11 +17,13 @@ import '../../providers/journal_provider.dart';
 import '../../generated/l10n.dart';
 import '../../utils/utils.dart';
 
+/// Screen used to create or edit a field journal entry.
 class AddJournalScreen extends StatefulWidget {
   final FieldJournal? journalEntry;
   final bool isEditing;
   final bool isEmbedded;
 
+  /// Creates a journal form screen.
   const AddJournalScreen({
     super.key,
     this.journalEntry,
@@ -29,10 +31,12 @@ class AddJournalScreen extends StatefulWidget {
     this.isEmbedded = false,
   });
 
+  /// Creates the mutable state for [AddJournalScreen].
   @override
   AddJournalScreenState createState() => AddJournalScreenState();
 }
 
+/// State implementation for [AddJournalScreen].
 class AddJournalScreenState extends State<AddJournalScreen> {
   final _formKey = GlobalKey<FormState>();
   final FocusNode _focusNode = FocusNode();
@@ -69,6 +73,7 @@ class AddJournalScreenState extends State<AddJournalScreen> {
     super.dispose();
   }
 
+  /// Builds the top action area used by the embedded layout variant.
   Widget _buildTopArea(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -423,6 +428,7 @@ class AddJournalScreenState extends State<AddJournalScreen> {
     );
   }
 
+  /// Builds embedded content for custom editor nodes such as images.
   Widget _embedBuilder(BuildContext context, EmbedNode node) {
     if (node.value.type == 'image') {
       final sourceType = node.value.data['source_type'];
@@ -452,6 +458,7 @@ class AddJournalScreenState extends State<AddJournalScreen> {
     return defaultFleatherEmbedBuilder(context, node);
   }
 
+  /// Launches a URL inserted inside the journal editor.
   void _launchUrl(String? url) async {
     if (url == null) return;
     final uri = Uri.parse(url);
@@ -461,6 +468,7 @@ class AddJournalScreenState extends State<AddJournalScreen> {
     }
   }
 
+  /// Validates and saves the journal entry using the provider layer.
   void _submitForm() async {
     final journalProvider = Provider.of<FieldJournalProvider>(context, listen: false);
     setState(() {

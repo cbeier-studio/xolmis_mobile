@@ -6,24 +6,28 @@ import '../data/daos/species_dao.dart';
 
 import '../providers/inventory_provider.dart';
 
+/// Manages species records grouped by inventory identifier.
 class SpeciesProvider with ChangeNotifier {
   final SpeciesDao _speciesDao;
 
   SpeciesProvider(this._speciesDao);
 
   final Map<String, List<Species>> _speciesMap = {};
+
+  /// Emits the current individual count for the active species record.
   final ValueNotifier<int> individualsCountNotifier = ValueNotifier<int>(0);
 
+  /// Notifies listeners without reloading data.
   void refreshState() {
     notifyListeners();
   }
 
-  // Get list of all inventory IDs
+  /// Returns the inventory identifiers that currently have cached species.
   List<String> getAllInventoryIds() {
     return _speciesMap.keys.toList();
   }
 
-  // Load list of species for an inventory ID
+  /// Loads all species records associated with [inventoryId].
   Future<void> loadSpeciesForInventory(String inventoryId) async {
     if (inventoryId.isEmpty) {
       debugPrint('[PROVIDER] !!! Invalid inventoryId: empty or null');
@@ -40,25 +44,27 @@ class SpeciesProvider with ChangeNotifier {
     }
   }
 
-  // Get list of species for an inventory
+  /// Returns the cached species list for [inventoryId].
   List<Species> getSpeciesForInventory(String inventoryId) {
     return _speciesMap[inventoryId] ?? [];
   }
 
+  /// Returns all records associated with [speciesName].
   Future<List<Species>> getAllRecordsBySpecies(String speciesName) async {
     return await _speciesDao.getAllRecordsBySpecies(speciesName);
   }
 
+  /// Returns every species record stored in the database.
   Future<List<Species>> getAllSpeciesRecords() async {
     return await _speciesDao.getAllSpeciesRecords();
   }
 
-  /// Retorna o número total de registros de espécies no banco de dados.
+  /// Returns the total number of species records stored in the database.
   Future<int> getTotalRecordsOfAllSpecies() async {
     return await _speciesDao.countAllSpeciesRecords();
   }
 
-  // Add species to the database and the list
+  /// Adds [species] to [inventoryId] and updates the inventory counts.
   Future<void> addSpecies(BuildContext context, String inventoryId, Species species) async {
     debugPrint('[PROVIDER] Adding species ${species.name} to inventory $inventoryId');
     await _speciesDao.insertSpecies(inventoryId, species);
@@ -84,7 +90,7 @@ class SpeciesProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // Update species in the database and the list
+  /// Updates a species record in storage and in the local inventory cache.
   Future<void> updateSpecies(String inventoryId, Species species) async {
     debugPrint('[PROVIDER] Updating species ${species.name} in inventory $inventoryId');
     await _speciesDao.updateSpecies(species);
@@ -101,7 +107,7 @@ class SpeciesProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // Remove species from database and from list
+  /// Deletes a species by identifier and refreshes the parent inventory counts.
   Future<void> removeSpecies(BuildContext context, String inventoryId, int speciesId) async {
     debugPrint('[PROVIDER] Removing species $speciesId from inventory $inventoryId');
     await _speciesDao.deleteSpecies(speciesId);
@@ -120,6 +126,7 @@ class SpeciesProvider with ChangeNotifier {
     }
   }
 
+  /// Deletes all cached and persisted records for [speciesName] in an inventory.
   Future<void> removeSpeciesFromInventory(BuildContext context, String inventoryId, String speciesName) async {
     debugPrint('[PROVIDER] Removing species $speciesName from inventory $inventoryId');
     await _speciesDao.deleteSpeciesFromInventory(inventoryId, speciesName);
@@ -138,7 +145,7 @@ class SpeciesProvider with ChangeNotifier {
     }
   }
 
-  // Update number of individuals for a species
+  /// Updates the individual count for [species] in memory and storage.
   void updateIndividualsCount(Species species) async {
     // 1. Find the species in the list
     final speciesList = _speciesMap[species.inventoryId];
@@ -155,7 +162,7 @@ class SpeciesProvider with ChangeNotifier {
     }
   }
 
-  // Increase number of individuals for a species
+  /// Increments the number of individuals recorded for [species].
   Future<void> incrementIndividualsCount(Species species) async {
     species.count++;
     await _speciesDao.updateSpecies(species);
@@ -171,7 +178,7 @@ class SpeciesProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // Decrease number of individuals for a species
+  /// Decrements the number of individuals recorded for [species].
   Future<void> decrementIndividualsCount(Species species) async {
     if (species.count > 0) {
       species.count--;
@@ -189,7 +196,7 @@ class SpeciesProvider with ChangeNotifier {
     }
   }
 
-  // Check if a species is already in the list
+  /// Returns whether [speciesName] already exists in [inventoryId].
   bool speciesExistsInInventory(String inventoryId, String speciesName) {
     final speciesList = getSpeciesForInventory(inventoryId);
     return speciesList.any((species) => species.name == speciesName);

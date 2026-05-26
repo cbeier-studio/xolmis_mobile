@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 
 import '../../generated/l10n.dart';
 
+/// Displays a single image file with zoom and pan support.
 class ImageDetailsScreen extends StatelessWidget {
   final String imagePath;
 
+  /// Creates an image details screen for the file at [imagePath].
   const ImageDetailsScreen({super.key, required this.imagePath});
 
   @override

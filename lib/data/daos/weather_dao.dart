@@ -5,6 +5,7 @@ import '../models/inventory.dart';
 import '../database/database_helper.dart';
 
 
+/// Provides database access for weather samples linked to inventories.
 class WeatherDao {
   final DatabaseHelper _dbHelper;
 

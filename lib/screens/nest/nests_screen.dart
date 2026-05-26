@@ -18,6 +18,7 @@ import '../../utils/export_utils.dart';
 import '../../utils/import_utils.dart';
 import '../../generated/l10n.dart';
 
+/// Main nests list screen with filters, selection, and import/export actions.
 class NestsScreen extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
 
@@ -27,6 +28,7 @@ class NestsScreen extends StatefulWidget {
   NestsScreenState createState() => NestsScreenState();
 }
 
+/// State controller for nests search, sorting, filtering, and bulk actions.
 class NestsScreenState extends State<NestsScreen> {
   late NestProvider nestProvider;
   final _searchController = TextEditingController();
@@ -71,6 +73,7 @@ class NestsScreenState extends State<NestsScreen> {
     super.dispose();
   }
 
+  /// Returns whether a date matches the currently selected date filter.
   bool _isWithinDateFilter(DateTime? date, DateFilter? filter) {
     if (date == null || filter == null) return true; // sem filtro ou data nula
     final now = DateTime.now();
@@ -112,6 +115,7 @@ class NestsScreenState extends State<NestsScreen> {
   }
 
   // Sort the nests by the selected field
+  /// Sorts nests by the current field and order.
   List<Nest> _sortNests(List<Nest> nests) {
     nests.sort((a, b) {
       int comparison;

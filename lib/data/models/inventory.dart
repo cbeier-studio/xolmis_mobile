@@ -11,8 +11,7 @@ import '../daos/inventory_dao.dart';
 
 import '../../main.dart';
 
-// POI class
-
+/// Represents a point of interest linked to a species record.
 class Poi {
   late int? id;
   final int speciesId;
@@ -103,8 +102,7 @@ class Poi {
   }
 }
 
-// Species class
-
+/// Represents a species observation recorded inside an inventory.
 class Species {
   late int? id;
   final String inventoryId;
@@ -249,8 +247,7 @@ class Species {
   }
 }
 
-// Vegetation class
-
+/// Represents a vegetation sample collected during an inventory.
 class Vegetation {
   late int? id;
   final String inventoryId;
@@ -431,8 +428,7 @@ class Vegetation {
   }
 }
 
-// Weather class
-
+/// Represents a weather sample collected during an inventory.
 class Weather {
   late int? id;
   final String inventoryId;
@@ -568,8 +564,7 @@ class Weather {
   }
 }
 
-// Inventory class
-
+/// Represents an inventory together with its timing state and child records.
 class Inventory with ChangeNotifier {
   String id;
   final InventoryType type;
@@ -597,21 +592,31 @@ class Inventory with ChangeNotifier {
   List<Weather> weatherList;
   StreamSubscription<void>? _timer;
   final ValueNotifier<double> _elapsedTimeNotifier = ValueNotifier<double>(0);
+  /// Emits the current elapsed time for listeners interested in timer updates.
   ValueNotifier<double> get elapsedTimeNotifier => _elapsedTimeNotifier;
   final ValueNotifier<bool> _isFinishedNotifier = ValueNotifier<bool>(false);
+
+  /// Emits whether the inventory is currently finished.
   ValueNotifier<bool> get isFinishedNotifier => _isFinishedNotifier;
   bool _autoFinished = false;
+
+  /// Returns whether the inventory was finished automatically by a rule.
   bool isAutoFinished() => _autoFinished;
   int currentInterval = 1;
   final ValueNotifier<int> _currentIntervalNotifier = ValueNotifier<int>(1);
+
+  /// Emits the currently active interval number.
   ValueNotifier<int> get currentIntervalNotifier => _currentIntervalNotifier;
   int intervalsWithoutNewSpecies = 0;
   final ValueNotifier<int> _intervalWithoutSpeciesNotifier = ValueNotifier<int>(0);
+
+  /// Emits the number of consecutive intervals without new species.
   ValueNotifier<int> get intervalWithoutSpeciesNotifier => _intervalWithoutSpeciesNotifier;
   int currentIntervalSpeciesCount = 0;
   double totalPausedTimeInSeconds = 0;
   DateTime? pauseStartTime;
 
+  /// Creates an inventory model with optional preloaded child collections.
   Inventory({
     required this.id,
     required this.type,
@@ -654,6 +659,7 @@ class Inventory with ChangeNotifier {
     }
   }
 
+  /// Creates an [Inventory] from a SQLite row plus already loaded child lists.
   Inventory.fromMap(Map<String, dynamic> map, List<Species> speciesList,
       List<Vegetation> vegetationList, List<Weather> weatherList,
       {int speciesCount = 0,
@@ -706,6 +712,7 @@ class Inventory with ChangeNotifier {
     }
   }
 
+  /// Returns a copy of this inventory with the provided fields replaced.
   Inventory copyWith({
     String? id,
     InventoryType? type,

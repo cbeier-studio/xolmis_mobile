@@ -28,6 +28,7 @@ import '../../utils/import_utils.dart';
 import '../../services/inventory_completion_service.dart';
 import '../../generated/l10n.dart';
 
+/// Main inventory list screen with filters, bulk actions, and import/export.
 class InventoriesScreen extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
 
@@ -37,6 +38,7 @@ class InventoriesScreen extends StatefulWidget {
   State<InventoriesScreen> createState() => _InventoriesScreenState();
 }
 
+/// State controller for inventory search, filtering, sorting, and selection.
 class _InventoriesScreenState extends State<InventoriesScreen> {
   late InventoryProvider inventoryProvider;
   late InventoryDao inventoryDao;

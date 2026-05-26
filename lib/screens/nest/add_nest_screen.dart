@@ -12,6 +12,7 @@ import '../../core/core_consts.dart';
 import '../../utils/utils.dart';
 import '../../generated/l10n.dart';
 
+/// Form screen for creating or editing nest records.
 class AddNestScreen extends StatefulWidget {
   final Nest? nest;
   final bool isEditing;
@@ -26,6 +27,7 @@ class AddNestScreen extends StatefulWidget {
   AddNestScreenState createState() => AddNestScreenState();
 }
 
+/// Holds nest form state, default values, and submit flow.
 class AddNestScreenState extends State<AddNestScreen> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _fieldNumberController;
@@ -73,6 +75,7 @@ class AddNestScreenState extends State<AddNestScreen> {
     }
   }
 
+  /// Builds the next automatic field number using observer and date.
   Future<void> _nextFieldNumber() async {
     final nestProvider = Provider.of<NestProvider>(context, listen: false);
     final prefs = await SharedPreferences.getInstance();
@@ -87,6 +90,7 @@ class AddNestScreenState extends State<AddNestScreen> {
     _fieldNumberController.text = "$_observerAcronym$ano${mes.toString().padLeft(2, '0')}${numSeq.toString().padLeft(3, '0')}";
   }
 
+  /// Retrieves device location to prefill nest coordinates.
   Future<void> _getCurrentLocation() async {
     Position? position = await getPosition(context);
     if (position != null) {

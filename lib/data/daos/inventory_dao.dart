@@ -10,6 +10,7 @@ import 'weather_dao.dart';
 
 import '../../utils/utils.dart';
 
+/// Provides persistence helpers for inventories and their aggregate queries.
 class InventoryDao {
   final DatabaseHelper _dbHelper;
   final SpeciesDao _speciesDao;

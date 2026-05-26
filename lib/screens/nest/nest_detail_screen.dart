@@ -17,6 +17,7 @@ import '../../core/core_consts.dart';
 import '../../utils/export_utils.dart';
 import '../../generated/l10n.dart';
 
+/// Detail screen for a nest with revisions and eggs tabs.
 class NestDetailScreen extends StatefulWidget {
   final Nest nest;
   final bool isEmbedded;
@@ -30,6 +31,7 @@ class NestDetailScreen extends StatefulWidget {
   NestDetailScreenState createState() => NestDetailScreenState();
 }
 
+/// Coordinates tab state and detail-level nest actions.
 class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerProviderStateMixin {
   bool _isSubmitting = false;
   final fabController = FabMenuController();
@@ -63,6 +65,7 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
     super.dispose();
   }
 
+  /// Opens the add-revision flow and refreshes data when saved.
   void _showAddRevisionScreen(BuildContext context) {
     final revisionProvider = Provider.of<NestRevisionProvider>(context, listen: false);
     if (MediaQuery.sizeOf(context).width > 600) {
@@ -99,6 +102,7 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
     }
   }
 
+  /// Opens the add-egg flow using the next sequential egg number.
   Future<void> _showAddEggScreen(BuildContext context) async {
     final eggProvider = Provider.of<EggProvider>(context, listen: false);
     int nextNumber = await eggProvider.getNextSequentialNumber(widget.nest.fieldNumber!);

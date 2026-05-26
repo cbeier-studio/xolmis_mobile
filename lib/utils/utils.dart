@@ -15,10 +15,15 @@ import '../screens/inventory/add_inventory_screen.dart';
 import '../core/core_consts.dart';
 import '../generated/l10n.dart';
 
+/// Cached species names used by autocomplete and search flows.
 List<String> allSpeciesNames = [];
 
+/// Optional callback invoked when an inventory stop action completes.
 void Function(String)? onInventoryStopped;
 
+/// Returns the country currently selected in shared preferences.
+///
+/// Defaults to [SupportedCountry.BR] when no saved country code is found.
 Future<SupportedCountry> getCountrySetting() async {
   final prefs = await SharedPreferences.getInstance();
   final countryCode = prefs.getString('user_country');
@@ -31,6 +36,11 @@ Future<SupportedCountry> getCountrySetting() async {
   );
 }
 
+/// Loads the species checklist asset for the currently selected country.
+///
+/// The returned list contains scientific names extracted from the
+/// `species_data_<country>.json` asset. An empty list is returned if the asset
+/// cannot be read or parsed.
 Future<List<String>> loadSpeciesSearchData() async {
   try {
     final selectedCountry = await getCountrySetting();
@@ -62,6 +72,10 @@ Future<List<String>> loadSpeciesSearchData() async {
   }
 }
 
+/// Returns whether [speciesName] matches the user-entered [query].
+///
+/// Matching supports multi-word queries, abbreviated genus/species searches,
+/// and a standard case-insensitive substring fallback.
 bool speciesMatchesQuery(String speciesName, String query) {
   final String lowerSpeciesName = speciesName.toLowerCase();
   final String lowerQuery = query.toLowerCase();
@@ -111,6 +125,10 @@ bool speciesMatchesQuery(String speciesName, String query) {
   return lowerSpeciesName.contains(lowerQuery);
 }
 
+/// Returns the next sequential Mackinnon-style inventory identifier.
+///
+/// The function increments the last two numeric characters of the final ID
+/// segment. If the suffix cannot be parsed, [currentId] is returned unchanged.
 String getNextInventoryId(String currentId) {
   // 1. Split the string in parts using '-' as delimiter
   final parts = currentId.split('-');
@@ -138,6 +156,10 @@ String getNextInventoryId(String currentId) {
   return nextId;
 }
 
+/// Checks whether a Mackinnon inventory reached its configured species limit.
+///
+/// When the inventory is complete, a dialog is shown allowing the user to stop
+/// the current list or immediately start the next one.
 void checkMackinnonCompletion(BuildContext context, Inventory inventory, InventoryDao inventoryDao) {
   if (inventory.type != InventoryType.invMackinnonList) {
     return;
@@ -152,6 +174,7 @@ void checkMackinnonCompletion(BuildContext context, Inventory inventory, Invento
   }
 }
 
+/// Shows the completion dialog for a finished Mackinnon list inventory.
 void _showMackinnonDialog(BuildContext context, Inventory inventory, InventoryDao inventoryDao) {
   showDialog(
     context: context,
@@ -244,6 +267,10 @@ Future<Position> _determinePosition() async {
   );
 }
 
+/// Shows a dialog that lets the user manually enter geographic coordinates.
+///
+/// Returns a synthetic [Position] when the form is submitted successfully, or
+/// `null` when the dialog is cancelled.
 Future<Position?> _showManualCoordinatesDialog(BuildContext context) {
   final formKey = GlobalKey<FormState>();
   final latitudeController = TextEditingController();
@@ -338,6 +365,10 @@ Future<Position?> _showManualCoordinatesDialog(BuildContext context) {
   );
 }
 
+/// Returns the current device position or a manually entered fallback.
+///
+/// If GPS retrieval fails, the user can choose to continue without coordinates
+/// or enter latitude and longitude manually.
 Future<Position?> getPosition(BuildContext context) async {
   try {
     return await _determinePosition();
@@ -375,6 +406,9 @@ Future<Position?> getPosition(BuildContext context) async {
   }
 }
 
+/// Returns the letter code used in generated inventory identifiers.
+///
+/// Returns `null` for inventory types that do not map to a letter.
 String? getInventoryTypeLetter(InventoryType inventoryType) {
   switch (inventoryType) {
     case InventoryType.invBanding:
@@ -396,6 +430,7 @@ String? getInventoryTypeLetter(InventoryType inventoryType) {
   }
 }
 
+/// Replaces commas with dots while the user types decimal values.
 class CommaToDotTextInputFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
@@ -407,6 +442,10 @@ class CommaToDotTextInputFormatter extends TextInputFormatter {
   }
 }
 
+/// Builds a tappable item used in grid-style home or menu layouts.
+///
+/// The optional [color] overrides the text theme color used for the icon and
+/// label.
 Widget buildGridMenuItem(
     BuildContext context, IconData icon, String label, VoidCallback onTap,
     {Color? color}) {

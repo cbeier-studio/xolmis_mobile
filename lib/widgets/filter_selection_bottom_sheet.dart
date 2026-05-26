@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 
+/// Encapsulates the result returned by the filter selection bottom sheet.
 class FilterSelectionResult<T> {
   final T? selectedItem;
   final bool cleared;
 
+  /// Creates a result that contains a selected item.
   const FilterSelectionResult.selected(this.selectedItem) : cleared = false;
 
+  /// Creates a result that indicates the selection was cleared.
   const FilterSelectionResult.cleared() : selectedItem = null, cleared = true;
 }
 
+/// Shows a searchable bottom sheet for choosing one item from [items].
+///
+/// The returned [FilterSelectionResult] either contains the selected item or
+/// indicates that the current selection should be cleared.
 Future<FilterSelectionResult<T>?> showFilterSelectionBottomSheet<T>({
   required BuildContext context,
   required String title,
@@ -39,6 +46,7 @@ Future<FilterSelectionResult<T>?> showFilterSelectionBottomSheet<T>({
   );
 }
 
+/// Internal content widget used by [showFilterSelectionBottomSheet].
 class _FilterSelectionBottomSheetContent<T> extends StatefulWidget {
   final String title;
   final List<T> items;

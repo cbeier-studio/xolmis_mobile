@@ -5,6 +5,7 @@ import '../../core/core_consts.dart';
 import '../models/journal.dart';
 import '../database/database_helper.dart';
 
+/// Provides database access for field journal entries.
 class FieldJournalDao {
   final DatabaseHelper _dbHelper;
 

@@ -4,46 +4,53 @@ import '../data/models/specimen.dart';
 import '../data/daos/specimen_dao.dart';
 import '../generated/l10n.dart';
 
+/// Manages specimen records loaded from the local database.
 class SpecimenProvider with ChangeNotifier {
   final SpecimenDao _specimenDao;
 
   SpecimenProvider(this._specimenDao);
 
   List<Specimen> _specimens = [];
+
+  /// All specimen records currently loaded in memory.
   List<Specimen> get specimens => _specimens;
-  // Get list of pending specimens
+
+  /// Specimens that are still marked as pending.
   List<Specimen> get pendingSpecimens => _specimens.where((specimen) => specimen.isPending).toList();
-  // Get list of archived specimens
+
+  /// Specimens that are no longer pending.
   List<Specimen> get archivedSpecimens => _specimens.where((specimen) => !specimen.isPending).toList();
 
+  /// The number of pending specimens.
   int get specimensCount => pendingSpecimens.length;
 
-  // Load list of all specimens
+  /// Loads all specimen records from persistent storage.
   Future<void> fetchSpecimens() async {
     _specimens = await _specimenDao.getSpecimens();
     notifyListeners();
   }
 
-  // Get list of specimens by species
+  /// Returns all specimens matching [speciesName].
   Future<List<Specimen>> getSpecimensBySpecies(String speciesName) async {
     return await _specimenDao.getSpecimensBySpecies(speciesName);
   }
 
-  // Get specimen data by ID
+  /// Returns the specimen identified by [specimenId].
   Future<Specimen> getSpecimenById(int specimenId) async {
     return await _specimenDao.getSpecimenById(specimenId);
   }
 
-  // Check if the specimen field number already exists
+  /// Returns whether [fieldNumber] is already in use by another specimen.
   Future<bool> specimenFieldNumberExists(String fieldNumber) async {
     return await _specimenDao.specimenFieldNumberExists(fieldNumber);
   }
 
+  /// Returns the next sequential specimen number for the given identifier parts.
   Future<int> getNextSequentialNumber(String acronym, int ano, int mes) async {
     return await _specimenDao.getNextSequentialNumber(acronym, ano, mes);
   }
 
-  // Add specimen to the database and the list
+  /// Adds a new specimen after validating that its field number is unique.
   Future<void> addSpecimen(Specimen specimen) async {
     if (await specimenFieldNumberExists(specimen.fieldNumber)) {
       throw Exception(S.current.errorSpecimenAlreadyExists);
@@ -54,7 +61,9 @@ class SpecimenProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // Add imported specimen to the database and the list
+  /// Imports a specimen record that already carries external data.
+  ///
+  /// Returns `true` on success and `false` if the import fails.
   Future<bool> importSpecimen(Specimen specimen) async {
     try {
       await _specimenDao.importSpecimen(specimen);
@@ -68,7 +77,7 @@ class SpecimenProvider with ChangeNotifier {
     }
   }
 
-  // Update specimen in the database and the list
+  /// Updates a specimen in storage and replaces the cached instance.
   Future<void> updateSpecimen(Specimen specimen) async {
     await _specimenDao.updateSpecimen(specimen);
 
@@ -81,7 +90,9 @@ class SpecimenProvider with ChangeNotifier {
     }
   }
 
-  // Remove specimen from database and from list
+  /// Deletes [specimen] from storage and removes it from the cache.
+  ///
+  /// Throws an [ArgumentError] when the specimen has no valid identifier.
   Future<void> removeSpecimen(Specimen specimen) async {
     if (specimen.id == null || specimen.id! <= 0) {
       throw ArgumentError('Invalid specimen ID: ${specimen.id}');
@@ -92,7 +103,7 @@ class SpecimenProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // Get list of distinct localities for autocomplete
+  /// Returns distinct specimen localities for autocomplete suggestions.
   Future<List<String>> getDistinctLocalities() {
     return _specimenDao.getDistinctLocalities();
   }

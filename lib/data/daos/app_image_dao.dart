@@ -4,6 +4,7 @@ import '../models/app_image.dart';
 import '../database/database_helper.dart';
 
 
+/// Provides persistence helpers for image records linked to domain entities.
 class AppImageDao {
   final DatabaseHelper _dbHelper;
 

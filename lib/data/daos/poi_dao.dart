@@ -5,6 +5,7 @@ import '../models/inventory.dart';
 import '../database/database_helper.dart';
 
 
+/// Provides database access for points of interest linked to species records.
 class PoiDao {
   final DatabaseHelper _dbHelper;
 

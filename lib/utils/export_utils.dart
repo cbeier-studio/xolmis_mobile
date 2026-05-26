@@ -21,9 +21,13 @@ import '../providers/nest_provider.dart';
 import '../core/core_consts.dart';
 import '../generated/l10n.dart';
 
+/// Marker written into every exported payload to identify the app source.
 const String kExportSource = 'Xolmis Mobile';
+
+/// Current version of the shared JSON export envelope schema.
 const String kExportSchemaVersion = '1';
 
+/// Ensures a single inventory has all child collections loaded before export.
 Future<Inventory> _ensureInventoryLoadedForExport(
   BuildContext context,
   Inventory inventory, {
@@ -40,6 +44,7 @@ Future<Inventory> _ensureInventoryLoadedForExport(
   }
 }
 
+/// Ensures a list of inventories has full details loaded before export.
 Future<List<Inventory>> _ensureInventoriesLoadedForExport(
   BuildContext context,
   List<Inventory> inventories, {
@@ -67,6 +72,7 @@ Future<List<Inventory>> _ensureInventoriesLoadedForExport(
   }
 }
 
+/// Ensures a single nest has revisions and eggs loaded before export.
 Future<Nest> _ensureNestLoadedForExport(
   BuildContext context,
   Nest nest, {
@@ -89,6 +95,7 @@ Future<Nest> _ensureNestLoadedForExport(
   }
 }
 
+/// Ensures a list of nests has full details loaded before export.
 Future<List<Nest>> _ensureNestsLoadedForExport(
   BuildContext context,
   List<Nest> nests, {
@@ -119,6 +126,7 @@ Future<List<Nest>> _ensureNestsLoadedForExport(
   }
 }
 
+/// Requests storage permission and returns `true` when access is granted.
 Future<bool> requestStoragePermission() async {
   var status = await Permission.storage.status;
   if (!status.isGranted) {
@@ -127,6 +135,7 @@ Future<bool> requestStoragePermission() async {
   return status.isGranted;
 }
 
+/// Exports all finished inventories as a JSON envelope and opens the share sheet.
 Future<void> exportAllInventoriesToJson(BuildContext context, InventoryProvider inventoryProvider) async {
   bool isDialogShown = false;
 
@@ -215,6 +224,7 @@ Future<void> exportAllInventoriesToJson(BuildContext context, InventoryProvider 
   }
 }
 
+/// Exports one inventory as JSON, ensuring lazy-loaded children are available.
 Future<void> exportInventoryToJson(BuildContext context, Inventory inventory, bool shareIt) async {
   try {
     final inventoryToExport =
@@ -260,7 +270,8 @@ Future<void> exportInventoryToJson(BuildContext context, Inventory inventory, bo
   }
 }
 
-// Add inventory data to list of rows
+/// Builds tabular rows for an inventory export including species, vegetation,
+/// weather, and POIs.
 Future<List<List>> buildInventoryRows(Inventory inventory, Locale locale) async {
   const List<String> inventoryHeaders = ['ID','Type','Duration',
     'Max of species','Start date','Start time','End date','End time',
@@ -381,7 +392,7 @@ Future<List<List>> buildInventoryRows(Inventory inventory, Locale locale) async 
   return rows;
 }
 
-// Convert to CellValue based on value type
+/// Converts a dynamic value into an Excel [CellValue] preserving basic types.
 CellValue _convertToCellValue(dynamic val) {
   if (val == null) {
     return TextCellValue('');
@@ -408,7 +419,7 @@ CellValue _convertToCellValue(dynamic val) {
   return TextCellValue(val.toString());
 }
 
-// Convert lists of dynamic to lists of CellValue to use in Excel
+/// Converts matrix rows into Excel-compatible [CellValue] rows.
 List<List<CellValue>> convertRowsToCellValues(List<List<dynamic>> dynamicRows) {
   List<List<CellValue>> cellValueRows = [];
   for (var dynamicRow in dynamicRows) {
@@ -421,7 +432,7 @@ List<List<CellValue>> convertRowsToCellValues(List<List<dynamic>> dynamicRows) {
   return cellValueRows;
 }
 
-// Export an inventory to a Excel file, returns the file path
+/// Exports one inventory to an Excel file and returns the generated path.
 Future<String> exportInventoryToExcel(BuildContext context, Inventory inventory, Locale locale) async {
   try {
     final inventoryToExport =
@@ -465,7 +476,7 @@ Future<String> exportInventoryToExcel(BuildContext context, Inventory inventory,
   }
 }
 
-// Export an inventory to a CSV file
+/// Exports one inventory to a CSV file and returns the generated path.
 Future<String> exportInventoryToCsv(BuildContext context, Inventory inventory, Locale locale) async {
   try {
     final inventoryToExport =
@@ -501,6 +512,7 @@ Future<String> exportInventoryToCsv(BuildContext context, Inventory inventory, L
   }
 }
 
+/// Exports one inventory POI dataset to KML and opens the share sheet.
 Future<void> exportInventoryToKml(BuildContext context, Inventory inventory) async {
   try {
     final inventoryToExport =
@@ -583,6 +595,7 @@ Future<void> exportInventoryToKml(BuildContext context, Inventory inventory) asy
   }
 }
 
+/// Exports selected inventories to a single JSON envelope.
 Future<void> exportSelectedInventoriesToJson(BuildContext context, List<Inventory> inventories) async {
   try {
     final inventoriesToExport =
@@ -626,6 +639,7 @@ Future<void> exportSelectedInventoriesToJson(BuildContext context, List<Inventor
   }
 }
 
+/// Exports selected inventories to individual CSV files and shares them.
 Future<void> exportSelectedInventoriesToCsv(BuildContext context, List<Inventory> inventories) async {
   showDialog(
     context: context,
@@ -684,6 +698,7 @@ Future<void> exportSelectedInventoriesToCsv(BuildContext context, List<Inventory
   }
 }
 
+/// Exports selected inventories to individual Excel files and shares them.
 Future<void> exportSelectedInventoriesToExcel(BuildContext context, List<Inventory> inventories) async {
   showDialog(
     context: context,
@@ -747,6 +762,7 @@ Future<void> exportSelectedInventoriesToExcel(BuildContext context, List<Invento
   }
 }
 
+/// Exports selected nests to a single JSON envelope.
 Future<void> exportSelectedNestsToJson(BuildContext context, List<Nest> nests) async {
   try {
     final nestsToExport = await _ensureNestsLoadedForExport(context, nests);
@@ -789,6 +805,7 @@ Future<void> exportSelectedNestsToJson(BuildContext context, List<Nest> nests) a
   }
 }
 
+/// Exports selected nests to individual CSV files and shares them.
 Future<void> exportSelectedNestsToCsv(BuildContext context, List<Nest> nests) async {
   showDialog(
     context: context,
@@ -847,6 +864,7 @@ Future<void> exportSelectedNestsToCsv(BuildContext context, List<Nest> nests) as
   }
 }
 
+/// Exports selected nests to individual Excel files and shares them.
 Future<void> exportSelectedNestsToExcel(BuildContext context, List<Nest> nests) async {
   showDialog(
     context: context,
@@ -910,6 +928,7 @@ Future<void> exportSelectedNestsToExcel(BuildContext context, List<Nest> nests) 
   }
 }
 
+/// Exports all inactive nests to a JSON envelope and opens the share sheet.
 Future<void> exportAllInactiveNestsToJson(BuildContext context) async {
   bool isDialogShown = false;
 
@@ -992,6 +1011,7 @@ Future<void> exportAllInactiveNestsToJson(BuildContext context) async {
   }
 }
 
+/// Exports one nest as JSON, including revisions and eggs when available.
 Future<void> exportNestToJson(BuildContext context, Nest nest) async {
   try {
     final nestToExport = await _ensureNestLoadedForExport(context, nest);
@@ -1033,6 +1053,7 @@ Future<void> exportNestToJson(BuildContext context, Nest nest) async {
   }
 }
 
+/// Exports one nest to CSV and returns the generated file path.
 Future<String> exportNestToCsv(BuildContext context, Nest nest, Locale locale) async {
   try {
     final nestToExport = await _ensureNestLoadedForExport(context, nest);
@@ -1067,7 +1088,7 @@ Future<String> exportNestToCsv(BuildContext context, Nest nest, Locale locale) a
   }
 }
 
-// Export a nest to an Excel file, returns the file path
+/// Exports one nest to Excel and returns the generated file path.
 Future<String> exportNestToExcel(BuildContext context, Nest nest, Locale locale) async {
   try {
     final nestToExport = await _ensureNestLoadedForExport(context, nest);
@@ -1109,7 +1130,7 @@ Future<String> exportNestToExcel(BuildContext context, Nest nest, Locale locale)
   }
 }
 
-// Add nest data to CSV rows
+/// Builds tabular rows for nest export including revisions and eggs.
 Future<List<List>> buildNestRows(Nest nest, Locale locale) async {
   const nestHeaders = ['Field number','Species','Locality','Longitude','Latitude',
     'Date found','Support','Height above ground','Male','Female','Helpers',
@@ -1177,6 +1198,7 @@ Future<List<List>> buildNestRows(Nest nest, Locale locale) async {
   return rows;
 }
 
+/// Exports one nest location dataset to KML and opens the share sheet.
 Future<void> exportNestToKml(BuildContext context, Nest nest) async {
   try {
     final nestToExport = await _ensureNestLoadedForExport(context, nest);
@@ -1235,6 +1257,7 @@ Future<void> exportNestToKml(BuildContext context, Nest nest) async {
   }
 }
 
+/// Exports all specimens as a JSON envelope and opens the share sheet.
 Future<void> exportAllSpecimensToJson(BuildContext context, List<Specimen> specimenList) async {
   bool isDialogShown = false;
 
@@ -1308,6 +1331,7 @@ Future<void> exportAllSpecimensToJson(BuildContext context, List<Specimen> speci
   }
 }
 
+/// Exports selected specimens to a single JSON envelope.
 Future<void> exportSelectedSpecimensToJson(BuildContext context, List<Specimen> specimenList) async {
   try {
     final jsonData = {
@@ -1348,6 +1372,7 @@ Future<void> exportSelectedSpecimensToJson(BuildContext context, List<Specimen> 
   }
 }
 
+/// Exports selected specimens to one CSV file and opens the share sheet.
 Future<void> exportSelectedSpecimensToCsv(BuildContext context, List<Specimen> specimenList) async {
   bool isDialogShown = false;
 
@@ -1418,6 +1443,7 @@ Future<void> exportSelectedSpecimensToCsv(BuildContext context, List<Specimen> s
   }
 }
 
+/// Exports selected specimens to one Excel file and opens the share sheet.
 Future<void> exportSelectedSpecimensToExcel(BuildContext context, List<Specimen> specimenList) async {
   bool isDialogShown = false;
 
@@ -1506,6 +1532,7 @@ Future<void> exportSelectedSpecimensToExcel(BuildContext context, List<Specimen>
   }
 }
 
+/// Exports all specimens to one CSV file and opens the share sheet.
 Future<void> exportAllSpecimensToCsv(BuildContext context, List<Specimen> specimenList) async {
   bool isDialogShown = false;
 
@@ -1581,6 +1608,7 @@ Future<void> exportAllSpecimensToCsv(BuildContext context, List<Specimen> specim
   }
 }
 
+/// Exports all specimens to one Excel file and opens the share sheet.
 Future<void> exportAllSpecimensToExcel(BuildContext context, List<Specimen> specimenList) async {
   bool isDialogShown = false;
 
@@ -1672,7 +1700,7 @@ Future<void> exportAllSpecimensToExcel(BuildContext context, List<Specimen> spec
   }
 }
 
-// Add specimens data to CSV rows
+/// Builds tabular rows for specimen exports.
 Future<List<List>> buildSpecimensRows(List<Specimen> specimenList, Locale locale) async {
   const specimenHeaders = ['Date/Time','Field number','Observer','Species','Type','Locality',
     'Longitude','Latitude','Notes'];
@@ -1699,6 +1727,7 @@ Future<List<List>> buildSpecimensRows(List<Specimen> specimenList, Locale locale
   return rows;
 }
 
+/// Exports one specimen location dataset to KML and opens the share sheet.
 Future<void> exportSpecimenToKml(BuildContext context, Specimen specimen) async {
   try {
     final gpx = GeoXml();

@@ -1,7 +1,6 @@
 import '../../core/core_consts.dart';
 
-// Specimen class
-
+/// Represents a specimen record stored locally and exchanged in exports.
 class Specimen {
   int? id;
   DateTime? sampleTime;
@@ -29,6 +28,7 @@ class Specimen {
     this.isPending = true,
   });
 
+  /// Converts this specimen into a SQLite-compatible map.
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -45,6 +45,7 @@ class Specimen {
     };
   }
 
+  /// Converts this specimen into a JSON-compatible map.
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -61,6 +62,7 @@ class Specimen {
     };
   }
 
+  /// Creates a [Specimen] from a JSON map.
   factory Specimen.fromJson(Map<String, dynamic> json) {
     return Specimen(
       id: json['id'],
@@ -77,6 +79,7 @@ class Specimen {
     );
   }
 
+  /// Creates a [Specimen] from a SQLite row map.
   factory Specimen.fromMap(Map<String, dynamic> map) {
     return Specimen(
       id: map['id']?.toInt(),
@@ -93,6 +96,7 @@ class Specimen {
     );
   }
 
+  /// Returns a copy of this specimen with the provided fields replaced.
   Specimen copyWith({
     int? id,
     DateTime? sampleTime,

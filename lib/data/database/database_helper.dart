@@ -4,8 +4,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
-
+/// Centralized SQLite access point responsible for opening, creating,
+/// upgrading, and maintaining the local database.
 class DatabaseHelper {
+  /// Singleton instance used across the app.
   static final DatabaseHelper instance = DatabaseHelper._internal();
 
   static const String _kLastVacuumRunAtKey = 'lastVacuumRunAt';
@@ -17,6 +19,7 @@ class DatabaseHelper {
 
   static Database? _database;
 
+  /// Returns the initialized database, creating it on first access.
   Future<Database?> get database async {
     if (_database != null) return _database;
 
@@ -24,6 +27,7 @@ class DatabaseHelper {
     return _database;
   }
 
+  /// Opens the app database file and wires creation, migration, and setup hooks.
   Future<Database> initDatabase() async {
     String path = join(await getDatabasesPath(), 'xolmis_database.db');
     return await openDatabase(
@@ -38,7 +42,7 @@ class DatabaseHelper {
     );
   }
 
-  // Create SQLite database file and structure
+  /// Creates all tables and indexes for a fresh database.
   void _createTables(Database db, int version) {
     db.execute('''
         CREATE TABLE inventories(
@@ -224,7 +228,7 @@ class DatabaseHelper {
     debugPrint('Database created with version $version');
   }
 
-  // Create indexes used by frequent joins, filters and ordering.
+  /// Creates indexes that speed up common filters, joins, and sorting.
   void _createPerformanceIndexes(Database db) {
     db.execute('CREATE INDEX IF NOT EXISTS idx_species_name ON species(name)');
     db.execute('CREATE INDEX IF NOT EXISTS idx_inventories_is_finished ON inventories(isFinished)');
@@ -234,7 +238,7 @@ class DatabaseHelper {
     db.execute('CREATE INDEX IF NOT EXISTS idx_nests_field_number ON nests(fieldNumber)');
   }
 
-  // Update SQLite database structure based on DB version
+  /// Applies incremental schema migrations between database versions.
   void _upgradeTables(Database db, int oldVersion, int newVersion) async {
     final prefs = await SharedPreferences.getInstance();
     debugPrint('Upgrading database from version $oldVersion to $newVersion');
@@ -481,6 +485,7 @@ class DatabaseHelper {
     }
   }
 
+  /// Runs `VACUUM` at most once per month to keep database file size healthy.
   Future<void> runMonthlyVacuumIfNeeded() async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -510,6 +515,7 @@ class DatabaseHelper {
     }
   }
 
+  /// Closes the opened database connection if available.
   Future<void> closeDatabase() async {
     final db = await database;
     await db?.close();

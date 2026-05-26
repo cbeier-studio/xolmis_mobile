@@ -10,15 +10,19 @@ import '../../core/core_consts.dart';
 import '../../utils/utils.dart';
 import '../../generated/l10n.dart';
 
+/// Displays the list of journal entries with filtering, sorting, and selection tools.
 class JournalsScreen extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
 
+  /// Creates the journals screen.
   const JournalsScreen({super.key, required this.scaffoldKey});
 
+  /// Creates the mutable state for [JournalsScreen].
   @override
   JournalsScreenState createState() => JournalsScreenState();
 }
 
+/// State implementation for [JournalsScreen].
 class JournalsScreenState extends State<JournalsScreen> {
   late FieldJournalProvider journalProvider;
   final _searchController = TextEditingController();
@@ -49,6 +53,7 @@ class JournalsScreenState extends State<JournalsScreen> {
     journalProvider.fetchJournalEntries();
   }
 
+  /// Returns whether [date] matches the active date [filter].
   bool _isWithinDateFilter(DateTime? date, DateFilter? filter) {
     if (date == null || filter == null) return true; // sem filtro ou data nula
     final now = DateTime.now();
@@ -89,6 +94,7 @@ class JournalsScreenState extends State<JournalsScreen> {
     }
   }
 
+  /// Sorts journal entries using the currently selected sort field and order.
   List<FieldJournal> _sortJournalEntries(List<FieldJournal> journalEntries) {
     journalEntries.sort((a, b) {
       int comparison;
@@ -108,6 +114,7 @@ class JournalsScreenState extends State<JournalsScreen> {
     return journalEntries;
   }
 
+  /// Shows the bottom sheet used to choose journal sorting options.
   void _showSortOptionsBottomSheet() {
     showModalBottomSheet(
       context: context,
@@ -198,6 +205,7 @@ class JournalsScreenState extends State<JournalsScreen> {
     );
   }
 
+  /// Returns all distinct observer values available in the loaded entries.
   List<String> _getUniqueObservers() {
     final entries =
         journalProvider.journalEntries;
@@ -215,6 +223,7 @@ class JournalsScreenState extends State<JournalsScreen> {
     return observers;
   }
 
+  /// Applies the active filters and sorting options to [journalEntries].
   List<FieldJournal> _filterJournalEntries(List<FieldJournal> journalEntries) {
     List<FieldJournal> filtered = journalEntries;
 
@@ -245,6 +254,7 @@ class JournalsScreenState extends State<JournalsScreen> {
     return _sortJournalEntries(filtered);
   }
 
+  /// Resolves the journal entry that should be shown in the detail pane.
   FieldJournal? _getEffectiveSelectedJournalEntry(
     List<FieldJournal> filteredEntries,
     bool isSplitScreen,
@@ -268,6 +278,7 @@ class JournalsScreenState extends State<JournalsScreen> {
     return filteredEntries[selectedIndex];
   }
 
+  /// Returns the identifier of the journal entry currently selected for details.
   int? _getEffectiveSelectedJournalEntryId(
     List<FieldJournal> filteredEntries,
     bool isSplitScreen,
@@ -276,6 +287,7 @@ class JournalsScreenState extends State<JournalsScreen> {
         ?.id;
   }
 
+  /// Opens the add-journal flow using a dialog or route depending on screen size.
   void _showAddJournalScreen(BuildContext context) {
     if (MediaQuery.sizeOf(context).width > 600) {
       showDialog(
@@ -310,6 +322,7 @@ class JournalsScreenState extends State<JournalsScreen> {
     }
   }
 
+  /// Deletes all journal entries currently selected in the list.
   void _deleteSelectedEntries() async {
     final journalProvider = Provider.of<FieldJournalProvider>(context, listen: false);
 
@@ -500,6 +513,7 @@ class JournalsScreenState extends State<JournalsScreen> {
     );
   }
 
+  /// Builds the master list pane for the journal screen.
   Widget _buildListPane(BuildContext context, bool isSplitScreen, bool isMenuShown) {
     return Column(
         children: [
@@ -799,6 +813,7 @@ class JournalsScreenState extends State<JournalsScreen> {
       );
   }
 
+  /// Builds the detail pane shown on larger screens.
   Widget _buildDetailPane(BuildContext context) {
     if (_selectedJournalEntry == null) {
       // Placeholder when nothing selected
@@ -824,6 +839,7 @@ class JournalsScreenState extends State<JournalsScreen> {
     );
   }
 
+  /// Builds a single journal list tile with selection and navigation behavior.
   ListTile journalListTileItem(List<FieldJournal> filteredEntries, int index, BuildContext context) {
     final entry = filteredEntries[index];
     final isSelected = selectedJournals.contains(entry.id);
@@ -882,6 +898,7 @@ class JournalsScreenState extends State<JournalsScreen> {
     );
   }
 
+  /// Shows contextual actions for a journal entry.
   void _showBottomSheet(BuildContext context, FieldJournal journalEntry) {
     showModalBottomSheet(
       context: context,
@@ -962,6 +979,7 @@ class JournalsScreenState extends State<JournalsScreen> {
     );
   }
 
+  /// Shows additional list-level actions for smaller screens.
   void _showMoreOptionsBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,

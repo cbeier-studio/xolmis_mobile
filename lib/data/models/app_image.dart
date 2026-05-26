@@ -1,6 +1,4 @@
-
-// Image class
-
+/// Represents an image file linked to a domain record in the app.
 class AppImage {
   late int? id;
   final String imagePath;
@@ -20,6 +18,7 @@ class AppImage {
     this.nestRevisionId,
   });
 
+  /// Creates an [AppImage] from a SQLite row map.
   factory AppImage.fromMap(Map<String, dynamic> map) {
     return AppImage(
       id: map['id'],
@@ -32,6 +31,7 @@ class AppImage {
     );
   }
 
+  /// Converts this image into a SQLite-compatible map.
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -44,6 +44,7 @@ class AppImage {
     };
   }
 
+  /// Returns a copy of this image with the provided fields replaced.
   AppImage copyWith({
     int? id,
     String? imagePath,

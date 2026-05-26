@@ -1,12 +1,21 @@
 import '../../generated/l10n.dart';
 
+/// Minimum width (in dp) used to switch to tablet-oriented layouts.
 const double kTabletBreakpoint = 600.0;
+
+/// Minimum width (in dp) used to switch to desktop-oriented layouts.
 const double kDesktopBreakpoint = 840.0;
+
+/// Default width (in dp) used by side sheets on large screens.
 const double kSideSheetWidth = 360.0;
 
+/// Latest bundled species taxonomy update version.
 const int kCurrentSpeciesUpdateVersion = 2025;
+
+/// Shared preferences key that stores the startup module index.
 const String kStartupModulePreferenceKey = 'startupModuleIndex';
 
+/// App modules that can be used as startup destination.
 enum StartupModule {
   inventories,
   nests,
@@ -15,6 +24,7 @@ enum StartupModule {
   statistics,
 }
 
+/// Exception thrown when inserting records into the database fails.
 class DatabaseInsertException implements Exception {
   final String message;
 
@@ -24,6 +34,7 @@ class DatabaseInsertException implements Exception {
   String toString() => 'DatabaseInsertException: $message';
 }
 
+/// Countries currently supported by species checklists and settings.
 enum SupportedCountry {
   AR, // Argentina
   BR, // Brazil
@@ -31,6 +42,7 @@ enum SupportedCountry {
   UY, // Uruguay
 }
 
+/// Localized metadata for each supported country.
 final Map<SupportedCountry, CountryMetadata> countryMetadata = {
   SupportedCountry.AR: CountryMetadata(
     name: S.current.countryArgentina,
@@ -50,6 +62,7 @@ final Map<SupportedCountry, CountryMetadata> countryMetadata = {
   ),
 };
 
+/// Human-readable metadata associated with a supported country.
 class CountryMetadata {
   final String name;
   final String isoCode;
@@ -57,11 +70,13 @@ class CountryMetadata {
   CountryMetadata({required this.name, required this.isoCode});
 }
 
+/// Provider groups that can show badge counters in navigation.
 enum BadgeProviderType {
   inventory,
   nest,
 }
 
+/// Predefined date range filters for list and statistics screens.
 enum DateFilter {
   today,
   yesterday,
@@ -73,11 +88,13 @@ enum DateFilter {
   customRange,
 }
 
+/// Sort direction for ordered data views.
 enum SortOrder {
   ascending,
   descending,
 }
 
+/// Available sort fields for inventories.
 enum InventorySortField {
   id,
   startTime,
@@ -86,6 +103,7 @@ enum InventorySortField {
   inventoryType,
 }
 
+/// Available sort fields for nests.
 enum NestSortField {
   fieldNumber,
   foundTime,
@@ -95,6 +113,7 @@ enum NestSortField {
   nestFate,
 }
 
+/// Available sort fields for specimens.
 enum SpecimenSortField {
   fieldNumber,
   sampleTime,
@@ -103,25 +122,28 @@ enum SpecimenSortField {
   specimenType,
 }
 
+/// Available sort fields for field journal entries.
 enum JournalSortField {
   title,
   creationDate,
   lastModifiedDate,
 }
 
+/// Available sort fields for species records inside inventories.
 enum SpeciesSortField {
   name,
   time,
   // type,
 }
 
-// Enum for warning dialog actions
+/// Actions returned by conditional warning dialogs.
 enum ConditionalAction {
   add,
   ignore,
   cancelDialog
 }
 
+/// Vegetation distribution descriptors used in vegetation samples.
 enum DistributionType {
   disNone,
   disRare,
@@ -140,6 +162,7 @@ enum DistributionType {
   disContinuousDenseCoverWithEdge,
 }
 
+/// Localized labels for [DistributionType] values.
 Map<DistributionType, String> distributionTypeFriendlyNames = {
   DistributionType.disNone: S.current.distributionNone,
   DistributionType.disRare: S.current.distributionRare,
@@ -158,6 +181,7 @@ Map<DistributionType, String> distributionTypeFriendlyNames = {
   DistributionType.disContinuousDenseCoverWithEdge: S.current.distributionContinuousDenseCoverWithEdge,
 };
 
+/// Precipitation categories used in weather samples.
 enum PrecipitationType {
   preNone,
   preFog,
@@ -170,6 +194,7 @@ enum PrecipitationType {
   preFrost,
 }
 
+/// Localized labels for [PrecipitationType] values.
 Map<PrecipitationType, String> precipitationTypeFriendlyNames = {
   PrecipitationType.preNone: S.current.precipitationNone,
   PrecipitationType.preFog: S.current.precipitationFog,
@@ -182,6 +207,7 @@ Map<PrecipitationType, String> precipitationTypeFriendlyNames = {
   PrecipitationType.preFrost: S.current.precipitationFrost,
 };
 
+/// Inventory protocol types available when creating an inventory.
 enum InventoryType {
   invFreeQualitative,
   invTimedQualitative,
@@ -195,6 +221,7 @@ enum InventoryType {
   invPointDetection,
 }
 
+/// Localized labels for [InventoryType] values.
 Map<InventoryType, String> inventoryTypeFriendlyNames = {
   InventoryType.invFreeQualitative: S.current.inventoryFreeQualitative,
   InventoryType.invTimedQualitative: S.current.inventoryTimedQualitative,
@@ -208,6 +235,7 @@ Map<InventoryType, String> inventoryTypeFriendlyNames = {
   InventoryType.invPointDetection: S.current.inventoryPointDetection,
 };
 
+/// Egg shape categories used by nest egg records.
 enum EggShapeType {
   estSpherical,
   estElliptical,
@@ -219,6 +247,7 @@ enum EggShapeType {
   estLongitudinal,
 }
 
+/// Localized labels for [EggShapeType] values.
 Map<EggShapeType, String> eggShapeTypeFriendlyNames = {
   EggShapeType.estSpherical: S.current.eggShapeSpherical,
   EggShapeType.estElliptical: S.current.eggShapeElliptical,
@@ -230,6 +259,7 @@ Map<EggShapeType, String> eggShapeTypeFriendlyNames = {
   EggShapeType.estLongitudinal: S.current.eggShapeLongitudinal,
 };
 
+/// Stages of nest development recorded in revisions.
 enum NestStageType {
   stgUnknown,
   stgBuilding,
@@ -240,6 +270,7 @@ enum NestStageType {
   stgInactive,
 }
 
+/// Localized labels for [NestStageType] values.
 Map<NestStageType, String> nestStageTypeFriendlyNames = {
   NestStageType.stgUnknown: S.current.nestStageUnknown,
   NestStageType.stgBuilding: S.current.nestStageBuilding,
@@ -250,30 +281,35 @@ Map<NestStageType, String> nestStageTypeFriendlyNames = {
   NestStageType.stgInactive: S.current.nestStageInactive,
 };
 
+/// Activity status of a nest during a revision.
 enum NestStatusType {
   nstUnknown,
   nstActive,
   nstInactive,
 }
 
+/// Localized labels for [NestStatusType] values.
 Map<NestStatusType, String> nestStatusTypeFriendlyNames = {
   NestStatusType.nstUnknown: S.current.nestStatusUnknown,
   NestStatusType.nstActive: S.current.nestStatusActive,
   NestStatusType.nstInactive: S.current.nestStatusInactive,
 };
 
+/// Final fate categories used to close nest records.
 enum NestFateType {
   fatUnknown,
   fatSuccess,
   fatLost,
 }
 
+/// Localized labels for [NestFateType] values.
 Map<NestFateType, String> nestFateTypeFriendlyNames = {
   NestFateType.fatUnknown: S.current.nestFateUnknown,
   NestFateType.fatSuccess: S.current.nestFateSuccess,
   NestFateType.fatLost: S.current.nestFateLost,
 };
 
+/// Biological specimen categories used when recording samples.
 enum SpecimenType {
   spcWholeCarcass,
   spcPartialCarcass,
@@ -290,6 +326,7 @@ enum SpecimenType {
   spcRegurgite,
 }
 
+/// Localized labels for [SpecimenType] values.
 Map<SpecimenType, String> specimenTypeFriendlyNames = {
   SpecimenType.spcWholeCarcass: S.current.specimenWholeCarcass,
   SpecimenType.spcPartialCarcass: S.current.specimenPartialCarcass,

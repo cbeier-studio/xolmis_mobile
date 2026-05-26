@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../data/database/database_helper.dart';
 
-/// Model representing the update result.
+/// Summarizes the result of a taxonomy update batch.
 class UpdateSummary {
   final int year;
   final int updatesCount; // Number of pairs old/new in JSON
@@ -28,16 +28,17 @@ class UpdateSummary {
   }
 }
 
-/// Service to update species names in the database from a JSON file.
+/// Applies taxonomy update files to persisted species-related tables.
 class SpeciesUpdateService {
   final DatabaseHelper _dbHelper;
 
   SpeciesUpdateService({required DatabaseHelper dbHelper}) : _dbHelper = dbHelper;
 
-  /// Apply species updates for a given year.
+  /// Applies species name updates for a given [year].
   ///
-  /// Load a JSON file from 'assets/updates/species_update_[year].json',
-  /// and updates the tables 'species', 'nests' and 'specimens' within a transaction.
+  /// The method loads `assets/updates/species_update_[year].json` and updates
+  /// the `species`, `nests`, and `specimens` tables inside a single
+  /// transaction.
   Future<UpdateSummary> applySpeciesUpdates(int year) async {
     final db = await _dbHelper.database;
     if (db == null) {
@@ -123,7 +124,7 @@ class SpeciesUpdateService {
     }
   }
 
-  /// Load species updates from a JSON file.
+  /// Loads species update pairs from the JSON asset for [year].
   Future<List<Map<String, dynamic>>> _loadUpdatesFromFile(int year) async {
     try {
       final String filePath = 'assets/updates/species_update_$year.json';

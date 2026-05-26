@@ -16,8 +16,10 @@ import 'image_details_screen.dart';
 import '../../utils/utils.dart';
 import '../../generated/l10n.dart';
 
+/// Enumerates the supported parent entities that can own image records.
 enum ImageParentType { vegetation, egg, specimen, nestRevision }
 
+/// Displays and manages images attached to a vegetation, egg, specimen, or nest revision record.
 class AppImageScreen extends StatefulWidget {
   final int? vegetationId;
   final int? eggId;
@@ -25,6 +27,7 @@ class AppImageScreen extends StatefulWidget {
   final int? nestRevisionId;
   final bool isEmbedded;
 
+  /// Creates an image management screen for exactly one supported parent record.
   const AppImageScreen({
     super.key,
     this.vegetationId,
@@ -34,6 +37,7 @@ class AppImageScreen extends StatefulWidget {
     this.isEmbedded = false,
   });
 
+  /// Creates the mutable state for [AppImageScreen].
   @override
   State<AppImageScreen> createState() => _AppImageScreenState();
 }
@@ -59,6 +63,7 @@ class _AppImageScreenState extends State<AppImageScreen> {
     super.dispose();
   }
 
+  /// Resolves which parent entity this screen should load images for.
   void _determineActiveParent() {
     if (widget.vegetationId != null) {
       _activeParentId = widget.vegetationId;
@@ -77,7 +82,7 @@ class _AppImageScreenState extends State<AppImageScreen> {
     }
   }
 
-  // Load images from the database
+  /// Loads images for the currently active parent record.
   Future<void> _loadImages() async {
     if (_activeParentId == null || _activeParentType == null) return;
 
@@ -97,7 +102,7 @@ class _AppImageScreenState extends State<AppImageScreen> {
     }
   }
 
-  // Add an image to the database
+  /// Picks an image from [source], copies it into app storage, and saves its metadata.
   Future<void> _addImage(ImageSource source) async {
     final imagePicker = ImagePicker();
     // Get the image from camera or gallery
@@ -137,6 +142,7 @@ class _AppImageScreenState extends State<AppImageScreen> {
     }
   }
 
+  /// Builds the top action area used by the embedded layout variant.
   Widget _buildTopArea(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -301,6 +307,7 @@ class _AppImageScreenState extends State<AppImageScreen> {
     );
   }
 
+  /// Requests the permissions required to capture or import images.
   Future<bool> _requestPermissions() async {
     final cameraStatus = await Permission.camera.request();
     PermissionStatus photosStatus;
@@ -344,6 +351,7 @@ class _AppImageScreenState extends State<AppImageScreen> {
     }
   }
 
+  /// Shows the dialog used to add a new image and optional notes.
   void _showAddImageDialog() {
     showDialog(
       context: context,
@@ -399,6 +407,7 @@ class _AppImageScreenState extends State<AppImageScreen> {
     );
   }
 
+  /// Shows contextual actions for an existing [appImage].
   void _showBottomSheet(BuildContext context, AppImage appImage) {
     showModalBottomSheet(
       context: context,
@@ -471,7 +480,7 @@ class _AppImageScreenState extends State<AppImageScreen> {
     );
   }
 
-  // Show a dialog to edit the notes of an image
+  /// Shows a dialog that lets the user edit notes for [appImage].
   void _showEditNotesDialog(BuildContext context, AppImage appImage) {
     final notesController = TextEditingController(text: appImage.notes);
 
@@ -520,7 +529,7 @@ class _AppImageScreenState extends State<AppImageScreen> {
     );
   }
 
-  // Build a GridView with the images
+  /// Builds the grid used to display [images].
   Widget _buildGridView(List<AppImage> images) {
     return GridView.builder(
       gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(

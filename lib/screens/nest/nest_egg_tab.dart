@@ -15,6 +15,7 @@ import '../../generated/l10n.dart';
 
 import 'add_egg_screen.dart';
 
+/// Tab that lists eggs associated with a nest.
 class EggsTab extends StatefulWidget {
   final Nest nest;
 
@@ -24,6 +25,7 @@ class EggsTab extends StatefulWidget {
   State<EggsTab> createState() => _EggsTabState();
 }
 
+/// Handles egg list interactions and CRUD actions.
 class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
@@ -34,6 +36,7 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
     return _buildEggList();
   }
 
+  /// Deletes an egg after confirmation.
   Future<void> _deleteEgg(Egg egg) async {
     final confirmed = await _showDeleteConfirmationDialog(context);
     if (confirmed) {
@@ -71,6 +74,7 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
         false;
   }
 
+  /// Opens the add-egg form with the next generated field suffix.
   Future<void> _showAddEggScreen(BuildContext context) async {
     final eggProvider = Provider.of<EggProvider>(context, listen: false);
     int nextNumber = await eggProvider.getNextSequentialNumber(widget.nest.fieldNumber!);
@@ -268,6 +272,7 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
   }
 }
 
+/// Grid card representation of an egg record.
 class EggGridItem extends StatelessWidget {
   const EggGridItem({super.key, required this.egg});
 
@@ -330,6 +335,7 @@ class EggGridItem extends StatelessWidget {
   }
 }
 
+/// List tile representation of an egg record.
 class EggListItem extends StatefulWidget {
   final Egg egg;
   final VoidCallback onLongPress;
@@ -340,6 +346,7 @@ class EggListItem extends StatefulWidget {
   EggListItemState createState() => EggListItemState();
 }
 
+/// State for compact egg rows and contextual actions.
 class EggListItemState extends State<EggListItem> {
   @override
   Widget build(BuildContext context) {

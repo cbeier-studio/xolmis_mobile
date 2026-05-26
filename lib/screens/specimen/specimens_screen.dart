@@ -20,15 +20,19 @@ import '../statistics/stats_specimens_screen.dart';
 import '../../generated/l10n.dart';
 import '../../widgets/filter_selection_bottom_sheet.dart';
 
+/// Displays the specimen registry with filtering, selection, and export actions.
 class SpecimensScreen extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
 
+  /// Creates the specimens screen.
   const SpecimensScreen({super.key, required this.scaffoldKey});
 
+  /// Creates the mutable state for [SpecimensScreen].
   @override
   SpecimensScreenState createState() => SpecimensScreenState();
 }
 
+/// State implementation for [SpecimensScreen].
 class SpecimensScreenState extends State<SpecimensScreen> {
   late SpecimenProvider specimenProvider;
   final _searchController = TextEditingController();
@@ -62,6 +66,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
     specimenProvider.fetchSpecimens();
   }
 
+  /// Returns whether [date] matches the currently selected date [filter].
   bool _isWithinDateFilter(DateTime? date, DateFilter? filter) {
     if (date == null || filter == null) return true; // sem filtro ou data nula
     final now = DateTime.now();
@@ -102,6 +107,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
     }
   }
 
+  /// Sorts [specimens] using the active sort field and direction.
   List<Specimen> _sortSpecimens(List<Specimen> specimens) {
     specimens.sort((a, b) {
       int comparison;
@@ -143,6 +149,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
     return specimens;
   }
 
+  /// Shows the bottom sheet used to configure specimen sorting.
   void _showSortOptionsBottomSheet() {
     showModalBottomSheet(
       context: context,
@@ -276,6 +283,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
     );
   }
 
+  /// Returns all distinct species names available in the active specimen subset.
   List<String> _getUniqueSpecies() {
     final specimens =
         _showPending
@@ -297,6 +305,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
     return species;
   }
 
+  /// Returns all distinct localities available in the active specimen subset.
   List<String> _getUniqueLocalities() {
     final specimens =
         _showPending
@@ -317,6 +326,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
     return localities;
   }
 
+  /// Returns all distinct observers available in the active specimen subset.
   List<String> _getUniqueObservers() {
     final specimens =
         _showPending
@@ -337,6 +347,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
     return observers;
   }
 
+  /// Opens the reusable string filter bottom sheet for list filters.
   Future<FilterSelectionResult<String>?> _showStringFilterBottomSheet({
     required String title,
     required List<String> items,
@@ -355,6 +366,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
     );
   }
 
+  /// Opens the species filter selector.
   Future<void> _selectSpeciesFromBottomSheet() async {
     final result = await _showStringFilterBottomSheet(
       title: S.current.species(1),
@@ -368,6 +380,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
     });
   }
 
+  /// Opens the locality filter selector.
   Future<void> _selectLocalityFromBottomSheet() async {
     final result = await _showStringFilterBottomSheet(
       title: S.current.locality,
@@ -380,6 +393,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
     });
   }
 
+  /// Applies the active filters and sorting options to [specimens].
   List<Specimen> _filterSpecimens(List<Specimen> specimens) {
     List<Specimen> filtered = specimens;
 
@@ -443,6 +457,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
     return _sortSpecimens(filtered);
   }
 
+  /// Resolves the specimen that should be shown in the detail pane.
   Specimen? _getEffectiveSelectedSpecimen(
     List<Specimen> filteredSpecimens,
     bool isSplitScreen,
@@ -466,6 +481,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
     return filteredSpecimens[selectedIndex];
   }
 
+  /// Returns the identifier of the specimen currently selected for details.
   int? _getEffectiveSelectedSpecimenId(
     List<Specimen> filteredSpecimens,
     bool isSplitScreen,
@@ -473,6 +489,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
     return _getEffectiveSelectedSpecimen(filteredSpecimens, isSplitScreen)?.id;
   }
 
+  /// Opens the add-specimen flow using a dialog or route depending on screen size.
   void _showAddSpecimenScreen(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
     final String observerAbbreviation =
@@ -524,6 +541,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
     }
   }
 
+  /// Deletes all specimens currently selected in the list.
   void _deleteSelectedSpecimens() async {
     final specimenProvider = Provider.of<SpecimenProvider>(
       context,
@@ -905,6 +923,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
     );
   }
 
+  /// Builds the master list pane for the specimen screen.
   Widget _buildListPane(
     BuildContext context,
     bool isSplitScreen,

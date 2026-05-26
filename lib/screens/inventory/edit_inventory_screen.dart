@@ -5,6 +5,7 @@ import '../../data/models/inventory.dart';
 import '../../generated/l10n.dart';
 import '../../providers/inventory_provider.dart';
 
+/// Screen used to edit metadata of an existing inventory.
 class EditInventoryScreen extends StatefulWidget {
   final Inventory inventory;
 
@@ -14,6 +15,7 @@ class EditInventoryScreen extends StatefulWidget {
   State<EditInventoryScreen> createState() => _EditInventoryScreenState();
 }
 
+/// State for editing inventory fields and returning an updated model.
 class _EditInventoryScreenState extends State<EditInventoryScreen> {
   late final TextEditingController _idController;
   late final TextEditingController _localityNameController;
@@ -50,6 +52,7 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
     super.dispose();
   }
 
+  /// Validates the form and pops with the updated inventory.
   void _saveForm() {
     // Valida e salva o formulário
     if (_formKey.currentState!.validate()) {

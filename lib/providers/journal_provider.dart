@@ -3,39 +3,44 @@ import 'package:flutter/material.dart';
 import '../data/models/journal.dart';
 import '../data/daos/journal_dao.dart';
 
+/// Manages field journal entries and exposes them to the widget tree.
 class FieldJournalProvider with ChangeNotifier {
   final FieldJournalDao _journalDao;
 
   FieldJournalProvider(this._journalDao);
 
   List<FieldJournal> _journalEntries = [];
+
+  /// The field journal entries currently loaded in memory.
   List<FieldJournal> get journalEntries => _journalEntries;
 
+  /// The number of loaded journal entries.
   int get entriesCount => journalEntries.length;
 
+  /// Notifies listeners without changing provider state.
   void refreshState() {
     notifyListeners();
   }
 
-  // Load list of all field journal entries
+  /// Loads all field journal entries from persistent storage.
   Future<void> fetchJournalEntries() async {
     _journalEntries = await _journalDao.getJournalEntries();
     notifyListeners();
   }
 
-  // Get field journal entry by ID
+  /// Returns a single journal entry identified by [entryId].
   Future<FieldJournal> getJournalEntryById(int entryId) async {
     return await _journalDao.getJournalEntryById(entryId);
   }
 
-  // Add field journal entry to the database and the list
+  /// Persists [journalEntry] and appends it to the in-memory list.
   Future<void> addJournalEntry(FieldJournal journalEntry) async {
     await _journalDao.insertJournalEntry(journalEntry);
     _journalEntries.add(journalEntry);
     notifyListeners();
   }
 
-  // Update field journal entry in the database and the list
+  /// Updates an existing journal entry in storage and in memory.
   Future<void> updateJournalEntry(FieldJournal journalEntry) async {
     await _journalDao.updateJournalEntry(journalEntry);
 
@@ -48,7 +53,9 @@ class FieldJournalProvider with ChangeNotifier {
     }
   }
 
-  // Remove field journal entry from database and from list
+  /// Deletes [journalEntry] from storage and removes it from the cache.
+  ///
+  /// Throws an [ArgumentError] when the entry has no valid identifier.
   Future<void> removeJournalEntry(FieldJournal journalEntry) async {
     if (journalEntry.id == null || journalEntry.id! <= 0) {
       throw ArgumentError('Invalid field journal entry ID: ${journalEntry.id}');

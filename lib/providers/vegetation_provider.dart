@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../data/models/inventory.dart';
 import '../data/daos/vegetation_dao.dart';
 
+/// Manages vegetation samples grouped by inventory identifier.
 class VegetationProvider with ChangeNotifier {
   final VegetationDao _vegetationDao;
 
@@ -10,11 +11,12 @@ class VegetationProvider with ChangeNotifier {
 
   final Map<String, List<Vegetation>> _vegetationMap = {};
 
+  /// Notifies listeners without reloading data.
   void refreshState() {
     notifyListeners();
   }
 
-  // Load vegetation records for an inventory ID
+  /// Loads all vegetation samples associated with [inventoryId].
   Future<void> loadVegetationForInventory(String inventoryId) async {
     try {
       final vegetationList = await _vegetationDao.getVegetationByInventory(inventoryId);
@@ -26,12 +28,12 @@ class VegetationProvider with ChangeNotifier {
     }
   }
 
-  // Get list of vegetation record for an inventory ID
+  /// Returns the cached vegetation samples for [inventoryId].
   List<Vegetation> getVegetationForInventory(String inventoryId) {
     return _vegetationMap[inventoryId] ?? [];
   }
 
-  // Add vegetation record to the database and the list
+  /// Persists [vegetation] for [inventoryId] and updates the local cache.
   Future<void> addVegetation(BuildContext context, String inventoryId, Vegetation vegetation) async {
     // Insert the vegetation data in the database
     await _vegetationDao.insertVegetation(vegetation);
@@ -43,7 +45,7 @@ class VegetationProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // Update vegetation in the database and the list
+  /// Updates a vegetation sample in storage and refreshes the inventory cache.
   Future<void> updateVegetation(String inventoryId, Vegetation vegetation) async {
     await _vegetationDao.updateVegetation(vegetation);
 
@@ -52,7 +54,7 @@ class VegetationProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // Remove vegetation record from database and from list
+  /// Deletes a vegetation sample from storage and removes it from the cache.
   Future<void> removeVegetation(String inventoryId, int vegetationId) async {
     await _vegetationDao.deleteVegetation(vegetationId);
 

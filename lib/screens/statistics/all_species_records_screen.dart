@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:xolmis/generated/l10n.dart';
 
+/// Displays a ranked list of species with their total records.
 class AllSpeciesRecordsScreen extends StatelessWidget {
   final List<MapEntry<String, int>> allSpeciesRecords;
 

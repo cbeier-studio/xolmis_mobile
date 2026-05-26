@@ -8,6 +8,7 @@ import '../../data/models/inventory.dart';
 import '../../utils/utils.dart';
 import '../../generated/l10n.dart';
 
+/// Detail screen for a species record, including its POI samples.
 class SpeciesDetailScreen extends StatefulWidget {
   final Species species;
 
@@ -17,6 +18,7 @@ class SpeciesDetailScreen extends StatefulWidget {
   SpeciesDetailScreenState createState() => SpeciesDetailScreenState();
 }
 
+/// Manages POI loading, creation, and removal for the selected species.
 class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
   bool _isAddingPoi = false;
 
@@ -32,6 +34,7 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
   }
 
   // Load the POIs for the species
+  /// Loads POIs already associated with this species.
   Future<void> _loadSpeciesData() async {
     final poiProvider = Provider.of<PoiProvider>(context, listen: false);
     setState(() {
@@ -40,6 +43,7 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
   }
 
   // Add a new POI
+  /// Captures location and creates a new POI linked to the species.
   Future<void> _addPoi() async {
     setState(() {
       _isAddingPoi = true;
@@ -82,6 +86,7 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
   }
 
   // Delete a POI
+  /// Deletes a POI after user confirmation.
   Future<void> _deletePoi(Poi poi) async {
     // Ask for user confirmation
     final confirmed = await _showDeleteConfirmationDialog(context);

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../data/models/inventory.dart';
 
+/// Displays the circular progress state of an inventory timer.
 class TimerProgressIndicator extends StatelessWidget {
+  /// Creates a timer progress indicator for [inventory].
   const TimerProgressIndicator({
     super.key,
     required this.value,

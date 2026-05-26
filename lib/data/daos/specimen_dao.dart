@@ -6,6 +6,7 @@ import '../models/specimen.dart';
 import '../database/database_helper.dart';
 
 
+/// Provides database access for specimen records.
 class SpecimenDao {
   final DatabaseHelper _dbHelper;
 
