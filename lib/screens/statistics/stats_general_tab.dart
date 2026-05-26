@@ -83,7 +83,7 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
 
       recordsPerHour = await getAllOccurrencesByHourOfDay();
 
-      recordsByMonth = await getOccurrencesByMonth('');
+      recordsByMonth = await getOccurrencesByMonth(null);
       speciesRichnessByMonth = await getSpeciesRichnessPerMonthGlobal();
       speciesRichnessByYear = await getSpeciesRichnessPerYearGlobal();
 
