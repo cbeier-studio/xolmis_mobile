@@ -81,11 +81,12 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
       averageInventoryHours = await widget.inventoryProvider.getAverageSamplingHours();
       totalNestsWithNidoparasitism = await getTotalNestsWithNidoparasitism();
 
+      recordsPerHour = await getAllOccurrencesByHourOfDay();
+
       final allSpeciesRecords = await widget.speciesProvider.getAllSpeciesRecords();
       final allNestsList = widget.nestProvider.nests;
       final allSpecimenList = widget.specimenProvider.specimens;
       final allEggsList = await widget.eggProvider.getAllEggs();
-      recordsPerHour = getAllOccurrencesByHourOfDay(allSpeciesRecords, allNestsList, allEggsList, allSpecimenList);
 
       recordsByMonth = _getRecordsByMonthGlobal(allSpeciesRecords, allNestsList, allEggsList, allSpecimenList);
       speciesRichnessByMonth = _getSpeciesRichnessPerMonthGlobal(allSpeciesRecords, allNestsList, allEggsList, allSpecimenList);

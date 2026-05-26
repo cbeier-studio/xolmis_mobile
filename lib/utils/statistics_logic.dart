@@ -210,112 +210,175 @@ Future<List<MapEntry<String, int>>> getTopSpeciesWithMostRecords(int count) asyn
   }).toList();
 }
 
-Map<int, int> getOccurrencesByMonth(
-    BuildContext context,
-    List<Species> speciesList,
-    List<Nest> nestList,
-    List<Egg> eggList,
-    List<Specimen> specimenList,
-    String? selectedSpecies) {
-  Map<int, int> occurrences = {};
-
+/// Returns the number of occurrences of [selectedSpecies] grouped by month (1–12),
+/// querying the database directly instead of relying on in-memory lists.
+///
+/// For [Species] records, [sampleTime] is used when available; otherwise the
+/// parent [Inventory.startTime] is used as a fallback via a LEFT JOIN.
+/// Records from [Nest], [Egg] and [Specimen] tables are also included when
+/// [selectedSpecies] is not null.
+///
+/// Returns a map with all 12 months pre-initialised to zero.
+Future<Map<int, int>> getOccurrencesByMonth(String? selectedSpecies) async {
   // Initialize the occurrences map with zero for each month
-  for (int month = 1; month <= 12; month++) {
-    occurrences[month] = 0;
+  final Map<int, int> occurrences = {for (var i = 1; i <= 12; i++) i: 0};
+
+  final db = await DatabaseHelper().database;
+  if (db == null) {
+    debugPrint('getOccurrencesByMonth: database is null.');
+    return occurrences;
   }
 
-  void addOccurrence(DateTime date) {
-    occurrences[date.month] = (occurrences[date.month] ?? 0) + 1;
-  }
-
-  // Check the list of species
-  for (var specie in speciesList) {
-    DateTime? speciesDate = specie.sampleTime;
-
-    if (speciesDate == null) {
-      Inventory? inventory =
-          Provider.of<InventoryProvider>(context, listen: false)
-              .getInventoryById(specie.inventoryId);
-      speciesDate = inventory?.startTime;
-    }
-
-    if (speciesDate != null) {
-      addOccurrence(speciesDate);
+  /// Adds row results (columns: month INTEGER, count INTEGER) to [occurrences].
+  void addRows(List<Map<String, dynamic>> rows) {
+    for (final row in rows) {
+      final month = row['month'] as int?;
+      final count = (row['count'] as int?) ?? 0;
+      if (month != null && month >= 1 && month <= 12) {
+        occurrences[month] = (occurrences[month] ?? 0) + count;
+      }
     }
   }
 
-  // Check the list of nests
-  for (var nest in nestList) {
-    if (nest.speciesName == selectedSpecies) {
-      addOccurrence(nest.foundTime!);
-    }
-  }
+  try {
+    // Species: use sampleTime, fallback to parent inventory startTime
+    final speciesFilter = selectedSpecies != null ? 'AND s.name = ?' : '';
+    final speciesArgs = selectedSpecies != null ? [selectedSpecies] : <dynamic>[];
+    final speciesRows = await db.rawQuery('''
+      SELECT
+        CAST(strftime('%m', COALESCE(s.sampleTime, i.startTime)) AS INTEGER) AS month,
+        COUNT(*) AS count
+      FROM species s
+      LEFT JOIN inventories i ON s.inventoryId = i.id
+      WHERE COALESCE(s.sampleTime, i.startTime) IS NOT NULL
+        $speciesFilter
+      GROUP BY month
+    ''', speciesArgs);
+    addRows(speciesRows);
 
-  // Check the list of eggs
-  for (var egg in eggList) {
-    if (egg.speciesName == selectedSpecies) {
-      addOccurrence(egg.sampleTime!);
-    }
-  }
+    if (selectedSpecies != null) {
+      // Nests: use foundTime
+      final nestRows = await db.rawQuery('''
+        SELECT
+          CAST(strftime('%m', foundTime) AS INTEGER) AS month,
+          COUNT(*) AS count
+        FROM nests
+        WHERE foundTime IS NOT NULL AND speciesName = ?
+        GROUP BY month
+      ''', [selectedSpecies]);
+      addRows(nestRows);
 
-  // Check the list of specimens
-  for (var specimen in specimenList) {
-    if (specimen.speciesName == selectedSpecies) {
-      addOccurrence(specimen.sampleTime!);
+      // Eggs: use sampleTime
+      final eggRows = await db.rawQuery('''
+        SELECT
+          CAST(strftime('%m', sampleTime) AS INTEGER) AS month,
+          COUNT(*) AS count
+        FROM eggs
+        WHERE sampleTime IS NOT NULL AND speciesName = ?
+        GROUP BY month
+      ''', [selectedSpecies]);
+      addRows(eggRows);
+
+      // Specimens: use sampleTime
+      final specimenRows = await db.rawQuery('''
+        SELECT
+          CAST(strftime('%m', sampleTime) AS INTEGER) AS month,
+          COUNT(*) AS count
+        FROM specimens
+        WHERE sampleTime IS NOT NULL AND speciesName = ?
+        GROUP BY month
+      ''', [selectedSpecies]);
+      addRows(specimenRows);
     }
+  } catch (e) {
+    debugPrint('Error in getOccurrencesByMonth: $e');
   }
 
   return occurrences;
 }
 
-Map<int, int> getOccurrencesByYear(
-    BuildContext context,
-    List<Species> speciesList,
-    List<Nest> nestList,
-    List<Egg> eggList,
-    List<Specimen> specimenList,
-    String? selectedSpecies) {
-  Map<int, int> occurrences = {};
+/// Returns the number of occurrences of [selectedSpecies] grouped by year,
+/// querying the database directly instead of relying on in-memory lists.
+///
+/// For [Species] records, [sampleTime] is used when available; otherwise the
+/// parent [Inventory.startTime] is used as a fallback via a LEFT JOIN.
+/// Records from [Nest], [Egg] and [Specimen] tables are also included when
+/// [selectedSpecies] is not null.
+///
+/// Returns an empty map when no records are found (years are not pre-initialised
+/// since the year range is dynamic).
+Future<Map<int, int>> getOccurrencesByYear(String? selectedSpecies) async {
+  final Map<int, int> occurrences = {};
 
-  void addOccurrence(DateTime date) {
-    occurrences[date.year] = (occurrences[date.year] ?? 0) + 1;
+  final db = await DatabaseHelper().database;
+  if (db == null) {
+    debugPrint('getOccurrencesByYear: database is null.');
+    return occurrences;
   }
 
-  // Check the list of species
-  for (var specie in speciesList) {
-    DateTime? speciesDate = specie.sampleTime;
-
-    if (speciesDate == null) {
-      Inventory? inventory =
-          Provider.of<InventoryProvider>(context, listen: false)
-              .getInventoryById(specie.inventoryId);
-      speciesDate = inventory?.startTime;
-    }
-
-    if (speciesDate != null) {
-      addOccurrence(speciesDate);
-    }
-  }
-
-  // Check the list of nests
-  for (var nest in nestList) {
-    if (nest.speciesName == selectedSpecies) {
-      addOccurrence(nest.foundTime!);
+  /// Adds row results (columns: year INTEGER, count INTEGER) to [occurrences].
+  void addRows(List<Map<String, dynamic>> rows) {
+    for (final row in rows) {
+      final year = row['year'] as int?;
+      final count = (row['count'] as int?) ?? 0;
+      if (year != null) {
+        occurrences[year] = (occurrences[year] ?? 0) + count;
+      }
     }
   }
 
-  // Check the list of eggs
-  for (var egg in eggList) {
-    if (egg.speciesName == selectedSpecies) {
-      addOccurrence(egg.sampleTime!);
-    }
-  }
+  try {
+    // Species: use sampleTime, fallback to parent inventory startTime
+    final speciesFilter = selectedSpecies != null ? 'AND s.name = ?' : '';
+    final speciesArgs = selectedSpecies != null ? [selectedSpecies] : <dynamic>[];
+    final speciesRows = await db.rawQuery('''
+      SELECT
+        CAST(strftime('%Y', COALESCE(s.sampleTime, i.startTime)) AS INTEGER) AS year,
+        COUNT(*) AS count
+      FROM species s
+      LEFT JOIN inventories i ON s.inventoryId = i.id
+      WHERE COALESCE(s.sampleTime, i.startTime) IS NOT NULL
+        $speciesFilter
+      GROUP BY year
+    ''', speciesArgs);
+    addRows(speciesRows);
 
-  // Check the list of specimens
-  for (var specimen in specimenList) {
-    if (specimen.speciesName == selectedSpecies) {
-      addOccurrence(specimen.sampleTime!);
+    if (selectedSpecies != null) {
+      // Nests: use foundTime
+      final nestRows = await db.rawQuery('''
+        SELECT
+          CAST(strftime('%Y', foundTime) AS INTEGER) AS year,
+          COUNT(*) AS count
+        FROM nests
+        WHERE foundTime IS NOT NULL AND speciesName = ?
+        GROUP BY year
+      ''', [selectedSpecies]);
+      addRows(nestRows);
+
+      // Eggs: use sampleTime
+      final eggRows = await db.rawQuery('''
+        SELECT
+          CAST(strftime('%Y', sampleTime) AS INTEGER) AS year,
+          COUNT(*) AS count
+        FROM eggs
+        WHERE sampleTime IS NOT NULL AND speciesName = ?
+        GROUP BY year
+      ''', [selectedSpecies]);
+      addRows(eggRows);
+
+      // Specimens: use sampleTime
+      final specimenRows = await db.rawQuery('''
+        SELECT
+          CAST(strftime('%Y', sampleTime) AS INTEGER) AS year,
+          COUNT(*) AS count
+        FROM specimens
+        WHERE sampleTime IS NOT NULL AND speciesName = ?
+        GROUP BY year
+      ''', [selectedSpecies]);
+      addRows(specimenRows);
     }
+  } catch (e) {
+    debugPrint('Error in getOccurrencesByYear: $e');
   }
 
   return occurrences;
@@ -486,28 +549,60 @@ List<FlSpot> prepareAccumulatedSpeciesWithinSample(List<Inventory> selectedInven
   return accumulatedSpeciesData;
 }
 
-/// Agrupa o número total de registros de uma espécie por hora do dia (0-23).
-Map<int, int> getAllOccurrencesByHourOfDay(
-    List<Species> speciesList,
-    List<Nest> nestList,
-    List<Egg> eggList,
-    List<Specimen> specimenList,
-    ) {
-  // Cria um mapa para armazenar a contagem de cada hora, inicializando todas com 0.
-  final Map<int, int> occurrences = { for (var i = 0; i < 24; i++) i: 0 };
+/// Returns the total number of records grouped by hour of day (0–23) across
+/// all record types ([Species], [Nest], [Egg], [Specimen]), querying the
+/// database directly via a single `UNION ALL` query.
+///
+/// Only records with a non-null timestamp are counted. All 24 hours are
+/// pre-initialised to zero.
+Future<Map<int, int>> getAllOccurrencesByHourOfDay() async {
+  final Map<int, int> occurrences = {for (var i = 0; i < 24; i++) i: 0};
 
-  // Combina todos os registros que têm um 'sampleTime' em uma única lista.
-  final allRecordsWithTime = [
-    ...speciesList.where((s) => s.sampleTime != null).map((s) => s.sampleTime!),
-    ...nestList.where((n) => n.foundTime != null).map((n) => n.foundTime!),
-    ...eggList.where((e) => e.sampleTime != null).map((e) => e.sampleTime!),
-    ...specimenList.where((sp) => sp.sampleTime != null).map((sp) => sp.sampleTime!),
-  ];
+  final db = await DatabaseHelper().database;
+  if (db == null) {
+    debugPrint('getAllOccurrencesByHourOfDay: database is null.');
+    return occurrences;
+  }
 
-  // Para cada registro, incrementa a contagem para a hora correspondente.
-  for (final time in allRecordsWithTime) {
-    final hour = time.hour;
-    occurrences[hour] = (occurrences[hour] ?? 0) + 1;
+  try {
+    final rows = await db.rawQuery('''
+      SELECT hour, COUNT(*) AS count
+      FROM (
+        SELECT CAST(strftime('%H', sampleTime) AS INTEGER) AS hour
+        FROM species
+        WHERE sampleTime IS NOT NULL
+
+        UNION ALL
+
+        SELECT CAST(strftime('%H', foundTime) AS INTEGER) AS hour
+        FROM nests
+        WHERE foundTime IS NOT NULL
+
+        UNION ALL
+
+        SELECT CAST(strftime('%H', sampleTime) AS INTEGER) AS hour
+        FROM eggs
+        WHERE sampleTime IS NOT NULL
+
+        UNION ALL
+
+        SELECT CAST(strftime('%H', sampleTime) AS INTEGER) AS hour
+        FROM specimens
+        WHERE sampleTime IS NOT NULL
+      ) grouped
+      GROUP BY hour
+      ORDER BY hour
+    ''');
+
+    for (final row in rows) {
+      final hour = row['hour'] as int?;
+      final count = (row['count'] as int?) ?? 0;
+      if (hour != null && hour >= 0 && hour < 24) {
+        occurrences[hour] = (occurrences[hour] ?? 0) + count;
+      }
+    }
+  } catch (e) {
+    debugPrint('Error in getAllOccurrencesByHourOfDay: $e');
   }
 
   return occurrences;

@@ -48,6 +48,8 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
   int totalAbundance = 0;
   int totalPoisCount = 0;
   bool isLoadingSpecies = false;
+  Map<int, int> _occurrencesByMonth = {for (var i = 1; i <= 12; i++) i: 0};
+  Map<int, int> _occurrencesByYear = {};
   int _touchedIndexNestFate = -1;
   int _touchedIndexTotals = -1;
   List<PieChartSectionData> totalsSections = [];
@@ -121,6 +123,8 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
       totalAbundance = individualsRecorded;
 
       totalRecordsPerSpecies = allSpeciesList.length + nestList.length + eggList.length + specimenList.length;
+      _occurrencesByMonth = await getOccurrencesByMonth(selectedSpecies);
+      _occurrencesByYear = await getOccurrencesByYear(selectedSpecies);
       totalsSections =
           getTotalsByRecordType(allSpeciesList, nestList, eggList, specimenList).entries.map((entry) {
             return PieChartSectionData(
@@ -434,14 +438,7 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
                                               rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
                                             ),
                                             barGroups: createBarGroupsFromOccurrencesMap(
-                                              getOccurrencesByMonth(
-                                                context,
-                                                allSpeciesList,
-                                                nestList,
-                                                eggList,
-                                                specimenList,
-                                                selectedSpecies,
-                                              ),
+                                              _occurrencesByMonth,
                                               16,
                                             ),
                                           ),
@@ -502,14 +499,7 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
                                               rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
                                             ),
                                             barGroups: createBarGroupsFromYearOccurrencesMap(
-                                              getOccurrencesByYear(
-                                                context,
-                                                allSpeciesList,
-                                                nestList,
-                                                eggList,
-                                                specimenList,
-                                                selectedSpecies,
-                                              ),
+                                              _occurrencesByYear,
                                             ),
                                           ),
                                         ),
