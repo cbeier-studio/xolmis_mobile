@@ -37,45 +37,97 @@ class NestDao {
     }
   }
 
-  /// Imports a [Nest] into the database, ignoring any pre-existing ID so that
-  /// the database assigns a new auto-incremented ID.
+  /// Imports a [Nest] into the database inside a single transaction.
   ///
-  /// After inserting the nest, also inserts all associated [NestRevision] and
-  /// [Egg] records, linking them to the newly generated nest ID.
+  /// If a nest with the same ID already exists, its main row is updated and all
+  /// related [NestRevision] and [Egg] rows are replaced by the imported data.
+  /// For new records, a new row is inserted (preserving ID when provided).
   /// Returns `true` on success, or `false` if an error occurs.
   Future<bool> importNest(Nest nest) async {
     final db = await _dbHelper.database;
+    if (db == null) {
+      debugPrint('Error importing nest: Database instance is null.');
+      return false;
+    }
+
     try {
-      // Create a map from the nest, but explicitly set id to null
-      // to allow autoincrement to assign a new ID.
-      Map<String, dynamic> nestMap = nest.toMap();
-      nestMap['id'] = null; // Ensure ID is null for autoincrement
+      return await db.transaction((txn) async {
+        final nestMap = nest.toMap();
+        int? targetNestId = nest.id;
 
-      int? newNestId = await db?.insert(
-        'nests',
-        nestMap,
-        conflictAlgorithm: ConflictAlgorithm.replace,
-      );
+        if (targetNestId != null) {
+          final updatedRows = await txn.update(
+            'nests',
+            nestMap,
+            where: 'id = ?',
+            whereArgs: [targetNestId],
+          );
 
-      if (newNestId != null) {
-        // Update the original nest object's ID with the new ID from the database
-        nest.id = newNestId;
+          if (updatedRows == 0) {
+            final insertedId = await txn.insert('nests', nestMap);
+            if (insertedId <= 0) {
+              throw Exception('Failed to insert nest: ${nest.toString()}');
+            }
+            targetNestId = insertedId;
+          }
+        } else {
+          nestMap['id'] = null;
+          final insertedId = await txn.insert('nests', nestMap);
+          if (insertedId <= 0) {
+            throw Exception('Failed to insert nest without ID: ${nest.toString()}');
+          }
+          targetNestId = insertedId;
+        }
 
-        // Now, import related revisions and eggs, associating them with the new nest ID
+        nest.id = targetNestId;
+
+        await txn.delete(
+          'nest_revisions',
+          where: 'nestId = ?',
+          whereArgs: [targetNestId],
+        );
+        await txn.delete(
+          'eggs',
+          where: 'nestId = ?',
+          whereArgs: [targetNestId],
+        );
+
         if (nest.revisionsList != null && nest.revisionsList!.isNotEmpty) {
-          for (var revision in nest.revisionsList!) {
-            revision.nestId = newNestId;
-            await _nestRevisionDao.insertNestRevision(revision);
+          for (final revision in nest.revisionsList!) {
+            revision.id = null;
+            revision.nestId = targetNestId;
+
+            final revisionId = await txn.insert(
+              'nest_revisions',
+              revision.toMap(),
+              conflictAlgorithm: ConflictAlgorithm.replace,
+            );
+            if (revisionId <= 0) {
+              throw Exception('Failed to insert nest revision: ${revision.toString()}');
+            }
+            revision.id = revisionId;
           }
         }
+
         if (nest.eggsList != null && nest.eggsList!.isNotEmpty) {
-          for (var egg in nest.eggsList!) {
-            egg.nestId = newNestId;
-            await _eggDao.insertEgg(egg);
+          for (final egg in nest.eggsList!) {
+            egg.id = null;
+            egg.nestId = targetNestId;
+
+            final eggId = await txn.insert(
+              'eggs',
+              egg.toMap(),
+              conflictAlgorithm: ConflictAlgorithm.replace,
+            );
+            if (eggId <= 0) {
+              throw Exception('Failed to insert egg: ${egg.toString()}');
+            }
+            egg.id = eggId;
           }
         }
-      }
-      return true;
+
+        return true;
+      });
     } catch (e) {
       debugPrint('Error importing nest: $e');
       return false;

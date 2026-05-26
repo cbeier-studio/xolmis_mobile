@@ -57,7 +57,7 @@ class NestProvider with ChangeNotifier {
       // Merge with existing in-memory state
       for (var dbNest in nestsFromDb) {
         int? index = _nests.indexWhere((n) => n.id == dbNest.id);
-        if (index != -1 && index != null) {
+        if (index != -1) {
           // Update counts only
           _nests[index].revisionCount = dbNest.revisionCount;
           _nests[index].eggCount = dbNest.eggCount;
@@ -129,8 +129,17 @@ class NestProvider with ChangeNotifier {
   /// Returns `true` when the import succeeds and `false` otherwise.
   Future<bool> importNest(Nest nest) async {
     try {
-      await _nestDao.importNest(nest);
-      _nests.add(nest);
+      final success = await _nestDao.importNest(nest);
+      if (!success) {
+        return false;
+      }
+
+      final index = _nests.indexWhere((n) => n.id == nest.id);
+      if (index != -1) {
+        _nests[index] = nest;
+      } else {
+        _nests.add(nest);
+      }
       notifyListeners();
 
       return true;

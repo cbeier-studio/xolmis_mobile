@@ -111,7 +111,7 @@ Future<void> importInventoryFromJson(BuildContext context) async {
     List<Inventory> inventoriesToImport = [];
 
     if (jsonData is Map<String, dynamic> && jsonData.containsKey('records') && jsonData['records'] is List) {
-      // Case: JSON has a key "inventories" and it's a list
+      // Case: JSON has a key "records" and it's a list
       final List<dynamic> inventoriesJsonList = jsonData['records'];
       totalInventoriesToImport = inventoriesJsonList.length;
       for (final item in inventoriesJsonList) {

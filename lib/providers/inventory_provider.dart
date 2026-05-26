@@ -150,9 +150,23 @@ class InventoryProvider with ChangeNotifier {
   Future<bool> importInventory(Inventory inventory) async {
     debugPrint('[PROVIDER] Importing inventory: ${inventory.id}');
     try {
-      await _inventoryDao.importInventory(inventory);
-      _inventories.add(inventory);
+      final success = await _inventoryDao.importInventory(inventory);
+      if (!success) {
+        return false;
+      }
+
+      final index = _inventories.indexWhere((inv) => inv.id == inventory.id);
+      if (index != -1) {
+        _inventories[index] = inventory;
+      } else {
+        _inventories.add(inventory);
+      }
       _inventoryMap[inventory.id] = inventory; // Add to the map
+
+      await _speciesProvider.loadSpeciesForInventory(inventory.id);
+      await _vegetationProvider.loadVegetationForInventory(inventory.id);
+      await _weatherProvider.loadWeatherForInventory(inventory.id);
+
       notifyListeners();
       debugPrint('[PROVIDER] ...Import complete for ${inventory.id}. Notifying listeners.');
 
