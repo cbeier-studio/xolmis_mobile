@@ -225,6 +225,18 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
+  String recordsCount(int howMany) {
+    String _temp0 = intl.Intl.pluralLogic(
+      howMany,
+      locale: localeName,
+      other: 'registros',
+      one: 'registro',
+      zero: 'registros',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get pause => 'Pausa';
 
   @override
@@ -1939,6 +1951,18 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
       other: 'espécies',
       one: 'espécie',
       zero: 'espécies',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String recordsCount(int howMany) {
+    String _temp0 = intl.Intl.pluralLogic(
+      howMany,
+      locale: localeName,
+      other: 'registros',
+      one: 'registro',
+      zero: 'registros',
     );
     return '$_temp0';
   }

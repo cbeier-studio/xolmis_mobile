@@ -472,9 +472,15 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                         alignment: AlignmentDirectional.centerEnd,
                         offset: const Offset(24, -8),
                         count: speciesList.length,
-                        child: Tab(text: S.of(context).species(2)),
+                        child: Tab(text: widget.inventory.type == InventoryType.invTransectDetection ||
+                            widget.inventory.type == InventoryType.invPointDetection
+                            ? S.current.recordsCount(2)
+                            : S.current.species(2)),
                       )
-                    : Tab(text: S.of(context).species(2));
+                    : Tab(text: widget.inventory.type == InventoryType.invTransectDetection ||
+                          widget.inventory.type == InventoryType.invPointDetection
+                          ? S.current.recordsCount(2)
+                          : S.current.species(2));
               },
             ),
             Consumer<VegetationProvider>(

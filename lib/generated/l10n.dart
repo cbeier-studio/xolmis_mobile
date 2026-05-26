@@ -634,6 +634,19 @@ class S {
     );
   }
 
+  /// `{howMany, plural, zero{records} one{record} other{records}}`
+  String recordsCount(int howMany) {
+    return Intl.plural(
+      howMany,
+      zero: 'records',
+      one: 'record',
+      other: 'records',
+      name: 'recordsCount',
+      desc: 'How many records the inventory have',
+      args: [howMany],
+    );
+  }
+
   /// `Pause`
   String get pause {
     return Intl.message(

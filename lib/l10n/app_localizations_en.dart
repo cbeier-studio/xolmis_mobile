@@ -223,6 +223,18 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String recordsCount(int howMany) {
+    String _temp0 = intl.Intl.pluralLogic(
+      howMany,
+      locale: localeName,
+      other: 'records',
+      one: 'record',
+      zero: 'records',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get pause => 'Pause';
 
   @override

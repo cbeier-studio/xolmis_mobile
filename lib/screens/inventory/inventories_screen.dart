@@ -1559,6 +1559,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     return ListTile(
       // Show progress of the inventory timer
       leading: Stack(
+        clipBehavior: Clip.none,
         alignment: Alignment.center,
         children: [
           if (_isShowingActiveInventories && inventory.duration == 0)
@@ -1586,6 +1587,21 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                   inventory: inventory,
                 );
               },
+            ),
+          if (_isShowingActiveInventories &&
+              inventory.duration > 0 &&
+              inventory.type == InventoryType.invIntervalQualitative)
+            Positioned(
+              top: -2,
+              right: -6,
+              child: ValueListenableBuilder<int>(
+                valueListenable: inventory.intervalWithoutSpeciesNotifier,
+                builder: (context, intervalWithoutSpecies, child) {
+                  return intervalWithoutSpecies > 0
+                      ? Badge.count(count: intervalWithoutSpecies)
+                      : const SizedBox.shrink();
+                },
+              ),
             ),
           // Show current interval for qualitative inventories
           if (_isShowingActiveInventories &&
@@ -1628,18 +1644,6 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
           Visibility(
             visible: inventory.isDiscarded,
             child: const Icon(Icons.block),
-          ),
-          // Show the number of intervals without species for qualitative inventories
-          Visibility(
-            visible: inventory.type == InventoryType.invIntervalQualitative,
-            child: ValueListenableBuilder<int>(
-              valueListenable: inventory.intervalWithoutSpeciesNotifier,
-              builder: (context, intervalWithoutSpecies, child) {
-                return intervalWithoutSpecies > 0
-                    ? Badge.count(count: intervalWithoutSpecies)
-                    : const SizedBox.shrink();
-              },
-            ),
           ),
           // Show the pause/resume button for active inventories
           Visibility(
@@ -1703,10 +1707,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Show the inventory type
-        Text(
-          '${inventoryTypeFriendlyNames[inventory.type]}',
-          overflow: TextOverflow.ellipsis,
-        ),
+        _buildInventoryTypePill(context, inventory.type),
         // Show the inventory locality
         if (inventory.localityName != null &&
             inventory.localityName!.isNotEmpty)
@@ -1719,26 +1720,208 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
           Text(
             '${DateFormat('dd/MM/yyyy HH:mm:ss').format(inventory.startTime!)} - ${DateFormat('HH:mm:ss').format(inventory.endTime!)}',
           ),
-        // Show the species count
+        // Show the species count as overlapping tags.
         Builder(
           builder: (context) {
+            final colorScheme = Theme.of(context).colorScheme;
             final int outCount = inventory.speciesOutOfInventoryCount;
             final int withinCount = (inventory.speciesCount - outCount).clamp(
               0,
               inventory.speciesCount,
             );
+            final bool useRecordsLabel =
+                inventory.type == InventoryType.invTransectDetection ||
+                inventory.type == InventoryType.invPointDetection;
 
-            String speciesText =
-                '$withinCount ${S.current.speciesCount(withinCount)}';
-            if (outCount > 0) {
-              speciesText +=
-                  ' + $outCount ${S.current.outOfSample.toLowerCase()}';
-            }
-
-            return Text(speciesText);
+            return Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildSpeciesCountSplitPill(
+                  context,
+                  withinCount: withinCount,
+                  outCount: outCount,
+                  primaryColor: colorScheme.primary,
+                  primaryForeground: colorScheme.onPrimary,
+                  secondaryColor: colorScheme.primaryContainer,
+                  secondaryForeground: colorScheme.onPrimaryContainer,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  useRecordsLabel
+                      ? S.current.recordsCount(withinCount + outCount)
+                      : S.current.speciesCount(withinCount + outCount),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            );
           },
         ),
       ],
+    );
+  }
+
+  Widget _buildInventoryTypePill(
+    BuildContext context,
+    InventoryType? type,
+  ) {
+    final backgroundColor = _inventoryTypePillColor(context, type);
+    final foregroundColor =
+        ThemeData.estimateBrightnessForColor(backgroundColor) == Brightness.dark
+            ? Colors.white
+            : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.85);
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(999.0),
+      ),
+      child: Text(
+        inventoryTypeFriendlyNames[type] ?? S.current.type,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+              color: foregroundColor,
+              fontWeight: FontWeight.w600,
+            ),
+      ),
+    );
+  }
+
+  Color _inventoryTypePillColor(BuildContext context, InventoryType? type) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    switch (type) {
+      case InventoryType.invFreeQualitative:
+        return _themeAwarePillColor(
+          context,
+          seedColor: Colors.grey,
+        );
+      case InventoryType.invTimedQualitative:
+        return _themeAwarePillColor(
+          context,
+          seedColor: Colors.teal,
+        );
+      case InventoryType.invIntervalQualitative:
+        return _themeAwarePillColor(
+          context,
+          seedColor: Colors.red,
+        );
+      case InventoryType.invMackinnonList:
+        return _themeAwarePillColor(
+          context,
+          seedColor: Colors.cyan,
+        );
+      case InventoryType.invTransectCount:
+        return _themeAwarePillColor(
+          context,
+          seedColor: Colors.purpleAccent,
+        );
+      case InventoryType.invPointCount:
+        return _themeAwarePillColor(
+          context,
+          seedColor: Colors.amber,
+        );
+      case InventoryType.invBanding:
+        return _themeAwarePillColor(
+          context,
+          seedColor: Colors.brown,
+        );
+      case InventoryType.invCasual:
+        return _themeAwarePillColor(
+          context,
+          seedColor: Colors.blueGrey,
+        );
+      case InventoryType.invTransectDetection:
+        return _themeAwarePillColor(
+          context,
+          seedColor: Colors.blue,
+        );
+      case InventoryType.invPointDetection:
+        return _themeAwarePillColor(
+          context,
+          seedColor: Colors.green,
+        );
+      case null:
+        return _themeAwarePillColor(
+          context,
+          seedColor: Colors.white,
+        );
+    }
+  }
+
+  Color _themeAwarePillColor(
+    BuildContext context, {
+    required Color seedColor,
+  }) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final baseSurface = isDark
+        ? colorScheme.surfaceContainerHighest
+        : colorScheme.surface;
+    final overlayOpacity = isDark ? 0.40 : 0.22;
+
+    return Color.alphaBlend(
+      seedColor.withValues(alpha: overlayOpacity),
+      baseSurface,
+    );
+  }
+
+  Widget _buildSpeciesCountSplitPill(
+    BuildContext context, {
+    required int withinCount,
+    required int outCount,
+    required Color primaryColor,
+    required Color primaryForeground,
+    required Color secondaryColor,
+    required Color secondaryForeground,
+  }) {
+    final hasOutCount = outCount > 0;
+
+    return Container(
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(99.0),
+        // border: Border.all(color: Theme.of(context).dividerColor.withValues(alpha: 0.12)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 1.0),
+            color: primaryColor,
+            child: Text(
+              withinCount.toString(),
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: primaryForeground,
+                    fontWeight: FontWeight.w600,
+                  ) ??
+                  TextStyle(
+                    color: primaryForeground,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 11,
+                  ),
+            ),
+          ),
+          if (hasOutCount)
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 1.0),
+              color: secondaryColor,
+              child: Text(
+                '+ $outCount',
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: secondaryForeground,
+                      fontWeight: FontWeight.w600,
+                    ) ??
+                    TextStyle(
+                      color: secondaryForeground,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 11,
+                    ),
+              ),
+            ),
+        ],
+      ),
     );
   }
 

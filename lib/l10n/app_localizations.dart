@@ -440,6 +440,12 @@ abstract class AppLocalizations {
   /// **'{howMany, plural, zero{species} one{species} other{species}}'**
   String speciesCount(int howMany);
 
+  /// How many records the inventory have
+  ///
+  /// In en, this message translates to:
+  /// **'{howMany, plural, zero{records} one{record} other{records}}'**
+  String recordsCount(int howMany);
+
   /// Pause button hint
   ///
   /// In en, this message translates to:

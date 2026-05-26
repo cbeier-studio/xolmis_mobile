@@ -339,6 +339,16 @@
             }
         }
     },
+    "recordsCount": "{howMany, plural, zero{records} one{record} other{records}}",
+    "@recordsCount": {
+        "type": "text",
+        "description": "How many records the inventory have",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
     "pause": "Pause",
     "@pause": {
         "type": "text",

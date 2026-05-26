@@ -198,6 +198,16 @@
             }
         }
     },
+  "recordsCount": "{howMany, plural, zero{registros} one{registro} other{registros}}",
+  "@recordsCount": {
+    "type": "text",
+    "description": "How many records the inventory have",
+    "placeholders": {
+      "howMany": {
+        "type": "int"
+      }
+    }
+  },
     "pause": "Pausa",
     "resume": "Retomar",
     "export": "Exportar",
