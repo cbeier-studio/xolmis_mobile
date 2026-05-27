@@ -1038,6 +1038,40 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String importCompletedSummary(int newCount, int updatedCount, int skippedCount, int errorsCount) {
+    return 'Import finished: $newCount new, $updatedCount updated, $skippedCount skipped, $errorsCount errors';
+  }
+
+  @override
+  String get importCancelled => 'Import cancelled.';
+
+  @override
+  String get importExistingRecords => 'Existing records on import';
+
+  @override
+  String get importPolicyAskEveryTime => 'Ask every time';
+
+  @override
+  String get importPolicyUpdateExisting => 'Update existing records';
+
+  @override
+  String get importPolicySkipExisting => 'Skip existing records';
+
+  @override
+  String get importConflictDialogTitle => 'Existing records found';
+
+  @override
+  String importConflictDialogMessage(int conflictsCount) {
+    return '$conflictsCount imported records already exist locally. What do you want to do?';
+  }
+
+  @override
+  String get importConflictDialogUpdateAction => 'Update';
+
+  @override
+  String get importConflictDialogSkipAction => 'Skip';
+
+  @override
   String failedToImportInventoryWithId(String id) {
     return 'Failed to import inventory with ID: $id';
   }

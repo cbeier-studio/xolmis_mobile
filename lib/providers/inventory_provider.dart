@@ -146,11 +146,19 @@ class InventoryProvider with ChangeNotifier {
 
   /// Imports an inventory record and caches it locally.
   ///
+  /// When [updateExisting] is `false`, imports that collide by ID are skipped
+  /// by the DAO and this method returns `false` for that record.
   /// Returns `true` when the import succeeds and `false` otherwise.
-  Future<bool> importInventory(Inventory inventory) async {
+  Future<bool> importInventory(
+    Inventory inventory, {
+    bool updateExisting = true,
+  }) async {
     debugPrint('[PROVIDER] Importing inventory: ${inventory.id}');
     try {
-      final success = await _inventoryDao.importInventory(inventory);
+      final success = await _inventoryDao.importInventory(
+        inventory,
+        updateExisting: updateExisting,
+      );
       if (!success) {
         return false;
       }

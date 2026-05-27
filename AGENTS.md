@@ -34,6 +34,7 @@
 - Prefer extending existing utils (`export_utils.dart`, `import_utils.dart`, `backup_utils.dart`, `utils.dart`) instead of duplicating file/permission/share logic inside screens.
 - Preserve the provider/DAO split: screens should not talk to SQLite directly.
 - If you add user-facing text, update the ARB files in `lib/l10n/` and regenerate localization output instead of editing generated Dart.
+- Add documentation comments (Dartdoc) to new methods and classes, especially in data models and providers, to clarify their purpose and usage for future maintainers.
 
 ## Validation commands
 - Install/refresh deps: `flutter pub get`
@@ -41,6 +42,7 @@
 - Run checklist integrity test only before build: `flutter test test/checklists_integrity_test.dart`
 - Run utils tests only when modified `lib/utils/` files: `flutter test test/utils/utils_methods_test.dart`
 - Launch locally: `flutter run`
+- Generate localization output after ARB changes: `flutter pub global run intl_utils:generate`
 
 ## Current repo realities
 - `flutter analyze` currently reports many pre-existing infos/warnings, including generated localization files and async-context lint noise; do not assume a clean analyzer baseline.

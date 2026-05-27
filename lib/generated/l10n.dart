@@ -3085,6 +3085,122 @@ class S {
     );
   }
 
+  /// `Import finished: {newCount} new, {updatedCount} updated, {skippedCount} skipped, {errorsCount} errors`
+  String importCompletedSummary(
+    int newCount,
+    int updatedCount,
+    int skippedCount,
+    int errorsCount,
+  ) {
+    return Intl.message(
+      'Import finished: $newCount new, $updatedCount updated, $skippedCount skipped, $errorsCount errors',
+      name: 'importCompletedSummary',
+      desc: 'Detailed summary for import operations with conflict handling',
+      args: [newCount, updatedCount, skippedCount, errorsCount],
+    );
+  }
+
+  /// `Import cancelled.`
+  String get importCancelled {
+    return Intl.message(
+      'Import cancelled.',
+      name: 'importCancelled',
+      desc: 'Message shown when user cancels import after conflict prompt',
+      args: [],
+    );
+  }
+
+  /// `Existing records on import`
+  String get importExistingRecords {
+    return Intl.message(
+      'Existing records on import',
+      name: 'importExistingRecords',
+      desc:
+          'Settings title for choosing import behavior when records already exist',
+      args: [],
+    );
+  }
+
+  /// `Ask every time`
+  String get importPolicyAskEveryTime {
+    return Intl.message(
+      'Ask every time',
+      name: 'importPolicyAskEveryTime',
+      desc: 'Import policy option to ask the user when conflicts are found',
+      args: [],
+    );
+  }
+
+  /// `Update existing records`
+  String get importPolicyUpdateExisting {
+    return Intl.message(
+      'Update existing records',
+      name: 'importPolicyUpdateExisting',
+      desc: 'Import policy option to overwrite existing records',
+      args: [],
+    );
+  }
+
+  /// `Skip existing records`
+  String get importPolicySkipExisting {
+    return Intl.message(
+      'Skip existing records',
+      name: 'importPolicySkipExisting',
+      desc: 'Import policy option to keep existing records untouched',
+      args: [],
+    );
+  }
+
+  /// `Existing records found`
+  String get importConflictDialogTitle {
+    return Intl.message(
+      'Existing records found',
+      name: 'importConflictDialogTitle',
+      desc: 'Title of the dialog shown when imported records already exist',
+      args: [],
+    );
+  }
+
+  /// `{conflictsCount} imported records already exist locally. What do you want to do?`
+  String importConflictDialogMessage(int conflictsCount) {
+    return Intl.message(
+      '$conflictsCount imported records already exist locally. What do you want to do?',
+      name: 'importConflictDialogMessage',
+      desc: 'Dialog message shown when import conflicts are detected',
+      args: [conflictsCount],
+    );
+  }
+
+  /// `Update`
+  String get importConflictDialogUpdateAction {
+    return Intl.message(
+      'Update',
+      name: 'importConflictDialogUpdateAction',
+      desc: 'Action label to update existing records during import',
+      args: [],
+    );
+  }
+
+  /// `Skip`
+  String get importConflictDialogSkipAction {
+    return Intl.message(
+      'Skip',
+      name: 'importConflictDialogSkipAction',
+      desc: 'Action label to skip existing records during import',
+      args: [],
+    );
+  }
+
+  /// `Import and export`
+  String get importAndExport {
+    return Intl.message(
+      'Import and export',
+      name: 'importAndExport',
+      desc: 'Settings section title for import and export options',
+      args: [],
+    );
+  }
+
   /// `Failed to import inventory with ID: {id}`
   String failedToImportInventoryWithId(String id) {
     return Intl.message(

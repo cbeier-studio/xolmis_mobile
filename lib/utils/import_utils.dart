@@ -4,8 +4,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xolmis/generated/l10n.dart';
 
+import '../core/core_consts.dart';
 import '../data/models/inventory.dart';
 import '../data/models/nest.dart';
 import '../data/models/specimen.dart';
@@ -14,6 +16,98 @@ import '../providers/inventory_provider.dart';
 import '../providers/nest_provider.dart';
 import '../providers/specimen_provider.dart';
 import 'export_utils.dart';
+
+/// Loads the persisted import-conflict behavior from shared preferences.
+///
+/// Falls back to [ImportExistingRecordPolicy.askEveryTime] when the value is
+/// missing or out of bounds.
+Future<ImportExistingRecordPolicy> _getImportConflictPolicy() async {
+  final prefs = await SharedPreferences.getInstance();
+  final savedPolicyIndex =
+      prefs.getInt(kImportExistingRecordsPolicyPreferenceKey) ??
+      ImportExistingRecordPolicy.askEveryTime.index;
+
+  if (savedPolicyIndex < 0 ||
+      savedPolicyIndex >= ImportExistingRecordPolicy.values.length) {
+    return ImportExistingRecordPolicy.askEveryTime;
+  }
+
+  return ImportExistingRecordPolicy.values[savedPolicyIndex];
+}
+
+/// Resolves whether existing records should be updated for the current import.
+///
+/// Returns `true` to update conflicts, `false` to skip conflicting records, and
+/// `null` when the user cancels from the confirmation dialog.
+Future<bool?> _resolveUpdateExistingDecision(
+  BuildContext context,
+  int conflictsCount,
+) async {
+  if (conflictsCount <= 0) {
+    return true;
+  }
+
+  final policy = await _getImportConflictPolicy();
+  switch (policy) {
+    case ImportExistingRecordPolicy.updateExisting:
+      return true;
+    case ImportExistingRecordPolicy.skipExisting:
+      return false;
+    case ImportExistingRecordPolicy.askEveryTime:
+      if (!context.mounted) return null;
+      return await showDialog<bool>(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext dialogContext) {
+          return AlertDialog(
+            title: Text(S.of(dialogContext).importConflictDialogTitle),
+            content: Text(
+              S.of(dialogContext).importConflictDialogMessage(conflictsCount),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(dialogContext).pop(),
+                child: Text(S.of(dialogContext).cancel),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(dialogContext).pop(false),
+                child: Text(S.of(dialogContext).importConflictDialogSkipAction),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(dialogContext).pop(true),
+                child: Text(
+                  S.of(dialogContext).importConflictDialogUpdateAction,
+                ),
+              ),
+            ],
+          );
+        },
+      );
+  }
+}
+
+/// Builds a localized import summary message including conflict outcomes.
+///
+/// Uses [successFallback] when there were no updates, skips, or errors.
+String _buildImportSummaryMessage(
+  BuildContext context, {
+  required int newCount,
+  required int updatedCount,
+  required int skippedCount,
+  required int errorsCount,
+  required String successFallback,
+}) {
+  if (updatedCount == 0 && skippedCount == 0 && errorsCount == 0) {
+    return successFallback;
+  }
+
+  return S.of(context).importCompletedSummary(
+    newCount,
+    updatedCount,
+    skippedCount,
+    errorsCount,
+  );
+}
 
 /// Imports inventory records from an exported JSON file selected by the user.
 ///
@@ -31,7 +125,9 @@ import 'export_utils.dart';
 /// longer mounted.
 Future<void> importInventoryFromJson(BuildContext context) async {
   bool isDialogShown = false;
-  int successfullyImportedCount = 0;
+  int newImportedCount = 0;
+  int updatedCount = 0;
+  int skippedCount = 0;
   int totalInventoriesToImport = 0;
   List<String> importErrors = [];
   
@@ -169,12 +265,54 @@ Future<void> importInventoryFromJson(BuildContext context) async {
       return;
     }
 
+    final Set<String> conflictingInventoryIds = <String>{};
+    for (final inventory in inventoriesToImport) {
+      final exists = await inventoryProvider.inventoryIdExists(inventory.id);
+      if (exists) {
+        conflictingInventoryIds.add(inventory.id);
+      }
+    }
+
+    final bool? shouldUpdateExisting = await _resolveUpdateExistingDecision(
+      context,
+      conflictingInventoryIds.length,
+    );
+
+    if (shouldUpdateExisting == null) {
+      if (isDialogShown && context.mounted) {
+        Navigator.of(context).pop();
+        isDialogShown = false;
+      }
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            showCloseIcon: true,
+            content: Text(S.current.importCancelled),
+          ),
+        );
+      }
+      return;
+    }
+
     // Save the inventory to the database
     for (final inventory in inventoriesToImport) {
       try {
-        final success = await inventoryProvider.importInventory(inventory);
+        final isExisting = conflictingInventoryIds.contains(inventory.id);
+        if (isExisting && !shouldUpdateExisting) {
+          skippedCount++;
+          continue;
+        }
+
+        final success = await inventoryProvider.importInventory(
+          inventory,
+          updateExisting: shouldUpdateExisting,
+        );
         if (success) {
-          successfullyImportedCount++;
+          if (isExisting) {
+            updatedCount++;
+          } else {
+            newImportedCount++;
+          }
         } else {
           importErrors.add(S.current.failedToImportInventoryWithId(inventory.id));
         }
@@ -191,11 +329,16 @@ Future<void> importInventoryFromJson(BuildContext context) async {
 
     // Show import summary
     if (context.mounted) {
-      String summaryMessage;
-      if (importErrors.isEmpty) {
-        summaryMessage = S.current.inventoriesImportedSuccessfully(successfullyImportedCount);
-      } else {
-        summaryMessage = S.current.importCompletedWithErrors(successfullyImportedCount, importErrors.length);
+      final summaryMessage = _buildImportSummaryMessage(
+        context,
+        newCount: newImportedCount,
+        updatedCount: updatedCount,
+        skippedCount: skippedCount,
+        errorsCount: importErrors.length,
+        successFallback:
+            S.current.inventoriesImportedSuccessfully(newImportedCount),
+      );
+      if (importErrors.isNotEmpty) {
         debugPrint("Import errors: \n${importErrors.join('\n')}");
       }
 
@@ -252,7 +395,9 @@ Future<void> importInventoryFromJson(BuildContext context) async {
 /// elements such as the progress dialog and result `SnackBar`s.
 Future<void> importNestsFromJson(BuildContext context) async {
   bool isDialogShown = false;
-  int successfullyImportedCount = 0;
+  int newImportedCount = 0;
+  int updatedCount = 0;
+  int skippedCount = 0;
   List<String> importErrors = [];
 
   try {
@@ -323,13 +468,61 @@ Future<void> importNestsFromJson(BuildContext context) async {
       }
 
       if (!context.mounted) return;
+
+      final Set<String> conflictingNestFieldNumbers = <String>{};
+      for (final nest in nestsToImport) {
+        final fieldNumber = nest.fieldNumber;
+        if (fieldNumber == null || fieldNumber.isEmpty) continue;
+        final exists = await nestProvider.nestFieldNumberExists(fieldNumber);
+        if (exists) {
+          conflictingNestFieldNumbers.add(fieldNumber.toLowerCase());
+        }
+      }
+
+      final bool? shouldUpdateExisting = await _resolveUpdateExistingDecision(
+        context,
+        conflictingNestFieldNumbers.length,
+      );
+
+      if (shouldUpdateExisting == null) {
+        if (isDialogShown && context.mounted) {
+          Navigator.of(context).pop();
+          isDialogShown = false;
+        }
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              showCloseIcon: true,
+              content: Text(S.current.importCancelled),
+            ),
+          );
+        }
+        return;
+      }
+
       // Save the nests to the database
       for (final nest in nestsToImport) {
-        final success = await nestProvider.importNest(nest);
+        final fieldNumber = nest.fieldNumber;
+        final isExisting =
+            fieldNumber != null &&
+            conflictingNestFieldNumbers.contains(fieldNumber.toLowerCase());
+        if (isExisting && !shouldUpdateExisting) {
+          skippedCount++;
+          continue;
+        }
+
+        final success = await nestProvider.importNest(
+          nest,
+          updateExisting: shouldUpdateExisting,
+        );
         if (success) {
-          successfullyImportedCount++;
+          if (isExisting) {
+            updatedCount++;
+          } else {
+            newImportedCount++;
+          }
         } else {
-          importErrors.add(S.current.failedToImportNestWithId(nest.id!));
+          importErrors.add(S.current.failedToImportNestWithId(nest.id ?? -1));
         }
       }
 
@@ -338,9 +531,14 @@ Future<void> importNestsFromJson(BuildContext context) async {
 
       if (!context.mounted) return;
 
-      String summaryMessage = importErrors.isEmpty
-          ? S.current.nestsImportedSuccessfully(successfullyImportedCount)
-          : S.current.importCompletedWithErrors(successfullyImportedCount, importErrors.length);
+      final summaryMessage = _buildImportSummaryMessage(
+        context,
+        newCount: newImportedCount,
+        updatedCount: updatedCount,
+        skippedCount: skippedCount,
+        errorsCount: importErrors.length,
+        successFallback: S.current.nestsImportedSuccessfully(newImportedCount),
+      );
       if (importErrors.isNotEmpty) debugPrint("Import errors: \n${importErrors.join('\n')}");
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -389,7 +587,9 @@ Future<void> importNestsFromJson(BuildContext context) async {
 /// transient UI feedback such as dialogs and `SnackBar`s.
 Future<void> importSpecimensFromJson(BuildContext context) async {
   bool isDialogShown = false;
-  int successfullyImportedCount = 0;
+  int newImportedCount = 0;
+  int updatedCount = 0;
+  int skippedCount = 0;
   List<String> importErrors = [];
 
   try {
@@ -460,13 +660,63 @@ Future<void> importSpecimensFromJson(BuildContext context) async {
       }
 
       if (!context.mounted) return;
+
+      final Set<String> conflictingSpecimenFieldNumbers = <String>{};
+      for (final specimen in specimensToImport) {
+        final fieldNumber = specimen.fieldNumber;
+        if (fieldNumber.isEmpty) continue;
+        final exists = await specimenProvider.specimenFieldNumberExists(fieldNumber);
+        if (exists) {
+          conflictingSpecimenFieldNumbers.add(fieldNumber.toLowerCase());
+        }
+      }
+
+      final bool? shouldUpdateExisting = await _resolveUpdateExistingDecision(
+        context,
+        conflictingSpecimenFieldNumbers.length,
+      );
+
+      if (shouldUpdateExisting == null) {
+        if (isDialogShown && context.mounted) {
+          Navigator.of(context).pop();
+          isDialogShown = false;
+        }
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              showCloseIcon: true,
+              content: Text(S.current.importCancelled),
+            ),
+          );
+        }
+        return;
+      }
+
       // Save the specimens to the database
       for (final specimen in specimensToImport) {
-        final success = await specimenProvider.importSpecimen(specimen);
+        final isExisting =
+            conflictingSpecimenFieldNumbers.contains(
+              specimen.fieldNumber.toLowerCase(),
+            );
+        if (isExisting && !shouldUpdateExisting) {
+          skippedCount++;
+          continue;
+        }
+
+        final success = await specimenProvider.importSpecimen(
+          specimen,
+          updateExisting: shouldUpdateExisting,
+        );
         if (success) {
-          successfullyImportedCount++;
+          if (isExisting) {
+            updatedCount++;
+          } else {
+            newImportedCount++;
+          }
         } else {
-          importErrors.add(S.current.failedToImportSpecimenWithId(specimen.id!));
+          importErrors.add(
+            S.current.failedToImportSpecimenWithId(specimen.id ?? -1),
+          );
         }
       }
 
@@ -475,9 +725,14 @@ Future<void> importSpecimensFromJson(BuildContext context) async {
 
       if (!context.mounted) return;
 
-      String summaryMessage = importErrors.isEmpty
-          ? S.current.specimensImportedSuccessfully(successfullyImportedCount)
-          : S.current.importCompletedWithErrors(successfullyImportedCount, importErrors.length);
+      final summaryMessage = _buildImportSummaryMessage(
+        context,
+        newCount: newImportedCount,
+        updatedCount: updatedCount,
+        skippedCount: skippedCount,
+        errorsCount: importErrors.length,
+        successFallback: S.current.specimensImportedSuccessfully(newImportedCount),
+      );
       if (importErrors.isNotEmpty) debugPrint("Import errors: \n${importErrors.join('\n')}");
 
       ScaffoldMessenger.of(context).showSnackBar(

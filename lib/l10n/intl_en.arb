@@ -1688,6 +1688,80 @@
             }
         }
     },
+    "importCompletedSummary": "Import finished: {newCount} new, {updatedCount} updated, {skippedCount} skipped, {errorsCount} errors",
+    "@importCompletedSummary": {
+        "type": "text",
+        "description": "Detailed summary for import operations with conflict handling",
+        "placeholders": {
+            "newCount": {
+                "type": "int"
+            },
+            "updatedCount": {
+                "type": "int"
+            },
+            "skippedCount": {
+                "type": "int"
+            },
+            "errorsCount": {
+                "type": "int"
+            }
+        }
+    },
+    "importCancelled": "Import cancelled.",
+    "@importCancelled": {
+        "type": "text",
+        "description": "Message shown when user cancels import after conflict prompt"
+    },
+    "importExistingRecords": "Existing records on import",
+    "@importExistingRecords": {
+        "type": "text",
+        "description": "Settings title for choosing import behavior when records already exist"
+    },
+    "importPolicyAskEveryTime": "Ask every time",
+    "@importPolicyAskEveryTime": {
+        "type": "text",
+        "description": "Import policy option to ask the user when conflicts are found"
+    },
+    "importPolicyUpdateExisting": "Update existing records",
+    "@importPolicyUpdateExisting": {
+        "type": "text",
+        "description": "Import policy option to overwrite existing records"
+    },
+    "importPolicySkipExisting": "Skip existing records",
+    "@importPolicySkipExisting": {
+        "type": "text",
+        "description": "Import policy option to keep existing records untouched"
+    },
+    "importConflictDialogTitle": "Existing records found",
+    "@importConflictDialogTitle": {
+        "type": "text",
+        "description": "Title of the dialog shown when imported records already exist"
+    },
+    "importConflictDialogMessage": "{conflictsCount} imported records already exist locally. What do you want to do?",
+    "@importConflictDialogMessage": {
+        "type": "text",
+        "description": "Dialog message shown when import conflicts are detected",
+        "placeholders": {
+            "conflictsCount": {
+                "type": "int"
+            }
+        }
+    },
+    "importConflictDialogUpdateAction": "Update",
+    "@importConflictDialogUpdateAction": {
+        "type": "text",
+        "description": "Action label to update existing records during import"
+    },
+    "importConflictDialogSkipAction": "Skip",
+    "@importConflictDialogSkipAction": {
+        "type": "text",
+        "description": "Action label to skip existing records during import"
+    },
+    "importAndExport": "Import and export",
+    "@importAndExport": {
+        "type": "text",
+        "description": "Settings section title for import and export options"
+    },
     "failedToImportInventoryWithId": "Failed to import inventory with ID: {id}",
     "@failedToImportInventoryWithId": {
         "type": "text",

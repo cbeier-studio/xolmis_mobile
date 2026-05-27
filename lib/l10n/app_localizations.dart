@@ -1880,6 +1880,66 @@ abstract class AppLocalizations {
   /// **'Import completed with errors: {successfullyImportedCount} successful, {importErrorsCount} errors'**
   String importCompletedWithErrors(int successfullyImportedCount, int importErrorsCount);
 
+  /// Detailed summary for import operations with conflict handling
+  ///
+  /// In en, this message translates to:
+  /// **'Import finished: {newCount} new, {updatedCount} updated, {skippedCount} skipped, {errorsCount} errors'**
+  String importCompletedSummary(int newCount, int updatedCount, int skippedCount, int errorsCount);
+
+  /// Message shown when user cancels import after conflict prompt
+  ///
+  /// In en, this message translates to:
+  /// **'Import cancelled.'**
+  String get importCancelled;
+
+  /// Settings title for choosing import behavior when records already exist
+  ///
+  /// In en, this message translates to:
+  /// **'Existing records on import'**
+  String get importExistingRecords;
+
+  /// Import policy option to ask the user when conflicts are found
+  ///
+  /// In en, this message translates to:
+  /// **'Ask every time'**
+  String get importPolicyAskEveryTime;
+
+  /// Import policy option to overwrite existing records
+  ///
+  /// In en, this message translates to:
+  /// **'Update existing records'**
+  String get importPolicyUpdateExisting;
+
+  /// Import policy option to keep existing records untouched
+  ///
+  /// In en, this message translates to:
+  /// **'Skip existing records'**
+  String get importPolicySkipExisting;
+
+  /// Title of the dialog shown when imported records already exist
+  ///
+  /// In en, this message translates to:
+  /// **'Existing records found'**
+  String get importConflictDialogTitle;
+
+  /// Dialog message shown when import conflicts are detected
+  ///
+  /// In en, this message translates to:
+  /// **'{conflictsCount} imported records already exist locally. What do you want to do?'**
+  String importConflictDialogMessage(int conflictsCount);
+
+  /// Action label to update existing records during import
+  ///
+  /// In en, this message translates to:
+  /// **'Update'**
+  String get importConflictDialogUpdateAction;
+
+  /// Action label to skip existing records during import
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get importConflictDialogSkipAction;
+
   /// Message when failed to import an inventory
   ///
   /// In en, this message translates to:

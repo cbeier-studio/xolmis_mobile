@@ -1055,6 +1055,40 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
+  String importCompletedSummary(int newCount, int updatedCount, int skippedCount, int errorsCount) {
+    return 'Importação finalizada: $newCount novos, $updatedCount atualizados, $skippedCount ignorados, $errorsCount erros';
+  }
+
+  @override
+  String get importCancelled => 'Importação cancelada.';
+
+  @override
+  String get importExistingRecords => 'Registros existentes na importação';
+
+  @override
+  String get importPolicyAskEveryTime => 'Perguntar sempre';
+
+  @override
+  String get importPolicyUpdateExisting => 'Atualizar registros existentes';
+
+  @override
+  String get importPolicySkipExisting => 'Ignorar registros existentes';
+
+  @override
+  String get importConflictDialogTitle => 'Registros existentes encontrados';
+
+  @override
+  String importConflictDialogMessage(int conflictsCount) {
+    return '$conflictsCount registros importados já existem localmente. O que você deseja fazer?';
+  }
+
+  @override
+  String get importConflictDialogUpdateAction => 'Atualizar';
+
+  @override
+  String get importConflictDialogSkipAction => 'Ignorar';
+
+  @override
   String failedToImportInventoryWithId(String id) {
     return 'Falha ao importar inventário com ID: $id';
   }
@@ -2784,6 +2818,40 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String importCompletedWithErrors(int successfullyImportedCount, int importErrorsCount) {
     return 'Importação concluída com erros: $successfullyImportedCount com sucesso, $importErrorsCount erros';
   }
+
+  @override
+  String importCompletedSummary(int newCount, int updatedCount, int skippedCount, int errorsCount) {
+    return 'Importação finalizada: $newCount novos, $updatedCount atualizados, $skippedCount ignorados, $errorsCount erros';
+  }
+
+  @override
+  String get importCancelled => 'Importação cancelada.';
+
+  @override
+  String get importExistingRecords => 'Registros existentes na importação';
+
+  @override
+  String get importPolicyAskEveryTime => 'Perguntar sempre';
+
+  @override
+  String get importPolicyUpdateExisting => 'Atualizar registros existentes';
+
+  @override
+  String get importPolicySkipExisting => 'Ignorar registros existentes';
+
+  @override
+  String get importConflictDialogTitle => 'Registros existentes encontrados';
+
+  @override
+  String importConflictDialogMessage(int conflictsCount) {
+    return '$conflictsCount registros importados já existem localmente. O que você deseja fazer?';
+  }
+
+  @override
+  String get importConflictDialogUpdateAction => 'Atualizar';
+
+  @override
+  String get importConflictDialogSkipAction => 'Ignorar';
 
   @override
   String failedToImportInventoryWithId(String id) {

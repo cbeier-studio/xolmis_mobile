@@ -39,34 +39,90 @@ class SpecimenDao {
     }
   }
 
-  /// Imports a [Specimen] into the database, ignoring any pre-existing ID so
-  /// that the database assigns a new auto-incremented ID.
+  /// Imports a [Specimen] into the database, optionally updating an existing
+  /// row when [Specimen.fieldNumber] conflicts.
   ///
-  /// Sets [specimen.id] with the newly generated ID upon success.
+  /// When [updateExisting] is `false`, existing specimens are left untouched
+  /// and the method returns `false` for that incoming record.
+  ///
+  /// New imported records always receive a local auto-incremented ID, ignoring
+  /// any numeric ID that may have come from another device.
+  ///
+  /// Sets [specimen.id] with the persisted ID upon success.
   /// Returns `true` on success, or `false` if an error occurs.
-  Future<bool> importSpecimen(Specimen specimen) async {
+  Future<bool> importSpecimen(
+    Specimen specimen, {
+    bool updateExisting = true,
+  }) async {
     final db = await _dbHelper.database;
+    if (db == null) {
+      return false;
+    }
+
     try {
-      // Create a map from the specimen, but explicitly set id to null
-      // to allow autoincrement to assign a new ID.
-      Map<String, dynamic> specimenMap = specimen.toMap();
-      specimenMap['id'] = null; // Ensure ID is null for autoincrement
+      return await db.transaction((txn) async {
+        final specimenMap = specimen.toMap();
+        final fieldNumber = specimen.fieldNumber;
 
-      int? newSpecimenId = await db?.insert(
-        'specimens',
-        specimenMap,
-        conflictAlgorithm: ConflictAlgorithm.replace,
-      );
+        if (fieldNumber.isNotEmpty) {
+          final existingSpecimenId = Sqflite.firstIntValue(
+                await txn.rawQuery(
+                  'SELECT id FROM specimens WHERE LOWER(fieldNumber) = ? LIMIT 1',
+                  [fieldNumber.toLowerCase()],
+                ),
+              );
 
-      if (newSpecimenId != null) {
-        // Update the original specimen object's ID with the new ID from the database
-        specimen.id = newSpecimenId;
-      }
-      return true;
+          if (existingSpecimenId != null) {
+            if (!updateExisting) {
+              return false;
+            }
+
+            specimenMap['id'] = existingSpecimenId;
+            final updatedRows = await txn.update(
+              'specimens',
+              specimenMap,
+              where: 'id = ?',
+              whereArgs: [existingSpecimenId],
+            );
+            if (updatedRows > 0) {
+              specimen.id = existingSpecimenId;
+              return true;
+            }
+            return false;
+          }
+        }
+
+        specimenMap['id'] = null;
+        final insertedId = await txn.insert('specimens', specimenMap);
+        if (insertedId <= 0) {
+          return false;
+        }
+        specimen.id = insertedId;
+        return true;
+      });
     } catch (e) {
       debugPrint('Error importing specimen: $e');
       return false;
     }
+  }
+
+  /// Returns the local numeric ID for the specimen identified by [fieldNumber].
+  ///
+  /// Matching is case-insensitive. Returns `null` when no local specimen has
+  /// the provided field number.
+  Future<int?> getSpecimenIdByFieldNumber(String fieldNumber) async {
+    final db = await _dbHelper.database;
+    final result = await db?.query(
+      'specimens',
+      columns: ['id'],
+      where: 'LOWER(fieldNumber) = ?',
+      whereArgs: [fieldNumber.toLowerCase()],
+      limit: 1,
+    );
+    if (result == null || result.isEmpty) {
+      return null;
+    }
+    return result.first['id'] as int?;
   }
 
   /// Returns all [Specimen] records stored in the database.

@@ -63,10 +63,16 @@ class InventoryDao {
   /// and all related [Species] (with their [Poi]s), [Vegetation], and [Weather]
   /// records are fully replaced by the imported ones.
   ///
+  /// When [updateExisting] is `false`, existing inventories are left untouched
+  /// and the method returns `false` for that incoming record.
+  ///
   /// The imported inventory is always marked as finished. The transaction is
   /// rolled back entirely if any database operation fails.
   /// Returns `true` on success, or `false` if an error occurs.
-  Future<bool> importInventory(Inventory inventory) async {
+  Future<bool> importInventory(
+    Inventory inventory, {
+    bool updateExisting = true,
+  }) async {
     final db = await _dbHelper.database;
     if (db == null) {
       debugPrint('[DAO] !!! ERROR importing inventory: Database instance is null.');
@@ -79,34 +85,47 @@ class InventoryDao {
         final String currentInventoryId = inventory.id;
         final inventoryMap = inventory.toMap();
 
-        await txn.rawDelete(
-          'DELETE FROM pois WHERE speciesId IN (SELECT id FROM species WHERE inventoryId = ?)',
-          [currentInventoryId],
-        );
-        await txn.delete(
-          'species',
-          where: 'inventoryId = ?',
-          whereArgs: [currentInventoryId],
-        );
-        await txn.delete(
-          'vegetation',
-          where: 'inventoryId = ?',
-          whereArgs: [currentInventoryId],
-        );
-        await txn.delete(
-          'weather',
-          where: 'inventoryId = ?',
-          whereArgs: [currentInventoryId],
-        );
+        final int existingCount = Sqflite.firstIntValue(
+              await txn.rawQuery(
+                'SELECT COUNT(*) FROM inventories WHERE id = ?',
+                [currentInventoryId],
+              ),
+            ) ??
+            0;
+        final bool alreadyExists = existingCount > 0;
 
-        final int updatedRows = await txn.update(
-          'inventories',
-          inventoryMap,
-          where: 'id = ?',
-          whereArgs: [currentInventoryId],
-        );
+        if (alreadyExists && !updateExisting) {
+          return false;
+        }
 
-        if (updatedRows == 0) {
+        if (alreadyExists) {
+          await txn.rawDelete(
+            'DELETE FROM pois WHERE speciesId IN (SELECT id FROM species WHERE inventoryId = ?)',
+            [currentInventoryId],
+          );
+          await txn.delete(
+            'species',
+            where: 'inventoryId = ?',
+            whereArgs: [currentInventoryId],
+          );
+          await txn.delete(
+            'vegetation',
+            where: 'inventoryId = ?',
+            whereArgs: [currentInventoryId],
+          );
+          await txn.delete(
+            'weather',
+            where: 'inventoryId = ?',
+            whereArgs: [currentInventoryId],
+          );
+
+          await txn.update(
+            'inventories',
+            inventoryMap,
+            where: 'id = ?',
+            whereArgs: [currentInventoryId],
+          );
+        } else {
           final int? recordId = await txn.insert(
             'inventories',
             inventoryMap,

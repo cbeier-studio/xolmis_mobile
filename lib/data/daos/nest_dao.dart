@@ -39,11 +39,18 @@ class NestDao {
 
   /// Imports a [Nest] into the database inside a single transaction.
   ///
-  /// If a nest with the same ID already exists, its main row is updated and all
-  /// related [NestRevision] and [Egg] rows are replaced by the imported data.
-  /// For new records, a new row is inserted (preserving ID when provided).
+  /// If a nest with the same [Nest.fieldNumber] already exists locally, its
+  /// main row is updated and all related [NestRevision] and [Egg] rows are
+  /// replaced by the imported data.
+  /// When [updateExisting] is `false`, existing nests are left untouched and
+  /// the method returns `false` for that incoming record.
+  /// For new records, a new row is inserted with a local auto-incremented ID,
+  /// ignoring any imported numeric ID from another device.
   /// Returns `true` on success, or `false` if an error occurs.
-  Future<bool> importNest(Nest nest) async {
+  Future<bool> importNest(
+    Nest nest, {
+    bool updateExisting = true,
+  }) async {
     final db = await _dbHelper.database;
     if (db == null) {
       debugPrint('Error importing nest: Database instance is null.');
@@ -53,17 +60,32 @@ class NestDao {
     try {
       return await db.transaction((txn) async {
         final nestMap = nest.toMap();
-        int? targetNestId = nest.id;
+        int? targetNestId;
+        final fieldNumber = nest.fieldNumber;
 
-        if (targetNestId != null) {
-          final updatedRows = await txn.update(
-            'nests',
-            nestMap,
-            where: 'id = ?',
-            whereArgs: [targetNestId],
-          );
+        if (fieldNumber != null && fieldNumber.isNotEmpty) {
+          final existingNestId = Sqflite.firstIntValue(
+                await txn.rawQuery(
+                  'SELECT id FROM nests WHERE LOWER(fieldNumber) = ? LIMIT 1',
+                  [fieldNumber.toLowerCase()],
+                ),
+              );
 
-          if (updatedRows == 0) {
+          if (existingNestId != null) {
+            if (!updateExisting) {
+              return false;
+            }
+
+            targetNestId = existingNestId;
+            nestMap['id'] = targetNestId;
+            await txn.update(
+              'nests',
+              nestMap,
+              where: 'id = ?',
+              whereArgs: [targetNestId],
+            );
+          } else {
+            nestMap['id'] = null;
             final insertedId = await txn.insert('nests', nestMap);
             if (insertedId <= 0) {
               throw Exception('Failed to insert nest: ${nest.toString()}');
@@ -132,6 +154,25 @@ class NestDao {
       debugPrint('Error importing nest: $e');
       return false;
     }
+  }
+
+  /// Returns the local numeric ID for the nest identified by [fieldNumber].
+  ///
+  /// Matching is case-insensitive. Returns `null` when no local nest has the
+  /// provided field number.
+  Future<int?> getNestIdByFieldNumber(String fieldNumber) async {
+    final db = await _dbHelper.database;
+    final result = await db?.query(
+      'nests',
+      columns: ['id'],
+      where: 'LOWER(fieldNumber) = ?',
+      whereArgs: [fieldNumber.toLowerCase()],
+      limit: 1,
+    );
+    if (result == null || result.isEmpty) {
+      return null;
+    }
+    return result.first['id'] as int?;
   }
 
   /// Returns all [Nest] records from the database, each populated with its

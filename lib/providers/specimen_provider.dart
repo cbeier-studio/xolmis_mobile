@@ -45,6 +45,11 @@ class SpecimenProvider with ChangeNotifier {
     return await _specimenDao.specimenFieldNumberExists(fieldNumber);
   }
 
+  /// Returns the local numeric ID for the specimen identified by [fieldNumber].
+  Future<int?> getSpecimenIdByFieldNumber(String fieldNumber) async {
+    return await _specimenDao.getSpecimenIdByFieldNumber(fieldNumber);
+  }
+
   /// Returns the next sequential specimen number for the given identifier parts.
   Future<int> getNextSequentialNumber(String acronym, int ano, int mes) async {
     return await _specimenDao.getNextSequentialNumber(acronym, ano, mes);
@@ -63,11 +68,28 @@ class SpecimenProvider with ChangeNotifier {
 
   /// Imports a specimen record that already carries external data.
   ///
+  /// When [updateExisting] is `false`, imports that collide by field number are
+  /// skipped by the DAO and this method returns `false` for that record.
   /// Returns `true` on success and `false` if the import fails.
-  Future<bool> importSpecimen(Specimen specimen) async {
+  Future<bool> importSpecimen(
+    Specimen specimen, {
+    bool updateExisting = true,
+  }) async {
     try {
-      await _specimenDao.importSpecimen(specimen);
-      _specimens.add(specimen);
+      final success = await _specimenDao.importSpecimen(
+        specimen,
+        updateExisting: updateExisting,
+      );
+      if (!success) {
+        return false;
+      }
+
+      final index = _specimens.indexWhere((n) => n.id == specimen.id);
+      if (index != -1) {
+        _specimens[index] = specimen;
+      } else {
+        _specimens.add(specimen);
+      }
       notifyListeners();
 
       return true;

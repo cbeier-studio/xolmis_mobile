@@ -15,6 +15,10 @@ const int kCurrentSpeciesUpdateVersion = 2025;
 /// Shared preferences key that stores the startup module index.
 const String kStartupModulePreferenceKey = 'startupModuleIndex';
 
+/// Shared preferences key that stores import behavior for existing records.
+const String kImportExistingRecordsPolicyPreferenceKey =
+    'importExistingRecordsPolicy';
+
 /// App modules that can be used as startup destination.
 enum StartupModule {
   inventories,
@@ -22,6 +26,13 @@ enum StartupModule {
   specimens,
   fieldJournal,
   statistics,
+}
+
+/// Defines what to do when imported records already exist locally.
+enum ImportExistingRecordPolicy {
+  askEveryTime,
+  updateExisting,
+  skipExisting,
 }
 
 /// Exception thrown when inserting records into the database fails.

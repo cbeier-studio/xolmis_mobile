@@ -113,6 +113,11 @@ class NestProvider with ChangeNotifier {
     return await _nestDao.nestFieldNumberExists(fieldNumber);
   }
 
+  /// Returns the local numeric ID for the nest identified by [fieldNumber].
+  Future<int?> getNestIdByFieldNumber(String fieldNumber) async {
+    return await _nestDao.getNestIdByFieldNumber(fieldNumber);
+  }
+
   /// Adds a new nest after validating that its field number is unique.
   Future<void> addNest(Nest nest) async {
     if (await nestFieldNumberExists(nest.fieldNumber!)) {
@@ -126,10 +131,18 @@ class NestProvider with ChangeNotifier {
 
   /// Imports an externally sourced nest record.
   ///
+  /// When [updateExisting] is `false`, imports that collide by field number are
+  /// skipped by the DAO and this method returns `false` for that record.
   /// Returns `true` when the import succeeds and `false` otherwise.
-  Future<bool> importNest(Nest nest) async {
+  Future<bool> importNest(
+    Nest nest, {
+    bool updateExisting = true,
+  }) async {
     try {
-      final success = await _nestDao.importNest(nest);
+      final success = await _nestDao.importNest(
+        nest,
+        updateExisting: updateExisting,
+      );
       if (!success) {
         return false;
       }
