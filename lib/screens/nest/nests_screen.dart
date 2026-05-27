@@ -774,6 +774,21 @@ class NestsScreenState extends State<NestsScreen> {
                           },
                           child: const Text('JSON'),
                         ),
+                        MenuItemButton(
+                          onPressed: () async {
+                            final nests = await Future.wait(
+                              selectedNests.map(
+                                (id) => nestProvider.getNestById(id),
+                              ),
+                            );
+                            await exportSelectedNestsToKml(context, nests);
+                            if (!mounted) return;
+                            setState(() {
+                              selectedNests.clear();
+                            });
+                          },
+                          child: const Text('KML'),
+                        ),
                       ],
                     ),
                     if (selectedNests.length > 1)

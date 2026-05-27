@@ -762,6 +762,109 @@ Future<void> exportSelectedInventoriesToExcel(BuildContext context, List<Invento
   }
 }
 
+/// Exports selected inventories to one KML file and opens the share sheet.
+Future<void> exportSelectedInventoriesToKml(BuildContext context, List<Inventory> inventories) async {
+  try {
+    final inventoriesToExport =
+        await _ensureInventoriesLoadedForExport(context, inventories);
+    final gpx = GeoXml();
+    gpx.creator = kExportSource;
+    gpx.metadata = Metadata(
+      name: 'Selected inventories',
+      desc: 'Points of Interest for selected inventories',
+      time: DateTime.now(),
+    );
+
+    for (final inventory in inventoriesToExport) {
+      if (inventory.startLatitude != null && inventory.startLongitude != null) {
+        gpx.wpts.add(
+          Wpt(
+            lat: inventory.startLatitude,
+            lon: inventory.startLongitude,
+            name: '${inventory.id} - Start',
+            desc: inventoryTypeFriendlyNames[inventory.type] ?? '',
+            time: inventory.startTime ?? DateTime.now(),
+          ),
+        );
+      }
+
+      if (inventory.endLatitude != null && inventory.endLongitude != null) {
+        gpx.wpts.add(
+          Wpt(
+            lat: inventory.endLatitude,
+            lon: inventory.endLongitude,
+            name: '${inventory.id} - End',
+            desc: inventoryTypeFriendlyNames[inventory.type] ?? '',
+            time: inventory.endTime ?? DateTime.now(),
+          ),
+        );
+      }
+
+      for (final species in inventory.speciesList) {
+        if (species.pois.isEmpty) {
+          continue;
+        }
+
+        for (final poi in species.pois) {
+          gpx.wpts.add(
+            Wpt(
+              lat: poi.latitude,
+              lon: poi.longitude,
+              name: '${inventory.id} - ${species.name} - POI #${poi.id}',
+              desc: poi.notes ?? '',
+              time: poi.sampleTime ?? DateTime.now(),
+            ),
+          );
+        }
+      }
+    }
+
+    if (gpx.wpts.isEmpty) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          showCloseIcon: true,
+          content: Text(S.of(context).noPoisToExport),
+        ),
+      );
+      return;
+    }
+
+    final kmlString = KmlWriter(
+      altitudeMode: AltitudeMode.clampToGround,
+    ).asString(gpx, pretty: true);
+
+    final now = DateTime.now();
+    final formatter = DateFormat('yyyyMMdd_HHmmss');
+    final formattedDate = formatter.format(now);
+
+    final tempDir = await getTemporaryDirectory();
+    final filePath = '${tempDir.path}/selected_inventories_$formattedDate.kml';
+    final file = File(filePath);
+    await file.writeAsString(kmlString);
+
+    await SharePlus.instance.share(
+      ShareParams(
+        files: [XFile(filePath, mimeType: 'application/vnd.google-earth.kml+xml')],
+        text: S.current.inventoryExported(inventoriesToExport.length),
+        subject: S.current.inventoryData(inventoriesToExport.length),
+      ),
+    );
+  } catch (error) {
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        persist: true,
+        showCloseIcon: true,
+        backgroundColor: Theme.of(context).colorScheme.error,
+        content: Text(
+          S.of(context).errorExportingInventory(inventories.length, error.toString()),
+        ),
+      ),
+    );
+  }
+}
+
 /// Exports selected nests to a single JSON envelope.
 Future<void> exportSelectedNestsToJson(BuildContext context, List<Nest> nests) async {
   try {
@@ -925,6 +1028,78 @@ Future<void> exportSelectedNestsToExcel(BuildContext context, List<Nest> nests) 
     if (context.mounted) {
       Navigator.of(context).pop();
     }
+  }
+}
+
+/// Exports selected nests to one KML file and opens the share sheet.
+Future<void> exportSelectedNestsToKml(BuildContext context, List<Nest> nests) async {
+  try {
+    final nestsToExport = await _ensureNestsLoadedForExport(context, nests);
+    final gpx = GeoXml();
+    gpx.creator = kExportSource;
+    gpx.metadata = Metadata(
+      name: 'Selected nests',
+      desc: 'Coordinates for selected nests',
+      time: DateTime.now(),
+    );
+
+    for (final nest in nestsToExport) {
+      if (nest.latitude == null || nest.longitude == null) {
+        continue;
+      }
+
+      gpx.wpts.add(
+        Wpt(
+          lat: nest.latitude,
+          lon: nest.longitude,
+          name: '${nest.fieldNumber} - ${nest.speciesName ?? ''}',
+          desc: nest.localityName ?? '',
+          time: nest.foundTime ?? DateTime.now(),
+        ),
+      );
+    }
+
+    if (gpx.wpts.isEmpty) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          showCloseIcon: true,
+          content: Text(S.of(context).noPoisToExport),
+        ),
+      );
+      return;
+    }
+
+    final kmlString = KmlWriter(
+      altitudeMode: AltitudeMode.clampToGround,
+    ).asString(gpx, pretty: true);
+
+    final now = DateTime.now();
+    final formatter = DateFormat('yyyyMMdd_HHmmss');
+    final formattedDate = formatter.format(now);
+
+    final tempDir = await getTemporaryDirectory();
+    final filePath = '${tempDir.path}/selected_nests_$formattedDate.kml';
+    final file = File(filePath);
+    await file.writeAsString(kmlString);
+
+    await SharePlus.instance.share(
+      ShareParams(
+        files: [XFile(filePath, mimeType: 'application/vnd.google-earth.kml+xml')],
+        text: S.current.nestExported(gpx.wpts.length),
+        subject: S.current.nestData(gpx.wpts.length),
+      ),
+    );
+  } catch (error) {
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        persist: true,
+        showCloseIcon: true,
+        backgroundColor: Theme.of(context).colorScheme.error,
+        content: Text(S.of(context).errorExportingNest(nests.length, error.toString())),
+      ),
+    );
   }
 }
 
@@ -1532,6 +1707,79 @@ Future<void> exportSelectedSpecimensToExcel(BuildContext context, List<Specimen>
   }
 }
 
+/// Exports selected specimens to one KML file and opens the share sheet.
+Future<void> exportSelectedSpecimensToKml(BuildContext context, List<Specimen> specimenList) async {
+  try {
+    final gpx = GeoXml();
+    gpx.creator = kExportSource;
+    gpx.metadata = Metadata(
+      name: 'Selected specimens',
+      desc: 'Coordinates for selected specimens',
+      time: DateTime.now(),
+    );
+
+    for (final specimen in specimenList) {
+      if (specimen.latitude == null || specimen.longitude == null) {
+        continue;
+      }
+
+      gpx.wpts.add(
+        Wpt(
+          lat: specimen.latitude,
+          lon: specimen.longitude,
+          name: '${specimen.fieldNumber} - ${specimen.speciesName ?? ''}',
+          desc: specimen.locality ?? '',
+          time: specimen.sampleTime ?? DateTime.now(),
+        ),
+      );
+    }
+
+    if (gpx.wpts.isEmpty) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          showCloseIcon: true,
+          content: Text(S.of(context).noPoisToExport),
+        ),
+      );
+      return;
+    }
+
+    final kmlString = KmlWriter(
+      altitudeMode: AltitudeMode.clampToGround,
+    ).asString(gpx, pretty: true);
+
+    final now = DateTime.now();
+    final formatter = DateFormat('yyyyMMdd_HHmmss');
+    final formattedDate = formatter.format(now);
+
+    final tempDir = await getTemporaryDirectory();
+    final filePath = '${tempDir.path}/selected_specimens_$formattedDate.kml';
+    final file = File(filePath);
+    await file.writeAsString(kmlString);
+
+    await SharePlus.instance.share(
+      ShareParams(
+        files: [XFile(filePath, mimeType: 'application/vnd.google-earth.kml+xml')],
+        text: S.current.specimenExported(gpx.wpts.length),
+        subject: S.current.specimenData(gpx.wpts.length),
+      ),
+    );
+  } catch (error) {
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        persist: true,
+        showCloseIcon: true,
+        backgroundColor: Theme.of(context).colorScheme.error,
+        content: Text(
+          S.of(context).errorExportingSpecimen(specimenList.length, error.toString()),
+        ),
+      ),
+    );
+  }
+}
+
 /// Exports all specimens to one CSV file and opens the share sheet.
 Future<void> exportAllSpecimensToCsv(BuildContext context, List<Specimen> specimenList) async {
   bool isDialogShown = false;
@@ -1783,3 +2031,4 @@ Future<void> exportSpecimenToKml(BuildContext context, Specimen specimen) async 
                         );
   }
 }
+

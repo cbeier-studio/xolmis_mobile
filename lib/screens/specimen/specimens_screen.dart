@@ -857,6 +857,24 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                           },
                           child: const Text('JSON'),
                         ),
+                        MenuItemButton(
+                          onPressed: () async {
+                            final specimens = await Future.wait(
+                              selectedSpecimens.map(
+                                (id) => specimenProvider.getSpecimenById(id),
+                              ),
+                            );
+                            await exportSelectedSpecimensToKml(
+                              context,
+                              specimens,
+                            );
+                            if (!mounted) return;
+                            setState(() {
+                              selectedSpecimens.clear();
+                            });
+                          },
+                          child: const Text('KML'),
+                        ),
                       ],
                     ),
                     if (selectedSpecimens.length > 1)

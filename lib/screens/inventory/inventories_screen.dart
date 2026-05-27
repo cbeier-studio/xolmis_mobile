@@ -857,6 +857,26 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                           },
                           child: const Text('JSON'),
                         ),
+                        MenuItemButton(
+                          onPressed: () async {
+                            final inventories =
+                                selectedInventories
+                                    .map(
+                                      (id) => inventoryProvider
+                                          .getInventoryById(id),
+                                    )
+                                    .whereType<Inventory>()
+                                    .toList();
+                            await exportSelectedInventoriesToKml(
+                              context,
+                              inventories,
+                            );
+                            setState(() {
+                              selectedInventories.clear();
+                            });
+                          },
+                          child: const Text('KML'),
+                        ),
                       ],
                     ),
                     MenuAnchor(
