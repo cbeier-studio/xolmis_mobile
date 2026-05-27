@@ -5,7 +5,8 @@ Xolmis Mobile is designed for fieldwork, enabling researchers and citizen scient
 > [!WARNING]
 > This project is in the early stages of development, so expect bugs and breaking changes.
 
-:dove: _Xolmis_ is a genus of Neotropical passerines. Today it is represented by two species: [_Xolmis irupero_](https://www.wikiaves.com.br/wiki/noivinha) and [_Xolmis velatus_](https://www.wikiaves.com.br/wiki/noivinha-branca).
+> [!NOTE]
+> :dove: _Xolmis_ is a genus of Neotropical passerines. Today it is represented by two species: [_Xolmis irupero_](https://www.wikiaves.com.br/wiki/noivinha) and [_Xolmis velatus_](https://www.wikiaves.com.br/wiki/noivinha-branca).
 
 ## Features
 
@@ -38,6 +39,32 @@ Here is a list of the main features:
 - [x] Integration with Xolmis desktop (via text files).
 - [x] Statistics view.
 - [x] Backup and restore data.
+
+## Important project details
+
+- **Local-first app**: Xolmis Mobile stores user data locally in SQLite (`sqflite`), so core field workflows work offline.
+- **Five main modules**: inventories, nests, specimens, field journal, and statistics.
+- **Image-aware backups**: backups are ZIP-based and include both the database and attached image files.
+- **Country-based species data**: autocomplete/checklists are loaded from bundled JSON assets by selected country.
+- **Localized interface**: user-facing strings are translated and managed via localization files.
+
+## Xolmis Desktop integration
+
+Xolmis Mobile is designed to interoperate with [**Xolmis Desktop**](https://github.com/cbeier-studio/Xolmis) by exporting/importing structured files.
+
+- Data can be exported from mobile (CSV, Excel, JSON, KML, and feature-specific text files) and consumed in desktop workflows.
+- JSON export/import uses a shared envelope structure to keep compatibility across modules and versions.
+- Main transferable records include inventories, nests, specimens, and related observations.
+- This interoperability allows a practical workflow: collect data in the field with mobile devices, then continue analysis and curation on desktop.
+
+> [!TIP]
+> When possible, prefer JSON export/import for richer structure and better long-term compatibility between mobile and desktop projects.
+
+## Data safety and portability
+
+- Use backup/restore regularly to keep database records and linked images synchronized.
+- Prefer feature export before large migrations or app reinstallation.
+- Keep generated files organized per project/campaign to simplify desktop ingestion.
 
 ## How to contribute
 
