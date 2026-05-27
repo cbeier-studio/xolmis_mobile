@@ -1089,6 +1089,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get importConflictDialogSkipAction => 'Ignorar';
 
   @override
+  String get importAndExport => 'Importação e exportação';
+
+  @override
   String failedToImportInventoryWithId(String id) {
     return 'Falha ao importar inventário com ID: $id';
   }
@@ -2852,6 +2855,9 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get importConflictDialogSkipAction => 'Ignorar';
+
+  @override
+  String get importAndExport => 'Importação e exportação';
 
   @override
   String failedToImportInventoryWithId(String id) {

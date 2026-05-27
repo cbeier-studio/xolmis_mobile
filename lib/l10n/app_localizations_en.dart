@@ -1072,6 +1072,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get importConflictDialogSkipAction => 'Skip';
 
   @override
+  String get importAndExport => 'Import and export';
+
+  @override
   String failedToImportInventoryWithId(String id) {
     return 'Failed to import inventory with ID: $id';
   }

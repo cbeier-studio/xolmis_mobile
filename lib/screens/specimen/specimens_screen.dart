@@ -1464,8 +1464,9 @@ class SpecimensScreenState extends State<SpecimensScreen> {
         },
       ),
       title: Text(
-        '${specimen.fieldNumber} - ${specimenTypeFriendlyNames[specimen.type]}',
-      ),
+              specimen.fieldNumber,
+              overflow: TextOverflow.ellipsis,
+            ),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -1476,6 +1477,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
           Text(specimen.locality!, overflow: TextOverflow.ellipsis),
           Text('${specimen.longitude}; ${specimen.latitude}'),
           Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(specimen.sampleTime!)),
+          _buildSpecimenTypePill(context, specimen.type),
         ],
       ),
       selected: isLargeScreen ? isDetailSelected : isSelected,
@@ -1498,6 +1500,84 @@ class SpecimensScreenState extends State<SpecimensScreen> {
           );
         }
       },
+    );
+  }
+
+  Widget _buildSpecimenTypePill(
+    BuildContext context,
+    SpecimenType? type,
+  ) {
+    final backgroundColor = _specimenTypePillColor(context, type);
+    final foregroundColor =
+        ThemeData.estimateBrightnessForColor(backgroundColor) == Brightness.dark
+            ? Colors.white
+            : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.85);
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(999.0),
+      ),
+      child: Text(
+        specimenTypeFriendlyNames[type] ?? S.current.specimenType,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+          color: foregroundColor,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
+
+  Color _specimenTypePillColor(BuildContext context, SpecimenType? type) {
+    switch (type) {
+      case SpecimenType.spcWholeCarcass:
+        return _themeAwarePillColor(context, seedColor: Colors.red);
+      case SpecimenType.spcPartialCarcass:
+        return _themeAwarePillColor(context, seedColor: Colors.deepOrange);
+      case SpecimenType.spcNest:
+        return _themeAwarePillColor(context, seedColor: Colors.amber);
+      case SpecimenType.spcBones:
+        return _themeAwarePillColor(context, seedColor: Colors.brown);
+      case SpecimenType.spcEgg:
+        return _themeAwarePillColor(context, seedColor: Colors.yellow);
+      case SpecimenType.spcParasites:
+        return _themeAwarePillColor(context, seedColor: Colors.lime);
+      case SpecimenType.spcFeathers:
+        return _themeAwarePillColor(context, seedColor: Colors.lightBlue);
+      case SpecimenType.spcBlood:
+        return _themeAwarePillColor(context, seedColor: Colors.pink);
+      case SpecimenType.spcClaw:
+        return _themeAwarePillColor(context, seedColor: Colors.deepPurple);
+      case SpecimenType.spcSwab:
+        return _themeAwarePillColor(context, seedColor: Colors.teal);
+      case SpecimenType.spcTissues:
+        return _themeAwarePillColor(context, seedColor: Colors.indigo);
+      case SpecimenType.spcFeces:
+        return _themeAwarePillColor(context, seedColor: Colors.green);
+      case SpecimenType.spcRegurgite:
+        return _themeAwarePillColor(context, seedColor: Colors.orange);
+      case null:
+        return _themeAwarePillColor(context, seedColor: Colors.blueGrey);
+    }
+  }
+
+  Color _themeAwarePillColor(
+    BuildContext context, {
+    required Color seedColor,
+  }) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final baseSurface = isDark
+        ? colorScheme.surfaceContainerHighest
+        : colorScheme.surface;
+    final overlayOpacity = isDark ? 0.40 : 0.22;
+
+    return Color.alphaBlend(
+      seedColor.withValues(alpha: overlayOpacity),
+      baseSurface,
     );
   }
 

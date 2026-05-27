@@ -1940,6 +1940,12 @@ abstract class AppLocalizations {
   /// **'Skip'**
   String get importConflictDialogSkipAction;
 
+  /// Settings section title for import and export options
+  ///
+  /// In en, this message translates to:
+  /// **'Import and export'**
+  String get importAndExport;
+
   /// Message when failed to import an inventory
   ///
   /// In en, this message translates to:
