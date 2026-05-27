@@ -1568,10 +1568,10 @@ abstract class AppLocalizations {
   /// **'Find journal entries'**
   String get findJournalEntries;
 
-  /// Text displayed when the field journal list is empty
+  /// Message when no journal entries are found
   ///
   /// In en, this message translates to:
-  /// **'No journal entries found'**
+  /// **'No journal entries found.'**
   String get noJournalEntriesFound;
 
   /// Title field label
@@ -1586,10 +1586,10 @@ abstract class AppLocalizations {
   /// **'Insert a title for the journal entry'**
   String get insertTitle;
 
-  /// Message shown when an error occurred while saving a journal entry
+  /// Error message when saving journal entry
   ///
   /// In en, this message translates to:
-  /// **'Error saving the field journal entry'**
+  /// **'Error saving journal entry'**
   String get errorSavingJournalEntry;
 
   /// Menu option to delete a field journal entry
@@ -1987,6 +1987,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to import nest with ID: {id}'**
   String failedToImportNestWithId(int id);
+
+  /// Plain text export format option
+  ///
+  /// In en, this message translates to:
+  /// **'Plain text'**
+  String get plainText;
 
   /// Settings backup section title
   ///
@@ -3157,6 +3163,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Species richness per year'**
   String get speciesRichnessPerYear;
+
+  /// Message when importing journals
+  ///
+  /// In en, this message translates to:
+  /// **'Importing journals'**
+  String get importingJournals;
+
+  /// Error message when importing journals
+  ///
+  /// In en, this message translates to:
+  /// **'Error importing journals'**
+  String get errorImportingJournals;
+
+  /// Message when journals are imported successfully
+  ///
+  /// In en, this message translates to:
+  /// **'Journals imported successfully: {howMany}'**
+  String journalsImportedSuccessfully(int howMany);
+
+  /// Error message when parsing journals array item fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error parsing \'journals\' array item: {errorMessage} \nItem: {item}'**
+  String errorParsingJournalsArrayItem(String item, String errorMessage);
+
+  /// Error message when unexpected journals array item is encountered
+  ///
+  /// In en, this message translates to:
+  /// **'Unexpected item in \'journals\' JSON array: {item}'**
+  String errorUnexpectedJournalsArrayItem(String item);
+
+  /// Message when no valid journal entries are found in imported file
+  ///
+  /// In en, this message translates to:
+  /// **'No valid journal entries found in the imported file.'**
+  String get noValidJournalEntriesFoundInFile;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

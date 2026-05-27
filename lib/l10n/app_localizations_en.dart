@@ -874,7 +874,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get findJournalEntries => 'Find journal entries';
 
   @override
-  String get noJournalEntriesFound => 'No journal entries found';
+  String get noJournalEntriesFound => 'No journal entries found.';
 
   @override
   String get title => 'Title';
@@ -883,7 +883,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get insertTitle => 'Insert a title for the journal entry';
 
   @override
-  String get errorSavingJournalEntry => 'Error saving the field journal entry';
+  String get errorSavingJournalEntry => 'Error saving journal entry';
 
   @override
   String get deleteJournalEntry => 'Delete journal entry';
@@ -1102,6 +1102,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String failedToImportNestWithId(int id) {
     return 'Failed to import nest with ID: $id';
   }
+
+  @override
+  String get plainText => 'Plain text';
 
   @override
   String get backup => 'Backup';
@@ -1737,4 +1740,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get speciesRichnessPerYear => 'Species richness per year';
+
+  @override
+  String get importingJournals => 'Importing journals';
+
+  @override
+  String get errorImportingJournals => 'Error importing journals';
+
+  @override
+  String journalsImportedSuccessfully(int howMany) {
+    return 'Journals imported successfully: $howMany';
+  }
+
+  @override
+  String errorParsingJournalsArrayItem(String item, String errorMessage) {
+    return 'Error parsing \'journals\' array item: $errorMessage \nItem: $item';
+  }
+
+  @override
+  String errorUnexpectedJournalsArrayItem(String item) {
+    return 'Unexpected item in \'journals\' JSON array: $item';
+  }
+
+  @override
+  String get noValidJournalEntriesFoundInFile => 'No valid journal entries found in the imported file.';
 }

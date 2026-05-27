@@ -891,7 +891,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get findJournalEntries => 'Procurar notas';
 
   @override
-  String get noJournalEntriesFound => 'Nenhuma nota encontrada';
+  String get noJournalEntriesFound => 'Nenhuma entrada de diário encontrada.';
 
   @override
   String get title => 'Título';
@@ -900,7 +900,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get insertTitle => 'Insira um título para a nota';
 
   @override
-  String get errorSavingJournalEntry => 'Erro ao salvar a nota do diário de campo';
+  String get errorSavingJournalEntry => 'Erro ao salvar entrada do diário';
 
   @override
   String get deleteJournalEntry => 'Apagar nota';
@@ -1120,6 +1120,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String failedToImportNestWithId(int id) {
     return 'Falha ao importar ninho com ID: $id';
   }
+
+  @override
+  String get plainText => 'Texto simples';
 
   @override
   String get backup => 'Backup';
@@ -1770,6 +1773,31 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get speciesRichnessPerYear => 'Riqueza de espécies por ano';
+
+  @override
+  String get importingJournals => 'Importando diário de campo';
+
+  @override
+  String get errorImportingJournals => 'Erro importando diário de campo';
+
+  @override
+  String journalsImportedSuccessfully(int howMany) {
+    return 'Diário de campo importado com sucesso: $howMany';
+  }
+
+  @override
+  String errorParsingJournalsArrayItem(String item, String errorMessage) {
+    return 'Erro ao analisar item do array \'journals\': $errorMessage \nItem: $item';
+  }
+
+  @override
+  String errorUnexpectedJournalsArrayItem(String item) {
+    return 'Item inesperado no array \'journals\' JSON: $item';
+  }
+
+  @override
+  String get noValidJournalEntriesFoundInFile =>
+      'Nenhuma entrada válida de diário foi encontrada no arquivo importado.';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -2659,7 +2687,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get findJournalEntries => 'Procurar notas';
 
   @override
-  String get noJournalEntriesFound => 'Nenhuma nota encontrada';
+  String get noJournalEntriesFound => 'Nenhuma entrada de diário encontrada.';
 
   @override
   String get title => 'Título';
@@ -2668,7 +2696,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get insertTitle => 'Insira um título para a nota';
 
   @override
-  String get errorSavingJournalEntry => 'Erro ao salvar a nota do diário de campo';
+  String get errorSavingJournalEntry => 'Erro ao salvar entrada do diário';
 
   @override
   String get deleteJournalEntry => 'Apagar nota';
@@ -2887,6 +2915,9 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String failedToImportNestWithId(int id) {
     return 'Falha ao importar ninho com ID: $id';
   }
+
+  @override
+  String get plainText => 'Texto simples';
 
   @override
   String get backup => 'Backup';
@@ -3537,4 +3568,29 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get speciesRichnessPerYear => 'Riqueza de espécies por ano';
+
+  @override
+  String get importingJournals => 'Importando diário de campo';
+
+  @override
+  String get errorImportingJournals => 'Erro importando diário de campo';
+
+  @override
+  String journalsImportedSuccessfully(int howMany) {
+    return 'Diário de campo importado com sucesso: $howMany';
+  }
+
+  @override
+  String errorParsingJournalsArrayItem(String item, String errorMessage) {
+    return 'Erro ao analisar item do array \'journals\': $errorMessage \nItem: $item';
+  }
+
+  @override
+  String errorUnexpectedJournalsArrayItem(String item) {
+    return 'Item inesperado no array \'journals\' JSON: $item';
+  }
+
+  @override
+  String get noValidJournalEntriesFoundInFile =>
+      'Nenhuma entrada válida de diário foi encontrada no arquivo importado.';
 }

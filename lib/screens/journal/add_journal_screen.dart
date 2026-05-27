@@ -11,6 +11,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/models/journal.dart';
 import '../../providers/journal_provider.dart';
@@ -44,6 +45,7 @@ class AddJournalScreenState extends State<AddJournalScreen> {
   late TextEditingController _titleController;
   late FleatherController _notesController;
   bool _isSubmitting = false;
+  String _observerAbbrev = '';
 
   @override
   void initState() {
@@ -64,6 +66,7 @@ class AddJournalScreenState extends State<AddJournalScreen> {
     } else {
       _notesController = FleatherController();
     }
+    _loadObserverAbbreviation();
   }
 
   @override
@@ -71,6 +74,13 @@ class AddJournalScreenState extends State<AddJournalScreen> {
     _titleController.dispose();
     _notesController.dispose();
     super.dispose();
+  }
+
+  void _loadObserverAbbreviation() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _observerAbbrev = prefs.getString('observer_abbreviation') ?? '';
+    });
   }
 
   /// Builds the top action area used by the embedded layout variant.
@@ -507,6 +517,7 @@ class AddJournalScreenState extends State<AddJournalScreen> {
         final newEntry = FieldJournal(
           title: _titleController.text,
           notes: jsonEncode(_notesController.document.toDelta().toList()),
+          observer: _observerAbbrev,
           creationDate: DateTime.now(),
           lastModifiedDate: DateTime.now(),
         );

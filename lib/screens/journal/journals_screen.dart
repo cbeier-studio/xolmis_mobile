@@ -443,14 +443,6 @@ class JournalsScreenState extends State<JournalsScreen> {
               );
             },
             menuChildren: [
-              // Action to import journal entries from JSON
-              MenuItemButton(
-                leadingIcon: const Icon(Icons.file_open_outlined),
-                onPressed: () async {
-                  await importJournalsFromJson(context);
-                },
-                child: Text(S.of(context).import),
-              ),
               // Action to select all journal entries
               MenuItemButton(
                 leadingIcon: const Icon(Icons.library_add_check_outlined),
@@ -464,6 +456,14 @@ class JournalsScreenState extends State<JournalsScreen> {
                   });
                 },
                 child: Text(S.of(context).selectAll),
+              ),
+              // Action to import journal entries from JSON
+              MenuItemButton(
+                leadingIcon: const Icon(Icons.file_open_outlined),
+                onPressed: () async {
+                  await importJournalsFromJson(context);
+                },
+                child: Text(S.of(context).import),
               ),
             ],
           ),
@@ -552,7 +552,7 @@ class JournalsScreenState extends State<JournalsScreen> {
                       selectedJournals.clear();
                     });
                   },
-                  child: const Text('TXT'),
+                  child: Text(S.current.plainText),
                 ),
                 MenuItemButton(
                   onPressed: () async {
@@ -650,14 +650,6 @@ class JournalsScreenState extends State<JournalsScreen> {
               );
             },
             menuChildren: [
-              // Action to import journal entries from JSON
-              MenuItemButton(
-                leadingIcon: const Icon(Icons.file_open_outlined),
-                onPressed: () async {
-                  await importJournalsFromJson(context);
-                },
-                child: Text(S.of(context).import),
-              ),
               // Action to select all journal entries
               MenuItemButton(
                 leadingIcon: const Icon(Icons.library_add_check_outlined),
@@ -671,6 +663,14 @@ class JournalsScreenState extends State<JournalsScreen> {
                   });
                 },
                 child: Text(S.of(context).selectAll),
+              ),
+              // Action to import journal entries from JSON
+              MenuItemButton(
+                leadingIcon: const Icon(Icons.file_open_outlined),
+                onPressed: () async {
+                  await importJournalsFromJson(context);
+                },
+                child: Text(S.of(context).import),
               ),
             ],
           ),
@@ -840,6 +840,15 @@ class JournalsScreenState extends State<JournalsScreen> {
                             avatar: const Icon(Icons.add_outlined),
                             onPressed: () {
                               _showAddJournalScreen(context);
+                            },
+                          ),
+                          const SizedBox(height: 8),
+                          ActionChip(
+                            label: Text(S.of(context).import),
+                            avatar: const Icon(Icons.file_open_outlined),
+                            onPressed: () async {
+                              await importJournalsFromJson(context);
+                              await journalProvider.fetchJournalEntries();
                             },
                           ),
                           if (_searchQuery.isNotEmpty) ...[
@@ -1059,6 +1068,49 @@ class JournalsScreenState extends State<JournalsScreen> {
                           }, color: Theme.of(context).colorScheme.error),
                     ],
                   ),
+                  Row(
+                    children: [
+                      const SizedBox(width: 8.0),
+                      Text(
+                        S.current.export,
+                        style: TextTheme.of(context).bodyMedium,
+                      ),
+                      Expanded(
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              const SizedBox(width: 16.0),
+                              ActionChip(
+                                label: Text(S.current.plainText),
+                                onPressed: () async {
+                                  exportSelectedJournalsToTxt(context, [journalEntry]);
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                              const SizedBox(width: 8.0),
+                              ActionChip(
+                                label: const Text('Markdown'),
+                                onPressed: () async {
+                                  exportSelectedJournalsToMarkdown(context, [journalEntry]);
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                              const SizedBox(width: 8.0),
+                              ActionChip(
+                                label: const Text('JSON'),
+                                onPressed: () async {
+                                  exportSelectedJournalsToJson(context, [journalEntry]);
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                              const SizedBox(width: 8.0),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
               ),
@@ -1091,15 +1143,6 @@ class JournalsScreenState extends State<JournalsScreen> {
                         physics: const NeverScrollableScrollPhysics(),
                         children: <Widget>[
                           buildGridMenuItem(
-                            context,
-                            Icons.file_open_outlined,
-                            S.of(context).import,
-                            () async {
-                              Navigator.of(context).pop();
-                              await importJournalsFromJson(context);
-                            },
-                          ),
-                          buildGridMenuItem(
                               context, Icons.library_add_check_outlined, S.of(context).selectAll,
                                   () async {
                                 Navigator.of(context).pop();
@@ -1111,6 +1154,15 @@ class JournalsScreenState extends State<JournalsScreen> {
                                       .toSet();
                                 });
                               }),
+                          buildGridMenuItem(
+                            context,
+                            Icons.file_open_outlined,
+                            S.of(context).import,
+                                () async {
+                              Navigator.of(context).pop();
+                              await importJournalsFromJson(context);
+                            },
+                          ),
                         ],
                       ),
                     ],

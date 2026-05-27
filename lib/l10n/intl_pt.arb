@@ -1260,6 +1260,11 @@
             }
         }
     },
+  "plainText": "Texto simples",
+  "@plainText": {
+    "type": "text",
+    "description": "Plain text export format option"
+  },
     "backup": "Backup",
     "@backup": {
         "type": "text",
@@ -1355,7 +1360,7 @@
             }
         }
     },
-    "failedToImportSpecimenWithId": "Falha ao importar espécime com ID: {id}",
+     "failedToImportSpecimenWithId": "Falha ao importar espécime com ID: {id}",
     "@failedToImportSpecimenWithId": {
         "type": "text",
         "description": "Message when failed to import a specimen",
@@ -1365,7 +1370,69 @@
             }
         }
     },
+    "importingJournals": "Importando diário de campo",
+    "@importingJournals": {
+        "type": "text",
+        "description": "Message when importing journals"
+    },
+    "errorImportingJournals": "Erro importando diário de campo",
+    "@errorImportingJournals": {
+        "type": "text",
+        "description": "Error message when importing journals"
+    },
+    "journalsImportedSuccessfully": "Diário de campo importado com sucesso: {howMany}",
+    "@journalsImportedSuccessfully": {
+        "type": "text",
+        "description": "Message when journals are imported successfully",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
+    "errorParsingJournalsArrayItem": "Erro ao analisar item do array 'journals': {errorMessage} \nItem: {item}",
+    "@errorParsingJournalsArrayItem": {
+        "type": "text",
+        "description": "Error message when parsing journals array item fails",
+        "placeholders": {
+            "item": {
+                "type": "String",
+                "description": "Array item"
+            },
+            "errorMessage": {
+                "type": "String",
+                "description": "Error message"
+            }
+        }
+    },
+    "errorUnexpectedJournalsArrayItem": "Item inesperado no array 'journals' JSON: {item}",
+    "@errorUnexpectedJournalsArrayItem": {
+        "type": "text",
+        "description": "Error message when unexpected journals array item is encountered",
+        "placeholders": {
+            "item": {
+                "type": "String",
+                "description": "Array item"
+            }
+        }
+    },
+    "noJournalEntriesFound": "Nenhuma entrada de diário encontrada.",
+    "@noJournalEntriesFound": {
+        "type": "text",
+        "description": "Message when no journal entries are found"
+    },
+    "noValidJournalEntriesFoundInFile": "Nenhuma entrada válida de diário foi encontrada no arquivo importado.",
+    "@noValidJournalEntriesFoundInFile": {
+        "type": "text",
+        "description": "Message when no valid journal entries are found in imported file"
+    },
+    "errorSavingJournalEntry": "Erro ao salvar entrada do diário",
+    "@errorSavingJournalEntry": {
+        "type": "text",
+        "description": "Error message when saving journal entry"
+    },
     "cloudCoverRangeError": "Nebulosidade deve estar entre 0 e 100",
+
     "@cloudCoverRangeError": {
         "type": "text",
         "description": "Error message when cloud cover is out of range"

@@ -2562,12 +2562,12 @@ class S {
     );
   }
 
-  /// `No journal entries found`
+  /// `No journal entries found.`
   String get noJournalEntriesFound {
     return Intl.message(
-      'No journal entries found',
+      'No journal entries found.',
       name: 'noJournalEntriesFound',
-      desc: 'Text displayed when the field journal list is empty',
+      desc: 'Message when no journal entries are found',
       args: [],
     );
   }
@@ -2592,12 +2592,12 @@ class S {
     );
   }
 
-  /// `Error saving the field journal entry`
+  /// `Error saving journal entry`
   String get errorSavingJournalEntry {
     return Intl.message(
-      'Error saving the field journal entry',
+      'Error saving journal entry',
       name: 'errorSavingJournalEntry',
-      desc: 'Message shown when an error occurred while saving a journal entry',
+      desc: 'Error message when saving journal entry',
       args: [],
     );
   }
@@ -3268,6 +3268,16 @@ class S {
       name: 'failedToImportNestWithId',
       desc: 'Message when failed to import a nest',
       args: [id],
+    );
+  }
+
+  /// `Plain text`
+  String get plainText {
+    return Intl.message(
+      'Plain text',
+      name: 'plainText',
+      desc: 'Plain text export format option',
+      args: [],
     );
   }
 
@@ -5101,6 +5111,66 @@ class S {
       'Species richness per year',
       name: 'speciesRichnessPerYear',
       desc: 'Chart title: species richness per year',
+      args: [],
+    );
+  }
+
+  /// `Importing journals`
+  String get importingJournals {
+    return Intl.message(
+      'Importing journals',
+      name: 'importingJournals',
+      desc: 'Message when importing journals',
+      args: [],
+    );
+  }
+
+  /// `Error importing journals`
+  String get errorImportingJournals {
+    return Intl.message(
+      'Error importing journals',
+      name: 'errorImportingJournals',
+      desc: 'Error message when importing journals',
+      args: [],
+    );
+  }
+
+  /// `Journals imported successfully: {howMany}`
+  String journalsImportedSuccessfully(int howMany) {
+    return Intl.message(
+      'Journals imported successfully: $howMany',
+      name: 'journalsImportedSuccessfully',
+      desc: 'Message when journals are imported successfully',
+      args: [howMany],
+    );
+  }
+
+  /// `Error parsing 'journals' array item: {errorMessage} \nItem: {item}`
+  String errorParsingJournalsArrayItem(String item, String errorMessage) {
+    return Intl.message(
+      'Error parsing \'journals\' array item: $errorMessage \nItem: $item',
+      name: 'errorParsingJournalsArrayItem',
+      desc: 'Error message when parsing journals array item fails',
+      args: [item, errorMessage],
+    );
+  }
+
+  /// `Unexpected item in 'journals' JSON array: {item}`
+  String errorUnexpectedJournalsArrayItem(String item) {
+    return Intl.message(
+      'Unexpected item in \'journals\' JSON array: $item',
+      name: 'errorUnexpectedJournalsArrayItem',
+      desc: 'Error message when unexpected journals array item is encountered',
+      args: [item],
+    );
+  }
+
+  /// `No valid journal entries found in the imported file.`
+  String get noValidJournalEntriesFoundInFile {
+    return Intl.message(
+      'No valid journal entries found in the imported file.',
+      name: 'noValidJournalEntriesFoundInFile',
+      desc: 'Message when no valid journal entries are found in imported file',
       args: [],
     );
   }

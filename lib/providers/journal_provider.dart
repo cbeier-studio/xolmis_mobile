@@ -40,29 +40,83 @@ class FieldJournalProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  /// Imports multiple journal entries and refreshes the cached list afterward.
-  ///
-  /// This method is intended for JSON import flows where entries may already
-  /// carry an explicit [FieldJournal.id]. It relies on the DAO's replace-on-
-  /// conflict behavior and then reloads the cache to keep the in-memory state
-  /// aligned with SQLite.
-  ///
-  /// Returns the number of entries successfully persisted.
-  Future<int> importJournalEntries(List<FieldJournal> journalEntries) async {
-    var importedCount = 0;
+   /// Detects which journal entries have conflicting titles in the database.
+   ///
+   /// Returns a set of titles (in lowercase) that already exist locally.
+   Future<Set<String>> _detectConflictingTitles(List<FieldJournal> journalEntries) async {
+     final conflictingTitles = <String>{};
+     for (final entry in journalEntries) {
+       final exists = await _journalDao.journalTitleExists(entry.title);
+       if (exists) {
+         conflictingTitles.add(entry.title.toLowerCase());
+       }
+     }
+     return conflictingTitles;
+   }
 
-    for (final journalEntry in journalEntries) {
-      try {
-        await _journalDao.insertJournalEntry(journalEntry);
-        importedCount++;
-      } catch (error) {
-        debugPrint('Error importing field journal entry: $error');
-      }
-    }
+   /// Imports multiple journal entries with conflict resolution.
+   ///
+   /// This method checks for existing entries with matching titles and either
+   /// updates or skips them based on the [updateExisting] flag. Each import
+   /// transaction is handled via [FieldJournalDao.importJournal], which ensures
+   /// consistency and assigns local auto-incremented IDs.
+   ///
+   /// Returns a map with counts for 'newCount', 'updatedCount', 'skippedCount',
+   /// and a list of 'errors' for any failed imports.
+   Future<Map<String, dynamic>> importJournalEntries(
+     List<FieldJournal> journalEntries, {
+     bool updateExisting = true,
+   }) async {
+     var newCount = 0;
+     var updatedCount = 0;
+     var skippedCount = 0;
+     final errors = <String>[];
 
-    await fetchJournalEntries();
-    return importedCount;
-  }
+     // Detect conflicting titles first
+     final conflictingTitles = await _detectConflictingTitles(journalEntries);
+
+     for (final journalEntry in journalEntries) {
+       try {
+         final isExisting = conflictingTitles.contains(journalEntry.title.toLowerCase());
+         if (isExisting && !updateExisting) {
+           skippedCount++;
+           continue;
+         }
+
+         final success = await _journalDao.importJournal(
+           journalEntry,
+           updateExisting: updateExisting,
+         );
+         if (success) {
+           if (isExisting) {
+             updatedCount++;
+           } else {
+             newCount++;
+           }
+         } else {
+           final identifier = journalEntry.title.isNotEmpty
+               ? journalEntry.title
+               : (journalEntry.id?.toString() ?? 'unknown');
+           errors.add('Failed to import field journal "$identifier": Unknown error');
+         }
+       } catch (error) {
+         final identifier = journalEntry.title.isNotEmpty
+             ? journalEntry.title
+             : (journalEntry.id?.toString() ?? 'unknown');
+         final message = 'Failed to import field journal "$identifier": $error';
+         debugPrint(message);
+         errors.add(message);
+       }
+     }
+
+     await fetchJournalEntries();
+     return {
+       'newCount': newCount,
+       'updatedCount': updatedCount,
+       'skippedCount': skippedCount,
+       'errors': errors,
+     };
+   }
 
   /// Updates an existing journal entry in storage and in memory.
   Future<void> updateJournalEntry(FieldJournal journalEntry) async {
@@ -90,4 +144,9 @@ class FieldJournalProvider with ChangeNotifier {
     notifyListeners();
   }
 
+   /// Returns `true` if a journal entry with the given [title] already exists
+   /// in the database (case-insensitive comparison).
+   Future<bool> journalTitleExists(String title) async {
+     return await _journalDao.journalTitleExists(title);
+   }
 }

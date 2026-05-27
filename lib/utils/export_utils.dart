@@ -200,7 +200,7 @@ Future<void> exportAllInventoriesToJson(BuildContext context, InventoryProvider 
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(filePath, mimeType: 'application/json')], 
-        text: S.current.inventoryExported(2), 
+        title: S.current.inventoryExported(2),
         subject: S.current.inventoryData(2)
       ),
     );
@@ -251,7 +251,7 @@ Future<void> exportInventoryToJson(BuildContext context, Inventory inventory, bo
       await SharePlus.instance.share(
         ShareParams(
           files: [XFile(filePath, mimeType: 'application/json')],
-          text: S.current.inventoryExported(1),
+          title: S.current.inventoryExported(1),
           subject: '${S.current.inventoryExported(1)} ${inventoryToExport.id}'
         ),
       );
@@ -577,7 +577,7 @@ Future<void> exportInventoryToKml(BuildContext context, Inventory inventory) asy
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(filePath, mimeType: 'application/vnd.google-earth.kml+xml')],
-        text: S.current.inventoryExported(1),
+        title: S.current.inventoryExported(1),
         subject: '${S.current.inventoryExported(1)} ${inventoryToExport.id}',
       ),
     );
@@ -622,7 +622,7 @@ Future<void> exportSelectedInventoriesToJson(BuildContext context, List<Inventor
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(filePath, mimeType: 'application/json')],
-        text: S.current.inventoryExported(inventories.length),
+        title: S.current.inventoryExported(inventories.length),
         subject: S.current.inventoryData(inventories.length),
       ),
     );
@@ -676,7 +676,7 @@ Future<void> exportSelectedInventoriesToCsv(BuildContext context, List<Inventory
       await SharePlus.instance.share(
         ShareParams(
           files: csvFiles,
-          text: S.current.inventoryExported(inventories.length),
+          title: S.current.inventoryExported(inventories.length),
           subject: S.current.inventoryData(inventories.length),
         ),
       );
@@ -740,7 +740,7 @@ Future<void> exportSelectedInventoriesToExcel(BuildContext context, List<Invento
       await SharePlus.instance.share(
         ShareParams(
           files: excelFiles,
-          text: S.current.inventoryExported(inventories.length),
+          title: S.current.inventoryExported(inventories.length),
           subject: S.current.inventoryData(inventories.length),
         ),
       );
@@ -847,7 +847,7 @@ Future<void> exportSelectedInventoriesToKml(BuildContext context, List<Inventory
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(filePath, mimeType: 'application/vnd.google-earth.kml+xml')],
-        text: S.current.inventoryExported(inventoriesToExport.length),
+        title: S.current.inventoryExported(inventoriesToExport.length),
         subject: S.current.inventoryData(inventoriesToExport.length),
       ),
     );
@@ -891,12 +891,16 @@ String _extractJournalEmbedPlaceholder(dynamic insert) {
     return '[Embedded content]';
   }
 
-  if (insert.containsKey('image')) {
-    return '[Image: ${insert['image']}]';
+  final type = insert['_type'] as String?;
+  if (type == 'image') {
+    final source = insert['source'] as String? ?? '';
+    return '[Image: ${source.isNotEmpty ? source : 'attached'}]';
+  }
+  if (type == 'hr') {
+    return '---';
   }
 
-  final firstKey = insert.keys.isEmpty ? 'content' : insert.keys.first;
-  return '[Embedded $firstKey]';
+  return '[Embedded ${type ?? 'content'}]';
 }
 
 String _journalDeltaToPlainText(String? notes) {
@@ -905,22 +909,131 @@ String _journalDeltaToPlainText(String? notes) {
     return notes ?? '';
   }
 
-  final buffer = StringBuffer();
+  final output = StringBuffer();
+  final currentLine = StringBuffer();
+  var orderedIndex = 1;
+  var hasWrittenElements = false;
+  String? lastBlockType;
+  bool? currentLineChecked;
+
+  bool isBlockType(String? blockType) {
+    return blockType == 'ul' ||
+        blockType == 'ol' ||
+        blockType == 'cl' ||
+        blockType == 'quote' ||
+        blockType == 'code';
+  }
+
+  void writeElement(String line, {String? blockType}) {
+    final isBlock = isBlockType(blockType);
+    final sameBlockRun =
+        isBlock && hasWrittenElements && lastBlockType == blockType;
+
+    if (hasWrittenElements && !sameBlockRun) {
+      output.writeln();
+    }
+
+    output.writeln(line);
+    hasWrittenElements = true;
+    lastBlockType = isBlock ? blockType : null;
+  }
+
+  String applyInlinePlainText(String text, Map<dynamic, dynamic>? attributes) {
+    if (text.isEmpty) {
+      return text;
+    }
+
+    final link = attributes?['a'];
+    if (link is String && link.isNotEmpty) {
+      return '$text ($link)';
+    }
+    return text;
+  }
+
+  void flushLine([Map<dynamic, dynamic>? lineAttributes]) {
+    final raw = currentLine.toString().trimRight();
+    if (raw.isEmpty) {
+      currentLine.clear();
+      currentLineChecked = null;
+      return;
+    }
+
+    final blockType = lineAttributes?['block'] as String?;
+    final headingLevel = lineAttributes?['heading'];
+    if (blockType != 'ol') orderedIndex = 1;
+
+    final lineChecked = lineAttributes?['checked'] as bool?;
+    final effectiveChecked = lineChecked ?? currentLineChecked;
+
+    String line;
+    if (effectiveChecked != null) {
+      line = effectiveChecked ? '- [x] ${raw.trim()}' : '- [ ] ${raw.trim()}';
+    } else if (blockType == 'cl') {
+      line = '- [ ] ${raw.trim()}';
+    // } else if (headingLevel is int) {
+    //   line = '${'#' * headingLevel.clamp(1, 6)} ${raw.trim()}';
+    } else if (blockType == 'ul') {
+      line = '- ${raw.trim()}';
+    } else if (blockType == 'ol') {
+      line = '${orderedIndex++}. ${raw.trim()}';
+    } else if (blockType == 'quote') {
+      line = '> ${raw.trim()}';
+    } else if (blockType == 'code') {
+      line = '    $raw';
+    } else {
+      line = raw;
+    }
+
+    writeElement(line, blockType: blockType);
+    currentLine.clear();
+    currentLineChecked = null;
+  }
+
   for (final op in ops) {
     if (op is! Map) {
       continue;
     }
 
     final insert = op['insert'];
+    final attributes = op['attributes'] as Map<dynamic, dynamic>?;
+
     if (insert is String) {
-      buffer.write(insert);
+      final parts = insert.split('\n');
+      for (var i = 0; i < parts.length; i++) {
+        final part = parts[i];
+        if (part.isNotEmpty) {
+          if (attributes?['checked'] is bool) {
+            currentLineChecked = attributes!['checked'] as bool;
+          }
+          currentLine.write(applyInlinePlainText(part, attributes));
+        }
+
+        if (i < parts.length - 1) {
+          final hasLineAttrs = attributes != null &&
+              (attributes.containsKey('block') ||
+                  attributes.containsKey('heading'));
+          flushLine(hasLineAttrs ? attributes : null);
+        }
+      }
       continue;
     }
 
-    buffer.write('\n${_extractJournalEmbedPlaceholder(insert)}\n');
+    if (insert is Map) {
+      final type = insert['_type'] as String?;
+      if (type == 'hr') {
+        if (currentLine.isNotEmpty) flushLine();
+        writeElement('---');
+      } else {
+        currentLine.write(_extractJournalEmbedPlaceholder(insert));
+      }
+    }
   }
 
-  return buffer.toString().trimRight();
+  if (currentLine.isNotEmpty) {
+    flushLine();
+  }
+
+  return output.toString().trimRight();
 }
 
 String _applyInlineMarkdown(String text, Map<dynamic, dynamic>? attributes) {
@@ -929,21 +1042,21 @@ String _applyInlineMarkdown(String text, Map<dynamic, dynamic>? attributes) {
   }
 
   var value = text;
-  final link = attributes?['link'];
-  if (attributes?['code'] == true) {
+  final link = attributes?['a'];
+  if (attributes?['c'] == true) {
     value = '`$value`';
   }
-  if (attributes?['bold'] == true) {
+  if (attributes?['b'] == true) {
     value = '**$value**';
   }
-  if (attributes?['italic'] == true) {
+  if (attributes?['i'] == true) {
     value = '*$value*';
   }
-  if (attributes?['strike'] == true) {
+  if (attributes?['s'] == true) {
     value = '~~$value~~';
   }
-  if (attributes?['underline'] == true) {
-    value = '<u>$value</u>';
+  if (attributes?['u'] == true) {
+    value = '$value'; // Markdown doesn't have native underline, so we can choose to ignore or use a custom syntax
   }
   if (link is String && link.isNotEmpty) {
     value = '[$value]($link)';
@@ -961,33 +1074,79 @@ String _journalDeltaToMarkdown(String? notes) {
   final output = StringBuffer();
   final currentLine = StringBuffer();
   var orderedIndex = 1;
+  var hasWrittenElements = false;
+  String? lastBlockType;
 
-  void flushLine([Map<dynamic, dynamic>? lineAttributes]) {
-    final raw = currentLine.toString().trimRight();
-    if (lineAttributes?['list'] != 'ordered') {
-      orderedIndex = 1;
-    }
+  bool _isBlockType(String? blockType) {
+    return blockType == 'ul' ||
+        blockType == 'ol' ||
+        blockType == 'cl' ||
+        blockType == 'quote' ||
+        blockType == 'code';
+  }
 
-    String line = raw;
-    if (lineAttributes?['header'] is int) {
-      final headerLevel = (lineAttributes!['header'] as int).clamp(1, 6);
-      line = '${'#' * headerLevel} ${raw.trim()}';
-    } else if (lineAttributes?['list'] == 'bullet') {
-      line = '- ${raw.trim()}';
-    } else if (lineAttributes?['list'] == 'ordered') {
-      line = '${orderedIndex++}. ${raw.trim()}';
-    } else if (lineAttributes?['list'] == 'checked') {
-      line = '- [x] ${raw.trim()}';
-    } else if (lineAttributes?['list'] == 'unchecked') {
-      line = '- [ ] ${raw.trim()}';
-    } else if (lineAttributes?['blockquote'] == true) {
-      line = '> ${raw.trim()}';
-    } else if (lineAttributes?['code-block'] == true) {
-      line = '    $raw';
+  void writeElement(String line, {String? blockType}) {
+    final isBlock = _isBlockType(blockType);
+    final sameBlockRun =
+        isBlock && hasWrittenElements && lastBlockType == blockType;
+
+    // Markdown expects a blank line between elements, except while we are in
+    // the same contiguous block run (lists, quotes, code blocks, checklists).
+    if (hasWrittenElements && !sameBlockRun) {
+      output.writeln();
     }
 
     output.writeln(line);
+    hasWrittenElements = true;
+    lastBlockType = isBlock ? blockType : null;
+  }
+  // Tracks whether the current line's text had the `checked` inline attribute,
+  // which is how Fleather marks checklist item state on text runs.
+  bool? currentLineChecked;
+
+  void flushLine([Map<dynamic, dynamic>? lineAttributes]) {
+    final raw = currentLine.toString().trimRight();
+    // Skip empty lines that carry block styles (e.g. blank trailing list items).
+    if (raw.isEmpty) {
+      currentLine.clear();
+      currentLineChecked = null;
+      return;
+    }
+
+    final blockType = lineAttributes?['block'] as String?;
+    final headingLevel = lineAttributes?['heading'];
+    if (blockType != 'ol') orderedIndex = 1;
+
+    String line;
+    // `checked` can appear on the block-terminating `\n` op (standard Fleather
+    // format) or as an inline attribute on text runs. Prefer the block attr, then
+    // fall back to what was tracked from the text runs.
+    final lineChecked = lineAttributes?['checked'] as bool?;
+    final effectiveChecked = lineChecked ?? currentLineChecked;
+
+    if (effectiveChecked != null) {
+      // Treat as a checklist item regardless of blockType.
+      line = effectiveChecked ? '- [x] ${raw.trim()}' : '- [ ] ${raw.trim()}';
+    } else if (blockType == 'cl') {
+      // Block is checklist but no checked state → assume unchecked.
+      line = '- [ ] ${raw.trim()}';
+    } else if (headingLevel is int) {
+      line = '${'#' * headingLevel.clamp(1, 6)} ${raw.trim()}';
+    } else if (blockType == 'ul') {
+      line = '- ${raw.trim()}';
+    } else if (blockType == 'ol') {
+      line = '${orderedIndex++}. ${raw.trim()}';
+    } else if (blockType == 'quote') {
+      line = '> ${raw.trim()}';
+    } else if (blockType == 'code') {
+      line = '    $raw';
+    } else {
+      line = raw;
+    }
+
+    writeElement(line, blockType: blockType);
     currentLine.clear();
+    currentLineChecked = null;
   }
 
   for (final op in ops) {
@@ -1003,19 +1162,34 @@ String _journalDeltaToMarkdown(String? notes) {
       for (var i = 0; i < parts.length; i++) {
         final part = parts[i];
         if (part.isNotEmpty) {
+          // Update checked state for the segment being written to the current line.
+          if (attributes?['checked'] is bool) {
+            currentLineChecked = attributes!['checked'] as bool;
+          }
           currentLine.write(_applyInlineMarkdown(part, attributes));
         }
         if (i < parts.length - 1) {
-          flushLine(attributes);
+          // A \n inside a text op with block/heading attributes terminates a
+          // styled paragraph; a \n without those attributes is a plain separator.
+          final hasLineAttrs = attributes != null &&
+              (attributes.containsKey('block') ||
+                  attributes.containsKey('heading'));
+          flushLine(hasLineAttrs ? attributes : null);
         }
       }
       continue;
     }
 
-    if (currentLine.isNotEmpty) {
-      currentLine.write(' ');
+    if (insert is Map) {
+      final type = insert['_type'] as String?;
+      if (type == 'hr') {
+        // Horizontal rule gets its own output line.
+        if (currentLine.isNotEmpty) flushLine();
+        writeElement('---');
+      } else {
+        currentLine.write(_extractJournalEmbedPlaceholder(insert));
+      }
     }
-    currentLine.write(_extractJournalEmbedPlaceholder(insert));
   }
 
   if (currentLine.isNotEmpty) {
@@ -1051,21 +1225,30 @@ String _buildJournalTxtExportContent(List<FieldJournal> journals) {
   return content.toString().trimRight();
 }
 
+String _toYamlStringValue(String value) {
+  final escaped = value.replaceAll('\\', '\\\\').replaceAll('"', '\\"');
+  return '"$escaped"';
+}
+
 String _buildJournalMarkdownExportContent(List<FieldJournal> journals) {
   final content = StringBuffer();
 
   for (var i = 0; i < journals.length; i++) {
     final journal = journals[i];
-    content.writeln('# ${journal.title}');
+    content.writeln('---');
+    content.writeln('title: ${_toYamlStringValue(journal.title)}');
     if (journal.observer != null && journal.observer!.isNotEmpty) {
-      content.writeln('- **Observer:** ${journal.observer}');
+      content.writeln('observer: ${_toYamlStringValue(journal.observer!)}');
     }
     if (journal.creationDate != null) {
-      content.writeln('- **Created:** ${journal.creationDate!.toIso8601String()}');
+      content.writeln('created: ${journal.creationDate!.toIso8601String()}');
     }
     if (journal.lastModifiedDate != null) {
-      content.writeln('- **Last modified:** ${journal.lastModifiedDate!.toIso8601String()}');
+      content.writeln('lastModified: ${journal.lastModifiedDate!.toIso8601String()}');
     }
+    content.writeln('---');
+    content.writeln('');
+    content.writeln('# ${journal.title}');
     content.writeln('');
     content.writeln(_journalDeltaToMarkdown(journal.notes));
 
@@ -1096,7 +1279,7 @@ Future<void> exportSelectedJournalsToTxt(
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(filePath, mimeType: 'text/plain')],
-        text: S.current.journalEntries(journals.length),
+        title: S.current.journalEntries(journals.length),
         subject: S.current.journalEntries(journals.length),
       ),
     );
@@ -1132,7 +1315,7 @@ Future<void> exportSelectedJournalsToMarkdown(
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(filePath, mimeType: 'text/markdown')],
-        text: S.current.journalEntries(journals.length),
+        title: S.current.journalEntries(journals.length),
         subject: S.current.journalEntries(journals.length),
       ),
     );
@@ -1175,7 +1358,7 @@ Future<void> exportSelectedJournalsToJson(
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(filePath, mimeType: 'application/json')],
-        text: S.current.journalEntries(journals.length),
+        title: S.current.journalEntries(journals.length),
         subject: S.current.journalEntries(journals.length),
       ),
     );
@@ -1217,7 +1400,7 @@ Future<void> exportSelectedNestsToJson(BuildContext context, List<Nest> nests) a
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(filePath, mimeType: 'application/json')],
-        text: S.current.nestExported(nests.length),
+        title: S.current.nestExported(nests.length),
         subject: S.current.nestData(nests.length),
       ),
     );
@@ -1271,7 +1454,7 @@ Future<void> exportSelectedNestsToCsv(BuildContext context, List<Nest> nests) as
       await SharePlus.instance.share(
         ShareParams(
           files: csvFiles,
-          text: S.current.nestExported(nests.length),
+          title: S.current.nestExported(nests.length),
           subject: S.current.nestData(nests.length),
         ),
       );
@@ -1335,7 +1518,7 @@ Future<void> exportSelectedNestsToExcel(BuildContext context, List<Nest> nests) 
       await SharePlus.instance.share(
         ShareParams(
           files: excelFiles,
-          text: S.current.nestExported(nests.length),
+          title: S.current.nestExported(nests.length),
           subject: S.current.nestData(nests.length),
         ),
       );
@@ -1413,7 +1596,7 @@ Future<void> exportSelectedNestsToKml(BuildContext context, List<Nest> nests) as
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(filePath, mimeType: 'application/vnd.google-earth.kml+xml')],
-        text: S.current.nestExported(gpx.wpts.length),
+        title: S.current.nestExported(gpx.wpts.length),
         subject: S.current.nestData(gpx.wpts.length),
       ),
     );
@@ -1488,7 +1671,7 @@ Future<void> exportAllInactiveNestsToJson(BuildContext context) async {
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(filePath, mimeType: 'application/json')], 
-        text: S.current.nestExported(2), 
+        title: S.current.nestExported(2),
         subject: S.current.nestData(2)
       ),
     );
@@ -1536,7 +1719,7 @@ Future<void> exportNestToJson(BuildContext context, Nest nest) async {
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(filePath, mimeType: 'application/json')], 
-        text: S.current.nestExported(1), 
+        title: S.current.nestExported(1),
         subject: '${S.current.nestData(1)} ${nestToExport.fieldNumber}'
       ),
     );
@@ -1741,7 +1924,7 @@ Future<void> exportNestToKml(BuildContext context, Nest nest) async {
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(filePath, mimeType: 'application/vnd.google-earth.kml+xml')],
-        text: S.current.nestExported(1),
+        title: S.current.nestExported(1),
         subject: '${S.current.nestExported(1)} ${nestToExport.fieldNumber}',
       ),
     );
@@ -1810,7 +1993,7 @@ Future<void> exportAllSpecimensToJson(BuildContext context, List<Specimen> speci
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(filePath, mimeType: 'application/json')], 
-        text: S.current.specimenExported(2), 
+        title: S.current.specimenExported(2),
         subject: S.current.specimenData(2)
       ),
     );
@@ -1857,7 +2040,7 @@ Future<void> exportSelectedSpecimensToJson(BuildContext context, List<Specimen> 
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(filePath, mimeType: 'application/json')],
-        text: S.current.specimenExported(specimenList.length),
+        title: S.current.specimenExported(specimenList.length),
         subject: S.current.specimenData(specimenList.length),
       ),
     );
@@ -1924,7 +2107,7 @@ Future<void> exportSelectedSpecimensToCsv(BuildContext context, List<Specimen> s
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(filePath, mimeType: 'text/csv')],
-        text: S.current.specimenExported(specimenList.length),
+        title: S.current.specimenExported(specimenList.length),
         subject: S.current.specimenData(specimenList.length),
       ),
     );
@@ -2013,7 +2196,7 @@ Future<void> exportSelectedSpecimensToExcel(BuildContext context, List<Specimen>
             mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
           ),
         ],
-        text: S.current.specimenExported(specimenList.length),
+        title: S.current.specimenExported(specimenList.length),
         subject: S.current.specimenData(specimenList.length),
       ),
     );
@@ -2088,7 +2271,7 @@ Future<void> exportSelectedSpecimensToKml(BuildContext context, List<Specimen> s
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(filePath, mimeType: 'application/vnd.google-earth.kml+xml')],
-        text: S.current.specimenExported(gpx.wpts.length),
+        title: S.current.specimenExported(gpx.wpts.length),
         subject: S.current.specimenData(gpx.wpts.length),
       ),
     );
@@ -2160,7 +2343,7 @@ Future<void> exportAllSpecimensToCsv(BuildContext context, List<Specimen> specim
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(filePath, mimeType: 'text/csv')], 
-        text: S.current.specimenExported(2), 
+        title: S.current.specimenExported(2),
         subject: S.current.specimenData(2)
       ),
     );
@@ -2252,7 +2435,7 @@ Future<void> exportAllSpecimensToExcel(BuildContext context, List<Specimen> spec
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(filePath, mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')], 
-        text: S.current.specimenExported(2), 
+        title: S.current.specimenExported(2),
         subject: S.current.specimenData(2)
       ),
     );
@@ -2342,7 +2525,7 @@ Future<void> exportSpecimenToKml(BuildContext context, Specimen specimen) async 
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(filePath, mimeType: 'application/vnd.google-earth.kml+xml')],
-        text: S.current.specimenExported(1),
+        title: S.current.specimenExported(1),
         subject: '${S.current.specimenExported(1)} ${specimen.fieldNumber}',
       ),
     );

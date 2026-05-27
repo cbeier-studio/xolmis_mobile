@@ -772,6 +772,56 @@ Future<void> importSpecimensFromJson(BuildContext context) async {
   }
 }
 
+Map<String, dynamic> _normalizeJournalJsonRecord(Map<String, dynamic> item) {
+  final normalized = Map<String, dynamic>.from(item);
+
+  final rawId = normalized['id'];
+  if (rawId is String) {
+    normalized['id'] = int.tryParse(rawId);
+  } else if (rawId is num) {
+    normalized['id'] = rawId.toInt();
+  } else if (rawId != null && rawId is! int) {
+    normalized['id'] = null;
+  }
+
+  final rawTitle = normalized['title'];
+  final title = rawTitle?.toString().trim() ?? '';
+  if (title.isEmpty) {
+    throw FormatException('Journal entry is missing a valid title.');
+  }
+  normalized['title'] = title;
+
+  final rawNotes = normalized['notes'];
+  if (rawNotes is List || rawNotes is Map) {
+    normalized['notes'] = jsonEncode(rawNotes);
+  } else if (rawNotes == null || rawNotes is String) {
+    normalized['notes'] = rawNotes;
+  } else {
+    normalized['notes'] = rawNotes.toString();
+  }
+
+  final rawObserver = normalized['observer'];
+  if (rawObserver != null && rawObserver is! String) {
+    normalized['observer'] = rawObserver.toString();
+  }
+
+  final rawCreationDate = normalized['creationDate'];
+  if (rawCreationDate is DateTime) {
+    normalized['creationDate'] = rawCreationDate.toIso8601String();
+  } else if (rawCreationDate != null && rawCreationDate is! String) {
+    normalized['creationDate'] = rawCreationDate.toString();
+  }
+
+  final rawLastModifiedDate = normalized['lastModifiedDate'];
+  if (rawLastModifiedDate is DateTime) {
+    normalized['lastModifiedDate'] = rawLastModifiedDate.toIso8601String();
+  } else if (rawLastModifiedDate != null && rawLastModifiedDate is! String) {
+    normalized['lastModifiedDate'] = rawLastModifiedDate.toString();
+  }
+
+  return normalized;
+}
+
 /// Imports field journal entries from an exported JSON file selected by the user.
 ///
 /// The file must use the standard Xolmis export envelope and the `journals`
@@ -779,19 +829,33 @@ Future<void> importSpecimensFromJson(BuildContext context) async {
 /// through [FieldJournalProvider]. Since journal entries are flat records with
 /// their rich text kept as a JSON string, the import flow preserves the notes as
 /// exported, including any image placeholders or embeds present in the source.
+///
+/// Entries with conflicting titles can be updated or skipped based on user
+/// preference, following the same conflict resolution pattern as specimens and nests.
 Future<void> importJournalsFromJson(BuildContext context) async {
   bool isDialogShown = false;
-  int importedCount = 0;
+  int newImportedCount = 0;
+  int updatedCount = 0;
+  int skippedCount = 0;
   int errorCount = 0;
   List<String> importErrors = [];
 
   try {
+    // Get provider reference BEFORE any async operations that might unmount context
+    late FieldJournalProvider journalProvider;
+    if (!context.mounted) {
+      debugPrint('[importJournalsFromJson] Context not mounted at start');
+      return;
+    }
+    journalProvider = Provider.of<FieldJournalProvider>(context, listen: false);
+
     final result = await FilePicker.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['json'],
     );
 
-    if (result == null || result.files.single.path == null) {
+    if (result == null) {
+      debugPrint('[importJournalsFromJson] FilePicker returned null (user cancelled)');
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -803,33 +867,67 @@ Future<void> importJournalsFromJson(BuildContext context) async {
       return;
     }
 
-    final filePath = result.files.single.path!;
-    final file = File(filePath);
-
-    if (!context.mounted) return;
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return Dialog(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                CircularProgressIndicator(),
-                SizedBox(width: 16),
-                Text(S.current.importingInventory),
-              ],
-            ),
+    if (result.files.isEmpty) {
+      debugPrint('[importJournalsFromJson] FilePicker returned result but files list is empty');
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            showCloseIcon: true,
+            content: Text(S.current.noFileSelected),
           ),
         );
-      },
-    );
-    isDialogShown = true;
+      }
+      return;
+    }
 
+    final filePath = result.files.first.path;
+    if (filePath == null) {
+      debugPrint('[importJournalsFromJson] Selected file has null path');
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            showCloseIcon: true,
+            content: Text(S.current.noFileSelected),
+          ),
+        );
+      }
+      return;
+    }
+
+    debugPrint('[importJournalsFromJson] File selected: $filePath');
+    final file = File(filePath);
+
+    if (!context.mounted) {
+      debugPrint('[importJournalsFromJson] Context unmounted after file selection, reading file without dialog');
+    } else {
+      debugPrint('[importJournalsFromJson] Context still mounted, showing progress dialog');
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Dialog(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(width: 16),
+                  Text(S.current.importingInventory),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+      isDialogShown = true;
+    }
+
+    debugPrint('[importJournalsFromJson] Reading JSON file...');
     final jsonString = await file.readAsString();
+    debugPrint('[importJournalsFromJson] File read successfully, parsing JSON...');
     final jsonData = jsonDecode(jsonString);
+    debugPrint('[importJournalsFromJson] JSON parsed successfully');
 
     if (jsonData is Map<String, dynamic>) {
       if (jsonData['source'] != kExportSource) {
@@ -842,15 +940,14 @@ Future<void> importJournalsFromJson(BuildContext context) async {
       throw FormatException(S.current.invalidJsonFormatExpectedObjectOrArray);
     }
 
-    if (!context.mounted) return;
-    final journalProvider = Provider.of<FieldJournalProvider>(context, listen: false);
 
     final List<dynamic> journalList =
-        jsonData is Map<String, dynamic> && jsonData['records'] is List
-            ? jsonData['records'] as List<dynamic>
-            : <dynamic>[];
+        jsonData['records'] is List ? jsonData['records'] as List<dynamic> : <dynamic>[];
+
+    debugPrint('[importJournalsFromJson] Journal list extracted: ${journalList.length} entries');
 
     if (journalList.isEmpty) {
+      debugPrint('[importJournalsFromJson] Journal list is empty in JSON records');
       if (isDialogShown && context.mounted) {
         Navigator.of(context).pop();
         isDialogShown = false;
@@ -867,19 +964,28 @@ Future<void> importJournalsFromJson(BuildContext context) async {
     }
 
     final journalsToImport = <FieldJournal>[];
+    debugPrint('[importJournalsFromJson] Starting to parse ${journalList.length} journal entries...');
     for (final item in journalList) {
       if (item is Map<String, dynamic>) {
         try {
-          journalsToImport.add(FieldJournal.fromJson(item));
+          final normalizedItem = _normalizeJournalJsonRecord(item);
+          journalsToImport.add(FieldJournal.fromJson(normalizedItem));
         } catch (e) {
-          importErrors.add('Error parsing journal item: ${item.toString()} -> $e');
+          final errorMsg = S.current.errorParsingJournalsArrayItem(item.toString(), e.toString());
+          importErrors.add(errorMsg);
+          debugPrint('[importJournalsFromJson] Parse error: $errorMsg');
         }
       } else {
-        importErrors.add('Unexpected journal item: ${item.toString()}');
+        final errorMsg = S.current.errorUnexpectedJournalsArrayItem(item.toString());
+        importErrors.add(errorMsg);
+        debugPrint('[importJournalsFromJson] Unexpected item type: $errorMsg');
       }
     }
+    debugPrint('[importJournalsFromJson] Parsing completed: ${journalsToImport.length} valid entries, ${importErrors.length} errors');
 
     if (journalsToImport.isEmpty) {
+      debugPrint('[importJournalsFromJson] No valid journal entries parsed from JSON. Parse errors: ${importErrors.length}');
+      importErrors.forEach((error) => debugPrint('  - $error'));
       if (isDialogShown && context.mounted) {
         Navigator.of(context).pop();
         isDialogShown = false;
@@ -893,7 +999,7 @@ Future<void> importJournalsFromJson(BuildContext context) async {
                 : null,
             content: Text(
               importErrors.isNotEmpty
-                  ? 'No valid journal entries found in file.'
+                  ? S.current.noValidJournalEntriesFoundInFile
                   : S.current.noJournalEntriesFound,
             ),
           ),
@@ -902,41 +1008,119 @@ Future<void> importJournalsFromJson(BuildContext context) async {
       return;
     }
 
-    importedCount = await journalProvider.importJournalEntries(journalsToImport);
+    if (!context.mounted) {
+      debugPrint('[importJournalsFromJson] Context unmounted before conflict detection, but will continue processing with provider reference');
+    }
+
+    debugPrint('[importJournalsFromJson] Parsing completed: ${journalsToImport.length} valid journals to import');
+
+    // Detect conflicting titles
+    final Set<String> conflictingJournalTitles = <String>{};
+    for (final journal in journalsToImport) {
+      final title = journal.title;
+      if (title.isNotEmpty) {
+        final exists = await journalProvider.journalTitleExists(title);
+        if (exists) {
+          conflictingJournalTitles.add(title.toLowerCase());
+        }
+      }
+    }
+    debugPrint('[importJournalsFromJson] Conflict detection completed: ${conflictingJournalTitles.length} conflicts found');
+
+    final bool? shouldUpdateExisting = await _resolveUpdateExistingDecision(
+      context,
+      conflictingJournalTitles.length,
+    );
+
+    if (shouldUpdateExisting == null) {
+      debugPrint('[importJournalsFromJson] User cancelled import at conflict resolution dialog');
+      if (isDialogShown && context.mounted) {
+        Navigator.of(context).pop();
+        isDialogShown = false;
+      }
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            showCloseIcon: true,
+            content: Text(S.current.importCancelled),
+          ),
+        );
+      }
+      return;
+    }
+
+    debugPrint('[importJournalsFromJson] Starting import process: updateExisting=$shouldUpdateExisting');
+
+    // Import the journals using the provider
+    final importResult = await journalProvider.importJournalEntries(
+      journalsToImport,
+      updateExisting: shouldUpdateExisting,
+    );
+    newImportedCount = importResult['newCount'] as int? ?? 0;
+    updatedCount = importResult['updatedCount'] as int? ?? 0;
+    skippedCount = importResult['skippedCount'] as int? ?? 0;
+    final persistenceErrors =
+        (importResult['errors'] as List<dynamic>? ?? [])
+            .map((error) => error.toString())
+            .toList();
+    importErrors.addAll(persistenceErrors);
     errorCount = importErrors.length;
+
+    debugPrint('[importJournalsFromJson] Import completed: newCount=$newImportedCount, updatedCount=$updatedCount, skippedCount=$skippedCount, errorCount=$errorCount');
+    if (persistenceErrors.isNotEmpty) {
+      debugPrint('[importJournalsFromJson] Persistence errors:');
+      persistenceErrors.forEach((error) => debugPrint('  - $error'));
+    }
 
     if (isDialogShown && context.mounted) {
       Navigator.of(context).pop();
       isDialogShown = false;
     }
 
-    if (!context.mounted) return;
+    if (!context.mounted) {
+      debugPrint('[importJournalsFromJson] Context unmounted after import completion. Import results: newCount=$newImportedCount, updatedCount=$updatedCount, skippedCount=$skippedCount, errorCount=$errorCount');
+      if (importErrors.isNotEmpty) {
+        debugPrint('[importJournalsFromJson] Import completed with errors: ${importErrors.join(", ")}');
+      }
+      return;
+    }
     if (importErrors.isNotEmpty) debugPrint('Import errors: \n${importErrors.join('\n')}');
+
+    final summaryMessage = _buildImportSummaryMessage(
+      context,
+      newCount: newImportedCount,
+      updatedCount: updatedCount,
+      skippedCount: skippedCount,
+      errorsCount: errorCount,
+      successFallback: S.current.journalsImportedSuccessfully(newImportedCount),
+    );
+    debugPrint('[importJournalsFromJson] Displaying import summary to user: $summaryMessage');
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        backgroundColor: errorCount > 0 ? Theme.of(context).colorScheme.error : Colors.green,
-        content: Text(
-          _buildImportSummaryMessage(
-            context,
-            newCount: importedCount,
-            updatedCount: 0,
-            skippedCount: 0,
-            errorsCount: errorCount,
-            successFallback: S.current.importCompletedSummary(importedCount, 0, 0, 0),
-          ),
-        ),
+        backgroundColor:
+            newImportedCount == 0 || errorCount > 0
+                ? Theme.of(context).colorScheme.error
+                : Colors.green,
+        showCloseIcon: true,
+        content: Text(summaryMessage),
+        duration: Duration(seconds: errorCount > 0 ? 5 : 2),
       ),
     );
   } catch (error) {
+    debugPrint('[importJournalsFromJson] Exception caught during import: $error');
     if (isDialogShown && context.mounted) {
       Navigator.of(context).pop();
     }
-    if (!context.mounted) return;
-    String errorMessage = '${S.current.errorSavingJournalEntry}: ${error.toString()}';
-    if (error is FormatException) {
-      errorMessage = '${S.current.errorSavingJournalEntry}: ${error.message}';
+    if (!context.mounted) {
+      debugPrint('[importJournalsFromJson] Context unmounted during error handling');
+      return;
     }
+    String errorMessage = '${S.current.errorImportingJournals}: ${error.toString()}';
+    if (error is FormatException) {
+      errorMessage = '${S.current.errorImportingJournals}: ${error.message}';
+    }
+    debugPrint('[importJournalsFromJson] Showing error to user: $errorMessage');
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         persist: true,
@@ -946,6 +1130,7 @@ Future<void> importJournalsFromJson(BuildContext context) async {
       ),
     );
   } finally {
+    debugPrint('[importJournalsFromJson] Finally block - cleaning up (closing dialog if needed)');
     if (isDialogShown && context.mounted) {
       Navigator.of(context).pop();
     }

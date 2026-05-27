@@ -1817,6 +1817,11 @@
             }
         }
     },
+    "plainText": "Plain text",
+    "@plainText": {
+        "type": "text",
+        "description": "Plain text export format option"
+    },
     "backup": "Backup",
     "@backup": {
         "type": "text",
@@ -2626,5 +2631,66 @@
     "speciesRichnessPerYear": "Species richness per year",
     "@speciesRichnessPerYear": {
         "description": "Chart title: species richness per year"
+    },
+    "importingJournals": "Importing journals",
+    "@importingJournals": {
+        "type": "text",
+        "description": "Message when importing journals"
+    },
+    "errorImportingJournals": "Error importing journals",
+    "@errorImportingJournals": {
+        "type": "text",
+        "description": "Error message when importing journals"
+    },
+    "journalsImportedSuccessfully": "Journals imported successfully: {howMany}",
+    "@journalsImportedSuccessfully": {
+        "type": "text",
+        "description": "Message when journals are imported successfully",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
+    "errorParsingJournalsArrayItem": "Error parsing 'journals' array item: {errorMessage} \nItem: {item}",
+    "@errorParsingJournalsArrayItem": {
+        "type": "text",
+        "description": "Error message when parsing journals array item fails",
+        "placeholders": {
+            "item": {
+                "type": "String",
+                "description": "Array item"
+            },
+            "errorMessage": {
+                "type": "String",
+                "description": "Error message"
+            }
+        }
+    },
+    "errorUnexpectedJournalsArrayItem": "Unexpected item in 'journals' JSON array: {item}",
+    "@errorUnexpectedJournalsArrayItem": {
+        "type": "text",
+        "description": "Error message when unexpected journals array item is encountered",
+        "placeholders": {
+            "item": {
+                "type": "String",
+                "description": "Array item"
+            }
+        }
+    },
+    "noJournalEntriesFound": "No journal entries found.",
+    "@noJournalEntriesFound": {
+        "type": "text",
+        "description": "Message when no journal entries are found"
+    },
+    "noValidJournalEntriesFoundInFile": "No valid journal entries found in the imported file.",
+    "@noValidJournalEntriesFoundInFile": {
+        "type": "text",
+        "description": "Message when no valid journal entries are found in imported file"
+    },
+    "errorSavingJournalEntry": "Error saving journal entry",
+    "@errorSavingJournalEntry": {
+        "type": "text",
+        "description": "Error message when saving journal entry"
     }
 }

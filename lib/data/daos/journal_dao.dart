@@ -91,4 +91,102 @@ class FieldJournalDao {
     final db = await _dbHelper.database;
     await db?.delete('field_journal', where: 'id = ?', whereArgs: [entryId]);
   }
+
+   /// Imports a [FieldJournal] into the database, optionally updating an existing
+   /// entry when [FieldJournal.title] conflicts.
+   ///
+   /// When [updateExisting] is `false`, existing entries are left untouched
+   /// and the method returns `false` for that incoming record.
+   ///
+   /// New imported records always receive a local auto-incremented ID, ignoring
+   /// any numeric ID that may have come from another device.
+   ///
+   /// Sets [journal.id] with the persisted ID upon success.
+   /// Returns `true` on success, or `false` if an error occurs.
+   Future<bool> importJournal(
+     FieldJournal journal, {
+     bool updateExisting = true,
+   }) async {
+     final db = await _dbHelper.database;
+     if (db == null) {
+       return false;
+     }
+
+     try {
+       return await db.transaction((txn) async {
+         final journalMap = journal.toMap();
+         final title = journal.title;
+
+         if (title.isNotEmpty) {
+           final existingJournalId = Sqflite.firstIntValue(
+                 await txn.rawQuery(
+                   'SELECT id FROM field_journal WHERE LOWER(title) = ? LIMIT 1',
+                   [title.toLowerCase()],
+                 ),
+               );
+
+           if (existingJournalId != null) {
+             if (!updateExisting) {
+               return false;
+             }
+
+             journalMap['id'] = existingJournalId;
+             final updatedRows = await txn.update(
+               'field_journal',
+               journalMap,
+               where: 'id = ?',
+               whereArgs: [existingJournalId],
+             );
+             if (updatedRows > 0) {
+               journal.id = existingJournalId;
+               return true;
+             }
+             return false;
+           }
+         }
+
+         journalMap['id'] = null;
+         final insertedId = await txn.insert('field_journal', journalMap);
+         if (insertedId <= 0) {
+           return false;
+         }
+         journal.id = insertedId;
+         return true;
+       });
+     } catch (e) {
+       debugPrint('Error importing journal: $e');
+       return false;
+     }
+   }
+
+   /// Returns the local numeric ID for the journal entry identified by [title].
+   ///
+   /// Matching is case-insensitive. Returns `null` when no local journal has
+   /// the provided title.
+   Future<int?> getJournalIdByTitle(String title) async {
+     final db = await _dbHelper.database;
+     final result = await db?.query(
+       'field_journal',
+       columns: ['id'],
+       where: 'LOWER(title) = ?',
+       whereArgs: [title.toLowerCase()],
+       limit: 1,
+     );
+     if (result == null || result.isEmpty) {
+       return null;
+     }
+     return result.first['id'] as int?;
+   }
+
+   /// Returns `true` if a journal entry with the given [title] already exists
+   /// in the database (case-insensitive comparison).
+   Future<bool> journalTitleExists(String title) async {
+     final db = await _dbHelper.database;
+     final result = await db?.query(
+       'field_journal',
+       where: 'LOWER(title) = ?',
+       whereArgs: [title.toLowerCase()],
+     );
+     return result!.isNotEmpty;
+   }
 }
