@@ -9,10 +9,12 @@ import 'package:xolmis/generated/l10n.dart';
 
 import '../core/core_consts.dart';
 import '../data/models/inventory.dart';
+import '../data/models/journal.dart';
 import '../data/models/nest.dart';
 import '../data/models/specimen.dart';
 
 import '../providers/inventory_provider.dart';
+import '../providers/journal_provider.dart';
 import '../providers/nest_provider.dart';
 import '../providers/specimen_provider.dart';
 import 'export_utils.dart';
@@ -769,3 +771,184 @@ Future<void> importSpecimensFromJson(BuildContext context) async {
     if (isDialogShown && context.mounted) Navigator.of(context).pop();
   }
 }
+
+/// Imports field journal entries from an exported JSON file selected by the user.
+///
+/// The file must use the standard Xolmis export envelope and the `journals`
+/// schema. Each valid record is converted into a [FieldJournal] and stored
+/// through [FieldJournalProvider]. Since journal entries are flat records with
+/// their rich text kept as a JSON string, the import flow preserves the notes as
+/// exported, including any image placeholders or embeds present in the source.
+Future<void> importJournalsFromJson(BuildContext context) async {
+  bool isDialogShown = false;
+  int importedCount = 0;
+  int errorCount = 0;
+  List<String> importErrors = [];
+
+  try {
+    final result = await FilePicker.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['json'],
+    );
+
+    if (result == null || result.files.single.path == null) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            showCloseIcon: true,
+            content: Text(S.current.noFileSelected),
+          ),
+        );
+      }
+      return;
+    }
+
+    final filePath = result.files.single.path!;
+    final file = File(filePath);
+
+    if (!context.mounted) return;
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(width: 16),
+                Text(S.current.importingInventory),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+    isDialogShown = true;
+
+    final jsonString = await file.readAsString();
+    final jsonData = jsonDecode(jsonString);
+
+    if (jsonData is Map<String, dynamic>) {
+      if (jsonData['source'] != kExportSource) {
+        throw FormatException(S.current.invalidJsonSource);
+      }
+      if (jsonData['schema'] != 'journals') {
+        throw FormatException(S.current.invalidJsonSchema);
+      }
+    } else {
+      throw FormatException(S.current.invalidJsonFormatExpectedObjectOrArray);
+    }
+
+    if (!context.mounted) return;
+    final journalProvider = Provider.of<FieldJournalProvider>(context, listen: false);
+
+    final List<dynamic> journalList =
+        jsonData is Map<String, dynamic> && jsonData['records'] is List
+            ? jsonData['records'] as List<dynamic>
+            : <dynamic>[];
+
+    if (journalList.isEmpty) {
+      if (isDialogShown && context.mounted) {
+        Navigator.of(context).pop();
+        isDialogShown = false;
+      }
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            showCloseIcon: true,
+            content: Text(S.current.noJournalEntriesFound),
+          ),
+        );
+      }
+      return;
+    }
+
+    final journalsToImport = <FieldJournal>[];
+    for (final item in journalList) {
+      if (item is Map<String, dynamic>) {
+        try {
+          journalsToImport.add(FieldJournal.fromJson(item));
+        } catch (e) {
+          importErrors.add('Error parsing journal item: ${item.toString()} -> $e');
+        }
+      } else {
+        importErrors.add('Unexpected journal item: ${item.toString()}');
+      }
+    }
+
+    if (journalsToImport.isEmpty) {
+      if (isDialogShown && context.mounted) {
+        Navigator.of(context).pop();
+        isDialogShown = false;
+      }
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            showCloseIcon: true,
+            backgroundColor: importErrors.isNotEmpty
+                ? Theme.of(context).colorScheme.error
+                : null,
+            content: Text(
+              importErrors.isNotEmpty
+                  ? 'No valid journal entries found in file.'
+                  : S.current.noJournalEntriesFound,
+            ),
+          ),
+        );
+      }
+      return;
+    }
+
+    importedCount = await journalProvider.importJournalEntries(journalsToImport);
+    errorCount = importErrors.length;
+
+    if (isDialogShown && context.mounted) {
+      Navigator.of(context).pop();
+      isDialogShown = false;
+    }
+
+    if (!context.mounted) return;
+    if (importErrors.isNotEmpty) debugPrint('Import errors: \n${importErrors.join('\n')}');
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: errorCount > 0 ? Theme.of(context).colorScheme.error : Colors.green,
+        content: Text(
+          _buildImportSummaryMessage(
+            context,
+            newCount: importedCount,
+            updatedCount: 0,
+            skippedCount: 0,
+            errorsCount: errorCount,
+            successFallback: S.current.importCompletedSummary(importedCount, 0, 0, 0),
+          ),
+        ),
+      ),
+    );
+  } catch (error) {
+    if (isDialogShown && context.mounted) {
+      Navigator.of(context).pop();
+    }
+    if (!context.mounted) return;
+    String errorMessage = '${S.current.errorSavingJournalEntry}: ${error.toString()}';
+    if (error is FormatException) {
+      errorMessage = '${S.current.errorSavingJournalEntry}: ${error.message}';
+    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        persist: true,
+        showCloseIcon: true,
+        backgroundColor: Theme.of(context).colorScheme.error,
+        content: Text(errorMessage),
+      ),
+    );
+  } finally {
+    if (isDialogShown && context.mounted) {
+      Navigator.of(context).pop();
+    }
+  }
+}
+

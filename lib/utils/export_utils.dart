@@ -13,6 +13,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../data/models/inventory.dart';
+import '../data/models/journal.dart';
 import '../data/models/nest.dart';
 import '../data/models/specimen.dart';
 import '../providers/inventory_provider.dart';
@@ -860,6 +861,332 @@ Future<void> exportSelectedInventoriesToKml(BuildContext context, List<Inventory
         content: Text(
           S.of(context).errorExportingInventory(inventories.length, error.toString()),
         ),
+      ),
+    );
+  }
+}
+
+List<dynamic>? _parseJournalDeltaOps(String? notes) {
+  if (notes == null || notes.trim().isEmpty) {
+    return null;
+  }
+
+  try {
+    final decoded = jsonDecode(notes);
+    if (decoded is List) {
+      return decoded;
+    }
+    if (decoded is Map<String, dynamic> && decoded['ops'] is List) {
+      return decoded['ops'] as List<dynamic>;
+    }
+  } catch (_) {
+    return null;
+  }
+
+  return null;
+}
+
+String _extractJournalEmbedPlaceholder(dynamic insert) {
+  if (insert is! Map) {
+    return '[Embedded content]';
+  }
+
+  if (insert.containsKey('image')) {
+    return '[Image: ${insert['image']}]';
+  }
+
+  final firstKey = insert.keys.isEmpty ? 'content' : insert.keys.first;
+  return '[Embedded $firstKey]';
+}
+
+String _journalDeltaToPlainText(String? notes) {
+  final ops = _parseJournalDeltaOps(notes);
+  if (ops == null) {
+    return notes ?? '';
+  }
+
+  final buffer = StringBuffer();
+  for (final op in ops) {
+    if (op is! Map) {
+      continue;
+    }
+
+    final insert = op['insert'];
+    if (insert is String) {
+      buffer.write(insert);
+      continue;
+    }
+
+    buffer.write('\n${_extractJournalEmbedPlaceholder(insert)}\n');
+  }
+
+  return buffer.toString().trimRight();
+}
+
+String _applyInlineMarkdown(String text, Map<dynamic, dynamic>? attributes) {
+  if (text.isEmpty) {
+    return text;
+  }
+
+  var value = text;
+  final link = attributes?['link'];
+  if (attributes?['code'] == true) {
+    value = '`$value`';
+  }
+  if (attributes?['bold'] == true) {
+    value = '**$value**';
+  }
+  if (attributes?['italic'] == true) {
+    value = '*$value*';
+  }
+  if (attributes?['strike'] == true) {
+    value = '~~$value~~';
+  }
+  if (attributes?['underline'] == true) {
+    value = '<u>$value</u>';
+  }
+  if (link is String && link.isNotEmpty) {
+    value = '[$value]($link)';
+  }
+
+  return value;
+}
+
+String _journalDeltaToMarkdown(String? notes) {
+  final ops = _parseJournalDeltaOps(notes);
+  if (ops == null) {
+    return notes ?? '';
+  }
+
+  final output = StringBuffer();
+  final currentLine = StringBuffer();
+  var orderedIndex = 1;
+
+  void flushLine([Map<dynamic, dynamic>? lineAttributes]) {
+    final raw = currentLine.toString().trimRight();
+    if (lineAttributes?['list'] != 'ordered') {
+      orderedIndex = 1;
+    }
+
+    String line = raw;
+    if (lineAttributes?['header'] is int) {
+      final headerLevel = (lineAttributes!['header'] as int).clamp(1, 6);
+      line = '${'#' * headerLevel} ${raw.trim()}';
+    } else if (lineAttributes?['list'] == 'bullet') {
+      line = '- ${raw.trim()}';
+    } else if (lineAttributes?['list'] == 'ordered') {
+      line = '${orderedIndex++}. ${raw.trim()}';
+    } else if (lineAttributes?['list'] == 'checked') {
+      line = '- [x] ${raw.trim()}';
+    } else if (lineAttributes?['list'] == 'unchecked') {
+      line = '- [ ] ${raw.trim()}';
+    } else if (lineAttributes?['blockquote'] == true) {
+      line = '> ${raw.trim()}';
+    } else if (lineAttributes?['code-block'] == true) {
+      line = '    $raw';
+    }
+
+    output.writeln(line);
+    currentLine.clear();
+  }
+
+  for (final op in ops) {
+    if (op is! Map) {
+      continue;
+    }
+
+    final insert = op['insert'];
+    final attributes = op['attributes'] as Map<dynamic, dynamic>?;
+
+    if (insert is String) {
+      final parts = insert.split('\n');
+      for (var i = 0; i < parts.length; i++) {
+        final part = parts[i];
+        if (part.isNotEmpty) {
+          currentLine.write(_applyInlineMarkdown(part, attributes));
+        }
+        if (i < parts.length - 1) {
+          flushLine(attributes);
+        }
+      }
+      continue;
+    }
+
+    if (currentLine.isNotEmpty) {
+      currentLine.write(' ');
+    }
+    currentLine.write(_extractJournalEmbedPlaceholder(insert));
+  }
+
+  if (currentLine.isNotEmpty) {
+    flushLine();
+  }
+
+  return output.toString().trimRight();
+}
+
+String _buildJournalTxtExportContent(List<FieldJournal> journals) {
+  final content = StringBuffer();
+
+  for (var i = 0; i < journals.length; i++) {
+    final journal = journals[i];
+    content.writeln('Title: ${journal.title}');
+    if (journal.observer != null && journal.observer!.isNotEmpty) {
+      content.writeln('Observer: ${journal.observer}');
+    }
+    if (journal.creationDate != null) {
+      content.writeln('Created: ${journal.creationDate!.toIso8601String()}');
+    }
+    if (journal.lastModifiedDate != null) {
+      content.writeln('Last modified: ${journal.lastModifiedDate!.toIso8601String()}');
+    }
+    content.writeln('');
+    content.writeln(_journalDeltaToPlainText(journal.notes));
+
+    if (i < journals.length - 1) {
+      content.writeln('\n${'-' * 40}\n');
+    }
+  }
+
+  return content.toString().trimRight();
+}
+
+String _buildJournalMarkdownExportContent(List<FieldJournal> journals) {
+  final content = StringBuffer();
+
+  for (var i = 0; i < journals.length; i++) {
+    final journal = journals[i];
+    content.writeln('# ${journal.title}');
+    if (journal.observer != null && journal.observer!.isNotEmpty) {
+      content.writeln('- **Observer:** ${journal.observer}');
+    }
+    if (journal.creationDate != null) {
+      content.writeln('- **Created:** ${journal.creationDate!.toIso8601String()}');
+    }
+    if (journal.lastModifiedDate != null) {
+      content.writeln('- **Last modified:** ${journal.lastModifiedDate!.toIso8601String()}');
+    }
+    content.writeln('');
+    content.writeln(_journalDeltaToMarkdown(journal.notes));
+
+    if (i < journals.length - 1) {
+      content.writeln('\n---\n');
+    }
+  }
+
+  return content.toString().trimRight();
+}
+
+/// Exports selected field journal notes to a single TXT file.
+Future<void> exportSelectedJournalsToTxt(
+  BuildContext context,
+  List<FieldJournal> journals,
+) async {
+  try {
+    final now = DateTime.now();
+    final formatter = DateFormat('yyyyMMdd_HHmmss');
+    final formattedDate = formatter.format(now);
+
+    final txtContent = _buildJournalTxtExportContent(journals);
+    final tempDir = await getTemporaryDirectory();
+    final filePath = '${tempDir.path}/selected_journals_$formattedDate.txt';
+    final file = File(filePath);
+    await file.writeAsString(txtContent);
+
+    await SharePlus.instance.share(
+      ShareParams(
+        files: [XFile(filePath, mimeType: 'text/plain')],
+        text: S.current.journalEntries(journals.length),
+        subject: S.current.journalEntries(journals.length),
+      ),
+    );
+  } catch (error) {
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        persist: true,
+        showCloseIcon: true,
+        backgroundColor: Theme.of(context).colorScheme.error,
+        content: Text('${S.current.errorSavingJournalEntry}: $error'),
+      ),
+    );
+  }
+}
+
+/// Exports selected field journal notes to a single Markdown file.
+Future<void> exportSelectedJournalsToMarkdown(
+  BuildContext context,
+  List<FieldJournal> journals,
+) async {
+  try {
+    final now = DateTime.now();
+    final formatter = DateFormat('yyyyMMdd_HHmmss');
+    final formattedDate = formatter.format(now);
+
+    final markdownContent = _buildJournalMarkdownExportContent(journals);
+    final tempDir = await getTemporaryDirectory();
+    final filePath = '${tempDir.path}/selected_journals_$formattedDate.md';
+    final file = File(filePath);
+    await file.writeAsString(markdownContent);
+
+    await SharePlus.instance.share(
+      ShareParams(
+        files: [XFile(filePath, mimeType: 'text/markdown')],
+        text: S.current.journalEntries(journals.length),
+        subject: S.current.journalEntries(journals.length),
+      ),
+    );
+  } catch (error) {
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        persist: true,
+        showCloseIcon: true,
+        backgroundColor: Theme.of(context).colorScheme.error,
+        content: Text('${S.current.errorSavingJournalEntry}: $error'),
+      ),
+    );
+  }
+}
+
+/// Exports selected field journal entries to a single JSON envelope.
+Future<void> exportSelectedJournalsToJson(
+  BuildContext context,
+  List<FieldJournal> journals,
+) async {
+  try {
+    final jsonData = {
+      'source': kExportSource,
+      'schema': 'journals',
+      'schemaVersion': kExportSchemaVersion,
+      'records': journals.map((journal) => journal.toJson()).toList(),
+    };
+    final jsonString = JsonEncoder.withIndent('  ').convert(jsonData);
+
+    final now = DateTime.now();
+    final formatter = DateFormat('yyyyMMdd_HHmmss');
+    final formattedDate = formatter.format(now);
+
+    final tempDir = await getTemporaryDirectory();
+    final filePath = '${tempDir.path}/selected_journals_$formattedDate.json';
+    final file = File(filePath);
+    await file.writeAsString(jsonString);
+
+    await SharePlus.instance.share(
+      ShareParams(
+        files: [XFile(filePath, mimeType: 'application/json')],
+        text: S.current.journalEntries(journals.length),
+        subject: S.current.journalEntries(journals.length),
+      ),
+    );
+  } catch (error) {
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        persist: true,
+        showCloseIcon: true,
+        backgroundColor: Theme.of(context).colorScheme.error,
+        content: Text('${S.current.errorSavingJournalEntry}: $error'),
       ),
     );
   }

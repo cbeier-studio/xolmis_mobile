@@ -10,12 +10,15 @@
 * Adicionados filtros para inventários, ninhos, espécimes e diário de campo.
 * Limpeza de arquivos temporários e banco de dados ao iniciar o app.
 * Adicionada opção para definir módulo a abrir ao iniciar o app.
+* Exportar notas do diário de campo para texto simples, Markdown ou JSON (experimental).
+* Adicionada nas configurações uma opção para definir o que fazer com registros existentes ao importar dados (perguntar, atualizar ou ignorar).
 
 ### Melhorias
 
 * Telas de estatísticas refatoradas e expandidas.
 * Melhorias de desempenho nas telas de inventários e ninhos (~90% mais rápidas).
 * Padronização dos formatos de importação e exportação de JSON para inventários, ninhos e espécimes.
+* Coordenadas geográficas podem ser exportadas para KML a partir de inventários, ninhos ou espécimes selecionados.
 * Destaque de itens selecionados em listas.
 * Destaque da primeira ocorrência da espécie no relatório Espécies por Inventário.
 * Padronização das mensagens de erro e avisos.

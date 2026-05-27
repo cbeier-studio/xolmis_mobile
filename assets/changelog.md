@@ -10,12 +10,15 @@
 * Added filters for inventories, nests, specimens and field journal.
 * Temporary files and database cleanup on app start.
 * Added option to set module to open on app start.
+* Export field journal notes to plain text, Markdown or JSON (experimental).
+* Added in settings an option to define what to do with existing records when importing data (ask, update or ignore).
 
 ### Improvements
 
 * Refactored and expanded statistics screens.
 * Performance improvements in inventories and nests screens (~90% faster).
 * Standardized JSON import and export formats for inventories, nests and specimens.
+* Geographical coordinates can be exported to KML from selected inventories, nests or specimens.
 * Highlight selected items in lists.
 * Highlight first occurrence of species in Species per Inventory report.
 * Standardized error and warning messages.

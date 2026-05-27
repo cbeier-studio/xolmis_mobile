@@ -7,6 +7,8 @@ import '../../providers/journal_provider.dart';
 
 import 'add_journal_screen.dart';
 import '../../core/core_consts.dart';
+import '../../utils/import_utils.dart';
+import '../../utils/export_utils.dart';
 import '../../utils/utils.dart';
 import '../../generated/l10n.dart';
 
@@ -361,6 +363,26 @@ class JournalsScreenState extends State<JournalsScreen> {
     );
   }
 
+  /// Resolves currently selected journal entries for batch actions.
+  Future<List<FieldJournal>> _getSelectedJournalEntries() async {
+    final entriesById = {
+      for (final entry in journalProvider.journalEntries)
+        if (entry.id != null) entry.id!: entry,
+    };
+
+    final selectedEntries = <FieldJournal>[];
+    for (final id in selectedJournals) {
+      final cached = entriesById[id];
+      if (cached != null) {
+        selectedEntries.add(cached);
+      } else {
+        selectedEntries.add(await journalProvider.getJournalEntryById(id));
+      }
+    }
+
+    return selectedEntries;
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.sizeOf(context).width;
@@ -421,6 +443,14 @@ class JournalsScreenState extends State<JournalsScreen> {
               );
             },
             menuChildren: [
+              // Action to import journal entries from JSON
+              MenuItemButton(
+                leadingIcon: const Icon(Icons.file_open_outlined),
+                onPressed: () async {
+                  await importJournalsFromJson(context);
+                },
+                child: Text(S.of(context).import),
+              ),
               // Action to select all journal entries
               MenuItemButton(
                 leadingIcon: const Icon(Icons.library_add_check_outlined),
@@ -496,6 +526,59 @@ class JournalsScreenState extends State<JournalsScreen> {
               onPressed: _deleteSelectedEntries,
             ),
             const VerticalDivider(),
+            MenuAnchor(
+              builder: (context, controller, child) {
+                return IconButton(
+                  icon: const Icon(Icons.share_outlined),
+                  tooltip: S.of(context).exportWhat(
+                    S.of(context).journalEntries(2).toLowerCase(),
+                  ),
+                  onPressed: () {
+                    if (controller.isOpen) {
+                      controller.close();
+                    } else {
+                      controller.open();
+                    }
+                  },
+                );
+              },
+              menuChildren: [
+                MenuItemButton(
+                  onPressed: () async {
+                    final journals = await _getSelectedJournalEntries();
+                    await exportSelectedJournalsToTxt(context, journals);
+                    if (!mounted) return;
+                    setState(() {
+                      selectedJournals.clear();
+                    });
+                  },
+                  child: const Text('TXT'),
+                ),
+                MenuItemButton(
+                  onPressed: () async {
+                    final journals = await _getSelectedJournalEntries();
+                    await exportSelectedJournalsToMarkdown(context, journals);
+                    if (!mounted) return;
+                    setState(() {
+                      selectedJournals.clear();
+                    });
+                  },
+                  child: const Text('Markdown'),
+                ),
+                MenuItemButton(
+                  onPressed: () async {
+                    final journals = await _getSelectedJournalEntries();
+                    await exportSelectedJournalsToJson(context, journals);
+                    if (!mounted) return;
+                    setState(() {
+                      selectedJournals.clear();
+                    });
+                  },
+                  child: const Text('JSON'),
+                ),
+              ],
+            ),
+            const VerticalDivider(),
             // Option to clear the selected specimens
             IconButton(
               icon: const Icon(Icons.clear_outlined),
@@ -567,6 +650,14 @@ class JournalsScreenState extends State<JournalsScreen> {
               );
             },
             menuChildren: [
+              // Action to import journal entries from JSON
+              MenuItemButton(
+                leadingIcon: const Icon(Icons.file_open_outlined),
+                onPressed: () async {
+                  await importJournalsFromJson(context);
+                },
+                child: Text(S.of(context).import),
+              ),
               // Action to select all journal entries
               MenuItemButton(
                 leadingIcon: const Icon(Icons.library_add_check_outlined),
@@ -999,6 +1090,15 @@ class JournalsScreenState extends State<JournalsScreen> {
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         children: <Widget>[
+                          buildGridMenuItem(
+                            context,
+                            Icons.file_open_outlined,
+                            S.of(context).import,
+                            () async {
+                              Navigator.of(context).pop();
+                              await importJournalsFromJson(context);
+                            },
+                          ),
                           buildGridMenuItem(
                               context, Icons.library_add_check_outlined, S.of(context).selectAll,
                                   () async {

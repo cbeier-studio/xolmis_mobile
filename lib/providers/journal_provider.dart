@@ -40,6 +40,30 @@ class FieldJournalProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  /// Imports multiple journal entries and refreshes the cached list afterward.
+  ///
+  /// This method is intended for JSON import flows where entries may already
+  /// carry an explicit [FieldJournal.id]. It relies on the DAO's replace-on-
+  /// conflict behavior and then reloads the cache to keep the in-memory state
+  /// aligned with SQLite.
+  ///
+  /// Returns the number of entries successfully persisted.
+  Future<int> importJournalEntries(List<FieldJournal> journalEntries) async {
+    var importedCount = 0;
+
+    for (final journalEntry in journalEntries) {
+      try {
+        await _journalDao.insertJournalEntry(journalEntry);
+        importedCount++;
+      } catch (error) {
+        debugPrint('Error importing field journal entry: $error');
+      }
+    }
+
+    await fetchJournalEntries();
+    return importedCount;
+  }
+
   /// Updates an existing journal entry in storage and in memory.
   Future<void> updateJournalEntry(FieldJournal journalEntry) async {
     await _journalDao.updateJournalEntry(journalEntry);
