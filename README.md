@@ -66,6 +66,13 @@ Xolmis Mobile is designed to interoperate with [**Xolmis Desktop**](https://gith
 - Prefer feature export before large migrations or app reinstallation.
 - Keep generated files organized per project/campaign to simplify desktop ingestion.
 
+## Technology stack
+
+- **Flutter**: Cross-platform mobile development framework for iOS and Android.
+- **SQLite**: Local database for structured data storage.
+- **Dart**: Programming language used in Flutter.
+- **GitHub**: Version control and collaboration platform.
+
 ## How to contribute
 
 You can create [pull requests](https://github.com/cbeier-studio/xolmis_mobile/pulls) directly and give feedback using the [GitHub Issues](https://github.com/cbeier-studio/xolmis_mobile/issues). All suggestions, bugs reported and general issues are much appreciated.
