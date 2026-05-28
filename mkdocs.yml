@@ -1,0 +1,141 @@
+site_name: Xolmis Mobile User Manual
+site_url: ""
+use_directory_urls: false
+repo_url: https://github.com/cbeier-studio/xolmis_mobile
+site_author: Christian Beier
+copyright: Copyright &copy; 2024-2026 Christian Beier
+nav:
+  - Home: index.md
+  - About Xolmis:
+    - Introduction: introduction.md
+    - Release Notes: release-notes.md
+    - FAQ: faq.md
+    - Best Practices: best-practices.md
+    - Xolmis Desktop: xolmis-desktop.md
+    - Feedback: feedback.md
+    - Sponsors: sponsors.md
+    - Privacy Policy: privacy.md
+    - License: license.md
+    - Third-Party Notices: third-party.md
+  - Getting Started:
+    - Installing: installing.md
+    - First Steps: first-steps.md
+    - Settings: settings.md
+  - Modules:
+    - Inventories:
+      - Manage inventories: inventories.md
+      - Inventory types: inventory-types.md
+      - Species list: species-list.md
+      - Vegetation: vegetation.md
+      - Weather: weather.md
+      - Statistics: inventory-statistics.md
+    - Nests:
+      - Manage nests: nests.md
+      - Nest revisions: nest-revisions.md
+      - Eggs: eggs.md
+      - Statistics: nests-statistics.md
+    - Specimens:
+      - Manage specimens: specimens.md
+      - Statistics: specimens-statistics.md
+    - Field journal:
+      - Manage notes: field-journal.md
+      - Editing notes: editing-notes.md
+    - Statistics:
+      - General Statistics: general-statistics.md
+      - Species Statistics: species-statistics.md
+theme:
+  name: material
+  logo: img/xolmis-icon.png
+  language: en
+  features:
+    - search.highlight
+    - search.suggest
+  palette:
+    - scheme: default
+      primary: deep purple
+      accent: deep purple
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - scheme: slate
+      primary: deep purple
+      accent: deep purple
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+markdown_extensions: 
+  - abbr
+  - admonition
+  - codehilite
+  - footnotes
+  - def_list
+  - attr_list
+  - pymdownx.critic
+  - pymdownx.caret
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.tilde
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+plugins: 
+  - search
+  - badges
+  - offline
+  - tags
+  - i18n:
+      docs_structure: folder
+      reconfigure_material: true
+      languages:
+        - locale: en
+          default: true
+          name: English
+          build: true
+        - locale: pt
+          name: Português
+          build: true
+          site_name: "Manual do Usuário do Xolmis Mobile"
+          nav:
+            - Home: index.md
+            - Sobre o Xolmis:
+              - Introdução: introduction.md
+              - Notas de versão: release-notes.md
+              - FAQ: faq.md
+              - Boas práticas: best-practices.md
+              - Xolmis Desktop: xolmis-desktop.md
+              - Feedback: feedback.md
+              - Patrocinadores: sponsors.md
+              - Política de privacidade: privacy.md
+              - Licença: license.md
+              - Aviso de terceiros: third-party.md
+            - Primeiros passos:
+              - Instalando: installing.md
+              - Primeiros passos: first-steps.md
+              - Configurações: settings.md
+            - Módulos:
+              - Inventários:
+                - Gerenciar inventários: inventories.md
+                - Tipos de inventário: inventory-types.md
+                - Lista de espécies: species-list.md
+                - Vegetação: vegetation.md
+                - Clima: weather.md
+                - Estatísticas: inventory-statistics.md
+              - Ninhos:
+                - Gerenciar ninhos: nests.md
+                - Revisões de ninhos: nest-revisions.md
+                - Ovos: eggs.md
+                - Estatísticas: nests-statistics.md
+              - Espécimes:
+                - Gerenciar espécimes: specimens.md
+                - Estatísticas: specimens-statistics.md
+              - Diário de campo:
+                - Gerenciar notas: field-journal.md
+                - Editar notas: editing-notes.md
+              - Estatísticas:
+                - Estatísticas gerais: general-statistics.md
+                - Estatísticas por espécie: species-statistics.md
