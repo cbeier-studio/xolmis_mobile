@@ -278,6 +278,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "countryParaguay": MessageLookupByLibrary.simpleMessage("Paraguay"),
     "countryUruguay": MessageLookupByLibrary.simpleMessage("Uruguay"),
     "createBackup": MessageLookupByLibrary.simpleMessage("Create backup"),
+    "createBackupDescription": MessageLookupByLibrary.simpleMessage(
+      "Backup file includes data and images",
+    ),
     "creationTime": MessageLookupByLibrary.simpleMessage("Creation time"),
     "dangerZone": MessageLookupByLibrary.simpleMessage("Danger zone"),
     "darkMode": MessageLookupByLibrary.simpleMessage("Dark"),
@@ -290,6 +293,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "decreaseIndividuals": MessageLookupByLibrary.simpleMessage(
       "Decrease individuals count",
     ),
+    "defaultObserver": MessageLookupByLibrary.simpleMessage("Default observer"),
+    "defaults": MessageLookupByLibrary.simpleMessage("Defaults"),
     "delete": MessageLookupByLibrary.simpleMessage("Delete"),
     "deleteAppData": MessageLookupByLibrary.simpleMessage(
       "Delete the app data",
@@ -530,7 +535,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "foundTime": MessageLookupByLibrary.simpleMessage("Found time"),
     "gallery": MessageLookupByLibrary.simpleMessage("Gallery"),
     "general": MessageLookupByLibrary.simpleMessage("General"),
+    "generalSettings": MessageLookupByLibrary.simpleMessage("General settings"),
     "generateId": MessageLookupByLibrary.simpleMessage("Generate ID"),
+    "giveFeedbackOnGitHub": MessageLookupByLibrary.simpleMessage(
+      "Give feedback or contribute on GitHub",
+    ),
     "height": MessageLookupByLibrary.simpleMessage("Height"),
     "heightAboveGround": MessageLookupByLibrary.simpleMessage(
       "Height above ground",
@@ -565,6 +574,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "importExistingRecords": MessageLookupByLibrary.simpleMessage(
       "Existing records on import",
+    ),
+    "importExportSettings": MessageLookupByLibrary.simpleMessage(
+      "Import and export",
     ),
     "importPolicyAskEveryTime": MessageLookupByLibrary.simpleMessage(
       "Ask every time",
@@ -681,6 +693,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "inventoryPointDetection": MessageLookupByLibrary.simpleMessage(
       "Detection Point Count",
     ),
+    "inventorySettings": MessageLookupByLibrary.simpleMessage(
+      "Inventory settings",
+    ),
     "inventoryTimedQualitative": MessageLookupByLibrary.simpleMessage(
       "Timed Qualitative List",
     ),
@@ -706,6 +721,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "latitude": MessageLookupByLibrary.simpleMessage("Latitude"),
     "length": MessageLookupByLibrary.simpleMessage("Length"),
     "lightMode": MessageLookupByLibrary.simpleMessage("Light"),
+    "limits": MessageLookupByLibrary.simpleMessage("Limits"),
     "listFinished": MessageLookupByLibrary.simpleMessage("List finished"),
     "listFinishedMessage": MessageLookupByLibrary.simpleMessage(
       "The list reached the maximum of species. Do you want to start the next list or finish now?",
@@ -830,6 +846,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Observer (abbreviation)",
     ),
     "observers": m49,
+    "observersSettings": MessageLookupByLibrary.simpleMessage("Observers"),
     "ok": MessageLookupByLibrary.simpleMessage("OK"),
     "openSourceLicenses": MessageLookupByLibrary.simpleMessage(
       "Open Source Licenses",
@@ -899,6 +916,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "remindMissingWeatherData": MessageLookupByLibrary.simpleMessage(
       "Remind missing weather data",
     ),
+    "reminders": MessageLookupByLibrary.simpleMessage("Reminders"),
     "removeSpeciesFromSample": MessageLookupByLibrary.simpleMessage(
       "Remove from the sample",
     ),
@@ -910,6 +928,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "restoreBackup": MessageLookupByLibrary.simpleMessage("Restore backup"),
     "restoreBackupConfirmation": MessageLookupByLibrary.simpleMessage(
       "Current data will be replaced by the backup and some data could be lost. Are you sure you want to proceed?",
+    ),
+    "restoreBackupDescription": MessageLookupByLibrary.simpleMessage(
+      "All data files will be replaced",
     ),
     "restoringData": MessageLookupByLibrary.simpleMessage("Restoring data"),
     "resume": MessageLookupByLibrary.simpleMessage("Resume"),
@@ -993,6 +1014,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Species richness per year",
     ),
     "speciesSearch": MessageLookupByLibrary.simpleMessage("Species search"),
+    "speciesSearchCountry": MessageLookupByLibrary.simpleMessage(
+      "Species search country",
+    ),
     "speciesUpgradeFailed": MessageLookupByLibrary.simpleMessage(
       "Species upgrade failed",
     ),
@@ -1065,6 +1089,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "type": MessageLookupByLibrary.simpleMessage("Type"),
     "vegetation": MessageLookupByLibrary.simpleMessage("Vegetation"),
     "vegetationData": MessageLookupByLibrary.simpleMessage("Vegetation data"),
+    "version": MessageLookupByLibrary.simpleMessage("Version"),
     "viewLicense": MessageLookupByLibrary.simpleMessage("View License"),
     "warningTitle": MessageLookupByLibrary.simpleMessage("Warning"),
     "weather": MessageLookupByLibrary.simpleMessage("Weather"),

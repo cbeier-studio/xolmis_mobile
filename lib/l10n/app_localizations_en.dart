@@ -54,6 +54,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get systemMode => 'System theme';
 
   @override
+  String get observersSettings => 'Observers';
+
+  @override
+  String get defaultObserver => 'Default observer';
+
+  @override
   String get observerSetting => 'Observer (abbreviation)';
 
   @override
@@ -61,6 +67,39 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get observerAbbreviation => 'Observer abbreviation';
+
+  @override
+  String get generalSettings => 'General settings';
+
+  @override
+  String get speciesSearchCountry => 'Species search country';
+
+  @override
+  String get inventorySettings => 'Inventory settings';
+
+  @override
+  String get limits => 'Limits';
+
+  @override
+  String get defaults => 'Defaults';
+
+  @override
+  String get reminders => 'Reminders';
+
+  @override
+  String get importExportSettings => 'Import and export';
+
+  @override
+  String get version => 'Version';
+
+  @override
+  String get giveFeedbackOnGitHub => 'Give feedback or contribute on GitHub';
+
+  @override
+  String get createBackupDescription => 'Backup file includes data and images';
+
+  @override
+  String get restoreBackupDescription => 'All data files will be replaced';
 
   @override
   String get cancel => 'Cancel';

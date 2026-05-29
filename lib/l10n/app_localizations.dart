@@ -170,6 +170,18 @@ abstract class AppLocalizations {
   /// **'System theme'**
   String get systemMode;
 
+  /// Observers option in settings
+  ///
+  /// In en, this message translates to:
+  /// **'Observers'**
+  String get observersSettings;
+
+  /// Default observer option in settings
+  ///
+  /// In en, this message translates to:
+  /// **'Default observer'**
+  String get defaultObserver;
+
   /// Observer option in settings
   ///
   /// In en, this message translates to:
@@ -187,6 +199,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Observer abbreviation'**
   String get observerAbbreviation;
+
+  /// General settings option in settings
+  ///
+  /// In en, this message translates to:
+  /// **'General settings'**
+  String get generalSettings;
+
+  /// Species search country option in settings
+  ///
+  /// In en, this message translates to:
+  /// **'Species search country'**
+  String get speciesSearchCountry;
+
+  /// Inventory settings option in settings
+  ///
+  /// In en, this message translates to:
+  /// **'Inventory settings'**
+  String get inventorySettings;
+
+  /// Limits section in inventory settings
+  ///
+  /// In en, this message translates to:
+  /// **'Limits'**
+  String get limits;
+
+  /// Defaults section in inventory settings
+  ///
+  /// In en, this message translates to:
+  /// **'Defaults'**
+  String get defaults;
+
+  /// Reminders section in inventory settings
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders'**
+  String get reminders;
+
+  /// Import and export option in settings
+  ///
+  /// In en, this message translates to:
+  /// **'Import and export'**
+  String get importExportSettings;
+
+  /// Version label in about the app section
+  ///
+  /// In en, this message translates to:
+  /// **'Version'**
+  String get version;
+
+  /// Label with a link to the app repository on GitHub in about the app section
+  ///
+  /// In en, this message translates to:
+  /// **'Give feedback or contribute on GitHub'**
+  String get giveFeedbackOnGitHub;
+
+  /// Label for the button to create a backup in settings
+  ///
+  /// In en, this message translates to:
+  /// **'Backup file includes data and images'**
+  String get createBackupDescription;
+
+  /// Label for the button to restore backup in settings
+  ///
+  /// In en, this message translates to:
+  /// **'All data files will be replaced'**
+  String get restoreBackupDescription;
 
   /// Cancel button label
   ///

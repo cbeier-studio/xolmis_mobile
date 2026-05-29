@@ -293,6 +293,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "countryParaguay": MessageLookupByLibrary.simpleMessage("Paraguai"),
     "countryUruguay": MessageLookupByLibrary.simpleMessage("Uruguai"),
     "createBackup": MessageLookupByLibrary.simpleMessage("Criar backup"),
+    "createBackupDescription": MessageLookupByLibrary.simpleMessage(
+      "O arquivo de backup inclui dados e imagens",
+    ),
     "creationTime": MessageLookupByLibrary.simpleMessage("Hora de criação"),
     "dangerZone": MessageLookupByLibrary.simpleMessage("Área perigosa"),
     "darkMode": MessageLookupByLibrary.simpleMessage("Escuro"),
@@ -305,6 +308,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "decreaseIndividuals": MessageLookupByLibrary.simpleMessage(
       "Diminuir contagem de indivíduos",
     ),
+    "defaultObserver": MessageLookupByLibrary.simpleMessage(
+      "Observador padrão",
+    ),
+    "defaults": MessageLookupByLibrary.simpleMessage("Padrões"),
     "delete": MessageLookupByLibrary.simpleMessage("Apagar"),
     "deleteAppData": MessageLookupByLibrary.simpleMessage(
       "Apagar dados do aplicativo",
@@ -557,7 +564,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "foundTime": MessageLookupByLibrary.simpleMessage("Hora do encontro"),
     "gallery": MessageLookupByLibrary.simpleMessage("Galeria"),
     "general": MessageLookupByLibrary.simpleMessage("Geral"),
+    "generalSettings": MessageLookupByLibrary.simpleMessage(
+      "Configurações gerais",
+    ),
     "generateId": MessageLookupByLibrary.simpleMessage("Gerar ID"),
+    "giveFeedbackOnGitHub": MessageLookupByLibrary.simpleMessage(
+      "Dar retorno ou contribuir no GitHub",
+    ),
     "height": MessageLookupByLibrary.simpleMessage("Altura"),
     "heightAboveGround": MessageLookupByLibrary.simpleMessage(
       "Altura acima do solo",
@@ -592,6 +605,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "importExistingRecords": MessageLookupByLibrary.simpleMessage(
       "Registros existentes na importação",
+    ),
+    "importExportSettings": MessageLookupByLibrary.simpleMessage(
+      "Importar e exportar",
     ),
     "importPolicyAskEveryTime": MessageLookupByLibrary.simpleMessage(
       "Perguntar sempre",
@@ -715,6 +731,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "inventoryPointDetection": MessageLookupByLibrary.simpleMessage(
       "Ponto de Detecções",
     ),
+    "inventorySettings": MessageLookupByLibrary.simpleMessage(
+      "Configurações de inventário",
+    ),
     "inventoryTimedQualitative": MessageLookupByLibrary.simpleMessage(
       "Lista Qualitativa Temporizada",
     ),
@@ -740,6 +759,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "latitude": MessageLookupByLibrary.simpleMessage("Latitude"),
     "length": MessageLookupByLibrary.simpleMessage("Comprimento"),
     "lightMode": MessageLookupByLibrary.simpleMessage("Claro"),
+    "limits": MessageLookupByLibrary.simpleMessage("Limites"),
     "listFinished": MessageLookupByLibrary.simpleMessage("Lista concluída"),
     "listFinishedMessage": MessageLookupByLibrary.simpleMessage(
       "A lista atingiu o número máximo de espécies. Deseja iniciar a próxima lista ou encerrar?",
@@ -878,6 +898,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Observador (sigla)",
     ),
     "observers": m49,
+    "observersSettings": MessageLookupByLibrary.simpleMessage("Observadores"),
     "ok": MessageLookupByLibrary.simpleMessage("OK"),
     "openSourceLicenses": MessageLookupByLibrary.simpleMessage(
       "Licenças de código aberto",
@@ -951,6 +972,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "remindMissingWeatherData": MessageLookupByLibrary.simpleMessage(
       "Lembrar dados faltantes do tempo",
     ),
+    "reminders": MessageLookupByLibrary.simpleMessage("Lembretes"),
     "removeSpeciesFromSample": MessageLookupByLibrary.simpleMessage(
       "Remover da amostra",
     ),
@@ -962,6 +984,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "restoreBackup": MessageLookupByLibrary.simpleMessage("Restaurar backup"),
     "restoreBackupConfirmation": MessageLookupByLibrary.simpleMessage(
       "Os dado atuais serão substituídos pelos dados do backup e alguns dados podem ser perdidos. Deseja prosseguir?",
+    ),
+    "restoreBackupDescription": MessageLookupByLibrary.simpleMessage(
+      "Todos arquivos de dados serão substituídos",
     ),
     "restoringData": MessageLookupByLibrary.simpleMessage("Restaurando dados"),
     "resume": MessageLookupByLibrary.simpleMessage("Retomar"),
@@ -1057,6 +1082,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Riqueza de espécies por ano",
     ),
     "speciesSearch": MessageLookupByLibrary.simpleMessage("Busca de espécies"),
+    "speciesSearchCountry": MessageLookupByLibrary.simpleMessage(
+      "País da busca de espécies",
+    ),
     "speciesUpgradeFailed": MessageLookupByLibrary.simpleMessage(
       "Falha ao atualizar espécies",
     ),
@@ -1137,6 +1165,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "vegetationData": MessageLookupByLibrary.simpleMessage(
       "Dados de vegetação",
     ),
+    "version": MessageLookupByLibrary.simpleMessage("Versão"),
     "viewLicense": MessageLookupByLibrary.simpleMessage("Ver licença"),
     "warningTitle": MessageLookupByLibrary.simpleMessage("Aviso"),
     "weather": MessageLookupByLibrary.simpleMessage("Tempo"),

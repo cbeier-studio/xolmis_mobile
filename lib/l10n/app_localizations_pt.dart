@@ -54,6 +54,12 @@ class AppLocalizationsPt extends AppLocalizations {
   String get systemMode => 'Tema do sistema';
 
   @override
+  String get observersSettings => 'Observadores';
+
+  @override
+  String get defaultObserver => 'Observador padrão';
+
+  @override
   String get observerSetting => 'Observador (sigla)';
 
   @override
@@ -61,6 +67,39 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get observerAbbreviation => 'Sigla do observador';
+
+  @override
+  String get generalSettings => 'Configurações gerais';
+
+  @override
+  String get speciesSearchCountry => 'País da busca de espécies';
+
+  @override
+  String get inventorySettings => 'Configurações de inventário';
+
+  @override
+  String get limits => 'Limites';
+
+  @override
+  String get defaults => 'Padrões';
+
+  @override
+  String get reminders => 'Lembretes';
+
+  @override
+  String get importExportSettings => 'Importar e exportar';
+
+  @override
+  String get version => 'Versão';
+
+  @override
+  String get giveFeedbackOnGitHub => 'Dar retorno ou contribuir no GitHub';
+
+  @override
+  String get createBackupDescription => 'O arquivo de backup inclui dados e imagens';
+
+  @override
+  String get restoreBackupDescription => 'Todos arquivos de dados serão substituídos';
 
   @override
   String get cancel => 'Cancelar';
@@ -1850,6 +1889,12 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get systemMode => 'Tema do sistema';
 
   @override
+  String get observersSettings => 'Observadores';
+
+  @override
+  String get defaultObserver => 'Observador padrão';
+
+  @override
   String get observerSetting => 'Observador (sigla)';
 
   @override
@@ -1857,6 +1902,39 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get observerAbbreviation => 'Sigla do observador';
+
+  @override
+  String get generalSettings => 'Configurações gerais';
+
+  @override
+  String get speciesSearchCountry => 'País da busca de espécies';
+
+  @override
+  String get inventorySettings => 'Configurações de inventário';
+
+  @override
+  String get limits => 'Limites';
+
+  @override
+  String get defaults => 'Padrões';
+
+  @override
+  String get reminders => 'Lembretes';
+
+  @override
+  String get importExportSettings => 'Importar e exportar';
+
+  @override
+  String get version => 'Versão';
+
+  @override
+  String get giveFeedbackOnGitHub => 'Dar retorno ou contribuir no GitHub';
+
+  @override
+  String get createBackupDescription => 'O arquivo de backup inclui dados e imagens';
+
+  @override
+  String get restoreBackupDescription => 'Todos arquivos de dados serão substituídos';
 
   @override
   String get cancel => 'Cancelar';

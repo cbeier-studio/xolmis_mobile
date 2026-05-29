@@ -178,6 +178,26 @@ class S {
     );
   }
 
+  /// `Observers`
+  String get observersSettings {
+    return Intl.message(
+      'Observers',
+      name: 'observersSettings',
+      desc: 'Observers option in settings',
+      args: [],
+    );
+  }
+
+  /// `Default observer`
+  String get defaultObserver {
+    return Intl.message(
+      'Default observer',
+      name: 'defaultObserver',
+      desc: 'Default observer option in settings',
+      args: [],
+    );
+  }
+
   /// `Observer (abbreviation)`
   String get observerSetting {
     return Intl.message(
@@ -204,6 +224,117 @@ class S {
       'Observer abbreviation',
       name: 'observerAbbreviation',
       desc: 'Label of text field to inform observer abbreviation',
+      args: [],
+    );
+  }
+
+  /// `General settings`
+  String get generalSettings {
+    return Intl.message(
+      'General settings',
+      name: 'generalSettings',
+      desc: 'General settings option in settings',
+      args: [],
+    );
+  }
+
+  /// `Species search country`
+  String get speciesSearchCountry {
+    return Intl.message(
+      'Species search country',
+      name: 'speciesSearchCountry',
+      desc: 'Species search country option in settings',
+      args: [],
+    );
+  }
+
+  /// `Inventory settings`
+  String get inventorySettings {
+    return Intl.message(
+      'Inventory settings',
+      name: 'inventorySettings',
+      desc: 'Inventory settings option in settings',
+      args: [],
+    );
+  }
+
+  /// `Limits`
+  String get limits {
+    return Intl.message(
+      'Limits',
+      name: 'limits',
+      desc: 'Limits section in inventory settings',
+      args: [],
+    );
+  }
+
+  /// `Defaults`
+  String get defaults {
+    return Intl.message(
+      'Defaults',
+      name: 'defaults',
+      desc: 'Defaults section in inventory settings',
+      args: [],
+    );
+  }
+
+  /// `Reminders`
+  String get reminders {
+    return Intl.message(
+      'Reminders',
+      name: 'reminders',
+      desc: 'Reminders section in inventory settings',
+      args: [],
+    );
+  }
+
+  /// `Import and export`
+  String get importExportSettings {
+    return Intl.message(
+      'Import and export',
+      name: 'importExportSettings',
+      desc: 'Import and export option in settings',
+      args: [],
+    );
+  }
+
+  /// `Version`
+  String get version {
+    return Intl.message(
+      'Version',
+      name: 'version',
+      desc: 'Version label in about the app section',
+      args: [],
+    );
+  }
+
+  /// `Give feedback or contribute on GitHub`
+  String get giveFeedbackOnGitHub {
+    return Intl.message(
+      'Give feedback or contribute on GitHub',
+      name: 'giveFeedbackOnGitHub',
+      desc:
+          'Label with a link to the app repository on GitHub in about the app section',
+      args: [],
+    );
+  }
+
+  /// `Backup file includes data and images`
+  String get createBackupDescription {
+    return Intl.message(
+      'Backup file includes data and images',
+      name: 'createBackupDescription',
+      desc: 'Label for the button to create a backup in settings',
+      args: [],
+    );
+  }
+
+  /// `All data files will be replaced`
+  String get restoreBackupDescription {
+    return Intl.message(
+      'All data files will be replaced',
+      name: 'restoreBackupDescription',
+      desc: 'Label for the button to restore backup in settings',
       args: [],
     );
   }

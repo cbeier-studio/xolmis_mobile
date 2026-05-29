@@ -1,22 +1,17 @@
 import 'dart:core';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:numberpicker/numberpicker.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:about/about.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:share_plus/share_plus.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:settings_ui/settings_ui.dart';
-import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:xolmis/screens/settings/backup_settings.dart';
 
-import '../../core/core_consts.dart';
-import '../../utils/backup_utils.dart';
 import '../../generated/l10n.dart';
-import '../../utils/utils.dart';
-import '../../utils/themes.dart';
+import 'general_settings.dart';
+import 'import_export_settings.dart';
+import 'inventory_settings.dart';
+import 'observer_settings.dart';
+import 'backup_settings.dart';
 
 /// Displays user-configurable application settings and backup actions.
 class SettingsScreen extends StatefulWidget {
@@ -28,95 +23,18 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  ThemeMode _themeMode = ThemeMode.system;
-  int _maxSimultaneousInventories = 2;
-  int _maxSpeciesMackinnon = 10;
-  int _pointCountsDuration = 8;
-  int _cumulativeTimeDuration = 45;
-  int _intervalsDuration = 10;
-  String _observerAbbreviation = '';
-  bool _formatNumbers = true;
-  bool _remindVegetationEmpty = false;
-  bool _remindWeatherEmpty = false;
-  int _startupModuleIndex = StartupModule.inventories.index;
-  /// Selected policy index for handling existing records during imports.
-  int _importExistingRecordPolicyIndex =
-      ImportExistingRecordPolicy.askEveryTime.index;
-  SupportedCountry _userCountry = SupportedCountry.BR;
   PackageInfo? _packageInfo;
 
   @override
   void initState() {
     super.initState();
     _setPackageInfo();
-    _loadSettings();
   }
 
   /// Loads package metadata used by the about screen.
   Future<void> _setPackageInfo() async => PackageInfo.fromPlatform().then(
     (PackageInfo packageInfo) => setState(() => _packageInfo = packageInfo),
   );
-
-  /// Loads persisted settings from shared preferences into local state.
-  Future<void> _loadSettings() async {
-    final prefs = await SharedPreferences.getInstance();
-    _userCountry = await getCountrySetting();
-    setState(() {
-      _themeMode = ThemeMode.values[prefs.getInt('themeMode') ?? 0];
-      _maxSimultaneousInventories =
-          prefs.getInt('maxSimultaneousInventories') ?? 3;
-      _maxSpeciesMackinnon = prefs.getInt('maxSpeciesMackinnon') ?? 10;
-      _pointCountsDuration = prefs.getInt('pointCountsDuration') ?? 8;
-      _cumulativeTimeDuration = prefs.getInt('cumulativeTimeDuration') ?? 45;
-      _intervalsDuration = prefs.getInt('intervalsDuration') ?? 10;
-      _observerAbbreviation = prefs.getString('observerAcronym') ?? '';
-      _formatNumbers = prefs.getBool('formatNumbers') ?? true;
-      _remindVegetationEmpty = prefs.getBool('remindVegetationEmpty') ?? false;
-      _remindWeatherEmpty = prefs.getBool('remindWeatherEmpty') ?? false;
-      _startupModuleIndex =
-          prefs.getInt(kStartupModulePreferenceKey) ??
-          StartupModule.inventories.index;
-      _importExistingRecordPolicyIndex =
-          prefs.getInt(kImportExistingRecordsPolicyPreferenceKey) ??
-          ImportExistingRecordPolicy.askEveryTime.index;
-
-      if (_startupModuleIndex < 0 ||
-          _startupModuleIndex >= StartupModule.values.length) {
-        _startupModuleIndex = StartupModule.inventories.index;
-      }
-
-      if (_importExistingRecordPolicyIndex < 0 ||
-          _importExistingRecordPolicyIndex >=
-              ImportExistingRecordPolicy.values.length) {
-        _importExistingRecordPolicyIndex =
-            ImportExistingRecordPolicy.askEveryTime.index;
-      }
-    });
-  }
-
-  /// Persists the current in-memory settings to shared preferences.
-  Future<void> _saveSettings() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('themeMode', _themeMode.index);
-    await prefs.setInt(
-      'maxSimultaneousInventories',
-      _maxSimultaneousInventories,
-    );
-    await prefs.setInt('maxSpeciesMackinnon', _maxSpeciesMackinnon);
-    await prefs.setInt('pointCountsDuration', _pointCountsDuration);
-    await prefs.setInt('cumulativeTimeDuration', _cumulativeTimeDuration);
-    await prefs.setInt('intervalsDuration', _intervalsDuration);
-    await prefs.setString('observerAcronym', _observerAbbreviation);
-    await prefs.setBool('formatNumbers', _formatNumbers);
-    await prefs.setBool('remindVegetationEmpty', _remindVegetationEmpty);
-    await prefs.setBool('remindWeatherEmpty', _remindWeatherEmpty);
-    await prefs.setInt(kStartupModulePreferenceKey, _startupModuleIndex);
-    await prefs.setInt(
-      kImportExistingRecordsPolicyPreferenceKey,
-      _importExistingRecordPolicyIndex,
-    );
-    await prefs.setString('user_country', _userCountry.name);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -128,639 +46,108 @@ class _SettingsScreenState extends State<SettingsScreen> {
           // Disable automatic 810px centering/padding so content fills the sheet.
           contentPadding: EdgeInsets.zero,
           crossAxisAlignment: CrossAxisAlignment.start,
-          lightTheme: SettingsThemeData(
-            settingsListBackground: ThemeData.light().scaffoldBackgroundColor,
-            titleTextColor: Colors.deepPurple,
-          ),
+          applicationType: ApplicationType.material,
+          platform: DevicePlatform.android,
+          // lightTheme: SettingsThemeData(
+          //   settingsListBackground: ThemeData.light().scaffoldBackgroundColor,
+          //   titleTextColor: Colors.deepPurple,
+          // ),
+          // darkTheme: SettingsThemeData(
+          //   settingsListBackground: ThemeData.dark().scaffoldBackgroundColor,
+          //   titleTextColor: Colors.deepPurple[300],
+          // ),
           sections: [
             SettingsSection(
-              title: Text(S.of(context).observer),
-              tiles: [
-                // Observer abbreviation
-                SettingsTile.navigation(
-                  leading: const Icon(Icons.person_outlined),
-                  title: Text(S.of(context).observerSetting),
-                  value: Text(_observerAbbreviation),
-                  onPressed: (context) async {
-                    String? newObserver = await buildObserverDialog(context);
-
-                    if (newObserver != null && newObserver.isNotEmpty) {
-                      setState(() {
-                        _observerAbbreviation = newObserver;
-                      });
-                      _saveSettings();
-                    }
-                  },
-                ),
-              ],
-            ),
-            SettingsSection(
-              title: Text(S.of(context).speciesSearch),
               tiles: [
                 SettingsTile.navigation(
-                  leading: const Icon(Icons.language_outlined),
-                  title: Text(S.current.country),
-                  value: Text(countryMetadata[_userCountry]?.name ?? ''),
-                  onPressed: (context) async {
-                    // Abre o novo diálogo de seleção de país
-                    final SupportedCountry? newCountry =
-                        await showCountrySelectionDialog(context);
-
-                    // Se o usuário selecionou um novo país e o valor é diferente
-                    if (newCountry != null && newCountry != _userCountry) {
-                      setState(() {
-                        _userCountry = newCountry;
-                      });
-                      // Salva a nova configuração
-                      await _saveSettings();
-
-                      // Recarrega os dados de espécies com base no novo país
-                      List<String> preloadedSpeciesNames =
-                          await loadSpeciesSearchData();
-                      preloadedSpeciesNames.sort((a, b) => a.compareTo(b));
-                      // Atualiza a lista global de espécies
-                      allSpeciesNames = List.from(preloadedSpeciesNames);
-                    }
-                  },
-                ),
-              ],
-            ),
-            SettingsSection(
-              title: Text(S.of(context).inventories),
-              tiles: [
-                // Maximum number of simultaneous inventories
-                SettingsTile.navigation(
-                  leading: const Icon(Icons.list_alt_outlined),
-                  title: Text(S.of(context).simultaneousInventories),
-                  value: Text(
-                    '$_maxSimultaneousInventories ${S.of(context).inventory(_maxSimultaneousInventories)}',
-                  ),
-                  onPressed: (context) async {
-                    final newMaxInventories = await showDialog<int>(
-                      context: context,
-                      builder: (context) {
-                        return NumberPickerDialog(
-                          minValue: 1,
-                          maxValue: 10,
-                          initialValue: _maxSimultaneousInventories,
-                          title: S.of(context).simultaneousInventories,
-                        );
-                      },
-                    );
-                    if (newMaxInventories != null) {
-                      setState(() {
-                        _maxSimultaneousInventories = newMaxInventories;
-                      });
-                      _saveSettings();
-                    }
-                  },
-                ),
-                // Mackinnon lists default number of species
-                SettingsTile.navigation(
-                  leading: const Icon(Icons.checklist_outlined),
-                  title: Text(S.of(context).mackinnonLists),
-                  value: Text(
-                    S.of(context).speciesPerList(_maxSpeciesMackinnon),
-                  ),
-                  onPressed: (context) async {
-                    final newMaxSpecies = await showDialog<int>(
-                      context: context,
-                      builder: (context) {
-                        return NumberPickerDialog(
-                          minValue: 1,
-                          maxValue: 30,
-                          initialValue: _maxSpeciesMackinnon,
-                          title: S.of(context).speciesPerListTitle,
-                        );
-                      },
-                    );
-                    if (newMaxSpecies != null) {
-                      setState(() {
-                        _maxSpeciesMackinnon = newMaxSpecies;
-                      });
-                      _saveSettings();
-                    }
-                  },
-                ),
-                // Point counts default duration
-                SettingsTile.navigation(
-                  leading: const Icon(Icons.timer_outlined),
-                  title: Text(S.of(context).pointCounts),
-                  value: Text(
-                    S.of(context).inventoryDuration(_pointCountsDuration),
-                  ),
-                  onPressed: (context) async {
-                    final newDuration = await showDialog<int>(
-                      context: context,
-                      builder: (context) {
-                        return NumberPickerDialog(
-                          minValue: 1,
-                          maxValue: 60,
-                          initialValue: _pointCountsDuration,
-                          title: S.of(context).durationMin,
-                        );
-                      },
-                    );
-                    if (newDuration != null) {
-                      setState(() {
-                        _pointCountsDuration = newDuration;
-                      });
-                      _saveSettings();
-                    }
-                  },
-                ),
-                // Timed qualitative list default duration
-                SettingsTile.navigation(
-                  leading: const Icon(Icons.timer_outlined),
-                  title: Text(S.of(context).timedQualitativeLists),
-                  value: Text(
-                    S.of(context).inventoryDuration(_cumulativeTimeDuration),
-                  ),
-                  onPressed: (context) async {
-                    final newDuration = await showDialog<int>(
-                      context: context,
-                      builder: (context) {
-                        return NumberPickerDialog(
-                          minValue: 1,
-                          maxValue: 120,
-                          initialValue: _cumulativeTimeDuration,
-                          title: S.of(context).durationMin,
-                        );
-                      },
-                    );
-                    if (newDuration != null) {
-                      setState(() {
-                        _cumulativeTimeDuration = newDuration;
-                      });
-                      _saveSettings();
-                    }
-                  },
-                ),
-                // Interval qualitative list default duration
-                SettingsTile.navigation(
-                  leading: const Icon(Icons.timer_outlined),
-                  title: Text(S.of(context).intervaledQualitativeLists),
-                  value: Text(
-                    S.of(context).inventoryDuration(_intervalsDuration),
-                  ),
-                  onPressed: (context) async {
-                    final newDuration = await showDialog<int>(
-                      context: context,
-                      builder: (context) {
-                        return NumberPickerDialog(
-                          minValue: 1,
-                          maxValue: 120,
-                          initialValue: _intervalsDuration,
-                          title: S.of(context).durationMin,
-                        );
-                      },
-                    );
-                    if (newDuration != null) {
-                      setState(() {
-                        _intervalsDuration = newDuration;
-                      });
-                      _saveSettings();
-                    }
-                  },
-                ),
-                SettingsTile.switchTile(
-                  title: Text(S.of(context).remindMissingVegetationData),
-                  leading: const Icon(Icons.notification_important_outlined),
-                  initialValue: _remindVegetationEmpty,
-                  onToggle: (bool value) {
-                    setState(() {
-                      _remindVegetationEmpty = value;
-                    });
-                    _saveSettings();
-                  },
-                ),
-                SettingsTile.switchTile(
-                  title: Text(S.of(context).remindMissingWeatherData),
-                  leading: const Icon(Icons.notification_important_outlined),
-                  initialValue: _remindWeatherEmpty,
-                  onToggle: (bool value) {
-                    setState(() {
-                      _remindWeatherEmpty = value;
-                    });
-                    _saveSettings();
-                  },
-                ),
-              ],
-            ),
-            SettingsSection(
-              title: Text(S.of(context).importAndExport),
-              tiles: [
-                SettingsTile.navigation(
-                  leading: const Icon(Icons.find_replace_outlined),
-                  title: Text(S.of(context).importExistingRecords),
-                  value: Text(
-                    _getImportExistingRecordPolicyLabel(
-                      context,
-                      _importExistingRecordPolicyIndex,
-                    ),
-                  ),
-                  onPressed: (context) async {
-                    final selectedPolicy =
-                    await _showImportConflictPolicySelectionDialog(context);
-
-                    if (selectedPolicy != null &&
-                        selectedPolicy != _importExistingRecordPolicyIndex) {
-                      setState(() {
-                        _importExistingRecordPolicyIndex = selectedPolicy;
-                      });
-                      await _saveSettings();
-                    }
-                  },
-                ),
-                SettingsTile.switchTile(
-                  title: Text(S.of(context).formatNumbers),
-                  description: Text(S.of(context).formatNumbersDescription),
-                  leading: const Icon(Icons.numbers_outlined),
-                  initialValue: _formatNumbers,
-                  onToggle: (bool value) {
-                    setState(() {
-                      _formatNumbers = value;
-                    });
-                    _saveSettings();
-                  },
-                ),
-              ],
-            ),
-            SettingsSection(
-              title: Text(S.of(context).general),
-              tiles: [
-                SettingsTile.navigation(
-                  leading: const Icon(Icons.home_outlined),
-                  title: Text(S.of(context).startupModule),
-                  value: Text(_getStartupModuleLabel(context, _startupModuleIndex)),
-                  onPressed: (context) async {
-                    final selectedModule =
-                        await _showStartupModuleSelectionDialog(context);
-
-                    if (selectedModule != null &&
-                        selectedModule != _startupModuleIndex) {
-                      setState(() {
-                        _startupModuleIndex = selectedModule;
-                      });
-                      await _saveSettings();
-                    }
-                  },
-                ),
-                // Option to select the theme mode
-                SettingsTile.navigation(
-                  leading: const Icon(Icons.contrast_outlined),
-                  title: Text(S.of(context).appearance),
-                  value: Builder(
-                    builder: (context) {
-                      switch (_themeMode) {
-                        case ThemeMode.light:
-                          return Text(S.of(context).lightMode);
-                        case ThemeMode.dark:
-                          return Text(S.of(context).darkMode);
-                        case ThemeMode.system:
-                          return Text(S.of(context).systemMode);
-                      }
-                    },
-                  ),
+                  // leading: const Icon(Icons.person_outlined),
+                  title: Text(S.of(context).generalSettings),
+                  description: Text('${S.current.appearance}, ${S.current.startupModule}, ${S.current.speciesSearchCountry}'),
                   onPressed: (context) {
-                    buildThemeModeSelector(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const GeneralSettings(),
+                      ),
+                    );
                   },
                 ),
+                // Observers
+                SettingsTile.navigation(
+                  // leading: const Icon(Icons.person_outlined),
+                  title: Text(S.of(context).observersSettings),
+                  description: Text(S.current.defaultObserver),
+                  onPressed: (context) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ObserverSettings(),
+                      ),
+                    );
+                  },
+                ),
+                SettingsTile.navigation(
+                  // leading: const Icon(Icons.person_outlined),
+                  title: Text(S.of(context).inventorySettings),
+                  description: Text('${S.current.limits}, ${S.current.defaults}, ${S.current.reminders}'),
+                  onPressed: (context) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const InventorySettings(),
+                      ),
+                    );
+                  },
+                ),
+                SettingsTile.navigation(
+                  // leading: const Icon(Icons.person_outlined),
+                  title: Text(S.of(context).importExportSettings),
+                  description: Text('${S.current.importExistingRecords}, ${S.current.formatNumbers}'),
+                  onPressed: (context) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ImportExportSettings(),
+                      ),
+                    );
+                  },
+                ),
+                SettingsTile.navigation(
+                  // leading: const Icon(Icons.person_outlined),
+                  title: Text(S.of(context).backup),
+                  description: Text('${S.current.createBackup}, ${S.current.restoreBackup}'),
+                  onPressed: (context) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const BackupSettings(),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+            SettingsSection(
+              // title: Text(S.of(context).general.toUpperCase()),
+              tiles: [
                 // About the app
                 SettingsTile.navigation(
-                  leading: const Icon(Icons.info_outlined),
+                  // leading: const Icon(Icons.info_outlined),
                   title: Text(S.of(context).about),
+                  description: Text('${S.current.version}, ${S.current.changelog}, ${S.current.viewLicense}'),
                   onPressed: (context) => buildShowAboutPage(context),
                 ),
                 SettingsTile.navigation(
-                  leading: const Icon(Icons.feedback_outlined),
+                  // leading: const Icon(Icons.feedback_outlined),
                   title: Text(S.of(context).suggestFeatureOrReportIssue),
+                  description: Text(S.current.giveFeedbackOnGitHub),
                   onPressed: (context) => _openFeedbackUrl(),
-                ),
-              ],
-            ),
-            SettingsSection(
-              title: Text(S.current.backup),
-              tiles: [
-                SettingsTile.navigation(
-                  leading: const Icon(Icons.save_outlined),
-                  title: Text(S.current.createBackup),
-                  onPressed: (context) async {
-                    await runCreateBackup(context);
-                  },
-                ),
-                SettingsTile.navigation(
-                  leading: const Icon(Icons.settings_backup_restore_outlined),
-                  title: Text(S.current.restoreBackup),
-                  onPressed: (context) async {
-                    // 1. Mostra o diálogo de aviso e aguarda a confirmação do usuário.
-                    final bool userConfirmed = await _showRestoreConfirmationDialog(context);
-
-                    // 2. Prossiga com a restauração apenas se o usuário confirmou.
-                    if (userConfirmed) {
-                      // A verificação `mounted` é uma boa prática em `async` callbacks.
-                      if (context.mounted) {
-                        await runBackupRestore(context);
-                      }
-                    }
-                  },
                 ),
               ],
             ),
           ],
         ),
       ),
-    );
-  }
-
-  /// Shows a dialog to edit the observer abbreviation stored in settings.
-  Future<String?> buildObserverDialog(BuildContext context) async {
-    return await showDialog<String>(
-      context: context,
-      builder: (BuildContext context) {
-        String observer = '';
-        return AlertDialog(
-          title: Text(S.of(context).observer),
-          content: TextField(
-            textCapitalization: TextCapitalization.characters,
-            onChanged: (value) {
-              observer = value;
-            },
-            decoration: InputDecoration(
-              labelText: S.of(context).observerAbbreviation,
-              border: OutlineInputBorder(),
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text(S.of(context).cancel),
-            ),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(observer),
-              child: Text(S.of(context).save),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  /// Builds and shows a dialog for selecting the user's country.
-  Future<SupportedCountry?> showCountrySelectionDialog(
-    BuildContext context,
-  ) async {
-    SupportedCountry? tempSelectedCountry = _userCountry;
-
-    return await showDialog<SupportedCountry>(
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (context, setDialogState) {
-            return AlertDialog(
-              title: Text(S.current.country),
-              contentPadding: const EdgeInsets.only(top: 20.0),
-              content: SingleChildScrollView(
-                child: RadioGroup<SupportedCountry>(
-                groupValue: tempSelectedCountry,
-                onChanged: (SupportedCountry? value) {
-                  setDialogState(() {
-                    tempSelectedCountry = value;
-                  });
-                },
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children:
-                    SupportedCountry.values.map((country) {
-                      return RadioListTile<SupportedCountry>(
-                        title: Text(countryMetadata[country]?.name ?? ''),
-                        value: country,
-                      );
-                    }).toList(),
-                ),
-              ),
-              ),
-              actions: <Widget>[
-                TextButton(
-                  child: Text(S.of(context).cancel),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-                TextButton(
-                  child: Text(S.of(context).save),
-                  onPressed: () {
-                    Navigator.of(context).pop(tempSelectedCountry);
-                  },
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
-  }
-
-  /// Shows a dialog for selecting the theme mode.
-  Future<dynamic> buildThemeModeSelector(BuildContext context) {
-    return showDialog(
-      context: context,
-      builder: (context) {
-        return SimpleDialog(
-          title: Text(S.of(context).selectMode),
-          children: [
-            SimpleDialogOption(
-              child: Row(
-                children: [
-                  const Icon(Icons.light_mode_outlined),
-                  const SizedBox(width: 8.0),
-                  Text(S.of(context).lightMode),
-                ],
-              ),
-              onPressed: () {
-                setState(() {
-                  _themeMode = ThemeMode.light;
-                });
-                _saveSettings();
-                Provider.of<ThemeModel>(context, listen: false).getThemeMode();
-                Navigator.pop(context);
-              },
-            ),
-            SimpleDialogOption(
-              child: Row(
-                children: [
-                  const Icon(Icons.dark_mode_outlined),
-                  const SizedBox(width: 8.0),
-                  Text(S.of(context).darkMode),
-                ],
-              ),
-              onPressed: () {
-                setState(() {
-                  _themeMode = ThemeMode.dark;
-                });
-                _saveSettings();
-                Provider.of<ThemeModel>(context, listen: false).getThemeMode();
-                Navigator.pop(context);
-              },
-            ),
-            SimpleDialogOption(
-              child: Row(
-                children: [
-                  const Icon(Icons.contrast_outlined),
-                  const SizedBox(width: 8.0),
-                  Text(S.of(context).systemMode),
-                ],
-              ),
-              onPressed: () {
-                setState(() {
-                  _themeMode = ThemeMode.system;
-                });
-                _saveSettings();
-                Provider.of<ThemeModel>(context, listen: false).getThemeMode();
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  /// Returns the localized label for a startup module index.
-  String _getStartupModuleLabel(BuildContext context, int moduleIndex) {
-    switch (StartupModule.values[moduleIndex]) {
-      case StartupModule.inventories:
-        return S.of(context).inventories;
-      case StartupModule.nests:
-        return S.of(context).nests;
-      case StartupModule.specimens:
-        return S.of(context).specimens(2);
-      case StartupModule.fieldJournal:
-        return S.of(context).fieldJournal;
-      case StartupModule.statistics:
-        return S.of(context).statistics;
-    }
-  }
-
-  /// Shows a dialog to choose which module opens on startup.
-  Future<int?> _showStartupModuleSelectionDialog(BuildContext context) async {
-    int tempSelectedModule = _startupModuleIndex;
-
-    return showDialog<int>(
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (context, setDialogState) {
-            return AlertDialog(
-              title: Text(S.of(context).startupModule),
-              content: SingleChildScrollView(
-                child: RadioGroup<int>(
-                  groupValue: tempSelectedModule,
-                  onChanged: (int? value) {
-                    if (value == null) return;
-                    setDialogState(() {
-                      tempSelectedModule = value;
-                    });
-                  },
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: List<Widget>.generate(
-                      StartupModule.values.length,
-                      (index) => RadioListTile<int>(
-                        title: Text(_getStartupModuleLabel(context, index)),
-                        value: index,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              actions: <Widget>[
-                TextButton(
-                  child: Text(S.of(context).cancel),
-                  onPressed: () => Navigator.of(context).pop(),
-                ),
-                TextButton(
-                  child: Text(S.of(context).save),
-                  onPressed: () => Navigator.of(context).pop(tempSelectedModule),
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
-  }
-
-  /// Returns the localized label for an import conflict policy index.
-  String _getImportExistingRecordPolicyLabel(
-    BuildContext context,
-    int policyIndex,
-  ) {
-    switch (ImportExistingRecordPolicy.values[policyIndex]) {
-      case ImportExistingRecordPolicy.askEveryTime:
-        return S.of(context).importPolicyAskEveryTime;
-      case ImportExistingRecordPolicy.updateExisting:
-        return S.of(context).importPolicyUpdateExisting;
-      case ImportExistingRecordPolicy.skipExisting:
-        return S.of(context).importPolicySkipExisting;
-    }
-  }
-
-  /// Shows a dialog to choose how imports handle existing records.
-  Future<int?> _showImportConflictPolicySelectionDialog(
-    BuildContext context,
-  ) async {
-    int tempSelectedPolicy = _importExistingRecordPolicyIndex;
-
-    return showDialog<int>(
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (context, setDialogState) {
-            return AlertDialog(
-              title: Text(S.of(context).importExistingRecords),
-              content: SingleChildScrollView(
-                child: RadioGroup<int>(
-                  groupValue: tempSelectedPolicy,
-                  onChanged: (int? value) {
-                    if (value == null) return;
-                    setDialogState(() {
-                      tempSelectedPolicy = value;
-                    });
-                  },
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      RadioListTile<int>(
-                        title: Text(S.of(context).importPolicyAskEveryTime),
-                        value: ImportExistingRecordPolicy.askEveryTime.index,
-                      ),
-                      RadioListTile<int>(
-                        title: Text(S.of(context).importPolicyUpdateExisting),
-                        value: ImportExistingRecordPolicy.updateExisting.index,
-                      ),
-                      RadioListTile<int>(
-                        title: Text(S.of(context).importPolicySkipExisting),
-                        value: ImportExistingRecordPolicy.skipExisting.index,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              actions: <Widget>[
-                TextButton(
-                  child: Text(S.of(context).cancel),
-                  onPressed: () => Navigator.of(context).pop(),
-                ),
-                TextButton(
-                  child: Text(S.of(context).save),
-                  onPressed: () => Navigator.of(context).pop(tempSelectedPolicy),
-                ),
-              ],
-            );
-          },
-        );
-      },
     );
   }
 
@@ -831,274 +218,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
       debugPrint('[SETTINGS] !!! ERROR: Could not launch $url: $e');
     }
   }
-
-  /// Creates a ZIP backup and opens the share sheet for the generated file.
-  Future<void> runCreateBackup(BuildContext context) async {
-    bool isDialogShown = false;
-    try {
-      final directory = await getTemporaryDirectory();
-      final now = DateTime.now();
-      final formatter = DateFormat('yyyyMMdd_HHmmss');
-      final formattedDate = formatter.format(now);
-      final backupFilePath =
-          '${directory!.path}/xolmis_backup_$formattedDate.zip';
-
-      if (mounted) {
-        showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext dialogContext) {
-            return Dialog(
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    CircularProgressIndicator(),
-                    SizedBox(width: 20),
-                    Text(S.of(dialogContext).backingUpData),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-        isDialogShown = true;
-      }
-
-      final success = await backupDatabase(backupFilePath);
-
-      if (isDialogShown && mounted) {
-        Navigator.of(context).pop();
-        isDialogShown = false;
-      }
-
-      if (success) {
-        final result = await SharePlus.instance.share(
-          ShareParams(
-            files: [XFile(backupFilePath, mimeType: 'application/zip')],
-            text: S.current.sendBackupTo,
-          ),
-        );
-
-        if (result.status == ShareResultStatus.success) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              backgroundColor: Colors.green,
-              content: Text(S.current.backupCreatedAndSharedSuccessfully),
-            ),
-          );
-        }
-      } else {
-        if (isDialogShown && mounted) {
-          Navigator.of(context).pop();
-          isDialogShown = false;
-        }
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(
-          SnackBar(
-            persist: true,
-              showCloseIcon: true,
-            backgroundColor: Theme.of(context).colorScheme.error,
-            content: Text(S.current.errorBackupNotFound)
-            )
-            );
-      }
-    } catch (e) {
-      if (isDialogShown && mounted) {
-        Navigator.of(context).pop();
-        isDialogShown = false;
-      }
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          persist: true,
-              showCloseIcon: true,
-          backgroundColor: Theme.of(context).colorScheme.error,
-          content: Text('${S.current.errorCreatingBackup}: ${e.toString()}'),
-        ),
-      );
-    }
-  }
-
-  /// Shows a confirmation dialog before starting the backup restore flow.
-  ///
-  /// Returns `true` when the user confirms and `false` otherwise.
-  Future<bool> _showRestoreConfirmationDialog(BuildContext context) async {
-    // `showDialog` retorna o valor passado para `Navigator.of(context).pop()`
-    final bool? confirmed = await showDialog<bool>(
-      context: context,
-      barrierDismissible: false, // O usuário deve pressionar um dos botões
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(S.current.restoreBackup),
-          content: Text(S.current.restoreBackupConfirmation),
-          actions: <Widget>[
-            // Botão para cancelar a ação
-            TextButton(
-              child: Text(S.of(context).cancel),
-              onPressed: () {
-                Navigator.of(context).pop(false); // Retorna 'false'
-              },
-            ),
-            // Botão para confirmar a ação, com destaque
-            TextButton(
-              style: TextButton.styleFrom(
-                foregroundColor: Theme.of(context).colorScheme.error,
-              ),
-              child: Text(S.current.restore),
-              onPressed: () {
-                Navigator.of(context).pop(true); // Retorna 'true'
-              },
-            ),
-          ],
-        );
-      },
-    );
-    // Se o usuário fechar o diálogo de outra forma, `confirmed` pode ser null.
-    // Tratamos null como `false`.
-    return confirmed ?? false;
-  }
-
-  /// Restores app data from a backup ZIP selected by the user.
-  Future<void> runBackupRestore(BuildContext context) async {
-    final result = await FilePicker.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['zip'],
-    );
-
-    if (result != null && result.files.single.path != null) {
-      final filePath = result.files.single.path!;
-      bool isDialogShown = false;
-      try {
-        if (mounted) {
-          showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (BuildContext dialogContext) {
-              return Dialog(
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      CircularProgressIndicator(),
-                      SizedBox(width: 20),
-                      Text(S.of(dialogContext).restoringData),
-                    ],
-                  ),
-                ),
-              );
-            },
-          );
-          isDialogShown = true;
-        }
-
-        final success = await restoreDatabase(filePath);
-
-        if (isDialogShown && mounted) {
-          Navigator.of(context).pop();
-          isDialogShown = false;
-        }
-
-        if (success) {
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            showCloseIcon: true,
-                            backgroundColor: Colors.green,
-                            content: Text(S.of(context).backupRestoredSuccessfully),
-                          ),
-                        );
-          }
-        } else {
-          if (isDialogShown && mounted) {
-            Navigator.of(context).pop();
-            isDialogShown = false;
-          }
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              persist: true,
-              showCloseIcon: true,
-              backgroundColor: Theme.of(context).colorScheme.error,
-              content: Text(S.current.errorRestoringBackup)),
-          );
-        }
-      } catch (e) {
-        if (isDialogShown && mounted) {
-          Navigator.of(context).pop();
-          isDialogShown = false;
-        }
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            persist: true,
-              showCloseIcon: true,
-            backgroundColor: Theme.of(context).colorScheme.error,
-            content: Text('${S.current.errorRestoringBackup}: ${e.toString()}'),
-          ),
-        );
-      }
-    }
-  }
 }
 
-/// Dialog widget that lets the user pick a number from a bounded range.
-class NumberPickerDialog extends StatefulWidget {
-  final int minValue;
-  final int maxValue;
-  final int initialValue;
-  final String title;
 
-  /// Creates a number picker dialog.
-  const NumberPickerDialog({
-    super.key,
-    required this.minValue,
-    required this.maxValue,
-    required this.initialValue,
-    required this.title,
-  });
-
-  @override
-  State<NumberPickerDialog> createState() => _NumberPickerDialogState();
-}
-
-class _NumberPickerDialogState extends State<NumberPickerDialog> {
-  int _currentValue = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    _currentValue = widget.initialValue;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Text(widget.title),
-      content: NumberPicker(
-        value: _currentValue,
-        minValue: widget.minValue,
-        maxValue: widget.maxValue,
-        onChanged: (value) {
-          setState(() {
-            _currentValue = value;
-          });
-        },
-      ),
-      actions: [
-        TextButton(
-          child: Text(S.of(context).cancel),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        TextButton(
-          child: Text(S.of(context).ok),
-          onPressed: () {
-            Navigator.pop(context, _currentValue);
-          },
-        ),
-      ],
-    );
-  }
-}
