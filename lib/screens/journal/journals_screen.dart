@@ -568,6 +568,17 @@ class JournalsScreenState extends State<JournalsScreen> {
                 MenuItemButton(
                   onPressed: () async {
                     final journals = await _getSelectedJournalEntries();
+                    await exportSelectedJournalsToWord(context, journals);
+                    if (!mounted) return;
+                    setState(() {
+                      selectedJournals.clear();
+                    });
+                  },
+                  child: const Text('Word'),
+                ),
+                MenuItemButton(
+                  onPressed: () async {
+                    final journals = await _getSelectedJournalEntries();
                     await exportSelectedJournalsToJson(context, journals);
                     if (!mounted) return;
                     setState(() {
@@ -1093,6 +1104,14 @@ class JournalsScreenState extends State<JournalsScreen> {
                                 label: const Text('Markdown'),
                                 onPressed: () async {
                                   exportSelectedJournalsToMarkdown(context, [journalEntry]);
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                              const SizedBox(width: 8.0),
+                              ActionChip(
+                                label: const Text('Word'),
+                                onPressed: () async {
+                                  exportSelectedJournalsToWord(context, [journalEntry]);
                                   Navigator.of(context).pop();
                                 },
                               ),

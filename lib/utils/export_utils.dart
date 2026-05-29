@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:csv/csv.dart';
+import 'package:docx_creator/docx_creator.dart';
 import 'package:excel/excel.dart';
 import 'package:geoxml/geoxml.dart';
 import 'package:flutter/material.dart';
@@ -903,6 +904,62 @@ String _extractJournalEmbedPlaceholder(dynamic insert) {
   return '[Embedded ${type ?? 'content'}]';
 }
 
+String? _extractJournalImageSource(Map<dynamic, dynamic> insert) {
+  final directCandidates = <dynamic>[
+    insert['source'],
+    insert['src'],
+    insert['url'],
+    insert['path'],
+  ];
+
+  for (final candidate in directCandidates) {
+    if (candidate is String && candidate.trim().isNotEmpty) {
+      return candidate.trim();
+    }
+  }
+
+  final nested = insert['data'];
+  if (nested is Map) {
+    final nestedCandidates = <dynamic>[
+      nested['source'],
+      nested['src'],
+      nested['url'],
+      nested['path'],
+    ];
+
+    for (final candidate in nestedCandidates) {
+      if (candidate is String && candidate.trim().isNotEmpty) {
+        return candidate.trim();
+      }
+    }
+  }
+
+  return null;
+}
+
+/// Builds Markdown representation for Fleather embeds used by DOCX export.
+String _extractJournalEmbedMarkdown(dynamic insert) {
+  if (insert is! Map) {
+    return '[Embedded content]';
+  }
+
+  final type = insert['_type'] as String?;
+  if (type == 'image') {
+    final source = _extractJournalImageSource(insert);
+    final alt = (insert['alt'] as String? ?? 'Image').trim();
+    if (source == null || source.isEmpty) {
+      return '[Image: attached]';
+    }
+    // Keep Markdown syntax so regular Markdown export and DOCX conversion can embed images.
+    return '![${alt.isEmpty ? 'Image' : alt}]($source)';
+  }
+  if (type == 'hr') {
+    return '---';
+  }
+
+  return '[Embedded ${type ?? 'content'}]';
+}
+
 String _journalDeltaToPlainText(String? notes) {
   final ops = _parseJournalDeltaOps(notes);
   if (ops == null) {
@@ -967,11 +1024,13 @@ String _journalDeltaToPlainText(String? notes) {
 
     String line;
     if (effectiveChecked != null) {
+      // Treat as a checklist item regardless of blockType.
       line = effectiveChecked ? '- [x] ${raw.trim()}' : '- [ ] ${raw.trim()}';
     } else if (blockType == 'cl') {
+      // Block is checklist but no checked state → assume unchecked.
       line = '- [ ] ${raw.trim()}';
-    // } else if (headingLevel is int) {
-    //   line = '${'#' * headingLevel.clamp(1, 6)} ${raw.trim()}';
+    } else if (headingLevel is int) {
+      line = '${'#' * headingLevel.clamp(1, 6)} ${raw.trim()}';
     } else if (blockType == 'ul') {
       line = '- ${raw.trim()}';
     } else if (blockType == 'ol') {
@@ -1002,13 +1061,15 @@ String _journalDeltaToPlainText(String? notes) {
       for (var i = 0; i < parts.length; i++) {
         final part = parts[i];
         if (part.isNotEmpty) {
+          // Update checked state for the segment being written to the current line.
           if (attributes?['checked'] is bool) {
             currentLineChecked = attributes!['checked'] as bool;
           }
           currentLine.write(applyInlinePlainText(part, attributes));
         }
-
         if (i < parts.length - 1) {
+          // A \n inside a text op with block/heading attributes terminates a
+          // styled paragraph; a \n without those attributes is a plain separator.
           final hasLineAttrs = attributes != null &&
               (attributes.containsKey('block') ||
                   attributes.containsKey('heading'));
@@ -1021,6 +1082,7 @@ String _journalDeltaToPlainText(String? notes) {
     if (insert is Map) {
       final type = insert['_type'] as String?;
       if (type == 'hr') {
+        // Horizontal rule gets its own output line.
         if (currentLine.isNotEmpty) flushLine();
         writeElement('---');
       } else {
@@ -1187,7 +1249,7 @@ String _journalDeltaToMarkdown(String? notes) {
         if (currentLine.isNotEmpty) flushLine();
         writeElement('---');
       } else {
-        currentLine.write(_extractJournalEmbedPlaceholder(insert));
+        currentLine.write(_extractJournalEmbedMarkdown(insert));
       }
     }
   }
@@ -1260,7 +1322,7 @@ String _buildJournalMarkdownExportContent(List<FieldJournal> journals) {
   return content.toString().trimRight();
 }
 
-/// Exports selected field journal notes to a single TXT file.
+/// Exports selected field journal notes to TXT files.
 Future<void> exportSelectedJournalsToTxt(
   BuildContext context,
   List<FieldJournal> journals,
@@ -1296,7 +1358,7 @@ Future<void> exportSelectedJournalsToTxt(
   }
 }
 
-/// Exports selected field journal notes to a single Markdown file.
+/// Exports selected field journal notes to Markdown files.
 Future<void> exportSelectedJournalsToMarkdown(
   BuildContext context,
   List<FieldJournal> journals,
@@ -1329,6 +1391,126 @@ Future<void> exportSelectedJournalsToMarkdown(
         content: Text('${S.current.errorSavingJournalEntry}: $error'),
       ),
     );
+  }
+}
+
+/// Exports selected field journal entries to a single DOCX file.
+///
+/// Each journal entry is rendered as a section starting with an H1 title,
+/// followed by metadata lines (observer, dates) and the rich-text body
+/// converted from Fleather Delta JSON via Markdown. Multiple entries are
+/// separated by a horizontal rule. The resulting file is shared through the
+/// platform share sheet.
+Future<void> exportSelectedJournalsToWord(
+  BuildContext context,
+  List<FieldJournal> journals,
+) async {
+  bool isDialogShown = false;
+
+  try {
+    if (!context.mounted) return;
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircularProgressIndicator(year2023: false),
+                SizedBox(width: 16),
+                Text(S.current.exporting),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+    isDialogShown = true;
+
+    final builder = docx();
+
+    for (var i = 0; i < journals.length; i++) {
+      final journal = journals[i];
+
+      // Title as Heading 1
+      builder.h1(journal.title);
+
+      // Metadata lines as plain paragraphs
+      if (journal.observer != null && journal.observer!.isNotEmpty) {
+        builder.p('Observer: ${journal.observer}');
+      }
+      if (journal.creationDate != null) {
+        builder.p('Created: ${journal.creationDate!.toIso8601String()}');
+      }
+      if (journal.lastModifiedDate != null) {
+        builder.p('Last modified: ${journal.lastModifiedDate!.toIso8601String()}');
+      }
+
+      // Convert Fleather Delta → Markdown → DocxNodes
+      final markdownContent = _journalDeltaToMarkdown(journal.notes);
+      if (markdownContent.isNotEmpty) {
+        final nodes = await MarkdownParser.parse(markdownContent);
+        for (final node in nodes) {
+          builder.add(node);
+        }
+      }
+
+      // Horizontal rule separator between entries (not after the last one)
+      if (i < journals.length - 1) {
+        builder.hr();
+      }
+    }
+
+    final doc = builder.build();
+    final bytes = await DocxExporter().exportToBytes(doc);
+
+    final now = DateTime.now();
+    final formatter = DateFormat('yyyyMMdd_HHmmss');
+    final formattedDate = formatter.format(now);
+
+    final tempDir = await getTemporaryDirectory();
+    final filePath = '${tempDir.path}/selected_journals_$formattedDate.docx';
+    await File(filePath).writeAsBytes(bytes);
+
+    if (isDialogShown && context.mounted) {
+      Navigator.of(context).pop();
+      isDialogShown = false;
+    }
+
+    await SharePlus.instance.share(
+      ShareParams(
+        files: [
+          XFile(
+            filePath,
+            mimeType:
+                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+          ),
+        ],
+        title: S.current.journalEntries(journals.length),
+        subject: S.current.journalEntries(journals.length),
+      ),
+    );
+  } catch (error) {
+    if (isDialogShown && context.mounted) {
+      Navigator.of(context).pop();
+      isDialogShown = false;
+    }
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        persist: true,
+        showCloseIcon: true,
+        backgroundColor: Theme.of(context).colorScheme.error,
+        content: Text('${S.current.errorSavingJournalEntry}: $error'),
+      ),
+    );
+  } finally {
+    if (isDialogShown && context.mounted) {
+      Navigator.of(context).pop();
+    }
   }
 }
 
@@ -1607,7 +1789,9 @@ Future<void> exportSelectedNestsToKml(BuildContext context, List<Nest> nests) as
         persist: true,
         showCloseIcon: true,
         backgroundColor: Theme.of(context).colorScheme.error,
-        content: Text(S.of(context).errorExportingNest(nests.length, error.toString())),
+        content: Text(
+          S.of(context).errorExportingNest(nests.length, error.toString()),
+        ),
       ),
     );
   }
@@ -2207,7 +2391,7 @@ Future<void> exportSelectedSpecimensToExcel(BuildContext context, List<Specimen>
         persist: true,
         showCloseIcon: true,
         backgroundColor: Theme.of(context).colorScheme.error,
-        content: Text(S.of(context).errorExportingSpecimen(specimenList.length, error.toString())),
+        content: Text(S.of(context).errorExportingSpecimen(1, error.toString())),
       ),
     );
   } finally {
@@ -2434,7 +2618,12 @@ Future<void> exportAllSpecimensToExcel(BuildContext context, List<Specimen> spec
     // 4. Share the file using share_plus
     await SharePlus.instance.share(
       ShareParams(
-        files: [XFile(filePath, mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')], 
+        files: [
+          XFile(
+            filePath,
+            mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+          ),
+        ],
         title: S.current.specimenExported(2),
         subject: S.current.specimenData(2)
       ),
@@ -2442,13 +2631,13 @@ Future<void> exportAllSpecimensToExcel(BuildContext context, List<Specimen> spec
   } catch (error) {
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            persist: true,
-                            showCloseIcon: true,
-                            backgroundColor: Theme.of(context).colorScheme.error,
-                            content: Text(S.of(context).errorExportingSpecimen(1, error.toString())),
-                          ),
-                        );
+      SnackBar(
+        persist: true,
+        showCloseIcon: true,
+        backgroundColor: Theme.of(context).colorScheme.error,
+        content: Text(S.of(context).errorExportingSpecimen(1, error.toString())),
+      ),
+    );
   } finally {
     // Ensure the dialog is always closed if it was shown and an error occurred,
     // or if the function returned early while the dialog was up.
