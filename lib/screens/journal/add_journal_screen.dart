@@ -376,15 +376,9 @@ class AddJournalScreenState extends State<AddJournalScreen> {
                           controller: _titleController,
                           textCapitalization: TextCapitalization.sentences,
                           decoration: InputDecoration(
-                            labelText: '${S.of(context).title} *',
+                            labelText: '${S.of(context).title} (${S.of(context).optional})',
                             border: OutlineInputBorder(),
                           ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return S.of(context).insertTitle;
-                            }
-                            return null;
-                          },
                         ),
                 ),
               ),
@@ -481,15 +475,33 @@ class AddJournalScreenState extends State<AddJournalScreen> {
   /// Validates and saves the journal entry using the provider layer.
   void _submitForm() async {
     final journalProvider = Provider.of<FieldJournalProvider>(context, listen: false);
+    final notesDeltaJson = jsonEncode(_notesController.document.toDelta().toList());
+    final notesPlainText = plainTextFromDelta(notesDeltaJson).trim();
+
     setState(() {
       _isSubmitting = true;
     });
+
+    if (notesPlainText.isEmpty) {
+      setState(() {
+        _isSubmitting = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          persist: false,
+          showCloseIcon: true,
+          backgroundColor: Theme.of(context).colorScheme.error,
+          content: Text(S.current.fieldCannotBeEmpty),
+        ),
+      );
+      return;
+    }
 
     if (_formKey.currentState!.validate()) {
       if (widget.isEditing) {
         final updatedEntry = widget.journalEntry!.copyWith(
           title: _titleController.text,
-          notes: jsonEncode(_notesController.document.toDelta().toList()),
+          notes: notesDeltaJson,
           lastModifiedDate: DateTime.now(),
         );
 
@@ -516,7 +528,7 @@ class AddJournalScreenState extends State<AddJournalScreen> {
         // Create Nest object with form data
         final newEntry = FieldJournal(
           title: _titleController.text,
-          notes: jsonEncode(_notesController.document.toDelta().toList()),
+          notes: notesDeltaJson,
           observer: _observerAbbrev,
           creationDate: DateTime.now(),
           lastModifiedDate: DateTime.now(),

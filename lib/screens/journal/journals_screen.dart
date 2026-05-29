@@ -102,7 +102,9 @@ class JournalsScreenState extends State<JournalsScreen> {
       int comparison;
       switch (_sortField) {
         case JournalSortField.title:
-          comparison = a.title.compareTo(b.title);
+          final aNotesPreview = firstSentenceFromDelta(a.notes).toLowerCase();
+          final bNotesPreview = firstSentenceFromDelta(b.notes).toLowerCase();
+          comparison = aNotesPreview.compareTo(bNotesPreview);
           break;
         case JournalSortField.lastModifiedDate:
           comparison = a.lastModifiedDate!.compareTo(b.lastModifiedDate!);
@@ -137,7 +139,7 @@ class JournalsScreenState extends State<JournalsScreen> {
                     spacing: 8.0, // Space between chips
                     children: <Widget>[
                       ChoiceChip(
-                        label: Text(S.current.title),
+                        label: Text(S.current.journalEntries(1)),
                         showCheckmark: false,
                         selected: _sortField == JournalSortField.title,
                         onSelected: (bool selected) {
@@ -242,13 +244,12 @@ class JournalsScreenState extends State<JournalsScreen> {
 
     // Filtro por busca textual
     if (_searchQuery.isNotEmpty) {
+      final query = _searchQuery.toLowerCase();
       filtered =
           filtered
               .where(
                 (entry) =>
-                    entry.title.toLowerCase().contains(
-                      _searchQuery.toLowerCase(),
-                    )
+                    plainTextFromDelta(entry.notes).toLowerCase().contains(query),
               )
               .toList();
     }
@@ -974,7 +975,15 @@ class JournalsScreenState extends State<JournalsScreen> {
           });
         },
       ),
-      title: Text(entry.title),
+      title: Builder(builder: (context) {
+        final preview = firstSentenceFromDelta(entry.notes);
+        if (preview.isEmpty) return const SizedBox.shrink();
+        return Text(
+          preview,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        );
+      }),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

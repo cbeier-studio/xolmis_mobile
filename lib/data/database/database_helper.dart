@@ -32,7 +32,7 @@ class DatabaseHelper {
     String path = join(await getDatabasesPath(), 'xolmis_database.db');
     return await openDatabase(
       path,
-      version: 23, // Increase the version number
+      version: 24, // Increase the version number
       onCreate: _createTables,
       onUpgrade: _upgradeTables,
       onConfigure: (db) {
@@ -215,7 +215,7 @@ class DatabaseHelper {
     db.execute('''
       CREATE TABLE field_journal (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        title TEXT NOT NULL,
+        title TEXT,
         notes TEXT,
         creationDate TEXT,
         lastModifiedDate TEXT,
@@ -482,6 +482,26 @@ class DatabaseHelper {
     }
     if (oldVersion < 23) {
       _createPerformanceIndexes(db);
+    }
+    if (oldVersion < 24) {
+      // SQLite cannot drop NOT NULL constraints in-place, so recreate table.
+      db.execute('ALTER TABLE field_journal RENAME TO field_journal_old');
+      db.execute('''
+        CREATE TABLE field_journal (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          title TEXT,
+          notes TEXT,
+          creationDate TEXT,
+          lastModifiedDate TEXT,
+          observer TEXT
+        )
+      ''');
+      db.execute('''
+        INSERT INTO field_journal (id, title, notes, creationDate, lastModifiedDate, observer)
+        SELECT id, title, notes, creationDate, lastModifiedDate, observer
+        FROM field_journal_old
+      ''');
+      db.execute('DROP TABLE field_journal_old');
     }
   }
 

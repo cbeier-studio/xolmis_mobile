@@ -466,3 +466,55 @@ Widget buildGridMenuItem(
   );
 }
 
+/// Converts a Fleather/Quill Delta JSON string to plain text.
+///
+/// Concatenates all string `insert` operations, ignoring embed objects and
+/// formatting attributes. Returns an empty string when [delta] is null, empty,
+/// or cannot be parsed.
+String plainTextFromDelta(String? delta) {
+  if (delta == null || delta.isEmpty) return '';
+
+  try {
+    final List<dynamic> ops = jsonDecode(delta) as List<dynamic>;
+    final buffer = StringBuffer();
+
+    for (final op in ops) {
+      if (op is Map<String, dynamic>) {
+        final insert = op['insert'];
+        if (insert is String) {
+          buffer.write(insert);
+        }
+      }
+    }
+
+    return buffer.toString();
+  } catch (_) {
+    return '';
+  }
+}
+
+/// Extracts the first sentence of plain text from a Fleather/Quill Delta JSON string.
+///
+/// Delegates to [plainTextFromDelta] for text extraction, then returns the
+/// content up to (and including) the first sentence-ending punctuation
+/// (`.`, `!`, `?`) or, when none is found, up to the first newline. Returns an
+/// empty string when [delta] is null, empty, or cannot be parsed.
+String firstSentenceFromDelta(String? delta) {
+  final text = plainTextFromDelta(delta).trimLeft();
+  if (text.isEmpty) return '';
+
+  // Find the first sentence-ending punctuation followed by a space or end.
+  final sentenceEnd = RegExp(r'[.!?](?:\s|$)');
+  final match = sentenceEnd.firstMatch(text);
+  if (match != null) {
+    return text.substring(0, match.end).trim();
+  }
+
+  // Fall back to the first line if no punctuation was found.
+  final newline = text.indexOf('\n');
+  if (newline > 0) {
+    return text.substring(0, newline).trim();
+  }
+
+  return text.trim();
+}
