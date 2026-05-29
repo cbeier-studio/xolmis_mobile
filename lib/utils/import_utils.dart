@@ -548,7 +548,7 @@ Future<void> importNestsFromJson(BuildContext context) async {
             backgroundColor: importErrors.isNotEmpty
               ? Theme.of(context).colorScheme.error
               : Colors.green,
-              content: Text(summaryMessage)
+            content: Text(summaryMessage)
           )
       );
     } else {
@@ -571,8 +571,8 @@ Future<void> importNestsFromJson(BuildContext context) async {
         showCloseIcon: true,
         backgroundColor: Theme.of(context).colorScheme.error,
         content: Text(errorMessage),
-        )
-        );
+          )
+          );
   } finally {
     if (isDialogShown && context.mounted) Navigator.of(context).pop();
   }
@@ -742,7 +742,7 @@ Future<void> importSpecimensFromJson(BuildContext context) async {
             backgroundColor: importErrors.isNotEmpty
               ? Theme.of(context).colorScheme.error
               : Colors.green,
-              content: Text(summaryMessage)
+            content: Text(summaryMessage)
           )
       );
     } else {
@@ -772,6 +772,104 @@ Future<void> importSpecimensFromJson(BuildContext context) async {
   }
 }
 
+Map<String, dynamic> _normalizeFleatherImageEmbed(Map<dynamic, dynamic> insert) {
+  final normalized = Map<String, dynamic>.from(insert);
+
+  String? readSource(Map<dynamic, dynamic> map) {
+    final candidates = [map['source'], map['src'], map['url'], map['path']];
+    for (final candidate in candidates) {
+      if (candidate is String && candidate.trim().isNotEmpty) {
+        return candidate.trim();
+      }
+    }
+    return null;
+  }
+
+  String? source = readSource(normalized);
+  final nestedData = normalized['data'];
+  if ((source == null || source.isEmpty) && nestedData is Map) {
+    source = readSource(nestedData);
+  }
+
+  if (source != null && source.isNotEmpty) {
+    final uri = Uri.tryParse(source);
+    if (uri != null && uri.scheme == 'file') {
+      source = uri.toFilePath();
+    } else {
+      source = Uri.decodeFull(source);
+    }
+
+    normalized['source'] = source;
+
+    // Keep fleather image renderer behavior stable when source_type is missing.
+    if (normalized['source_type'] == null || normalized['source_type'].toString().isEmpty) {
+      if (source.startsWith('http://') || source.startsWith('https://')) {
+        normalized['source_type'] = 'url';
+      } else if (source.startsWith('assets/')) {
+        normalized['source_type'] = 'assets';
+      } else {
+        normalized['source_type'] = 'file';
+      }
+    }
+  }
+
+  return normalized;
+}
+
+String _normalizeJournalNotesJson(dynamic rawNotes) {
+  dynamic parsed = rawNotes;
+
+  if (rawNotes is String) {
+    final trimmed = rawNotes.trim();
+    if (trimmed.isEmpty) return rawNotes;
+
+    try {
+      parsed = jsonDecode(trimmed);
+    } catch (_) {
+      return rawNotes;
+    }
+  }
+
+  List<dynamic>? ops;
+  if (parsed is List) {
+    ops = parsed;
+  } else if (parsed is Map && parsed['ops'] is List) {
+    ops = parsed['ops'] as List<dynamic>;
+  }
+
+  if (ops == null) {
+    if (rawNotes is List || rawNotes is Map) {
+      return jsonEncode(rawNotes);
+    }
+    return rawNotes?.toString() ?? '';
+  }
+
+  final normalizedOps = <dynamic>[];
+  for (final op in ops) {
+    if (op is Map) {
+      final normalizedOp = Map<String, dynamic>.from(op);
+      final insert = normalizedOp['insert'];
+      if (insert is Map) {
+        final type = insert['_type']?.toString();
+        if (type == 'image') {
+          normalizedOp['insert'] = _normalizeFleatherImageEmbed(insert);
+        }
+      }
+      normalizedOps.add(normalizedOp);
+    } else {
+      normalizedOps.add(op);
+    }
+  }
+
+  if (parsed is Map && parsed['ops'] is List) {
+    final normalizedDoc = Map<String, dynamic>.from(parsed);
+    normalizedDoc['ops'] = normalizedOps;
+    return jsonEncode(normalizedDoc);
+  }
+
+  return jsonEncode(normalizedOps);
+}
+
 Map<String, dynamic> _normalizeJournalJsonRecord(Map<String, dynamic> item) {
   final normalized = Map<String, dynamic>.from(item);
 
@@ -792,9 +890,9 @@ Map<String, dynamic> _normalizeJournalJsonRecord(Map<String, dynamic> item) {
   normalized['title'] = title;
 
   final rawNotes = normalized['notes'];
-  if (rawNotes is List || rawNotes is Map) {
-    normalized['notes'] = jsonEncode(rawNotes);
-  } else if (rawNotes == null || rawNotes is String) {
+  if (rawNotes is List || rawNotes is Map || rawNotes is String) {
+    normalized['notes'] = _normalizeJournalNotesJson(rawNotes);
+  } else if (rawNotes == null) {
     normalized['notes'] = rawNotes;
   } else {
     normalized['notes'] = rawNotes.toString();
@@ -1136,4 +1234,3 @@ Future<void> importJournalsFromJson(BuildContext context) async {
     }
   }
 }
-

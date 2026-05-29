@@ -10,7 +10,7 @@
 * Adicionados filtros para inventários, ninhos, espécimes e diário de campo.
 * Limpeza de arquivos temporários e banco de dados ao iniciar o app.
 * Adicionada opção para definir módulo a abrir ao iniciar o app.
-* Exportar notas do diário de campo para texto simples, Markdown ou JSON (experimental).
+* Exportar notas do diário de campo para texto simples, Markdown, Word, ou JSON (experimental).
 * Importar notas do diário de campo de arquivo JSON (experimental).
 * Adicionada nas configurações uma opção para definir o que fazer com registros existentes ao importar dados (perguntar, atualizar ou ignorar).
 

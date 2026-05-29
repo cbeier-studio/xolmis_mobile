@@ -10,7 +10,7 @@
 * Added filters for inventories, nests, specimens and field journal.
 * Temporary files and database cleanup on app start.
 * Added option to set module to open on app start.
-* Export field journal notes to plain text, Markdown or JSON (experimental).
+* Export field journal notes to plain text, Markdown, Word, or JSON (experimental).
 * Import field journal notes from JSON file (experimental).
 * Added in settings an option to define what to do with existing records when importing data (ask, update or ignore).
 
