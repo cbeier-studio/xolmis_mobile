@@ -1774,6 +1774,12 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                       : S.current.speciesCount(withinCount + outCount),
                   overflow: TextOverflow.ellipsis,
                 ),
+                const SizedBox(width: 8),
+                const Text('•'),
+                const SizedBox(width: 8),
+                Icon(Icons.person, size: 16, color: Theme.of(context).colorScheme.surfaceTint),
+                const SizedBox(width: 4),
+                Text(inventory.totalObservers.toString()),
               ],
             );
           },
