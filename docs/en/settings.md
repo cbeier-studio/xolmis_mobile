@@ -2,11 +2,36 @@
 
 The **Settings** module allows you to configure how Xolmis Mobile behaves during fieldwork. These options control species search, inventory behavior, data import/export, backups, and general preferences. Adjusting settings before going to the field ensures a smoother and more efficient workflow.
 
-## Observer
+## General Settings
+
+General preferences for the app interface.
+
+### Initial Module
+
+Select which module shows when the app starts.
+
+### Appearance
+
+Choose between:
+
+- Light
+- Dark
+- System default
+
+### Country of Species Search
+
+Select the country where you are working.
+
+This determines:
+
+- The species list used in searches
+- Regional checklists
+
+## Observers
 
 The observer settings define your personal identification within the app.
 
-### Observer abbreviation
+### Default observer abbreviation
 
 A short code used to:
 
@@ -16,18 +41,7 @@ A short code used to:
 
 This abbreviation is required for most modules.
 
-## Species Search
-
-### Country
-
-Select the country where you are working.  
-
-This determines:
-
-- The species list used in searches  
-- Regional checklists
-
-## Inventories
+## Inventory Settings
 
 Settings that affect how inventories behave during creation and sampling.
 
@@ -56,7 +70,7 @@ Enable reminders for:
 
 These reminders appear when finishing an inventory.
 
-## Import & Export
+## Import and Export
 
 General settings for data transfer.
 
@@ -72,30 +86,6 @@ Define what happens when imported data conflicts with existing records:
 
 Check this option to use the localized decimal separator, or uncheck it to use period (.).
 
-## General
-
-General preferences for the app interface.
-
-### Initial Module
-
-Select which module shows when the app starts.
-
-### Appearance
-
-Choose between:
-
-- Light  
-- Dark  
-- System default  
-
-### About the app
-
-Information about the app.
-
-### Suggest feature or report bug
-
-Go to a webpage where you can give feedback about the app.
-
 ## Backup
 
 Tools for safeguarding your data.
@@ -107,6 +97,14 @@ Generates a full backup of all app data.
 ### Restore backup
 
 Replaces all current data with the contents of a backup file.
+
+## About the app
+
+Information about the app.
+
+## Suggest feature or report bug
+
+Go to a webpage where you can give feedback about the app.
 
 ---
 

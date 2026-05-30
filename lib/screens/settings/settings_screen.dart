@@ -62,7 +62,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 SettingsTile.navigation(
                   // leading: const Icon(Icons.person_outlined),
                   title: Text(S.of(context).generalSettings),
-                  description: Text('${S.current.appearance}, ${S.current.startupModule}, ${S.current.speciesSearchCountry}'),
+                  description: Text('${S.current.appearance} • ${S.current.startupModule} • ${S.current.speciesSearchCountry}'),
                   onPressed: (context) {
                     Navigator.push(
                       context,
@@ -89,7 +89,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 SettingsTile.navigation(
                   // leading: const Icon(Icons.person_outlined),
                   title: Text(S.of(context).inventorySettings),
-                  description: Text('${S.current.limits}, ${S.current.defaults}, ${S.current.reminders}'),
+                  description: Text('${S.current.limits} • ${S.current.defaults} • ${S.current.reminders}'),
                   onPressed: (context) {
                     Navigator.push(
                       context,
@@ -102,7 +102,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 SettingsTile.navigation(
                   // leading: const Icon(Icons.person_outlined),
                   title: Text(S.of(context).importExportSettings),
-                  description: Text('${S.current.importExistingRecords}, ${S.current.formatNumbers}'),
+                  description: Text('${S.current.importExistingRecords} • ${S.current.formatNumbers}'),
                   onPressed: (context) {
                     Navigator.push(
                       context,
@@ -115,7 +115,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 SettingsTile.navigation(
                   // leading: const Icon(Icons.person_outlined),
                   title: Text(S.of(context).backup),
-                  description: Text('${S.current.createBackup}, ${S.current.restoreBackup}'),
+                  description: Text('${S.current.createBackup} • ${S.current.restoreBackup}'),
                   onPressed: (context) {
                     Navigator.push(
                       context,
@@ -134,7 +134,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 SettingsTile.navigation(
                   // leading: const Icon(Icons.info_outlined),
                   title: Text(S.of(context).about),
-                  description: Text('${S.current.version}, ${S.current.changelog}, ${S.current.viewLicense}'),
+                  description: Text('${S.current.version} • ${S.current.changelog} • ${S.current.viewLicense}'),
                   onPressed: (context) => buildShowAboutPage(context),
                 ),
                 SettingsTile.navigation(

@@ -94,7 +94,7 @@ class AddJournalScreenState extends State<AddJournalScreen> {
           child: Row(
             children: [
               Expanded(
-                child: Text(S.of(context).newJournalEntry,
+                child: Text(widget.isEditing ? S.current.editJournalEntry : S.current.newJournalEntry,
                     style: Theme.of(context).textTheme.titleLarge),
               ),
               IconButton(
@@ -273,7 +273,7 @@ class AddJournalScreenState extends State<AddJournalScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(S.of(context).newJournalEntry),
+        title: Text(widget.isEditing ? S.current.editJournalEntry : S.of(context).newJournalEntry),
         actions: [
           IconButton(
             icon: const Icon(Icons.add_location_alt_outlined),
@@ -368,20 +368,6 @@ class AddJournalScreenState extends State<AddJournalScreen> {
       ),
         body: Column(
             children: [
-              Form(
-                key: _formKey,
-                child: Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: TextFormField(
-                          controller: _titleController,
-                          textCapitalization: TextCapitalization.sentences,
-                          decoration: InputDecoration(
-                            labelText: '${S.of(context).title} (${S.of(context).optional})',
-                            border: OutlineInputBorder(),
-                          ),
-                        ),
-                ),
-              ),
                 Expanded(
                   child: FleatherEditor(
                     controller: _notesController,
@@ -405,6 +391,20 @@ class AddJournalScreenState extends State<AddJournalScreen> {
                 ),
                 FleatherToolbar.basic(
                     controller: _notesController, editorKey: _editorKey),
+              Form(
+                key: _formKey,
+                child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: TextFormField(
+                    controller: _titleController,
+                    textCapitalization: TextCapitalization.sentences,
+                    decoration: InputDecoration(
+                      labelText: '${S.of(context).title} (${S.of(context).optional})',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+              ),
               SafeArea(
                 child: Container(
                     padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 16.0),

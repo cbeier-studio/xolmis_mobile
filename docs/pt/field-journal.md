@@ -7,13 +7,12 @@ Esta seção explica como criar, editar, excluir, importar, exportar, buscar, fi
 ## Criar uma Nova Nota
 
 1. Abra o módulo **Diário de Campo**.  
-2. Toque no botão **+** no canto inferior direito.  
-3. Digite um **título** para a nota.  
-4. Escreva seu texto no editor de notas.  
-5. Opcionalmente, adicione:
+2. Toque no botão **+** no canto inferior direito.
+3. Escreva seu texto no editor de notas.  
+4. Opcionalmente, adicione:
    - **Imagens**  
    - **Coordenadas GPS**  
-6. Toque em **Salvar**.
+5. Toque em **Salvar**.
 
 Novas notas aparecem na lista ordenadas por data.
 
@@ -45,16 +44,6 @@ Para editar uma nota:
 
 Excluir uma nota **não remove** as imagens associadas.
 
-## Adicionar Coordenadas a uma Nota
-
-Você pode anexar a localização GPS atual do dispositivo a qualquer nota.
-
-1. Abra a nota.  
-2. Toque em **Adicionar coordenadas**.  
-3. Confirme a localização.
-
-As coordenadas são adicionadas ao texto da nota.
-
 ## Importar Notas
 
 Você pode importar notas do diário a partir de arquivos JSON exportados por outro dispositivo.
@@ -74,15 +63,14 @@ Você pode exportar várias notas de uma vez.
 3. Escolha o formato de exportação:
    - **Texto simples** — texto sem formatação.  
    - **Markdown** — texto com marcações de formatação.  
+   - **Word** — documento formatado compatível com Microsoft Word.
    - **JSON** — arquivo estruturado usado para importar no Xolmis.
 
 Um painel de compartilhamento será exibido para que você envie o arquivo para a nuvem ou outro dispositivo.
 
 ## Buscar e Filtrar Notas
 
-Use a barra de busca para encontrar notas por:
-
-- Título  
+Use a barra de busca para encontrar notas por seu conteúdo. Você pode pesquisar por palavras-chave, frases ou termos específicos.
 
 Os filtros permitem restringir os resultados por:
 
@@ -93,7 +81,7 @@ Os filtros permitem restringir os resultados por:
 
 Toque no **ícone de ordenação** para ordenar notas por:
 
-- Título  
+- Nota
 - Data de criação  
 - Última modificação  
 

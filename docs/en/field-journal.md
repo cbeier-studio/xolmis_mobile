@@ -8,12 +8,11 @@ This section explains how to create, edit, delete, import, export, search, filte
 
 1. Open the **Field Journal** module.  
 2. Tap the **+** button in the lower-right corner.
-3. Enter a **title** for the note.
-4. Enter your text in the note editor.  
-5. Optionally add:
+3. Enter your text in the note editor.  
+4. Optionally add:
    - **Images**  
    - **GPS coordinates**    
-6. Tap **Save**.
+5. Tap **Save**.
 
 New notes appear in the list ordered by date.
 
@@ -45,16 +44,6 @@ To edit a note:
 
 Deleting a note does not remove the associated images.
 
-## Add Coordinates to a Note
-
-You can attach the device’s current GPS location to any note.
-
-1. Open the note.  
-2. Tap **Add coordinates**.  
-3. Confirm the location.
-
-Coordinates are added in the note text.
-
 ## Import Notes
 
 You can import journal notes from JSON files exported by another device.
@@ -74,15 +63,14 @@ You can export selected notes at once.
 2. Select the export format:
    - **Plain text** — simple text without formatting.
    - **Markdown** — simple text with formatting marks.
+   - **Word** — formatted document compatible with Microsoft Word.
    - **JSON** — structured file used to import in Xolmis.
 
 A sharing panel will appear so you can send the file to cloud storage or another device.
 
 ## Search and Filter Notes
 
-Use the search bar to find notes by:
-
-- Title  
+Use the search bar to find notes by its content. You can search for keywords, phrases, or specific terms.
 
 Filters allow you to narrow results by:
 
@@ -93,7 +81,7 @@ Filters allow you to narrow results by:
 
 Tap the **sort icon** to order notes by:
 
-- Title
+- Note
 - Creation time
 - Last modified time  
 

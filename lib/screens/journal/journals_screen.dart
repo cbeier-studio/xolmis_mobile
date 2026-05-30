@@ -904,14 +904,22 @@ class JournalsScreenState extends State<JournalsScreen> {
               Expanded(
                 child: LayoutBuilder(builder:
                     (BuildContext context, BoxConstraints constraints) {
-                    return ListView.separated(
-                                separatorBuilder: (context, index) => Divider(),
-                                shrinkWrap: true,
-                                itemCount: filteredEntries.length,
-                                itemBuilder: (context, index) {
-                                  return journalListTileItem(filteredEntries, index, context);
-                                },
-                              );
+                    return ListView.builder(
+                      padding: EdgeInsetsGeometry.fromLTRB(8, 0, 8, 0),
+                      shrinkWrap: true,
+                      itemCount: filteredEntries.length,
+                      itemBuilder: (context, index) {
+                        final entry = filteredEntries[index];
+                        final isSelected = selectedJournals.contains(entry.id);
+                        final isLargeScreen = MediaQuery.sizeOf(context).width >= kTabletBreakpoint;
+                        return Card(
+                            color: isSelected ? isLargeScreen
+                                ? Theme.of(context).colorScheme.secondaryContainer
+                                : Theme.of(context).colorScheme.primaryContainer : Colors.amber[50],
+                            child: journalListTileItem(filteredEntries, index, context)
+                        );
+                      },
+                    );
                   
                 }),
               ),
@@ -980,7 +988,7 @@ class JournalsScreenState extends State<JournalsScreen> {
         if (preview.isEmpty) return const SizedBox.shrink();
         return Text(
           preview,
-          maxLines: 2,
+          maxLines: 3,
           overflow: TextOverflow.ellipsis,
         );
       }),
@@ -992,10 +1000,10 @@ class JournalsScreenState extends State<JournalsScreen> {
         ],
       ),
       selected: isLargeScreen ? isDetailSelected : isSelected,
-      selectedTileColor:
-          isLargeScreen
-              ? Theme.of(context).colorScheme.secondaryContainer
-              : Theme.of(context).colorScheme.primaryContainer,
+      // selectedTileColor:
+      //     isLargeScreen
+      //         ? Theme.of(context).colorScheme.secondaryContainer
+      //         : Theme.of(context).colorScheme.primaryContainer,
       onLongPress: () =>
           _showBottomSheet(context, entry),
       onTap: () {
