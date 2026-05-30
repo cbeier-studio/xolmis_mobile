@@ -14,9 +14,14 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/models/journal.dart';
+import '../../data/models/predefined_tag.dart';
+import '../../data/models/tag.dart';
+import '../../data/daos/tag_dao.dart';
+import '../../data/database/database_helper.dart';
 import '../../providers/journal_provider.dart';
 import '../../generated/l10n.dart';
 import '../../utils/utils.dart';
+import '../../widgets/tag_selection_field.dart';
 
 /// Screen used to create or edit a field journal entry.
 class AddJournalScreen extends StatefulWidget {
@@ -25,12 +30,7 @@ class AddJournalScreen extends StatefulWidget {
   final bool isEmbedded;
 
   /// Creates a journal form screen.
-  const AddJournalScreen({
-    super.key,
-    this.journalEntry,
-    this.isEditing = false,
-    this.isEmbedded = false,
-  });
+  const AddJournalScreen({super.key, this.journalEntry, this.isEditing = false, this.isEmbedded = false});
 
   /// Creates the mutable state for [AddJournalScreen].
   @override
@@ -42,14 +42,21 @@ class AddJournalScreenState extends State<AddJournalScreen> {
   final _formKey = GlobalKey<FormState>();
   final FocusNode _focusNode = FocusNode();
   final GlobalKey<EditorState> _editorKey = GlobalKey();
+  final GlobalKey<TagSelectionFieldState> _tagSelectionKey = GlobalKey<TagSelectionFieldState>();
   late TextEditingController _titleController;
   late FleatherController _notesController;
   bool _isSubmitting = false;
   String _observerAbbrev = '';
+  late TagDao _tagDao;
+  List<PredefinedTag> _tagDefinitions = [];
+  List<String> _predefinedTags = [];
+  List<String> _allTagNames = [];
+  late List<JournalTag> _selectedTags = [];
 
   @override
   void initState() {
     super.initState();
+    _tagDao = TagDao(DatabaseHelper.instance);
     _titleController = TextEditingController();
 
     if (widget.isEditing) {
@@ -67,6 +74,28 @@ class AddJournalScreenState extends State<AddJournalScreen> {
       _notesController = FleatherController();
     }
     _loadObserverAbbreviation();
+    _loadTagData();
+  }
+
+  void _loadTagData() async {
+    try {
+      final definitions = await _tagDao.getAllTagDefinitions();
+      final predefined = await _tagDao.getPredefinedTags();
+      final allNames = await _tagDao.getAllTagNames();
+      final sortedDefinitions = definitions.toList()..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+      final sortedPredefined = predefined.toSet().toList()..sort();
+      final sortedAllNames = allNames.toSet().toList()..sort();
+
+      setState(() {
+        _tagDefinitions = sortedDefinitions;
+        _predefinedTags = sortedPredefined;
+        _allTagNames = sortedAllNames;
+      });
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error loading tag data: $e');
+      }
+    }
   }
 
   @override
@@ -94,115 +123,110 @@ class AddJournalScreenState extends State<AddJournalScreen> {
           child: Row(
             children: [
               Expanded(
-                child: Text(widget.isEditing ? S.current.editJournalEntry : S.current.newJournalEntry,
-                    style: Theme.of(context).textTheme.titleLarge),
+                child: Text(
+                  widget.isEditing ? S.current.editJournalEntry : S.current.newJournalEntry,
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
               ),
               IconButton(
-            icon: const Icon(Icons.add_location_alt_outlined),
-            tooltip: S.of(context).addCoordinates,
-            onPressed: () async {
-              Position? position = await getPosition(context);
-              if (position != null) {
-                final selection = _notesController.selection;
-                final positionText = '${position.longitude}; ${position.latitude}';
-                _notesController.replaceText(
-                  selection.baseOffset,
-                  0,
-                  positionText,
-                  selection: TextSelection.collapsed(offset: selection.baseOffset + positionText.length),
-                );
-              }              
-            },
-          ),
-          MenuAnchor(
-            builder: (context, controller, child) {
-              return IconButton(
-                icon: const Icon(Icons.add_a_photo_outlined),
-                tooltip: S.of(context).addImage,
-                onPressed: () {
-                  if (controller.isOpen) {
-                    controller.close();
-                  } else {
-                    controller.open();
-                  }
-                },
-              );
-            },
-            menuChildren: [
-              MenuItemButton(
+                icon: const Icon(Icons.add_location_alt_outlined),
+                tooltip: S.of(context).addCoordinates,
                 onPressed: () async {
-                  final picker = ImagePicker();
-                  final pickedFile = await picker.pickImage(source: ImageSource.camera);
-                  if (pickedFile != null) {
-                    // Save the image to the app's documents directory
-                    final directory = await getApplicationDocumentsDirectory();
-                    final fileName = path.basename(pickedFile.path);
-                    final savedImage = await File(pickedFile.path).copy('${directory.path}/$fileName');
-      
+                  Position? position = await getPosition(context);
+                  if (position != null) {
                     final selection = _notesController.selection;
+                    final positionText = '${position.longitude}; ${position.latitude}';
                     _notesController.replaceText(
                       selection.baseOffset,
-                      selection.extentOffset - selection.baseOffset,
-                      EmbeddableObject('image', inline: false, data: {
-                        'source_type': kIsWeb ? 'url' : 'file',
-                        'source': savedImage.path,
-                      }),
-                    );
-                    _notesController.replaceText(
-                      selection.baseOffset + 1,
                       0,
-                      '\n',
-                      selection: TextSelection.collapsed(
-                          offset: selection.baseOffset + 2),
+                      positionText,
+                      selection: TextSelection.collapsed(offset: selection.baseOffset + positionText.length),
                     );
                   }
                 },
-                child: Text(S.current.camera),
               ),
-              MenuItemButton(
-                onPressed: () async {
-                  final picker = ImagePicker();
-                  final image = await picker.pickImage(source: ImageSource.gallery);
-                  if (image != null) {
-                    final selection = _notesController.selection;
-                    _notesController.replaceText(
-                      selection.baseOffset,
-                      selection.extentOffset - selection.baseOffset,
-                      EmbeddableObject('image', inline: false, data: {
-                        'source_type': kIsWeb ? 'url' : 'file',
-                        'source': image.path,
-                      }),
-                    );
-                    _notesController.replaceText(
-                      selection.baseOffset + 1,
-                      0,
-                      '\n',
-                      selection: TextSelection.collapsed(
-                          offset: selection.baseOffset + 2),
-                    );
-                  }
+              MenuAnchor(
+                builder: (context, controller, child) {
+                  return IconButton(
+                    icon: const Icon(Icons.add_a_photo_outlined),
+                    tooltip: S.of(context).addImage,
+                    onPressed: () {
+                      if (controller.isOpen) {
+                        controller.close();
+                      } else {
+                        controller.open();
+                      }
+                    },
+                  );
                 },
-                child: Text(S.current.gallery),
+                menuChildren: [
+                  MenuItemButton(
+                    onPressed: () async {
+                      final picker = ImagePicker();
+                      final pickedFile = await picker.pickImage(source: ImageSource.camera);
+                      if (pickedFile != null) {
+                        // Save the image to the app's documents directory
+                        final directory = await getApplicationDocumentsDirectory();
+                        final fileName = path.basename(pickedFile.path);
+                        final savedImage = await File(pickedFile.path).copy('${directory.path}/$fileName');
+
+                        final selection = _notesController.selection;
+                        _notesController.replaceText(
+                          selection.baseOffset,
+                          selection.extentOffset - selection.baseOffset,
+                          EmbeddableObject(
+                            'image',
+                            inline: false,
+                            data: {'source_type': kIsWeb ? 'url' : 'file', 'source': savedImage.path},
+                          ),
+                        );
+                        _notesController.replaceText(
+                          selection.baseOffset + 1,
+                          0,
+                          '\n',
+                          selection: TextSelection.collapsed(offset: selection.baseOffset + 2),
+                        );
+                      }
+                    },
+                    child: Text(S.current.camera),
+                  ),
+                  MenuItemButton(
+                    onPressed: () async {
+                      final picker = ImagePicker();
+                      final image = await picker.pickImage(source: ImageSource.gallery);
+                      if (image != null) {
+                        final selection = _notesController.selection;
+                        _notesController.replaceText(
+                          selection.baseOffset,
+                          selection.extentOffset - selection.baseOffset,
+                          EmbeddableObject(
+                            'image',
+                            inline: false,
+                            data: {'source_type': kIsWeb ? 'url' : 'file', 'source': image.path},
+                          ),
+                        );
+                        _notesController.replaceText(
+                          selection.baseOffset + 1,
+                          0,
+                          '\n',
+                          selection: TextSelection.collapsed(offset: selection.baseOffset + 2),
+                        );
+                      }
+                    },
+                    child: Text(S.current.gallery),
+                  ),
+                ],
               ),
-            ],
-          ),
-          _isSubmitting
-                          ? const SizedBox(
-                        width: 24,
-                        height: 24,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          year2023: false,
-                        ),
-                      )
-                          : FilledButton(
-                        onPressed: _submitForm,
-                        child: Text(S.of(context).save),
-                      ),
+              _isSubmitting
+                  ? const SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: CircularProgressIndicator(strokeWidth: 2, year2023: false),
+                  )
+                  : FilledButton(onPressed: _submitForm, child: Text(S.of(context).save)),
             ],
           ),
         ),
-        
       ],
     );
   }
@@ -217,55 +241,69 @@ class AddJournalScreenState extends State<AddJournalScreen> {
             _buildTopArea(context),
             Expanded(
               child: Column(
-            children: [
-              Form(
-                key: _formKey,
-                child: Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: TextFormField(
-                          controller: _titleController,
-                          textCapitalization: TextCapitalization.sentences,
-                          decoration: InputDecoration(
-                            labelText: '${S.of(context).title} *',
-                            border: OutlineInputBorder(),
+                children: [
+                  Form(
+                    key: _formKey,
+                    child: Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Column(
+                        children: [
+                          TextFormField(
+                            controller: _titleController,
+                            textCapitalization: TextCapitalization.sentences,
+                            decoration: InputDecoration(
+                              labelText: '${S.of(context).title} *',
+                              border: OutlineInputBorder(),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return S.of(context).insertTitle;
+                              }
+                              return null;
+                            },
                           ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return S.of(context).insertTitle;
-                            }
-                            return null;
-                          },
-                        ),
-                ),
-              ),
-                Expanded(
-                  child: FleatherEditor(
-                    controller: _notesController,
-                    focusNode: _focusNode,
-                    editorKey: _editorKey,
-                    
-                    padding: EdgeInsets.only(
-                      left: 16,
-                      right: 16,
-                      bottom: MediaQuery.of(context).padding.bottom,
+                          SizedBox(height: 16),
+                          TagSelectionField(
+                            key: _tagSelectionKey,
+                            initialTags: widget.isEditing ? widget.journalEntry!.tags : [],
+                            predefinedTags: _predefinedTags,
+                            allTagNames: _allTagNames,
+                            tagDefinitions: _tagDefinitions,
+                            onTagsChanged: (tags) {
+                              setState(() {
+                                _selectedTags = tags;
+                              });
+                              if (widget.isEditing) {
+                                widget.journalEntry!.tags = tags;
+                              }
+                            },
+                            label: S.of(context).tags,
+                          ),
+                        ],
+                      ),
                     ),
-                    onLaunchUrl: _launchUrl,
-                    maxContentWidth: 800,
-                    embedBuilder: _embedBuilder,
-                    spellCheckConfiguration: SpellCheckConfiguration(
+                  ),
+                  Expanded(
+                    child: FleatherEditor(
+                      controller: _notesController,
+                      focusNode: _focusNode,
+                      editorKey: _editorKey,
+
+                      padding: EdgeInsets.only(left: 16, right: 16, bottom: MediaQuery.of(context).padding.bottom),
+                      onLaunchUrl: _launchUrl,
+                      maxContentWidth: 800,
+                      embedBuilder: _embedBuilder,
+                      spellCheckConfiguration: SpellCheckConfiguration(
                         spellCheckService: DefaultSpellCheckService(),
                         misspelledSelectionColor: Colors.red,
-                        misspelledTextStyle:
-                            DefaultTextStyle.of(context).style),
+                        misspelledTextStyle: DefaultTextStyle.of(context).style,
+                      ),
+                    ),
                   ),
-                ),
-                FleatherToolbar.basic(
-                    controller: _notesController, editorKey: _editorKey),
-              
-            ],   
-                  ),
+                  FleatherToolbar.basic(controller: _notesController, editorKey: _editorKey),
+                ],
+              ),
             ),
-            
           ],
         ),
       );
@@ -289,7 +327,7 @@ class AddJournalScreenState extends State<AddJournalScreen> {
                   positionText,
                   selection: TextSelection.collapsed(offset: selection.baseOffset + positionText.length),
                 );
-              }              
+              }
             },
           ),
           MenuAnchor(
@@ -316,22 +354,22 @@ class AddJournalScreenState extends State<AddJournalScreen> {
                     final directory = await getApplicationDocumentsDirectory();
                     final fileName = path.basename(pickedFile.path);
                     final savedImage = await File(pickedFile.path).copy('${directory.path}/$fileName');
-      
+
                     final selection = _notesController.selection;
                     _notesController.replaceText(
                       selection.baseOffset,
                       selection.extentOffset - selection.baseOffset,
-                      EmbeddableObject('image', inline: false, data: {
-                        'source_type': kIsWeb ? 'url' : 'file',
-                        'source': savedImage.path,
-                      }),
+                      EmbeddableObject(
+                        'image',
+                        inline: false,
+                        data: {'source_type': kIsWeb ? 'url' : 'file', 'source': savedImage.path},
+                      ),
                     );
                     _notesController.replaceText(
                       selection.baseOffset + 1,
                       0,
                       '\n',
-                      selection: TextSelection.collapsed(
-                          offset: selection.baseOffset + 2),
+                      selection: TextSelection.collapsed(offset: selection.baseOffset + 2),
                     );
                   }
                 },
@@ -346,17 +384,17 @@ class AddJournalScreenState extends State<AddJournalScreen> {
                     _notesController.replaceText(
                       selection.baseOffset,
                       selection.extentOffset - selection.baseOffset,
-                      EmbeddableObject('image', inline: false, data: {
-                        'source_type': kIsWeb ? 'url' : 'file',
-                        'source': image.path,
-                      }),
+                      EmbeddableObject(
+                        'image',
+                        inline: false,
+                        data: {'source_type': kIsWeb ? 'url' : 'file', 'source': image.path},
+                      ),
                     );
                     _notesController.replaceText(
                       selection.baseOffset + 1,
                       0,
                       '\n',
-                      selection: TextSelection.collapsed(
-                          offset: selection.baseOffset + 2),
+                      selection: TextSelection.collapsed(offset: selection.baseOffset + 2),
                     );
                   }
                 },
@@ -366,36 +404,33 @@ class AddJournalScreenState extends State<AddJournalScreen> {
           ),
         ],
       ),
-        body: Column(
-            children: [
-                Expanded(
-                  child: FleatherEditor(
-                    controller: _notesController,
-                    focusNode: _focusNode,
-                    editorKey: _editorKey,
-                    
-                    padding: EdgeInsets.only(
-                      left: 16,
-                      right: 16,
-                      bottom: MediaQuery.of(context).padding.bottom,
-                    ),
-                    onLaunchUrl: _launchUrl,
-                    maxContentWidth: 800,
-                    embedBuilder: _embedBuilder,
-                    spellCheckConfiguration: SpellCheckConfiguration(
-                        spellCheckService: DefaultSpellCheckService(),
-                        misspelledSelectionColor: Colors.red,
-                        misspelledTextStyle:
-                            DefaultTextStyle.of(context).style),
-                  ),
-                ),
-                FleatherToolbar.basic(
-                    controller: _notesController, editorKey: _editorKey),
-              Form(
-                key: _formKey,
-                child: Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: TextFormField(
+      body: Column(
+        children: [
+          Expanded(
+            child: FleatherEditor(
+              controller: _notesController,
+              focusNode: _focusNode,
+              editorKey: _editorKey,
+
+              padding: EdgeInsets.only(left: 16, right: 16, bottom: MediaQuery.of(context).padding.bottom),
+              onLaunchUrl: _launchUrl,
+              maxContentWidth: 800,
+              embedBuilder: _embedBuilder,
+              spellCheckConfiguration: SpellCheckConfiguration(
+                spellCheckService: DefaultSpellCheckService(),
+                misspelledSelectionColor: Colors.red,
+                misspelledTextStyle: DefaultTextStyle.of(context).style,
+              ),
+            ),
+          ),
+          FleatherToolbar.basic(controller: _notesController, editorKey: _editorKey),
+          Form(
+            key: _formKey,
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  TextFormField(
                     controller: _titleController,
                     textCapitalization: TextCapitalization.sentences,
                     decoration: InputDecoration(
@@ -403,32 +438,46 @@ class AddJournalScreenState extends State<AddJournalScreen> {
                       border: OutlineInputBorder(),
                     ),
                   ),
-                ),
-              ),
-              SafeArea(
-                child: Container(
-                    padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 16.0),
-                    width: double.infinity,
-                    child: Align(
-                      alignment: Alignment.centerRight,
-                      child: _isSubmitting
-                          ? const SizedBox(
-                        width: 24,
-                        height: 24,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          year2023: false,
-                        ),
-                      )
-                          : FilledButton(
-                        onPressed: _submitForm,
-                        child: Text(S.of(context).save),
-                      ),
-                    )
-                ),
-              ),
-            ],   
+                  SizedBox(height: 16),
+                  TagSelectionField(
+                    key: _tagSelectionKey,
+                    initialTags: widget.isEditing ? widget.journalEntry!.tags : [],
+                    predefinedTags: _predefinedTags,
+                    allTagNames: _allTagNames,
+                    tagDefinitions: _tagDefinitions,
+                    onTagsChanged: (tags) {
+                      setState(() {
+                        _selectedTags = tags;
+                      });
+                      if (widget.isEditing) {
+                        widget.journalEntry!.tags = tags;
+                      }
+                    },
+                    label: S.of(context).tags,
                   ),
+                ],
+              ),
+            ),
+          ),
+          SafeArea(
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 16.0),
+              width: double.infinity,
+              child: Align(
+                alignment: Alignment.centerRight,
+                child:
+                    _isSubmitting
+                        ? const SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(strokeWidth: 2, year2023: false),
+                        )
+                        : FilledButton(onPressed: _submitForm, child: Text(S.of(context).save)),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -451,9 +500,7 @@ class AddJournalScreenState extends State<AddJournalScreen> {
           child: Container(
             width: 300,
             height: 300,
-            decoration: BoxDecoration(
-              image: DecorationImage(image: image, fit: BoxFit.cover),
-            ),
+            decoration: BoxDecoration(image: DecorationImage(image: image, fit: BoxFit.cover)),
           ),
         );
       }
@@ -474,6 +521,9 @@ class AddJournalScreenState extends State<AddJournalScreen> {
 
   /// Validates and saves the journal entry using the provider layer.
   void _submitForm() async {
+    // Preserve a typed tag even when the user taps save without submitting the field.
+    _tagSelectionKey.currentState?.commitPendingTag();
+
     final journalProvider = Provider.of<FieldJournalProvider>(context, listen: false);
     final notesDeltaJson = jsonEncode(_notesController.document.toDelta().toList());
     final notesPlainText = plainTextFromDelta(notesDeltaJson).trim();
@@ -525,13 +575,14 @@ class AddJournalScreenState extends State<AddJournalScreen> {
           );
         }
       } else {
-        // Create Nest object with form data
+        // Create FieldJournal object with form data
         final newEntry = FieldJournal(
           title: _titleController.text,
           notes: notesDeltaJson,
           observer: _observerAbbrev,
           creationDate: DateTime.now(),
           lastModifiedDate: DateTime.now(),
+          tags: _selectedTags,
         );
 
         setState(() {
@@ -545,16 +596,15 @@ class AddJournalScreenState extends State<AddJournalScreen> {
           if (kDebugMode) {
             print('Error adding field journal entry: $error');
           }
-          
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                persist: true,
-                showCloseIcon: true,
-                backgroundColor: Theme.of(context).colorScheme.error,
-                content: Text(S.current.errorSavingJournalEntry),
-              ),
-            );
-          
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              persist: true,
+              showCloseIcon: true,
+              backgroundColor: Theme.of(context).colorScheme.error,
+              content: Text(S.current.errorSavingJournalEntry),
+            ),
+          );
         }
       }
     } else {

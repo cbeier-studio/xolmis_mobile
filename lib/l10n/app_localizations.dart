@@ -3277,6 +3277,120 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No valid journal entries found in the imported file.'**
   String get noValidJournalEntriesFoundInFile;
+
+  /// Label for tag selection field in journal entries
+  ///
+  /// In en, this message translates to:
+  /// **'Tags'**
+  String get tags;
+
+  /// Predefined journal tag for behavior observations
+  ///
+  /// In en, this message translates to:
+  /// **'Behavior'**
+  String get predefinedTagBehavior;
+
+  /// Predefined journal tag for feeding observations
+  ///
+  /// In en, this message translates to:
+  /// **'Feeding'**
+  String get predefinedTagFeeding;
+
+  /// Predefined journal tag for vocalization observations
+  ///
+  /// In en, this message translates to:
+  /// **'Vocalization'**
+  String get predefinedTagVocalization;
+
+  /// Predefined journal tag for identification notes
+  ///
+  /// In en, this message translates to:
+  /// **'Identification'**
+  String get predefinedTagIdentification;
+
+  /// Predefined journal tag for uncertain observations
+  ///
+  /// In en, this message translates to:
+  /// **'Doubt'**
+  String get predefinedTagDoubt;
+
+  /// Predefined journal tag for habitat notes
+  ///
+  /// In en, this message translates to:
+  /// **'Habitat'**
+  String get predefinedTagHabitat;
+
+  /// Predefined journal tag for weather notes
+  ///
+  /// In en, this message translates to:
+  /// **'Weather'**
+  String get predefinedTagWeather;
+
+  /// Predefined journal tag for checklist or list-related notes
+  ///
+  /// In en, this message translates to:
+  /// **'List'**
+  String get predefinedTagList;
+
+  /// Predefined journal tag for breeding observations
+  ///
+  /// In en, this message translates to:
+  /// **'Breeding'**
+  String get predefinedTagBreeding;
+
+  /// Predefined journal tag for seasonal arrival records
+  ///
+  /// In en, this message translates to:
+  /// **'Season arrival'**
+  String get predefinedTagSeasonArrival;
+
+  /// Predefined journal tag for fieldwork notes
+  ///
+  /// In en, this message translates to:
+  /// **'Fieldwork'**
+  String get predefinedTagFieldwork;
+
+  /// Button label for adding a tag to a journal entry
+  ///
+  /// In en, this message translates to:
+  /// **'Add tag'**
+  String get addTag;
+
+  /// Settings screen title for managing journal tags
+  ///
+  /// In en, this message translates to:
+  /// **'Manage tags'**
+  String get manageTags;
+
+  /// Input label for creating a custom tag
+  ///
+  /// In en, this message translates to:
+  /// **'New tag name'**
+  String get newTagName;
+
+  /// Badge for user-created tags
+  ///
+  /// In en, this message translates to:
+  /// **'Custom'**
+  String get customTag;
+
+  /// Badge for built-in predefined tags
+  ///
+  /// In en, this message translates to:
+  /// **'Predefined'**
+  String get predefinedTag;
+
+  /// Action to change a tag color
+  ///
+  /// In en, this message translates to:
+  /// **'Change tag color'**
+  String get changeTagColor;
+
+  /// Empty state for tag management list
+  ///
+  /// In en, this message translates to:
+  /// **'No tags found'**
+  String get noTagsFound;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

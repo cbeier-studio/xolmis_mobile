@@ -1803,4 +1803,61 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noValidJournalEntriesFoundInFile => 'No valid journal entries found in the imported file.';
+
+  @override
+  String get tags => 'Tags';
+
+  @override
+  String get predefinedTagBehavior => 'Behavior';
+
+  @override
+  String get predefinedTagFeeding => 'Feeding';
+
+  @override
+  String get predefinedTagVocalization => 'Vocalization';
+
+  @override
+  String get predefinedTagIdentification => 'Identification';
+
+  @override
+  String get predefinedTagDoubt => 'Doubt';
+
+  @override
+  String get predefinedTagHabitat => 'Habitat';
+
+  @override
+  String get predefinedTagWeather => 'Weather';
+
+  @override
+  String get predefinedTagList => 'List';
+
+  @override
+  String get predefinedTagBreeding => 'Breeding';
+
+  @override
+  String get predefinedTagSeasonArrival => 'Season arrival';
+
+  @override
+  String get predefinedTagFieldwork => 'Fieldwork';
+
+  @override
+  String get addTag => 'Add tag';
+
+  @override
+  String get manageTags => 'Manage tags';
+
+  @override
+  String get newTagName => 'New tag name';
+
+  @override
+  String get customTag => 'Custom';
+
+  @override
+  String get predefinedTag => 'Predefined';
+
+  @override
+  String get changeTagColor => 'Change tag color';
+
+  @override
+  String get noTagsFound => 'No tags found';
 }

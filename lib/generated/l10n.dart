@@ -5305,6 +5305,196 @@ class S {
       args: [],
     );
   }
+
+  /// `Tags`
+  String get tags {
+    return Intl.message(
+      'Tags',
+      name: 'tags',
+      desc: 'Label for tag selection field in journal entries',
+      args: [],
+    );
+  }
+
+  /// `Behavior`
+  String get predefinedTagBehavior {
+    return Intl.message(
+      'Behavior',
+      name: 'predefinedTagBehavior',
+      desc: 'Predefined journal tag for behavior observations',
+      args: [],
+    );
+  }
+
+  /// `Feeding`
+  String get predefinedTagFeeding {
+    return Intl.message(
+      'Feeding',
+      name: 'predefinedTagFeeding',
+      desc: 'Predefined journal tag for feeding observations',
+      args: [],
+    );
+  }
+
+  /// `Vocalization`
+  String get predefinedTagVocalization {
+    return Intl.message(
+      'Vocalization',
+      name: 'predefinedTagVocalization',
+      desc: 'Predefined journal tag for vocalization observations',
+      args: [],
+    );
+  }
+
+  /// `Identification`
+  String get predefinedTagIdentification {
+    return Intl.message(
+      'Identification',
+      name: 'predefinedTagIdentification',
+      desc: 'Predefined journal tag for identification notes',
+      args: [],
+    );
+  }
+
+  /// `Doubt`
+  String get predefinedTagDoubt {
+    return Intl.message(
+      'Doubt',
+      name: 'predefinedTagDoubt',
+      desc: 'Predefined journal tag for uncertain observations',
+      args: [],
+    );
+  }
+
+  /// `Habitat`
+  String get predefinedTagHabitat {
+    return Intl.message(
+      'Habitat',
+      name: 'predefinedTagHabitat',
+      desc: 'Predefined journal tag for habitat notes',
+      args: [],
+    );
+  }
+
+  /// `Weather`
+  String get predefinedTagWeather {
+    return Intl.message(
+      'Weather',
+      name: 'predefinedTagWeather',
+      desc: 'Predefined journal tag for weather notes',
+      args: [],
+    );
+  }
+
+  /// `List`
+  String get predefinedTagList {
+    return Intl.message(
+      'List',
+      name: 'predefinedTagList',
+      desc: 'Predefined journal tag for checklist or list-related notes',
+      args: [],
+    );
+  }
+
+  /// `Breeding`
+  String get predefinedTagBreeding {
+    return Intl.message(
+      'Breeding',
+      name: 'predefinedTagBreeding',
+      desc: 'Predefined journal tag for breeding observations',
+      args: [],
+    );
+  }
+
+  /// `Season arrival`
+  String get predefinedTagSeasonArrival {
+    return Intl.message(
+      'Season arrival',
+      name: 'predefinedTagSeasonArrival',
+      desc: 'Predefined journal tag for seasonal arrival records',
+      args: [],
+    );
+  }
+
+  /// `Fieldwork`
+  String get predefinedTagFieldwork {
+    return Intl.message(
+      'Fieldwork',
+      name: 'predefinedTagFieldwork',
+      desc: 'Predefined journal tag for fieldwork notes',
+      args: [],
+    );
+  }
+
+  /// `Add tag`
+  String get addTag {
+    return Intl.message(
+      'Add tag',
+      name: 'addTag',
+      desc: 'Button label for adding a tag to a journal entry',
+      args: [],
+    );
+  }
+
+  /// `Manage tags`
+  String get manageTags {
+    return Intl.message(
+      'Manage tags',
+      name: 'manageTags',
+      desc: 'Settings screen title for managing journal tags',
+      args: [],
+    );
+  }
+
+  /// `New tag name`
+  String get newTagName {
+    return Intl.message(
+      'New tag name',
+      name: 'newTagName',
+      desc: 'Input label for creating a custom tag',
+      args: [],
+    );
+  }
+
+  /// `Custom`
+  String get customTag {
+    return Intl.message(
+      'Custom',
+      name: 'customTag',
+      desc: 'Badge for user-created tags',
+      args: [],
+    );
+  }
+
+  /// `Predefined`
+  String get predefinedTag {
+    return Intl.message(
+      'Predefined',
+      name: 'predefinedTag',
+      desc: 'Badge for built-in predefined tags',
+      args: [],
+    );
+  }
+
+  /// `Change tag color`
+  String get changeTagColor {
+    return Intl.message(
+      'Change tag color',
+      name: 'changeTagColor',
+      desc: 'Action to change a tag color',
+      args: [],
+    );
+  }
+
+  /// `No tags found`
+  String get noTagsFound {
+    return Intl.message(
+      'No tags found',
+      name: 'noTagsFound',
+      desc: 'Empty state for tag management list',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

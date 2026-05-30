@@ -1,3 +1,5 @@
+import '../models/tag.dart';
+
 /// Represents a field journal entry stored locally by the app.
 class FieldJournal {
   late int? id;
@@ -6,6 +8,7 @@ class FieldJournal {
   final DateTime? creationDate;
   final DateTime? lastModifiedDate;
   String? observer;
+  List<JournalTag> tags;
 
   FieldJournal({
     this.id,
@@ -14,6 +17,7 @@ class FieldJournal {
     this.creationDate,
     this.lastModifiedDate,
     this.observer,
+    this.tags = const [],
   });
 
   /// Creates a [FieldJournal] from a SQLite row map.
@@ -52,6 +56,7 @@ class FieldJournal {
     DateTime? creationDate,
     DateTime? lastModifiedDate,
     String? observer,
+    List<JournalTag>? tags,
   }) {
     return FieldJournal(
       id: id ?? this.id,
@@ -60,6 +65,7 @@ class FieldJournal {
       creationDate: creationDate ?? this.creationDate,
       lastModifiedDate: lastModifiedDate ?? this.lastModifiedDate,
       observer: observer ?? this.observer,
+      tags: tags ?? this.tags,
     );
   }
 
@@ -71,7 +77,8 @@ class FieldJournal {
         'notes: $notes, '
         'creationDate: $creationDate, '
         'lastModifiedDate: $lastModifiedDate, '
-        'observer: $observer'
+        'observer: $observer, '
+        'tags: $tags'
         '}';
   }
 
@@ -84,11 +91,17 @@ class FieldJournal {
       'creationDate': creationDate?.toIso8601String(),
       'lastModifiedDate': lastModifiedDate?.toIso8601String(),
       'observer': observer,
+      'tags': tags.map((t) => t.toJson()).toList(),
     };
   }
 
   /// Creates a [FieldJournal] from a JSON map.
   factory FieldJournal.fromJson(Map<String, dynamic> json) {
+    final tagsList = (json['tags'] as List?)
+        ?.map((t) => JournalTag.fromJson(t))
+        .toList() ??
+        [];
+
     return FieldJournal(
       id: json['id'],
       title: json['title'],
@@ -96,6 +109,7 @@ class FieldJournal {
       creationDate: json['creationDate'] != null ? DateTime.parse(json['creationDate']) : null,
       lastModifiedDate: json['lastModifiedDate'] != null ? DateTime.parse(json['lastModifiedDate']) : null,
       observer: json['observer'],
+      tags: tagsList,
     );
   }
 }

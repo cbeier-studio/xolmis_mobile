@@ -2758,4 +2758,81 @@
         "type": "text",
         "description": "Error message when saving journal entry"
     }
+,
+  "tags": "Tags",
+  "@tags": {
+    "description": "Label for tag selection field in journal entries"
+  },
+  "predefinedTagBehavior": "Behavior",
+  "@predefinedTagBehavior": {
+    "description": "Predefined journal tag for behavior observations"
+  },
+  "predefinedTagFeeding": "Feeding",
+  "@predefinedTagFeeding": {
+    "description": "Predefined journal tag for feeding observations"
+  },
+  "predefinedTagVocalization": "Vocalization",
+  "@predefinedTagVocalization": {
+    "description": "Predefined journal tag for vocalization observations"
+  },
+  "predefinedTagIdentification": "Identification",
+  "@predefinedTagIdentification": {
+    "description": "Predefined journal tag for identification notes"
+  },
+  "predefinedTagDoubt": "Doubt",
+  "@predefinedTagDoubt": {
+    "description": "Predefined journal tag for uncertain observations"
+  },
+  "predefinedTagHabitat": "Habitat",
+  "@predefinedTagHabitat": {
+    "description": "Predefined journal tag for habitat notes"
+  },
+  "predefinedTagWeather": "Weather",
+  "@predefinedTagWeather": {
+    "description": "Predefined journal tag for weather notes"
+  },
+  "predefinedTagList": "List",
+  "@predefinedTagList": {
+    "description": "Predefined journal tag for checklist or list-related notes"
+  },
+  "predefinedTagBreeding": "Breeding",
+  "@predefinedTagBreeding": {
+    "description": "Predefined journal tag for breeding observations"
+  },
+  "predefinedTagSeasonArrival": "Season arrival",
+  "@predefinedTagSeasonArrival": {
+    "description": "Predefined journal tag for seasonal arrival records"
+  },
+  "predefinedTagFieldwork": "Fieldwork",
+  "@predefinedTagFieldwork": {
+    "description": "Predefined journal tag for fieldwork notes"
+  },
+  "addTag": "Add tag",
+  "@addTag": {
+    "description": "Button label for adding a tag to a journal entry"
+  },
+  "manageTags": "Manage tags",
+  "@manageTags": {
+    "description": "Settings screen title for managing journal tags"
+  },
+  "newTagName": "New tag name",
+  "@newTagName": {
+    "description": "Input label for creating a custom tag"
+  },
+  "customTag": "Custom",
+  "@customTag": {
+    "description": "Badge for user-created tags"
+  },
+  "predefinedTag": "Predefined",
+  "@predefinedTag": {
+    "description": "Badge for built-in predefined tags"
+  },
+  "changeTagColor": "Change tag color",
+  "@changeTagColor": {
+    "description": "Action to change a tag color"
+  },
+  "noTagsFound": "No tags found",
+  "@noTagsFound": {
+    "description": "Empty state for tag management list"
+  }
 }

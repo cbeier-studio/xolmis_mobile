@@ -1837,6 +1837,63 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get noValidJournalEntriesFoundInFile =>
       'Nenhuma entrada válida de diário foi encontrada no arquivo importado.';
+
+  @override
+  String get tags => 'Tags';
+
+  @override
+  String get predefinedTagBehavior => 'Comportamento';
+
+  @override
+  String get predefinedTagFeeding => 'Alimentação';
+
+  @override
+  String get predefinedTagVocalization => 'Vocalização';
+
+  @override
+  String get predefinedTagIdentification => 'Identificação';
+
+  @override
+  String get predefinedTagDoubt => 'Dúvida';
+
+  @override
+  String get predefinedTagHabitat => 'Habitat';
+
+  @override
+  String get predefinedTagWeather => 'Clima';
+
+  @override
+  String get predefinedTagList => 'Lista';
+
+  @override
+  String get predefinedTagBreeding => 'Reprodução';
+
+  @override
+  String get predefinedTagSeasonArrival => 'Chegada sazonal';
+
+  @override
+  String get predefinedTagFieldwork => 'Trabalho de campo';
+
+  @override
+  String get addTag => 'Adicionar tag';
+
+  @override
+  String get manageTags => 'Gerenciar tags';
+
+  @override
+  String get newTagName => 'Nome da nova tag';
+
+  @override
+  String get customTag => 'Personalizada';
+
+  @override
+  String get predefinedTag => 'Pré-definida';
+
+  @override
+  String get changeTagColor => 'Alterar cor da tag';
+
+  @override
+  String get noTagsFound => 'Nenhuma tag encontrada';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -3671,4 +3728,61 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   @override
   String get noValidJournalEntriesFoundInFile =>
       'Nenhuma entrada válida de diário foi encontrada no arquivo importado.';
+
+  @override
+  String get tags => 'Tags';
+
+  @override
+  String get predefinedTagBehavior => 'Comportamento';
+
+  @override
+  String get predefinedTagFeeding => 'Alimentação';
+
+  @override
+  String get predefinedTagVocalization => 'Vocalização';
+
+  @override
+  String get predefinedTagIdentification => 'Identificação';
+
+  @override
+  String get predefinedTagDoubt => 'Dúvida';
+
+  @override
+  String get predefinedTagHabitat => 'Habitat';
+
+  @override
+  String get predefinedTagWeather => 'Clima';
+
+  @override
+  String get predefinedTagList => 'Lista';
+
+  @override
+  String get predefinedTagBreeding => 'Reprodução';
+
+  @override
+  String get predefinedTagSeasonArrival => 'Chegada sazonal';
+
+  @override
+  String get predefinedTagFieldwork => 'Trabalho de campo';
+
+  @override
+  String get addTag => 'Adicionar tag';
+
+  @override
+  String get manageTags => 'Gerenciar tags';
+
+  @override
+  String get newTagName => 'Nome da nova tag';
+
+  @override
+  String get customTag => 'Personalizada';
+
+  @override
+  String get predefinedTag => 'Pré-definida';
+
+  @override
+  String get changeTagColor => 'Alterar cor da tag';
+
+  @override
+  String get noTagsFound => 'Nenhuma tag encontrada';
 }

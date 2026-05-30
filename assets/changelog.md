@@ -13,6 +13,8 @@
 * Export field journal notes to plain text, Markdown, Word, or JSON (experimental).
 * Import field journal notes from JSON file (experimental).
 * Added in settings an option to define what to do with existing records when importing data (ask, update or ignore).
+* Added tags for field journal notes.
+* Added option in settings to edit the available tags for field journal notes.
 
 ### Improvements
 

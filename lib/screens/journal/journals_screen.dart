@@ -30,6 +30,7 @@ class JournalsScreenState extends State<JournalsScreen> {
   final _searchController = TextEditingController();
   String _searchQuery = '';
   String? _selectedObserver;
+  String? _selectedTag;
   DateFilter? _selectedDateFilter;
   DateTimeRange? _selectedDateRange;
   Set<int> selectedJournals = {};
@@ -71,9 +72,7 @@ class JournalsScreenState extends State<JournalsScreen> {
       case DateFilter.today:
         return date.isAfter(todayStart) || date.isAtSameMomentAs(todayStart);
       case DateFilter.yesterday:
-        return (date.isAfter(yesterdayStart) ||
-                date.isAtSameMomentAs(yesterdayStart)) &&
-            date.isBefore(todayStart);
+        return (date.isAfter(yesterdayStart) || date.isAtSameMomentAs(yesterdayStart)) && date.isBefore(todayStart);
       case DateFilter.last7Days:
         return date.isAfter(weekStart) || date.isAtSameMomentAs(weekStart);
       case DateFilter.last30Days:
@@ -81,17 +80,14 @@ class JournalsScreenState extends State<JournalsScreen> {
       case DateFilter.last90Days:
         return date.isAfter(last90Start) || date.isAtSameMomentAs(last90Start);
       case DateFilter.last180Days:
-        return date.isAfter(last180Start) ||
-            date.isAtSameMomentAs(last180Start);
+        return date.isAfter(last180Start) || date.isAtSameMomentAs(last180Start);
       case DateFilter.last365Days:
-        return date.isAfter(last365Start) ||
-            date.isAtSameMomentAs(last365Start);
+        return date.isAfter(last365Start) || date.isAtSameMomentAs(last365Start);
       case DateFilter.customRange:
         if (_selectedDateRange == null) return true;
         // Ajuste para incluir o dia inteiro da data final (até 23:59:59)
         final endOfDay = _selectedDateRange!.end.add(const Duration(days: 1));
-        return (date.isAfter(_selectedDateRange!.start) ||
-            date.isAtSameMomentAs(_selectedDateRange!.start)) &&
+        return (date.isAfter(_selectedDateRange!.start) || date.isAtSameMomentAs(_selectedDateRange!.start)) &&
             date.isBefore(endOfDay);
     }
   }
@@ -124,86 +120,94 @@ class JournalsScreenState extends State<JournalsScreen> {
       context: context,
       builder: (context) {
         return SafeArea(
-            child: StatefulBuilder(
-          builder: (BuildContext context, StateSetter setModalState) {
-            return Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: SingleChildScrollView(
-                child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(S.of(context).sortBy, style: Theme.of(context).textTheme.bodyLarge),
-                  const SizedBox(height: 8),
-                  Wrap(
-                    spacing: 8.0, // Space between chips
-                    children: <Widget>[
-                      ChoiceChip(
-                        label: Text(S.current.journalEntries(1)),
-                        showCheckmark: false,
-                        selected: _sortField == JournalSortField.title,
-                        onSelected: (bool selected) {
-                          setModalState(() {
-                            _sortField = JournalSortField.title;
-                          });
-                          setState(() {
-                            _sortField = JournalSortField.title;
-                          });
-                        },
+          child: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setModalState) {
+              return Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(S.of(context).sortBy, style: Theme.of(context).textTheme.bodyLarge),
+                      const SizedBox(height: 8),
+                      Wrap(
+                        spacing: 8.0, // Space between chips
+                        children: <Widget>[
+                          ChoiceChip(
+                            label: Text(S.current.journalEntries(1)),
+                            showCheckmark: false,
+                            selected: _sortField == JournalSortField.title,
+                            onSelected: (bool selected) {
+                              setModalState(() {
+                                _sortField = JournalSortField.title;
+                              });
+                              setState(() {
+                                _sortField = JournalSortField.title;
+                              });
+                            },
+                          ),
+                          ChoiceChip(
+                            label: Text(S.current.creationTime),
+                            showCheckmark: false,
+                            selected: _sortField == JournalSortField.creationDate,
+                            onSelected: (bool selected) {
+                              setModalState(() {
+                                _sortField = JournalSortField.creationDate;
+                              });
+                              setState(() {
+                                _sortField = JournalSortField.creationDate;
+                              });
+                            },
+                          ),
+                          ChoiceChip(
+                            label: Text(S.current.lastModifiedTime),
+                            showCheckmark: false,
+                            selected: _sortField == JournalSortField.lastModifiedDate,
+                            onSelected: (bool selected) {
+                              setModalState(() {
+                                _sortField = JournalSortField.lastModifiedDate;
+                              });
+                              setState(() {
+                                _sortField = JournalSortField.lastModifiedDate;
+                              });
+                            },
+                          ),
+                        ],
                       ),
-                      ChoiceChip(
-                        label: Text(S.current.creationTime),
-                        showCheckmark: false,
-                        selected: _sortField == JournalSortField.creationDate,
-                        onSelected: (bool selected) {
+                      const Divider(),
+                      Text(S.of(context).direction, style: Theme.of(context).textTheme.bodyLarge),
+                      const SizedBox(height: 8),
+                      SegmentedButton<SortOrder>(
+                        segments: [
+                          ButtonSegment(
+                            value: SortOrder.ascending,
+                            label: Text(S.of(context).ascending),
+                            icon: const Icon(Icons.south_outlined),
+                          ),
+                          ButtonSegment(
+                            value: SortOrder.descending,
+                            label: Text(S.of(context).descending),
+                            icon: const Icon(Icons.north_outlined),
+                          ),
+                        ],
+                        selected: {_sortOrder},
+                        showSelectedIcon: false,
+                        onSelectionChanged: (Set<SortOrder> newSelection) {
                           setModalState(() {
-                            _sortField = JournalSortField.creationDate;
+                            _sortOrder = newSelection.first;
                           });
                           setState(() {
-                            _sortField = JournalSortField.creationDate;
-                          });
-                        },
-                      ),
-                      ChoiceChip(
-                        label: Text(S.current.lastModifiedTime),
-                        showCheckmark: false,
-                        selected: _sortField == JournalSortField.lastModifiedDate,
-                        onSelected: (bool selected) {
-                          setModalState(() {
-                            _sortField = JournalSortField.lastModifiedDate;
-                          });
-                          setState(() {
-                            _sortField = JournalSortField.lastModifiedDate;
+                            _sortOrder = newSelection.first;
                           });
                         },
                       ),
                     ],
                   ),
-                  const Divider(),
-                  Text(S.of(context).direction, style: Theme.of(context).textTheme.bodyLarge),
-                  const SizedBox(height: 8),
-                  SegmentedButton<SortOrder>(
-                    segments: [
-                      ButtonSegment(value: SortOrder.ascending, label: Text(S.of(context).ascending), icon: const Icon(Icons.south_outlined)),
-                      ButtonSegment(value: SortOrder.descending, label: Text(S.of(context).descending), icon: const Icon(Icons.north_outlined)),
-                    ],
-                    selected: {_sortOrder},
-                    showSelectedIcon: false,
-                    onSelectionChanged: (Set<SortOrder> newSelection) {
-                      setModalState(() {
-                        _sortOrder = newSelection.first;
-                      });
-                      setState(() {
-                        _sortOrder = newSelection.first;
-                      });
-                    },
-                  ),
-                ],
-              ),
-              ),
-            );
-          },
-            ),
+                ),
+              );
+            },
+          ),
         );
       },
     );
@@ -211,14 +215,11 @@ class JournalsScreenState extends State<JournalsScreen> {
 
   /// Returns all distinct observer values available in the loaded entries.
   List<String> _getUniqueObservers() {
-    final entries =
-        journalProvider.journalEntries;
+    final entries = journalProvider.journalEntries;
 
     final observers =
         entries
-            .where(
-              (entry) => entry.observer != null && entry.observer!.isNotEmpty,
-            )
+            .where((entry) => entry.observer != null && entry.observer!.isNotEmpty)
             .map((entry) => entry.observer!)
             .toSet()
             .toList();
@@ -227,41 +228,49 @@ class JournalsScreenState extends State<JournalsScreen> {
     return observers;
   }
 
+  /// Returns all distinct tag names available in the loaded entries.
+  List<String> _getUniqueTags() {
+    final entries = journalProvider.journalEntries;
+
+    final tags =
+        entries
+            .expand((entry) => entry.tags)
+            .map((tag) => tag.name)
+            .where((name) => name.trim().isNotEmpty)
+            .toSet()
+            .toList();
+
+    tags.sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
+    return tags;
+  }
+
   /// Applies the active filters and sorting options to [journalEntries].
   List<FieldJournal> _filterJournalEntries(List<FieldJournal> journalEntries) {
     List<FieldJournal> filtered = journalEntries;
 
     // Filtro por data (usa startTime)
     if (_selectedDateFilter != null) {
-      filtered =
-          filtered
-              .where(
-                (entry) =>
-                    _isWithinDateFilter(entry.creationDate, _selectedDateFilter),
-              )
-              .toList();
+      filtered = filtered.where((entry) => _isWithinDateFilter(entry.creationDate, _selectedDateFilter)).toList();
     }
 
     // Filtro por busca textual
     if (_searchQuery.isNotEmpty) {
       final query = _searchQuery.toLowerCase();
+      filtered = filtered.where((entry) => plainTextFromDelta(entry.notes).toLowerCase().contains(query)).toList();
+    }
+
+    // Filtro por tag
+    if (_selectedTag != null && _selectedTag!.trim().isNotEmpty) {
+      final selectedTag = _selectedTag!.trim().toLowerCase();
       filtered =
-          filtered
-              .where(
-                (entry) =>
-                    plainTextFromDelta(entry.notes).toLowerCase().contains(query),
-              )
-              .toList();
+          filtered.where((entry) => entry.tags.any((tag) => tag.name.trim().toLowerCase() == selectedTag)).toList();
     }
 
     return _sortJournalEntries(filtered);
   }
 
   /// Resolves the journal entry that should be shown in the detail pane.
-  FieldJournal? _getEffectiveSelectedJournalEntry(
-    List<FieldJournal> filteredEntries,
-    bool isSplitScreen,
-  ) {
+  FieldJournal? _getEffectiveSelectedJournalEntry(List<FieldJournal> filteredEntries, bool isSplitScreen) {
     if (!isSplitScreen || filteredEntries.isEmpty) {
       return _selectedJournalEntry;
     }
@@ -270,9 +279,7 @@ class JournalsScreenState extends State<JournalsScreen> {
       return filteredEntries.first;
     }
 
-    final selectedIndex = filteredEntries.indexWhere(
-      (entry) => entry.id == _selectedJournalEntry!.id,
-    );
+    final selectedIndex = filteredEntries.indexWhere((entry) => entry.id == _selectedJournalEntry!.id);
 
     if (selectedIndex == -1) {
       return filteredEntries.first;
@@ -282,12 +289,8 @@ class JournalsScreenState extends State<JournalsScreen> {
   }
 
   /// Returns the identifier of the journal entry currently selected for details.
-  int? _getEffectiveSelectedJournalEntryId(
-    List<FieldJournal> filteredEntries,
-    bool isSplitScreen,
-  ) {
-    return _getEffectiveSelectedJournalEntry(filteredEntries, isSplitScreen)
-        ?.id;
+  int? _getEffectiveSelectedJournalEntryId(List<FieldJournal> filteredEntries, bool isSplitScreen) {
+    return _getEffectiveSelectedJournalEntry(filteredEntries, isSplitScreen)?.id;
   }
 
   /// Opens the add-journal flow using a dialog or route depending on screen size.
@@ -297,13 +300,8 @@ class JournalsScreenState extends State<JournalsScreen> {
         context: context,
         builder: (context) {
           return Dialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16.0),
-            ),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 800),
-              child: const AddJournalScreen(),
-            ),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
+            child: ConstrainedBox(constraints: const BoxConstraints(maxWidth: 800), child: const AddJournalScreen()),
           );
         },
       ).then((newEntry) {
@@ -313,10 +311,7 @@ class JournalsScreenState extends State<JournalsScreen> {
         }
       });
     } else {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const AddJournalScreen()),
-      ).then((newEntry) {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => const AddJournalScreen())).then((newEntry) {
         // Reload the specimen list
         if (newEntry != null) {
           journalProvider.fetchJournalEntries();
@@ -334,9 +329,15 @@ class JournalsScreenState extends State<JournalsScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(S.of(context).confirmDelete),
-          content: Text(S
-              .of(context)
-              .confirmDeleteMessage(selectedJournals.length, "female", S.of(context).journalEntries(selectedJournals.length))),
+          content: Text(
+            S
+                .of(context)
+                .confirmDeleteMessage(
+                  selectedJournals.length,
+                  "female",
+                  S.of(context).journalEntries(selectedJournals.length),
+                ),
+          ),
           actions: <Widget>[
             TextButton(
               onPressed: () {
@@ -391,112 +392,110 @@ class JournalsScreenState extends State<JournalsScreen> {
     final isMenuShown = screenWidth < kDesktopBreakpoint;
 
     return Scaffold(
-      appBar: !isSplitScreen ? AppBar(
-        title: SearchBar(
-          controller: _searchController,
-          hintText: S.of(context).fieldJournal,
-          elevation: WidgetStateProperty.all(0),
-          leading: isMenuShown ? Builder(
-          builder: (context) => IconButton(
-            icon: const Icon(Icons.menu_outlined),
-            onPressed: () {
-              widget.scaffoldKey.currentState?.openDrawer();
-            },
-          ),
-        ) : const SizedBox.shrink(),
-          trailing: [
-            _searchController.text.isNotEmpty
-                ? IconButton(
-              icon: const Icon(Icons.clear_outlined),
-              onPressed: () {
-                setState(() {
-                  _searchQuery = '';
-                  _searchController.clear();
-                });
-              },
-            ) : const SizedBox.shrink(),
-            IconButton(
-              icon: const Icon(Icons.sort_outlined),
-              tooltip: S.of(context).sortBy,
-              onPressed: () {
-                _showSortOptionsBottomSheet();
-              },
-            ),
-            
-              MediaQuery.sizeOf(context).width < 600
-              ? IconButton(
-            icon: const Icon(Icons.more_vert_outlined),
-            onPressed: () {
-              _showMoreOptionsBottomSheet(context);
-            },
-          )
-              : MenuAnchor(
-            builder: (context, controller, child) {
-              return IconButton(
-                icon: const Icon(Icons.more_vert_outlined),
-                onPressed: () {
-                  if (controller.isOpen) {
-                    controller.close();
-                  } else {
-                    controller.open();
-                  }
-                },
-              );
-            },
-            menuChildren: [
-              // Action to select all journal entries
-              MenuItemButton(
-                leadingIcon: const Icon(Icons.library_add_check_outlined),
-                onPressed: () {
-                  final filteredJournals = _filterJournalEntries(journalProvider.journalEntries);
-                  setState(() {
-                    selectedJournals = filteredJournals
-                        .map((journal) => journal.id)
-                        .whereType<int>()
-                        .toSet();
-                  });
-                },
-                child: Text(S.of(context).selectAll),
-              ),
-              // Action to import journal entries from JSON
-              MenuItemButton(
-                leadingIcon: const Icon(Icons.file_open_outlined),
-                onPressed: () async {
-                  await importJournalsFromJson(context);
-                },
-                child: Text(S.of(context).import),
-              ),
-            ],
-          ),
-          ],
-          onChanged: (query) {
-            setState(() {
-              _searchQuery = query;
-            });
-          },
-        ),
-        actions: [
-          
-        ],
-      ) : null,
+      appBar:
+          !isSplitScreen
+              ? AppBar(
+                title: SearchBar(
+                  controller: _searchController,
+                  hintText: S.of(context).fieldJournal,
+                  elevation: WidgetStateProperty.all(0),
+                  leading:
+                      isMenuShown
+                          ? Builder(
+                            builder:
+                                (context) => IconButton(
+                                  icon: const Icon(Icons.menu_outlined),
+                                  onPressed: () {
+                                    widget.scaffoldKey.currentState?.openDrawer();
+                                  },
+                                ),
+                          )
+                          : const SizedBox.shrink(),
+                  trailing: [
+                    _searchController.text.isNotEmpty
+                        ? IconButton(
+                          icon: const Icon(Icons.clear_outlined),
+                          onPressed: () {
+                            setState(() {
+                              _searchQuery = '';
+                              _searchController.clear();
+                            });
+                          },
+                        )
+                        : const SizedBox.shrink(),
+                    IconButton(
+                      icon: const Icon(Icons.sort_outlined),
+                      tooltip: S.of(context).sortBy,
+                      onPressed: () {
+                        _showSortOptionsBottomSheet();
+                      },
+                    ),
+
+                    MediaQuery.sizeOf(context).width < 600
+                        ? IconButton(
+                          icon: const Icon(Icons.more_vert_outlined),
+                          onPressed: () {
+                            _showMoreOptionsBottomSheet(context);
+                          },
+                        )
+                        : MenuAnchor(
+                          builder: (context, controller, child) {
+                            return IconButton(
+                              icon: const Icon(Icons.more_vert_outlined),
+                              onPressed: () {
+                                if (controller.isOpen) {
+                                  controller.close();
+                                } else {
+                                  controller.open();
+                                }
+                              },
+                            );
+                          },
+                          menuChildren: [
+                            // Action to select all journal entries
+                            MenuItemButton(
+                              leadingIcon: const Icon(Icons.library_add_check_outlined),
+                              onPressed: () {
+                                final filteredJournals = _filterJournalEntries(journalProvider.journalEntries);
+                                setState(() {
+                                  selectedJournals =
+                                      filteredJournals.map((journal) => journal.id).whereType<int>().toSet();
+                                });
+                              },
+                              child: Text(S.of(context).selectAll),
+                            ),
+                            // Action to import journal entries from JSON
+                            MenuItemButton(
+                              leadingIcon: const Icon(Icons.file_open_outlined),
+                              onPressed: () async {
+                                await importJournalsFromJson(context);
+                              },
+                              child: Text(S.of(context).import),
+                            ),
+                          ],
+                        ),
+                  ],
+                  onChanged: (query) {
+                    setState(() {
+                      _searchQuery = query;
+                    });
+                  },
+                ),
+                actions: [],
+              )
+              : null,
       body: LayoutBuilder(
         builder: (context, constraints) {
           // On large screens we show a split screen master/detail
           if (isSplitScreen) {
-            final leftPaneWidth =
-                (constraints.maxWidth * 0.4).clamp(kSideSheetWidth, 520.0);
+            final leftPaneWidth = (constraints.maxWidth * 0.4).clamp(kSideSheetWidth, 520.0);
             return Row(
               children: [
                 // Left: list pane with bounded width for better readability.
-                Container(
-                  width: leftPaneWidth,
-                  child: _buildListPane(context, isSplitScreen, isMenuShown),
-                ),
+                Container(width: leftPaneWidth, child: _buildListPane(context, isSplitScreen, isMenuShown)),
                 VerticalDivider(),
                 // Right: detail pane
-                Expanded(
-                  child: _buildDetailPane(context),
-                ),
+                Expanded(child: _buildDetailPane(context)),
               ],
             );
           } else {
@@ -505,9 +504,10 @@ class JournalsScreenState extends State<JournalsScreen> {
           }
         },
       ),
-      floatingActionButtonLocation: selectedJournals.isNotEmpty
-          ? FloatingActionButtonLocation.endContained
-          : FloatingActionButtonLocation.endFloat,
+      floatingActionButtonLocation:
+          selectedJournals.isNotEmpty
+              ? FloatingActionButtonLocation.endContained
+              : FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
         tooltip: S.of(context).newJournalEntry,
         onPressed: () {
@@ -515,186 +515,188 @@ class JournalsScreenState extends State<JournalsScreen> {
         },
         child: const Icon(Icons.note_add_outlined),
       ),
-      bottomNavigationBar: selectedJournals.isNotEmpty
-          ? BottomAppBar(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            IconButton(
-              icon: const Icon(Icons.delete_outlined),
-              tooltip: S.of(context).delete,
-              color: Colors.red,
-              onPressed: _deleteSelectedEntries,
-            ),
-            const VerticalDivider(),
-            MenuAnchor(
-              builder: (context, controller, child) {
-                return IconButton(
-                  icon: const Icon(Icons.share_outlined),
-                  tooltip: S.of(context).exportWhat(
-                    S.of(context).journalEntries(2).toLowerCase(),
-                  ),
-                  onPressed: () {
-                    if (controller.isOpen) {
-                      controller.close();
-                    } else {
-                      controller.open();
-                    }
-                  },
-                );
-              },
-              menuChildren: [
-                MenuItemButton(
-                  onPressed: () async {
-                    final journals = await _getSelectedJournalEntries();
-                    await exportSelectedJournalsToTxt(context, journals);
-                    if (!mounted) return;
-                    setState(() {
-                      selectedJournals.clear();
-                    });
-                  },
-                  child: Text(S.current.plainText),
+      bottomNavigationBar:
+          selectedJournals.isNotEmpty
+              ? BottomAppBar(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.delete_outlined),
+                      tooltip: S.of(context).delete,
+                      color: Colors.red,
+                      onPressed: _deleteSelectedEntries,
+                    ),
+                    const VerticalDivider(),
+                    MenuAnchor(
+                      builder: (context, controller, child) {
+                        return IconButton(
+                          icon: const Icon(Icons.share_outlined),
+                          tooltip: S.of(context).exportWhat(S.of(context).journalEntries(2).toLowerCase()),
+                          onPressed: () {
+                            if (controller.isOpen) {
+                              controller.close();
+                            } else {
+                              controller.open();
+                            }
+                          },
+                        );
+                      },
+                      menuChildren: [
+                        MenuItemButton(
+                          onPressed: () async {
+                            final journals = await _getSelectedJournalEntries();
+                            await exportSelectedJournalsToTxt(context, journals);
+                            if (!mounted) return;
+                            setState(() {
+                              selectedJournals.clear();
+                            });
+                          },
+                          child: Text(S.current.plainText),
+                        ),
+                        MenuItemButton(
+                          onPressed: () async {
+                            final journals = await _getSelectedJournalEntries();
+                            await exportSelectedJournalsToMarkdown(context, journals);
+                            if (!mounted) return;
+                            setState(() {
+                              selectedJournals.clear();
+                            });
+                          },
+                          child: const Text('Markdown'),
+                        ),
+                        MenuItemButton(
+                          onPressed: () async {
+                            final journals = await _getSelectedJournalEntries();
+                            await exportSelectedJournalsToWord(context, journals);
+                            if (!mounted) return;
+                            setState(() {
+                              selectedJournals.clear();
+                            });
+                          },
+                          child: const Text('Word'),
+                        ),
+                        MenuItemButton(
+                          onPressed: () async {
+                            final journals = await _getSelectedJournalEntries();
+                            await exportSelectedJournalsToJson(context, journals);
+                            if (!mounted) return;
+                            setState(() {
+                              selectedJournals.clear();
+                            });
+                          },
+                          child: const Text('JSON'),
+                        ),
+                      ],
+                    ),
+                    const VerticalDivider(),
+                    // Option to clear the selected specimens
+                    IconButton(
+                      icon: const Icon(Icons.clear_outlined),
+                      tooltip: S.current.clearSelection,
+                      onPressed: () {
+                        setState(() {
+                          selectedJournals.clear();
+                        });
+                      },
+                    ),
+                  ],
                 ),
-                MenuItemButton(
-                  onPressed: () async {
-                    final journals = await _getSelectedJournalEntries();
-                    await exportSelectedJournalsToMarkdown(context, journals);
-                    if (!mounted) return;
-                    setState(() {
-                      selectedJournals.clear();
-                    });
-                  },
-                  child: const Text('Markdown'),
-                ),
-                MenuItemButton(
-                  onPressed: () async {
-                    final journals = await _getSelectedJournalEntries();
-                    await exportSelectedJournalsToWord(context, journals);
-                    if (!mounted) return;
-                    setState(() {
-                      selectedJournals.clear();
-                    });
-                  },
-                  child: const Text('Word'),
-                ),
-                MenuItemButton(
-                  onPressed: () async {
-                    final journals = await _getSelectedJournalEntries();
-                    await exportSelectedJournalsToJson(context, journals);
-                    if (!mounted) return;
-                    setState(() {
-                      selectedJournals.clear();
-                    });
-                  },
-                  child: const Text('JSON'),
-                ),
-              ],
-            ),
-            const VerticalDivider(),
-            // Option to clear the selected specimens
-            IconButton(
-              icon: const Icon(Icons.clear_outlined),
-              tooltip: S.current.clearSelection,
-              onPressed: () {
-                setState(() {
-                  selectedJournals.clear();
-                });
-              },
-            ),
-          ],
-        ),
-      )
-          : null,
+              )
+              : null,
     );
   }
 
   /// Builds the master list pane for the journal screen.
   Widget _buildListPane(BuildContext context, bool isSplitScreen, bool isMenuShown) {
     return Column(
-        children: [
-          if (isSplitScreen) const SizedBox(height: 16.0),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
-            child: isSplitScreen ? SearchBar(
-          controller: _searchController,
-          hintText: S.of(context).fieldJournal,
-          elevation: WidgetStateProperty.all(0),
-              leading: isMenuShown
-                  ? Builder(
-                builder: (context) => IconButton(
-                  icon: const Icon(Icons.menu_outlined),
-                  onPressed: () {
-                    widget.scaffoldKey.currentState?.openDrawer();
-                  },
-                ),
-              )
-                  : const SizedBox.shrink(),
-          trailing: [
-            _searchController.text.isNotEmpty
-                ? IconButton(
-              icon: const Icon(Icons.clear_outlined),
-              onPressed: () {
-                setState(() {
-                  _searchQuery = '';
-                  _searchController.clear();
-                });
-              },
-            )
-                : const SizedBox.shrink(),
-            IconButton(
-              icon: const Icon(Icons.sort_outlined),
-              tooltip: S.of(context).sortBy,
-              onPressed: () {
-                _showSortOptionsBottomSheet();
-              },
-            ),
-            MenuAnchor(
-            builder: (context, controller, child) {
-              return IconButton(
-                icon: const Icon(Icons.more_vert_outlined),
-                onPressed: () {
-                  if (controller.isOpen) {
-                    controller.close();
-                  } else {
-                    controller.open();
-                  }
-                },
-              );
-            },
-            menuChildren: [
-              // Action to select all journal entries
-              MenuItemButton(
-                leadingIcon: const Icon(Icons.library_add_check_outlined),
-                onPressed: () {
-                  final filteredJournals = _filterJournalEntries(journalProvider.journalEntries);
-                  setState(() {
-                    selectedJournals = filteredJournals
-                        .map((journal) => journal.id)
-                        .whereType<int>()
-                        .toSet();
-                  });
-                },
-                child: Text(S.of(context).selectAll),
-              ),
-              // Action to import journal entries from JSON
-              MenuItemButton(
-                leadingIcon: const Icon(Icons.file_open_outlined),
-                onPressed: () async {
-                  await importJournalsFromJson(context);
-                },
-                child: Text(S.of(context).import),
-              ),
-            ],
-          ),
-          ],
-          onChanged: (query) {
-            setState(() {
-              _searchQuery = query;
-            });
-          },
-        ) : null,
-          ),
-          Padding(
+      children: [
+        if (isSplitScreen) const SizedBox(height: 16.0),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
+          child:
+              isSplitScreen
+                  ? SearchBar(
+                    controller: _searchController,
+                    hintText: S.of(context).fieldJournal,
+                    elevation: WidgetStateProperty.all(0),
+                    leading:
+                        isMenuShown
+                            ? Builder(
+                              builder:
+                                  (context) => IconButton(
+                                    icon: const Icon(Icons.menu_outlined),
+                                    onPressed: () {
+                                      widget.scaffoldKey.currentState?.openDrawer();
+                                    },
+                                  ),
+                            )
+                            : const SizedBox.shrink(),
+                    trailing: [
+                      _searchController.text.isNotEmpty
+                          ? IconButton(
+                            icon: const Icon(Icons.clear_outlined),
+                            onPressed: () {
+                              setState(() {
+                                _searchQuery = '';
+                                _searchController.clear();
+                              });
+                            },
+                          )
+                          : const SizedBox.shrink(),
+                      IconButton(
+                        icon: const Icon(Icons.sort_outlined),
+                        tooltip: S.of(context).sortBy,
+                        onPressed: () {
+                          _showSortOptionsBottomSheet();
+                        },
+                      ),
+                      MenuAnchor(
+                        builder: (context, controller, child) {
+                          return IconButton(
+                            icon: const Icon(Icons.more_vert_outlined),
+                            onPressed: () {
+                              if (controller.isOpen) {
+                                controller.close();
+                              } else {
+                                controller.open();
+                              }
+                            },
+                          );
+                        },
+                        menuChildren: [
+                          // Action to select all journal entries
+                          MenuItemButton(
+                            leadingIcon: const Icon(Icons.library_add_check_outlined),
+                            onPressed: () {
+                              final filteredJournals = _filterJournalEntries(journalProvider.journalEntries);
+                              setState(() {
+                                selectedJournals =
+                                    filteredJournals.map((journal) => journal.id).whereType<int>().toSet();
+                              });
+                            },
+                            child: Text(S.of(context).selectAll),
+                          ),
+                          // Action to import journal entries from JSON
+                          MenuItemButton(
+                            leadingIcon: const Icon(Icons.file_open_outlined),
+                            onPressed: () async {
+                              await importJournalsFromJson(context);
+                            },
+                            child: Text(S.of(context).import),
+                          ),
+                        ],
+                      ),
+                    ],
+                    onChanged: (query) {
+                      setState(() {
+                        _searchQuery = query;
+                      });
+                    },
+                  )
+                  : null,
+        ),
+        Padding(
           padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
           child: Row(
             children: [
@@ -712,17 +714,16 @@ class JournalsScreenState extends State<JournalsScreen> {
                             final end = DateFormat('dd/MM/yyyy').format(_selectedDateRange!.end);
                             label = "$start - $end";
                           } else {
-                            label = _selectedDateFilter != null
-                                ? _dateFilterLabels[_selectedDateFilter]!
-                                : S.of(context).date;
+                            label =
+                                _selectedDateFilter != null
+                                    ? _dateFilterLabels[_selectedDateFilter]!
+                                    : S.of(context).date;
                           }
 
                           return FilterChip(
                             label: Text(label),
                             avatar: _selectedDateFilter == null ? const Icon(Icons.calendar_today_outlined) : null,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
                             visualDensity: VisualDensity.compact,
                             onSelected: (selected) {
                               if (selected) {
@@ -770,13 +771,9 @@ class JournalsScreenState extends State<JournalsScreen> {
                       MenuAnchor(
                         builder: (context, controller, child) {
                           return FilterChip(
-                            label: Text(
-                              _selectedObserver ?? S.current.observer,
-                            ),
+                            label: Text(_selectedObserver ?? S.current.observer),
                             avatar: _selectedObserver == null ? Icon(Icons.person_outlined) : null,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
                             visualDensity: VisualDensity.compact,
                             onSelected: (selected) {
                               if (selected) {
@@ -803,6 +800,39 @@ class JournalsScreenState extends State<JournalsScreen> {
                           }),
                         ],
                       ),
+                      const SizedBox(width: 8.0),
+                      MenuAnchor(
+                        builder: (context, controller, child) {
+                          return FilterChip(
+                            label: Text(_selectedTag ?? S.current.tags),
+                            avatar: _selectedTag == null ? const Icon(Icons.local_offer_outlined) : null,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+                            visualDensity: VisualDensity.compact,
+                            onSelected: (selected) {
+                              if (selected) {
+                                controller.open();
+                              } else {
+                                setState(() {
+                                  _selectedTag = null;
+                                });
+                              }
+                            },
+                            selected: _selectedTag != null,
+                          );
+                        },
+                        menuChildren: [
+                          ..._getUniqueTags().map((tagName) {
+                            return MenuItemButton(
+                              onPressed: () {
+                                setState(() {
+                                  _selectedTag = tagName;
+                                });
+                              },
+                              child: Text(tagName),
+                            );
+                          }),
+                        ],
+                      ),
                     ],
                   ),
                 ),
@@ -810,136 +840,132 @@ class JournalsScreenState extends State<JournalsScreen> {
             ],
           ),
         ),
-          Expanded(
-              child: Consumer<FieldJournalProvider>(
-                builder: (context, journalProvider, child) {
-                  final filteredEntries =
-                  _filterJournalEntries(journalProvider.journalEntries);
+        Expanded(
+          child: Consumer<FieldJournalProvider>(
+            builder: (context, journalProvider, child) {
+              final filteredEntries = _filterJournalEntries(journalProvider.journalEntries);
 
-                  final effectiveSelectedEntry =
-                      _getEffectiveSelectedJournalEntry(
-                        filteredEntries,
-                        isSplitScreen,
-                      );
+              final effectiveSelectedEntry = _getEffectiveSelectedJournalEntry(filteredEntries, isSplitScreen);
 
-                  if (isSplitScreen &&
-                      effectiveSelectedEntry != null &&
-                      _selectedJournalEntry?.id != effectiveSelectedEntry.id) {
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      if (!mounted) return;
-                      setState(() {
-                        _selectedJournalEntry = effectiveSelectedEntry;
-                      });
-                    });
-                  }
-
-                  if (filteredEntries.isEmpty) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.note_outlined,
-                            size: 48,
-                            color: Theme.of(context).colorScheme.surfaceDim,
-                          ),
-                          const SizedBox(height: 8),
-                          Text(S.of(context).noJournalEntriesFound),
-                          const SizedBox(height: 8),
-                          ActionChip(
-                            label: Text(S.of(context).newJournalEntry),
-                            avatar: const Icon(Icons.add_outlined),
-                            onPressed: () {
-                              _showAddJournalScreen(context);
-                            },
-                          ),
-                          const SizedBox(height: 8),
-                          ActionChip(
-                            label: Text(S.of(context).import),
-                            avatar: const Icon(Icons.file_open_outlined),
-                            onPressed: () async {
-                              await importJournalsFromJson(context);
-                              await journalProvider.fetchJournalEntries();
-                            },
-                          ),
-                          if (_searchQuery.isNotEmpty) ...[
-                            const SizedBox(height: 8),
-                            ActionChip(
-                                label: Text(S.of(context).clearFilters),
-                                avatar: const Icon(Icons.search_off_outlined),
-                                onPressed: () async {
-                                  setState(() {
-                                    _searchQuery = '';
-                                    _searchController.clear();
-                                  });
-                                }
-                            ),
-                          ],
-                          const SizedBox(height: 8),
-                          ActionChip(
-                            label: Text(S.of(context).refresh),
-                            avatar: const Icon(Icons.refresh_outlined),
-                            onPressed: () async {
-                              await journalProvider.fetchJournalEntries();
-                            },
-                          ),
-                        ],
-                      ),
-                    );
-                  }
-
-                  return RefreshIndicator(
-                    onRefresh: () async {
-                      await journalProvider.fetchJournalEntries();
-                    },
-                child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
-                child: Text(
-                  '${filteredEntries.length} ${S.of(context).journalEntries(filteredEntries.length).toLowerCase()}',
-                ),
-              ),
-              Expanded(
-                child: LayoutBuilder(builder:
-                    (BuildContext context, BoxConstraints constraints) {
-                    return ListView.builder(
-                      padding: EdgeInsetsGeometry.fromLTRB(8, 0, 8, 0),
-                      shrinkWrap: true,
-                      itemCount: filteredEntries.length,
-                      itemBuilder: (context, index) {
-                        final entry = filteredEntries[index];
-                        final isSelected = selectedJournals.contains(entry.id);
-                        final isLargeScreen = MediaQuery.sizeOf(context).width >= kTabletBreakpoint;
-                        return Card(
-                            color: isSelected ? isLargeScreen
-                                ? Theme.of(context).colorScheme.secondaryContainer
-                                : Theme.of(context).colorScheme.primaryContainer : Colors.amber[50],
-                            child: journalListTileItem(filteredEntries, index, context)
-                        );
-                      },
-                    );
-                  
-                }),
-              ),
-            ],
-                )
-                  );
+              if (isSplitScreen &&
+                  effectiveSelectedEntry != null &&
+                  _selectedJournalEntry?.id != effectiveSelectedEntry.id) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (!mounted) return;
+                  setState(() {
+                    _selectedJournalEntry = effectiveSelectedEntry;
+                  });
+                });
               }
-            
-          ))
-        ],
-      );
+
+              if (filteredEntries.isEmpty) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(Icons.note_outlined, size: 48, color: Theme.of(context).colorScheme.surfaceDim),
+                      const SizedBox(height: 8),
+                      Text(S.of(context).noJournalEntriesFound),
+                      const SizedBox(height: 8),
+                      ActionChip(
+                        label: Text(S.of(context).newJournalEntry),
+                        avatar: const Icon(Icons.add_outlined),
+                        onPressed: () {
+                          _showAddJournalScreen(context);
+                        },
+                      ),
+                      const SizedBox(height: 8),
+                      ActionChip(
+                        label: Text(S.of(context).import),
+                        avatar: const Icon(Icons.file_open_outlined),
+                        onPressed: () async {
+                          await importJournalsFromJson(context);
+                          await journalProvider.fetchJournalEntries();
+                        },
+                      ),
+                      if (_searchQuery.isNotEmpty) ...[
+                        const SizedBox(height: 8),
+                        ActionChip(
+                          label: Text(S.of(context).clearFilters),
+                          avatar: const Icon(Icons.search_off_outlined),
+                          onPressed: () async {
+                            setState(() {
+                              _searchQuery = '';
+                              _searchController.clear();
+                              _selectedDateFilter = null;
+                              _selectedDateRange = null;
+                              _selectedObserver = null;
+                              _selectedTag = null;
+                            });
+                          },
+                        ),
+                      ],
+                      const SizedBox(height: 8),
+                      ActionChip(
+                        label: Text(S.of(context).refresh),
+                        avatar: const Icon(Icons.refresh_outlined),
+                        onPressed: () async {
+                          await journalProvider.fetchJournalEntries();
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              }
+
+              return RefreshIndicator(
+                onRefresh: () async {
+                  await journalProvider.fetchJournalEntries();
+                },
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
+                      child: Text(
+                        '${filteredEntries.length} ${S.of(context).journalEntries(filteredEntries.length).toLowerCase()}',
+                      ),
+                    ),
+                    Expanded(
+                      child: LayoutBuilder(
+                        builder: (BuildContext context, BoxConstraints constraints) {
+                          return ListView.builder(
+                            padding: EdgeInsetsGeometry.fromLTRB(8, 0, 8, 0),
+                            shrinkWrap: true,
+                            itemCount: filteredEntries.length,
+                            itemBuilder: (context, index) {
+                              final entry = filteredEntries[index];
+                              final isSelected = selectedJournals.contains(entry.id);
+                              final isLargeScreen = MediaQuery.sizeOf(context).width >= kTabletBreakpoint;
+                              return Card(
+                                color:
+                                    isSelected
+                                        ? isLargeScreen
+                                            ? Theme.of(context).colorScheme.secondaryContainer
+                                            : Theme.of(context).colorScheme.primaryContainer
+                                        : Colors.amber[50],
+                                child: journalListTileItem(filteredEntries, index, context),
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
   }
 
   /// Builds the detail pane shown on larger screens.
   Widget _buildDetailPane(BuildContext context) {
     if (_selectedJournalEntry == null) {
       // Placeholder when nothing selected
-      return Center(
-        child: Text(S.of(context).selectJournalToView),
-      );
+      return Center(child: Text(S.of(context).selectJournalToView));
     }
 
     // Show InventoryDetailScreen in-place for the selected inventory
@@ -949,11 +975,7 @@ class JournalsScreenState extends State<JournalsScreen> {
         constraints: const BoxConstraints(maxWidth: 960),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: AddJournalScreen(
-            journalEntry: _selectedJournalEntry,
-            isEditing: true,
-            isEmbedded: true,
-          ),
+          child: AddJournalScreen(journalEntry: _selectedJournalEntry, isEditing: true, isEmbedded: true),
         ),
       ),
     );
@@ -964,10 +986,7 @@ class JournalsScreenState extends State<JournalsScreen> {
     final entry = filteredEntries[index];
     final isSelected = selectedJournals.contains(entry.id);
     final isLargeScreen = MediaQuery.sizeOf(context).width >= kTabletBreakpoint;
-    final selectedJournalId = _getEffectiveSelectedJournalEntryId(
-      filteredEntries,
-      isLargeScreen,
-    );
+    final selectedJournalId = _getEffectiveSelectedJournalEntryId(filteredEntries, isLargeScreen);
     final isDetailSelected = selectedJournalId == entry.id;
 
     return ListTile(
@@ -983,20 +1002,25 @@ class JournalsScreenState extends State<JournalsScreen> {
           });
         },
       ),
-      title: Builder(builder: (context) {
-        final preview = firstSentenceFromDelta(entry.notes);
-        if (preview.isEmpty) return const SizedBox.shrink();
-        return Text(
-          preview,
-          maxLines: 3,
-          overflow: TextOverflow.ellipsis,
-        );
-      }),
+      title: Builder(
+        builder: (context) {
+          final preview = firstSentenceFromDelta(entry.notes);
+          if (preview.isEmpty) return const SizedBox.shrink();
+          return Text(preview, maxLines: 3, overflow: TextOverflow.ellipsis);
+        },
+      ),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(DateFormat('dd/MM/yyyy HH:mm:ss')
-              .format(entry.creationDate!)),
+          Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(entry.creationDate!)),
+          if (entry.tags.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 6.0,
+              runSpacing: 4.0,
+              children: [for (var tag in entry.tags) _buildTagPill(context, tag.name, tag.colorIndex)],
+            ),
+          ],
         ],
       ),
       selected: isLargeScreen ? isDetailSelected : isSelected,
@@ -1004,25 +1028,43 @@ class JournalsScreenState extends State<JournalsScreen> {
       //     isLargeScreen
       //         ? Theme.of(context).colorScheme.secondaryContainer
       //         : Theme.of(context).colorScheme.primaryContainer,
-      onLongPress: () =>
-          _showBottomSheet(context, entry),
+      onLongPress: () => _showBottomSheet(context, entry),
       onTap: () {
         if (isLargeScreen) {
           setState(() {
             _selectedJournalEntry = entry;
           });
         } else {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => AddJournalScreen(
-              journalEntry: entry,
-              isEditing: true,
-            ),
-          ),
-        );
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => AddJournalScreen(journalEntry: entry, isEditing: true)),
+          );
         }
       },
+    );
+  }
+
+  /// Builds a pill/badge for displaying a tag.
+  Widget _buildTagPill(BuildContext context, String tagName, int colorIndex) {
+    final backgroundColor = getTagColorByIndex(colorIndex);
+    final foregroundColor =
+        ThemeData.estimateBrightnessForColor(backgroundColor) == Brightness.dark
+            ? Colors.white
+            : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.85);
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
+      decoration: BoxDecoration(
+        color: backgroundColor.withOpacity(0.2),
+        border: Border.all(color: backgroundColor, width: 0.5),
+        borderRadius: BorderRadius.circular(999.0),
+      ),
+      child: Text(
+        tagName,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: Theme.of(context).textTheme.labelSmall?.copyWith(color: backgroundColor, fontWeight: FontWeight.w600),
+      ),
     );
   }
 
@@ -1033,39 +1075,34 @@ class JournalsScreenState extends State<JournalsScreen> {
       builder: (BuildContext context) {
         return SafeArea(
           child: BottomSheet(
-          onClosing: () {},
-          builder: (BuildContext context) {
-            return Container(
-              padding: const EdgeInsets.all(16.0),
-              child: SingleChildScrollView(
-                child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(journalEntry.title, style: TextTheme.of(context).bodyLarge,),
-                  ),
-                  const Divider(),
-                  GridView.count(
-                    crossAxisCount: MediaQuery.sizeOf(context).width < 600 ? 4 : 5,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
+            onClosing: () {},
+            builder: (BuildContext context) {
+              return Container(
+                padding: const EdgeInsets.all(16.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      buildGridMenuItem(
-                          context, Icons.edit_outlined, S.current.edit, () {
-                        Navigator.of(context).pop();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AddJournalScreen(
-                              journalEntry: journalEntry,
-                              isEditing: true,
-                            ),
-                          ),
-                        );
-                      }),
-                      buildGridMenuItem(context, Icons.delete_outlined,
-                          S.of(context).delete, () {
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(journalEntry.title, style: TextTheme.of(context).bodyLarge),
+                      ),
+                      const Divider(),
+                      GridView.count(
+                        crossAxisCount: MediaQuery.sizeOf(context).width < 600 ? 4 : 5,
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        children: <Widget>[
+                          buildGridMenuItem(context, Icons.edit_outlined, S.current.edit, () {
+                            Navigator.of(context).pop();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AddJournalScreen(journalEntry: journalEntry, isEditing: true),
+                              ),
+                            );
+                          }),
+                          buildGridMenuItem(context, Icons.delete_outlined, S.of(context).delete, () {
                             Navigator.of(context).pop();
                             // Ask for user confirmation
                             showDialog(
@@ -1073,7 +1110,15 @@ class JournalsScreenState extends State<JournalsScreen> {
                               builder: (BuildContext context) {
                                 return AlertDialog(
                                   title: Text(S.of(context).confirmDelete),
-                                  content: Text(S.of(context).confirmDeleteMessage(1, "female", S.of(context).journalEntries(1).toLowerCase())),
+                                  content: Text(
+                                    S
+                                        .of(context)
+                                        .confirmDeleteMessage(
+                                          1,
+                                          "female",
+                                          S.of(context).journalEntries(1).toLowerCase(),
+                                        ),
+                                  ),
                                   actions: <Widget>[
                                     TextButton(
                                       onPressed: () {
@@ -1094,64 +1139,61 @@ class JournalsScreenState extends State<JournalsScreen> {
                               },
                             );
                           }, color: Theme.of(context).colorScheme.error),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      const SizedBox(width: 8.0),
-                      Text(
-                        S.current.export,
-                        style: TextTheme.of(context).bodyMedium,
+                        ],
                       ),
-                      Expanded(
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: [
-                              const SizedBox(width: 16.0),
-                              ActionChip(
-                                label: Text(S.current.plainText),
-                                onPressed: () async {
-                                  exportSelectedJournalsToTxt(context, [journalEntry]);
-                                  Navigator.of(context).pop();
-                                },
+                      Row(
+                        children: [
+                          const SizedBox(width: 8.0),
+                          Text(S.current.export, style: TextTheme.of(context).bodyMedium),
+                          Expanded(
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: [
+                                  const SizedBox(width: 16.0),
+                                  ActionChip(
+                                    label: Text(S.current.plainText),
+                                    onPressed: () async {
+                                      exportSelectedJournalsToTxt(context, [journalEntry]);
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                  const SizedBox(width: 8.0),
+                                  ActionChip(
+                                    label: const Text('Markdown'),
+                                    onPressed: () async {
+                                      exportSelectedJournalsToMarkdown(context, [journalEntry]);
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                  const SizedBox(width: 8.0),
+                                  ActionChip(
+                                    label: const Text('Word'),
+                                    onPressed: () async {
+                                      exportSelectedJournalsToWord(context, [journalEntry]);
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                  const SizedBox(width: 8.0),
+                                  ActionChip(
+                                    label: const Text('JSON'),
+                                    onPressed: () async {
+                                      exportSelectedJournalsToJson(context, [journalEntry]);
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                  const SizedBox(width: 8.0),
+                                ],
                               ),
-                              const SizedBox(width: 8.0),
-                              ActionChip(
-                                label: const Text('Markdown'),
-                                onPressed: () async {
-                                  exportSelectedJournalsToMarkdown(context, [journalEntry]);
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                              const SizedBox(width: 8.0),
-                              ActionChip(
-                                label: const Text('Word'),
-                                onPressed: () async {
-                                  exportSelectedJournalsToWord(context, [journalEntry]);
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                              const SizedBox(width: 8.0),
-                              ActionChip(
-                                label: const Text('JSON'),
-                                onPressed: () async {
-                                  exportSelectedJournalsToJson(context, [journalEntry]);
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                              const SizedBox(width: 8.0),
-                            ],
+                            ),
                           ),
-                        ),
+                        ],
                       ),
                     ],
                   ),
-                ],
-              ),
-              ),
-            );
-          },
+                ),
+              );
+            },
           ),
         );
       },
@@ -1179,26 +1221,22 @@ class JournalsScreenState extends State<JournalsScreen> {
                         physics: const NeverScrollableScrollPhysics(),
                         children: <Widget>[
                           buildGridMenuItem(
-                              context, Icons.library_add_check_outlined, S.of(context).selectAll,
-                                  () async {
-                                Navigator.of(context).pop();
-                                final filteredJournals = _filterJournalEntries(journalProvider.journalEntries);
-                                setState(() {
-                                  selectedJournals = filteredJournals
-                                      .map((journal) => journal.id)
-                                      .whereType<int>()
-                                      .toSet();
-                                });
-                              }),
-                          buildGridMenuItem(
                             context,
-                            Icons.file_open_outlined,
-                            S.of(context).import,
-                                () async {
+                            Icons.library_add_check_outlined,
+                            S.of(context).selectAll,
+                            () async {
                               Navigator.of(context).pop();
-                              await importJournalsFromJson(context);
+                              final filteredJournals = _filterJournalEntries(journalProvider.journalEntries);
+                              setState(() {
+                                selectedJournals =
+                                    filteredJournals.map((journal) => journal.id).whereType<int>().toSet();
+                              });
                             },
                           ),
+                          buildGridMenuItem(context, Icons.file_open_outlined, S.of(context).import, () async {
+                            Navigator.of(context).pop();
+                            await importJournalsFromJson(context);
+                          }),
                         ],
                       ),
                     ],

@@ -2202,4 +2202,81 @@
   "@speciesRichnessPerYear": {
     "description": "Chart title: species richness per year"
   }
+,
+  "tags": "Tags",
+  "@tags": {
+    "description": "Label for tag selection field in journal entries"
+  },
+  "predefinedTagBehavior": "Comportamento",
+  "@predefinedTagBehavior": {
+    "description": "Tag predefinida para observações de comportamento"
+  },
+  "predefinedTagFeeding": "Alimentação",
+  "@predefinedTagFeeding": {
+    "description": "Tag predefinida para observações de alimentação"
+  },
+  "predefinedTagVocalization": "Vocalização",
+  "@predefinedTagVocalization": {
+    "description": "Tag predefinida para observações de vocalização"
+  },
+  "predefinedTagIdentification": "Identificação",
+  "@predefinedTagIdentification": {
+    "description": "Tag predefinida para notas de identificação"
+  },
+  "predefinedTagDoubt": "Dúvida",
+  "@predefinedTagDoubt": {
+    "description": "Tag predefinida para observações incertas"
+  },
+  "predefinedTagHabitat": "Habitat",
+  "@predefinedTagHabitat": {
+    "description": "Tag predefinida para notas de habitat"
+  },
+  "predefinedTagWeather": "Clima",
+  "@predefinedTagWeather": {
+    "description": "Tag predefinida para notas sobre clima"
+  },
+  "predefinedTagList": "Lista",
+  "@predefinedTagList": {
+    "description": "Tag predefinida para notas relacionadas a listas"
+  },
+  "predefinedTagBreeding": "Reprodução",
+  "@predefinedTagBreeding": {
+    "description": "Tag predefinida para observações de reprodução"
+  },
+  "predefinedTagSeasonArrival": "Chegada sazonal",
+  "@predefinedTagSeasonArrival": {
+    "description": "Tag predefinida para registros de chegada sazonal"
+  },
+  "predefinedTagFieldwork": "Trabalho de campo",
+  "@predefinedTagFieldwork": {
+    "description": "Tag predefinida para anotações de trabalho de campo"
+  },
+  "addTag": "Adicionar tag",
+  "@addTag": {
+    "description": "Button label for adding a tag to a journal entry"
+  },
+  "manageTags": "Gerenciar tags",
+  "@manageTags": {
+    "description": "Título da tela de configuração para gerenciar tags do diário"
+  },
+  "newTagName": "Nome da nova tag",
+  "@newTagName": {
+    "description": "Rótulo do campo para criar uma tag personalizada"
+  },
+  "customTag": "Personalizada",
+  "@customTag": {
+    "description": "Identificador para tags criadas pelo usuário"
+  },
+  "predefinedTag": "Pré-definida",
+  "@predefinedTag": {
+    "description": "Identificador para tags pré-definidas"
+  },
+  "changeTagColor": "Alterar cor da tag",
+  "@changeTagColor": {
+    "description": "Ação para alterar a cor de uma tag"
+  },
+  "noTagsFound": "Nenhuma tag encontrada",
+  "@noTagsFound": {
+    "description": "Estado vazio da lista de gerenciamento de tags"
+  }
 }

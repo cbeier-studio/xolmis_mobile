@@ -216,6 +216,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "addSpeciesToSample": MessageLookupByLibrary.simpleMessage(
       "Add to the sample",
     ),
+    "addTag": MessageLookupByLibrary.simpleMessage("Add tag"),
     "allDates": MessageLookupByLibrary.simpleMessage("All dates"),
     "allLocalities": MessageLookupByLibrary.simpleMessage("All localities"),
     "allTypes": MessageLookupByLibrary.simpleMessage("All types"),
@@ -244,6 +245,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "camera": MessageLookupByLibrary.simpleMessage("Camera"),
     "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+    "changeTagColor": MessageLookupByLibrary.simpleMessage("Change tag color"),
     "changelog": MessageLookupByLibrary.simpleMessage("Changelog"),
     "clearFilters": MessageLookupByLibrary.simpleMessage("Clear filters"),
     "clearSelection": MessageLookupByLibrary.simpleMessage("Clear selection"),
@@ -282,6 +284,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Backup file includes data and images",
     ),
     "creationTime": MessageLookupByLibrary.simpleMessage("Creation time"),
+    "customTag": MessageLookupByLibrary.simpleMessage("Custom"),
     "dangerZone": MessageLookupByLibrary.simpleMessage("Danger zone"),
     "darkMode": MessageLookupByLibrary.simpleMessage("Dark"),
     "dataDeleted": MessageLookupByLibrary.simpleMessage(
@@ -733,6 +736,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "mackinnonLists": MessageLookupByLibrary.simpleMessage("Mackinnon lists"),
     "male": MessageLookupByLibrary.simpleMessage("Male"),
     "maleNameOrId": MessageLookupByLibrary.simpleMessage("Male name or ID"),
+    "manageTags": MessageLookupByLibrary.simpleMessage("Manage tags"),
     "maxSpecies": MessageLookupByLibrary.simpleMessage("Max species"),
     "minutes": m43,
     "missingVegetationData": MessageLookupByLibrary.simpleMessage(
@@ -781,6 +785,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "newPoi": MessageLookupByLibrary.simpleMessage("New POI"),
     "newRevision": MessageLookupByLibrary.simpleMessage("New revision"),
     "newSpecimen": MessageLookupByLibrary.simpleMessage("New specimen"),
+    "newTagName": MessageLookupByLibrary.simpleMessage("New tag name"),
     "newVegetation": MessageLookupByLibrary.simpleMessage(
       "New vegetation record",
     ),
@@ -822,6 +827,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "noSpecimenCollected": MessageLookupByLibrary.simpleMessage(
       "No specimen collected.",
     ),
+    "noTagsFound": MessageLookupByLibrary.simpleMessage("No tags found"),
     "noValidInventoriesFoundInFile": MessageLookupByLibrary.simpleMessage(
       "No valid inventories found in the imported file.",
     ),
@@ -883,6 +889,24 @@ class MessageLookup extends MessageLookupByLibrary {
     "precipitationRain": MessageLookupByLibrary.simpleMessage("Rain"),
     "precipitationShowers": MessageLookupByLibrary.simpleMessage("Showers"),
     "precipitationSnow": MessageLookupByLibrary.simpleMessage("Snow"),
+    "predefinedTag": MessageLookupByLibrary.simpleMessage("Predefined"),
+    "predefinedTagBehavior": MessageLookupByLibrary.simpleMessage("Behavior"),
+    "predefinedTagBreeding": MessageLookupByLibrary.simpleMessage("Breeding"),
+    "predefinedTagDoubt": MessageLookupByLibrary.simpleMessage("Doubt"),
+    "predefinedTagFeeding": MessageLookupByLibrary.simpleMessage("Feeding"),
+    "predefinedTagFieldwork": MessageLookupByLibrary.simpleMessage("Fieldwork"),
+    "predefinedTagHabitat": MessageLookupByLibrary.simpleMessage("Habitat"),
+    "predefinedTagIdentification": MessageLookupByLibrary.simpleMessage(
+      "Identification",
+    ),
+    "predefinedTagList": MessageLookupByLibrary.simpleMessage("List"),
+    "predefinedTagSeasonArrival": MessageLookupByLibrary.simpleMessage(
+      "Season arrival",
+    ),
+    "predefinedTagVocalization": MessageLookupByLibrary.simpleMessage(
+      "Vocalization",
+    ),
+    "predefinedTagWeather": MessageLookupByLibrary.simpleMessage("Weather"),
     "proportion": MessageLookupByLibrary.simpleMessage("Proportion"),
     "reactivate": MessageLookupByLibrary.simpleMessage("Reactivate"),
     "reactivateInventory": MessageLookupByLibrary.simpleMessage(
@@ -1061,6 +1085,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "surveyHours": MessageLookupByLibrary.simpleMessage("survey hours"),
     "systemMode": MessageLookupByLibrary.simpleMessage("System theme"),
+    "tags": MessageLookupByLibrary.simpleMessage("Tags"),
     "temperature": MessageLookupByLibrary.simpleMessage("Temperature"),
     "timeFound": MessageLookupByLibrary.simpleMessage("Date and time found"),
     "timeMinutes": MessageLookupByLibrary.simpleMessage(

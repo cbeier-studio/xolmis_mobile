@@ -8,6 +8,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:xolmis/data/daos/journal_dao.dart';
+import 'package:xolmis/data/daos/tag_dao.dart';
 // import 'package:xolmis/data/database/repositories/journal_repository.dart';
 
 import 'package:xolmis/main.dart';
@@ -17,6 +18,7 @@ import 'package:xolmis/data/database/database_helper.dart';
 import 'package:xolmis/providers/inventory_provider.dart';
 import 'package:xolmis/providers/species_provider.dart';
 import 'package:xolmis/providers/poi_provider.dart';
+import 'package:xolmis/providers/tag_provider.dart';
 import 'package:xolmis/providers/vegetation_provider.dart';
 import 'package:xolmis/providers/weather_provider.dart';
 import 'package:xolmis/providers/nest_provider.dart';
@@ -51,6 +53,7 @@ void main() async {
   late SpecimenDao specimenDao;
   late AppImageDao appImageDao;
   late FieldJournalDao journalDao;
+  late TagDao tagDao;
 
   late InventoryProvider inventoryProvider;
   late SpeciesProvider speciesProvider;
@@ -63,6 +66,7 @@ void main() async {
   late SpecimenProvider specimenProvider;
   late AppImageProvider appImageProvider;
   late FieldJournalProvider journalProvider;
+  late TagProvider tagProvider;
 
   late AppDependencies dependencies;
 
@@ -81,6 +85,7 @@ void main() async {
     specimenDao = SpecimenDao(databaseHelper);
     appImageDao = AppImageDao(databaseHelper);
     journalDao = FieldJournalDao(databaseHelper);
+    tagDao = TagDao(databaseHelper);
 
     poiProvider = PoiProvider(poiDao);
     speciesProvider = SpeciesProvider(speciesDao);
@@ -93,6 +98,8 @@ void main() async {
     specimenProvider = SpecimenProvider(specimenDao);
     appImageProvider = AppImageProvider(appImageDao);
     journalProvider = FieldJournalProvider(journalDao);
+    tagProvider = TagProvider(tagDao);
+
 
     dependencies = AppDependencies(
       inventoryDao: inventoryDao,
@@ -106,6 +113,7 @@ void main() async {
       specimenDao: specimenDao,
       appImageDao: appImageDao,
       journalDao: journalDao,
+      tagDao: tagDao,
       inventoryProvider: inventoryProvider,
       speciesProvider: speciesProvider,
       poiProvider: poiProvider,
@@ -117,6 +125,7 @@ void main() async {
       specimenProvider: specimenProvider,
       appImageProvider: appImageProvider,
       journalProvider: journalProvider,
+      tagProvider: tagProvider,
     );    
   });
 

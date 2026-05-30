@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/core_consts.dart';
+import 'tags_settings_screen.dart';
 import '../../utils/utils.dart';
 import '../../utils/themes.dart';
 import '../../generated/l10n.dart';
@@ -32,12 +33,9 @@ class _GeneralSettingsState extends State<GeneralSettings> {
     _userCountry = await getCountrySetting();
     setState(() {
       _themeMode = ThemeMode.values[prefs.getInt('themeMode') ?? 0];
-      _startupModuleIndex =
-          prefs.getInt(kStartupModulePreferenceKey) ??
-              StartupModule.inventories.index;
+      _startupModuleIndex = prefs.getInt(kStartupModulePreferenceKey) ?? StartupModule.inventories.index;
 
-      if (_startupModuleIndex < 0 ||
-          _startupModuleIndex >= StartupModule.values.length) {
+      if (_startupModuleIndex < 0 || _startupModuleIndex >= StartupModule.values.length) {
         _startupModuleIndex = StartupModule.inventories.index;
       }
     });
@@ -54,9 +52,7 @@ class _GeneralSettingsState extends State<GeneralSettings> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(S.current.generalSettings),
-      ),
+      appBar: AppBar(title: Text(S.current.generalSettings)),
       body: SettingsList(
         contentPadding: EdgeInsets.zero,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,11 +85,9 @@ class _GeneralSettingsState extends State<GeneralSettings> {
                 title: Text(S.of(context).startupModule),
                 value: Text(_getStartupModuleLabel(context, _startupModuleIndex)),
                 onPressed: (context) async {
-                  final selectedModule =
-                  await _showStartupModuleSelectionDialog(context);
+                  final selectedModule = await _showStartupModuleSelectionDialog(context);
 
-                  if (selectedModule != null &&
-                      selectedModule != _startupModuleIndex) {
+                  if (selectedModule != null && selectedModule != _startupModuleIndex) {
                     setState(() {
                       _startupModuleIndex = selectedModule;
                     });
@@ -107,8 +101,7 @@ class _GeneralSettingsState extends State<GeneralSettings> {
                 value: Text(countryMetadata[_userCountry]?.name ?? ''),
                 onPressed: (context) async {
                   // Abre o novo diálogo de seleção de país
-                  final SupportedCountry? newCountry =
-                  await showCountrySelectionDialog(context);
+                  final SupportedCountry? newCountry = await showCountrySelectionDialog(context);
 
                   // Se o usuário selecionou um novo país e o valor é diferente
                   if (newCountry != null && newCountry != _userCountry) {
@@ -119,12 +112,19 @@ class _GeneralSettingsState extends State<GeneralSettings> {
                     await _saveSettings();
 
                     // Recarrega os dados de espécies com base no novo país
-                    List<String> preloadedSpeciesNames =
-                    await loadSpeciesSearchData();
+                    List<String> preloadedSpeciesNames = await loadSpeciesSearchData();
                     preloadedSpeciesNames.sort((a, b) => a.compareTo(b));
                     // Atualiza a lista global de espécies
                     allSpeciesNames = List.from(preloadedSpeciesNames);
                   }
+                },
+              ),
+              SettingsTile.navigation(
+                leading: const Icon(Icons.local_offer_outlined),
+                title: Text(S.current.tags),
+                value: Text(S.current.manageTags),
+                onPressed: (context) {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const TagsSettingsScreen()));
                 },
               ),
             ],
@@ -135,9 +135,7 @@ class _GeneralSettingsState extends State<GeneralSettings> {
   }
 
   /// Builds and shows a dialog for selecting the user's country.
-  Future<SupportedCountry?> showCountrySelectionDialog(
-      BuildContext context,
-      ) async {
+  Future<SupportedCountry?> showCountrySelectionDialog(BuildContext context) async {
     SupportedCountry? tempSelectedCountry = _userCountry;
 
     return await showDialog<SupportedCountry>(
@@ -159,12 +157,12 @@ class _GeneralSettingsState extends State<GeneralSettings> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children:
-                    SupportedCountry.values.map((country) {
-                      return RadioListTile<SupportedCountry>(
-                        title: Text(countryMetadata[country]?.name ?? ''),
-                        value: country,
-                      );
-                    }).toList(),
+                        SupportedCountry.values.map((country) {
+                          return RadioListTile<SupportedCountry>(
+                            title: Text(countryMetadata[country]?.name ?? ''),
+                            value: country,
+                          );
+                        }).toList(),
                   ),
                 ),
               ),
@@ -294,19 +292,13 @@ class _GeneralSettingsState extends State<GeneralSettings> {
                     mainAxisSize: MainAxisSize.min,
                     children: List<Widget>.generate(
                       StartupModule.values.length,
-                          (index) => RadioListTile<int>(
-                        title: Text(_getStartupModuleLabel(context, index)),
-                        value: index,
-                      ),
+                      (index) => RadioListTile<int>(title: Text(_getStartupModuleLabel(context, index)), value: index),
                     ),
                   ),
                 ),
               ),
               actions: <Widget>[
-                TextButton(
-                  child: Text(S.of(context).cancel),
-                  onPressed: () => Navigator.of(context).pop(),
-                ),
+                TextButton(child: Text(S.of(context).cancel), onPressed: () => Navigator.of(context).pop()),
                 TextButton(
                   child: Text(S.of(context).save),
                   onPressed: () => Navigator.of(context).pop(tempSelectedModule),

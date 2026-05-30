@@ -62,7 +62,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 SettingsTile.navigation(
                   // leading: const Icon(Icons.person_outlined),
                   title: Text(S.of(context).generalSettings),
-                  description: Text('${S.current.appearance} • ${S.current.startupModule} • ${S.current.speciesSearchCountry}'),
+                  description: Text('${S.current.appearance} • ${S.current.startupModule} • ${S.current.speciesSearchCountry} • ${S.current.tags}'),
                   onPressed: (context) {
                     Navigator.push(
                       context,

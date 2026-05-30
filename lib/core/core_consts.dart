@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import '../../generated/l10n.dart';
 
 /// Minimum width (in dp) used to switch to tablet-oriented layouts.
@@ -16,24 +17,13 @@ const int kCurrentSpeciesUpdateVersion = 2025;
 const String kStartupModulePreferenceKey = 'startupModuleIndex';
 
 /// Shared preferences key that stores import behavior for existing records.
-const String kImportExistingRecordsPolicyPreferenceKey =
-    'importExistingRecordsPolicy';
+const String kImportExistingRecordsPolicyPreferenceKey = 'importExistingRecordsPolicy';
 
 /// App modules that can be used as startup destination.
-enum StartupModule {
-  inventories,
-  nests,
-  specimens,
-  fieldJournal,
-  statistics,
-}
+enum StartupModule { inventories, nests, specimens, fieldJournal, statistics }
 
 /// Defines what to do when imported records already exist locally.
-enum ImportExistingRecordPolicy {
-  askEveryTime,
-  updateExisting,
-  skipExisting,
-}
+enum ImportExistingRecordPolicy { askEveryTime, updateExisting, skipExisting }
 
 /// Exception thrown when inserting records into the database fails.
 class DatabaseInsertException implements Exception {
@@ -55,22 +45,10 @@ enum SupportedCountry {
 
 /// Localized metadata for each supported country.
 final Map<SupportedCountry, CountryMetadata> countryMetadata = {
-  SupportedCountry.AR: CountryMetadata(
-    name: S.current.countryArgentina,
-    isoCode: 'AR',
-  ),
-  SupportedCountry.BR: CountryMetadata(
-    name: S.current.countryBrazil,
-    isoCode: 'BR',
-  ),
-  SupportedCountry.PY: CountryMetadata(
-    name: S.current.countryParaguay,
-    isoCode: 'PY',
-  ),
-  SupportedCountry.UY: CountryMetadata(
-    name: S.current.countryUruguay,
-    isoCode: 'UY',
-  ),
+  SupportedCountry.AR: CountryMetadata(name: S.current.countryArgentina, isoCode: 'AR'),
+  SupportedCountry.BR: CountryMetadata(name: S.current.countryBrazil, isoCode: 'BR'),
+  SupportedCountry.PY: CountryMetadata(name: S.current.countryParaguay, isoCode: 'PY'),
+  SupportedCountry.UY: CountryMetadata(name: S.current.countryUruguay, isoCode: 'UY'),
 };
 
 /// Human-readable metadata associated with a supported country.
@@ -82,63 +60,25 @@ class CountryMetadata {
 }
 
 /// Provider groups that can show badge counters in navigation.
-enum BadgeProviderType {
-  inventory,
-  nest,
-}
+enum BadgeProviderType { inventory, nest }
 
 /// Predefined date range filters for list and statistics screens.
-enum DateFilter {
-  today,
-  yesterday,
-  last7Days,
-  last30Days,
-  last90Days,
-  last180Days,
-  last365Days,
-  customRange,
-}
+enum DateFilter { today, yesterday, last7Days, last30Days, last90Days, last180Days, last365Days, customRange }
 
 /// Sort direction for ordered data views.
-enum SortOrder {
-  ascending,
-  descending,
-}
+enum SortOrder { ascending, descending }
 
 /// Available sort fields for inventories.
-enum InventorySortField {
-  id,
-  startTime,
-  endTime,
-  locality,
-  inventoryType,
-}
+enum InventorySortField { id, startTime, endTime, locality, inventoryType }
 
 /// Available sort fields for nests.
-enum NestSortField {
-  fieldNumber,
-  foundTime,
-  lastTime,
-  species,
-  locality,
-  nestFate,
-}
+enum NestSortField { fieldNumber, foundTime, lastTime, species, locality, nestFate }
 
 /// Available sort fields for specimens.
-enum SpecimenSortField {
-  fieldNumber,
-  sampleTime,
-  species,
-  locality,
-  specimenType,
-}
+enum SpecimenSortField { fieldNumber, sampleTime, species, locality, specimenType }
 
 /// Available sort fields for field journal entries.
-enum JournalSortField {
-  title,
-  creationDate,
-  lastModifiedDate,
-}
+enum JournalSortField { title, creationDate, lastModifiedDate }
 
 /// Available sort fields for species records inside inventories.
 enum SpeciesSortField {
@@ -148,11 +88,7 @@ enum SpeciesSortField {
 }
 
 /// Actions returned by conditional warning dialogs.
-enum ConditionalAction {
-  add,
-  ignore,
-  cancelDialog
-}
+enum ConditionalAction { add, ignore, cancelDialog }
 
 /// Vegetation distribution descriptors used in vegetation samples.
 enum DistributionType {
@@ -193,17 +129,7 @@ Map<DistributionType, String> distributionTypeFriendlyNames = {
 };
 
 /// Precipitation categories used in weather samples.
-enum PrecipitationType {
-  preNone,
-  preFog,
-  preMist,
-  preDrizzle,
-  preRain,
-  preShowers,
-  preSnow,
-  preHail,
-  preFrost,
-}
+enum PrecipitationType { preNone, preFog, preMist, preDrizzle, preRain, preShowers, preSnow, preHail, preFrost }
 
 /// Localized labels for [PrecipitationType] values.
 Map<PrecipitationType, String> precipitationTypeFriendlyNames = {
@@ -271,15 +197,7 @@ Map<EggShapeType, String> eggShapeTypeFriendlyNames = {
 };
 
 /// Stages of nest development recorded in revisions.
-enum NestStageType {
-  stgUnknown,
-  stgBuilding,
-  stgLaying,
-  stgIncubating,
-  stgHatching,
-  stgNestling,
-  stgInactive,
-}
+enum NestStageType { stgUnknown, stgBuilding, stgLaying, stgIncubating, stgHatching, stgNestling, stgInactive }
 
 /// Localized labels for [NestStageType] values.
 Map<NestStageType, String> nestStageTypeFriendlyNames = {
@@ -293,11 +211,7 @@ Map<NestStageType, String> nestStageTypeFriendlyNames = {
 };
 
 /// Activity status of a nest during a revision.
-enum NestStatusType {
-  nstUnknown,
-  nstActive,
-  nstInactive,
-}
+enum NestStatusType { nstUnknown, nstActive, nstInactive }
 
 /// Localized labels for [NestStatusType] values.
 Map<NestStatusType, String> nestStatusTypeFriendlyNames = {
@@ -307,11 +221,7 @@ Map<NestStatusType, String> nestStatusTypeFriendlyNames = {
 };
 
 /// Final fate categories used to close nest records.
-enum NestFateType {
-  fatUnknown,
-  fatSuccess,
-  fatLost,
-}
+enum NestFateType { fatUnknown, fatSuccess, fatLost }
 
 /// Localized labels for [NestFateType] values.
 Map<NestFateType, String> nestFateTypeFriendlyNames = {
@@ -354,3 +264,32 @@ Map<SpecimenType, String> specimenTypeFriendlyNames = {
   SpecimenType.spcRegurgite: S.current.specimenRegurgite,
 };
 
+/// Palette of predefined colors for journal tags with good contrast in light/dark themes.
+const List<Color> kJournalTagColors = [
+  Color(0xFFE91E63), // Pink
+  Color(0xFF9C27B0), // Purple
+  Color(0xFF2196F3), // Blue
+  Color(0xFF00BCD4), // Cyan
+  Color(0xFF4CAF50), // Green
+  Color(0xFFFFC107), // Amber
+  Color(0xFFFF9800), // Orange
+  Color(0xFFF44336), // Red
+  Color(0xFF3F51B5), // Indigo
+  Color(0xFF009688), // Teal
+  Color(0xFF8BC34A), // Light Green
+  Color(0xFFCDDC39), // Lime
+  Color(0xFF795548), // Brown
+  Color(0xFF607D8B), // Blue Grey
+  Color(0xFF673AB7), // Deep Purple
+  Color(0xFF03A9F4), // Light Blue
+];
+
+/// Returns a random color from the predefined tag colors palette.
+Color getRandomTagColor() {
+  return kJournalTagColors[DateTime.now().millisecond % kJournalTagColors.length];
+}
+
+/// Returns a tag color by index.
+Color getTagColorByIndex(int colorIndex) {
+  return kJournalTagColors[colorIndex % kJournalTagColors.length];
+}
