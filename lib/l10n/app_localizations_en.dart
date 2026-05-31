@@ -931,6 +931,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get editJournalEntry => 'Edit journal entry';
 
   @override
+  String get changeJournalColor => 'Change note color';
+
+  @override
+  String get selectJournalColor => 'Select note color';
+
+  @override
   String get statistics => 'Statistics';
 
   @override

@@ -2,12 +2,15 @@ import '../models/tag.dart';
 
 /// Represents a field journal entry stored locally by the app.
 class FieldJournal {
+  static const int defaultBackgroundColorValue = 0xFFFFF8E1; // Colors.amber[50]
+
   late int? id;
   final String title;
   String? notes;
   final DateTime? creationDate;
   final DateTime? lastModifiedDate;
   String? observer;
+  final int backgroundColor;
   List<JournalTag> tags;
 
   FieldJournal({
@@ -17,8 +20,19 @@ class FieldJournal {
     this.creationDate,
     this.lastModifiedDate,
     this.observer,
+    this.backgroundColor = defaultBackgroundColorValue,
     this.tags = const [],
   });
+
+  static int _parseBackgroundColor(dynamic rawValue) {
+    if (rawValue is int) return rawValue;
+    if (rawValue is num) return rawValue.toInt();
+    if (rawValue is String) {
+      final parsed = int.tryParse(rawValue);
+      if (parsed != null) return parsed;
+    }
+    return defaultBackgroundColorValue;
+  }
 
   /// Creates a [FieldJournal] from a SQLite row map.
   factory FieldJournal.fromMap(Map<String, dynamic> map) {
@@ -33,6 +47,7 @@ class FieldJournal {
           ? DateTime.parse(map['lastModifiedDate'])
           : null,
       observer: map['observer'],
+      backgroundColor: _parseBackgroundColor(map['backgroundColor']),
     );
   }
 
@@ -45,6 +60,7 @@ class FieldJournal {
       'creationDate': creationDate?.toIso8601String(),
       'lastModifiedDate': lastModifiedDate?.toIso8601String(),
       'observer': observer,
+      'backgroundColor': backgroundColor,
     };
   }
 
@@ -56,6 +72,7 @@ class FieldJournal {
     DateTime? creationDate,
     DateTime? lastModifiedDate,
     String? observer,
+    int? backgroundColor,
     List<JournalTag>? tags,
   }) {
     return FieldJournal(
@@ -65,6 +82,7 @@ class FieldJournal {
       creationDate: creationDate ?? this.creationDate,
       lastModifiedDate: lastModifiedDate ?? this.lastModifiedDate,
       observer: observer ?? this.observer,
+      backgroundColor: backgroundColor ?? this.backgroundColor,
       tags: tags ?? this.tags,
     );
   }
@@ -78,6 +96,7 @@ class FieldJournal {
         'creationDate: $creationDate, '
         'lastModifiedDate: $lastModifiedDate, '
         'observer: $observer, '
+        'backgroundColor: $backgroundColor, '
         'tags: $tags'
         '}';
   }
@@ -91,6 +110,7 @@ class FieldJournal {
       'creationDate': creationDate?.toIso8601String(),
       'lastModifiedDate': lastModifiedDate?.toIso8601String(),
       'observer': observer,
+      'backgroundColor': backgroundColor,
       'tags': tags.map((t) => t.toJson()).toList(),
     };
   }
@@ -109,6 +129,7 @@ class FieldJournal {
       creationDate: json['creationDate'] != null ? DateTime.parse(json['creationDate']) : null,
       lastModifiedDate: json['lastModifiedDate'] != null ? DateTime.parse(json['lastModifiedDate']) : null,
       observer: json['observer'],
+      backgroundColor: _parseBackgroundColor(json['backgroundColor']),
       tags: tagsList,
     );
   }

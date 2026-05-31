@@ -27,6 +27,10 @@ Isso determina:
 - A lista de espécies usada nas buscas
 - Listas regionais
 
+### Tags
+
+Gerencie as tags disponíveis. Você pode adicionar novas tags usando o campo no topo da tela, remover tags adicionadas ou alterar a cor das tags. Algumas tags pré-definidas não podem ser removidas.
+
 ## Observadores
 
 As configurações do observador definem sua identificação pessoal dentro do aplicativo.

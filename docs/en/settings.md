@@ -27,6 +27,10 @@ This determines:
 - The species list used in searches
 - Regional checklists
 
+### Tags
+
+Manage available tags. You can add new tags using the field at the screen top, remove added tags or change the color of tags. Some predefined tags cannot be removed.
+
 ## Observers
 
 The observer settings define your personal identification within the app.

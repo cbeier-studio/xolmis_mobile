@@ -2753,6 +2753,26 @@ class S {
     );
   }
 
+  /// `Change note color`
+  String get changeJournalColor {
+    return Intl.message(
+      'Change note color',
+      name: 'changeJournalColor',
+      desc: 'Menu option to change a field journal note background color',
+      args: [],
+    );
+  }
+
+  /// `Select note color`
+  String get selectJournalColor {
+    return Intl.message(
+      'Select note color',
+      name: 'selectJournalColor',
+      desc: 'Dialog title to choose a field journal note background color',
+      args: [],
+    );
+  }
+
   /// `Statistics`
   String get statistics {
     return Intl.message(

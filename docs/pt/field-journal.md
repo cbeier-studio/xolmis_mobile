@@ -30,14 +30,24 @@ Para editar uma nota:
 2. Modifique o texto ou anexos.  
 3. Salve suas alterações.
 
+## Alterar Cor da Nota
+
+Você pode personalizar a nota com uma cor de sua preferência.
+
+1. Toque e segure a nota.
+2. Toque em **Alterar cor da nota**.  
+3. Escolha a cor desejada.
+
 ## Excluir Notas
 
 ### Excluir uma única nota
+
 1. Toque e segure a nota.  
 2. Toque em **Excluir**.  
 3. Confirme.
 
 ### Excluir várias notas
+
 1. Selecione notas usando as caixas de seleção.  
 2. Toque no ícone **Excluir** (lixeira).  
 3. Confirme.
@@ -76,6 +86,7 @@ Os filtros permitem restringir os resultados por:
 
 - Intervalo de datas  
 - Observador
+- Tag
 
 ## Ordenar Notas
 

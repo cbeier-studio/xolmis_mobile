@@ -188,7 +188,7 @@ class TagSelectionFieldState extends State<TagSelectionField> {
         // Tag chips
         if (selectedTags.isNotEmpty)
           Padding(
-            padding: EdgeInsets.only(bottom: 12),
+            padding: EdgeInsets.only(bottom: 4),
             child: Wrap(
               spacing: 4,
               runSpacing: 2,
@@ -197,10 +197,14 @@ class TagSelectionFieldState extends State<TagSelectionField> {
                 final color = getTagColorByIndex(tag.colorIndex);
 
                 return Chip(
-                  label: Text(tag.name),
+                  label: Text(tag.name, style: TextStyle(fontSize: 12)),
                   backgroundColor: color.withValues(alpha: 0.2),
                   labelStyle: TextStyle(color: color, fontWeight: FontWeight.w500),
-                  deleteIcon: Icon(Icons.close, size: 18, color: color),
+                  labelPadding: const EdgeInsets.symmetric(horizontal: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 0),
+                  deleteIcon: Icon(Icons.close, size: 14, color: color),
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  visualDensity: VisualDensity.compact,
                   onDeleted: () => _removeTag(index),
                 );
               }),

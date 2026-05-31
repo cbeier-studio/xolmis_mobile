@@ -948,6 +948,12 @@ class AppLocalizationsPt extends AppLocalizations {
   String get editJournalEntry => 'Editar nota';
 
   @override
+  String get changeJournalColor => 'Alterar cor da nota';
+
+  @override
+  String get selectJournalColor => 'Selecionar cor da nota';
+
+  @override
   String get statistics => 'Estatísticas';
 
   @override
@@ -2838,6 +2844,12 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get editJournalEntry => 'Editar nota';
+
+  @override
+  String get changeJournalColor => 'Alterar cor da nota';
+
+  @override
+  String get selectJournalColor => 'Selecionar cor da nota';
 
   @override
   String get statistics => 'Estatísticas';

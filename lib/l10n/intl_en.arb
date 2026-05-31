@@ -1500,6 +1500,16 @@
         "type": "text",
         "description": "Menu option to edit a field journal entry"
     },
+    "changeJournalColor": "Change note color",
+    "@changeJournalColor": {
+        "type": "text",
+        "description": "Menu option to change a field journal note background color"
+    },
+    "selectJournalColor": "Select note color",
+    "@selectJournalColor": {
+        "type": "text",
+        "description": "Dialog title to choose a field journal note background color"
+    },
     "statistics": "Statistics",
     "@statistics": {
         "type": "text",

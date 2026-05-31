@@ -30,6 +30,14 @@ To edit a note:
 2. Modify the text or attachments.  
 3. Save your changes.
 
+## Edit Note Color
+
+You can customize the note with a preferred color.
+
+1. Long-press the note.  
+2. Tap **Edit color**.  
+3. Choose the desired color.
+
 ## Delete Notes
 
 ### Delete a single note
@@ -76,6 +84,7 @@ Filters allow you to narrow results by:
 
 - Date range  
 - Observer
+- Tag
 
 ## Sort Notes
 

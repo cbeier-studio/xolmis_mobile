@@ -46,6 +46,7 @@ class AddJournalScreenState extends State<AddJournalScreen> {
   late TextEditingController _titleController;
   late FleatherController _notesController;
   bool _isSubmitting = false;
+  bool _editorHasFocus = false;
   String _observerAbbrev = '';
   late TagDao _tagDao;
   List<PredefinedTag> _tagDefinitions = [];
@@ -75,6 +76,13 @@ class AddJournalScreenState extends State<AddJournalScreen> {
     }
     _loadObserverAbbreviation();
     _loadTagData();
+    _focusNode.addListener(_onEditorFocusChange);
+  }
+
+  void _onEditorFocusChange() {
+    setState(() {
+      _editorHasFocus = _focusNode.hasFocus;
+    });
   }
 
   void _loadTagData() async {
@@ -100,6 +108,7 @@ class AddJournalScreenState extends State<AddJournalScreen> {
 
   @override
   void dispose() {
+    _focusNode.removeListener(_onEditorFocusChange);
     _titleController.dispose();
     _notesController.dispose();
     super.dispose();
@@ -248,21 +257,35 @@ class AddJournalScreenState extends State<AddJournalScreen> {
                       padding: EdgeInsets.all(16.0),
                       child: Column(
                         children: [
-                          TextFormField(
-                            controller: _titleController,
-                            textCapitalization: TextCapitalization.sentences,
-                            decoration: InputDecoration(
-                              labelText: '${S.of(context).title} *',
-                              border: OutlineInputBorder(),
+                          AnimatedSize(
+                            duration: const Duration(milliseconds: 200),
+                            curve: Curves.easeInOut,
+                            child: AnimatedOpacity(
+                              duration: const Duration(milliseconds: 200),
+                              opacity: _editorHasFocus ? 0.0 : 1.0,
+                              child: _editorHasFocus
+                                  ? const SizedBox.shrink()
+                                  : Column(
+                                      children: [
+                                        TextFormField(
+                                          controller: _titleController,
+                                          textCapitalization: TextCapitalization.sentences,
+                                          decoration: InputDecoration(
+                                            labelText: '${S.of(context).title} *',
+                                            border: OutlineInputBorder(),
+                                          ),
+                                          validator: (value) {
+                                            if (value == null || value.isEmpty) {
+                                              return S.of(context).insertTitle;
+                                            }
+                                            return null;
+                                          },
+                                        ),
+                                        const SizedBox(height: 16),
+                                      ],
+                                    ),
                             ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return S.of(context).insertTitle;
-                              }
-                              return null;
-                            },
                           ),
-                          SizedBox(height: 16),
                           TagSelectionField(
                             key: _tagSelectionKey,
                             initialTags: widget.isEditing ? widget.journalEntry!.tags : [],
@@ -402,6 +425,13 @@ class AddJournalScreenState extends State<AddJournalScreen> {
               ),
             ],
           ),
+          _isSubmitting
+              ? const SizedBox(
+            width: 24,
+            height: 24,
+            child: CircularProgressIndicator(strokeWidth: 2, year2023: false),
+          )
+              : TextButton(onPressed: _submitForm, child: Text(S.of(context).save)),
         ],
       ),
       body: Column(
@@ -430,15 +460,29 @@ class AddJournalScreenState extends State<AddJournalScreen> {
               padding: EdgeInsets.all(16.0),
               child: Column(
                 children: [
-                  TextFormField(
-                    controller: _titleController,
-                    textCapitalization: TextCapitalization.sentences,
-                    decoration: InputDecoration(
-                      labelText: '${S.of(context).title} (${S.of(context).optional})',
-                      border: OutlineInputBorder(),
+                  AnimatedSize(
+                    duration: const Duration(milliseconds: 200),
+                    curve: Curves.easeInOut,
+                    child: AnimatedOpacity(
+                      duration: const Duration(milliseconds: 200),
+                      opacity: _editorHasFocus ? 0.0 : 1.0,
+                      child: _editorHasFocus
+                          ? const SizedBox.shrink()
+                          : Column(
+                              children: [
+                                TextFormField(
+                                  controller: _titleController,
+                                  textCapitalization: TextCapitalization.sentences,
+                                  decoration: InputDecoration(
+                                    labelText: '${S.of(context).title} (${S.of(context).optional})',
+                                    border: OutlineInputBorder(),
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+                              ],
+                            ),
                     ),
                   ),
-                  SizedBox(height: 16),
                   TagSelectionField(
                     key: _tagSelectionKey,
                     initialTags: widget.isEditing ? widget.journalEntry!.tags : [],
@@ -459,23 +503,23 @@ class AddJournalScreenState extends State<AddJournalScreen> {
               ),
             ),
           ),
-          SafeArea(
-            child: Container(
-              padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 16.0),
-              width: double.infinity,
-              child: Align(
-                alignment: Alignment.centerRight,
-                child:
-                    _isSubmitting
-                        ? const SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: CircularProgressIndicator(strokeWidth: 2, year2023: false),
-                        )
-                        : FilledButton(onPressed: _submitForm, child: Text(S.of(context).save)),
-              ),
-            ),
-          ),
+          // SafeArea(
+          //   child: Container(
+          //     padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 16.0),
+          //     width: double.infinity,
+          //     child: Align(
+          //       alignment: Alignment.centerRight,
+          //       child:
+          //           _isSubmitting
+          //               ? const SizedBox(
+          //                 width: 24,
+          //                 height: 24,
+          //                 child: CircularProgressIndicator(strokeWidth: 2, year2023: false),
+          //               )
+          //               : FilledButton(onPressed: _submitForm, child: Text(S.of(context).save)),
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );

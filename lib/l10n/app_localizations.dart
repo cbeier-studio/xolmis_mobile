@@ -1682,6 +1682,18 @@ abstract class AppLocalizations {
   /// **'Edit journal entry'**
   String get editJournalEntry;
 
+  /// Menu option to change a field journal note background color
+  ///
+  /// In en, this message translates to:
+  /// **'Change note color'**
+  String get changeJournalColor;
+
+  /// Dialog title to choose a field journal note background color
+  ///
+  /// In en, this message translates to:
+  /// **'Select note color'**
+  String get selectJournalColor;
+
   /// Title for statistics screen and labels
   ///
   /// In en, this message translates to:

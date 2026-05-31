@@ -49,6 +49,15 @@ class JournalsScreenState extends State<JournalsScreen> {
     DateFilter.customRange: S.current.dateInterval,
   };
 
+  static const List<int> _journalBackgroundColorOptions = [
+    FieldJournal.defaultBackgroundColorValue, // amber[50] default
+    0xFFFFEBEE, // red[50]
+    0xFFF3E5F5, // purple[50]
+    0xFFE3F2FD, // blue[50]
+    0xFFE8F5E9, // green[50]
+    0xFFE0F2F1, // teal[50]
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -383,6 +392,59 @@ class JournalsScreenState extends State<JournalsScreen> {
     }
 
     return selectedEntries;
+  }
+
+  Color _resolveJournalCardColor(FieldJournal entry, {required bool isSelected, required bool isLargeScreen}) {
+    if (isSelected) {
+      return isLargeScreen ? Theme.of(context).colorScheme.secondaryContainer : Theme.of(context).colorScheme.primaryContainer;
+    }
+    return Color(entry.backgroundColor);
+  }
+
+  Future<void> _showJournalColorPickerDialog(FieldJournal journalEntry) async {
+    final selectedColor = await showDialog<int>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: Text(S.current.selectJournalColor),
+          content: Wrap(
+            spacing: 12,
+            runSpacing: 12,
+            children: _journalBackgroundColorOptions.map((colorValue) {
+              final isSelected = colorValue == journalEntry.backgroundColor;
+              return InkWell(
+                borderRadius: BorderRadius.circular(999),
+                onTap: () => Navigator.of(dialogContext).pop(colorValue),
+                child: Container(
+                  width: 42,
+                  height: 42,
+                  decoration: BoxDecoration(
+                    color: Color(colorValue),
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: isSelected ? Theme.of(dialogContext).colorScheme.primary : Theme.of(dialogContext).colorScheme.outlineVariant,
+                      width: isSelected ? 2 : 1,
+                    ),
+                  ),
+                  child: isSelected ? Icon(Icons.check, size: 18, color: Theme.of(dialogContext).colorScheme.onSurface) : null,
+                ),
+              );
+            }).toList(),
+          ),
+          actions: [TextButton(onPressed: () => Navigator.of(dialogContext).pop(), child: Text(S.current.cancel))],
+        );
+      },
+    );
+
+    if (selectedColor == null || selectedColor == journalEntry.backgroundColor) {
+      return;
+    }
+
+    final updatedEntry = journalEntry.copyWith(
+      backgroundColor: selectedColor,
+      lastModifiedDate: DateTime.now(),
+    );
+    await journalProvider.updateJournalEntry(updatedEntry);
   }
 
   @override
@@ -930,7 +992,7 @@ class JournalsScreenState extends State<JournalsScreen> {
                       child: LayoutBuilder(
                         builder: (BuildContext context, BoxConstraints constraints) {
                           return ListView.builder(
-                            padding: EdgeInsetsGeometry.fromLTRB(8, 0, 8, 0),
+                            padding: EdgeInsetsGeometry.fromLTRB(8, 0, 8, 8),
                             shrinkWrap: true,
                             itemCount: filteredEntries.length,
                             itemBuilder: (context, index) {
@@ -938,12 +1000,7 @@ class JournalsScreenState extends State<JournalsScreen> {
                               final isSelected = selectedJournals.contains(entry.id);
                               final isLargeScreen = MediaQuery.sizeOf(context).width >= kTabletBreakpoint;
                               return Card(
-                                color:
-                                    isSelected
-                                        ? isLargeScreen
-                                            ? Theme.of(context).colorScheme.secondaryContainer
-                                            : Theme.of(context).colorScheme.primaryContainer
-                                        : Colors.amber[50],
+                                color: _resolveJournalCardColor(entry, isSelected: isSelected, isLargeScreen: isLargeScreen),
                                 child: journalListTileItem(filteredEntries, index, context),
                               );
                             },
@@ -1073,6 +1130,7 @@ class JournalsScreenState extends State<JournalsScreen> {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
+        final preview = firstSentenceFromDelta(journalEntry.notes);
         return SafeArea(
           child: BottomSheet(
             onClosing: () {},
@@ -1085,7 +1143,7 @@ class JournalsScreenState extends State<JournalsScreen> {
                     children: <Widget>[
                       Align(
                         alignment: Alignment.centerLeft,
-                        child: Text(journalEntry.title, style: TextTheme.of(context).bodyLarge),
+                        child: Text(preview, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextTheme.of(context).bodyLarge),
                       ),
                       const Divider(),
                       GridView.count(
@@ -1101,6 +1159,10 @@ class JournalsScreenState extends State<JournalsScreen> {
                                 builder: (context) => AddJournalScreen(journalEntry: journalEntry, isEditing: true),
                               ),
                             );
+                          }),
+                          buildGridMenuItem(context, Icons.format_color_fill_outlined, S.current.changeJournalColor, () async {
+                            Navigator.of(context).pop();
+                            await _showJournalColorPickerDialog(journalEntry);
                           }),
                           buildGridMenuItem(context, Icons.delete_outlined, S.of(context).delete, () {
                             Navigator.of(context).pop();

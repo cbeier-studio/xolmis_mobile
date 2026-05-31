@@ -48,8 +48,8 @@ Images can be attached to any note to document:
 
 ### Remove images
 
-- Double tap an image to select it.  
-- Use the backspace on keyboard to delete it.
+1. Double tap an image to select it.  
+2. Use the backspace on keyboard to delete it.
 
 ## Adding GPS Coordinates
 
@@ -60,6 +60,18 @@ You can attach the device’s current location to a note.
 3. Confirm the location.
 
 Coordinates appear in the text.
+
+## Adding Tags
+
+### Add a tag
+
+1. Type a topic in the **Tags** field.
+2. Choose a suggestion from the list or tap the **+** icon to add a new tag.
+3. The tags will appear above the Tags field.
+
+### Remove a tag
+
+- Tap the **X** icon next to the tag to remove it.
 
 ## Editing Existing Content
 
@@ -73,7 +85,7 @@ All edits are applied immediately.
 
 ## Best Practices for Editing Notes
 
-- Use **headings** to separate topics (e.g., “Habitat”, “Behavior”, “Weather”).  
+- Use **tags** to separate topics (e.g., “habitat”, “behavior”, “weather”).  
 - Add **images** to document important observations.  
 - Include **coordinates** for location-specific notes.  
 - Use **bold** or *italic* to highlight species names or key findings.  

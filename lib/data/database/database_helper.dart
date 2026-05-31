@@ -38,7 +38,7 @@ class DatabaseHelper {
     String path = join(await getDatabasesPath(), 'xolmis_database.db');
     return await openDatabase(
       path,
-      version: 27,
+      version: 28,
       onCreate: _createTables,
       onUpgrade: _upgradeTables,
       onConfigure: (db) {
@@ -225,7 +225,8 @@ class DatabaseHelper {
         notes TEXT,
         creationDate TEXT,
         lastModifiedDate TEXT,
-        observer TEXT
+        observer TEXT,
+        backgroundColor INTEGER NOT NULL DEFAULT 4294965473
       )
     ''');
     db.execute('''
@@ -603,6 +604,9 @@ class DatabaseHelper {
     if (oldVersion < 27) {
       await _migrateTagsToReferenceModel(db);
       await _seedPredefinedTags(db);
+    }
+    if (oldVersion < 28) {
+      db.execute('ALTER TABLE field_journal ADD COLUMN backgroundColor INTEGER NOT NULL DEFAULT 4294965473');
     }
   }
 

@@ -48,8 +48,8 @@ Imagens podem ser anexadas a qualquer nota para documentar:
 
 ### Remover imagens
 
-- Toque duas vezes na imagem para selecioná-la.  
-- Use a tecla de apagar do teclado para removê-la.
+1. Toque duas vezes na imagem para selecioná-la.  
+2. Use a tecla de apagar do teclado para removê-la.
 
 ## Adicionando Coordenadas GPS
 
@@ -61,19 +61,32 @@ Você pode anexar a localização atual do dispositivo a uma nota.
 
 As coordenadas aparecerão no texto.
 
+## Adicionando Tags
+
+### Adicionando uma tag
+
+1. Digite um tópico no campo de **Tags**.
+2. Escolha uma sugestão da lista ou toque no ícone **+** para adicionar uma nova tag.
+3. As tags adicionadas aparecem acima do campo Tags.
+
+### Removendo uma tag
+
+- Toque no **X** da tags para removê-la.
+
 ## Editando Conteúdo Existente
 
 Para modificar uma nota:
 
 1. Abra a nota.  
 2. Altere o texto, formatação, imagens ou coordenadas.  
-3. Salve suas alterações.
+3. Opcionalmente, altere as tags.
+4. Salve suas alterações.
 
 Todas as edições são aplicadas imediatamente.
 
 ## Boas Práticas para Editar Notas
 
-- Use **títulos** para separar tópicos (ex.: “Habitat”, “Comportamento”, “Clima”).  
+- Use **tags** para separar tópicos (ex.: “habitat”, “comportamento”, “clima”).  
 - Adicione **imagens** para documentar observações importantes.  
 - Inclua **coordenadas** para notas específicas de localização.  
 - Use **negrito** ou *itálico* para destacar nomes de espécies ou achados importantes.  

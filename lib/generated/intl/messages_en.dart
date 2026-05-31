@@ -245,6 +245,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "camera": MessageLookupByLibrary.simpleMessage("Camera"),
     "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+    "changeJournalColor": MessageLookupByLibrary.simpleMessage(
+      "Change note color",
+    ),
     "changeTagColor": MessageLookupByLibrary.simpleMessage("Change tag color"),
     "changelog": MessageLookupByLibrary.simpleMessage("Changelog"),
     "clearFilters": MessageLookupByLibrary.simpleMessage("Clear filters"),
@@ -968,6 +971,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "selectInventoryType": MessageLookupByLibrary.simpleMessage(
       "Please, select an inventory type",
+    ),
+    "selectJournalColor": MessageLookupByLibrary.simpleMessage(
+      "Select note color",
     ),
     "selectJournalToView": MessageLookupByLibrary.simpleMessage(
       "Select a note to view its details",

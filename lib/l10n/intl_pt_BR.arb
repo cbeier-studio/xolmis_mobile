@@ -943,6 +943,16 @@
         "type": "text",
         "description": "Menu option to edit a field journal entry"
     },
+    "changeJournalColor": "Alterar cor da nota",
+    "@changeJournalColor": {
+        "type": "text",
+        "description": "Menu option to change a field journal note background color"
+    },
+    "selectJournalColor": "Selecionar cor da nota",
+    "@selectJournalColor": {
+        "type": "text",
+        "description": "Dialog title to choose a field journal note background color"
+    },
     "statistics": "Estatísticas",
     "@statistics": {
         "type": "text",
