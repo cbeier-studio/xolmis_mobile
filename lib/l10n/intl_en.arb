@@ -2602,6 +2602,16 @@
         "type": "text",
         "description": "Invalid JSON file schema error message"
     },
+    "noResults": "No results",
+    "@noResults": {
+        "type": "text",
+        "description": "No results message"
+    },
+    "clearSearch": "Clear search",
+    "@clearSearch": {
+        "type": "text",
+        "description": "Clear search button label"
+    },
   "countryArgentina": "Argentina",
   "countryBrazil": "Brazil",
   "countryParaguay": "Paraguay",
@@ -2630,6 +2640,17 @@
     "distributionContinuousCoverWithGaps": "Continuous with gaps",
     "distributionContinuousDenseCover": "Continuous and dense",
     "distributionContinuousDenseCoverWithEdge": "Continuous with edge between strata",
+    "inventoryTypesDialogTitle": "Inventory types",
+    "inventoryFreeQualitativeDescription": "Free-form qualitative observations without a fixed duration.",
+    "inventoryTimedQualitativeDescription": "A qualitative list recorded during a fixed amount of time. Timer resets when a new species is recorded.",
+    "inventoryIntervalQualitativeDescription": "A qualitative list split into repeated time intervals. Three intervals without new species recorded is a common stopping rule.",
+    "inventoryMackinnonListDescription": "A species accumulation list completed until the target number of species is reached.",
+    "inventoryTransectCountDescription": "Count every individual detected while moving along a transect.",
+    "inventoryPointCountDescription": "Count every individual detected from a fixed point during a set duration.",
+    "inventoryBandingDescription": "Record birds captured, handled, or banded during a banding session.",
+    "inventoryCasualDescription": "Record opportunistic observations without a fixed protocol or time limit.",
+    "inventoryTransectDetectionDescription": "Record detections along a transect with distance and/or flight height.",
+    "inventoryPointDetectionDescription": "Record detections from a fixed point with distance and/or flight height.",
     "inventoryFreeQualitative": "Free Qualitative List",
     "inventoryTimedQualitative": "Timed Qualitative List",
     "inventoryIntervalQualitative": "Interval Qualitative List",

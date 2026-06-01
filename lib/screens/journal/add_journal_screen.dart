@@ -61,10 +61,10 @@ class AddJournalScreenState extends State<AddJournalScreen> {
     _titleController = TextEditingController();
 
     if (widget.isEditing) {
-      _titleController.text = widget.journalEntry!.title;
+      _titleController.text = widget.journalEntry?.title ?? '';
       dynamic notesJson;
       try {
-        notesJson = jsonDecode(widget.journalEntry!.notes!);
+        notesJson = jsonDecode(widget.journalEntry!.notes);
         final doc = ParchmentDocument.fromJson(notesJson);
         _notesController = FleatherController(document: doc);
       } catch (e) {
@@ -271,15 +271,9 @@ class AddJournalScreenState extends State<AddJournalScreen> {
                                           controller: _titleController,
                                           textCapitalization: TextCapitalization.sentences,
                                           decoration: InputDecoration(
-                                            labelText: '${S.of(context).title} *',
+                                            labelText: '${S.of(context).title} (${S.of(context).optional})',
                                             border: OutlineInputBorder(),
                                           ),
-                                          validator: (value) {
-                                            if (value == null || value.isEmpty) {
-                                              return S.of(context).insertTitle;
-                                            }
-                                            return null;
-                                          },
                                         ),
                                         const SizedBox(height: 16),
                                       ],

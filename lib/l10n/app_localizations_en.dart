@@ -1542,6 +1542,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get invalidJsonSchema => 'Invalid JSON schema.';
 
   @override
+  String get noResults => 'No results';
+
+  @override
+  String get clearSearch => 'Clear search';
+
+  @override
   String get countryArgentina => 'Argentina';
 
   @override
@@ -1624,6 +1630,45 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get distributionContinuousDenseCoverWithEdge => 'Continuous with edge between strata';
+
+  @override
+  String get inventoryTypesDialogTitle => 'Inventory types';
+
+  @override
+  String get inventoryFreeQualitativeDescription => 'Free-form qualitative observations without a fixed duration.';
+
+  @override
+  String get inventoryTimedQualitativeDescription =>
+      'A qualitative list recorded during a fixed amount of time. Timer resets when a new species is recorded.';
+
+  @override
+  String get inventoryIntervalQualitativeDescription =>
+      'A qualitative list split into repeated time intervals. Three intervals without new species recorded is a common stopping rule.';
+
+  @override
+  String get inventoryMackinnonListDescription =>
+      'A species accumulation list completed until the target number of species is reached.';
+
+  @override
+  String get inventoryTransectCountDescription => 'Count every individual detected while moving along a transect.';
+
+  @override
+  String get inventoryPointCountDescription =>
+      'Count every individual detected from a fixed point during a set duration.';
+
+  @override
+  String get inventoryBandingDescription => 'Record birds captured, handled, or banded during a banding session.';
+
+  @override
+  String get inventoryCasualDescription => 'Record opportunistic observations without a fixed protocol or time limit.';
+
+  @override
+  String get inventoryTransectDetectionDescription =>
+      'Record detections along a transect with distance and/or flight height.';
+
+  @override
+  String get inventoryPointDetectionDescription =>
+      'Record detections from a fixed point with distance and/or flight height.';
 
   @override
   String get inventoryFreeQualitative => 'Free Qualitative List';

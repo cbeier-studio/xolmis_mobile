@@ -1575,6 +1575,12 @@ class AppLocalizationsPt extends AppLocalizations {
   String get invalidJsonSchema => 'Esquema do JSON inválido.';
 
   @override
+  String get noResults => 'Sem resultados';
+
+  @override
+  String get clearSearch => 'Limpar busca';
+
+  @override
   String get countryArgentina => 'Argentina';
 
   @override
@@ -1657,6 +1663,46 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get distributionContinuousDenseCoverWithEdge => 'Contínua com borda separando estratos';
+
+  @override
+  String get inventoryTypesDialogTitle => 'Tipos de inventário';
+
+  @override
+  String get inventoryFreeQualitativeDescription => 'Observações qualitativas livres, sem duração fixa.';
+
+  @override
+  String get inventoryTimedQualitativeDescription =>
+      'Lista qualitativa registrada durante um tempo fixo. O temporizador é reiniciado a cada vez que uma nova espécie é detectada.';
+
+  @override
+  String get inventoryIntervalQualitativeDescription =>
+      'Lista qualitativa dividida em intervalos de tempo repetidos. Três intervalos sem registro de novas espécies encerram o inventário.';
+
+  @override
+  String get inventoryMackinnonListDescription =>
+      'Lista de acumulação de espécies concluída até atingir o número-alvo de espécies.';
+
+  @override
+  String get inventoryTransectCountDescription => 'Conte todos os indivíduos detectados ao longo de um transecto.';
+
+  @override
+  String get inventoryPointCountDescription =>
+      'Conte todos os indivíduos detectados em um ponto fixo durante uma duração definida.';
+
+  @override
+  String get inventoryBandingDescription =>
+      'Registre aves capturadas, manipuladas ou anilhadas durante uma sessão de anilhamento.';
+
+  @override
+  String get inventoryCasualDescription => 'Registre observações oportunistas sem protocolo fixo ou limite de tempo.';
+
+  @override
+  String get inventoryTransectDetectionDescription =>
+      'Registre detecções ao longo de um transecto com distância e/ou altura de voo.';
+
+  @override
+  String get inventoryPointDetectionDescription =>
+      'Registre detecções em um ponto fixo com distância e/ou altura de voo.';
 
   @override
   String get inventoryFreeQualitative => 'Lista Qualitativa Livre';
@@ -3472,6 +3518,12 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get invalidJsonSchema => 'Esquema do JSON inválido.';
 
   @override
+  String get noResults => 'Sem resultados';
+
+  @override
+  String get clearSearch => 'Limpar busca';
+
+  @override
   String get countryArgentina => 'Argentina';
 
   @override
@@ -3554,6 +3606,46 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get distributionContinuousDenseCoverWithEdge => 'Contínua com borda separando estratos';
+
+  @override
+  String get inventoryTypesDialogTitle => 'Tipos de inventário';
+
+  @override
+  String get inventoryFreeQualitativeDescription => 'Observações qualitativas livres, sem duração fixa.';
+
+  @override
+  String get inventoryTimedQualitativeDescription =>
+      'Lista qualitativa registrada durante um tempo fixo. O temporizador é reiniciado a cada vez que uma nova espécie é detectada.';
+
+  @override
+  String get inventoryIntervalQualitativeDescription =>
+      'Lista qualitativa dividida em intervalos de tempo repetidos. Três intervalos sem registro de novas espécies encerram o inventário.';
+
+  @override
+  String get inventoryMackinnonListDescription =>
+      'Lista de acumulação de espécies concluída até atingir o número-alvo de espécies.';
+
+  @override
+  String get inventoryTransectCountDescription => 'Conte todos os indivíduos detectados ao longo de um transecto.';
+
+  @override
+  String get inventoryPointCountDescription =>
+      'Conte todos os indivíduos detectados em um ponto fixo durante uma duração definida.';
+
+  @override
+  String get inventoryBandingDescription =>
+      'Registre aves capturadas, manipuladas ou anilhadas durante uma sessão de anilhamento.';
+
+  @override
+  String get inventoryCasualDescription => 'Registre observações oportunistas sem protocolo fixo ou limite de tempo.';
+
+  @override
+  String get inventoryTransectDetectionDescription =>
+      'Registre detecções ao longo de um transecto com distância e/ou altura de voo.';
+
+  @override
+  String get inventoryPointDetectionDescription =>
+      'Registre detecções em um ponto fixo com distância e/ou altura de voo.';
 
   @override
   String get inventoryFreeQualitative => 'Lista Qualitativa Livre';

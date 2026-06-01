@@ -1266,9 +1266,12 @@ String _buildJournalTxtExportContent(List<FieldJournal> journals) {
 
   for (var i = 0; i < journals.length; i++) {
     final journal = journals[i];
-    content.writeln('Title: ${journal.title}');
+    // content.writeln('Title: ${journal.title}');
     if (journal.observer != null && journal.observer!.isNotEmpty) {
       content.writeln('Observer: ${journal.observer}');
+    }
+    if (journal.tags.isNotEmpty) {
+      content.writeln('Tags: ${journal.tags.join(', ')}');
     }
     if (journal.creationDate != null) {
       content.writeln('Created: ${journal.creationDate!.toIso8601String()}');
@@ -1298,9 +1301,12 @@ String _buildJournalMarkdownExportContent(List<FieldJournal> journals) {
   for (var i = 0; i < journals.length; i++) {
     final journal = journals[i];
     content.writeln('---');
-    content.writeln('title: ${_toYamlStringValue(journal.title)}');
+    // content.writeln('title: ${_toYamlStringValue(journal.title)}');
     if (journal.observer != null && journal.observer!.isNotEmpty) {
       content.writeln('observer: ${_toYamlStringValue(journal.observer!)}');
+    }
+    if (journal.tags.isNotEmpty) {
+      content.writeln('tags: [${_toYamlStringValue(journal.tags.join(', '))}]');
     }
     if (journal.creationDate != null) {
       content.writeln('created: ${journal.creationDate!.toIso8601String()}');
@@ -1436,11 +1442,14 @@ Future<void> exportSelectedJournalsToWord(
       final journal = journals[i];
 
       // Title as Heading 1
-      builder.h1(journal.title);
+      // builder.h1(journal.title);
 
       // Metadata lines as plain paragraphs
       if (journal.observer != null && journal.observer!.isNotEmpty) {
         builder.p('Observer: ${journal.observer}');
+      }
+      if (journal.tags.isNotEmpty) {
+        builder.p('Tags: ${journal.tags.join(', ')}');
       }
       if (journal.creationDate != null) {
         builder.p('Created: ${journal.creationDate!.toIso8601String()}');

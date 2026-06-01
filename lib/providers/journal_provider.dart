@@ -48,7 +48,7 @@ class FieldJournalProvider with ChangeNotifier {
      for (final entry in journalEntries) {
        final exists = await _journalDao.journalTitleExists(entry.title);
        if (exists) {
-         conflictingTitles.add(entry.title.toLowerCase());
+         conflictingTitles.add(entry.title!.toLowerCase());
        }
      }
      return conflictingTitles;
@@ -77,32 +77,34 @@ class FieldJournalProvider with ChangeNotifier {
 
      for (final journalEntry in journalEntries) {
        try {
-         final isExisting = conflictingTitles.contains(journalEntry.title.toLowerCase());
+         final isExisting = conflictingTitles.contains(journalEntry.title?.toLowerCase());
          if (isExisting && !updateExisting) {
            skippedCount++;
            continue;
          }
 
-         final success = await _journalDao.importJournal(
-           journalEntry,
-           updateExisting: updateExisting,
-         );
-         if (success) {
-           if (isExisting) {
-             updatedCount++;
-           } else {
-             newCount++;
-           }
-         } else {
-           final identifier = journalEntry.title.isNotEmpty
-               ? journalEntry.title
-               : (journalEntry.id?.toString() ?? 'unknown');
-           errors.add('Failed to import field journal "$identifier": Unknown error');
-         }
-       } catch (error) {
-         final identifier = journalEntry.title.isNotEmpty
-             ? journalEntry.title
-             : (journalEntry.id?.toString() ?? 'unknown');
+          final success = await _journalDao.importJournal(
+            journalEntry,
+            updateExisting: updateExisting,
+          );
+          if (success) {
+            if (isExisting) {
+              updatedCount++;
+            } else {
+              newCount++;
+            }
+          } else {
+            final identifier =
+                journalEntry.title != null && journalEntry.title!.isNotEmpty
+                    ? journalEntry.title
+                    : (journalEntry.id?.toString() ?? 'unknown');
+            errors.add('Failed to import field journal "$identifier": Unknown error');
+          }
+        } catch (error) {
+          final identifier =
+              journalEntry.title != null && journalEntry.title!.isNotEmpty
+                  ? journalEntry.title
+                  : (journalEntry.id?.toString() ?? 'unknown');
          final message = 'Failed to import field journal "$identifier": $error';
          debugPrint(message);
          errors.add(message);
@@ -146,7 +148,10 @@ class FieldJournalProvider with ChangeNotifier {
 
    /// Returns `true` if a journal entry with the given [title] already exists
    /// in the database (case-insensitive comparison).
-   Future<bool> journalTitleExists(String title) async {
+   Future<bool> journalTitleExists(String? title) async {
+     if (title == null || title.trim().isEmpty) {
+       return false;
+     }
      return await _journalDao.journalTitleExists(title);
    }
 }

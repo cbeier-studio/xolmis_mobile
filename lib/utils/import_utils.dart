@@ -883,11 +883,8 @@ Map<String, dynamic> _normalizeJournalJsonRecord(Map<String, dynamic> item) {
   }
 
   final rawTitle = normalized['title'];
-  final title = rawTitle?.toString().trim() ?? '';
-  if (title.isEmpty) {
-    throw FormatException('Journal entry is missing a valid title.');
-  }
-  normalized['title'] = title;
+  final title = rawTitle?.toString().trim();
+  normalized['title'] = (title == null || title.isEmpty) ? null : title;
 
   final rawNotes = normalized['notes'];
   if (rawNotes is List || rawNotes is Map || rawNotes is String) {
@@ -1115,7 +1112,7 @@ Future<void> importJournalsFromJson(BuildContext context) async {
     // Detect conflicting titles
     final Set<String> conflictingJournalTitles = <String>{};
     for (final journal in journalsToImport) {
-      final title = journal.title;
+      final title = journal.title ?? '';
       if (title.isNotEmpty) {
         final exists = await journalProvider.journalTitleExists(title);
         if (exists) {

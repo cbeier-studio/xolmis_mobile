@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../generated/l10n.dart';
+
 /// Encapsulates the result returned by the filter selection bottom sheet.
 class FilterSelectionResult<T> {
   final T? selectedItem;
@@ -135,7 +137,7 @@ class _FilterSelectionBottomSheetContentState<T>
                           context,
                         ).pop(FilterSelectionResult<T>.cleared());
                       },
-                      child: Text(widget.clearActionLabel ?? 'Clear'),
+                      child: Text(widget.clearActionLabel ?? S.current.clearSearch),
                     ),
                 ],
               ),
@@ -163,7 +165,7 @@ class _FilterSelectionBottomSheetContentState<T>
                     filteredItems.isEmpty
                         ? Center(
                           child: Text(
-                            widget.emptyStateLabel ?? 'No results',
+                            widget.emptyStateLabel ?? S.current.noResults,
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
                         )

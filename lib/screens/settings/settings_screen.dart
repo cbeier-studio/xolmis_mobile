@@ -88,7 +88,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
                 SettingsTile.navigation(
                   // leading: const Icon(Icons.person_outlined),
-                  title: Text(S.of(context).inventorySettings),
+                  title: Text(S.of(context).inventories),
                   description: Text('${S.current.limits} • ${S.current.defaults} • ${S.current.reminders}'),
                   onPressed: (context) {
                     Navigator.push(

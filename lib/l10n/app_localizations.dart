@@ -2780,6 +2780,18 @@ abstract class AppLocalizations {
   /// **'Invalid JSON schema.'**
   String get invalidJsonSchema;
 
+  /// No results message
+  ///
+  /// In en, this message translates to:
+  /// **'No results'**
+  String get noResults;
+
+  /// Clear search button label
+  ///
+  /// In en, this message translates to:
+  /// **'Clear search'**
+  String get clearSearch;
+
   /// No description provided for @countryArgentina.
   ///
   /// In en, this message translates to:
@@ -2947,6 +2959,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Continuous with edge between strata'**
   String get distributionContinuousDenseCoverWithEdge;
+
+  /// No description provided for @inventoryTypesDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Inventory types'**
+  String get inventoryTypesDialogTitle;
+
+  /// No description provided for @inventoryFreeQualitativeDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Free-form qualitative observations without a fixed duration.'**
+  String get inventoryFreeQualitativeDescription;
+
+  /// No description provided for @inventoryTimedQualitativeDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'A qualitative list recorded during a fixed amount of time. Timer resets when a new species is recorded.'**
+  String get inventoryTimedQualitativeDescription;
+
+  /// No description provided for @inventoryIntervalQualitativeDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'A qualitative list split into repeated time intervals. Three intervals without new species recorded is a common stopping rule.'**
+  String get inventoryIntervalQualitativeDescription;
+
+  /// No description provided for @inventoryMackinnonListDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'A species accumulation list completed until the target number of species is reached.'**
+  String get inventoryMackinnonListDescription;
+
+  /// No description provided for @inventoryTransectCountDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Count every individual detected while moving along a transect.'**
+  String get inventoryTransectCountDescription;
+
+  /// No description provided for @inventoryPointCountDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Count every individual detected from a fixed point during a set duration.'**
+  String get inventoryPointCountDescription;
+
+  /// No description provided for @inventoryBandingDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Record birds captured, handled, or banded during a banding session.'**
+  String get inventoryBandingDescription;
+
+  /// No description provided for @inventoryCasualDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Record opportunistic observations without a fixed protocol or time limit.'**
+  String get inventoryCasualDescription;
+
+  /// No description provided for @inventoryTransectDetectionDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Record detections along a transect with distance and/or flight height.'**
+  String get inventoryTransectDetectionDescription;
+
+  /// No description provided for @inventoryPointDetectionDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Record detections from a fixed point with distance and/or flight height.'**
+  String get inventoryPointDetectionDescription;
 
   /// No description provided for @inventoryFreeQualitative.
   ///

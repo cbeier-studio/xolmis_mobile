@@ -5,8 +5,8 @@ class FieldJournal {
   static const int defaultBackgroundColorValue = 0xFFFFF8E1; // Colors.amber[50]
 
   late int? id;
-  final String title;
-  String? notes;
+  String? title;
+  final String notes;
   final DateTime? creationDate;
   final DateTime? lastModifiedDate;
   String? observer;
@@ -15,8 +15,8 @@ class FieldJournal {
 
   FieldJournal({
     this.id,
-    required this.title,
-    this.notes,
+    this.title,
+    required this.notes,
     this.creationDate,
     this.lastModifiedDate,
     this.observer,
@@ -39,7 +39,7 @@ class FieldJournal {
     return FieldJournal(
       id: map['id'],
       title: map['title'],
-      notes: map['notes'],
+      notes: (map['notes'] as String?) ?? '',
       creationDate: map['creationDate'] != null
           ? DateTime.parse(map['creationDate'])
           : null,
@@ -125,7 +125,7 @@ class FieldJournal {
     return FieldJournal(
       id: json['id'],
       title: json['title'],
-      notes: json['notes'],
+      notes: (json['notes'] as String?) ?? '',
       creationDate: json['creationDate'] != null ? DateTime.parse(json['creationDate']) : null,
       lastModifiedDate: json['lastModifiedDate'] != null ? DateTime.parse(json['lastModifiedDate']) : null,
       observer: json['observer'],

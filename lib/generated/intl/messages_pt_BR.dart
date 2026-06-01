@@ -266,6 +266,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "changelog": MessageLookupByLibrary.simpleMessage("Log de alterações"),
     "clearFilters": MessageLookupByLibrary.simpleMessage("Limpar filtros"),
+    "clearSearch": MessageLookupByLibrary.simpleMessage("Limpar busca"),
     "clearSelection": MessageLookupByLibrary.simpleMessage("Limpar seleção"),
     "close": MessageLookupByLibrary.simpleMessage("Fechar"),
     "cloudCover": MessageLookupByLibrary.simpleMessage("Nebulosidade"),
@@ -705,8 +706,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "inventoriesImportedSuccessfully": m34,
     "inventory": m35,
     "inventoryBanding": MessageLookupByLibrary.simpleMessage("Anilhamento"),
+    "inventoryBandingDescription": MessageLookupByLibrary.simpleMessage(
+      "Registre aves capturadas, manipuladas ou anilhadas durante uma sessão de anilhamento.",
+    ),
     "inventoryCasual": MessageLookupByLibrary.simpleMessage(
       "Observação Casual",
+    ),
+    "inventoryCasualDescription": MessageLookupByLibrary.simpleMessage(
+      "Registre observações oportunistas sem protocolo fixo ou limite de tempo.",
     ),
     "inventoryData": m36,
     "inventoryDuration": m37,
@@ -714,6 +721,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "inventoryFound": m39,
     "inventoryFreeQualitative": MessageLookupByLibrary.simpleMessage(
       "Lista Qualitativa Livre",
+    ),
+    "inventoryFreeQualitativeDescription": MessageLookupByLibrary.simpleMessage(
+      "Observações qualitativas livres, sem duração fixa.",
     ),
     "inventoryId": MessageLookupByLibrary.simpleMessage("ID do Inventário"),
     "inventoryIdAlreadyExists": MessageLookupByLibrary.simpleMessage(
@@ -731,14 +741,26 @@ class MessageLookup extends MessageLookupByLibrary {
     "inventoryIntervalQualitative": MessageLookupByLibrary.simpleMessage(
       "Lista Qualitativa por Intervalos",
     ),
+    "inventoryIntervalQualitativeDescription": MessageLookupByLibrary.simpleMessage(
+      "Lista qualitativa dividida em intervalos de tempo repetidos. Três intervalos sem registro de novas espécies encerram o inventário.",
+    ),
     "inventoryMackinnonList": MessageLookupByLibrary.simpleMessage(
       "Lista de Mackinnon",
+    ),
+    "inventoryMackinnonListDescription": MessageLookupByLibrary.simpleMessage(
+      "Lista de acumulação de espécies concluída até atingir o número-alvo de espécies.",
     ),
     "inventoryPointCount": MessageLookupByLibrary.simpleMessage(
       "Ponto de Contagem",
     ),
+    "inventoryPointCountDescription": MessageLookupByLibrary.simpleMessage(
+      "Conte todos os indivíduos detectados em um ponto fixo durante uma duração definida.",
+    ),
     "inventoryPointDetection": MessageLookupByLibrary.simpleMessage(
       "Ponto de Detecções",
+    ),
+    "inventoryPointDetectionDescription": MessageLookupByLibrary.simpleMessage(
+      "Registre detecções em um ponto fixo com distância e/ou altura de voo.",
     ),
     "inventorySettings": MessageLookupByLibrary.simpleMessage(
       "Configurações de inventário",
@@ -746,13 +768,25 @@ class MessageLookup extends MessageLookupByLibrary {
     "inventoryTimedQualitative": MessageLookupByLibrary.simpleMessage(
       "Lista Qualitativa Temporizada",
     ),
+    "inventoryTimedQualitativeDescription": MessageLookupByLibrary.simpleMessage(
+      "Lista qualitativa registrada durante um tempo fixo. O temporizador é reiniciado a cada vez que uma nova espécie é detectada.",
+    ),
     "inventoryTransectCount": MessageLookupByLibrary.simpleMessage(
       "Contagem em Transecto",
+    ),
+    "inventoryTransectCountDescription": MessageLookupByLibrary.simpleMessage(
+      "Conte todos os indivíduos detectados ao longo de um transecto.",
     ),
     "inventoryTransectDetection": MessageLookupByLibrary.simpleMessage(
       "Transecto de Detecções",
     ),
+    "inventoryTransectDetectionDescription": MessageLookupByLibrary.simpleMessage(
+      "Registre detecções ao longo de um transecto com distância e/ou altura de voo.",
+    ),
     "inventoryType": MessageLookupByLibrary.simpleMessage("Tipo de inventário"),
+    "inventoryTypesDialogTitle": MessageLookupByLibrary.simpleMessage(
+      "Tipos de inventário",
+    ),
     "journalEntries": m40,
     "journalsImportedSuccessfully": m41,
     "keepRunning": MessageLookupByLibrary.simpleMessage("Manter ativo"),
@@ -876,6 +910,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "noPoisToExport": MessageLookupByLibrary.simpleMessage(
       "Nenhum POI para exportar.",
     ),
+    "noResults": MessageLookupByLibrary.simpleMessage("Sem resultados"),
     "noRevisionsFound": MessageLookupByLibrary.simpleMessage(
       "Nenhuma revisão registrada.",
     ),

@@ -251,6 +251,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "changeTagColor": MessageLookupByLibrary.simpleMessage("Change tag color"),
     "changelog": MessageLookupByLibrary.simpleMessage("Changelog"),
     "clearFilters": MessageLookupByLibrary.simpleMessage("Clear filters"),
+    "clearSearch": MessageLookupByLibrary.simpleMessage("Clear search"),
     "clearSelection": MessageLookupByLibrary.simpleMessage("Clear selection"),
     "close": MessageLookupByLibrary.simpleMessage("Close"),
     "cloudCover": MessageLookupByLibrary.simpleMessage("Cloud cover"),
@@ -666,8 +667,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "inventoriesImportedSuccessfully": m34,
     "inventory": m35,
     "inventoryBanding": MessageLookupByLibrary.simpleMessage("Banding"),
+    "inventoryBandingDescription": MessageLookupByLibrary.simpleMessage(
+      "Record birds captured, handled, or banded during a banding session.",
+    ),
     "inventoryCasual": MessageLookupByLibrary.simpleMessage(
       "Casual Observation",
+    ),
+    "inventoryCasualDescription": MessageLookupByLibrary.simpleMessage(
+      "Record opportunistic observations without a fixed protocol or time limit.",
     ),
     "inventoryData": m36,
     "inventoryDuration": m37,
@@ -675,6 +682,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "inventoryFound": m39,
     "inventoryFreeQualitative": MessageLookupByLibrary.simpleMessage(
       "Free Qualitative List",
+    ),
+    "inventoryFreeQualitativeDescription": MessageLookupByLibrary.simpleMessage(
+      "Free-form qualitative observations without a fixed duration.",
     ),
     "inventoryId": MessageLookupByLibrary.simpleMessage("Inventory ID"),
     "inventoryIdAlreadyExists": MessageLookupByLibrary.simpleMessage(
@@ -692,12 +702,24 @@ class MessageLookup extends MessageLookupByLibrary {
     "inventoryIntervalQualitative": MessageLookupByLibrary.simpleMessage(
       "Interval Qualitative List",
     ),
+    "inventoryIntervalQualitativeDescription": MessageLookupByLibrary.simpleMessage(
+      "A qualitative list split into repeated time intervals. Three intervals without new species recorded is a common stopping rule.",
+    ),
     "inventoryMackinnonList": MessageLookupByLibrary.simpleMessage(
       "Mackinnon List",
     ),
+    "inventoryMackinnonListDescription": MessageLookupByLibrary.simpleMessage(
+      "A species accumulation list completed until the target number of species is reached.",
+    ),
     "inventoryPointCount": MessageLookupByLibrary.simpleMessage("Point Count"),
+    "inventoryPointCountDescription": MessageLookupByLibrary.simpleMessage(
+      "Count every individual detected from a fixed point during a set duration.",
+    ),
     "inventoryPointDetection": MessageLookupByLibrary.simpleMessage(
       "Detection Point Count",
+    ),
+    "inventoryPointDetectionDescription": MessageLookupByLibrary.simpleMessage(
+      "Record detections from a fixed point with distance and/or flight height.",
     ),
     "inventorySettings": MessageLookupByLibrary.simpleMessage(
       "Inventory settings",
@@ -705,13 +727,25 @@ class MessageLookup extends MessageLookupByLibrary {
     "inventoryTimedQualitative": MessageLookupByLibrary.simpleMessage(
       "Timed Qualitative List",
     ),
+    "inventoryTimedQualitativeDescription": MessageLookupByLibrary.simpleMessage(
+      "A qualitative list recorded during a fixed amount of time. Timer resets when a new species is recorded.",
+    ),
     "inventoryTransectCount": MessageLookupByLibrary.simpleMessage(
       "Transect Count",
+    ),
+    "inventoryTransectCountDescription": MessageLookupByLibrary.simpleMessage(
+      "Count every individual detected while moving along a transect.",
     ),
     "inventoryTransectDetection": MessageLookupByLibrary.simpleMessage(
       "Detection Transect Count",
     ),
+    "inventoryTransectDetectionDescription": MessageLookupByLibrary.simpleMessage(
+      "Record detections along a transect with distance and/or flight height.",
+    ),
     "inventoryType": MessageLookupByLibrary.simpleMessage("Inventory type"),
+    "inventoryTypesDialogTitle": MessageLookupByLibrary.simpleMessage(
+      "Inventory types",
+    ),
     "journalEntries": m40,
     "journalsImportedSuccessfully": m41,
     "keepRunning": MessageLookupByLibrary.simpleMessage("Keep active"),
@@ -821,6 +855,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "noPoisToExport": MessageLookupByLibrary.simpleMessage(
       "No POIs to export.",
     ),
+    "noResults": MessageLookupByLibrary.simpleMessage("No results"),
     "noRevisionsFound": MessageLookupByLibrary.simpleMessage(
       "No revisions recorded.",
     ),

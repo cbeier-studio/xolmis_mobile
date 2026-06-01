@@ -4599,6 +4599,26 @@ class S {
     );
   }
 
+  /// `No results`
+  String get noResults {
+    return Intl.message(
+      'No results',
+      name: 'noResults',
+      desc: 'No results message',
+      args: [],
+    );
+  }
+
+  /// `Clear search`
+  String get clearSearch {
+    return Intl.message(
+      'Clear search',
+      name: 'clearSearch',
+      desc: 'Clear search button label',
+      args: [],
+    );
+  }
+
   /// `Argentina`
   String get countryArgentina {
     return Intl.message(
@@ -4824,6 +4844,116 @@ class S {
     return Intl.message(
       'Continuous with edge between strata',
       name: 'distributionContinuousDenseCoverWithEdge',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Inventory types`
+  String get inventoryTypesDialogTitle {
+    return Intl.message(
+      'Inventory types',
+      name: 'inventoryTypesDialogTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Free-form qualitative observations without a fixed duration.`
+  String get inventoryFreeQualitativeDescription {
+    return Intl.message(
+      'Free-form qualitative observations without a fixed duration.',
+      name: 'inventoryFreeQualitativeDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `A qualitative list recorded during a fixed amount of time. Timer resets when a new species is recorded.`
+  String get inventoryTimedQualitativeDescription {
+    return Intl.message(
+      'A qualitative list recorded during a fixed amount of time. Timer resets when a new species is recorded.',
+      name: 'inventoryTimedQualitativeDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `A qualitative list split into repeated time intervals. Three intervals without new species recorded is a common stopping rule.`
+  String get inventoryIntervalQualitativeDescription {
+    return Intl.message(
+      'A qualitative list split into repeated time intervals. Three intervals without new species recorded is a common stopping rule.',
+      name: 'inventoryIntervalQualitativeDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `A species accumulation list completed until the target number of species is reached.`
+  String get inventoryMackinnonListDescription {
+    return Intl.message(
+      'A species accumulation list completed until the target number of species is reached.',
+      name: 'inventoryMackinnonListDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Count every individual detected while moving along a transect.`
+  String get inventoryTransectCountDescription {
+    return Intl.message(
+      'Count every individual detected while moving along a transect.',
+      name: 'inventoryTransectCountDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Count every individual detected from a fixed point during a set duration.`
+  String get inventoryPointCountDescription {
+    return Intl.message(
+      'Count every individual detected from a fixed point during a set duration.',
+      name: 'inventoryPointCountDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Record birds captured, handled, or banded during a banding session.`
+  String get inventoryBandingDescription {
+    return Intl.message(
+      'Record birds captured, handled, or banded during a banding session.',
+      name: 'inventoryBandingDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Record opportunistic observations without a fixed protocol or time limit.`
+  String get inventoryCasualDescription {
+    return Intl.message(
+      'Record opportunistic observations without a fixed protocol or time limit.',
+      name: 'inventoryCasualDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Record detections along a transect with distance and/or flight height.`
+  String get inventoryTransectDetectionDescription {
+    return Intl.message(
+      'Record detections along a transect with distance and/or flight height.',
+      name: 'inventoryTransectDetectionDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Record detections from a fixed point with distance and/or flight height.`
+  String get inventoryPointDetectionDescription {
+    return Intl.message(
+      'Record detections from a fixed point with distance and/or flight height.',
+      name: 'inventoryPointDetectionDescription',
       desc: '',
       args: [],
     );

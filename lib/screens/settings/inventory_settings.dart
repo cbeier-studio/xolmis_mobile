@@ -58,7 +58,7 @@ class _InventorySettingsState extends State<InventorySettings> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(S.current.inventorySettings),
+        title: Text(S.current.inventories),
       ),
       body: SettingsList(
         contentPadding: EdgeInsets.zero,
@@ -103,7 +103,7 @@ class _InventorySettingsState extends State<InventorySettings> {
               tiles: [
             // Mackinnon lists default number of species
             SettingsTile.navigation(
-              leading: const Icon(Icons.checklist_outlined),
+              leading: const Icon(Icons.format_list_numbered_outlined),
               title: Text(S.of(context).mackinnonLists),
               value: Text(
                 S.of(context).speciesPerList(_maxSpeciesMackinnon),

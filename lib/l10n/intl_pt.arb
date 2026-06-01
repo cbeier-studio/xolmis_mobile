@@ -2107,6 +2107,16 @@
     "type": "text",
     "description": "Invalid JSON file schema error message"
   },
+  "noResults": "Sem resultados",
+  "@noResults": {
+    "type": "text",
+    "description": "No results message"
+  },
+  "clearSearch": "Limpar busca",
+  "@clearSearch": {
+    "type": "text",
+    "description": "Clear search button label"
+  },
   "countryArgentina": "Argentina",
   "countryBrazil": "Brasil",
   "countryParaguay": "Paraguai",
@@ -2135,6 +2145,17 @@
     "distributionContinuousCoverWithGaps": "Contínua com manchas sem cobertura",
     "distributionContinuousDenseCover": "Contínua e densa",
     "distributionContinuousDenseCoverWithEdge": "Contínua com borda separando estratos",
+    "inventoryTypesDialogTitle": "Tipos de inventário",
+    "inventoryFreeQualitativeDescription": "Observações qualitativas livres, sem duração fixa.",
+    "inventoryTimedQualitativeDescription": "Lista qualitativa registrada durante um tempo fixo. O temporizador é reiniciado a cada vez que uma nova espécie é detectada.",
+    "inventoryIntervalQualitativeDescription": "Lista qualitativa dividida em intervalos de tempo repetidos. Três intervalos sem registro de novas espécies encerram o inventário.",
+    "inventoryMackinnonListDescription": "Lista de acumulação de espécies concluída até atingir o número-alvo de espécies.",
+    "inventoryTransectCountDescription": "Conte todos os indivíduos detectados ao longo de um transecto.",
+    "inventoryPointCountDescription": "Conte todos os indivíduos detectados em um ponto fixo durante uma duração definida.",
+    "inventoryBandingDescription": "Registre aves capturadas, manipuladas ou anilhadas durante uma sessão de anilhamento.",
+    "inventoryCasualDescription": "Registre observações oportunistas sem protocolo fixo ou limite de tempo.",
+    "inventoryTransectDetectionDescription": "Registre detecções ao longo de um transecto com distância e/ou altura de voo.",
+    "inventoryPointDetectionDescription": "Registre detecções em um ponto fixo com distância e/ou altura de voo.",
     "inventoryFreeQualitative": "Lista Qualitativa Livre",
     "inventoryTimedQualitative": "Lista Qualitativa Temporizada",
     "inventoryIntervalQualitative": "Lista Qualitativa por Intervalos",

@@ -133,7 +133,11 @@ class FieldJournalDao {
   /// and the method returns `false` for that incoming record.
   ///
   /// New imported records always receive a local auto-incremented ID, ignoring
-  /// any numeric ID that may have come from another device.
+  /// any numeric ID that may have come from another device. Tags from
+  /// [journal.tags] are also imported: any tag name not yet present in
+  /// `predefined_tags` is inserted, and the association in `journal_tags` is
+  /// created for the imported entry. When an existing entry is updated, its
+  /// previous tag associations are replaced with the incoming ones.
   ///
   /// Sets [journal.id] with the persisted ID upon success.
   /// Returns `true` on success, or `false` if an error occurs.
@@ -148,7 +152,7 @@ class FieldJournalDao {
         final journalMap = journal.toMap();
         final title = journal.title;
 
-        if (title.isNotEmpty) {
+        if (title != null && title.isNotEmpty) {
           final existingJournalId = Sqflite.firstIntValue(
             await txn.rawQuery('SELECT id FROM field_journal WHERE LOWER(title) = ? LIMIT 1', [title.toLowerCase()]),
           );
@@ -167,6 +171,15 @@ class FieldJournalDao {
             );
             if (updatedRows > 0) {
               journal.id = existingJournalId;
+              // Replace existing tag associations with the imported ones.
+              await txn.delete('journal_tags', where: 'journalId = ?', whereArgs: [existingJournalId]);
+              for (final tag in journal.tags) {
+                final tagId = await _tagDao.upsertTagDefinition(tag, executor: txn);
+                await txn.insert('journal_tags', {
+                  'journalId': existingJournalId,
+                  'tagId': tagId,
+                }, conflictAlgorithm: ConflictAlgorithm.replace);
+              }
               return true;
             }
             return false;
@@ -179,6 +192,14 @@ class FieldJournalDao {
           return false;
         }
         journal.id = insertedId;
+        // Insert tag associations for the new entry.
+        for (final tag in journal.tags) {
+          final tagId = await _tagDao.upsertTagDefinition(tag, executor: txn);
+          await txn.insert('journal_tags', {
+            'journalId': insertedId,
+            'tagId': tagId,
+          }, conflictAlgorithm: ConflictAlgorithm.replace);
+        }
         return true;
       });
     } catch (e) {
@@ -208,9 +229,12 @@ class FieldJournalDao {
 
   /// Returns `true` if a journal entry with the given [title] already exists
   /// in the database (case-insensitive comparison).
-  Future<bool> journalTitleExists(String title) async {
+  Future<bool> journalTitleExists(String? title) async {
+    if (title == null || title.trim().isEmpty) {
+      return false;
+    }
     final db = await _dbHelper.database;
-    final result = await db?.query('field_journal', where: 'LOWER(title) = ?', whereArgs: [title.toLowerCase()]);
+    final result = await db?.query('field_journal', where: 'LOWER(title) = ?', whereArgs: [title?.toLowerCase()]);
     return result!.isNotEmpty;
   }
 }

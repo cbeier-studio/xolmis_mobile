@@ -8,6 +8,8 @@ import '../../core/core_consts.dart';
 import '../../utils/utils.dart';
 import '../../generated/l10n.dart';
 
+const String _kRecentInventoryLocalitiesPreferenceKey = 'recentInventoryLocalities';
+
 /// Form screen used to create a new inventory entry.
 class AddInventoryScreen extends StatefulWidget {
   final String? initialInventoryId;
@@ -30,6 +32,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
   final _totalObserversController = TextEditingController();
   late TextEditingController _localityNameController;
   late TextEditingController _fieldLocalityEditingController;
+  List<String> _recentLocalities = const [];
   InventoryType _selectedType = InventoryType.invFreeQualitative;
   bool _isSubmitting = false;
 
@@ -44,6 +47,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
     _localityNameController.text = widget.initialLocalityName ?? '';
     _fieldLocalityEditingController = TextEditingController();
     _fieldLocalityEditingController.text = widget.initialLocalityName ?? '';
+    _loadRecentLocalities();
   }
 
   @override
@@ -79,6 +83,10 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                       decoration: InputDecoration(
                         labelText: '${S.of(context).inventoryType} *',
                         border: OutlineInputBorder(),
+                        suffixIcon: IconButton(
+                          onPressed: _showInventoryTypesDialog,
+                          icon: const Icon(Icons.help_outline),
+                        ),
                       ),
                       items: InventoryType.values.map((type) {
                         return DropdownMenuItem(
@@ -181,25 +189,13 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                       initialValue: widget.initialLocalityName != null
                           ? TextEditingValue(text: widget.initialLocalityName!)
                           : TextEditingValue.empty,
-                      optionsBuilder:
-                          (TextEditingValue textEditingValue) async {
-                        if (textEditingValue.text.isEmpty) {
-                          return const Iterable<String>.empty();
-                        }
-
-                        try {
-                          final localityOptions = await Provider.of<InventoryProvider>(context, listen: false).getDistinctLocalities();
-                          return localityOptions.where((String option) {
-                            return option.toLowerCase().contains(textEditingValue.text.toLowerCase());
-                          });
-                        } catch (e) {
-                          debugPrint('Error fetching locality options: $e');
-                          return const Iterable<String>.empty();
-                        }
+                      optionsBuilder: (TextEditingValue textEditingValue) async {
+                        return _getLocalitySuggestions(textEditingValue.text);
                       },
                       onSelected: (String selection) {
                         _localityNameController.text = selection;
                         _fieldLocalityEditingController.text = selection;
+                        _saveRecentLocality(selection);
                       },
                       fieldViewBuilder: (BuildContext context,
                           TextEditingController fieldTextEditingController,
@@ -219,11 +215,20 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                             }
                             return null;
                           },
+                          onTap: () {
+                            // Forces a value-change event so Autocomplete opens on focus.
+                            if (fieldTextEditingController.text.isEmpty) {
+                              fieldTextEditingController.text = ' ';
+                              fieldTextEditingController.selection = const TextSelection.collapsed(offset: 1);
+                              Future.microtask(fieldTextEditingController.clear);
+                            }
+                          },
                           onChanged: (value) {
                             _localityNameController.text = value;
                           },
                           onFieldSubmitted: (String value) {
                             _localityNameController.text = value;
+                            _saveRecentLocality(value);
                             onFieldSubmitted();
                           },
                         );
@@ -239,7 +244,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                             child: SizedBox(
                               width: MediaQuery.of(context).size.width * 0.9,
                               child: ListView.builder(
-                                padding: EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.all(8.0),
                                 itemCount: options.length,
                                 itemBuilder: (BuildContext context, int index) {
                                   final String option = options.elementAt(index);
@@ -417,7 +422,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                   height: 24,
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
-                    year2023: false,),
+                    ),
                 )
                     : FilledButton(
                   onPressed: _submitForm,
@@ -429,6 +434,209 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
         ],
       ),
     );
+  }
+
+  /// Loads recent localities used in inventory creation.
+  Future<void> _loadRecentLocalities() async {
+    final prefs = await SharedPreferences.getInstance();
+    final saved = prefs.getStringList(_kRecentInventoryLocalitiesPreferenceKey) ?? const [];
+
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {
+      _recentLocalities = saved.where((item) => item.trim().isNotEmpty).take(3).toList();
+    });
+  }
+
+  /// Stores a locality at the top of the recent list, keeping only the last three entries.
+  Future<void> _saveRecentLocality(String locality) async {
+    final normalized = locality.trim();
+    if (normalized.isEmpty) {
+      return;
+    }
+
+    final updated = [
+      normalized,
+      ..._recentLocalities.where((item) => item.toLowerCase() != normalized.toLowerCase()),
+    ].take(3).toList();
+
+    if (mounted) {
+      setState(() {
+        _recentLocalities = updated;
+      });
+    }
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList(_kRecentInventoryLocalitiesPreferenceKey, updated);
+  }
+
+  /// Returns locality suggestions with recent entries pinned to the top.
+  Future<List<String>> _getLocalitySuggestions(String queryText) async {
+    final query = queryText.trim().toLowerCase();
+
+    try {
+      final localityOptions = await Provider.of<InventoryProvider>(context, listen: false).getDistinctLocalities();
+      final normalizedOptions = <String>[];
+      final seen = <String>{};
+
+      for (final option in localityOptions) {
+        final normalized = option.trim();
+        final key = normalized.toLowerCase();
+        if (normalized.isEmpty || !seen.add(key)) {
+          continue;
+        }
+        normalizedOptions.add(normalized);
+      }
+
+      final filteredRecent = _recentLocalities
+          .where((item) => item.toLowerCase().contains(query))
+          .toList();
+      final filteredOptions = normalizedOptions
+          .where((item) => item.toLowerCase().contains(query))
+          .toList();
+
+      final merged = <String>[];
+      final mergedSet = <String>{};
+
+      for (final item in filteredRecent) {
+        final key = item.toLowerCase();
+        if (mergedSet.add(key)) {
+          merged.add(item);
+        }
+      }
+
+      for (final item in filteredOptions) {
+        final key = item.toLowerCase();
+        if (mergedSet.add(key)) {
+          merged.add(item);
+        }
+      }
+
+      return merged;
+    } catch (e) {
+      debugPrint('Error fetching locality options: $e');
+      return _recentLocalities.where((item) => item.toLowerCase().contains(query)).toList();
+    }
+  }
+
+  /// Shows a dialog explaining the available inventory protocols.
+  void _showInventoryTypesDialog() {
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) {
+        final isFullScreen = MediaQuery.sizeOf(dialogContext).width < kTabletBreakpoint;
+        final title = S.of(dialogContext).inventoryTypesDialogTitle;
+        final items = _buildInventoryTypeDialogItems(dialogContext);
+
+        if (isFullScreen) {
+          return Dialog.fullscreen(
+            child: SafeArea(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 12, 8, 12),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            title,
+                            style: Theme.of(dialogContext).textTheme.titleLarge,
+                          ),
+                        ),
+                        IconButton(
+                          tooltip: S.of(dialogContext).close,
+                          onPressed: () => Navigator.of(dialogContext).pop(),
+                          icon: const Icon(Icons.close),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Divider(height: 1),
+                  Expanded(child: _InventoryTypesDialogList(items: items)),
+                ],
+              ),
+            ),
+          );
+        }
+
+        final dialogHeight = MediaQuery.sizeOf(dialogContext).height * 0.6;
+
+        return AlertDialog(
+          title: Text(title),
+          content: SizedBox(
+            width: 560,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: dialogHeight),
+              child: _InventoryTypesDialogList(items: items),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: Text(S.of(dialogContext).close),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  /// Builds the list of inventory type names and descriptions used by the dialog.
+  List<_InventoryTypeDialogItem> _buildInventoryTypeDialogItems(BuildContext context) {
+    return [
+      _InventoryTypeDialogItem(
+        type: InventoryType.invFreeQualitative,
+        description: S.of(context).inventoryFreeQualitativeDescription,
+        icon: Icons.checklist,
+      ),
+      _InventoryTypeDialogItem(
+        type: InventoryType.invTimedQualitative,
+        description: S.of(context).inventoryTimedQualitativeDescription,
+        icon: Icons.timer_outlined,
+      ),
+      _InventoryTypeDialogItem(
+        type: InventoryType.invIntervalQualitative,
+        description: S.of(context).inventoryIntervalQualitativeDescription,
+        icon: Icons.update,
+      ),
+      _InventoryTypeDialogItem(
+        type: InventoryType.invMackinnonList,
+        description: S.of(context).inventoryMackinnonListDescription,
+        icon: Icons.format_list_numbered,
+      ),
+      _InventoryTypeDialogItem(
+        type: InventoryType.invTransectCount,
+        description: S.of(context).inventoryTransectCountDescription,
+        icon: Icons.route,
+      ),
+      _InventoryTypeDialogItem(
+        type: InventoryType.invPointCount,
+        description: S.of(context).inventoryPointCountDescription,
+        icon: Icons.radar,
+      ),
+      _InventoryTypeDialogItem(
+        type: InventoryType.invBanding,
+        description: S.of(context).inventoryBandingDescription,
+        icon: Icons.grid_4x4,
+      ),
+      _InventoryTypeDialogItem(
+        type: InventoryType.invCasual,
+        description: S.of(context).inventoryCasualDescription,
+        icon: Icons.gps_fixed,
+      ),
+      _InventoryTypeDialogItem(
+        type: InventoryType.invTransectDetection,
+        description: S.of(context).inventoryTransectDetectionDescription,
+        icon: Icons.timeline,
+      ),
+      _InventoryTypeDialogItem(
+        type: InventoryType.invPointDetection,
+        description: S.of(context).inventoryPointDetectionDescription,
+        icon: Icons.hub_outlined,
+      ),
+    ];
   }
 
   // Load default values from settings
@@ -510,6 +718,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
       });
 
       if (success) {
+        await _saveRecentLocality(_localityNameController.text);
         if (mounted) {
           Navigator.pop(context); // Return to the previous screen
         }
@@ -533,3 +742,45 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
     }
   }
 }
+
+/// Small data holder for one inventory type entry in the information dialog.
+class _InventoryTypeDialogItem {
+  final InventoryType type;
+  final String description;
+  final IconData icon;
+
+  const _InventoryTypeDialogItem({
+    required this.type,
+    required this.description,
+    required this.icon,
+  });
+}
+
+/// Scrollable list used by the inventory types information dialog.
+class _InventoryTypesDialogList extends StatelessWidget {
+  final List<_InventoryTypeDialogItem> items;
+
+  const _InventoryTypesDialogList({required this.items});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.separated(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+      itemCount: items.length,
+      separatorBuilder: (context, _) => const SizedBox(height: 8),
+      itemBuilder: (context, index) {
+        final item = items[index];
+        return ListTile(
+          contentPadding: EdgeInsets.zero,
+          leading: Icon(item.icon),
+          title: Text(inventoryTypeFriendlyNames[item.type] ?? ''),
+          subtitle: Padding(
+            padding: const EdgeInsets.only(top: 4),
+            child: Text(item.description),
+          ),
+        );
+      },
+    );
+  }
+}
+
