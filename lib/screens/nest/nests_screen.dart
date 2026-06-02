@@ -595,9 +595,9 @@ class NestsScreenState extends State<NestsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.sizeOf(context).width;
-    final isSplitScreen = screenWidth >= kTabletBreakpoint;
-    final isMenuShown = screenWidth < kDesktopBreakpoint;
+    // final screenWidth = MediaQuery.sizeOf(context).width;
+    final isSplitScreen = Responsive.isMediumScreen(context) || Responsive.isLargeScreen(context);  // screenWidth >= kTabletBreakpoint;
+    final isMenuShown = Responsive.isSmallScreen(context) || Responsive.isMediumScreen(context);  // screenWidth < kDesktopBreakpoint;
 
     return Scaffold(
       appBar:
@@ -1379,7 +1379,7 @@ class NestsScreenState extends State<NestsScreen> {
   ) {
     final nest = filteredNests[index];
     final isSelected = selectedNests.contains(nest.id);
-    final isLargeScreen = MediaQuery.sizeOf(context).width >= kTabletBreakpoint;
+    final isLargeScreen = Responsive.isMediumScreen(context) || Responsive.isLargeScreen(context);  // MediaQuery.sizeOf(context).width >= kTabletBreakpoint;
     final selectedNestId = _getEffectiveSelectedNestId(
       filteredNests,
       isLargeScreen,

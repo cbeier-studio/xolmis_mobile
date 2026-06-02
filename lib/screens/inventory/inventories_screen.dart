@@ -667,9 +667,9 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.sizeOf(context).width;
-    final isSplitScreen = screenWidth >= kTabletBreakpoint;
-    final isMenuShown = screenWidth < kDesktopBreakpoint;
+    // final screenWidth = MediaQuery.sizeOf(context).width;
+    final isSplitScreen = Responsive.isMediumScreen(context) || Responsive.isLargeScreen(context);  // screenWidth >= kTabletBreakpoint;
+    final isMenuShown = Responsive.isSmallScreen(context) || Responsive.isMediumScreen(context);  // screenWidth < kDesktopBreakpoint;
 
     return Scaffold(
       appBar:
@@ -1571,7 +1571,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
   ) {
     final inventory = filteredInventories[index];
     final isSelected = selectedInventories.contains(inventory.id);
-    final isLargeScreen = MediaQuery.sizeOf(context).width >= kTabletBreakpoint;
+    final isLargeScreen = Responsive.isMediumScreen(context) || Responsive.isLargeScreen(context);  // MediaQuery.sizeOf(context).width >= kTabletBreakpoint;
     final selectedInventoryId = _getEffectiveSelectedInventoryId(
       filteredInventories,
       isLargeScreen,

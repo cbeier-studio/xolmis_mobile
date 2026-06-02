@@ -449,9 +449,9 @@ class JournalsScreenState extends State<JournalsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.sizeOf(context).width;
-    final isSplitScreen = screenWidth >= kTabletBreakpoint;
-    final isMenuShown = screenWidth < kDesktopBreakpoint;
+    // final screenWidth = MediaQuery.sizeOf(context).width;
+    final isSplitScreen = Responsive.isMediumScreen(context) || Responsive.isLargeScreen(context);  // screenWidth >= kTabletBreakpoint;
+    final isMenuShown = Responsive.isSmallScreen(context) || Responsive.isMediumScreen(context);  // screenWidth < kDesktopBreakpoint;
 
     return Scaffold(
       appBar:
@@ -998,7 +998,7 @@ class JournalsScreenState extends State<JournalsScreen> {
                             itemBuilder: (context, index) {
                               final entry = filteredEntries[index];
                               final isSelected = selectedJournals.contains(entry.id);
-                              final isLargeScreen = MediaQuery.sizeOf(context).width >= kTabletBreakpoint;
+                              final isLargeScreen = Responsive.isMediumScreen(context) || Responsive.isLargeScreen(context);  // MediaQuery.sizeOf(context).width >= kTabletBreakpoint;
                               return Card(
                                 color: _resolveJournalCardColor(entry, isSelected: isSelected, isLargeScreen: isLargeScreen),
                                 child: journalListTileItem(filteredEntries, index, context),
@@ -1042,7 +1042,7 @@ class JournalsScreenState extends State<JournalsScreen> {
   ListTile journalListTileItem(List<FieldJournal> filteredEntries, int index, BuildContext context) {
     final entry = filteredEntries[index];
     final isSelected = selectedJournals.contains(entry.id);
-    final isLargeScreen = MediaQuery.sizeOf(context).width >= kTabletBreakpoint;
+    final isLargeScreen = Responsive.isMediumScreen(context) || Responsive.isLargeScreen(context);  // MediaQuery.sizeOf(context).width >= kTabletBreakpoint;
     final selectedJournalId = _getEffectiveSelectedJournalEntryId(filteredEntries, isLargeScreen);
     final isDetailSelected = selectedJournalId == entry.id;
 

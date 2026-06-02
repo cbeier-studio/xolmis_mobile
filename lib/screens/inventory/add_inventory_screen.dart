@@ -526,7 +526,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
     showDialog<void>(
       context: context,
       builder: (dialogContext) {
-        final isFullScreen = MediaQuery.sizeOf(dialogContext).width < kTabletBreakpoint;
+        final isFullScreen = Responsive.isMediumScreen(dialogContext) || Responsive.isLargeScreen(dialogContext);  // MediaQuery.sizeOf(dialogContext).width < kTabletBreakpoint;
         final title = S.of(dialogContext).inventoryTypesDialogTitle;
         final items = _buildInventoryTypeDialogItems(dialogContext);
 

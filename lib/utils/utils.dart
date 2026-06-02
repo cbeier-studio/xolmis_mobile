@@ -21,6 +21,21 @@ List<String> allSpeciesNames = [];
 /// Optional callback invoked when an inventory stop action completes.
 void Function(String)? onInventoryStopped;
 
+class Responsive {
+  static bool isSmallScreen(BuildContext context) {
+    return MediaQuery.of(context).size.width < kTabletBreakpoint;
+  }
+
+  static bool isMediumScreen(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    return width >= kTabletBreakpoint && width < kDesktopBreakpoint;
+  }
+
+  static bool isLargeScreen(BuildContext context) {
+    return MediaQuery.of(context).size.width >= kDesktopBreakpoint;
+  }
+}
+
 /// Returns the country currently selected in shared preferences.
 ///
 /// Defaults to [SupportedCountry.BR] when no saved country code is found.
@@ -28,8 +43,8 @@ Future<SupportedCountry> getCountrySetting() async {
   final prefs = await SharedPreferences.getInstance();
   final countryCode = prefs.getString('user_country');
 
-  // Converte a string 'BR' de volta para o enum SupportedCountry.BR
-  // O valor padrão é Brasil se nada for encontrado.
+  // Convert 'BR' string back to enum SupportedCountry.BR
+  // Default value is Brazil if nothing was found.
   return SupportedCountry.values.firstWhere(
         (e) => e.name == countryCode,
     orElse: () => SupportedCountry.BR,
@@ -49,10 +64,10 @@ Future<List<String>> loadSpeciesSearchData() async {
     final filePath = 'assets/checklists/species_data_$countryCode.json';
     debugPrint('Carregando dados de espécies do arquivo: $filePath');
 
-    // Carrega o conteúdo do arquivo JSON do bundle de assets.
+    // Loads the JSON file content from assets bundle.
     final jsonString = await rootBundle.loadString(filePath);
 
-    // Decodifica o JSON e o converte para uma lista de strings.
+    // Decode JSON and convert it to a list of strings.
     final jsonData = json.decode(jsonString) as List<dynamic>;
     final speciesList = jsonData.map((species) => species['scientificName'].toString()).toList();
 
@@ -60,14 +75,13 @@ Future<List<String>> loadSpeciesSearchData() async {
     return speciesList;
 
   } on FlutterError catch (e) {
-    // Trata especificamente o erro de arquivo não encontrado.
+    // Handles specifically the error of file not found.
     debugPrint('ERRO: Não foi possível carregar o arquivo de dados de espécies. Verifique se o arquivo está no local correto e declarado no pubspec.yaml. Detalhes: $e');
-    // Retorna uma lista vazia para evitar que o app quebre.
+    // Returns and empty list as safe fallback.
     return [];
   } catch (e) {
-    // Trata outros erros (ex: JSON malformado, erro de tipo).
+    // Handles other errors (ex: malformed JSON, type error).
     debugPrint('ERRO: Ocorreu um erro inesperado ao carregar ou processar os dados de espécies: $e');
-    // Retorna uma lista vazia como fallback seguro.
     return [];
   }
 }

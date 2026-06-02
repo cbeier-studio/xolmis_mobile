@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:side_sheet/side_sheet.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:xolmis/utils/utils.dart';
 
 import 'providers/inventory_provider.dart';
 import 'providers/nest_provider.dart';
@@ -371,7 +372,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
   void _navigateToSettings(BuildContext context) {
     final rootContext = _scaffoldKey.currentContext ?? context;
     final screenWidth = MediaQuery.sizeOf(rootContext).width;
-    final shouldUseSideSheet = screenWidth >= kTabletBreakpoint;
+    final shouldUseSideSheet = Responsive.isMediumScreen(rootContext) || Responsive.isLargeScreen(rootContext);  // screenWidth >= kTabletBreakpoint;
     final isDrawerOpen = _scaffoldKey.currentState?.isDrawerOpen ?? false;
     final settingsSheetWidth =
         (screenWidth * 0.38).clamp(420.0, 620.0);
@@ -461,9 +462,9 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.sizeOf(context).width;
-    final useSideNavRail = screenWidth >= kDesktopBreakpoint;
-    final useFixedNavDrawer = screenWidth >= kDesktopBreakpoint;
+    // final screenWidth = MediaQuery.sizeOf(context).width;
+    final useSideNavRail = Responsive.isMediumScreen(context) || Responsive.isLargeScreen(context);  // screenWidth >= kDesktopBreakpoint;
+    final useFixedNavDrawer = Responsive.isLargeScreen(context); // screenWidth >= kDesktopBreakpoint;
 
     // Generate NavigationRailDestinations
     List<NavigationRailDestination> railDestinations =
