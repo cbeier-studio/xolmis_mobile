@@ -52,6 +52,16 @@ class InventoryProvider with ChangeNotifier {
 
   InventoryProvider(this._inventoryDao, this._speciesProvider, this._vegetationProvider, this._weatherProvider);
 
+  /// Synchronizes persisted data from [source] into [target] without replacing
+  /// the in-memory instance, preserving runtime timer subscriptions.
+  void _syncInventoryInstance(
+    Inventory target,
+    Inventory source, {
+    bool includeCollections = false,
+  }) {
+    target.applyPersistedState(source, includeCollections: includeCollections);
+  }
+
   /// Notifies listeners without changing provider state.
   void refreshState() {
     notifyListeners();
@@ -75,24 +85,8 @@ class InventoryProvider with ChangeNotifier {
     // Update existing or add new inventories
     for (var dbInventory in inventoriesFromDb) {
       if (_inventoryMap.containsKey(dbInventory.id)) {
-        // Object already exists in memory: UPDATE IT, do not replace it.
         final memoryInventory = _inventoryMap[dbInventory.id]!;
-        memoryInventory.currentInterval = dbInventory.currentInterval;
-        memoryInventory.elapsedTime = dbInventory.elapsedTime;
-        memoryInventory.isFinished = dbInventory.isFinished;
-        memoryInventory.isPaused = dbInventory.isPaused;
-        memoryInventory.startTime = dbInventory.startTime;
-        memoryInventory.endTime = dbInventory.endTime;
-        memoryInventory.duration = dbInventory.duration;
-        memoryInventory.localityName = dbInventory.localityName;
-        memoryInventory.speciesCount = dbInventory.speciesCount;
-        memoryInventory.speciesWithinCount = dbInventory.speciesWithinCount;
-        memoryInventory.speciesOutOfInventoryCount = dbInventory.speciesOutOfInventoryCount;
-        memoryInventory.currentIntervalSpeciesCount = dbInventory.currentIntervalSpeciesCount;
-        memoryInventory.totalPausedTimeInSeconds = dbInventory.totalPausedTimeInSeconds;
-        memoryInventory.pauseStartTime = dbInventory.pauseStartTime;
-        memoryInventory.intervalsWithoutNewSpecies = dbInventory.intervalsWithoutNewSpecies;
-        memoryInventory.isDiscarded = dbInventory.isDiscarded;
+        _syncInventoryInstance(memoryInventory, dbInventory, includeCollections: true);
       } else {
         // Object does not exist in memory: ADD IT.
         _inventories.add(dbInventory);
@@ -351,26 +345,31 @@ class InventoryProvider with ChangeNotifier {
       for (var dbInventory in inventoriesFromDb) {
         if (_inventoryMap.containsKey(dbInventory.id)) {
           final memoryInventory = _inventoryMap[dbInventory.id]!;
-          memoryInventory.currentInterval = dbInventory.currentInterval;
-          memoryInventory.elapsedTime = dbInventory.elapsedTime;
-          memoryInventory.isFinished = dbInventory.isFinished;
-          memoryInventory.isPaused = dbInventory.isPaused;
-          memoryInventory.startTime = dbInventory.startTime;
-          memoryInventory.endTime = dbInventory.endTime;
-          memoryInventory.duration = dbInventory.duration;
-          memoryInventory.localityName = dbInventory.localityName;
-          memoryInventory.speciesCount = dbInventory.speciesCount;
-          memoryInventory.speciesWithinCount = dbInventory.speciesWithinCount;
-          memoryInventory.speciesOutOfInventoryCount =
-              dbInventory.speciesOutOfInventoryCount;
-          memoryInventory.currentIntervalSpeciesCount = dbInventory.currentIntervalSpeciesCount;
-          memoryInventory.totalPausedTimeInSeconds = dbInventory.totalPausedTimeInSeconds;
-          memoryInventory.pauseStartTime = dbInventory.pauseStartTime;
-          memoryInventory.intervalsWithoutNewSpecies = dbInventory.intervalsWithoutNewSpecies;
-          memoryInventory.isDiscarded = dbInventory.isDiscarded;
+          _syncInventoryInstance(memoryInventory, dbInventory);
         } else {
           _inventories.add(dbInventory);
           _inventoryMap[dbInventory.id] = dbInventory;
+        }
+      }
+
+      // Active inventories must stay fully hydrated in memory so timer state
+      // survives refreshes and we avoid replacing live instances.
+      final activeIds = inventoriesFromDb
+          .where((inventory) => !inventory.isFinished)
+          .map((inventory) => inventory.id)
+          .toSet();
+      for (final id in activeIds) {
+        try {
+          final detailedInventory = await _inventoryDao.getInventoryById(id);
+          final memoryInventory = _inventoryMap[id];
+          if (memoryInventory != null) {
+            _syncInventoryInstance(memoryInventory, detailedInventory, includeCollections: true);
+          } else {
+            _inventories.add(detailedInventory);
+            _inventoryMap[id] = detailedInventory;
+          }
+        } catch (e) {
+          debugPrint('[PROVIDER] !!! ERROR loading active inventory details for $id: $e');
         }
       }
       debugPrint('[PROVIDER] Summary sync complete. Count: ${activeInventories.length}');
@@ -386,12 +385,16 @@ class InventoryProvider with ChangeNotifier {
   /// Loads complete details for a specific inventory on demand.
   Future<void> loadInventoryDetails(String inventoryId) async {
     try {
-      final inventory = await _inventoryDao.getInventoryById(inventoryId);
+      final inventoryFromDb = await _inventoryDao.getInventoryById(inventoryId);
       final index = _inventories.indexWhere((inv) => inv.id == inventoryId);
       if (index != -1) {
-        _inventories[index] = inventory;
+        final memoryInventory = _inventories[index];
+        _syncInventoryInstance(memoryInventory, inventoryFromDb, includeCollections: true);
+      } else {
+        _inventories.add(inventoryFromDb);
+        _inventoryMap[inventoryId] = inventoryFromDb;
       }
-      _inventoryMap[inventoryId] = inventory;
+      _inventoryMap[inventoryId] = _inventoryMap[inventoryId] ?? inventoryFromDb;
       notifyListeners();
       debugPrint('[PROVIDER] Loaded complete details for inventory: $inventoryId');
     } catch (e) {
@@ -407,13 +410,18 @@ class InventoryProvider with ChangeNotifier {
     try {
       final inventories = <Inventory>[];
       for (var id in inventoryIds) {
-        final inventory = await _inventoryDao.getInventoryById(id);
+        final inventoryFromDb = await _inventoryDao.getInventoryById(id);
         final index = _inventories.indexWhere((inv) => inv.id == id);
         if (index != -1) {
-          _inventories[index] = inventory;
+          final memoryInventory = _inventories[index];
+          _syncInventoryInstance(memoryInventory, inventoryFromDb, includeCollections: true);
+          _inventoryMap[id] = memoryInventory;
+          inventories.add(memoryInventory);
+        } else {
+          _inventories.add(inventoryFromDb);
+          _inventoryMap[id] = inventoryFromDb;
+          inventories.add(inventoryFromDb);
         }
-        _inventoryMap[id] = inventory;
-        inventories.add(inventory);
       }
       notifyListeners();
       debugPrint('[PROVIDER] Loaded complete details for ${inventories.length} inventories');

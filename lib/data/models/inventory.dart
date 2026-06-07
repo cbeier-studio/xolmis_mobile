@@ -935,6 +935,51 @@ class Inventory with ChangeNotifier {
     notifyListeners();
   }
 
+  /// Applies persisted values from [source] into this in-memory instance.
+  ///
+  /// This keeps the same object identity (and therefore any active runtime
+  /// timer subscription) while refreshing DB-backed fields.
+  ///
+  /// When [includeCollections] is `true`, nested lists ([speciesList],
+  /// [vegetationList], [weatherList]) are also replaced with [source] values.
+  void applyPersistedState(Inventory source, {bool includeCollections = false}) {
+    duration = source.duration;
+    maxSpecies = source.maxSpecies;
+    isPaused = source.isPaused;
+    isFinished = source.isFinished;
+    elapsedTime = source.elapsedTime;
+    startTime = source.startTime;
+    endTime = source.endTime;
+    startLongitude = source.startLongitude;
+    startLatitude = source.startLatitude;
+    endLongitude = source.endLongitude;
+    endLatitude = source.endLatitude;
+    localityName = source.localityName;
+    totalObservers = source.totalObservers;
+    observer = source.observer;
+    notes = source.notes;
+    isDiscarded = source.isDiscarded;
+    currentInterval = source.currentInterval;
+    intervalsWithoutNewSpecies = source.intervalsWithoutNewSpecies;
+    currentIntervalSpeciesCount = source.currentIntervalSpeciesCount;
+    totalPausedTimeInSeconds = source.totalPausedTimeInSeconds;
+    pauseStartTime = source.pauseStartTime;
+    speciesCount = source.speciesCount;
+    speciesWithinCount = source.speciesWithinCount;
+    speciesOutOfInventoryCount = source.speciesOutOfInventoryCount;
+
+    if (includeCollections) {
+      speciesList = source.speciesList;
+      vegetationList = source.vegetationList;
+      weatherList = source.weatherList;
+    }
+
+    _elapsedTimeNotifier.value = elapsedTime;
+    _currentIntervalNotifier.value = currentInterval;
+    _intervalWithoutSpeciesNotifier.value = intervalsWithoutNewSpecies;
+    _isFinishedNotifier.value = isFinished;
+  }
+
   /// Starts the inventory countdown timer, ticking every 5 seconds.
   ///
   /// Does nothing if [duration] is `0`. On each tick, the elapsed time is

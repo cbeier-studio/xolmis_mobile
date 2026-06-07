@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 
 import 'package:csv/csv.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:xolmis/generated/l10n.dart';
 
 import '../../data/models/inventory.dart';
+import '../../providers/inventory_provider.dart';
 
 /// Builds a cross-inventory species report and allows CSV export.
 class InventoryReportScreen extends StatelessWidget {
@@ -16,36 +18,67 @@ class InventoryReportScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Load the species list and generate the report data
-    final speciesSet = _getSpeciesList(selectedInventories);
-    final reportData = _generateReportData(speciesSet, selectedInventories);
+    return FutureBuilder<List<Inventory>>(
+      future: Provider.of<InventoryProvider>(context, listen: false)
+          .loadInventoriesDetails(selectedInventories.map((e) => e.id).toList()),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text(S.current.reportSpeciesByInventory),
+            ),
+            body: const Center(
+              child: CircularProgressIndicator(
+                year2023: false,
+              ),
+            ),
+          );
+        }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(S.current.reportSpeciesByInventory),
-        actions: [
-          // Option to export the report to a CSV file
-          IconButton(
-            icon: Icon(Icons.share_outlined),
-            onPressed: () async {
-              await _exportReportToCsv(context, reportData);
-            },
+        if (snapshot.hasError) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text(S.current.reportSpeciesByInventory),
+            ),
+            body: Center(
+              child: Text(snapshot.error.toString()),
+            ),
+          );
+        }
+
+        final inventories = snapshot.data ?? [];
+        // Load the species list and generate the report data
+        final speciesSet = _getSpeciesList(inventories);
+        final reportData = _generateReportData(speciesSet, inventories);
+
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(S.current.reportSpeciesByInventory),
+            actions: [
+              // Option to export the report to a CSV file
+              IconButton(
+                icon: const Icon(Icons.share_outlined),
+                onPressed: () async {
+                  await _exportReportToCsv(context, reportData, inventories);
+                },
+              ),
+            ],
           ),
-        ],
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          // Build table with the report data
-          child: DataTable(
-            columns: _buildColumns(selectedInventories),
-            rows: _buildRows(speciesSet, reportData),
+          body: SafeArea(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                // Build table with the report data
+                child: DataTable(
+                  columns: _buildColumns(inventories),
+                  rows: _buildRows(speciesSet, reportData),
+                ),
+              ),
+            ),
           ),
-        ),
-      ),
-      ),
+        );
+      },
     );
   }
 
@@ -197,10 +230,10 @@ class InventoryReportScreen extends StatelessWidget {
   }
 
   // Export the report data to a CSV file
-  Future<void> _exportReportToCsv(BuildContext context, List<List<dynamic>> reportData) async {
+  Future<void> _exportReportToCsv(BuildContext context, List<List<dynamic>> reportData, List<Inventory> inventories) async {
     bool isDialogShown = false;
 
-    if (selectedInventories.isEmpty) {
+    if (inventories.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(S.current.noDataToExport)),
       );
@@ -221,7 +254,7 @@ class InventoryReportScreen extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   CircularProgressIndicator(year2023: false,),
-                  SizedBox(width: 16),
+                  const SizedBox(width: 16),
                   Text(S.current.exporting),
                 ],
               ),
@@ -231,7 +264,7 @@ class InventoryReportScreen extends StatelessWidget {
       );
       isDialogShown = true;
 
-      final headers = _buildColumns(selectedInventories).map((column) => column.label.toString()).toList();
+      final headers = _buildColumns(inventories).map((column) => column.label.toString()).toList();
       final csvData = [headers, ...reportData];
       final csv = Csv().encode(csvData);
       final directory = await getTemporaryDirectory();
