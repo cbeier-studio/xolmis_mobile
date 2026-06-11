@@ -163,11 +163,14 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     InventoryDao inventoryDao,
   ) async {
     for (final inventory in inventoryProvider.activeInventories) {
+      if (inventory.type == InventoryType.invBanding ||
+          inventory.type == InventoryType.invTransectDetection ||
+          inventory.type == InventoryType.invPointDetection) {
+        continue;
+      }
+
       if (inventory.id != widget.inventory.id &&
-          !speciesProvider.speciesExistsInInventory(inventory.id, speciesName) &&
-          (inventory.type != InventoryType.invBanding ||
-              inventory.type != InventoryType.invTransectDetection ||
-              inventory.type != InventoryType.invPointDetection)) {
+          !speciesProvider.speciesExistsInInventory(inventory.id, speciesName)) {
         // Set the initial count to 1 for transect and point count inventories
         final initialCount =
             inventory.type == InventoryType.invTransectCount || inventory.type == InventoryType.invPointCount ? 1 : 0;
