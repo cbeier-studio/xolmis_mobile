@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import 'package:csv/csv.dart';
@@ -29,7 +30,6 @@ class InventoryReportScreen extends StatelessWidget {
             ),
             body: const Center(
               child: CircularProgressIndicator(
-                year2023: false,
               ),
             ),
           );
@@ -165,20 +165,24 @@ class InventoryReportScreen extends StatelessWidget {
   // Build the columns for the DataTable
   /// Builds DataTable headers for species, inventories, and totals.
   List<DataColumn> _buildColumns(List<Inventory> inventories) {
-    final columns = <DataColumn>[
-      DataColumn(label: Text(S.current.species(2))),
-    ];
+    final headerLabels = _buildHeaderLabels(inventories);
+    return headerLabels.map((label) => DataColumn(label: Text(label))).toList();
+  }
+
+  /// Builds plain-text header labels for table and CSV export.
+  List<String> _buildHeaderLabels(List<Inventory> inventories) {
+    final labels = <String>[S.current.species(2)];
 
     for (final inventory in inventories) {
       // Remove the date from the inventory ID
       final parts = inventory.id.split('-');
       final displayId = parts.length > 1 ? '${parts.first}-${parts[1]}-${parts.last}' : inventory.id;
-      columns.add(DataColumn(label: Text(displayId)));
+      labels.add(displayId);
     }
 
-    columns.add(DataColumn(label: Text(S.current.totalIndividuals)));
+    labels.add(S.current.totalIndividuals);
 
-    return columns;
+    return labels;
   }
 
   // Build the rows for the DataTable
@@ -233,7 +237,8 @@ class InventoryReportScreen extends StatelessWidget {
   Future<void> _exportReportToCsv(BuildContext context, List<List<dynamic>> reportData, List<Inventory> inventories) async {
     bool isDialogShown = false;
 
-    if (inventories.isEmpty) {
+    final hasSpeciesRows = reportData.length > 1;
+    if (inventories.isEmpty || !hasSpeciesRows) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(S.current.noDataToExport)),
       );
@@ -253,7 +258,7 @@ class InventoryReportScreen extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  CircularProgressIndicator(year2023: false,),
+                  const CircularProgressIndicator(),
                   const SizedBox(width: 16),
                   Text(S.current.exporting),
                 ],
@@ -264,14 +269,15 @@ class InventoryReportScreen extends StatelessWidget {
       );
       isDialogShown = true;
 
-      final headers = _buildColumns(inventories).map((column) => column.label.toString()).toList();
+      final headers = _buildHeaderLabels(inventories);
       final csvData = [headers, ...reportData];
       final csv = Csv().encode(csvData);
       final directory = await getTemporaryDirectory();
-      final path = '${directory?.path}/inventory_report_${DateTime.now().toIso8601String()}.csv';
+      final timestamp = DateTime.now().millisecondsSinceEpoch;
+      final path = '${directory.path}/inventory_report_$timestamp.csv';
       final file = File(path);
-      await file.writeAsString(csv);
-      
+      await file.writeAsString(csv, encoding: utf8, flush: true);
+
       if (isDialogShown) {
         if (context.mounted) {
           Navigator.of(context).pop();
