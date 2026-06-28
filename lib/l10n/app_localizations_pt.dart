@@ -1946,6 +1946,17 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get noTagsFound => 'Nenhuma tag encontrada';
+
+  @override
+  String get confirmAdd => 'Confirmar adição';
+
+  @override
+  String confirmAddIndividual(String speciesName) {
+    return 'Deseja adicionar um indivíduo à contagem de $speciesName?';
+  }
+
+  @override
+  String get add => 'Adicionar';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -3889,4 +3900,15 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get noTagsFound => 'Nenhuma tag encontrada';
+
+  @override
+  String get confirmAdd => 'Confirmar adição';
+
+  @override
+  String confirmAddIndividual(String speciesName) {
+    return 'Deseja adicionar um indivíduo à contagem de $speciesName?';
+  }
+
+  @override
+  String get add => 'Adicionar';
 }

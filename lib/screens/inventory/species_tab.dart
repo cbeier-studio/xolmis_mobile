@@ -72,27 +72,58 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
 
   // Add a species to the inventory
   /// Adds a new species to the current inventory and persists it.
-  Future<void> _addSpeciesToInventory(String speciesName, SpeciesDao speciesDao, InventoryDao inventoryDao) async {
+  Future<void> _addSpeciesToInventory(String speciesName, SpeciesDao speciesDao, InventoryDao inventoryDao, {int? count}) async {
     final speciesProvider = Provider.of<SpeciesProvider>(context, listen: false);
     final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
 
-    // If the species is already in the inventory, show a message and return
-    if (widget.inventory.type != InventoryType.invTransectDetection &&
-        widget.inventory.type != InventoryType.invPointDetection) {
+    final isDetectionInventory = widget.inventory.type == InventoryType.invTransectDetection ||
+        widget.inventory.type == InventoryType.invPointDetection;
+
+    // If the species is already in the inventory, accumulate count or return
+    if (!isDetectionInventory) {
       if (speciesProvider.speciesExistsInInventory(widget.inventory.id, speciesName)) {
-        _showSpeciesAlreadyExistsMessage();
+        final existingSpecies = speciesProvider
+            .getSpeciesForInventory(widget.inventory.id)
+            .firstWhere((s) => s.name == speciesName);
+
+        // If count is null or zero, show appropriate message/dialog
+        if (count == null || count == 0) {
+          final isCountingInventory = widget.inventory.type == InventoryType.invTransectCount ||
+              widget.inventory.type == InventoryType.invPointCount;
+
+          if (isCountingInventory) {
+            // For counting inventories, ask if user wants to add one individual
+            if (mounted) {
+              final shouldAdd = await _showAddIndividualConfirmationDialog(context, speciesName);
+              if (!shouldAdd) return;
+            }
+          } else {
+            // For other inventories, show species already exists message
+            _showSpeciesAlreadyExistsMessage();
+            return;
+          }
+        }
+
+        final additionalCount = count ??
+            (widget.inventory.type == InventoryType.invTransectCount ||
+                    widget.inventory.type == InventoryType.invPointCount
+                ? 1
+                : 0);
+
+        final updatedSpecies = existingSpecies.copyWith(count: existingSpecies.count + additionalCount);
+        await speciesProvider.updateSpecies(widget.inventory.id, updatedSpecies);
+        await _updateSpeciesList(widget.inventory.id);
         return;
       }
     }
 
-    // Set the initial count to 1 for transect and point count inventories
-    final initialCount =
-        widget.inventory.type == InventoryType.invTransectCount ||
+    // Set the initial count
+    final initialCount = count ??
+        (widget.inventory.type == InventoryType.invTransectCount ||
                 widget.inventory.type == InventoryType.invPointCount ||
-                widget.inventory.type == InventoryType.invTransectDetection ||
-                widget.inventory.type == InventoryType.invPointDetection
+                isDetectionInventory
             ? 1
-            : 0;
+            : 0);
 
     // Create the new species
     Species? newSpecies = Species(
@@ -105,8 +136,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     );
 
     // Add species details
-    if (widget.inventory.type == InventoryType.invTransectDetection ||
-        widget.inventory.type == InventoryType.invPointDetection) {
+    if (isDetectionInventory) {
       newSpecies = await Navigator.push<Species>(
         context,
         MaterialPageRoute(
@@ -115,6 +145,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                   EditSpeciesScreen(species: newSpecies!, allowDuplicatedSpeciesNames: _allowsDuplicatedSpeciesNames),
         ),
       );
+      if (newSpecies == null) return;
     }
 
     // Insert the new species in the database
@@ -128,6 +159,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
         inventoryProvider,
         speciesDao,
         inventoryDao,
+        count: count,
       );
 
       if (widget.inventory.type == InventoryType.invIntervalQualitative) {
@@ -154,14 +186,33 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(S.of(context).errorSpeciesAlreadyExists)));
   }
 
+  /// Shows a confirmation dialog to add one individual to an existing species count
+  Future<bool> _showAddIndividualConfirmationDialog(BuildContext context, String speciesName) async {
+    return await showDialog<bool>(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog.adaptive(
+              title: Text(S.of(context).confirmAdd),
+              content: Text(S.of(context).confirmAddIndividual(speciesName)),
+              actions: <Widget>[
+                TextButton(onPressed: () => Navigator.of(context).pop(false), child: Text(S.of(context).cancel)),
+                TextButton(onPressed: () => Navigator.of(context).pop(true), child: Text(S.of(context).add)),
+              ],
+            );
+          },
+        ) ??
+        false;
+  }
+
   // Add species to other active inventories
   Future<void> _addSpeciesToOtherActiveInventories(
     String speciesName,
     SpeciesProvider speciesProvider,
     InventoryProvider inventoryProvider,
     SpeciesDao speciesDao,
-    InventoryDao inventoryDao,
-  ) async {
+    InventoryDao inventoryDao, {
+    int? count,
+  }) async {
     for (final inventory in inventoryProvider.activeInventories) {
       // ignore the current inventory
       if (inventory.id == widget.inventory.id) {
@@ -173,41 +224,55 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
           inventory.type == InventoryType.invPointDetection) {
         continue;
       }
-      // add species to other active inventories if they don't already exist
-      if (!speciesProvider.speciesExistsInInventory(inventory.id, speciesName)) {
-        // Set the initial count to 1 for transect and point count inventories
-        final initialCount =
-            inventory.type == InventoryType.invTransectCount || inventory.type == InventoryType.invPointCount ? 1 : 0;
-        // Create the new species
-        final newSpeciesForOtherInventory = Species(
-          inventoryId: inventory.id,
-          name: speciesName,
-          sampleTime: DateTime.now(),
-          isOutOfInventory: inventory.isFinished,
-          count: initialCount,
-          pois: [],
-        );
-        // Insert the new species in the database
-        await speciesDao.insertSpecies(newSpeciesForOtherInventory.inventoryId, newSpeciesForOtherInventory);
 
-        if (inventory.type == InventoryType.invIntervalQualitative) {
-          // Increment the current interval species count for interval qualitative inventories
-          inventory.currentIntervalSpeciesCount++;
-          await inventoryDao.updateInventoryCurrentIntervalSpeciesCount(
-            inventory.id,
-            inventory.currentIntervalSpeciesCount,
-          );
-        } else if (inventory.type == InventoryType.invTimedQualitative) {
-          // Restart the inventory timer for timed qualitative inventories
-          _restartInventoryTimer(inventoryProvider, inventory, inventoryDao);
-        } else {
-          // Or just update the inventory in the database
-          inventoryProvider.updateInventory(inventory);
-        }
-        // Reload the species list for the other inventory
+      // If species already exists in the other inventory, accumulate count
+      if (speciesProvider.speciesExistsInInventory(inventory.id, speciesName)) {
+        final existingSpecies =
+            speciesProvider.getSpeciesForInventory(inventory.id).firstWhere((s) => s.name == speciesName);
+        final additionalCount =
+            count ??
+            (inventory.type == InventoryType.invTransectCount || inventory.type == InventoryType.invPointCount ? 1 : 0);
+        final updatedSpecies = existingSpecies.copyWith(count: existingSpecies.count + additionalCount);
+        await speciesProvider.updateSpecies(inventory.id, updatedSpecies);
         await speciesProvider.loadSpeciesForInventory(inventory.id);
         inventory.speciesList = speciesProvider.getSpeciesForInventory(inventory.id);
+        continue;
       }
+
+      // add species to other active inventories if they don't already exist
+      // Set the initial count
+      final initialCount =
+          count ??
+          (inventory.type == InventoryType.invTransectCount || inventory.type == InventoryType.invPointCount ? 1 : 0);
+      // Create the new species
+      final newSpeciesForOtherInventory = Species(
+        inventoryId: inventory.id,
+        name: speciesName,
+        sampleTime: DateTime.now(),
+        isOutOfInventory: inventory.isFinished,
+        count: initialCount,
+        pois: [],
+      );
+      // Insert the new species in the database
+      await speciesDao.insertSpecies(newSpeciesForOtherInventory.inventoryId, newSpeciesForOtherInventory);
+
+      if (inventory.type == InventoryType.invIntervalQualitative) {
+        // Increment the current interval species count for interval qualitative inventories
+        inventory.currentIntervalSpeciesCount++;
+        await inventoryDao.updateInventoryCurrentIntervalSpeciesCount(
+          inventory.id,
+          inventory.currentIntervalSpeciesCount,
+        );
+      } else if (inventory.type == InventoryType.invTimedQualitative) {
+        // Restart the inventory timer for timed qualitative inventories
+        _restartInventoryTimer(inventoryProvider, inventory, inventoryDao);
+      } else {
+        // Or just update the inventory in the database
+        inventoryProvider.updateInventory(inventory);
+      }
+      // Reload the species list for the other inventory
+      await speciesProvider.loadSpeciesForInventory(inventory.id);
+      inventory.speciesList = speciesProvider.getSpeciesForInventory(inventory.id);
     }
   }
 
@@ -359,7 +424,14 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
     );
 
     if (newSpeciesName != null && newSpeciesName.isNotEmpty) {
-      await _addSpeciesToInventory(newSpeciesName, speciesDao, inventoryDao);
+      int? parsedCount;
+      String speciesName = newSpeciesName;
+      final match = RegExp(r'^(\d+)[, ]+(.*)$').firstMatch(newSpeciesName);
+      if (match != null) {
+        parsedCount = int.tryParse(match.group(1)!);
+        speciesName = match.group(2)!;
+      }
+      await _addSpeciesToInventory(speciesName, speciesDao, inventoryDao, count: parsedCount);
     }
   }
 
@@ -445,24 +517,42 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                   );
                 },
                 suggestionsBuilder: (context, controller) {
-                  if (controller.text.isEmpty) {
+                  final text = controller.text;
+                  if (text.isEmpty) {
                     return [];
-                  } else {
-                    return List<String>.from(
-                      allSpeciesNames,
-                    ).where((species) => speciesMatchesQuery(species, controller.text.toLowerCase())).map((species) {
-                      return ListTile(
-                        title: Text(species),
-                        onTap: () async {
-                          debugPrint('[SPECIES_TAB] Selected species from search suggestions: $species');
-                          await _addSpeciesToInventory(species, speciesDao, inventoryDao);
-                          controller.closeView(species);
-                          controller.clear();
-                          checkMackinnonCompletion(context, widget.inventory, inventoryDao);
-                        },
-                      );
-                    }).toList();
                   }
+
+                  int? parsedCount;
+                  String query = text;
+
+                  // Regex to match "123,query" or "123 query"
+                  final match = RegExp(r'^(\d+)[, ]+(.*)$').firstMatch(text);
+                  if (match != null) {
+                    parsedCount = int.tryParse(match.group(1)!);
+                    query = match.group(2)!;
+                  }
+
+                  if (query.isEmpty) {
+                    return [];
+                  }
+
+                  return List<String>.from(
+                    allSpeciesNames,
+                  ).where((species) => speciesMatchesQuery(species, query.toLowerCase())).map((species) {
+                    return ListTile(
+                      title: Text(species),
+                      trailing: parsedCount != null ? Text('x$parsedCount') : null,
+                      onTap: () async {
+                        debugPrint(
+                          '[SPECIES_TAB] Selected species from search suggestions: $species with count $parsedCount',
+                        );
+                        await _addSpeciesToInventory(species, speciesDao, inventoryDao, count: parsedCount);
+                        controller.closeView(species);
+                        controller.clear();
+                        checkMackinnonCompletion(context, widget.inventory, inventoryDao);
+                      },
+                    );
+                  }).toList();
                 },
               ),
             ),

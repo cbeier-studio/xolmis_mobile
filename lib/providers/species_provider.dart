@@ -74,11 +74,7 @@ class SpeciesProvider with ChangeNotifier {
       debugPrint('[PROVIDER] Initializing species list for inventory $inventoryId');
       _speciesMap[inventoryId] = [];
     }
-    // Check if the species already exists in the list
-    if (_speciesMap[inventoryId]!.any((s) => s.name == species.name)) {
-      debugPrint('[PROVIDER] Species ${species.name} already exists in inventory $inventoryId');
-      return; // Species already exists, no need to add
-    }
+
     // Add the species to the list
     debugPrint('[PROVIDER] Adding species ${species.name} to local list for inventory $inventoryId');
     _speciesMap[inventoryId]!.add(species);

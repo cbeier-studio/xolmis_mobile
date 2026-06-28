@@ -1911,4 +1911,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noTagsFound => 'No tags found';
+
+  @override
+  String get confirmAdd => 'Confirm add';
+
+  @override
+  String confirmAddIndividual(String speciesName) {
+    return 'Do you want to add one individual to the count of $speciesName?';
+  }
+
+  @override
+  String get add => 'Add';
 }

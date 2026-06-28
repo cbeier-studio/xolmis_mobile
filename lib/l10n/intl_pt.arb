@@ -2307,7 +2307,29 @@
     "description": "Ação para alterar a cor de uma tag"
   },
   "noTagsFound": "Nenhuma tag encontrada",
-  "@noTagsFound": {
-    "description": "Estado vazio da lista de gerenciamento de tags"
-  }
+   "@noTagsFound": {
+     "description": "Estado vazio da lista de gerenciamento de tags"
+   },
+   "confirmAdd": "Confirmar adição",
+   "@confirmAdd": {
+     "type": "text",
+     "description": "Título do diálogo para confirmar a adição de um indivíduo à contagem de uma espécie existente"
+   },
+   "confirmAddIndividual": "Deseja adicionar um indivíduo à contagem de {speciesName}?",
+   "@confirmAddIndividual": {
+     "type": "text",
+     "description": "Mensagem pedindo confirmação do usuário para adicionar um indivíduo à espécie existente",
+     "placeholders": {
+       "speciesName": {
+         "type": "String",
+         "description": "Espécie que terá um indivíduo adicionado"
+       }
+     }
+   },
+   "add": "Adicionar",
+   "@add": {
+     "type": "text",
+     "description": "Rótulo do botão adicionar"
+   }
 }
+

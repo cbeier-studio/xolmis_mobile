@@ -5645,6 +5645,33 @@ class S {
       args: [],
     );
   }
+
+  /// `Confirm add`
+  String get confirmAdd {
+    return Intl.message(
+      'Confirm add',
+      name: 'confirmAdd',
+      desc:
+          'Title of dialog to confirm adding an individual to an existing species count',
+      args: [],
+    );
+  }
+
+  /// `Do you want to add one individual to the count of {speciesName}?`
+  String confirmAddIndividual(String speciesName) {
+    return Intl.message(
+      'Do you want to add one individual to the count of $speciesName?',
+      name: 'confirmAddIndividual',
+      desc:
+          'Message asking user confirmation to add one individual to existing species',
+      args: [speciesName],
+    );
+  }
+
+  /// `Add`
+  String get add {
+    return Intl.message('Add', name: 'add', desc: 'Add button label', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

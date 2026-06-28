@@ -3481,6 +3481,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No tags found'**
   String get noTagsFound;
+
+  /// Title of dialog to confirm adding an individual to an existing species count
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm add'**
+  String get confirmAdd;
+
+  /// Message asking user confirmation to add one individual to existing species
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to add one individual to the count of {speciesName}?'**
+  String confirmAddIndividual(String speciesName);
+
+  /// Add button label
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get add;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

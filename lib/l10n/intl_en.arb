@@ -2788,8 +2788,7 @@
     "@errorSavingJournalEntry": {
         "type": "text",
         "description": "Error message when saving journal entry"
-    }
-,
+    },
   "tags": "Tags",
   "@tags": {
     "description": "Label for tag selection field in journal entries"
@@ -2865,5 +2864,26 @@
   "noTagsFound": "No tags found",
   "@noTagsFound": {
     "description": "Empty state for tag management list"
+  },
+  "confirmAdd": "Confirm add",
+  "@confirmAdd": {
+    "type": "text",
+    "description": "Title of dialog to confirm adding an individual to an existing species count"
+  },
+  "confirmAddIndividual": "Do you want to add one individual to the count of {speciesName}?",
+  "@confirmAddIndividual": {
+    "type": "text",
+    "description": "Message asking user confirmation to add one individual to existing species",
+    "placeholders": {
+      "speciesName": {
+        "type": "String",
+        "description": "Species that will have one individual added"
+      }
+    }
+  },
+  "add": "Add",
+  "@add": {
+    "type": "text",
+    "description": "Add button label"
   }
 }
