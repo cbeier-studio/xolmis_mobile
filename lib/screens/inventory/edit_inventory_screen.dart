@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import '../../core/core_consts.dart';
 import '../../data/models/inventory.dart';
 import '../../generated/l10n.dart';
 import '../../providers/inventory_provider.dart';
@@ -25,6 +26,8 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
   late final TextEditingController _observerController;
   late bool _isDiscarded;
   late TextEditingController fieldLocalityEditingController;
+  late final InventoryType _initialType;
+  InventoryType _selectedType = InventoryType.invFreeQualitative;
 
   final _formKey = GlobalKey<FormState>();
   late final inventoryProvider = Provider.of<InventoryProvider>(
@@ -35,6 +38,8 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
     super.initState();
     // Inicializa os controladores com os dados da espécie recebida
     _idController = TextEditingController(text: widget.inventory.id);
+    _selectedType = widget.inventory.type;
+    _initialType = widget.inventory.type;
     _localityNameController = TextEditingController(text: widget.inventory.localityName);
     _notesController = TextEditingController(text: widget.inventory.notes);
     _totalObserversController = TextEditingController(text: widget.inventory.totalObservers.toString());
@@ -54,14 +59,50 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
   }
 
   /// Validates the form and pops with the updated inventory.
-  void _saveForm() {
-    // Valida e salva o formulário
+  Future<void> _saveForm() async {
+    // Validate and save form
+    if (_selectedType != _initialType) {
+      // Show warning dialog when inventory type is changed
+      final shouldContinue = await showDialog<bool>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) => AlertDialog(
+          title: Text(S.current.inventoryTypeChangeWarningTitle),
+          content: Text(
+            S.current.inventoryTypeChangeWarningMessage(
+              inventoryTypeFriendlyNames[_initialType]!,
+              inventoryTypeFriendlyNames[_selectedType]!,
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: Text(S.current.cancel),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: Text(S.current.continueAction),
+            ),
+          ],
+        ),
+      ) ?? false;
+
+      // If user cancelled the type change, revert the selection
+      if (!shouldContinue) {
+        setState(() {
+          _selectedType = _initialType;
+        });
+        return;
+      }
+    }
+
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
-      // Cria uma cópia da espécie original com os dados atualizados do formulário
+      // Create a copy of the original inventory with the updated data from the form
       final updatedInventory = widget.inventory.copyWith(
         id: _idController.text,
+        type: _selectedType,
         localityName: fieldLocalityEditingController.text,
         totalObservers: int.tryParse(_totalObserversController.text),
         observer: _observerController.text.toUpperCase(),
@@ -69,7 +110,7 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
         isDiscarded: _isDiscarded,
       );
 
-      // Retorna para a tela anterior com o objeto 'Species' atualizado
+      // Return to the previous screen with the updated inventory
       Navigator.of(context).pop(updatedInventory);
     }
   }
@@ -108,6 +149,35 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
                   },
                 ),
                 SizedBox(height: 8),
+                // Inventory type
+                DropdownButtonFormField<InventoryType>(
+                  initialValue: _selectedType,
+                  decoration: InputDecoration(
+                    labelText: '${S.of(context).inventoryType} *',
+                    border: OutlineInputBorder(),
+                  ),
+                  items: InventoryType.values.map((type) {
+                    return DropdownMenuItem(
+                      value: type,
+                      child: Text(inventoryTypeFriendlyNames[type]!),
+                    );
+                  }).toList(),
+                  onChanged: (InventoryType? newValue) {
+                    if (newValue != null) {
+                      setState(() {
+                        _selectedType = newValue;
+                      });
+                    }
+                  },
+                  validator: (value) {
+                    if (value == null || value.index < 0) {
+                      return S.of(context).selectInventoryType;
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 8.0),
+                // Locality
                 Autocomplete<String>(
                   optionsBuilder:
                       (TextEditingValue textEditingValue) async {
@@ -187,6 +257,7 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
                 ),
                 SizedBox(height: 8),
                 Row(children: [
+                  // Total observers
                   Expanded(
                     child:
                 TextFormField(
@@ -230,6 +301,7 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
                 ),
                   ),
                   const SizedBox(width: 8),
+                  // Observer
                   Expanded(
                     child: TextFormField(
                       controller: _observerController,
@@ -249,6 +321,7 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
                 ],
                 ),
                 SizedBox(height: 8),
+                // Notes
                 TextFormField(
                   controller: _notesController,
                   textCapitalization: TextCapitalization.sentences,
@@ -259,6 +332,7 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
                   ),
                 ),
                 SizedBox(height: 8),
+                // Discarded
                 SwitchListTile.adaptive(
                   title: Text(S.current.discardedInventory),
                   value: _isDiscarded,

@@ -1083,6 +1083,29 @@
         "type": "text",
         "description": "Warning title"
     },
+    "continueAction": "Continuar",
+    "@continueAction": {
+        "type": "text",
+        "description": "Rótulo da ação para prosseguir com uma operação"
+    },
+    "inventoryTypeChangeWarningTitle": "Alterar tipo de inventário?",
+    "@inventoryTypeChangeWarningTitle": {
+        "type": "text",
+        "description": "Título exibido quando o usuário tenta alterar o tipo de inventário na edição"
+    },
+    "inventoryTypeChangeWarningMessage": "Alterar de {currentType} para {newType} pode mudar premissas e regras do protocolo deste inventário. Deseja continuar com a alteração?",
+    "@inventoryTypeChangeWarningMessage": {
+        "type": "text",
+        "description": "Mensagem de aviso exibida antes de aplicar alteração de tipo de inventário na tela de edição",
+        "placeholders": {
+            "currentType": {
+                "type": "String"
+            },
+            "newType": {
+                "type": "String"
+            }
+        }
+    },
     "remindMissingVegetationData": "Lembrar dados faltantes de vegetação",
     "@remindMissingVegetationData": {
         "type": "text",
@@ -2332,4 +2355,3 @@
      "description": "Rótulo do botão adicionar"
    }
 }
-

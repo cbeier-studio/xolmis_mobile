@@ -1640,6 +1640,29 @@
         "type": "text",
         "description": "Warning title"
     },
+    "continueAction": "Continue",
+    "@continueAction": {
+        "type": "text",
+        "description": "Action label to proceed with an operation"
+    },
+    "inventoryTypeChangeWarningTitle": "Change inventory type?",
+    "@inventoryTypeChangeWarningTitle": {
+        "type": "text",
+        "description": "Title shown when the user attempts to change inventory type while editing"
+    },
+    "inventoryTypeChangeWarningMessage": "Changing from {currentType} to {newType} may alter assumptions and protocol-specific premises of this inventory. Continue with this change?",
+    "@inventoryTypeChangeWarningMessage": {
+        "type": "text",
+        "description": "Warning message shown before applying inventory type change in edit screen",
+        "placeholders": {
+            "currentType": {
+                "type": "String"
+            },
+            "newType": {
+                "type": "String"
+            }
+        }
+    },
     "remindMissingVegetationData": "Remind missing vegetation data",
     "@remindMissingVegetationData": {
         "type": "text",

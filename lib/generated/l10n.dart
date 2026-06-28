@@ -3023,6 +3023,38 @@ class S {
     );
   }
 
+  /// `Continue`
+  String get continueAction {
+    return Intl.message(
+      'Continue',
+      name: 'continueAction',
+      desc: 'Action label to proceed with an operation',
+      args: [],
+    );
+  }
+
+  /// `Change inventory type?`
+  String get inventoryTypeChangeWarningTitle {
+    return Intl.message(
+      'Change inventory type?',
+      name: 'inventoryTypeChangeWarningTitle',
+      desc:
+          'Title shown when the user attempts to change inventory type while editing',
+      args: [],
+    );
+  }
+
+  /// `Changing from {currentType} to {newType} may alter assumptions and protocol-specific premises of this inventory. Continue with this change?`
+  String inventoryTypeChangeWarningMessage(String currentType, String newType) {
+    return Intl.message(
+      'Changing from $currentType to $newType may alter assumptions and protocol-specific premises of this inventory. Continue with this change?',
+      name: 'inventoryTypeChangeWarningMessage',
+      desc:
+          'Warning message shown before applying inventory type change in edit screen',
+      args: [currentType, newType],
+    );
+  }
+
   /// `Remind missing vegetation data`
   String get remindMissingVegetationData {
     return Intl.message(

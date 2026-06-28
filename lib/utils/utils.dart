@@ -543,13 +543,17 @@ String removeDiacritics(String text) {
       .replaceAll('à', 'a')
       .replaceAll('â', 'a')
       .replaceAll('ã', 'a')
+      .replaceAll('ä', 'a')
       .replaceAll('é', 'e')
       .replaceAll('ê', 'e')
+      .replaceAll('ë', 'e')
       .replaceAll('í', 'i')
       .replaceAll('ó', 'o')
       .replaceAll('ô', 'o')
       .replaceAll('õ', 'o')
+      .replaceAll('ö', 'o')
       .replaceAll('ú', 'u')
+      .replaceAll('ü', 'u')
       .replaceAll('ç', 'c')
       .replaceAll('ñ', 'n');
 }

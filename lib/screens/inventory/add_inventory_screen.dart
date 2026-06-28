@@ -127,7 +127,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                                 return AlertDialog(
                                   title: Text(S.of(context).generateId),
                                   content: TextField(
-                                    maxLength: 10,
+                                    maxLength: 20,
                                     textCapitalization: TextCapitalization.words,
                                     autofocus: true,
                                     decoration: InputDecoration(
@@ -467,7 +467,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
 
   /// Returns locality suggestions with recent entries pinned to the top.
   Future<List<String>> _getLocalitySuggestions(String queryText) async {
-    final query = _normalizeForSuggestionSearch(queryText.trim());
+    final query = removeDiacritics(queryText.trim());
 
     try {
       final localityOptions = await Provider.of<InventoryProvider>(context, listen: false).getDistinctLocalities();
@@ -475,7 +475,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
 
       for (final option in localityOptions) {
         final normalized = option.trim();
-        final key = _normalizeForSuggestionSearch(normalized);
+        final key = removeDiacritics(normalized);
         if (normalized.isEmpty) {
           continue;
         }
@@ -488,17 +488,17 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
       final normalizedOptions = normalizedOptionsByKey.values.toList();
 
       final filteredRecent = _recentLocalities
-          .where((item) => _normalizeForSuggestionSearch(item).contains(query))
+          .where((item) => removeDiacritics(item).contains(query))
           .toList();
       final filteredOptions = normalizedOptions
-          .where((item) => _normalizeForSuggestionSearch(item).contains(query))
+          .where((item) => removeDiacritics(item).contains(query))
           .toList();
 
       final merged = <String>[];
       final mergedIndexByKey = <String, int>{};
 
       for (final item in filteredRecent) {
-        final key = _normalizeForSuggestionSearch(item);
+        final key = removeDiacritics(item);
         if (!mergedIndexByKey.containsKey(key)) {
           mergedIndexByKey[key] = merged.length;
           merged.add(item);
@@ -506,7 +506,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
       }
 
       for (final item in filteredOptions) {
-        final key = _normalizeForSuggestionSearch(item);
+        final key = removeDiacritics(item);
         final existingIndex = mergedIndexByKey[key];
         if (existingIndex == null) {
           mergedIndexByKey[key] = merged.length;
@@ -517,13 +517,8 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
       return merged;
     } catch (e) {
       debugPrint('Error fetching locality options: $e');
-      return _recentLocalities.where((item) => _normalizeForSuggestionSearch(item).contains(query)).toList();
+      return _recentLocalities.where((item) => removeDiacritics(item).contains(query)).toList();
     }
-  }
-
-  /// Normalizes text for suggestion search without changing what the user types.
-  String _normalizeForSuggestionSearch(String text) {
-    return removeDiacritics(text).toLowerCase();
   }
 
   /// Shows a dialog explaining the available inventory protocols.

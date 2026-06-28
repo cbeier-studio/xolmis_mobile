@@ -161,7 +161,7 @@ class AddNestScreenState extends State<AddNestScreen> {
                         } else {
                           return List<String>.from(allSpeciesNames)
                               .where((species) => speciesMatchesQuery(
-                                  species, controller.text.toLowerCase()))
+                                  species, controller.text))
                               .map((species) {
                             return ListTile(
                               title: Text(species),

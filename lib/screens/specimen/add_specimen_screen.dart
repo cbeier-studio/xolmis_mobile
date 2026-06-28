@@ -177,7 +177,7 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
                         } else {
                           return List<String>.from(allSpeciesNames)
                               .where((species) => speciesMatchesQuery(
-                                  species, controller.text.toLowerCase()))
+                                  species, controller.text))
                               .map((species) {
                             return ListTile(
                               title: Text(species),
