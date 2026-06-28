@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/core_consts.dart';
 import '../../data/models/inventory.dart';
 import '../../generated/l10n.dart';
@@ -21,6 +22,8 @@ class EditInventoryScreen extends StatefulWidget {
 class _EditInventoryScreenState extends State<EditInventoryScreen> {
   late final TextEditingController _idController;
   late final TextEditingController _localityNameController;
+  late final TextEditingController _durationController;
+  late final TextEditingController _maxSpeciesController;
   late final TextEditingController _notesController;
   late final TextEditingController _totalObserversController;
   late final TextEditingController _observerController;
@@ -42,6 +45,8 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
     _initialType = widget.inventory.type;
     _localityNameController = TextEditingController(text: widget.inventory.localityName);
     _notesController = TextEditingController(text: widget.inventory.notes);
+    _durationController = TextEditingController(text: widget.inventory.duration.toString());
+    _maxSpeciesController = TextEditingController(text: widget.inventory.maxSpecies.toString());
     _totalObserversController = TextEditingController(text: widget.inventory.totalObservers.toString());
     _observerController = TextEditingController(text: widget.inventory.observer);
     _isDiscarded = widget.inventory.isDiscarded;
@@ -53,9 +58,48 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
     _idController.dispose();
     _localityNameController.dispose();
     _notesController.dispose();
+    _durationController.dispose();
+    _maxSpeciesController.dispose();
     _totalObserversController.dispose();
     _observerController.dispose();
     super.dispose();
+  }
+
+  // Load default values from settings
+  Future<void> _updateFormFields(InventoryType newValue) async {
+    final prefs = await SharedPreferences.getInstance();
+    final maxSpeciesMackinnon = prefs.getInt('maxSpeciesMackinnon') ?? 10;
+    final pointCountsDuration = prefs.getInt('pointCountsDuration') ?? 8;
+    final cumulativeTimeDuration = prefs.getInt('cumulativeTimeDuration') ?? 45;
+    final intervalsDuration = prefs.getInt('intervalsDuration') ?? 10;
+
+    setState(() {
+      if (newValue == InventoryType.invTimedQualitative) {
+        if (widget.inventory.duration == 0) {
+          _durationController.text = cumulativeTimeDuration.toString();
+        }
+        _maxSpeciesController.text = '';
+      } else if (newValue == InventoryType.invIntervalQualitative) {
+        if (widget.inventory.duration == 0) {
+          _durationController.text = intervalsDuration.toString();
+        }
+        _maxSpeciesController.text = '';
+      } else if (newValue == InventoryType.invMackinnonList) {
+        if (widget.inventory.maxSpecies == 0) {
+          _maxSpeciesController.text = maxSpeciesMackinnon.toString();
+        }
+        _durationController.text = '';
+      } else if (newValue == InventoryType.invPointCount ||
+          newValue == InventoryType.invPointDetection) {
+        if (widget.inventory.duration == 0) {
+          _durationController.text = pointCountsDuration.toString();
+        }
+        _maxSpeciesController.text = '';
+      } else {
+        _durationController.text = '';
+        _maxSpeciesController.text = '';
+      }
+    });
   }
 
   /// Validates the form and pops with the updated inventory.
@@ -104,6 +148,8 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
         id: _idController.text,
         type: _selectedType,
         localityName: fieldLocalityEditingController.text,
+        duration: int.tryParse(_durationController.text),
+        maxSpecies: int.tryParse(_maxSpeciesController.text),
         totalObservers: int.tryParse(_totalObserversController.text),
         observer: _observerController.text.toUpperCase(),
         notes: _notesController.text.isNotEmpty ? _notesController.text : null,
@@ -167,6 +213,7 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
                       setState(() {
                         _selectedType = newValue;
                       });
+                      _updateFormFields(newValue);
                     }
                   },
                   validator: (value) {
@@ -254,6 +301,97 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
                       ),
                     );
                   },
+                ),
+                SizedBox(height: 8),
+                Row(
+                  children: [
+                    Expanded(
+                      // Inventory duration
+                      child: TextFormField(
+                        controller: _durationController,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                        decoration: InputDecoration(
+                          labelText: S.of(context).duration,
+                          border: OutlineInputBorder(),
+                          suffixText: 'min',
+                          prefixIcon: IconButton(
+                              onPressed: () {
+                                int count = int.tryParse(_durationController.text) ?? 1;
+                                if (count > 1) {
+                                  setState(() {
+                                    count--;
+                                    _durationController.text = count.toString();
+                                  });
+                                }
+                              },
+                              icon: Icon(Icons.remove_outlined)),
+                          suffixIcon: IconButton(
+                              onPressed: () {
+                                int count = int.tryParse(_durationController.text) ?? 1;
+                                setState(() {
+                                  count++;
+                                  _durationController.text = count.toString();
+                                });
+                              },
+                              icon: Icon(Icons.add_outlined)),
+                        ),
+                        validator: (value) {
+                          if ((_selectedType == InventoryType.invTimedQualitative ||
+                              _selectedType == InventoryType.invIntervalQualitative ||
+                              _selectedType == InventoryType.invPointCount ||
+                              _selectedType == InventoryType.invPointDetection) &&
+                              (value == null || value.isEmpty)) {
+                            return S.of(context).insertDuration;
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 8.0),
+                    Expanded(
+                      // Inventory max of species
+                      child: TextFormField(
+                        controller: _maxSpeciesController,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                        decoration: InputDecoration(
+                          labelText: S.of(context).maxSpecies,
+                          border: OutlineInputBorder(),
+                          suffixText: 'spp.',
+                          prefixIcon: IconButton(
+                              onPressed: () {
+                                int count = int.tryParse(_maxSpeciesController.text) ?? 10;
+                                if (count > 5) {
+                                  setState(() {
+                                    count--;
+                                    _maxSpeciesController.text = count.toString();
+                                  });
+                                }
+                              },
+                              icon: Icon(Icons.remove_outlined)),
+                          suffixIcon: IconButton(
+                              onPressed: () {
+                                int count = int.tryParse(_maxSpeciesController.text) ?? 10;
+                                setState(() {
+                                  count++;
+                                  _maxSpeciesController.text = count.toString();
+                                });
+                              },
+                              icon: Icon(Icons.add_outlined)),
+                        ),
+                        validator: (value) {
+                          if ((_selectedType == InventoryType.invMackinnonList) && (value == null || value.isEmpty)) {
+                            return S.of(context).insertMaxSpecies;
+                          }
+                          if ((value != null && value.isNotEmpty) && int.tryParse(value)! < 5) {
+                            return S.of(context).mustBeBiggerThanFive;
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                  ],
                 ),
                 SizedBox(height: 8),
                 Row(children: [
