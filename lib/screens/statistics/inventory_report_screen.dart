@@ -7,6 +7,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:xolmis/generated/l10n.dart';
+import 'package:xolmis/utils/utils.dart';
 
 import '../../data/models/inventory.dart';
 import '../../providers/inventory_provider.dart';
@@ -185,7 +186,6 @@ class InventoryReportScreen extends StatelessWidget {
     return labels;
   }
 
-  // Build the rows for the DataTable
   /// Builds styled rows for the inventory species report table.
   List<DataRow> _buildRows(List<String> speciesList, List<List<dynamic>> reportData) {
     return reportData.asMap().entries.map((entry) {
@@ -214,6 +214,14 @@ class InventoryReportScreen extends StatelessWidget {
           // Estilo padrão
           TextStyle style = const TextStyle();
 
+          // Highlights species not found
+          if (colIndex == 0 && rowIndex != reportData.length - 1) {
+            if (!allSpeciesNames.contains(cellEntry.value.toString())) {
+              style = const TextStyle(
+                color: Colors.red,
+              );
+            }
+          }
           // Aplica o destaque se for a primeira ocorrência
           if (colIndex == firstOccurrenceIndex) {
             style = const TextStyle(
