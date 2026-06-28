@@ -1014,6 +1014,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get warningTitle => 'Warning';
 
   @override
+  String get continueAction => 'Continue';
+
+  @override
+  String get inventoryTypeChangeWarningTitle => 'Change inventory type?';
+
+  @override
+  String inventoryTypeChangeWarningMessage(String currentType, String newType) {
+    return 'Changing from $currentType to $newType may alter assumptions and protocol-specific premises of this inventory. Continue with this change?';
+  }
+
+  @override
   String get remindMissingVegetationData => 'Remind missing vegetation data';
 
   @override

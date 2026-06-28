@@ -1031,6 +1031,17 @@ class AppLocalizationsPt extends AppLocalizations {
   String get warningTitle => 'Aviso';
 
   @override
+  String get continueAction => 'Continuar';
+
+  @override
+  String get inventoryTypeChangeWarningTitle => 'Alterar tipo de inventário?';
+
+  @override
+  String inventoryTypeChangeWarningMessage(String currentType, String newType) {
+    return 'Alterar de $currentType para $newType pode mudar premissas e regras do protocolo deste inventário. Deseja continuar com a alteração?';
+  }
+
+  @override
   String get remindMissingVegetationData => 'Lembrar dados faltantes de vegetação';
 
   @override
@@ -2984,6 +2995,17 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get warningTitle => 'Aviso';
+
+  @override
+  String get continueAction => 'Continuar';
+
+  @override
+  String get inventoryTypeChangeWarningTitle => 'Alterar tipo de inventário?';
+
+  @override
+  String inventoryTypeChangeWarningMessage(String currentType, String newType) {
+    return 'Alterar de $currentType para $newType pode mudar premissas e regras do protocolo deste inventário. Deseja continuar com a alteração?';
+  }
 
   @override
   String get remindMissingVegetationData => 'Lembrar dados faltantes de vegetação';

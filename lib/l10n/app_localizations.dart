@@ -1844,6 +1844,24 @@ abstract class AppLocalizations {
   /// **'Warning'**
   String get warningTitle;
 
+  /// Action label to proceed with an operation
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continueAction;
+
+  /// Title shown when the user attempts to change inventory type while editing
+  ///
+  /// In en, this message translates to:
+  /// **'Change inventory type?'**
+  String get inventoryTypeChangeWarningTitle;
+
+  /// Warning message shown before applying inventory type change in edit screen
+  ///
+  /// In en, this message translates to:
+  /// **'Changing from {currentType} to {newType} may alter assumptions and protocol-specific premises of this inventory. Continue with this change?'**
+  String inventoryTypeChangeWarningMessage(String currentType, String newType);
+
   /// Settings option to remind missing vegetation data
   ///
   /// In en, this message translates to:
