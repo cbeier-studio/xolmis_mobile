@@ -187,8 +187,9 @@ class AddNestScreenState extends State<AddNestScreen> {
 
                         try {
                           final localityOptions = await Provider.of<NestProvider>(context, listen: false).getDistinctLocalities();
+                          final query = removeDiacritics(textEditingValue.text);
                           return localityOptions.where((String option) {
-                            return option.toLowerCase().contains(textEditingValue.text.toLowerCase());
+                            return removeDiacritics(option).contains(query);
                           });
                         } catch (e) {
                           debugPrint('Error fetching locality options: $e');
@@ -268,8 +269,9 @@ class AddNestScreenState extends State<AddNestScreen> {
 
                         try {
                           final supportOptions = await Provider.of<NestProvider>(context, listen: false).getDistinctSupports();
+                          final query = removeDiacritics(textEditingValue.text);
                           return supportOptions.where((String option) {
-                            return option.toLowerCase().contains(textEditingValue.text.toLowerCase());
+                            return removeDiacritics(option).contains(query);
                           });
                         } catch (e) {
                           debugPrint('Error fetching support options: $e');

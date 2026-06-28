@@ -201,10 +201,11 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                           TextEditingController fieldTextEditingController,
                           FocusNode fieldFocusNode,
                           VoidCallback onFieldSubmitted) {
+                        _fieldLocalityEditingController = fieldTextEditingController;
                         return TextFormField(
                           controller: fieldTextEditingController,
                           focusNode: fieldFocusNode,
-                          textCapitalization: TextCapitalization.words,
+                          textCapitalization: TextCapitalization.none,
                           decoration: InputDecoration(
                             labelText: '${S.of(context).locality} *',
                             border: OutlineInputBorder(),
@@ -214,14 +215,6 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                               return S.of(context).insertLocality;
                             }
                             return null;
-                          },
-                          onTap: () {
-                            // Forces a value-change event so Autocomplete opens on focus.
-                            if (fieldTextEditingController.text.isEmpty) {
-                              fieldTextEditingController.text = ' ';
-                              fieldTextEditingController.selection = const TextSelection.collapsed(offset: 1);
-                              Future.microtask(fieldTextEditingController.clear);
-                            }
                           },
                           onChanged: (value) {
                             _localityNameController.text = value;
@@ -474,42 +467,49 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
 
   /// Returns locality suggestions with recent entries pinned to the top.
   Future<List<String>> _getLocalitySuggestions(String queryText) async {
-    final query = queryText.trim().toLowerCase();
+    final query = _normalizeForSuggestionSearch(queryText.trim());
 
     try {
       final localityOptions = await Provider.of<InventoryProvider>(context, listen: false).getDistinctLocalities();
-      final normalizedOptions = <String>[];
-      final seen = <String>{};
+      final normalizedOptionsByKey = <String, String>{};
 
       for (final option in localityOptions) {
         final normalized = option.trim();
-        final key = normalized.toLowerCase();
-        if (normalized.isEmpty || !seen.add(key)) {
+        final key = _normalizeForSuggestionSearch(normalized);
+        if (normalized.isEmpty) {
           continue;
         }
-        normalizedOptions.add(normalized);
+
+        if (!normalizedOptionsByKey.containsKey(key)) {
+          normalizedOptionsByKey[key] = normalized;
+        }
       }
 
+      final normalizedOptions = normalizedOptionsByKey.values.toList();
+
       final filteredRecent = _recentLocalities
-          .where((item) => item.toLowerCase().contains(query))
+          .where((item) => _normalizeForSuggestionSearch(item).contains(query))
           .toList();
       final filteredOptions = normalizedOptions
-          .where((item) => item.toLowerCase().contains(query))
+          .where((item) => _normalizeForSuggestionSearch(item).contains(query))
           .toList();
 
       final merged = <String>[];
-      final mergedSet = <String>{};
+      final mergedIndexByKey = <String, int>{};
 
       for (final item in filteredRecent) {
-        final key = item.toLowerCase();
-        if (mergedSet.add(key)) {
+        final key = _normalizeForSuggestionSearch(item);
+        if (!mergedIndexByKey.containsKey(key)) {
+          mergedIndexByKey[key] = merged.length;
           merged.add(item);
         }
       }
 
       for (final item in filteredOptions) {
-        final key = item.toLowerCase();
-        if (mergedSet.add(key)) {
+        final key = _normalizeForSuggestionSearch(item);
+        final existingIndex = mergedIndexByKey[key];
+        if (existingIndex == null) {
+          mergedIndexByKey[key] = merged.length;
           merged.add(item);
         }
       }
@@ -517,8 +517,13 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
       return merged;
     } catch (e) {
       debugPrint('Error fetching locality options: $e');
-      return _recentLocalities.where((item) => item.toLowerCase().contains(query)).toList();
+      return _recentLocalities.where((item) => _normalizeForSuggestionSearch(item).contains(query)).toList();
     }
+  }
+
+  /// Normalizes text for suggestion search without changing what the user types.
+  String _normalizeForSuggestionSearch(String text) {
+    return removeDiacritics(text).toLowerCase();
   }
 
   /// Shows a dialog explaining the available inventory protocols.
@@ -681,7 +686,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
       final newInventory = Inventory(
         id: _idController.text,
         type: _selectedType,
-        localityName: _localityNameController.text,
+        localityName: _fieldLocalityEditingController.text,
         duration: int.tryParse(_durationController.text) ?? 0,
         maxSpecies: int.tryParse(_maxSpeciesController.text) ?? 0,
         totalObservers: int.tryParse(_totalObserversController.text) ?? 1,
@@ -718,7 +723,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
       });
 
       if (success) {
-        await _saveRecentLocality(_localityNameController.text);
+        await _saveRecentLocality(_fieldLocalityEditingController.text);
         if (mounted) {
           Navigator.pop(context); // Return to the previous screen
         }
@@ -783,4 +788,3 @@ class _InventoryTypesDialogList extends StatelessWidget {
     );
   }
 }
-

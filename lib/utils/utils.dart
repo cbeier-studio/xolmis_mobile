@@ -91,8 +91,8 @@ Future<List<String>> loadSpeciesSearchData() async {
 /// Matching supports multi-word queries, abbreviated genus/species searches,
 /// and a standard case-insensitive substring fallback.
 bool speciesMatchesQuery(String speciesName, String query) {
-  final String lowerSpeciesName = speciesName.toLowerCase();
-  final String lowerQuery = query.toLowerCase();
+  final String lowerSpeciesName = removeDiacritics(speciesName);
+  final String lowerQuery = removeDiacritics(query);
 
   if (lowerQuery.isEmpty) {
     return true;
@@ -531,4 +531,25 @@ String firstSentenceFromDelta(String? delta) {
   }
 
   return text.trim();
+}
+
+/// Removes diacritics (accents) from a string and converts it to lowercase.
+///
+/// Useful for comparing strings while ignoring case and accents.
+String removeDiacritics(String text) {
+  return text
+      .toLowerCase()
+      .replaceAll('á', 'a')
+      .replaceAll('à', 'a')
+      .replaceAll('â', 'a')
+      .replaceAll('ã', 'a')
+      .replaceAll('é', 'e')
+      .replaceAll('ê', 'e')
+      .replaceAll('í', 'i')
+      .replaceAll('ó', 'o')
+      .replaceAll('ô', 'o')
+      .replaceAll('õ', 'o')
+      .replaceAll('ú', 'u')
+      .replaceAll('ç', 'c')
+      .replaceAll('ñ', 'n');
 }

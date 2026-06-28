@@ -201,8 +201,9 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
                             }
 
                             final options = await Provider.of<SpecimenProvider>(context, listen: false).getDistinctLocalities();
+                            final query = removeDiacritics(textEditingValue.text);
                             return options.where((String option) {
-                              return option.toLowerCase().contains(textEditingValue.text.toLowerCase());
+                              return removeDiacritics(option).contains(query);
                             });
                           },
                           onSelected: (String selection) {

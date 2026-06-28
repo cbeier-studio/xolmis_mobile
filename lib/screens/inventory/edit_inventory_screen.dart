@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../data/models/inventory.dart';
 import '../../generated/l10n.dart';
 import '../../providers/inventory_provider.dart';
+import '../../utils/utils.dart';
 
 /// Screen used to edit metadata of an existing inventory.
 class EditInventoryScreen extends StatefulWidget {
@@ -116,8 +117,9 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
 
                     try {
                       final localityOptions = await Provider.of<InventoryProvider>(context, listen: false).getDistinctLocalities();
+                      final query = removeDiacritics(textEditingValue.text);
                       return localityOptions.where((String option) {
-                        return option.toLowerCase().contains(textEditingValue.text.toLowerCase());
+                        return removeDiacritics(option).contains(query);
                       });
                     } catch (e) {
                       debugPrint('Error fetching locality options: $e');
