@@ -7,12 +7,12 @@ Esta seção explica como usar a lista de espécies durante o trabalho de campo.
 ## Adicionando uma Espécie
 
 1. Abra um inventário.  
-2. Toque no campo **Buscar espécie** no topo da lista.  
-3. Digite parte do nome científico.  
-   - Você pode usar:
-     - Iniciais do gênero + espécie (ex.: *peob* → *Penelope obscura*)  
-     - Correspondências parciais  
-     - Múltiplos fragmentos separados por espaços  
+2. Toque no campo **Adicionar espécie** no topo da lista.  
+3. Digite parte do nome científico. Você pode usar:
+   - Iniciais do gênero + espécie (ex.: *peob* ou *penobs* → *Penelope obscura*)  
+   - Correspondências parciais (ex.: *muscu* → *Troglodytes musculus*)  
+   - Múltiplos fragmentos separados por espaços (ex.: *pen obs* → *Penelope obscura*)
+   - Quantidade de indivíduos + vírgula + busca de espécie (ex.: *32,chrruf* → *Chrysomus ruficapillus* x 32)
 4. Selecione a espécie nas sugestões.
 
 Se a espécie for adicionada após o inventário ser finalizado, ela será marcada como **fora da amostra**.
@@ -25,7 +25,7 @@ Se a espécie não for encontrada:
 - Selecione **Adicionar espécie**  
 - Digite um nome temporário  
 
-O nome personalizado aparecerá exatamente como foi digitado.
+O nome personalizado aparecerá exatamente como foi digitado, destacado em vermelho.
 
 ## Ajustando o Número de Indivíduos
 
@@ -130,7 +130,7 @@ Quando a lista de espécies está vazia, o app pode exibir **sugestões de açã
 
 - Adicionar espécie  
 
-Essas sugestões ajudam novos usuários.
+Essas sugestões ajudam a guiar novos usuários.
 
 A lista de espécies/registros foi projetada para ser rápida, flexível e adequada ao campo, garantindo que suas observações sejam registradas com precisão e eficiência em qualquer tipo de levantamento.
 

@@ -21,6 +21,8 @@
 * Telas de estatísticas reformuladas e expandidas.
 * Melhorias de desempenho nas telas de inventários e ninhos (~90% mais rápidas).
 * Telas de configurações reformuladas.
+* Tipo de inventário pode ser alterado.
+* Adição de espécie no inventário com quantidade de indivíduos diretamente na busca.
 * Padronização dos formatos de importação e exportação de JSON para inventários, ninhos e espécimes.
 * Coordenadas geográficas podem ser exportadas para KML a partir de inventários, ninhos ou espécimes selecionados.
 * Destaque de itens selecionados em listas.

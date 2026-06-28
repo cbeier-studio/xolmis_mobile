@@ -7,12 +7,12 @@ This section explains how to use the species list during fieldwork.
 ## Adding a Species
 
 1. Open an inventory.  
-2. Tap the **Search species** field at the top of the list.  
-3. Type part of the scientific name.  
-   - You may use:
-     - Initials of genus + species (e.g., *peob* → *Penelope obscura*)  
-     - Partial matches  
-     - Multiple fragments separated by spaces  
+2. Tap the **Add species** field at the top of the list.  
+3. Type part of the scientific name. You may use:
+   - Initials of genus + species (e.g., *peob* or *penobs* → *Penelope obscura*)  
+   - Partial matches (e.g., *muscu* → *Troglodytes musculus*)
+   - Multiple fragments separated by spaces (e.g., *pen obs* → *Penelope obscura*)  
+   - Count + comma + species (e.g., *32,chrruf* → *Chrysomus ruficapillus* x 32)
 4. Select the species from the suggestions.
 
 If the species is added after the inventory is finished, it will be marked **outside the sample**.
@@ -25,7 +25,7 @@ If the species is not found:
 - Select **Add species**  
 - Enter a temporary name  
 
-The custom name will appear exactly as typed.
+The custom name will appear exactly as typed, highlighted in red.
 
 ## Adjusting the Number of Individuals
 

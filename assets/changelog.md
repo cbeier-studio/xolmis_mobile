@@ -21,6 +21,8 @@
 * Refactored and expanded statistics screens.
 * Performance improvements in inventories and nests screens (~90% faster).
 * Refactored settings screens.
+* Inventory type can be changed.
+* Add species to inventory with individuals count directly in the search.
 * Standardized JSON import and export formats for inventories, nests and specimens.
 * Geographical coordinates can be exported to KML from selected inventories, nests or specimens.
 * Highlight selected items in lists.
