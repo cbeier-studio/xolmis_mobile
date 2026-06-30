@@ -32,8 +32,8 @@ Esse fluxo garante que as observações de campo se tornem **validadas, padroniz
 
 ## Relação com o Xolmis Mobile
 
-- **Levantamentos** – Inventários do Mobile tornam‑se eventos de levantamento no Desktop.  
-- **Avistamentos** – Detecções de espécies registradas em campo são integradas ao módulo de avistamentos.  
+- **Amostragens** – Inventários do Mobile tornam‑se eventos de amostragem no Desktop.  
+- **Observações** – Detecções de espécies registradas em campo são integradas ao módulo de observações.  
 - **Capturas** – Dados de capturas podem ser expandidos com biometria e histórico de anilhamento.  
 - **Ninhos e Ovos** – Dados de monitoramento do Mobile são incorporados ao fluxo completo de biologia reprodutiva.  
 - **Espécimes** – Amostras coletadas em campo podem ser vinculadas a preparações laboratoriais e coleções institucionais.  

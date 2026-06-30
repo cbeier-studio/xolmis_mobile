@@ -9,13 +9,19 @@ This section explains how to use the species list during fieldwork.
 1. Open an inventory.  
 2. Tap the **Add species** field at the top of the list.  
 3. Type part of the scientific name. You may use:
-   - Initials of genus + species (e.g., *peob* or *penobs* → *Penelope obscura*)  
-   - Partial matches (e.g., *muscu* → *Troglodytes musculus*)
-   - Multiple fragments separated by spaces (e.g., *pen obs* → *Penelope obscura*)  
-   - Count + comma + species (e.g., *32,chrruf* → *Chrysomus ruficapillus* x 32)
+   - Initials of genus + species (e.g., `peob` or `penobs` → *Penelope obscura*)  
+   - Partial matches (e.g., `muscu` → *Troglodytes musculus*)
+   - Multiple fragments separated by spaces (e.g., `pen obs` → *Penelope obscura*)  
+   - Count + comma + species (e.g., `32,chrruf` → *Chrysomus ruficapillus* x 32)
 4. Select the species from the suggestions.
 
 If the species is added after the inventory is finished, it will be marked **outside the sample**.
+
+If the species is already in the list:
+
+- If the inventory is a **Detection Transect** or **Detection Point** inventory, add a new species record.
+- If the inventory is a **Transect Count** or **Point Count** inventory, ask if you want to add to the count. If the count was entered in the search, add to the count without asking.
+- Other inventory types show a message and do not add anything.
 
 ### Adding a custom species
 
@@ -39,7 +45,7 @@ Qualitative lists do not track individual counts.
 
 ## Adding POIs (Points of Interest)
 
-A POI stores the **GPS coordinates** of a species detection.
+A POI stores the **GPS coordinates** of a species or detection.
 
 To add a POI:
 

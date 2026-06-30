@@ -9,13 +9,19 @@ Esta seção explica como usar a lista de espécies durante o trabalho de campo.
 1. Abra um inventário.  
 2. Toque no campo **Adicionar espécie** no topo da lista.  
 3. Digite parte do nome científico. Você pode usar:
-   - Iniciais do gênero + espécie (ex.: *peob* ou *penobs* → *Penelope obscura*)  
-   - Correspondências parciais (ex.: *muscu* → *Troglodytes musculus*)  
-   - Múltiplos fragmentos separados por espaços (ex.: *pen obs* → *Penelope obscura*)
-   - Quantidade de indivíduos + vírgula + busca de espécie (ex.: *32,chrruf* → *Chrysomus ruficapillus* x 32)
+   - Iniciais do gênero + espécie (ex.: `peob` ou `penobs` → *Penelope obscura*)  
+   - Correspondências parciais (ex.: `muscu` → *Troglodytes musculus*)  
+   - Múltiplos fragmentos separados por espaços (ex.: `pen obs` → *Penelope obscura*)
+   - Quantidade de indivíduos + vírgula + busca de espécie (ex.: `32,chrruf` → *Chrysomus ruficapillus* x 32)
 4. Selecione a espécie nas sugestões.
 
 Se a espécie for adicionada após o inventário ser finalizado, ela será marcada como **fora da amostra**.
+
+Se a espécie já estiver na lista:
+
+- Se o inventário for do tipo **Transecto de Detecções** ou **Ponto de Detecções**, adiciona um novo registro da espécie.
+- Se o inventário for do tipo **Contagem em Transecto** ou **Ponto de Contagem**, pergunta se quer adicionar à contagem da espécie. Se foi digitada a quantidade de indivíduos na busca, adiciona à contagem da espécie sem perguntar.
+- Outros tipos de inventários mostram uma mensagem e não adicionam nada.
 
 ### Adicionando uma espécie personalizada
 
@@ -39,7 +45,7 @@ Listas qualitativas não registram contagens de indivíduos.
 
 ## Adicionando POIs (Pontos de Interesse)
 
-Um POI armazena as **coordenadas GPS** de uma detecção de espécie.
+Um POI armazena as **coordenadas GPS** de uma espécie ou detecção de espécie.
 
 Para adicionar um POI:
 
