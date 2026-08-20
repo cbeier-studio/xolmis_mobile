@@ -912,6 +912,29 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
+  String get inventoryRules => 'Regras de inventário';
+
+  @override
+  String get speciesPropagationBehavior => 'Propagação de espécies de inventários inativos';
+
+  @override
+  String get speciesPropagationAlways => 'Sempre propagar';
+
+  @override
+  String get speciesPropagationAsk => 'Sempre perguntar';
+
+  @override
+  String get speciesPropagationNever => 'Nunca propagar';
+
+  @override
+  String get confirmPropagateSpecies => 'Propagar espécie';
+
+  @override
+  String confirmPropagateSpeciesMessage(String speciesName) {
+    return 'Deseja adicionar a espécie $speciesName aos outros inventários ativos?';
+  }
+
+  @override
   String get yes => 'Sim';
 
   @override
@@ -1029,6 +1052,17 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get warningTitle => 'Aviso';
+
+  @override
+  String get continueAction => 'Continuar';
+
+  @override
+  String get inventoryTypeChangeWarningTitle => 'Alterar tipo de inventário?';
+
+  @override
+  String inventoryTypeChangeWarningMessage(String currentType, String newType) {
+    return 'Alterar de $currentType para $newType pode mudar premissas e regras do protocolo deste inventário. Deseja continuar com a alteração?';
+  }
 
   @override
   String get remindMissingVegetationData => 'Lembrar dados faltantes de vegetação';
@@ -1946,6 +1980,17 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get noTagsFound => 'Nenhuma tag encontrada';
+
+  @override
+  String get confirmAdd => 'Confirmar adição';
+
+  @override
+  String confirmAddIndividual(String speciesName) {
+    return 'Deseja adicionar um indivíduo à contagem de $speciesName?';
+  }
+
+  @override
+  String get add => 'Adicionar';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -2856,6 +2901,29 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   }
 
   @override
+  String get inventoryRules => 'Regras de inventário';
+
+  @override
+  String get speciesPropagationBehavior => 'Propagação de espécies de inventários inativos';
+
+  @override
+  String get speciesPropagationAlways => 'Sempre propagar';
+
+  @override
+  String get speciesPropagationAsk => 'Sempre perguntar';
+
+  @override
+  String get speciesPropagationNever => 'Nunca propagar';
+
+  @override
+  String get confirmPropagateSpecies => 'Propagar espécie';
+
+  @override
+  String confirmPropagateSpeciesMessage(String speciesName) {
+    return 'Deseja adicionar a espécie $speciesName aos outros inventários ativos?';
+  }
+
+  @override
   String get yes => 'Sim';
 
   @override
@@ -2973,6 +3041,17 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get warningTitle => 'Aviso';
+
+  @override
+  String get continueAction => 'Continuar';
+
+  @override
+  String get inventoryTypeChangeWarningTitle => 'Alterar tipo de inventário?';
+
+  @override
+  String inventoryTypeChangeWarningMessage(String currentType, String newType) {
+    return 'Alterar de $currentType para $newType pode mudar premissas e regras do protocolo deste inventário. Deseja continuar com a alteração?';
+  }
 
   @override
   String get remindMissingVegetationData => 'Lembrar dados faltantes de vegetação';
@@ -3889,4 +3968,15 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get noTagsFound => 'Nenhuma tag encontrada';
+
+  @override
+  String get confirmAdd => 'Confirmar adição';
+
+  @override
+  String confirmAddIndividual(String speciesName) {
+    return 'Deseja adicionar um indivíduo à contagem de $speciesName?';
+  }
+
+  @override
+  String get add => 'Adicionar';
 }

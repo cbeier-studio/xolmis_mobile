@@ -883,6 +883,47 @@
             }
         }
     },
+  "inventoryRules": "Regras de inventário",
+  "@inventoryRules": {
+    "type": "text",
+    "description": "Inventory rules tab"
+  },
+    "speciesPropagationBehavior": "Propagação de espécies de inventários inativos",
+    "@speciesPropagationBehavior": {
+        "type": "text",
+        "description": "Configuração para definir como espécies são propagadas para outros inventários ativos"
+    },
+    "speciesPropagationAlways": "Sempre propagar",
+    "@speciesPropagationAlways": {
+        "type": "text",
+        "description": "Opção de política para sempre propagar espécies para outros inventários ativos"
+    },
+    "speciesPropagationAsk": "Sempre perguntar",
+    "@speciesPropagationAsk": {
+        "type": "text",
+        "description": "Opção de política para perguntar antes de propagar espécies"
+    },
+    "speciesPropagationNever": "Nunca propagar",
+    "@speciesPropagationNever": {
+        "type": "text",
+        "description": "Opção de política para nunca propagar espécies para outros inventários ativos"
+    },
+    "confirmPropagateSpecies": "Propagar espécie",
+    "@confirmPropagateSpecies": {
+        "type": "text",
+        "description": "Título do diálogo para confirmar propagação de espécie"
+    },
+    "confirmPropagateSpeciesMessage": "Deseja adicionar a espécie {speciesName} aos outros inventários ativos?",
+    "@confirmPropagateSpeciesMessage": {
+        "type": "text",
+        "description": "Mensagem do diálogo para confirmar propagação de espécie",
+        "placeholders": {
+            "speciesName": {
+                "type": "String",
+                "description": "Espécie que pode ser propagada"
+            }
+        }
+    },
     "yes": "Sim",
     "@yes": {
         "type": "text",
@@ -1082,6 +1123,29 @@
     "@warningTitle": {
         "type": "text",
         "description": "Warning title"
+    },
+    "continueAction": "Continuar",
+    "@continueAction": {
+        "type": "text",
+        "description": "Rótulo da ação para prosseguir com uma operação"
+    },
+    "inventoryTypeChangeWarningTitle": "Alterar tipo de inventário?",
+    "@inventoryTypeChangeWarningTitle": {
+        "type": "text",
+        "description": "Título exibido quando o usuário tenta alterar o tipo de inventário na edição"
+    },
+    "inventoryTypeChangeWarningMessage": "Alterar de {currentType} para {newType} pode mudar premissas e regras do protocolo deste inventário. Deseja continuar com a alteração?",
+    "@inventoryTypeChangeWarningMessage": {
+        "type": "text",
+        "description": "Mensagem de aviso exibida antes de aplicar alteração de tipo de inventário na tela de edição",
+        "placeholders": {
+            "currentType": {
+                "type": "String"
+            },
+            "newType": {
+                "type": "String"
+            }
+        }
     },
     "remindMissingVegetationData": "Lembrar dados faltantes de vegetação",
     "@remindMissingVegetationData": {
@@ -2317,5 +2381,27 @@
   "deleteObserverConfirmation": "Tem certeza que deseja apagar este observador?",
   "selectDefaultObserver": "Selecionar observador padrão",
   "emailAddress": "Endereço de e-mail",
-  "observerName": "Nome do observador"
+  "observerName": "Nome do observador",
+  "confirmAdd": "Confirmar adição",
+  "@confirmAdd": {
+    "type": "text",
+    "description": "Título do diálogo para confirmar a adição de um indivíduo à contagem de uma espécie existente"
+  },
+  "confirmAddIndividual": "Deseja adicionar um indivíduo à contagem de {speciesName}?",
+  "@confirmAddIndividual": {
+    "type": "text",
+    "description": "Mensagem pedindo confirmação do usuário para adicionar um indivíduo à espécie existente",
+    "placeholders": {
+      "speciesName": {
+        "type": "String",
+        "description": "Espécie que terá um indivíduo adicionado"
+      }
+    }
+  },
+  "add": "Adicionar",
+  "@add": {
+    "type": "text",
+    "description": "Rótulo do botão adicionar"
+  }
+
 }

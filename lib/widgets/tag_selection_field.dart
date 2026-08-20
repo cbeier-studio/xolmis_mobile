@@ -5,6 +5,7 @@ import '../core/core_consts.dart';
 import '../data/models/predefined_tag.dart';
 import '../data/models/tag.dart';
 import '../generated/l10n.dart';
+import '../utils/utils.dart';
 
 /// A widget for selecting and managing tags with autocomplete and chip display.
 ///
@@ -73,26 +74,8 @@ class TagSelectionFieldState extends State<TagSelectionField> {
     }
   }
 
-  String _normalizeForMatching(String value) {
-    return value
-        .trim()
-        .toLowerCase()
-        .replaceAll('á', 'a')
-        .replaceAll('à', 'a')
-        .replaceAll('â', 'a')
-        .replaceAll('ã', 'a')
-        .replaceAll('é', 'e')
-        .replaceAll('ê', 'e')
-        .replaceAll('í', 'i')
-        .replaceAll('ó', 'o')
-        .replaceAll('ô', 'o')
-        .replaceAll('õ', 'o')
-        .replaceAll('ú', 'u')
-        .replaceAll('ç', 'c');
-  }
-
   bool _isSameTag(String left, String right) {
-    return _normalizeForMatching(left) == _normalizeForMatching(right);
+    return removeDiacritics(left) == removeDiacritics(right);
   }
 
   PredefinedTag? _findTagDefinition(String tagName) {
@@ -140,7 +123,7 @@ class TagSelectionFieldState extends State<TagSelectionField> {
   }
 
   Iterable<String> _suggestionsFor(String rawInput) {
-    final input = _normalizeForMatching(rawInput);
+    final input = removeDiacritics(rawInput);
     if (input.isEmpty) {
       return const [];
     }
@@ -148,18 +131,18 @@ class TagSelectionFieldState extends State<TagSelectionField> {
     final suggestions = <String>{};
 
     for (final tag in widget.predefinedTags) {
-      if (_normalizeForMatching(tag).contains(input) && !selectedTags.any((t) => _isSameTag(t.name, tag))) {
+      if (removeDiacritics(tag).contains(input) && !selectedTags.any((t) => _isSameTag(t.name, tag))) {
         suggestions.add(tag);
       }
     }
 
     for (final tag in widget.allTagNames) {
-      if (_normalizeForMatching(tag).contains(input) && !selectedTags.any((t) => _isSameTag(t.name, tag))) {
+      if (removeDiacritics(tag).contains(input) && !selectedTags.any((t) => _isSameTag(t.name, tag))) {
         suggestions.add(tag);
       }
     }
 
-    final list = suggestions.toList()..sort((a, b) => _normalizeForMatching(a).compareTo(_normalizeForMatching(b)));
+    final list = suggestions.toList()..sort((a, b) => removeDiacritics(a).compareTo(removeDiacritics(b)));
     return list;
   }
 

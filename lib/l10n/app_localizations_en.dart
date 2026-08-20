@@ -895,6 +895,29 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get inventoryRules => 'Inventory rules';
+
+  @override
+  String get speciesPropagationBehavior => 'Species propagation from inactive inventories';
+
+  @override
+  String get speciesPropagationAlways => 'Always propagate';
+
+  @override
+  String get speciesPropagationAsk => 'Always ask';
+
+  @override
+  String get speciesPropagationNever => 'Never propagate';
+
+  @override
+  String get confirmPropagateSpecies => 'Propagate species';
+
+  @override
+  String confirmPropagateSpeciesMessage(String speciesName) {
+    return 'Do you want to add $speciesName to other active inventories?';
+  }
+
+  @override
   String get yes => 'Yes';
 
   @override
@@ -1012,6 +1035,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get warningTitle => 'Warning';
+
+  @override
+  String get continueAction => 'Continue';
+
+  @override
+  String get inventoryTypeChangeWarningTitle => 'Change inventory type?';
+
+  @override
+  String inventoryTypeChangeWarningMessage(String currentType, String newType) {
+    return 'Changing from $currentType to $newType may alter assumptions and protocol-specific premises of this inventory. Continue with this change?';
+  }
 
   @override
   String get remindMissingVegetationData => 'Remind missing vegetation data';
@@ -1911,4 +1945,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noTagsFound => 'No tags found';
+
+  @override
+  String get confirmAdd => 'Confirm add';
+
+  @override
+  String confirmAddIndividual(String speciesName) {
+    return 'Do you want to add one individual to the count of $speciesName?';
+  }
+
+  @override
+  String get add => 'Add';
 }

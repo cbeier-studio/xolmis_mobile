@@ -2633,6 +2633,81 @@ class S {
     );
   }
 
+  /// `Inventory rules`
+  String get inventoryRules {
+    return Intl.message(
+      'Inventory rules',
+      name: 'inventoryRules',
+      desc: 'Inventory rules tab',
+      args: [],
+    );
+  }
+
+  /// `Species propagation from inactive inventories`
+  String get speciesPropagationBehavior {
+    return Intl.message(
+      'Species propagation from inactive inventories',
+      name: 'speciesPropagationBehavior',
+      desc:
+          'Settings option to define how species are propagated to other active inventories',
+      args: [],
+    );
+  }
+
+  /// `Always propagate`
+  String get speciesPropagationAlways {
+    return Intl.message(
+      'Always propagate',
+      name: 'speciesPropagationAlways',
+      desc:
+          'Policy option to always propagate species to other active inventories',
+      args: [],
+    );
+  }
+
+  /// `Always ask`
+  String get speciesPropagationAsk {
+    return Intl.message(
+      'Always ask',
+      name: 'speciesPropagationAsk',
+      desc:
+          'Policy option to ask before propagating species to other active inventories',
+      args: [],
+    );
+  }
+
+  /// `Never propagate`
+  String get speciesPropagationNever {
+    return Intl.message(
+      'Never propagate',
+      name: 'speciesPropagationNever',
+      desc:
+          'Policy option to never propagate species to other active inventories',
+      args: [],
+    );
+  }
+
+  /// `Propagate species`
+  String get confirmPropagateSpecies {
+    return Intl.message(
+      'Propagate species',
+      name: 'confirmPropagateSpecies',
+      desc:
+          'Title of dialog to confirm species propagation to other active inventories',
+      args: [],
+    );
+  }
+
+  /// `Do you want to add {speciesName} to other active inventories?`
+  String confirmPropagateSpeciesMessage(String speciesName) {
+    return Intl.message(
+      'Do you want to add $speciesName to other active inventories?',
+      name: 'confirmPropagateSpeciesMessage',
+      desc: 'Message of dialog to confirm species propagation',
+      args: [speciesName],
+    );
+  }
+
   /// `Yes`
   String get yes {
     return Intl.message(
@@ -3020,6 +3095,38 @@ class S {
       name: 'warningTitle',
       desc: 'Warning title',
       args: [],
+    );
+  }
+
+  /// `Continue`
+  String get continueAction {
+    return Intl.message(
+      'Continue',
+      name: 'continueAction',
+      desc: 'Action label to proceed with an operation',
+      args: [],
+    );
+  }
+
+  /// `Change inventory type?`
+  String get inventoryTypeChangeWarningTitle {
+    return Intl.message(
+      'Change inventory type?',
+      name: 'inventoryTypeChangeWarningTitle',
+      desc:
+          'Title shown when the user attempts to change inventory type while editing',
+      args: [],
+    );
+  }
+
+  /// `Changing from {currentType} to {newType} may alter assumptions and protocol-specific premises of this inventory. Continue with this change?`
+  String inventoryTypeChangeWarningMessage(String currentType, String newType) {
+    return Intl.message(
+      'Changing from $currentType to $newType may alter assumptions and protocol-specific premises of this inventory. Continue with this change?',
+      name: 'inventoryTypeChangeWarningMessage',
+      desc:
+          'Warning message shown before applying inventory type change in edit screen',
+      args: [currentType, newType],
     );
   }
 
@@ -5656,6 +5763,18 @@ class S {
     );
   }
 
+  /// `Confirm add`
+  String get confirmAdd {
+    return Intl.message(
+      'Confirm add',
+      name: 'confirmAdd',
+      desc:
+          'Title of dialog to confirm adding an individual to an existing species count',
+
+      args: [],
+    );
+  }
+
   /// `New observer`
   String get newObserver {
     return Intl.message(
@@ -5724,6 +5843,23 @@ class S {
       desc: '',
       args: [],
     );
+  }
+
+  /// `Do you want to add one individual to the count of {speciesName}?`
+  String confirmAddIndividual(String speciesName) {
+    return Intl.message(
+      'Do you want to add one individual to the count of $speciesName?',
+      name: 'confirmAddIndividual',
+      desc:
+          'Message asking user confirmation to add one individual to existing species',
+      args: [speciesName],
+    );
+  }
+
+  /// `Add`
+  String get add {
+    return Intl.message('Add', name: 'add', desc: 'Add button label', args: []);
+
   }
 }
 

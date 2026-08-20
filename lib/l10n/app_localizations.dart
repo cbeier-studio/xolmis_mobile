@@ -1610,6 +1610,48 @@ abstract class AppLocalizations {
   /// **'Do you want to delete {speciesName} from other active inventories?'**
   String confirmDeleteSpeciesMessage(String speciesName);
 
+  /// Inventory rules tab
+  ///
+  /// In en, this message translates to:
+  /// **'Inventory rules'**
+  String get inventoryRules;
+
+  /// Settings option to define how species are propagated to other active inventories
+  ///
+  /// In en, this message translates to:
+  /// **'Species propagation from inactive inventories'**
+  String get speciesPropagationBehavior;
+
+  /// Policy option to always propagate species to other active inventories
+  ///
+  /// In en, this message translates to:
+  /// **'Always propagate'**
+  String get speciesPropagationAlways;
+
+  /// Policy option to ask before propagating species to other active inventories
+  ///
+  /// In en, this message translates to:
+  /// **'Always ask'**
+  String get speciesPropagationAsk;
+
+  /// Policy option to never propagate species to other active inventories
+  ///
+  /// In en, this message translates to:
+  /// **'Never propagate'**
+  String get speciesPropagationNever;
+
+  /// Title of dialog to confirm species propagation to other active inventories
+  ///
+  /// In en, this message translates to:
+  /// **'Propagate species'**
+  String get confirmPropagateSpecies;
+
+  /// Message of dialog to confirm species propagation
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to add {speciesName} to other active inventories?'**
+  String confirmPropagateSpeciesMessage(String speciesName);
+
   /// Affirmative button label
   ///
   /// In en, this message translates to:
@@ -1843,6 +1885,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Warning'**
   String get warningTitle;
+
+  /// Action label to proceed with an operation
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continueAction;
+
+  /// Title shown when the user attempts to change inventory type while editing
+  ///
+  /// In en, this message translates to:
+  /// **'Change inventory type?'**
+  String get inventoryTypeChangeWarningTitle;
+
+  /// Warning message shown before applying inventory type change in edit screen
+  ///
+  /// In en, this message translates to:
+  /// **'Changing from {currentType} to {newType} may alter assumptions and protocol-specific premises of this inventory. Continue with this change?'**
+  String inventoryTypeChangeWarningMessage(String currentType, String newType);
 
   /// Settings option to remind missing vegetation data
   ///
@@ -3481,6 +3541,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No tags found'**
   String get noTagsFound;
+
+  /// Title of dialog to confirm adding an individual to an existing species count
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm add'**
+  String get confirmAdd;
+
+  /// Message asking user confirmation to add one individual to existing species
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to add one individual to the count of {speciesName}?'**
+  String confirmAddIndividual(String speciesName);
+
+  /// Add button label
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get add;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

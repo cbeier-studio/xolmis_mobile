@@ -177,7 +177,7 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
                         } else {
                           return List<String>.from(allSpeciesNames)
                               .where((species) => speciesMatchesQuery(
-                                  species, controller.text.toLowerCase()))
+                                  species, controller.text))
                               .map((species) {
                             return ListTile(
                               title: Text(species),
@@ -201,8 +201,9 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
                             }
 
                             final options = await Provider.of<SpecimenProvider>(context, listen: false).getDistinctLocalities();
+                            final query = removeDiacritics(textEditingValue.text);
                             return options.where((String option) {
-                              return option.toLowerCase().contains(textEditingValue.text.toLowerCase());
+                              return removeDiacritics(option).contains(query);
                             });
                           },
                           onSelected: (String selection) {

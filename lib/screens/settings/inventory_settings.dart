@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../core/core_consts.dart';
 import '../../generated/l10n.dart';
 import '../../widgets/number_picker_dialog.dart';
 
@@ -20,6 +21,7 @@ class _InventorySettingsState extends State<InventorySettings> {
   int _intervalsDuration = 10;
   bool _remindVegetationEmpty = false;
   bool _remindWeatherEmpty = false;
+  int _speciesPropagationPolicyIndex = kDefaultSpeciesPropagationPolicy.index;
 
   @override
   void initState() {
@@ -31,14 +33,20 @@ class _InventorySettingsState extends State<InventorySettings> {
   Future<void> _loadSettings() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      _maxSimultaneousInventories =
-          prefs.getInt('maxSimultaneousInventories') ?? 3;
+      _maxSimultaneousInventories = prefs.getInt('maxSimultaneousInventories') ?? 3;
       _maxSpeciesMackinnon = prefs.getInt('maxSpeciesMackinnon') ?? 10;
       _pointCountsDuration = prefs.getInt('pointCountsDuration') ?? 8;
       _cumulativeTimeDuration = prefs.getInt('cumulativeTimeDuration') ?? 45;
       _intervalsDuration = prefs.getInt('intervalsDuration') ?? 10;
       _remindVegetationEmpty = prefs.getBool('remindVegetationEmpty') ?? false;
       _remindWeatherEmpty = prefs.getBool('remindWeatherEmpty') ?? false;
+      _speciesPropagationPolicyIndex =
+          prefs.getInt(kSpeciesPropagationPolicyPreferenceKey) ?? kDefaultSpeciesPropagationPolicy.index;
+
+      if (_speciesPropagationPolicyIndex < 0 ||
+          _speciesPropagationPolicyIndex >= SpeciesPropagationPolicy.values.length) {
+        _speciesPropagationPolicyIndex = kDefaultSpeciesPropagationPolicy.index;
+      }
     });
   }
 
@@ -52,14 +60,13 @@ class _InventorySettingsState extends State<InventorySettings> {
     await prefs.setInt('intervalsDuration', _intervalsDuration);
     await prefs.setBool('remindVegetationEmpty', _remindVegetationEmpty);
     await prefs.setBool('remindWeatherEmpty', _remindWeatherEmpty);
+    await prefs.setInt(kSpeciesPropagationPolicyPreferenceKey, _speciesPropagationPolicyIndex);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(S.current.inventories),
-      ),
+      appBar: AppBar(title: Text(S.current.inventories)),
       body: SettingsList(
         contentPadding: EdgeInsets.zero,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,15 +74,13 @@ class _InventorySettingsState extends State<InventorySettings> {
         platform: DevicePlatform.android,
         sections: [
           SettingsSection(
-            title: Text(S.current.limits.toUpperCase()),
+            title: Text(S.current.inventoryRules.toUpperCase()),
             tiles: [
               // Maximum number of simultaneous inventories
               SettingsTile.navigation(
                 leading: const Icon(Icons.list_alt_outlined),
                 title: Text(S.of(context).simultaneousInventories),
-                value: Text(
-                  '$_maxSimultaneousInventories ${S.of(context).inventory(_maxSimultaneousInventories)}',
-                ),
+                value: Text('$_maxSimultaneousInventories ${S.of(context).inventory(_maxSimultaneousInventories)}'),
                 onPressed: (context) async {
                   final newMaxInventories = await showDialog<int>(
                     context: context,
@@ -96,148 +101,222 @@ class _InventorySettingsState extends State<InventorySettings> {
                   }
                 },
               ),
+              // Species propagation from inactive inventory
+              SettingsTile.navigation(
+                leading: const Icon(Icons.sync_alt_outlined),
+                title: Text(S.of(context).speciesPropagationBehavior),
+                value: Text(_getSpeciesPropagationPolicyLabel(context, _speciesPropagationPolicyIndex)),
+                onPressed: (context) async {
+                  final selectedPolicy = await _showSpeciesPropagationPolicySelectionDialog(context);
+                  if (selectedPolicy != null && selectedPolicy != _speciesPropagationPolicyIndex) {
+                    setState(() {
+                      _speciesPropagationPolicyIndex = selectedPolicy;
+                    });
+                    await _saveSettings();
+                  }
+                },
+              ),
             ],
           ),
           SettingsSection(
             title: Text(S.current.defaults.toUpperCase()),
-              tiles: [
-            // Mackinnon lists default number of species
-            SettingsTile.navigation(
-              leading: const Icon(Icons.format_list_numbered_outlined),
-              title: Text(S.of(context).mackinnonLists),
-              value: Text(
-                S.of(context).speciesPerList(_maxSpeciesMackinnon),
+            tiles: [
+              // Mackinnon lists default number of species
+              SettingsTile.navigation(
+                leading: const Icon(Icons.format_list_numbered_outlined),
+                title: Text(S.of(context).mackinnonLists),
+                value: Text(S.of(context).speciesPerList(_maxSpeciesMackinnon)),
+                onPressed: (context) async {
+                  final newMaxSpecies = await showDialog<int>(
+                    context: context,
+                    builder: (context) {
+                      return NumberPickerDialog(
+                        minValue: 1,
+                        maxValue: 30,
+                        initialValue: _maxSpeciesMackinnon,
+                        title: S.of(context).speciesPerListTitle,
+                      );
+                    },
+                  );
+                  if (newMaxSpecies != null) {
+                    setState(() {
+                      _maxSpeciesMackinnon = newMaxSpecies;
+                    });
+                    _saveSettings();
+                  }
+                },
               ),
-              onPressed: (context) async {
-                final newMaxSpecies = await showDialog<int>(
-                  context: context,
-                  builder: (context) {
-                    return NumberPickerDialog(
-                      minValue: 1,
-                      maxValue: 30,
-                      initialValue: _maxSpeciesMackinnon,
-                      title: S.of(context).speciesPerListTitle,
-                    );
-                  },
-                );
-                if (newMaxSpecies != null) {
-                  setState(() {
-                    _maxSpeciesMackinnon = newMaxSpecies;
-                  });
-                  _saveSettings();
-                }
-              },
-            ),
-            // Point counts default duration
-            SettingsTile.navigation(
-              leading: const Icon(Icons.timer_outlined),
-              title: Text(S.of(context).pointCounts),
-              value: Text(
-                S.of(context).inventoryDuration(_pointCountsDuration),
+              // Point counts default duration
+              SettingsTile.navigation(
+                leading: const Icon(Icons.timer_outlined),
+                title: Text(S.of(context).pointCounts),
+                value: Text(S.of(context).inventoryDuration(_pointCountsDuration)),
+                onPressed: (context) async {
+                  final newDuration = await showDialog<int>(
+                    context: context,
+                    builder: (context) {
+                      return NumberPickerDialog(
+                        minValue: 1,
+                        maxValue: 60,
+                        initialValue: _pointCountsDuration,
+                        title: S.of(context).durationMin,
+                      );
+                    },
+                  );
+                  if (newDuration != null) {
+                    setState(() {
+                      _pointCountsDuration = newDuration;
+                    });
+                    _saveSettings();
+                  }
+                },
               ),
-              onPressed: (context) async {
-                final newDuration = await showDialog<int>(
-                  context: context,
-                  builder: (context) {
-                    return NumberPickerDialog(
-                      minValue: 1,
-                      maxValue: 60,
-                      initialValue: _pointCountsDuration,
-                      title: S.of(context).durationMin,
-                    );
-                  },
-                );
-                if (newDuration != null) {
-                  setState(() {
-                    _pointCountsDuration = newDuration;
-                  });
-                  _saveSettings();
-                }
-              },
-            ),
-            // Timed qualitative list default duration
-            SettingsTile.navigation(
-              leading: const Icon(Icons.timer_outlined),
-              title: Text(S.of(context).timedQualitativeLists),
-              value: Text(
-                S.of(context).inventoryDuration(_cumulativeTimeDuration),
+              // Timed qualitative list default duration
+              SettingsTile.navigation(
+                leading: const Icon(Icons.timer_outlined),
+                title: Text(S.of(context).timedQualitativeLists),
+                value: Text(S.of(context).inventoryDuration(_cumulativeTimeDuration)),
+                onPressed: (context) async {
+                  final newDuration = await showDialog<int>(
+                    context: context,
+                    builder: (context) {
+                      return NumberPickerDialog(
+                        minValue: 1,
+                        maxValue: 120,
+                        initialValue: _cumulativeTimeDuration,
+                        title: S.of(context).durationMin,
+                      );
+                    },
+                  );
+                  if (newDuration != null) {
+                    setState(() {
+                      _cumulativeTimeDuration = newDuration;
+                    });
+                    _saveSettings();
+                  }
+                },
               ),
-              onPressed: (context) async {
-                final newDuration = await showDialog<int>(
-                  context: context,
-                  builder: (context) {
-                    return NumberPickerDialog(
-                      minValue: 1,
-                      maxValue: 120,
-                      initialValue: _cumulativeTimeDuration,
-                      title: S.of(context).durationMin,
-                    );
-                  },
-                );
-                if (newDuration != null) {
-                  setState(() {
-                    _cumulativeTimeDuration = newDuration;
-                  });
-                  _saveSettings();
-                }
-              },
-            ),
-            // Interval qualitative list default duration
-            SettingsTile.navigation(
-              leading: const Icon(Icons.timer_outlined),
-              title: Text(S.of(context).intervaledQualitativeLists),
-              value: Text(
-                S.of(context).inventoryDuration(_intervalsDuration),
+              // Interval qualitative list default duration
+              SettingsTile.navigation(
+                leading: const Icon(Icons.timer_outlined),
+                title: Text(S.of(context).intervaledQualitativeLists),
+                value: Text(S.of(context).inventoryDuration(_intervalsDuration)),
+                onPressed: (context) async {
+                  final newDuration = await showDialog<int>(
+                    context: context,
+                    builder: (context) {
+                      return NumberPickerDialog(
+                        minValue: 1,
+                        maxValue: 120,
+                        initialValue: _intervalsDuration,
+                        title: S.of(context).durationMin,
+                      );
+                    },
+                  );
+                  if (newDuration != null) {
+                    setState(() {
+                      _intervalsDuration = newDuration;
+                    });
+                    _saveSettings();
+                  }
+                },
               ),
-              onPressed: (context) async {
-                final newDuration = await showDialog<int>(
-                  context: context,
-                  builder: (context) {
-                    return NumberPickerDialog(
-                      minValue: 1,
-                      maxValue: 120,
-                      initialValue: _intervalsDuration,
-                      title: S.of(context).durationMin,
-                    );
-                  },
-                );
-                if (newDuration != null) {
-                  setState(() {
-                    _intervalsDuration = newDuration;
-                  });
-                  _saveSettings();
-                }
-              },
-            ),
-          ]),
+            ],
+          ),
           SettingsSection(
             title: Text(S.current.reminders.toUpperCase()),
-              tiles: [
-                SettingsTile.switchTile(
-                  title: Text(S.of(context).remindMissingVegetationData),
-                  leading: const Icon(Icons.notification_important_outlined),
-                  initialValue: _remindVegetationEmpty,
-                  onToggle: (bool value) {
-                    setState(() {
-                      _remindVegetationEmpty = value;
-                    });
-                    _saveSettings();
-                  },
-                ),
-                SettingsTile.switchTile(
-                  title: Text(S.of(context).remindMissingWeatherData),
-                  leading: const Icon(Icons.notification_important_outlined),
-                  initialValue: _remindWeatherEmpty,
-                  onToggle: (bool value) {
-                    setState(() {
-                      _remindWeatherEmpty = value;
-                    });
-                    _saveSettings();
-                  },
-                ),
-              ])
+            tiles: [
+              SettingsTile.switchTile(
+                title: Text(S.of(context).remindMissingVegetationData),
+                leading: const Icon(Icons.notification_important_outlined),
+                initialValue: _remindVegetationEmpty,
+                onToggle: (bool value) {
+                  setState(() {
+                    _remindVegetationEmpty = value;
+                  });
+                  _saveSettings();
+                },
+              ),
+              SettingsTile.switchTile(
+                title: Text(S.of(context).remindMissingWeatherData),
+                leading: const Icon(Icons.notification_important_outlined),
+                initialValue: _remindWeatherEmpty,
+                onToggle: (bool value) {
+                  setState(() {
+                    _remindWeatherEmpty = value;
+                  });
+                  _saveSettings();
+                },
+              ),
+            ],
+          ),
         ],
       ),
+    );
+  }
+
+  /// Returns the localized label for a species propagation policy index.
+  String _getSpeciesPropagationPolicyLabel(BuildContext context, int policyIndex) {
+    switch (SpeciesPropagationPolicy.values[policyIndex]) {
+      case SpeciesPropagationPolicy.alwaysPropagate:
+        return S.of(context).speciesPropagationAlways;
+      case SpeciesPropagationPolicy.askEveryTime:
+        return S.of(context).speciesPropagationAsk;
+      case SpeciesPropagationPolicy.neverPropagate:
+        return S.of(context).speciesPropagationNever;
+    }
+  }
+
+  /// Shows a dialog to choose how species are propagated across active inventories.
+  Future<int?> _showSpeciesPropagationPolicySelectionDialog(BuildContext context) async {
+    int tempSelectedPolicy = _speciesPropagationPolicyIndex;
+
+    return showDialog<int>(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              title: Text(S.of(context).speciesPropagationBehavior),
+              content: SingleChildScrollView(
+                child: RadioGroup<int>(
+                  groupValue: tempSelectedPolicy,
+                  onChanged: (int? value) {
+                    if (value == null) return;
+                    setDialogState(() {
+                      tempSelectedPolicy = value;
+                    });
+                  },
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      RadioListTile<int>(
+                        title: Text(S.of(context).speciesPropagationAlways),
+                        value: SpeciesPropagationPolicy.alwaysPropagate.index,
+                      ),
+                      RadioListTile<int>(
+                        title: Text(S.of(context).speciesPropagationAsk),
+                        value: SpeciesPropagationPolicy.askEveryTime.index,
+                      ),
+                      RadioListTile<int>(
+                        title: Text(S.of(context).speciesPropagationNever),
+                        value: SpeciesPropagationPolicy.neverPropagate.index,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(child: Text(S.of(context).cancel), onPressed: () => Navigator.of(context).pop()),
+                TextButton(
+                  child: Text(S.of(context).save),
+                  onPressed: () => Navigator.of(context).pop(tempSelectedPolicy),
+                ),
+              ],
+            );
+          },
+        );
+      },
     );
   }
 }

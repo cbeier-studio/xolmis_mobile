@@ -135,13 +135,13 @@ Future<void> importInventoryFromJson(BuildContext context) async {
   
   try {
     // Pick a JSON file
-    FilePickerResult? result = await FilePicker.pickFiles(
+    PlatformFile? result = await FilePicker.pickFile(
       type: FileType.custom,
       allowedExtensions: ['json'],
     );
 
     // If no file was selected, exit without error
-    if (result == null || result.files.single.path == null) {
+    if (result == null || result.path == null) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -152,7 +152,7 @@ Future<void> importInventoryFromJson(BuildContext context) async {
       return;
     }
 
-    final filePath = result.files.single.path!;
+    final filePath = result.path!;
     final file = File(filePath);
 
     // Show a loading dialog
@@ -404,13 +404,13 @@ Future<void> importNestsFromJson(BuildContext context) async {
 
   try {
     // Pick a JSON file
-    FilePickerResult? result = await FilePicker.pickFiles(
+    PlatformFile? result = await FilePicker.pickFile(
       type: FileType.custom,
       allowedExtensions: ['json'],
     );
 
-    if (result != null && result.files.single.path != null) {
-      final filePath = result.files.single.path!;
+    if (result != null && result.path != null) {
+      final filePath = result.path!;
       final file = File(filePath);
 
       // Show a loading dialog
@@ -596,13 +596,13 @@ Future<void> importSpecimensFromJson(BuildContext context) async {
 
   try {
     // Pick a JSON file
-    FilePickerResult? result = await FilePicker.pickFiles(
+    PlatformFile? result = await FilePicker.pickFile(
       type: FileType.custom,
       allowedExtensions: ['json'],
     );
 
-    if (result != null && result.files.single.path != null) {
-      final filePath = result.files.single.path!;
+    if (result != null && result.path != null) {
+      final filePath = result.path!;
       final file = File(filePath);
 
       // Show a loading dialog
@@ -944,7 +944,7 @@ Future<void> importJournalsFromJson(BuildContext context) async {
     }
     journalProvider = Provider.of<FieldJournalProvider>(context, listen: false);
 
-    final result = await FilePicker.pickFiles(
+    final result = await FilePicker.pickFile(
       type: FileType.custom,
       allowedExtensions: ['json'],
     );
@@ -962,20 +962,7 @@ Future<void> importJournalsFromJson(BuildContext context) async {
       return;
     }
 
-    if (result.files.isEmpty) {
-      debugPrint('[importJournalsFromJson] FilePicker returned result but files list is empty');
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            showCloseIcon: true,
-            content: Text(S.current.noFileSelected),
-          ),
-        );
-      }
-      return;
-    }
-
-    final filePath = result.files.first.path;
+    final filePath = result.path;
     if (filePath == null) {
       debugPrint('[importJournalsFromJson] Selected file has null path');
       if (context.mounted) {

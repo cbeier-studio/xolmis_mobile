@@ -1440,6 +1440,47 @@
             }
         }
     },
+    "inventoryRules": "Inventory rules",
+    "@inventoryRules": {
+        "type": "text",
+        "description": "Inventory rules tab"
+    },
+    "speciesPropagationBehavior": "Species propagation from inactive inventories",
+    "@speciesPropagationBehavior": {
+        "type": "text",
+        "description": "Settings option to define how species are propagated to other active inventories"
+    },
+    "speciesPropagationAlways": "Always propagate",
+    "@speciesPropagationAlways": {
+        "type": "text",
+        "description": "Policy option to always propagate species to other active inventories"
+    },
+    "speciesPropagationAsk": "Always ask",
+    "@speciesPropagationAsk": {
+        "type": "text",
+        "description": "Policy option to ask before propagating species to other active inventories"
+    },
+    "speciesPropagationNever": "Never propagate",
+    "@speciesPropagationNever": {
+        "type": "text",
+        "description": "Policy option to never propagate species to other active inventories"
+    },
+    "confirmPropagateSpecies": "Propagate species",
+    "@confirmPropagateSpecies": {
+        "type": "text",
+        "description": "Title of dialog to confirm species propagation to other active inventories"
+    },
+    "confirmPropagateSpeciesMessage": "Do you want to add {speciesName} to other active inventories?",
+    "@confirmPropagateSpeciesMessage": {
+        "type": "text",
+        "description": "Message of dialog to confirm species propagation",
+        "placeholders": {
+            "speciesName": {
+                "type": "String",
+                "description": "Species that may be propagated"
+            }
+        }
+    },
     "yes": "Yes",
     "@yes": {
         "type": "text",
@@ -1639,6 +1680,29 @@
     "@warningTitle": {
         "type": "text",
         "description": "Warning title"
+    },
+    "continueAction": "Continue",
+    "@continueAction": {
+        "type": "text",
+        "description": "Action label to proceed with an operation"
+    },
+    "inventoryTypeChangeWarningTitle": "Change inventory type?",
+    "@inventoryTypeChangeWarningTitle": {
+        "type": "text",
+        "description": "Title shown when the user attempts to change inventory type while editing"
+    },
+    "inventoryTypeChangeWarningMessage": "Changing from {currentType} to {newType} may alter assumptions and protocol-specific premises of this inventory. Continue with this change?",
+    "@inventoryTypeChangeWarningMessage": {
+        "type": "text",
+        "description": "Warning message shown before applying inventory type change in edit screen",
+        "placeholders": {
+            "currentType": {
+                "type": "String"
+            },
+            "newType": {
+                "type": "String"
+            }
+        }
     },
     "remindMissingVegetationData": "Remind missing vegetation data",
     "@remindMissingVegetationData": {
@@ -2788,8 +2852,7 @@
     "@errorSavingJournalEntry": {
         "type": "text",
         "description": "Error message when saving journal entry"
-    }
-,
+    },
   "tags": "Tags",
   "@tags": {
     "description": "Label for tag selection field in journal entries"
@@ -2873,5 +2936,27 @@
   "deleteObserverConfirmation": "Are you sure you want to delete this observer?",
   "selectDefaultObserver": "Select default observer",
   "emailAddress": "Email address",
-  "observerName": "Observer name"
+  "observerName": "Observer name",
+  "confirmAdd": "Confirm add",
+  "@confirmAdd": {
+    "type": "text",
+    "description": "Title of dialog to confirm adding an individual to an existing species count"
+  },
+  "confirmAddIndividual": "Do you want to add one individual to the count of {speciesName}?",
+  "@confirmAddIndividual": {
+    "type": "text",
+    "description": "Message asking user confirmation to add one individual to existing species",
+    "placeholders": {
+      "speciesName": {
+        "type": "String",
+        "description": "Species that will have one individual added"
+      }
+    }
+  },
+  "add": "Add",
+  "@add": {
+    "type": "text",
+    "description": "Add button label"
+  }
+
 }

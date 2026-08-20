@@ -19,11 +19,20 @@ const String kStartupModulePreferenceKey = 'startupModuleIndex';
 /// Shared preferences key that stores import behavior for existing records.
 const String kImportExistingRecordsPolicyPreferenceKey = 'importExistingRecordsPolicy';
 
+/// Shared preferences key that stores species propagation behavior between inventories.
+const String kSpeciesPropagationPolicyPreferenceKey = 'speciesPropagationPolicy';
+
 /// App modules that can be used as startup destination.
 enum StartupModule { inventories, nests, specimens, fieldJournal, statistics }
 
 /// Defines what to do when imported records already exist locally.
 enum ImportExistingRecordPolicy { askEveryTime, updateExisting, skipExisting }
+
+/// Defines how species are propagated to other active inventories.
+enum SpeciesPropagationPolicy { alwaysPropagate, askEveryTime, neverPropagate }
+
+/// Default policy used when no species propagation preference has been saved yet.
+const SpeciesPropagationPolicy kDefaultSpeciesPropagationPolicy = SpeciesPropagationPolicy.askEveryTime;
 
 /// Exception thrown when inserting records into the database fails.
 class DatabaseInsertException implements Exception {

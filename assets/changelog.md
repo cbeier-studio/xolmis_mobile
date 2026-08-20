@@ -15,12 +15,15 @@
 * Added in settings an option to define what to do with existing records when importing data (ask, update or ignore).
 * Added tags for field journal notes.
 * Added option in settings to edit the available tags for field journal notes.
+* Added in settings an option to define the policy for species propagation from inactive inventories (ask, propagate or ignore).
 
 ### Improvements
 
 * Refactored and expanded statistics screens.
 * Performance improvements in inventories and nests screens (~90% faster).
 * Refactored settings screens.
+* Inventory type can be changed.
+* Add species to inventory with individuals count directly in the search.
 * Standardized JSON import and export formats for inventories, nests and specimens.
 * Geographical coordinates can be exported to KML from selected inventories, nests or specimens.
 * Highlight selected items in lists.

@@ -36,7 +36,12 @@ class SpeciesListItemState extends State<SpeciesListItem> {
     return ListTile(
       title: Text(
         widget.species.name,
-         style: const TextStyle(fontStyle: FontStyle.italic),
+        style: TextStyle(
+          fontStyle: FontStyle.italic,
+          color: allSpeciesNames.contains(widget.species.name)
+              ? null
+              : Colors.red,
+        ),
       ),
       subtitle: _buildSubtitle(),
       tileColor: widget.species.isOutOfInventory
