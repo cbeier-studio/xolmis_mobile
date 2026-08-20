@@ -2,13 +2,23 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:xolmis/core/core_consts.dart';
 import 'package:xolmis/data/models/inventory.dart';
-import 'package:xolmis/data/models/nest.dart';
 import 'package:xolmis/data/models/specimen.dart';
+import 'package:xolmis/utils/predefined_tags.dart';
 import 'package:xolmis/utils/statistics_logic.dart';
 import 'package:xolmis/utils/utils.dart';
 
 void main() {
   group('utils.dart', () {
+    group('removeDiacritics', () {
+      test('normalizes accents and converts text to lowercase', () {
+        expect(removeDiacritics('ÁrVore ÇÃO'), equals('arvore cao'));
+      });
+
+      test('leaves already normalized text unchanged aside from casing', () {
+        expect(removeDiacritics('Simple Text'), equals('simple text'));
+      });
+    });
+
     group('speciesMatchesQuery', () {
       test('returns true for empty query', () {
         expect(speciesMatchesQuery('Turdus rufiventris', ''), isTrue);
@@ -69,6 +79,44 @@ void main() {
         expect(getInventoryTypeLetter(InventoryType.invMackinnonList), equals('L'));
         expect(getInventoryTypeLetter(InventoryType.invPointCount), equals('P'));
         expect(getInventoryTypeLetter(InventoryType.invTransectCount), equals('T'));
+      });
+    });
+
+    group('plainTextFromDelta', () {
+      test('joins string inserts and ignores embeds', () {
+        const delta = '[{"insert":"Hello "},{"insert":{"image":"asset.png"}},{"insert":"world!"}]';
+
+        expect(plainTextFromDelta(delta), equals('Hello world!'));
+      });
+
+      test('returns empty string for malformed json', () {
+        expect(plainTextFromDelta('{not valid json}'), equals(''));
+      });
+    });
+
+    group('firstSentenceFromDelta', () {
+      test('returns the first sentence including punctuation', () {
+        const delta = '[{"insert":"First sentence. Second sentence."}]';
+
+        expect(firstSentenceFromDelta(delta), equals('First sentence.'));
+      });
+
+      test('falls back to the first line when no sentence punctuation exists', () {
+        const delta = '[{"insert":"First line\\nSecond line"}]';
+
+        expect(firstSentenceFromDelta(delta), equals('First line'));
+      });
+    });
+
+    group('localizedPredefinedTagNames', () {
+      test('returns portuguese tags for pt locales', () {
+        expect(localizedPredefinedTagNames('pt_BR'), contains('alimentação'));
+        expect(localizedPredefinedTagNames('PT'), contains('clima'));
+      });
+
+      test('returns english tags for non-pt locales', () {
+        expect(localizedPredefinedTagNames('en'), contains('behavior'));
+        expect(localizedPredefinedTagNames('es'), contains('fieldwork'));
       });
     });
   });
