@@ -339,6 +339,10 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "deleteJournalEntry": MessageLookupByLibrary.simpleMessage("Apagar nota"),
     "deleteNest": MessageLookupByLibrary.simpleMessage("Apagar ninho"),
+    "deleteObserver": MessageLookupByLibrary.simpleMessage("Apagar observador"),
+    "deleteObserverConfirmation": MessageLookupByLibrary.simpleMessage(
+      "Tem certeza que deseja apagar este observador?",
+    ),
     "deletePoi": MessageLookupByLibrary.simpleMessage("Apagar POI"),
     "deleteRevision": MessageLookupByLibrary.simpleMessage(
       "Apagar revisão de ninho",
@@ -423,6 +427,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Editar revisão de ninho",
     ),
     "editNotes": MessageLookupByLibrary.simpleMessage("Editar notas"),
+    "editObserver": MessageLookupByLibrary.simpleMessage("Editar observador"),
     "editSpecimen": MessageLookupByLibrary.simpleMessage("Editar espécime"),
     "editVegetation": MessageLookupByLibrary.simpleMessage(
       "Editar dados de vegetação",
@@ -442,6 +447,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "eggShapeOval": MessageLookupByLibrary.simpleMessage("Oval"),
     "eggShapePyriform": MessageLookupByLibrary.simpleMessage("Piriforme"),
     "eggShapeSpherical": MessageLookupByLibrary.simpleMessage("Esférico"),
+    "emailAddress": MessageLookupByLibrary.simpleMessage("Endereço de e-mail"),
     "endTime": MessageLookupByLibrary.simpleMessage("Hora final"),
     "enterCoordinates": MessageLookupByLibrary.simpleMessage(
       "Entrar coordenadas",
@@ -817,6 +823,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "male": MessageLookupByLibrary.simpleMessage("Macho"),
     "maleNameOrId": MessageLookupByLibrary.simpleMessage("Nome ou ID do macho"),
+    "manageObservers": MessageLookupByLibrary.simpleMessage(
+      "Gerenciar observadores",
+    ),
     "manageTags": MessageLookupByLibrary.simpleMessage("Gerenciar tags"),
     "maxSpecies": MessageLookupByLibrary.simpleMessage("Máx. espécies"),
     "minutes": m43,
@@ -861,6 +870,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "newInventory": MessageLookupByLibrary.simpleMessage("Novo inventário"),
     "newJournalEntry": MessageLookupByLibrary.simpleMessage("Nova nota"),
     "newNest": MessageLookupByLibrary.simpleMessage("Novo ninho"),
+    "newObserver": MessageLookupByLibrary.simpleMessage("Novo observador"),
     "newPoi": MessageLookupByLibrary.simpleMessage("Novo POI"),
     "newRevision": MessageLookupByLibrary.simpleMessage("Nova revisão"),
     "newSpecimen": MessageLookupByLibrary.simpleMessage("Novo espécime"),
@@ -942,6 +952,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "observerAbbreviationMissing": MessageLookupByLibrary.simpleMessage(
       "Sigla do observador não encontrada. Adicione-a nas configurações.",
     ),
+    "observerName": MessageLookupByLibrary.simpleMessage("Nome do observador"),
     "observerSetting": MessageLookupByLibrary.simpleMessage(
       "Observador (sigla)",
     ),
@@ -1065,6 +1076,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "save": MessageLookupByLibrary.simpleMessage("Salvar"),
     "seeAll": MessageLookupByLibrary.simpleMessage("Ver tudo"),
     "selectAll": MessageLookupByLibrary.simpleMessage("Selecionar todos"),
+    "selectDefaultObserver": MessageLookupByLibrary.simpleMessage(
+      "Selecionar observador padrão",
+    ),
     "selectInventoryToView": MessageLookupByLibrary.simpleMessage(
       "Selecione um inventário para ver os detalhes",
     ),

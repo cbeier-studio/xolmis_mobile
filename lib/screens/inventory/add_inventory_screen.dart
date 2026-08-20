@@ -162,7 +162,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                             if (result != null && result.isNotEmpty) {
                               // Concatenate the inventory ID in the specified format
                               final prefs = await SharedPreferences.getInstance();
-                              final observerAcronym = prefs.getString('observerAcronym') ?? '';
+                              final observerAcronym = prefs.getString('defaultObserver') ?? '';
                               final now = DateTime.now();
                               final year = now.year.toString();
                               final month = now.month.toString().padLeft(2, '0');
@@ -676,7 +676,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
     });
 
     final prefs = await SharedPreferences.getInstance();
-    final observerAbbrev = prefs.getString('observerAcronym') ?? '';
+    final observerAbbrev = prefs.getString('defaultObserver') ?? '';
     if (_formKey.currentState!.validate()) {
       final newInventory = Inventory(
         id: _idController.text,

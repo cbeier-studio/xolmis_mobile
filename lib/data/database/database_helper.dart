@@ -38,7 +38,7 @@ class DatabaseHelper {
     String path = join(await getDatabasesPath(), 'xolmis_database.db');
     return await openDatabase(
       path,
-      version: 28,
+      version: 29,
       onCreate: _createTables,
       onUpgrade: _upgradeTables,
       onConfigure: (db) {
@@ -245,6 +245,31 @@ class DatabaseHelper {
         FOREIGN KEY (journalId) REFERENCES field_journal(id) ON DELETE CASCADE,
         FOREIGN KEY (tagId) REFERENCES predefined_tags(id) ON DELETE CASCADE,
         UNIQUE(journalId, tagId)
+      )
+    ''');
+    db.execute('''
+      CREATE TABLE observers (
+        observerAbbrev TEXT PRIMARY KEY,
+        observerName TEXT NOT NULL,
+        emailAddress TEXT
+      )
+    ''');
+    db.execute('''
+      CREATE TABLE inventoryObservers (
+        inventoryId TEXT NOT NULL,
+        observerAbbrev TEXT NOT NULL,
+        PRIMARY KEY (inventoryId, observerAbbrev),
+        FOREIGN KEY (inventoryId) REFERENCES inventories(id) ON DELETE CASCADE,
+        FOREIGN KEY (observerAbbrev) REFERENCES observers(observerAbbrev)
+      )
+    ''');
+    db.execute('''
+      CREATE TABLE speciesObservers (
+        speciesId INTEGER NOT NULL,
+        observerAbbrev TEXT NOT NULL,
+        PRIMARY KEY (speciesId, observerAbbrev),
+        FOREIGN KEY (speciesId) REFERENCES species(id) ON DELETE CASCADE,
+        FOREIGN KEY (observerAbbrev) REFERENCES observers(observerAbbrev)
       )
     ''');
 
@@ -607,6 +632,37 @@ class DatabaseHelper {
     }
     if (oldVersion < 28) {
       db.execute('ALTER TABLE field_journal ADD COLUMN backgroundColor INTEGER NOT NULL DEFAULT 4294965473');
+    }
+    if (oldVersion < 29) {
+      final defObserver = prefs.getString('observerAcronym') ?? '';
+      await prefs.setString('defaultObserver', defObserver);
+      await prefs.remove('observerAcronym');
+
+      db.execute('''
+        CREATE TABLE observers (
+          observerAbbrev TEXT PRIMARY KEY,
+          observerName TEXT NOT NULL,
+          emailAddress TEXT
+        )
+      ''');
+      db.execute('''
+        CREATE TABLE inventoryObservers (
+          inventoryId TEXT NOT NULL,
+          observerAbbrev TEXT NOT NULL,
+          PRIMARY KEY (inventoryId, observerAbbrev),
+          FOREIGN KEY (inventoryId) REFERENCES inventories(id) ON DELETE CASCADE,
+          FOREIGN KEY (observerAbbrev) REFERENCES observers(observerAbbrev)
+        )
+      ''');
+      db.execute('''
+        CREATE TABLE speciesObservers (
+          speciesId INTEGER NOT NULL,
+          observerAbbrev TEXT NOT NULL,
+          PRIMARY KEY (speciesId, observerAbbrev),
+          FOREIGN KEY (speciesId) REFERENCES species(id) ON DELETE CASCADE,
+          FOREIGN KEY (observerAbbrev) REFERENCES observers(observerAbbrev)
+        )
+      ''');
     }
   }
 

@@ -2309,5 +2309,13 @@
   "noTagsFound": "Nenhuma tag encontrada",
   "@noTagsFound": {
     "description": "Estado vazio da lista de gerenciamento de tags"
-  }
+  },
+  "manageObservers": "Gerenciar observadores",
+  "newObserver": "Novo observador",
+  "editObserver": "Editar observador",
+  "deleteObserver": "Apagar observador",
+  "deleteObserverConfirmation": "Tem certeza que deseja apagar este observador?",
+  "selectDefaultObserver": "Selecionar observador padrão",
+  "emailAddress": "Endereço de e-mail",
+  "observerName": "Nome do observador"
 }

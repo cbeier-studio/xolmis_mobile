@@ -4,9 +4,11 @@ import 'package:sqflite/sqflite.dart';
 
 import '../database/database_helper.dart';
 import '../models/inventory.dart';
+import '../models/observer.dart';
 import 'species_dao.dart';
 import 'vegetation_dao.dart';
 import 'weather_dao.dart';
+import 'observer_dao.dart';
 
 import '../../utils/utils.dart';
 
@@ -16,8 +18,9 @@ class InventoryDao {
   final SpeciesDao _speciesDao;
   final VegetationDao _vegetationDao;
   final WeatherDao _weatherDao;
+  final ObserverDao _observerDao;
 
-  InventoryDao(this._dbHelper, this._speciesDao, this._vegetationDao, this._weatherDao);
+  InventoryDao(this._dbHelper, this._speciesDao, this._vegetationDao, this._weatherDao, this._observerDao);
 
   /// Inserts a new [Inventory] record into the database.
   ///
@@ -41,6 +44,17 @@ class InventoryDao {
         inventory.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
+
+      // Insert observers for the inventory
+      if (db != null) {
+        for (var observer in inventory.observers) {
+          await db.insert('inventoryObservers', {
+            'inventoryId': inventory.id,
+            'observerAbbrev': observer.observerAbbrev,
+          }, conflictAlgorithm: ConflictAlgorithm.replace);
+        }
+      }
+
       return recordId != null && recordId > 0;
     } on DatabaseException catch (e) {
       debugPrint('Database error: $e');
@@ -118,6 +132,11 @@ class InventoryDao {
             where: 'inventoryId = ?',
             whereArgs: [currentInventoryId],
           );
+          await txn.delete(
+            'inventoryObservers',
+            where: 'inventoryId = ?',
+            whereArgs: [currentInventoryId],
+          );
 
           await txn.update(
             'inventories',
@@ -133,6 +152,17 @@ class InventoryDao {
           if (recordId == null || recordId <= 0) {
             throw Exception('Failed to insert inventory: ${inventory.toString()}');
           }
+        }
+
+        for (final observer in inventory.observers) {
+          await txn.insert(
+            'inventoryObservers',
+            {
+              'inventoryId': currentInventoryId,
+              'observerAbbrev': observer.observerAbbrev,
+            },
+            conflictAlgorithm: ConflictAlgorithm.replace,
+          );
         }
 
         for (final species in inventory.speciesList) {
@@ -161,6 +191,17 @@ class InventoryDao {
             if (poiId == null || poiId <= 0) {
               throw Exception('Failed to insert POI: ${poi.toString()}');
             }
+          }
+
+          for (final observer in species.observers) {
+            await txn.insert(
+              'speciesObservers',
+              {
+                'speciesId': speciesId,
+                'observerAbbrev': observer.observerAbbrev,
+              },
+              conflictAlgorithm: ConflictAlgorithm.replace,
+            );
           }
         }
 
@@ -219,12 +260,32 @@ class InventoryDao {
   Future<void> updateInventory(Inventory inventory) async {
     try {
       final db = await _dbHelper.database;
-      await db?.update(
-        'inventories',
-        inventory.toMap(),
-        where: 'id = ?',
-        whereArgs: [inventory.id],
-      );
+      await db?.transaction((txn) async {
+        await txn.update(
+          'inventories',
+          inventory.toMap(),
+          where: 'id = ?',
+          whereArgs: [inventory.id],
+        );
+
+        // Update observers
+        await txn.delete(
+          'inventoryObservers',
+          where: 'inventoryId = ?',
+          whereArgs: [inventory.id],
+        );
+
+        for (var observer in inventory.observers) {
+          await txn.insert(
+            'inventoryObservers',
+            {
+              'inventoryId': inventory.id,
+              'observerAbbrev': observer.observerAbbrev,
+            },
+            conflictAlgorithm: ConflictAlgorithm.replace,
+          );
+        }
+      });
       debugPrint('[DAO] Inventory updated: ${inventory.id}');
     } catch (e) {
       debugPrint('[DAO] !!! ERROR updating inventory: $e');
@@ -336,6 +397,13 @@ class InventoryDao {
           where: 'inventoryId = ?',
           whereArgs: [oldId],
         );
+
+        await txn.update(
+          'inventoryObservers',
+          {'inventoryId': newId},
+          where: 'inventoryId = ?',
+          whereArgs: [oldId],
+        );
       });
       await db.execute('PRAGMA foreign_keys = ON;');
 
@@ -384,8 +452,9 @@ class InventoryDao {
         List<Species> speciesList = await _speciesDao.getSpeciesByInventory(map['id'], false);
         List<Vegetation> vegetationList = await _vegetationDao.getVegetationByInventory(map['id']);
         List<Weather> weatherList = await _weatherDao.getWeatherByInventory(map['id']);
+        List<Observer> observers = await _observerDao.getObserversByInventory(map['id']);
 
-        Inventory inventory = Inventory.fromMap(map, speciesList, vegetationList, weatherList);
+        Inventory inventory = Inventory.fromMap(map, speciesList, vegetationList, weatherList, observers);
 
         return inventory;
       }).toList());
@@ -417,7 +486,8 @@ class InventoryDao {
       List<Species> speciesList = await _speciesDao.getSpeciesByInventory(map['id'], false);
       List<Vegetation> vegetationList = await _vegetationDao.getVegetationByInventory(map['id']);
       List<Weather> weatherList = await _weatherDao.getWeatherByInventory(map['id']);
-      return Inventory.fromMap(map, speciesList, vegetationList, weatherList);
+      List<Observer> observers = await _observerDao.getObserversByInventory(map['id']);
+      return Inventory.fromMap(map, speciesList, vegetationList, weatherList, observers);
     } else {
       throw Exception('Inventory not found with ID $id');
     }
@@ -507,9 +577,10 @@ class InventoryDao {
         final speciesWithinCount = map['speciesWithinCount'] as int? ?? 0;
         final speciesOutOfInventoryCount =
             map['speciesOutOfInventoryCount'] as int? ?? 0;
-        // Cria inventário sem especies/vegetação/clima
+        // Cria inventário sem especies/vegetação/clima/observadores
         return Inventory.fromMap(
           map,
+          [],
           [],
           [],
           [],
@@ -570,7 +641,8 @@ class InventoryDao {
       for (var map in maps) {
         // Para a lista de filtro, pode carregar só a espécie filtrada
         List<Species> filteredSpecies = await _speciesDao.getSpeciesByInventory(map['id'], false);
-        inventories.add(Inventory.fromMap(map, filteredSpecies, [], []));
+        List<Observer> observers = await _observerDao.getObserversByInventory(map['id']);
+        inventories.add(Inventory.fromMap(map, filteredSpecies, [], [], observers));
       }
 
       debugPrint('[DAO] Loaded ${inventories.length} inventories with species: $speciesName');

@@ -8,6 +8,7 @@ import '../../core/core_consts.dart';
 import '../../utils/utils.dart';
 
 import '../daos/inventory_dao.dart';
+import 'observer.dart';
 
 import '../../main.dart';
 
@@ -115,6 +116,7 @@ class Species {
   double? flightHeight;
   String? flightDirection;
   List<Poi> pois;
+  List<Observer> observers;
 
   Species({
     this.id,
@@ -128,11 +130,12 @@ class Species {
     this.flightHeight,
     this.flightDirection,
     this.pois = const [],
+    this.observers = const [],
   });
 
   /// Creates a [Species] instance from a SQLite row [map], associating the
-  /// given [pois] list.
-  factory Species.fromMap(Map<String, dynamic> map, List<Poi> pois) {
+  /// given [pois] and [observers] lists.
+  factory Species.fromMap(Map<String, dynamic> map, List<Poi> pois, List<Observer> observers) {
     return Species(
       id: map['id'],
       inventoryId: map['inventoryId'],
@@ -147,6 +150,7 @@ class Species {
       flightHeight: map['flightHeight'],
       flightDirection: map['flightDirection'],
       pois: pois,
+      observers: observers,
     );
   }
 
@@ -162,7 +166,8 @@ class Species {
     double? distance,
     double? flightHeight,
     String? flightDirection,
-    List<Poi>? pois
+    List<Poi>? pois,
+    List<Observer>? observers,
   }) {
     return Species(
       id: id ?? this.id,
@@ -176,6 +181,7 @@ class Species {
       flightHeight: flightHeight ?? this.flightHeight,
       flightDirection: flightDirection ?? this.flightDirection,
       pois: pois ?? this.pois,
+      observers: observers ?? this.observers,
     );
   }
 
@@ -211,10 +217,11 @@ class Species {
       'flightHeight': flightHeight,
       'flightDirection': flightDirection,
       'pois': pois.map((poi) => poi.toJson()).toList(),
+      'observers': observers.map((observer) => observer.toJson()).toList(),
     };
   }
 
-  /// Creates a [Species] instance from a JSON map, including nested [Poi]s.
+  /// Creates a [Species] instance from a JSON map, including nested [Poi]s and [Observer]s.
   factory Species.fromJson(Map<String, dynamic> json) {
     return Species(
       id: json['id'],
@@ -228,6 +235,9 @@ class Species {
       flightHeight: json['flightHeight'],
       flightDirection: json['flightDirection'],
       pois: (json['pois'] as List).map((item) => Poi.fromJson(item)).toList(),
+      observers: json['observers'] != null 
+          ? (json['observers'] as List).map((item) => Observer.fromJson(item)).toList()
+          : const [],
     );
   }
 
@@ -243,7 +253,8 @@ class Species {
         'distance: $distance, '
         'flightHeight: $flightHeight, '
         'flightDirection: $flightDirection, '
-        'notes: $notes}';
+        'notes: $notes, '
+        'observers: $observers}';
   }
 }
 
@@ -585,6 +596,7 @@ class Inventory with ChangeNotifier {
   String? notes;
   bool isDiscarded;
   List<Species> speciesList;
+  List<Observer> observers;
   int speciesCount = 0; // Cached count of all species records
   int speciesWithinCount = 0; // Cached count of species inside sample
   int speciesOutOfInventoryCount = 0; // Cached count of species outside sample
@@ -637,6 +649,7 @@ class Inventory with ChangeNotifier {
     this.notes,
     this.isDiscarded = false,
     this.speciesList = const [],
+    this.observers = const [],
     this.speciesCount = 0,
     this.speciesWithinCount = 0,
     this.speciesOutOfInventoryCount = 0,
@@ -661,7 +674,7 @@ class Inventory with ChangeNotifier {
 
   /// Creates an [Inventory] from a SQLite row plus already loaded child lists.
   Inventory.fromMap(Map<String, dynamic> map, List<Species> speciesList,
-      List<Vegetation> vegetationList, List<Weather> weatherList,
+      List<Vegetation> vegetationList, List<Weather> weatherList, List<Observer> observers,
       {int speciesCount = 0,
       int speciesWithinCount = 0,
       int speciesOutOfInventoryCount = 0})
@@ -695,6 +708,7 @@ class Inventory with ChangeNotifier {
             ? DateTime.parse(map['pauseStartTime'])
             : null,
         speciesList = speciesList,
+        observers = observers,
         speciesCount = speciesCount,
         speciesWithinCount = speciesWithinCount,
         speciesOutOfInventoryCount = speciesOutOfInventoryCount,
@@ -738,6 +752,7 @@ class Inventory with ChangeNotifier {
     String? notes,
     bool? isDiscarded,
     List<Species>? speciesList,
+    List<Observer>? observers,
     int? speciesCount,
     int? speciesWithinCount,
     int? speciesOutOfInventoryCount,
@@ -769,6 +784,7 @@ class Inventory with ChangeNotifier {
       notes: notes ?? this.notes,
       isDiscarded: isDiscarded ?? this.isDiscarded,
       speciesList: speciesList ?? this.speciesList,
+      observers: observers ?? this.observers,
       speciesCount: speciesCount ?? this.speciesCount,
       speciesWithinCount: speciesWithinCount ?? this.speciesWithinCount,
       speciesOutOfInventoryCount:
@@ -834,7 +850,8 @@ class Inventory with ChangeNotifier {
         'totalObservers: $totalObservers, '
         'observer: $observer, '
         'notes: $notes, '
-        'isDiscarded: $isDiscarded }';
+        'isDiscarded: $isDiscarded, '
+        'observers: $observers }';
   }
 
   /// Converts this [Inventory] to a JSON-compatible map for export, including
@@ -862,13 +879,14 @@ class Inventory with ChangeNotifier {
       'totalPausedTimeInSeconds': totalPausedTimeInSeconds,
       'pauseStartTime': pauseStartTime?.toIso8601String(),
       'speciesList': speciesList.map((species) => species.toJson()).toList(),
+      'observers': observers.map((observer) => observer.toJson()).toList(),
       'vegetationList': vegetationList.map((vegetation) => vegetation.toJson()).toList(),
       'weatherList': weatherList.map((weather) => weather.toJson()).toList(),
     };
   }
 
   /// Creates an [Inventory] instance from a JSON map, including nested
-  /// [Species], [Vegetation], and [Weather] lists.
+  /// [Species], [Vegetation], [Weather] and [Observer] lists.
   factory Inventory.fromJson(Map<String, dynamic> json) {
     return Inventory(
       id: json['id'],
@@ -892,6 +910,9 @@ class Inventory with ChangeNotifier {
       totalPausedTimeInSeconds: json['totalPausedTimeInSeconds'],
       pauseStartTime: json['pauseStartTime'] != null ? DateTime.parse(json['pauseStartTime']) : null,
       speciesList: (json['speciesList'] as List).map((item) => Species.fromJson(item)).toList(),
+      observers: json['observers'] != null 
+          ? (json['observers'] as List).map((item) => Observer.fromJson(item)).toList()
+          : const [],
       vegetationList: (json['vegetationList'] as List).map((item) => Vegetation.fromJson(item)).toList(),
       weatherList: (json['weatherList'] as List).map((item) => Weather.fromJson(item)).toList(),
     );
@@ -970,6 +991,7 @@ class Inventory with ChangeNotifier {
 
     if (includeCollections) {
       speciesList = source.speciesList;
+      observers = source.observers;
       vegetationList = source.vegetationList;
       weatherList = source.weatherList;
     }

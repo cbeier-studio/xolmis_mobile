@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
 
 import '../models/inventory.dart';
 import '../database/database_helper.dart';
 import 'poi_dao.dart';
+import 'observer_dao.dart';
+import '../models/observer.dart';
 
 /// Provides database access for species observations and their related POIs.
 class SpeciesDao {
   final DatabaseHelper _dbHelper;
   final PoiDao _poiDao;
+  final ObserverDao _observerDao;
 
-  SpeciesDao(this._dbHelper, this._poiDao);
+  SpeciesDao(this._dbHelper, this._poiDao, this._observerDao);
 
   /// Inserts a new [Species] record linked to [inventoryId] into the database.
   ///
@@ -18,9 +22,20 @@ class SpeciesDao {
   Future<int?> insertSpecies(String inventoryId, Species species) async {
     final db = await _dbHelper.database;
     try {
-      int? id = await db?.insert('species', species.toMap(inventoryId));
-      species.id = id;
-      return id;
+      return await db?.transaction((txn) async {
+        int? id = await txn.insert('species', species.toMap(inventoryId));
+        species.id = id;
+
+        if (id != null && id > 0) {
+          for (var observer in species.observers) {
+            await txn.insert('speciesObservers', {
+              'speciesId': id,
+              'observerAbbrev': observer.observerAbbrev,
+            }, conflictAlgorithm: ConflictAlgorithm.replace);
+          }
+        }
+        return id;
+      });
     } catch (e) {
       debugPrint('Error inserting species: $e');
       return 0;
@@ -30,12 +45,27 @@ class SpeciesDao {
   /// Updates the database record for the given [species] using its [Species.id].
   Future<void> updateSpecies(Species species) async {
     final db = await _dbHelper.database;
-    await db?.update(
-      'species',
-      species.toMap(species.inventoryId),
-      where: 'id = ?',
-      whereArgs: [species.id],
-    );
+    await db?.transaction((txn) async {
+      await txn.update(
+        'species',
+        species.toMap(species.inventoryId),
+        where: 'id = ?',
+        whereArgs: [species.id],
+      );
+
+      await txn.delete(
+        'speciesObservers',
+        where: 'speciesId = ?',
+        whereArgs: [species.id],
+      );
+
+      for (var observer in species.observers) {
+        await txn.insert('speciesObservers', {
+          'speciesId': species.id,
+          'observerAbbrev': observer.observerAbbrev,
+        }, conflictAlgorithm: ConflictAlgorithm.replace);
+      }
+    });
   }
 
   /// Deletes the [Species] record identified by [speciesId] from the database.
@@ -72,7 +102,8 @@ class SpeciesDao {
     ) ?? [];
     if (maps.isNotEmpty) {
       final pois = await _poiDao.getPoisForSpecies(id);
-      return Species.fromMap(maps.first, pois);
+      final observers = await _observerDao.getObserversBySpecies(id);
+      return Species.fromMap(maps.first, pois, observers);
     } else {
       throw Exception('Species not found with ID $id');
     }
@@ -108,10 +139,24 @@ class SpeciesDao {
       poisBySpeciesId[speciesId]!.add(Poi.fromMap(poiMap));
     }
 
+    final observersMaps = await db?.rawQuery('''
+      SELECT so.speciesId, o.* FROM observers o
+      INNER JOIN speciesObservers so ON o.observerAbbrev = so.observerAbbrev
+      WHERE so.speciesId IN (${speciesIds.join(',')})
+    ''') ?? [];
+
+    final observersBySpeciesId = <int, List<Observer>>{};
+    for (final obsMap in observersMaps) {
+      final speciesId = obsMap['speciesId'] as int;
+      observersBySpeciesId.putIfAbsent(speciesId, () => []);
+      observersBySpeciesId[speciesId]!.add(Observer.fromMap(obsMap));
+    }
+
     return speciesMaps.map((map) {
       final speciesId = map['id'] as int;
       final pois = poisBySpeciesId[speciesId] ?? [];
-      return Species.fromMap(map, pois);
+      final observers = observersBySpeciesId[speciesId] ?? [];
+      return Species.fromMap(map, pois, observers);
     }).toList();
   }
 
@@ -151,10 +196,24 @@ class SpeciesDao {
       poisBySpeciesId[speciesId]!.add(Poi.fromMap(poiMap));
     }
 
+    final observersMaps = await db?.rawQuery('''
+      SELECT so.speciesId, o.* FROM observers o
+      INNER JOIN speciesObservers so ON o.observerAbbrev = so.observerAbbrev
+      WHERE so.speciesId IN (${speciesIds.join(',')})
+    ''') ?? [];
+
+    final observersBySpeciesId = <int, List<Observer>>{};
+    for (final obsMap in observersMaps) {
+      final speciesId = obsMap['speciesId'] as int;
+      observersBySpeciesId.putIfAbsent(speciesId, () => []);
+      observersBySpeciesId[speciesId]!.add(Observer.fromMap(obsMap));
+    }
+
     return speciesMaps.map((map) {
       final speciesId = map['id'] as int;
       final pois = poisBySpeciesId[speciesId] ?? [];
-      return Species.fromMap(map, pois);
+      final observers = observersBySpeciesId[speciesId] ?? [];
+      return Species.fromMap(map, pois, observers);
     }).toList();
   }
 
@@ -184,10 +243,24 @@ class SpeciesDao {
       poisBySpeciesId[speciesId]!.add(Poi.fromMap(poiMap));
     }
 
+    final observersMaps = await db?.rawQuery('''
+      SELECT so.speciesId, o.* FROM observers o
+      INNER JOIN speciesObservers so ON o.observerAbbrev = so.observerAbbrev
+      WHERE so.speciesId IN (${speciesIds.join(',')})
+    ''') ?? [];
+
+    final observersBySpeciesId = <int, List<Observer>>{};
+    for (final obsMap in observersMaps) {
+      final speciesId = obsMap['speciesId'] as int;
+      observersBySpeciesId.putIfAbsent(speciesId, () => []);
+      observersBySpeciesId[speciesId]!.add(Observer.fromMap(obsMap));
+    }
+
     return speciesMaps.map((map) {
       final speciesId = map['id'] as int;
       final pois = poisBySpeciesId[speciesId] ?? [];
-      return Species.fromMap(map, pois);
+      final observers = observersBySpeciesId[speciesId] ?? [];
+      return Species.fromMap(map, pois, observers);
     }).toList();
   }
 

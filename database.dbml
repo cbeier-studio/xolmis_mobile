@@ -190,3 +190,33 @@ Table field_journal {
     lastModifiedDate text
     observer text
 }
+
+Table observers {
+    observerAbbrev text [primary key]
+    observerName text [not null]
+    emailAddress text
+}
+
+Table inventoryObservers {
+    inventoryId text [not null]
+    observerAbbrev text [not null]
+
+    indexes {
+        (inventoryId, observerAbbrev) [unique, name: 'idx_inventory_observers']
+    }
+}
+
+Ref: inventoryObservers.inventoryId > inventories.id [delete: cascade]
+Ref: inventoryObservers.observerAbbrev > observers.observerAbbrev
+
+Table speciesObservers {
+    speciesId integer [not null]
+    observerAbbrev text [not null]
+
+    indexes {
+        (speciesId, observerAbbrev) [unique, name: 'idx_species_observers']
+    }
+}
+
+Ref: speciesObservers.speciesId > species.id [delete: cascade]
+Ref: speciesObservers.observerAbbrev > observers.observerAbbrev

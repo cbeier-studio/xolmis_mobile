@@ -2865,5 +2865,13 @@
   "noTagsFound": "No tags found",
   "@noTagsFound": {
     "description": "Empty state for tag management list"
-  }
+  },
+  "manageObservers": "Manage observers",
+  "newObserver": "New observer",
+  "editObserver": "Edit observer",
+  "deleteObserver": "Delete observer",
+  "deleteObserverConfirmation": "Are you sure you want to delete this observer?",
+  "selectDefaultObserver": "Select default observer",
+  "emailAddress": "Email address",
+  "observerName": "Observer name"
 }

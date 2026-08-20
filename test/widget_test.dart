@@ -8,6 +8,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:xolmis/data/daos/journal_dao.dart';
+import 'package:xolmis/data/daos/observer_dao.dart';
 import 'package:xolmis/data/daos/tag_dao.dart';
 // import 'package:xolmis/data/database/repositories/journal_repository.dart';
 
@@ -16,6 +17,7 @@ import 'package:xolmis/main.dart';
 import 'package:xolmis/data/database/database_helper.dart';
 
 import 'package:xolmis/providers/inventory_provider.dart';
+import 'package:xolmis/providers/observer_provider.dart';
 import 'package:xolmis/providers/species_provider.dart';
 import 'package:xolmis/providers/poi_provider.dart';
 import 'package:xolmis/providers/tag_provider.dart';
@@ -54,6 +56,7 @@ void main() async {
   late AppImageDao appImageDao;
   late FieldJournalDao journalDao;
   late TagDao tagDao;
+  late ObserverDao observerDao;
 
   late InventoryProvider inventoryProvider;
   late SpeciesProvider speciesProvider;
@@ -67,6 +70,7 @@ void main() async {
   late AppImageProvider appImageProvider;
   late FieldJournalProvider journalProvider;
   late TagProvider tagProvider;
+  late ObserverProvider observerProvider;
 
   late AppDependencies dependencies;
 
@@ -75,10 +79,10 @@ void main() async {
     await databaseHelper.initDatabase();
 
     poiDao = PoiDao(databaseHelper);
-    speciesDao = SpeciesDao(databaseHelper, poiDao);
+    speciesDao = SpeciesDao(databaseHelper, poiDao, observerDao);
     vegetationDao = VegetationDao(databaseHelper);
     weatherDao = WeatherDao(databaseHelper);
-    inventoryDao = InventoryDao(databaseHelper, speciesDao, vegetationDao, weatherDao);
+    inventoryDao = InventoryDao(databaseHelper, speciesDao, vegetationDao, weatherDao, observerDao);
     eggDao = EggDao(databaseHelper);
     nestRevisionDao = NestRevisionDao(databaseHelper);
     nestDao = NestDao(databaseHelper, nestRevisionDao, eggDao);
@@ -86,6 +90,7 @@ void main() async {
     appImageDao = AppImageDao(databaseHelper);
     journalDao = FieldJournalDao(databaseHelper);
     tagDao = TagDao(databaseHelper);
+    observerDao = ObserverDao(databaseHelper);
 
     poiProvider = PoiProvider(poiDao);
     speciesProvider = SpeciesProvider(speciesDao);
@@ -99,7 +104,7 @@ void main() async {
     appImageProvider = AppImageProvider(appImageDao);
     journalProvider = FieldJournalProvider(journalDao);
     tagProvider = TagProvider(tagDao);
-
+    observerProvider = ObserverProvider(observerDao);
 
     dependencies = AppDependencies(
       inventoryDao: inventoryDao,
@@ -114,6 +119,7 @@ void main() async {
       appImageDao: appImageDao,
       journalDao: journalDao,
       tagDao: tagDao,
+      observerDao: observerDao,
       inventoryProvider: inventoryProvider,
       speciesProvider: speciesProvider,
       poiProvider: poiProvider,
@@ -126,6 +132,7 @@ void main() async {
       appImageProvider: appImageProvider,
       journalProvider: journalProvider,
       tagProvider: tagProvider,
+      observerProvider: observerProvider,
     );    
   });
 

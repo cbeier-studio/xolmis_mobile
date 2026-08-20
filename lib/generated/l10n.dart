@@ -5645,6 +5645,86 @@ class S {
       args: [],
     );
   }
+
+  /// `Manage observers`
+  String get manageObservers {
+    return Intl.message(
+      'Manage observers',
+      name: 'manageObservers',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `New observer`
+  String get newObserver {
+    return Intl.message(
+      'New observer',
+      name: 'newObserver',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit observer`
+  String get editObserver {
+    return Intl.message(
+      'Edit observer',
+      name: 'editObserver',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete observer`
+  String get deleteObserver {
+    return Intl.message(
+      'Delete observer',
+      name: 'deleteObserver',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Are you sure you want to delete this observer?`
+  String get deleteObserverConfirmation {
+    return Intl.message(
+      'Are you sure you want to delete this observer?',
+      name: 'deleteObserverConfirmation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select default observer`
+  String get selectDefaultObserver {
+    return Intl.message(
+      'Select default observer',
+      name: 'selectDefaultObserver',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Email address`
+  String get emailAddress {
+    return Intl.message(
+      'Email address',
+      name: 'emailAddress',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Observer name`
+  String get observerName {
+    return Intl.message(
+      'Observer name',
+      name: 'observerName',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

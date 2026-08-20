@@ -19,6 +19,7 @@ import 'data/daos/specimen_dao.dart';
 import 'data/daos/app_image_dao.dart';
 import 'data/daos/journal_dao.dart';
 import 'data/daos/tag_dao.dart';
+import 'data/daos/observer_dao.dart';
 
 import 'providers/inventory_provider.dart';
 import 'providers/species_provider.dart';
@@ -32,6 +33,7 @@ import 'providers/specimen_provider.dart';
 import 'providers/app_image_provider.dart';
 import 'providers/journal_provider.dart';
 import 'providers/tag_provider.dart';
+import 'providers/observer_provider.dart';
 
 import 'main_screen.dart';
 import 'utils/backup_utils.dart';
@@ -74,10 +76,11 @@ Future<void> main() async {
 
     // Create the DAOs
     final poiDao = PoiDao(databaseHelper);
-    final speciesDao = SpeciesDao(databaseHelper, poiDao);
+    final observerDao = ObserverDao(databaseHelper);
+    final speciesDao = SpeciesDao(databaseHelper, poiDao, observerDao);
     final vegetationDao = VegetationDao(databaseHelper);
     final weatherDao = WeatherDao(databaseHelper);
-    final inventoryDao = InventoryDao(databaseHelper, speciesDao, vegetationDao, weatherDao);
+    final inventoryDao = InventoryDao(databaseHelper, speciesDao, vegetationDao, weatherDao, observerDao);
     final nestRevisionDao = NestRevisionDao(databaseHelper);
     final eggDao = EggDao(databaseHelper);
     final nestDao = NestDao(databaseHelper, nestRevisionDao, eggDao);
@@ -98,6 +101,8 @@ Future<void> main() async {
     final nestProvider = NestProvider(nestDao);
     final journalProvider = FieldJournalProvider(journalDao);
     final tagProvider = TagProvider(tagDao);
+    final observerProvider = ObserverProvider(observerDao);
+    await observerProvider.fetchObservers();
 
     // Preload the species names list
     List<String> preloadedSpeciesNames = await loadSpeciesSearchData();
@@ -117,6 +122,7 @@ Future<void> main() async {
       appImageDao: appImageDao,
       journalDao: journalDao,
       tagDao: tagDao,
+      observerDao: observerDao,
 
       inventoryProvider: inventoryProvider,
       speciesProvider: speciesProvider,
@@ -130,6 +136,7 @@ Future<void> main() async {
       appImageProvider: appImageProvider,
       journalProvider: journalProvider,
       tagProvider: tagProvider,
+      observerProvider: observerProvider,
 
       preloadedSpeciesNames: preloadedSpeciesNames,
     );
@@ -156,6 +163,7 @@ class AppDependencies {
   final AppImageDao appImageDao;
   final FieldJournalDao journalDao;
   final TagDao tagDao;
+  final ObserverDao observerDao;
   final InventoryProvider inventoryProvider;
   final SpeciesProvider speciesProvider;
   final PoiProvider poiProvider;
@@ -168,6 +176,7 @@ class AppDependencies {
   final AppImageProvider appImageProvider;
   final FieldJournalProvider journalProvider;
   final TagProvider tagProvider;
+  final ObserverProvider observerProvider;
   final List<String> preloadedSpeciesNames;
 
   /// Creates a dependency bundle passed to [MyApp].
@@ -184,6 +193,7 @@ class AppDependencies {
     required this.appImageDao,
     required this.journalDao,
     required this.tagDao,
+    required this.observerDao,
     required this.inventoryProvider,
     required this.speciesProvider,
     required this.poiProvider,
@@ -196,6 +206,7 @@ class AppDependencies {
     required this.appImageProvider,
     required this.journalProvider,
     required this.tagProvider,
+    required this.observerProvider,
     this.preloadedSpeciesNames = const [],
   });
 }
@@ -223,6 +234,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(value: dependencies.weatherProvider),
         ChangeNotifierProvider.value(value: dependencies.inventoryProvider),
         ChangeNotifierProvider.value(value: dependencies.nestProvider),
+        ChangeNotifierProvider.value(value: dependencies.observerProvider),
         Provider.value(value: dependencies.inventoryDao),
         Provider.value(value: dependencies.speciesDao),
         Provider.value(value: dependencies.poiDao),
@@ -230,6 +242,7 @@ class MyApp extends StatelessWidget {
         Provider.value(value: dependencies.weatherDao),
         Provider.value(value: dependencies.journalDao),
         Provider.value(value: dependencies.tagDao),
+        Provider.value(value: dependencies.observerDao),
       ],
       child: Consumer<ThemeModel>(
         builder: (context, themeModel, child) {

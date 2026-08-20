@@ -23,14 +23,14 @@ class _ObserverSettingsState extends State<ObserverSettings> {
   Future<void> _loadSettings() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      _observerAbbreviation = prefs.getString('observerAcronym') ?? '';
+      _observerAbbreviation = prefs.getString('defaultObserver') ?? '';
     });
   }
 
   /// Persists the current in-memory settings to shared preferences.
   Future<void> _saveSettings() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('observerAcronym', _observerAbbreviation);
+    await prefs.setString('defaultObserver', _observerAbbreviation);
   }
 
   @override

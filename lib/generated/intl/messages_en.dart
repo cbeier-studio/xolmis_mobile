@@ -320,6 +320,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "Delete journal entry",
     ),
     "deleteNest": MessageLookupByLibrary.simpleMessage("Delete nest"),
+    "deleteObserver": MessageLookupByLibrary.simpleMessage("Delete observer"),
+    "deleteObserverConfirmation": MessageLookupByLibrary.simpleMessage(
+      "Are you sure you want to delete this observer?",
+    ),
     "deletePoi": MessageLookupByLibrary.simpleMessage("Delete POI"),
     "deleteRevision": MessageLookupByLibrary.simpleMessage(
       "Delete nest revision",
@@ -404,6 +408,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Edit nest revision",
     ),
     "editNotes": MessageLookupByLibrary.simpleMessage("Edit notes"),
+    "editObserver": MessageLookupByLibrary.simpleMessage("Edit observer"),
     "editSpecimen": MessageLookupByLibrary.simpleMessage("Edit specimen"),
     "editVegetation": MessageLookupByLibrary.simpleMessage("Edit vegetation"),
     "editWeather": MessageLookupByLibrary.simpleMessage("Edit weather"),
@@ -419,6 +424,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "eggShapeOval": MessageLookupByLibrary.simpleMessage("Oval"),
     "eggShapePyriform": MessageLookupByLibrary.simpleMessage("Pyriform"),
     "eggShapeSpherical": MessageLookupByLibrary.simpleMessage("Spherical"),
+    "emailAddress": MessageLookupByLibrary.simpleMessage("Email address"),
     "endTime": MessageLookupByLibrary.simpleMessage("End time"),
     "enterCoordinates": MessageLookupByLibrary.simpleMessage(
       "Enter coordinates",
@@ -773,6 +779,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "mackinnonLists": MessageLookupByLibrary.simpleMessage("Mackinnon lists"),
     "male": MessageLookupByLibrary.simpleMessage("Male"),
     "maleNameOrId": MessageLookupByLibrary.simpleMessage("Male name or ID"),
+    "manageObservers": MessageLookupByLibrary.simpleMessage("Manage observers"),
     "manageTags": MessageLookupByLibrary.simpleMessage("Manage tags"),
     "maxSpecies": MessageLookupByLibrary.simpleMessage("Max species"),
     "minutes": m43,
@@ -819,6 +826,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "New journal entry",
     ),
     "newNest": MessageLookupByLibrary.simpleMessage("New nest"),
+    "newObserver": MessageLookupByLibrary.simpleMessage("New observer"),
     "newPoi": MessageLookupByLibrary.simpleMessage("New POI"),
     "newRevision": MessageLookupByLibrary.simpleMessage("New revision"),
     "newSpecimen": MessageLookupByLibrary.simpleMessage("New specimen"),
@@ -886,6 +894,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "observerAbbreviationMissing": MessageLookupByLibrary.simpleMessage(
       "Observer abbreviation is missing. Please add it in the settings.",
     ),
+    "observerName": MessageLookupByLibrary.simpleMessage("Observer name"),
     "observerSetting": MessageLookupByLibrary.simpleMessage(
       "Observer (abbreviation)",
     ),
@@ -1001,6 +1010,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "save": MessageLookupByLibrary.simpleMessage("Save"),
     "seeAll": MessageLookupByLibrary.simpleMessage("See all"),
     "selectAll": MessageLookupByLibrary.simpleMessage("Select all"),
+    "selectDefaultObserver": MessageLookupByLibrary.simpleMessage(
+      "Select default observer",
+    ),
     "selectInventoryToView": MessageLookupByLibrary.simpleMessage(
       "Select an inventory to view its details",
     ),
