@@ -1610,6 +1610,48 @@ abstract class AppLocalizations {
   /// **'Do you want to delete {speciesName} from other active inventories?'**
   String confirmDeleteSpeciesMessage(String speciesName);
 
+  /// Inventory rules tab
+  ///
+  /// In en, this message translates to:
+  /// **'Inventory rules'**
+  String get inventoryRules;
+
+  /// Settings option to define how species are propagated to other active inventories
+  ///
+  /// In en, this message translates to:
+  /// **'Species propagation from inactive inventories'**
+  String get speciesPropagationBehavior;
+
+  /// Policy option to always propagate species to other active inventories
+  ///
+  /// In en, this message translates to:
+  /// **'Always propagate'**
+  String get speciesPropagationAlways;
+
+  /// Policy option to ask before propagating species to other active inventories
+  ///
+  /// In en, this message translates to:
+  /// **'Always ask'**
+  String get speciesPropagationAsk;
+
+  /// Policy option to never propagate species to other active inventories
+  ///
+  /// In en, this message translates to:
+  /// **'Never propagate'**
+  String get speciesPropagationNever;
+
+  /// Title of dialog to confirm species propagation to other active inventories
+  ///
+  /// In en, this message translates to:
+  /// **'Propagate species'**
+  String get confirmPropagateSpecies;
+
+  /// Message of dialog to confirm species propagation
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to add {speciesName} to other active inventories?'**
+  String confirmPropagateSpeciesMessage(String speciesName);
+
   /// Affirmative button label
   ///
   /// In en, this message translates to:

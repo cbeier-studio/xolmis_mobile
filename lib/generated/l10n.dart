@@ -2633,6 +2633,81 @@ class S {
     );
   }
 
+  /// `Inventory rules`
+  String get inventoryRules {
+    return Intl.message(
+      'Inventory rules',
+      name: 'inventoryRules',
+      desc: 'Inventory rules tab',
+      args: [],
+    );
+  }
+
+  /// `Species propagation from inactive inventories`
+  String get speciesPropagationBehavior {
+    return Intl.message(
+      'Species propagation from inactive inventories',
+      name: 'speciesPropagationBehavior',
+      desc:
+          'Settings option to define how species are propagated to other active inventories',
+      args: [],
+    );
+  }
+
+  /// `Always propagate`
+  String get speciesPropagationAlways {
+    return Intl.message(
+      'Always propagate',
+      name: 'speciesPropagationAlways',
+      desc:
+          'Policy option to always propagate species to other active inventories',
+      args: [],
+    );
+  }
+
+  /// `Always ask`
+  String get speciesPropagationAsk {
+    return Intl.message(
+      'Always ask',
+      name: 'speciesPropagationAsk',
+      desc:
+          'Policy option to ask before propagating species to other active inventories',
+      args: [],
+    );
+  }
+
+  /// `Never propagate`
+  String get speciesPropagationNever {
+    return Intl.message(
+      'Never propagate',
+      name: 'speciesPropagationNever',
+      desc:
+          'Policy option to never propagate species to other active inventories',
+      args: [],
+    );
+  }
+
+  /// `Propagate species`
+  String get confirmPropagateSpecies {
+    return Intl.message(
+      'Propagate species',
+      name: 'confirmPropagateSpecies',
+      desc:
+          'Title of dialog to confirm species propagation to other active inventories',
+      args: [],
+    );
+  }
+
+  /// `Do you want to add {speciesName} to other active inventories?`
+  String confirmPropagateSpeciesMessage(String speciesName) {
+    return Intl.message(
+      'Do you want to add $speciesName to other active inventories?',
+      name: 'confirmPropagateSpeciesMessage',
+      desc: 'Message of dialog to confirm species propagation',
+      args: [speciesName],
+    );
+  }
+
   /// `Yes`
   String get yes {
     return Intl.message(

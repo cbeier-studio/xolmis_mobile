@@ -883,6 +883,47 @@
             }
         }
     },
+  "inventoryRules": "Regras de inventário",
+  "@inventoryRules": {
+    "type": "text",
+    "description": "Inventory rules tab"
+  },
+    "speciesPropagationBehavior": "Propagação de espécies de inventários inativos",
+    "@speciesPropagationBehavior": {
+        "type": "text",
+        "description": "Configuração para definir como espécies são propagadas para outros inventários ativos"
+    },
+    "speciesPropagationAlways": "Sempre propagar",
+    "@speciesPropagationAlways": {
+        "type": "text",
+        "description": "Opção de política para sempre propagar espécies para outros inventários ativos"
+    },
+    "speciesPropagationAsk": "Sempre perguntar",
+    "@speciesPropagationAsk": {
+        "type": "text",
+        "description": "Opção de política para perguntar antes de propagar espécies"
+    },
+    "speciesPropagationNever": "Nunca propagar",
+    "@speciesPropagationNever": {
+        "type": "text",
+        "description": "Opção de política para nunca propagar espécies para outros inventários ativos"
+    },
+    "confirmPropagateSpecies": "Propagar espécie",
+    "@confirmPropagateSpecies": {
+        "type": "text",
+        "description": "Título do diálogo para confirmar propagação de espécie"
+    },
+    "confirmPropagateSpeciesMessage": "Deseja adicionar a espécie {speciesName} aos outros inventários ativos?",
+    "@confirmPropagateSpeciesMessage": {
+        "type": "text",
+        "description": "Mensagem do diálogo para confirmar propagação de espécie",
+        "placeholders": {
+            "speciesName": {
+                "type": "String",
+                "description": "Espécie que pode ser propagada"
+            }
+        }
+    },
     "yes": "Sim",
     "@yes": {
         "type": "text",

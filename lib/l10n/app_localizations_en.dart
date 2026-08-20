@@ -895,6 +895,29 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get inventoryRules => 'Inventory rules';
+
+  @override
+  String get speciesPropagationBehavior => 'Species propagation from inactive inventories';
+
+  @override
+  String get speciesPropagationAlways => 'Always propagate';
+
+  @override
+  String get speciesPropagationAsk => 'Always ask';
+
+  @override
+  String get speciesPropagationNever => 'Never propagate';
+
+  @override
+  String get confirmPropagateSpecies => 'Propagate species';
+
+  @override
+  String confirmPropagateSpeciesMessage(String speciesName) {
+    return 'Do you want to add $speciesName to other active inventories?';
+  }
+
+  @override
   String get yes => 'Yes';
 
   @override

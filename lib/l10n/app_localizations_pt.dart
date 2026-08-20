@@ -912,6 +912,29 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
+  String get inventoryRules => 'Regras de inventário';
+
+  @override
+  String get speciesPropagationBehavior => 'Propagação de espécies de inventários inativos';
+
+  @override
+  String get speciesPropagationAlways => 'Sempre propagar';
+
+  @override
+  String get speciesPropagationAsk => 'Sempre perguntar';
+
+  @override
+  String get speciesPropagationNever => 'Nunca propagar';
+
+  @override
+  String get confirmPropagateSpecies => 'Propagar espécie';
+
+  @override
+  String confirmPropagateSpeciesMessage(String speciesName) {
+    return 'Deseja adicionar a espécie $speciesName aos outros inventários ativos?';
+  }
+
+  @override
   String get yes => 'Sim';
 
   @override
@@ -2875,6 +2898,29 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   @override
   String confirmDeleteSpeciesMessage(String speciesName) {
     return 'Deseja remover a espécie $speciesName dos outros inventários ativos?';
+  }
+
+  @override
+  String get inventoryRules => 'Regras de inventário';
+
+  @override
+  String get speciesPropagationBehavior => 'Propagação de espécies de inventários inativos';
+
+  @override
+  String get speciesPropagationAlways => 'Sempre propagar';
+
+  @override
+  String get speciesPropagationAsk => 'Sempre perguntar';
+
+  @override
+  String get speciesPropagationNever => 'Nunca propagar';
+
+  @override
+  String get confirmPropagateSpecies => 'Propagar espécie';
+
+  @override
+  String confirmPropagateSpeciesMessage(String speciesName) {
+    return 'Deseja adicionar a espécie $speciesName aos outros inventários ativos?';
   }
 
   @override

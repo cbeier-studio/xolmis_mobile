@@ -1440,6 +1440,47 @@
             }
         }
     },
+    "inventoryRules": "Inventory rules",
+    "@inventoryRules": {
+        "type": "text",
+        "description": "Inventory rules tab"
+    },
+    "speciesPropagationBehavior": "Species propagation from inactive inventories",
+    "@speciesPropagationBehavior": {
+        "type": "text",
+        "description": "Settings option to define how species are propagated to other active inventories"
+    },
+    "speciesPropagationAlways": "Always propagate",
+    "@speciesPropagationAlways": {
+        "type": "text",
+        "description": "Policy option to always propagate species to other active inventories"
+    },
+    "speciesPropagationAsk": "Always ask",
+    "@speciesPropagationAsk": {
+        "type": "text",
+        "description": "Policy option to ask before propagating species to other active inventories"
+    },
+    "speciesPropagationNever": "Never propagate",
+    "@speciesPropagationNever": {
+        "type": "text",
+        "description": "Policy option to never propagate species to other active inventories"
+    },
+    "confirmPropagateSpecies": "Propagate species",
+    "@confirmPropagateSpecies": {
+        "type": "text",
+        "description": "Title of dialog to confirm species propagation to other active inventories"
+    },
+    "confirmPropagateSpeciesMessage": "Do you want to add {speciesName} to other active inventories?",
+    "@confirmPropagateSpeciesMessage": {
+        "type": "text",
+        "description": "Message of dialog to confirm species propagation",
+        "placeholders": {
+            "speciesName": {
+                "type": "String",
+                "description": "Species that may be propagated"
+            }
+        }
+    },
     "yes": "Yes",
     "@yes": {
         "type": "text",

@@ -15,6 +15,7 @@
 * Adicionada nas configurações uma opção para definir o que fazer com registros existentes ao importar dados (perguntar, atualizar ou ignorar).
 * Adicionadas tags para as notas do diário de campo.
 * Adicionada opção nas configurações para editar as tags disponíveis para as notas do diário de campo.
+* Adicionada nas configurações uma opção para definir a propagação de espécie a partir de inventários inativos (perguntar, propagar ou ignorar).
 
 ### Melhorias
 
