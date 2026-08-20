@@ -196,13 +196,13 @@ class _BackupSettingsState extends State<BackupSettings> {
 
   /// Restores app data from a backup ZIP selected by the user.
   Future<void> runBackupRestore(BuildContext context) async {
-    final result = await FilePicker.pickFiles(
+    final result = await FilePicker.pickFile(
       type: FileType.custom,
       allowedExtensions: ['zip'],
     );
 
-    if (result != null && result.files.single.path != null) {
-      final filePath = result.files.single.path!;
+    if (result != null && result.path != null) {
+      final filePath = result.path!;
       bool isDialogShown = false;
       try {
         if (mounted) {
