@@ -7,6 +7,7 @@ import '../../generated/l10n.dart';
 import '../../providers/inventory_provider.dart';
 import '../../providers/poi_provider.dart';
 import '../../providers/species_provider.dart';
+import '../../widgets/scrollable_chart_indicator.dart';
 import '../../utils/statistics_logic.dart';
 
 /// Statistics screen focused on a selected set of inventories.
@@ -261,7 +262,8 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                               const SizedBox(height: 8,),
                               SizedBox(
                                 height: 400,
-                                child: LayoutBuilder(
+                                child: ScrollableChartIndicator(
+                                  child: LayoutBuilder(
                                   builder: (context, constraints) {
                                     final chartWidth = _responsiveChartWidth(
                                       constraints.maxWidth - 16,
@@ -442,6 +444,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                                       ),
                                     );
                                   },
+                                  ),
                                 ),
                               ),
                             ],
@@ -585,7 +588,8 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
             const SizedBox(height: 8),
             SizedBox(
               height: 150,
-              child: LayoutBuilder(
+              child: ScrollableChartIndicator(
+                child: LayoutBuilder(
                 builder: (context, constraints) {
                   final chartWidth = _responsiveChartWidth(
                     constraints.maxWidth,
@@ -695,6 +699,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                     ),
                   );
                 },
+                ),
               ),
             ),
               ],
