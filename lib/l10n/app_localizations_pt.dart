@@ -1982,6 +1982,30 @@ class AppLocalizationsPt extends AppLocalizations {
   String get noTagsFound => 'Nenhuma tag encontrada';
 
   @override
+  String get manageObservers => 'Gerenciar observadores';
+
+  @override
+  String get newObserver => 'Novo observador';
+
+  @override
+  String get editObserver => 'Editar observador';
+
+  @override
+  String get deleteObserver => 'Apagar observador';
+
+  @override
+  String get deleteObserverConfirmation => 'Tem certeza que deseja apagar este observador?';
+
+  @override
+  String get selectDefaultObserver => 'Selecionar observador padrão';
+
+  @override
+  String get emailAddress => 'Endereço de e-mail';
+
+  @override
+  String get observerName => 'Nome do observador';
+
+  @override
   String get confirmAdd => 'Confirmar adição';
 
   @override

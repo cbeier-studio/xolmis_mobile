@@ -1947,6 +1947,30 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noTagsFound => 'No tags found';
 
   @override
+  String get manageObservers => 'Manage observers';
+
+  @override
+  String get newObserver => 'New observer';
+
+  @override
+  String get editObserver => 'Edit observer';
+
+  @override
+  String get deleteObserver => 'Delete observer';
+
+  @override
+  String get deleteObserverConfirmation => 'Are you sure you want to delete this observer?';
+
+  @override
+  String get selectDefaultObserver => 'Select default observer';
+
+  @override
+  String get emailAddress => 'Email address';
+
+  @override
+  String get observerName => 'Observer name';
+
+  @override
   String get confirmAdd => 'Confirm add';
 
   @override

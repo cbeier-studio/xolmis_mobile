@@ -3542,6 +3542,54 @@ abstract class AppLocalizations {
   /// **'No tags found'**
   String get noTagsFound;
 
+  /// No description provided for @manageObservers.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage observers'**
+  String get manageObservers;
+
+  /// No description provided for @newObserver.
+  ///
+  /// In en, this message translates to:
+  /// **'New observer'**
+  String get newObserver;
+
+  /// No description provided for @editObserver.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit observer'**
+  String get editObserver;
+
+  /// No description provided for @deleteObserver.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete observer'**
+  String get deleteObserver;
+
+  /// No description provided for @deleteObserverConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this observer?'**
+  String get deleteObserverConfirmation;
+
+  /// No description provided for @selectDefaultObserver.
+  ///
+  /// In en, this message translates to:
+  /// **'Select default observer'**
+  String get selectDefaultObserver;
+
+  /// No description provided for @emailAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Email address'**
+  String get emailAddress;
+
+  /// No description provided for @observerName.
+  ///
+  /// In en, this message translates to:
+  /// **'Observer name'**
+  String get observerName;
+
   /// Title of dialog to confirm adding an individual to an existing species count
   ///
   /// In en, this message translates to:

@@ -5763,18 +5763,6 @@ class S {
     );
   }
 
-  /// `Confirm add`
-  String get confirmAdd {
-    return Intl.message(
-      'Confirm add',
-      name: 'confirmAdd',
-      desc:
-          'Title of dialog to confirm adding an individual to an existing species count',
-
-      args: [],
-    );
-  }
-
   /// `New observer`
   String get newObserver {
     return Intl.message(
@@ -5845,6 +5833,17 @@ class S {
     );
   }
 
+  /// `Confirm add`
+  String get confirmAdd {
+    return Intl.message(
+      'Confirm add',
+      name: 'confirmAdd',
+      desc:
+          'Title of dialog to confirm adding an individual to an existing species count',
+      args: [],
+    );
+  }
+
   /// `Do you want to add one individual to the count of {speciesName}?`
   String confirmAddIndividual(String speciesName) {
     return Intl.message(
@@ -5859,7 +5858,6 @@ class S {
   /// `Add`
   String get add {
     return Intl.message('Add', name: 'add', desc: 'Add button label', args: []);
-
   }
 }
 
