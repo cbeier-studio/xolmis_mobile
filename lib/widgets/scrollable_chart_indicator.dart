@@ -1,25 +1,24 @@
 import 'package:flutter/material.dart';
 
 class ScrollableChartIndicator extends StatefulWidget {
-  final Widget child;
+  final Widget Function(BuildContext context, ScrollController controller) builder;
 
-  const ScrollableChartIndicator({super.key, required this.child});
+  const ScrollableChartIndicator({super.key, required this.builder});
 
   @override
   State<ScrollableChartIndicator> createState() => _ScrollableChartIndicatorState();
 }
 
 class _ScrollableChartIndicatorState extends State<ScrollableChartIndicator> {
-  late final ScrollController _scrollController;
+  final ScrollController _scrollController = ScrollController();
   bool _canScrollLeft = false;
   bool _canScrollRight = false;
 
   @override
   void initState() {
     super.initState();
-    _scrollController = ScrollController();
     _scrollController.addListener(_checkScrollability);
-    // Verifica o estado inicial após a renderização
+    // Agenda a verificação após a montagem completa da árvore de layout do gráfico
     WidgetsBinding.instance.addPostFrameCallback((_) => _checkScrollability());
   }
 
@@ -29,10 +28,16 @@ class _ScrollableChartIndicatorState extends State<ScrollableChartIndicator> {
     final maxScroll = _scrollController.position.maxScrollExtent;
     final currentScroll = _scrollController.offset;
 
-    setState(() {
-      _canScrollLeft = currentScroll > 5;
-      _canScrollRight = currentScroll < maxScroll - 5 && maxScroll > 0;
-    });
+    // Atualiza apenas se houver mudança de estado para evitar re-renders desnecessários
+    final canLeft = currentScroll > 5;
+    final canRight = currentScroll < maxScroll - 5 && maxScroll > 0;
+
+    if (canLeft != _canScrollLeft || canRight != _canScrollRight) {
+      setState(() {
+        _canScrollLeft = canLeft;
+        _canScrollRight = canRight;
+      });
+    }
   }
 
   @override
@@ -44,64 +49,61 @@ class _ScrollableChartIndicatorState extends State<ScrollableChartIndicator> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        // Injeta o ScrollController no gráfico
-        PrimaryScrollController(
-          controller: _scrollController,
-          child: NotificationListener<ScrollNotification>(
-            onNotification: (notification) {
-              _checkScrollability();
-              return false;
-            },
-            child: widget.child,
-          ),
-        ),
+    return NotificationListener<ScrollNotification>(
+      onNotification: (notification) {
+        _checkScrollability();
+        return false;
+      },
+      child: Stack(
+        children: [
+          // Constrói a árvore passando o controller configurado
+          widget.builder(context, _scrollController),
 
-        // Indicador de rolagem para a esquerda
-        if (_canScrollLeft)
-          Positioned(
-            left: 0,
-            top: 0,
-            bottom: 0,
-            child: IgnorePointer(
-              child: Container(
-                width: 28,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Theme.of(context).cardColor.withValues(alpha: 0.9),
-                      Theme.of(context).cardColor.withValues(alpha: 0.0),
-                    ],
+          // Seta para Esquerda
+          if (_canScrollLeft)
+            Positioned(
+              left: 0,
+              top: 0,
+              bottom: 0,
+              child: IgnorePointer(
+                child: Container(
+                  width: 32,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Theme.of(context).cardColor.withValues(alpha: 0.95),
+                        Theme.of(context).cardColor.withValues(alpha: 0.0),
+                      ],
+                    ),
                   ),
+                  child: const Icon(Icons.chevron_left, size: 22, color: Colors.grey),
                 ),
-                child: const Icon(Icons.chevron_left, size: 20, color: Colors.grey),
               ),
             ),
-          ),
 
-        // Indicador de rolagem para a direita
-        if (_canScrollRight)
-          Positioned(
-            right: 0,
-            top: 0,
-            bottom: 0,
-            child: IgnorePointer(
-              child: Container(
-                width: 28,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Theme.of(context).cardColor.withValues(alpha: 0.0),
-                      Theme.of(context).cardColor.withValues(alpha: 0.9),
-                    ],
+          // Seta para Direita
+          if (_canScrollRight)
+            Positioned(
+              right: 0,
+              top: 0,
+              bottom: 0,
+              child: IgnorePointer(
+                child: Container(
+                  width: 32,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Theme.of(context).cardColor.withValues(alpha: 0.0),
+                        Theme.of(context).cardColor.withValues(alpha: 0.95),
+                      ],
+                    ),
                   ),
+                  child: const Icon(Icons.chevron_right, size: 22, color: Colors.grey),
                 ),
-                child: const Icon(Icons.chevron_right, size: 20, color: Colors.grey),
               ),
             ),
-          ),
-      ],
+        ],
+      ),
     );
   }
 }
