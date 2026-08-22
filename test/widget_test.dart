@@ -39,6 +39,9 @@ import 'package:xolmis/data/daos/vegetation_dao.dart';
 import 'package:xolmis/data/daos/weather_dao.dart';
 import 'package:xolmis/data/daos/app_image_dao.dart';
 
+import 'package:xolmis/services/location_service.dart';
+import 'package:xolmis/services/location_service_impl.dart';
+
 void main() async {
   late DatabaseHelper databaseHelper;
 
@@ -54,6 +57,8 @@ void main() async {
   late AppImageDao appImageDao;
   late FieldJournalDao journalDao;
   late TagDao tagDao;
+
+  late LocationService locationService;
 
   late InventoryProvider inventoryProvider;
   late SpeciesProvider speciesProvider;
@@ -87,6 +92,8 @@ void main() async {
     journalDao = FieldJournalDao(databaseHelper);
     tagDao = TagDao(databaseHelper);
 
+    locationService = GeolocatorServiceImpl();
+
     poiProvider = PoiProvider(poiDao);
     speciesProvider = SpeciesProvider(speciesDao);
     vegetationProvider = VegetationProvider(vegetationDao);
@@ -114,6 +121,9 @@ void main() async {
       appImageDao: appImageDao,
       journalDao: journalDao,
       tagDao: tagDao,
+
+      locationService: locationService,
+
       inventoryProvider: inventoryProvider,
       speciesProvider: speciesProvider,
       poiProvider: poiProvider,

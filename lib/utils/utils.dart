@@ -14,6 +14,7 @@ import '../providers/species_provider.dart';
 import '../screens/inventory/add_inventory_screen.dart';
 import '../core/core_consts.dart';
 import '../generated/l10n.dart';
+import '../services/location_service.dart';
 
 /// Cached species names used by autocomplete and search flows.
 List<String> allSpeciesNames = [];
@@ -233,54 +234,6 @@ void _showMackinnonDialog(BuildContext context, Inventory inventory, InventoryDa
   );
 }
 
-/// Determine the current position of the device.
-///
-/// When the location services are not enabled or permissions
-/// are denied the `Future` will return an error.
-Future<Position> _determinePosition() async {
-  bool serviceEnabled;
-  LocationPermission permission;
-
-  // Test if location services are enabled.
-  serviceEnabled = await Geolocator.isLocationServiceEnabled();
-  if (!serviceEnabled) {
-    // Location services are not enabled don't continue
-    // accessing the position and request users of the
-    // App to enable the location services.
-    return Future.error('Location services are disabled.');
-  }
-
-  permission = await Geolocator.checkPermission();
-  if (permission == LocationPermission.denied) {
-    permission = await Geolocator.requestPermission();
-    if (permission == LocationPermission.denied) {
-      // Permissions are denied, next time you could try
-      // requesting permissions again (this is also where
-      // Android's shouldShowRequestPermissionRationale
-      // returned true. According to Android guidelines
-      // your App should show an explanatory UI now.
-      return Future.error('Location permissions are denied');
-    }
-  }
-
-  if (permission == LocationPermission.deniedForever) {
-    // Permissions are denied forever, handle appropriately.
-    return Future.error(
-        'Location permissions are permanently denied, we cannot request permissions.');
-  }
-
-  // When we reach here, permissions are granted and we can
-  // continue accessing the position of the device.
-  final LocationSettings locationSettings = LocationSettings(
-    accuracy: LocationAccuracy.high,
-    timeLimit: const Duration(seconds: 30),
-  );
-
-  return await Geolocator.getCurrentPosition(
-    locationSettings: locationSettings,
-  );
-}
-
 /// Shows a dialog that lets the user manually enter geographic coordinates.
 ///
 /// Returns a synthetic [Position] when the form is submitted successfully, or
@@ -384,40 +337,55 @@ Future<Position?> _showManualCoordinatesDialog(BuildContext context) {
 /// If GPS retrieval fails, the user can choose to continue without coordinates
 /// or enter latitude and longitude manually.
 Future<Position?> getPosition(BuildContext context) async {
-  try {
-    return await _determinePosition();
-  } catch (e) {
-    debugPrint("Error getting position: $e");
-    if (!context.mounted) return null;
+  final locationService = Provider.of<LocationService>(context, listen: false);
+  final result = await locationService.getCurrentCoordinate();
 
-    final choice = await showDialog<bool>(
-      context: context,
-      barrierDismissible: false,
-      builder: (dialogContext) {
-        return AlertDialog.adaptive(
-          title: Text(S.of(dialogContext).locationError),
-          content: Text(S.of(dialogContext).couldNotGetGpsLocation),
-          actions: [
-            TextButton(
-              child: Text(S.of(dialogContext).continueWithout),
-              onPressed: () => Navigator.of(dialogContext).pop(false),
-            ),
-            TextButton(
-              child: Text(S.of(dialogContext).enterManually),
-              onPressed: () => Navigator.of(dialogContext).pop(true),
-            ),
-          ],
-        );
-      },
-    );
-
-    if (choice == true) {
+  return await result.fold(
+    (failure) async {
+      debugPrint("Error getting position: $failure");
       if (!context.mounted) return null;
-      return await _showManualCoordinatesDialog(context);
-    } else {
-      return null;
-    }
-  }
+
+      final choice = await showDialog<bool>(
+        context: context,
+        barrierDismissible: false,
+        builder: (dialogContext) {
+          return AlertDialog.adaptive(
+            title: Text(S.of(dialogContext).locationError),
+            content: Text(S.of(dialogContext).couldNotGetGpsLocation),
+            actions: [
+              TextButton(
+                child: Text(S.of(dialogContext).continueWithout),
+                onPressed: () => Navigator.of(dialogContext).pop(false),
+              ),
+              TextButton(
+                child: Text(S.of(dialogContext).enterManually),
+                onPressed: () => Navigator.of(dialogContext).pop(true),
+              ),
+            ],
+          );
+        },
+      );
+
+      if (choice == true) {
+        if (!context.mounted) return null;
+        return await _showManualCoordinatesDialog(context);
+      } else {
+        return null;
+      }
+    },
+    (coord) async => Position(
+      latitude: coord.latitude,
+      longitude: coord.longitude,
+      altitude: coord.altitude,
+      timestamp: DateTime.now(),
+      accuracy: 0.0,
+      altitudeAccuracy: 0.0,
+      heading: 0.0,
+      headingAccuracy: 0.0,
+      speed: 0.0,
+      speedAccuracy: 0.0,
+    ),
+  );
 }
 
 /// Returns the letter code used in generated inventory identifiers.
