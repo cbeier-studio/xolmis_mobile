@@ -8,8 +8,6 @@ import '../../core/core_consts.dart';
 import '../../utils/utils.dart';
 import '../../generated/l10n.dart';
 
-const String _kRecentInventoryLocalitiesPreferenceKey = 'recentInventoryLocalities';
-
 /// Form screen used to create a new inventory entry.
 class AddInventoryScreen extends StatefulWidget {
   final String? initialInventoryId;
@@ -31,7 +29,6 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
   final _maxSpeciesController = TextEditingController();
   final _totalObserversController = TextEditingController();
   late TextEditingController _localityNameController;
-  late TextEditingController _fieldLocalityEditingController;
   List<String> _recentLocalities = const [];
   InventoryType _selectedType = InventoryType.invFreeQualitative;
   bool _isSubmitting = false;
@@ -45,8 +42,6 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
     _totalObserversController.text = '1';
     _localityNameController = TextEditingController();
     _localityNameController.text = widget.initialLocalityName ?? '';
-    _fieldLocalityEditingController = TextEditingController();
-    _fieldLocalityEditingController.text = widget.initialLocalityName ?? '';
     _loadRecentLocalities();
   }
 
@@ -57,7 +52,6 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
     _maxSpeciesController.dispose();
     _totalObserversController.dispose();
     _localityNameController.dispose();
-    _fieldLocalityEditingController.dispose();
     super.dispose();
   }
 
@@ -190,28 +184,28 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                           ? TextEditingValue(text: widget.initialLocalityName!)
                           : TextEditingValue.empty,
                       optionsBuilder: (TextEditingValue textEditingValue) async {
-                        return _getLocalitySuggestions(textEditingValue.text);
+                        return await _getLocalitySuggestions(textEditingValue.text);
                       },
                       onSelected: (String selection) {
                         _localityNameController.text = selection;
-                        _fieldLocalityEditingController.text = selection;
                         _saveRecentLocality(selection);
                       },
-                      fieldViewBuilder: (BuildContext context,
+                      fieldViewBuilder: (
+                          BuildContext context,
                           TextEditingController fieldTextEditingController,
                           FocusNode fieldFocusNode,
-                          VoidCallback onFieldSubmitted) {
-                        _fieldLocalityEditingController = fieldTextEditingController;
+                          VoidCallback onFieldSubmitted,
+                          ) {
                         return TextFormField(
                           controller: fieldTextEditingController,
                           focusNode: fieldFocusNode,
                           textCapitalization: TextCapitalization.none,
                           decoration: InputDecoration(
                             labelText: '${S.of(context).locality} *',
-                            border: OutlineInputBorder(),
+                            border: const OutlineInputBorder(),
                           ),
                           validator: (value) {
-                            if (value == null || value.isEmpty) {
+                            if (value == null || value.trim().isEmpty) {
                               return S.of(context).insertLocality;
                             }
                             return null;
@@ -221,33 +215,36 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                           },
                           onFieldSubmitted: (String value) {
                             _localityNameController.text = value;
-                            _saveRecentLocality(value);
+                            if (value.trim().isNotEmpty) {
+                              _saveRecentLocality(value);
+                            }
                             onFieldSubmitted();
                           },
                         );
                       },
-                      optionsViewBuilder: (BuildContext context,
+                      optionsViewBuilder: (
+                          BuildContext context,
                           AutocompleteOnSelected<String> onSelected,
-                          Iterable<String> options) {
+                          Iterable<String> options,
+                          ) {
                         return Align(
                           alignment: Alignment.topLeft,
                           child: Material(
-                            elevation: 4.0, // Add this line for shadow
+                            elevation: 4.0,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
                             child: SizedBox(
                               width: MediaQuery.of(context).size.width * 0.9,
                               child: ListView.builder(
-                                padding: const EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.symmetric(vertical: 4.0),
+                                shrinkWrap: true,
                                 itemCount: options.length,
                                 itemBuilder: (BuildContext context, int index) {
                                   final String option = options.elementAt(index);
-                                  return GestureDetector(
+                                  return ListTile(
+                                    title: Text(option),
                                     onTap: () {
                                       onSelected(option);
                                     },
-                                    child: ListTile(
-                                      title: Text(option),
-                                    ),
                                   );
                                 },
                               ),
@@ -432,7 +429,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
   /// Loads recent localities used in inventory creation.
   Future<void> _loadRecentLocalities() async {
     final prefs = await SharedPreferences.getInstance();
-    final saved = prefs.getStringList(_kRecentInventoryLocalitiesPreferenceKey) ?? const [];
+    final saved = prefs.getStringList(kRecentInventoryLocalitiesPreferenceKey) ?? const [];
 
     if (!mounted) {
       return;
@@ -462,7 +459,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
     }
 
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setStringList(_kRecentInventoryLocalitiesPreferenceKey, updated);
+    await prefs.setStringList(kRecentInventoryLocalitiesPreferenceKey, updated);
   }
 
   /// Returns locality suggestions with recent entries pinned to the top.
@@ -681,7 +678,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
       final newInventory = Inventory(
         id: _idController.text,
         type: _selectedType,
-        localityName: _fieldLocalityEditingController.text,
+        localityName: _localityNameController.text,
         duration: int.tryParse(_durationController.text) ?? 0,
         maxSpecies: int.tryParse(_maxSpeciesController.text) ?? 0,
         totalObservers: int.tryParse(_totalObserversController.text) ?? 1,
@@ -718,7 +715,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
       });
 
       if (success) {
-        await _saveRecentLocality(_fieldLocalityEditingController.text);
+        await _saveRecentLocality(_localityNameController.text);
         if (mounted) {
           Navigator.pop(context); // Return to the previous screen
         }
