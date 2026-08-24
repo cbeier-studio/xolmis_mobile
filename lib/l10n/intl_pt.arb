@@ -311,6 +311,7 @@
     "selectInventoryType": "Por favor, selecione um tipo de inventário",
     "inventoryId": "ID do Inventário",
     "generateId": "Gerar ID",
+    "expedition": "Expedição",
     "siteAbbreviation": "Nome ou sigla do local",
     "optional": "* opcional",
     "insertInventoryId": "Por favor, insira uma ID para o inventário",

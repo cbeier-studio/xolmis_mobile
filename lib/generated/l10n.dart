@@ -898,6 +898,16 @@ class S {
     );
   }
 
+  /// `Expedition`
+  String get expedition {
+    return Intl.message(
+      'Expedition',
+      name: 'expedition',
+      desc: 'Field label for expedition name used in ID generation',
+      args: [],
+    );
+  }
+
   /// `Site name or abbreviation`
   String get siteAbbreviation {
     return Intl.message(

@@ -112,63 +112,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                         // Button to generate ID
                         suffixIcon: IconButton(
                           icon: const Icon(Icons.auto_mode_outlined),
-                          onPressed: () async {
-                            final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
-                            final result = await showDialog<String>(
-                              context: context,
-                              builder: (BuildContext context) {
-                                String acronym = '';
-                                return AlertDialog(
-                                  title: Text(S.of(context).generateId),
-                                  content: TextField(
-                                    maxLength: 20,
-                                    textCapitalization: TextCapitalization.words,
-                                    autofocus: true,
-                                    decoration: InputDecoration(
-                                      labelText: S.of(context).siteAbbreviation,
-                                      border: OutlineInputBorder(),
-                                      helperText: S.of(context).optional,
-                                    ),
-                                    onChanged: (value) {
-                                      setState(() {
-                                        acronym = value;
-                                      });
-                                    },
-                                  ),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      child: Text(S.of(context).cancel),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                    TextButton(
-                                      child: Text(S.of(context).ok),
-                                      onPressed: () {
-                                        Navigator.of(context).pop(acronym);
-                                      },
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-
-                            if (result != null && result.isNotEmpty) {
-                              // Concatenate the inventory ID in the specified format
-                              final prefs = await SharedPreferences.getInstance();
-                              final observerAcronym = prefs.getString('observerAcronym') ?? '';
-                              final now = DateTime.now();
-                              final year = now.year.toString();
-                              final month = now.month.toString().padLeft(2, '0');
-                              final day = now.day.toString().padLeft(2, '0');
-                              final inventoryTypeLetter = getInventoryTypeLetter(_selectedType);
-                              final sequentialNumber = await inventoryProvider.getNextSequentialNumber(result, observerAcronym, now.year, now.month, now.day, inventoryTypeLetter);
-
-                              final inventoryId = '$result-$observerAcronym-$year$month$day-${inventoryTypeLetter ?? ''}${sequentialNumber.toString().padLeft(2, '0')}';
-
-                              _idController.text = inventoryId;
-                            }
-                          },
+                          onPressed: _onGenerateIdPressed,
                         ),
                       ),
                       validator: (value) {
@@ -666,6 +610,94 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
     });
   }
 
+  Future<void> _onGenerateIdPressed() async {
+    final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
+
+    final result = await showDialog<Map<String, String>>(
+      context: context,
+      builder: (BuildContext context) {
+        String expedition = '';
+        String siteAbbreviation = '';
+
+        return AlertDialog(
+          title: Text(S.of(context).generateId),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                maxLength: 20,
+                textCapitalization: TextCapitalization.words,
+                autofocus: true,
+                decoration: InputDecoration(
+                  labelText: S.of(context).expedition,
+                  border: const OutlineInputBorder(),
+                  helperText: S.of(context).optional,
+                ),
+                onChanged: (value) => expedition = value,
+              ),
+              const SizedBox(height: 16.0),
+              TextField(
+                maxLength: 20,
+                textCapitalization: TextCapitalization.words,
+                decoration: InputDecoration(
+                  labelText: S.of(context).siteAbbreviation,
+                  border: const OutlineInputBorder(),
+                  helperText: S.of(context).optional,
+                ),
+                onChanged: (value) => siteAbbreviation = value,
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text(S.of(context).cancel),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            TextButton(
+              child: Text(S.of(context).ok),
+              onPressed: () => Navigator.of(context).pop({
+                'expedition': expedition,
+                'siteAbbreviation': siteAbbreviation,
+              }),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (result != null && mounted) {
+      final expedition = result['expedition'] ?? '';
+      final siteAbbreviation = result['siteAbbreviation'] ?? '';
+
+      final prefs = await SharedPreferences.getInstance();
+      final observerAbbrev = prefs.getString('observerAcronym') ?? '';
+      final now = DateTime.now();
+      final year = now.year.toString();
+      final month = now.month.toString().padLeft(2, '0');
+      final day = now.day.toString().padLeft(2, '0');
+      final inventoryTypeLetter = getInventoryTypeLetter(_selectedType);
+
+      final sequentialNumber = await inventoryProvider.getNextSequentialNumber(
+        expedition,
+        siteAbbreviation,
+        observerAbbrev,
+        now.year,
+        now.month,
+        now.day,
+        inventoryTypeLetter,
+      );
+
+      final expeditionPart = expedition.isNotEmpty ? '$expedition-' : '';
+      final sitePart = siteAbbreviation.isNotEmpty ? '$siteAbbreviation-' : '';
+      final typeLetterPart = inventoryTypeLetter ?? '';
+      final seqPart = sequentialNumber.toString().padLeft(2, '0');
+
+      final inventoryId = '$expeditionPart$sitePart$observerAbbrev-$year$month$day-$typeLetterPart$seqPart';
+
+      _idController.text = inventoryId;
+    }
+  }
+
   // Handle form submission
   void _submitForm() async {
     setState(() {
@@ -692,23 +724,25 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
       final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
       final idExists = await inventoryProvider.inventoryIdExists(newInventory.id);
       
+      if (!mounted) return;
+
       if (idExists) {
         setState(() {
           _isSubmitting = false;
         });
         // ID already exists, show a SnackBar
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(S.of(context).inventoryIdAlreadyExists),
-            ),
-          );
-        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(S.of(context).inventoryIdAlreadyExists),
+          ),
+        );
         return; // Prevent adding inventory
       }
 
       // ID do not exist, insert inventory
       final success = await inventoryProvider.addInventory(context, newInventory);
+
+      if (!mounted) return;
 
       setState(() {
         _isSubmitting = false;
@@ -721,16 +755,14 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
         }
       } else {
         // Handle insertion error
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              persist: true,
-              showCloseIcon: true,
-              backgroundColor: Theme.of(context).colorScheme.error,
-              content: Text(S.of(context).errorInsertingInventory),
-            ),
-          );
-        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            persist: true,
+            showCloseIcon: true,
+            backgroundColor: Theme.of(context).colorScheme.error,
+            content: Text(S.of(context).errorInsertingInventory),
+          ),
+        );
       }
     } else {
       setState(() {

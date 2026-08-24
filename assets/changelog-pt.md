@@ -16,6 +16,7 @@
 * Adicionadas tags para as notas do diário de campo.
 * Adicionada opção nas configurações para editar as tags disponíveis para as notas do diário de campo.
 * Adicionada nas configurações uma opção para definir a propagação de espécie a partir de inventários inativos (perguntar, propagar ou ignorar).
+* Adicionado campo Expedição no gerador de ID do inventário.
 
 ### Melhorias
 

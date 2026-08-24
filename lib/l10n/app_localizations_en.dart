@@ -314,6 +314,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get generateId => 'Generate ID';
 
   @override
+  String get expedition => 'Expedition';
+
+  @override
   String get siteAbbreviation => 'Site name or abbreviation';
 
   @override

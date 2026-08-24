@@ -596,6 +596,12 @@ abstract class AppLocalizations {
   /// **'Generate ID'**
   String get generateId;
 
+  /// Field label for expedition name used in ID generation
+  ///
+  /// In en, this message translates to:
+  /// **'Expedition'**
+  String get expedition;
+
   /// Field label asking the inventory site name or abbreviation to generate the ID
   ///
   /// In en, this message translates to:

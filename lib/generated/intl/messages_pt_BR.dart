@@ -544,6 +544,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "errorUnexpectedJournalsArrayItem": m23,
     "errorUnexpectedNestsArrayItem": m24,
     "errorUnexpectedSpecimensArrayItem": m25,
+    "expedition": MessageLookupByLibrary.simpleMessage("Expedição"),
     "export": MessageLookupByLibrary.simpleMessage("Exportar"),
     "exportAll": MessageLookupByLibrary.simpleMessage("Exportar todos"),
     "exportAllWhat": m26,

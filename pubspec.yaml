@@ -3,7 +3,7 @@ description: "Collect ornithological data in the field."
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.3+137
+version: 1.0.3+138
 
 environment:
   sdk: ^3.7.0
@@ -24,7 +24,7 @@ dependencies:
   fab_m3e: ^0.1.1
   m3e_design: ^0.2.1
   settings_ui: ^3.0.1
-  fleather: ^1.27.0
+  fleather: ^1.28.0
   fl_chart: ^1.2.0
   numberpicker: ^2.1.2
   image_picker: ^1.2.3
@@ -43,7 +43,7 @@ dependencies:
       url: https://github.com/justkawal/excel.git
       ref: 751dfc597c893a0b34eccfe6921f126e03a5c683
   geoxml: ^2.6.2
-  archive: ^4.1.0
+  archive: ^4.2.0
 
   # State management
   provider: ^6.1.5+1
@@ -101,7 +101,7 @@ flutter:
   # see https://flutter.dev/to/font-from-package
   assets:
     - assets/license.txt
-    - assets/species_data.json
+#    - assets/species_data.json
     - assets/checklists/species_data_AR.json
     - assets/checklists/species_data_BR.json
     - assets/checklists/species_data_PY.json

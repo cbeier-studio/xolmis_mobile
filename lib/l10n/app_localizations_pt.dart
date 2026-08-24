@@ -316,6 +316,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get generateId => 'Gerar ID';
 
   @override
+  String get expedition => 'Expedição';
+
+  @override
   String get siteAbbreviation => 'Nome ou sigla do local';
 
   @override
@@ -2303,6 +2306,9 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get generateId => 'Gerar ID';
+
+  @override
+  String get expedition => 'Expedição';
 
   @override
   String get siteAbbreviation => 'Nome ou sigla do local';

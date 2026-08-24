@@ -16,6 +16,7 @@
 * Added tags for field journal notes.
 * Added option in settings to edit the available tags for field journal notes.
 * Added in settings an option to define the policy for species propagation from inactive inventories (ask, propagate or ignore).
+* Added field Expedition in inventory ID generator.
 
 ### Improvements
 

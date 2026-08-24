@@ -484,6 +484,11 @@
         "type": "text",
         "description": "Title of dialog to generate an inventory ID"
     },
+    "expedition": "Expedition",
+    "@expedition": {
+        "type": "text",
+        "description": "Field label for expedition name used in ID generation"
+    },
     "siteAbbreviation": "Site name or abbreviation",
     "@siteAbbreviation": {
         "type": "text",
