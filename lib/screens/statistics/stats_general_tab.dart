@@ -1,5 +1,5 @@
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 import 'package:xolmis/providers/inventory_provider.dart';
 import 'package:xolmis/providers/nest_provider.dart';

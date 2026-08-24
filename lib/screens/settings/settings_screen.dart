@@ -1,5 +1,5 @@
 import 'dart:core';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:about/about.dart';
 import 'package:settings_ui/settings_ui.dart';

@@ -1,10 +1,9 @@
 import 'package:fleather/fleather.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'data/database/database_helper.dart';
 import 'data/daos/inventory_dao.dart';
@@ -247,9 +246,7 @@ class MyApp extends StatelessWidget {
             localizationsDelegates: [
               S.delegate,
               FleatherLocalizations.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
+              ...GlobalMaterialLocalizations.delegates,
             ],
             supportedLocales: S.delegate.supportedLocales,
             localeResolutionCallback: (Locale? locale, Iterable<Locale> supportedLocales) {

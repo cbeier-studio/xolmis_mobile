@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import '../../generated/l10n.dart';
 
 /// Minimum width (in dp) used to switch to tablet-oriented layouts.

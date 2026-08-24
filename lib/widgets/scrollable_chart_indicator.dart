@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ScrollableChartIndicator extends StatefulWidget {
   final Widget Function(BuildContext context, ScrollController controller) builder;

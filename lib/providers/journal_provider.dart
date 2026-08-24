@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../data/models/journal.dart';
 import '../data/daos/journal_dao.dart';
