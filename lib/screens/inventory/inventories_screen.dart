@@ -1738,9 +1738,27 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
         if (_isShowingActiveInventories && inventory.duration > 0)
           Text(S.of(context).inventoryDuration(inventory.duration)),
         // Show the date and time of the inventory
-        if (!_isShowingActiveInventories)
-          Text(
-            '${DateFormat('dd/MM/yyyy HH:mm:ss').format(inventory.startTime!)} - ${DateFormat('HH:mm:ss').format(inventory.endTime!)}',
+        if (!_isShowingActiveInventories && inventory.startTime != null)
+          Builder(
+            builder: (context) {
+              final start = inventory.startTime!;
+              final end = inventory.endTime;
+              final startStr = DateFormat('dd/MM/yyyy HH:mm').format(start);
+
+              if (end == null) {
+                return Text(startStr);
+              }
+
+              final isSameDay = start.year == end.year &&
+                  start.month == end.month &&
+                  start.day == end.day;
+
+              final endStr = isSameDay
+                  ? DateFormat('HH:mm').format(end)
+                  : DateFormat('dd/MM/yyyy HH:mm').format(end);
+
+              return Text('$startStr - $endStr');
+            },
           ),
         // Show the species count as overlapping tags.
         Builder(

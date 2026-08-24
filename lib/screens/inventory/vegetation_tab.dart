@@ -171,7 +171,7 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      DateFormat('dd/MM/yyyy HH:mm:ss').format(vegetation.sampleTime!),
+                      DateFormat('dd/MM/yyyy HH:mm').format(vegetation.sampleTime!),
                       style: TextTheme.of(innerContext).bodyLarge,
                     ),
                   ),
@@ -290,7 +290,7 @@ class VegetationGridItem extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      DateFormat('dd/MM/yyyy HH:mm:ss').format(vegetation.sampleTime!),
+                      DateFormat('dd/MM/yyyy HH:mm').format(vegetation.sampleTime!),
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     Text('${vegetation.latitude}; ${vegetation.longitude}'),

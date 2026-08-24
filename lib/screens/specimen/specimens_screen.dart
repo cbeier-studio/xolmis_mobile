@@ -1494,7 +1494,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
           ),
           Text(specimen.locality!, overflow: TextOverflow.ellipsis),
           Text('${specimen.longitude}; ${specimen.latitude}'),
-          Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(specimen.sampleTime!)),
+          Text(DateFormat('dd/MM/yyyy HH:mm').format(specimen.sampleTime!)),
           _buildSpecimenTypePill(context, specimen.type),
         ],
       ),

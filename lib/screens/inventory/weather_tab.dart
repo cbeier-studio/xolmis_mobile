@@ -172,7 +172,7 @@ class _WeatherTabState extends State<WeatherTab>
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        DateFormat('dd/MM/yyyy HH:mm:ss',).format(weather.sampleTime!),
+                        DateFormat('dd/MM/yyyy HH:mm',).format(weather.sampleTime!),
                         style: TextTheme.of(innerContext).bodyLarge,
                       ),
                     ),
@@ -303,7 +303,7 @@ class WeatherGridItemState extends State<WeatherGridItem> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                DateFormat('dd/MM/yyyy HH:mm:ss').format(widget.weather.sampleTime!),
+                DateFormat('dd/MM/yyyy HH:mm').format(widget.weather.sampleTime!),
                 style: TextTheme.of(context).headlineSmall,
               ),
               const SizedBox(height: 8),

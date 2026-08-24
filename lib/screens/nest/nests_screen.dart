@@ -1397,7 +1397,7 @@ class NestsScreenState extends State<NestsScreen> {
           ),
           Text(nest.localityName!, overflow: TextOverflow.ellipsis),
           Text('${nest.longitude}; ${nest.latitude}'),
-          Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(nest.foundTime!)),
+          Text(DateFormat('dd/MM/yyyy HH:mm').format(nest.foundTime!)),
         ],
       ),
       selected: isLargeScreen ? isDetailSelected : isSelected,

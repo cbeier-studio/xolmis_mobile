@@ -1069,7 +1069,7 @@ class JournalsScreenState extends State<JournalsScreen> {
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(entry.creationDate!)),
+          Text(DateFormat('dd/MM/yyyy HH:mm').format(entry.creationDate!)),
           if (entry.tags.isNotEmpty) ...[
             const SizedBox(height: 8),
             Wrap(

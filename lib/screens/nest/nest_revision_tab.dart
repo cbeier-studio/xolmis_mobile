@@ -187,7 +187,7 @@ class _NestRevisionsTabState extends State<NestRevisionsTab>
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      DateFormat('dd/MM/yyyy HH:mm:ss',).format(revision.sampleTime!),
+                      DateFormat('dd/MM/yyyy HH:mm',).format(revision.sampleTime!),
                       style: TextTheme.of(innerContext).bodyLarge,
                     ),
                   ),
@@ -326,7 +326,7 @@ class NestRevisionGridItem extends StatelessWidget {
               children: [
                 Text(
                   DateFormat(
-                    'dd/MM/yyyy HH:mm:ss',
+                    'dd/MM/yyyy HH:mm',
                   ).format(revision.sampleTime!),
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
@@ -395,7 +395,7 @@ class RevisionListItemState extends State<RevisionListItem> {
       ),
       title: Text(
         DateFormat(
-          'dd/MM/yyyy HH:mm:ss',
+          'dd/MM/yyyy HH:mm',
         ).format(widget.nestRevision.sampleTime!),
       ),
       subtitle: Column(

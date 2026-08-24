@@ -325,7 +325,7 @@ class EggGridItem extends StatelessWidget {
                   egg.speciesName!,
                   style: const TextStyle(fontStyle: FontStyle.italic),
                 ),
-                Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(egg.sampleTime!)),
+                Text(DateFormat('dd/MM/yyyy HH:mm').format(egg.sampleTime!)),
               ],
             ),
           ],
@@ -385,7 +385,7 @@ class EggListItemState extends State<EggListItem> {
             style: const TextStyle(fontStyle: FontStyle.italic),
           ),
           Text(
-            DateFormat('dd/MM/yyyy HH:mm:ss').format(widget.egg.sampleTime!),
+            DateFormat('dd/MM/yyyy HH:mm').format(widget.egg.sampleTime!),
           ),
         ],
       ),
