@@ -749,6 +749,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
       });
 
       if (success) {
+        prefs.setInt(kRecentInventoryTypePreferenceKey, _selectedType.index);
         await _saveRecentLocality(_localityNameController.text);
         if (mounted) {
           Navigator.pop(context); // Return to the previous screen

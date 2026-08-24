@@ -549,6 +549,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     final prefs = await SharedPreferences.getInstance();
     final String observerAbbreviation =
         prefs.getString('observerAcronym') ?? '';
+    final InventoryType lastInventoryType = InventoryType.values[prefs.getInt(kRecentInventoryTypePreferenceKey) ?? 0];
 
     if (observerAbbreviation.isEmpty) {
       if (context.mounted) {
@@ -592,7 +593,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
               ),
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 400),
-                child: const AddInventoryScreen(),
+                child: AddInventoryScreen(initialInventoryType: lastInventoryType,),
               ),
             );
           },
@@ -606,7 +607,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
         // Show full screen on small screens
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const AddInventoryScreen()),
+          MaterialPageRoute(builder: (context) => AddInventoryScreen(initialInventoryType: lastInventoryType,)),
         ).then((newInventory) {
           // Update the inventory list
           if (newInventory != null) {
