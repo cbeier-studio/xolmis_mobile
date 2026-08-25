@@ -43,6 +43,16 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
     _localityNameController = TextEditingController();
     _localityNameController.text = widget.initialLocalityName ?? '';
     _loadRecentLocalities();
+
+    if (widget.initialInventoryId == null) {
+      generateSimpleId().then((id) {
+        if (mounted) {
+          setState(() {
+            _idController.text = id;
+          });
+        }
+      });
+    }
   }
 
   @override
@@ -588,8 +598,11 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
     final cumulativeTimeDuration = prefs.getInt('cumulativeTimeDuration') ?? 45;
     final intervalsDuration = prefs.getInt('intervalsDuration') ?? 10;
 
+    final newId = await generateSimpleId(newValue);
+
     setState(() {
       _selectedType = newValue;
+      _idController.text = newId;
       if (newValue == InventoryType.invTimedQualitative) {
         _durationController.text = cumulativeTimeDuration.toString();
         _maxSpeciesController.text = '';
@@ -696,6 +709,36 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
 
       _idController.text = inventoryId;
     }
+  }
+
+  Future<String> generateSimpleId([InventoryType? type]) async {
+    final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
+    final prefs = await SharedPreferences.getInstance();
+
+    final observerAbbrev = prefs.getString('observerAcronym') ?? '';
+    final now = DateTime.now();
+    final year = now.year.toString();
+    final month = now.month.toString().padLeft(2, '0');
+    final day = now.day.toString().padLeft(2, '0');
+    final inventoryTypeLetter = getInventoryTypeLetter(type ?? _selectedType);
+
+    final dateString = '$year$month$day';
+
+    final sequentialNumber = await inventoryProvider.getNextSequentialNumber(
+      '',
+      '',
+      observerAbbrev,
+      now.year,
+      now.month,
+      now.day,
+      inventoryTypeLetter,
+    );
+
+    final typeLetterPart = inventoryTypeLetter ?? '';
+    final seqPart = sequentialNumber.toString().padLeft(2, '0');
+
+    // Montar o ID simples
+    return '$observerAbbrev-$dateString-$typeLetterPart$seqPart';
   }
 
   // Handle form submission
