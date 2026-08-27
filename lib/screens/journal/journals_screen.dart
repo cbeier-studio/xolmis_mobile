@@ -1047,6 +1047,7 @@ class JournalsScreenState extends State<JournalsScreen> {
     final isDetailSelected = selectedJournalId == entry.id;
 
     return ListTile(
+      dense: true,
       leading: Checkbox(
         value: isSelected,
         onChanged: (bool? value) {
@@ -1069,7 +1070,14 @@ class JournalsScreenState extends State<JournalsScreen> {
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(DateFormat('dd/MM/yyyy HH:mm').format(entry.creationDate!)),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Icon(Icons.event, size: 14, color: Theme.of(context).colorScheme.onSurfaceVariant),
+              const SizedBox(width: 4),
+              Text(DateFormat('dd/MM/yyyy HH:mm').format(entry.creationDate!)),
+            ],
+          ),
           if (entry.tags.isNotEmpty) ...[
             const SizedBox(height: 8),
             Wrap(
