@@ -30,6 +30,9 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
+  String get pointsOfOccurrence => 'Pontos de ocorrência';
+
+  @override
   String get settings => 'Configurações';
 
   @override
@@ -2020,6 +2023,9 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
     String _temp0 = intl.Intl.pluralLogic(howMany, locale: localeName, other: 'Notas do diário', one: 'Nota do diário');
     return '$_temp0';
   }
+
+  @override
+  String get pointsOfOccurrence => 'Pontos de ocorrência';
 
   @override
   String get settings => 'Configurações';

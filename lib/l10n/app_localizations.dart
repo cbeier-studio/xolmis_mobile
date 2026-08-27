@@ -122,6 +122,12 @@ abstract class AppLocalizations {
   /// **'{howMany, plural, one{Journal entry} other{Journal entries}}'**
   String journalEntries(int howMany);
 
+  /// Points of occurrence label
+  ///
+  /// In en, this message translates to:
+  /// **'Points of occurrence'**
+  String get pointsOfOccurrence;
+
   /// Settings title and button label
   ///
   /// In en, this message translates to:

@@ -999,6 +999,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "poi": MessageLookupByLibrary.simpleMessage("POI"),
     "pointCounts": MessageLookupByLibrary.simpleMessage("Pontos de contagem"),
+    "pointsOfOccurrence": MessageLookupByLibrary.simpleMessage(
+      "Pontos de ocorrência",
+    ),
     "poisRecorded": m53,
     "precipitation": MessageLookupByLibrary.simpleMessage("Precipitação"),
     "precipitationDrizzle": MessageLookupByLibrary.simpleMessage("Garoa"),

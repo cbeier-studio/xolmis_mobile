@@ -30,6 +30,9 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get pointsOfOccurrence => 'Points of occurrence';
+
+  @override
   String get settings => 'Settings';
 
   @override

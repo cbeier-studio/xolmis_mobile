@@ -98,6 +98,16 @@ class S {
     );
   }
 
+  /// `Points of occurrence`
+  String get pointsOfOccurrence {
+    return Intl.message(
+      'Points of occurrence',
+      name: 'pointsOfOccurrence',
+      desc: 'Points of occurrence label',
+      args: [],
+    );
+  }
+
   /// `Settings`
   String get settings {
     return Intl.message(

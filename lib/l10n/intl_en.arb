@@ -29,6 +29,11 @@
             }
         }
     },
+    "pointsOfOccurrence": "Points of occurrence",
+    "@pointsOfOccurrence": {
+        "type": "text",
+        "description": "Points of occurrence label"
+    },
     "settings": "Settings",
     "@settings": {
         "type": "text",

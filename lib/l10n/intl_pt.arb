@@ -28,6 +28,11 @@
             }
         }
     },
+  "pointsOfOccurrence": "Pontos de ocorrência",
+  "@pointsOfOccurrence": {
+    "type": "text",
+    "description": "Points of occurrence label"
+  },
     "settings": "Configurações",
     "general": "Geral",
     "@general": {
