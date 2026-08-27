@@ -24,6 +24,8 @@
 * Melhorias de desempenho nas telas de inventários e ninhos (~90% mais rápidas).
 * Telas de configurações reformuladas.
 * Tipo de inventário pode ser alterado.
+* Lembrar o tipo de inventário ao criar um novo inventário.
+* Geração automática de ID para inventários.
 * Adição de espécie no inventário com quantidade de indivíduos diretamente na busca.
 * Padronização dos formatos de importação e exportação de JSON para inventários, ninhos e espécimes.
 * Coordenadas geográficas podem ser exportadas para KML a partir de inventários, ninhos ou espécimes selecionados.
@@ -37,6 +39,10 @@
 * Corrigidas listas de Mackinnon não finalizando corretamente.
 * Corrigido problema que não salvava o valor informado em campos com autocompletar.
 * Corrigida inconsistência nos caminhos temporários de exportação e backup.
+
+### Técnico/Dependências
+
+* Atualizado para Flutter 3.47 e Dart 3.13.
 
 ## 1.0.2
 

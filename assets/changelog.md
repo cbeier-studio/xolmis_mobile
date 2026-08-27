@@ -24,6 +24,8 @@
 * Performance improvements in inventories and nests screens (~90% faster).
 * Refactored settings screens.
 * Inventory type can be changed.
+* Remember the last inventory type when creating a new inventory.
+* Auto-generate ID for inventories.
 * Add species to inventory with individuals count directly in the search.
 * Standardized JSON import and export formats for inventories, nests and specimens.
 * Geographical coordinates can be exported to KML from selected inventories, nests or specimens.
@@ -37,6 +39,10 @@
 * Fixed Mackinnon lists not finishing properly.
 * Fixed issue that did not save informed values in fields with autocompletion.
 * Fixed inconsistency in temporary paths for export and backup.
+
+### Technical/Dependencies
+
+* Upgraded to Flutter 3.47 and Dart 3.13.
 
 ## 1.0.2
 
