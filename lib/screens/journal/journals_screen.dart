@@ -784,7 +784,7 @@ class JournalsScreenState extends State<JournalsScreen> {
 
                           return FilterChip(
                             label: Text(label),
-                            avatar: _selectedDateFilter == null ? const Icon(Icons.calendar_today_outlined) : null,
+                            // avatar: _selectedDateFilter == null ? const Icon(Icons.calendar_today_outlined) : null,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
                             visualDensity: VisualDensity.compact,
                             onSelected: (selected) {
@@ -834,7 +834,7 @@ class JournalsScreenState extends State<JournalsScreen> {
                         builder: (context, controller, child) {
                           return FilterChip(
                             label: Text(_selectedObserver ?? S.current.observer),
-                            avatar: _selectedObserver == null ? Icon(Icons.person_outlined) : null,
+                            // avatar: _selectedObserver == null ? Icon(Icons.person_outlined) : null,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
                             visualDensity: VisualDensity.compact,
                             onSelected: (selected) {
@@ -867,7 +867,7 @@ class JournalsScreenState extends State<JournalsScreen> {
                         builder: (context, controller, child) {
                           return FilterChip(
                             label: Text(_selectedTag ?? S.current.tags),
-                            avatar: _selectedTag == null ? const Icon(Icons.local_offer_outlined) : null,
+                            // avatar: _selectedTag == null ? const Icon(Icons.local_offer_outlined) : null,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
                             visualDensity: VisualDensity.compact,
                             onSelected: (selected) {

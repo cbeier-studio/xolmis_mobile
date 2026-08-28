@@ -1084,7 +1084,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                   : null,
         ),
         Padding(
-          padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
+          padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 2.0),
           child: LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {
               final screenWidth = constraints.maxWidth;
@@ -1146,10 +1146,10 @@ class SpecimensScreenState extends State<SpecimensScreen> {
 
                           return FilterChip(
                             label: Text(label),
-                            avatar:
-                                _selectedDateFilter == null
-                                    ? const Icon(Icons.calendar_today_outlined)
-                                    : null,
+                            // avatar:
+                            //     _selectedDateFilter == null
+                            //         ? const Icon(Icons.calendar_today_outlined)
+                            //         : null,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20.0),
                             ),
@@ -1202,10 +1202,10 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                       const SizedBox(width: 8.0),
                       FilterChip(
                         label: Text(_selectedSpecies ?? S.current.species(1)),
-                        avatar:
-                            _selectedSpecies == null
-                                ? const Icon(Icons.account_tree_outlined)
-                                : null,
+                        // avatar:
+                        //     _selectedSpecies == null
+                        //         ? const Icon(Icons.account_tree_outlined)
+                        //         : null,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20.0),
                         ),
@@ -1223,10 +1223,10 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                       const SizedBox(width: 8.0),
                       FilterChip(
                         label: Text(_selectedLocality ?? S.current.locality),
-                        avatar:
-                            _selectedLocality == null
-                                ? const Icon(Icons.location_on_outlined)
-                                : null,
+                        // avatar:
+                        //     _selectedLocality == null
+                        //         ? const Icon(Icons.location_on_outlined)
+                        //         : null,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20.0),
                         ),
@@ -1249,10 +1249,10 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                             label: Text(
                               _selectedObserver ?? S.current.observer,
                             ),
-                            avatar:
-                                _selectedObserver == null
-                                    ? Icon(Icons.person_outlined)
-                                    : null,
+                            // avatar:
+                            //     _selectedObserver == null
+                            //         ? Icon(Icons.person_outlined)
+                            //         : null,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20.0),
                             ),
