@@ -101,7 +101,8 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
                         ),
                         const SizedBox(height: 8.0),
                         DropdownButtonFormField<DistributionType>(
-                            value: _selectedHerbsDistribution,
+                            initialValue: _selectedHerbsDistribution,
+                            isExpanded: true,
                             decoration: InputDecoration(
                               labelText: S.of(context).distribution,
                               border: OutlineInputBorder(),
@@ -109,7 +110,10 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
                             items: DistributionType.values.map((distribution) {
                               return DropdownMenuItem(
                                 value: distribution,
-                                child: Text(distributionTypeFriendlyNames[distribution]!),
+                                child: Text(
+                                  distributionTypeFriendlyNames[distribution]!,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               );
                             }).toList(),
                             onChanged: (DistributionType? newValue) {
@@ -127,7 +131,8 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
                         ),
                         const SizedBox(height: 8.0),
                         DropdownButtonFormField<DistributionType>(
-                            value: _selectedShrubsDistribution,
+                            initialValue: _selectedShrubsDistribution,
+                            isExpanded: true,
                             decoration: InputDecoration(
                               labelText: S.of(context).distribution,
                               border: OutlineInputBorder(),
@@ -135,7 +140,10 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
                             items: DistributionType.values.map((distribution) {
                               return DropdownMenuItem(
                                 value: distribution,
-                                child: Text(distributionTypeFriendlyNames[distribution]!),
+                                child: Text(
+                                  distributionTypeFriendlyNames[distribution]!,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               );
                             }).toList(),
                             onChanged: (DistributionType? newValue) {
@@ -153,7 +161,8 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
                         ),
                         const SizedBox(height: 8.0),
                         DropdownButtonFormField<DistributionType>(
-                            value: _selectedTreesDistribution,
+                            initialValue: _selectedTreesDistribution,
+                            isExpanded: true,
                             decoration: InputDecoration(
                               labelText: S.of(context).distribution,
                               border: OutlineInputBorder(),
@@ -161,7 +170,10 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
                             items: DistributionType.values.map((distribution) {
                               return DropdownMenuItem(
                                 value: distribution,
-                                child: Text(distributionTypeFriendlyNames[distribution]!),
+                                child: Text(
+                                  distributionTypeFriendlyNames[distribution]!,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               );
                             }).toList(),
                             onChanged: (DistributionType? newValue) {

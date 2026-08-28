@@ -203,6 +203,7 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                         title: Text(S.of(context).confirmFate),
                         content: DropdownButtonFormField<NestFateType>(
                           initialValue: selectedNestFate,
+                          isExpanded: true,
                           decoration: InputDecoration(
                             labelText: S.of(context).nestFate,
                             helperText: S.of(context).requiredField,
@@ -224,7 +225,12 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                                       ? const Icon(Icons.cancel, color: Colors.red)
                                       : const Icon(Icons.help, color: Colors.grey),
                                   const SizedBox(width: 8),
-                                  Text(nestFateTypeFriendlyNames[fate]!),
+                                  Expanded(
+                                    child: Text(
+                                      nestFateTypeFriendlyNames[fate]!,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
                                 ],
                               ),
                             );
@@ -514,6 +520,7 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                         title: Text(S.of(context).confirmFate),
                         content: DropdownButtonFormField<NestFateType>(
                           initialValue: selectedNestFate,
+                          isExpanded: true,
                           decoration: InputDecoration(
                             labelText: S.of(context).nestFate,
                             helperText: S.of(context).requiredField,
@@ -535,7 +542,12 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                                       ? const Icon(Icons.cancel, color: Colors.red)
                                       : const Icon(Icons.help, color: Colors.grey),
                                   const SizedBox(width: 8),
-                                  Text(nestFateTypeFriendlyNames[fate]!),
+                                  Expanded(
+                                    child: Text(
+                                      nestFateTypeFriendlyNames[fate]!,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
                                 ],
                               ),
                             );
@@ -712,6 +724,7 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                         title: Text(S.of(context).confirmFate),
                         content: DropdownButtonFormField<NestFateType>(
                           initialValue: selectedNestFate,
+                          isExpanded: true,
                           decoration: InputDecoration(
                             labelText: S.of(context).nestFate,
                             helperText: S.of(context).requiredField,
@@ -733,7 +746,12 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                                       ? const Icon(Icons.cancel, color: Colors.red)
                                       : const Icon(Icons.help, color: Colors.grey),
                                   const SizedBox(width: 8),
-                                  Text(nestFateTypeFriendlyNames[fate]!),
+                                  Expanded(
+                                    child: Text(
+                                      nestFateTypeFriendlyNames[fate]!,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
                                 ],
                               ),
                             );

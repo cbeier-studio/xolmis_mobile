@@ -114,6 +114,7 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
                             Expanded(
                               child: DropdownButtonFormField<PrecipitationType>(
                                   value: _selectedPrecipitation,
+                                  isExpanded: true,
                                   decoration: InputDecoration(
                                     labelText: '${S.of(context).precipitation} *',
                                     helperText: S.of(context).requiredField,
@@ -122,7 +123,10 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
                                   items: PrecipitationType.values.map((precipitation) {
                                     return DropdownMenuItem(
                                       value: precipitation,
-                                      child: Text(precipitationTypeFriendlyNames[precipitation]!),
+                                      child: Text(
+                                        precipitationTypeFriendlyNames[precipitation]!,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                                     );
                                   }).toList(),
                                   onChanged: (PrecipitationType? newValue) {

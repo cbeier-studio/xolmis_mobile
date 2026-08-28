@@ -315,7 +315,7 @@ class WeatherGridItemState extends State<WeatherGridItem> {
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.cloud_outlined),
+                      const Icon(Icons.cloud_outlined, size: 14),
                       const SizedBox(width: 4),
                       Text('${widget.weather.cloudCover}%'),
                     ],
@@ -323,7 +323,7 @@ class WeatherGridItemState extends State<WeatherGridItem> {
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.cloudy_snowing),
+                      const Icon(Icons.cloudy_snowing, size: 14),
                       const SizedBox(width: 4),
                       Text(
                         '${precipitationTypeFriendlyNames[widget.weather.precipitation]}',
@@ -333,7 +333,7 @@ class WeatherGridItemState extends State<WeatherGridItem> {
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.thermostat_outlined),
+                      const Icon(Icons.thermostat_outlined, size: 14),
                       const SizedBox(width: 4),
                       Text('${widget.weather.temperature} °C'),
                     ],
@@ -341,29 +341,33 @@ class WeatherGridItemState extends State<WeatherGridItem> {
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.wind_power_outlined),
+                      const Icon(Icons.wind_power_outlined, size: 14),
                       const SizedBox(width: 4),
                       Text(
                         '${widget.weather.windSpeed} bft ${widget.weather.windDirection ?? ''}',
                       ),
                     ],
                   ),
+                  if (widget.weather.atmosphericPressure != null && widget.weather.atmosphericPressure != 0) ...[
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.cyclone_outlined),
+                      const Icon(Icons.cyclone_outlined, size: 14),
                       const SizedBox(width: 4),
                       Text('${widget.weather.atmosphericPressure ?? 0} mPa'),
                     ],
                   ),
+                  ],
+                  if (widget.weather.relativeHumidity != null && widget.weather.relativeHumidity != 0) ...[
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.water_drop_outlined),
+                      const Icon(Icons.water_drop_outlined, size: 14),
                       const SizedBox(width: 4),
                       Text('${widget.weather.relativeHumidity ?? 0}%'),
                     ],
                   ),
+                  ],
                 ],
               ),
             ],
@@ -407,7 +411,7 @@ class WeatherListItemState extends State<WeatherListItem> {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.cloud_outlined),
+              Icon(Icons.cloud, size: 16, color: Theme.of(context).colorScheme.primary),
               const SizedBox(width: 4),
               Text('${widget.weather.cloudCover}%'),
             ],
@@ -415,7 +419,7 @@ class WeatherListItemState extends State<WeatherListItem> {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.cloudy_snowing),
+              Icon(Icons.cloudy_snowing, size: 16, color: Theme.of(context).colorScheme.primary),
               const SizedBox(width: 4),
               Text(
                 '${precipitationTypeFriendlyNames[widget.weather.precipitation]}',
@@ -425,7 +429,7 @@ class WeatherListItemState extends State<WeatherListItem> {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.thermostat_outlined),
+              Icon(Icons.thermostat, size: 16, color: Theme.of(context).colorScheme.primary),
               const SizedBox(width: 4),
               Text('${widget.weather.temperature} °C'),
             ],
@@ -433,29 +437,33 @@ class WeatherListItemState extends State<WeatherListItem> {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.wind_power_outlined),
+              Icon(Icons.wind_power, size: 16, color: Theme.of(context).colorScheme.primary),
               const SizedBox(width: 4),
               Text(
                 '${widget.weather.windSpeed} bft ${widget.weather.windDirection ?? ''}',
               ),
             ],
           ),
+          if (widget.weather.atmosphericPressure != null && widget.weather.atmosphericPressure != 0) ...[
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.cyclone_outlined),
+              Icon(Icons.cyclone, size: 16, color: Theme.of(context).colorScheme.primary),
               const SizedBox(width: 4),
               Text('${widget.weather.atmosphericPressure ?? 0} mPa'),
             ],
           ),
+          ],
+          if (widget.weather.relativeHumidity != null && widget.weather.relativeHumidity != 0) ...[
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.water_drop_outlined),
+              Icon(Icons.water_drop, size: 16, color: Theme.of(context).colorScheme.primary),
               const SizedBox(width: 4),
               Text('${widget.weather.relativeHumidity ?? 0}%'),
             ],
           ),
+          ],
         ],
       ),
       onLongPress: widget.onLongPress,

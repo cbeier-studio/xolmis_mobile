@@ -132,6 +132,7 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
                         const SizedBox(height: 16.0),
                         DropdownButtonFormField<SpecimenType>(
                           initialValue: _selectedType,
+                          isExpanded: true,
                           decoration: InputDecoration(
                             labelText: '${S.of(context).specimenType} *',
                             border: OutlineInputBorder(),
@@ -139,7 +140,10 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
                           items: SpecimenType.values.map((type) {
                             return DropdownMenuItem(
                               value: type,
-                              child: Text(specimenTypeFriendlyNames[type]!),
+                              child: Text(
+                                specimenTypeFriendlyNames[type]!,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             );
                           }).toList(),
                           onChanged: (SpecimenType? newValue) {

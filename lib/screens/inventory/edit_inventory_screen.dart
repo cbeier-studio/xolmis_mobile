@@ -201,6 +201,7 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
                 // Inventory type
                 DropdownButtonFormField<InventoryType>(
                   initialValue: _selectedType,
+                  isExpanded: true,
                   decoration: InputDecoration(
                     labelText: '${S.of(context).inventoryType} *',
                     border: OutlineInputBorder(),
@@ -208,7 +209,10 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
                   items: InventoryType.values.map((type) {
                     return DropdownMenuItem(
                       value: type,
-                      child: Text(inventoryTypeFriendlyNames[type]!),
+                      child: Text(
+                        inventoryTypeFriendlyNames[type]!,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     );
                   }).toList(),
                   onChanged: (InventoryType? newValue) {

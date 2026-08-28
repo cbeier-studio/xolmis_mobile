@@ -156,6 +156,7 @@ class AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
                             Expanded(
                               child: DropdownButtonFormField<NestStatusType>(
                                   value: _selectedNestStatus,
+                                  isExpanded: true,
                                   decoration: InputDecoration(
                                     labelText: '${S.of(context).nestStatus} *',
                                     helperText: S.of(context).requiredField,
@@ -164,7 +165,10 @@ class AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
                                   items: NestStatusType.values.map((nestStatus) {
                                     return DropdownMenuItem(
                                       value: nestStatus,
-                                      child: Text(nestStatusTypeFriendlyNames[nestStatus]!),
+                                      child: Text(
+                                        nestStatusTypeFriendlyNames[nestStatus]!,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                                     );
                                   }).toList(),
                                   onChanged: (NestStatusType? newValue) {
@@ -178,6 +182,7 @@ class AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
                             Expanded(
                               child: DropdownButtonFormField<NestStageType>(
                                   value: _selectedNestStage,
+                                  isExpanded: true,
                                   decoration: InputDecoration(
                                     labelText: '${S.of(context).nestPhase} *',
                                     helperText: S.of(context).requiredField,
@@ -186,7 +191,10 @@ class AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
                                   items: NestStageType.values.map((nestStage) {
                                     return DropdownMenuItem(
                                       value: nestStage,
-                                      child: Text(nestStageTypeFriendlyNames[nestStage]!),
+                                      child: Text(
+                                        nestStageTypeFriendlyNames[nestStage]!,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                                     );
                                   }).toList(),
                                   onChanged: (NestStageType? newValue) {

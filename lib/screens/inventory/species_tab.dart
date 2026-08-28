@@ -559,48 +559,65 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                             tooltip: S.of(context).sortBy,
                             onPressed: () => _showSortOptionsBottomSheet(),
                           ),
-                          MediaQuery.sizeOf(context).width < 600
-                              ? IconButton(
-                                icon: const Icon(Icons.more_vert_outlined),
-                                onPressed: () {
-                                  _showMoreOptionsBottomSheet(context);
-                                },
-                              )
-                              : MenuAnchor(
-                                builder: (context, controller, child) {
-                                  return IconButton(
-                                    icon: const Icon(Icons.more_vert_outlined),
-                                    onPressed: () {
-                                      if (controller.isOpen) {
-                                        controller.close();
-                                      } else {
-                                        controller.open();
-                                      }
-                                    },
-                                  );
-                                },
-                                menuChildren: [
-                                  MenuItemButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => SpeciesChartScreen(inventory: widget.inventory),
-                                        ),
-                                      );
-                                    },
-                                    leadingIcon: const Icon(Icons.show_chart_outlined),
-                                    child: Text(S.current.speciesAccumulationCurve, overflow: TextOverflow.ellipsis),
-                                  ),
-                                  MenuItemButton(
-                                    onPressed: () {
-                                      _showAddSpeciesDialog(context, widget.speciesDao, widget.inventoryDao);
-                                    },
-                                    leadingIcon: const Icon(Icons.add_box_outlined),
-                                    child: Text(S.current.addSpecies),
-                                  ),
-                                ],
-                              ),
+                          IconButton(
+                            icon: const Icon(Icons.add_box_outlined),
+                            tooltip: S.of(context).addSpecies,
+                            onPressed: () => _showAddSpeciesDialog(context, widget.speciesDao, widget.inventoryDao),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.show_chart_outlined),
+                            tooltip: S.of(context).speciesAccumulationCurve,
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SpeciesChartScreen(inventory: widget.inventory),
+                                ),
+                              );
+                            },
+                          ),
+                          // MediaQuery.sizeOf(context).width < 600
+                          //     ? IconButton(
+                          //       icon: const Icon(Icons.more_vert_outlined),
+                          //       onPressed: () {
+                          //         _showMoreOptionsBottomSheet(context);
+                          //       },
+                          //     )
+                          //     : MenuAnchor(
+                          //       builder: (context, controller, child) {
+                          //         return IconButton(
+                          //           icon: const Icon(Icons.more_vert_outlined),
+                          //           onPressed: () {
+                          //             if (controller.isOpen) {
+                          //               controller.close();
+                          //             } else {
+                          //               controller.open();
+                          //             }
+                          //           },
+                          //         );
+                          //       },
+                          //       menuChildren: [
+                          //         MenuItemButton(
+                          //           onPressed: () {
+                          //             Navigator.push(
+                          //               context,
+                          //               MaterialPageRoute(
+                          //                 builder: (context) => SpeciesChartScreen(inventory: widget.inventory),
+                          //               ),
+                          //             );
+                          //           },
+                          //           leadingIcon: const Icon(Icons.show_chart_outlined),
+                          //           child: Text(S.current.speciesAccumulationCurve, overflow: TextOverflow.ellipsis),
+                          //         ),
+                          //         MenuItemButton(
+                          //           onPressed: () {
+                          //             _showAddSpeciesDialog(context, widget.speciesDao, widget.inventoryDao);
+                          //           },
+                          //           leadingIcon: const Icon(Icons.add_box_outlined),
+                          //           child: Text(S.current.addSpecies),
+                          //         ),
+                          //       ],
+                          //     ),
                         ],
                       ),
                     ),

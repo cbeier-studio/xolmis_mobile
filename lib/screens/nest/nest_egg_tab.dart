@@ -372,7 +372,20 @@ class EggListItemState extends State<EggListItem> {
               ),
             );
           } else {
-            return const Icon(Icons.hide_image_outlined);
+            return Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                border: Border.all(color: Colors.grey.shade400),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Icon(
+                Icons.image_not_supported_outlined,
+                color: Colors.grey.shade500,
+                size: 24,
+              ),
+            );
           }
         },
       ),

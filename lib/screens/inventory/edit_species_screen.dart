@@ -105,7 +105,17 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
       return false;
     }
 
-    return widget.existingSpeciesNames.contains(name.trim());
+    final trimmedName = name.trim();
+
+    // Se o nome não mudou em relação ao original, não é considerado duplicidade (é o próprio registro)
+    if (trimmedName.toLowerCase() == widget.species.name.trim().toLowerCase()) {
+      return false;
+    }
+
+    // Verifica se o nome existe no conjunto de nomes existentes (ignorando case)
+    return widget.existingSpeciesNames.any(
+      (existingName) => existingName.trim().toLowerCase() == trimmedName.toLowerCase(),
+    );
   }
 
   void _showNameValidationError(String message) {
@@ -129,8 +139,11 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
-      // Cria uma cópia da espécie original com os dados atualizados do formulário
-      final updatedSpecies = widget.species.copyWith(
+      // Cria um novo objeto Species com os dados atualizados para garantir que campos
+      // nulos (como distância ou notas limpas) sejam corretamente aplicados.
+      final updatedSpecies = Species(
+        id: widget.species.id,
+        inventoryId: widget.species.inventoryId,
         name: speciesName,
         count: int.tryParse(_countController.text) ?? widget.species.count,
         distance: double.tryParse(_distanceController.text),
@@ -138,6 +151,8 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
         flightDirection: _selectedFlightDirection,
         notes: _notesController.text.isNotEmpty ? _notesController.text : null,
         isOutOfInventory: _isOutOfInventory,
+        sampleTime: widget.species.sampleTime,
+        pois: widget.species.pois,
       );
 
       // Retorna para a tela anterior com o objeto 'Species' atualizado

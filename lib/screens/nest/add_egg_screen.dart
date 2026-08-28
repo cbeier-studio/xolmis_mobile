@@ -152,6 +152,7 @@ class AddEggScreenState extends State<AddEggScreen> {
                         const SizedBox(height: 16.0),
                         DropdownButtonFormField<EggShapeType>(
                             value: _selectedEggShape,
+                            isExpanded: true,
                             decoration: InputDecoration(
                               labelText: '${S.of(context).eggShape} *',
                               helperText: S.of(context).requiredField,
@@ -160,7 +161,10 @@ class AddEggScreenState extends State<AddEggScreen> {
                             items: EggShapeType.values.map((eggShape) {
                               return DropdownMenuItem(
                                 value: eggShape,
-                                child: Text(eggShapeTypeFriendlyNames[eggShape]!),
+                                child: Text(
+                                  eggShapeTypeFriendlyNames[eggShape]!,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               );
                             }).toList(),
                             onChanged: (EggShapeType? newValue) {
