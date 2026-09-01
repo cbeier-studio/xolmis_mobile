@@ -1165,9 +1165,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "tags": MessageLookupByLibrary.simpleMessage("Tags"),
     "temperature": MessageLookupByLibrary.simpleMessage("Temperature"),
     "timeFound": MessageLookupByLibrary.simpleMessage("Date and time found"),
-    "timeMinutes": MessageLookupByLibrary.simpleMessage(
-      "Time (10 minutes intervals)",
-    ),
+    "timeMinutes": MessageLookupByLibrary.simpleMessage("Minutes"),
+    "timeSeconds": MessageLookupByLibrary.simpleMessage("Seconds"),
     "timedQualitativeLists": MessageLookupByLibrary.simpleMessage(
       "Timed qualitative lists",
     ),

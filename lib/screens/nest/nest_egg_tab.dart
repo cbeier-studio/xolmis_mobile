@@ -395,7 +395,12 @@ class EggListItemState extends State<EggListItem> {
         children: [
           Text(
             widget.egg.speciesName!,
-            style: const TextStyle(fontStyle: FontStyle.italic),
+            style: TextStyle(
+                fontStyle: FontStyle.italic,
+                color: allSpeciesNames.contains(widget.egg.speciesName)
+                    ? null
+                    : Colors.red,
+            ),
           ),
           Text(
             DateFormat('dd/MM/yyyy HH:mm').format(widget.egg.sampleTime!),

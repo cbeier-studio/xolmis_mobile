@@ -1092,12 +1092,22 @@ class S {
     );
   }
 
-  /// `Time (10 minutes intervals)`
+  /// `Minutes`
   String get timeMinutes {
     return Intl.message(
-      'Time (10 minutes intervals)',
+      'Minutes',
       name: 'timeMinutes',
       desc: 'Time in minutes field label',
+      args: [],
+    );
+  }
+
+  /// `Seconds`
+  String get timeSeconds {
+    return Intl.message(
+      'Seconds',
+      name: 'timeSeconds',
+      desc: 'Time in seconds field label',
       args: [],
     );
   }

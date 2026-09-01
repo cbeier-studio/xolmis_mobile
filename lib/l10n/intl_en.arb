@@ -584,10 +584,15 @@
         "type": "text",
         "description": "Species accumulated field label"
     },
-    "timeMinutes": "Time (10 minutes intervals)",
+    "timeMinutes": "Minutes",
     "@timeMinutes": {
         "type": "text",
         "description": "Time in minutes field label"
+    },
+    "timeSeconds": "Seconds",
+    "@timeSeconds": {
+        "type": "text",
+        "description": "Time in seconds field label"
     },
     "speciesCounted": "Species counted",
     "@speciesCounted": {

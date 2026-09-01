@@ -713,8 +713,14 @@ abstract class AppLocalizations {
   /// Time in minutes field label
   ///
   /// In en, this message translates to:
-  /// **'Time (10 minutes intervals)'**
+  /// **'Minutes'**
   String get timeMinutes;
+
+  /// Time in seconds field label
+  ///
+  /// In en, this message translates to:
+  /// **'Seconds'**
+  String get timeSeconds;
 
   /// Species counted field label
   ///

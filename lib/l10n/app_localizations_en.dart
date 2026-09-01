@@ -374,7 +374,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get speciesAccumulated => 'Species accumulated';
 
   @override
-  String get timeMinutes => 'Time (10 minutes intervals)';
+  String get timeMinutes => 'Minutes';
+
+  @override
+  String get timeSeconds => 'Seconds';
 
   @override
   String get speciesCounted => 'Species counted';

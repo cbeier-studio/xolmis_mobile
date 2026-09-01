@@ -74,6 +74,43 @@ class AddEggScreenState extends State<AddEggScreen> {
     super.dispose();
   }
 
+  // Show dialog to add a personalized species name
+  Future<String> _showAddSpeciesDialog(BuildContext context) async {
+    String? newSpeciesName = await showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        String speciesName = '';
+        return AlertDialog(
+          title: Text(S.of(context).addSpecies),
+          content: TextField(
+            textCapitalization: TextCapitalization.sentences,
+            onChanged: (value) {
+              speciesName = value;
+            },
+            decoration: InputDecoration(labelText: S.of(context).speciesName, border: OutlineInputBorder()),
+          ),
+          actions: <Widget>[
+            TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(S.of(context).cancel)),
+            TextButton(onPressed: () => Navigator.of(context).pop(speciesName), child: Text(S.of(context).save)),
+          ],
+        );
+      },
+    );
+
+    if (newSpeciesName != null && newSpeciesName.isNotEmpty) {
+      int? parsedCount;
+      String speciesName = newSpeciesName;
+      final match = RegExp(r'^(\d+)[, ]+(.*)$').firstMatch(newSpeciesName);
+      if (match != null) {
+        parsedCount = int.tryParse(match.group(1)!);
+        speciesName = match.group(2)!;
+      }
+      return speciesName;
+    } else {
+      return '';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -114,6 +151,13 @@ class AddEggScreenState extends State<AddEggScreen> {
                             labelText: '${S.of(context).species(1)} *',
                             helperText: S.of(context).requiredField,
                             border: OutlineInputBorder(),
+                            suffixIcon: IconButton(
+                              icon: const Icon(Icons.add_box_outlined),
+                              tooltip: S.of(context).addSpecies,
+                              onPressed: () async {
+                                _speciesNameController.text = await _showAddSpeciesDialog(context);
+                              },
+                            ),
                           ),
                           readOnly: true,
                           validator: (value) {

@@ -945,57 +945,110 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
   }
 
   void _showNestInfoDialog(BuildContext context, Nest nest) {
-    showDialog(
+    showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(S.of(context).nestInfo),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: [
-                ListTile(
-                  title: Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(nest.foundTime!)),
-                  subtitle: Text(S.of(context).timeFound),
-                ),
-                ListTile(
-                  title: Text('${nest.localityName}'),
-                  subtitle: Text(S.of(context).locality),
-                ),
-                ListTile(
-                  title: Text('${nest.support}'),
-                  subtitle: Text(S.of(context).nestSupport),
-                ),
-                if (nest.heightAboveGround != null) 
-                  ListTile(
-                    title: Text('${nest.heightAboveGround} m'),
-                    subtitle: Text(S.of(context).heightAboveGround),
+        return BottomSheet(
+          onClosing: () {},
+          builder: (BuildContext context) {
+            return SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      if (nest.foundTime != null)
+                        Text(
+                          DateFormat('dd/MM/yyyy HH:mm:ss').format(nest.foundTime!),
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      Text(
+                        nest.isActive ? S.of(context).active : S.of(context).inactive,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: nest.isActive ? Colors.green : Colors.orange,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
-                if (nest.male != '') 
-                  ListTile(
-                    title: Text('${nest.male}'),
-                    subtitle: Text(S.of(context).male),
+                  const SizedBox(height: 8,),
+                  Text(
+                    '${nest.speciesName}',
+                    style: Theme.of(context).textTheme.bodyLarge,
                   ),
-                if (nest.female != '') 
-                  ListTile(
-                    title: Text('${nest.female}'),
-                    subtitle: Text(S.of(context).female),
+                  const SizedBox(height: 8),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    textBaseline: TextBaseline.alphabetic,
+                    children: [
+                      Text(
+                        '${nest.support}',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      if (nest.heightAboveGround != null) ...[
+                        const SizedBox(width: 8),
+                        const Text('•'),
+                        const SizedBox(width: 4),
+                        Icon(Icons.height, size: 16, color: Theme.of(context).colorScheme.primary),
+                        const SizedBox(width: 4),
+                        Text('${nest.heightAboveGround} m', style: Theme.of(context).textTheme.bodyMedium),
+                      ],
+                      ],
                   ),
-                if (nest.helpers != '')
-                  ListTile(
-                    title: Text('${nest.helpers}'),
-                    subtitle: Text(S.of(context).helpers),
+                      const SizedBox(height: 8),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                      textBaseline: TextBaseline.alphabetic,
+                      children: [
+                        const Icon(Icons.location_on_outlined, size: 16, color: Colors.deepPurple),
+                        const SizedBox(width: 4),
+                        Text('${nest.localityName}', style: Theme.of(context).textTheme.bodyMedium),
+                    ],
                   ),
-              ],
+                  if (nest.male != null && nest.male != '') ...[
+                    const SizedBox(height: 8),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    textBaseline: TextBaseline.alphabetic,
+                    children: [
+                      const Icon(Icons.male, size: 16, color: Colors.deepPurple),
+                      const SizedBox(width: 4),
+                      Text('${nest.male}', style: Theme.of(context).textTheme.bodyMedium),
+                    ],
+                  ),
+                  ],
+                  if (nest.female != null && nest.female != '') ...[
+                    const SizedBox(height: 8),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    textBaseline: TextBaseline.alphabetic,
+                    children: [
+                      const Icon(Icons.female, size: 16, color: Colors.deepPurple),
+                      const SizedBox(width: 4),
+                      Text('${nest.female}', style: Theme.of(context).textTheme.bodyMedium),
+                    ],
+                  ),
+                  ],
+                  if (nest.helpers != null && nest.helpers != '') ...[
+                    const SizedBox(height: 8),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    textBaseline: TextBaseline.alphabetic,
+                    children: [
+                      const Icon(Icons.pending, size: 16, color: Colors.deepPurple),
+                      const SizedBox(width: 4),
+                      Text('${nest.helpers}', style: Theme.of(context).textTheme.bodyMedium),
+                    ],
+                  ),
+        ],
+                ],
+              ),
             ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text(S.of(context).close),
-            ),
-          ],
+            );
+          },
         );
       },
     );

@@ -1393,7 +1393,12 @@ class NestsScreenState extends State<NestsScreen> {
         children: [
           Text(
             nest.speciesName!,
-            style: const TextStyle(fontStyle: FontStyle.italic),
+            style: TextStyle(
+              fontStyle: FontStyle.italic,
+              color: allSpeciesNames.contains(nest.speciesName)
+                ? null
+                : Colors.red,
+            ),
           ),
           Text(nest.localityName!, overflow: TextOverflow.ellipsis),
           Text('${nest.longitude}; ${nest.latitude}'),

@@ -1503,7 +1503,12 @@ class SpecimensScreenState extends State<SpecimensScreen> {
         children: [
           Text(
             specimen.speciesName!,
-            style: const TextStyle(fontStyle: FontStyle.italic),
+            style: TextStyle(
+                fontStyle: FontStyle.italic,
+                color: allSpeciesNames.contains(specimen.speciesName)
+                  ? null
+                  : Colors.red,
+            ),
           ),
           Text(specimen.locality!, overflow: TextOverflow.ellipsis),
           Text('${specimen.longitude}; ${specimen.latitude}'),
