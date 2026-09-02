@@ -5,7 +5,7 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:xolmis/data/daos/journal_dao.dart';
 import 'package:xolmis/data/daos/observer_dao.dart';
@@ -41,6 +41,9 @@ import 'package:xolmis/data/daos/vegetation_dao.dart';
 import 'package:xolmis/data/daos/weather_dao.dart';
 import 'package:xolmis/data/daos/app_image_dao.dart';
 
+import 'package:xolmis/services/location_service.dart';
+import 'package:xolmis/services/location_service_impl.dart';
+
 void main() async {
   late DatabaseHelper databaseHelper;
 
@@ -57,6 +60,8 @@ void main() async {
   late FieldJournalDao journalDao;
   late TagDao tagDao;
   late ObserverDao observerDao;
+
+  late LocationService locationService;
 
   late InventoryProvider inventoryProvider;
   late SpeciesProvider speciesProvider;
@@ -92,6 +97,8 @@ void main() async {
     tagDao = TagDao(databaseHelper);
     observerDao = ObserverDao(databaseHelper);
 
+    locationService = GeolocatorServiceImpl();
+
     poiProvider = PoiProvider(poiDao);
     speciesProvider = SpeciesProvider(speciesDao);
     vegetationProvider = VegetationProvider(vegetationDao);
@@ -120,6 +127,7 @@ void main() async {
       journalDao: journalDao,
       tagDao: tagDao,
       observerDao: observerDao,
+      locationService: locationService,
       inventoryProvider: inventoryProvider,
       speciesProvider: speciesProvider,
       poiProvider: poiProvider,

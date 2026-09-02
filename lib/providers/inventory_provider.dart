@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../data/models/inventory.dart';
 import '../data/daos/inventory_dao.dart';
@@ -295,8 +295,8 @@ class InventoryProvider with ChangeNotifier {
   }
 
   /// Returns the next sequential inventory number for the given identifier parts.
-  Future<int> getNextSequentialNumber(String? local, String observer, int ano, int mes, int dia, String? typeChar) {
-    return _inventoryDao.getNextSequentialNumber(local, observer, ano, mes, dia, typeChar);
+  Future<int> getNextSequentialNumber(String? expedition, String? local, String observer, int ano, int mes, int dia, String? typeChar) {
+    return _inventoryDao.getNextSequentialNumber(expedition, local, observer, ano, mes, dia, typeChar);
   }
 
   /// Returns the total sampling hours across all inventories using SQL.

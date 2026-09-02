@@ -98,6 +98,16 @@ class S {
     );
   }
 
+  /// `Points of occurrence`
+  String get pointsOfOccurrence {
+    return Intl.message(
+      'Points of occurrence',
+      name: 'pointsOfOccurrence',
+      desc: 'Points of occurrence label',
+      args: [],
+    );
+  }
+
   /// `Settings`
   String get settings {
     return Intl.message(
@@ -898,6 +908,16 @@ class S {
     );
   }
 
+  /// `Expedition`
+  String get expedition {
+    return Intl.message(
+      'Expedition',
+      name: 'expedition',
+      desc: 'Field label for expedition name used in ID generation',
+      args: [],
+    );
+  }
+
   /// `Site name or abbreviation`
   String get siteAbbreviation {
     return Intl.message(
@@ -1072,12 +1092,22 @@ class S {
     );
   }
 
-  /// `Time (10 minutes intervals)`
+  /// `Minutes`
   String get timeMinutes {
     return Intl.message(
-      'Time (10 minutes intervals)',
+      'Minutes',
       name: 'timeMinutes',
       desc: 'Time in minutes field label',
+      args: [],
+    );
+  }
+
+  /// `Seconds`
+  String get timeSeconds {
+    return Intl.message(
+      'Seconds',
+      name: 'timeSeconds',
+      desc: 'Time in seconds field label',
       args: [],
     );
   }

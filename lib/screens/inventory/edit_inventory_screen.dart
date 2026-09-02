@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -28,9 +28,9 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
   late final TextEditingController _totalObserversController;
   late final TextEditingController _observerController;
   late bool _isDiscarded;
-  late TextEditingController fieldLocalityEditingController;
   late final InventoryType _initialType;
   InventoryType _selectedType = InventoryType.invFreeQualitative;
+  List<String> _recentLocalities = const [];
 
   final _formKey = GlobalKey<FormState>();
   late final inventoryProvider = Provider.of<InventoryProvider>(
@@ -50,6 +50,7 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
     _totalObserversController = TextEditingController(text: widget.inventory.totalObservers.toString());
     _observerController = TextEditingController(text: widget.inventory.observer);
     _isDiscarded = widget.inventory.isDiscarded;
+    _loadRecentLocalities();
   }
 
   @override
@@ -147,7 +148,7 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
       final updatedInventory = widget.inventory.copyWith(
         id: _idController.text,
         type: _selectedType,
-        localityName: fieldLocalityEditingController.text,
+        localityName: _localityNameController.text,
         duration: int.tryParse(_durationController.text),
         maxSpecies: int.tryParse(_maxSpeciesController.text),
         totalObservers: int.tryParse(_totalObserversController.text),
@@ -155,6 +156,8 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
         notes: _notesController.text.isNotEmpty ? _notesController.text : null,
         isDiscarded: _isDiscarded,
       );
+
+      await _saveRecentLocality(_localityNameController.text);
 
       // Return to the previous screen with the updated inventory
       Navigator.of(context).pop(updatedInventory);
@@ -198,6 +201,7 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
                 // Inventory type
                 DropdownButtonFormField<InventoryType>(
                   initialValue: _selectedType,
+                  isExpanded: true,
                   decoration: InputDecoration(
                     labelText: '${S.of(context).inventoryType} *',
                     border: OutlineInputBorder(),
@@ -205,7 +209,10 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
                   items: InventoryType.values.map((type) {
                     return DropdownMenuItem(
                       value: type,
-                      child: Text(inventoryTypeFriendlyNames[type]!),
+                      child: Text(
+                        inventoryTypeFriendlyNames[type]!,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     );
                   }).toList(),
                   onChanged: (InventoryType? newValue) {
@@ -226,74 +233,71 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
                 const SizedBox(height: 8.0),
                 // Locality
                 Autocomplete<String>(
-                  optionsBuilder:
-                      (TextEditingValue textEditingValue) async {
-                    if (textEditingValue.text.isEmpty) {
-                      return const Iterable<String>.empty();
-                    }
-
-                    try {
-                      final localityOptions = await Provider.of<InventoryProvider>(context, listen: false).getDistinctLocalities();
-                      final query = removeDiacritics(textEditingValue.text);
-                      return localityOptions.where((String option) {
-                        return removeDiacritics(option).contains(query);
-                      });
-                    } catch (e) {
-                      debugPrint('Error fetching locality options: $e');
-                      return const Iterable<String>.empty();
-                    }
+                  initialValue: widget.inventory.localityName != null
+                      ? TextEditingValue(text: widget.inventory.localityName!)
+                      : TextEditingValue.empty,
+                  optionsBuilder: (TextEditingValue textEditingValue) async {
+                    return await _getLocalitySuggestions(textEditingValue.text);
                   },
                   onSelected: (String selection) {
                     _localityNameController.text = selection;
-                    fieldLocalityEditingController.text = selection;
+                    _saveRecentLocality(selection);
                   },
-                  fieldViewBuilder: (BuildContext context,
+                  fieldViewBuilder: (
+                      BuildContext context,
                       TextEditingController fieldTextEditingController,
                       FocusNode fieldFocusNode,
-                      VoidCallback onFieldSubmitted) {
-                    fieldLocalityEditingController = fieldTextEditingController;
-                    fieldLocalityEditingController.text = widget.inventory.localityName ?? '';
+                      VoidCallback onFieldSubmitted,
+                      ) {
                     return TextFormField(
-                      controller: fieldLocalityEditingController,
+                      controller: fieldTextEditingController,
                       focusNode: fieldFocusNode,
-                      textCapitalization: TextCapitalization.words,
+                      textCapitalization: TextCapitalization.none,
                       decoration: InputDecoration(
                         labelText: '${S.of(context).locality} *',
-                        border: OutlineInputBorder(),
+                        border: const OutlineInputBorder(),
                       ),
                       validator: (value) {
-                        if (value == null || value.isEmpty) {
+                        if (value == null || value.trim().isEmpty) {
                           return S.of(context).insertLocality;
                         }
                         return null;
                       },
+                      onChanged: (value) {
+                        _localityNameController.text = value;
+                      },
                       onFieldSubmitted: (String value) {
+                        _localityNameController.text = value;
+                        if (value.trim().isNotEmpty) {
+                          _saveRecentLocality(value);
+                        }
                         onFieldSubmitted();
                       },
                     );
                   },
-                  optionsViewBuilder: (BuildContext context,
+                  optionsViewBuilder: (
+                      BuildContext context,
                       AutocompleteOnSelected<String> onSelected,
-                      Iterable<String> options) {
+                      Iterable<String> options,
+                      ) {
                     return Align(
                       alignment: Alignment.topLeft,
                       child: Material(
-                        elevation: 4.0, // Add this line for shadow
+                        elevation: 4.0,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
                         child: SizedBox(
                           width: MediaQuery.of(context).size.width * 0.9,
                           child: ListView.builder(
-                            padding: EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.symmetric(vertical: 4.0),
+                            shrinkWrap: true,
                             itemCount: options.length,
                             itemBuilder: (BuildContext context, int index) {
                               final String option = options.elementAt(index);
-                              return GestureDetector(
+                              return ListTile(
+                                title: Text(option),
                                 onTap: () {
                                   onSelected(option);
                                 },
-                                child: ListTile(
-                                  title: Text(option),
-                                ),
                               );
                             },
                           ),
@@ -487,5 +491,97 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
         ),
       ),
     );
+  }
+
+  /// Loads recent localities used in inventory creation.
+  Future<void> _loadRecentLocalities() async {
+    final prefs = await SharedPreferences.getInstance();
+    final saved = prefs.getStringList(kRecentInventoryLocalitiesPreferenceKey) ?? const [];
+
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {
+      _recentLocalities = saved.where((item) => item.trim().isNotEmpty).take(3).toList();
+    });
+  }
+
+  /// Stores a locality at the top of the recent list, keeping only the last three entries.
+  Future<void> _saveRecentLocality(String locality) async {
+    final normalized = locality.trim();
+    if (normalized.isEmpty) {
+      return;
+    }
+
+    final updated = [
+      normalized,
+      ..._recentLocalities.where((item) => item.toLowerCase() != normalized.toLowerCase()),
+    ].take(3).toList();
+
+    if (mounted) {
+      setState(() {
+        _recentLocalities = updated;
+      });
+    }
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList(kRecentInventoryLocalitiesPreferenceKey, updated);
+  }
+
+  /// Returns locality suggestions with recent entries pinned to the top.
+  Future<List<String>> _getLocalitySuggestions(String queryText) async {
+    final query = removeDiacritics(queryText.trim());
+
+    try {
+      final localityOptions = await Provider.of<InventoryProvider>(context, listen: false).getDistinctLocalities();
+      final normalizedOptionsByKey = <String, String>{};
+
+      for (final option in localityOptions) {
+        final normalized = option.trim();
+        final key = removeDiacritics(normalized);
+        if (normalized.isEmpty) {
+          continue;
+        }
+
+        if (!normalizedOptionsByKey.containsKey(key)) {
+          normalizedOptionsByKey[key] = normalized;
+        }
+      }
+
+      final normalizedOptions = normalizedOptionsByKey.values.toList();
+
+      final filteredRecent = _recentLocalities
+          .where((item) => removeDiacritics(item).contains(query))
+          .toList();
+      final filteredOptions = normalizedOptions
+          .where((item) => removeDiacritics(item).contains(query))
+          .toList();
+
+      final merged = <String>[];
+      final mergedIndexByKey = <String, int>{};
+
+      for (final item in filteredRecent) {
+        final key = removeDiacritics(item);
+        if (!mergedIndexByKey.containsKey(key)) {
+          mergedIndexByKey[key] = merged.length;
+          merged.add(item);
+        }
+      }
+
+      for (final item in filteredOptions) {
+        final key = removeDiacritics(item);
+        final existingIndex = mergedIndexByKey[key];
+        if (existingIndex == null) {
+          mergedIndexByKey[key] = merged.length;
+          merged.add(item);
+        }
+      }
+
+      return merged;
+    } catch (e) {
+      debugPrint('Error fetching locality options: $e');
+      return _recentLocalities.where((item) => removeDiacritics(item).contains(query)).toList();
+    }
   }
 }

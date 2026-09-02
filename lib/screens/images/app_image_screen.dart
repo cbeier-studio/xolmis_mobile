@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:path/path.dart' as path;
@@ -553,7 +553,10 @@ class _AppImageScreenState extends State<AppImageScreen> {
               ),
             );
           },
-          child: GridTile(
+          child: ClipRRect(
+            clipBehavior: Clip.antiAlias,
+            borderRadius: BorderRadius.circular(8.0),
+            child: GridTile(
             footer: GridTileBar(
               backgroundColor: Colors.black45,
               title: Text(
@@ -567,13 +570,11 @@ class _AppImageScreenState extends State<AppImageScreen> {
                       }),
             ),
             child: 
-                ClipRRect(
-                  clipBehavior: Clip.hardEdge,
-                  child: image.imagePath.isNotEmpty ? Image.file(
+                 image.imagePath.isNotEmpty ? Image.file(
                     File(image.imagePath),
                     fit: BoxFit.cover,
-                  ) : const Center(
-                    child: Text('No Image'),
+                  ) : Center(
+                    child: Icon(Icons.image_not_supported_outlined, color: Colors.grey.shade500, size: 24,),
                   ),
                 ),
           ),

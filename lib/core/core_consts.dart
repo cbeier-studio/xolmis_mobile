@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import '../../generated/l10n.dart';
 
 /// Minimum width (in dp) used to switch to tablet-oriented layouts.
@@ -21,6 +21,11 @@ const String kImportExistingRecordsPolicyPreferenceKey = 'importExistingRecordsP
 
 /// Shared preferences key that stores species propagation behavior between inventories.
 const String kSpeciesPropagationPolicyPreferenceKey = 'speciesPropagationPolicy';
+
+const String kRecentInventoryTypePreferenceKey = 'recentInventoryType';
+const String kRecentInventoryLocalitiesPreferenceKey = 'recentInventoryLocalities';
+const String kRecentNestLocalitiesPreferenceKey = 'recentNestLocalities';
+const String kRecentSpecimenLocalitiesPreferenceKey = 'recentSpecimenLocalities';
 
 /// App modules that can be used as startup destination.
 enum StartupModule { inventories, nests, specimens, fieldJournal, statistics }

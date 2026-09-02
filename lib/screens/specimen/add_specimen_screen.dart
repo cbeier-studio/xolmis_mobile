@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -34,11 +34,11 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
   late TextEditingController _speciesNameController;
   late TextEditingController _localityNameController;
   late TextEditingController _notesController;
-  late TextEditingController _fieldLocalityEditingController;
   SpecimenType _selectedType = SpecimenType.spcFeathers;
   bool _isSubmitting = false;
   Position? _currentPosition;
   String _observerAcronym = '';
+  List<String> _recentLocalities = const [];
 
   @override
   void initState() {
@@ -46,16 +46,15 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
     _fieldNumberController = TextEditingController();
     _speciesNameController = TextEditingController();
     _localityNameController = TextEditingController(text: widget.specimen?.locality ?? '');
-    _fieldLocalityEditingController = TextEditingController(text: widget.specimen?.locality ?? '');
     _notesController = TextEditingController();
     _loadObserverAcronym();
+    _loadRecentLocalities();
 
     if (widget.isEditing) {
       _selectedType = widget.specimen!.type;
       _fieldNumberController.text = widget.specimen!.fieldNumber;
       _speciesNameController.text = widget.specimen!.speciesName ?? '';
       _localityNameController.text = widget.specimen!.locality ?? '';
-      _fieldLocalityEditingController.text = widget.specimen!.locality ?? '';
       _notesController.text = widget.specimen!.notes ?? '';
     } else {
       _nextFieldNumber();
@@ -101,6 +100,43 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
     }
   }
 
+  // Show dialog to add a personalized species name
+  Future<String> _showAddSpeciesDialog(BuildContext context) async {
+    String? newSpeciesName = await showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        String speciesName = '';
+        return AlertDialog(
+          title: Text(S.of(context).addSpecies),
+          content: TextField(
+            textCapitalization: TextCapitalization.sentences,
+            onChanged: (value) {
+              speciesName = value;
+            },
+            decoration: InputDecoration(labelText: S.of(context).speciesName, border: OutlineInputBorder()),
+          ),
+          actions: <Widget>[
+            TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(S.of(context).cancel)),
+            TextButton(onPressed: () => Navigator.of(context).pop(speciesName), child: Text(S.of(context).save)),
+          ],
+        );
+      },
+    );
+
+    if (newSpeciesName != null && newSpeciesName.isNotEmpty) {
+      int? parsedCount;
+      String speciesName = newSpeciesName;
+      final match = RegExp(r'^(\d+)[, ]+(.*)$').firstMatch(newSpeciesName);
+      if (match != null) {
+        parsedCount = int.tryParse(match.group(1)!);
+        speciesName = match.group(2)!;
+      }
+      return speciesName;
+    } else {
+      return '';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -132,7 +168,8 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
                         ),
                         const SizedBox(height: 16.0),
                         DropdownButtonFormField<SpecimenType>(
-                          value: _selectedType,
+                          initialValue: _selectedType,
+                          isExpanded: true,
                           decoration: InputDecoration(
                             labelText: '${S.of(context).specimenType} *',
                             border: OutlineInputBorder(),
@@ -140,7 +177,10 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
                           items: SpecimenType.values.map((type) {
                             return DropdownMenuItem(
                               value: type,
-                              child: Text(specimenTypeFriendlyNames[type]!),
+                              child: Text(
+                                specimenTypeFriendlyNames[type]!,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             );
                           }).toList(),
                           onChanged: (SpecimenType? newValue) {
@@ -158,6 +198,13 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
                           decoration: InputDecoration(
                             labelText: '${S.of(context).species(1)} *',
                             border: OutlineInputBorder(),
+                            suffixIcon: IconButton(
+                              icon: const Icon(Icons.add_box_outlined),
+                              tooltip: S.of(context).addSpecies,
+                              onPressed: () async {
+                                _speciesNameController.text = await _showAddSpeciesDialog(context);
+                              },
+                            ),
                           ),
                           readOnly: true,
                           validator: (value) {
@@ -195,50 +242,78 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
                     ),
                         const SizedBox(height: 16.0),
                         Autocomplete<String>(
+                          initialValue: widget.isEditing
+                              ? TextEditingValue(text: widget.specimen!.locality ?? '')
+                              : TextEditingValue.empty,
                           optionsBuilder: (TextEditingValue textEditingValue) async {
-                            if (textEditingValue.text == '') {
-                              return const Iterable<String>.empty();
-                            }
-
-                            final options = await Provider.of<SpecimenProvider>(context, listen: false).getDistinctLocalities();
-                            final query = removeDiacritics(textEditingValue.text);
-                            return options.where((String option) {
-                              return removeDiacritics(option).contains(query);
-                            });
+                            return await _getLocalitySuggestions(textEditingValue.text);
                           },
                           onSelected: (String selection) {
                             _localityNameController.text = selection;
-                            _fieldLocalityEditingController.text = selection;
+                            _saveRecentLocality(selection);
                           },
-                          fieldViewBuilder: (BuildContext context, TextEditingController fieldTextEditingController, FocusNode fieldFocusNode, VoidCallback onFieldSubmitted) {
-                            _fieldLocalityEditingController = fieldTextEditingController;
-                            if (widget.isEditing && !_isSubmitting) {                              
-                              _fieldLocalityEditingController.text = widget.specimen?.locality ?? '';
-                            }                            
+                          fieldViewBuilder: (
+                              BuildContext context,
+                              TextEditingController fieldTextEditingController,
+                              FocusNode fieldFocusNode,
+                              VoidCallback onFieldSubmitted,
+                              ) {
                             return TextFormField(
-                              controller: _fieldLocalityEditingController,
+                              controller: fieldTextEditingController,
                               focusNode: fieldFocusNode,
-                              textCapitalization: TextCapitalization.words,
+                              textCapitalization: TextCapitalization.none,
                               decoration: InputDecoration(
                                 labelText: '${S.of(context).locality} *',
-                                helperText: S.of(context).requiredField,
-                                border: OutlineInputBorder(),
+                                border: const OutlineInputBorder(),
                               ),
                               validator: (value) {
-                                if (value == null || value.isEmpty) {
+                                if (value == null || value.trim().isEmpty) {
                                   return S.of(context).insertLocality;
                                 }
                                 return null;
                               },
                               onChanged: (value) {
                                 _localityNameController.text = value;
-                                _fieldLocalityEditingController.text = value;
                               },
                               onFieldSubmitted: (String value) {
+                                _localityNameController.text = value;
+                                if (value.trim().isNotEmpty) {
+                                  _saveRecentLocality(value);
+                                }
                                 onFieldSubmitted();
                               },
                             );
-                          },                          
+                          },
+                          optionsViewBuilder: (
+                              BuildContext context,
+                              AutocompleteOnSelected<String> onSelected,
+                              Iterable<String> options,
+                              ) {
+                            return Align(
+                              alignment: Alignment.topLeft,
+                              child: Material(
+                                elevation: 4.0,
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
+                                child: SizedBox(
+                                  width: MediaQuery.of(context).size.width * 0.9,
+                                  child: ListView.builder(
+                                    padding: const EdgeInsets.symmetric(vertical: 4.0),
+                                    shrinkWrap: true,
+                                    itemCount: options.length,
+                                    itemBuilder: (BuildContext context, int index) {
+                                      final String option = options.elementAt(index);
+                                      return ListTile(
+                                        title: Text(option),
+                                        onTap: () {
+                                          onSelected(option);
+                                        },
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
                         ),
                         const SizedBox(height: 16.0),
                         TextFormField(
@@ -279,6 +354,98 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
     );
   }
 
+  /// Loads recent localities used in inventory creation.
+  Future<void> _loadRecentLocalities() async {
+    final prefs = await SharedPreferences.getInstance();
+    final saved = prefs.getStringList(kRecentSpecimenLocalitiesPreferenceKey) ?? const [];
+
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {
+      _recentLocalities = saved.where((item) => item.trim().isNotEmpty).take(3).toList();
+    });
+  }
+
+  /// Stores a locality at the top of the recent list, keeping only the last three entries.
+  Future<void> _saveRecentLocality(String locality) async {
+    final normalized = locality.trim();
+    if (normalized.isEmpty) {
+      return;
+    }
+
+    final updated = [
+      normalized,
+      ..._recentLocalities.where((item) => item.toLowerCase() != normalized.toLowerCase()),
+    ].take(3).toList();
+
+    if (mounted) {
+      setState(() {
+        _recentLocalities = updated;
+      });
+    }
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList(kRecentSpecimenLocalitiesPreferenceKey, updated);
+  }
+
+  /// Returns locality suggestions with recent entries pinned to the top.
+  Future<List<String>> _getLocalitySuggestions(String queryText) async {
+    final query = removeDiacritics(queryText.trim());
+
+    try {
+      final localityOptions = await Provider.of<SpecimenProvider>(context, listen: false).getDistinctLocalities();
+      final normalizedOptionsByKey = <String, String>{};
+
+      for (final option in localityOptions) {
+        final normalized = option.trim();
+        final key = removeDiacritics(normalized);
+        if (normalized.isEmpty) {
+          continue;
+        }
+
+        if (!normalizedOptionsByKey.containsKey(key)) {
+          normalizedOptionsByKey[key] = normalized;
+        }
+      }
+
+      final normalizedOptions = normalizedOptionsByKey.values.toList();
+
+      final filteredRecent = _recentLocalities
+          .where((item) => removeDiacritics(item).contains(query))
+          .toList();
+      final filteredOptions = normalizedOptions
+          .where((item) => removeDiacritics(item).contains(query))
+          .toList();
+
+      final merged = <String>[];
+      final mergedIndexByKey = <String, int>{};
+
+      for (final item in filteredRecent) {
+        final key = removeDiacritics(item);
+        if (!mergedIndexByKey.containsKey(key)) {
+          mergedIndexByKey[key] = merged.length;
+          merged.add(item);
+        }
+      }
+
+      for (final item in filteredOptions) {
+        final key = removeDiacritics(item);
+        final existingIndex = mergedIndexByKey[key];
+        if (existingIndex == null) {
+          mergedIndexByKey[key] = merged.length;
+          merged.add(item);
+        }
+      }
+
+      return merged;
+    } catch (e) {
+      debugPrint('Error fetching locality options: $e');
+      return _recentLocalities.where((item) => removeDiacritics(item).contains(query)).toList();
+    }
+  }
+
   /// Validates the form and saves the specimen through the provider layer.
   void _submitForm() async {
     final specimenProvider = Provider.of<SpecimenProvider>(context, listen: false);
@@ -291,7 +458,7 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
         final updatedSpecimen = widget.specimen!.copyWith(
           fieldNumber: _fieldNumberController.text,
           speciesName: _speciesNameController.text,
-          locality: _fieldLocalityEditingController.text,
+          locality: _localityNameController.text,
           notes: _notesController.text,
           type: _selectedType,
           observer: (widget.specimen?.observer?.trim().isNotEmpty ?? false)
@@ -315,11 +482,11 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
           );
         }
       } else {
-        // Create Nest object with form data
+        // Create Specimen object with form data
         final newSpecimen = Specimen(
           fieldNumber: _fieldNumberController.text,
           speciesName: _speciesNameController.text,
-          locality: _fieldLocalityEditingController.text,
+          locality: _localityNameController.text,
           longitude: _currentPosition?.longitude,
           latitude: _currentPosition?.latitude,
           notes: _notesController.text,

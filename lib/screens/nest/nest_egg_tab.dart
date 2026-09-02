@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -325,7 +325,7 @@ class EggGridItem extends StatelessWidget {
                   egg.speciesName!,
                   style: const TextStyle(fontStyle: FontStyle.italic),
                 ),
-                Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(egg.sampleTime!)),
+                Text(DateFormat('dd/MM/yyyy HH:mm').format(egg.sampleTime!)),
               ],
             ),
           ],
@@ -372,7 +372,20 @@ class EggListItemState extends State<EggListItem> {
               ),
             );
           } else {
-            return const Icon(Icons.hide_image_outlined);
+            return Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                border: Border.all(color: Colors.grey.shade400),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Icon(
+                Icons.image_not_supported_outlined,
+                color: Colors.grey.shade500,
+                size: 24,
+              ),
+            );
           }
         },
       ),
@@ -382,10 +395,15 @@ class EggListItemState extends State<EggListItem> {
         children: [
           Text(
             widget.egg.speciesName!,
-            style: const TextStyle(fontStyle: FontStyle.italic),
+            style: TextStyle(
+                fontStyle: FontStyle.italic,
+                color: allSpeciesNames.contains(widget.egg.speciesName)
+                    ? null
+                    : Colors.red,
+            ),
           ),
           Text(
-            DateFormat('dd/MM/yyyy HH:mm:ss').format(widget.egg.sampleTime!),
+            DateFormat('dd/MM/yyyy HH:mm').format(widget.egg.sampleTime!),
           ),
         ],
       ),

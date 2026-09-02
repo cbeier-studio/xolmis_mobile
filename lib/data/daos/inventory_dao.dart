@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -500,10 +500,10 @@ class InventoryDao {
   /// The ID prefix is built as
   /// `[<local>-]<observer>-<year><month><day>-[<typeChar>]`.
   /// If no existing inventory matches the prefix, returns `1`.
-  Future<int> getNextSequentialNumber(String? local, String observer, int ano, int mes, int dia, String? typeChar) async {
+  Future<int> getNextSequentialNumber(String? expedition, String? local, String observer, int ano, int mes, int dia, String? typeChar) async {
     final db = await _dbHelper.database;
 
-    final prefix = "${local != null ? '$local-' : ''}$observer-$ano${mes.toString().padLeft(2, '0')}${dia.toString().padLeft(2, '0')}-${typeChar ?? ''}";
+    final prefix = "${expedition != null && expedition.isNotEmpty ? '$expedition-' : ''}${local != null && local.isNotEmpty ? '$local-' : ''}$observer-$ano${mes.toString().padLeft(2, '0')}${dia.toString().padLeft(2, '0')}-${typeChar ?? ''}";
 
     final results = await db?.query(
       'inventories',

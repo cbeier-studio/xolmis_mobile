@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
@@ -955,7 +955,7 @@ class NestsScreenState extends State<NestsScreen> {
                   : null,
         ),
         Padding(
-          padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
+          padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 2.0),
           child: LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {
               final screenWidth = constraints.maxWidth;
@@ -1016,10 +1016,10 @@ class NestsScreenState extends State<NestsScreen> {
 
                           return FilterChip(
                             label: Text(label),
-                            avatar:
-                                _selectedDateFilter == null
-                                    ? const Icon(Icons.calendar_today_outlined)
-                                    : null,
+                            // avatar:
+                            //     _selectedDateFilter == null
+                            //         ? const Icon(Icons.calendar_today_outlined)
+                            //         : null,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20.0),
                             ),
@@ -1079,10 +1079,10 @@ class NestsScreenState extends State<NestsScreen> {
                                       S.current.nestFate
                                   : S.current.nestFate,
                             ),
-                            avatar:
-                                _selectedFate == null
-                                    ? Icon(Icons.category_outlined)
-                                    : null,
+                            // avatar:
+                            //     _selectedFate == null
+                            //         ? Icon(Icons.category_outlined)
+                            //         : null,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20.0),
                             ),
@@ -1118,10 +1118,10 @@ class NestsScreenState extends State<NestsScreen> {
                       const SizedBox(width: 8.0),
                       FilterChip(
                         label: Text(_selectedSpecies ?? S.current.species(1)),
-                        avatar:
-                            _selectedSpecies == null
-                                ? const Icon(Icons.account_tree_outlined)
-                                : null,
+                        // avatar:
+                        //     _selectedSpecies == null
+                        //         ? const Icon(Icons.account_tree_outlined)
+                        //         : null,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20.0),
                         ),
@@ -1140,10 +1140,10 @@ class NestsScreenState extends State<NestsScreen> {
                       const SizedBox(width: 8.0),
                       FilterChip(
                         label: Text(_selectedLocality ?? S.current.locality),
-                        avatar:
-                            _selectedLocality == null
-                                ? const Icon(Icons.location_on_outlined)
-                                : null,
+                        // avatar:
+                        //     _selectedLocality == null
+                        //         ? const Icon(Icons.location_on_outlined)
+                        //         : null,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20.0),
                         ),
@@ -1166,10 +1166,10 @@ class NestsScreenState extends State<NestsScreen> {
                             label: Text(
                               _selectedObserver ?? S.current.observer,
                             ),
-                            avatar:
-                                _selectedObserver == null
-                                    ? Icon(Icons.person_outlined)
-                                    : null,
+                            // avatar:
+                            //     _selectedObserver == null
+                            //         ? Icon(Icons.person_outlined)
+                            //         : null,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20.0),
                             ),
@@ -1393,11 +1393,16 @@ class NestsScreenState extends State<NestsScreen> {
         children: [
           Text(
             nest.speciesName!,
-            style: const TextStyle(fontStyle: FontStyle.italic),
+            style: TextStyle(
+              fontStyle: FontStyle.italic,
+              color: allSpeciesNames.contains(nest.speciesName)
+                ? null
+                : Colors.red,
+            ),
           ),
           Text(nest.localityName!, overflow: TextOverflow.ellipsis),
           Text('${nest.longitude}; ${nest.latitude}'),
-          Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(nest.foundTime!)),
+          Text(DateFormat('dd/MM/yyyy HH:mm').format(nest.foundTime!)),
         ],
       ),
       selected: isLargeScreen ? isDetailSelected : isSelected,

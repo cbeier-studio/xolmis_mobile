@@ -30,6 +30,9 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
+  String get pointsOfOccurrence => 'Pontos de ocorrência';
+
+  @override
   String get settings => 'Configurações';
 
   @override
@@ -316,6 +319,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get generateId => 'Gerar ID';
 
   @override
+  String get expedition => 'Expedição';
+
+  @override
   String get siteAbbreviation => 'Nome ou sigla do local';
 
   @override
@@ -370,7 +376,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String get speciesAccumulated => 'Acumulado de espécies';
 
   @override
-  String get timeMinutes => 'Tempo (intervalos de 10 minutos)';
+  String get timeMinutes => 'Minutos';
+
+  @override
+  String get timeSeconds => 'Segundos';
 
   @override
   String get speciesCounted => 'Número de espécies';
@@ -2043,6 +2052,9 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   }
 
   @override
+  String get pointsOfOccurrence => 'Pontos de ocorrência';
+
+  @override
   String get settings => 'Configurações';
 
   @override
@@ -2329,6 +2341,9 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get generateId => 'Gerar ID';
 
   @override
+  String get expedition => 'Expedição';
+
+  @override
   String get siteAbbreviation => 'Nome ou sigla do local';
 
   @override
@@ -2383,7 +2398,10 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get speciesAccumulated => 'Acumulado de espécies';
 
   @override
-  String get timeMinutes => 'Tempo (intervalos de 10 minutos)';
+  String get timeMinutes => 'Minutos';
+
+  @override
+  String get timeSeconds => 'Segundos';
 
   @override
   String get speciesCounted => 'Número de espécies';

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -549,6 +549,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     final prefs = await SharedPreferences.getInstance();
     final String observerAbbreviation =
         prefs.getString('observerAcronym') ?? '';
+    final InventoryType lastInventoryType = InventoryType.values[prefs.getInt(kRecentInventoryTypePreferenceKey) ?? 0];
 
     if (observerAbbreviation.isEmpty) {
       if (context.mounted) {
@@ -592,7 +593,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
               ),
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 400),
-                child: const AddInventoryScreen(),
+                child: AddInventoryScreen(initialInventoryType: lastInventoryType,),
               ),
             );
           },
@@ -606,7 +607,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
         // Show full screen on small screens
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const AddInventoryScreen()),
+          MaterialPageRoute(builder: (context) => AddInventoryScreen(initialInventoryType: lastInventoryType,)),
         ).then((newInventory) {
           // Update the inventory list
           if (newInventory != null) {
@@ -1109,7 +1110,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                   : null,
         ),
         Padding(
-          padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
+          padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 2.0),
           child: LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {
               final screenWidth = constraints.maxWidth;
@@ -1170,10 +1171,10 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
 
                           return FilterChip(
                             label: Text(label),
-                            avatar:
-                                _selectedDateFilter == null
-                                    ? const Icon(Icons.calendar_today_outlined)
-                                    : null,
+                            // avatar:
+                            //     _selectedDateFilter == null
+                            //         ? const Icon(Icons.calendar_today_outlined)
+                            //         : null,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20.0),
                             ),
@@ -1233,10 +1234,10 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                       S.current.type
                                   : S.current.type,
                             ),
-                            avatar:
-                                _selectedInventoryType == null
-                                    ? Icon(Icons.category_outlined)
-                                    : null,
+                            // avatar:
+                            //     _selectedInventoryType == null
+                            //         ? Icon(Icons.category_outlined)
+                            //         : null,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20.0),
                             ),
@@ -1272,10 +1273,10 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                       const SizedBox(width: 8.0),
                       FilterChip(
                         label: Text(_selectedLocality ?? S.current.locality),
-                        avatar:
-                            _selectedLocality == null
-                                ? const Icon(Icons.location_on_outlined)
-                                : null,
+                        // avatar:
+                        //     _selectedLocality == null
+                        //         ? const Icon(Icons.location_on_outlined)
+                        //         : null,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20.0),
                         ),
@@ -1298,10 +1299,10 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                             label: Text(
                               _selectedObserver ?? S.current.observer,
                             ),
-                            avatar:
-                                _selectedObserver == null
-                                    ? Icon(Icons.person_outlined)
-                                    : null,
+                            // avatar:
+                            //     _selectedObserver == null
+                            //         ? Icon(Icons.person_outlined)
+                            //         : null,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20.0),
                             ),
@@ -1336,10 +1337,10 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                         label: Text(
                           _selectedSpeciesFilter ?? S.current.species(1),
                         ),
-                        avatar:
-                            _selectedSpeciesFilter == null
-                                ? const Icon(Icons.account_tree_outlined)
-                                : null,
+                        // avatar:
+                        //     _selectedSpeciesFilter == null
+                        //         ? const Icon(Icons.account_tree_outlined)
+                        //         : null,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20.0),
                         ),
@@ -1738,9 +1739,27 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
         if (_isShowingActiveInventories && inventory.duration > 0)
           Text(S.of(context).inventoryDuration(inventory.duration)),
         // Show the date and time of the inventory
-        if (!_isShowingActiveInventories)
-          Text(
-            '${DateFormat('dd/MM/yyyy HH:mm:ss').format(inventory.startTime!)} - ${DateFormat('HH:mm:ss').format(inventory.endTime!)}',
+        if (!_isShowingActiveInventories && inventory.startTime != null)
+          Builder(
+            builder: (context) {
+              final start = inventory.startTime!;
+              final end = inventory.endTime;
+              final startStr = DateFormat('dd/MM/yyyy HH:mm').format(start);
+
+              if (end == null) {
+                return Text(startStr);
+              }
+
+              final isSameDay = start.year == end.year &&
+                  start.month == end.month &&
+                  start.day == end.day;
+
+              final endStr = isSameDay
+                  ? DateFormat('HH:mm').format(end)
+                  : DateFormat('dd/MM/yyyy HH:mm').format(end);
+
+              return Text('$startStr - $endStr');
+            },
           ),
         // Show the species count as overlapping tags.
         Builder(

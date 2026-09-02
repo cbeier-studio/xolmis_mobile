@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
@@ -784,7 +784,7 @@ class JournalsScreenState extends State<JournalsScreen> {
 
                           return FilterChip(
                             label: Text(label),
-                            avatar: _selectedDateFilter == null ? const Icon(Icons.calendar_today_outlined) : null,
+                            // avatar: _selectedDateFilter == null ? const Icon(Icons.calendar_today_outlined) : null,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
                             visualDensity: VisualDensity.compact,
                             onSelected: (selected) {
@@ -834,7 +834,7 @@ class JournalsScreenState extends State<JournalsScreen> {
                         builder: (context, controller, child) {
                           return FilterChip(
                             label: Text(_selectedObserver ?? S.current.observer),
-                            avatar: _selectedObserver == null ? Icon(Icons.person_outlined) : null,
+                            // avatar: _selectedObserver == null ? Icon(Icons.person_outlined) : null,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
                             visualDensity: VisualDensity.compact,
                             onSelected: (selected) {
@@ -867,7 +867,7 @@ class JournalsScreenState extends State<JournalsScreen> {
                         builder: (context, controller, child) {
                           return FilterChip(
                             label: Text(_selectedTag ?? S.current.tags),
-                            avatar: _selectedTag == null ? const Icon(Icons.local_offer_outlined) : null,
+                            // avatar: _selectedTag == null ? const Icon(Icons.local_offer_outlined) : null,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
                             visualDensity: VisualDensity.compact,
                             onSelected: (selected) {
@@ -1047,6 +1047,7 @@ class JournalsScreenState extends State<JournalsScreen> {
     final isDetailSelected = selectedJournalId == entry.id;
 
     return ListTile(
+      dense: true,
       leading: Checkbox(
         value: isSelected,
         onChanged: (bool? value) {
@@ -1069,7 +1070,14 @@ class JournalsScreenState extends State<JournalsScreen> {
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(entry.creationDate!)),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Icon(Icons.event, size: 14, color: Theme.of(context).colorScheme.onSurfaceVariant),
+              const SizedBox(width: 4),
+              Text(DateFormat('dd/MM/yyyy HH:mm').format(entry.creationDate!)),
+            ],
+          ),
           if (entry.tags.isNotEmpty) ...[
             const SizedBox(height: 8),
             Wrap(

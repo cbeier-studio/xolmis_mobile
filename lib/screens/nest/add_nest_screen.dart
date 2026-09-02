@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
@@ -38,11 +38,10 @@ class AddNestScreenState extends State<AddNestScreen> {
   late TextEditingController _maleController;
   late TextEditingController _femaleController;
   late TextEditingController _helpersController;
-  late TextEditingController _fieldLocalityEditingController;
-  late TextEditingController _fieldSupportEditingController;
   bool _isSubmitting = false;
   Position? _currentPosition;
   String _observerAcronym = '';
+  List<String> _recentLocalities = const [];
 
   @override
   void initState() {
@@ -55,8 +54,7 @@ class AddNestScreenState extends State<AddNestScreen> {
     _maleController = TextEditingController();
     _femaleController = TextEditingController();
     _helpersController = TextEditingController();
-    _fieldLocalityEditingController = TextEditingController();
-    _fieldSupportEditingController = TextEditingController();
+    _loadRecentLocalities();
 
   if (widget.isEditing) {
       _fieldNumberController.text = widget.nest!.fieldNumber!;
@@ -103,6 +101,43 @@ class AddNestScreenState extends State<AddNestScreen> {
     }
   }
 
+  // Show dialog to add a personalized species name
+  Future<String> _showAddSpeciesDialog(BuildContext context) async {
+    String? newSpeciesName = await showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        String speciesName = '';
+        return AlertDialog(
+          title: Text(S.of(context).addSpecies),
+          content: TextField(
+            textCapitalization: TextCapitalization.sentences,
+            onChanged: (value) {
+              speciesName = value;
+            },
+            decoration: InputDecoration(labelText: S.of(context).speciesName, border: OutlineInputBorder()),
+          ),
+          actions: <Widget>[
+            TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(S.of(context).cancel)),
+            TextButton(onPressed: () => Navigator.of(context).pop(speciesName), child: Text(S.of(context).save)),
+          ],
+        );
+      },
+    );
+
+    if (newSpeciesName != null && newSpeciesName.isNotEmpty) {
+      int? parsedCount;
+      String speciesName = newSpeciesName;
+      final match = RegExp(r'^(\d+)[, ]+(.*)$').firstMatch(newSpeciesName);
+      if (match != null) {
+        parsedCount = int.tryParse(match.group(1)!);
+        speciesName = match.group(2)!;
+      }
+      return speciesName;
+    } else {
+      return '';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -142,6 +177,13 @@ class AddNestScreenState extends State<AddNestScreen> {
                           decoration: InputDecoration(
                             labelText: '${S.of(context).species(1)} *',
                             border: OutlineInputBorder(),
+                            suffixIcon: IconButton(
+                              icon: const Icon(Icons.add_box_outlined),
+                              tooltip: S.of(context).addSpecies,
+                              onPressed: () async {
+                                _speciesNameController.text = await _showAddSpeciesDialog(context);
+                              },
+                            ),
                           ),
                           readOnly: true,
                           validator: (value) {
@@ -179,169 +221,164 @@ class AddNestScreenState extends State<AddNestScreen> {
                         ),
                         const SizedBox(height: 16.0),
                         Autocomplete<String>(
-                      optionsBuilder:
-                          (TextEditingValue textEditingValue) async {
-                        if (textEditingValue.text.isEmpty) {
-                          return const Iterable<String>.empty();
-                        }
-
-                        try {
-                          final localityOptions = await Provider.of<NestProvider>(context, listen: false).getDistinctLocalities();
-                          final query = removeDiacritics(textEditingValue.text);
-                          return localityOptions.where((String option) {
-                            return removeDiacritics(option).contains(query);
-                          });
-                        } catch (e) {
-                          debugPrint('Error fetching locality options: $e');
-                          return const Iterable<String>.empty();
-                        }
-                      },
-                      onSelected: (String selection) {
-                        _localityNameController.text = selection;
-                        _fieldLocalityEditingController.text = selection;
-                      },
-                      fieldViewBuilder: (BuildContext context,
-                          TextEditingController fieldTextEditingController,
-                          FocusNode fieldFocusNode,
-                          VoidCallback onFieldSubmitted) {
-                        return TextFormField(
-                          controller: fieldTextEditingController,
-                          focusNode: fieldFocusNode,
-                          textCapitalization: TextCapitalization.words,
-                          decoration: InputDecoration(
-                            labelText: '${S.of(context).locality} *',
-                            border: OutlineInputBorder(),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return S.of(context).insertLocality;
-                            }
-                            return null;
+                          initialValue: widget.isEditing
+                              ? TextEditingValue(text: widget.nest!.localityName ?? '')
+                              : TextEditingValue.empty,
+                          optionsBuilder: (TextEditingValue textEditingValue) async {
+                            return await _getLocalitySuggestions(textEditingValue.text);
                           },
-                          onChanged: (value) {
-                            _fieldLocalityEditingController.text = value;
-                            _localityNameController.text = value;
+                          onSelected: (String selection) {
+                            _localityNameController.text = selection;
+                            _saveRecentLocality(selection);
                           },
-                          onFieldSubmitted: (String value) {
-                            _fieldLocalityEditingController.text = value;
-                            _localityNameController.text = value;
-                            onFieldSubmitted();
-                          },
-                        );
-                      },
-                      optionsViewBuilder: (BuildContext context,
-                          AutocompleteOnSelected<String> onSelected,
-                          Iterable<String> options) {
-                        return Align(
-                          alignment: Alignment.topLeft,
-                          child: Material(
-                            elevation: 4.0, // Add this line for shadow
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
-                            child: SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.9,
-                              child: ListView.builder(
-                                padding: EdgeInsets.all(8.0),
-                                itemCount: options.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  final String option = options.elementAt(index);
-                                  return GestureDetector(
-                                    onTap: () {
-                                      onSelected(option);
-                                    },
-                                    child: ListTile(
-                                      title: Text(option),
-                                    ),
-                                  );
-                                },
+                          fieldViewBuilder: (
+                              BuildContext context,
+                              TextEditingController fieldTextEditingController,
+                              FocusNode fieldFocusNode,
+                              VoidCallback onFieldSubmitted,
+                              ) {
+                            return TextFormField(
+                              controller: fieldTextEditingController,
+                              focusNode: fieldFocusNode,
+                              textCapitalization: TextCapitalization.none,
+                              decoration: InputDecoration(
+                                labelText: '${S.of(context).locality} *',
+                                border: const OutlineInputBorder(),
                               ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 16.0),
-                    Autocomplete<String>(
-                      optionsBuilder:
-                          (TextEditingValue textEditingValue) async {
-                        if (textEditingValue.text.isEmpty) {
-                          return const Iterable<String>.empty();
-                        }
-
-                        try {
-                          final supportOptions = await Provider.of<NestProvider>(context, listen: false).getDistinctSupports();
-                          final query = removeDiacritics(textEditingValue.text);
-                          return supportOptions.where((String option) {
-                            return removeDiacritics(option).contains(query);
-                          });
-                        } catch (e) {
-                          debugPrint('Error fetching support options: $e');
-                          return const Iterable<String>.empty();
-                        }
-                      },
-                      onSelected: (String selection) {
-                        _supportController.text = selection;
-                        _fieldSupportEditingController.text = selection;
-                      },
-                      fieldViewBuilder: (BuildContext context,
-                          TextEditingController fieldTextEditingController,
-                          FocusNode fieldFocusNode,
-                          VoidCallback onFieldSubmitted) {
-                        return TextFormField(
-                          controller: fieldTextEditingController,
-                          focusNode: fieldFocusNode,
-                          textCapitalization: TextCapitalization.sentences,
-                          decoration: InputDecoration(
-                            labelText: '${S.of(context).nestSupport} *',
-                            hintText: S.of(context).plantSpeciesOrSupportType,
-                            border: OutlineInputBorder(),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return S.of(context).insertNestSupport;
-                            }
-                            return null;
+                              validator: (value) {
+                                if (value == null || value.trim().isEmpty) {
+                                  return S.of(context).insertLocality;
+                                }
+                                return null;
+                              },
+                              onChanged: (value) {
+                                _localityNameController.text = value;
+                              },
+                              onFieldSubmitted: (String value) {
+                                _localityNameController.text = value;
+                                if (value.trim().isNotEmpty) {
+                                  _saveRecentLocality(value);
+                                }
+                                onFieldSubmitted();
+                              },
+                            );
                           },
-                          onChanged: (value) {
-                            _fieldSupportEditingController.text = value;
-                            _supportController.text = value;
-                          },
-                          onFieldSubmitted: (String value) {
-                            _fieldSupportEditingController.text = value;
-                            _supportController.text = value;
-                            onFieldSubmitted();
-                          },
-                        );
-                      },
-                      optionsViewBuilder: (BuildContext context,
-                          AutocompleteOnSelected<String> onSelected,
-                          Iterable<String> options) {
-                        return Align(
-                          alignment: Alignment.topLeft,
-                          child: Material(
-                            elevation: 4.0, // Add this line for shadow
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
-                            child: SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.9,
-                              child: ListView.builder(
-                                padding: EdgeInsets.all(8.0),
-                                itemCount: options.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  final String option = options.elementAt(index);
-                                  return GestureDetector(
-                                    onTap: () {
-                                      onSelected(option);
+                          optionsViewBuilder: (
+                              BuildContext context,
+                              AutocompleteOnSelected<String> onSelected,
+                              Iterable<String> options,
+                              ) {
+                            return Align(
+                              alignment: Alignment.topLeft,
+                              child: Material(
+                                elevation: 4.0,
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
+                                child: SizedBox(
+                                  width: MediaQuery.of(context).size.width * 0.9,
+                                  child: ListView.builder(
+                                    padding: const EdgeInsets.symmetric(vertical: 4.0),
+                                    shrinkWrap: true,
+                                    itemCount: options.length,
+                                    itemBuilder: (BuildContext context, int index) {
+                                      final String option = options.elementAt(index);
+                                      return ListTile(
+                                        title: Text(option),
+                                        onTap: () {
+                                          onSelected(option);
+                                        },
+                                      );
                                     },
-                                    child: ListTile(
-                                      title: Text(option),
-                                    ),
-                                  );
-                                },
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
+                            );
+                          },
+                        ),
+                        const SizedBox(height: 16.0),
+                        Autocomplete<String>(
+                          initialValue: widget.isEditing
+                              ? TextEditingValue(text: widget.nest!.support ?? '')
+                              : TextEditingValue.empty,
+                          optionsBuilder: (TextEditingValue textEditingValue) async {
+                            if (textEditingValue.text.isEmpty) {
+                              return const Iterable<String>.empty();
+                            }
+
+                            try {
+                              final supportOptions = await Provider.of<NestProvider>(context, listen: false).getDistinctSupports();
+                              final query = removeDiacritics(textEditingValue.text);
+                              return supportOptions.where((String option) {
+                                return removeDiacritics(option).contains(query);
+                              });
+                            } catch (e) {
+                              debugPrint('Error fetching support options: $e');
+                              return const Iterable<String>.empty();
+                            }
+                          },
+                          onSelected: (String selection) {
+                            _supportController.text = selection;
+                          },
+                          fieldViewBuilder: (
+                              BuildContext context,
+                              TextEditingController fieldTextEditingController,
+                              FocusNode fieldFocusNode,
+                              VoidCallback onFieldSubmitted,
+                              ) {
+                            return TextFormField(
+                              controller: fieldTextEditingController,
+                              focusNode: fieldFocusNode,
+                              textCapitalization: TextCapitalization.sentences,
+                              decoration: InputDecoration(
+                                labelText: '${S.of(context).nestSupport} *',
+                                hintText: S.of(context).plantSpeciesOrSupportType,
+                                border: const OutlineInputBorder(),
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return S.of(context).insertNestSupport;
+                                }
+                                return null;
+                              },
+                              onChanged: (value) {
+                                _supportController.text = value;
+                              },
+                              onFieldSubmitted: (String value) {
+                                _supportController.text = value;
+                                onFieldSubmitted();
+                              },
+                            );
+                          },
+                          optionsViewBuilder: (
+                              BuildContext context,
+                              AutocompleteOnSelected<String> onSelected,
+                              Iterable<String> options,
+                              ) {
+                            return Align(
+                              alignment: Alignment.topLeft,
+                              child: Material(
+                                elevation: 4.0,
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
+                                child: SizedBox(
+                                  width: MediaQuery.of(context).size.width * 0.9,
+                                  child: ListView.builder(
+                                    padding: const EdgeInsets.symmetric(vertical: 4.0),
+                                    shrinkWrap: true,
+                                    itemCount: options.length,
+                                    itemBuilder: (BuildContext context, int index) {
+                                      final String option = options.elementAt(index);
+                                      return ListTile(
+                                        title: Text(option),
+                                        onTap: () {
+                                          onSelected(option);
+                                        },
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
                         const SizedBox(height: 16.0),
                         TextFormField(
                           controller: _heightAboveGroundController,
@@ -416,6 +453,98 @@ class AddNestScreenState extends State<AddNestScreen> {
     );
   }
 
+  /// Loads recent localities used in inventory creation.
+  Future<void> _loadRecentLocalities() async {
+    final prefs = await SharedPreferences.getInstance();
+    final saved = prefs.getStringList(kRecentNestLocalitiesPreferenceKey) ?? const [];
+
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {
+      _recentLocalities = saved.where((item) => item.trim().isNotEmpty).take(3).toList();
+    });
+  }
+
+  /// Stores a locality at the top of the recent list, keeping only the last three entries.
+  Future<void> _saveRecentLocality(String locality) async {
+    final normalized = locality.trim();
+    if (normalized.isEmpty) {
+      return;
+    }
+
+    final updated = [
+      normalized,
+      ..._recentLocalities.where((item) => item.toLowerCase() != normalized.toLowerCase()),
+    ].take(3).toList();
+
+    if (mounted) {
+      setState(() {
+        _recentLocalities = updated;
+      });
+    }
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList(kRecentNestLocalitiesPreferenceKey, updated);
+  }
+
+  /// Returns locality suggestions with recent entries pinned to the top.
+  Future<List<String>> _getLocalitySuggestions(String queryText) async {
+    final query = removeDiacritics(queryText.trim());
+
+    try {
+      final localityOptions = await Provider.of<NestProvider>(context, listen: false).getDistinctLocalities();
+      final normalizedOptionsByKey = <String, String>{};
+
+      for (final option in localityOptions) {
+        final normalized = option.trim();
+        final key = removeDiacritics(normalized);
+        if (normalized.isEmpty) {
+          continue;
+        }
+
+        if (!normalizedOptionsByKey.containsKey(key)) {
+          normalizedOptionsByKey[key] = normalized;
+        }
+      }
+
+      final normalizedOptions = normalizedOptionsByKey.values.toList();
+
+      final filteredRecent = _recentLocalities
+          .where((item) => removeDiacritics(item).contains(query))
+          .toList();
+      final filteredOptions = normalizedOptions
+          .where((item) => removeDiacritics(item).contains(query))
+          .toList();
+
+      final merged = <String>[];
+      final mergedIndexByKey = <String, int>{};
+
+      for (final item in filteredRecent) {
+        final key = removeDiacritics(item);
+        if (!mergedIndexByKey.containsKey(key)) {
+          mergedIndexByKey[key] = merged.length;
+          merged.add(item);
+        }
+      }
+
+      for (final item in filteredOptions) {
+        final key = removeDiacritics(item);
+        final existingIndex = mergedIndexByKey[key];
+        if (existingIndex == null) {
+          mergedIndexByKey[key] = merged.length;
+          merged.add(item);
+        }
+      }
+
+      return merged;
+    } catch (e) {
+      debugPrint('Error fetching locality options: $e');
+      return _recentLocalities.where((item) => removeDiacritics(item).contains(query)).toList();
+    }
+  }
+
   void _submitForm() async {
     final nestProvider = Provider.of<NestProvider>(context, listen: false);
 
@@ -424,8 +553,8 @@ class AddNestScreenState extends State<AddNestScreen> {
         final updatedNest = widget.nest!.copyWith(
           fieldNumber: _fieldNumberController.text,
           speciesName: _speciesNameController.text,
-          localityName: _fieldLocalityEditingController.text,
-          support: _fieldSupportEditingController.text,
+          localityName: _localityNameController.text,
+          support: _supportController.text,
           heightAboveGround: double.tryParse(_heightAboveGroundController.text),
           male: _maleController.text,
           female: _femaleController.text,
@@ -454,10 +583,10 @@ class AddNestScreenState extends State<AddNestScreen> {
         final newNest = Nest(
           fieldNumber: _fieldNumberController.text,
           speciesName: _speciesNameController.text,
-          localityName: _fieldLocalityEditingController.text,
+          localityName: _localityNameController.text,
           longitude: _currentPosition?.longitude,
           latitude: _currentPosition?.latitude,
-          support: _fieldSupportEditingController.text,
+          support: _supportController.text,
           heightAboveGround: double.tryParse(_heightAboveGroundController.text),
           male: _maleController.text,
           female: _femaleController.text,

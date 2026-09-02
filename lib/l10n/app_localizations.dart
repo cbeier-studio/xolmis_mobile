@@ -122,6 +122,12 @@ abstract class AppLocalizations {
   /// **'{howMany, plural, one{Journal entry} other{Journal entries}}'**
   String journalEntries(int howMany);
 
+  /// Points of occurrence label
+  ///
+  /// In en, this message translates to:
+  /// **'Points of occurrence'**
+  String get pointsOfOccurrence;
+
   /// Settings title and button label
   ///
   /// In en, this message translates to:
@@ -596,6 +602,12 @@ abstract class AppLocalizations {
   /// **'Generate ID'**
   String get generateId;
 
+  /// Field label for expedition name used in ID generation
+  ///
+  /// In en, this message translates to:
+  /// **'Expedition'**
+  String get expedition;
+
   /// Field label asking the inventory site name or abbreviation to generate the ID
   ///
   /// In en, this message translates to:
@@ -701,8 +713,14 @@ abstract class AppLocalizations {
   /// Time in minutes field label
   ///
   /// In en, this message translates to:
-  /// **'Time (10 minutes intervals)'**
+  /// **'Minutes'**
   String get timeMinutes;
+
+  /// Time in seconds field label
+  ///
+  /// In en, this message translates to:
+  /// **'Seconds'**
+  String get timeSeconds;
 
   /// Species counted field label
   ///

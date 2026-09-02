@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:xolmis/generated/l10n.dart';
 
 /// Displays a ranked list of species with their total records.

@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -187,7 +187,7 @@ class _NestRevisionsTabState extends State<NestRevisionsTab>
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      DateFormat('dd/MM/yyyy HH:mm:ss',).format(revision.sampleTime!),
+                      DateFormat('dd/MM/yyyy HH:mm',).format(revision.sampleTime!),
                       style: TextTheme.of(innerContext).bodyLarge,
                     ),
                   ),
@@ -326,7 +326,7 @@ class NestRevisionGridItem extends StatelessWidget {
               children: [
                 Text(
                   DateFormat(
-                    'dd/MM/yyyy HH:mm:ss',
+                    'dd/MM/yyyy HH:mm',
                   ).format(revision.sampleTime!),
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
@@ -389,13 +389,26 @@ class RevisionListItemState extends State<RevisionListItem> {
               ),
             );
           } else {
-            return const Icon(Icons.hide_image_outlined);
+            return Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                border: Border.all(color: Colors.grey.shade400),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Icon(
+                Icons.image_not_supported_outlined,
+                color: Colors.grey.shade500,
+                size: 24,
+              ),
+            );
           }
         },
       ),
       title: Text(
         DateFormat(
-          'dd/MM/yyyy HH:mm:ss',
+          'dd/MM/yyyy HH:mm',
         ).format(widget.nestRevision.sampleTime!),
       ),
       subtitle: Column(

@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../../data/models/inventory.dart';
@@ -114,6 +114,7 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
                             Expanded(
                               child: DropdownButtonFormField<PrecipitationType>(
                                   value: _selectedPrecipitation,
+                                  isExpanded: true,
                                   decoration: InputDecoration(
                                     labelText: '${S.of(context).precipitation} *',
                                     helperText: S.of(context).requiredField,
@@ -122,7 +123,10 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
                                   items: PrecipitationType.values.map((precipitation) {
                                     return DropdownMenuItem(
                                       value: precipitation,
-                                      child: Text(precipitationTypeFriendlyNames[precipitation]!),
+                                      child: Text(
+                                        precipitationTypeFriendlyNames[precipitation]!,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                                     );
                                   }).toList(),
                                   onChanged: (PrecipitationType? newValue) {

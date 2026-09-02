@@ -30,6 +30,9 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get pointsOfOccurrence => 'Points of occurrence';
+
+  @override
   String get settings => 'Settings';
 
   @override
@@ -314,6 +317,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get generateId => 'Generate ID';
 
   @override
+  String get expedition => 'Expedition';
+
+  @override
   String get siteAbbreviation => 'Site name or abbreviation';
 
   @override
@@ -368,7 +374,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get speciesAccumulated => 'Species accumulated';
 
   @override
-  String get timeMinutes => 'Time (10 minutes intervals)';
+  String get timeMinutes => 'Minutes';
+
+  @override
+  String get timeSeconds => 'Seconds';
 
   @override
   String get speciesCounted => 'Species counted';

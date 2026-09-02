@@ -29,6 +29,11 @@
             }
         }
     },
+    "pointsOfOccurrence": "Points of occurrence",
+    "@pointsOfOccurrence": {
+        "type": "text",
+        "description": "Points of occurrence label"
+    },
     "settings": "Settings",
     "@settings": {
         "type": "text",
@@ -484,6 +489,11 @@
         "type": "text",
         "description": "Title of dialog to generate an inventory ID"
     },
+    "expedition": "Expedition",
+    "@expedition": {
+        "type": "text",
+        "description": "Field label for expedition name used in ID generation"
+    },
     "siteAbbreviation": "Site name or abbreviation",
     "@siteAbbreviation": {
         "type": "text",
@@ -574,10 +584,15 @@
         "type": "text",
         "description": "Species accumulated field label"
     },
-    "timeMinutes": "Time (10 minutes intervals)",
+    "timeMinutes": "Minutes",
     "@timeMinutes": {
         "type": "text",
         "description": "Time in minutes field label"
+    },
+    "timeSeconds": "Seconds",
+    "@timeSeconds": {
+        "type": "text",
+        "description": "Time in seconds field label"
     },
     "speciesCounted": "Species counted",
     "@speciesCounted": {

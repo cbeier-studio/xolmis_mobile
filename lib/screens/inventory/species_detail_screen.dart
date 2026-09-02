@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 
@@ -128,38 +129,44 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.species.name),
-        actions: [
-          // Option to view species info
-          IconButton(
-            icon: const Icon(Icons.info_outlined),
-            onPressed: () {
-              _showSpeciesInfoDialog(context, widget.species);
-            },
-          ),
-        ],
       ),
-      body: Consumer<PoiProvider>(
-              builder: (context, poiProvider, child) {
-                // Get the POIs for the species
-                final pois = poiProvider.getPoisForSpecies(widget.species.id ?? 0);
-                return RefreshIndicator(
-                  onRefresh: () async {
-                    // Refresh the POIs
-                    poiProvider.getPoisForSpecies(widget.species.id ?? 0);
-                  },
-                  child: Column(
-                    children: [
-                      Expanded(
-                          child: pois.isEmpty
-                            // Show message when there are no POIs
-                              ? Center(child: Text(S.of(context).noPoiFound),)
-                              : _buildListView(pois, poiProvider)
-                        ), 
-                    ],
-                  ),                     
-                );
-              }
+      body: Column(
+        children: [
+          _buildInfoPanel(),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                S.of(context).pointsOfOccurrence,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+              ),
+            ),
           ),
+          Expanded(
+            child: Consumer<PoiProvider>(
+                builder: (context, poiProvider, child) {
+                  // Get the POIs for the species
+                  final pois = poiProvider.getPoisForSpecies(widget.species.id ?? 0);
+                  return RefreshIndicator(
+                    onRefresh: () async {
+                      // Refresh the POIs
+                      poiProvider.getPoisForSpecies(widget.species.id ?? 0);
+                    },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                            child: _buildListView(pois, poiProvider)
+                          ),
+                      ],
+                    ),
+                  );
+                }
+            ),
+          ),
+      ],
+      ),
       // FAB to add a new POI
       floatingActionButton: FloatingActionButton(
         tooltip: S.of(context).newPoi,
@@ -229,86 +236,58 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
 
   // Build a list view for small screens
   Widget _buildListView(List<Poi> pois, PoiProvider poiProvider) {
-    return ListView.builder(
-      itemCount: pois.length,
-      itemBuilder: (context, index) {
-        final poi = pois[index];
-        return Dismissible(
-          key: ValueKey(poi),
-          direction: DismissDirection.endToStart,
-          background: Container(
-            color: Colors.red,
-            alignment: Alignment.centerRight,
-            padding: const EdgeInsets.only(right: 20.0),
-            child: const Icon(Icons.delete_outlined, color: Colors.white),
-          ),
-          confirmDismiss: (direction) async {
-            return await _showDeleteConfirmationDialog(context);
-          },
-          onDismissed: (direction) async {
-            // Delete the POI from database
-            await poiProvider.removePoi(widget.species.id!, poi.id!);
-          },
-          child: PoiListItem(
-            poi: poi,
-            onLongPress: () => _showBottomSheet(context, poi),
-          ),
-        );
-      },
-    );
-  }
-
-  void _showSpeciesInfoDialog(BuildContext context, Species species) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(S.of(context).speciesInfo),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: [
-                ListTile(
-                  title: Text('${species.count} ${S.of(context).individual(species.count)}'),
-                  subtitle: Text(S.of(context).count),
-                ),
-                ListTile(
-                  title: Text('${species.sampleTime}'),
-                  subtitle: Text(S.of(context).recordTime),
-                ),
-                ListTile(
-                  title: Text(species.isOutOfInventory ? S.of(context).outOfSample : S.of(context).withinSample),
-                ),
-                ListTile(
-                  title: Text('${species.distance}'),
-                  subtitle: Text(S.current.distance),
-                ),
-                ListTile(
-                  title: Text('${species.flightHeight}'),
-                  subtitle: Text(S.current.flightHeight),
-                ),
-                ListTile(
-                  title: Text('${species.flightDirection}'),
-                  subtitle: Text(S.current.flightDirection),
-                ),
-                if (species.notes != null && species.notes!.isNotEmpty)
-                  ListTile(
-                    title: Text(species.notes ?? ''),
-                    subtitle: Text(S.of(context).notes),
-                  ),
-              ],
+    if (pois.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+                Icons.location_on_outlined,
+                size: 48,
+                color: Theme.of(context).colorScheme.surfaceDim
             ),
-          ),
-          actions: [
-            TextButton(
+            const SizedBox(height: 8),
+            Text(S.of(context).noPoiFound),
+            const SizedBox(height: 8),
+            ActionChip(
+              label: Text(S.of(context).addPoi),
+              avatar: const Icon(Icons.add_outlined),
               onPressed: () {
-                Navigator.of(context).pop();
+                _addPoi();
               },
-              child: Text(S.of(context).close),
             ),
           ],
-        );
-      },
-    );
+        ),
+      );
+    } else {
+      return ListView.builder(
+        itemCount: pois.length,
+        itemBuilder: (context, index) {
+          final poi = pois[index];
+          return Dismissible(
+            key: ValueKey(poi),
+            direction: DismissDirection.endToStart,
+            background: Container(
+              color: Colors.red,
+              alignment: Alignment.centerRight,
+              padding: const EdgeInsets.only(right: 20.0),
+              child: const Icon(Icons.delete_outlined, color: Colors.white),
+            ),
+            confirmDismiss: (direction) async {
+              return await _showDeleteConfirmationDialog(context);
+            },
+            onDismissed: (direction) async {
+              // Delete the POI from database
+              await poiProvider.removePoi(widget.species.id!, poi.id!);
+            },
+            child: PoiListItem(
+              poi: poi,
+              onLongPress: () => _showBottomSheet(context, poi),
+            ),
+          );
+        },
+      );
+    }
   }
 
   // Show the dialog to edit POI notes
@@ -352,6 +331,85 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
           ],
         );
       },
+    );
+  }
+
+  Widget _buildInfoPanel() {
+    final species = widget.species;
+    return Card(
+      margin: const EdgeInsets.all(8.0),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                if (species.sampleTime != null)
+                  Text(
+                    DateFormat('dd/MM/yyyy HH:mm:ss').format(species.sampleTime!),
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                Text(
+                  species.isOutOfInventory ? S.of(context).outOfSample : S.of(context).withinSample,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: species.isOutOfInventory ? Colors.orange : Colors.green,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              textBaseline: TextBaseline.alphabetic,
+              children: [
+            Text(
+              '${species.count} ${S.of(context).individual(species.count)}',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+                  if (species.distance != null) ...[
+                    const SizedBox(width: 8),
+                    const Text('•'),
+                    const SizedBox(width: 8),
+                    _buildInfoItem(Icons.straighten, '${species.distance} m', S.current.distance),
+                  ],
+                  if (species.flightHeight != null) ...[
+                    const SizedBox(width: 8),
+                    const Text('•'),
+                    const SizedBox(width: 4),
+                    _buildInfoItem(Icons.height, '${species.flightHeight} m', S.current.flightHeight),
+                  ],
+                  if (species.flightDirection != null && species.flightDirection!.isNotEmpty) ...[
+                    const SizedBox(width: 8),
+                    // const Text('•'),
+                    // const SizedBox(width: 8),
+                    Text(species.flightDirection!, style: Theme.of(context).textTheme.bodyMedium),
+                  ],
+            ],
+            ),
+            if (species.notes != null && species.notes!.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              Text(
+                species.notes!,
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInfoItem(IconData icon, String value, String label) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, size: 16, color: Theme.of(context).colorScheme.primary),
+        const SizedBox(width: 4),
+        Text(value, style: Theme.of(context).textTheme.bodyMedium),
+      ],
     );
   }
 }

@@ -28,6 +28,11 @@
             }
         }
     },
+  "pointsOfOccurrence": "Pontos de ocorrência",
+  "@pointsOfOccurrence": {
+    "type": "text",
+    "description": "Points of occurrence label"
+  },
     "settings": "Configurações",
     "general": "Geral",
     "@general": {
@@ -311,6 +316,7 @@
     "selectInventoryType": "Por favor, selecione um tipo de inventário",
     "inventoryId": "ID do Inventário",
     "generateId": "Gerar ID",
+    "expedition": "Expedição",
     "siteAbbreviation": "Nome ou sigla do local",
     "optional": "* opcional",
     "insertInventoryId": "Por favor, insira uma ID para o inventário",
@@ -357,10 +363,15 @@
         "type": "text",
         "description": "Species accumulated field label"
     },
-    "timeMinutes": "Tempo (intervalos de 10 minutos)",
+    "timeMinutes": "Minutos",
     "@timeMinutes": {
         "type": "text",
         "description": "Time in minutes field label"
+    },
+    "timeSeconds": "Segundos",
+    "@timeSeconds": {
+        "type": "text",
+        "description": "Time in seconds field label"
     },
     "speciesCounted": "Número de espécies",
     "@speciesCounted": {

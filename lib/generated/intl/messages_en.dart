@@ -525,6 +525,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "errorUnexpectedJournalsArrayItem": m23,
     "errorUnexpectedNestsArrayItem": m24,
     "errorUnexpectedSpecimensArrayItem": m25,
+    "expedition": MessageLookupByLibrary.simpleMessage("Expedition"),
     "export": MessageLookupByLibrary.simpleMessage("Export"),
     "exportAll": MessageLookupByLibrary.simpleMessage("Export all"),
     "exportAllWhat": m26,
@@ -947,6 +948,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "platinumSponsor": MessageLookupByLibrary.simpleMessage("Platinum Sponsor"),
     "poi": MessageLookupByLibrary.simpleMessage("POI"),
     "pointCounts": MessageLookupByLibrary.simpleMessage("Point counts"),
+    "pointsOfOccurrence": MessageLookupByLibrary.simpleMessage(
+      "Points of occurrence",
+    ),
     "poisRecorded": m53,
     "precipitation": MessageLookupByLibrary.simpleMessage("Precipitation"),
     "precipitationDrizzle": MessageLookupByLibrary.simpleMessage("Drizzle"),
@@ -1173,9 +1177,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "tags": MessageLookupByLibrary.simpleMessage("Tags"),
     "temperature": MessageLookupByLibrary.simpleMessage("Temperature"),
     "timeFound": MessageLookupByLibrary.simpleMessage("Date and time found"),
-    "timeMinutes": MessageLookupByLibrary.simpleMessage(
-      "Time (10 minutes intervals)",
-    ),
+    "timeMinutes": MessageLookupByLibrary.simpleMessage("Minutes"),
+    "timeSeconds": MessageLookupByLibrary.simpleMessage("Seconds"),
     "timedQualitativeLists": MessageLookupByLibrary.simpleMessage(
       "Timed qualitative lists",
     ),

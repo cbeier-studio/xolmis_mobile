@@ -1,10 +1,9 @@
 import 'package:fleather/fleather.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'data/database/database_helper.dart';
 import 'data/daos/inventory_dao.dart';
@@ -20,6 +19,9 @@ import 'data/daos/app_image_dao.dart';
 import 'data/daos/journal_dao.dart';
 import 'data/daos/tag_dao.dart';
 import 'data/daos/observer_dao.dart';
+
+import 'services/location_service.dart';
+import 'services/location_service_impl.dart';
 
 import 'providers/inventory_provider.dart';
 import 'providers/species_provider.dart';
@@ -89,6 +91,8 @@ Future<void> main() async {
     final journalDao = FieldJournalDao(databaseHelper);
     final tagDao = TagDao(databaseHelper);
 
+    final locationService = GeolocatorServiceImpl();
+
     final appImageProvider = AppImageProvider(appImageDao);
     final poiProvider = PoiProvider(poiDao);
     final speciesProvider = SpeciesProvider(speciesDao);
@@ -123,6 +127,8 @@ Future<void> main() async {
       journalDao: journalDao,
       tagDao: tagDao,
       observerDao: observerDao,
+
+      locationService: locationService,
 
       inventoryProvider: inventoryProvider,
       speciesProvider: speciesProvider,
@@ -164,6 +170,7 @@ class AppDependencies {
   final FieldJournalDao journalDao;
   final TagDao tagDao;
   final ObserverDao observerDao;
+  final LocationService locationService;
   final InventoryProvider inventoryProvider;
   final SpeciesProvider speciesProvider;
   final PoiProvider poiProvider;
@@ -194,6 +201,7 @@ class AppDependencies {
     required this.journalDao,
     required this.tagDao,
     required this.observerDao,
+    required this.locationService,
     required this.inventoryProvider,
     required this.speciesProvider,
     required this.poiProvider,
@@ -243,6 +251,7 @@ class MyApp extends StatelessWidget {
         Provider.value(value: dependencies.journalDao),
         Provider.value(value: dependencies.tagDao),
         Provider.value(value: dependencies.observerDao),
+        Provider.value(value: dependencies.locationService),
       ],
       child: Consumer<ThemeModel>(
         builder: (context, themeModel, child) {
@@ -250,9 +259,7 @@ class MyApp extends StatelessWidget {
             localizationsDelegates: [
               S.delegate,
               FleatherLocalizations.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
+              ...GlobalMaterialLocalizations.delegates,
             ],
             supportedLocales: S.delegate.supportedLocales,
             localeResolutionCallback: (Locale? locale, Iterable<Locale> supportedLocales) {

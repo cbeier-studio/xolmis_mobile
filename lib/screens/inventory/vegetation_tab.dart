@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -171,7 +171,7 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      DateFormat('dd/MM/yyyy HH:mm:ss').format(vegetation.sampleTime!),
+                      DateFormat('dd/MM/yyyy HH:mm').format(vegetation.sampleTime!),
                       style: TextTheme.of(innerContext).bodyLarge,
                     ),
                   ),
@@ -290,7 +290,7 @@ class VegetationGridItem extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      DateFormat('dd/MM/yyyy HH:mm:ss').format(vegetation.sampleTime!),
+                      DateFormat('dd/MM/yyyy HH:mm').format(vegetation.sampleTime!),
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     Text('${vegetation.latitude}; ${vegetation.longitude}'),
@@ -348,7 +348,20 @@ class VegetationListItemState extends State<VegetationListItem> {
               ),
             );
           } else {
-            return const Icon(Icons.hide_image_outlined);
+            return Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                border: Border.all(color: Colors.grey.shade400),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Icon(
+                Icons.image_not_supported_outlined,
+                color: Colors.grey.shade500,
+                size: 24,
+              ),
+            );
           }
         },
       ),
