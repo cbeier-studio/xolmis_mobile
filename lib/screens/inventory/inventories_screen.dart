@@ -629,7 +629,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog.adaptive(
+        return AlertDialog(
           title: Text(S.of(context).confirmDelete),
           content: Text(
             S
@@ -648,6 +648,9 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
               child: Text(S.of(context).cancel),
             ),
             TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: Theme.of(context).colorScheme.error,
+              ),
               onPressed: () async {
                 // Call the function to delete species
                 for (final id in selectedInventories) {
@@ -2284,12 +2287,10 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog.adaptive(
+        return AlertDialog(
           title: Text(S.of(context).confirmDelete),
           content: Text(
-            S
-                .of(context)
-                .confirmDeleteMessage(1, "male", S.of(context).inventory(1)),
+            S.of(context).confirmDeleteMessage(1, "male", S.of(context).inventory(1)),
           ),
           actions: <Widget>[
             TextButton(
@@ -2299,6 +2300,9 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
               child: Text(S.of(context).cancel),
             ),
             TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: Theme.of(context).colorScheme.error,
+              ),
               onPressed: () async {
                 Navigator.of(context).pop(true);
                 // Call the function to delete species

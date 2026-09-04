@@ -50,7 +50,7 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
     return await showDialog<bool>(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog.adaptive(
+        return AlertDialog(
           title: Text(S.of(context).confirmDelete),
           content: Text(S.of(context).confirmDeleteMessage(2, "male", S.of(context).vegetationData.toLowerCase())),
           actions: <Widget>[
@@ -59,6 +59,9 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
               child: Text(S.of(context).cancel),
             ),
             TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: Theme.of(context).colorScheme.error,
+              ),
               onPressed: () => Navigator.of(context).pop(true),
               child: Text(S.of(context).delete),
             ),
@@ -317,7 +320,7 @@ class VegetationGridItem extends StatelessWidget {
   }
 }
 
-class VegetationListItem extends StatefulWidget {
+class VegetationListItem extends StatelessWidget {
   final Vegetation vegetation;
   final VoidCallback onLongPress;
 
@@ -328,94 +331,92 @@ class VegetationListItem extends StatefulWidget {
   });
 
   @override
-  VegetationListItemState createState() => VegetationListItemState();
-}
-
-class VegetationListItemState extends State<VegetationListItem> {
-  @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: FutureBuilder<List<AppImage>>(
-        future: Provider.of<AppImageProvider>(context, listen: false)
-            .fetchImagesForVegetation(widget.vegetation.id ?? 0),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator(
-              year2023: false,
-            );
-          } else if (snapshot.hasError) {
-            return const Icon(Icons.error);
-          } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-            return ClipRRect(
-              borderRadius: BorderRadius.circular(4),
-              child: Image.file(
-                File(snapshot.data!.first.imagePath),
-                width: 50,
-                height: 50,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
+    return Consumer<AppImageProvider>(
+      builder: (context, appImageProvider, child) {
+        return ListTile(
+          leading: FutureBuilder<List<AppImage>>(
+            future: appImageProvider.fetchImagesForVegetation(vegetation.id ?? 0, notify: false),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator(
+                  year2023: false,
+                );
+              } else if (snapshot.hasError) {
+                return const Icon(Icons.error);
+              } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                return ClipRRect(
+                  borderRadius: BorderRadius.circular(4),
+                  child: Image.file(
+                    File(snapshot.data!.first.imagePath),
                     width: 50,
                     height: 50,
-                      decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      border: Border.all(color: Colors.grey.shade400),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                      child: Icon(
-                        Icons.error,
-                        color: Theme.of(context).colorScheme.error,
-                        size: 24,
-                      ),
-                  );
-                },
-              ),
-            );
-          } else {
-            return Container(
-              width: 50,
-              height: 50,
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                border: Border.all(color: Colors.grey.shade400),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: Icon(
-                Icons.image_not_supported_outlined,
-                color: Colors.grey.shade500,
-                size: 24,
-              ),
-            );
-          }
-        },
-      ),
-      title: Text(DateFormat('dd/MM/yyyy HH:mm').format(widget.vegetation.sampleTime!)),
-      subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Text('${widget.vegetation.latitude}; ${widget.vegetation.longitude}'),
-          widget.vegetation.herbsDistribution == DistributionType.disNone
-              ? Text('${S.of(context).herbs}: ${widget.vegetation.herbsDistribution?.index ?? 0}')
-              : Text('${S.of(context).herbs}: ${widget.vegetation.herbsDistribution?.index ?? 0}; ${widget.vegetation.herbsProportion}%; ${widget.vegetation.herbsHeight} cm'),
-          widget.vegetation.shrubsDistribution == DistributionType.disNone
-              ? Text('${S.of(context).shrubs}: ${widget.vegetation.shrubsDistribution?.index ?? 0}')
-              : Text('${S.of(context).shrubs}: ${widget.vegetation.shrubsDistribution?.index ?? 0}; ${widget.vegetation.shrubsProportion}%; ${widget.vegetation.shrubsHeight} cm'),
-          widget.vegetation.treesDistribution == DistributionType.disNone
-              ? Text('${S.of(context).trees}: ${widget.vegetation.treesDistribution?.index ?? 0}')
-              : Text('${S.of(context).trees}: ${widget.vegetation.treesDistribution?.index ?? 0}; ${widget.vegetation.treesProportion}%; ${widget.vegetation.treesHeight} cm'),
-          if (widget.vegetation.notes != null && widget.vegetation.notes != '')
-            Text('${widget.vegetation.notes}'),
-        ],
-      ),
-      onLongPress: widget.onLongPress,
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => AppImageScreen(
-              vegetationId: widget.vegetation.id,
-            ),
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        width: 50,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          border: Border.all(color: Colors.grey.shade400),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Icon(
+                          Icons.error,
+                          color: Theme.of(context).colorScheme.error,
+                          size: 24,
+                        ),
+                      );
+                    },
+                  ),
+                );
+              } else {
+                return Container(
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    border: Border.all(color: Colors.grey.shade400),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Icon(
+                    Icons.image_not_supported_outlined,
+                    color: Colors.grey.shade500,
+                    size: 24,
+                  ),
+                );
+              }
+            },
           ),
+          title: Text(DateFormat('dd/MM/yyyy HH:mm').format(vegetation.sampleTime!)),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Text('${vegetation.latitude}; ${vegetation.longitude}'),
+              vegetation.herbsDistribution == DistributionType.disNone
+                  ? Text('${S.of(context).herbs}: ${vegetation.herbsDistribution?.index ?? 0}')
+                  : Text('${S.of(context).herbs}: ${vegetation.herbsDistribution?.index ?? 0}; ${vegetation.herbsProportion}%; ${vegetation.herbsHeight} cm'),
+              vegetation.shrubsDistribution == DistributionType.disNone
+                  ? Text('${S.of(context).shrubs}: ${vegetation.shrubsDistribution?.index ?? 0}')
+                  : Text('${S.of(context).shrubs}: ${vegetation.shrubsDistribution?.index ?? 0}; ${vegetation.shrubsProportion}%; ${vegetation.shrubsHeight} cm'),
+              vegetation.treesDistribution == DistributionType.disNone
+                  ? Text('${S.of(context).trees}: ${vegetation.treesDistribution?.index ?? 0}')
+                  : Text('${S.of(context).trees}: ${vegetation.treesDistribution?.index ?? 0}; ${vegetation.treesProportion}%; ${vegetation.treesHeight} cm'),
+              if (vegetation.notes != null && vegetation.notes != '')
+                Text('${vegetation.notes}'),
+            ],
+          ),
+          onLongPress: onLongPress,
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AppImageScreen(
+                  vegetationId: vegetation.id,
+                ),
+              ),
+            );
+          },
         );
       },
     );

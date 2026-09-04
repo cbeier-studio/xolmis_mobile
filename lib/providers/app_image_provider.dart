@@ -19,59 +19,67 @@ class AppImageProvider with ChangeNotifier {
   }
 
   /// Loads all images associated with a vegetation record.
-  Future<List<AppImage>> fetchImagesForVegetation(int vegetationId) async {
-    _images = await _appImageDao.getImagesForVegetation(vegetationId);
-    notifyListeners();
-    return _images;
+  Future<List<AppImage>> fetchImagesForVegetation(int vegetationId, {bool notify = true}) async {
+    final result = await _appImageDao.getImagesForVegetation(vegetationId);
+    if (notify) {
+      _images = result;
+      notifyListeners();
+    }
+    return result;
   }
 
   /// Persists [appImage] for a vegetation record and refreshes the local cache.
   Future<void> addImageToVegetation(AppImage appImage, int vegetationId) async {
     await _appImageDao.insertImageToVegetation(appImage, vegetationId);
-    _images = await _appImageDao.getImagesForVegetation(vegetationId);
-    notifyListeners();
+    await fetchImagesForVegetation(vegetationId);
   }
 
   /// Loads all images associated with a nest revision.
-  Future<List<AppImage>> fetchImagesForNestRevision(int revisionId) async {
-    _images = await _appImageDao.getImagesForNestRevision(revisionId);
-    notifyListeners();
-    return _images;
+  Future<List<AppImage>> fetchImagesForNestRevision(int revisionId, {bool notify = true}) async {
+    final result = await _appImageDao.getImagesForNestRevision(revisionId);
+    if (notify) {
+      _images = result;
+      notifyListeners();
+    }
+    return result;
   }
 
   /// Persists [appImage] for a nest revision and refreshes the local cache.
   Future<void> addImageToNestRevision(AppImage appImage, int revisionId) async {
     await _appImageDao.insertImageToNestRevision(appImage, revisionId);
-    _images = await _appImageDao.getImagesForNestRevision(revisionId);
-    notifyListeners();
+    await fetchImagesForNestRevision(revisionId);
   }
 
   /// Loads all images associated with an egg record.
-  Future<List<AppImage>> fetchImagesForEgg(int eggId) async {
-    _images = await _appImageDao.getImagesForEgg(eggId);
-    notifyListeners();
-    return _images;
+  Future<List<AppImage>> fetchImagesForEgg(int eggId, {bool notify = true}) async {
+    final result = await _appImageDao.getImagesForEgg(eggId);
+    if (notify) {
+      _images = result;
+      notifyListeners();
+    }
+    return result;
   }
 
   /// Persists [appImage] for an egg record and refreshes the local cache.
   Future<void> addImageToEgg(AppImage appImage, int eggId) async {
     await _appImageDao.insertImageToEgg(appImage, eggId);
-    _images = await _appImageDao.getImagesForEgg(eggId);
-    notifyListeners();
+    await fetchImagesForEgg(eggId);
   }
 
   /// Loads all images associated with a specimen record.
-  Future<List<AppImage>> fetchImagesForSpecimen(int specimenId) async {
-    _images = await _appImageDao.getImagesForSpecimen(specimenId);
-    notifyListeners();
-    return _images;
+  Future<List<AppImage>> fetchImagesForSpecimen(int specimenId, {bool notify = true}) async {
+    final result = await _appImageDao.getImagesForSpecimen(specimenId);
+    if (notify) {
+      _images = result;
+      notifyListeners();
+    }
+    return result;
   }
 
   /// Persists [appImage] for a specimen record and refreshes the local cache.
   Future<void> addImageToSpecimen(AppImage appImage, int specimenId) async {
     await _appImageDao.insertImageToSpecimen(appImage, specimenId);
-    _images = await _appImageDao.getImagesForSpecimen(specimenId);
-    notifyListeners();
+    await fetchImagesForSpecimen(specimenId);
   }
 
   /// Updates an existing image record in storage and in memory.

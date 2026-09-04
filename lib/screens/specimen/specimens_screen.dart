@@ -551,12 +551,10 @@ class SpecimensScreenState extends State<SpecimensScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog.adaptive(
+        return AlertDialog(
           title: Text(S.of(context).confirmDelete),
           content: Text(
-            S
-                .of(context)
-                .confirmDeleteMessage(
+            S.of(context).confirmDeleteMessage(
                   selectedSpecimens.length,
                   "male",
                   S.of(context).specimens(selectedSpecimens.length),
@@ -570,6 +568,9 @@ class SpecimensScreenState extends State<SpecimensScreen> {
               child: Text(S.of(context).cancel),
             ),
             TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: Theme.of(context).colorScheme.error,
+              ),
               onPressed: () async {
                 // Call the function to delete species
                 for (final id in selectedSpecimens) {
@@ -1429,7 +1430,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
     );
   }
 
-  ListTile specimenListTileItem(
+  Widget specimenListTileItem(
     List<Specimen> filteredSpecimens,
     int index,
     BuildContext context,
@@ -1443,114 +1444,115 @@ class SpecimensScreenState extends State<SpecimensScreen> {
     );
     final isDetailSelected = selectedSpecimenId == specimen.id;
 
-    return ListTile(
-      leading: Checkbox(
-        value: isSelected,
-        onChanged: (bool? value) {
-          setState(() {
-            if (value == true) {
-              selectedSpecimens.add(specimen.id!);
-            } else {
-              selectedSpecimens.remove(specimen.id);
-            }
-          });
-        },
-      ),
-      trailing: FutureBuilder<List<AppImage>>(
-        future: Provider.of<AppImageProvider>(
-          context,
-          listen: false,
-        ).fetchImagesForSpecimen(specimen.id ?? 0),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator(year2023: false);
-          } else if (snapshot.hasError) {
-            return const Icon(Icons.error);
-          } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-            return ClipRRect(
-              borderRadius: BorderRadius.circular(4),
-              child: Image.file(
-                File(snapshot.data!.first.imagePath),
-                width: 50,
-                height: 50,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
+    return Consumer<AppImageProvider>(
+      builder: (context, appImageProvider, child) {
+        return ListTile(
+          leading: Checkbox(
+            value: isSelected,
+            onChanged: (bool? value) {
+              setState(() {
+                if (value == true) {
+                  selectedSpecimens.add(specimen.id!);
+                } else {
+                  selectedSpecimens.remove(specimen.id);
+                }
+              });
+            },
+          ),
+          trailing: FutureBuilder<List<AppImage>>(
+            future: appImageProvider.fetchImagesForSpecimen(specimen.id ?? 0, notify: false),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator(year2023: false);
+              } else if (snapshot.hasError) {
+                return const Icon(Icons.error);
+              } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                return ClipRRect(
+                  borderRadius: BorderRadius.circular(4),
+                  child: Image.file(
+                    File(snapshot.data!.first.imagePath),
                     width: 50,
                     height: 50,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      border: Border.all(color: Colors.grey.shade400),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Icon(
-                      Icons.error,
-                      color: Theme.of(context).colorScheme.error,
-                      size: 24,
-                    ),
-                  );
-                },
-              ),
-            );
-          } else {
-            return Container(
-              width: 50,
-              height: 50,
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                border: Border.all(color: Colors.grey.shade400),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: Icon(
-                Icons.image_not_supported_outlined,
-                color: Colors.grey.shade500,
-                size: 24,
-              ),
-            );
-          }
-        },
-      ),
-      title: Text(
-              specimen.fieldNumber,
-              overflow: TextOverflow.ellipsis,
-            ),
-      subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            specimen.speciesName!,
-            style: TextStyle(
-                fontStyle: FontStyle.italic,
-                color: allSpeciesNames.contains(specimen.speciesName)
-                  ? null
-                  : Colors.red,
-            ),
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        width: 50,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          border: Border.all(color: Colors.grey.shade400),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Icon(
+                          Icons.error,
+                          color: Theme.of(context).colorScheme.error,
+                          size: 24,
+                        ),
+                      );
+                    },
+                  ),
+                );
+              } else {
+                return Container(
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    border: Border.all(color: Colors.grey.shade400),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Icon(
+                    Icons.image_not_supported_outlined,
+                    color: Colors.grey.shade500,
+                    size: 24,
+                  ),
+                );
+              }
+            },
           ),
-          Text(specimen.locality!, overflow: TextOverflow.ellipsis),
-          Text('${specimen.longitude}; ${specimen.latitude}'),
-          Text(DateFormat('dd/MM/yyyy HH:mm').format(specimen.sampleTime!)),
-          _buildSpecimenTypePill(context, specimen.type),
-        ],
-      ),
-      selected: isLargeScreen ? isDetailSelected : isSelected,
-      selectedTileColor:
-          isLargeScreen
-              ? Theme.of(context).colorScheme.secondaryContainer
-              : Theme.of(context).colorScheme.primaryContainer,
-      onLongPress: () => _showBottomSheet(context, specimen),
-      onTap: () {
-        if (isLargeScreen) {
-          setState(() {
-            _selectedSpecimen = specimen;
-          });
-        } else {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AppImageScreen(specimenId: specimen.id),
-            ),
-          );
-        }
+          title: Text(
+                  specimen.fieldNumber,
+                  overflow: TextOverflow.ellipsis,
+                ),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                specimen.speciesName!,
+                style: TextStyle(
+                    fontStyle: FontStyle.italic,
+                    color: allSpeciesNames.contains(specimen.speciesName)
+                      ? null
+                      : Colors.red,
+                ),
+              ),
+              Text(specimen.locality!, overflow: TextOverflow.ellipsis),
+              Text('${specimen.longitude}; ${specimen.latitude}'),
+              Text(DateFormat('dd/MM/yyyy HH:mm').format(specimen.sampleTime!)),
+              _buildSpecimenTypePill(context, specimen.type),
+            ],
+          ),
+          selected: isLargeScreen ? isDetailSelected : isSelected,
+          selectedTileColor:
+              isLargeScreen
+                  ? Theme.of(context).colorScheme.secondaryContainer
+                  : Theme.of(context).colorScheme.primaryContainer,
+          onLongPress: () => _showBottomSheet(context, specimen),
+          onTap: () {
+            if (isLargeScreen) {
+              setState(() {
+                _selectedSpecimen = specimen;
+              });
+            } else {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AppImageScreen(specimenId: specimen.id),
+                ),
+              );
+            }
+          },
+        );
       },
     );
   }
@@ -1724,7 +1726,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                               showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
-                                  return AlertDialog.adaptive(
+                                  return AlertDialog(
                                     title: Text(S.of(context).confirmDelete),
                                     content: Text(
                                       S
@@ -1743,6 +1745,11 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                                         child: Text(S.of(context).cancel),
                                       ),
                                       TextButton(
+                                        style: TextButton.styleFrom(
+                                          foregroundColor: Theme.of(context)
+                                              .colorScheme
+                                              .error,
+                                        ),
                                         onPressed: () async {
                                           Navigator.of(context).pop(true);
                                           // Call the function to delete species

@@ -51,12 +51,10 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
     return await showDialog<bool>(
           context: context,
           builder: (BuildContext context) {
-            return AlertDialog.adaptive(
+            return AlertDialog(
               title: Text(S.of(context).confirmDelete),
               content: Text(
-                S
-                    .of(context)
-                    .confirmDeleteMessage(1, "male", S.of(context).egg(1)),
+                S.of(context).confirmDeleteMessage(1, "male", S.of(context).egg(1)),
               ),
               actions: <Widget>[
                 TextButton(
@@ -65,7 +63,10 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
                 ),
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(true),
-                  child: Text(S.of(context).delete),
+                  child: Text(
+                      S.of(context).delete,
+                      style: TextStyle(color: Theme.of(context).colorScheme.error),
+                  ),
                 ),
               ],
             );
@@ -154,7 +155,7 @@ class _EggsTabState extends State<EggsTab> with AutomaticKeepAliveClientMixin {
               } else {
                 return RefreshIndicator(
                   onRefresh: () async {
-                    await eggProvider.getEggForNest(widget.nest.id ?? 0);
+                    await eggProvider.loadEggForNest(widget.nest.id ?? 0);
                   },
                   child: _buildListView(eggList),
                 );
@@ -287,29 +288,30 @@ class EggGridItem extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
-              child: FutureBuilder<List<AppImage>>(
-                future: Provider.of<AppImageProvider>(
-                  context,
-                  listen: false,
-                ).fetchImagesForEgg(egg.id!),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const CircularProgressIndicator(year2023: false,);
-                  } else if (snapshot.hasError) {
-                    return const Icon(Icons.error);
-                  } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                    return ClipRRect(
-                      borderRadius: BorderRadius.circular(0),
-                      child: Image.file(
-                        File(snapshot.data!.first.imagePath),
-                        width: 50,
-                        height: 50,
-                        fit: BoxFit.cover,
-                      ),
-                    );
-                  } else {
-                    return const Icon(Icons.hide_image_outlined);
-                  }
+              child: Consumer<AppImageProvider>(
+                builder: (context, appImageProvider, child) {
+                  return FutureBuilder<List<AppImage>>(
+                    future: appImageProvider.fetchImagesForEgg(egg.id!, notify: false),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircularProgressIndicator(year2023: false,);
+                      } else if (snapshot.hasError) {
+                        return const Icon(Icons.error);
+                      } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                        return ClipRRect(
+                          borderRadius: BorderRadius.circular(0),
+                          child: Image.file(
+                            File(snapshot.data!.first.imagePath),
+                            width: 50,
+                            height: 50,
+                            fit: BoxFit.cover,
+                          ),
+                        );
+                      } else {
+                        return const Icon(Icons.hide_image_outlined);
+                      }
+                    },
+                  );
                 },
               ),
             ),
@@ -336,100 +338,95 @@ class EggGridItem extends StatelessWidget {
 }
 
 /// List tile representation of an egg record.
-class EggListItem extends StatefulWidget {
+class EggListItem extends StatelessWidget {
   final Egg egg;
   final VoidCallback onLongPress;
 
   const EggListItem({super.key, required this.egg, required this.onLongPress});
 
   @override
-  EggListItemState createState() => EggListItemState();
-}
-
-/// State for compact egg rows and contextual actions.
-class EggListItemState extends State<EggListItem> {
-  @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: FutureBuilder<List<AppImage>>(
-        future: Provider.of<AppImageProvider>(
-          context,
-          listen: false,
-        ).fetchImagesForEgg(widget.egg.id ?? 0),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator(year2023: false,);
-          } else if (snapshot.hasError) {
-            return const Icon(Icons.error);
-          } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-            return ClipRRect(
-              borderRadius: BorderRadius.circular(4),
-              child: Image.file(
-                File(snapshot.data!.first.imagePath),
-                width: 50,
-                height: 50,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
+    return Consumer<AppImageProvider>(
+      builder: (context, appImageProvider, child) {
+        return ListTile(
+          leading: FutureBuilder<List<AppImage>>(
+            future: appImageProvider.fetchImagesForEgg(egg.id ?? 0, notify: false),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator(year2023: false,);
+              } else if (snapshot.hasError) {
+                return const Icon(Icons.error);
+              } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                return ClipRRect(
+                  borderRadius: BorderRadius.circular(4),
+                  child: Image.file(
+                    File(snapshot.data!.first.imagePath),
                     width: 50,
                     height: 50,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      border: Border.all(color: Colors.grey.shade400),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Icon(
-                      Icons.error,
-                      color: Theme.of(context).colorScheme.error,
-                      size: 24,
-                    ),
-                  );
-                },
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        width: 50,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          border: Border.all(color: Colors.grey.shade400),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Icon(
+                          Icons.error,
+                          color: Theme.of(context).colorScheme.error,
+                          size: 24,
+                        ),
+                      );
+                    },
+                  ),
+                );
+              } else {
+                return Container(
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    border: Border.all(color: Colors.grey.shade400),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Icon(
+                    Icons.image_not_supported_outlined,
+                    color: Colors.grey.shade500,
+                    size: 24,
+                  ),
+                );
+              }
+            },
+          ),
+          title: Text('${egg.fieldNumber}'),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                egg.speciesName!,
+                style: TextStyle(
+                    fontStyle: FontStyle.italic,
+                    color: allSpeciesNames.contains(egg.speciesName)
+                        ? null
+                        : Colors.red,
+                ),
+              ),
+              Text(
+                DateFormat('dd/MM/yyyy HH:mm').format(egg.sampleTime!),
+              ),
+            ],
+          ),
+          onLongPress: onLongPress,
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AppImageScreen(eggId: egg.id),
               ),
             );
-          } else {
-            return Container(
-              width: 50,
-              height: 50,
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                border: Border.all(color: Colors.grey.shade400),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: Icon(
-                Icons.image_not_supported_outlined,
-                color: Colors.grey.shade500,
-                size: 24,
-              ),
-            );
-          }
-        },
-      ),
-      title: Text('${widget.egg.fieldNumber}'),
-      subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            widget.egg.speciesName!,
-            style: TextStyle(
-                fontStyle: FontStyle.italic,
-                color: allSpeciesNames.contains(widget.egg.speciesName)
-                    ? null
-                    : Colors.red,
-            ),
-          ),
-          Text(
-            DateFormat('dd/MM/yyyy HH:mm').format(widget.egg.sampleTime!),
-          ),
-        ],
-      ),
-      onLongPress: widget.onLongPress,
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => AppImageScreen(eggId: widget.egg.id),
-          ),
+          },
         );
       },
     );

@@ -106,7 +106,7 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
     return await showDialog<bool>(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog.adaptive(
+        return AlertDialog(
           title: Text(S.of(context).confirmDelete),
           content: Text(S.of(context).confirmDeleteMessage(1, "male", S.of(context).poi)),
           actions: <Widget>[
@@ -115,6 +115,9 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
               child: Text(S.of(context).cancel),
             ),
             TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: Theme.of(context).colorScheme.error,
+              ),
               onPressed: () => Navigator.of(context).pop(true),
               child: Text(S.of(context).delete),
             ),

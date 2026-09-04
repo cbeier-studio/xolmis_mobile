@@ -349,7 +349,7 @@ Future<Position?> getPosition(BuildContext context) async {
         context: context,
         barrierDismissible: false,
         builder: (dialogContext) {
-          return AlertDialog.adaptive(
+          return AlertDialog(
             title: Text(S.of(dialogContext).locationError),
             content: Text(S.of(dialogContext).couldNotGetGpsLocation),
             actions: [

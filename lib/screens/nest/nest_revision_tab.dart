@@ -53,12 +53,10 @@ class _NestRevisionsTabState extends State<NestRevisionsTab>
     return await showDialog<bool>(
           context: context,
           builder: (BuildContext context) {
-            return AlertDialog.adaptive(
+            return AlertDialog(
               title: Text(S.of(context).confirmDelete),
               content: Text(
-                S
-                    .of(context)
-                    .confirmDeleteMessage(
+                S.of(context).confirmDeleteMessage(
                       1,
                       "female",
                       S.of(context).revision(1).toLowerCase(),
@@ -70,6 +68,9 @@ class _NestRevisionsTabState extends State<NestRevisionsTab>
                   child: Text(S.of(context).cancel),
                 ),
                 TextButton(
+                  style: TextButton.styleFrom(
+                    foregroundColor: Theme.of(context).colorScheme.error,
+                  ),
                   onPressed: () => Navigator.of(context).pop(true),
                   child: Text(S.of(context).delete),
                 ),
@@ -156,7 +157,7 @@ class _NestRevisionsTabState extends State<NestRevisionsTab>
               } else {
                 return RefreshIndicator(
                   onRefresh: () async {
-                    await nestRevisionProvider.getRevisionForNest(
+                    await nestRevisionProvider.loadRevisionForNest(
                       widget.nest.id ?? 0,
                     );
                   },
@@ -294,29 +295,30 @@ class NestRevisionGridItem extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
-              child: FutureBuilder<List<AppImage>>(
-                future: Provider.of<AppImageProvider>(
-                  context,
-                  listen: false,
-                ).fetchImagesForNestRevision(revision.id!),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const CircularProgressIndicator(year2023: false,);
-                  } else if (snapshot.hasError) {
-                    return const Icon(Icons.error);
-                  } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                    return ClipRRect(
-                      borderRadius: BorderRadius.circular(0),
-                      child: Image.file(
-                        File(snapshot.data!.first.imagePath),
-                        width: 50,
-                        height: 50,
-                        fit: BoxFit.cover,
-                      ),
-                    );
-                  } else {
-                    return const Icon(Icons.hide_image_outlined);
-                  }
+              child: Consumer<AppImageProvider>(
+                builder: (context, appImageProvider, child) {
+                  return FutureBuilder<List<AppImage>>(
+                    future: appImageProvider.fetchImagesForNestRevision(revision.id!, notify: false),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircularProgressIndicator(year2023: false,);
+                      } else if (snapshot.hasError) {
+                        return const Icon(Icons.error);
+                      } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                        return ClipRRect(
+                          borderRadius: BorderRadius.circular(0),
+                          child: Image.file(
+                            File(snapshot.data!.first.imagePath),
+                            width: 50,
+                            height: 50,
+                            fit: BoxFit.cover,
+                          ),
+                        );
+                      } else {
+                        return const Icon(Icons.hide_image_outlined);
+                      }
+                    },
+                  );
                 },
               ),
             ),
@@ -349,7 +351,7 @@ class NestRevisionGridItem extends StatelessWidget {
 }
 
 /// List tile representation of a nest revision.
-class RevisionListItem extends StatefulWidget {
+class RevisionListItem extends StatelessWidget {
   final NestRevision nestRevision;
   final VoidCallback onLongPress;
 
@@ -360,105 +362,100 @@ class RevisionListItem extends StatefulWidget {
   });
 
   @override
-  RevisionListItemState createState() => RevisionListItemState();
-}
-
-/// State for revision list rows and contextual actions.
-class RevisionListItemState extends State<RevisionListItem> {
-  @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: FutureBuilder<List<AppImage>>(
-        future: Provider.of<AppImageProvider>(
-          context,
-          listen: false,
-        ).fetchImagesForNestRevision(widget.nestRevision.id ?? 0),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator(year2023: false,);
-          } else if (snapshot.hasError) {
-            return const Icon(Icons.error);
-          } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-            return ClipRRect(
-              borderRadius: BorderRadius.circular(4),
-              child: Image.file(
-                File(snapshot.data!.first.imagePath),
-                width: 50,
-                height: 50,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
+    return Consumer<AppImageProvider>(
+      builder: (context, appImageProvider, child) {
+        return ListTile(
+          leading: FutureBuilder<List<AppImage>>(
+            future: appImageProvider.fetchImagesForNestRevision(nestRevision.id ?? 0, notify: false),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator(year2023: false,);
+              } else if (snapshot.hasError) {
+                return const Icon(Icons.error);
+              } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                return ClipRRect(
+                  borderRadius: BorderRadius.circular(4),
+                  child: Image.file(
+                    File(snapshot.data!.first.imagePath),
                     width: 50,
                     height: 50,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      border: Border.all(color: Colors.grey.shade400),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Icon(
-                      Icons.error,
-                      color: Theme.of(context).colorScheme.error,
-                      size: 24,
-                    ),
-                  );
-                },
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        width: 50,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          border: Border.all(color: Colors.grey.shade400),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Icon(
+                          Icons.error,
+                          color: Theme.of(context).colorScheme.error,
+                          size: 24,
+                        ),
+                      );
+                    },
+                  ),
+                );
+              } else {
+                return Container(
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    border: Border.all(color: Colors.grey.shade400),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Icon(
+                    Icons.image_not_supported_outlined,
+                    color: Colors.grey.shade500,
+                    size: 24,
+                  ),
+                );
+              }
+            },
+          ),
+          title: Text(
+            DateFormat(
+              'dd/MM/yyyy HH:mm',
+            ).format(nestRevision.sampleTime!),
+          ),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '${nestStatusTypeFriendlyNames[nestRevision.nestStatus]}: ${nestStageTypeFriendlyNames[nestRevision.nestStage]}',
+                style: TextStyle(
+                  color:
+                      nestRevision.nestStatus == NestStatusType.nstActive
+                          ? Colors.blue
+                          : nestRevision.nestStatus ==
+                              NestStatusType.nstInactive
+                          ? Colors.red
+                          : null,
+                ),
+              ),
+              Text(
+                '${S.of(context).host}: ${nestRevision.eggsHost ?? 0} ${S.of(context).egg(nestRevision.eggsHost ?? 0).toLowerCase()}, ${nestRevision.nestlingsHost ?? 0} ${S.of(context).nestling(nestRevision.nestlingsHost ?? 0).toLowerCase()}',
+              ),
+              Text(
+                '${S.of(context).nidoparasite}: ${nestRevision.eggsParasite ?? 0} ${S.of(context).egg(nestRevision.eggsParasite ?? 0).toLowerCase()}, ${nestRevision.nestlingsParasite ?? 0} ${S.of(context).nestling(nestRevision.nestlingsParasite ?? 0).toLowerCase()}',
+              ),
+            ],
+          ),
+          onLongPress: onLongPress,
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder:
+                    (context) =>
+                        AppImageScreen(nestRevisionId: nestRevision.id),
               ),
             );
-          } else {
-            return Container(
-              width: 50,
-              height: 50,
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                border: Border.all(color: Colors.grey.shade400),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: Icon(
-                Icons.image_not_supported_outlined,
-                color: Colors.grey.shade500,
-                size: 24,
-              ),
-            );
-          }
-        },
-      ),
-      title: Text(
-        DateFormat(
-          'dd/MM/yyyy HH:mm',
-        ).format(widget.nestRevision.sampleTime!),
-      ),
-      subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '${nestStatusTypeFriendlyNames[widget.nestRevision.nestStatus]}: ${nestStageTypeFriendlyNames[widget.nestRevision.nestStage]}',
-            style: TextStyle(
-              color:
-                  widget.nestRevision.nestStatus == NestStatusType.nstActive
-                      ? Colors.blue
-                      : widget.nestRevision.nestStatus ==
-                          NestStatusType.nstInactive
-                      ? Colors.red
-                      : null,
-            ),
-          ),
-          Text(
-            '${S.of(context).host}: ${widget.nestRevision.eggsHost ?? 0} ${S.of(context).egg(widget.nestRevision.eggsHost ?? 0).toLowerCase()}, ${widget.nestRevision.nestlingsHost ?? 0} ${S.of(context).nestling(widget.nestRevision.nestlingsHost ?? 0).toLowerCase()}',
-          ),
-          Text(
-            '${S.of(context).nidoparasite}: ${widget.nestRevision.eggsParasite ?? 0} ${S.of(context).egg(widget.nestRevision.eggsParasite ?? 0).toLowerCase()}, ${widget.nestRevision.nestlingsParasite ?? 0} ${S.of(context).nestling(widget.nestRevision.nestlingsParasite ?? 0).toLowerCase()}',
-          ),
-        ],
-      ),
-      onLongPress: widget.onLongPress,
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder:
-                (context) =>
-                    AppImageScreen(nestRevisionId: widget.nestRevision.id),
-          ),
+          },
         );
       },
     );

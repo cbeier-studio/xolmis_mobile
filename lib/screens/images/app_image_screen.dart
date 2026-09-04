@@ -258,8 +258,15 @@ class _AppImageScreenState extends State<AppImageScreen> {
                     ActionChip(
                       label: Text(S.of(context).addImage),
                       avatar: const Icon(Icons.add_outlined),
-                      onPressed: () {
-                        _showAddImageDialog();
+                      onPressed: () async {
+                        // Request permission to access the camera and photos
+                        final permissionsGranted = await _requestPermissions();
+                        if (!mounted) return;
+
+                        if (permissionsGranted) {
+                          _notesController.clear(); // Clear notes before showing dialog
+                          _showAddImageDialog();
+                        }
                       },
                     ),
                   ],
@@ -360,9 +367,10 @@ class _AppImageScreenState extends State<AppImageScreen> {
           title: Text(S.of(context).addImage),
           content: SingleChildScrollView(
             child: Form(
-              key: _formKey, // _formKey can be used if validation is needed
+              key: _formKey,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   TextFormField(
                     controller: _notesController,
@@ -371,23 +379,32 @@ class _AppImageScreenState extends State<AppImageScreen> {
                     decoration: InputDecoration(
                       labelText: S.of(context).notes,
                       border: const OutlineInputBorder(),
+                      alignLabelWithHint: true,
                     ),
                   ),
-                  const SizedBox(height: 16.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      OutlinedButton.icon(
-                        onPressed: () => _addImage(ImageSource.gallery),
-                        label: Text(S.of(context).gallery),
-                        icon: const Icon(Icons.image_search_outlined),
-                      ),
-                      OutlinedButton.icon(
-                        onPressed: () => _addImage(ImageSource.camera),
-                        label: Text(S.of(context).camera),
-                        icon: const Icon(Icons.camera_alt_outlined),
-                      ),
-                    ],
+                  const SizedBox(height: 24.0),
+                  ListTile(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      side: BorderSide(color: Theme.of(context).colorScheme.outline),
+                    ),
+                    leading: const Icon(Icons.photo_library_outlined),
+                    title: Text(S.of(context).gallery),
+                    iconColor: Theme.of(context).colorScheme.primary,
+                    textColor: Theme.of(context).colorScheme.primary,
+                    onTap: () => _addImage(ImageSource.gallery),
+                  ),
+                  const SizedBox(height: 12.0),
+                  ListTile(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      side: BorderSide(color: Theme.of(context).colorScheme.outline),
+                    ),
+                    leading: const Icon(Icons.camera_alt_outlined),
+                    title: Text(S.of(context).camera),
+                    iconColor: Theme.of(context).colorScheme.primary,
+                    textColor: Theme.of(context).colorScheme.primary,
+                    onTap: () => _addImage(ImageSource.camera),
                   ),
                 ],
               ),
@@ -435,7 +452,7 @@ class _AppImageScreenState extends State<AppImageScreen> {
                           context, Icons.share_outlined, S.current.export, () {
                         Navigator.of(context).pop();
                         SharePlus.instance.share(
-                          ShareParams(files: [XFile(appImage.imagePath)], text: 'Compartilhando imagem'),
+                          ShareParams(files: [XFile(appImage.imagePath)],),
                         );
                       }),
                       buildGridMenuItem(context, Icons.delete_outlined,
@@ -445,7 +462,7 @@ class _AppImageScreenState extends State<AppImageScreen> {
                             showDialog(
                               context: context,
                               builder: (BuildContext context) {
-                                return AlertDialog.adaptive(
+                                return AlertDialog(
                                   title: Text(S.of(context).confirmDelete),
                                   content: Text(S.of(context).confirmDeleteMessage(1, "female", S.of(context).images(1).toLowerCase())),
                                   actions: <Widget>[
@@ -461,7 +478,10 @@ class _AppImageScreenState extends State<AppImageScreen> {
                                         // Call the function to delete image
                                         if (appImage.id != null) appImageProvider.deleteImage(appImage.id!);
                                       },
-                                      child: Text(S.of(context).delete),
+                                      child: Text(
+                                        S.of(context).delete,
+                                        style: TextStyle(color: Theme.of(context).colorScheme.error),
+                                      ),
                                     ),
                                   ],
                                 );
@@ -557,18 +577,30 @@ class _AppImageScreenState extends State<AppImageScreen> {
             clipBehavior: Clip.antiAlias,
             borderRadius: BorderRadius.circular(8.0),
             child: GridTile(
-            footer: GridTileBar(
+              header: Align(
+                alignment: Alignment.topRight,
+                child: IconButton(
+                  style: ButtonStyle(
+                    backgroundColor: WidgetStateProperty.all(Colors.white.withValues(alpha: 0.5)),
+                  ),
+                  icon: image.notes!.isEmpty ? const Icon(Icons.post_add) : const Icon(Icons.edit_note),
+                  onPressed: () {
+                    _showEditNotesDialog(context, image);
+                  },
+                ),
+              ),
+            footer: image.notes!.isNotEmpty ? GridTileBar(
               backgroundColor: Colors.black45,
               title: Text(
                 image.notes ?? '',
                 overflow: TextOverflow.ellipsis,
               ),
-              trailing: IconButton(
-                      icon: Icon(Icons.edit_outlined),
-                      onPressed: () {
-                        _showEditNotesDialog(context, image);
-                      }),
-            ),
+              // trailing: IconButton(
+              //         icon: Icon(Icons.edit_outlined),
+              //         onPressed: () {
+              //           _showEditNotesDialog(context, image);
+              //         }),
+            ) : null,
             child: 
                  image.imagePath.isNotEmpty ? Image.file(
                     File(image.imagePath),

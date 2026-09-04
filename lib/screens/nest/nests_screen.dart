@@ -1538,12 +1538,10 @@ class NestsScreenState extends State<NestsScreen> {
                               showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
-                                  return AlertDialog.adaptive(
+                                  return AlertDialog(
                                     title: Text(S.of(context).confirmDelete),
                                     content: Text(
-                                      S
-                                          .of(context)
-                                          .confirmDeleteMessage(
+                                      S.of(context).confirmDeleteMessage(
                                             1,
                                             "male",
                                             S.of(context).nest(1),
@@ -1558,6 +1556,9 @@ class NestsScreenState extends State<NestsScreen> {
                                         child: Text(S.of(context).cancel),
                                       ),
                                       TextButton(
+                                        style: TextButton.styleFrom(
+                                          foregroundColor: Theme.of(context).colorScheme.error,
+                                        ),
                                         onPressed: () async {
                                           Navigator.of(context).pop(true);
                                           // Call the function to delete species

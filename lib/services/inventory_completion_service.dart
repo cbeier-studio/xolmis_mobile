@@ -147,7 +147,7 @@ class InventoryCompletionService {
     final bool? confirmedFinish = await showDialog<bool>(
       context: context,
       builder: (BuildContext dialogContext) {
-        return AlertDialog.adaptive(
+        return AlertDialog(
           title: Text(S.of(dialogContext).confirmFinish),
           content: Text(S.of(dialogContext).confirmFinishMessage(inventory.id)),
           actions: <Widget>[
