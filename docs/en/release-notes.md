@@ -21,7 +21,8 @@ Initial release of Xolmis Mobile.
 - Action suggestions when lists or screens are empty (experimental).  
 - Option to set the initial module shown at app startup.  
 - Backup and restore system for all data and images.  
-- Export options: CSV, Excel (experimental), JSON, KML, Plain text (notes), and Markdown (notes).  
+- Export options for inventories, nests, and specimens: CSV, Excel (experimental), JSON and KML.
+- Export options for field journal entries: JSON, Plain text, Markdown and Word.  
 - Import inventories, nests, specimens, and notes from JSON.  
 - Observer abbreviation required and used to generate IDs and field numbers.  
 - Ability to generate inventory IDs automatically.  
@@ -57,8 +58,8 @@ Initial release of Xolmis Mobile.
 
 ### Technical updates
 
-- Updated **Flutter** to v3.44 (development framework).  
-- Updated **Dart** to v3.12 (programming language).
+- Updated **Flutter** to v3.47 (development framework).  
+- Updated **Dart** to v3.13 (programming language).
 - Migrated to new Flutter components (`MenuAnchor`, `SearchAnchor`).  
 - Removed deprecated dependencies (e.g., `workmanager`).  
 - Refactored internal code structure and background operation methods.  
@@ -71,8 +72,7 @@ Planned features for upcoming releases:
 
 - Multi-observer inventories.  
 - Bird banding captures and morphometry.  
-- Parental care in nests.  
-- Spot-mapping method in inventories.  
+- Parental care in nests. 
 
 *[CSV]: Comma Separated Values
 *[JSON]: JavaScript Object Notation

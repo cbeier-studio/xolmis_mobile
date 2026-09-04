@@ -53,6 +53,14 @@ Settings that affect how inventories behave during creation and sampling.
 
 Limit how many inventories can run simultaneously.
 
+### Propagation of species to inactive inventories
+
+Define the behavior when adding species to inactive inventories:
+
+- Always propagate (to active inventories).
+- Always ask.
+- Never propagate.
+
 ### Mackinnon list size
 
 Set the number of species per list.

@@ -23,13 +23,12 @@ If the species is already in the list:
 - If the inventory is a **Transect Count** or **Point Count** inventory, ask if you want to add to the count. If the count was entered in the search, add to the count without asking.
 - Other inventory types show a message and do not add anything.
 
-### Adding a custom species
+### Adding a Custom Species
 
 If the species is not found:
 
-- Tap the **⋮** menu in the search bar  
-- Select **Add species**  
-- Enter a temporary name  
+- Tap the **+** icon on the right side of the search bar  
+- Enter a temporary name
 
 The custom name will appear exactly as typed, highlighted in red.
 
@@ -74,10 +73,7 @@ Long‑press a species in the list to open the action menu:
 
 ## Species Inside vs. Outside the Sample
 
-Species added **after finishing** an inventory are marked:
-
-- **Gray**  
-- Labeled as **outside sample**
+Species added **after finishing** an inventory are marked with **gray** background.
 
 This distinction is important for:
 
@@ -109,21 +105,22 @@ Sorting options may include:
 
 Sorting helps during long surveys or when reviewing data.
 
-## More Options (⋮ Menu)
+## Species Accumulation Chart
 
-The **⋮ menu** in the search bar provides additional tools:
+During or after an inventory, a **species accumulation chart** can be visualized to track species counts over time.
 
-- **Add species** (custom name)  
-- **Species accumulation chart**  
+To view, tap the **line chart icon** on the right side of the search bar.
 
-These tools help evaluate sampling completeness and inventory performance.
+If the inventory has a defined duration, a dashed line is displayed marking the end of the sampling period.
 
-## Synchronization Between Active Inventories
+This tool helps evaluate sampling completeness and inventory performance.
 
-When multiple inventories are active:
+## Propagation to Active Inventories
 
-- Adding a species to one inventory **automatically adds it to all others**,  
-  except for **Banding** inventories.
+When there are active inventories:
+
+- Adding a species to one active inventory **automatically adds it to all other active inventories**, except for **Banding** inventories.
+- Adding a species to an inactive inventory follows the species propagation option in [Settings](settings.md): always propagate, always ask, or never propagate.
 
 This allows:
 

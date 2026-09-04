@@ -53,6 +53,14 @@ Configurações que afetam como os inventários se comportam durante a criação
 
 Limite de quantos inventários podem estar ativos simultaneamente.
 
+### Propagação de espécies de inventários inativos
+
+Define o comportamento ao adicionar espécies a inventários inativos: 
+
+- Sempre propagar (para inventários ativos). 
+- Sempre perguntar.
+- Nunca propagar.
+
 ### Tamanho da lista de Mackinnon
 
 Defina o número de espécies por lista.

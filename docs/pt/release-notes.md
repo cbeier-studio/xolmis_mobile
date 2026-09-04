@@ -21,7 +21,8 @@ Lançamento inicial do Xolmis Mobile.
 - Sugestões de ação quando listas ou telas estão vazias (experimental).  
 - Opção para definir o módulo inicial exibido ao abrir o app.  
 - Sistema de backup e restauração para todos os dados e imagens.  
-- Opções de exportação: CSV, Excel (experimental), JSON, KML, Texto simples (notas) e Markdown (notas).  
+- Opções de exportação de inventários, ninhos e espécimes: CSV, Excel (experimental), JSON e KML.
+- Opções de exportação de notas do diário de campo: JSON, Texto simples, Markdown e Word.  
 - Importação de inventários, ninhos, espécimes e notas a partir de JSON.  
 - Abreviação do observador obrigatória e usada para gerar IDs e números de campo.  
 - Capacidade de gerar IDs de inventário automaticamente.  
@@ -57,8 +58,8 @@ Lançamento inicial do Xolmis Mobile.
 
 ### Atualizações técnicas
 
-- Atualização do **Flutter** para v3.44 (framework de desenvolvimento).  
-- Atualização do **Dart** para v3.12 (linguagem de programação).  
+- Atualização do **Flutter** para v3.47 (framework de desenvolvimento).  
+- Atualização do **Dart** para v3.13 (linguagem de programação).  
 - Migração para novos componentes Flutter (`MenuAnchor`, `SearchAnchor`).  
 - Remoção de dependências obsoletas (ex.: `workmanager`).  
 - Reestruturação interna do código e métodos de operação em segundo plano.  
@@ -70,9 +71,8 @@ Lançamento inicial do Xolmis Mobile.
 Recursos planejados para versões futuras:
 
 - Inventários com múltiplos observadores.  
-- Capturas e biometria em operações de anilhamento.  
-- Cuidado parental em ninhos.  
-- Método de mapeamento de territórios (spot-mapping) em inventários.  
+- Capturas e morfometria em operações de anilhamento.  
+- Cuidado parental em ninhos. 
 
 *[CSV]: Comma Separated Values  
 *[JSON]: JavaScript Object Notation  

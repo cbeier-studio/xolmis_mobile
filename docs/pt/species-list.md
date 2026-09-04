@@ -23,12 +23,11 @@ Se a espécie já estiver na lista:
 - Se o inventário for do tipo **Contagem em Transecto** ou **Ponto de Contagem**, pergunta se quer adicionar à contagem da espécie. Se foi digitada a quantidade de indivíduos na busca, adiciona à contagem da espécie sem perguntar.
 - Outros tipos de inventários mostram uma mensagem e não adicionam nada.
 
-### Adicionando uma espécie personalizada
+### Adicionando uma Espécie Personalizada
 
 Se a espécie não for encontrada:
 
-- Toque no menu **⋮** na barra de busca  
-- Selecione **Adicionar espécie**  
+- Toque no ícone **+** na direita da barra de busca  
 - Digite um nome temporário  
 
 O nome personalizado aparecerá exatamente como foi digitado, destacado em vermelho.
@@ -74,10 +73,7 @@ Toque e segure uma espécie na lista para abrir o menu de ações:
 
 ## Espécies Dentro vs. Fora da Amostra
 
-Espécies adicionadas **após finalizar** um inventário são marcadas:
-
-- **Cinza**  
-- Com o rótulo **fora da amostra**
+Espécies adicionadas **após finalizar** um inventário são marcadas com fundo **cinza**.
 
 Essa distinção é importante para:
 
@@ -109,21 +105,22 @@ As opções podem incluir:
 
 A ordenação ajuda em levantamentos longos ou na revisão dos dados.
 
-## Mais Opções (Menu ⋮)
+## Curva de Acumulação de Espécies
 
-O menu **⋮** na barra de busca oferece ferramentas adicionais:
+Durante ou após a execução de um inventário é possível visualizar uma **curva de acumulação de espécies** ao longo do tempo.
 
-- **Adicionar espécie** (nome personalizado)  
-- **Gráfico de acumulação de espécies**  
+Para visualizar, clique no ícone de **gráfico de linha** na direita da barra de busca.
 
-Essas ferramentas ajudam a avaliar a completude da amostragem e o desempenho do inventário.
+Se o inventário tiver uma duração definida, uma linha tracejada é exibida no gráfico marcando o fim do período de amostragem.
 
-## Sincronização Entre Inventários Ativos
+Essa ferramenta ajuda a avaliar a completude da amostragem e o desempenho do inventário.
 
-Quando vários inventários estão ativos:
+## Propagação para Inventários Ativos
 
-- Adicionar uma espécie a um inventário **automaticamente a adiciona aos demais**,  
-  exceto inventários de **Anilhamento**.
+Quando há inventários ativos:
+
+- Adicionar uma espécie a um inventário ativo **automaticamente a adiciona aos demais inventários ativos**, exceto inventários de **Anilhamento**.
+- Adicionar uma espécie a um inventário inativo obedece opção de propagação de espécies nas [Configurações](settings.md): sempre propagar, sempre perguntar, ou nunca propagar.
 
 Isso permite:
 
