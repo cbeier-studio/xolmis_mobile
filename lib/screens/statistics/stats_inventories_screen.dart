@@ -343,9 +343,9 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                                                               ? parts.last
                                                               : widget.inventories[index]
                                                               .id;
-                                                          return Text(listNumber);
+                                                          return SideTitleWidget(meta: meta, child: Text(listNumber));
                                                         } else {
-                                                          return Text('');
+                                                          return SideTitleWidget(meta: meta, child: Text(''));
                                                         }
                                                       },
                                                     ),
@@ -358,9 +358,9 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                                                       getTitlesWidget: (value, meta) {
                                                         return Align(
                                                           alignment: Alignment.center,
-                                                          child: Text(
+                                                          child: SideTitleWidget(meta: meta, child: Text(
                                                             value.toInt().toString(),
-                                                          ),
+                                                          )),
                                                         );
                                                       },
                                                     ),

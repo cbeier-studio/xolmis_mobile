@@ -100,6 +100,7 @@ class _SpeciesChartScreenState extends State<SpeciesChartScreen> {
                   ),
                   titlesData: FlTitlesData(
                     bottomTitles: AxisTitles(
+                      axisNameSize: 20,
                       axisNameWidget: Text(
                         intervalSize == 10
                             ? S.current.timeSeconds
@@ -109,24 +110,25 @@ class _SpeciesChartScreenState extends State<SpeciesChartScreen> {
                       ),
                       sideTitles: SideTitles(
                         showTitles: true,
-                        reservedSize: 40,
+                        reservedSize: 30,
                         getTitlesWidget: (value, meta) {
                           // Convert seconds to appropriate display unit
                           final displayValue = intervalSize == 10
                               ? value.toInt()           // show raw seconds
                               : (value / 60).round();   // convert to minutes
-                          return Text('$displayValue');
+                          return SideTitleWidget(meta: meta, child: Text('$displayValue'));
                         },
                       ),
                     ),
                     leftTitles: AxisTitles(
+                      axisNameSize: 20,
                       axisNameWidget: Text(S.current.speciesAccumulated),
                       sideTitles: SideTitles(
                         showTitles: true,
-                        interval: 5,
+                        interval: maxY > 10 ? 5 : 1,
                         reservedSize: 40,
                         getTitlesWidget: (value, meta) {
-                          return Text(value.toInt().toString());
+                          return SideTitleWidget(meta: meta, child: Text(value.toInt().toString()));
                         },
                       ),
                     ),

@@ -433,7 +433,7 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
                                                     String monthAbbreviation = DateFormat(
                                                       'MMM',
                                                     ).format(DateTime(0, value.toInt()));
-                                                    return Text(monthAbbreviation[0].toUpperCase());
+                                                    return SideTitleWidget(meta: meta, child: Text(monthAbbreviation[0].toUpperCase()));
                                                   },
                                                 ),
                                               ),
@@ -494,7 +494,7 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
                                                 sideTitles: SideTitles(
                                                   showTitles: true,
                                                   getTitlesWidget: (value, meta) {
-                                                    return Text(value.toInt().toString());
+                                                    return SideTitleWidget(meta: meta, child: Text(value.toInt().toString()));
                                                   },
                                                 ),
                                               ),
@@ -692,12 +692,10 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
                                                         // Mostra os títulos do eixo X em intervalos (0, 6, 12, 18, 23) para não poluir.
                                                         final hour = value.toInt();
                                                         if (hour % 3 == 0 || hour == 23) {
-                                                          return Padding(
-                                                            padding: const EdgeInsets.only(top: 8.0),
-                                                            child: Text(hour.toString().padLeft(2, '0')),
-                                                          );
+                                                          return SideTitleWidget(meta: meta, child: Text(hour.toString().padLeft(2, '0')));
+                                                        } else {
+                                                          return SideTitleWidget(meta: meta, child: Text(''));
                                                         }
-                                                        return const Text('');
                                                       },
                                                     ),
                                                   ),

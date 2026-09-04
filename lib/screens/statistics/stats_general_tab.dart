@@ -9,8 +9,6 @@ import 'package:xolmis/providers/species_provider.dart';
 import '../../generated/l10n.dart';
 
 import '../../data/models/inventory.dart';
-import '../../data/models/nest.dart';
-import '../../data/models/specimen.dart';
 import '../../providers/egg_provider.dart';
 import '../../providers/specimen_provider.dart';
 import '../../utils/statistics_logic.dart';
@@ -576,7 +574,7 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
                                         return null;
                                       }
                                       return BarTooltipItem(
-                                        '', // String principal vazia, usamos os children
+                                        '', // Main string empty, we use the children
                                         const TextStyle(),
                                         children: [
                                           TextSpan(
@@ -607,15 +605,13 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
                                     showTitles: true,
                                     reservedSize: 30,
                                     getTitlesWidget: (value, meta) {
-                                      // Mostra os títulos do eixo X em intervalos (0, 6, 12, 18, 23) para não poluir.
+                                      // Show X axis titles only on specific intervals.
                                       final hour = value.toInt();
                                       if (hour % 3 == 0 || hour == 23) {
-                                        return Padding(
-                                          padding: const EdgeInsets.only(top: 8.0),
-                                          child: Text(hour.toString().padLeft(2, '0')),
-                                        );
+                                        return SideTitleWidget(meta: meta, child: Text(hour.toString().padLeft(2, '0')));
+                                      } else {
+                                        return SideTitleWidget(meta: meta, child: const Text(''));
                                       }
-                                      return const Text('');
                                     },
                                   ),
                                 ),
@@ -625,7 +621,6 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
                                 topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
                                 rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
                               ),
-                              // Usa a nova função para obter os dados do histograma
                               barGroups: createBarGroupsFromOccurrencesMap(
                                 recordsPerHour,
                                 12,
@@ -716,12 +711,7 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
                                          reservedSize: 30,
                                          getTitlesWidget: (value, meta) {
                                            final month = value.toInt();
-                                           return Padding(
-                                             padding: const EdgeInsets.only(top: 8.0),
-                                             child: Text(
-                                               _getMonthAbbrName(month),
-                                             ),
-                                           );
+                                           return SideTitleWidget(meta: meta, child: Text(_getMonthAbbrName(month)));
                                          },
                                        ),
                                      ),
@@ -829,12 +819,7 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
                                          reservedSize: 30,
                                          getTitlesWidget: (value, meta) {
                                            final month = value.toInt();
-                                           return Padding(
-                                             padding: const EdgeInsets.only(top: 8.0),
-                                             child: Text(
-                                               _getMonthAbbrName(month),
-                                             ),
-                                           );
+                                           return SideTitleWidget(meta: meta, child: Text(_getMonthAbbrName(month)));
                                          },
                                        ),
                                      ),
@@ -946,14 +931,10 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
                                            final sortedYears = speciesRichnessByYear.keys.toList()..sort();
                                            final index = value.toInt();
                                            if (index >= 0 && index < sortedYears.length) {
-                                             return Padding(
-                                               padding: const EdgeInsets.only(top: 8.0),
-                                               child: Text(
-                                                 sortedYears[index].toString(),
-                                               ),
-                                             );
+                                             return SideTitleWidget(meta: meta, child: Text(sortedYears[index].toString()));
+                                           } else {
+                                             return SideTitleWidget(meta: meta, child: Text(''));
                                            }
-                                           return const Text('');
                                          },
                                        ),
                                      ),
