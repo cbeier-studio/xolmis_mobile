@@ -323,13 +323,14 @@ class WeatherGridItemState extends State<WeatherGridItem> {
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.cloudy_snowing, size: 14),
+                      const Icon(Icons.snowing, size: 14),
                       const SizedBox(width: 4),
                       Text(
                         '${precipitationTypeFriendlyNames[widget.weather.precipitation]}',
                       ),
                     ],
                   ),
+                  if (widget.weather.temperature != null && widget.weather.temperature != 0) ...[
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -338,16 +339,25 @@ class WeatherGridItemState extends State<WeatherGridItem> {
                       Text('${widget.weather.temperature} °C'),
                     ],
                   ),
+                  ],
+                  if (widget.weather.windSpeed != null && widget.weather.windSpeed != 0) ...[
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const Icon(Icons.wind_power_outlined, size: 14),
                       const SizedBox(width: 4),
                       Text(
-                        '${widget.weather.windSpeed} bft ${widget.weather.windDirection ?? ''}',
+                        '${widget.weather.windSpeed} bft',
                       ),
+                      if (widget.weather.windDirection != null && widget.weather.windDirection != '') ...[
+                        const SizedBox(width: 4),
+                        Text(
+                          '${widget.weather.windDirection}',
+                        ),
+                      ],
                     ],
                   ),
+                  ],
                   if (widget.weather.atmosphericPressure != null && widget.weather.atmosphericPressure != 0) ...[
                   Row(
                     mainAxisSize: MainAxisSize.min,
@@ -400,7 +410,7 @@ class WeatherListItemState extends State<WeatherListItem> {
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(
-        DateFormat('dd/MM/yyyy HH:mm:ss').format(widget.weather.sampleTime!),
+        DateFormat('dd/MM/yyyy HH:mm').format(widget.weather.sampleTime!),
       ),
       subtitle: Wrap(
         direction: Axis.horizontal,
@@ -419,13 +429,14 @@ class WeatherListItemState extends State<WeatherListItem> {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.cloudy_snowing, size: 16, color: Theme.of(context).colorScheme.primary),
+              Icon(Icons.snowing, size: 16, color: Theme.of(context).colorScheme.primary),
               const SizedBox(width: 4),
               Text(
                 '${precipitationTypeFriendlyNames[widget.weather.precipitation]}',
               ),
             ],
           ),
+          if (widget.weather.temperature != null && widget.weather.temperature != 0) ...[
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -434,16 +445,25 @@ class WeatherListItemState extends State<WeatherListItem> {
               Text('${widget.weather.temperature} °C'),
             ],
           ),
+          ],
+          if (widget.weather.windSpeed != null && widget.weather.windSpeed != 0) ...[
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(Icons.wind_power, size: 16, color: Theme.of(context).colorScheme.primary),
               const SizedBox(width: 4),
               Text(
-                '${widget.weather.windSpeed} bft ${widget.weather.windDirection ?? ''}',
+                '${widget.weather.windSpeed} bft',
               ),
+              if (widget.weather.windDirection != null && widget.weather.windDirection != '') ...[
+                const SizedBox(width: 4),
+                Text(
+                  '${widget.weather.windDirection}',
+                ),
+              ],
             ],
           ),
+          ],
           if (widget.weather.atmosphericPressure != null && widget.weather.atmosphericPressure != 0) ...[
           Row(
             mainAxisSize: MainAxisSize.min,

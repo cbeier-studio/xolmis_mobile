@@ -27,7 +27,7 @@ If the species is already in the list:
 
 If the species is not found:
 
-- Tap the **+** icon on the right side of the search bar  
+- Tap the :material-plus-box-outline: icon on the right side of the search bar  
 - Enter a temporary name
 
 The custom name will appear exactly as typed, highlighted in red.
@@ -109,7 +109,7 @@ Sorting helps during long surveys or when reviewing data.
 
 During or after an inventory, a **species accumulation chart** can be visualized to track species counts over time.
 
-To view, tap the **line chart icon** on the right side of the search bar.
+To view, tap the :material-chart-line-variant: icon on the right side of the search bar.
 
 If the inventory has a defined duration, a dashed line is displayed marking the end of the sampling period.
 

@@ -573,6 +573,22 @@ class _AppImageScreenState extends State<AppImageScreen> {
                  image.imagePath.isNotEmpty ? Image.file(
                     File(image.imagePath),
                     fit: BoxFit.cover,
+                   errorBuilder: (context, error, stackTrace) {
+                     return Container(
+                       width: 50,
+                       height: 50,
+                       decoration: BoxDecoration(
+                         color: Colors.grey[200],
+                         border: Border.all(color: Colors.grey.shade400),
+                         borderRadius: BorderRadius.circular(4),
+                       ),
+                       child: Icon(
+                         Icons.error,
+                         color: Theme.of(context).colorScheme.error,
+                         size: 24,
+                       ),
+                     );
+                   },
                   ) : Center(
                     child: Icon(Icons.image_not_supported_outlined, color: Colors.grey.shade500, size: 24,),
                   ),

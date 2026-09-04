@@ -363,12 +363,28 @@ class EggListItemState extends State<EggListItem> {
             return const Icon(Icons.error);
           } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
             return ClipRRect(
-              borderRadius: BorderRadius.circular(0),
+              borderRadius: BorderRadius.circular(4),
               child: Image.file(
                 File(snapshot.data!.first.imagePath),
                 width: 50,
                 height: 50,
                 fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    width: 50,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      border: Border.all(color: Colors.grey.shade400),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Icon(
+                      Icons.error,
+                      color: Theme.of(context).colorScheme.error,
+                      size: 24,
+                    ),
+                  );
+                },
               ),
             );
           } else {

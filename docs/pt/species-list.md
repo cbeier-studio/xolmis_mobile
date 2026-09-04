@@ -27,7 +27,7 @@ Se a espécie já estiver na lista:
 
 Se a espécie não for encontrada:
 
-- Toque no ícone **+** na direita da barra de busca  
+- Toque no ícone :material-plus-box-outline: na direita da barra de busca  
 - Digite um nome temporário  
 
 O nome personalizado aparecerá exatamente como foi digitado, destacado em vermelho.
@@ -109,7 +109,7 @@ A ordenação ajuda em levantamentos longos ou na revisão dos dados.
 
 Durante ou após a execução de um inventário é possível visualizar uma **curva de acumulação de espécies** ao longo do tempo.
 
-Para visualizar, clique no ícone de **gráfico de linha** na direita da barra de busca.
+Para visualizar, clique no ícone :material-chart-line-variant: na direita da barra de busca.
 
 Se o inventário tiver uma duração definida, uma linha tracejada é exibida no gráfico marcando o fim do período de amostragem.
 

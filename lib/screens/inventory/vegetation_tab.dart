@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:xolmis/core/core_consts.dart';
 
 import '../../data/models/inventory.dart';
 import '../../data/models/app_image.dart';
@@ -293,11 +294,18 @@ class VegetationGridItem extends StatelessWidget {
                       DateFormat('dd/MM/yyyy HH:mm').format(vegetation.sampleTime!),
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    Text('${vegetation.latitude}; ${vegetation.longitude}'),
-                    Text('${S.of(context).herbs}: ${vegetation.herbsDistribution?.index ?? 0}; ${vegetation.herbsProportion}%; ${vegetation.herbsHeight} cm'),
-                    Text('${S.of(context).shrubs}: ${vegetation.shrubsDistribution?.index ?? 0}; ${vegetation.shrubsProportion}%; ${vegetation.shrubsHeight} cm'),
-                    Text('${S.of(context).trees}: ${vegetation.treesDistribution?.index ?? 0}; ${vegetation.treesProportion}%; ${vegetation.treesHeight} cm'),
-                    Text('${vegetation.notes}'),
+                    // Text('${vegetation.latitude}; ${vegetation.longitude}'),
+                    vegetation.herbsDistribution == DistributionType.disNone
+                        ? Text('${S.of(context).herbs}: ${vegetation.herbsDistribution?.index ?? 0}')
+                        : Text('${S.of(context).herbs}: ${vegetation.herbsDistribution?.index ?? 0}; ${vegetation.herbsProportion}%; ${vegetation.herbsHeight} cm'),
+                    vegetation.shrubsDistribution == DistributionType.disNone
+                        ? Text('${S.of(context).shrubs}: ${vegetation.shrubsDistribution?.index ?? 0}')
+                        : Text('${S.of(context).shrubs}: ${vegetation.shrubsDistribution?.index ?? 0}; ${vegetation.shrubsProportion}%; ${vegetation.shrubsHeight} cm'),
+                    vegetation.treesDistribution == DistributionType.disNone
+                        ? Text('${S.of(context).trees}: ${vegetation.treesDistribution?.index ?? 0}')
+                        : Text('${S.of(context).trees}: ${vegetation.treesDistribution?.index ?? 0}; ${vegetation.treesProportion}%; ${vegetation.treesHeight} cm'),
+                    if (vegetation.notes != null && vegetation.notes != '')
+                      Text('${vegetation.notes}'),
                   ],
                 ),
               ],
@@ -339,12 +347,28 @@ class VegetationListItemState extends State<VegetationListItem> {
             return const Icon(Icons.error);
           } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
             return ClipRRect(
-              borderRadius: BorderRadius.circular(0),
+              borderRadius: BorderRadius.circular(4),
               child: Image.file(
                 File(snapshot.data!.first.imagePath),
                 width: 50,
                 height: 50,
                 fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    width: 50,
+                    height: 50,
+                      decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      border: Border.all(color: Colors.grey.shade400),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                      child: Icon(
+                        Icons.error,
+                        color: Theme.of(context).colorScheme.error,
+                        size: 24,
+                      ),
+                  );
+                },
               ),
             );
           } else {
@@ -365,15 +389,22 @@ class VegetationListItemState extends State<VegetationListItem> {
           }
         },
       ),
-      title: Text(DateFormat('dd/MM/yyyy HH:mm:ss').format(widget.vegetation.sampleTime!)),
+      title: Text(DateFormat('dd/MM/yyyy HH:mm').format(widget.vegetation.sampleTime!)),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('${widget.vegetation.latitude}; ${widget.vegetation.longitude}'),
-          Text('${S.of(context).herbs}: ${widget.vegetation.herbsDistribution?.index ?? 0}; ${widget.vegetation.herbsProportion}%; ${widget.vegetation.herbsHeight} cm'),
-          Text('${S.of(context).shrubs}: ${widget.vegetation.shrubsDistribution?.index ?? 0}; ${widget.vegetation.shrubsProportion}%; ${widget.vegetation.shrubsHeight} cm'),
-          Text('${S.of(context).trees}: ${widget.vegetation.treesDistribution?.index ?? 0}; ${widget.vegetation.treesProportion}%; ${widget.vegetation.treesHeight} cm'),
-          Text('${widget.vegetation.notes}'),
+          // Text('${widget.vegetation.latitude}; ${widget.vegetation.longitude}'),
+          widget.vegetation.herbsDistribution == DistributionType.disNone
+              ? Text('${S.of(context).herbs}: ${widget.vegetation.herbsDistribution?.index ?? 0}')
+              : Text('${S.of(context).herbs}: ${widget.vegetation.herbsDistribution?.index ?? 0}; ${widget.vegetation.herbsProportion}%; ${widget.vegetation.herbsHeight} cm'),
+          widget.vegetation.shrubsDistribution == DistributionType.disNone
+              ? Text('${S.of(context).shrubs}: ${widget.vegetation.shrubsDistribution?.index ?? 0}')
+              : Text('${S.of(context).shrubs}: ${widget.vegetation.shrubsDistribution?.index ?? 0}; ${widget.vegetation.shrubsProportion}%; ${widget.vegetation.shrubsHeight} cm'),
+          widget.vegetation.treesDistribution == DistributionType.disNone
+              ? Text('${S.of(context).trees}: ${widget.vegetation.treesDistribution?.index ?? 0}')
+              : Text('${S.of(context).trees}: ${widget.vegetation.treesDistribution?.index ?? 0}; ${widget.vegetation.treesProportion}%; ${widget.vegetation.treesHeight} cm'),
+          if (widget.vegetation.notes != null && widget.vegetation.notes != '')
+            Text('${widget.vegetation.notes}'),
         ],
       ),
       onLongPress: widget.onLongPress,

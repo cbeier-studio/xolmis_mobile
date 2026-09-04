@@ -110,9 +110,24 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
                             items: DistributionType.values.map((distribution) {
                               return DropdownMenuItem(
                                 value: distribution,
-                                child: Text(
+                                child: Row(
+                                  children: [
+                                    Text(
+                                  distribution.index.toString().padLeft(2, '0'),
+                                      style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14.0,
+                                    ),
+                                ),
+                                const SizedBox(width: 8.0),
+                                Text(
                                   distributionTypeFriendlyNames[distribution]!,
                                   overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    fontSize: 14.0,
+                                  ),
+                                ),
+                                ],
                                 ),
                               );
                             }).toList(),
@@ -140,9 +155,24 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
                             items: DistributionType.values.map((distribution) {
                               return DropdownMenuItem(
                                 value: distribution,
-                                child: Text(
-                                  distributionTypeFriendlyNames[distribution]!,
-                                  overflow: TextOverflow.ellipsis,
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      distribution.index.toString().padLeft(2, '0'),
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14.0,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8.0),
+                                    Text(
+                                      distributionTypeFriendlyNames[distribution]!,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        fontSize: 14.0,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               );
                             }).toList(),
@@ -170,9 +200,24 @@ class AddVegetationDataScreenState extends State<AddVegetationDataScreen> {
                             items: DistributionType.values.map((distribution) {
                               return DropdownMenuItem(
                                 value: distribution,
-                                child: Text(
-                                  distributionTypeFriendlyNames[distribution]!,
-                                  overflow: TextOverflow.ellipsis,
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      distribution.index.toString().padLeft(2, '0'),
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14.0,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8.0),
+                                    Text(
+                                      distributionTypeFriendlyNames[distribution]!,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        fontSize: 14.0,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               );
                             }).toList(),

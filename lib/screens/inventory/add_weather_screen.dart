@@ -49,11 +49,19 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
     if (widget.isEditing) {
       _selectedPrecipitation = widget.weather!.precipitation!;
       _cloudCoverController.text = widget.weather!.cloudCover.toString();
+      if (widget.weather!.temperature != null) {
       _temperatureController.text = widget.weather!.temperature.toString();
+      }
+      if (widget.weather!.windSpeed != null) {
       _windSpeedController.text = widget.weather!.windSpeed.toString();
+      }
       _selectedWindDirection = widget.weather!.windDirection;
-      _atmosphericPressureController.text = widget.weather!.atmosphericPressure.toString();
-      _relativeHumidityController.text = widget.weather!.relativeHumidity.toString();
+      if (widget.weather!.atmosphericPressure != null) {
+        _atmosphericPressureController.text = widget.weather!.atmosphericPressure.toString();
+      }
+      if (widget.weather!.relativeHumidity != null) {
+        _relativeHumidityController.text = widget.weather!.relativeHumidity.toString();
+      }
     }
   }
 
@@ -146,6 +154,7 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
                         ),
                         const SizedBox(height: 16.0),
                         Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Expanded(
                               child: TextFormField(
@@ -171,6 +180,7 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
                         ),
                         const SizedBox(height: 16.0,),
                         Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Expanded(
                               child: TextFormField(
@@ -230,15 +240,17 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
                         ),
                         const SizedBox(height: 16.0),
                         Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Expanded(
                               child: TextFormField(
                                 controller: _atmosphericPressureController,
-                                keyboardType: TextInputType.number,
+                                keyboardType: TextInputType.numberWithOptions(decimal: true),
+                                selectAllOnFocus: true,
                                 inputFormatters: [
                                   CommaToDotTextInputFormatter(),
                                   // Allow only numbers and decimal separator with 1 decimal place
-                                  FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,1}')),
+                                  // FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,1}')),
                                 ],
                                 decoration: InputDecoration(
                                   labelText: S.of(context).atmosphericPressure,
@@ -251,11 +263,11 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
                             Expanded(
                               child: TextFormField(
                                 controller: _relativeHumidityController,
-                                keyboardType: TextInputType.number,
+                                keyboardType: TextInputType.numberWithOptions(decimal: true),
                                 inputFormatters: [
                                   CommaToDotTextInputFormatter(),
                                   // Allow only numbers and decimal separator with 1 decimal place
-                                  FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,1}')),
+                                  // FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,1}')),
                                 ],
                                 decoration: InputDecoration(
                                   labelText: S.of(context).relativeHumidity,
@@ -329,11 +341,11 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
         final updatedWeather = widget.weather!.copyWith(
           cloudCover: int.tryParse(_cloudCoverController.text) ?? 0,
           precipitation: _selectedPrecipitation,
-          temperature: double.tryParse(_temperatureController.text) ?? 0,
-          windSpeed: int.tryParse(_windSpeedController.text) ?? 0,
+          temperature: double.tryParse(_temperatureController.text),
+          windSpeed: int.tryParse(_windSpeedController.text),
           windDirection: _selectedWindDirection,
-          atmosphericPressure: double.tryParse(_atmosphericPressureController.text) ?? 0,
-          relativeHumidity: double.tryParse(_relativeHumidityController.text) ?? 0,
+          atmosphericPressure: double.tryParse(_atmosphericPressureController.text),
+          relativeHumidity: double.tryParse(_relativeHumidityController.text),
         );
 
         final weatherProvider = Provider.of<WeatherProvider>(context, listen: false);
@@ -349,11 +361,11 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
           sampleTime: DateTime.now(),
           cloudCover: int.tryParse(_cloudCoverController.text) ?? 0,
           precipitation: _selectedPrecipitation,
-          temperature: double.tryParse(_temperatureController.text) ?? 0,
-          windSpeed: int.tryParse(_windSpeedController.text) ?? 0,
+          temperature: double.tryParse(_temperatureController.text),
+          windSpeed: int.tryParse(_windSpeedController.text),
           windDirection: _selectedWindDirection,
-          atmosphericPressure: double.tryParse(_atmosphericPressureController.text) ?? 0,
-          relativeHumidity: double.tryParse(_relativeHumidityController.text) ?? 0,
+          atmosphericPressure: double.tryParse(_atmosphericPressureController.text),
+          relativeHumidity: double.tryParse(_relativeHumidityController.text),
         );
 
         final weatherProvider = Provider.of<WeatherProvider>(context, listen: false);

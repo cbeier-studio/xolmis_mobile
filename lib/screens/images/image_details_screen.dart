@@ -21,7 +21,23 @@ class ImageDetailsScreen extends StatelessWidget {
         minScale: 0.5,
         maxScale: 5.0,
         child: Center(
-          child:  Image.file(File(imagePath)),
+          child:  Image.file(File(imagePath),
+            errorBuilder: (context, error, stackTrace) {
+              return Container(
+                width: 50,
+                height: 50,
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  border: Border.all(color: Colors.grey.shade400),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Icon(
+                  Icons.error,
+                  color: Theme.of(context).colorScheme.error,
+                  size: 24,
+                ),
+              );
+            },),
         ),
       ),
     );
