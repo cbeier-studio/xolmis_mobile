@@ -332,93 +332,145 @@ class VegetationListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AppImageProvider>(
-      builder: (context, appImageProvider, child) {
-        return ListTile(
-          leading: FutureBuilder<List<AppImage>>(
-            future: appImageProvider.fetchImagesForVegetation(vegetation.id ?? 0, notify: false),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator(
-                  year2023: false,
-                );
-              } else if (snapshot.hasError) {
-                return const Icon(Icons.error);
-              } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                return ClipRRect(
-                  borderRadius: BorderRadius.circular(4),
-                  child: Image.file(
-                    File(snapshot.data!.first.imagePath),
-                    width: 50,
-                    height: 50,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Container(
-                        width: 50,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          border: Border.all(color: Colors.grey.shade400),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Icon(
-                          Icons.error,
-                          color: Theme.of(context).colorScheme.error,
-                          size: 24,
-                        ),
-                      );
-                    },
-                  ),
-                );
-              } else {
-                return Container(
-                  width: 50,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    border: Border.all(color: Colors.grey.shade400),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Icon(
-                    Icons.image_not_supported_outlined,
-                    color: Colors.grey.shade500,
-                    size: 24,
-                  ),
-                );
-              }
-            },
+    return ListTile(
+      leading: VegetationThumbnail(vegetationId: vegetation.id ?? 0),
+      title: Text(DateFormat('dd/MM/yyyy HH:mm').format(vegetation.sampleTime!)),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Text('${vegetation.latitude}; ${vegetation.longitude}'),
+          vegetation.herbsDistribution == DistributionType.disNone
+              ? Text('${S.of(context).herbs}: ${vegetation.herbsDistribution?.index ?? 0}')
+              : Text('${S.of(context).herbs}: ${vegetation.herbsDistribution?.index ?? 0}; ${vegetation.herbsProportion}%; ${vegetation.herbsHeight} cm'),
+          vegetation.shrubsDistribution == DistributionType.disNone
+              ? Text('${S.of(context).shrubs}: ${vegetation.shrubsDistribution?.index ?? 0}')
+              : Text('${S.of(context).shrubs}: ${vegetation.shrubsDistribution?.index ?? 0}; ${vegetation.shrubsProportion}%; ${vegetation.shrubsHeight} cm'),
+          vegetation.treesDistribution == DistributionType.disNone
+              ? Text('${S.of(context).trees}: ${vegetation.treesDistribution?.index ?? 0}')
+              : Text('${S.of(context).trees}: ${vegetation.treesDistribution?.index ?? 0}; ${vegetation.treesProportion}%; ${vegetation.treesHeight} cm'),
+          if (vegetation.notes != null && vegetation.notes != '')
+            Text('${vegetation.notes}'),
+        ],
+      ),
+      onLongPress: onLongPress,
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AppImageScreen(
+              vegetationId: vegetation.id,
+            ),
           ),
-          title: Text(DateFormat('dd/MM/yyyy HH:mm').format(vegetation.sampleTime!)),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Text('${vegetation.latitude}; ${vegetation.longitude}'),
-              vegetation.herbsDistribution == DistributionType.disNone
-                  ? Text('${S.of(context).herbs}: ${vegetation.herbsDistribution?.index ?? 0}')
-                  : Text('${S.of(context).herbs}: ${vegetation.herbsDistribution?.index ?? 0}; ${vegetation.herbsProportion}%; ${vegetation.herbsHeight} cm'),
-              vegetation.shrubsDistribution == DistributionType.disNone
-                  ? Text('${S.of(context).shrubs}: ${vegetation.shrubsDistribution?.index ?? 0}')
-                  : Text('${S.of(context).shrubs}: ${vegetation.shrubsDistribution?.index ?? 0}; ${vegetation.shrubsProportion}%; ${vegetation.shrubsHeight} cm'),
-              vegetation.treesDistribution == DistributionType.disNone
-                  ? Text('${S.of(context).trees}: ${vegetation.treesDistribution?.index ?? 0}')
-                  : Text('${S.of(context).trees}: ${vegetation.treesDistribution?.index ?? 0}; ${vegetation.treesProportion}%; ${vegetation.treesHeight} cm'),
-              if (vegetation.notes != null && vegetation.notes != '')
-                Text('${vegetation.notes}'),
-            ],
-          ),
-          onLongPress: onLongPress,
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => AppImageScreen(
-                  vegetationId: vegetation.id,
-                ),
-              ),
-            );
-          },
         );
       },
+    );
+  }
+}
+
+/// A widget that displays a thumbnail for a vegetation sample, handling
+/// loading, error, and empty states reactively.
+class VegetationThumbnail extends StatefulWidget {
+  final int vegetationId;
+
+  const VegetationThumbnail({super.key, required this.vegetationId});
+
+  @override
+  State<VegetationThumbnail> createState() => _VegetationThumbnailState();
+}
+
+class _VegetationThumbnailState extends State<VegetationThumbnail> {
+  List<AppImage>? _images;
+  bool _isLoading = true;
+  bool _hasError = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    Provider.of<AppImageProvider>(context);
+    _fetchImages();
+  }
+
+  @override
+  void didUpdateWidget(VegetationThumbnail oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.vegetationId != widget.vegetationId) {
+      _fetchImages();
+    }
+  }
+
+  Future<void> _fetchImages() async {
+    try {
+      final provider = Provider.of<AppImageProvider>(context, listen: false);
+      final images = await provider.fetchImagesForVegetation(widget.vegetationId, notify: false);
+      if (mounted) {
+        setState(() {
+          _images = images;
+          _isLoading = false;
+          _hasError = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+          _hasError = true;
+        });
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_isLoading && (_images == null || _images!.isEmpty)) {
+      return const SizedBox(
+        width: 50,
+        height: 50,
+        child: Center(
+          child: SizedBox(
+            width: 20,
+            height: 20,
+            child: CircularProgressIndicator(strokeWidth: 2, year2023: false),
+          ),
+        ),
+      );
+    }
+
+    if (_hasError) {
+      return _buildPlaceholder(context, Icons.error_outline, isError: true);
+    }
+
+    if (_images != null && _images!.isNotEmpty) {
+      final imagePath = _images!.first.imagePath;
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(4),
+        child: Image.file(
+          File(imagePath),
+          width: 50,
+          height: 50,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) =>
+              _buildPlaceholder(context, Icons.error, isError: true),
+        ),
+      );
+    }
+
+    return _buildPlaceholder(context, Icons.image_not_supported_outlined);
+  }
+
+  Widget _buildPlaceholder(BuildContext context, IconData icon, {bool isError = false}) {
+    return Container(
+      width: 50,
+      height: 50,
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        border: Border.all(color: Colors.grey.shade400),
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Icon(
+        icon,
+        color: isError ? Theme.of(context).colorScheme.error : Colors.grey.shade500,
+        size: 24,
+      ),
     );
   }
 }

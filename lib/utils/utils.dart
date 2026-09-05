@@ -3,6 +3,8 @@ import 'dart:math';
 
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as path;
 import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -524,4 +526,17 @@ String removeDiacritics(String text) {
       .replaceAll('ü', 'u')
       .replaceAll('ç', 'c')
       .replaceAll('ñ', 'n');
+}
+
+/// Resolves a stored image path to a valid absolute path for the current session.
+///
+/// If [storedPath] is already an absolute path (legacy), it extracts the
+/// filename and re-bases it to the current application documents directory.
+/// If it's already just a filename, it appends the documents directory path.
+Future<String> resolveImagePath(String storedPath) async {
+  if (storedPath.isEmpty) return '';
+
+  final fileName = path.basename(storedPath);
+  final directory = await getApplicationDocumentsDirectory();
+  return path.join(directory.path, fileName);
 }

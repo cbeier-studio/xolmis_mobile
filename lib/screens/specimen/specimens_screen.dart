@@ -1437,122 +1437,71 @@ class SpecimensScreenState extends State<SpecimensScreen> {
   ) {
     final specimen = filteredSpecimens[index];
     final isSelected = selectedSpecimens.contains(specimen.id);
-    final isLargeScreen = Responsive.isMediumScreen(context) || Responsive.isLargeScreen(context);  // MediaQuery.sizeOf(context).width >= kTabletBreakpoint;
+    final isLargeScreen =
+        Responsive.isMediumScreen(context) ||
+        Responsive.isLargeScreen(context); // MediaQuery.sizeOf(context).width >= kTabletBreakpoint;
     final selectedSpecimenId = _getEffectiveSelectedSpecimenId(
       filteredSpecimens,
       isLargeScreen,
     );
     final isDetailSelected = selectedSpecimenId == specimen.id;
 
-    return Consumer<AppImageProvider>(
-      builder: (context, appImageProvider, child) {
-        return ListTile(
-          leading: Checkbox(
-            value: isSelected,
-            onChanged: (bool? value) {
-              setState(() {
-                if (value == true) {
-                  selectedSpecimens.add(specimen.id!);
-                } else {
-                  selectedSpecimens.remove(specimen.id);
-                }
-              });
-            },
-          ),
-          trailing: FutureBuilder<List<AppImage>>(
-            future: appImageProvider.fetchImagesForSpecimen(specimen.id ?? 0, notify: false),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator(year2023: false);
-              } else if (snapshot.hasError) {
-                return const Icon(Icons.error);
-              } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                return ClipRRect(
-                  borderRadius: BorderRadius.circular(4),
-                  child: Image.file(
-                    File(snapshot.data!.first.imagePath),
-                    width: 50,
-                    height: 50,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Container(
-                        width: 50,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          border: Border.all(color: Colors.grey.shade400),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Icon(
-                          Icons.error,
-                          color: Theme.of(context).colorScheme.error,
-                          size: 24,
-                        ),
-                      );
-                    },
-                  ),
-                );
-              } else {
-                return Container(
-                  width: 50,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    border: Border.all(color: Colors.grey.shade400),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Icon(
-                    Icons.image_not_supported_outlined,
-                    color: Colors.grey.shade500,
-                    size: 24,
-                  ),
-                );
-              }
-            },
-          ),
-          title: Text(
-                  specimen.fieldNumber,
-                  overflow: TextOverflow.ellipsis,
-                ),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                specimen.speciesName!,
-                style: TextStyle(
-                    fontStyle: FontStyle.italic,
-                    color: allSpeciesNames.contains(specimen.speciesName)
+    return ListTile(
+      leading: Checkbox(
+        value: isSelected,
+        onChanged: (bool? value) {
+          setState(() {
+            if (value == true) {
+              selectedSpecimens.add(specimen.id!);
+            } else {
+              selectedSpecimens.remove(specimen.id);
+            }
+          });
+        },
+      ),
+      trailing: SpecimenThumbnail(specimenId: specimen.id ?? 0),
+      title: Text(
+        specimen.fieldNumber,
+        overflow: TextOverflow.ellipsis,
+      ),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            specimen.speciesName!,
+            style: TextStyle(
+              fontStyle: FontStyle.italic,
+              color:
+                  allSpeciesNames.contains(specimen.speciesName)
                       ? null
                       : Colors.red,
-                ),
-              ),
-              Text(specimen.locality!, overflow: TextOverflow.ellipsis),
-              Text('${specimen.longitude}; ${specimen.latitude}'),
-              Text(DateFormat('dd/MM/yyyy HH:mm').format(specimen.sampleTime!)),
-              _buildSpecimenTypePill(context, specimen.type),
-            ],
+            ),
           ),
-          selected: isLargeScreen ? isDetailSelected : isSelected,
-          selectedTileColor:
-              isLargeScreen
-                  ? Theme.of(context).colorScheme.secondaryContainer
-                  : Theme.of(context).colorScheme.primaryContainer,
-          onLongPress: () => _showBottomSheet(context, specimen),
-          onTap: () {
-            if (isLargeScreen) {
-              setState(() {
-                _selectedSpecimen = specimen;
-              });
-            } else {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => AppImageScreen(specimenId: specimen.id),
-                ),
-              );
-            }
-          },
-        );
+          Text(specimen.locality!, overflow: TextOverflow.ellipsis),
+          Text('${specimen.longitude}; ${specimen.latitude}'),
+          Text(DateFormat('dd/MM/yyyy HH:mm').format(specimen.sampleTime!)),
+          _buildSpecimenTypePill(context, specimen.type),
+        ],
+      ),
+      selected: isLargeScreen ? isDetailSelected : isSelected,
+      selectedTileColor:
+          isLargeScreen
+              ? Theme.of(context).colorScheme.secondaryContainer
+              : Theme.of(context).colorScheme.primaryContainer,
+      onLongPress: () => _showBottomSheet(context, specimen),
+      onTap: () {
+        if (isLargeScreen) {
+          setState(() {
+            _selectedSpecimen = specimen;
+          });
+        } else {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AppImageScreen(specimenId: specimen.id),
+            ),
+          );
+        }
       },
     );
   }
@@ -1571,6 +1520,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
       decoration: BoxDecoration(
         color: backgroundColor,
+        border: Border.all(color: Theme.of(context).dividerColor.withValues(alpha: 0.12)),
         borderRadius: BorderRadius.circular(999.0),
       ),
       child: Text(
@@ -1935,6 +1885,118 @@ class SpecimensScreenState extends State<SpecimensScreen> {
           ),
         );
       },
+    );
+  }
+}
+
+/// A widget that displays a thumbnail for a specimen, handling loading,
+/// error, and empty states reactively.
+class SpecimenThumbnail extends StatefulWidget {
+  final int specimenId;
+
+  const SpecimenThumbnail({super.key, required this.specimenId});
+
+  @override
+  State<SpecimenThumbnail> createState() => _SpecimenThumbnailState();
+}
+
+class _SpecimenThumbnailState extends State<SpecimenThumbnail> {
+  List<AppImage>? _images;
+  bool _isLoading = true;
+  bool _hasError = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Re-fetch when the AppImageProvider notifies changes.
+    // This makes the thumbnail reactive to image additions or removals.
+    Provider.of<AppImageProvider>(context);
+    _fetchImages();
+  }
+
+  @override
+  void didUpdateWidget(SpecimenThumbnail oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.specimenId != widget.specimenId) {
+      _fetchImages();
+    }
+  }
+
+  Future<void> _fetchImages() async {
+    try {
+      final provider = Provider.of<AppImageProvider>(context, listen: false);
+      final images = await provider.fetchImagesForSpecimen(widget.specimenId, notify: false);
+      if (mounted) {
+        setState(() {
+          _images = images;
+          _isLoading = false;
+          _hasError = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+          _hasError = true;
+        });
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Show a smaller progress indicator during the initial load if no data is available yet.
+    if (_isLoading && (_images == null || _images!.isEmpty)) {
+      return const SizedBox(
+        width: 50,
+        height: 50,
+        child: Center(
+          child: SizedBox(
+            width: 20,
+            height: 20,
+            child: CircularProgressIndicator(strokeWidth: 2, year2023: false),
+          ),
+        ),
+      );
+    }
+
+    if (_hasError) {
+      return _buildPlaceholder(context, Icons.error_outline, isError: true);
+    }
+
+    if (_images != null && _images!.isNotEmpty) {
+      final imagePath = _images!.first.imagePath;
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(4),
+        child: Image.file(
+          File(imagePath),
+          width: 50,
+          height: 50,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) =>
+              _buildPlaceholder(context, Icons.error, isError: true),
+        ),
+      );
+    }
+
+    // Default placeholder when no images are found.
+    return _buildPlaceholder(context, Icons.image_not_supported_outlined);
+  }
+
+  Widget _buildPlaceholder(BuildContext context, IconData icon, {bool isError = false}) {
+    return Container(
+      width: 50,
+      height: 50,
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        border: Border.all(color: Colors.grey.shade400),
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Icon(
+        icon,
+        color: isError ? Theme.of(context).colorScheme.error : Colors.grey.shade500,
+        size: 24,
+      ),
     );
   }
 }

@@ -91,12 +91,17 @@ class _AboutScreenState extends State<AboutScreen> {
               title: Text(S.current.changelog),
               trailing: const Icon(Icons.chevron_right),
               onTap: () {
+                final locale = Localizations.localeOf(context);
+                final assetPath = locale.languageCode == 'pt'
+                    ? 'assets/changelog-pt.md'
+                    : 'assets/changelog.md';
+
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => MarkdownViewerScreen(
                       title: S.current.changelog,
-                      assetPath: 'assets/changelog.md',
+                      assetPath: assetPath,
                     ),
                   ),
                 );

@@ -1789,7 +1789,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                   secondaryColor: colorScheme.primaryContainer,
                   secondaryForeground: colorScheme.onPrimaryContainer,
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: 4),
                 Text(
                   useRecordsLabel
                       ? S.current.recordsCount(withinCount + outCount)
@@ -1824,6 +1824,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
       decoration: BoxDecoration(
         color: backgroundColor,
+        border: Border.all(color: Theme.of(context).dividerColor.withValues(alpha: 0.12)),
         borderRadius: BorderRadius.circular(999.0),
       ),
       child: Text(

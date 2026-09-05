@@ -288,32 +288,7 @@ class EggGridItem extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
-              child: Consumer<AppImageProvider>(
-                builder: (context, appImageProvider, child) {
-                  return FutureBuilder<List<AppImage>>(
-                    future: appImageProvider.fetchImagesForEgg(egg.id!, notify: false),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const CircularProgressIndicator(year2023: false,);
-                      } else if (snapshot.hasError) {
-                        return const Icon(Icons.error);
-                      } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                        return ClipRRect(
-                          borderRadius: BorderRadius.circular(0),
-                          child: Image.file(
-                            File(snapshot.data!.first.imagePath),
-                            width: 50,
-                            height: 50,
-                            fit: BoxFit.cover,
-                          ),
-                        );
-                      } else {
-                        return const Icon(Icons.hide_image_outlined);
-                      }
-                    },
-                  );
-                },
-              ),
+              child: EggThumbnail(eggId: egg.id ?? 0),
             ),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -346,89 +321,140 @@ class EggListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AppImageProvider>(
-      builder: (context, appImageProvider, child) {
-        return ListTile(
-          leading: FutureBuilder<List<AppImage>>(
-            future: appImageProvider.fetchImagesForEgg(egg.id ?? 0, notify: false),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator(year2023: false,);
-              } else if (snapshot.hasError) {
-                return const Icon(Icons.error);
-              } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                return ClipRRect(
-                  borderRadius: BorderRadius.circular(4),
-                  child: Image.file(
-                    File(snapshot.data!.first.imagePath),
-                    width: 50,
-                    height: 50,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Container(
-                        width: 50,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          border: Border.all(color: Colors.grey.shade400),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Icon(
-                          Icons.error,
-                          color: Theme.of(context).colorScheme.error,
-                          size: 24,
-                        ),
-                      );
-                    },
-                  ),
-                );
-              } else {
-                return Container(
-                  width: 50,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    border: Border.all(color: Colors.grey.shade400),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Icon(
-                    Icons.image_not_supported_outlined,
-                    color: Colors.grey.shade500,
-                    size: 24,
-                  ),
-                );
-              }
-            },
+    return ListTile(
+      leading: EggThumbnail(eggId: egg.id ?? 0),
+      title: Text('${egg.fieldNumber}'),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            egg.speciesName!,
+            style: TextStyle(
+              fontStyle: FontStyle.italic,
+              color:
+                  allSpeciesNames.contains(egg.speciesName) ? null : Colors.red,
+            ),
           ),
-          title: Text('${egg.fieldNumber}'),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                egg.speciesName!,
-                style: TextStyle(
-                    fontStyle: FontStyle.italic,
-                    color: allSpeciesNames.contains(egg.speciesName)
-                        ? null
-                        : Colors.red,
-                ),
-              ),
-              Text(
-                DateFormat('dd/MM/yyyy HH:mm').format(egg.sampleTime!),
-              ),
-            ],
+          Text(
+            DateFormat('dd/MM/yyyy HH:mm').format(egg.sampleTime!),
           ),
-          onLongPress: onLongPress,
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => AppImageScreen(eggId: egg.id),
-              ),
-            );
-          },
+        ],
+      ),
+      onLongPress: onLongPress,
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => AppImageScreen(eggId: egg.id)),
         );
       },
+    );
+  }
+}
+
+/// A widget that displays a thumbnail for an egg, handling loading,
+/// error, and empty states reactively.
+class EggThumbnail extends StatefulWidget {
+  final int eggId;
+
+  const EggThumbnail({super.key, required this.eggId});
+
+  @override
+  State<EggThumbnail> createState() => _EggThumbnailState();
+}
+
+class _EggThumbnailState extends State<EggThumbnail> {
+  List<AppImage>? _images;
+  bool _isLoading = true;
+  bool _hasError = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    Provider.of<AppImageProvider>(context);
+    _fetchImages();
+  }
+
+  @override
+  void didUpdateWidget(EggThumbnail oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.eggId != widget.eggId) {
+      _fetchImages();
+    }
+  }
+
+  Future<void> _fetchImages() async {
+    try {
+      final provider = Provider.of<AppImageProvider>(context, listen: false);
+      final images = await provider.fetchImagesForEgg(widget.eggId, notify: false);
+      if (mounted) {
+        setState(() {
+          _images = images;
+          _isLoading = false;
+          _hasError = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+          _hasError = true;
+        });
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_isLoading && (_images == null || _images!.isEmpty)) {
+      return const SizedBox(
+        width: 50,
+        height: 50,
+        child: Center(
+          child: SizedBox(
+            width: 20,
+            height: 20,
+            child: CircularProgressIndicator(strokeWidth: 2, year2023: false),
+          ),
+        ),
+      );
+    }
+
+    if (_hasError) {
+      return _buildPlaceholder(context, Icons.error_outline, isError: true);
+    }
+
+    if (_images != null && _images!.isNotEmpty) {
+      final imagePath = _images!.first.imagePath;
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(4),
+        child: Image.file(
+          File(imagePath),
+          width: 50,
+          height: 50,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) =>
+              _buildPlaceholder(context, Icons.error, isError: true),
+        ),
+      );
+    }
+
+    return _buildPlaceholder(context, Icons.image_not_supported_outlined);
+  }
+
+  Widget _buildPlaceholder(BuildContext context, IconData icon, {bool isError = false}) {
+    return Container(
+      width: 50,
+      height: 50,
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        border: Border.all(color: Colors.grey.shade400),
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Icon(
+        icon,
+        color: isError ? Theme.of(context).colorScheme.error : Colors.grey.shade500,
+        size: 24,
+      ),
     );
   }
 }

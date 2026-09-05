@@ -295,32 +295,7 @@ class NestRevisionGridItem extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(0.0, 16.0, 16.0, 16.0),
-              child: Consumer<AppImageProvider>(
-                builder: (context, appImageProvider, child) {
-                  return FutureBuilder<List<AppImage>>(
-                    future: appImageProvider.fetchImagesForNestRevision(revision.id!, notify: false),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const CircularProgressIndicator(year2023: false,);
-                      } else if (snapshot.hasError) {
-                        return const Icon(Icons.error);
-                      } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                        return ClipRRect(
-                          borderRadius: BorderRadius.circular(0),
-                          child: Image.file(
-                            File(snapshot.data!.first.imagePath),
-                            width: 50,
-                            height: 50,
-                            fit: BoxFit.cover,
-                          ),
-                        );
-                      } else {
-                        return const Icon(Icons.hide_image_outlined);
-                      }
-                    },
-                  );
-                },
-              ),
+              child: NestRevisionThumbnail(revisionId: revision.id ?? 0),
             ),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -363,101 +338,155 @@ class RevisionListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AppImageProvider>(
-      builder: (context, appImageProvider, child) {
-        return ListTile(
-          leading: FutureBuilder<List<AppImage>>(
-            future: appImageProvider.fetchImagesForNestRevision(nestRevision.id ?? 0, notify: false),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator(year2023: false,);
-              } else if (snapshot.hasError) {
-                return const Icon(Icons.error);
-              } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                return ClipRRect(
-                  borderRadius: BorderRadius.circular(4),
-                  child: Image.file(
-                    File(snapshot.data!.first.imagePath),
-                    width: 50,
-                    height: 50,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Container(
-                        width: 50,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          border: Border.all(color: Colors.grey.shade400),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Icon(
-                          Icons.error,
-                          color: Theme.of(context).colorScheme.error,
-                          size: 24,
-                        ),
-                      );
-                    },
-                  ),
-                );
-              } else {
-                return Container(
-                  width: 50,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    border: Border.all(color: Colors.grey.shade400),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Icon(
-                    Icons.image_not_supported_outlined,
-                    color: Colors.grey.shade500,
-                    size: 24,
-                  ),
-                );
-              }
-            },
-          ),
-          title: Text(
-            DateFormat(
-              'dd/MM/yyyy HH:mm',
-            ).format(nestRevision.sampleTime!),
-          ),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '${nestStatusTypeFriendlyNames[nestRevision.nestStatus]}: ${nestStageTypeFriendlyNames[nestRevision.nestStage]}',
-                style: TextStyle(
-                  color:
-                      nestRevision.nestStatus == NestStatusType.nstActive
-                          ? Colors.blue
-                          : nestRevision.nestStatus ==
+    return ListTile(
+      leading: NestRevisionThumbnail(revisionId: nestRevision.id ?? 0),
+      title: Text(
+        DateFormat(
+          'dd/MM/yyyy HH:mm',
+        ).format(nestRevision.sampleTime!),
+      ),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '${nestStatusTypeFriendlyNames[nestRevision.nestStatus]}: ${nestStageTypeFriendlyNames[nestRevision.nestStage]}',
+            style: TextStyle(
+              color:
+                  nestRevision.nestStatus == NestStatusType.nstActive
+                      ? Colors.blue
+                      : nestRevision.nestStatus ==
                               NestStatusType.nstInactive
                           ? Colors.red
                           : null,
-                ),
-              ),
-              Text(
-                '${S.of(context).host}: ${nestRevision.eggsHost ?? 0} ${S.of(context).egg(nestRevision.eggsHost ?? 0).toLowerCase()}, ${nestRevision.nestlingsHost ?? 0} ${S.of(context).nestling(nestRevision.nestlingsHost ?? 0).toLowerCase()}',
-              ),
-              Text(
-                '${S.of(context).nidoparasite}: ${nestRevision.eggsParasite ?? 0} ${S.of(context).egg(nestRevision.eggsParasite ?? 0).toLowerCase()}, ${nestRevision.nestlingsParasite ?? 0} ${S.of(context).nestling(nestRevision.nestlingsParasite ?? 0).toLowerCase()}',
-              ),
-            ],
+            ),
           ),
-          onLongPress: onLongPress,
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder:
-                    (context) =>
-                        AppImageScreen(nestRevisionId: nestRevision.id),
-              ),
-            );
-          },
+          Text(
+            '${S.of(context).host}: ${nestRevision.eggsHost ?? 0} ${S.of(context).egg(nestRevision.eggsHost ?? 0).toLowerCase()}, ${nestRevision.nestlingsHost ?? 0} ${S.of(context).nestling(nestRevision.nestlingsHost ?? 0).toLowerCase()}',
+          ),
+          Text(
+            '${S.of(context).nidoparasite}: ${nestRevision.eggsParasite ?? 0} ${S.of(context).egg(nestRevision.eggsParasite ?? 0).toLowerCase()}, ${nestRevision.nestlingsParasite ?? 0} ${S.of(context).nestling(nestRevision.nestlingsParasite ?? 0).toLowerCase()}',
+          ),
+        ],
+      ),
+      onLongPress: onLongPress,
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder:
+                (context) =>
+                    AppImageScreen(nestRevisionId: nestRevision.id),
+          ),
         );
       },
+    );
+  }
+}
+
+/// A widget that displays a thumbnail for a nest revision, handling loading,
+/// error, and empty states reactively.
+class NestRevisionThumbnail extends StatefulWidget {
+  final int revisionId;
+
+  const NestRevisionThumbnail({super.key, required this.revisionId});
+
+  @override
+  State<NestRevisionThumbnail> createState() => _NestRevisionThumbnailState();
+}
+
+class _NestRevisionThumbnailState extends State<NestRevisionThumbnail> {
+  List<AppImage>? _images;
+  bool _isLoading = true;
+  bool _hasError = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    Provider.of<AppImageProvider>(context);
+    _fetchImages();
+  }
+
+  @override
+  void didUpdateWidget(NestRevisionThumbnail oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.revisionId != widget.revisionId) {
+      _fetchImages();
+    }
+  }
+
+  Future<void> _fetchImages() async {
+    try {
+      final provider = Provider.of<AppImageProvider>(context, listen: false);
+      final images = await provider.fetchImagesForNestRevision(widget.revisionId, notify: false);
+      if (mounted) {
+        setState(() {
+          _images = images;
+          _isLoading = false;
+          _hasError = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+          _hasError = true;
+        });
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_isLoading && (_images == null || _images!.isEmpty)) {
+      return const SizedBox(
+        width: 50,
+        height: 50,
+        child: Center(
+          child: SizedBox(
+            width: 20,
+            height: 20,
+            child: CircularProgressIndicator(strokeWidth: 2, year2023: false),
+          ),
+        ),
+      );
+    }
+
+    if (_hasError) {
+      return _buildPlaceholder(context, Icons.error_outline, isError: true);
+    }
+
+    if (_images != null && _images!.isNotEmpty) {
+      final imagePath = _images!.first.imagePath;
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(4),
+        child: Image.file(
+          File(imagePath),
+          width: 50,
+          height: 50,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) =>
+              _buildPlaceholder(context, Icons.error, isError: true),
+        ),
+      );
+    }
+
+    return _buildPlaceholder(context, Icons.image_not_supported_outlined);
+  }
+
+  Widget _buildPlaceholder(BuildContext context, IconData icon, {bool isError = false}) {
+    return Container(
+      width: 50,
+      height: 50,
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        border: Border.all(color: Colors.grey.shade400),
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Icon(
+        icon,
+        color: isError ? Theme.of(context).colorScheme.error : Colors.grey.shade500,
+        size: 24,
+      ),
     );
   }
 }

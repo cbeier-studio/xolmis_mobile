@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../data/database/database_helper.dart';
+import 'utils.dart';
 
 /// Deletes all files and directories inside the app temporary directory.
 ///
@@ -65,9 +66,12 @@ Future<bool> backupDatabase(String filePath) async {
 
     if (images != null) {
       for (final imageRow in images) {
-        final imagePath = imageRow['imagePath'] as String?;
-        if (imagePath != null && await File(imagePath).exists()) {
-          encoder.addFile(File(imagePath), path.basename(imagePath));
+        final storedPath = imageRow['imagePath'] as String?;
+        if (storedPath != null) {
+          final absolutePath = await resolveImagePath(storedPath);
+          if (await File(absolutePath).exists()) {
+            encoder.addFile(File(absolutePath), path.basename(absolutePath));
+          }
         }
       }
     }
@@ -131,19 +135,15 @@ Future<bool> restoreDatabase(String filePath) async {
     // Re-open the database
     final db = await dbHelper.initDatabase();
 
-    // Update image paths in the database
+    // Update image paths in the database to be relative (filename only)
     final images = await db.query('images', columns: ['id', 'imagePath']);
     if (images.isNotEmpty) {
-      final imageDirectory = await getApplicationDocumentsDirectory();
       for (final imageRow in images) {
         final imageId = imageRow['id'] as int?;
-        final oldImagePath = imageRow['imagePath'] as String?;
-        if (imageId != null && oldImagePath != null) {
-          final imageName = path.basename(oldImagePath);
-          final newImagePath = path.join(imageDirectory.path, imageName);
-          if (await File(newImagePath).exists()) {
-            await db.update('images', {'imagePath': newImagePath}, where: 'id = ?', whereArgs: [imageId]);
-          }
+        final currentPath = imageRow['imagePath'] as String?;
+        if (imageId != null && currentPath != null) {
+          final relativePath = path.basename(currentPath);
+          await db.update('images', {'imagePath': relativePath}, where: 'id = ?', whereArgs: [imageId]);
         }
       }
     }

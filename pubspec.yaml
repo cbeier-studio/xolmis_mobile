@@ -3,7 +3,7 @@ description: "Collect ornithological data in the field."
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.3+144
+version: 1.0.3+145
 
 environment:
   sdk: ^3.7.0
@@ -32,7 +32,6 @@ dependencies:
   image_picker: ^1.2.3
   file_picker: ^12.2.0
   share_plus: ^13.3.0
-#  timelines_plus: ^1.0.6
 
   # Data and persistence dependencies
   sqflite: ^2.4.2+1
@@ -45,6 +44,7 @@ dependencies:
       ref: 751dfc597c893a0b34eccfe6921f126e03a5c683
   geoxml: ^2.6.2
   archive: ^4.2.0
+  flutter_markdown_plus: ^1.0.12
 
   # State management
   provider: ^6.1.5+1
@@ -57,7 +57,7 @@ dependencies:
   package_info_plus: ^10.2.1
   device_info_plus: ^13.2.0
   url_launcher: ^6.3.2
-  flutter_markdown_plus: ^1.0.12
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -101,18 +101,21 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
   assets:
+  # license and changelogs
     - assets/license.txt
-#    - assets/species_data.json
+    - assets/license.md
+    - assets/changelog.md
+    - assets/changelog-pt.md
+  # icons and images
+    - assets/xolmis_icon.png
+    - assets/xolmis_icon_monochrome.png
+    - assets/alianza_del_pastizal_logo.png
+  # species checklists
     - assets/checklists/species_data_AR.json
     - assets/checklists/species_data_BR.json
     - assets/checklists/species_data_PY.json
     - assets/checklists/species_data_UY.json
-    - assets/xolmis_icon.png
-    - assets/xolmis_icon_monochrome.png
-    - assets/alianza_del_pastizal_logo.png
-    - assets/changelog.md
-    - assets/changelog-pt.md
-    - assets/license.md
+  # taxonomy updates
     - assets/updates/species_update_2025.json
 
 

@@ -176,8 +176,10 @@ class AddJournalScreenState extends State<AddJournalScreen> {
                       if (pickedFile != null) {
                         // Save the image to the app's documents directory
                         final directory = await getApplicationDocumentsDirectory();
-                        final fileName = path.basename(pickedFile.path);
-                        final savedImage = await File(pickedFile.path).copy('${directory.path}/$fileName');
+                        final String originalFileName = path.basename(pickedFile.path);
+                        final String extension = path.extension(originalFileName);
+                        final String newFileName = '${DateTime.now().millisecondsSinceEpoch}$extension';
+                        await File(pickedFile.path).copy('${directory.path}/$newFileName');
 
                         final selection = _notesController.selection;
                         _notesController.replaceText(
@@ -186,7 +188,7 @@ class AddJournalScreenState extends State<AddJournalScreen> {
                           EmbeddableObject(
                             'image',
                             inline: false,
-                            data: {'source_type': kIsWeb ? 'url' : 'file', 'source': savedImage.path},
+                            data: {'source_type': kIsWeb ? 'url' : 'file', 'source': newFileName},
                           ),
                         );
                         _notesController.replaceText(
@@ -202,8 +204,15 @@ class AddJournalScreenState extends State<AddJournalScreen> {
                   MenuItemButton(
                     onPressed: () async {
                       final picker = ImagePicker();
-                      final image = await picker.pickImage(source: ImageSource.gallery);
-                      if (image != null) {
+                      final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+                      if (pickedFile != null) {
+                        // Save the image to the app's documents directory
+                        final directory = await getApplicationDocumentsDirectory();
+                        final String originalFileName = path.basename(pickedFile.path);
+                        final String extension = path.extension(originalFileName);
+                        final String newFileName = '${DateTime.now().millisecondsSinceEpoch}$extension';
+                        await File(pickedFile.path).copy('${directory.path}/$newFileName');
+
                         final selection = _notesController.selection;
                         _notesController.replaceText(
                           selection.baseOffset,
@@ -211,7 +220,7 @@ class AddJournalScreenState extends State<AddJournalScreen> {
                           EmbeddableObject(
                             'image',
                             inline: false,
-                            data: {'source_type': kIsWeb ? 'url' : 'file', 'source': image.path},
+                            data: {'source_type': kIsWeb ? 'url' : 'file', 'source': newFileName},
                           ),
                         );
                         _notesController.replaceText(
@@ -362,61 +371,70 @@ class AddJournalScreenState extends State<AddJournalScreen> {
               );
             },
             menuChildren: [
-              MenuItemButton(
-                onPressed: () async {
-                  final picker = ImagePicker();
-                  final pickedFile = await picker.pickImage(source: ImageSource.camera);
-                  if (pickedFile != null) {
-                    // Save the image to the app's documents directory
-                    final directory = await getApplicationDocumentsDirectory();
-                    final fileName = path.basename(pickedFile.path);
-                    final savedImage = await File(pickedFile.path).copy('${directory.path}/$fileName');
+                  MenuItemButton(
+                    onPressed: () async {
+                      final picker = ImagePicker();
+                      final pickedFile = await picker.pickImage(source: ImageSource.camera);
+                      if (pickedFile != null) {
+                        // Save the image to the app's documents directory
+                        final directory = await getApplicationDocumentsDirectory();
+                        final String originalFileName = path.basename(pickedFile.path);
+                        final String extension = path.extension(originalFileName);
+                        final String newFileName = '${DateTime.now().millisecondsSinceEpoch}$extension';
+                        await File(pickedFile.path).copy('${directory.path}/$newFileName');
 
-                    final selection = _notesController.selection;
-                    _notesController.replaceText(
-                      selection.baseOffset,
-                      selection.extentOffset - selection.baseOffset,
-                      EmbeddableObject(
-                        'image',
-                        inline: false,
-                        data: {'source_type': kIsWeb ? 'url' : 'file', 'source': savedImage.path},
-                      ),
-                    );
-                    _notesController.replaceText(
-                      selection.baseOffset + 1,
-                      0,
-                      '\n',
-                      selection: TextSelection.collapsed(offset: selection.baseOffset + 2),
-                    );
-                  }
-                },
-                child: Text(S.current.camera),
-              ),
-              MenuItemButton(
-                onPressed: () async {
-                  final picker = ImagePicker();
-                  final image = await picker.pickImage(source: ImageSource.gallery);
-                  if (image != null) {
-                    final selection = _notesController.selection;
-                    _notesController.replaceText(
-                      selection.baseOffset,
-                      selection.extentOffset - selection.baseOffset,
-                      EmbeddableObject(
-                        'image',
-                        inline: false,
-                        data: {'source_type': kIsWeb ? 'url' : 'file', 'source': image.path},
-                      ),
-                    );
-                    _notesController.replaceText(
-                      selection.baseOffset + 1,
-                      0,
-                      '\n',
-                      selection: TextSelection.collapsed(offset: selection.baseOffset + 2),
-                    );
-                  }
-                },
-                child: Text(S.current.gallery),
-              ),
+                        final selection = _notesController.selection;
+                        _notesController.replaceText(
+                          selection.baseOffset,
+                          selection.extentOffset - selection.baseOffset,
+                          EmbeddableObject(
+                            'image',
+                            inline: false,
+                            data: {'source_type': kIsWeb ? 'url' : 'file', 'source': newFileName},
+                          ),
+                        );
+                        _notesController.replaceText(
+                          selection.baseOffset + 1,
+                          0,
+                          '\n',
+                          selection: TextSelection.collapsed(offset: selection.baseOffset + 2),
+                        );
+                      }
+                    },
+                    child: Text(S.current.camera),
+                  ),
+                  MenuItemButton(
+                    onPressed: () async {
+                      final picker = ImagePicker();
+                      final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+                      if (pickedFile != null) {
+                        // Save the image to the app's documents directory
+                        final directory = await getApplicationDocumentsDirectory();
+                        final String originalFileName = path.basename(pickedFile.path);
+                        final String extension = path.extension(originalFileName);
+                        final String newFileName = '${DateTime.now().millisecondsSinceEpoch}$extension';
+                        await File(pickedFile.path).copy('${directory.path}/$newFileName');
+
+                        final selection = _notesController.selection;
+                        _notesController.replaceText(
+                          selection.baseOffset,
+                          selection.extentOffset - selection.baseOffset,
+                          EmbeddableObject(
+                            'image',
+                            inline: false,
+                            data: {'source_type': kIsWeb ? 'url' : 'file', 'source': newFileName},
+                          ),
+                        );
+                        _notesController.replaceText(
+                          selection.baseOffset + 1,
+                          0,
+                          '\n',
+                          selection: TextSelection.collapsed(offset: selection.baseOffset + 2),
+                        );
+                      }
+                    },
+                    child: Text(S.current.gallery),
+                  ),
             ],
           ),
           _isSubmitting
@@ -523,28 +541,42 @@ class AddJournalScreenState extends State<AddJournalScreen> {
   Widget _embedBuilder(BuildContext context, EmbedNode node) {
     if (node.value.type == 'image') {
       final sourceType = node.value.data['source_type'];
-      ImageProvider? image;
+      final String source = node.value.data['source'];
+
       if (sourceType == 'assets') {
-        image = AssetImage(node.value.data['source']);
+        return _buildImageEmbed(AssetImage(source));
       } else if (sourceType == 'file') {
-        image = FileImage(File(node.value.data['source']));
-      } else if (sourceType == 'url') {
-        image = NetworkImage(node.value.data['source']);
-      }
-      if (image != null) {
-        return Padding(
-          // Caret takes 2 pixels, hence not symmetric padding values.
-          padding: const EdgeInsets.only(left: 4, right: 2, top: 2, bottom: 2),
-          child: Container(
-            width: 300,
-            height: 300,
-            decoration: BoxDecoration(image: DecorationImage(image: image, fit: BoxFit.cover)),
-          ),
+        return FutureBuilder<String>(
+          future: resolveImagePath(source),
+          builder: (context, snapshot) {
+            if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+              return _buildImageEmbed(FileImage(File(snapshot.data!)));
+            }
+            return const SizedBox(
+              width: 300,
+              height: 300,
+              child: Center(child: CircularProgressIndicator()),
+            );
+          },
         );
+      } else if (sourceType == 'url') {
+        return _buildImageEmbed(NetworkImage(source));
       }
     }
 
     return defaultFleatherEmbedBuilder(context, node);
+  }
+
+  Widget _buildImageEmbed(ImageProvider image) {
+    return Padding(
+      // Caret takes 2 pixels, hence not symmetric padding values.
+      padding: const EdgeInsets.only(left: 4, right: 2, top: 2, bottom: 2),
+      child: Container(
+        width: 300,
+        height: 300,
+        decoration: BoxDecoration(image: DecorationImage(image: image, fit: BoxFit.cover)),
+      ),
+    );
   }
 
   /// Launches a URL inserted inside the journal editor.

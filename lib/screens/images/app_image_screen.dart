@@ -118,11 +118,12 @@ class _AppImageScreenState extends State<AppImageScreen> {
       final String newFileName = '$newFileNameBase$extension';
       final String newPath = path.join(directory.path, newFileName);
 
-      final savedImage = await File(pickedFile.path).copy(newPath);
+      await File(pickedFile.path).copy(newPath);
 
       // Create an AppImage object and save it to the database
+      // Only the filename is stored in the database to remain portable across app container UUID changes.
       final appImage = AppImage(
-        imagePath: savedImage.path,
+        imagePath: newFileName,
         notes: _notesController.text,
       );
 

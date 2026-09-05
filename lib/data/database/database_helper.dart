@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 import 'dart:ui' as ui;
 import 'package:cupertino_ui/cupertino_ui.dart';
@@ -38,7 +39,7 @@ class DatabaseHelper {
     String path = join(await getDatabasesPath(), 'xolmis_database.db');
     return await openDatabase(
       path,
-      version: 28,
+      version: 29,
       onCreate: _createTables,
       onUpgrade: _upgradeTables,
       onConfigure: (db) {
@@ -608,6 +609,64 @@ class DatabaseHelper {
     if (oldVersion < 28) {
       db.execute('ALTER TABLE field_journal ADD COLUMN backgroundColor INTEGER NOT NULL DEFAULT 4294965473');
     }
+    if (oldVersion < 29) {
+      await _migrateToRelativeImagePaths(db);
+    }
+  }
+
+  /// Migrates image paths in 'images' and 'field_journal' tables to relative filenames.
+  Future<void> _migrateToRelativeImagePaths(Database db) async {
+    debugPrint('[DB_MIGRATION] Migrating image paths to relative format...');
+
+    // 1. Migrate 'images' table
+    final imageRows = await db.query('images', columns: ['id', 'imagePath']);
+    for (final row in imageRows) {
+      final id = row['id'] as int;
+      final fullPath = row['imagePath'] as String;
+      final relativePath = basename(fullPath);
+      if (fullPath != relativePath) {
+        await db.update('images', {'imagePath': relativePath}, where: 'id = ?', whereArgs: [id]);
+      }
+    }
+
+    // 2. Migrate 'field_journal' table (Fleather/Quill JSON)
+    final journalRows = await db.query('field_journal', columns: ['id', 'notes']);
+    for (final row in journalRows) {
+      final id = row['id'] as int;
+      final notesJson = row['notes'] as String?;
+      if (notesJson == null || notesJson.isEmpty) continue;
+
+      try {
+        final List<dynamic> ops = jsonDecode(notesJson) as List<dynamic>;
+        bool changed = false;
+
+        for (final op in ops) {
+          if (op is Map<String, dynamic> && op.containsKey('insert')) {
+            final insert = op['insert'];
+            if (insert is Map<String, dynamic> && insert['type'] == 'image') {
+              final data = insert['data'];
+              if (data is Map<String, dynamic> && data['source_type'] == 'file') {
+                final fullSource = data['source'] as String?;
+                if (fullSource != null) {
+                  final relativeSource = basename(fullSource);
+                  if (fullSource != relativeSource) {
+                    data['source'] = relativeSource;
+                    changed = true;
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        if (changed) {
+          await db.update('field_journal', {'notes': jsonEncode(ops)}, where: 'id = ?', whereArgs: [id]);
+        }
+      } catch (e) {
+        debugPrint('[DB_MIGRATION] Failed to migrate journal notes for ID $id: $e');
+      }
+    }
+    debugPrint('[DB_MIGRATION] Migration to relative paths finished.');
   }
 
   /// Runs `VACUUM` at most once per month to keep database file size healthy.

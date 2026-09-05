@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:material_ui/material_ui.dart';
 import '../data/models/app_image.dart';
 import '../data/daos/app_image_dao.dart';
+import '../utils/utils.dart';
 
 /// Manages image records linked to field entities and keeps listeners updated.
 class AppImageProvider with ChangeNotifier {
@@ -21,11 +22,12 @@ class AppImageProvider with ChangeNotifier {
   /// Loads all images associated with a vegetation record.
   Future<List<AppImage>> fetchImagesForVegetation(int vegetationId, {bool notify = true}) async {
     final result = await _appImageDao.getImagesForVegetation(vegetationId);
+    final resolvedResult = await _resolveImages(result);
     if (notify) {
-      _images = result;
+      _images = resolvedResult;
       notifyListeners();
     }
-    return result;
+    return resolvedResult;
   }
 
   /// Persists [appImage] for a vegetation record and refreshes the local cache.
@@ -37,11 +39,12 @@ class AppImageProvider with ChangeNotifier {
   /// Loads all images associated with a nest revision.
   Future<List<AppImage>> fetchImagesForNestRevision(int revisionId, {bool notify = true}) async {
     final result = await _appImageDao.getImagesForNestRevision(revisionId);
+    final resolvedResult = await _resolveImages(result);
     if (notify) {
-      _images = result;
+      _images = resolvedResult;
       notifyListeners();
     }
-    return result;
+    return resolvedResult;
   }
 
   /// Persists [appImage] for a nest revision and refreshes the local cache.
@@ -53,11 +56,12 @@ class AppImageProvider with ChangeNotifier {
   /// Loads all images associated with an egg record.
   Future<List<AppImage>> fetchImagesForEgg(int eggId, {bool notify = true}) async {
     final result = await _appImageDao.getImagesForEgg(eggId);
+    final resolvedResult = await _resolveImages(result);
     if (notify) {
-      _images = result;
+      _images = resolvedResult;
       notifyListeners();
     }
-    return result;
+    return resolvedResult;
   }
 
   /// Persists [appImage] for an egg record and refreshes the local cache.
@@ -69,11 +73,12 @@ class AppImageProvider with ChangeNotifier {
   /// Loads all images associated with a specimen record.
   Future<List<AppImage>> fetchImagesForSpecimen(int specimenId, {bool notify = true}) async {
     final result = await _appImageDao.getImagesForSpecimen(specimenId);
+    final resolvedResult = await _resolveImages(result);
     if (notify) {
-      _images = result;
+      _images = resolvedResult;
       notifyListeners();
     }
-    return result;
+    return resolvedResult;
   }
 
   /// Persists [appImage] for a specimen record and refreshes the local cache.
@@ -105,5 +110,12 @@ class AppImageProvider with ChangeNotifier {
     }
 
     notifyListeners();
+  }
+
+  /// Helper that resolves all image paths in a list to absolute paths.
+  Future<List<AppImage>> _resolveImages(List<AppImage> images) async {
+    return await Future.wait(images.map((img) async {
+      return img.copyWith(imagePath: await resolveImagePath(img.imagePath));
+    }));
   }
 }
