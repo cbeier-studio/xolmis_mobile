@@ -788,6 +788,11 @@
         "type": "text",
         "description": "Add species dialog title and text hint in find species field"
     },
+  "addCustomSpecies": "Adicionar espécie personalizada",
+  "@addCustomSpecies": {
+    "type": "text",
+    "description": "Add custom species dialog title"
+  },
     "deleteSpecies": "Apagar espécie",
     "@deleteSpecies": {
         "type": "text",

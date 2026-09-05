@@ -841,6 +841,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get addSpecies => 'Add species';
 
   @override
+  String get addCustomSpecies => 'Add custom species';
+
+  @override
   String get deleteSpecies => 'Delete species';
 
   @override

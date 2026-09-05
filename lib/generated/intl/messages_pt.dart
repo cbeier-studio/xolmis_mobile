@@ -223,6 +223,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "addCoordinates": MessageLookupByLibrary.simpleMessage(
       "Adicionar coordenadas",
     ),
+    "addCustomSpecies": MessageLookupByLibrary.simpleMessage(
+      "Adicionar espécie personalizada",
+    ),
     "addEditNotes": MessageLookupByLibrary.simpleMessage(
       "Adicionar/editar anotações",
     ),

@@ -2460,6 +2460,16 @@ class S {
     );
   }
 
+  /// `Add custom species`
+  String get addCustomSpecies {
+    return Intl.message(
+      'Add custom species',
+      name: 'addCustomSpecies',
+      desc: 'Add custom species dialog title',
+      args: [],
+    );
+  }
+
   /// `Delete species`
   String get deleteSpecies {
     return Intl.message(

@@ -1349,6 +1349,11 @@
         "type": "text",
         "description": "Add species dialog title and text hint in find species field"
     },
+    "addCustomSpecies": "Add custom species",
+    "@addCustomSpecies": {
+        "type": "text",
+        "description": "Add custom species dialog title"
+    },
     "deleteSpecies": "Delete species",
     "@deleteSpecies": {
         "type": "text",

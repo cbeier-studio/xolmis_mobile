@@ -15,6 +15,7 @@ import '../../core/core_consts.dart';
 import '../../utils/utils.dart';
 import '../statistics/species_chart_screen.dart';
 import '../../widgets/species_list_item.dart';
+import '../../widgets/mini_species_accumulation_chart.dart';
 import '../../generated/l10n.dart';
 
 /// Inventory tab that manages species records and related actions.
@@ -501,7 +502,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
       builder: (BuildContext context) {
         String speciesName = '';
         return AlertDialog(
-          title: Text(S.of(context).addSpecies),
+          title: Text(S.of(context).addCustomSpecies),
           content: TextField(
             textCapitalization: TextCapitalization.sentences,
             onChanged: (value) {
@@ -548,7 +549,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                     enableSuggestions: false,
                     decoration: InputDecoration(
                       filled: true,
-                      hintText: '${S.of(context).addSpecies}...',
+                      hintText: '${S.of(context).addSpecies}',
                       prefixIcon: const Icon(Icons.add_outlined),
                       border: const OutlineInputBorder(),
                       suffixIcon: Row(
@@ -561,63 +562,12 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                           ),
                           IconButton(
                             icon: const Icon(Icons.add_box_outlined),
-                            tooltip: S.of(context).addSpecies,
+                            tooltip: S.of(context).addCustomSpecies,
                             onPressed: () => _showAddSpeciesDialog(context, widget.speciesDao, widget.inventoryDao),
                           ),
-                          IconButton(
-                            icon: const Icon(Icons.show_chart_outlined),
-                            tooltip: S.of(context).speciesAccumulationCurve,
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => SpeciesChartScreen(inventory: widget.inventory),
-                                ),
-                              );
-                            },
-                          ),
-                          // MediaQuery.sizeOf(context).width < 600
-                          //     ? IconButton(
-                          //       icon: const Icon(Icons.more_vert_outlined),
-                          //       onPressed: () {
-                          //         _showMoreOptionsBottomSheet(context);
-                          //       },
-                          //     )
-                          //     : MenuAnchor(
-                          //       builder: (context, controller, child) {
-                          //         return IconButton(
-                          //           icon: const Icon(Icons.more_vert_outlined),
-                          //           onPressed: () {
-                          //             if (controller.isOpen) {
-                          //               controller.close();
-                          //             } else {
-                          //               controller.open();
-                          //             }
-                          //           },
-                          //         );
-                          //       },
-                          //       menuChildren: [
-                          //         MenuItemButton(
-                          //           onPressed: () {
-                          //             Navigator.push(
-                          //               context,
-                          //               MaterialPageRoute(
-                          //                 builder: (context) => SpeciesChartScreen(inventory: widget.inventory),
-                          //               ),
-                          //             );
-                          //           },
-                          //           leadingIcon: const Icon(Icons.show_chart_outlined),
-                          //           child: Text(S.current.speciesAccumulationCurve, overflow: TextOverflow.ellipsis),
-                          //         ),
-                          //         MenuItemButton(
-                          //           onPressed: () {
-                          //             _showAddSpeciesDialog(context, widget.speciesDao, widget.inventoryDao);
-                          //           },
-                          //           leadingIcon: const Icon(Icons.add_box_outlined),
-                          //           child: Text(S.current.addSpecies),
-                          //         ),
-                          //       ],
-                          //     ),
+                          const SizedBox(width: 8),
+                          MiniSpeciesAccumulationChart(inventory: widget.inventory),
+                          const SizedBox(width: 16),
                         ],
                       ),
                     ),
@@ -913,7 +863,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                       Text(S.of(context).sortBy, style: Theme.of(context).textTheme.bodyLarge),
                       const SizedBox(height: 8),
                       Wrap(
-                        spacing: 8.0, // Space between chips
+                        spacing: 8.0,
                         children: <Widget>[
                           ChoiceChip(
                             label: Text(S.current.speciesName),

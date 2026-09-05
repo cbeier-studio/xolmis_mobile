@@ -218,6 +218,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "add": MessageLookupByLibrary.simpleMessage("Add"),
     "addButton": MessageLookupByLibrary.simpleMessage("Add"),
     "addCoordinates": MessageLookupByLibrary.simpleMessage("Add coordinates"),
+    "addCustomSpecies": MessageLookupByLibrary.simpleMessage(
+      "Add custom species",
+    ),
     "addEditNotes": MessageLookupByLibrary.simpleMessage("Add/edit notes"),
     "addEgg": MessageLookupByLibrary.simpleMessage("Add egg"),
     "addImage": MessageLookupByLibrary.simpleMessage("Add image"),

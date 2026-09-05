@@ -1508,6 +1508,12 @@ abstract class AppLocalizations {
   /// **'Add species'**
   String get addSpecies;
 
+  /// Add custom species dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Add custom species'**
+  String get addCustomSpecies;
+
   /// Menu option to delete a species
   ///
   /// In en, this message translates to:

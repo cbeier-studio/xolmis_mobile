@@ -858,6 +858,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get addSpecies => 'Adicionar espécie';
 
   @override
+  String get addCustomSpecies => 'Adicionar espécie personalizada';
+
+  @override
   String get deleteSpecies => 'Apagar espécie';
 
   @override
@@ -2854,6 +2857,9 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get addSpecies => 'Adicionar espécie';
+
+  @override
+  String get addCustomSpecies => 'Adicionar espécie personalizada';
 
   @override
   String get deleteSpecies => 'Apagar espécie';
