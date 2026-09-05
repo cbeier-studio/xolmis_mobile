@@ -2,6 +2,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../utils/themes.dart';
 import '../../core/core_consts.dart';
 import '../../generated/l10n.dart';
 
@@ -63,6 +64,9 @@ class _ImportExportSettingsState extends State<ImportExportSettings> {
         crossAxisAlignment: CrossAxisAlignment.start,
         applicationType: ApplicationType.material,
         platform: DevicePlatform.android,
+        brightness: Theme.of(context).brightness,
+        lightTheme: getSettingsLightTheme(context),
+        darkTheme: getSettingsDarkTheme(context),
         sections: [
           SettingsSection(
             title: Text(S.current.import.toUpperCase()),

@@ -242,6 +242,7 @@ class MyApp extends StatelessWidget {
       ],
       child: Consumer<ThemeModel>(
         builder: (context, themeModel, child) {
+          themeModel.getThemeMode();
           return MaterialApp(
             localizationsDelegates: [
               S.delegate,

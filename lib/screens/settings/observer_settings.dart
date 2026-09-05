@@ -1,6 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../utils/themes.dart';
 import '../../generated/l10n.dart';
 
 class ObserverSettings extends StatefulWidget {
@@ -44,6 +45,9 @@ class _ObserverSettingsState extends State<ObserverSettings> {
         crossAxisAlignment: CrossAxisAlignment.start,
         applicationType: ApplicationType.material,
         platform: DevicePlatform.android,
+        brightness: Theme.of(context).brightness,
+        lightTheme: getSettingsLightTheme(context),
+        darkTheme: getSettingsDarkTheme(context),
         sections: [
           SettingsSection(
             title: Text(S.current.defaultObserver.toUpperCase()),

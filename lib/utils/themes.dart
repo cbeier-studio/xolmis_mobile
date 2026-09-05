@@ -1,5 +1,32 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:settings_ui/settings_ui.dart';
+
+/// Returns the default light theme for settings lists.
+SettingsThemeData getSettingsLightTheme(BuildContext context) {
+  return SettingsThemeData(
+    settingsListBackground: Theme.of(context).scaffoldBackgroundColor,
+    settingsSectionBackground: Theme.of(context).cardColor,
+    settingsTileTextColor: Theme.of(context).colorScheme.onSurface,
+    tileDescriptionTextColor: Theme.of(context).colorScheme.onSurfaceVariant,
+    leadingIconsColor: Theme.of(context).colorScheme.primary,
+    titleTextColor: Theme.of(context).colorScheme.primary,
+    trailingTextColor: Theme.of(context).colorScheme.onSurfaceVariant,
+  );
+}
+
+/// Returns the default dark theme for settings lists.
+SettingsThemeData getSettingsDarkTheme(BuildContext context) {
+  return SettingsThemeData(
+    settingsListBackground: Theme.of(context).scaffoldBackgroundColor,
+    settingsSectionBackground: Theme.of(context).cardColor,
+    settingsTileTextColor: Theme.of(context).colorScheme.onSurface,
+    tileDescriptionTextColor: Theme.of(context).colorScheme.onSurfaceVariant,
+    leadingIconsColor: Theme.of(context).colorScheme.primary,
+    titleTextColor: Theme.of(context).colorScheme.primary,
+    trailingTextColor: Theme.of(context).colorScheme.onSurfaceVariant,
+  );
+}
 
 
 /// Holds the app theme mode and notifies listeners when it changes.

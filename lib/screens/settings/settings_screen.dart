@@ -1,17 +1,16 @@
 import 'dart:core';
 import 'package:material_ui/material_ui.dart';
-import 'package:package_info_plus/package_info_plus.dart';
-import 'package:about/about.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:xolmis/screens/settings/backup_settings.dart';
 
+import '../../utils/themes.dart';
 import '../../generated/l10n.dart';
 import 'general_settings.dart';
 import 'import_export_settings.dart';
 import 'inventory_settings.dart';
 import 'observer_settings.dart';
 import 'backup_settings.dart';
+import 'about_screen.dart';
 
 /// Displays user-configurable application settings and backup actions.
 class SettingsScreen extends StatefulWidget {
@@ -23,18 +22,10 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  PackageInfo? _packageInfo;
-
   @override
   void initState() {
     super.initState();
-    _setPackageInfo();
   }
-
-  /// Loads package metadata used by the about screen.
-  Future<void> _setPackageInfo() async => PackageInfo.fromPlatform().then(
-    (PackageInfo packageInfo) => setState(() => _packageInfo = packageInfo),
-  );
 
   @override
   Widget build(BuildContext context) {
@@ -48,14 +39,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           applicationType: ApplicationType.material,
           platform: DevicePlatform.android,
-          // lightTheme: SettingsThemeData(
-          //   settingsListBackground: ThemeData.light().scaffoldBackgroundColor,
-          //   titleTextColor: Colors.deepPurple,
-          // ),
-          // darkTheme: SettingsThemeData(
-          //   settingsListBackground: ThemeData.dark().scaffoldBackgroundColor,
-          //   titleTextColor: Colors.deepPurple[300],
-          // ),
+          brightness: Theme.of(context).brightness,
+          lightTheme: getSettingsLightTheme(context),
+          darkTheme: getSettingsDarkTheme(context),
           sections: [
             SettingsSection(
               tiles: [
@@ -151,53 +137,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  /// Shows the application about page with version and license information.
   Future<void> buildShowAboutPage(BuildContext context) {
-    return showAboutPage(
-      context: context,
-      title: Text(S.of(context).about),
-      values: {
-        'version': '${_packageInfo?.version}',
-        'buildNumber': '${_packageInfo?.buildNumber}',
-        'year': '2024-${DateTime.now().year}',
-        'author': 'Christian Beier',
-      },
-      applicationIcon: Image.asset(
-        'assets/xolmis_icon.png',
-        width: 150,
-        height: 150,
+    return Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const AboutScreen(),
       ),
-      applicationLegalese: '© {{ year }}  {{ author }}',
-      applicationName: _packageInfo?.appName ?? 'Xolmis',
-      applicationVersion: '{{ version }}+{{ buildNumber }}',
-      applicationDescription: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(S.of(context).platinumSponsor),
-          Image.asset('assets/alianza_del_pastizal_logo.png', scale: 3),
-        ],
-      ),
-      children: [
-        MarkdownPageListTile(
-          icon: const Icon(Icons.list),
-          title: Text(S.current.changelog),
-          filename: 'assets/changelog.md',
-        ),
-        MarkdownPageListTile(
-          filename: 'assets/license.md',
-          title: Text(S.current.viewLicense),
-          icon: const Icon(Icons.description),
-        ),
-        // MarkdownPageListTile(
-        //   filename: 'CONTRIBUTING.md',
-        //   title: Text('Contributing'),
-        //   icon: const Icon(Icons.share),
-        // ),
-        LicensesPageListTile(
-          title: Text(S.current.openSourceLicenses),
-          icon: const Icon(Icons.favorite),
-        ),
-      ],
     );
   }
 

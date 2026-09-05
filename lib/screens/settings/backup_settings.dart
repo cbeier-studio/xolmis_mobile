@@ -5,6 +5,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../../utils/themes.dart';
 import '../../utils/backup_utils.dart';
 import '../../generated/l10n.dart';
 
@@ -27,6 +28,9 @@ class _BackupSettingsState extends State<BackupSettings> {
         crossAxisAlignment: CrossAxisAlignment.start,
         applicationType: ApplicationType.material,
         platform: DevicePlatform.android,
+        brightness: Theme.of(context).brightness,
+        lightTheme: getSettingsLightTheme(context),
+        darkTheme: getSettingsDarkTheme(context),
         sections: [
           SettingsSection(
             tiles: [

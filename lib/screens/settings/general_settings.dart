@@ -58,6 +58,9 @@ class _GeneralSettingsState extends State<GeneralSettings> {
         crossAxisAlignment: CrossAxisAlignment.start,
         applicationType: ApplicationType.material,
         platform: DevicePlatform.android,
+        brightness: Theme.of(context).brightness,
+        lightTheme: getSettingsLightTheme(context),
+        darkTheme: getSettingsDarkTheme(context),
         sections: [
           SettingsSection(
             tiles: [
