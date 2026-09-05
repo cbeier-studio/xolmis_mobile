@@ -34,7 +34,6 @@ class _SpeciesChartScreenState extends State<SpeciesChartScreen> {
     });
   }
 
-  // Initialize the chart data
   /// Initializes chart points and axis bounds.
   void _initializeChartData() {
     final speciesProvider = Provider.of<SpeciesProvider>(context, listen: false);
@@ -45,7 +44,6 @@ class _SpeciesChartScreenState extends State<SpeciesChartScreen> {
     });
   }
 
-  // Set the chart bounds
   /// Calculates min/max axis values from accumulated points.
   void _calculateChartBounds() {
     minX = 0.0;
@@ -197,19 +195,38 @@ class _SpeciesChartScreenState extends State<SpeciesChartScreen> {
     final speciesByInterval = <int, Set<String>>{};
 
     // Work entirely in seconds for uniform precision across all interval sizes.
-    final startTime = inventory.startTime!;
-    final currentTime = inventory.isFinished ? inventory.endTime! : DateTime.now();
-    final totalElapsedSeconds = currentTime.difference(startTime).inSeconds;
-    inventoryDurationSeconds = totalElapsedSeconds.toDouble();
+    final startTime = inventory.startTime;
+    if (startTime == null) return [];
+
+    final endTime = inventory.isFinished ? inventory.endTime! : DateTime.now();
+    final wallClockDuration = endTime.difference(startTime).inSeconds;
+
+    // Find the latest species registration time among all registered species
+    int maxSpeciesElapsed = 0;
+    for (final species in speciesList) {
+      if (species.sampleTime != null) {
+        final elapsed = species.sampleTime!.difference(startTime).inSeconds;
+        if (elapsed > maxSpeciesElapsed) {
+          maxSpeciesElapsed = elapsed;
+        }
+      }
+    }
+
+    // The chart should extend to cover the latest species OR the inventory wall-clock duration.
+    // This ensures species registered after the timer/finish are visible.
+    final totalElapsedSeconds = maxSpeciesElapsed > wallClockDuration ? maxSpeciesElapsed : wallClockDuration;
+
+    // Use the wallClockDuration as the marker for the inventory's end.
+    inventoryDurationSeconds = wallClockDuration.toDouble();
     final totalElapsedMinutes = totalElapsedSeconds ~/ 60;
 
     // Choose interval size in seconds:
-    //   < 2 min  → 10 s
-    //   < 20 min → 60 s (1 min)
-    //   >= 20 min → 600 s (10 min)
-    if (totalElapsedMinutes < 2) {
+    //   < 5 min  → 10 s
+    //   < 60 min → 60 s (1 min)
+    //   >= 60 min → 600 s (10 min)
+    if (totalElapsedMinutes < 5) {
       intervalSize = 10;
-    } else if (totalElapsedMinutes < 20) {
+    } else if (totalElapsedMinutes < 60) {
       intervalSize = 60;
     } else {
       intervalSize = 600;
@@ -258,7 +275,6 @@ class _SpeciesChartScreenState extends State<SpeciesChartScreen> {
   }
 }
 
-// Data class for the species accumulation curve
 /// Immutable point used by the accumulation curve.
 class SpeciesAccumulationData {
   final int interval;
