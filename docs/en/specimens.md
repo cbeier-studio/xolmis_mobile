@@ -41,6 +41,8 @@ You can attach photos to document the specimen or its collection context.
 
 Tap an image to view it in full screen.
 
+In the specimens list, you'll see the first image's thumbnail. If there are no images, the :material-image-off-outline: icon will appear, and if an error occurs, the :fontawesome-solid-circle-exclamation: icon will be shown.
+
 ## Archive Specimens
 
 Specimens can be organized into two categories:

@@ -41,6 +41,8 @@ Você pode anexar fotos para documentar o espécime ou o contexto da coleta.
 
 Toque em uma imagem para visualizá-la em tela cheia.
 
+Na lista de espécimes você verá a miniatura da primeira imagem da lista. Se não houver imagens, o ícone :material-image-off-outline: aparecerá, e se ocorrer um erro o ícone :fontawesome-solid-circle-exclamation: é mostrado.
+
 ## Arquivar Espécimes
 
 Os espécimes podem ser organizados em duas categorias:

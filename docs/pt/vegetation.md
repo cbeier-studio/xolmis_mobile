@@ -57,6 +57,8 @@ Para adicionar imagens:
 
 Você pode tocar em uma imagem para visualizá-la em tela cheia e aplicar zoom.
 
+Na lista de vegetação você verá a miniatura da primeira imagem da lista. Se não houver imagens, o ícone :material-image-off-outline: aparecerá, e se ocorrer um erro o ícone :fontawesome-solid-circle-exclamation: é mostrado.
+
 ## Lembretes para Dados de Vegetação Ausentes
 
 Se ativado em **Configurações → Inventários**, o app pode lembrar você de preencher os dados de vegetação ao finalizar um inventário.

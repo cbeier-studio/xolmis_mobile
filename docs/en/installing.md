@@ -6,13 +6,13 @@ Xolmis Mobile is available for both **Android** and **iOS/iPadOS** devices throu
 
 ### Android
 
-- Android 7.0 or later  
+- Android 8.0 or later  
 - Access to the **Google Play Store**
 
 ### iOS / iPadOS
 
-- iOS 13 or later  
-- iPadOS 13 or later  
+- iOS 15 or later  
+- iPadOS 15 or later  
 - Access to the **Apple App Store**
 
 ## Install on Android (Google Play Store)

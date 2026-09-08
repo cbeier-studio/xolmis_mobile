@@ -2,9 +2,9 @@
 
 ## Por que Xolmis?
 
-Dados ornitológicos são frequentemente coletados em campo sob condições desafiadoras e inicialmente registrados manualmente em papel. Mais tarde, esses registros são digitalizados para análise, mas mesmo assim costumam ser armazenados em formatos diversos, como arquivos CSV, planilhas Excel ou documentos de texto — cada um com sua própria estrutura e convenções definidas por pesquisadores individuais.
+Dados ornitológicos são frequentemente coletados em campo sob condições desafiadoras e inicialmente registrados manualmente em papel. Mais tarde, esses registros são digitalizados para análise, mas mesmo assim costumam ser armazenados em formatos diversos, como arquivos CSV, planilhas Excel ou documentos de texto, cada um com sua própria estrutura e convenções definidas por pesquisadores individuais.
 
-Como resultado, os dados podem ficar espalhados por várias pastas, dispositivos ou até computadores de colaboradores. Localizar informações específicas ou lembrar o que existe pode se tornar um verdadeiro desafio. Reutilizar dados de diferentes coleções ou projetos geralmente exige um trabalho tedioso de **padronização, reformatamento e limpeza**. Embora existam plataformas colaborativas de ciência, uma parte significativa de dados valiosos permanece isolada em máquinas pessoais, inacessível à comunidade científica mais ampla.
+Como resultado, os dados podem ficar espalhados por várias pastas, dispositivos ou até computadores de colaboradores. Localizar informações específicas ou lembrar o que existe pode se tornar um verdadeiro desafio. Reutilizar dados de diferentes coleções ou projetos geralmente exige um trabalho tedioso de **padronização, reformatação e limpeza**. Embora existam plataformas colaborativas de ciência, uma parte significativa de dados valiosos permanece isolada em máquinas pessoais, inacessível à comunidade científica mais ampla.
 
 O **Xolmis** foi criado para enfrentar essa fragmentação. Ele oferece uma solução unificada para **coletar, organizar, curar e gerenciar dados ornitológicos de diversos tipos**. Projetado para pesquisadores, técnicos de campo, instituições e projetos de conservação, o Xolmis fornece um ambiente centralizado e estruturado que promove:
 

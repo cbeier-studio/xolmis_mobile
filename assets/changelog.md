@@ -31,6 +31,8 @@
 * Geographical coordinates can be exported to KML from selected inventories, nests or specimens.
 * Highlight selected items in lists.
 * Highlight first occurrence of species in Species per Inventory report.
+* Mini chart of species accumulation in add species field in inventory.
+* Refactored loading of image thumbnails in lists.
 * Standardized error and warning messages.
 
 ### Bug fixes
@@ -39,10 +41,14 @@
 * Fixed Mackinnon lists not finishing properly.
 * Fixed issue that did not save informed values in fields with autocompletion.
 * Fixed inconsistency in temporary paths for export and backup.
+* Images now save the relative path to avoid file not found error.
+* Species accumulation chart now shows the correct accumulated species.
+* Settings now respect the selected theme (light/dark).
 
 ### Technical/Dependencies
 
 * Upgraded to Flutter 3.47 and Dart 3.13.
+* Removed `about` dependency.
 
 ## 1.0.2
 

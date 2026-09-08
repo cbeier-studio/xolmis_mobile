@@ -12,7 +12,7 @@ Your observer code is required to:
 - Create nest and specimen field numbers  
 - Track who collected each record  
 
-Make sure it is set correctly in **[Settings](settings.md) → Observer**.
+Make sure it is set correctly in **[Settings](settings.md) → Observers → Observer (abbreviation)**.
 
 ### Choose the correct country for species search
 
@@ -149,6 +149,7 @@ Restoring a backup **replaces all current data**.
 - **KML** for mapping POIs, nests and specimens
 - **Plain text** for field journal notes without text formatting
 - **Markdown** for field journal notes with text formatting markings
+- **Word** for field journal notes with text formatting and images
 
 ### Export finished inventories only
 

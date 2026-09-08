@@ -57,6 +57,8 @@ To add images:
 
 You can tap an image to view it in full screen and zoom in.
 
+In the vegetation list, you'll see the first image's thumbnail. If there are no images, the :material-image-off-outline: icon will appear, and if an error occurs, the :fontawesome-solid-circle-exclamation: icon will be shown.
+
 ## Reminders for Missing Vegetation Data
 
 If enabled in **Settings → Inventories**, the app can remind you to fill vegetation data when finishing an inventory.

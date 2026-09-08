@@ -4,7 +4,7 @@ Xolmis Mobile supports several inventory (survey) methods used in ornithological
 
 Below is an overview of all inventory types available in the app.
 
-## 1. Qualitative List (Free)
+## 1. Free Qualitative List
 
 A simple list of all species detected at a location during a visit.
 
@@ -111,12 +111,12 @@ Useful for point-based distance sampling.
 
 The best inventory type depends on your project goals:
 
-- **General birding or casual surveys:** Qualitative List  
+- **General birding or casual surveys:** Free Qualitative List  
 - **Standardized effort:** Timed or Interval Lists  
 - **Rapid assessments:** Mackinnon Lists  
 - **Quantitative monitoring:** Transect or Point Count  
 - **Distance sampling:** Detection Transect or Detection Point  
-- **Banding operations:** Banding List  
+- **Banding operations:** Banding
 - **Opportunistic sightings:** Casual Observation  
 
 Each method is designed to match real-world field protocols, ensuring your data remains consistent and scientifically useful.

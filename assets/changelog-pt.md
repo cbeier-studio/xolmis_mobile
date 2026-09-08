@@ -31,6 +31,8 @@
 * Coordenadas geográficas podem ser exportadas para KML a partir de inventários, ninhos ou espécimes selecionados.
 * Destaque de itens selecionados em listas.
 * Destaque da primeira ocorrência da espécie no relatório Espécies por Inventário.
+* Mini gráfico de acumulação de espécies no campo de adição de espécies no inventário.
+* Reformulado carregamento de miniaturas de imagens nas listas.
 * Padronização das mensagens de erro e avisos.
 
 ### Correções
@@ -39,10 +41,14 @@
 * Corrigidas listas de Mackinnon não finalizando corretamente.
 * Corrigido problema que não salvava o valor informado em campos com autocompletar.
 * Corrigida inconsistência nos caminhos temporários de exportação e backup.
+* Imagens agora salvam o caminho relativo para evitar problemas de arquivo não encontrado.
+* Curva de acumulação de espécies agora mostra o acumulado de espécies corretamente.
+* Configurações agora respeitam o tema selecionado (claro/escuro).
 
 ### Técnico/Dependências
 
 * Atualizado para Flutter 3.47 e Dart 3.13.
+* Removida dependência de `about`.
 
 ## 1.0.2
 

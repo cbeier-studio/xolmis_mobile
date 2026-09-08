@@ -50,7 +50,7 @@ as long as attribution is preserved.
 Xolmis Mobile uses third‑party packages for:
 
 ### **UI and Interaction**
-- `cupertino_icons`  
+- `material_ui`  
 - `side_sheet`  
 - `settings_ui`  
 - `fleather`  
@@ -58,22 +58,31 @@ Xolmis Mobile uses third‑party packages for:
 - `image_picker`  
 - `file_picker`  
 - `share_plus`  
-- `about`
+- `fab_m3e`
+- `m3e_design`
+- `numberpicker`
+- `flutter_local_notifications`
 
 ### **Data and Persistence**
 - `sqflite`  
 - `csv`  
 - `shared_preferences`  
+- `docx_creator`  
 - `excel` (GitHub version)  
 - `geoxml`  
 - `archive`
+- `flutter_markdown_plus`
 
 ### **Device and System Integration**
+- `provider`
+- `path`
+- `path_provider`  
 - `permission_handler`  
 - `geolocator`  
 - `package_info_plus`  
 - `device_info_plus`  
 - `url_launcher`
+- `fpdart`
 
 Each of these packages includes its own license, visible in the **Licenses** screen.
 

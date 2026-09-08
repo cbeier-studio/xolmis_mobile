@@ -61,7 +61,7 @@ Initial release of Xolmis Mobile.
 - Updated **Flutter** to v3.47 (development framework).  
 - Updated **Dart** to v3.13 (programming language).
 - Migrated to new Flutter components (`MenuAnchor`, `SearchAnchor`).  
-- Removed deprecated dependencies (e.g., `workmanager`).  
+- Removed deprecated dependencies (e.g., `workmanager`, `about`).  
 - Refactored internal code structure and background operation methods.  
 - Improved database handling, temporary paths, and export/backup consistency.  
 - Added iOS/iPadOS support and improved cross‑platform behavior.

@@ -8,7 +8,7 @@ O patrocinador Platinum representa nosso mais alto nível de parceria. Ele forne
 
 ### Alianza del Pastizal
 
-[![Logotipo da Alianza del Pastizal](img/alianza-del-pastizal.png)](https://www.alianzadelpastizal.org.br/)
+[![Logotipo da Alianza del Pastizal](img/alianza-del-pastizal.png){width="200"}](https://www.alianzadelpastizal.org.br/)
 
 Uma iniciativa regional dedicada à conservação dos ecossistemas campestres da América do Sul. Além de patrocinar, a Alianza del Pastizal também utiliza o **Xolmis** em suas atividades, fortalecendo o sistema como software para gestão de dados de biodiversidade e apoiando esforços colaborativos entre instituições, pesquisadores e projetos de conservação.  
 Para mais informações: [Alianza del Pastizal Brasil](https://www.alianzadelpastizal.org.br/).

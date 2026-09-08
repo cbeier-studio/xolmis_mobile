@@ -12,7 +12,7 @@ Seu código de observador é necessário para:
 - Criar números de campo para ninhos e espécimes  
 - Registrar quem coletou cada dado  
 
-Certifique-se de configurá-lo corretamente em **[Configurações](settings.md) → Observador**.
+Certifique-se de configurá-lo corretamente em **[Configurações](settings.md) → Observadores → Observador (sigla)**.
 
 ### Escolha o país correto para a busca de espécies
 
@@ -148,7 +148,8 @@ Restaurar um backup **substitui todos os dados atuais**.
 - **JSON** para importar no Xolmis Desktop ou Xolmis Mobile  
 - **KML** para mapear POIs, ninhos e espécimes  
 - **Texto simples** para notas do diário sem formatação  
-- **Markdown** para notas do diário com marcações de formatação  
+- **Markdown** para notas do diário com marcações de formatação
+- **Word** para notas do diário com formatação e imagens
 
 ### Exporte apenas inventários finalizados
 

@@ -42,6 +42,8 @@ Você pode anexar fotos para documentar a condição do ninho, seu conteúdo ou 
 
 Toque em uma imagem para visualizá-la em tela cheia.
 
+Na lista de revisões você verá a miniatura da primeira imagem da lista. Se não houver imagens, o ícone :material-image-off-outline: aparecerá, e se ocorrer um erro o ícone :fontawesome-solid-circle-exclamation: é mostrado.
+
 ## Requisitos para Inativar um Ninho
 
 Um ninho **deve ter pelo menos uma revisão** antes de poder ser marcado como inativo.  

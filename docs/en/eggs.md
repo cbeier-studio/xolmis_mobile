@@ -38,6 +38,8 @@ Images help document egg morphology, coloration, or damage.
 4. Optionally add a description.  
 5. Save.
 
+In the eggs list, you'll see the first image's thumbnail. If there are no images, the :material-image-off-outline: icon will appear, and if an error occurs, the :fontawesome-solid-circle-exclamation: icon will be shown.
+
 ## When to Use Egg Records
 
 Egg records are especially useful when:

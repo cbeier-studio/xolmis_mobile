@@ -4,7 +4,7 @@ O Xolmis Mobile oferece vários métodos de inventário (levantamento) usados em
 
 Abaixo está uma visão geral de todos os tipos de inventário disponíveis no aplicativo.
 
-## 1. Lista Qualitativa (Livre)
+## 1. Lista Qualitativa Livre
 
 Uma lista simples de todas as espécies detectadas em uma localidade durante uma visita.
 
@@ -48,7 +48,7 @@ Uma lista estruturada com um número fixo de espécies por lista.
 
 Amplamente usada em avaliações rápidas de biodiversidade.
 
-## 5. Transecto
+## 5. Contagem em Transecto
 
 Um levantamento quantitativo realizado enquanto se desloca por uma rota.
 
@@ -57,7 +57,7 @@ Um levantamento quantitativo realizado enquanto se desloca por uma rota.
 - As espécies são adicionadas uma vez, com contagens ajustáveis  
 - Adequado para transectos a pé ou de carro
 
-## 6. Ponto de Escuta (Point Count)
+## 6. Ponto de Contagem
 
 Um levantamento quantitativo realizado a partir de um ponto fixo.
 
@@ -66,7 +66,7 @@ Um levantamento quantitativo realizado a partir de um ponto fixo.
 - Termina automaticamente quando o tempo expira  
 - Ideal para amostragem padronizada por ponto
 
-## 7. Anilhamento (Redes de Nevoeiro)
+## 7. Anilhamento
 
 Uma lista de espécies detectadas durante operações de anilhamento.
 
@@ -84,7 +84,7 @@ Um registro simples de avistamentos oportunísticos.
 - Sem limites de tempo ou espécies  
 - Útil para observações isoladas ou incidentais
 
-## 9. Transecto de Detecção
+## 9. Transecto de Detecções
 
 Um transecto onde **cada detecção** é registrada como uma entrada separada.
 
@@ -97,9 +97,9 @@ Um transecto onde **cada detecção** é registrada como uma entrada separada.
 
 Usado em amostragem por distância e estudos de detectabilidade.
 
-## 10. Ponto de Detecção
+## 10. Ponto de Detecções
 
-Uma versão baseada em ponto do transecto de detecção.
+Uma versão baseada em ponto do transecto de detecções.
 
 - Cada detecção é um registro separado  
 - Inclui campos de distância, altura e direção  
@@ -111,12 +111,12 @@ Uma versão baseada em ponto do transecto de detecção.
 
 O melhor tipo de inventário depende dos objetivos do seu projeto:
 
-- **Observação geral ou levantamentos casuais:** Lista Qualitativa  
+- **Observação geral ou levantamentos casuais:** Lista Qualitativa Livre 
 - **Esforço padronizado:** Listas Temporizadas ou por Intervalos  
 - **Avaliações rápidas:** Listas de Mackinnon  
-- **Monitoramento quantitativo:** Transecto ou Ponto de Escuta  
-- **Amostragem por distância:** Transecto de Detecção ou Ponto de Detecção  
-- **Operações de anilhamento:** Lista de Anilhamento  
+- **Monitoramento quantitativo:** Contagem em Transecto ou Ponto de Contagem  
+- **Amostragem por distância:** Transecto de Detecções ou Ponto de Detecções  
+- **Operações de anilhamento:** Anilhamento  
 - **Avistamentos oportunísticos:** Observação Casual  
 
 Cada método foi projetado para corresponder a protocolos reais de campo, garantindo que seus dados permaneçam consistentes e cientificamente úteis.

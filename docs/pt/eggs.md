@@ -38,6 +38,8 @@ Imagens ajudam a documentar morfologia, coloração ou danos no ovo.
 4. Opcionalmente, adicione uma descrição.  
 5. Salve.
 
+Na lista de ovos você verá a miniatura da primeira imagem da lista. Se não houver imagens, o ícone :material-image-off-outline: aparecerá, e se ocorrer um erro o ícone :fontawesome-solid-circle-exclamation: é mostrado.
+
 ## Quando Usar Registros de Ovos
 
 Registros de ovos são especialmente úteis para:

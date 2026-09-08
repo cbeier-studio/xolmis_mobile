@@ -42,6 +42,8 @@ You can attach photos to document nest condition, contents, or habitat.
 
 Tap an image to view it in full screen.
 
+In the revisions list, you'll see the first image's thumbnail. If there are no images, the :material-image-off-outline: icon will appear, and if an error occurs, the :fontawesome-solid-circle-exclamation: icon will be shown.
+
 ## Requirements for Inactivating a Nest
 
 A nest **must have at least one revision** before it can be marked inactive.  
