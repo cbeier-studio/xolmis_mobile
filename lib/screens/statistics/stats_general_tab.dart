@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
@@ -493,7 +494,8 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
                                       ),
                                       title: Text(
                                         entry.key,
-                                        style: const TextStyle(
+                                        style: TextStyle(
+                                          fontFamily: Platform.isIOS ? 'CupertinoSystemDisplay' : null,
                                           fontStyle: FontStyle.italic,
                                           fontSize: 12,
                                         ),

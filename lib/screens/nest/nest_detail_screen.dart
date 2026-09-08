@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fab_m3e/fab_m3e.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
@@ -858,7 +860,10 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
               const SizedBox(height: 8.0,),
                     Text(
                       widget.nest.speciesName!,
-                      style: const TextStyle(fontStyle: FontStyle.italic),
+                      style: TextStyle(
+                          fontFamily: Platform.isIOS ? 'CupertinoSystemDisplay' : null,
+                          fontStyle: FontStyle.italic
+                      ),
                     ),
                     TabBar(
                       controller: _tabController,

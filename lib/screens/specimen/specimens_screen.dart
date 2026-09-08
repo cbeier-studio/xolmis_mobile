@@ -1470,6 +1470,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
           Text(
             specimen.speciesName!,
             style: TextStyle(
+              fontFamily: Platform.isIOS ? 'CupertinoSystemDisplay' : null,
               fontStyle: FontStyle.italic,
               color:
                   allSpeciesNames.contains(specimen.speciesName)

@@ -265,8 +265,14 @@ class MyApp extends StatelessWidget {
               return Locale('en', '');
             },
             title: 'Xolmis',
-            theme: ThemeData(brightness: Brightness.light),
-            darkTheme: ThemeData(brightness: Brightness.dark),
+            theme: ThemeData(
+              useMaterial3: true,
+              brightness: Brightness.light,
+            ),
+            darkTheme: ThemeData(
+              useMaterial3: true,
+              brightness: Brightness.dark,
+            ),
             themeMode: themeModel.themeMode,
             home: MainScreen(),
           );

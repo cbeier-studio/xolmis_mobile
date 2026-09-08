@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
@@ -43,7 +45,10 @@ class MarkdownViewerScreen extends StatelessWidget {
               h4: theme.textTheme.titleLarge,
               h5: theme.textTheme.titleMedium,
               h6: theme.textTheme.titleSmall,
-              em: textStyle?.copyWith(fontStyle: FontStyle.italic),
+              em: textStyle?.copyWith(
+                  fontFamily: Platform.isIOS ? 'CupertinoSystemDisplay' : null,
+                  fontStyle: FontStyle.italic
+              ),
               strong: textStyle?.copyWith(fontWeight: FontWeight.bold),
               del: textStyle?.copyWith(decoration: TextDecoration.lineThrough),
               a: textStyle?.copyWith(color: theme.colorScheme.primary, decoration: TextDecoration.underline),

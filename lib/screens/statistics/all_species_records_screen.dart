@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:material_ui/material_ui.dart';
 import 'package:xolmis/generated/l10n.dart';
 
@@ -22,7 +24,9 @@ class AllSpeciesRecordsScreen extends StatelessWidget {
           return ListTile(
             title: Text(
               entry.key,
-              style: const TextStyle(fontStyle: FontStyle.italic),
+              style: TextStyle(
+                  fontFamily: Platform.isIOS ? 'CupertinoSystemDisplay' : null,
+                  fontStyle: FontStyle.italic),
             ),
             trailing: Text(
               entry.value.toString(),

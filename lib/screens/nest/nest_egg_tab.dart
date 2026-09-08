@@ -300,7 +300,10 @@ class EggGridItem extends StatelessWidget {
                 ),
                 Text(
                   egg.speciesName!,
-                  style: const TextStyle(fontStyle: FontStyle.italic),
+                  style: TextStyle(
+                      fontFamily: Platform.isIOS ? 'CupertinoSystemDisplay' : null,
+                      fontStyle: FontStyle.italic
+                  ),
                 ),
                 Text(DateFormat('dd/MM/yyyy HH:mm').format(egg.sampleTime!)),
               ],
@@ -330,6 +333,7 @@ class EggListItem extends StatelessWidget {
           Text(
             egg.speciesName!,
             style: TextStyle(
+              fontFamily: Platform.isIOS ? 'CupertinoSystemDisplay' : null,
               fontStyle: FontStyle.italic,
               color:
                   allSpeciesNames.contains(egg.speciesName) ? null : Colors.red,

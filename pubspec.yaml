@@ -3,7 +3,7 @@ description: "Collect ornithological data in the field."
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.3+145
+version: 1.0.3+146
 
 environment:
   sdk: ^3.7.0
@@ -18,7 +18,7 @@ dependencies:
   fpdart: ^1.2.0
 
   # UI dependencies
-  material_ui: ^1.1.1
+  material_ui: ^1.2.0
 #  cupertino_ui: any
 #  cupertino_icons: ^1.0.9
   flutter_local_notifications: ^22.3.0

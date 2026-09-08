@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -1394,6 +1396,7 @@ class NestsScreenState extends State<NestsScreen> {
           Text(
             nest.speciesName!,
             style: TextStyle(
+              fontFamily: Platform.isIOS ? 'CupertinoSystemDisplay' : null,
               fontStyle: FontStyle.italic,
               color: allSpeciesNames.contains(nest.speciesName)
                 ? null

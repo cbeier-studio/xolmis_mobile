@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
@@ -733,7 +735,10 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                         alignment: Alignment.centerLeft,
                         child: Text(
                           species.name,
-                          style: TextTheme.of(context).bodyLarge?.copyWith(fontStyle: FontStyle.italic),
+                          style: TextTheme.of(context).bodyLarge?.copyWith(
+                              fontFamily: Platform.isIOS ? 'CupertinoSystemDisplay' : null,
+                              fontStyle: FontStyle.italic
+                          ),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),

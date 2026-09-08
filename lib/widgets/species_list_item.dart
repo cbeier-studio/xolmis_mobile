@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
@@ -37,6 +38,7 @@ class SpeciesListItemState extends State<SpeciesListItem> {
       title: Text(
         widget.species.name,
         style: TextStyle(
+          fontFamily: Platform.isIOS ? 'CupertinoSystemDisplay' : null,
           fontStyle: FontStyle.italic,
           color: allSpeciesNames.contains(widget.species.name)
               ? null
