@@ -1531,6 +1531,17 @@ class NestsScreenState extends State<NestsScreen> {
                               }
                             },
                           ),
+                          if (!_showActive)
+                            buildGridMenuItem(
+                              context,
+                              Icons.undo_outlined,
+                              S.of(context).reactivate,
+                                  () {
+                                Navigator.of(context).pop();
+                                nest.isActive = true;
+                                nestProvider.updateNest(nest);
+                              },
+                            ),
                           buildGridMenuItem(
                             context,
                             Icons.delete_outlined,

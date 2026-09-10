@@ -199,6 +199,7 @@ class AddJournalScreenState extends State<AddJournalScreen> {
                         );
                       }
                     },
+                    leadingIcon: const Icon(Icons.camera_alt_outlined),
                     child: Text(S.current.camera),
                   ),
                   MenuItemButton(
@@ -231,6 +232,7 @@ class AddJournalScreenState extends State<AddJournalScreen> {
                         );
                       }
                     },
+                    leadingIcon: const Icon(Icons.photo_library_outlined),
                     child: Text(S.current.gallery),
                   ),
                 ],
@@ -266,29 +268,6 @@ class AddJournalScreenState extends State<AddJournalScreen> {
                       padding: EdgeInsets.all(16.0),
                       child: Column(
                         children: [
-                          AnimatedSize(
-                            duration: const Duration(milliseconds: 200),
-                            curve: Curves.easeInOut,
-                            child: AnimatedOpacity(
-                              duration: const Duration(milliseconds: 200),
-                              opacity: _editorHasFocus ? 0.0 : 1.0,
-                              child: _editorHasFocus
-                                  ? const SizedBox.shrink()
-                                  : Column(
-                                      children: [
-                                        TextFormField(
-                                          controller: _titleController,
-                                          textCapitalization: TextCapitalization.sentences,
-                                          decoration: InputDecoration(
-                                            labelText: '${S.of(context).title} (${S.of(context).optional})',
-                                            border: OutlineInputBorder(),
-                                          ),
-                                        ),
-                                        const SizedBox(height: 16),
-                                      ],
-                                    ),
-                            ),
-                          ),
                           TagSelectionField(
                             key: _tagSelectionKey,
                             initialTags: widget.isEditing ? widget.journalEntry!.tags : [],
@@ -326,7 +305,9 @@ class AddJournalScreenState extends State<AddJournalScreen> {
                       ),
                     ),
                   ),
+                  Divider(height: 1,),
                   FleatherToolbar.basic(controller: _notesController, editorKey: _editorKey),
+                  Divider(height: 1,),
                 ],
               ),
             ),
@@ -401,6 +382,7 @@ class AddJournalScreenState extends State<AddJournalScreen> {
                         );
                       }
                     },
+                    leadingIcon: const Icon(Icons.camera_alt_outlined),
                     child: Text(S.current.camera),
                   ),
                   MenuItemButton(
@@ -433,6 +415,7 @@ class AddJournalScreenState extends State<AddJournalScreen> {
                         );
                       }
                     },
+                    leadingIcon: const Icon(Icons.photo_library_outlined),
                     child: Text(S.current.gallery),
                   ),
             ],
@@ -448,6 +431,7 @@ class AddJournalScreenState extends State<AddJournalScreen> {
       ),
       body: Column(
         children: [
+          Divider(height: 1,),
           Expanded(
             child: FleatherEditor(
               controller: _notesController,
@@ -465,36 +449,15 @@ class AddJournalScreenState extends State<AddJournalScreen> {
               ),
             ),
           ),
+          Divider(height: 1,),
           FleatherToolbar.basic(controller: _notesController, editorKey: _editorKey),
+          Divider(height: 1,),
           Form(
             key: _formKey,
             child: Padding(
               padding: EdgeInsets.all(16.0),
               child: Column(
                 children: [
-                  AnimatedSize(
-                    duration: const Duration(milliseconds: 200),
-                    curve: Curves.easeInOut,
-                    child: AnimatedOpacity(
-                      duration: const Duration(milliseconds: 200),
-                      opacity: _editorHasFocus ? 0.0 : 1.0,
-                      child: _editorHasFocus
-                          ? const SizedBox.shrink()
-                          : Column(
-                              children: [
-                                TextFormField(
-                                  controller: _titleController,
-                                  textCapitalization: TextCapitalization.sentences,
-                                  decoration: InputDecoration(
-                                    labelText: '${S.of(context).title} (${S.of(context).optional})',
-                                    border: OutlineInputBorder(),
-                                  ),
-                                ),
-                                const SizedBox(height: 16),
-                              ],
-                            ),
-                    ),
-                  ),
                   TagSelectionField(
                     key: _tagSelectionKey,
                     initialTags: widget.isEditing ? widget.journalEntry!.tags : [],
@@ -509,29 +472,12 @@ class AddJournalScreenState extends State<AddJournalScreen> {
                         widget.journalEntry!.tags = tags;
                       }
                     },
-                    label: S.of(context).tags,
+                    label: S.of(context).addTag,
                   ),
                 ],
               ),
             ),
           ),
-          // SafeArea(
-          //   child: Container(
-          //     padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 16.0),
-          //     width: double.infinity,
-          //     child: Align(
-          //       alignment: Alignment.centerRight,
-          //       child:
-          //           _isSubmitting
-          //               ? const SizedBox(
-          //                 width: 24,
-          //                 height: 24,
-          //                 child: CircularProgressIndicator(strokeWidth: 2, year2023: false),
-          //               )
-          //               : FilledButton(onPressed: _submitForm, child: Text(S.of(context).save)),
-          //     ),
-          //   ),
-          // ),
         ],
       ),
     );

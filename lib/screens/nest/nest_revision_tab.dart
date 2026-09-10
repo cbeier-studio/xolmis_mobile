@@ -338,6 +338,38 @@ class RevisionListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final Color primaryColor;
+    final Color primaryForeground;
+    final Color secondaryColor;
+    final Color secondaryForeground;
+
+    if (nestRevision.nestStatus == NestStatusType.nstActive) {
+      if (isDark) {
+        primaryColor = Colors.green.shade400;
+        primaryForeground = Colors.black;
+        secondaryColor = Colors.green.shade900;
+        secondaryForeground = Colors.green.shade100;
+      } else {
+        primaryColor = Colors.green.shade600;
+        primaryForeground = Colors.white;
+        secondaryColor = Colors.green.shade100;
+        secondaryForeground = Colors.green.shade800;
+      }
+    } else {
+      if (isDark) {
+        primaryColor = Colors.grey.shade600;
+        primaryForeground = Colors.black;
+        secondaryColor = Colors.grey.shade800;
+        secondaryForeground = Colors.grey.shade400;
+      } else {
+        primaryColor = Colors.grey;
+        primaryForeground = Colors.white;
+        secondaryColor = Colors.grey.shade300;
+        secondaryForeground = Colors.grey.shade700;
+      }
+    }
+
     return ListTile(
       leading: NestRevisionThumbnail(revisionId: nestRevision.id ?? 0),
       title: Text(
@@ -348,17 +380,14 @@ class RevisionListItem extends StatelessWidget {
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            '${nestStatusTypeFriendlyNames[nestRevision.nestStatus]}: ${nestStageTypeFriendlyNames[nestRevision.nestStage]}',
-            style: TextStyle(
-              color:
-                  nestRevision.nestStatus == NestStatusType.nstActive
-                      ? Colors.blue
-                      : nestRevision.nestStatus ==
-                              NestStatusType.nstInactive
-                          ? Colors.red
-                          : null,
-            ),
+          _buildStatusStageSplitPill(
+            context,
+            status: nestStatusTypeFriendlyNames[nestRevision.nestStatus]!,
+            stage: nestStageTypeFriendlyNames[nestRevision.nestStage]!,
+            primaryColor: primaryColor,
+            primaryForeground: primaryForeground,
+            secondaryColor: secondaryColor,
+            secondaryForeground: secondaryForeground,
           ),
           Text(
             '${S.of(context).host}: ${nestRevision.eggsHost ?? 0} ${S.of(context).egg(nestRevision.eggsHost ?? 0).toLowerCase()}, ${nestRevision.nestlingsHost ?? 0} ${S.of(context).nestling(nestRevision.nestlingsHost ?? 0).toLowerCase()}',
@@ -379,6 +408,66 @@ class RevisionListItem extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildStatusStageSplitPill(
+      BuildContext context, {
+        required String status,
+        required String stage,
+        required Color primaryColor,
+        required Color primaryForeground,
+        required Color secondaryColor,
+        required Color secondaryForeground,
+      }) {
+
+    return Container(
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(99.0),
+        // border: Border.all(
+        //   color: Theme.of(context).dividerColor.withValues(alpha: 0.12),
+        //   width: 1.4,
+        // ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 1.0),
+            color: primaryColor,
+            child: Text(
+              status,
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                color: primaryForeground,
+                fontWeight: FontWeight.w600,
+              ) ??
+                  TextStyle(
+                    color: primaryForeground,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 11,
+                  ),
+            ),
+          ),
+
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 1.0),
+            color: secondaryColor,
+            child: Text(
+              stage,
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                color: secondaryForeground,
+                fontWeight: FontWeight.w600,
+              ) ??
+                  TextStyle(
+                    color: secondaryForeground,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 11,
+                  ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

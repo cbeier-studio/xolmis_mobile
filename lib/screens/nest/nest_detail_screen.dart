@@ -915,8 +915,7 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                   EggsTab(nest: widget.nest),
                 ],
               ),
-        floatingActionButton: widget.nest.isActive
-            ? FabMenuM3E(
+        floatingActionButton: FabMenuM3E(
           controller: fabController,
           alignment: Alignment.bottomRight,
           direction: FabMenuDirection.up,
@@ -945,7 +944,7 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
               },
             ),
           ],
-        ) : null,
+        ),
     );
   }
 

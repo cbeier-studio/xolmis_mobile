@@ -158,14 +158,20 @@ class TagSelectionFieldState extends State<TagSelectionField> {
     final inputDecoration =
         widget.decoration ??
         InputDecoration(
-          labelText: widget.label ?? S.current.tags,
-          hintText: widget.hint ?? S.current.addTag,
-          border: OutlineInputBorder(),
+          labelText: widget.label ?? S.current.addTag,
+          hintText: widget.hint ?? '',
+          border: InputBorder.none,
           isDense: true,
           contentPadding: EdgeInsets.all(12),
         );
 
-    return Column(
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: Theme.of(context).colorScheme.outline),
+        borderRadius: BorderRadius.circular(4),
+      ),
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Tag chips
@@ -202,14 +208,17 @@ class TagSelectionFieldState extends State<TagSelectionField> {
             return _suggestionsFor(textEditingValue.text);
           },
           onSelected: _addTag,
+          optionsViewOpenDirection: OptionsViewOpenDirection.up,
           fieldViewBuilder: (context, textEditingController, focusNode, onFieldSubmitted) {
             return TextFormField(
               controller: textEditingController,
               focusNode: focusNode,
               decoration: inputDecoration.copyWith(
+                hintText: '',
                 suffixIcon: IconButton(icon: const Icon(Icons.add), tooltip: S.current.addTag, onPressed: commitPendingTag),
               ),
               textCapitalization: TextCapitalization.none,
+              autocorrect: false,
               onFieldSubmitted: (value) {
                 commitPendingTag();
               },
@@ -222,7 +231,7 @@ class TagSelectionFieldState extends State<TagSelectionField> {
             }
 
             return Align(
-              alignment: Alignment.topLeft,
+              alignment: Alignment.bottomLeft,
               child: Material(
                 elevation: 8,
                 child: ConstrainedBox(
@@ -234,7 +243,21 @@ class TagSelectionFieldState extends State<TagSelectionField> {
                     separatorBuilder: (context, index) => const Divider(height: 1),
                     itemBuilder: (context, index) {
                       final suggestion = optionsList[index];
-                      return ListTile(title: Text(suggestion), dense: true, onTap: () => onSelected(suggestion));
+                      final tag = _findTagDefinition(suggestion);
+                      final color = getTagColorByIndex(tag!.colorIndex);
+                      return ListTile(
+                          title: Align(
+                            alignment: Alignment.topLeft,
+                             child: Chip(
+                            label: Text(suggestion),
+                            backgroundColor: color.withValues(alpha: 0.2),
+                            visualDensity: VisualDensity.compact,
+                            labelStyle: TextStyle(color: color, fontWeight: FontWeight.w500),
+                            labelPadding: const EdgeInsets.symmetric(horizontal: 4),
+                             ),
+                          ),
+                          dense: true,
+                          onTap: () => onSelected(suggestion));
                     },
                   ),
                 ),
@@ -243,6 +266,7 @@ class TagSelectionFieldState extends State<TagSelectionField> {
           },
         ),
       ],
+      ),
     );
   }
 }
