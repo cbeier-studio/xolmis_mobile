@@ -259,28 +259,8 @@ class NestDao {
     List<Nest> nests = await Future.wait(maps.map((map) async {
       List<NestRevision> revisionsList = await _nestRevisionDao.getNestRevisionsForNest(map['id']);
       List<Egg> eggsList = await _eggDao.getEggsForNest(map['id']);
-      // Create Nest instance using the main constructor
-      Nest nest = Nest(
-        id: map['id']?.toInt(),
-        fieldNumber: map['fieldNumber'],
-        speciesName: map['speciesName'],
-        localityName: map['localityName'],
-        longitude: map['longitude']?.toDouble(),
-        latitude: map['latitude']?.toDouble(),
-        support: map['support'],
-        heightAboveGround: map['heightAboveGround']?.toDouble(),
-        foundTime: map['foundTime'] != null ? DateTime.parse(map['foundTime']) : null,
-        lastTime: map['lastTime'] != null ? DateTime.parse(map['lastTime']) : null,
-        nestFate: NestFateType.values[map['nestFate']],
-        male: map['male'],
-        female: map['female'],
-        helpers: map['helpers'],
-        isActive: map['isActive'] == 1,
-        revisionsList: revisionsList,
-        eggsList: eggsList,
-      );
-
-      return nest;
+      
+      return Nest.fromMap(map, revisionsList, eggsList);
     }).toList());
 
     return nests;
@@ -439,7 +419,8 @@ class NestDao {
          SELECT 
            n.*,
            COUNT(DISTINCT nr.id) as revisionCount,
-           COUNT(DISTINCT e.id) as eggCount
+           COUNT(DISTINCT e.id) as eggCount,
+           (SELECT nestStatus FROM nest_revisions WHERE nestId = n.id ORDER BY sampleTime DESC LIMIT 1) as lastNestStatus
          FROM nests n
          LEFT JOIN nest_revisions nr ON nr.nestId = n.id
          LEFT JOIN eggs e ON e.nestId = n.id
@@ -462,6 +443,7 @@ class NestDao {
           foundTime: map['foundTime'] != null ? DateTime.parse(map['foundTime'] as String) : null,
           lastTime: map['lastTime'] != null ? DateTime.parse(map['lastTime'] as String) : null,
           nestFate: map['nestFate'] != null ? NestFateType.values[map['nestFate'] as int] : NestFateType.fatUnknown,
+          lastNestStatus: map['lastNestStatus'] != null ? NestStatusType.values[map['lastNestStatus'] as int] : NestStatusType.nstUnknown,
           male: map['male'] as String?,
           female: map['female'] as String?,
           helpers: map['helpers'] as String?,

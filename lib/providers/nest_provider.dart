@@ -58,9 +58,11 @@ class NestProvider with ChangeNotifier {
       for (var dbNest in nestsFromDb) {
         int? index = _nests.indexWhere((n) => n.id == dbNest.id);
         if (index != -1) {
-          // Update counts only
+          // Update summary fields
           _nests[index].revisionCount = dbNest.revisionCount;
           _nests[index].eggCount = dbNest.eggCount;
+          _nests[index].lastNestStatus = dbNest.lastNestStatus;
+          _nests[index].nestFate = dbNest.nestFate;
         } else {
           _nests.add(dbNest);
         }

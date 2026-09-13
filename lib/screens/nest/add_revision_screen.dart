@@ -155,7 +155,7 @@ class AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
                           children: [
                             Expanded(
                               child: DropdownButtonFormField<NestStatusType>(
-                                  value: _selectedNestStatus,
+                                  initialValue: _selectedNestStatus,
                                   isExpanded: true,
                                   decoration: InputDecoration(
                                     labelText: '${S.of(context).nestStatus} *',
@@ -174,14 +174,26 @@ class AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
                                   onChanged: (NestStatusType? newValue) {
                                     setState(() {
                                       _selectedNestStatus = newValue!;
+                                      if (_selectedNestStatus == NestStatusType.nstInactive) {
+                                        _selectedNestStage = NestStageType.stgInactive;
+                                      }
+                                      if (_selectedNestStatus == NestStatusType.nstUnknown) {
+                                        _selectedNestStage = NestStageType.stgUnknown;
+                                      }
                                     });
+                                  },
+                                  validator: (NestStatusType? value) {
+                                    if (value == null || value.index < 0) {
+                                      return S.of(context).selectNestStatus;
+                                    }
+                                    return null;
                                   }
                               ),
                             ),
                             const SizedBox(width: 8.0),
                             Expanded(
                               child: DropdownButtonFormField<NestStageType>(
-                                  value: _selectedNestStage,
+                                  initialValue: _selectedNestStage,
                                   isExpanded: true,
                                   decoration: InputDecoration(
                                     labelText: '${S.of(context).nestPhase} *',
@@ -201,6 +213,21 @@ class AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
                                     setState(() {
                                       _selectedNestStage = newValue!;
                                     });
+                                  },
+                                  validator: (NestStageType? value) {
+                                    if (value == null || value.index < 0) {
+                                      return S.of(context).selectNestPhase;
+                                    }
+                                    if (_selectedNestStatus == NestStatusType.nstInactive && value != NestStageType.stgInactive) {
+                                      return S.of(context).invalidNestPhase;
+                                    }
+                                    if (_selectedNestStatus == NestStatusType.nstActive && value == NestStageType.stgInactive) {
+                                      return S.of(context).invalidNestPhase;
+                                    }
+                                    if (_selectedNestStatus == NestStatusType.nstUnknown && value != NestStageType.stgUnknown) {
+                                      return S.of(context).invalidNestPhase;
+                                    }
+                                    return null;
                                   }
                               ),
                             ),

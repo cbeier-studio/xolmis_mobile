@@ -1316,6 +1316,30 @@ abstract class AppLocalizations {
   /// **'Nest phase'**
   String get nestPhase;
 
+  /// Validation message shown when the nest status is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Select nest status'**
+  String get selectNestStatus;
+
+  /// Validation message shown when the nest phase is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Select nest phase'**
+  String get selectNestPhase;
+
+  /// Message shown when the nest phase is invalid
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid nest phase'**
+  String get invalidNestPhase;
+
+  /// Validation message shown when the egg shape is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Select egg shape'**
+  String get selectEggShape;
+
   /// Philornis larvae present field label
   ///
   /// In en, this message translates to:
@@ -2222,6 +2246,30 @@ abstract class AppLocalizations {
   /// **'Restore backup'**
   String get restoreBackup;
 
+  /// Restore backup images only confirmation dialog text
+  ///
+  /// In en, this message translates to:
+  /// **'Only the images of the backup file will be restored. Are you sure you want to proceed?'**
+  String get restoreBackupImagesOnlyConfirmation;
+
+  /// Restore images only checkbox label
+  ///
+  /// In en, this message translates to:
+  /// **'Restore images only'**
+  String get restoreBackupImagesOnly;
+
+  /// Restore images only checkbox description
+  ///
+  /// In en, this message translates to:
+  /// **'Restore only the images in the backup file. Do not restore database.'**
+  String get restoreBackupImagesOnlyDescription;
+
+  /// Message when images are restored successfully
+  ///
+  /// In en, this message translates to:
+  /// **'{howMany} images restored successfully!'**
+  String imagesRestoredSuccessfully(int howMany);
+
   /// Message when backup is restored successfully
   ///
   /// In en, this message translates to:
@@ -2407,6 +2455,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reactivate'**
   String get reactivate;
+
+  /// Title of dialog to confirm reactivating a nest or inventory
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm reactivate'**
+  String get confirmReactivate;
+
+  /// Message asking confirmation to reactivate a nest or inventory
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to reactivate {gender, select, male{this} female{this} other{this}} {what} ({which})?'**
+  String confirmReactivateMessage(String gender, String what, String which);
 
   /// Archive button label
   ///

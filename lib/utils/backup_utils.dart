@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:material_ui/material_ui.dart';
+import 'package:flutter/foundation.dart';
 import 'package:archive/archive_io.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
@@ -103,36 +103,36 @@ Future<bool> restoreDatabase(String filePath) async {
     // Close the database before restoring
     await dbHelper.closeDatabase();
 
-    // Delete the existing database file if it exists
+    // Deleta o arquivo do banco de dados existente se ele existir
     if (await File(dbFile).exists()) {
       await File(dbFile).delete();
     }
 
-    final inputStream = InputFileStream(filePath);
-    final archive = ZipDecoder().decodeStream(inputStream);
+    final docsDir = await getApplicationDocumentsDirectory();
 
-    // Check if the database file exists in the archive
-    final dbFileInArchive = archive.findFile('xolmis_database.db');
-    if (dbFileInArchive == null) {
-      debugPrint('Error: xolmis_database.db not found in the backup file.');
+    bool success;
+    try {
+      // Executa a extração pesada em um isolate separado para não bloquear a UI
+      success = await compute(_extractDatabaseAndImagesFromZip, {
+        'zipFilePath': filePath,
+        'dbFile': dbFile,
+        'docsDirPath': docsDir.path,
+      });
+    } catch (e) {
+      debugPrint('Isolate database extraction failed, falling back to main isolate: $e');
+      success = _extractDatabaseAndImagesFromZip({
+        'zipFilePath': filePath,
+        'dbFile': dbFile,
+        'docsDirPath': docsDir.path,
+      });
+    }
+
+    if (!success) {
+      debugPrint('Error: Failed to extract database from the backup file.');
       return false;
     }
 
-    for (final file in archive) {
-      final filename = file.name;
-      if (filename == 'xolmis_database.db') {
-        final outputStream = OutputFileStream(dbFile);
-        outputStream.writeBytes(file.content);
-        outputStream.close();
-      } else {
-        final imageDirectory = await getApplicationDocumentsDirectory();
-        final imageOutputPath = path.join(imageDirectory.path, filename);
-        final imageOutputFile = File(imageOutputPath);
-        await imageOutputFile.create(recursive: true);
-        await imageOutputFile.writeAsBytes(file.content);
-      }
-    }
-    // Re-open the database
+    // Re-abre o banco de dados
     final db = await dbHelper.initDatabase();
 
     // Update image paths in the database to be relative (filename only)
@@ -152,4 +152,88 @@ Future<bool> restoreDatabase(String filePath) async {
     debugPrint('Error restoring database: $e');
     return false;
   }
+}
+
+Future<int> restoreImagesOnlyFromBackup(String zipFilePath) async {
+  try {
+    final docsDir = await getApplicationDocumentsDirectory();
+
+    int restoredImagesCount;
+    try {
+      // Executa a extração pesada em um isolate separado para não bloquear a UI
+      restoredImagesCount = await compute(_extractImagesFromZip, {
+        'zipFilePath': zipFilePath,
+        'docsDirPath': docsDir.path,
+      });
+    } catch (e) {
+      debugPrint('Isolate images extraction failed, falling back to main isolate: $e');
+      restoredImagesCount = _extractImagesFromZip({
+        'zipFilePath': zipFilePath,
+        'docsDirPath': docsDir.path,
+      });
+    }
+
+    debugPrint('[IMAGE_RESTORE] Completed. Restored images: $restoredImagesCount');
+    return restoredImagesCount;
+  } catch (e) {
+    debugPrint('[IMAGE_RESTORE] Error restoring images only: $e');
+    return 0;
+  }
+}
+
+/// Helper executado em isolate para extrair imagens e banco de dados.
+bool _extractDatabaseAndImagesFromZip(Map<String, String> args) {
+  final zipFilePath = args['zipFilePath']!;
+  final dbFile = args['dbFile']!;
+  final docsDirPath = args['docsDirPath']!;
+
+  final inputStream = InputFileStream(zipFilePath);
+  final archive = ZipDecoder().decodeStream(inputStream);
+
+  final dbFileInArchive = archive.findFile('xolmis_database.db');
+  if (dbFileInArchive == null) {
+    inputStream.close();
+    return false;
+  }
+
+  for (final file in archive) {
+    final filename = file.name;
+    if (filename == 'xolmis_database.db') {
+      final outputStream = OutputFileStream(dbFile);
+      outputStream.writeBytes(file.content);
+      outputStream.close();
+    } else if (file.isFile) {
+      // Usa path.basename para evitar problemas com caminhos relativos no ZIP
+      final imageOutputPath = path.join(docsDirPath, path.basename(filename));
+      final imageOutputFile = File(imageOutputPath);
+      imageOutputFile.createSync(recursive: true);
+      imageOutputFile.writeAsBytesSync(file.content as List<int>);
+    }
+  }
+  inputStream.close();
+  return true;
+}
+
+/// Helper executado em isolate para extrair apenas imagens.
+int _extractImagesFromZip(Map<String, String> args) {
+  final zipFilePath = args['zipFilePath']!;
+  final docsDirPath = args['docsDirPath']!;
+  int restoredCount = 0;
+
+  final inputStream = InputFileStream(zipFilePath);
+  final archive = ZipDecoder().decodeStream(inputStream);
+
+  for (final file in archive) {
+    if (file.isFile && file.name != 'xolmis_database.db') {
+      final filename = path.basename(file.name);
+      final outputPath = path.join(docsDirPath, filename);
+      final outputFile = File(outputPath);
+
+      outputFile.createSync(recursive: true);
+      outputFile.writeAsBytesSync(file.content as List<int>);
+      restoredCount++;
+    }
+  }
+  inputStream.close();
+  return restoredCount;
 }

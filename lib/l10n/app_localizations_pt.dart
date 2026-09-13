@@ -702,6 +702,18 @@ class AppLocalizationsPt extends AppLocalizations {
   String get nestPhase => 'Estágio';
 
   @override
+  String get selectNestStatus => 'Selecione o status do ninho';
+
+  @override
+  String get selectNestPhase => 'Selecione o estágio';
+
+  @override
+  String get invalidNestPhase => 'Estágio inválido';
+
+  @override
+  String get selectEggShape => 'Selecione a forma do ovo';
+
+  @override
   String get philornisLarvaePresent => 'Presença de larvas de Philornis';
 
   @override
@@ -1244,6 +1256,22 @@ class AppLocalizationsPt extends AppLocalizations {
   String get restoreBackup => 'Restaurar backup';
 
   @override
+  String get restoreBackupImagesOnlyConfirmation =>
+      'Somente as imagens do arquivo de backup serão restauradas. Deseja prosseguir?';
+
+  @override
+  String get restoreBackupImagesOnly => 'Restaurar somente imagens';
+
+  @override
+  String get restoreBackupImagesOnlyDescription =>
+      'Restaura somente as imagens do arquivo de backup. Não restaura o banco de dados.';
+
+  @override
+  String imagesRestoredSuccessfully(int howMany) {
+    return '$howMany imagens restauradas com sucesso!';
+  }
+
+  @override
   String get backupRestoredSuccessfully => 'Backup restaurado com sucesso! Reinicie o app para aplicar as alterações.';
 
   @override
@@ -1341,6 +1369,15 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get reactivate => 'Reativar';
+
+  @override
+  String get confirmReactivate => 'Confirmar reativação';
+
+  @override
+  String confirmReactivateMessage(String gender, String what, String which) {
+    String _temp0 = intl.Intl.selectLogic(gender, {'male': 'este', 'female': 'esta', 'other': 'este(a)'});
+    return 'Tem certeza que deseja reativar $_temp0 $what ($which)?';
+  }
 
   @override
   String get archive => 'Arquivar';
@@ -2703,6 +2740,18 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get nestPhase => 'Estágio';
 
   @override
+  String get selectNestStatus => 'Selecione o status do ninho';
+
+  @override
+  String get selectNestPhase => 'Selecione o estágio';
+
+  @override
+  String get invalidNestPhase => 'Estágio inválido';
+
+  @override
+  String get selectEggShape => 'Selecione a forma do ovo';
+
+  @override
   String get philornisLarvaePresent => 'Presença de larvas de Philornis';
 
   @override
@@ -3244,6 +3293,22 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get restoreBackup => 'Restaurar backup';
 
   @override
+  String get restoreBackupImagesOnlyConfirmation =>
+      'Somente as imagens do arquivo de backup serão restauradas. Deseja prosseguir?';
+
+  @override
+  String get restoreBackupImagesOnly => 'Restaurar somente imagens';
+
+  @override
+  String get restoreBackupImagesOnlyDescription =>
+      'Restaura somente as imagens do arquivo de backup. Não restaura o banco de dados.';
+
+  @override
+  String imagesRestoredSuccessfully(int howMany) {
+    return '$howMany imagens restauradas com sucesso!';
+  }
+
+  @override
   String get backupRestoredSuccessfully => 'Backup restaurado com sucesso! Reinicie o app para aplicar as alterações.';
 
   @override
@@ -3341,6 +3406,15 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get reactivate => 'Reativar';
+
+  @override
+  String get confirmReactivate => 'Confirmar reativação';
+
+  @override
+  String confirmReactivateMessage(String gender, String what, String which) {
+    String _temp0 = intl.Intl.selectLogic(gender, {'male': 'este', 'female': 'esta', 'other': 'este(a)'});
+    return 'Tem certeza que deseja reativar $_temp0 $what ($which)?';
+  }
 
   @override
   String get archive => 'Arquivar';

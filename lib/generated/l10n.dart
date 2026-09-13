@@ -2125,6 +2125,46 @@ class S {
     );
   }
 
+  /// `Select nest status`
+  String get selectNestStatus {
+    return Intl.message(
+      'Select nest status',
+      name: 'selectNestStatus',
+      desc: 'Validation message shown when the nest status is empty',
+      args: [],
+    );
+  }
+
+  /// `Select nest phase`
+  String get selectNestPhase {
+    return Intl.message(
+      'Select nest phase',
+      name: 'selectNestPhase',
+      desc: 'Validation message shown when the nest phase is empty',
+      args: [],
+    );
+  }
+
+  /// `Invalid nest phase`
+  String get invalidNestPhase {
+    return Intl.message(
+      'Invalid nest phase',
+      name: 'invalidNestPhase',
+      desc: 'Message shown when the nest phase is invalid',
+      args: [],
+    );
+  }
+
+  /// `Select egg shape`
+  String get selectEggShape {
+    return Intl.message(
+      'Select egg shape',
+      name: 'selectEggShape',
+      desc: 'Validation message shown when the egg shape is empty',
+      args: [],
+    );
+  }
+
   /// `Philornis larvae present`
   String get philornisLarvaePresent {
     return Intl.message(
@@ -3669,6 +3709,46 @@ class S {
     );
   }
 
+  /// `Only the images of the backup file will be restored. Are you sure you want to proceed?`
+  String get restoreBackupImagesOnlyConfirmation {
+    return Intl.message(
+      'Only the images of the backup file will be restored. Are you sure you want to proceed?',
+      name: 'restoreBackupImagesOnlyConfirmation',
+      desc: 'Restore backup images only confirmation dialog text',
+      args: [],
+    );
+  }
+
+  /// `Restore images only`
+  String get restoreBackupImagesOnly {
+    return Intl.message(
+      'Restore images only',
+      name: 'restoreBackupImagesOnly',
+      desc: 'Restore images only checkbox label',
+      args: [],
+    );
+  }
+
+  /// `Restore only the images in the backup file. Do not restore database.`
+  String get restoreBackupImagesOnlyDescription {
+    return Intl.message(
+      'Restore only the images in the backup file. Do not restore database.',
+      name: 'restoreBackupImagesOnlyDescription',
+      desc: 'Restore images only checkbox description',
+      args: [],
+    );
+  }
+
+  /// `{howMany} images restored successfully!`
+  String imagesRestoredSuccessfully(int howMany) {
+    return Intl.message(
+      '$howMany images restored successfully!',
+      name: 'imagesRestoredSuccessfully',
+      desc: 'Message when images are restored successfully',
+      args: [howMany],
+    );
+  }
+
   /// `Backup restored successfully! Restart the app to apply the changes.`
   String get backupRestoredSuccessfully {
     return Intl.message(
@@ -3976,6 +4056,26 @@ class S {
       name: 'reactivate',
       desc: 'Reactivate button label',
       args: [],
+    );
+  }
+
+  /// `Confirm reactivate`
+  String get confirmReactivate {
+    return Intl.message(
+      'Confirm reactivate',
+      name: 'confirmReactivate',
+      desc: 'Title of dialog to confirm reactivating a nest or inventory',
+      args: [],
+    );
+  }
+
+  /// `Are you sure you want to reactivate {gender, select, male{this} female{this} other{this}} {what} ({which})?`
+  String confirmReactivateMessage(String gender, String what, String which) {
+    return Intl.message(
+      'Are you sure you want to reactivate ${Intl.gender(gender, male: 'this', female: 'this', other: 'this')} $what ($which)?',
+      name: 'confirmReactivateMessage',
+      desc: 'Message asking confirmation to reactivate a nest or inventory',
+      args: [gender, what, which],
     );
   }
 

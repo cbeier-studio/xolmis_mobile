@@ -63,6 +63,23 @@ class _BackupSettingsState extends State<BackupSettings> {
                   }
                 },
               ),
+              SettingsTile(
+                leading: const Icon(Icons.perm_media_outlined),
+                title: Text(S.current.restoreBackupImagesOnly),
+                description: Text(S.current.restoreBackupImagesOnlyDescription),
+                onPressed: (context) async {
+                  // 1. Mostra o diálogo de aviso e aguarda a confirmação do usuário.
+                  final bool userConfirmed = await _showRestoreImagesConfirmationDialog(context);
+
+                  // 2. Prossiga com a restauração apenas se o usuário confirmou.
+                  if (userConfirmed) {
+                    // A verificação `mounted` é uma boa prática em `async` callbacks.
+                    if (context.mounted) {
+                      await runBackupImagesRestore(context);
+                    }
+                  }
+                },
+              ),
             ],
           ),
         ],
@@ -79,7 +96,7 @@ class _BackupSettingsState extends State<BackupSettings> {
       final formatter = DateFormat('yyyyMMdd_HHmmss');
       final formattedDate = formatter.format(now);
       final backupFilePath =
-          '${directory!.path}/xolmis_backup_$formattedDate.zip';
+          '${directory.path}/xolmis_backup_$formattedDate.zip';
 
       if (mounted) {
         showDialog(
@@ -92,8 +109,8 @@ class _BackupSettingsState extends State<BackupSettings> {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    CircularProgressIndicator(),
-                    SizedBox(width: 20),
+                    const CircularProgressIndicator(),
+                    const SizedBox(width: 20),
                     Text(S.of(dialogContext).backingUpData),
                   ],
                 ),
@@ -119,7 +136,7 @@ class _BackupSettingsState extends State<BackupSettings> {
           ),
         );
 
-        if (result.status == ShareResultStatus.success) {
+        if (result.status == ShareResultStatus.success && mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               backgroundColor: Colors.green,
@@ -132,30 +149,32 @@ class _BackupSettingsState extends State<BackupSettings> {
           Navigator.of(context).pop();
           isDialogShown = false;
         }
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
                 persist: true,
                 showCloseIcon: true,
                 backgroundColor: Theme.of(context).colorScheme.error,
                 content: Text(S.current.errorBackupNotFound)
             )
-        );
+          );
+        }
       }
     } catch (e) {
       if (isDialogShown && mounted) {
         Navigator.of(context).pop();
         isDialogShown = false;
       }
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          persist: true,
-          showCloseIcon: true,
-          backgroundColor: Theme.of(context).colorScheme.error,
-          content: Text('${S.current.errorCreatingBackup}: ${e.toString()}'),
-        ),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            persist: true,
+            showCloseIcon: true,
+            backgroundColor: Theme.of(context).colorScheme.error,
+            content: Text('${S.current.errorCreatingBackup}: ${e.toString()}'),
+          ),
+        );
+      }
     }
   }
 
@@ -198,62 +217,103 @@ class _BackupSettingsState extends State<BackupSettings> {
     return confirmed ?? false;
   }
 
+  Future<bool> _showRestoreImagesConfirmationDialog(BuildContext context) async {
+    final bool? confirmed = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(S.current.restoreBackup),
+          content: Text(S.current.restoreBackupImagesOnlyConfirmation),
+          actions: <Widget>[
+            TextButton(
+              child: Text(S.of(context).cancel),
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: Theme.of(context).colorScheme.error,
+              ),
+              child: Text(S.current.restore),
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+            ),
+          ],
+        );
+      },
+    );
+    // Se o usuário fechar o diálogo de outra forma, `confirmed` pode ser null.
+    // Tratamos null como `false`.
+    return confirmed ?? false;
+  }
+
   /// Restores app data from a backup ZIP selected by the user.
   Future<void> runBackupRestore(BuildContext context) async {
-    final result = await FilePicker.pickFile(
-      type: FileType.custom,
-      allowedExtensions: ['zip'],
-    );
+    bool isDialogShown = false;
+    try {
+      final result = await FilePicker.pickFile(
+        type: FileType.custom,
+        allowedExtensions: ['zip'],
+      );
 
-    if (result != null && result.path != null) {
-      final filePath = result.path!;
-      bool isDialogShown = false;
-      try {
+      if (result == null || result.path == null) {
         if (mounted) {
-          showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (BuildContext dialogContext) {
-              return Dialog(
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      CircularProgressIndicator(),
-                      SizedBox(width: 20),
-                      Text(S.of(dialogContext).restoringData),
-                    ],
-                  ),
-                ),
-              );
-            },
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              showCloseIcon: true,
+              content: Text(S.current.noFileSelected),
+            ),
           );
-          isDialogShown = true;
         }
+        return;
+      }
 
-        final success = await restoreDatabase(filePath);
-
-        if (isDialogShown && mounted) {
-          Navigator.of(context).pop();
-          isDialogShown = false;
-        }
-
-        if (success) {
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                showCloseIcon: true,
-                backgroundColor: Colors.green,
-                content: Text(S.of(context).backupRestoredSuccessfully),
+      final filePath = result.path!;
+      if (mounted) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext dialogContext) {
+            return Dialog(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const CircularProgressIndicator(),
+                    const SizedBox(width: 20),
+                    Text(S.of(dialogContext).restoringData),
+                  ],
+                ),
               ),
             );
-          }
-        } else {
-          if (isDialogShown && mounted) {
-            Navigator.of(context).pop();
-            isDialogShown = false;
-          }
+          },
+        );
+        isDialogShown = true;
+      }
+
+      final success = await restoreDatabase(filePath);
+
+      if (isDialogShown && mounted) {
+        Navigator.of(context).pop();
+        isDialogShown = false;
+      }
+
+      if (success) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              showCloseIcon: true,
+              backgroundColor: Colors.green,
+              content: Text(S.of(context).backupRestoredSuccessfully),
+            ),
+          );
+        }
+      } else {
+        if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
                 persist: true,
@@ -262,11 +322,91 @@ class _BackupSettingsState extends State<BackupSettings> {
                 content: Text(S.current.errorRestoringBackup)),
           );
         }
-      } catch (e) {
-        if (isDialogShown && mounted) {
-          Navigator.of(context).pop();
-          isDialogShown = false;
+      }
+    } catch (e) {
+      if (isDialogShown && mounted) {
+        Navigator.of(context).pop();
+        isDialogShown = false;
+      }
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            persist: true,
+            showCloseIcon: true,
+            backgroundColor: Theme.of(context).colorScheme.error,
+            content: Text('${S.current.errorRestoringBackup}: ${e.toString()}'),
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> runBackupImagesRestore(BuildContext context) async {
+    bool isDialogShown = false;
+    try {
+      final result = await FilePicker.pickFile(
+        type: FileType.custom,
+        allowedExtensions: ['zip'],
+      );
+
+      if (result == null || result.path == null) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              showCloseIcon: true,
+              content: Text(S.current.noFileSelected),
+            ),
+          );
         }
+        return;
+      }
+
+      final filePath = result.path!;
+      if (mounted) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext dialogContext) {
+            return Dialog(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const CircularProgressIndicator(),
+                    const SizedBox(width: 20),
+                    Text(S.current.restoringData),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+        isDialogShown = true;
+      }
+
+      final imagesCount = await restoreImagesOnlyFromBackup(filePath);
+
+      if (isDialogShown && mounted) {
+        Navigator.of(context).pop();
+        isDialogShown = false;
+      }
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            showCloseIcon: true,
+            backgroundColor: imagesCount > 0 ? Colors.green : null,
+            content: Text(S.current.imagesRestoredSuccessfully(imagesCount)),
+          ),
+        );
+      }
+    } catch (e) {
+      if (isDialogShown && mounted) {
+        Navigator.of(context).pop();
+        isDialogShown = false;
+      }
+      if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             persist: true,

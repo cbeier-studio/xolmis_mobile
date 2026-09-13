@@ -344,30 +344,47 @@ class RevisionListItem extends StatelessWidget {
     final Color secondaryColor;
     final Color secondaryForeground;
 
-    if (nestRevision.nestStatus == NestStatusType.nstActive) {
-      if (isDark) {
-        primaryColor = Colors.green.shade400;
-        primaryForeground = Colors.black;
-        secondaryColor = Colors.green.shade900;
-        secondaryForeground = Colors.green.shade100;
-      } else {
-        primaryColor = Colors.green.shade600;
-        primaryForeground = Colors.white;
-        secondaryColor = Colors.green.shade100;
-        secondaryForeground = Colors.green.shade800;
-      }
-    } else {
-      if (isDark) {
-        primaryColor = Colors.grey.shade600;
-        primaryForeground = Colors.black;
-        secondaryColor = Colors.grey.shade800;
-        secondaryForeground = Colors.grey.shade400;
-      } else {
-        primaryColor = Colors.grey;
-        primaryForeground = Colors.white;
-        secondaryColor = Colors.grey.shade300;
-        secondaryForeground = Colors.grey.shade700;
-      }
+    switch (nestRevision.nestStatus) {
+      case NestStatusType.nstActive:
+        if (isDark) {
+          primaryColor = Colors.green.shade400;
+          primaryForeground = Colors.black;
+          secondaryColor = Colors.green.shade900;
+          secondaryForeground = Colors.green.shade100;
+        } else {
+          primaryColor = Colors.green.shade600;
+          primaryForeground = Colors.white;
+          secondaryColor = Colors.green.shade100;
+          secondaryForeground = Colors.green.shade800;
+        }
+        break;
+      case NestStatusType.nstInactive:
+        if (isDark) {
+          primaryColor = Colors.orange.shade400;
+          primaryForeground = Colors.black;
+          secondaryColor = Colors.orange.shade900;
+          secondaryForeground = Colors.orange.shade100;
+        } else {
+          primaryColor = Colors.orange.shade600;
+          primaryForeground = Colors.white;
+          secondaryColor = Colors.orange.shade100;
+          secondaryForeground = Colors.orange.shade800;
+        }
+        break;
+      case NestStatusType.nstUnknown:
+      default:
+        if (isDark) {
+          primaryColor = Colors.grey.shade600;
+          primaryForeground = Colors.black;
+          secondaryColor = Colors.grey.shade800;
+          secondaryForeground = Colors.grey.shade400;
+        } else {
+          primaryColor = Colors.grey;
+          primaryForeground = Colors.white;
+          secondaryColor = Colors.grey.shade300;
+          secondaryForeground = Colors.grey.shade700;
+        }
+        break;
     }
 
     return ListTile(

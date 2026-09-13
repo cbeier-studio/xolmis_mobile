@@ -1589,7 +1589,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
         alignment: Alignment.center,
         children: [
           if (_isShowingActiveInventories && inventory.duration == 0)
-            const SizedBox(width: 47),
+            const SizedBox(width: 48),
           if (_isShowingActiveInventories && inventory.duration > 0)
             ValueListenableBuilder<double>(
               valueListenable: inventory.elapsedTimeNotifier,

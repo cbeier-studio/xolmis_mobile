@@ -1130,6 +1130,26 @@
         "type": "text",
         "description": "Nest phase field label"
     },
+    "selectNestStatus": "Select nest status",
+    "@selectNestStatus": {
+        "type": "text",
+        "description": "Validation message shown when the nest status is empty"
+    },
+    "selectNestPhase": "Select nest phase",
+    "@selectNestPhase": {
+        "type": "text",
+        "description": "Validation message shown when the nest phase is empty"
+    },
+    "invalidNestPhase": "Invalid nest phase",
+    "@invalidNestPhase": {
+        "type": "text",
+        "description": "Message shown when the nest phase is invalid"
+    },
+    "selectEggShape": "Select egg shape",
+    "@selectEggShape": {
+        "type": "text",
+        "description": "Validation message shown when the egg shape is empty"
+    },
     "philornisLarvaePresent": "Philornis larvae present",
     "@philornisLarvaePresent": {
         "type": "text",
@@ -2026,6 +2046,31 @@
         "type": "text",
         "description": "Restore backup settings tile title"
     },
+    "restoreBackupImagesOnlyConfirmation": "Only the images of the backup file will be restored. Are you sure you want to proceed?",
+    "@restoreBackupImagesOnlyConfirmation": {
+        "type": "text",
+        "description": "Restore backup images only confirmation dialog text"
+    },
+    "restoreBackupImagesOnly": "Restore images only",
+    "@restoreBackupImagesOnly": {
+        "type": "text",
+        "description": "Restore images only checkbox label"
+    },
+    "restoreBackupImagesOnlyDescription": "Restore only the images in the backup file. Do not restore database.",
+    "@restoreBackupImagesOnlyDescription": {
+        "type": "text",
+        "description": "Restore images only checkbox description"
+    },
+    "imagesRestoredSuccessfully": "{howMany} images restored successfully!",
+    "@imagesRestoredSuccessfully": {
+        "type": "text",
+        "description": "Message when images are restored successfully",
+        "placeholders": {
+            "howMany": {
+                "type": "int"
+            }
+        }
+    },
     "backupRestoredSuccessfully": "Backup restored successfully! Restart the app to apply the changes.",
     "@backupRestoredSuccessfully": {
         "type": "text",
@@ -2195,6 +2240,29 @@
     "@reactivate": {
         "type": "text",
         "description": "Reactivate button label"
+    },
+    "confirmReactivate": "Confirm reactivate",
+    "@confirmReactivate": {
+        "type": "text",
+        "description": "Title of dialog to confirm reactivating a nest or inventory"
+    },
+    "confirmReactivateMessage": "Are you sure you want to reactivate {gender, select, male{this} female{this} other{this}} {what} ({which})?",
+    "@confirmReactivateMessage": {
+        "type": "text",
+        "description": "Message asking confirmation to reactivate a nest or inventory",
+        "placeholders": {
+            "gender": {
+                "type": "String"
+            },
+            "what": {
+                "type": "String",
+                "description": "Type of item to reactivate (nest, inventory)"
+            },
+            "which": {
+                "type": "String",
+                "description": "ID or field number of the item"
+            }
+        }
     },
   "archive": "Archive",
   "@archive": {

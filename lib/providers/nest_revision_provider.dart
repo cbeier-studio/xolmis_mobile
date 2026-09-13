@@ -41,11 +41,19 @@ class NestRevisionProvider with ChangeNotifier {
     nestRevision.nestId = nestId;
     await _nestRevisionDao.insertNestRevision(nestRevision);
 
-    final nestProvider = Provider.of<NestProvider>(context, listen: false);
-    nestProvider.nests.firstWhere((nest) => nest.id == nestId).revisionsList?.add(nestRevision); 
-
     // Add the nest revision to the list of the provider
-    _nestRevisionMap[nestId] = await _nestRevisionDao.getNestRevisionsForNest(nestId);
+    final fullList = await _nestRevisionDao.getNestRevisionsForNest(nestId);
+    _nestRevisionMap[nestId] = fullList;
+
+    final nestProvider = Provider.of<NestProvider>(context, listen: false);
+    final nestIndex = nestProvider.nests.indexWhere((nest) => nest.id == nestId);
+    if (nestIndex != -1) {
+      final nest = nestProvider.nests[nestIndex];
+      nest.revisionsList = fullList; 
+      nest.revisionCount = fullList.length;
+      nest.updateLastNestStatus();
+      nestProvider.refreshState();
+    }
 
     notifyListeners();
   }
@@ -54,11 +62,18 @@ class NestRevisionProvider with ChangeNotifier {
   Future<void> updateNestRevision(BuildContext context, NestRevision nestRevision) async {
     await _nestRevisionDao.updateNestRevision(nestRevision);
 
-    final nestProvider = Provider.of<NestProvider>(context, listen: false);
-    nestProvider.nests.firstWhere((nest) => nest.id == nestRevision.nestId).revisionsList?.removeWhere((r) => r.id == nestRevision.id);
-    nestProvider.nests.firstWhere((nest) => nest.id == nestRevision.nestId).revisionsList?.add(nestRevision);
+    final nestId = nestRevision.nestId!;
+    final fullList = await _nestRevisionDao.getNestRevisionsForNest(nestId);
+    _nestRevisionMap[nestId] = fullList;
 
-    _nestRevisionMap[nestRevision.nestId!] = await _nestRevisionDao.getNestRevisionsForNest(nestRevision.nestId!);
+    final nestProvider = Provider.of<NestProvider>(context, listen: false);
+    final nestIndex = nestProvider.nests.indexWhere((nest) => nest.id == nestId);
+    if (nestIndex != -1) {
+      final nest = nestProvider.nests[nestIndex];
+      nest.revisionsList = fullList;
+      nest.updateLastNestStatus();
+      nestProvider.refreshState();
+    }
 
     notifyListeners();
   }
@@ -67,10 +82,19 @@ class NestRevisionProvider with ChangeNotifier {
   Future<void> removeNestRevision(BuildContext context, int nestId, int nestRevisionId) async {
     await _nestRevisionDao.deleteNestRevision(nestRevisionId);
 
-    final nestProvider = Provider.of<NestProvider>(context, listen: false);
-    nestProvider.nests.firstWhere((nest) => nest.id == nestId).revisionsList?.removeWhere((r) => r.id == nestRevisionId);
+    final fullList = await _nestRevisionDao.getNestRevisionsForNest(nestId);
+    _nestRevisionMap[nestId] = fullList;
 
-    _nestRevisionMap[nestId] = await _nestRevisionDao.getNestRevisionsForNest(nestId);
+    final nestProvider = Provider.of<NestProvider>(context, listen: false);
+    final nestIndex = nestProvider.nests.indexWhere((nest) => nest.id == nestId);
+    if (nestIndex != -1) {
+      final nest = nestProvider.nests[nestIndex];
+      nest.revisionsList = fullList;
+      nest.revisionCount = fullList.length;
+      nest.updateLastNestStatus();
+      nestProvider.refreshState();
+    }
+
     notifyListeners();
   }
 }

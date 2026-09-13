@@ -595,6 +595,42 @@ class NestsScreenState extends State<NestsScreen> {
     );
   }
 
+  // Confirm and reactivate a nest
+  void _confirmReactivateNest(Nest nest) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(S.of(context).confirmReactivate),
+          content: Text(
+            S.of(context).confirmReactivateMessage(
+                  "male",
+                  S.of(context).nest(1),
+                  nest.fieldNumber ?? '',
+                ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(S.of(context).cancel),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop();
+                nest.isActive = true;
+                nest.nestFate = NestFateType.fatUnknown;
+                await nestProvider.updateNest(nest);
+              },
+              child: Text(S.of(context).reactivate),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     // final screenWidth = MediaQuery.sizeOf(context).width;
@@ -1415,9 +1451,8 @@ class NestsScreenState extends State<NestsScreen> {
               : Theme.of(context).colorScheme.primaryContainer,
       leading:
       // Show checkbox if showing inactive nests
-      Visibility(
-        visible: !_showActive,
-        child: Checkbox(
+      !_showActive ?
+        Checkbox(
           value: isSelected,
           onChanged: (bool? value) {
             setState(() {
@@ -1428,15 +1463,43 @@ class NestsScreenState extends State<NestsScreen> {
               }
             });
           },
-        ),
+        ) : SizedBox(width: 48,
+     child: Tooltip(
+      message: nestStatusTypeFriendlyNames[nest.lastNestStatus] ?? '',
+      child: Icon(
+        nest.lastNestStatus == NestStatusType.nstActive
+            ? Icons.fiber_manual_record
+            : nest.lastNestStatus == NestStatusType.nstInactive
+            ? Icons.fiber_manual_record_outlined
+            : Icons.help_outline,
+        color: nest.lastNestStatus == NestStatusType.nstActive
+            ? Colors.green
+            : nest.lastNestStatus == NestStatusType.nstInactive
+            ? Colors.orange
+            : Colors.grey,
+        size: 24,
       ),
-      // Show icon based on the nest fate
+    ),
+      ),
+      // Show icon based on the nest status and fate
       trailing:
-          nest.nestFate == NestFateType.fatSuccess
-              ? const Icon(Icons.check_circle, color: Colors.green)
-              : nest.nestFate == NestFateType.fatLost
-              ? const Icon(Icons.cancel, color: Colors.red)
-              : const Icon(Icons.help, color: Colors.grey),
+        !_showActive
+          // Nest Fate Indicator
+          ? Tooltip(
+            message: nestFateTypeFriendlyNames[nest.nestFate] ?? '',
+            child: Icon(
+              nest.nestFate == NestFateType.fatSuccess
+                  ? Icons.check_circle
+                  : nest.nestFate == NestFateType.fatLost
+                  ? Icons.cancel
+                  : Icons.help,
+              color: nest.nestFate == NestFateType.fatSuccess
+                  ? Colors.green
+                  : nest.nestFate == NestFateType.fatLost
+                  ? Colors.red
+                  : Colors.grey,
+            ),
+          ) : null,
       onLongPress: () => _showBottomSheet(context, nest),
       onTap: () {
         if (isLargeScreen) {
@@ -1536,10 +1599,9 @@ class NestsScreenState extends State<NestsScreen> {
                               context,
                               Icons.undo_outlined,
                               S.of(context).reactivate,
-                                  () {
+                              () {
                                 Navigator.of(context).pop();
-                                nest.isActive = true;
-                                nestProvider.updateNest(nest);
+                                _confirmReactivateNest(nest);
                               },
                             ),
                           buildGridMenuItem(

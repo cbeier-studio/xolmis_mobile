@@ -605,6 +605,26 @@
     "nestRevision": "Revisão de ninho",
     "nestStatus": "Status do ninho",
     "nestPhase": "Estágio",
+  "selectNestStatus": "Selecione o status do ninho",
+  "@selectNestStatus": {
+    "type": "text",
+    "description": "Validation message shown when the nest status is empty"
+  },
+  "selectNestPhase": "Selecione o estágio",
+  "@selectNestPhase": {
+    "type": "text",
+    "description": "Validation message shown when the nest phase is empty"
+  },
+  "invalidNestPhase": "Estágio inválido",
+  "@invalidNestPhase": {
+    "type": "text",
+    "description": "Message shown when the nest phase is invalid"
+  },
+  "selectEggShape": "Selecione a forma do ovo",
+  "@selectEggShape": {
+    "type": "text",
+    "description": "Validation message shown when the egg shape is empty"
+  },
     "philornisLarvaePresent": "Presença de larvas de Philornis",
     "errorSavingRevision": "Erro ao salvar a revisão de ninho.",
     "findSpecimens": "Procurar espécimes...",
@@ -1465,6 +1485,31 @@
         "type": "text",
         "description": "Restore backup settings tile title"
     },
+  "restoreBackupImagesOnlyConfirmation": "Somente as imagens do arquivo de backup serão restauradas. Deseja prosseguir?",
+  "@restoreBackupImagesOnlyConfirmation": {
+    "type": "text",
+    "description": "Restore backup images only confirmation dialog text"
+  },
+  "restoreBackupImagesOnly": "Restaurar somente imagens",
+  "@restoreBackupImagesOnly": {
+    "type": "text",
+    "description": "Restore images only checkbox label"
+  },
+  "restoreBackupImagesOnlyDescription": "Restaura somente as imagens do arquivo de backup. Não restaura o banco de dados.",
+  "@restoreBackupImagesOnlyDescription": {
+    "type": "text",
+    "description": "Restore images only checkbox description"
+  },
+  "imagesRestoredSuccessfully": "{howMany} imagens restauradas com sucesso!",
+  "@imagesRestoredSuccessfully": {
+    "type": "text",
+    "description": "Message when images are restored successfully",
+    "placeholders": {
+      "howMany": {
+        "type": "int"
+      }
+    }
+  },
     "backupRestoredSuccessfully": "Backup restaurado com sucesso! Reinicie o app para aplicar as alterações.",
     "@backupRestoredSuccessfully": {
         "type": "text",
@@ -1696,6 +1741,29 @@
     "@reactivate": {
       "type": "text",
       "description": "Reactivate button label"
+    },
+    "confirmReactivate": "Confirmar reativação",
+    "@confirmReactivate": {
+        "type": "text",
+        "description": "Title of dialog to confirm reactivating a nest or inventory"
+    },
+    "confirmReactivateMessage": "Tem certeza que deseja reativar {gender, select, male{este} female{esta} other{este(a)}} {what} ({which})?",
+    "@confirmReactivateMessage": {
+        "type": "text",
+        "description": "Message asking confirmation to reactivate a nest or inventory",
+        "placeholders": {
+            "gender": {
+                "type": "String"
+            },
+            "what": {
+                "type": "String",
+                "description": "Type of item to reactivate (nest, inventory)"
+            },
+            "which": {
+                "type": "String",
+                "description": "ID or field number of the item"
+            }
+        }
     },
   "archive": "Arquivar",
   "@archive": {

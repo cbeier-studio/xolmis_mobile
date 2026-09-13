@@ -215,12 +215,18 @@ class AddEggScreenState extends State<AddEggScreen> {
                               setState(() {
                                 _selectedEggShape = newValue!;
                               });
+                            },
+                            validator: (EggShapeType? value) {
+                              if (value == null || value.index < 0) {
+                                return S.of(context).selectEggShape;
+                              }
+                              return null;
                             }
                         ),
                         const SizedBox(height: 16.0),
                         TextFormField(
                           controller: _widthController,
-                          keyboardType: TextInputType.number,
+                          keyboardType: TextInputType.numberWithOptions(decimal: true),
                           inputFormatters: [
                             CommaToDotTextInputFormatter(),
                             // Allow only numbers and decimal separator with 1 decimal place
@@ -235,7 +241,7 @@ class AddEggScreenState extends State<AddEggScreen> {
                         const SizedBox(height: 16.0),
                         TextFormField(
                           controller: _lengthController,
-                          keyboardType: TextInputType.number,
+                          keyboardType: TextInputType.numberWithOptions(decimal: true),
                           inputFormatters: [
                             CommaToDotTextInputFormatter(),
                             // Allow only numbers and decimal separator with 1 decimal place
@@ -250,7 +256,7 @@ class AddEggScreenState extends State<AddEggScreen> {
                         const SizedBox(height: 16.0),
                         TextFormField(
                           controller: _massController,
-                          keyboardType: TextInputType.number,
+                          keyboardType: TextInputType.numberWithOptions(decimal: true),
                           inputFormatters: [
                             CommaToDotTextInputFormatter(),
                             // Allow only numbers and decimal separator with 2 decimal places

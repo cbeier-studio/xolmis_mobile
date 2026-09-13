@@ -700,6 +700,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get nestPhase => 'Nest phase';
 
   @override
+  String get selectNestStatus => 'Select nest status';
+
+  @override
+  String get selectNestPhase => 'Select nest phase';
+
+  @override
+  String get invalidNestPhase => 'Invalid nest phase';
+
+  @override
+  String get selectEggShape => 'Select egg shape';
+
+  @override
   String get philornisLarvaePresent => 'Philornis larvae present';
 
   @override
@@ -1226,6 +1238,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get restoreBackup => 'Restore backup';
 
   @override
+  String get restoreBackupImagesOnlyConfirmation =>
+      'Only the images of the backup file will be restored. Are you sure you want to proceed?';
+
+  @override
+  String get restoreBackupImagesOnly => 'Restore images only';
+
+  @override
+  String get restoreBackupImagesOnlyDescription =>
+      'Restore only the images in the backup file. Do not restore database.';
+
+  @override
+  String imagesRestoredSuccessfully(int howMany) {
+    return '$howMany images restored successfully!';
+  }
+
+  @override
   String get backupRestoredSuccessfully => 'Backup restored successfully! Restart the app to apply the changes.';
 
   @override
@@ -1323,6 +1351,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get reactivate => 'Reactivate';
+
+  @override
+  String get confirmReactivate => 'Confirm reactivate';
+
+  @override
+  String confirmReactivateMessage(String gender, String what, String which) {
+    String _temp0 = intl.Intl.selectLogic(gender, {'male': 'this', 'female': 'this', 'other': 'this'});
+    return 'Are you sure you want to reactivate $_temp0 $what ($which)?';
+  }
 
   @override
   String get archive => 'Archive';

@@ -251,6 +251,7 @@ class Nest with ChangeNotifier {
   DateTime? foundTime;
   DateTime? lastTime;
   NestFateType? nestFate;
+  NestStatusType? lastNestStatus;
   String? male;
   String? female;
   String? helpers;
@@ -276,6 +277,7 @@ class Nest with ChangeNotifier {
     this.foundTime,
     this.lastTime,
     this.nestFate = NestFateType.fatUnknown,
+    this.lastNestStatus = NestStatusType.nstUnknown,
     this.male,
     this.female,
     this.helpers,
@@ -287,6 +289,23 @@ class Nest with ChangeNotifier {
     this.eggCount = 0,
   }) : revisionsList = revisionsList ?? [],
        eggsList = eggsList ?? [];
+
+  /// Updates [lastNestStatus] based on the most recent revision in [revisionsList].
+  void updateLastNestStatus() {
+    if (revisionsList == null || revisionsList!.isEmpty) {
+      lastNestStatus = NestStatusType.nstUnknown;
+      return;
+    }
+
+    NestRevision latest = revisionsList!.first;
+    for (final rev in revisionsList!) {
+      if (rev.sampleTime != null && (latest.sampleTime == null || rev.sampleTime!.isAfter(latest.sampleTime!))) {
+        latest = rev;
+      }
+    }
+    lastNestStatus = latest.nestStatus;
+    notifyListeners();
+  }
 
   /// Converts this nest into a SQLite-compatible map.
   Map<String, dynamic> toMap() {
@@ -336,6 +355,21 @@ class Nest with ChangeNotifier {
 
   /// Creates a [Nest] from a JSON map, including revisions and eggs.
   factory Nest.fromJson(Map<String, dynamic> json) {
+    final revisionsList = (json['revisionsList'] as List?)?.map((item) => NestRevision.fromJson(item)).toList() ?? [];
+    
+    NestStatusType? lastStatus;
+    if (json['lastNestStatus'] != null) {
+      lastStatus = NestStatusType.values[json['lastNestStatus']];
+    } else if (revisionsList.isNotEmpty) {
+      NestRevision latest = revisionsList.first;
+      for (final rev in revisionsList) {
+        if (rev.sampleTime != null && (latest.sampleTime == null || rev.sampleTime!.isAfter(latest.sampleTime!))) {
+          latest = rev;
+        }
+      }
+      lastStatus = latest.nestStatus;
+    }
+
     return Nest(
       id: json['id'],
       fieldNumber: json['fieldNumber'],
@@ -348,13 +382,14 @@ class Nest with ChangeNotifier {
       support: json['support'],
       heightAboveGround: json['heightAboveGround'],
       nestFate: json['nestFate'] != null ? NestFateType.values[json['nestFate']] : NestFateType.fatUnknown,
+      lastNestStatus: lastStatus ?? NestStatusType.nstUnknown,
       male: json['male'],
       female: json['female'],
       helpers: json['helpers'],
       observer: json['observer'],
       isActive: json['isActive'] == 1,
-      revisionsList: (json['revisionsList'] as List).map((item) => NestRevision.fromJson(item)).toList(),
-      eggsList: (json['eggsList'] as List).map((item) => Egg.fromJson(item)).toList(),
+      revisionsList: revisionsList,
+      eggsList: (json['eggsList'] as List?)?.map((item) => Egg.fromJson(item)).toList() ?? [],
       revisionCount: json['revisionCount']?.toInt() ?? 0,
       eggCount: json['eggCount']?.toInt() ?? 0,
     );
@@ -362,6 +397,19 @@ class Nest with ChangeNotifier {
 
   /// Creates a [Nest] from a SQLite row map and already loaded child lists.
   factory Nest.fromMap(Map<String, dynamic> map, List<NestRevision> revisionsList, List<Egg> eggsList) {
+    NestStatusType? lastStatus;
+    if (map['lastNestStatus'] != null) {
+      lastStatus = NestStatusType.values[map['lastNestStatus'] as int];
+    } else if (revisionsList.isNotEmpty) {
+      NestRevision latest = revisionsList.first;
+      for (final rev in revisionsList) {
+        if (rev.sampleTime != null && (latest.sampleTime == null || rev.sampleTime!.isAfter(latest.sampleTime!))) {
+          latest = rev;
+        }
+      }
+      lastStatus = latest.nestStatus;
+    }
+
     return Nest(
       id: map['id']?.toInt(),
       fieldNumber: map['fieldNumber'],
@@ -374,6 +422,7 @@ class Nest with ChangeNotifier {
       foundTime: map['foundTime'] != null ? DateTime.parse(map['foundTime']) : null,
       lastTime: map['lastTime'] != null ? DateTime.parse(map['lastTime']) : null,
       nestFate: map['nestFate'] != null ? NestFateType.values[map['nestFate'] as int] : NestFateType.fatUnknown,
+      lastNestStatus: lastStatus ?? NestStatusType.nstUnknown,
       male: map['male'],
       female: map['female'],
       helpers: map['helpers'],
@@ -399,6 +448,7 @@ class Nest with ChangeNotifier {
     DateTime? foundTime,
     DateTime? lastTime,
     NestFateType? nestFate,
+    NestStatusType? lastNestStatus,
     String? male,
     String? female,
     String? helpers,
@@ -421,6 +471,7 @@ class Nest with ChangeNotifier {
       foundTime: foundTime ?? this.foundTime,
       lastTime: lastTime ?? this.lastTime,
       nestFate: nestFate ?? this.nestFate,
+      lastNestStatus: lastNestStatus ?? this.lastNestStatus,
       male: male ?? this.male,
       female: female ?? this.female,
       helpers: helpers ?? this.helpers,
