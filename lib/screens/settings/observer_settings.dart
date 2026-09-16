@@ -78,32 +78,58 @@ class _ObserverSettingsState extends State<ObserverSettings> {
   Future<String?> buildObserverDialog(BuildContext context) async {
     return await showDialog<String>(
       context: context,
-      builder: (BuildContext context) {
-        String observer = '';
-        return AlertDialog(
-          title: Text(S.of(context).observer),
-          content: TextField(
-            textCapitalization: TextCapitalization.characters,
-            onChanged: (value) {
-              observer = value;
-            },
-            decoration: InputDecoration(
-              labelText: S.of(context).observerAbbreviation,
-              border: OutlineInputBorder(),
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text(S.of(context).cancel),
-            ),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(observer),
-              child: Text(S.of(context).save),
-            ),
-          ],
-        );
+      builder: (BuildContext dialogContext) {
+        return _ObserverDialogContent(initialValue: _observerAbbreviation);
       },
+    );
+  }
+}
+
+class _ObserverDialogContent extends StatefulWidget {
+  final String initialValue;
+  const _ObserverDialogContent({required this.initialValue});
+
+  @override
+  State<_ObserverDialogContent> createState() => _ObserverDialogContentState();
+}
+
+class _ObserverDialogContentState extends State<_ObserverDialogContent> {
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.initialValue);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text(S.of(context).observer),
+      content: TextField(
+        controller: _controller,
+        textCapitalization: TextCapitalization.characters,
+        decoration: InputDecoration(
+          labelText: S.of(context).observerAbbreviation,
+          border: const OutlineInputBorder(),
+        ),
+      ),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: Text(S.of(context).cancel),
+        ),
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(_controller.text),
+          child: Text(S.of(context).save),
+        ),
+      ],
     );
   }
 }
