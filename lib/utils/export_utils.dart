@@ -3,8 +3,8 @@ import 'dart:io';
 
 import 'package:csv/csv.dart';
 import 'package:docx_creator/docx_creator.dart';
-import 'package:excel/excel.dart';
-import 'package:geoxml/geoxml.dart';
+import 'package:excel_plus/excel_plus.dart';
+import 'package:xml/xml.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
@@ -126,6 +126,63 @@ Future<List<Nest>> _ensureNestsLoadedForExport(
     debugPrint('Error loading nests details for export: $error');
     return nests;
   }
+}
+
+/// A simple internal model for KML waypoints.
+class _KmlWaypoint {
+  final double? lat;
+  final double? lon;
+  final String name;
+  final String description;
+  final DateTime? time;
+
+  _KmlWaypoint({
+    required this.lat,
+    required this.lon,
+    required this.name,
+    this.description = '',
+    this.time,
+  });
+}
+
+/// Generates a KML string with waypoints using the `xml` package.
+String _buildKmlString({
+  required String name,
+  String? description,
+  required List<_KmlWaypoint> waypoints,
+}) {
+  final builder = XmlBuilder();
+  builder.processing('xml', 'version="1.0" encoding="UTF-8"');
+  builder.element('kml', attributes: {'xmlns': 'http://www.opengis.net/kml/2.2'}, nest: () {
+    builder.element('Document', nest: () {
+      builder.element('name', nest: name);
+      if (description != null && description.isNotEmpty) {
+        builder.element('description', nest: description);
+      }
+
+      for (final wpt in waypoints) {
+        if (wpt.lat == null || wpt.lon == null) continue;
+
+        builder.element('Placemark', nest: () {
+          builder.element('name', nest: wpt.name);
+          if (wpt.description.isNotEmpty) {
+            builder.element('description', nest: wpt.description);
+          }
+          if (wpt.time != null) {
+            builder.element('TimeStamp', nest: () {
+              builder.element('when', nest: wpt.time!.toIso8601String());
+            });
+          }
+          builder.element('Point', nest: () {
+            // KML coordinates are (longitude, latitude, [altitude])
+            builder.element('coordinates', nest: '${wpt.lon},${wpt.lat},0');
+          });
+        });
+      }
+    });
+  });
+
+  return builder.buildDocument().toXmlString(pretty: true, indent: '  ');
 }
 
 /// Requests storage permission and returns `true` when access is granted.
@@ -519,44 +576,41 @@ Future<void> exportInventoryToKml(BuildContext context, Inventory inventory) asy
   try {
     final inventoryToExport =
         await _ensureInventoryLoadedForExport(context, inventory);
-    final gpx = GeoXml();
-    gpx.creator = 'Xolmis Mobile';
-    gpx.metadata = Metadata(
-      name: 'Inventory ${inventoryToExport.id}',
-      desc: 'Points of Interest for Inventory ${inventoryToExport.id}',
-      time: inventoryToExport.startTime ?? DateTime.now(),
-    );
+    final List<_KmlWaypoint> waypoints = [];
+    
+    if (inventoryToExport.startLatitude != null && inventoryToExport.startLongitude != null) {
+      waypoints.add(_KmlWaypoint(
+        lat: inventoryToExport.startLatitude,
+        lon: inventoryToExport.startLongitude,
+        name: '${inventoryToExport.id} - Start',
+        description: inventoryTypeFriendlyNames[inventoryToExport.type] ?? '',
+        time: inventoryToExport.startTime,
+      ));
+    }
 
-    gpx.wpts.add(Wpt(
-      lat: inventoryToExport.startLatitude,
-      lon: inventoryToExport.startLongitude,
-      name: '${inventoryToExport.id} - Start',
-      desc: inventoryTypeFriendlyNames[inventoryToExport.type] ?? '',
-      time: inventoryToExport.startTime ?? DateTime.now(),
-    ));
-    gpx.wpts.add(Wpt(
-      lat: inventoryToExport.endLatitude,
-      lon: inventoryToExport.endLongitude,
-      name: '${inventoryToExport.id} - End',
-      desc: inventoryTypeFriendlyNames[inventoryToExport.type] ?? '',
-      time: inventoryToExport.endTime ?? DateTime.now(),
-    ));
+    if (inventoryToExport.endLatitude != null && inventoryToExport.endLongitude != null) {
+      waypoints.add(_KmlWaypoint(
+        lat: inventoryToExport.endLatitude,
+        lon: inventoryToExport.endLongitude,
+        name: '${inventoryToExport.id} - End',
+        description: inventoryTypeFriendlyNames[inventoryToExport.type] ?? '',
+        time: inventoryToExport.endTime,
+      ));
+    }
 
     for (var species in inventoryToExport.speciesList) {
-      if (species.pois.isNotEmpty) {
-        for (var poi in species.pois) {
-          gpx.wpts.add(Wpt(
-            lat: poi.latitude,
-            lon: poi.longitude,
-            name: '${species.name} - POI #${poi.id}',
-            desc: poi.notes ?? '',
-            time: poi.sampleTime ?? DateTime.now(),
-          ));
-        }
+      for (var poi in species.pois) {
+        waypoints.add(_KmlWaypoint(
+          lat: poi.latitude,
+          lon: poi.longitude,
+          name: '${species.name} - POI #${poi.id}',
+          description: poi.notes ?? '',
+          time: poi.sampleTime,
+        ));
       }
     }
 
-    if (gpx.wpts.isEmpty) {
+    if (waypoints.isEmpty) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -568,7 +622,11 @@ Future<void> exportInventoryToKml(BuildContext context, Inventory inventory) asy
       return;
     }
 
-    final kmlString = KmlWriter(altitudeMode: AltitudeMode.clampToGround).asString(gpx, pretty: true);
+    final kmlString = _buildKmlString(
+      name: 'Inventory ${inventoryToExport.id}',
+      description: 'Points of Interest for Inventory ${inventoryToExport.id}',
+      waypoints: waypoints,
+    );
 
     Directory tempDir = await getTemporaryDirectory();
     final filePath = '${tempDir.path}/inventory_${inventoryToExport.id}_pois.kml';
@@ -769,59 +827,49 @@ Future<void> exportSelectedInventoriesToKml(BuildContext context, List<Inventory
   try {
     final inventoriesToExport =
         await _ensureInventoriesLoadedForExport(context, inventories);
-    final gpx = GeoXml();
-    gpx.creator = kExportSource;
-    gpx.metadata = Metadata(
-      name: 'Selected inventories',
-      desc: 'Points of Interest for selected inventories',
-      time: DateTime.now(),
-    );
+    final List<_KmlWaypoint> waypoints = [];
 
     for (final inventory in inventoriesToExport) {
       if (inventory.startLatitude != null && inventory.startLongitude != null) {
-        gpx.wpts.add(
-          Wpt(
+        waypoints.add(
+          _KmlWaypoint(
             lat: inventory.startLatitude,
             lon: inventory.startLongitude,
             name: '${inventory.id} - Start',
-            desc: inventoryTypeFriendlyNames[inventory.type] ?? '',
-            time: inventory.startTime ?? DateTime.now(),
+            description: inventoryTypeFriendlyNames[inventory.type] ?? '',
+            time: inventory.startTime,
           ),
         );
       }
 
       if (inventory.endLatitude != null && inventory.endLongitude != null) {
-        gpx.wpts.add(
-          Wpt(
+        waypoints.add(
+          _KmlWaypoint(
             lat: inventory.endLatitude,
             lon: inventory.endLongitude,
             name: '${inventory.id} - End',
-            desc: inventoryTypeFriendlyNames[inventory.type] ?? '',
-            time: inventory.endTime ?? DateTime.now(),
+            description: inventoryTypeFriendlyNames[inventory.type] ?? '',
+            time: inventory.endTime,
           ),
         );
       }
 
       for (final species in inventory.speciesList) {
-        if (species.pois.isEmpty) {
-          continue;
-        }
-
         for (final poi in species.pois) {
-          gpx.wpts.add(
-            Wpt(
+          waypoints.add(
+            _KmlWaypoint(
               lat: poi.latitude,
               lon: poi.longitude,
               name: '${inventory.id} - ${species.name} - POI #${poi.id}',
-              desc: poi.notes ?? '',
-              time: poi.sampleTime ?? DateTime.now(),
+              description: poi.notes ?? '',
+              time: poi.sampleTime,
             ),
           );
         }
       }
     }
 
-    if (gpx.wpts.isEmpty) {
+    if (waypoints.isEmpty) {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -832,9 +880,11 @@ Future<void> exportSelectedInventoriesToKml(BuildContext context, List<Inventory
       return;
     }
 
-    final kmlString = KmlWriter(
-      altitudeMode: AltitudeMode.clampToGround,
-    ).asString(gpx, pretty: true);
+    final kmlString = _buildKmlString(
+      name: 'Selected inventories',
+      description: 'Points of Interest for selected inventories',
+      waypoints: waypoints,
+    );
 
     final now = DateTime.now();
     final formatter = DateFormat('yyyyMMdd_HHmmss');
@@ -1736,31 +1786,25 @@ Future<void> exportSelectedNestsToExcel(BuildContext context, List<Nest> nests) 
 Future<void> exportSelectedNestsToKml(BuildContext context, List<Nest> nests) async {
   try {
     final nestsToExport = await _ensureNestsLoadedForExport(context, nests);
-    final gpx = GeoXml();
-    gpx.creator = kExportSource;
-    gpx.metadata = Metadata(
-      name: 'Selected nests',
-      desc: 'Coordinates for selected nests',
-      time: DateTime.now(),
-    );
+    final List<_KmlWaypoint> waypoints = [];
 
     for (final nest in nestsToExport) {
       if (nest.latitude == null || nest.longitude == null) {
         continue;
       }
 
-      gpx.wpts.add(
-        Wpt(
+      waypoints.add(
+        _KmlWaypoint(
           lat: nest.latitude,
           lon: nest.longitude,
           name: '${nest.fieldNumber} - ${nest.speciesName ?? ''}',
-          desc: nest.localityName ?? '',
-          time: nest.foundTime ?? DateTime.now(),
+          description: nest.localityName ?? '',
+          time: nest.foundTime,
         ),
       );
     }
 
-    if (gpx.wpts.isEmpty) {
+    if (waypoints.isEmpty) {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -1771,9 +1815,11 @@ Future<void> exportSelectedNestsToKml(BuildContext context, List<Nest> nests) as
       return;
     }
 
-    final kmlString = KmlWriter(
-      altitudeMode: AltitudeMode.clampToGround,
-    ).asString(gpx, pretty: true);
+    final kmlString = _buildKmlString(
+      name: 'Selected nests',
+      description: 'Coordinates for selected nests',
+      waypoints: waypoints,
+    );
 
     final now = DateTime.now();
     final formatter = DateFormat('yyyyMMdd_HHmmss');
@@ -1787,8 +1833,8 @@ Future<void> exportSelectedNestsToKml(BuildContext context, List<Nest> nests) as
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(filePath, mimeType: 'application/vnd.google-earth.kml+xml')],
-        title: S.current.nestExported(gpx.wpts.length),
-        subject: S.current.nestData(gpx.wpts.length),
+        title: S.current.nestExported(waypoints.length),
+        subject: S.current.nestData(waypoints.length),
       ),
     );
   } catch (error) {
@@ -2080,34 +2126,33 @@ Future<List<List>> buildNestRows(Nest nest, Locale locale) async {
 Future<void> exportNestToKml(BuildContext context, Nest nest) async {
   try {
     final nestToExport = await _ensureNestLoadedForExport(context, nest);
-    final gpx = GeoXml();
-    gpx.creator = 'Xolmis Mobile';
-    gpx.metadata = Metadata(
-      name: 'Nest ${nestToExport.fieldNumber}',
-      desc: 'Coordinates for Nest ${nestToExport.fieldNumber}',
-      time: nestToExport.foundTime ?? DateTime.now(),
-    );
+    final List<_KmlWaypoint> waypoints = [];
+    if (nestToExport.latitude != null && nestToExport.longitude != null) {
+      waypoints.add(_KmlWaypoint(
+        lat: nestToExport.latitude,
+        lon: nestToExport.longitude,
+        name: '${nestToExport.fieldNumber} - ${nestToExport.speciesName}',
+        description: nestToExport.localityName ?? '',
+        time: nestToExport.foundTime,
+      ));
+    }
 
-          gpx.wpts.add(Wpt(
-            lat: nestToExport.latitude,
-            lon: nestToExport.longitude,
-            name: '${nestToExport.fieldNumber} - ${nestToExport.speciesName}',
-            desc: nestToExport.localityName ?? '',
-            time: nestToExport.foundTime ?? DateTime.now(),
-          ));
-
-    if (gpx.wpts.isEmpty) {
+    if (waypoints.isEmpty) {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            showCloseIcon: true,
-                            content: Text(S.of(context).noPoisToExport),
-                          ),
-                        );
+        SnackBar(
+          showCloseIcon: true,
+          content: Text(S.of(context).noPoisToExport),
+        ),
+      );
       return;
     }
 
-    final kmlString = KmlWriter(altitudeMode: AltitudeMode.clampToGround).asString(gpx, pretty: true);
+    final kmlString = _buildKmlString(
+      name: 'Nest ${nestToExport.fieldNumber}',
+      description: 'Coordinates for Nest ${nestToExport.fieldNumber}',
+      waypoints: waypoints,
+    );
 
     Directory tempDir = await getTemporaryDirectory();
     final filePath = '${tempDir.path}/nest_${nestToExport.fieldNumber}.kml';
@@ -2413,31 +2458,25 @@ Future<void> exportSelectedSpecimensToExcel(BuildContext context, List<Specimen>
 /// Exports selected specimens to one KML file and opens the share sheet.
 Future<void> exportSelectedSpecimensToKml(BuildContext context, List<Specimen> specimenList) async {
   try {
-    final gpx = GeoXml();
-    gpx.creator = kExportSource;
-    gpx.metadata = Metadata(
-      name: 'Selected specimens',
-      desc: 'Coordinates for selected specimens',
-      time: DateTime.now(),
-    );
+    final List<_KmlWaypoint> waypoints = [];
 
     for (final specimen in specimenList) {
       if (specimen.latitude == null || specimen.longitude == null) {
         continue;
       }
 
-      gpx.wpts.add(
-        Wpt(
+      waypoints.add(
+        _KmlWaypoint(
           lat: specimen.latitude,
           lon: specimen.longitude,
           name: '${specimen.fieldNumber} - ${specimen.speciesName ?? ''}',
-          desc: specimen.locality ?? '',
-          time: specimen.sampleTime ?? DateTime.now(),
+          description: specimen.locality ?? '',
+          time: specimen.sampleTime,
         ),
       );
     }
 
-    if (gpx.wpts.isEmpty) {
+    if (waypoints.isEmpty) {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -2448,9 +2487,11 @@ Future<void> exportSelectedSpecimensToKml(BuildContext context, List<Specimen> s
       return;
     }
 
-    final kmlString = KmlWriter(
-      altitudeMode: AltitudeMode.clampToGround,
-    ).asString(gpx, pretty: true);
+    final kmlString = _buildKmlString(
+      name: 'Selected specimens',
+      description: 'Coordinates for selected specimens',
+      waypoints: waypoints,
+    );
 
     final now = DateTime.now();
     final formatter = DateFormat('yyyyMMdd_HHmmss');
@@ -2464,8 +2505,8 @@ Future<void> exportSelectedSpecimensToKml(BuildContext context, List<Specimen> s
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(filePath, mimeType: 'application/vnd.google-earth.kml+xml')],
-        title: S.current.specimenExported(gpx.wpts.length),
-        subject: S.current.specimenData(gpx.wpts.length),
+        title: S.current.specimenExported(waypoints.length),
+        subject: S.current.specimenData(waypoints.length),
       ),
     );
   } catch (error) {
@@ -2686,34 +2727,33 @@ Future<List<List>> buildSpecimensRows(List<Specimen> specimenList, Locale locale
 /// Exports one specimen location dataset to KML and opens the share sheet.
 Future<void> exportSpecimenToKml(BuildContext context, Specimen specimen) async {
   try {
-    final gpx = GeoXml();
-    gpx.creator = 'Xolmis Mobile';
-    gpx.metadata = Metadata(
-      name: 'Specimen ${specimen.fieldNumber}',
-      desc: 'Coordinates for Specimen ${specimen.fieldNumber}',
-      time: specimen.sampleTime ?? DateTime.now(),
-    );
+    final List<_KmlWaypoint> waypoints = [];
+    if (specimen.latitude != null && specimen.longitude != null) {
+      waypoints.add(_KmlWaypoint(
+        lat: specimen.latitude,
+        lon: specimen.longitude,
+        name: '${specimen.fieldNumber} - ${specimen.speciesName}',
+        description: specimen.locality ?? '',
+        time: specimen.sampleTime,
+      ));
+    }
 
-    gpx.wpts.add(Wpt(
-      lat: specimen.latitude,
-      lon: specimen.longitude,
-      name: '${specimen.fieldNumber} - ${specimen.speciesName}',
-      desc: specimen.locality ?? '',
-      time: specimen.sampleTime ?? DateTime.now(),
-    ));
-
-    if (gpx.wpts.isEmpty) {
+    if (waypoints.isEmpty) {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            showCloseIcon: true,
-                            content: Text(S.of(context).noPoisToExport),
-                          ),
-                        );
+        SnackBar(
+          showCloseIcon: true,
+          content: Text(S.of(context).noPoisToExport),
+        ),
+      );
       return;
     }
 
-    final kmlString = KmlWriter(altitudeMode: AltitudeMode.clampToGround).asString(gpx, pretty: true);
+    final kmlString = _buildKmlString(
+      name: 'Specimen ${specimen.fieldNumber}',
+      description: 'Coordinates for Specimen ${specimen.fieldNumber}',
+      waypoints: waypoints,
+    );
 
     Directory tempDir = await getTemporaryDirectory();
     final filePath = '${tempDir.path}/specimen_${specimen.fieldNumber}.kml';
