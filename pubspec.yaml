@@ -38,8 +38,8 @@ dependencies:
   sqflite: ^2.4.2+1
   csv: ^8.0.0
   shared_preferences: ^2.5.5
-  docx_creator: ^1.3.2
-  excel_plus: ^2.21.0
+  docx_creator: ^1.3.3
+  excel_plus: ^2.22.0
 #  excel:
 #    git:
 #      url: https://github.com/justkawal/excel.git
@@ -112,6 +112,7 @@ flutter:
     - assets/xolmis_icon.png
     - assets/xolmis_icon_monochrome.png
     - assets/alianza_del_pastizal_logo.png
+    - assets/save_brasil_logo.png
   # species checklists
     - assets/checklists/species_data_AR.json
     - assets/checklists/species_data_BR.json

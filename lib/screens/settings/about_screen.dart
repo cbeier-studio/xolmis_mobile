@@ -77,9 +77,19 @@ class _AboutScreenState extends State<AboutScreen> {
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
                   const SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
                   Image.asset(
                     'assets/alianza_del_pastizal_logo.png',
-                    scale: 3,
+                    scale: 5,
+                  ),
+                      const SizedBox(width: 8),
+                      Image.asset(
+                        'assets/save_brasil_logo.png',
+                        scale: 4,
+                      ),
+                      ],
                   ),
                 ],
               ),
