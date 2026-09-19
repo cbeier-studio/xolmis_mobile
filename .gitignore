@@ -37,6 +37,7 @@ cmake-build-*/
 .pub/
 /build/
 .fvm/
+/site/
 
 # Symbolication related
 app.*.symbols
