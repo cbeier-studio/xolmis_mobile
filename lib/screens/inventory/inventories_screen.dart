@@ -94,6 +94,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
   @override
   void dispose() {
     onInventoryStopped = null;
+    _searchController.dispose();
     super.dispose();
   }
 

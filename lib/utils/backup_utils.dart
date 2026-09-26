@@ -78,6 +78,7 @@ Future<bool> backupDatabase(String filePath) async {
     encoder.close();
     return true;
   } catch (e) {
+    debugPrint('Error creating database backup: $e');
     return false;
   }
 }

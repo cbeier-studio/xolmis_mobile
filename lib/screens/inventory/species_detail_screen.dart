@@ -294,11 +294,11 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
   }
 
   // Show the dialog to edit POI notes
-  void _showEditNotesDialog(BuildContext context, Poi poi) {
+  void _showEditNotesDialog(BuildContext context, Poi poi) async {
     final notesController = TextEditingController(text: poi.notes);
     final poiProvider = Provider.of<PoiProvider>(context, listen: false);
 
-    showDialog(
+    await showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
@@ -328,13 +328,17 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
                 if (context.mounted) {
                   Navigator.of(context).pop();
                 }
-                setState(() {});
+                if (mounted) {
+                  setState(() {});
+                }
               },
             ),
           ],
         );
       },
     );
+
+    notesController.dispose();
   }
 
   Widget _buildInfoPanel() {

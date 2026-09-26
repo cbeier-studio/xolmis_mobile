@@ -1,7 +1,9 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:geolocator/geolocator.dart';
 
 import '../data/models/inventory.dart';
 import '../data/daos/inventory_dao.dart';
+import '../utils/utils.dart';
 
 import 'species_provider.dart';
 import 'vegetation_provider.dart';
@@ -124,12 +126,15 @@ class InventoryProvider with ChangeNotifier {
   Future<bool> addInventory(BuildContext context, Inventory inventory) async {
     debugPrint('[PROVIDER] Adding new inventory: ${inventory.id}');
     try {
-      await _inventoryDao.insertInventory(context, inventory);
+      Position? position = await getPosition(context);
+      await _inventoryDao.insertInventory(inventory, position: position);
       _inventories.add(inventory);
       _inventoryMap[inventory.id] = inventory; // Add to the map
       notifyListeners();
       debugPrint('[PROVIDER] ...Success. Starting timer for new inventory.');
-      startInventoryTimer(context, inventory, _inventoryDao);
+      if (context.mounted) {
+        startInventoryTimer(context, inventory, _inventoryDao);
+      }
 
       return true;
     } catch (error) {

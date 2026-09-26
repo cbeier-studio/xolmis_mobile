@@ -1074,7 +1074,7 @@ class Inventory with ChangeNotifier {
 
             if (isAutoFinished() && !isFinished) {
               debugPrint('>>> Calling stopTimer() automatically for $id...');
-              await stopTimer(context, inventoryDao);
+              await stopTimer(context.mounted ? context : null, inventoryDao);
               // If finished automatically, show a notification
               await showNotification(flutterLocalNotificationsPlugin);
 
@@ -1157,7 +1157,7 @@ class Inventory with ChangeNotifier {
   /// end coordinates, and persists the final state via [inventoryDao].
   ///
   /// Does nothing if the inventory is already finished.
-  Future<void> stopTimer(BuildContext context, InventoryDao inventoryDao) async {
+  Future<void> stopTimer(BuildContext? context, InventoryDao inventoryDao) async {
     if (isFinished) {
       debugPrint('STOP_TIMER_IGNORED for $id: Already finished.');
       return;
@@ -1174,10 +1174,12 @@ class Inventory with ChangeNotifier {
 
     // Define endTime, endLatitude and endLongitude when finishing the inventory
     endTime = DateTime.now();
-    Position? position = await getPosition(context);
-    if (position != null) {
-      endLatitude = position.latitude;
-      endLongitude = position.longitude;
+    if (context != null && context.mounted) {
+      Position? position = await getPosition(context);
+      if (position != null) {
+        endLatitude = position.latitude;
+        endLongitude = position.longitude;
+      }
     }
 
     await inventoryDao.updateInventory(this);

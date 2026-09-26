@@ -234,7 +234,8 @@ class FieldJournalDao {
       return false;
     }
     final db = await _dbHelper.database;
-    final result = await db?.query('field_journal', where: 'LOWER(title) = ?', whereArgs: [title?.toLowerCase()]);
-    return result!.isNotEmpty;
+    if (db == null) return false;
+    final result = await db.query('field_journal', where: 'LOWER(title) = ?', whereArgs: [title.toLowerCase()]);
+    return result.isNotEmpty;
   }
 }

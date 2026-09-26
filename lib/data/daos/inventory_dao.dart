@@ -22,15 +22,14 @@ class InventoryDao {
   /// Inserts a new [Inventory] record into the database.
   ///
   /// Automatically sets [Inventory.startTime] to the current date/time and,
-  /// if location permission is available, populates [Inventory.startLatitude]
+  /// if [position] is provided, populates [Inventory.startLatitude]
   /// and [Inventory.startLongitude] from the device's current position.
   /// Uses [ConflictAlgorithm.replace] to handle duplicate entries.
   /// Returns `true` on success, or `false` if a database or generic error occurs.
-  Future<bool> insertInventory(BuildContext context, Inventory inventory) async {
+  Future<bool> insertInventory(Inventory inventory, {Position? position}) async {
     final db = await _dbHelper.database;
     try {
       inventory.startTime = DateTime.now();
-      Position? position = await getPosition(context);
       if (position != null) {
         inventory.startLatitude = position.latitude;
         inventory.startLongitude = position.longitude;

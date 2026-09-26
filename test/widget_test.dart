@@ -1,18 +1,16 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:material_ui/material_ui.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:provider/provider.dart';
 import 'package:xolmis/data/daos/journal_dao.dart';
 import 'package:xolmis/data/daos/tag_dao.dart';
-// import 'package:xolmis/data/database/repositories/journal_repository.dart';
-
 import 'package:xolmis/main.dart';
-
+import 'package:xolmis/main_screen.dart';
+import 'package:xolmis/screens/inventory/inventories_screen.dart';
 import 'package:xolmis/data/database/database_helper.dart';
 
 import 'package:xolmis/providers/inventory_provider.dart';
@@ -41,8 +39,51 @@ import 'package:xolmis/data/daos/app_image_dao.dart';
 
 import 'package:xolmis/services/location_service.dart';
 import 'package:xolmis/services/location_service_impl.dart';
+import 'package:xolmis/utils/themes.dart';
 
-void main() async {
+const MethodChannel _permissionHandlerChannel = MethodChannel(
+  'flutter.baseflow.com/permissions/methods',
+);
+
+void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  setUpAll(() {
+    sqfliteFfiInit();
+    databaseFactory = databaseFactoryFfi;
+
+    SharedPreferences.setMockInitialValues({});
+    PackageInfo.setMockInitialValues(
+      appName: 'xolmis',
+      packageName: 'org.xolmis.app',
+      version: '1.0.0',
+      buildNumber: '1',
+      buildSignature: 'test',
+    );
+
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(_permissionHandlerChannel, (call) async {
+      switch (call.method) {
+        case 'requestPermissions':
+          return <int, int>{17: 1};
+        case 'checkPermissionStatus':
+        case 'checkServiceStatus':
+          return 1;
+        case 'shouldShowRequestPermissionRationale':
+          return false;
+        case 'openAppSettings':
+          return true;
+        default:
+          return null;
+      }
+    });
+  });
+
+  tearDownAll(() {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(_permissionHandlerChannel, null);
+  });
+
   late DatabaseHelper databaseHelper;
 
   late InventoryDao inventoryDao;
@@ -139,24 +180,24 @@ void main() async {
     );    
   });
 
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
+  testWidgets('MyApp renders main navigation shell', (WidgetTester tester) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
     await tester.pumpWidget(
-        MyApp(
-          dependencies: dependencies,
-        )
+      ChangeNotifierProvider(
+        create: (_) => ThemeModel(),
+        child: MyApp(dependencies: dependencies),
+      ),
     );
-
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
     await tester.pump();
+    await tester.pump(const Duration(milliseconds: 200));
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(find.byType(MainScreen), findsOneWidget);
+    expect(find.byType(InventoriesScreen), findsOneWidget);
+
+    await tester.pump(const Duration(seconds: 11));
   });
 }

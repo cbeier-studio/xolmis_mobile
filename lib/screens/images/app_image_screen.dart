@@ -502,10 +502,10 @@ class _AppImageScreenState extends State<AppImageScreen> {
   }
 
   /// Shows a dialog that lets the user edit notes for [appImage].
-  void _showEditNotesDialog(BuildContext context, AppImage appImage) {
+  void _showEditNotesDialog(BuildContext context, AppImage appImage) async {
     final notesController = TextEditingController(text: appImage.notes);
 
-    showDialog(
+    await showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
@@ -548,6 +548,8 @@ class _AppImageScreenState extends State<AppImageScreen> {
         );
       },
     );
+
+    notesController.dispose();
   }
 
   /// Builds the grid used to display [images].

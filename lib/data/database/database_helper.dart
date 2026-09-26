@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 import 'dart:ui' as ui;
-import 'package:cupertino_ui/cupertino_ui.dart';
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -42,16 +42,16 @@ class DatabaseHelper {
       version: 29,
       onCreate: _createTables,
       onUpgrade: _upgradeTables,
-      onConfigure: (db) {
+      onConfigure: (db) async {
         // Turn on SQLite foreign keys (disabled by default)
-        db.execute('PRAGMA foreign_keys = ON;');
+        await db.execute('PRAGMA foreign_keys = ON;');
       },
     );
   }
 
   /// Creates all tables and indexes for a fresh database.
   Future<void> _createTables(Database db, int version) async {
-    db.execute('''
+    await db.execute('''
         CREATE TABLE inventories(
           id TEXT PRIMARY KEY, 
           type INTEGER, 
@@ -78,7 +78,7 @@ class DatabaseHelper {
           isDiscarded INTEGER
         )
       ''');
-    db.execute('''
+    await db.execute('''
         CREATE TABLE species(
           id INTEGER PRIMARY KEY AUTOINCREMENT, 
           inventoryId TEXT NOT NULL, 
@@ -93,7 +93,7 @@ class DatabaseHelper {
           FOREIGN KEY (inventoryId) REFERENCES inventories(id) ON DELETE CASCADE 
         )
       ''');
-    db.execute('''
+    await db.execute('''
         CREATE TABLE vegetation (
             id INTEGER PRIMARY KEY AUTOINCREMENT, 
             inventoryId TEXT NOT NULL, 
@@ -113,7 +113,7 @@ class DatabaseHelper {
             FOREIGN KEY (inventoryId) REFERENCES inventories(id) ON DELETE CASCADE 
         )
       ''');
-    db.execute('''
+    await db.execute('''
         CREATE TABLE weather (
             id INTEGER PRIMARY KEY AUTOINCREMENT, 
             inventoryId INTEGER NOT NULL, 
@@ -128,7 +128,7 @@ class DatabaseHelper {
             FOREIGN KEY (inventoryId) REFERENCES inventories(id) ON DELETE CASCADE 
         )
       ''');
-    db.execute('''
+    await db.execute('''
         CREATE TABLE nests (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           fieldNumber TEXT,
@@ -148,7 +148,7 @@ class DatabaseHelper {
           isActive INTEGER
         )
       ''');
-    db.execute('''
+    await db.execute('''
         CREATE TABLE eggs (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           nestId INTEGER,
@@ -162,7 +162,7 @@ class DatabaseHelper {
           FOREIGN KEY (nestId) REFERENCES nests(id) ON DELETE CASCADE
         )
       ''');
-    db.execute('''
+    await db.execute('''
         CREATE TABLE nest_revisions (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           nestId INTEGER,
@@ -178,7 +178,7 @@ class DatabaseHelper {
           FOREIGN KEY (nestId) REFERENCES nests(id) ON DELETE CASCADE
         )
       ''');
-    db.execute('''
+    await db.execute('''
         CREATE TABLE specimens (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           sampleTime TEXT,
@@ -193,7 +193,7 @@ class DatabaseHelper {
           isPending INTEGER DEFAULT 1
         )
       ''');
-    db.execute('''
+    await db.execute('''
         CREATE TABLE pois (
             id INTEGER PRIMARY KEY AUTOINCREMENT, 
             speciesId INTEGER NOT NULL, 
@@ -204,7 +204,7 @@ class DatabaseHelper {
             FOREIGN KEY (speciesId) REFERENCES species(id) ON DELETE CASCADE 
         )
       ''');
-    db.execute('''
+    await db.execute('''
       CREATE TABLE images (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         imagePath TEXT NOT NULL,
@@ -219,7 +219,7 @@ class DatabaseHelper {
         FOREIGN KEY (nestRevisionId) REFERENCES nest_revisions(id) ON DELETE CASCADE
       )
     ''');
-    db.execute('''
+    await db.execute('''
       CREATE TABLE field_journal (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         title TEXT,
@@ -230,7 +230,7 @@ class DatabaseHelper {
         backgroundColor INTEGER NOT NULL DEFAULT 4294965473
       )
     ''');
-    db.execute('''
+    await db.execute('''
       CREATE TABLE predefined_tags (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT UNIQUE NOT NULL,
@@ -238,7 +238,7 @@ class DatabaseHelper {
         isCustom INTEGER DEFAULT 0
       )
     ''');
-    db.execute('''
+    await db.execute('''
       CREATE TABLE journal_tags (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         journalId INTEGER NOT NULL,
@@ -250,8 +250,8 @@ class DatabaseHelper {
     ''');
 
     await _seedPredefinedTags(db);
-    _createPerformanceIndexes(db);
-    _createTagIndexes(db);
+    await _createPerformanceIndexes(db);
+    await _createTagIndexes(db);
 
     debugPrint('Database created with version $version');
   }
@@ -361,35 +361,35 @@ class DatabaseHelper {
       WHERE tagId IS NOT NULL
     ''');
     await db.execute('DROP TABLE journal_tags_old');
-    _createTagIndexes(db);
+    await _createTagIndexes(db);
   }
 
   /// Creates indexes that speed up common filters, joins, and sorting.
-  void _createPerformanceIndexes(Database db) {
-    db.execute('CREATE INDEX IF NOT EXISTS idx_species_name ON species(name)');
-    db.execute('CREATE INDEX IF NOT EXISTS idx_inventories_is_finished ON inventories(isFinished)');
-    db.execute('CREATE INDEX IF NOT EXISTS idx_species_is_out_of_inventory ON species(isOutOfInventory)');
-    db.execute('CREATE INDEX IF NOT EXISTS idx_nests_found_time ON nests(foundTime DESC)');
-    db.execute('CREATE INDEX IF NOT EXISTS idx_nests_species_name ON nests(speciesName)');
-    db.execute('CREATE INDEX IF NOT EXISTS idx_nests_field_number ON nests(fieldNumber)');
+  Future<void> _createPerformanceIndexes(Database db) async {
+    await db.execute('CREATE INDEX IF NOT EXISTS idx_species_name ON species(name)');
+    await db.execute('CREATE INDEX IF NOT EXISTS idx_inventories_is_finished ON inventories(isFinished)');
+    await db.execute('CREATE INDEX IF NOT EXISTS idx_species_is_out_of_inventory ON species(isOutOfInventory)');
+    await db.execute('CREATE INDEX IF NOT EXISTS idx_nests_found_time ON nests(foundTime DESC)');
+    await db.execute('CREATE INDEX IF NOT EXISTS idx_nests_species_name ON nests(speciesName)');
+    await db.execute('CREATE INDEX IF NOT EXISTS idx_nests_field_number ON nests(fieldNumber)');
   }
 
   /// Creates indexes specific to journal tag tables.
-  void _createTagIndexes(Database db) {
-    db.execute('CREATE INDEX IF NOT EXISTS idx_journal_tags_journal_id ON journal_tags(journalId)');
-    db.execute('CREATE INDEX IF NOT EXISTS idx_journal_tags_tag_id ON journal_tags(tagId)');
-    db.execute('CREATE INDEX IF NOT EXISTS idx_predefined_tags_name ON predefined_tags(name)');
+  Future<void> _createTagIndexes(Database db) async {
+    await db.execute('CREATE INDEX IF NOT EXISTS idx_journal_tags_journal_id ON journal_tags(journalId)');
+    await db.execute('CREATE INDEX IF NOT EXISTS idx_journal_tags_tag_id ON journal_tags(tagId)');
+    await db.execute('CREATE INDEX IF NOT EXISTS idx_predefined_tags_name ON predefined_tags(name)');
   }
 
   /// Applies incremental schema migrations between database versions.
-  void _upgradeTables(Database db, int oldVersion, int newVersion) async {
+  Future<void> _upgradeTables(Database db, int oldVersion, int newVersion) async {
     final prefs = await SharedPreferences.getInstance();
     debugPrint('Upgrading database from version $oldVersion to $newVersion');
     if (oldVersion < 2) {
-      db.execute('ALTER TABLE inventories ADD COLUMN maxSpecies INTEGER');
+      await db.execute('ALTER TABLE inventories ADD COLUMN maxSpecies INTEGER');
     }
     if (oldVersion < 3) {
-      db.execute('''
+      await db.execute('''
           CREATE TABLE weather (
               id INTEGER PRIMARY KEY AUTOINCREMENT, 
               inventoryId INTEGER NOT NULL, 
@@ -403,7 +403,7 @@ class DatabaseHelper {
       ''');
     }
     if (oldVersion < 4) {
-      db.execute('''
+      await db.execute('''
         CREATE TABLE nests (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           fieldNumber TEXT,
@@ -421,7 +421,7 @@ class DatabaseHelper {
           helpers TEXT
         )
       ''');
-      db.execute('''
+      await db.execute('''
         CREATE TABLE eggs (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           nestId INTEGER,
@@ -435,7 +435,7 @@ class DatabaseHelper {
           FOREIGN KEY (nestId) REFERENCES nests(id) ON DELETE CASCADE
         )
       ''');
-      db.execute('''
+      await db.execute('''
         CREATE TABLE nest_revisions (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           nestId INTEGER,
@@ -453,10 +453,10 @@ class DatabaseHelper {
       ''');
     }
     if (oldVersion < 5) {
-      db.execute('ALTER TABLE nests ADD COLUMN isActive INTEGER');
+      await db.execute('ALTER TABLE nests ADD COLUMN isActive INTEGER');
     }
     if (oldVersion < 6) {
-      db.execute('''
+      await db.execute('''
         CREATE TABLE specimens (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           sampleTime TEXT,
@@ -471,7 +471,7 @@ class DatabaseHelper {
       ''');
     }
     if (oldVersion < 7) {
-      db.execute('''
+      await db.execute('''
         CREATE TABLE images (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           imagePath TEXT NOT NULL,
@@ -488,20 +488,20 @@ class DatabaseHelper {
       ''');
     }
     if (oldVersion < 8) {
-      db.execute('ALTER TABLE species ADD COLUMN notes TEXT');
+      await db.execute('ALTER TABLE species ADD COLUMN notes TEXT');
     }
     if (oldVersion < 9) {
-      db.execute('ALTER TABLE inventories ADD COLUMN currentInterval INTEGER');
+      await db.execute('ALTER TABLE inventories ADD COLUMN currentInterval INTEGER');
     }
     if (oldVersion < 10) {
-      db.execute('ALTER TABLE inventories ADD COLUMN intervalsWithoutNewSpecies INTEGER');
-      db.execute('ALTER TABLE inventories ADD COLUMN currentIntervalSpeciesCount INTEGER');
+      await db.execute('ALTER TABLE inventories ADD COLUMN intervalsWithoutNewSpecies INTEGER');
+      await db.execute('ALTER TABLE inventories ADD COLUMN currentIntervalSpeciesCount INTEGER');
     }
     if (oldVersion < 11) {
-      db.execute('ALTER TABLE species ADD COLUMN sampleTime TEXT');
+      await db.execute('ALTER TABLE species ADD COLUMN sampleTime TEXT');
     }
     if (oldVersion < 12) {
-      db.execute('''
+      await db.execute('''
         CREATE TABLE field_journal (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           title TEXT NOT NULL,
@@ -512,56 +512,56 @@ class DatabaseHelper {
       ''');
     }
     if (oldVersion < 13) {
-      db.execute('ALTER TABLE pois ADD COLUMN sampleTime TEXT');
+      await db.execute('ALTER TABLE pois ADD COLUMN sampleTime TEXT');
     }
     if (oldVersion < 14) {
-      db.execute('ALTER TABLE specimens ADD COLUMN isPending INTEGER DEFAULT 1');
+      await db.execute('ALTER TABLE specimens ADD COLUMN isPending INTEGER DEFAULT 1');
     }
     if (oldVersion < 15) {
-      db.execute('ALTER TABLE inventories ADD COLUMN localityName TEXT');
+      await db.execute('ALTER TABLE inventories ADD COLUMN localityName TEXT');
     }
     if (oldVersion < 16) {
-      db.execute('ALTER TABLE pois ADD COLUMN notes TEXT');
+      await db.execute('ALTER TABLE pois ADD COLUMN notes TEXT');
     }
     if (oldVersion < 17) {
-      db.execute('ALTER TABLE inventories ADD COLUMN notes TEXT');
-      db.execute('ALTER TABLE inventories ADD COLUMN isDiscarded INTEGER');
+      await db.execute('ALTER TABLE inventories ADD COLUMN notes TEXT');
+      await db.execute('ALTER TABLE inventories ADD COLUMN isDiscarded INTEGER');
     }
     if (oldVersion < 18) {
-      db.execute('ALTER TABLE inventories ADD COLUMN totalObservers INTEGER');
-      db.execute('ALTER TABLE weather ADD COLUMN atmosphericPressure REAL');
-      db.execute('ALTER TABLE weather ADD COLUMN relativeHumidity REAL');
+      await db.execute('ALTER TABLE inventories ADD COLUMN totalObservers INTEGER');
+      await db.execute('ALTER TABLE weather ADD COLUMN atmosphericPressure REAL');
+      await db.execute('ALTER TABLE weather ADD COLUMN relativeHumidity REAL');
     }
     if (oldVersion < 19) {
-      db.execute('ALTER TABLE species ADD COLUMN distance REAL');
-      db.execute('ALTER TABLE species ADD COLUMN flightHeight REAL');
-      db.execute('ALTER TABLE species ADD COLUMN flightDirection TEXT');
+      await db.execute('ALTER TABLE species ADD COLUMN distance REAL');
+      await db.execute('ALTER TABLE species ADD COLUMN flightHeight REAL');
+      await db.execute('ALTER TABLE species ADD COLUMN flightDirection TEXT');
     }
     if (oldVersion < 20) {
-      db.execute('ALTER TABLE weather ADD COLUMN windDirection TEXT');
+      await db.execute('ALTER TABLE weather ADD COLUMN windDirection TEXT');
     }
     if (oldVersion < 21) {
-      db.execute('ALTER TABLE inventories ADD COLUMN totalPausedTimeInSeconds REAL');
-      db.execute('ALTER TABLE inventories ADD COLUMN pauseStartTime TEXT');
+      await db.execute('ALTER TABLE inventories ADD COLUMN totalPausedTimeInSeconds REAL');
+      await db.execute('ALTER TABLE inventories ADD COLUMN pauseStartTime TEXT');
     }
     if (oldVersion < 22) {
-      db.execute('ALTER TABLE inventories ADD COLUMN observer TEXT');
+      await db.execute('ALTER TABLE inventories ADD COLUMN observer TEXT');
       final observerAbbrev = prefs.getString('observerAcronym') ?? '';
-      db.update('inventories', {'observer': observerAbbrev}, where: 'observer IS NULL');
-      db.execute('ALTER TABLE nests ADD COLUMN observer TEXT');
-      db.update('nests', {'observer': observerAbbrev}, where: 'observer IS NULL');
-      db.execute('ALTER TABLE specimens ADD COLUMN observer TEXT');
-      db.update('specimens', {'observer': observerAbbrev}, where: 'observer IS NULL');
-      db.execute('ALTER TABLE field_journal ADD COLUMN observer TEXT');
-      db.update('field_journal', {'observer': observerAbbrev}, where: 'observer IS NULL');
+      await db.update('inventories', {'observer': observerAbbrev}, where: 'observer IS NULL');
+      await db.execute('ALTER TABLE nests ADD COLUMN observer TEXT');
+      await db.update('nests', {'observer': observerAbbrev}, where: 'observer IS NULL');
+      await db.execute('ALTER TABLE specimens ADD COLUMN observer TEXT');
+      await db.update('specimens', {'observer': observerAbbrev}, where: 'observer IS NULL');
+      await db.execute('ALTER TABLE field_journal ADD COLUMN observer TEXT');
+      await db.update('field_journal', {'observer': observerAbbrev}, where: 'observer IS NULL');
     }
     if (oldVersion < 23) {
-      _createPerformanceIndexes(db);
+      await _createPerformanceIndexes(db);
     }
     if (oldVersion < 24) {
       // SQLite cannot drop NOT NULL constraints in-place, so recreate table.
-      db.execute('ALTER TABLE field_journal RENAME TO field_journal_old');
-      db.execute('''
+      await db.execute('ALTER TABLE field_journal RENAME TO field_journal_old');
+      await db.execute('''
         CREATE TABLE field_journal (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           title TEXT,
@@ -571,15 +571,15 @@ class DatabaseHelper {
           observer TEXT
         )
       ''');
-      db.execute('''
+      await db.execute('''
         INSERT INTO field_journal (id, title, notes, creationDate, lastModifiedDate, observer)
         SELECT id, title, notes, creationDate, lastModifiedDate, observer
         FROM field_journal_old
       ''');
-      db.execute('DROP TABLE field_journal_old');
+      await db.execute('DROP TABLE field_journal_old');
     }
     if (oldVersion < 25) {
-      db.execute('''
+      await db.execute('''
         CREATE TABLE predefined_tags (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           name TEXT UNIQUE NOT NULL,
@@ -587,7 +587,7 @@ class DatabaseHelper {
           isCustom INTEGER DEFAULT 0
         )
       ''');
-      db.execute('''
+      await db.execute('''
         CREATE TABLE journal_tags (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           journalId INTEGER NOT NULL,
@@ -597,7 +597,7 @@ class DatabaseHelper {
           UNIQUE(journalId, tagId)
         )
       ''');
-      _createTagIndexes(db);
+      await _createTagIndexes(db);
     }
     if (oldVersion < 26) {
       await _seedPredefinedTags(db);
@@ -607,7 +607,7 @@ class DatabaseHelper {
       await _seedPredefinedTags(db);
     }
     if (oldVersion < 28) {
-      db.execute('ALTER TABLE field_journal ADD COLUMN backgroundColor INTEGER NOT NULL DEFAULT 4294965473');
+      await db.execute('ALTER TABLE field_journal ADD COLUMN backgroundColor INTEGER NOT NULL DEFAULT 4294965473');
     }
     if (oldVersion < 29) {
       await _migrateToRelativeImagePaths(db);

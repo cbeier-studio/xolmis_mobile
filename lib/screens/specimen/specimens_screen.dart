@@ -66,6 +66,12 @@ class SpecimensScreenState extends State<SpecimensScreen> {
     specimenProvider.fetchSpecimens();
   }
 
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
   /// Returns whether [date] matches the currently selected date [filter].
   bool _isWithinDateFilter(DateTime? date, DateFilter? filter) {
     if (date == null || filter == null) return true; // sem filtro ou data nula

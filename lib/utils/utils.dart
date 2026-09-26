@@ -240,12 +240,12 @@ void _showMackinnonDialog(BuildContext context, Inventory inventory, InventoryDa
 ///
 /// Returns a synthetic [Position] when the form is submitted successfully, or
 /// `null` when the dialog is cancelled.
-Future<Position?> _showManualCoordinatesDialog(BuildContext context) {
+Future<Position?> _showManualCoordinatesDialog(BuildContext context) async {
   final formKey = GlobalKey<FormState>();
   final latitudeController = TextEditingController();
   final longitudeController = TextEditingController();
 
-  return showDialog<Position?>(
+  final result = await showDialog<Position?>(
     context: context,
     barrierDismissible: false,
     builder: (dialogContext) {
@@ -332,6 +332,11 @@ Future<Position?> _showManualCoordinatesDialog(BuildContext context) {
       );
     },
   );
+
+  latitudeController.dispose();
+  longitudeController.dispose();
+
+  return result;
 }
 
 /// Returns the current device position or a manually entered fallback.
