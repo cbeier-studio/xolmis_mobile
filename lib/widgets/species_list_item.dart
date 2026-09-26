@@ -63,9 +63,7 @@ class SpeciesListItemState extends State<SpeciesListItem> {
               },
             ),
             InkWell(
-              onTap: () {
-                _showEditCountDialog(context);
-              },
+              onTap: _showEditCountDialog,
               child: Selector<SpeciesProvider, int>(
                 selector: (context, speciesProvider) => speciesProvider.individualsCountNotifier.value,
                 builder: (context, count, child) {
@@ -201,58 +199,63 @@ class SpeciesListItemState extends State<SpeciesListItem> {
   }
 
   /// Shows a dialog that lets the user edit the species individual count.
-  Future<void> _showEditCountDialog(BuildContext context) async {
+  Future<void> _showEditCountDialog() async {
+    final controller =
+        TextEditingController(text: widget.species.count.toString());
+
     int? newCount = await showDialog<int>(
       context: context,
-      builder: (BuildContext context) {
-        int currentCount = widget.species.count;
+      builder: (BuildContext dialogContext) {
         return AlertDialog(
-          title: Text(S.of(context).editCount),
-          content: StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextFormField(
-                    initialValue: currentCount.toString(),
-                    keyboardType: TextInputType.number,
-                    onChanged: (value) {
-                      setState(() {
-                        currentCount = int.tryParse(value) ?? 0;
-                      });
-                    },
-                    decoration: InputDecoration(
-                      labelText: S.of(context).individualsCount,
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                ],
-              );
-            },
+          title: Text(S.of(dialogContext).editCount),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: controller,
+                keyboardType: TextInputType.number,
+                autofocus: true,
+                decoration: InputDecoration(
+                  labelText: S.of(dialogContext).individualsCount,
+                  border: const OutlineInputBorder(),
+                ),
+                onSubmitted: (value) {
+                  final parsed = int.tryParse(value);
+                  if (parsed != null) {
+                    Navigator.of(dialogContext).pop(parsed);
+                  }
+                },
+              ),
+            ],
           ),
           actions: <Widget>[
             TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text(S.of(context).cancel),
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: Text(S.of(dialogContext).cancel),
             ),
             TextButton(
-              onPressed: () => Navigator.of(context).pop(currentCount),
-              child: Text(S.of(context).save),
+              onPressed: () {
+                final parsed = int.tryParse(controller.text);
+                Navigator.of(dialogContext).pop(parsed);
+              },
+              child: Text(S.of(dialogContext).save),
             ),
           ],
         );
       },
     );
 
-    if (newCount != null) {
-      // Update the value of species.count
-      setState(() {
-        widget.species.count = newCount;
-      });
+    controller.dispose();
 
-      // Notify the provider
-      Provider.of<SpeciesProvider>(context, listen: false)
-          .updateIndividualsCount(widget.species);
-    }
+    if (!mounted || newCount == null) return;
+
+    // Update the value of species.count
+    setState(() {
+      widget.species.count = newCount;
+    });
+
+    // Notify the provider
+    Provider.of<SpeciesProvider>(context, listen: false)
+        .updateIndividualsCount(widget.species);
   }
 }

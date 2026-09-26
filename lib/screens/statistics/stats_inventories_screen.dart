@@ -10,6 +10,55 @@ import '../../providers/species_provider.dart';
 import '../../widgets/scrollable_chart_indicator.dart';
 import '../../utils/statistics_logic.dart';
 
+/// Loader screen that fetches full details for a list of inventory IDs before displaying [StatsInventoriesScreen].
+class StatsInventoriesLoadingScreen extends StatefulWidget {
+  final List<String> inventoryIds;
+
+  const StatsInventoriesLoadingScreen({super.key, required this.inventoryIds});
+
+  @override
+  State<StatsInventoriesLoadingScreen> createState() => _StatsInventoriesLoadingScreenState();
+}
+
+class _StatsInventoriesLoadingScreenState extends State<StatsInventoriesLoadingScreen> {
+  late final Future<List<Inventory>> _future;
+
+  @override
+  void initState() {
+    super.initState();
+    _future = Provider.of<InventoryProvider>(context, listen: false)
+        .loadInventoriesDetails(widget.inventoryIds);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<List<Inventory>>(
+      future: _future,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
+          return StatsInventoriesScreen(
+            inventories: snapshot.data ?? [],
+          );
+        } else if (snapshot.hasError) {
+          return Scaffold(
+            appBar: AppBar(title: Text(S.current.statistics)),
+            body: Center(
+              child: Text('Error: ${snapshot.error}'),
+            ),
+          );
+        } else {
+          return Scaffold(
+            appBar: AppBar(title: Text(S.current.statistics)),
+            body: const Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
+      },
+    );
+  }
+}
+
 /// Statistics screen focused on a selected set of inventories.
 class StatsInventoriesScreen extends StatefulWidget {
   final List<Inventory> inventories;

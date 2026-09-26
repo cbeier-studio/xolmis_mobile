@@ -928,36 +928,9 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) {
-                                    // Get selected inventory IDs and pre-load full details
-                                    final selectedIds =
-                                        selectedInventories.toList();
-                                    return FutureBuilder<List<Inventory>>(
-                                      future: inventoryProvider
-                                          .loadInventoriesDetails(selectedIds),
-                                      builder: (context, snapshot) {
-                                        if (snapshot.connectionState ==
-                                                ConnectionState.done &&
-                                            snapshot.hasData) {
-                                          return StatsInventoriesScreen(
-                                            inventories: snapshot.data ?? [],
-                                          );
-                                        } else {
-                                          return Scaffold(
-                                            appBar: AppBar(
-                                              title: Text(
-                                                S.of(context).statistics,
-                                              ),
-                                            ),
-                                            body: const Center(
-                                              child:
-                                                  CircularProgressIndicator(),
-                                            ),
-                                          );
-                                        }
-                                      },
-                                    );
-                                  },
+                                  builder: (context) => StatsInventoriesLoadingScreen(
+                                    inventoryIds: selectedInventories.toList(),
+                                  ),
                                 ),
                               );
                             },

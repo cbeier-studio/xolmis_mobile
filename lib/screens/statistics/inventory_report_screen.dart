@@ -13,16 +13,29 @@ import '../../data/models/inventory.dart';
 import '../../providers/inventory_provider.dart';
 
 /// Builds a cross-inventory species report and allows CSV export.
-class InventoryReportScreen extends StatelessWidget {
+class InventoryReportScreen extends StatefulWidget {
   final List<Inventory> selectedInventories;
 
   const InventoryReportScreen({super.key, required this.selectedInventories});
 
   @override
+  State<InventoryReportScreen> createState() => _InventoryReportScreenState();
+}
+
+class _InventoryReportScreenState extends State<InventoryReportScreen> {
+  late final Future<List<Inventory>> _future;
+
+  @override
+  void initState() {
+    super.initState();
+    _future = Provider.of<InventoryProvider>(context, listen: false)
+        .loadInventoriesDetails(widget.selectedInventories.map((e) => e.id).toList());
+  }
+
+  @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Inventory>>(
-      future: Provider.of<InventoryProvider>(context, listen: false)
-          .loadInventoriesDetails(selectedInventories.map((e) => e.id).toList()),
+      future: _future,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Scaffold(
