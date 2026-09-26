@@ -149,18 +149,18 @@ packages:
     dependency: transitive
     description:
       name: csv_plus
-      sha256: "9c8d4b83f7ce3d43d72b0c9bc161866739461e262974ce1a41ca38d128010377"
+      sha256: "63e7a6af35076215ffbbd9304b90bbb6d5556af0b1562dbf63566c4717b013ea"
       url: "https://pub.dev"
     source: hosted
-    version: "1.9.0"
+    version: "1.10.0"
   cupertino_ui:
     dependency: transitive
     description:
       name: cupertino_ui
-      sha256: c6747018d37d32feeeb858a1d7043831cb541460ebe1a890a995cdb8df8ea5a5
+      sha256: c23816577a1280cff409e989541767887011f8f1d8c1863a794ed308af46f2a9
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.0"
+    version: "1.1.1"
   dart_style:
     dependency: transitive
     description:
@@ -205,10 +205,10 @@ packages:
     dependency: "direct main"
     description:
       name: docx_creator
-      sha256: cc80a4728f2daf4727e94d94410e7e4334a9a36093a575a42365dc116f80f228
+      sha256: "04971c958642f4448985f7d3b4594803ef73c84168959fd02ade0e1d9c566435"
       url: "https://pub.dev"
     source: hosted
-    version: "1.3.3"
+    version: "1.3.4"
   dynamic_color:
     dependency: transitive
     description:
@@ -229,10 +229,10 @@ packages:
     dependency: "direct main"
     description:
       name: excel_plus
-      sha256: a361a52a2e8116f9ea9389aba1d10a9aa254ce1171152f6a611a1677cf534230
+      sha256: b759eccda40fb87f9239515ec92cac74c1d96f0f457dd3f6a9efe5588dc29972
       url: "https://pub.dev"
     source: hosted
-    version: "2.22.0"
+    version: "2.23.0"
   fab_m3e:
     dependency: "direct main"
     description:
@@ -285,10 +285,10 @@ packages:
     dependency: transitive
     description:
       name: file_picker_darwin
-      sha256: deb3ff69d58656b885c85bc1627f09ecb79860f272a5e7577149582ede4dce5d
+      sha256: "51aef9f4c80449c736e7cc02198675fda73689f0bd45a84da642cfeab0250d46"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.0"
+    version: "2.1.2"
   file_picker_linux:
     dependency: transitive
     description:
@@ -617,10 +617,10 @@ packages:
     dependency: transitive
     description:
       name: image_picker_ios
-      sha256: ee3885b6fcd71958fbc79770dd194c63371439d536d69c47b279171a486482ae
+      sha256: "852a7762962f3bb3ad54ef1d342669e41557f466033a676baa8876b367cf4050"
       url: "https://pub.dev"
     source: hosted
-    version: "0.8.13+7"
+    version: "0.8.13+8"
   image_picker_linux:
     dependency: transitive
     description:
@@ -1049,10 +1049,10 @@ packages:
     dependency: "direct main"
     description:
       name: settings_ui
-      sha256: "7437c9c867f331ff6c90e951f2333441eab5cf5e654c3a7f3e4aad0c01db51ef"
+      sha256: "1fb956d5db5882611cdeec239317a73a31168de12a544f229531a0773d752ed2"
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.1"
+    version: "4.0.0"
   share_plus:
     dependency: "direct main"
     description:

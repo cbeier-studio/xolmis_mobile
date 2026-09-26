@@ -2005,4 +2005,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get add => 'Add';
+
+  @override
+  String get onlineHelp => 'Online help';
 }

@@ -1,5 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../generated/l10n.dart';
 import 'markdown_viewer_screen.dart';
@@ -58,7 +59,16 @@ class _AboutScreenState extends State<AboutScreen> {
               '${_packageInfo?.version ?? ''}+${_packageInfo?.buildNumber ?? ''}',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 8),
+            TextButton.icon(
+              onPressed: () => launchUrl(
+                Uri.parse('https://xolmis.app'),
+                mode: LaunchMode.externalApplication,
+              ),
+              icon: const Icon(Icons.language, size: 16),
+              label: const Text('xolmis.app'),
+            ),
+            const SizedBox(height: 8),
             // Legalese
             Text(
               '© 2024-$year Christian Beier',
@@ -76,20 +86,40 @@ class _AboutScreenState extends State<AboutScreen> {
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 12),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                  Image.asset(
-                    'assets/alianza_del_pastizal_logo.png',
-                    scale: 5,
-                  ),
-                      const SizedBox(width: 8),
-                      Image.asset(
-                        'assets/save_brasil_logo.png',
-                        scale: 4,
+                      InkWell(
+                        onTap: () => launchUrl(
+                          Uri.parse('https://www.alianzadelpastizal.org.br/'),
+                          mode: LaunchMode.externalApplication,
+                        ),
+                        borderRadius: BorderRadius.circular(8),
+                        child: Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: Image.asset(
+                            'assets/alianza_del_pastizal_logo.png',
+                            scale: 5,
+                          ),
+                        ),
                       ),
-                      ],
+                      const SizedBox(width: 16),
+                      InkWell(
+                        onTap: () => launchUrl(
+                          Uri.parse('https://www.savebrasil.org.br/'),
+                          mode: LaunchMode.externalApplication,
+                        ),
+                        borderRadius: BorderRadius.circular(8),
+                        child: Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: Image.asset(
+                            'assets/save_brasil_logo.png',
+                            scale: 4,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

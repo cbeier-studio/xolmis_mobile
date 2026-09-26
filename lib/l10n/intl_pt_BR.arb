@@ -2478,5 +2478,10 @@
   "@add": {
     "type": "text",
     "description": "Rótulo do botão adicionar"
+  },
+  "onlineHelp": "Ajuda online",
+  "@help": {
+    "type": "text",
+    "description": "Help button label"
   }
 }

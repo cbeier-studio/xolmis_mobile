@@ -3643,6 +3643,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Add'**
   String get add;
+
+  /// No description provided for @onlineHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Online help'**
+  String get onlineHelp;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

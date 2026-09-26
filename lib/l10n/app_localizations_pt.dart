@@ -2040,6 +2040,9 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get add => 'Adicionar';
+
+  @override
+  String get onlineHelp => 'Ajuda online';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -4077,4 +4080,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get add => 'Adicionar';
+
+  @override
+  String get onlineHelp => 'Ajuda online';
 }

@@ -26,6 +26,7 @@ import 'screens/statistics/stats_screen.dart';
 
 import 'core/core_consts.dart';
 import 'generated/l10n.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /// Top-level shell that manages app navigation and startup orchestration.
 class MainScreen extends StatefulWidget {
@@ -570,7 +571,9 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
         ),
       ),
       footer: SafeArea(
-        child: ListTile(
+        child: Column(
+          children: [
+            ListTile(
           leading:
               Theme.of(context).brightness == Brightness.light
                   ? const Icon(Icons.settings_outlined)
@@ -581,6 +584,30 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
           ),
           contentPadding: const EdgeInsets.symmetric(horizontal: 24.0),
           onTap: () => _navigateToSettings(context),
+        ),
+            ListTile(
+              leading:
+              Theme.of(context).brightness == Brightness.light
+                  ? const Icon(Icons.help_outline)
+                  : const Icon(Icons.help),
+              title: Text(
+                S.of(context).onlineHelp,
+                style: textTheme.labelLarge,
+              ),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 24.0),
+              onTap: () {
+                final isDrawerOpen = _scaffoldKey.currentState?.isDrawerOpen ?? false;
+                if (isDrawerOpen) {
+                  Navigator.of(context).pop();
+                }
+                final locale = Localizations.localeOf(context);
+                final url = locale.languageCode == 'pt'
+                    ? 'https://xolmis.app/docs/mobile/pt'
+                    : 'https://xolmis.app/docs/mobile';
+                launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+              },
+            ),
+      ],
         ),
       ),
       children: <Widget>[

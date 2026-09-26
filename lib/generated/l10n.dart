@@ -5919,6 +5919,11 @@ class S {
   String get add {
     return Intl.message('Add', name: 'add', desc: 'Add button label', args: []);
   }
+
+  /// `Online help`
+  String get onlineHelp {
+    return Intl.message('Online help', name: 'onlineHelp', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

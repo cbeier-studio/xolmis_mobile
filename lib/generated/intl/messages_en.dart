@@ -931,6 +931,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "observers": m54,
     "observersSettings": MessageLookupByLibrary.simpleMessage("Observers"),
     "ok": MessageLookupByLibrary.simpleMessage("OK"),
+    "onlineHelp": MessageLookupByLibrary.simpleMessage("Online help"),
     "openSourceLicenses": MessageLookupByLibrary.simpleMessage(
       "Open Source Licenses",
     ),
