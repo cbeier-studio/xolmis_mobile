@@ -2164,25 +2164,22 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                       final locale = Localizations.localeOf(
                                         context,
                                       );
-                                      final csvFile =
+                                      final csvFiles =
                                           await exportInventoryToCsv(
                                             context,
                                             inventory,
                                             locale,
                                           );
-                                      // Share the file using share_plus
-                                      await SharePlus.instance.share(
-                                        ShareParams(
-                                          files: [
-                                            XFile(
-                                              csvFile,
-                                              mimeType: 'text/csv',
-                                            ),
-                                          ],
-                                          text: S.current.inventoryExported(1),
-                                          subject: S.current.inventoryData(1),
-                                        ),
-                                      );
+                                      if (csvFiles.isNotEmpty) {
+                                        // Share the files using share_plus
+                                        await SharePlus.instance.share(
+                                          ShareParams(
+                                            files: csvFiles.map((f) => XFile(f, mimeType: 'text/csv')).toList(),
+                                            text: S.current.inventoryExported(1),
+                                            subject: S.current.inventoryData(1),
+                                          ),
+                                        );
+                                      }
                                       if (context.mounted) {
                                         Navigator.of(context).pop();
                                       }

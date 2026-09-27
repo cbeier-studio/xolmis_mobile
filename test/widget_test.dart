@@ -1,14 +1,17 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:provider/provider.dart';
+import 'package:xolmis/core/core_consts.dart';
 import 'package:xolmis/data/daos/journal_dao.dart';
 import 'package:xolmis/data/daos/tag_dao.dart';
 import 'package:xolmis/main.dart';
 import 'package:xolmis/main_screen.dart';
 import 'package:xolmis/screens/inventory/inventories_screen.dart';
+import 'package:xolmis/screens/onboarding/inventory_export_onboarding_screen.dart';
 import 'package:xolmis/data/database/database_helper.dart';
 
 import 'package:xolmis/providers/inventory_provider.dart';
@@ -115,6 +118,10 @@ void main() {
   late AppDependencies dependencies;
 
   setUp(() async {
+    SharedPreferences.setMockInitialValues({
+      kInventoryExportOnboardingSeenPreferenceKey: true,
+    });
+
     databaseHelper = DatabaseHelper();
     await databaseHelper.initDatabase();
 
@@ -198,4 +205,57 @@ void main() {
 
     await tester.pump(const Duration(seconds: 11));
   });
+
+  testWidgets(
+    'inventory export onboarding is shown once and stays dismissed after acknowledgement',
+    (WidgetTester tester) async {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.clear();
+
+      tester.view.physicalSize = const Size(390, 844);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      await tester.pumpWidget(
+        ChangeNotifierProvider(
+          create: (_) => ThemeModel(),
+          child: MyApp(dependencies: dependencies),
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+
+      expect(find.byType(InventoryExportOnboardingScreen), findsOneWidget);
+      final onboarding = tester.widget<InventoryExportOnboardingScreen>(
+        find.byType(InventoryExportOnboardingScreen),
+      );
+
+      onboarding.onClose();
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+
+      expect(find.byType(InventoryExportOnboardingScreen), findsNothing);
+      expect(
+        prefs.getBool(kInventoryExportOnboardingSeenPreferenceKey),
+        isTrue,
+      );
+
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pump();
+
+      await tester.pumpWidget(
+        ChangeNotifierProvider(
+          create: (_) => ThemeModel(),
+          child: MyApp(dependencies: dependencies),
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+
+      expect(find.byType(InventoryExportOnboardingScreen), findsNothing);
+
+      await tester.pump(const Duration(seconds: 11));
+    },
+  );
 }

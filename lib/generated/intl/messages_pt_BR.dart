@@ -751,6 +751,31 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "inventoryData": m40,
     "inventoryDuration": m41,
+    "inventoryExportOnboardingAction": MessageLookupByLibrary.simpleMessage(
+      "Entendi",
+    ),
+    "inventoryExportOnboardingCsvDescription": MessageLookupByLibrary.simpleMessage(
+      "Agora geram 3 arquivos separados, e cada arquivo pode incluir dados de mais de um inventário.",
+    ),
+    "inventoryExportOnboardingCsvTitle": MessageLookupByLibrary.simpleMessage(
+      "Exportações em CSV",
+    ),
+    "inventoryExportOnboardingExcelDescription":
+        MessageLookupByLibrary.simpleMessage(
+          "Agora geram 1 arquivo com 4 abas, e a planilha pode incluir dados de mais de um inventário.",
+        ),
+    "inventoryExportOnboardingExcelTitle": MessageLookupByLibrary.simpleMessage(
+      "Exportações em Excel",
+    ),
+    "inventoryExportOnboardingMessage": MessageLookupByLibrary.simpleMessage(
+      "Para maior compatibilidade, as exportações de CSV e Excel agora usam uma nova estrutura de arquivos.",
+    ),
+    "inventoryExportOnboardingSupport": MessageLookupByLibrary.simpleMessage(
+      "Se tiver dúvidas, envie um e-mail para suporte@xolmis.app.",
+    ),
+    "inventoryExportOnboardingTitle": MessageLookupByLibrary.simpleMessage(
+      "Mudanças na exportação",
+    ),
     "inventoryExported": m42,
     "inventoryFound": m43,
     "inventoryFreeQualitative": MessageLookupByLibrary.simpleMessage(

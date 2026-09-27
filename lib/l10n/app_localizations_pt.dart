@@ -808,6 +808,33 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
+  String get inventoryExportOnboardingTitle => 'Mudanças na exportação';
+
+  @override
+  String get inventoryExportOnboardingMessage =>
+      'Para maior compatibilidade, as exportações de CSV e Excel agora usam uma nova estrutura de arquivos.';
+
+  @override
+  String get inventoryExportOnboardingCsvTitle => 'Exportações em CSV';
+
+  @override
+  String get inventoryExportOnboardingCsvDescription =>
+      'Agora geram 3 arquivos separados, e cada arquivo pode incluir dados de mais de um inventário.';
+
+  @override
+  String get inventoryExportOnboardingExcelTitle => 'Exportações em Excel';
+
+  @override
+  String get inventoryExportOnboardingExcelDescription =>
+      'Agora geram 1 arquivo com 4 abas, e a planilha pode incluir dados de mais de um inventário.';
+
+  @override
+  String get inventoryExportOnboardingSupport => 'Se tiver dúvidas, envie um e-mail para suporte@xolmis.app.';
+
+  @override
+  String get inventoryExportOnboardingAction => 'Entendi';
+
+  @override
   String nestExported(int howMany) {
     String _temp0 = intl.Intl.pluralLogic(
       howMany,
@@ -2847,6 +2874,33 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
     String _temp0 = intl.Intl.pluralLogic(howMany, locale: localeName, other: 'os inventários', one: 'o inventário');
     return 'Erro ao exportar $_temp0: $errorMessage';
   }
+
+  @override
+  String get inventoryExportOnboardingTitle => 'Mudanças na exportação';
+
+  @override
+  String get inventoryExportOnboardingMessage =>
+      'Para maior compatibilidade, as exportações de CSV e Excel agora usam uma nova estrutura de arquivos.';
+
+  @override
+  String get inventoryExportOnboardingCsvTitle => 'Exportações em CSV';
+
+  @override
+  String get inventoryExportOnboardingCsvDescription =>
+      'Agora geram 3 arquivos separados, e cada arquivo pode incluir dados de mais de um inventário.';
+
+  @override
+  String get inventoryExportOnboardingExcelTitle => 'Exportações em Excel';
+
+  @override
+  String get inventoryExportOnboardingExcelDescription =>
+      'Agora geram 1 arquivo com 4 abas, e a planilha pode incluir dados de mais de um inventário.';
+
+  @override
+  String get inventoryExportOnboardingSupport => 'Se tiver dúvidas, envie um e-mail para suporte@xolmis.app.';
+
+  @override
+  String get inventoryExportOnboardingAction => 'Entendi';
 
   @override
   String nestExported(int howMany) {

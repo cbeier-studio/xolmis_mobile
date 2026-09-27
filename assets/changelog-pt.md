@@ -1,5 +1,17 @@
 # Log de alterações
 
+## 1.0.4
+
+### Melhorias
+
+* Adicionado link para a ajuda online no app.
+* Modificado layout de arquivos CSV e Excel exportados para melhorar compatibilidade com outros softwares.
+
+### Correções
+
+* Diálogo para alterar o número de indivíduos de uma espécie não estava aplicando o valor informado.
+* Tela de estatísticas dos inventários selecionados ficava travada no carregamento.
+
 ## 1.0.3
 
 ### Novas funcionalidades

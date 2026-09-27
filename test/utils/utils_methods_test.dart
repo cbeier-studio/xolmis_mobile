@@ -1,8 +1,14 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xolmis/core/core_consts.dart';
 import 'package:xolmis/data/models/inventory.dart';
+import 'package:xolmis/data/models/nest.dart';
 import 'package:xolmis/data/models/specimen.dart';
+import 'package:xolmis/generated/l10n.dart';
+import 'package:xolmis/utils/export_utils.dart';
 import 'package:xolmis/utils/predefined_tags.dart';
 import 'package:xolmis/utils/statistics_logic.dart';
 import 'package:xolmis/utils/utils.dart';
@@ -363,6 +369,143 @@ void main() {
 
       expect(result[4], equals(2));
       expect(result[1], equals(0));
+    });
+  });
+
+   group('export_utils.dart', () {
+     TestWidgetsFlutterBinding.ensureInitialized();
+
+     setUpAll(() async {
+       SharedPreferences.setMockInitialValues({});
+       await S.load(const Locale('en'));
+       await initializeDateFormatting('en_US', null);
+     });
+
+    final testInventory = Inventory(
+      id: 'INV-100',
+      type: InventoryType.invPointCount,
+      duration: 15,
+      localityName: 'National Park',
+      startLatitude: -23.55,
+      startLongitude: -46.63,
+      observer: 'J. Doe',
+      startTime: DateTime(2026, 3, 30, 8, 0),
+      speciesList: [
+        Species(
+          inventoryId: 'INV-100',
+          name: 'Turdus rufiventris',
+          count: 3,
+          isOutOfInventory: false,
+          sampleTime: DateTime(2026, 3, 30, 8, 5),
+        ),
+      ],
+      vegetationList: [
+        Vegetation(
+          inventoryId: 'INV-100',
+          sampleTime: DateTime(2026, 3, 30, 8, 10),
+          latitude: -23.55,
+          longitude: -46.63,
+          herbsProportion: 50,
+        ),
+      ],
+      weatherList: [
+        Weather(
+          inventoryId: 'INV-100',
+          sampleTime: DateTime(2026, 3, 30, 8, 10),
+          cloudCover: 20,
+          temperature: 24.5,
+        ),
+      ],
+    );
+
+    test('buildInventoriesSpeciesRows creates flat denormalized rows with Darwin Core headers', () async {
+      final rows = await buildInventoriesSpeciesRows([testInventory], const Locale('en'));
+
+      expect(rows, hasLength(2));
+      final headers = rows.first;
+      expect(headers, contains('eventID'));
+      expect(headers, contains('samplingProtocol'));
+      expect(headers, contains('scientificName'));
+      expect(headers, contains('individualCount'));
+
+      final dataRow = rows[1];
+      expect(dataRow[0], equals('INV-100'));
+      expect(dataRow[headers.indexOf('scientificName')], equals('Turdus rufiventris'));
+      expect(dataRow[headers.indexOf('individualCount')], equals(3));
+    });
+
+    test('buildInventoriesVegetationRows creates flat denormalized vegetation rows', () async {
+      final rows = await buildInventoriesVegetationRows([testInventory], const Locale('en'));
+
+      expect(rows, hasLength(2));
+      final headers = rows.first;
+      expect(headers, contains('eventID'));
+      expect(headers, contains('herbsProportion'));
+
+      final dataRow = rows[1];
+      expect(dataRow[0], equals('INV-100'));
+      expect(dataRow[headers.indexOf('herbsProportion')], equals(50));
+    });
+
+    test('buildInventoriesWeatherRows creates flat denormalized weather rows', () async {
+      final rows = await buildInventoriesWeatherRows([testInventory], const Locale('en'));
+
+      expect(rows, hasLength(2));
+      final headers = rows.first;
+      expect(headers, contains('eventID'));
+      expect(headers, contains('cloudCover'));
+
+      final dataRow = rows[1];
+      expect(dataRow[0], equals('INV-100'));
+      expect(dataRow[headers.indexOf('cloudCover')], equals(20));
+    });
+
+    test('buildNestsRevisionsRows creates flat denormalized nest revision rows with DwC headers', () async {
+      final testNest = Nest(
+        fieldNumber: 'N-01',
+        speciesName: 'Zenaida auriculata',
+        localityName: 'Forest Edge',
+        revisionsList: [
+          NestRevision(
+            nestId: 1,
+            nestStatus: NestStatusType.nstActive,
+            sampleTime: DateTime(2026, 3, 20, 10, 0),
+          ),
+        ],
+      );
+
+      final rows = await buildNestsRevisionsRows([testNest], const Locale('en'));
+
+      expect(rows, hasLength(2));
+      final headers = rows.first;
+      expect(headers, contains('occurrenceID'));
+      expect(headers, contains('scientificName'));
+      expect(headers, contains('nestStatus'));
+
+      final dataRow = rows[1];
+      expect(dataRow[0], equals('N-01'));
+      expect(dataRow[1], equals('Zenaida auriculata'));
+    });
+
+    test('buildSpecimensRows creates flat specimen rows with Darwin Core headers', () async {
+      final testSpecimen = Specimen(
+        fieldNumber: 'SPC-001',
+        speciesName: 'Furnarius rufus',
+        locality: 'Meadow',
+        sampleTime: DateTime(2026, 3, 25, 14, 0),
+      );
+
+      final rows = await buildSpecimensRows([testSpecimen], const Locale('en'));
+
+      expect(rows, hasLength(2));
+      final headers = rows.first;
+      expect(headers, contains('occurrenceID'));
+      expect(headers, contains('scientificName'));
+      expect(headers, contains('verbatimEventDate'));
+
+      final dataRow = rows[1];
+      expect(dataRow[headers.indexOf('occurrenceID')], equals('SPC-001'));
+      expect(dataRow[headers.indexOf('scientificName')], equals('Furnarius rufus'));
     });
   });
 }

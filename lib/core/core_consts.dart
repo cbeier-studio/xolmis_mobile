@@ -22,6 +22,9 @@ const String kImportExistingRecordsPolicyPreferenceKey = 'importExistingRecordsP
 /// Shared preferences key that stores species propagation behavior between inventories.
 const String kSpeciesPropagationPolicyPreferenceKey = 'speciesPropagationPolicy';
 
+/// Shared preferences key that stores whether the inventory export onboarding was acknowledged.
+const String kInventoryExportOnboardingSeenPreferenceKey = 'inventoryExportOnboardingSeen';
+
 const String kRecentInventoryTypePreferenceKey = 'recentInventoryType';
 const String kRecentInventoryLocalitiesPreferenceKey = 'recentInventoryLocalities';
 const String kRecentNestLocalitiesPreferenceKey = 'recentNestLocalities';

@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.0.4
+
+### Improvements
+
+* Added help online link in app.
+* Modified CSV and Excel export layout to improve compatibility with other softwares.
+
+### Bug fixes
+
+* The dialog to change the number of individuals of a species was not applying the value informed.
+* The statistics screen of selected inventories was stuck in loading.
+
 ## 1.0.3
 
 ### New features

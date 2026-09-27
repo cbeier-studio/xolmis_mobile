@@ -806,6 +806,33 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get inventoryExportOnboardingTitle => 'Export changes';
+
+  @override
+  String get inventoryExportOnboardingMessage =>
+      'For best compatibility, CSV and Excel exports now use a new file structure.';
+
+  @override
+  String get inventoryExportOnboardingCsvTitle => 'CSV exports';
+
+  @override
+  String get inventoryExportOnboardingCsvDescription =>
+      'CSV exports now generate 3 separate files, and each file can include data from more than one inventory.';
+
+  @override
+  String get inventoryExportOnboardingExcelTitle => 'Excel exports';
+
+  @override
+  String get inventoryExportOnboardingExcelDescription =>
+      'Excel exports now generate 1 file with 4 tabs, and the workbook can include data from more than one inventory.';
+
+  @override
+  String get inventoryExportOnboardingSupport => 'If you have any questions, please contact support@xolmis.app.';
+
+  @override
+  String get inventoryExportOnboardingAction => 'Got it';
+
+  @override
   String nestExported(int howMany) {
     String _temp0 = intl.Intl.pluralLogic(howMany, locale: localeName, other: 'Nests exported!', one: 'Nest exported!');
     return '$_temp0';

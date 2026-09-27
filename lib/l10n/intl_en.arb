@@ -1293,6 +1293,46 @@
             }
         }
     },
+    "inventoryExportOnboardingTitle": "Export changes",
+    "@inventoryExportOnboardingTitle": {
+        "type": "text",
+        "description": "Title of the one-time onboarding screen that explains inventory export changes"
+    },
+    "inventoryExportOnboardingMessage": "For best compatibility, CSV and Excel exports now use a new file structure.",
+    "@inventoryExportOnboardingMessage": {
+        "type": "text",
+        "description": "Introductory message on the inventory export onboarding screen"
+    },
+    "inventoryExportOnboardingCsvTitle": "CSV exports",
+    "@inventoryExportOnboardingCsvTitle": {
+        "type": "text",
+        "description": "Section title for CSV changes on the inventory export onboarding screen"
+    },
+    "inventoryExportOnboardingCsvDescription": "CSV exports now generate 3 separate files, and each file can include data from more than one inventory.",
+    "@inventoryExportOnboardingCsvDescription": {
+        "type": "text",
+        "description": "Description of the new CSV export behavior for inventories"
+    },
+    "inventoryExportOnboardingExcelTitle": "Excel exports",
+    "@inventoryExportOnboardingExcelTitle": {
+        "type": "text",
+        "description": "Section title for Excel changes on the inventory export onboarding screen"
+    },
+    "inventoryExportOnboardingExcelDescription": "Excel exports now generate 1 file with 4 tabs, and the workbook can include data from more than one inventory.",
+    "@inventoryExportOnboardingExcelDescription": {
+        "type": "text",
+        "description": "Description of the new Excel export behavior for inventories"
+    },
+    "inventoryExportOnboardingSupport": "If you have any questions, please contact support@xolmis.app.",
+    "@inventoryExportOnboardingSupport": {
+        "type": "text",
+        "description": "Support contact shown on the inventory export onboarding screen"
+    },
+    "inventoryExportOnboardingAction": "Got it",
+    "@inventoryExportOnboardingAction": {
+        "type": "text",
+        "description": "Button label used to close the inventory export onboarding screen"
+    },
     "nestExported": "{howMany, plural, one{Nest exported!} other{Nests exported!}}",
     "@nestExported": {
         "type": "text",

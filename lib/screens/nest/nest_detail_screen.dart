@@ -329,15 +329,17 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                       onPressed: () async {
                         Navigator.of(context).pop();
                         final locale = Localizations.localeOf(context);
-                        final csvFile = await exportNestToCsv(context, widget.nest, locale);
-                        // Share the file using share_plus
-                        await SharePlus.instance.share(
-                          ShareParams(
-                            files: [XFile(csvFile, mimeType: 'text/csv')],
-                            text: S.current.nestExported(1),
-                            subject: S.current.nestData(1),
-                          ),
-                        );
+                        final csvFiles = await exportNestToCsv(context, widget.nest, locale);
+                        if (csvFiles.isNotEmpty) {
+                          // Share the files using share_plus
+                          await SharePlus.instance.share(
+                            ShareParams(
+                              files: csvFiles.map((f) => XFile(f, mimeType: 'text/csv')).toList(),
+                              text: S.current.nestExported(1),
+                              subject: S.current.nestData(1),
+                            ),
+                          );
+                        }
                       },
                       child: const Text('CSV'),
                     ),
@@ -645,15 +647,17 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                     MenuItemButton(
                       onPressed: () async {
                         final locale = Localizations.localeOf(context);
-                        final csvFile = await exportNestToCsv(context, widget.nest, locale);
-                        // Share the file using share_plus
-                        await SharePlus.instance.share(
-                          ShareParams(
-                            files: [XFile(csvFile, mimeType: 'text/csv')],
-                            text: S.current.nestExported(1),
-                            subject: S.current.nestData(1),
-                          ),
-                        );
+                        final csvFiles = await exportNestToCsv(context, widget.nest, locale);
+                        if (csvFiles.isNotEmpty) {
+                          // Share the files using share_plus
+                          await SharePlus.instance.share(
+                            ShareParams(
+                              files: csvFiles.map((f) => XFile(f, mimeType: 'text/csv')).toList(),
+                              text: S.current.nestExported(1),
+                              subject: S.current.nestData(1),
+                            ),
+                          );
+                        }
                         Navigator.of(context).pop();
                       },
                       child: const Text('CSV'),
@@ -828,22 +832,24 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                   ),
                   ],
                   if (!widget.nest.isActive) ...[
-                  ActionChip(
-                    label: Text('${S.current.export} CSV'), 
-                    avatar: const Icon(Icons.share_outlined),
-                    onPressed: () async {
-                      final locale = Localizations.localeOf(context);
-                        final csvFile = await exportNestToCsv(context, widget.nest, locale);
-                        // Share the file using share_plus
-                        await SharePlus.instance.share(
-                          ShareParams(
-                            files: [XFile(csvFile, mimeType: 'text/csv')],
-                            text: S.current.nestExported(1),
-                            subject: S.current.nestData(1),
-                          ),
-                        );
-                    },
-                  ),
+                   ActionChip(
+                     label: Text('${S.current.export} CSV'),
+                     avatar: const Icon(Icons.share_outlined),
+                     onPressed: () async {
+                       final locale = Localizations.localeOf(context);
+                         final csvFiles = await exportNestToCsv(context, widget.nest, locale);
+                         if (csvFiles.isNotEmpty) {
+                           // Share the files using share_plus
+                           await SharePlus.instance.share(
+                             ShareParams(
+                               files: csvFiles.map((f) => XFile(f, mimeType: 'text/csv')).toList(),
+                               text: S.current.nestExported(1),
+                               subject: S.current.nestData(1),
+                             ),
+                           );
+                         }
+                     },
+                   ),
                   const SizedBox(width: 8.0,),
                   ActionChip(
                     label: Text('${S.current.export} JSON'), 
@@ -1091,22 +1097,24 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                               Row(
                                 children: [
                                   const SizedBox(width: 16.0),
-                                  ActionChip(
-                                    label: const Text('CSV'),
-                                    onPressed: () async {
-                                      Navigator.of(context).pop();
-                                      final locale = Localizations.localeOf(context);
-                                      final csvFile = await exportNestToCsv(context, nest, locale);
-                                      // Share the file using share_plus
-                                      await SharePlus.instance.share(
-                                        ShareParams(
-                                          files: [XFile(csvFile, mimeType: 'text/csv')],
-                                          text: S.current.nestExported(1),
-                                          subject: S.current.nestData(1),
-                                        ),
-                                      );
-                                    },
-                                  ),
+                                   ActionChip(
+                                     label: const Text('CSV'),
+                                     onPressed: () async {
+                                       Navigator.of(context).pop();
+                                       final locale = Localizations.localeOf(context);
+                                       final csvFiles = await exportNestToCsv(context, nest, locale);
+                                       if (csvFiles.isNotEmpty) {
+                                         // Share the files using share_plus
+                                         await SharePlus.instance.share(
+                                           ShareParams(
+                                             files: csvFiles.map((f) => XFile(f, mimeType: 'text/csv')).toList(),
+                                             text: S.current.nestExported(1),
+                                             subject: S.current.nestData(1),
+                                           ),
+                                         );
+                                       }
+                                     },
+                                   ),
                                   const SizedBox(width: 8.0),
                                   ActionChip(
                                     label: const Text('Excel'),

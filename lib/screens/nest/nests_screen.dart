@@ -1675,24 +1675,21 @@ class NestsScreenState extends State<NestsScreen> {
                                       final locale = Localizations.localeOf(
                                         context,
                                       );
-                                      final csvFile = await exportNestToCsv(
+                                      final csvFiles = await exportNestToCsv(
                                         context,
                                         nest,
                                         locale,
                                       );
-                                      // Share the file using share_plus
-                                      await SharePlus.instance.share(
-                                        ShareParams(
-                                          files: [
-                                            XFile(
-                                              csvFile,
-                                              mimeType: 'text/csv',
-                                            ),
-                                          ],
-                                          text: S.current.nestExported(1),
-                                          subject: S.current.nestData(1),
-                                        ),
-                                      );
+                                      if (csvFiles.isNotEmpty) {
+                                        // Share the files using share_plus
+                                        await SharePlus.instance.share(
+                                          ShareParams(
+                                            files: csvFiles.map((f) => XFile(f, mimeType: 'text/csv')).toList(),
+                                            text: S.current.nestExported(1),
+                                            subject: S.current.nestData(1),
+                                          ),
+                                        );
+                                      }
                                       Navigator.of(context).pop();
                                     },
                                   ),

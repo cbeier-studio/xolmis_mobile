@@ -276,12 +276,14 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                             leadingIcon: const Icon(Icons.share_outlined),
                             onPressed: () async {
                               final locale = Localizations.localeOf(context);
-                              final csvFile = await exportInventoryToCsv(context, widget.inventory, locale);
-                              await SharePlus.instance.share(ShareParams(
-                                files: [XFile(csvFile, mimeType: 'text/csv')],
-                                text: S.current.inventoryExported(1),
-                                subject: S.current.inventoryData(1),
-                              ));
+                              final csvFiles = await exportInventoryToCsv(context, widget.inventory, locale);
+                              if (csvFiles.isNotEmpty) {
+                                await SharePlus.instance.share(ShareParams(
+                                  files: csvFiles.map((f) => XFile(f, mimeType: 'text/csv')).toList(),
+                                  text: S.current.inventoryExported(1),
+                                  subject: S.current.inventoryData(1),
+                                ));
+                              }
                             },
                             child: Text('${S.current.export} CSV'),
                           ),
@@ -370,32 +372,34 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                   const SizedBox(width: 8.0,),
                   ],
                   if (widget.inventory.isFinished) ...[
-                    const SizedBox(width: 8.0,),
-                  ActionChip(
-                    label: Text('${S.current.export} CSV'), 
-                    avatar: const Icon(Icons.share_outlined),
-                    onPressed: () {
-                      final locale = Localizations.localeOf(context);
-                      exportInventoryToCsv(context, widget.inventory, locale).then((csvFile) async {
-                        // Share the file using share_plus
-                        await SharePlus.instance.share(
-                          ShareParams(
-                            files: [XFile(csvFile, mimeType: 'text/csv')],
-                            text: S.current.inventoryExported(1),
-                            subject: S.current.inventoryData(1),
-                          ),
-                        );
-                      });
-                    },
-                  ),
-                  const SizedBox(width: 8.0,),
-                  ActionChip(
-                    label: Text('${S.current.export} JSON'), 
-                    avatar: const Icon(Icons.share_outlined),
-                    onPressed: () {
-                      exportInventoryToJson(context, widget.inventory, true);
-                    },
-                  ),
+                     const SizedBox(width: 8.0,),
+                   ActionChip(
+                     label: Text('${S.current.export} CSV'),
+                     avatar: const Icon(Icons.share_outlined),
+                     onPressed: () {
+                       final locale = Localizations.localeOf(context);
+                       exportInventoryToCsv(context, widget.inventory, locale).then((csvFiles) async {
+                         if (csvFiles.isNotEmpty) {
+                           // Share the files using share_plus
+                           await SharePlus.instance.share(
+                             ShareParams(
+                               files: csvFiles.map((f) => XFile(f, mimeType: 'text/csv')).toList(),
+                               text: S.current.inventoryExported(1),
+                               subject: S.current.inventoryData(1),
+                             ),
+                           );
+                         }
+                       });
+                     },
+                   ),
+                   const SizedBox(width: 8.0,),
+                   ActionChip(
+                     label: Text('${S.current.export} JSON'),
+                     avatar: const Icon(Icons.share_outlined),
+                     onPressed: () {
+                       exportInventoryToJson(context, widget.inventory, true);
+                     },
+                   ),
                   ],
                   const SizedBox(width: 8.0,),
                 ],
@@ -675,22 +679,24 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                 );
               },
               menuChildren: [
-                MenuItemButton(
-                  leadingIcon: const Icon(Icons.share_outlined),
-                  onPressed: () async {
-                    final locale = Localizations.localeOf(context);
-                    final csvFile = await exportInventoryToCsv(context, widget.inventory, locale);
-                    // Share the file using share_plus
-                    await SharePlus.instance.share(
-                      ShareParams(
-                        files: [XFile(csvFile, mimeType: 'text/csv')],
-                        text: S.current.inventoryExported(1),
-                        subject: S.current.inventoryData(1),
-                      ),
-                    );
-                  },
-                  child: Text('${S.current.export} CSV'),
-                ),
+               MenuItemButton(
+                   leadingIcon: const Icon(Icons.share_outlined),
+                   onPressed: () async {
+                     final locale = Localizations.localeOf(context);
+                     final csvFiles = await exportInventoryToCsv(context, widget.inventory, locale);
+                     if (csvFiles.isNotEmpty) {
+                       // Share the files using share_plus
+                       await SharePlus.instance.share(
+                         ShareParams(
+                           files: csvFiles.map((f) => XFile(f, mimeType: 'text/csv')).toList(),
+                           text: S.current.inventoryExported(1),
+                           subject: S.current.inventoryData(1),
+                         ),
+                       );
+                     }
+                   },
+                   child: Text('${S.current.export} CSV'),
+                 ),
                 MenuItemButton(
                   leadingIcon: const Icon(Icons.share_outlined),
                   onPressed: () async {
@@ -782,23 +788,25 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                   ),
                   ],
                   if (widget.inventory.isFinished) ...[
-                  ActionChip(
-                    label: Text('${S.current.export} CSV'), 
-                    avatar: const Icon(Icons.share_outlined),
-                    onPressed: () {
-                      final locale = Localizations.localeOf(context);
-                      exportInventoryToCsv(context, widget.inventory, locale).then((csvFile) async {
-                        // Share the file using share_plus
-                        await SharePlus.instance.share(
-                          ShareParams(
-                            files: [XFile(csvFile, mimeType: 'text/csv')],
-                            text: S.current.inventoryExported(1),
-                            subject: S.current.inventoryData(1),
-                          ),
-                        );
-                      });
-                    },
-                  ),
+                   ActionChip(
+                     label: Text('${S.current.export} CSV'),
+                     avatar: const Icon(Icons.share_outlined),
+                     onPressed: () {
+                       final locale = Localizations.localeOf(context);
+                       exportInventoryToCsv(context, widget.inventory, locale).then((csvFiles) async {
+                         if (csvFiles.isNotEmpty) {
+                           // Share the files using share_plus
+                           await SharePlus.instance.share(
+                             ShareParams(
+                               files: csvFiles.map((f) => XFile(f, mimeType: 'text/csv')).toList(),
+                               text: S.current.inventoryExported(1),
+                               subject: S.current.inventoryData(1),
+                             ),
+                           );
+                         }
+                       });
+                     },
+                   ),
                   const SizedBox(width: 8.0,),
                   ActionChip(
                     label: Text('${S.current.export} JSON'), 
@@ -1027,18 +1035,18 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                                       Navigator.of(context).pop();
                                       final locale = Localizations.localeOf(
                                           context);
-                                      final csvFile = await exportInventoryToCsv(
+                                      final csvFiles = await exportInventoryToCsv(
                                           context, inventory, locale);
-                                      // Share the file using share_plus
-                                      await SharePlus.instance.share(
-                                        ShareParams(
-                                            files: [
-                                              XFile(csvFile, mimeType: 'text/csv')
-                                            ],
-                                            text: S.current.inventoryExported(1),
-                                            subject: S.current.inventoryData(1)
-                                        ),
-                                      );
+                                      if (csvFiles.isNotEmpty) {
+                                        // Share the files using share_plus
+                                        await SharePlus.instance.share(
+                                          ShareParams(
+                                              files: csvFiles.map((f) => XFile(f, mimeType: 'text/csv')).toList(),
+                                              text: S.current.inventoryExported(1),
+                                              subject: S.current.inventoryData(1)
+                                          ),
+                                        );
+                                      }
                                     },
                                   ),
                                   const SizedBox(width: 8.0),

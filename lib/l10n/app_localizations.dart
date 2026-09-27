@@ -1484,6 +1484,54 @@ abstract class AppLocalizations {
   /// **'Error exporting {howMany, plural, one{inventory} other{inventories}}: {errorMessage}'**
   String errorExportingInventory(int howMany, String errorMessage);
 
+  /// Title of the one-time onboarding screen that explains inventory export changes
+  ///
+  /// In en, this message translates to:
+  /// **'Export changes'**
+  String get inventoryExportOnboardingTitle;
+
+  /// Introductory message on the inventory export onboarding screen
+  ///
+  /// In en, this message translates to:
+  /// **'For best compatibility, CSV and Excel exports now use a new file structure.'**
+  String get inventoryExportOnboardingMessage;
+
+  /// Section title for CSV changes on the inventory export onboarding screen
+  ///
+  /// In en, this message translates to:
+  /// **'CSV exports'**
+  String get inventoryExportOnboardingCsvTitle;
+
+  /// Description of the new CSV export behavior for inventories
+  ///
+  /// In en, this message translates to:
+  /// **'CSV exports now generate 3 separate files, and each file can include data from more than one inventory.'**
+  String get inventoryExportOnboardingCsvDescription;
+
+  /// Section title for Excel changes on the inventory export onboarding screen
+  ///
+  /// In en, this message translates to:
+  /// **'Excel exports'**
+  String get inventoryExportOnboardingExcelTitle;
+
+  /// Description of the new Excel export behavior for inventories
+  ///
+  /// In en, this message translates to:
+  /// **'Excel exports now generate 1 file with 4 tabs, and the workbook can include data from more than one inventory.'**
+  String get inventoryExportOnboardingExcelDescription;
+
+  /// Support contact shown on the inventory export onboarding screen
+  ///
+  /// In en, this message translates to:
+  /// **'If you have any questions, please contact support@xolmis.app.'**
+  String get inventoryExportOnboardingSupport;
+
+  /// Button label used to close the inventory export onboarding screen
+  ///
+  /// In en, this message translates to:
+  /// **'Got it'**
+  String get inventoryExportOnboardingAction;
+
   /// Message when nest was exported
   ///
   /// In en, this message translates to:

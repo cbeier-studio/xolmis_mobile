@@ -712,6 +712,31 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "inventoryData": m40,
     "inventoryDuration": m41,
+    "inventoryExportOnboardingAction": MessageLookupByLibrary.simpleMessage(
+      "Got it",
+    ),
+    "inventoryExportOnboardingCsvDescription": MessageLookupByLibrary.simpleMessage(
+      "CSV exports now generate 3 separate files, and each file can include data from more than one inventory.",
+    ),
+    "inventoryExportOnboardingCsvTitle": MessageLookupByLibrary.simpleMessage(
+      "CSV exports",
+    ),
+    "inventoryExportOnboardingExcelDescription":
+        MessageLookupByLibrary.simpleMessage(
+          "Excel exports now generate 1 file with 4 tabs, and the workbook can include data from more than one inventory.",
+        ),
+    "inventoryExportOnboardingExcelTitle": MessageLookupByLibrary.simpleMessage(
+      "Excel exports",
+    ),
+    "inventoryExportOnboardingMessage": MessageLookupByLibrary.simpleMessage(
+      "For best compatibility, CSV and Excel exports now use a new file structure.",
+    ),
+    "inventoryExportOnboardingSupport": MessageLookupByLibrary.simpleMessage(
+      "If you have any questions, please contact support@xolmis.app.",
+    ),
+    "inventoryExportOnboardingTitle": MessageLookupByLibrary.simpleMessage(
+      "Export changes",
+    ),
     "inventoryExported": m42,
     "inventoryFound": m43,
     "inventoryFreeQualitative": MessageLookupByLibrary.simpleMessage(

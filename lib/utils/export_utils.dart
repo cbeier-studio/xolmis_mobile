@@ -329,117 +329,389 @@ Future<void> exportInventoryToJson(BuildContext context, Inventory inventory, bo
   }
 }
 
-/// Builds tabular rows for an inventory export including species, vegetation,
-/// weather, and POIs.
-Future<List<List>> buildInventoryRows(Inventory inventory, Locale locale) async {
-  const List<String> inventoryHeaders = ['ID','Type','Duration',
-    'Max of species','Start date','Start time','End date','End time',
-    'Locality','Start longitude','Start latitude','End longitude',
-    'End latitude','Total of observers','Observer','Intervals','Paused time (seconds)','Notes','Discarded'];
-  const List<String> speciesHeaders = ['SPECIES', 'Count', 'Time', 'Out of sample',
-    'Distance', 'Flight height', 'Flight direction', 'Notes'];
-  const List<String> vegetationHeaders = ['Date/Time','Latitude','Longitude',
-    'Herbs Proportion','Herbs Distribution','Herbs Height',
-    'Shrubs Proportion','Shrubs Distribution','Shrubs Height',
-    'Trees Proportion','Trees Distribution','Trees Height','Notes'];
-  const List<String> weatherHeaders = ['Date/Time','Cloud cover','Precipitation',
-    'Temperature','Wind speed','Wind direction','Atmospheric pressure',
-    'Relative humidity'];
-  const List<String> poiHeaders = ['Species', 'Date/Time', 'Latitude', 'Longitude', 'Notes'];
-  final List<List<dynamic>> rows = [];
-  final numberFormat = NumberFormat.decimalPattern(locale.toString())..maximumFractionDigits = 7;
-  final prefs = await SharedPreferences.getInstance();
-  final formatNumbers = prefs.getBool('formatNumbers') ?? true;
+// --- Darwin Core Aligned Headers ---
 
-  // Add inventory data
-  rows.add(inventoryHeaders);
-  rows.add([
+/// Headers for Inventory species occurrences (Occurrences table/sheet).
+const List<String> kInventoryOccurrencesHeaders = [
+  'eventID',
+  'samplingProtocol',
+  'samplingEffort',
+  'eventDate',
+  'eventTime',
+  'eventEndDate',
+  'eventEndTime',
+  'locality',
+  'decimalLongitude',
+  'decimalLatitude',
+  'endLongitude',
+  'endLatitude',
+  'recordedBy',
+  'totalObservers',
+  'samplingIntervals',
+  'pausedTimeSeconds',
+  'eventRemarks',
+  'isDiscarded',
+  'scientificName',
+  'individualCount',
+  'occurrenceTime',
+  'isOutOfSample',
+  'distance',
+  'flightHeight',
+  'flightDirection',
+  'occurrenceRemarks',
+];
+
+/// Headers for Vegetation measurements (Vegetation table/sheet).
+const List<String> kInventoryVegetationHeaders = [
+  'eventID',
+  'samplingProtocol',
+  'samplingEffort',
+  'eventDate',
+  'eventTime',
+  'locality',
+  'decimalLongitude',
+  'decimalLatitude',
+  'recordedBy',
+  'eventRemarks',
+  'measurementDate',
+  'measurementLatitude',
+  'measurementLongitude',
+  'herbsProportion',
+  'herbsDistribution',
+  'herbsHeight',
+  'shrubsProportion',
+  'shrubsDistribution',
+  'shrubsHeight',
+  'treesProportion',
+  'treesDistribution',
+  'treesHeight',
+  'measurementRemarks',
+];
+
+/// Headers for Weather measurements (Weather table/sheet).
+const List<String> kInventoryWeatherHeaders = [
+  'eventID',
+  'samplingProtocol',
+  'samplingEffort',
+  'eventDate',
+  'eventTime',
+  'locality',
+  'decimalLongitude',
+  'decimalLatitude',
+  'recordedBy',
+  'eventRemarks',
+  'measurementDate',
+  'cloudCover',
+  'precipitation',
+  'temperature',
+  'windSpeed',
+  'windDirection',
+  'atmosphericPressure',
+  'relativeHumidity',
+];
+
+/// Headers for Points of Interest (POIs table/sheet).
+const List<String> kInventoryPoiHeaders = [
+  'eventID',
+  'samplingProtocol',
+  'eventDate',
+  'locality',
+  'recordedBy',
+  'scientificName',
+  'poiDate',
+  'decimalLatitude',
+  'decimalLongitude',
+  'poiRemarks',
+];
+
+/// Headers for Inventory summary (Events table/sheet).
+const List<String> kInventoryEventsHeaders = [
+  'eventID',
+  'samplingProtocol',
+  'samplingEffort',
+  'maxSpecies',
+  'eventDate',
+  'eventTime',
+  'eventEndDate',
+  'eventEndTime',
+  'locality',
+  'decimalLongitude',
+  'decimalLatitude',
+  'endLongitude',
+  'endLatitude',
+  'totalObservers',
+  'recordedBy',
+  'samplingIntervals',
+  'pausedTimeSeconds',
+  'eventRemarks',
+  'isDiscarded',
+];
+
+List<dynamic> _buildInventoryPrefix(
+  Inventory inventory,
+  NumberFormat numberFormat,
+  bool formatNumbers,
+) {
+  return [
     inventory.id,
     inventoryTypeFriendlyNames[inventory.type] ?? '',
     inventory.duration,
-    inventory.maxSpecies,
-    inventory.startTime != null ? DateFormat.yMd(locale.toString()).format(inventory.startTime!) : '',
-    inventory.startTime != null ? DateFormat.Hms(locale.toString()).format(inventory.startTime!) : '',
-    inventory.endTime != null ? DateFormat.yMd(locale.toString()).format(inventory.endTime!) : '',
-    inventory.endTime != null ? DateFormat.Hms(locale.toString()).format(inventory.endTime!) : '',
+    inventory.startTime != null
+        ? DateFormat('yyyy-MM-dd').format(inventory.startTime!)
+        : '',
+    inventory.startTime != null
+        ? DateFormat('HH:mm:ss').format(inventory.startTime!)
+        : '',
+    inventory.endTime != null
+        ? DateFormat('yyyy-MM-dd').format(inventory.endTime!)
+        : '',
+    inventory.endTime != null
+        ? DateFormat('HH:mm:ss').format(inventory.endTime!)
+        : '',
     inventory.localityName ?? '',
-    inventory.startLongitude != null ? formatNumbers ? numberFormat.format(inventory.startLongitude) : inventory.startLongitude : '',
-    inventory.startLatitude != null ? formatNumbers ? numberFormat.format(inventory.startLatitude) : inventory.startLatitude : '',
-    inventory.endLongitude != null ? formatNumbers ? numberFormat.format(inventory.endLongitude) : inventory.endLongitude : '',
-    inventory.endLatitude != null ? formatNumbers ? numberFormat.format(inventory.endLatitude) : inventory.endLatitude : '',
-    inventory.totalObservers == 0 ? '' : inventory.totalObservers,
+    inventory.startLongitude != null
+        ? (formatNumbers
+            ? numberFormat.format(inventory.startLongitude)
+            : inventory.startLongitude)
+        : '',
+    inventory.startLatitude != null
+        ? (formatNumbers
+            ? numberFormat.format(inventory.startLatitude)
+            : inventory.startLatitude)
+        : '',
+    inventory.endLongitude != null
+        ? (formatNumbers
+            ? numberFormat.format(inventory.endLongitude)
+            : inventory.endLongitude)
+        : '',
+    inventory.endLatitude != null
+        ? (formatNumbers
+            ? numberFormat.format(inventory.endLatitude)
+            : inventory.endLatitude)
+        : '',
     inventory.observer ?? '',
+    inventory.totalObservers == 0 ? '' : inventory.totalObservers,
     inventory.currentInterval == 0 ? '' : inventory.currentInterval,
-    inventory.totalPausedTimeInSeconds == 0 ? '' : inventory.totalPausedTimeInSeconds,
+    inventory.totalPausedTimeInSeconds == 0
+        ? ''
+        : inventory.totalPausedTimeInSeconds,
     inventory.notes ?? '',
     inventory.isDiscarded ? 'Yes' : 'No',
-  ]);
-  
-  // Add species data
-  rows.add(['']); // Empty line to separate the inventory of the species
-  rows.add(speciesHeaders);
-  for (var species in inventory.speciesList) {
-    rows.add([
-      species.name, 
-      species.count,
-      species.sampleTime != null ? DateFormat('dd/MM/yyyy HH:mm:ss').format(species.sampleTime!) : '',
-      species.isOutOfInventory ? 'Yes' : 'No',
-      species.distance != null ? formatNumbers ? numberFormat.format(species.distance) : species.distance : '',
-      species.flightDirection != null ? formatNumbers ? numberFormat.format(species.flightHeight) : species.flightHeight : '',
-      species.flightDirection,
-      species.notes ?? '',
-    ]);
+  ];
+}
+
+/// Builds flat denormalized species occurrences rows for a list of inventories.
+Future<List<List<dynamic>>> buildInventoriesSpeciesRows(
+  List<Inventory> inventories,
+  Locale locale,
+) async {
+  final List<List<dynamic>> rows = [kInventoryOccurrencesHeaders];
+  final numberFormat = NumberFormat.decimalPattern(locale.toString())
+    ..maximumFractionDigits = 7;
+  final prefs = await SharedPreferences.getInstance();
+  final formatNumbers = prefs.getBool('formatNumbers') ?? true;
+
+  for (var inventory in inventories) {
+    final prefix = _buildInventoryPrefix(inventory, numberFormat, formatNumbers);
+    if (inventory.speciesList.isNotEmpty) {
+      for (var species in inventory.speciesList) {
+        rows.add([
+          ...prefix,
+          species.name,
+          species.count,
+          species.sampleTime != null
+              ? DateFormat('yyyy-MM-dd HH:mm:ss').format(species.sampleTime!)
+              : '',
+          species.isOutOfInventory ? 'Yes' : 'No',
+          species.distance != null
+              ? (formatNumbers
+                  ? numberFormat.format(species.distance)
+                  : species.distance)
+              : '',
+          species.flightHeight != null
+              ? (formatNumbers
+                  ? numberFormat.format(species.flightHeight)
+                  : species.flightHeight)
+              : '',
+          species.flightDirection ?? '',
+          species.notes ?? '',
+        ]);
+      }
+    } else {
+      rows.add([
+        ...prefix,
+        '', '', '', '', '', '', '', ''
+      ]);
+    }
   }
-  
-  // Add vegetation data
-  rows.add(['']); // Empty line to separate vegetation data
-  rows.add(['VEGETATION']);
-  rows.add(vegetationHeaders);
-  for (var vegetation in inventory.vegetationList) {
-    rows.add([
-      vegetation.sampleTime != null ? DateFormat('dd/MM/yyyy HH:mm:ss').format(vegetation.sampleTime!) : '',
-      vegetation.latitude != null ? formatNumbers ? numberFormat.format(vegetation.latitude) : vegetation.latitude : '',
-      vegetation.longitude != null ? formatNumbers ? numberFormat.format(vegetation.longitude) : vegetation.longitude : '',
-      vegetation.herbsProportion,
-      vegetation.herbsDistribution?.index ?? '',
-      vegetation.herbsHeight,
-      vegetation.shrubsProportion,
-      vegetation.shrubsDistribution?.index ?? '',
-      vegetation.shrubsHeight,
-      vegetation.treesProportion,
-      vegetation.treesDistribution?.index ?? '',
-      vegetation.treesHeight,
-      vegetation.notes ?? '',
-    ]);
+
+  return rows;
+}
+
+/// Builds flat denormalized vegetation measurement rows for a list of inventories.
+Future<List<List<dynamic>>> buildInventoriesVegetationRows(
+  List<Inventory> inventories,
+  Locale locale,
+) async {
+  final List<List<dynamic>> rows = [kInventoryVegetationHeaders];
+  final numberFormat = NumberFormat.decimalPattern(locale.toString())
+    ..maximumFractionDigits = 7;
+  final prefs = await SharedPreferences.getInstance();
+  final formatNumbers = prefs.getBool('formatNumbers') ?? true;
+
+  for (var inventory in inventories) {
+    if (inventory.vegetationList.isEmpty) continue;
+    final prefix = [
+      inventory.id,
+      inventoryTypeFriendlyNames[inventory.type] ?? '',
+      inventory.duration,
+      inventory.startTime != null
+          ? DateFormat('yyyy-MM-dd').format(inventory.startTime!)
+          : '',
+      inventory.startTime != null
+          ? DateFormat('HH:mm:ss').format(inventory.startTime!)
+          : '',
+      inventory.localityName ?? '',
+      inventory.startLongitude != null
+          ? (formatNumbers
+              ? numberFormat.format(inventory.startLongitude)
+              : inventory.startLongitude)
+          : '',
+      inventory.startLatitude != null
+          ? (formatNumbers
+              ? numberFormat.format(inventory.startLatitude)
+              : inventory.startLatitude)
+          : '',
+      inventory.observer ?? '',
+      inventory.notes ?? '',
+    ];
+
+    for (var veg in inventory.vegetationList) {
+      rows.add([
+        ...prefix,
+        veg.sampleTime != null
+            ? DateFormat('yyyy-MM-dd HH:mm:ss').format(veg.sampleTime!)
+            : '',
+        veg.latitude != null
+            ? (formatNumbers
+                ? numberFormat.format(veg.latitude)
+                : veg.latitude)
+            : '',
+        veg.longitude != null
+            ? (formatNumbers
+                ? numberFormat.format(veg.longitude)
+                : veg.longitude)
+            : '',
+        veg.herbsProportion ?? '',
+        veg.herbsDistribution?.index ?? '',
+        veg.herbsHeight ?? '',
+        veg.shrubsProportion ?? '',
+        veg.shrubsDistribution?.index ?? '',
+        veg.shrubsHeight ?? '',
+        veg.treesProportion ?? '',
+        veg.treesDistribution?.index ?? '',
+        veg.treesHeight ?? '',
+        veg.notes ?? '',
+      ]);
+    }
   }
-  
-  // Add weather data
-  rows.add(['']); // Empty line to separate weather data
-  rows.add(['WEATHER']);
-  rows.add(weatherHeaders);
-  for (var weather in inventory.weatherList) {
-    rows.add([
-      weather.sampleTime != null ? DateFormat('dd/MM/yyyy HH:mm:ss').format(weather.sampleTime!) : '',
-      weather.cloudCover ?? '',
-      precipitationTypeFriendlyNames[weather.precipitation] ?? '',
-      weather.temperature != null ? formatNumbers ? NumberFormat.decimalPattern(locale.toString()).format(weather.temperature) : weather.temperature : '',
-      weather.windSpeed ?? '',
-      weather.windDirection,
-      weather.atmosphericPressure ?? '',
-      weather.relativeHumidity ?? '',
-    ]);
+
+  return rows;
+}
+
+/// Builds flat denormalized weather log rows for a list of inventories.
+Future<List<List<dynamic>>> buildInventoriesWeatherRows(
+  List<Inventory> inventories,
+  Locale locale,
+) async {
+  final List<List<dynamic>> rows = [kInventoryWeatherHeaders];
+  final numberFormat = NumberFormat.decimalPattern(locale.toString())
+    ..maximumFractionDigits = 7;
+  final prefs = await SharedPreferences.getInstance();
+  final formatNumbers = prefs.getBool('formatNumbers') ?? true;
+
+  for (var inventory in inventories) {
+    if (inventory.weatherList.isEmpty) continue;
+    final prefix = [
+      inventory.id,
+      inventoryTypeFriendlyNames[inventory.type] ?? '',
+      inventory.duration,
+      inventory.startTime != null
+          ? DateFormat('yyyy-MM-dd').format(inventory.startTime!)
+          : '',
+      inventory.startTime != null
+          ? DateFormat('HH:mm:ss').format(inventory.startTime!)
+          : '',
+      inventory.localityName ?? '',
+      inventory.startLongitude != null
+          ? (formatNumbers
+              ? numberFormat.format(inventory.startLongitude)
+              : inventory.startLongitude)
+          : '',
+      inventory.startLatitude != null
+          ? (formatNumbers
+              ? numberFormat.format(inventory.startLatitude)
+              : inventory.startLatitude)
+          : '',
+      inventory.observer ?? '',
+      inventory.notes ?? '',
+    ];
+
+    for (var weather in inventory.weatherList) {
+      rows.add([
+        ...prefix,
+        weather.sampleTime != null
+            ? DateFormat('yyyy-MM-dd HH:mm:ss').format(weather.sampleTime!)
+            : '',
+        weather.cloudCover ?? '',
+        precipitationTypeFriendlyNames[weather.precipitation] ?? '',
+        weather.temperature != null
+            ? (formatNumbers
+                ? numberFormat.format(weather.temperature)
+                : weather.temperature)
+            : '',
+        weather.windSpeed ?? '',
+        weather.windDirection ?? '',
+        weather.atmosphericPressure ?? '',
+        weather.relativeHumidity ?? '',
+      ]);
+    }
   }
-  
-  // Add POIs data
-  rows.add(['']); // Empty line to separate POI data
-  rows.add(['POINTS OF INTEREST']);
-  rows.add(poiHeaders);
-  for (var species in inventory.speciesList) {
-    if (species.pois.isNotEmpty) {
+
+  return rows;
+}
+
+/// Builds flat denormalized POI rows for a list of inventories.
+Future<List<List<dynamic>>> buildInventoriesPoiRows(
+  List<Inventory> inventories,
+  Locale locale,
+) async {
+  final List<List<dynamic>> rows = [kInventoryPoiHeaders];
+  final numberFormat = NumberFormat.decimalPattern(locale.toString())
+    ..maximumFractionDigits = 7;
+  final prefs = await SharedPreferences.getInstance();
+  final formatNumbers = prefs.getBool('formatNumbers') ?? true;
+
+  for (var inventory in inventories) {
+    final prefix = [
+      inventory.id,
+      inventoryTypeFriendlyNames[inventory.type] ?? '',
+      inventory.startTime != null
+          ? DateFormat('yyyy-MM-dd').format(inventory.startTime!)
+          : '',
+      inventory.localityName ?? '',
+      inventory.observer ?? '',
+    ];
+
+    for (var species in inventory.speciesList) {
+      if (species.pois.isEmpty) continue;
       for (var poi in species.pois) {
         rows.add([
+          ...prefix,
           species.name,
-          poi.sampleTime != null ? DateFormat('dd/MM/yyyy HH:mm:ss').format(poi.sampleTime!) : '',
+          poi.sampleTime != null
+              ? DateFormat('yyyy-MM-dd HH:mm:ss').format(poi.sampleTime!)
+              : '',
           formatNumbers ? numberFormat.format(poi.latitude) : poi.latitude,
           formatNumbers ? numberFormat.format(poi.longitude) : poi.longitude,
           poi.notes ?? '',
@@ -451,15 +723,84 @@ Future<List<List>> buildInventoryRows(Inventory inventory, Locale locale) async 
   return rows;
 }
 
+/// Builds inventory summary rows for a list of inventories.
+Future<List<List<dynamic>>> buildInventoriesSummaryRows(
+  List<Inventory> inventories,
+  Locale locale,
+) async {
+  final List<List<dynamic>> rows = [kInventoryEventsHeaders];
+  final numberFormat = NumberFormat.decimalPattern(locale.toString())
+    ..maximumFractionDigits = 7;
+  final prefs = await SharedPreferences.getInstance();
+  final formatNumbers = prefs.getBool('formatNumbers') ?? true;
+
+  for (var inventory in inventories) {
+    rows.add([
+      inventory.id,
+      inventoryTypeFriendlyNames[inventory.type] ?? '',
+      inventory.duration,
+      inventory.maxSpecies,
+      inventory.startTime != null
+          ? DateFormat('yyyy-MM-dd').format(inventory.startTime!)
+          : '',
+      inventory.startTime != null
+          ? DateFormat('HH:mm:ss').format(inventory.startTime!)
+          : '',
+      inventory.endTime != null
+          ? DateFormat('yyyy-MM-dd').format(inventory.endTime!)
+          : '',
+      inventory.endTime != null
+          ? DateFormat('HH:mm:ss').format(inventory.endTime!)
+          : '',
+      inventory.localityName ?? '',
+      inventory.startLongitude != null
+          ? (formatNumbers
+              ? numberFormat.format(inventory.startLongitude)
+              : inventory.startLongitude)
+          : '',
+      inventory.startLatitude != null
+          ? (formatNumbers
+              ? numberFormat.format(inventory.startLatitude)
+              : inventory.startLatitude)
+          : '',
+      inventory.endLongitude != null
+          ? (formatNumbers
+              ? numberFormat.format(inventory.endLongitude)
+              : inventory.endLongitude)
+          : '',
+      inventory.endLatitude != null
+          ? (formatNumbers
+              ? numberFormat.format(inventory.endLatitude)
+              : inventory.endLatitude)
+          : '',
+      inventory.totalObservers == 0 ? '' : inventory.totalObservers,
+      inventory.observer ?? '',
+      inventory.currentInterval == 0 ? '' : inventory.currentInterval,
+      inventory.totalPausedTimeInSeconds == 0
+          ? ''
+          : inventory.totalPausedTimeInSeconds,
+      inventory.notes ?? '',
+      inventory.isDiscarded ? 'Yes' : 'No',
+    ]);
+  }
+
+  return rows;
+}
+
+/// Builds tabular rows for an inventory export.
+Future<List<List<dynamic>>> buildInventoryRows(
+  Inventory inventory,
+  Locale locale,
+) async {
+  return buildInventoriesSpeciesRows([inventory], locale);
+}
+
 /// Converts a dynamic value into an Excel [CellValue] preserving basic types.
 CellValue _convertToCellValue(dynamic val) {
   if (val == null) {
     return TextCellValue('');
   }
   if (val is String) {
-    // if (val.startsWith('=')) {
-    //   return FormulaCellValue(val);
-    // }
     return TextCellValue(val);
   }
   if (val is int) {
@@ -471,9 +812,6 @@ CellValue _convertToCellValue(dynamic val) {
   if (val is bool) {
     return BoolCellValue(val);
   }
-  // if (val is DateTime) {
-  //   return TextCellValue(DateFormat('dd/MM/yyyy HH:mm:ss').format(val));
-  // }
 
   return TextCellValue(val.toString());
 }
@@ -491,94 +829,180 @@ List<List<CellValue>> convertRowsToCellValues(List<List<dynamic>> dynamicRows) {
   return cellValueRows;
 }
 
+/// Builds an Excel workbook with sheets for Occurrences, Vegetation, Weather, POIs, and Events.
+Future<Excel> _createInventoriesExcel(
+  List<Inventory> inventories,
+  Locale locale,
+) async {
+  final excel = Excel.createExcel();
+
+  final speciesRows = await buildInventoriesSpeciesRows(inventories, locale);
+  final occSheet = excel['Occurrences'];
+  for (var row in convertRowsToCellValues(speciesRows)) {
+    occSheet.appendRow(row);
+  }
+  if (excel.sheets.containsKey('Sheet1')) {
+    excel.delete('Sheet1');
+  }
+
+  final vegRows = await buildInventoriesVegetationRows(inventories, locale);
+  if (vegRows.length > 1) {
+    final vegSheet = excel['Vegetation'];
+    for (var row in convertRowsToCellValues(vegRows)) {
+      vegSheet.appendRow(row);
+    }
+  }
+
+  final weatherRows = await buildInventoriesWeatherRows(inventories, locale);
+  if (weatherRows.length > 1) {
+    final weatherSheet = excel['Weather'];
+    for (var row in convertRowsToCellValues(weatherRows)) {
+      weatherSheet.appendRow(row);
+    }
+  }
+
+  final poiRows = await buildInventoriesPoiRows(inventories, locale);
+  if (poiRows.length > 1) {
+    final poiSheet = excel['POIs'];
+    for (var row in convertRowsToCellValues(poiRows)) {
+      poiSheet.appendRow(row);
+    }
+  }
+
+  final eventsRows = await buildInventoriesSummaryRows(inventories, locale);
+  final eventsSheet = excel['Events'];
+  for (var row in convertRowsToCellValues(eventsRows)) {
+    eventsSheet.appendRow(row);
+  }
+
+  return excel;
+}
+
 /// Exports one inventory to an Excel file and returns the generated path.
-Future<String> exportInventoryToExcel(BuildContext context, Inventory inventory, Locale locale) async {
+Future<String> exportInventoryToExcel(
+  BuildContext context,
+  Inventory inventory,
+  Locale locale,
+) async {
   try {
     final inventoryToExport =
         await _ensureInventoryLoadedForExport(context, inventory);
-    // 1. Create a list of data
-    List<List<dynamic>> rows = await buildInventoryRows(inventoryToExport, locale);
-    List<List<CellValue>> cellRows = convertRowsToCellValues(rows);
+    final excel = await _createInventoriesExcel([inventoryToExport], locale);
 
-    // 2. Convert the list of data to Excel
-    final excel = Excel.createExcel();
-    final Sheet sheet = excel['Sheet1'];
-
-    for (List<CellValue> row in cellRows) {
-      sheet.appendRow(row);
-    }
-
-    // 3. Create the file in a temporary directory
     var fileBytes = excel.save();
     Directory tempDir = await getTemporaryDirectory();
     final filePath = '${tempDir.path}/inventory_${inventoryToExport.id}.xlsx';
-    // if (sheet.rows.isNotEmpty) {
+    if (fileBytes != null) {
       File(filePath)
         ..create(recursive: true)
-        ..writeAsBytes(fileBytes!);
-      return filePath; // Return the file path for further use
-    // } else {
-      // throw Exception('Failed to generate Excel file.');
-    // }
+        ..writeAsBytes(fileBytes);
+      return filePath;
+    } else {
+      throw Exception('Failed to generate Excel file.');
+    }
   } catch (error) {
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            persist: true,
-                            showCloseIcon: true,
-                            backgroundColor: Theme.of(context).colorScheme.error,
-                            content: Text(S.of(context).errorExportingInventory(1, error.toString())),
-                          ),
-                        );
+        SnackBar(
+          persist: true,
+          showCloseIcon: true,
+          backgroundColor: Theme.of(context).colorScheme.error,
+          content: Text(
+            S.of(context).errorExportingInventory(1, error.toString()),
+          ),
+        ),
+      );
     }
     return '';
   }
 }
 
-/// Exports one inventory to a CSV file and returns the generated path.
-Future<String> exportInventoryToCsv(BuildContext context, Inventory inventory, Locale locale) async {
+/// Exports one inventory to CSV files (species, vegetation, weather) and returns the list of generated paths.
+Future<List<String>> exportInventoryToCsv(
+  BuildContext context,
+  Inventory inventory,
+  Locale locale,
+) async {
   try {
     final inventoryToExport =
         await _ensureInventoryLoadedForExport(context, inventory);
-    // 1. Create a list of data
-    List<List<dynamic>> rows = await buildInventoryRows(inventoryToExport, locale);
+    final filePaths = <String>[];
 
-    // 2. Convert the list of data to CSV
-    String csv = Csv(fieldDelimiter: ';').encode(rows);
-
-    // 3. Create the file in a temporary directory
-    Directory tempDir = await getTemporaryDirectory();
-    final filePath = '${tempDir.path}/inventory_${inventoryToExport.id}.csv';
-    if (csv.isNotEmpty) {
-      final file = File(filePath);
-      await file.writeAsString(csv);
-      return filePath;
-    } else {
-      throw Exception('Failed to generate CSV file.');
+    // Export species data
+    List<List<dynamic>> speciesRows =
+        await buildInventoriesSpeciesRows([inventoryToExport], locale);
+    if (speciesRows.isNotEmpty) {
+      String speciesCsv = Csv(fieldDelimiter: ';').encode(speciesRows);
+      Directory tempDir = await getTemporaryDirectory();
+      final speciesFilePath = '${tempDir.path}/inventory_${inventoryToExport.id}_species.csv';
+      if (speciesCsv.isNotEmpty) {
+        final file = File(speciesFilePath);
+        await file.writeAsString(speciesCsv);
+        filePaths.add(speciesFilePath);
+      }
     }
+
+    // Export vegetation data
+    List<List<dynamic>> vegRows =
+        await buildInventoriesVegetationRows([inventoryToExport], locale);
+    if (vegRows.length > 1) {
+      String vegCsv = Csv(fieldDelimiter: ';').encode(vegRows);
+      Directory tempDir = await getTemporaryDirectory();
+      final vegFilePath = '${tempDir.path}/inventory_${inventoryToExport.id}_vegetation.csv';
+      if (vegCsv.isNotEmpty) {
+        final file = File(vegFilePath);
+        await file.writeAsString(vegCsv);
+        filePaths.add(vegFilePath);
+      }
+    }
+
+    // Export weather data
+    List<List<dynamic>> weatherRows =
+        await buildInventoriesWeatherRows([inventoryToExport], locale);
+    if (weatherRows.length > 1) {
+      String weatherCsv = Csv(fieldDelimiter: ';').encode(weatherRows);
+      Directory tempDir = await getTemporaryDirectory();
+      final weatherFilePath = '${tempDir.path}/inventory_${inventoryToExport.id}_weather.csv';
+      if (weatherCsv.isNotEmpty) {
+        final file = File(weatherFilePath);
+        await file.writeAsString(weatherCsv);
+        filePaths.add(weatherFilePath);
+      }
+    }
+
+    if (filePaths.isEmpty) {
+      throw Exception('Failed to generate CSV files.');
+    }
+    return filePaths;
   } catch (error) {
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            persist: true,
-                            showCloseIcon: true,
-                            backgroundColor: Theme.of(context).colorScheme.error,
-                            content: Text(S.of(context).errorExportingInventory(1, error.toString())),
-                          ),
-                        );
+        SnackBar(
+          persist: true,
+          showCloseIcon: true,
+          backgroundColor: Theme.of(context).colorScheme.error,
+          content: Text(
+            S.of(context).errorExportingInventory(1, error.toString()),
+          ),
+        ),
+      );
     }
-    return '';
+    return [];
   }
 }
 
 /// Exports one inventory POI dataset to KML and opens the share sheet.
-Future<void> exportInventoryToKml(BuildContext context, Inventory inventory) async {
+Future<void> exportInventoryToKml(
+  BuildContext context,
+  Inventory inventory,
+) async {
   try {
     final inventoryToExport =
         await _ensureInventoryLoadedForExport(context, inventory);
     final List<_KmlWaypoint> waypoints = [];
-    
-    if (inventoryToExport.startLatitude != null && inventoryToExport.startLongitude != null) {
+
+    if (inventoryToExport.startLatitude != null &&
+        inventoryToExport.startLongitude != null) {
       waypoints.add(_KmlWaypoint(
         lat: inventoryToExport.startLatitude,
         lon: inventoryToExport.startLongitude,
@@ -588,7 +1012,8 @@ Future<void> exportInventoryToKml(BuildContext context, Inventory inventory) asy
       ));
     }
 
-    if (inventoryToExport.endLatitude != null && inventoryToExport.endLongitude != null) {
+    if (inventoryToExport.endLatitude != null &&
+        inventoryToExport.endLongitude != null) {
       waypoints.add(_KmlWaypoint(
         lat: inventoryToExport.endLatitude,
         lon: inventoryToExport.endLongitude,
@@ -613,11 +1038,11 @@ Future<void> exportInventoryToKml(BuildContext context, Inventory inventory) asy
     if (waypoints.isEmpty) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            showCloseIcon: true,
-                            content: Text(S.of(context).noPoisToExport),
-                          ),
-                        );
+          SnackBar(
+            showCloseIcon: true,
+            content: Text(S.of(context).noPoisToExport),
+          ),
+        );
       }
       return;
     }
@@ -629,13 +1054,16 @@ Future<void> exportInventoryToKml(BuildContext context, Inventory inventory) asy
     );
 
     Directory tempDir = await getTemporaryDirectory();
-    final filePath = '${tempDir.path}/inventory_${inventoryToExport.id}_pois.kml';
+    final filePath =
+        '${tempDir.path}/inventory_${inventoryToExport.id}_pois.kml';
     final file = File(filePath);
     await file.writeAsString(kmlString);
 
     await SharePlus.instance.share(
       ShareParams(
-        files: [XFile(filePath, mimeType: 'application/vnd.google-earth.kml+xml')],
+        files: [
+          XFile(filePath, mimeType: 'application/vnd.google-earth.kml+xml')
+        ],
         title: S.current.inventoryExported(1),
         subject: '${S.current.inventoryExported(1)} ${inventoryToExport.id}',
       ),
@@ -643,20 +1071,25 @@ Future<void> exportInventoryToKml(BuildContext context, Inventory inventory) asy
   } catch (error) {
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            persist: true,
-                            showCloseIcon: true,
-                            backgroundColor: Theme.of(context).colorScheme.error,
-                            content: Text(S.of(context).errorExportingInventory(1, error.toString())),
-                          ),
-                        );
+        SnackBar(
+          persist: true,
+          showCloseIcon: true,
+          backgroundColor: Theme.of(context).colorScheme.error,
+          content: Text(
+            S.of(context).errorExportingInventory(1, error.toString()),
+          ),
+        ),
+      );
     }
     return;
   }
 }
 
 /// Exports selected inventories to a single JSON envelope.
-Future<void> exportSelectedInventoriesToJson(BuildContext context, List<Inventory> inventories) async {
+Future<void> exportSelectedInventoriesToJson(
+  BuildContext context,
+  List<Inventory> inventories,
+) async {
   try {
     final inventoriesToExport =
         await _ensureInventoriesLoadedForExport(context, inventories);
@@ -664,7 +1097,8 @@ Future<void> exportSelectedInventoriesToJson(BuildContext context, List<Inventor
       'source': kExportSource,
       'schema': 'inventories',
       'schemaVersion': kExportSchemaVersion,
-      'records': inventoriesToExport.map((inventory) => inventory.toJson()).toList(),
+      'records':
+          inventoriesToExport.map((inventory) => inventory.toJson()).toList(),
     };
     var encoder = JsonEncoder.withIndent("  ");
     final jsonString = encoder.convert(jsonData);
@@ -692,15 +1126,23 @@ Future<void> exportSelectedInventoriesToJson(BuildContext context, List<Inventor
           persist: true,
           showCloseIcon: true,
           backgroundColor: Theme.of(context).colorScheme.error,
-          content: Text(S.of(context).errorExportingInventory(inventories.length, error.toString())),
+          content: Text(
+            S.of(context).errorExportingInventory(
+              inventories.length,
+              error.toString(),
+            ),
+          ),
         ),
       );
     }
   }
 }
 
-/// Exports selected inventories to individual CSV files and shares them.
-Future<void> exportSelectedInventoriesToCsv(BuildContext context, List<Inventory> inventories) async {
+/// Exports selected inventories to a single CSV file and shares it.
+Future<void> exportSelectedInventoriesToCsv(
+  BuildContext context,
+  List<Inventory> inventories,
+) async {
   showDialog(
     context: context,
     barrierDismissible: false,
@@ -722,19 +1164,61 @@ Future<void> exportSelectedInventoriesToCsv(BuildContext context, List<Inventory
   );
   try {
     final locale = Localizations.localeOf(context);
-    List<XFile> csvFiles = [];
+    final inventoriesToExport =
+        await _ensureInventoriesLoadedForExport(context, inventories);
 
-    for (final inventory in inventories) {
-      final filePath = await exportInventoryToCsv(context, inventory, locale);
-      if (filePath.isNotEmpty) {
-        csvFiles.add(XFile(filePath, mimeType: 'text/csv'));
+    final now = DateTime.now();
+    final formatter = DateFormat('yyyyMMdd_HHmmss');
+    final formattedDate = formatter.format(now);
+
+    final filePaths = <String>[];
+
+    // Export species data
+    List<List<dynamic>> speciesRows =
+        await buildInventoriesSpeciesRows(inventoriesToExport, locale);
+    if (speciesRows.isNotEmpty) {
+      String speciesCsv = Csv(fieldDelimiter: ';').encode(speciesRows);
+      Directory tempDir = await getTemporaryDirectory();
+      final speciesFilePath = '${tempDir.path}/selected_inventories_${formattedDate}_species.csv';
+      if (speciesCsv.isNotEmpty) {
+        final file = File(speciesFilePath);
+        await file.writeAsString(speciesCsv);
+        filePaths.add(speciesFilePath);
       }
     }
 
-    if (csvFiles.isNotEmpty) {
+    // Export vegetation data
+    List<List<dynamic>> vegRows =
+        await buildInventoriesVegetationRows(inventoriesToExport, locale);
+    if (vegRows.length > 1) {
+      String vegCsv = Csv(fieldDelimiter: ';').encode(vegRows);
+      Directory tempDir = await getTemporaryDirectory();
+      final vegFilePath = '${tempDir.path}/selected_inventories_${formattedDate}_vegetation.csv';
+      if (vegCsv.isNotEmpty) {
+        final file = File(vegFilePath);
+        await file.writeAsString(vegCsv);
+        filePaths.add(vegFilePath);
+      }
+    }
+
+    // Export weather data
+    List<List<dynamic>> weatherRows =
+        await buildInventoriesWeatherRows(inventoriesToExport, locale);
+    if (weatherRows.length > 1) {
+      String weatherCsv = Csv(fieldDelimiter: ';').encode(weatherRows);
+      Directory tempDir = await getTemporaryDirectory();
+      final weatherFilePath = '${tempDir.path}/selected_inventories_${formattedDate}_weather.csv';
+      if (weatherCsv.isNotEmpty) {
+        final file = File(weatherFilePath);
+        await file.writeAsString(weatherCsv);
+        filePaths.add(weatherFilePath);
+      }
+    }
+
+    if (filePaths.isNotEmpty) {
       await SharePlus.instance.share(
         ShareParams(
-          files: csvFiles,
+          files: filePaths.map((f) => XFile(f, mimeType: 'text/csv')).toList(),
           title: S.current.inventoryExported(inventories.length),
           subject: S.current.inventoryData(inventories.length),
         ),
@@ -747,7 +1231,12 @@ Future<void> exportSelectedInventoriesToCsv(BuildContext context, List<Inventory
           persist: true,
           showCloseIcon: true,
           backgroundColor: Theme.of(context).colorScheme.error,
-          content: Text(S.of(context).errorExportingInventory(inventories.length, error.toString())),
+          content: Text(
+            S.of(context).errorExportingInventory(
+              inventories.length,
+              error.toString(),
+            ),
+          ),
         ),
       );
     }
@@ -758,8 +1247,11 @@ Future<void> exportSelectedInventoriesToCsv(BuildContext context, List<Inventory
   }
 }
 
-/// Exports selected inventories to individual Excel files and shares them.
-Future<void> exportSelectedInventoriesToExcel(BuildContext context, List<Inventory> inventories) async {
+/// Exports selected inventories to a single Excel file and shares it.
+Future<void> exportSelectedInventoriesToExcel(
+  BuildContext context,
+  List<Inventory> inventories,
+) async {
   showDialog(
     context: context,
     barrierDismissible: false,
@@ -781,24 +1273,32 @@ Future<void> exportSelectedInventoriesToExcel(BuildContext context, List<Invento
   );
   try {
     final locale = Localizations.localeOf(context);
-    List<XFile> excelFiles = [];
+    final inventoriesToExport =
+        await _ensureInventoriesLoadedForExport(context, inventories);
+    final excel = await _createInventoriesExcel(inventoriesToExport, locale);
 
-    for (final inventory in inventories) {
-      final filePath = await exportInventoryToExcel(context, inventory, locale);
-      if (filePath.isNotEmpty) {
-        excelFiles.add(
-          XFile(
-            filePath,
-            mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-          ),
-        );
-      }
-    }
+    var fileBytes = excel.save();
+    final now = DateTime.now();
+    final formatter = DateFormat('yyyyMMdd_HHmmss');
+    final formattedDate = formatter.format(now);
 
-    if (excelFiles.isNotEmpty) {
+    Directory tempDir = await getTemporaryDirectory();
+    final filePath =
+        '${tempDir.path}/selected_inventories_$formattedDate.xlsx';
+    if (fileBytes != null) {
+      File(filePath)
+        ..create(recursive: true)
+        ..writeAsBytes(fileBytes);
+
       await SharePlus.instance.share(
         ShareParams(
-          files: excelFiles,
+          files: [
+            XFile(
+              filePath,
+              mimeType:
+                  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            )
+          ],
           title: S.current.inventoryExported(inventories.length),
           subject: S.current.inventoryData(inventories.length),
         ),
@@ -811,7 +1311,12 @@ Future<void> exportSelectedInventoriesToExcel(BuildContext context, List<Invento
           persist: true,
           showCloseIcon: true,
           backgroundColor: Theme.of(context).colorScheme.error,
-          content: Text(S.of(context).errorExportingInventory(inventories.length, error.toString())),
+          content: Text(
+            S.of(context).errorExportingInventory(
+              inventories.length,
+              error.toString(),
+            ),
+          ),
         ),
       );
     }
@@ -1659,7 +2164,7 @@ Future<void> exportSelectedNestsToJson(BuildContext context, List<Nest> nests) a
   }
 }
 
-/// Exports selected nests to individual CSV files and shares them.
+/// Exports selected nests to a single CSV file and shares it.
 Future<void> exportSelectedNestsToCsv(BuildContext context, List<Nest> nests) async {
   showDialog(
     context: context,
@@ -1682,19 +2187,44 @@ Future<void> exportSelectedNestsToCsv(BuildContext context, List<Nest> nests) as
   );
   try {
     final locale = Localizations.localeOf(context);
-    List<XFile> csvFiles = [];
+    final nestsToExport = await _ensureNestsLoadedForExport(context, nests);
 
-    for (final nest in nests) {
-      final filePath = await exportNestToCsv(context, nest, locale);
-      if (filePath.isNotEmpty) {
-        csvFiles.add(XFile(filePath, mimeType: 'text/csv'));
+    final now = DateTime.now();
+    final formatter = DateFormat('yyyyMMdd_HHmmss');
+    final formattedDate = formatter.format(now);
+
+    final filePaths = <String>[];
+
+    // Export revisions data
+    List<List<dynamic>> revRows = await buildNestsRevisionsRows(nestsToExport, locale);
+    if (revRows.isNotEmpty) {
+      String revCsv = Csv(fieldDelimiter: ';').encode(revRows);
+      Directory tempDir = await getTemporaryDirectory();
+      final revFilePath = '${tempDir.path}/selected_nests_${formattedDate}_revisions.csv';
+      if (revCsv.isNotEmpty) {
+        final file = File(revFilePath);
+        await file.writeAsString(revCsv);
+        filePaths.add(revFilePath);
       }
     }
 
-    if (csvFiles.isNotEmpty) {
+    // Export eggs data
+    List<List<dynamic>> eggRows = await buildNestsEggsRows(nestsToExport, locale);
+    if (eggRows.length > 1) {
+      String eggCsv = Csv(fieldDelimiter: ';').encode(eggRows);
+      Directory tempDir = await getTemporaryDirectory();
+      final eggFilePath = '${tempDir.path}/selected_nests_${formattedDate}_eggs.csv';
+      if (eggCsv.isNotEmpty) {
+        final file = File(eggFilePath);
+        await file.writeAsString(eggCsv);
+        filePaths.add(eggFilePath);
+      }
+    }
+
+    if (filePaths.isNotEmpty) {
       await SharePlus.instance.share(
         ShareParams(
-          files: csvFiles,
+          files: filePaths.map((f) => XFile(f, mimeType: 'text/csv')).toList(),
           title: S.current.nestExported(nests.length),
           subject: S.current.nestData(nests.length),
         ),
@@ -1718,7 +2248,7 @@ Future<void> exportSelectedNestsToCsv(BuildContext context, List<Nest> nests) as
   }
 }
 
-/// Exports selected nests to individual Excel files and shares them.
+/// Exports selected nests to a single Excel file and shares it.
 Future<void> exportSelectedNestsToExcel(BuildContext context, List<Nest> nests) async {
   showDialog(
     context: context,
@@ -1741,24 +2271,30 @@ Future<void> exportSelectedNestsToExcel(BuildContext context, List<Nest> nests) 
   );
   try {
     final locale = Localizations.localeOf(context);
-    List<XFile> excelFiles = [];
+    final nestsToExport = await _ensureNestsLoadedForExport(context, nests);
+    final excel = await _createNestsExcel(nestsToExport, locale);
 
-    for (final nest in nests) {
-      final filePath = await exportNestToExcel(context, nest, locale);
-      if (filePath.isNotEmpty) {
-        excelFiles.add(
-          XFile(
-            filePath,
-            mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-          ),
-        );
-      }
-    }
+    var fileBytes = excel.save();
+    final now = DateTime.now();
+    final formatter = DateFormat('yyyyMMdd_HHmmss');
+    final formattedDate = formatter.format(now);
 
-    if (excelFiles.isNotEmpty) {
+    Directory tempDir = await getTemporaryDirectory();
+    final filePath = '${tempDir.path}/selected_nests_$formattedDate.xlsx';
+    if (fileBytes != null) {
+      File(filePath)
+        ..create(recursive: true)
+        ..writeAsBytes(fileBytes);
+
       await SharePlus.instance.share(
         ShareParams(
-          files: excelFiles,
+          files: [
+            XFile(
+              filePath,
+              mimeType:
+                  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            )
+          ],
           title: S.current.nestExported(nests.length),
           subject: S.current.nestData(nests.length),
         ),
@@ -1977,38 +2513,281 @@ Future<void> exportNestToJson(BuildContext context, Nest nest) async {
   }
 }
 
-/// Exports one nest to CSV and returns the generated file path.
-Future<String> exportNestToCsv(BuildContext context, Nest nest, Locale locale) async {
+/// Headers for Nest records (Nests table/sheet).
+const List<String> kNestHeaders = [
+  'occurrenceID',
+  'scientificName',
+  'locality',
+  'decimalLongitude',
+  'decimalLatitude',
+  'verbatimEventDate',
+  'support',
+  'heightAboveGround',
+  'male',
+  'female',
+  'helpers',
+  'lastEventDate',
+  'recordedBy',
+  'nestFate',
+];
+
+/// Headers for Nest revisions (Revisions table/sheet).
+const List<String> kNestRevisionHeaders = [
+  'occurrenceID',
+  'scientificName',
+  'locality',
+  'decimalLongitude',
+  'decimalLatitude',
+  'recordedBy',
+  'eventTime',
+  'nestStatus',
+  'nestStage',
+  'eggsHost',
+  'nestlingsHost',
+  'eggsParasite',
+  'nestlingsParasite',
+  'hasPhilornisLarvae',
+  'revisionRemarks',
+];
+
+/// Headers for Nest eggs (Eggs table/sheet).
+const List<String> kNestEggHeaders = [
+  'occurrenceID',
+  'scientificName',
+  'locality',
+  'eventTime',
+  'eggFieldNumber',
+  'eggSpeciesName',
+  'eggShape',
+  'width',
+  'length',
+  'mass',
+];
+
+/// Builds flat summary rows for a list of nests.
+Future<List<List<dynamic>>> buildNestsSummaryRows(
+  List<Nest> nests,
+  Locale locale,
+) async {
+  final List<List<dynamic>> rows = [kNestHeaders];
+  final numberFormat = NumberFormat.decimalPattern(locale.toString())
+    ..maximumFractionDigits = 7;
+  final prefs = await SharedPreferences.getInstance();
+  final formatNumbers = prefs.getBool('formatNumbers') ?? true;
+
+  for (var nest in nests) {
+    rows.add([
+      nest.fieldNumber ?? '',
+      nest.speciesName ?? '',
+      nest.localityName ?? '',
+      nest.longitude != null
+          ? (formatNumbers ? numberFormat.format(nest.longitude) : nest.longitude)
+          : '',
+      nest.latitude != null
+          ? (formatNumbers ? numberFormat.format(nest.latitude) : nest.latitude)
+          : '',
+      nest.foundTime != null
+          ? DateFormat('yyyy-MM-dd HH:mm:ss').format(nest.foundTime!)
+          : '',
+      nest.support ?? '',
+      nest.heightAboveGround != null
+          ? (formatNumbers
+              ? numberFormat.format(nest.heightAboveGround)
+              : nest.heightAboveGround)
+          : '',
+      nest.male ?? '',
+      nest.female ?? '',
+      nest.helpers ?? '',
+      nest.lastTime != null
+          ? DateFormat('yyyy-MM-dd HH:mm:ss').format(nest.lastTime!)
+          : '',
+      nest.observer ?? '',
+      nestFateTypeFriendlyNames[nest.nestFate] ?? '',
+    ]);
+  }
+
+  return rows;
+}
+
+/// Builds flat denormalized revision rows for a list of nests.
+Future<List<List<dynamic>>> buildNestsRevisionsRows(
+  List<Nest> nests,
+  Locale locale,
+) async {
+  final List<List<dynamic>> rows = [kNestRevisionHeaders];
+  final numberFormat = NumberFormat.decimalPattern(locale.toString())
+    ..maximumFractionDigits = 7;
+  final prefs = await SharedPreferences.getInstance();
+  final formatNumbers = prefs.getBool('formatNumbers') ?? true;
+
+  for (var nest in nests) {
+    final prefix = [
+      nest.fieldNumber ?? '',
+      nest.speciesName ?? '',
+      nest.localityName ?? '',
+      nest.longitude != null
+          ? (formatNumbers ? numberFormat.format(nest.longitude) : nest.longitude)
+          : '',
+      nest.latitude != null
+          ? (formatNumbers ? numberFormat.format(nest.latitude) : nest.latitude)
+          : '',
+      nest.observer ?? '',
+    ];
+
+    final revisions = nest.revisionsList ?? [];
+    if (revisions.isNotEmpty) {
+      for (var rev in revisions) {
+        rows.add([
+          ...prefix,
+          rev.sampleTime != null
+              ? DateFormat('yyyy-MM-dd HH:mm:ss').format(rev.sampleTime!)
+              : '',
+          nestStatusTypeFriendlyNames[rev.nestStatus] ?? '',
+          nestStageTypeFriendlyNames[rev.nestStage] ?? '',
+          rev.eggsHost ?? '',
+          rev.nestlingsHost ?? '',
+          rev.eggsParasite ?? '',
+          rev.nestlingsParasite ?? '',
+          rev.hasPhilornisLarvae == true ? 'Yes' : 'No',
+          rev.notes ?? '',
+        ]);
+      }
+    } else {
+      rows.add([
+        ...prefix,
+        '', '', '', '', '', '', '', '', ''
+      ]);
+    }
+  }
+
+  return rows;
+}
+
+/// Builds flat egg rows for a list of nests.
+Future<List<List<dynamic>>> buildNestsEggsRows(
+  List<Nest> nests,
+  Locale locale,
+) async {
+  final List<List<dynamic>> rows = [kNestEggHeaders];
+  final numberFormat = NumberFormat.decimalPattern(locale.toString())
+    ..maximumFractionDigits = 7;
+  final prefs = await SharedPreferences.getInstance();
+  final formatNumbers = prefs.getBool('formatNumbers') ?? true;
+
+  for (var nest in nests) {
+    final eggs = nest.eggsList ?? [];
+    if (eggs.isEmpty) continue;
+
+    for (var egg in eggs) {
+      rows.add([
+        nest.fieldNumber ?? '',
+        nest.speciesName ?? '',
+        nest.localityName ?? '',
+        egg.sampleTime != null
+            ? DateFormat('yyyy-MM-dd HH:mm:ss').format(egg.sampleTime!)
+            : '',
+        egg.fieldNumber ?? '',
+        egg.speciesName ?? '',
+        eggShapeTypeFriendlyNames[egg.eggShape] ?? '',
+        egg.width != null
+            ? (formatNumbers ? numberFormat.format(egg.width) : egg.width)
+            : '',
+        egg.length != null
+            ? (formatNumbers ? numberFormat.format(egg.length) : egg.length)
+            : '',
+        egg.mass != null
+            ? (formatNumbers ? numberFormat.format(egg.mass) : egg.mass)
+            : '',
+      ]);
+    }
+  }
+
+  return rows;
+}
+
+/// Builds tabular rows for nest export.
+Future<List<List<dynamic>>> buildNestRows(Nest nest, Locale locale) async {
+  return buildNestsRevisionsRows([nest], locale);
+}
+
+/// Builds an Excel workbook with sheets for Revisions, Nests, and Eggs.
+Future<Excel> _createNestsExcel(List<Nest> nests, Locale locale) async {
+  final excel = Excel.createExcel();
+
+  final revRows = await buildNestsRevisionsRows(nests, locale);
+  final revSheet = excel['Revisions'];
+  for (var row in convertRowsToCellValues(revRows)) {
+    revSheet.appendRow(row);
+  }
+  if (excel.sheets.containsKey('Sheet1')) {
+    excel.delete('Sheet1');
+  }
+
+  final nestRows = await buildNestsSummaryRows(nests, locale);
+  final nestSheet = excel['Nests'];
+  for (var row in convertRowsToCellValues(nestRows)) {
+    nestSheet.appendRow(row);
+  }
+
+  final eggRows = await buildNestsEggsRows(nests, locale);
+  if (eggRows.length > 1) {
+    final eggSheet = excel['Eggs'];
+    for (var row in convertRowsToCellValues(eggRows)) {
+      eggSheet.appendRow(row);
+    }
+  }
+
+  return excel;
+}
+
+/// Exports one nest to CSV files (revisions and eggs) and returns the list of generated file paths.
+Future<List<String>> exportNestToCsv(BuildContext context, Nest nest, Locale locale) async {
   try {
     final nestToExport = await _ensureNestLoadedForExport(context, nest);
-    // 1. Create a list of data for the CSV
-    List<List<dynamic>> rows = await buildNestRows(nestToExport, locale);
+    final filePaths = <String>[];
 
-    // 2. Convert the list of data to CSV
-    String csv = Csv(fieldDelimiter: ';').encode(rows);
+    // Export revisions data
+    List<List<dynamic>> revRows = await buildNestsRevisionsRows([nestToExport], locale);
+    if (revRows.isNotEmpty) {
+      String revCsv = Csv(fieldDelimiter: ';').encode(revRows);
+      Directory tempDir = await getTemporaryDirectory();
+      final revFilePath = '${tempDir.path}/nest_${nestToExport.fieldNumber}_revisions.csv';
+      if (revCsv.isNotEmpty) {
+        final file = File(revFilePath);
+        await file.writeAsString(revCsv);
+        filePaths.add(revFilePath);
+      }
+    }
 
-    // 3. Create the file in a temporary directory
-    Directory tempDir = await getTemporaryDirectory();
-    final filePath = '${tempDir.path}/nest_${nestToExport.fieldNumber}.csv';
-    if (csv.isNotEmpty) {
-      final file = File(filePath);
-      await file.writeAsString(csv);
-      return filePath;
-    } else {
-      throw Exception('Failed to generate CSV file.');
-    }    
+    // Export eggs data
+    List<List<dynamic>> eggRows = await buildNestsEggsRows([nestToExport], locale);
+    if (eggRows.length > 1) {
+      String eggCsv = Csv(fieldDelimiter: ';').encode(eggRows);
+      Directory tempDir = await getTemporaryDirectory();
+      final eggFilePath = '${tempDir.path}/nest_${nestToExport.fieldNumber}_eggs.csv';
+      if (eggCsv.isNotEmpty) {
+        final file = File(eggFilePath);
+        await file.writeAsString(eggCsv);
+        filePaths.add(eggFilePath);
+      }
+    }
+
+    if (filePaths.isEmpty) {
+      throw Exception('Failed to generate CSV files.');
+    }
+    return filePaths;
   } catch (error) {
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            persist: true,
-                            showCloseIcon: true,
-                            backgroundColor: Theme.of(context).colorScheme.error,
-                            content: Text(S.of(context).errorExportingNest(1, error.toString())),
-                          ),
-                        );
+        SnackBar(
+          persist: true,
+          showCloseIcon: true,
+          backgroundColor: Theme.of(context).colorScheme.error,
+          content: Text(S.of(context).errorExportingNest(1, error.toString())),
+        ),
+      );
     }
-    return '';
+    return [];
   }
 }
 
@@ -2016,19 +2795,8 @@ Future<String> exportNestToCsv(BuildContext context, Nest nest, Locale locale) a
 Future<String> exportNestToExcel(BuildContext context, Nest nest, Locale locale) async {
   try {
     final nestToExport = await _ensureNestLoadedForExport(context, nest);
-    // 1. Create a list of data
-    List<List<dynamic>> rows = await buildNestRows(nestToExport, locale);
-    List<List<CellValue>> cellRows = convertRowsToCellValues(rows);
+    final excel = await _createNestsExcel([nestToExport], locale);
 
-    // 2. Convert the list of data to Excel
-    final excel = Excel.createExcel();
-    final Sheet sheet = excel['Sheet1'];
-
-    for (List<CellValue> row in cellRows) {
-      sheet.appendRow(row);
-    }
-
-    // 3. Create the file in a temporary directory
     var fileBytes = excel.save();
     Directory tempDir = await getTemporaryDirectory();
     final filePath = '${tempDir.path}/nest_${nestToExport.fieldNumber}.xlsx';
@@ -2036,90 +2804,22 @@ Future<String> exportNestToExcel(BuildContext context, Nest nest, Locale locale)
       File(filePath)
         ..create(recursive: true)
         ..writeAsBytes(fileBytes);
-      return filePath; // Return the file path for further use
+      return filePath;
     } else {
       throw Exception('Failed to generate Excel file.');
     }
   } catch (error) {
     if (!context.mounted) return '';
     ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            persist: true,
-                            showCloseIcon: true,
-                            backgroundColor: Theme.of(context).colorScheme.error,
-                            content: Text(S.of(context).errorExportingNest(1, error.toString())),
-                          ),
-                        );
+      SnackBar(
+        persist: true,
+        showCloseIcon: true,
+        backgroundColor: Theme.of(context).colorScheme.error,
+        content: Text(S.of(context).errorExportingNest(1, error.toString())),
+      ),
+    );
     return '';
   }
-}
-
-/// Builds tabular rows for nest export including revisions and eggs.
-Future<List<List>> buildNestRows(Nest nest, Locale locale) async {
-  const nestHeaders = ['Field number','Species','Locality','Longitude','Latitude',
-    'Date found','Support','Height above ground','Male','Female','Helpers',
-    'Last date','Observer','Fate'];
-  const revisionHeaders = ['Date/Time','Status','Phase','Host eggs','Host nestlings',
-    'Nidoparasite eggs','Nidoparasite nestlings','Has Philornis larvae','Notes'];
-  const eggHeaders = ['Date/Time','Field number','Species','Egg shape',
-    'Width','Length','Weight'];
-  final numberFormat = NumberFormat.decimalPattern(locale.toString())..maximumFractionDigits = 7;
-  List<List<dynamic>> rows = [];
-  final prefs = await SharedPreferences.getInstance();
-  final formatNumbers = prefs.getBool('formatNumbers') ?? true;
-  rows.add(nestHeaders);
-  rows.add([
-    nest.fieldNumber,
-    nest.speciesName,
-    nest.localityName,
-    formatNumbers ? numberFormat.format(nest.longitude) : nest.longitude,
-    formatNumbers ? numberFormat.format(nest.latitude) : nest.latitude,
-    nest.foundTime != null ? DateFormat('dd/MM/yyyy HH:mm:ss').format(nest.foundTime!) : '',
-    nest.support,
-    formatNumbers ? NumberFormat.decimalPattern(locale.toString()).format(nest.heightAboveGround) : nest.heightAboveGround,
-    nest.male,
-    nest.female,
-    nest.helpers,
-    nest.lastTime != null ? DateFormat('dd/MM/yyyy HH:mm:ss').format(nest.lastTime!) : '',
-    nest.observer,
-    nestFateTypeFriendlyNames[nest.nestFate] ?? '',
-  ]);
-  
-  // Add nest revision data
-  rows.add(['']); // Empty line as separator
-  rows.add(['REVISIONS']);
-  rows.add(revisionHeaders);
-  for (var revision in nest.revisionsList ?? []) {
-    rows.add([
-      revision.sampleTime != null ? DateFormat('dd/MM/yyyy HH:mm:ss').format(revision.sampleTime!) : '',
-      nestStatusTypeFriendlyNames[revision.nestStatus] ?? '',
-      nestStageTypeFriendlyNames[revision.nestStage] ?? '',
-      revision.eggsHost,
-      revision.nestlingsHost,
-      revision.eggsParasite,
-      revision.nestlingsParasite,
-      revision.hasPhilornisLarvae,
-      revision.notes,
-    ]);
-  }
-  
-  // Add egg data
-  rows.add(['']);
-  rows.add(['EGGS']);
-  rows.add(eggHeaders);
-  for (var egg in nest.eggsList ?? []) {
-    rows.add([
-      egg.sampleTime != null ? DateFormat('dd/MM/yyyy HH:mm:ss').format(egg.sampleTime!) : '',
-      egg.fieldNumber,
-      egg.speciesName,
-      eggShapeTypeFriendlyNames[egg.eggShape] ?? '',
-      formatNumbers ? NumberFormat.decimalPattern(locale.toString()).format(egg.width) : egg.width,
-      formatNumbers ? NumberFormat.decimalPattern(locale.toString()).format(egg.length) : egg.length,
-      formatNumbers ? NumberFormat.decimalPattern(locale.toString()).format(egg.mass) : egg.mass,
-    ]);
-  }
-
-  return rows;
 }
 
 /// Exports one nest location dataset to KML and opens the share sheet.
@@ -2697,27 +3397,41 @@ Future<void> exportAllSpecimensToExcel(BuildContext context, List<Specimen> spec
   }
 }
 
+/// Headers for Specimen records.
+const List<String> kSpecimenHeaders = [
+  'verbatimEventDate',
+  'occurrenceID',
+  'recordedBy',
+  'scientificName',
+  'basisOfRecord',
+  'locality',
+  'decimalLongitude',
+  'decimalLatitude',
+  'occurrenceRemarks',
+];
+
 /// Builds tabular rows for specimen exports.
-Future<List<List>> buildSpecimensRows(List<Specimen> specimenList, Locale locale) async {
-  const specimenHeaders = ['Date/Time','Field number','Observer','Species','Type','Locality',
-    'Longitude','Latitude','Notes'];
+Future<List<List<dynamic>>> buildSpecimensRows(List<Specimen> specimenList, Locale locale) async {
   final numberFormat = NumberFormat.decimalPattern(locale.toString())..maximumFractionDigits = 7;
-  List<List<dynamic>> rows = [];
+  List<List<dynamic>> rows = [kSpecimenHeaders];
   final prefs = await SharedPreferences.getInstance();
   final formatNumbers = prefs.getBool('formatNumbers') ?? true;
 
-  rows.add(specimenHeaders);
   for (var specimen in specimenList) {
     rows.add([
-      specimen.sampleTime != null ? DateFormat('dd/MM/yyyy HH:mm:ss').format(specimen.sampleTime!) : '',
+      specimen.sampleTime != null ? DateFormat('yyyy-MM-dd HH:mm:ss').format(specimen.sampleTime!) : '',
       specimen.fieldNumber,
-      specimen.observer,
-      specimen.speciesName,
+      specimen.observer ?? '',
+      specimen.speciesName ?? '',
       specimenTypeFriendlyNames[specimen.type] ?? '',
-      specimen.locality,
-      formatNumbers ? numberFormat.format(specimen.longitude) : specimen.longitude,
-      formatNumbers ? numberFormat.format(specimen.latitude) : specimen.latitude,
-      specimen.notes,
+      specimen.locality ?? '',
+      specimen.longitude != null
+          ? (formatNumbers ? numberFormat.format(specimen.longitude) : specimen.longitude)
+          : '',
+      specimen.latitude != null
+          ? (formatNumbers ? numberFormat.format(specimen.latitude) : specimen.latitude)
+          : '',
+      specimen.notes ?? '',
     ]);
   }
 

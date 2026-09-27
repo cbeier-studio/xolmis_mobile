@@ -732,6 +732,46 @@
             }
         }
     },
+    "inventoryExportOnboardingTitle": "Mudanças na exportação",
+    "@inventoryExportOnboardingTitle": {
+        "type": "text",
+        "description": "Título da tela única de onboarding que explica as mudanças na exportação de inventários"
+    },
+    "inventoryExportOnboardingMessage": "Para maior compatibilidade, as exportações de CSV e Excel agora usam uma nova estrutura de arquivos.",
+    "@inventoryExportOnboardingMessage": {
+        "type": "text",
+        "description": "Mensagem introdutória da tela de onboarding sobre exportação de inventários"
+    },
+    "inventoryExportOnboardingCsvTitle": "Exportações em CSV",
+    "@inventoryExportOnboardingCsvTitle": {
+        "type": "text",
+        "description": "Título da seção sobre CSV na tela de onboarding de exportação de inventários"
+    },
+    "inventoryExportOnboardingCsvDescription": "Agora geram 3 arquivos separados, e cada arquivo pode incluir dados de mais de um inventário.",
+    "@inventoryExportOnboardingCsvDescription": {
+        "type": "text",
+        "description": "Descrição do novo comportamento de exportação em CSV para inventários"
+    },
+    "inventoryExportOnboardingExcelTitle": "Exportações em Excel",
+    "@inventoryExportOnboardingExcelTitle": {
+        "type": "text",
+        "description": "Título da seção sobre Excel na tela de onboarding de exportação de inventários"
+    },
+    "inventoryExportOnboardingExcelDescription": "Agora geram 1 arquivo com 4 abas, e a planilha pode incluir dados de mais de um inventário.",
+    "@inventoryExportOnboardingExcelDescription": {
+        "type": "text",
+        "description": "Descrição do novo comportamento de exportação em Excel para inventários"
+    },
+    "inventoryExportOnboardingSupport": "Se tiver dúvidas, envie um e-mail para suporte@xolmis.app.",
+    "@inventoryExportOnboardingSupport": {
+        "type": "text",
+        "description": "Contato de suporte exibido na tela de onboarding sobre exportação de inventários"
+    },
+    "inventoryExportOnboardingAction": "Entendi",
+    "@inventoryExportOnboardingAction": {
+        "type": "text",
+        "description": "Texto do botão usado para fechar a tela de onboarding sobre exportação de inventários"
+    },
     "nestExported": "{howMany, plural, one{Ninho exportado!} other{Ninhos exportados!}}",
     "@nestExported": {
         "type": "text",

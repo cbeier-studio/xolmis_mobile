@@ -20,6 +20,7 @@ import 'main.dart';
 import 'screens/inventory/inventories_screen.dart';
 import 'screens/journal/journals_screen.dart';
 import 'screens/nest/nests_screen.dart';
+import 'screens/onboarding/inventory_export_onboarding_screen.dart';
 import 'screens/specimen/specimens_screen.dart';
 import 'screens/settings/settings_screen.dart';
 import 'screens/statistics/stats_screen.dart';
@@ -58,6 +59,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late final List<_NavigationItem> _navItems;
   int _selectedIndex = StartupModule.inventories.index;
+  bool _showInventoryExportOnboarding = false;
   String _appVersion = '';
   late InventoryProvider inventoryProvider;
   late InventoryDao inventoryDao;
@@ -133,6 +135,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
     ];
 
     _loadStartupModulePreference();
+    _loadInventoryExportOnboardingPreference();
     _initializeApp();
   }
 
@@ -185,6 +188,33 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
       });
       debugPrint("Error fetching initial data: $e");
     }
+  }
+
+  /// Loads whether the one-time inventory export onboarding should be displayed.
+  Future<void> _loadInventoryExportOnboardingPreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    final hasSeenOnboarding =
+        prefs.getBool(kInventoryExportOnboardingSeenPreferenceKey) ?? false;
+
+    if (hasSeenOnboarding || !mounted) {
+      return;
+    }
+
+    setState(() {
+      _showInventoryExportOnboarding = true;
+    });
+  }
+
+  /// Persists the onboarding acknowledgement and reveals the main shell.
+  Future<void> _dismissInventoryExportOnboarding() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(kInventoryExportOnboardingSeenPreferenceKey, true);
+
+    if (!mounted) return;
+
+    setState(() {
+      _showInventoryExportOnboarding = false;
+    });
   }
 
   @override
@@ -463,6 +493,12 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    if (_showInventoryExportOnboarding) {
+      return InventoryExportOnboardingScreen(
+        onClose: _dismissInventoryExportOnboarding,
+      );
+    }
+
     // final screenWidth = MediaQuery.sizeOf(context).width;
     final useSideNavRail = Responsive.isMediumScreen(context) || Responsive.isLargeScreen(context);  // screenWidth >= kDesktopBreakpoint;
     final useFixedNavDrawer = Responsive.isLargeScreen(context); // screenWidth >= kDesktopBreakpoint;

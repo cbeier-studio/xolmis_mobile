@@ -2412,6 +2412,89 @@ class S {
     );
   }
 
+  /// `Export changes`
+  String get inventoryExportOnboardingTitle {
+    return Intl.message(
+      'Export changes',
+      name: 'inventoryExportOnboardingTitle',
+      desc:
+          'Title of the one-time onboarding screen that explains inventory export changes',
+      args: [],
+    );
+  }
+
+  /// `For best compatibility, CSV and Excel exports now use a new file structure.`
+  String get inventoryExportOnboardingMessage {
+    return Intl.message(
+      'For best compatibility, CSV and Excel exports now use a new file structure.',
+      name: 'inventoryExportOnboardingMessage',
+      desc: 'Introductory message on the inventory export onboarding screen',
+      args: [],
+    );
+  }
+
+  /// `CSV exports`
+  String get inventoryExportOnboardingCsvTitle {
+    return Intl.message(
+      'CSV exports',
+      name: 'inventoryExportOnboardingCsvTitle',
+      desc:
+          'Section title for CSV changes on the inventory export onboarding screen',
+      args: [],
+    );
+  }
+
+  /// `CSV exports now generate 3 separate files, and each file can include data from more than one inventory.`
+  String get inventoryExportOnboardingCsvDescription {
+    return Intl.message(
+      'CSV exports now generate 3 separate files, and each file can include data from more than one inventory.',
+      name: 'inventoryExportOnboardingCsvDescription',
+      desc: 'Description of the new CSV export behavior for inventories',
+      args: [],
+    );
+  }
+
+  /// `Excel exports`
+  String get inventoryExportOnboardingExcelTitle {
+    return Intl.message(
+      'Excel exports',
+      name: 'inventoryExportOnboardingExcelTitle',
+      desc:
+          'Section title for Excel changes on the inventory export onboarding screen',
+      args: [],
+    );
+  }
+
+  /// `Excel exports now generate 1 file with 4 tabs, and the workbook can include data from more than one inventory.`
+  String get inventoryExportOnboardingExcelDescription {
+    return Intl.message(
+      'Excel exports now generate 1 file with 4 tabs, and the workbook can include data from more than one inventory.',
+      name: 'inventoryExportOnboardingExcelDescription',
+      desc: 'Description of the new Excel export behavior for inventories',
+      args: [],
+    );
+  }
+
+  /// `If you have any questions, please contact support@xolmis.app.`
+  String get inventoryExportOnboardingSupport {
+    return Intl.message(
+      'If you have any questions, please contact support@xolmis.app.',
+      name: 'inventoryExportOnboardingSupport',
+      desc: 'Support contact shown on the inventory export onboarding screen',
+      args: [],
+    );
+  }
+
+  /// `Got it`
+  String get inventoryExportOnboardingAction {
+    return Intl.message(
+      'Got it',
+      name: 'inventoryExportOnboardingAction',
+      desc: 'Button label used to close the inventory export onboarding screen',
+      args: [],
+    );
+  }
+
   /// `{howMany, plural, one{Nest exported!} other{Nests exported!}}`
   String nestExported(int howMany) {
     return Intl.plural(
