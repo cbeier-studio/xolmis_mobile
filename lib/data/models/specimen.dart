@@ -64,6 +64,8 @@ class Specimen {
 
   /// Creates a [Specimen] from a JSON map.
   factory Specimen.fromJson(Map<String, dynamic> json) {
+    final rawPending = json['isPending'];
+    final bool parsedPending = rawPending is bool ? rawPending : (rawPending == 1);
     return Specimen(
       id: json['id'],
       sampleTime: json['sampleTime'] != null ? DateTime.parse(json['sampleTime']) : null,
@@ -75,7 +77,7 @@ class Specimen {
       speciesName: json['speciesName'],
       observer: json['observer'],
       notes: json['notes'],
-      isPending: json['isPending'] == 1,
+      isPending: parsedPending,
     );
   }
 

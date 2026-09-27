@@ -124,11 +124,9 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
     );
 
     if (newSpeciesName != null && newSpeciesName.isNotEmpty) {
-      int? parsedCount;
       String speciesName = newSpeciesName;
       final match = RegExp(r'^(\d+)[, ]+(.*)$').firstMatch(newSpeciesName);
       if (match != null) {
-        parsedCount = int.tryParse(match.group(1)!);
         speciesName = match.group(2)!;
       }
       return speciesName;
