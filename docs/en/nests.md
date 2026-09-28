@@ -103,6 +103,10 @@ Nests can be exported individually or in groups.
 1. Tap the **⋮** menu.  
 2. Select **Export all (JSON)**.
 
+!!! tip
+
+    For detailed column specifications and file generation rules (such as when multiple files are generated per export), see [Export Formats](export-formats.md).
+
 ## Search and Filter Nests
 
 Use the search bar to find nests by:

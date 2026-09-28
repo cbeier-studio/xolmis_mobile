@@ -78,6 +78,10 @@ Você pode exportar várias notas de uma vez.
 
 Um painel de compartilhamento será exibido para que você envie o arquivo para a nuvem ou outro dispositivo.
 
+!!! tip
+
+    Para especificações detalhadas sobre os formatos de exportação do Diário de Campo, consulte [Formatos de Exportação](export-formats.md).
+
 ## Buscar e Filtrar Notas
 
 Use a barra de busca para encontrar notas por seu conteúdo. Você pode pesquisar por palavras-chave, frases ou termos específicos.

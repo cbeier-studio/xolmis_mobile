@@ -1,5 +1,5 @@
 site_name: Xolmis Mobile User Manual
-site_url: ""
+site_url: https://xolmis.app
 use_directory_urls: false
 repo_url: https://github.com/cbeier-studio/xolmis_mobile
 site_author: Christian Beier
@@ -21,6 +21,7 @@ nav:
     - Installing: installing.md
     - First Steps: first-steps.md
     - Settings: settings.md
+    - Export Formats: export-formats.md
   - Modules:
     - Inventories:
       - Manage inventories: inventories.md
@@ -117,6 +118,7 @@ plugins:
               - Instalando: installing.md
               - Primeiros passos: first-steps.md
               - Configurações: settings.md
+              - Formatos de exportação: export-formats.md
             - Módulos:
               - Inventários:
                 - Gerenciar inventários: inventories.md

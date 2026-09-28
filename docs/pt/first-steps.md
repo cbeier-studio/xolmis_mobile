@@ -87,7 +87,7 @@ Backups regulares protegem seus dados contra perda.
 Quando estiver pronto para analisar ou compartilhar seu trabalho:
 
 - Exporte inventários, ninhos ou espécimes em **CSV**, **Excel**, **JSON** ou **KML**  
-- Exporte notas em **Texto simples**, **Markdown** ou **JSON**  
+- Exporte notas em **Texto simples**, **Markdown**, **Word** ou **JSON**  
 - Importe seus dados no **Xolmis Desktop** para armazenamento e análise de longo prazo  
 
 ## Você Está Pronto para Começar

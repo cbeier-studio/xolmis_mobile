@@ -98,6 +98,10 @@ Defina o que acontece quando os dados importados conflitam com registros existen
 
 Marque esta opção para usar o separador decimal local, ou desmarque para usar ponto (.).
 
+!!! tip
+
+    Para saber mais sobre os arquivos exportados, estruturas de colunas e regras de geração de arquivo único vs. múltiplos arquivos, consulte [Formatos de Exportação](export-formats.md).
+
 ## Backup
 
 Ferramentas para proteger seus dados.

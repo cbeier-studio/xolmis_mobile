@@ -87,7 +87,7 @@ Regular backups protect your data from loss.
 When you're ready to analyze or share your work:
 
 - Export inventories, nests, or specimens in **CSV**, **Excel**, **JSON**, or **KML** formats  
-- Export notes in **Plain text**, **Markdown**, or **JSON**
+- Export notes in **Plain text**, **Markdown**, **Word**, or **JSON**
 - Import your data into **Xolmis Desktop** for long-term storage and analysis  
 
 ## You're Ready to Begin

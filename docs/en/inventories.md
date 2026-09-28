@@ -126,6 +126,10 @@ Inventories can be exported individually or in groups.
 
 A sharing panel will appear so you can send the file to cloud storage or another device.
 
+!!! tip
+
+    For detailed column specifications and file generation rules (such as when multiple files are generated per export), see [Export Formats](export-formats.md).
+
 ## Search Inventories
 
 Use the search bar at the top of the screen to find inventories by:

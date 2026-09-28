@@ -103,6 +103,10 @@ Ninhos podem ser exportados individualmente ou em grupos.
 1. Toque no menu **⋮**.  
 2. Selecione **Exportar todos (JSON)**.
 
+!!! tip
+
+    Para especificações detalhadas de colunas e regras de geração de arquivos (como quando múltiplos arquivos são gerados por exportação), consulte [Formatos de Exportação](export-formats.md).
+
 ## Buscar e Filtrar Ninhos
 
 Use a barra de busca para encontrar ninhos por:

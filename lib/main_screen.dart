@@ -544,6 +544,19 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
                             : const Icon(Icons.settings),
                     onPressed: () => _navigateToSettings(context),
                   ),
+                  IconButton(
+                    icon:
+                    Theme.of(context).brightness == Brightness.light
+                        ? const Icon(Icons.help_outline)
+                        : const Icon(Icons.help),
+                    onPressed: () {
+                      final locale = Localizations.localeOf(context);
+                      final url = locale.languageCode == 'pt'
+                          ? 'https://xolmis.app/docs/mobile/pt'
+                          : 'https://xolmis.app/docs/mobile';
+                      launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+                    },
+                  ),
                 ],
               ),
               groupAlignment: 0.0,

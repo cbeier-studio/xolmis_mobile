@@ -113,6 +113,10 @@ Um painel de compartilhamento aparecerá para enviar o arquivo para a nuvem ou o
    - **JSON**
    - **KML**
 
+!!! tip
+
+    Para especificações detalhadas de colunas e regras de geração de arquivos, consulte [Formatos de Exportação](export-formats.md).
+
 ## Buscar e Filtrar Espécimes
 
 Use a barra de busca para encontrar espécimes por:

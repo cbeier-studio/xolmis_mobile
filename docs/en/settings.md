@@ -98,6 +98,10 @@ Define what happens when imported data conflicts with existing records:
 
 Check this option to use the localized decimal separator, or uncheck it to use period (.).
 
+!!! tip
+
+    To learn more about export files, column structures, and single vs. multiple file generation rules, see [Export Formats](export-formats.md).
+
 ## Backup
 
 Tools for safeguarding your data.

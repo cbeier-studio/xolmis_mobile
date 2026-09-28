@@ -1,10 +1,22 @@
-# Release notes
+# Release Notes
 
 This section documents the changes, new features, and improvements introduced in each version of **Xolmis Mobile**. Release notes help users understand what has been added, modified, or planned for future updates.
 
-## v1.0 (release date)
+## v1.0.4 (unreleased)
 
-Initial release of Xolmis Mobile.
+### Enhancements
+
+- Added link to online help in the app.  
+- Modified layout of exported CSV and Excel files to improve compatibility with third-party software.
+
+### Fixes
+
+- Dialog for changing the number of individuals of a species was not applying the entered value.
+- Statistics screen for selected inventories got stuck loading.
+
+## v1.0.3 (2026-09-19)
+
+Initial beta of Xolmis Mobile.
 
 ### New features
 
@@ -34,14 +46,18 @@ Initial release of Xolmis Mobile.
 - Improved sorting menus, long‑press menus, and search bars.  
 - Highlighting of selected items and first species occurrences in reports.  
 - Improved species list behavior, including within/outside sample separation.  
+- Add species to inventory with individual count directly from search.  
 - Better handling of simultaneous inventories and synchronization rules.  
 - Improved layout for larger displays and refined About screen with sponsors.  
 - Improved CSV formatting, number formatting options, and coordinate precision.  
+- Standardized JSON import and export formats for inventories, nests, and specimens.  
 - Enhanced reminders for missing vegetation or weather data.  
 - Preloading species names at startup for faster search.  
 - More consistent error and warning messages.  
-- Temporary file and database cleanup on app start.
-- Updated **[Clements taxonomy](https://www.birds.cornell.edu/clementschecklist/)** to v2025, ensuring alignment with the latest ornithological classification.
+- Temporary file and database cleanup on app start.  
+- Species accumulation mini-chart in the species addition field within inventories.  
+- Redesigned image thumbnail loading in lists.  
+- Updated **[Clements taxonomy](https://www.birds.cornell.edu/clementschecklist/)** to v2025, ensuring alignment with the latest ornithological classification.  
 
 ### Fixes
 
@@ -54,27 +70,23 @@ Initial release of Xolmis Mobile.
 - Fixed weather data saving, CSV export null checks, and field journal sorting.  
 - Improved GPS error handling with fallback options.  
 - Fixed bugs in nest revisions, egg counts, and specimen handling.  
-- Numerous UI fixes, including dark mode issues and navigation problems.
+- Numerous UI fixes, including dark mode issues and navigation problems.  
+- Settings screen now respects the selected theme (light/dark).  
+- Images now save relative path to avoid file-not-found issues.  
+- Fixed inconsistency in temporary export and backup paths.  
+- Species accumulation curve now correctly shows accumulated species count.  
 
 ### Technical updates
 
 - Updated **Flutter** to v3.47 (development framework).  
-- Updated **Dart** to v3.13 (programming language).
+- Updated **Dart** to v3.13 (programming language).  
 - Migrated to new Flutter components (`MenuAnchor`, `SearchAnchor`).  
-- Removed deprecated dependencies (e.g., `workmanager`, `about`).  
+- Removed deprecated dependencies (e.g., `workmanager`, `about`, `geoxml`).  
 - Refactored internal code structure and background operation methods.  
 - Improved database handling, temporary paths, and export/backup consistency.  
-- Added iOS/iPadOS support and improved cross‑platform behavior.
+- Added iOS/iPadOS support and improved cross‑platform behavior.  
 
-## What's next
-
-Planned features for upcoming releases:
-
-- Multi-observer inventories.  
-- Bird banding captures and morphometry.  
-- Parental care in nests. 
-
-*[CSV]: Comma Separated Values
-*[JSON]: JavaScript Object Notation
-*[KML]: Keyhole Markeup Language
-*[POI]: Point of Interest
+*[CSV]: Comma Separated Values  
+*[JSON]: JavaScript Object Notation  
+*[KML]: Keyhole Markup Language  
+*[POI]: Point of Interest  

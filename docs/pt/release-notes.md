@@ -2,9 +2,21 @@
 
 Esta seção documenta as mudanças, novos recursos e melhorias introduzidas em cada versão do **Xolmis Mobile**. As notas de versão ajudam os usuários a entender o que foi adicionado, modificado ou planejado para futuras atualizações.
 
-## v1.0 (data de lançamento)
+## v1.0.4 (não publicado)
 
-Lançamento inicial do Xolmis Mobile.
+### Melhorias
+
+- Adicionado link para a ajuda online no app.  
+- Modificado layout de arquivos CSV e Excel exportados para melhorar compatibilidade com outros softwares.
+
+### Correções
+
+- Diálogo para alterar o número de indivíduos de uma espécie não estava aplicando o valor informado.
+- Tela de estatísticas dos inventários selecionados ficava travada no carregamento.
+
+## v1.0.3 (2026-09-19)
+
+Beta inicial do Xolmis Mobile.
 
 ### Novos recursos
 
@@ -33,14 +45,18 @@ Lançamento inicial do Xolmis Mobile.
 - Telas de estatísticas reformuladas com novos gráficos e métricas.  
 - Menus de ordenação, menus de toque longo e barras de busca aprimorados.  
 - Destaque de itens selecionados e primeiras ocorrências de espécies em relatórios.  
-- Comportamento aprimorado da lista de espécies, incluindo separação dentro/fora da amostra.  
-- Melhor gerenciamento de inventários simultâneos e regras de sincronização.  
+- Comportamento aprimorado da lista de espécies, incluindo separação dentro/fora da amostra.
+- Adição de espécie no inventário com quantidade de indivíduos diretamente na busca.
+- Melhor gerenciamento de inventários simultâneos e regras de sincronização.
 - Layout aprimorado para telas maiores e tela Sobre refinada com patrocinadores.  
-- Melhor formatação de CSV, opções de formatação numérica e precisão de coordenadas.  
+- Melhor formatação de CSV, opções de formatação numérica e precisão de coordenadas. 
+- Padronização dos formatos de importação e exportação de JSON para inventários, ninhos e espécimes.
 - Lembretes aprimorados para dados ausentes de vegetação ou clima.  
 - Pré-carregamento de nomes de espécies na inicialização para busca mais rápida.  
 - Mensagens de erro e aviso mais consistentes.  
-- Limpeza de arquivos temporários e banco de dados ao iniciar o app.  
+- Limpeza de arquivos temporários e banco de dados ao iniciar o app.
+- Mini gráfico de acumulação de espécies no campo de adição de espécies no inventário.
+- Reformulado carregamento de miniaturas de imagens nas listas.
 - Atualização da **[taxonomia Clements](https://www.birds.cornell.edu/clementschecklist/)** para v2025, garantindo alinhamento com a classificação ornitológica mais recente.
 
 ### Correções
@@ -55,24 +71,20 @@ Lançamento inicial do Xolmis Mobile.
 - Melhor tratamento de erros de GPS com opções alternativas.  
 - Correções em revisões de ninhos, contagem de ovos e manipulação de espécimes.  
 - Diversas correções de interface, incluindo problemas no modo escuro e navegação.
+- Tela de configurações agora respeita o tema selecionado (claro/escuro).
+- Imagens agora salvam o caminho relativo para evitar problemas de arquivo não encontrado.
+- Corrigida inconsistência nos caminhos temporários de exportação e backup.
+- Curva de acumulação de espécies agora mostra o acumulado de espécies corretamente.
 
 ### Atualizações técnicas
 
 - Atualização do **Flutter** para v3.47 (framework de desenvolvimento).  
 - Atualização do **Dart** para v3.13 (linguagem de programação).  
 - Migração para novos componentes Flutter (`MenuAnchor`, `SearchAnchor`).  
-- Remoção de dependências obsoletas (ex.: `workmanager`, `about`).  
+- Remoção de dependências obsoletas (ex.: `workmanager`, `about`, `geoxml`).  
 - Reestruturação interna do código e métodos de operação em segundo plano.  
 - Melhorias no gerenciamento do banco de dados, caminhos temporários e consistência de exportação/backup.  
 - Adicionado suporte a iOS/iPadOS e comportamento multiplataforma aprimorado.
-
-## O que vem a seguir
-
-Recursos planejados para versões futuras:
-
-- Inventários com múltiplos observadores.  
-- Capturas e morfometria em operações de anilhamento.  
-- Cuidado parental em ninhos. 
 
 *[CSV]: Comma Separated Values  
 *[JSON]: JavaScript Object Notation  

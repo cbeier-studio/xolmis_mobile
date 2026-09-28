@@ -62,7 +62,7 @@ Possible reasons:
 - The taxonomy or checklist may be outdated or incomplete.  
 - You typed too few characters.
 
-You can always add a **temporary custom species name** using the “Add species” option.
+You can always add a **temporary custom species name** using the “Add custom species” option.
 
 ## Nests & Specimens
 

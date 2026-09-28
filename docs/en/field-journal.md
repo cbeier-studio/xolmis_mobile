@@ -76,6 +76,10 @@ You can export selected notes at once.
 
 A sharing panel will appear so you can send the file to cloud storage or another device.
 
+!!! tip
+    
+    For detailed specifications on Field Journal export formats, see [Export Formats](export-formats.md).
+
 ## Search and Filter Notes
 
 Use the search bar to find notes by its content. You can search for keywords, phrases, or specific terms.

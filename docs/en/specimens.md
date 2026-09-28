@@ -113,6 +113,10 @@ A sharing panel will appear so you can send the file to cloud storage or another
    - **JSON**
    - **KML**
 
+!!! tip
+
+    For detailed column specifications and file generation rules, see [Export Formats](export-formats.md).
+
 ## Search and Filter Specimens
 
 Use the search bar to find specimens by:

@@ -62,7 +62,7 @@ Possíveis razões:
 - A taxonomia ou checklist pode estar desatualizada ou incompleta.  
 - Você digitou poucos caracteres.
 
-Você sempre pode adicionar um **nome de espécie personalizado temporário** usando a opção “Adicionar espécie”.
+Você sempre pode adicionar um **nome de espécie personalizado temporário** usando a opção “Adicionar espécie personalizada”.
 
 ## Ninhos e Espécimes
 

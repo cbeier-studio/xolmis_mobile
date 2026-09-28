@@ -126,6 +126,10 @@ Inventários podem ser exportados individualmente ou em grupos.
 
 Um painel de compartilhamento aparecerá para enviar o arquivo para a nuvem ou outro dispositivo.
 
+!!! tip
+    
+    Para especificações detalhadas de colunas e regras de geração de arquivos (como quando múltiplos arquivos são gerados por exportação), consulte [Formatos de Exportação](export-formats.md).
+
 ## Buscar Inventários
 
 Use a barra de busca no topo da tela para encontrar inventários por:
