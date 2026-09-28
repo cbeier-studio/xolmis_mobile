@@ -397,6 +397,16 @@ void main() {
           count: 3,
           isOutOfInventory: false,
           sampleTime: DateTime(2026, 3, 30, 8, 5),
+          pois: [
+            Poi(
+              id: 1,
+              speciesId: 1,
+              latitude: -23.55,
+              longitude: -46.63,
+              sampleTime: DateTime(2026, 3, 30, 8, 6),
+              notes: 'Near river',
+            ),
+          ],
         ),
       ],
       vegetationList: [
@@ -432,6 +442,21 @@ void main() {
       expect(dataRow[0], equals('INV-100'));
       expect(dataRow[headers.indexOf('scientificName')], equals('Turdus rufiventris'));
       expect(dataRow[headers.indexOf('individualCount')], equals(3));
+    });
+
+    test('buildInventoriesPoiRows creates flat denormalized poi rows', () async {
+      final rows = await buildInventoriesPoiRows([testInventory], const Locale('en'));
+
+      expect(rows, hasLength(2));
+      final headers = rows.first;
+      expect(headers, contains('eventID'));
+      expect(headers, contains('scientificName'));
+      expect(headers, contains('poiRemarks'));
+
+      final dataRow = rows[1];
+      expect(dataRow[0], equals('INV-100'));
+      expect(dataRow[headers.indexOf('scientificName')], equals('Turdus rufiventris'));
+      expect(dataRow[headers.indexOf('poiRemarks')], equals('Near river'));
     });
 
     test('buildInventoriesVegetationRows creates flat denormalized vegetation rows', () async {

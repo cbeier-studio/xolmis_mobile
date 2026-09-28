@@ -6,25 +6,25 @@ O Xolmis Mobile permite exportar dados de todos os seus módulos—**Inventário
 
 Dependendo do formato escolhido, uma operação de exportação pode gerar **um único arquivo** ou **múltiplos arquivos**:
 
-| Módulo / Ação | Formato | Quantidade de Arquivos Gerados | Detalhes |
-| :--- | :--- | :--- | :--- |
-| **Inventários** | **CSV** | Até **3 arquivos** | Gera arquivos separados: `..._species.csv`, `..._vegetation.csv` (se houver medições) e `..._weather.csv` (se houver dados climáticos). |
-| | **Excel** | **1 arquivo** | Gera uma planilha `.xlsx` única contendo até 5 abas: `Occurrences`, `Vegetation`, `Weather`, `POIs` e `Events`. |
-| | **JSON** | **1 arquivo** | Arquivo `.json` único envolvido em um envelope padronizado. |
-| | **KML** | **1 arquivo** | Arquivo espacial `.kml` único com pontos de início/fim e POIs de espécies. |
-| **Ninhos** | **CSV** | Até **2 arquivos** | Gera arquivos separados: `..._revisions.csv` e `..._eggs.csv` (se houver medições de ovos). |
-| | **Excel** | **1 arquivo** | Gera uma planilha `.xlsx` única contendo até 3 abas: `Revisions`, `Nests` (resumo) e `Eggs`. |
-| | **JSON** | **1 arquivo** | Arquivo `.json` único envolvido em um envelope padronizado. |
-| | **KML** | **1 arquivo** | Arquivo espacial `.kml` único contendo a localização dos ninhos. |
-| **Espécimes** | **CSV** | **1 arquivo** | Gera o arquivo `..._specimens.csv`. |
-| | **Excel** | **1 arquivo** | Gera uma planilha `.xlsx` única com a aba `Specimens`. |
-| | **JSON** | **1 arquivo** | Arquivo `.json` único envolvido em um envelope padronizado. |
-| | **KML** | **1 arquivo** | Arquivo espacial `.kml` único contendo as localizações de coleta. |
-| **Diário de Campo** | **Texto Simples** | **1 arquivo** | Arquivo `.txt` único formatado com as anotações. |
-| | **Markdown** | **1 arquivo** | Arquivo `.md` único formatado com cabeçalhos e metadados. |
-| | **Word** | **1 arquivo** | Documento Word `.docx` único com estilos em títulos e parágrafos. |
-| | **JSON** | **1 arquivo** | Arquivo `.json` único contendo estruturas Delta JSON envelopadas. |
-| **Backup** | **ZIP** | **1 arquivo** | Arquivo compactado contendo o banco de dados `xolmis_database.db` e todas as fotos anexadas. |
+| Módulo / Ação | Formato | Quantidade de Arquivos Gerados | Detalhes                                                                                                                                                            |
+| :--- | :--- |:-------------------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Inventários** | **CSV** | Até **4 arquivos**             | Gera arquivos separados: `..._species.csv`, `..._pois.csv` (se houver), `..._vegetation.csv` (se houver medições) e `..._weather.csv` (se houver dados climáticos). |
+| | **Excel** | **1 arquivo**                  | Gera uma planilha `.xlsx` única contendo até 5 abas: `Occurrences`, `Vegetation`, `Weather`, `POIs` e `Events`.                                                     |
+| | **JSON** | **1 arquivo**                  | Arquivo `.json` único envolvido em um envelope padronizado.                                                                                                         |
+| | **KML** | **1 arquivo**                  | Arquivo espacial `.kml` único com pontos de início/fim e POIs de espécies.                                                                                          |
+| **Ninhos** | **CSV** | Até **2 arquivos**             | Gera arquivos separados: `..._revisions.csv` e `..._eggs.csv` (se houver medições de ovos).                                                                         |
+| | **Excel** | **1 arquivo**                  | Gera uma planilha `.xlsx` única contendo até 3 abas: `Revisions`, `Nests` (resumo) e `Eggs`.                                                                        |
+| | **JSON** | **1 arquivo**                  | Arquivo `.json` único envolvido em um envelope padronizado.                                                                                                         |
+| | **KML** | **1 arquivo**                  | Arquivo espacial `.kml` único contendo a localização dos ninhos.                                                                                                    |
+| **Espécimes** | **CSV** | **1 arquivo**                  | Gera o arquivo `..._specimens.csv`.                                                                                                                                 |
+| | **Excel** | **1 arquivo**                  | Gera uma planilha `.xlsx` única com a aba `Specimens`.                                                                                                              |
+| | **JSON** | **1 arquivo**                  | Arquivo `.json` único envolvido em um envelope padronizado.                                                                                                         |
+| | **KML** | **1 arquivo**                  | Arquivo espacial `.kml` único contendo as localizações de coleta.                                                                                                   |
+| **Diário de Campo** | **Texto Simples** | **1 arquivo**                  | Arquivo `.txt` único formatado com as anotações.                                                                                                                    |
+| | **Markdown** | **1 arquivo**                  | Arquivo `.md` único formatado com cabeçalhos e metadados.                                                                                                           |
+| | **Word** | **1 arquivo**                  | Documento Word `.docx` único com estilos em títulos e parágrafos.                                                                                                   |
+| | **JSON** | **1 arquivo**                  | Arquivo `.json` único contendo estruturas Delta JSON envelopadas.                                                                                                   |
+| **Backup** | **ZIP** | **1 arquivo**                  | Arquivo compactado contendo o banco de dados `xolmis_database.db` e todas as fotos anexadas.                                                                        |
 
 !!! note
 
@@ -124,7 +124,7 @@ Contém amostras das condições atmosféricas registradas durante o inventário
 | `atmosphericPressure` | Decimal | Pressão atmosférica (hPa). |
 | `relativeHumidity` | Decimal | Umidade relativa do ar (%). |
 
-#### Tabela de Pontos de Interesse (Aba no Excel: `POIs`)
+#### Tabela de Pontos de Interesse (`..._pois.csv` / Aba no Excel: `POIs`)
 
 Incluída nas planilhas Excel para registrar waypoints de GPS individuais marcados durante a observação de espécies.
 

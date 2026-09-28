@@ -6,25 +6,25 @@ Xolmis Mobile allows you to export your data across modules—**Inventories**, *
 
 Depending on the chosen export format, an export operation may produce **a single file** or **multiple files**:
 
-| Module / Action | Format | Number of Files Generated | Details |
-| :--- | :--- | :--- | :--- |
-| **Inventories** | **CSV** | Up to **3 files** | Generates separate files: `..._species.csv`, `..._vegetation.csv` (if data exists), and `..._weather.csv` (if data exists). |
-| | **Excel** | **1 file** | Generates a single `.xlsx` workbook containing up to 5 worksheets: `Occurrences`, `Vegetation`, `Weather`, `POIs`, and `Events`. |
-| | **JSON** | **1 file** | Single `.json` file wrapped in a standardized envelope. |
-| | **KML** | **1 file** | Single `.kml` spatial file with start/end coordinates and species POIs. |
-| **Nests** | **CSV** | Up to **2 files** | Generates separate files: `..._revisions.csv` and `..._eggs.csv` (if egg measurements exist). |
-| | **Excel** | **1 file** | Generates a single `.xlsx` workbook containing up to 3 worksheets: `Revisions`, `Nests` (summary), and `Eggs`. |
-| | **JSON** | **1 file** | Single `.json` file wrapped in a standardized envelope. |
-| | **KML** | **1 file** | Single `.kml` spatial file containing nest locations. |
-| **Specimens** | **CSV** | **1 file** | Generates `..._specimens.csv`. |
-| | **Excel** | **1 file** | Generates a single `.xlsx` workbook with a `Specimens` worksheet. |
-| | **JSON** | **1 file** | Single `.json` file wrapped in a standardized envelope. |
-| | **KML** | **1 file** | Single `.kml` spatial file containing specimen collection locations. |
-| **Field Journal** | **Plain Text** | **1 file** | Single `.txt` file formatted with text entries. |
-| | **Markdown** | **1 file** | Single `.md` file formatted with headers and metadata. |
-| | **Word** | **1 file** | Single `.docx` Word document with styled headings and paragraphs. |
-| | **JSON** | **1 file** | Single `.json` file containing rich-text Delta JSON strings wrapped in the envelope. |
-| **Backup** | **ZIP** | **1 file** | Archive containing `xolmis_database.db` and all indexed photo media files. |
+| Module / Action | Format | Number of Files Generated | Details                                                                                                                                                      |
+| :--- | :--- |:--------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Inventories** | **CSV** | Up to **4 files**         | Generates separate files: `..._species.csv`, `..._pois.csv` (if data exists), `..._vegetation.csv` (if data exists), and `..._weather.csv` (if data exists). |
+| | **Excel** | **1 file**                | Generates a single `.xlsx` workbook containing up to 5 worksheets: `Occurrences`, `Vegetation`, `Weather`, `POIs`, and `Events`.                             |
+| | **JSON** | **1 file**                | Single `.json` file wrapped in a standardized envelope.                                                                                                      |
+| | **KML** | **1 file**                | Single `.kml` spatial file with start/end coordinates and species POIs.                                                                                      |
+| **Nests** | **CSV** | Up to **2 files**         | Generates separate files: `..._revisions.csv` and `..._eggs.csv` (if egg measurements exist).                                                                |
+| | **Excel** | **1 file**                | Generates a single `.xlsx` workbook containing up to 3 worksheets: `Revisions`, `Nests` (summary), and `Eggs`.                                               |
+| | **JSON** | **1 file**                | Single `.json` file wrapped in a standardized envelope.                                                                                                      |
+| | **KML** | **1 file**                | Single `.kml` spatial file containing nest locations.                                                                                                        |
+| **Specimens** | **CSV** | **1 file**                | Generates `..._specimens.csv`.                                                                                                                               |
+| | **Excel** | **1 file**                | Generates a single `.xlsx` workbook with a `Specimens` worksheet.                                                                                            |
+| | **JSON** | **1 file**                | Single `.json` file wrapped in a standardized envelope.                                                                                                      |
+| | **KML** | **1 file**                | Single `.kml` spatial file containing specimen collection locations.                                                                                         |
+| **Field Journal** | **Plain Text** | **1 file**                | Single `.txt` file formatted with text entries.                                                                                                              |
+| | **Markdown** | **1 file**                | Single `.md` file formatted with headers and metadata.                                                                                                       |
+| | **Word** | **1 file**                | Single `.docx` Word document with styled headings and paragraphs.                                                                                            |
+| | **JSON** | **1 file**                | Single `.json` file containing rich-text Delta JSON strings wrapped in the envelope.                                                                         |
+| **Backup** | **ZIP** | **1 file**                | Archive containing `xolmis_database.db` and all indexed photo media files.                                                                                   |
 
 !!! note
 
@@ -124,7 +124,7 @@ Contains atmospheric and weather condition samples recorded during inventories.
 | `atmosphericPressure` | Double | Barometric pressure (hPa). |
 | `relativeHumidity` | Double | Relative air humidity (%). |
 
-#### Points of Interest Table (Excel tab: `POIs`)
+#### Points of Interest Table (`..._pois.csv` / Excel tab: `POIs`)
 
 Included in Excel workbooks to record individual GPS waypoints logged during species observations.
 

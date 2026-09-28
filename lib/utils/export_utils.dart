@@ -917,7 +917,7 @@ Future<String> exportInventoryToExcel(
   }
 }
 
-/// Exports one inventory to CSV files (species, vegetation, weather) and returns the list of generated paths.
+/// Exports one inventory to CSV files (species, vegetation, weather, pois) and returns the list of generated paths.
 Future<List<String>> exportInventoryToCsv(
   BuildContext context,
   Inventory inventory,
@@ -939,6 +939,20 @@ Future<List<String>> exportInventoryToCsv(
         final file = File(speciesFilePath);
         await file.writeAsString(speciesCsv);
         filePaths.add(speciesFilePath);
+      }
+    }
+
+    // Export POI data
+    List<List<dynamic>> poiRows =
+        await buildInventoriesPoiRows([inventoryToExport], locale);
+    if (poiRows.length > 1) {
+      String poiCsv = Csv(fieldDelimiter: ';').encode(poiRows);
+      Directory tempDir = await getTemporaryDirectory();
+      final poiFilePath = '${tempDir.path}/inventory_${inventoryToExport.id}_pois.csv';
+      if (poiCsv.isNotEmpty) {
+        final file = File(poiFilePath);
+        await file.writeAsString(poiCsv);
+        filePaths.add(poiFilePath);
       }
     }
 
@@ -1184,6 +1198,20 @@ Future<void> exportSelectedInventoriesToCsv(
         final file = File(speciesFilePath);
         await file.writeAsString(speciesCsv);
         filePaths.add(speciesFilePath);
+      }
+    }
+
+    // Export POI data
+    List<List<dynamic>> poiRows =
+        await buildInventoriesPoiRows(inventoriesToExport, locale);
+    if (poiRows.length > 1) {
+      String poiCsv = Csv(fieldDelimiter: ';').encode(poiRows);
+      Directory tempDir = await getTemporaryDirectory();
+      final poiFilePath = '${tempDir.path}/selected_inventories_${formattedDate}_pois.csv';
+      if (poiCsv.isNotEmpty) {
+        final file = File(poiFilePath);
+        await file.writeAsString(poiCsv);
+        filePaths.add(poiFilePath);
       }
     }
 
