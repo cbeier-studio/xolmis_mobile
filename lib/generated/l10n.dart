@@ -959,6 +959,26 @@ class S {
     );
   }
 
+  /// `Elapsed time`
+  String get elapsedTime {
+    return Intl.message(
+      'Elapsed time',
+      name: 'elapsedTime',
+      desc: 'Label for elapsed time since inventory start',
+      args: [],
+    );
+  }
+
+  /// `Remaining`
+  String get remainingTime {
+    return Intl.message(
+      'Remaining',
+      name: 'remainingTime',
+      desc: 'Label for remaining time in timed inventory',
+      args: [],
+    );
+  }
+
   /// `{howMany, plural, one{minute} other{minutes}}`
   String minutes(int howMany) {
     return Intl.plural(

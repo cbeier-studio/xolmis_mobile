@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/gestures.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
@@ -230,7 +231,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                       inventoryDao: widget.inventoryDao,
                     );
                     await completionService.attemptFinishInventory(context);
-                    if (!widget.isEmbedded) {
+                    if (!widget.isEmbedded && context.mounted) {
                       Navigator.pop(context, true);
                     }
                     setState(() {
@@ -344,7 +345,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                       inventoryDao: widget.inventoryDao,
                     );
                     await completionService.attemptFinishInventory(context);
-                    if (!widget.isEmbedded) {
+                    if (!widget.isEmbedded && context.mounted) {
                       Navigator.pop(context, true);
                     }
                     setState(() {
@@ -405,46 +406,35 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                 ],
               ),
               ),
-        // Inventory summary row (type, duration, max species)
-        if (!widget.isEmbedded)
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('${inventoryTypeFriendlyNames[widget.inventory.type]}'),
-            if (widget.inventory.duration > 0) ...[
-              Text(': ${widget.inventory.duration} ${S.of(context).minutes(widget.inventory.duration)}'),
-              // Show the remaining time
-              if (!widget.inventory.isFinished)
-                ValueListenableBuilder<double>(
-                  valueListenable: widget.inventory.elapsedTimeNotifier,
-                  builder: (context, elapsedTime, child) {
-                    final remainingTime = (widget.inventory.duration * 60) - elapsedTime;
-                    final minutes = (remainingTime / 60).floor();
-                    final seconds = (remainingTime % 60).floor();
-                    return Text(
-                      ' (${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')})',
-                      style: TextStyle(color: Theme.of(context).colorScheme.primary),
-                    );
-                  },
+        // Inventory summary row (type, duration, elapsed time, max species)
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('${inventoryTypeFriendlyNames[widget.inventory.type]}'),
+              if (widget.inventory.duration > 0) ...[
+                Text(': ${widget.inventory.duration} ${S.of(context).minutes(widget.inventory.duration)}'),
+              ],
+              _InventoryElapsedTimeWidget(inventory: widget.inventory),
+              if (widget.inventory.maxSpecies > 0) ...[
+                Text(': ${widget.inventory.maxSpecies} ${S.of(context).speciesAcronym(widget.inventory.maxSpecies)}'),
+              ],
+              const SizedBox(width: 8.0,),
+              // Show the number of intervals without species for qualitative inventories
+              Visibility(
+                visible: widget.inventory.type == InventoryType.invIntervalQualitative && !widget.inventory.isFinished,
+                child: ValueListenableBuilder<int>(
+                    valueListenable: widget.inventory.intervalWithoutSpeciesNotifier,
+                    builder: (context, intervalWithoutSpecies, child) {
+                      return intervalWithoutSpecies > 0
+                          ? Badge.count(count: intervalWithoutSpecies)
+                          : const SizedBox.shrink();
+                    }
                 ),
-            ],
-            if (widget.inventory.maxSpecies > 0) ...[
-              Text(': ${widget.inventory.maxSpecies} ${S.of(context).speciesAcronym(widget.inventory.maxSpecies)}'),
-            ],
-            const SizedBox(width: 8.0,),
-            // Show the number of intervals without species for qualitative inventories
-            Visibility(
-              visible: widget.inventory.type == InventoryType.invIntervalQualitative && !widget.inventory.isFinished,
-              child: ValueListenableBuilder<int>(
-                  valueListenable: widget.inventory.intervalWithoutSpeciesNotifier,
-                  builder: (context, intervalWithoutSpecies, child) {
-                    return intervalWithoutSpecies > 0
-                        ? Badge.count(count: intervalWithoutSpecies)
-                        : const SizedBox.shrink();
-                  }
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         // Progress indicator if active
         if (!widget.isEmbedded && widget.inventory.duration > 0 && !widget.inventory.isFinished)
@@ -632,7 +622,9 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                     inventoryDao: widget.inventoryDao,
                   );
                   await completionService.attemptFinishInventory(context);
-                  Navigator.pop(context, true);
+                  if (context.mounted) {
+                    Navigator.pop(context, true);
+                  }
                   setState(() {
                     _isSubmitting = false;
                   });
@@ -761,7 +753,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                       inventoryDao: widget.inventoryDao,
                     );
                     await completionService.attemptFinishInventory(context);
-                    if (!widget.isEmbedded) {
+                    if (!widget.isEmbedded && context.mounted) {
                       Navigator.pop(context, true);
                     }
                     setState(() {
@@ -821,30 +813,16 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
               ),
               ),         
               const SizedBox(height: 8.0,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text('${inventoryTypeFriendlyNames[widget.inventory.type]}'),
                     if (widget.inventory.duration > 0) ...[
                       Text(': ${widget.inventory.duration} ${S.of(context).minutes(widget.inventory.duration)}'),
-                      // Show the remaining time
-                      if (!widget.inventory.isFinished)
-                        ValueListenableBuilder<double>(
-                          valueListenable: widget.inventory.elapsedTimeNotifier,
-                          builder: (context, elapsedTime, child) {
-                            final remainingTime = (widget.inventory.duration * 60) - elapsedTime;
-                            // Do not show if the time is negative
-                            if (remainingTime < 0) return const SizedBox.shrink();
-
-                            final minutes = (remainingTime / 60).floor();
-                            final seconds = (remainingTime % 60).floor();
-                            return Text(
-                              ' (${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')})',
-                              style: TextStyle(color: Theme.of(context).colorScheme.primary),
-                            );
-                          },
-                        ),
                     ],
+                    _InventoryElapsedTimeWidget(inventory: widget.inventory),
                     if (widget.inventory.maxSpecies > 0) ...[
                       Text(': ${widget.inventory.maxSpecies} ${S.of(context).speciesAcronym(widget.inventory.maxSpecies)}'),
                     ],
@@ -863,6 +841,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                     ),
                   ],
                 ),
+              ),
               const SizedBox(height: 8.0,),
               widget.inventory.duration > 0 && !widget.inventory.isFinished
                   ? ValueListenableBuilder<double>(
@@ -1106,3 +1085,133 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
     );
   }
 }
+
+/// Battery-optimized widget to display the elapsed time since inventory start,
+/// as well as remaining time for timed inventories in HH:MM format.
+class _InventoryElapsedTimeWidget extends StatefulWidget {
+  final Inventory inventory;
+
+  const _InventoryElapsedTimeWidget({required this.inventory});
+
+  @override
+  State<_InventoryElapsedTimeWidget> createState() =>
+      _InventoryElapsedTimeWidgetState();
+}
+
+class _InventoryElapsedTimeWidgetState
+    extends State<_InventoryElapsedTimeWidget> {
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.inventory.addListener(_onInventoryChanged);
+    _syncTimer();
+  }
+
+  @override
+  void didUpdateWidget(covariant _InventoryElapsedTimeWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.inventory != widget.inventory) {
+      oldWidget.inventory.removeListener(_onInventoryChanged);
+      widget.inventory.addListener(_onInventoryChanged);
+      _syncTimer();
+    }
+  }
+
+  void _onInventoryChanged() {
+    _syncTimer();
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  /// Cancels or starts the 1-minute periodic timer depending on active status.
+  /// Battery optimization: The timer runs ONLY when the inventory is active and NOT paused,
+  /// updating once every minute in HH:MM format.
+  void _syncTimer() {
+    _timer?.cancel();
+    _timer = null;
+
+    if (!widget.inventory.isFinished && !widget.inventory.isPaused) {
+      _timer = Timer.periodic(const Duration(minutes: 1), (_) {
+        if (mounted) {
+          setState(() {});
+        }
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    widget.inventory.removeListener(_onInventoryChanged);
+    super.dispose();
+  }
+
+  /// Calculates net active elapsed seconds since the inventory started.
+  double _calculateElapsedSeconds() {
+    final inventory = widget.inventory;
+    if (inventory.startTime == null) {
+      return inventory.elapsedTime;
+    }
+
+    if (inventory.isFinished) {
+      if (inventory.endTime != null) {
+        final gross =
+            inventory.endTime!.difference(inventory.startTime!).inSeconds.toDouble();
+        final net = gross - inventory.totalPausedTimeInSeconds;
+        return net < 0 ? 0 : net;
+      }
+      return inventory.elapsedTime;
+    }
+
+    final now = DateTime.now();
+    double totalPaused = inventory.totalPausedTimeInSeconds;
+    if (inventory.isPaused && inventory.pauseStartTime != null) {
+      totalPaused +=
+          now.difference(inventory.pauseStartTime!).inSeconds.toDouble();
+    }
+
+    final grossSeconds =
+        now.difference(inventory.startTime!).inSeconds.toDouble();
+    final netSeconds = grossSeconds - totalPaused;
+    return netSeconds < 0 ? 0 : netSeconds;
+  }
+
+  /// Formats seconds into HH:MM string.
+  String _formatTime(double seconds) {
+    final totalSeconds = seconds.round();
+    if (totalSeconds <= 0) return '00:00';
+
+    final totalMinutes = totalSeconds ~/ 60;
+    final hours = totalMinutes ~/ 60;
+    final minutes = totalMinutes % 60;
+
+    return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final inventory = widget.inventory;
+    final elapsedSecs = _calculateElapsedSeconds();
+    final elapsedText = _formatTime(elapsedSecs);
+
+    if (inventory.duration > 0 && !inventory.isFinished) {
+      final totalSecs = inventory.duration * 60;
+      final remainingSecs = totalSecs - elapsedSecs;
+      final remainingText = _formatTime(remainingSecs < 0 ? 0 : remainingSecs);
+
+      return Text(
+        ' (${S.of(context).elapsedTime}: $elapsedText | ${S.of(context).remainingTime}: $remainingText)',
+        style: TextStyle(color: Theme.of(context).colorScheme.primary),
+      );
+    }
+
+    return Text(
+      ' (${S.of(context).elapsedTime}: $elapsedText)',
+      style: TextStyle(color: Theme.of(context).colorScheme.primary),
+    );
+  }
+}
+

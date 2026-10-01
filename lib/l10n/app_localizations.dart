@@ -632,6 +632,18 @@ abstract class AppLocalizations {
   /// **'Duration'**
   String get duration;
 
+  /// Label for elapsed time since inventory start
+  ///
+  /// In en, this message translates to:
+  /// **'Elapsed time'**
+  String get elapsedTime;
+
+  /// Label for remaining time in timed inventory
+  ///
+  /// In en, this message translates to:
+  /// **'Remaining'**
+  String get remainingTime;
+
   /// Field suffix and messages containing duration of time
   ///
   /// In en, this message translates to:

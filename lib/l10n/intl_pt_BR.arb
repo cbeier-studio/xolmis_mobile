@@ -321,6 +321,16 @@
     "optional": "* opcional",
     "insertInventoryId": "Por favor, insira uma ID para o inventário",
     "duration": "Duração",
+    "elapsedTime": "Tempo decorrido",
+    "@elapsedTime": {
+        "type": "text",
+        "description": "Label for elapsed time since inventory start"
+    },
+    "remainingTime": "Restante",
+    "@remainingTime": {
+        "type": "text",
+        "description": "Label for remaining time in timed inventory"
+    },
     "minutes": "{howMany, plural, one{minuto} other{minutos}}",
     "@minutes": {
         "type": "text",

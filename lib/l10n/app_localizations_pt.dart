@@ -334,6 +334,12 @@ class AppLocalizationsPt extends AppLocalizations {
   String get duration => 'Duração';
 
   @override
+  String get elapsedTime => 'Tempo decorrido';
+
+  @override
+  String get remainingTime => 'Restante';
+
+  @override
   String minutes(int howMany) {
     String _temp0 = intl.Intl.pluralLogic(howMany, locale: localeName, other: 'minutos', one: 'minuto');
     return '$_temp0';
@@ -2400,6 +2406,12 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get duration => 'Duração';
+
+  @override
+  String get elapsedTime => 'Tempo decorrido';
+
+  @override
+  String get remainingTime => 'Restante';
 
   @override
   String minutes(int howMany) {

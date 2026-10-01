@@ -471,6 +471,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "eggShapeOval": MessageLookupByLibrary.simpleMessage("Oval"),
     "eggShapePyriform": MessageLookupByLibrary.simpleMessage("Piriforme"),
     "eggShapeSpherical": MessageLookupByLibrary.simpleMessage("Esférico"),
+    "elapsedTime": MessageLookupByLibrary.simpleMessage("Tempo decorrido"),
     "endTime": MessageLookupByLibrary.simpleMessage("Hora final"),
     "enterCoordinates": MessageLookupByLibrary.simpleMessage(
       "Entrar coordenadas",
@@ -1106,6 +1107,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "relativeHumidityRangeError": MessageLookupByLibrary.simpleMessage(
       "Umidade relativa deve estar entre 0 e 100",
     ),
+    "remainingTime": MessageLookupByLibrary.simpleMessage("Restante"),
     "remindMissingVegetationData": MessageLookupByLibrary.simpleMessage(
       "Lembrar dados faltantes de vegetação",
     ),

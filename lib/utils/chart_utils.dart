@@ -1,3 +1,4 @@
+import '../core/core_consts.dart';
 import '../data/models/inventory.dart';
 
 /// Immutable point used by the accumulation curve.
@@ -26,9 +27,28 @@ Map<String, dynamic> prepareSpeciesAccumulationData(Inventory inventory, List<Sp
   final endTime = inventory.isFinished ? inventory.endTime! : DateTime.now();
   final wallClockDuration = endTime.difference(startTime).inSeconds;
 
+  // For detection inventories (or any inventory where multiple records per species may exist),
+  // count only the first record (earliest sampleTime) of each species in the inventory.
+  final isDetectionInventory =
+      inventory.type == InventoryType.invTransectDetection ||
+      inventory.type == InventoryType.invPointDetection;
+
+  List<Species> effectiveSpeciesList = speciesList;
+  if (isDetectionInventory) {
+    final firstRecordBySpecies = <String, Species>{};
+    for (final species in speciesList) {
+      if (species.sampleTime == null) continue;
+      final existing = firstRecordBySpecies[species.name];
+      if (existing == null || species.sampleTime!.isBefore(existing.sampleTime!)) {
+        firstRecordBySpecies[species.name] = species;
+      }
+    }
+    effectiveSpeciesList = firstRecordBySpecies.values.toList();
+  }
+
   // Find the latest species registration time among all registered species
   int maxSpeciesElapsed = 0;
-  for (final species in speciesList) {
+  for (final species in effectiveSpeciesList) {
     if (species.sampleTime != null) {
       final elapsed = species.sampleTime!.difference(startTime).inSeconds;
       if (elapsed > maxSpeciesElapsed) {

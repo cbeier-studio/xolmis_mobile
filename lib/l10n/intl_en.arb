@@ -514,6 +514,16 @@
         "type": "text",
         "description": "Time duration field label"
     },
+    "elapsedTime": "Elapsed time",
+    "@elapsedTime": {
+        "type": "text",
+        "description": "Label for elapsed time since inventory start"
+    },
+    "remainingTime": "Remaining",
+    "@remainingTime": {
+        "type": "text",
+        "description": "Label for remaining time in timed inventory"
+    },
     "minutes": "{howMany, plural, one{minute} other{minutes}}",
     "@minutes": {
         "type": "text",

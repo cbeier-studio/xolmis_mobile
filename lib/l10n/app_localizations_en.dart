@@ -332,6 +332,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get duration => 'Duration';
 
   @override
+  String get elapsedTime => 'Elapsed time';
+
+  @override
+  String get remainingTime => 'Remaining';
+
+  @override
   String minutes(int howMany) {
     String _temp0 = intl.Intl.pluralLogic(howMany, locale: localeName, other: 'minutes', one: 'minute');
     return '$_temp0';
