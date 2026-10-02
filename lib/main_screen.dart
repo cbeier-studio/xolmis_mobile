@@ -193,10 +193,31 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
   /// Loads whether the one-time inventory export onboarding should be displayed.
   Future<void> _loadInventoryExportOnboardingPreference() async {
     final prefs = await SharedPreferences.getInstance();
+
+    final hasRunBefore = prefs.getBool('hasRunBefore') ?? false;
+    final packageInfo = await PackageInfo.fromPlatform();
+    final currentBuild = int.tryParse(packageInfo.buildNumber) ?? 0;
+
+    if (!hasRunBefore) {
+      // Brand new installation: mark app as having run and set onboarding seen version to current build
+      // so brand new installations never see upgrade onboardings.
+      await prefs.setBool('hasRunBefore', true);
+      await prefs.setInt('inventoryExportOnboardingSeenVersion', currentBuild);
+      await prefs.setBool(kInventoryExportOnboardingSeenPreferenceKey, true);
+      return;
+    }
+
+    if (currentBuild < kInventoryExportOnboardingVersion) {
+      return;
+    }
+
+    final seenVersion = prefs.getInt('inventoryExportOnboardingSeenVersion') ?? 0;
     final hasSeenOnboarding =
         prefs.getBool(kInventoryExportOnboardingSeenPreferenceKey) ?? false;
 
-    if (hasSeenOnboarding || !mounted) {
+    if (seenVersion >= kInventoryExportOnboardingVersion ||
+        hasSeenOnboarding ||
+        !mounted) {
       return;
     }
 
@@ -208,6 +229,8 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
   /// Persists the onboarding acknowledgement and reveals the main shell.
   Future<void> _dismissInventoryExportOnboarding() async {
     final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(
+        'inventoryExportOnboardingSeenVersion', kInventoryExportOnboardingVersion);
     await prefs.setBool(kInventoryExportOnboardingSeenPreferenceKey, true);
 
     if (!mounted) return;

@@ -58,7 +58,7 @@ void main() {
       appName: 'xolmis',
       packageName: 'org.xolmis.app',
       version: '1.0.0',
-      buildNumber: '1',
+      buildNumber: '152',
       buildSignature: 'test',
     );
 
@@ -207,10 +207,12 @@ void main() {
   });
 
   testWidgets(
-    'inventory export onboarding is shown once and stays dismissed after acknowledgement',
+    'inventory export onboarding is shown once for upgrades and stays dismissed after acknowledgement',
     (WidgetTester tester) async {
       final prefs = await SharedPreferences.getInstance();
       await prefs.clear();
+      await prefs.setBool('hasRunBefore', true);
+      await prefs.setInt('inventoryExportOnboardingSeenVersion', 0);
 
       tester.view.physicalSize = const Size(390, 844);
       tester.view.devicePixelRatio = 1.0;
@@ -254,6 +256,36 @@ void main() {
       await tester.pump(const Duration(seconds: 1));
 
       expect(find.byType(InventoryExportOnboardingScreen), findsNothing);
+
+      await tester.pump(const Duration(seconds: 11));
+    },
+  );
+
+  testWidgets(
+    'inventory export onboarding is NOT shown on brand new installations of version 152+',
+    (WidgetTester tester) async {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.clear();
+
+      tester.view.physicalSize = const Size(390, 844);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      await tester.pumpWidget(
+        ChangeNotifierProvider(
+          create: (_) => ThemeModel(),
+          child: MyApp(dependencies: dependencies),
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+
+      expect(find.byType(InventoryExportOnboardingScreen), findsNothing);
+      expect(
+        prefs.getBool(kInventoryExportOnboardingSeenPreferenceKey),
+        isTrue,
+      );
 
       await tester.pump(const Duration(seconds: 11));
     },

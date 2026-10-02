@@ -25,6 +25,9 @@ const String kSpeciesPropagationPolicyPreferenceKey = 'speciesPropagationPolicy'
 /// Shared preferences key that stores whether the inventory export onboarding was acknowledged.
 const String kInventoryExportOnboardingSeenPreferenceKey = 'inventoryExportOnboardingSeen';
 
+/// Version threshold where inventory export onboarding was introduced.
+const int kInventoryExportOnboardingVersion = 152;
+
 const String kRecentInventoryTypePreferenceKey = 'recentInventoryType';
 const String kRecentInventoryLocalitiesPreferenceKey = 'recentInventoryLocalities';
 const String kRecentNestLocalitiesPreferenceKey = 'recentNestLocalities';
