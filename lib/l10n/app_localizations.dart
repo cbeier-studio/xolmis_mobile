@@ -3704,11 +3704,23 @@ abstract class AppLocalizations {
   /// **'Add'**
   String get add;
 
-  /// No description provided for @onlineHelp.
+  /// Online help button label
   ///
   /// In en, this message translates to:
   /// **'Online help'**
   String get onlineHelp;
+
+  /// Start longitude/latitude label
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get start;
+
+  /// End longitude/latitude label
+  ///
+  /// In en, this message translates to:
+  /// **'End'**
+  String get end;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

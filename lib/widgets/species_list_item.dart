@@ -200,52 +200,12 @@ class SpeciesListItemState extends State<SpeciesListItem> {
 
   /// Shows a dialog that lets the user edit the species individual count.
   Future<void> _showEditCountDialog() async {
-    final controller =
-        TextEditingController(text: widget.species.count.toString());
-
-    int? newCount = await showDialog<int>(
+    final int? newCount = await showDialog<int>(
       context: context,
       builder: (BuildContext dialogContext) {
-        return AlertDialog(
-          title: Text(S.of(dialogContext).editCount),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: controller,
-                keyboardType: TextInputType.number,
-                autofocus: true,
-                decoration: InputDecoration(
-                  labelText: S.of(dialogContext).individualsCount,
-                  border: const OutlineInputBorder(),
-                ),
-                onSubmitted: (value) {
-                  final parsed = int.tryParse(value);
-                  if (parsed != null) {
-                    Navigator.of(dialogContext).pop(parsed);
-                  }
-                },
-              ),
-            ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.of(dialogContext).pop(),
-              child: Text(S.of(dialogContext).cancel),
-            ),
-            TextButton(
-              onPressed: () {
-                final parsed = int.tryParse(controller.text);
-                Navigator.of(dialogContext).pop(parsed);
-              },
-              child: Text(S.of(dialogContext).save),
-            ),
-          ],
-        );
+        return EditCountDialog(initialCount: widget.species.count);
       },
     );
-
-    controller.dispose();
 
     if (!mounted || newCount == null) return;
 
@@ -257,5 +217,73 @@ class SpeciesListItemState extends State<SpeciesListItem> {
     // Notify the provider
     Provider.of<SpeciesProvider>(context, listen: false)
         .updateIndividualsCount(widget.species);
+  }
+}
+
+/// Dialog widget for editing the species individual count.
+class EditCountDialog extends StatefulWidget {
+  final int initialCount;
+
+  const EditCountDialog({super.key, required this.initialCount});
+
+  @override
+  State<EditCountDialog> createState() => _EditCountDialogState();
+}
+
+class _EditCountDialogState extends State<EditCountDialog> {
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.initialCount.toString());
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text(S.of(context).editCount),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: _controller,
+              keyboardType: TextInputType.number,
+              autofocus: true,
+              decoration: InputDecoration(
+                labelText: S.of(context).individualsCount,
+                border: const OutlineInputBorder(),
+              ),
+              onSubmitted: (value) {
+                final parsed = int.tryParse(value);
+                if (parsed != null) {
+                  Navigator.of(context).pop(parsed);
+                }
+              },
+            ),
+          ],
+        ),
+      ),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: Text(S.of(context).cancel),
+        ),
+        TextButton(
+          onPressed: () {
+            final parsed = int.tryParse(_controller.text);
+            Navigator.of(context).pop(parsed);
+          },
+          child: Text(S.of(context).save),
+        ),
+      ],
+    );
   }
 }

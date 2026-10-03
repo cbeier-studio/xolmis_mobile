@@ -3089,8 +3089,18 @@
     "description": "Add button label"
   },
   "onlineHelp": "Online help",
-    "@help": {
+    "@onlineHelp": {
     "type": "text",
-    "description": "Help button label"
-  }
+    "description": "Online help button label"
+  },
+    "start": "Start",
+    "@start": {
+        "type": "text",
+        "description": "Start longitude/latitude label"
+    },
+    "end": "End",
+    "@end": {
+        "type": "text",
+        "description": "End longitude/latitude label"
+    }
 }

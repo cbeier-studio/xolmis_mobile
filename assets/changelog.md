@@ -6,6 +6,9 @@
 
 * Added help online link in app.
 * Modified CSV and Excel export layout to improve compatibility with other softwares.
+* Edit date, time and coordinates in inventories, nests and specimens.
+* Missing geographical coordinates indicator.
+* Show elapsed time in inventory details.
 
 ### Bug fixes
 

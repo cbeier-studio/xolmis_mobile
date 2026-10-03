@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:xolmis/core/core_consts.dart';
 import 'package:xolmis/data/models/specimen.dart';
 import 'package:xolmis/data/models/journal.dart';
+import 'package:xolmis/data/models/inventory.dart';
 
 void main() {
   group('Specimen Model Tests', () {
@@ -100,6 +101,105 @@ void main() {
 
       expect(updated.title, equals('New Title'));
       expect(updated.notes, equals('Notes'));
+    });
+  });
+
+  group('Inventory Model Tests', () {
+    test('hasValidStartCoordinates identifies non-null and non-zero start coordinates', () {
+      final invWithStart = Inventory(
+        id: 'INV-001',
+        type: InventoryType.invCasual,
+        duration: 0,
+        startLatitude: -23.55,
+        startLongitude: -46.63,
+      );
+      expect(invWithStart.hasValidStartCoordinates, isTrue);
+
+      final invZeroStart = Inventory(
+        id: 'INV-002',
+        type: InventoryType.invCasual,
+        duration: 0,
+        startLatitude: 0.0,
+        startLongitude: 0.0,
+      );
+      expect(invZeroStart.hasValidStartCoordinates, isFalse);
+
+      final invNullStart = Inventory(
+        id: 'INV-003',
+        type: InventoryType.invCasual,
+        duration: 0,
+      );
+      expect(invNullStart.hasValidStartCoordinates, isFalse);
+    });
+
+    test('hasValidEndCoordinates identifies non-null and non-zero end coordinates', () {
+      final invWithEnd = Inventory(
+        id: 'INV-001',
+        type: InventoryType.invCasual,
+        duration: 0,
+        endLatitude: -23.56,
+        endLongitude: -46.64,
+      );
+      expect(invWithEnd.hasValidEndCoordinates, isTrue);
+
+      final invZeroEnd = Inventory(
+        id: 'INV-002',
+        type: InventoryType.invCasual,
+        duration: 0,
+        endLatitude: 0.0,
+        endLongitude: 0.0,
+      );
+      expect(invZeroEnd.hasValidEndCoordinates, isFalse);
+    });
+
+    test('hasMissingCoordinates returns correct status for active and finished inventories', () {
+      // Active inventory with valid start coordinates -> not missing
+      final activeInv = Inventory(
+        id: 'INV-001',
+        type: InventoryType.invCasual,
+        duration: 0,
+        isFinished: false,
+        startLatitude: -23.55,
+        startLongitude: -46.63,
+        endLatitude: 0.0,
+        endLongitude: 0.0,
+      );
+      expect(activeInv.hasMissingCoordinates, isFalse);
+
+      // Finished inventory with valid start but blank end coordinates -> missing
+      final finishedInvMissingEnd = Inventory(
+        id: 'INV-002',
+        type: InventoryType.invCasual,
+        duration: 0,
+        isFinished: true,
+        startLatitude: -23.55,
+        startLongitude: -46.63,
+        endLatitude: 0.0,
+        endLongitude: 0.0,
+      );
+      expect(finishedInvMissingEnd.hasMissingCoordinates, isTrue);
+
+      // Finished inventory with both valid start and end coordinates -> not missing
+      final finishedInvComplete = Inventory(
+        id: 'INV-003',
+        type: InventoryType.invCasual,
+        duration: 0,
+        isFinished: true,
+        startLatitude: -23.55,
+        startLongitude: -46.63,
+        endLatitude: -23.56,
+        endLongitude: -46.64,
+      );
+      expect(finishedInvComplete.hasMissingCoordinates, isFalse);
+    });
+
+    test('cancelTimer successfully completes without error', () {
+      final inv = Inventory(
+        id: 'INV-001',
+        type: InventoryType.invCasual,
+        duration: 10,
+      );
+      expect(() => inv.cancelTimer(), returnsNormally);
     });
   });
 }

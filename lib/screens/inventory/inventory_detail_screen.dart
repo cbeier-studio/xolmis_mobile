@@ -418,7 +418,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
               ],
               _InventoryElapsedTimeWidget(inventory: widget.inventory),
               if (widget.inventory.maxSpecies > 0) ...[
-                Text(': ${widget.inventory.maxSpecies} ${S.of(context).speciesAcronym(widget.inventory.maxSpecies)}'),
+                Text(' : ${widget.inventory.maxSpecies} ${S.of(context).speciesAcronym(widget.inventory.maxSpecies)}'),
               ],
               const SizedBox(width: 8.0,),
               // Show the number of intervals without species for qualitative inventories
@@ -824,7 +824,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                     ],
                     _InventoryElapsedTimeWidget(inventory: widget.inventory),
                     if (widget.inventory.maxSpecies > 0) ...[
-                      Text(': ${widget.inventory.maxSpecies} ${S.of(context).speciesAcronym(widget.inventory.maxSpecies)}'),
+                      Text(' : ${widget.inventory.maxSpecies} ${S.of(context).speciesAcronym(widget.inventory.maxSpecies)}'),
                     ],
                     const SizedBox(width: 8.0,),
                     // Show the number of intervals without species for qualitative inventories
@@ -873,6 +873,10 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                     builder: (context, speciesProvider, child) {
                       final speciesList = speciesProvider.getSpeciesForInventory(
                           widget.inventory.id);
+                      final speciesTabText = widget.inventory.type == InventoryType.invTransectDetection || widget.inventory.type == InventoryType.invPointDetection
+                          ? S.of(context).recordsCount(2)
+                          : S.of(context).species(2);
+
                       return speciesList.isNotEmpty
                           ? Badge.count(
                         backgroundColor: Colors.deepPurple[100],
@@ -880,9 +884,9 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                         alignment: AlignmentDirectional.centerEnd,
                         offset: const Offset(24, -8),
                         count: speciesList.length,
-                        child: Tab(text: S.of(context).species(2)),
+                        child: Tab(text: "${speciesTabText[0].toUpperCase()}${speciesTabText.substring(1).toLowerCase()}"),
                       )
-                          : Tab(text: S.of(context).species(2));
+                          : Tab(text: "${speciesTabText[0].toUpperCase()}${speciesTabText.substring(1).toLowerCase()}");
                     },
                   ),
                   Consumer<VegetationProvider>(
@@ -1087,7 +1091,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
 }
 
 /// Battery-optimized widget to display the elapsed time since inventory start,
-/// as well as remaining time for timed inventories in HH:MM format.
+/// as well as remaining time for timed inventories in MM:SS (or HH:MM:SS if elapsed > 60 min) format.
 class _InventoryElapsedTimeWidget extends StatefulWidget {
   final Inventory inventory;
 
@@ -1126,15 +1130,15 @@ class _InventoryElapsedTimeWidgetState
     }
   }
 
-  /// Cancels or starts the 1-minute periodic timer depending on active status.
-  /// Battery optimization: The timer runs ONLY when the inventory is active and NOT paused,
-  /// updating once every minute in HH:MM format.
+  /// Cancels or starts the 5-second periodic timer depending on active status.
+  /// The timer runs ONLY when the inventory is active and NOT paused,
+  /// updating once every 5 seconds.
   void _syncTimer() {
     _timer?.cancel();
     _timer = null;
 
     if (!widget.inventory.isFinished && !widget.inventory.isPaused) {
-      _timer = Timer.periodic(const Duration(minutes: 1), (_) {
+      _timer = Timer.periodic(const Duration(seconds: 5), (_) {
         if (mounted) {
           setState(() {});
         }
@@ -1152,7 +1156,7 @@ class _InventoryElapsedTimeWidgetState
   /// Calculates net active elapsed seconds since the inventory started.
   double _calculateElapsedSeconds() {
     final inventory = widget.inventory;
-    if (inventory.startTime == null) {
+    if (inventory.startTime == null || inventory.isPaused) {
       return inventory.elapsedTime;
     }
 
@@ -1168,10 +1172,6 @@ class _InventoryElapsedTimeWidgetState
 
     final now = DateTime.now();
     double totalPaused = inventory.totalPausedTimeInSeconds;
-    if (inventory.isPaused && inventory.pauseStartTime != null) {
-      totalPaused +=
-          now.difference(inventory.pauseStartTime!).inSeconds.toDouble();
-    }
 
     final grossSeconds =
         now.difference(inventory.startTime!).inSeconds.toDouble();
@@ -1179,38 +1179,83 @@ class _InventoryElapsedTimeWidgetState
     return netSeconds < 0 ? 0 : netSeconds;
   }
 
-  /// Formats seconds into HH:MM string.
-  String _formatTime(double seconds) {
+  /// Formats seconds into MM:SS string, or HH:MM:SS if [showHours] is true or total seconds >= 3600.
+  String _formatTime(double seconds, {bool showHours = false}) {
     final totalSeconds = seconds.round();
-    if (totalSeconds <= 0) return '00:00';
+    if (totalSeconds <= 0) {
+      return showHours ? '00:00:00' : '00:00';
+    }
+
+    final hours = totalSeconds ~/ 3600;
+    final minutes = (totalSeconds % 3600) ~/ 60;
+    final secs = totalSeconds % 60;
+
+    if (showHours || hours > 0) {
+      return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${secs.toString().padLeft(2, '0')}';
+    }
 
     final totalMinutes = totalSeconds ~/ 60;
-    final hours = totalMinutes ~/ 60;
-    final minutes = totalMinutes % 60;
-
-    return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}';
+    return '${totalMinutes.toString().padLeft(2, '0')}:${secs.toString().padLeft(2, '0')}';
   }
 
   @override
   Widget build(BuildContext context) {
     final inventory = widget.inventory;
     final elapsedSecs = _calculateElapsedSeconds();
-    final elapsedText = _formatTime(elapsedSecs);
+    final showHours = elapsedSecs >= 3600;
+    final elapsedText = _formatTime(elapsedSecs, showHours: showHours);
+    final primaryColor = Theme.of(context).colorScheme.primary;
+    const iconSize = 16.0;
 
     if (inventory.duration > 0 && !inventory.isFinished) {
       final totalSecs = inventory.duration * 60;
       final remainingSecs = totalSecs - elapsedSecs;
-      final remainingText = _formatTime(remainingSecs < 0 ? 0 : remainingSecs);
+      final remainingText = _formatTime(remainingSecs < 0 ? 0 : remainingSecs, showHours: showHours);
 
-      return Text(
-        ' (${S.of(context).elapsedTime}: $elapsedText | ${S.of(context).remainingTime}: $remainingText)',
-        style: TextStyle(color: Theme.of(context).colorScheme.primary),
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const SizedBox(width: 6.0),
+          Tooltip(
+            message: S.of(context).elapsedTime,
+            child: Icon(Icons.timer_outlined, size: iconSize, color: primaryColor),
+          ),
+          const SizedBox(width: 2.0),
+          Text(
+            elapsedText,
+            style: TextStyle(color: primaryColor),
+          ),
+          Text(
+            ' • ',
+            style: TextStyle(color: primaryColor),
+          ),
+          Tooltip(
+            message: S.of(context).remainingTime,
+            child: Icon(Icons.hourglass_bottom, size: iconSize, color: primaryColor),
+          ),
+          const SizedBox(width: 2.0),
+          Text(
+            remainingText,
+            style: TextStyle(color: primaryColor),
+          ),
+        ],
       );
     }
 
-    return Text(
-      ' (${S.of(context).elapsedTime}: $elapsedText)',
-      style: TextStyle(color: Theme.of(context).colorScheme.primary),
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const SizedBox(width: 6.0),
+        Tooltip(
+          message: S.of(context).elapsedTime,
+          child: Icon(Icons.timer_outlined, size: iconSize, color: primaryColor),
+        ),
+        const SizedBox(width: 2.0),
+        Text(
+          elapsedText,
+          style: TextStyle(color: primaryColor),
+        ),
+      ],
     );
   }
 }

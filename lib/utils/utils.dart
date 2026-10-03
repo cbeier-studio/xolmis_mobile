@@ -251,55 +251,57 @@ Future<Position?> _showManualCoordinatesDialog(BuildContext context) async {
     builder: (dialogContext) {
       return AlertDialog(
         title: Text(S.of(dialogContext).enterCoordinates),
-        content: Form(
-          key: formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextFormField(
-                controller: latitudeController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: S.of(dialogContext).latitude,
+        content: SingleChildScrollView(
+          child: Form(
+            key: formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  controller: latitudeController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: S.of(dialogContext).latitude,
+                  ),
+                  keyboardType: TextInputType.numberWithOptions(signed: true, decimal: true),
+                  inputFormatters: [
+                    CommaToDotTextInputFormatter(),
+                  ],
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return S.of(dialogContext).fieldCannotBeEmpty;
+                    }
+                    final lat = double.tryParse(value);
+                    if (lat == null || lat < -90 || lat > 90) {
+                      return S.of(dialogContext).invalidLatitude;
+                    }
+                    return null;
+                  },
                 ),
-                keyboardType: TextInputType.numberWithOptions(signed: true, decimal: true),
-                inputFormatters: [
-                  CommaToDotTextInputFormatter(),
-                ],
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return S.of(dialogContext).fieldCannotBeEmpty;
-                  }
-                  final lat = double.tryParse(value);
-                  if (lat == null || lat < -90 || lat > 90) {
-                    return S.of(dialogContext).invalidLatitude;
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 8),
-              TextFormField(
-                controller: longitudeController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: S.of(dialogContext).longitude,
+                SizedBox(height: 8),
+                TextFormField(
+                  controller: longitudeController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: S.of(dialogContext).longitude,
+                  ),
+                  keyboardType: TextInputType.numberWithOptions(signed: true, decimal: true),
+                  inputFormatters: [
+                    CommaToDotTextInputFormatter(),
+                  ],
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return S.of(dialogContext).fieldCannotBeEmpty;
+                    }
+                    final lon = double.tryParse(value);
+                    if (lon == null || lon < -180 || lon > 180) {
+                      return S.of(dialogContext).invalidLongitude;
+                    }
+                    return null;
+                  },
                 ),
-                keyboardType: TextInputType.numberWithOptions(signed: true, decimal: true),
-                inputFormatters: [
-                  CommaToDotTextInputFormatter(),
-                ],
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return S.of(dialogContext).fieldCannotBeEmpty;
-                  }
-                  final lon = double.tryParse(value);
-                  if (lon == null || lon < -180 || lon > 180) {
-                    return S.of(dialogContext).invalidLongitude;
-                  }
-                  return null;
-                },
-              ),
-            ],
+              ],
+            ),
           ),
         ),
         actions: [
@@ -333,8 +335,10 @@ Future<Position?> _showManualCoordinatesDialog(BuildContext context) async {
     },
   );
 
-  latitudeController.dispose();
-  longitudeController.dispose();
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    latitudeController.dispose();
+    longitudeController.dispose();
+  });
 
   return result;
 }

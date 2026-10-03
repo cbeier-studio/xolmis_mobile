@@ -2041,4 +2041,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get onlineHelp => 'Online help';
+
+  @override
+  String get start => 'Start';
+
+  @override
+  String get end => 'End';
 }

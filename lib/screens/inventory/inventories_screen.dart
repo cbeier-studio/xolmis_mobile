@@ -1776,6 +1776,12 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                 Icon(Icons.person, size: 16, color: Theme.of(context).colorScheme.surfaceTint),
                 const SizedBox(width: 4),
                 Text(inventory.totalObservers.toString()),
+                if (inventory.hasMissingCoordinates) ...[
+                  const SizedBox(width: 8),
+                  const Text('•'),
+                  const SizedBox(width: 8),
+                  const Icon(Icons.location_off_outlined, size: 16, color: Colors.grey),
+                ],
               ],
             );
           },

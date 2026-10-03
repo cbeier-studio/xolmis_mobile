@@ -472,6 +472,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "eggShapePyriform": MessageLookupByLibrary.simpleMessage("Piriforme"),
     "eggShapeSpherical": MessageLookupByLibrary.simpleMessage("Esférico"),
     "elapsedTime": MessageLookupByLibrary.simpleMessage("Tempo decorrido"),
+    "end": MessageLookupByLibrary.simpleMessage("Final"),
     "endTime": MessageLookupByLibrary.simpleMessage("Hora final"),
     "enterCoordinates": MessageLookupByLibrary.simpleMessage(
       "Entrar coordenadas",
@@ -1294,6 +1295,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Espécimes por tipo",
     ),
     "specimensImportedSuccessfully": m67,
+    "start": MessageLookupByLibrary.simpleMessage("Inicial"),
     "startInventory": MessageLookupByLibrary.simpleMessage(
       "Iniciar inventário",
     ),

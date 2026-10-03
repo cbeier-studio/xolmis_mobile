@@ -1440,9 +1440,14 @@ class NestsScreenState extends State<NestsScreen> {
                 : Colors.red,
             ),
           ),
-          Text(nest.localityName!, overflow: TextOverflow.ellipsis),
-          Text('${nest.longitude}; ${nest.latitude}'),
           Text(DateFormat('dd/MM/yyyy HH:mm').format(nest.foundTime!)),
+          Text(nest.localityName!, overflow: TextOverflow.ellipsis),
+          if (nest.latitude != null && nest.longitude != null) ...[
+            Text('${nest.longitude}; ${nest.latitude}'),
+          ],
+          if (nest.longitude == null && nest.latitude == null) ...[
+            const Icon(Icons.location_off_outlined, size: 16.0, color: Colors.grey),
+          ],
         ],
       ),
       selected: isLargeScreen ? isDetailSelected : isSelected,

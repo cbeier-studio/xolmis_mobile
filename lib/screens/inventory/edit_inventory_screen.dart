@@ -1,5 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/core_consts.dart';
@@ -27,6 +28,14 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
   late final TextEditingController _notesController;
   late final TextEditingController _totalObserversController;
   late final TextEditingController _observerController;
+  late final TextEditingController _startTimeController;
+  late final TextEditingController _endTimeController;
+  late final TextEditingController _startLatitudeController;
+  late final TextEditingController _startLongitudeController;
+  late final TextEditingController _endLatitudeController;
+  late final TextEditingController _endLongitudeController;
+  DateTime? _startTime;
+  DateTime? _endTime;
   late bool _isDiscarded;
   late final InventoryType _initialType;
   InventoryType _selectedType = InventoryType.invFreeQualitative;
@@ -50,6 +59,38 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
     _totalObserversController = TextEditingController(text: widget.inventory.totalObservers.toString());
     _observerController = TextEditingController(text: widget.inventory.observer);
     _isDiscarded = widget.inventory.isDiscarded;
+
+    _startTime = widget.inventory.startTime;
+    _startTimeController = TextEditingController(
+      text: _startTime != null ? DateFormat('dd/MM/yyyy HH:mm').format(_startTime!) : '',
+    );
+
+    _endTime = widget.inventory.endTime;
+    _endTimeController = TextEditingController(
+      text: _endTime != null ? DateFormat('dd/MM/yyyy HH:mm').format(_endTime!) : '',
+    );
+
+    _startLatitudeController = TextEditingController(
+      text: widget.inventory.startLatitude != null && widget.inventory.startLatitude != 0
+          ? widget.inventory.startLatitude.toString()
+          : '',
+    );
+    _startLongitudeController = TextEditingController(
+      text: widget.inventory.startLongitude != null && widget.inventory.startLongitude != 0
+          ? widget.inventory.startLongitude.toString()
+          : '',
+    );
+    _endLatitudeController = TextEditingController(
+      text: widget.inventory.endLatitude != null && widget.inventory.endLatitude != 0
+          ? widget.inventory.endLatitude.toString()
+          : '',
+    );
+    _endLongitudeController = TextEditingController(
+      text: widget.inventory.endLongitude != null && widget.inventory.endLongitude != 0
+          ? widget.inventory.endLongitude.toString()
+          : '',
+    );
+
     _loadRecentLocalities();
   }
 
@@ -63,7 +104,73 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
     _maxSpeciesController.dispose();
     _totalObserversController.dispose();
     _observerController.dispose();
+    _startTimeController.dispose();
+    _endTimeController.dispose();
+    _startLatitudeController.dispose();
+    _startLongitudeController.dispose();
+    _endLatitudeController.dispose();
+    _endLongitudeController.dispose();
     super.dispose();
+  }
+
+  /// Opens date and time pickers to update the inventory start time.
+  Future<void> _selectStartTime(BuildContext context) async {
+    final current = _startTime ?? DateTime.now();
+    final pickedDate = await showDatePicker(
+      context: context,
+      initialDate: current,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+    if (pickedDate == null || !mounted || !context.mounted) return;
+
+    final pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(current),
+    );
+    if (pickedTime == null || !mounted) return;
+
+    final newDateTime = DateTime(
+      pickedDate.year,
+      pickedDate.month,
+      pickedDate.day,
+      pickedTime.hour,
+      pickedTime.minute,
+    );
+    setState(() {
+      _startTime = newDateTime;
+      _startTimeController.text = DateFormat('dd/MM/yyyy HH:mm').format(newDateTime);
+    });
+  }
+
+  /// Opens date and time pickers to update the inventory end time.
+  Future<void> _selectEndTime(BuildContext context) async {
+    final current = _endTime ?? _startTime ?? DateTime.now();
+    final pickedDate = await showDatePicker(
+      context: context,
+      initialDate: current,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+    if (pickedDate == null || !mounted || !context.mounted) return;
+
+    final pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(current),
+    );
+    if (pickedTime == null || !mounted) return;
+
+    final newDateTime = DateTime(
+      pickedDate.year,
+      pickedDate.month,
+      pickedDate.day,
+      pickedTime.hour,
+      pickedTime.minute,
+    );
+    setState(() {
+      _endTime = newDateTime;
+      _endTimeController.text = DateFormat('dd/MM/yyyy HH:mm').format(newDateTime);
+    });
   }
 
   // Load default values from settings
@@ -144,21 +251,52 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
+      final startLatText = _startLatitudeController.text.trim();
+      final startLonText = _startLongitudeController.text.trim();
+      final endLatText = _endLatitudeController.text.trim();
+      final endLonText = _endLongitudeController.text.trim();
+
+      final double? startLat = startLatText.isNotEmpty ? double.tryParse(startLatText) : null;
+      final double? startLon = startLonText.isNotEmpty ? double.tryParse(startLonText) : null;
+      final double? endLat = endLatText.isNotEmpty ? double.tryParse(endLatText) : null;
+      final double? endLon = endLonText.isNotEmpty ? double.tryParse(endLonText) : null;
+
       // Create a copy of the original inventory with the updated data from the form
-      final updatedInventory = widget.inventory.copyWith(
+      final updatedInventory = Inventory(
         id: _idController.text,
         type: _selectedType,
+        duration: int.tryParse(_durationController.text) ?? widget.inventory.duration,
+        maxSpecies: int.tryParse(_maxSpeciesController.text) ?? widget.inventory.maxSpecies,
+        isPaused: widget.inventory.isPaused,
+        isFinished: widget.inventory.isFinished,
+        elapsedTime: widget.inventory.elapsedTime,
+        startTime: _startTime,
+        endTime: _endTime,
+        startLongitude: startLon,
+        startLatitude: startLat,
+        endLongitude: endLon,
+        endLatitude: endLat,
         localityName: _localityNameController.text,
-        duration: int.tryParse(_durationController.text),
-        maxSpecies: int.tryParse(_maxSpeciesController.text),
-        totalObservers: int.tryParse(_totalObserversController.text),
+        totalObservers: int.tryParse(_totalObserversController.text) ?? widget.inventory.totalObservers,
         observer: _observerController.text.toUpperCase(),
         notes: _notesController.text.isNotEmpty ? _notesController.text : null,
         isDiscarded: _isDiscarded,
+        speciesList: widget.inventory.speciesList,
+        speciesCount: widget.inventory.speciesCount,
+        speciesWithinCount: widget.inventory.speciesWithinCount,
+        speciesOutOfInventoryCount: widget.inventory.speciesOutOfInventoryCount,
+        vegetationList: widget.inventory.vegetationList,
+        weatherList: widget.inventory.weatherList,
+        currentInterval: widget.inventory.currentInterval,
+        intervalsWithoutNewSpecies: widget.inventory.intervalsWithoutNewSpecies,
+        currentIntervalSpeciesCount: widget.inventory.currentIntervalSpeciesCount,
+        totalPausedTimeInSeconds: widget.inventory.totalPausedTimeInSeconds,
+        pauseStartTime: widget.inventory.pauseStartTime,
       );
 
       await _saveRecentLocality(_localityNameController.text);
 
+      if (!mounted) return;
       // Return to the previous screen with the updated inventory
       Navigator.of(context).pop(updatedInventory);
     }
@@ -306,6 +444,147 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
                     );
                   },
                 ),
+                const SizedBox(height: 8.0),
+                // Start & End Time
+                TextFormField(
+                        controller: _startTimeController,
+                        readOnly: true,
+                        decoration: InputDecoration(
+                          labelText: S.of(context).startTime,
+                          border: const OutlineInputBorder(),
+                          suffixIcon: const Icon(Icons.calendar_today),
+                        ),
+                        onTap: () => _selectStartTime(context),
+                      ),
+                    const SizedBox(height: 8.0),
+            TextFormField(
+                        controller: _endTimeController,
+                        readOnly: true,
+                        decoration: InputDecoration(
+                          labelText: S.of(context).endTime,
+                          border: const OutlineInputBorder(),
+                          suffixIcon: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              if (_endTimeController.text.isNotEmpty)
+                                IconButton(
+                                  icon: const Icon(Icons.clear, size: 18),
+                                  onPressed: () {
+                                    setState(() {
+                                      _endTime = null;
+                                      _endTimeController.clear();
+                                    });
+                                  },
+                                ),
+                              const Icon(Icons.calendar_today),
+                              const SizedBox(width: 8),
+                            ],
+                          ),
+                        ),
+                        onTap: () => _selectEndTime(context),
+                      ),
+                const SizedBox(height: 8.0),
+                // Start Coordinates
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        controller: _startLongitudeController,
+                        keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: true),
+                        decoration: InputDecoration(
+                          labelText: '${S.of(context).longitude} (${S.of(context).start})',
+                          border: const OutlineInputBorder(),
+                        ),
+                        inputFormatters: [
+                          CommaToDotTextInputFormatter(),
+                        ],
+                        validator: (value) {
+                          if (value != null && value.trim().isNotEmpty) {
+                            final lon = double.tryParse(value.trim());
+                            if (lon == null || lon < -180 || lon > 180) {
+                              return S.of(context).invalidLongitude;
+                            }
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 8.0),
+                    Expanded(
+                      child: TextFormField(
+                        controller: _startLatitudeController,
+                        keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: true),
+                        decoration: InputDecoration(
+                          labelText: '${S.of(context).latitude} (${S.of(context).start})',
+                          border: const OutlineInputBorder(),
+                        ),
+                        inputFormatters: [
+                          CommaToDotTextInputFormatter(),
+                        ],
+                        validator: (value) {
+                          if (value != null && value.trim().isNotEmpty) {
+                            final lat = double.tryParse(value.trim());
+                            if (lat == null || lat < -90 || lat > 90) {
+                              return S.of(context).invalidLatitude;
+                            }
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8.0),
+                // End Coordinates
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        controller: _endLongitudeController,
+                        keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: true),
+                        decoration: InputDecoration(
+                          labelText: '${S.of(context).longitude} (${S.of(context).end})',
+                          border: const OutlineInputBorder(),
+                        ),
+                        inputFormatters: [
+                          CommaToDotTextInputFormatter(),
+                        ],
+                        validator: (value) {
+                          if (value != null && value.trim().isNotEmpty) {
+                            final lon = double.tryParse(value.trim());
+                            if (lon == null || lon < -180 || lon > 180) {
+                              return S.of(context).invalidLongitude;
+                            }
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 8.0),
+                    Expanded(
+                      child: TextFormField(
+                        controller: _endLatitudeController,
+                        keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: true),
+                        decoration: InputDecoration(
+                          labelText: '${S.of(context).latitude} (${S.of(context).end})',
+                          border: const OutlineInputBorder(),
+                        ),
+                        inputFormatters: [
+                          CommaToDotTextInputFormatter(),
+                        ],
+                        validator: (value) {
+                          if (value != null && value.trim().isNotEmpty) {
+                            final lat = double.tryParse(value.trim());
+                            if (lat == null || lat < -90 || lat > 90) {
+                              return S.of(context).invalidLatitude;
+                            }
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                  ],
+                ),
                 SizedBox(height: 8),
                 Row(
                   children: [
@@ -388,7 +667,7 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
                           if ((_selectedType == InventoryType.invMackinnonList) && (value == null || value.isEmpty)) {
                             return S.of(context).insertMaxSpecies;
                           }
-                          if ((value != null && value.isNotEmpty) && int.tryParse(value)! < 5) {
+                          if ((value != null && value.isNotEmpty) && int.tryParse(value)! > 0 && int.tryParse(value)! < 5) {
                             return S.of(context).mustBeBiggerThanFive;
                           }
                           return null;

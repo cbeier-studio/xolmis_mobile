@@ -598,6 +598,24 @@ class Inventory with ChangeNotifier {
 
   /// Emits whether the inventory is currently finished.
   ValueNotifier<bool> get isFinishedNotifier => _isFinishedNotifier;
+
+  /// Returns true if both start latitude and start longitude are present and non-zero.
+  bool get hasValidStartCoordinates =>
+      startLatitude != null &&
+      startLatitude != 0 &&
+      startLongitude != null &&
+      startLongitude != 0;
+
+  /// Returns true if both end latitude and end longitude are present and non-zero.
+  bool get hasValidEndCoordinates =>
+      endLatitude != null &&
+      endLatitude != 0 &&
+      endLongitude != null &&
+      endLongitude != 0;
+
+  /// Returns true if start coordinates are missing/blank, or if finished and end coordinates are missing/blank.
+  bool get hasMissingCoordinates =>
+      !hasValidStartCoordinates || (isFinished && !hasValidEndCoordinates);
   bool _autoFinished = false;
 
   /// Returns whether the inventory was finished automatically by a rule.
@@ -1100,6 +1118,14 @@ class Inventory with ChangeNotifier {
     _timer?.pause();
     isPaused = true;
     pauseStartTime = DateTime.now();
+
+    if (startTime != null) {
+      final now = DateTime.now();
+      final grossSeconds = now.difference(startTime!).inSeconds.toDouble();
+      final netSeconds = grossSeconds - totalPausedTimeInSeconds;
+      elapsedTime = netSeconds < 0 ? 0 : netSeconds;
+    }
+
     elapsedTimeNotifier.value = elapsedTime;
     debugPrint('...PAUSED inventory $id at $pauseStartTime. Current elapsedTime: $elapsedTime');
     elapsedTimeNotifier.notifyListeners();
@@ -1151,6 +1177,13 @@ class Inventory with ChangeNotifier {
     elapsedTimeNotifier.notifyListeners();
     notifyListeners();
     await inventoryDao.updateInventory(this);
+  }
+
+  /// Cancels the running timer subscription, if any.
+  void cancelTimer() {
+    debugPrint('CANCEL_TIMER for inventory $id');
+    _timer?.cancel();
+    _timer = null;
   }
 
   /// Stops the timer, marks the inventory as finished, records [endTime] and

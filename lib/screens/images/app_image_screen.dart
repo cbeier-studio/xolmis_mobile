@@ -549,7 +549,9 @@ class _AppImageScreenState extends State<AppImageScreen> {
       },
     );
 
-    notesController.dispose();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      notesController.dispose();
+    });
   }
 
   /// Builds the grid used to display [images].

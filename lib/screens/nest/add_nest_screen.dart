@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -38,6 +39,10 @@ class AddNestScreenState extends State<AddNestScreen> {
   late TextEditingController _maleController;
   late TextEditingController _femaleController;
   late TextEditingController _helpersController;
+  late TextEditingController _foundTimeController;
+  late TextEditingController _latitudeController;
+  late TextEditingController _longitudeController;
+  DateTime? _foundTime;
   bool _isSubmitting = false;
   Position? _currentPosition;
   String _observerAcronym = '';
@@ -54,23 +59,82 @@ class AddNestScreenState extends State<AddNestScreen> {
     _maleController = TextEditingController();
     _femaleController = TextEditingController();
     _helpersController = TextEditingController();
+    _foundTimeController = TextEditingController();
+    _latitudeController = TextEditingController();
+    _longitudeController = TextEditingController();
     _loadRecentLocalities();
 
-  if (widget.isEditing) {
-      _fieldNumberController.text = widget.nest!.fieldNumber!;
-      _speciesNameController.text = widget.nest!.speciesName!;
-      _localityNameController.text = widget.nest!.localityName!;
-      _supportController.text = widget.nest!.support!;
+    if (widget.isEditing && widget.nest != null) {
+      _fieldNumberController.text = widget.nest!.fieldNumber ?? '';
+      _speciesNameController.text = widget.nest!.speciesName ?? '';
+      _localityNameController.text = widget.nest!.localityName ?? '';
+      _supportController.text = widget.nest!.support ?? '';
       _heightAboveGroundController.text = widget.nest!.heightAboveGround != null
           ? widget.nest!.heightAboveGround.toString()
           : '';
-      _maleController.text = widget.nest!.male!;
-      _femaleController.text = widget.nest!.female!;
-      _helpersController.text = widget.nest!.helpers!;
+      _maleController.text = widget.nest!.male ?? '';
+      _femaleController.text = widget.nest!.female ?? '';
+      _helpersController.text = widget.nest!.helpers ?? '';
+      _foundTime = widget.nest!.foundTime;
+      if (_foundTime != null) {
+        _foundTimeController.text = DateFormat('dd/MM/yyyy HH:mm').format(_foundTime!);
+      }
+      if (widget.nest!.latitude != null) {
+        _latitudeController.text = widget.nest!.latitude.toString();
+      }
+      if (widget.nest!.longitude != null) {
+        _longitudeController.text = widget.nest!.longitude.toString();
+      }
     } else {
       _nextFieldNumber();
       _getCurrentLocation();
     }
+  }
+
+  @override
+  void dispose() {
+    _fieldNumberController.dispose();
+    _speciesNameController.dispose();
+    _localityNameController.dispose();
+    _supportController.dispose();
+    _heightAboveGroundController.dispose();
+    _maleController.dispose();
+    _femaleController.dispose();
+    _helpersController.dispose();
+    _foundTimeController.dispose();
+    _latitudeController.dispose();
+    _longitudeController.dispose();
+    super.dispose();
+  }
+
+  /// Opens date and time pickers to update the nest found time.
+  Future<void> _selectFoundTime(BuildContext context) async {
+    final current = _foundTime ?? DateTime.now();
+    final pickedDate = await showDatePicker(
+      context: context,
+      initialDate: current,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+    if (pickedDate == null || !mounted || !context.mounted) return;
+
+    final pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(current),
+    );
+    if (pickedTime == null || !mounted) return;
+
+    final newDateTime = DateTime(
+      pickedDate.year,
+      pickedDate.month,
+      pickedDate.day,
+      pickedTime.hour,
+      pickedTime.minute,
+    );
+    setState(() {
+      _foundTime = newDateTime;
+      _foundTimeController.text = DateFormat('dd/MM/yyyy HH:mm').format(newDateTime);
+    });
   }
 
   /// Builds the next automatic field number using observer and date.
@@ -125,11 +189,9 @@ class AddNestScreenState extends State<AddNestScreen> {
     );
 
     if (newSpeciesName != null && newSpeciesName.isNotEmpty) {
-      int? parsedCount;
       String speciesName = newSpeciesName;
       final match = RegExp(r'^(\d+)[, ]+(.*)$').firstMatch(newSpeciesName);
       if (match != null) {
-        parsedCount = int.tryParse(match.group(1)!);
         speciesName = match.group(2)!;
       }
       return speciesName;
@@ -142,7 +204,7 @@ class AddNestScreenState extends State<AddNestScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(S.of(context).newNest),
+          title: Text(widget.isEditing ? S.of(context).editNest : S.of(context).newNest),
         ),
         body: Column(
             children: [
@@ -171,53 +233,53 @@ class AddNestScreenState extends State<AddNestScreen> {
                         const SizedBox(height: 16.0),
                         SearchAnchor(
                           isFullScreen: MediaQuery.of(context).size.width < 600,
-                      builder: (context, controller) {
-                        return TextFormField(
-                          controller: _speciesNameController,
-                          decoration: InputDecoration(
-                            labelText: '${S.of(context).species(1)} *',
-                            border: OutlineInputBorder(),
-                            suffixIcon: IconButton(
-                              icon: const Icon(Icons.add_box_outlined),
-                              tooltip: S.of(context).addSpecies,
-                              onPressed: () async {
-                                _speciesNameController.text = await _showAddSpeciesDialog(context);
+                          builder: (context, controller) {
+                            return TextFormField(
+                              controller: _speciesNameController,
+                              decoration: InputDecoration(
+                                labelText: '${S.of(context).species(1)} *',
+                                border: OutlineInputBorder(),
+                                suffixIcon: IconButton(
+                                  icon: const Icon(Icons.add_box_outlined),
+                                  tooltip: S.of(context).addSpecies,
+                                  onPressed: () async {
+                                    _speciesNameController.text = await _showAddSpeciesDialog(context);
+                                  },
+                                ),
+                              ),
+                              readOnly: true,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return S.of(context).selectSpecies;
+                                }
+                                return null;
                               },
-                            ),
-                          ),
-                          readOnly: true,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return S.of(context).selectSpecies;
-                            }
-                            return null;
-                          },
-                          onTap: () {
-                            controller.openView();
-                          },
-                        );
-                      },
-                      suggestionsBuilder: (context, controller) {
-                        if (controller.text.isEmpty) {
-                          return [];
-                        } else {
-                          return List<String>.from(allSpeciesNames)
-                              .where((species) => speciesMatchesQuery(
-                                  species, controller.text))
-                              .map((species) {
-                            return ListTile(
-                              title: Text(species),
-                              onTap: () async {
-                                setState(() {
-                                  _speciesNameController.text = species;
-                                });
-                                controller.closeView(species);
-                                controller.clear();
+                              onTap: () {
+                                controller.openView();
                               },
                             );
-                          }).toList();
-                        }
-                      },
+                          },
+                          suggestionsBuilder: (context, controller) {
+                            if (controller.text.isEmpty) {
+                              return [];
+                            } else {
+                              return List<String>.from(allSpeciesNames)
+                                  .where((species) => speciesMatchesQuery(
+                                      species, controller.text))
+                                  .map((species) {
+                                return ListTile(
+                                  title: Text(species),
+                                  onTap: () async {
+                                    setState(() {
+                                      _speciesNameController.text = species;
+                                    });
+                                    controller.closeView(species);
+                                    controller.clear();
+                                  },
+                                );
+                              }).toList();
+                            }
+                          },
                         ),
                         const SizedBox(height: 16.0),
                         Autocomplete<String>(
@@ -294,6 +356,69 @@ class AddNestScreenState extends State<AddNestScreen> {
                             );
                           },
                         ),
+                        if (widget.isEditing) ...[
+                          const SizedBox(height: 16.0),
+                          TextFormField(
+                            controller: _foundTimeController,
+                            readOnly: true,
+                            decoration: InputDecoration(
+                              labelText: S.of(context).foundTime,
+                              border: const OutlineInputBorder(),
+                              suffixIcon: const Icon(Icons.calendar_today),
+                            ),
+                            onTap: () => _selectFoundTime(context),
+                          ),
+                          const SizedBox(height: 16.0),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: TextFormField(
+                                  controller: _latitudeController,
+                                  keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: true),
+                                  decoration: InputDecoration(
+                                    labelText: S.of(context).latitude,
+                                    border: const OutlineInputBorder(),
+                                  ),
+                                  inputFormatters: [
+                                    CommaToDotTextInputFormatter(),
+                                  ],
+                                  validator: (value) {
+                                    if (value != null && value.trim().isNotEmpty) {
+                                      final lat = double.tryParse(value.trim());
+                                      if (lat == null || lat < -90 || lat > 90) {
+                                        return S.of(context).invalidLatitude;
+                                      }
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                              const SizedBox(width: 16.0),
+                              Expanded(
+                                child: TextFormField(
+                                  controller: _longitudeController,
+                                  keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: true),
+                                  decoration: InputDecoration(
+                                    labelText: S.of(context).longitude,
+                                    border: const OutlineInputBorder(),
+                                  ),
+                                  inputFormatters: [
+                                    CommaToDotTextInputFormatter(),
+                                  ],
+                                  validator: (value) {
+                                    if (value != null && value.trim().isNotEmpty) {
+                                      final lon = double.tryParse(value.trim());
+                                      if (lon == null || lon < -180 || lon > 180) {
+                                        return S.of(context).invalidLongitude;
+                                      }
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                         const SizedBox(height: 16.0),
                         Autocomplete<String>(
                           initialValue: widget.isEditing
@@ -438,7 +563,6 @@ class AddNestScreenState extends State<AddNestScreen> {
                         height: 24,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          year2023: false,
                         ),
                       )
                           : FilledButton(
@@ -550,25 +674,44 @@ class AddNestScreenState extends State<AddNestScreen> {
 
     if (_formKey.currentState!.validate()) {
       if (widget.isEditing) {
-        final updatedNest = widget.nest!.copyWith(
+        final latText = _latitudeController.text.trim();
+        final lonText = _longitudeController.text.trim();
+        final double? lat = latText.isNotEmpty ? double.tryParse(latText) : null;
+        final double? lon = lonText.isNotEmpty ? double.tryParse(lonText) : null;
+
+        final updatedNest = Nest(
+          id: widget.nest!.id,
           fieldNumber: _fieldNumberController.text,
           speciesName: _speciesNameController.text,
           localityName: _localityNameController.text,
+          longitude: lon,
+          latitude: lat,
           support: _supportController.text,
           heightAboveGround: double.tryParse(_heightAboveGroundController.text),
+          foundTime: _foundTime ?? widget.nest!.foundTime,
+          lastTime: widget.nest!.lastTime,
+          nestFate: widget.nest!.nestFate,
+          lastNestStatus: widget.nest!.lastNestStatus,
           male: _maleController.text,
           female: _femaleController.text,
           helpers: _helpersController.text,
+          observer: widget.nest!.observer,
+          isActive: widget.nest!.isActive,
+          revisionsList: widget.nest!.revisionsList,
+          eggsList: widget.nest!.eggsList,
+          revisionCount: widget.nest!.revisionCount,
+          eggCount: widget.nest!.eggCount,
         );
 
         try {
           await nestProvider.updateNest(updatedNest);
-
+          if (!mounted) return;
           Navigator.pop(context);
         } catch (error) {
           if (kDebugMode) {
             print('Error saving nest: $error');
           }
+          if (!mounted) return;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               persist: true,
@@ -602,11 +745,13 @@ class AddNestScreenState extends State<AddNestScreen> {
 
         try {
           await nestProvider.addNest(newNest);
+          if (!mounted) return;
           Navigator.pop(context);
         } catch (error) {
           if (kDebugMode) {
             print('Error adding nest: $error');
           }
+          if (!mounted) return;
           if (error.toString().contains(S.of(context).errorNestAlreadyExists)) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(

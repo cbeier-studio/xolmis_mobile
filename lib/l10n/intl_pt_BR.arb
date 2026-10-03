@@ -2530,8 +2530,18 @@
     "description": "Rótulo do botão adicionar"
   },
   "onlineHelp": "Ajuda online",
-  "@help": {
+  "@onlineHelp": {
     "type": "text",
-    "description": "Help button label"
+    "description": "Online help button label"
+  },
+  "start": "Inicial",
+  "@start": {
+    "type": "text",
+    "description": "Start longitude/latitude label"
+  },
+  "end": "Final",
+  "@end": {
+    "type": "text",
+    "description": "End longitude/latitude label"
   }
 }

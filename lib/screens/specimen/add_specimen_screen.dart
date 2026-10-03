@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -34,6 +35,10 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
   late TextEditingController _speciesNameController;
   late TextEditingController _localityNameController;
   late TextEditingController _notesController;
+  late TextEditingController _sampleTimeController;
+  late TextEditingController _latitudeController;
+  late TextEditingController _longitudeController;
+  DateTime? _sampleTime;
   SpecimenType _selectedType = SpecimenType.spcFeathers;
   bool _isSubmitting = false;
   Position? _currentPosition;
@@ -47,19 +52,74 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
     _speciesNameController = TextEditingController();
     _localityNameController = TextEditingController(text: widget.specimen?.locality ?? '');
     _notesController = TextEditingController();
+    _sampleTimeController = TextEditingController();
+    _latitudeController = TextEditingController();
+    _longitudeController = TextEditingController();
     _loadObserverAcronym();
     _loadRecentLocalities();
 
-    if (widget.isEditing) {
+    if (widget.isEditing && widget.specimen != null) {
       _selectedType = widget.specimen!.type;
       _fieldNumberController.text = widget.specimen!.fieldNumber;
       _speciesNameController.text = widget.specimen!.speciesName ?? '';
       _localityNameController.text = widget.specimen!.locality ?? '';
       _notesController.text = widget.specimen!.notes ?? '';
+      _sampleTime = widget.specimen!.sampleTime;
+      if (_sampleTime != null) {
+        _sampleTimeController.text = DateFormat('dd/MM/yyyy HH:mm').format(_sampleTime!);
+      }
+      if (widget.specimen!.latitude != null) {
+        _latitudeController.text = widget.specimen!.latitude.toString();
+      }
+      if (widget.specimen!.longitude != null) {
+        _longitudeController.text = widget.specimen!.longitude.toString();
+      }
     } else {
       _nextFieldNumber();
       _getCurrentLocation();
     }
+  }
+
+  @override
+  void dispose() {
+    _fieldNumberController.dispose();
+    _speciesNameController.dispose();
+    _localityNameController.dispose();
+    _notesController.dispose();
+    _sampleTimeController.dispose();
+    _latitudeController.dispose();
+    _longitudeController.dispose();
+    super.dispose();
+  }
+
+  /// Opens date and time pickers to update the specimen sample time.
+  Future<void> _selectSampleTime(BuildContext context) async {
+    final current = _sampleTime ?? DateTime.now();
+    final pickedDate = await showDatePicker(
+      context: context,
+      initialDate: current,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+    if (pickedDate == null || !mounted || !context.mounted) return;
+
+    final pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(current),
+    );
+    if (pickedTime == null || !mounted) return;
+
+    final newDateTime = DateTime(
+      pickedDate.year,
+      pickedDate.month,
+      pickedDate.day,
+      pickedTime.hour,
+      pickedTime.minute,
+    );
+    setState(() {
+      _sampleTime = newDateTime;
+      _sampleTimeController.text = DateFormat('dd/MM/yyyy HH:mm').format(newDateTime);
+    });
   }
 
   /// Loads the observer acronym used to generate default specimen numbers.
@@ -139,7 +199,7 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(S.of(context).newSpecimen),
+          title: Text(widget.isEditing ? S.of(context).editSpecimen : S.of(context).newSpecimen),
         ),
         body: Column(
             children: [
@@ -190,54 +250,54 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
                         const SizedBox(height: 16.0),
                         SearchAnchor(
                           isFullScreen: MediaQuery.of(context).size.width < 600,
-                      builder: (context, controller) {
-                        return TextFormField(
-                          controller: _speciesNameController,
-                          decoration: InputDecoration(
-                            labelText: '${S.of(context).species(1)} *',
-                            border: OutlineInputBorder(),
-                            suffixIcon: IconButton(
-                              icon: const Icon(Icons.add_box_outlined),
-                              tooltip: S.of(context).addSpecies,
-                              onPressed: () async {
-                                _speciesNameController.text = await _showAddSpeciesDialog(context);
+                          builder: (context, controller) {
+                            return TextFormField(
+                              controller: _speciesNameController,
+                              decoration: InputDecoration(
+                                labelText: '${S.of(context).species(1)} *',
+                                border: OutlineInputBorder(),
+                                suffixIcon: IconButton(
+                                  icon: const Icon(Icons.add_box_outlined),
+                                  tooltip: S.of(context).addSpecies,
+                                  onPressed: () async {
+                                    _speciesNameController.text = await _showAddSpeciesDialog(context);
+                                  },
+                                ),
+                              ),
+                              readOnly: true,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return S.of(context).selectSpecies;
+                                }
+                                return null;
                               },
-                            ),
-                          ),
-                          readOnly: true,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return S.of(context).selectSpecies;
-                            }
-                            return null;
-                          },
-                          onTap: () {
-                            controller.openView();
-                          },
-                        );
-                      },
-                      suggestionsBuilder: (context, controller) {
-                        if (controller.text.isEmpty) {
-                          return [];
-                        } else {
-                          return List<String>.from(allSpeciesNames)
-                              .where((species) => speciesMatchesQuery(
-                                  species, controller.text))
-                              .map((species) {
-                            return ListTile(
-                              title: Text(species),
-                              onTap: () async {
-                                setState(() {
-                                  _speciesNameController.text = species;
-                                });
-                                controller.closeView(species);
-                                controller.clear();
+                              onTap: () {
+                                controller.openView();
                               },
                             );
-                          }).toList();
-                        }
-                      },
-                    ),
+                          },
+                          suggestionsBuilder: (context, controller) {
+                            if (controller.text.isEmpty) {
+                              return [];
+                            } else {
+                              return List<String>.from(allSpeciesNames)
+                                  .where((species) => speciesMatchesQuery(
+                                      species, controller.text))
+                                  .map((species) {
+                                return ListTile(
+                                  title: Text(species),
+                                  onTap: () async {
+                                    setState(() {
+                                      _speciesNameController.text = species;
+                                    });
+                                    controller.closeView(species);
+                                    controller.clear();
+                                  },
+                                );
+                              }).toList();
+                            }
+                          },
+                        ),
                         const SizedBox(height: 16.0),
                         Autocomplete<String>(
                           initialValue: widget.isEditing
@@ -313,6 +373,69 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
                             );
                           },
                         ),
+                        if (widget.isEditing) ...[
+                          const SizedBox(height: 16.0),
+                          TextFormField(
+                            controller: _sampleTimeController,
+                            readOnly: true,
+                            decoration: InputDecoration(
+                              labelText: S.of(context).sampleTime,
+                              border: const OutlineInputBorder(),
+                              suffixIcon: const Icon(Icons.calendar_today),
+                            ),
+                            onTap: () => _selectSampleTime(context),
+                          ),
+                          const SizedBox(height: 16.0),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: TextFormField(
+                                  controller: _latitudeController,
+                                  keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: true),
+                                  decoration: InputDecoration(
+                                    labelText: S.of(context).latitude,
+                                    border: const OutlineInputBorder(),
+                                  ),
+                                  inputFormatters: [
+                                    CommaToDotTextInputFormatter(),
+                                  ],
+                                  validator: (value) {
+                                    if (value != null && value.trim().isNotEmpty) {
+                                      final lat = double.tryParse(value.trim());
+                                      if (lat == null || lat < -90 || lat > 90) {
+                                        return S.of(context).invalidLatitude;
+                                      }
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                              const SizedBox(width: 16.0),
+                              Expanded(
+                                child: TextFormField(
+                                  controller: _longitudeController,
+                                  keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: true),
+                                  decoration: InputDecoration(
+                                    labelText: S.of(context).longitude,
+                                    border: const OutlineInputBorder(),
+                                  ),
+                                  inputFormatters: [
+                                    CommaToDotTextInputFormatter(),
+                                  ],
+                                  validator: (value) {
+                                    if (value != null && value.trim().isNotEmpty) {
+                                      final lon = double.tryParse(value.trim());
+                                      if (lon == null || lon < -180 || lon > 180) {
+                                        return S.of(context).invalidLongitude;
+                                      }
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                         const SizedBox(height: 16.0),
                         TextFormField(
                           controller: _notesController,
@@ -338,7 +461,7 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
                           ? const SizedBox(
                         width: 24,
                         height: 24,
-                        child: CircularProgressIndicator(strokeWidth: 2, year2023: false,),
+                        child: CircularProgressIndicator(strokeWidth: 2),
                       )
                           : FilledButton(
                         onPressed: _submitForm,
@@ -453,23 +576,34 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
 
     if (_formKey.currentState!.validate()) {
       if (widget.isEditing) {
-        final updatedSpecimen = widget.specimen!.copyWith(
+        final latText = _latitudeController.text.trim();
+        final lonText = _longitudeController.text.trim();
+        final double? lat = latText.isNotEmpty ? double.tryParse(latText) : null;
+        final double? lon = lonText.isNotEmpty ? double.tryParse(lonText) : null;
+
+        final updatedSpecimen = Specimen(
+          id: widget.specimen!.id,
+          sampleTime: _sampleTime ?? widget.specimen!.sampleTime,
           fieldNumber: _fieldNumberController.text,
-          speciesName: _speciesNameController.text,
-          locality: _localityNameController.text,
-          notes: _notesController.text,
           type: _selectedType,
+          longitude: lon,
+          latitude: lat,
+          locality: _localityNameController.text,
+          speciesName: _speciesNameController.text,
           observer: (widget.specimen?.observer?.trim().isNotEmpty ?? false)
               ? widget.specimen!.observer
               : (_observerAcronym.isEmpty ? null : _observerAcronym),
+          notes: _notesController.text,
+          isPending: widget.specimen?.isPending ?? true,
         );
 
         try {
           await specimenProvider.updateSpecimen(updatedSpecimen);
-
+          if (!mounted) return;
           Navigator.pop(context);
         } catch (error) {
           debugPrint('Error saving specimen: $error');
+          if (!mounted) return;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               persist: true,
@@ -499,11 +633,13 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
 
         try {
           await specimenProvider.addSpecimen(newSpecimen);
+          if (!mounted) return;
           Navigator.pop(context);
         } catch (error) {
           if (kDebugMode) {
             print('Error adding specimen: $error');
           }
+          if (!mounted) return;
           if (error.toString().contains(S.current.errorSpecimenAlreadyExists)) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -515,7 +651,7 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 persist: true,
-              showCloseIcon: true,
+                showCloseIcon: true,
                 backgroundColor: Theme.of(context).colorScheme.error,
                 content: Text(S.current.errorSavingSpecimen),
               ),

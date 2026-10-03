@@ -6025,7 +6025,32 @@ class S {
 
   /// `Online help`
   String get onlineHelp {
-    return Intl.message('Online help', name: 'onlineHelp', desc: '', args: []);
+    return Intl.message(
+      'Online help',
+      name: 'onlineHelp',
+      desc: 'Online help button label',
+      args: [],
+    );
+  }
+
+  /// `Start`
+  String get start {
+    return Intl.message(
+      'Start',
+      name: 'start',
+      desc: 'Start longitude/latitude label',
+      args: [],
+    );
+  }
+
+  /// `End`
+  String get end {
+    return Intl.message(
+      'End',
+      name: 'end',
+      desc: 'End longitude/latitude label',
+      args: [],
+    );
   }
 }
 

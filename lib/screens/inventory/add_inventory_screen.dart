@@ -53,6 +53,8 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
         }
       });
     }
+
+    _updateFormFields(_selectedType);
   }
 
   @override

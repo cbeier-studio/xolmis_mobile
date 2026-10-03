@@ -338,7 +338,9 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
       },
     );
 
-    notesController.dispose();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      notesController.dispose();
+    });
   }
 
   Widget _buildInfoPanel() {

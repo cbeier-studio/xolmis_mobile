@@ -6,6 +6,9 @@
 
 * Adicionado link para a ajuda online no app.
 * Modificado layout de arquivos CSV e Excel exportados para melhorar compatibilidade com outros softwares.
+* Edição de data, hora e coordenadas de inventários, ninhos e espécimes.
+* Indicador de coordenadas geográficas faltantes.
+* Mostra tempo decorrido nos detalhes do inventário.
 
 ### Correções
 

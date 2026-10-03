@@ -1484,10 +1484,20 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                       : Colors.red,
             ),
           ),
-          Text(specimen.locality!, overflow: TextOverflow.ellipsis),
-          Text('${specimen.longitude}; ${specimen.latitude}'),
           Text(DateFormat('dd/MM/yyyy HH:mm').format(specimen.sampleTime!)),
-          _buildSpecimenTypePill(context, specimen.type),
+          Text(specimen.locality!, overflow: TextOverflow.ellipsis),
+          if (specimen.longitude != null && specimen.latitude != null) ...[
+            Text('${specimen.longitude}; ${specimen.latitude}'),
+          ],
+          Row(
+            children: [
+              _buildSpecimenTypePill(context, specimen.type),
+              if (specimen.longitude == null && specimen.latitude == null) ...[
+                const SizedBox(width: 8.0),
+                const Icon(Icons.location_off_outlined, size: 16.0, color: Colors.grey),
+              ],
+            ],
+          ),
         ],
       ),
       selected: isLargeScreen ? isDetailSelected : isSelected,

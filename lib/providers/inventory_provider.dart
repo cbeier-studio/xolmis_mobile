@@ -80,6 +80,12 @@ class InventoryProvider with ChangeNotifier {
     try {final inventoriesFromDb = await _inventoryDao.getInventories();
     final Set<String> dbInventoryIds = inventoriesFromDb.map((inv) => inv.id).toSet();
 
+    // Cancel timers for inventories that do not exist in DB anymore
+    final removedInventories = _inventoryMap.values.where((inv) => !dbInventoryIds.contains(inv.id)).toList();
+    for (var inv in removedInventories) {
+      inv.cancelTimer();
+    }
+
     // Remove from memory the inventories that does not exist in DB anymore
     _inventoryMap.removeWhere((id, inventory) => !dbInventoryIds.contains(id));
     _inventories.removeWhere((inventory) => !dbInventoryIds.contains(inventory.id));
@@ -204,6 +210,8 @@ class InventoryProvider with ChangeNotifier {
   /// Deletes the inventory identified by [id] from storage and cache.
   Future<void> removeInventory(String id) async {
     debugPrint('[PROVIDER] Removing inventory: $id');
+    final inventory = _inventoryMap[id];
+    inventory?.cancelTimer();
     await _inventoryDao.deleteInventory(id);
 
     _inventories.removeWhere((inventory) => inventory.id == id);
@@ -343,6 +351,12 @@ class InventoryProvider with ChangeNotifier {
     try {
       final inventoriesFromDb = await _inventoryDao.getInventoriesSummary();
       final Set<String> dbInventoryIds = inventoriesFromDb.map((inv) => inv.id).toSet();
+
+      // Cancel timers for inventories that do not exist in DB anymore
+      final removedInventories = _inventoryMap.values.where((inv) => !dbInventoryIds.contains(inv.id)).toList();
+      for (var inv in removedInventories) {
+        inv.cancelTimer();
+      }
 
       _inventoryMap.removeWhere((id, inventory) => !dbInventoryIds.contains(id));
       _inventories.removeWhere((inventory) => !dbInventoryIds.contains(inventory.id));
