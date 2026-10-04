@@ -429,6 +429,7 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
                                               bottomTitles: AxisTitles(
                                                 sideTitles: SideTitles(
                                                   showTitles: true,
+                                                  reservedSize: 30,
                                                   getTitlesWidget: (value, meta) {
                                                     String monthAbbreviation = DateFormat(
                                                       'MMM',
@@ -493,6 +494,7 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
                                               bottomTitles: AxisTitles(
                                                 sideTitles: SideTitles(
                                                   showTitles: true,
+                                                  reservedSize: 30,
                                                   getTitlesWidget: (value, meta) {
                                                     return SideTitleWidget(meta: meta, child: Text(value.toInt().toString()));
                                                   },

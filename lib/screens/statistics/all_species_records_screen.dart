@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:material_ui/material_ui.dart';
 import 'package:xolmis/generated/l10n.dart';
 
+import '../../utils/utils.dart';
+
 /// Displays a ranked list of species with their total records.
 class AllSpeciesRecordsScreen extends StatelessWidget {
   final List<MapEntry<String, int>> allSpeciesRecords;
@@ -26,7 +28,11 @@ class AllSpeciesRecordsScreen extends StatelessWidget {
               entry.key,
               style: TextStyle(
                   fontFamily: Platform.isIOS ? 'CupertinoSystemDisplay' : null,
-                  fontStyle: FontStyle.italic),
+                  fontStyle: FontStyle.italic,
+                  color: allSpeciesNames.contains(entry.key)
+                      ? null
+                      : Colors.red,
+              ),
             ),
             trailing: Text(
               entry.value.toString(),

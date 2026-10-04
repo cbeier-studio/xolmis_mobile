@@ -286,22 +286,22 @@ Map<SpecimenType, String> specimenTypeFriendlyNames = {
 
 /// Palette of predefined colors for journal tags with good contrast in light/dark themes.
 const List<Color> kJournalTagColors = [
-  Color(0xFFE91E63), // Pink
-  Color(0xFF9C27B0), // Purple
-  Color(0xFF2196F3), // Blue
-  Color(0xFF00BCD4), // Cyan
-  Color(0xFF4CAF50), // Green
-  Color(0xFFFFC107), // Amber
-  Color(0xFFFF9800), // Orange
-  Color(0xFFF44336), // Red
-  Color(0xFF3F51B5), // Indigo
-  Color(0xFF009688), // Teal
-  Color(0xFF8BC34A), // Light Green
-  Color(0xFFCDDC39), // Lime
-  Color(0xFF795548), // Brown
-  Color(0xFF607D8B), // Blue Grey
-  Color(0xFF673AB7), // Deep Purple
-  Color(0xFF03A9F4), // Light Blue
+  Color(0xFF48429B), // Jacaranda
+  Color(0xFF1B5E20), // Emerald
+  Color(0xFFE65100), // Calango Orange
+  Color(0xFF0D47A1), // Navy Blue
+  Color(0xFFB71C1C), // Carmine
+  Color(0xFF004D40), // Teal
+  Color(0xFF4A148C), // Purple
+  Color(0xFF33691E), // Olive
+  Color(0xFFF57F17), // Amber
+  Color(0xFF880E4F), // Magenta
+  Color(0xFF006064), // Sky Cyan
+  Color(0xFF795548), // Light Brown
+  Color(0xFF827717), // Lime Green
+  Color(0xFF1A237E), // Indigo
+  Color(0xFF3E2723), // Clay Brown
+  Color(0xFF263238), // Graphite
 ];
 
 /// Returns a random color from the predefined tag colors palette.

@@ -4,6 +4,35 @@ import '../models/tag.dart';
 class FieldJournal {
   static const int defaultBackgroundColorValue = 0xFFFFF8E1; // Colors.amber[50]
 
+  /// Canonical journal background colors persisted in storage and exports.
+  static const List<int> backgroundColorOptions = [
+    defaultBackgroundColorValue, // amber[50] default
+    0xFFFFEBEE, // red[50]
+    0xFFF3E5F5, // purple[50]
+    0xFFE3F2FD, // blue[50]
+    0xFFE8F5E9, // green[50]
+    0xFFE0F2F1, // teal[50]
+  ];
+
+  /// Dark-theme equivalents for the canonical journal background colors.
+  static const Map<int, int> darkBackgroundColorByLightValue = {
+    defaultBackgroundColorValue: 0xFF5A4A00,
+    0xFFFFEBEE: 0xFF5C2B2E,
+    0xFFF3E5F5: 0xFF4A3457,
+    0xFFE3F2FD: 0xFF274863,
+    0xFFE8F5E9: 0xFF2F4A35,
+    0xFFE0F2F1: 0xFF234B49,
+  };
+
+  /// Resolves the color value that should be displayed for the current theme.
+  static int resolveDisplayBackgroundColorValue(
+    int backgroundColor, {
+    required bool isDarkMode,
+  }) {
+    if (!isDarkMode) return backgroundColor;
+    return darkBackgroundColorByLightValue[backgroundColor] ?? backgroundColor;
+  }
+
   late int? id;
   String? title;
   final String notes;

@@ -49,15 +49,6 @@ class JournalsScreenState extends State<JournalsScreen> {
     DateFilter.customRange: S.current.dateInterval,
   };
 
-  static const List<int> _journalBackgroundColorOptions = [
-    FieldJournal.defaultBackgroundColorValue, // amber[50] default
-    0xFFFFEBEE, // red[50]
-    0xFFF3E5F5, // purple[50]
-    0xFFE3F2FD, // blue[50]
-    0xFFE8F5E9, // green[50]
-    0xFFE0F2F1, // teal[50]
-  ];
-
   @override
   void initState() {
     super.initState();
@@ -404,7 +395,11 @@ class JournalsScreenState extends State<JournalsScreen> {
     if (isSelected) {
       return isLargeScreen ? Theme.of(context).colorScheme.secondaryContainer : Theme.of(context).colorScheme.primaryContainer;
     }
-    return Color(entry.backgroundColor);
+    final displayColorValue = FieldJournal.resolveDisplayBackgroundColorValue(
+      entry.backgroundColor,
+      isDarkMode: Theme.of(context).brightness == Brightness.dark,
+    );
+    return Color(displayColorValue);
   }
 
   Future<void> _showJournalColorPickerDialog(FieldJournal journalEntry) async {
@@ -416,8 +411,16 @@ class JournalsScreenState extends State<JournalsScreen> {
           content: Wrap(
             spacing: 12,
             runSpacing: 12,
-            children: _journalBackgroundColorOptions.map((colorValue) {
+            children: FieldJournal.backgroundColorOptions.map((colorValue) {
               final isSelected = colorValue == journalEntry.backgroundColor;
+              final displayColor = Color(
+                FieldJournal.resolveDisplayBackgroundColorValue(
+                  colorValue,
+                  isDarkMode: Theme.of(dialogContext).brightness == Brightness.dark,
+                ),
+              );
+              final iconColor =
+                  ThemeData.estimateBrightnessForColor(displayColor) == Brightness.dark ? Colors.white : Colors.black87;
               return InkWell(
                 borderRadius: BorderRadius.circular(999),
                 onTap: () => Navigator.of(dialogContext).pop(colorValue),
@@ -425,14 +428,14 @@ class JournalsScreenState extends State<JournalsScreen> {
                   width: 42,
                   height: 42,
                   decoration: BoxDecoration(
-                    color: Color(colorValue),
+                    color: displayColor,
                     shape: BoxShape.circle,
                     border: Border.all(
                       color: isSelected ? Theme.of(dialogContext).colorScheme.primary : Theme.of(dialogContext).colorScheme.outlineVariant,
                       width: isSelected ? 2 : 1,
                     ),
                   ),
-                  child: isSelected ? Icon(Icons.check, size: 18, color: Theme.of(dialogContext).colorScheme.onSurface) : null,
+                  child: isSelected ? Icon(Icons.check, size: 18, color: iconColor) : null,
                 ),
               );
             }).toList(),
@@ -1070,7 +1073,7 @@ class JournalsScreenState extends State<JournalsScreen> {
         builder: (context) {
           final preview = firstSentenceFromDelta(entry.notes);
           if (preview.isEmpty) return const SizedBox.shrink();
-          return Text(preview, maxLines: 3, overflow: TextOverflow.ellipsis);
+          return Text(preview, maxLines: 3, overflow: TextOverflow.ellipsis,);
         },
       ),
       subtitle: Column(
@@ -1119,14 +1122,16 @@ class JournalsScreenState extends State<JournalsScreen> {
   Widget _buildTagPill(BuildContext context, String tagName, int colorIndex) {
     final backgroundColor = getTagColorByIndex(colorIndex);
     final foregroundColor =
-        ThemeData.estimateBrightnessForColor(backgroundColor) == Brightness.dark
-            ? Colors.white
-            : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.85);
+      Theme.of(context).brightness == Brightness.dark
+            ? const Color(0xFFFFFFFF)
+            : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.95);
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
       decoration: BoxDecoration(
-        color: backgroundColor.withOpacity(0.2),
+        color: Theme.of(context).brightness == Brightness.dark
+            ? backgroundColor.withValues(alpha: 0.9)
+            : backgroundColor.withValues(alpha: 0.2),
         border: Border.all(color: backgroundColor, width: 0.5),
         borderRadius: BorderRadius.circular(999.0),
       ),
@@ -1134,7 +1139,8 @@ class JournalsScreenState extends State<JournalsScreen> {
         tagName,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
-        style: Theme.of(context).textTheme.labelSmall?.copyWith(color: backgroundColor, fontWeight: FontWeight.w600),
+        style: Theme.of(context).textTheme.labelSmall?.copyWith(color: foregroundColor, fontWeight: FontWeight.w600,
+          ),
       ),
     );
   }
