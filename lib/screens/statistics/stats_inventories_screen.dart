@@ -9,6 +9,7 @@ import '../../providers/poi_provider.dart';
 import '../../providers/species_provider.dart';
 import '../../widgets/scrollable_chart_indicator.dart';
 import '../../utils/statistics_logic.dart';
+import 'inventory_report_screen.dart';
 
 /// Loader screen that fetches full details for a list of inventory IDs before displaying [StatsInventoriesScreen].
 class StatsInventoriesLoadingScreen extends StatefulWidget {
@@ -500,6 +501,28 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                                       },
                                     );
                                   },
+                                ),
+                              ),
+                              const SizedBox(height: 8,),
+                              TextButton(
+                                onPressed: () {
+                                  final inventories =
+                                  widget.inventories;
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder:
+                                          (context) => InventoryReportScreen(
+                                        selectedInventories:
+                                        inventories
+                                            .whereType<Inventory>()
+                                            .toList(),
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Text(
+                                  S.current.viewSpeciesTable,
                                 ),
                               ),
                             ],

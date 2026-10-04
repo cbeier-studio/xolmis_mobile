@@ -2106,6 +2106,9 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get startingPleaseWait => 'Iniciando, aguarde...';
+
+  @override
+  String get viewSpeciesTable => 'Ver tabela de espécies';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -4209,4 +4212,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get startingPleaseWait => 'Iniciando, aguarde...';
+
+  @override
+  String get viewSpeciesTable => 'Ver tabela de espécies';
 }

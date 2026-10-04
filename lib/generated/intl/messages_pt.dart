@@ -719,10 +719,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "intervaledQualitativeLists": MessageLookupByLibrary.simpleMessage(
       "Listas qualitativas por intervalo",
     ),
-    "invalidJsonFormatExpectedObjectOrArray":
-        MessageLookupByLibrary.simpleMessage(
-          "Formato JSON inválido. Esperado um objeto com os metadados e chaves de dados obrigatórios.",
-        ),
+    "invalidJsonFormatExpectedObjectOrArray": MessageLookupByLibrary.simpleMessage(
+      "Formato JSON inválido. Esperado um objeto com os metadados e chaves de dados obrigatórios.",
+    ),
     "invalidJsonSchema": MessageLookupByLibrary.simpleMessage(
       "Esquema do JSON inválido.",
     ),
@@ -759,10 +758,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "inventoryExportOnboardingAction": MessageLookupByLibrary.simpleMessage(
       "Entendi",
     ),
-    "inventoryExportOnboardingCsvDescription":
-        MessageLookupByLibrary.simpleMessage(
-          "Agora geram 3 arquivos separados, e cada arquivo pode incluir dados de mais de um inventário.",
-        ),
+    "inventoryExportOnboardingCsvDescription": MessageLookupByLibrary.simpleMessage(
+      "Agora geram 3 arquivos separados, e cada arquivo pode incluir dados de mais de um inventário.",
+    ),
     "inventoryExportOnboardingCsvTitle": MessageLookupByLibrary.simpleMessage(
       "Exportações em CSV",
     ),
@@ -806,10 +804,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "inventoryIntervalQualitative": MessageLookupByLibrary.simpleMessage(
       "Lista Qualitativa por Intervalos",
     ),
-    "inventoryIntervalQualitativeDescription":
-        MessageLookupByLibrary.simpleMessage(
-          "Lista qualitativa dividida em intervalos de tempo repetidos. Três intervalos sem registro de novas espécies encerram o inventário.",
-        ),
+    "inventoryIntervalQualitativeDescription": MessageLookupByLibrary.simpleMessage(
+      "Lista qualitativa dividida em intervalos de tempo repetidos. Três intervalos sem registro de novas espécies encerram o inventário.",
+    ),
     "inventoryMackinnonList": MessageLookupByLibrary.simpleMessage(
       "Lista de Mackinnon",
     ),
@@ -837,10 +834,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "inventoryTimedQualitative": MessageLookupByLibrary.simpleMessage(
       "Lista Qualitativa Temporizada",
     ),
-    "inventoryTimedQualitativeDescription":
-        MessageLookupByLibrary.simpleMessage(
-          "Lista qualitativa registrada durante um tempo fixo. O temporizador é reiniciado a cada vez que uma nova espécie é detectada.",
-        ),
+    "inventoryTimedQualitativeDescription": MessageLookupByLibrary.simpleMessage(
+      "Lista qualitativa registrada durante um tempo fixo. O temporizador é reiniciado a cada vez que uma nova espécie é detectada.",
+    ),
     "inventoryTransectCount": MessageLookupByLibrary.simpleMessage(
       "Contagem em Transecto",
     ),
@@ -850,10 +846,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "inventoryTransectDetection": MessageLookupByLibrary.simpleMessage(
       "Transecto de Detecções",
     ),
-    "inventoryTransectDetectionDescription":
-        MessageLookupByLibrary.simpleMessage(
-          "Registre detecções ao longo de um transecto com distância e/ou altura de voo.",
-        ),
+    "inventoryTransectDetectionDescription": MessageLookupByLibrary.simpleMessage(
+      "Registre detecções ao longo de um transecto com distância e/ou altura de voo.",
+    ),
     "inventoryType": MessageLookupByLibrary.simpleMessage("Tipo de inventário"),
     "inventoryTypeChangeWarningMessage": m44,
     "inventoryTypeChangeWarningTitle": MessageLookupByLibrary.simpleMessage(
@@ -1369,6 +1364,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "version": MessageLookupByLibrary.simpleMessage("Versão"),
     "viewLicense": MessageLookupByLibrary.simpleMessage("Ver licença"),
+    "viewSpeciesTable": MessageLookupByLibrary.simpleMessage(
+      "Ver tabela de espécies",
+    ),
     "warningTitle": MessageLookupByLibrary.simpleMessage("Aviso"),
     "weather": MessageLookupByLibrary.simpleMessage("Tempo"),
     "weatherData": MessageLookupByLibrary.simpleMessage("Dados do tempo"),

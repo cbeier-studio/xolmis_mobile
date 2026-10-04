@@ -2069,4 +2069,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get startingPleaseWait => 'Starting, please wait...';
+
+  @override
+  String get viewSpeciesTable => 'View species table';
 }

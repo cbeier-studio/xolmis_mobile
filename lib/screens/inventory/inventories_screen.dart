@@ -884,63 +884,20 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                         ),
                       ],
                     ),
-                    MenuAnchor(
-                      builder: (context, controller, child) {
-                        return IconButton(
-                          icon: const Icon(Icons.more_vert_outlined),
-                          onPressed: () {
-                            if (controller.isOpen) {
-                              controller.close();
-                            } else {
-                              controller.open();
-                            }
-                          },
+                    if (selectedInventories.length > 1)
+                    IconButton(
+                      icon: const Icon(Icons.insert_chart_outlined),
+                      tooltip: S.current.statistics,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => StatsInventoriesLoadingScreen(
+                              inventoryIds: selectedInventories.toList(),
+                            ),
+                          ),
                         );
                       },
-                      menuChildren: [
-                        MenuItemButton(
-                          onPressed: () {
-                            final inventories =
-                                selectedInventories
-                                    .map(
-                                      (id) => inventoryProvider
-                                          .getInventoryById(id),
-                                    )
-                                    .toList();
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder:
-                                    (context) => InventoryReportScreen(
-                                      selectedInventories:
-                                          inventories
-                                              .whereType<Inventory>()
-                                              .toList(),
-                                    ),
-                              ),
-                            );
-                          },
-                          leadingIcon: const Icon(Icons.table_view_outlined),
-                          child: Text(S.current.reportSpeciesByInventory),
-                        ),
-                        if (selectedInventories.length > 1)
-                          MenuItemButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => StatsInventoriesLoadingScreen(
-                                    inventoryIds: selectedInventories.toList(),
-                                  ),
-                                ),
-                              );
-                            },
-                            leadingIcon: const Icon(
-                              Icons.insert_chart_outlined,
-                            ),
-                            child: Text(S.current.statistics),
-                          ),
-                      ],
                     ),
                     const VerticalDivider(),
                     // Option to clear the selected inventories

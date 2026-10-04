@@ -3763,6 +3763,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Starting, please wait...'**
   String get startingPleaseWait;
+
+  /// View table button label
+  ///
+  /// In en, this message translates to:
+  /// **'View species table'**
+  String get viewSpeciesTable;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

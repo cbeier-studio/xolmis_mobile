@@ -3137,5 +3137,10 @@
     "@startingPleaseWait": {
         "type": "text",
         "description": "Starting dialog message"
+    },
+    "viewSpeciesTable": "View species table",
+    "@viewSpeciesTable": {
+        "type": "text",
+        "description": "View table button label"
     }
 }

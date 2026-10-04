@@ -2578,5 +2578,10 @@
   "@startingPleaseWait": {
     "type": "text",
     "description": "Starting dialog message"
+  },
+  "viewSpeciesTable": "Ver tabela de espécies",
+  "@viewSpeciesTable": {
+    "type": "text",
+    "description": "View table button label"
   }
 }
