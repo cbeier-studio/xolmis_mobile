@@ -21,6 +21,11 @@ class LocationServiceDisabledFailure extends LocationFailure {
   const LocationServiceDisabledFailure();
 }
 
+/// O GPS demorou demais para retornar uma posição.
+class LocationTimeoutFailure extends LocationFailure {
+  const LocationTimeoutFailure();
+}
+
 /// Ocorreu um erro desconhecido ao tentar obter a localização.
 class LocationUnknownFailure extends LocationFailure {
   final String message;

@@ -599,6 +599,10 @@ class Inventory with ChangeNotifier {
   /// Emits whether the inventory is currently finished.
   ValueNotifier<bool> get isFinishedNotifier => _isFinishedNotifier;
 
+  bool get isStationary =>
+      type == InventoryType.invPointCount ||
+      type == InventoryType.invPointDetection;
+
   /// Returns true if both start latitude and start longitude are present and non-zero.
   bool get hasValidStartCoordinates =>
       startLatitude != null &&
@@ -615,7 +619,7 @@ class Inventory with ChangeNotifier {
 
   /// Returns true if start coordinates are missing/blank, or if finished and end coordinates are missing/blank.
   bool get hasMissingCoordinates =>
-      !hasValidStartCoordinates || (isFinished && !hasValidEndCoordinates);
+      !hasValidStartCoordinates || (isFinished && !isStationary && !hasValidEndCoordinates);
   bool _autoFinished = false;
 
   /// Returns whether the inventory was finished automatically by a rule.

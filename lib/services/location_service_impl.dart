@@ -29,11 +29,11 @@ class GeolocatorServiceImpl implements LocationService {
         return left(const LocationPermissionPermanentlyDeniedFailure());
       }
 
-      // Obtém a posição atual com precisão alta e timeout de 30 segundos.
+      // Obtém a posição atual com precisão alta e timeout de 15 segundos.
       final position = await Geolocator.getCurrentPosition(
         locationSettings: const LocationSettings(
           accuracy: LocationAccuracy.high,
-          timeLimit: Duration(seconds: 30),
+          timeLimit: Duration(seconds: 15),
         ),
       );
 
@@ -43,7 +43,7 @@ class GeolocatorServiceImpl implements LocationService {
         altitude: position.altitude,
       ));
     } on TimeoutException {
-      return left(const LocationUnknownFailure('Tempo esgotado ao obter localização GPS.'));
+      return left(const LocationTimeoutFailure());
     } catch (e) {
       return left(LocationUnknownFailure('Erro inesperado: ${e.toString()}'));
     }

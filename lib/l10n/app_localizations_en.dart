@@ -1359,6 +1359,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get couldNotGetGpsLocation => 'Could not get GPS location';
 
   @override
+  String get locationPermissionDeniedMessage => 'Location permission denied.';
+
+  @override
+  String get locationPermissionPermanentlyDeniedMessage =>
+      'Location permission denied permanently. Open settings to allow access.';
+
+  @override
+  String get locationServiceDisabledMessage => 'Device GPS is turned off. Enable location in settings.';
+
+  @override
+  String get locationTimeoutMessage => 'Timed out while getting GPS location. Try again or enter coordinates manually.';
+
+  @override
+  String get openSettings => 'Open settings';
+
+  @override
+  String get finishingInventoryPleaseWait => 'Finishing inventory... please wait';
+
+  @override
   String get continueWithout => 'Continue without';
 
   @override
@@ -2047,4 +2066,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get end => 'End';
+
+  @override
+  String get startingPleaseWait => 'Starting, please wait...';
 }

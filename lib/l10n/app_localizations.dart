@@ -2462,6 +2462,42 @@ abstract class AppLocalizations {
   /// **'Could not get GPS location'**
   String get couldNotGetGpsLocation;
 
+  /// Message shown when location permission is denied
+  ///
+  /// In en, this message translates to:
+  /// **'Location permission denied.'**
+  String get locationPermissionDeniedMessage;
+
+  /// Message shown when location permission is permanently denied
+  ///
+  /// In en, this message translates to:
+  /// **'Location permission denied permanently. Open settings to allow access.'**
+  String get locationPermissionPermanentlyDeniedMessage;
+
+  /// Message shown when device location service is disabled
+  ///
+  /// In en, this message translates to:
+  /// **'Device GPS is turned off. Enable location in settings.'**
+  String get locationServiceDisabledMessage;
+
+  /// Message shown when GPS acquisition times out
+  ///
+  /// In en, this message translates to:
+  /// **'Timed out while getting GPS location. Try again or enter coordinates manually.'**
+  String get locationTimeoutMessage;
+
+  /// Open settings button label
+  ///
+  /// In en, this message translates to:
+  /// **'Open settings'**
+  String get openSettings;
+
+  /// Message shown while inventory finalization is in progress
+  ///
+  /// In en, this message translates to:
+  /// **'Finishing inventory... please wait'**
+  String get finishingInventoryPleaseWait;
+
   /// Continue without button label
   ///
   /// In en, this message translates to:
@@ -3721,6 +3757,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'End'**
   String get end;
+
+  /// Starting dialog message
+  ///
+  /// In en, this message translates to:
+  /// **'Starting, please wait...'**
+  String get startingPleaseWait;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

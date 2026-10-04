@@ -565,6 +565,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "finish": MessageLookupByLibrary.simpleMessage("Finish"),
     "finishInventory": MessageLookupByLibrary.simpleMessage("Finish inventory"),
     "finished": MessageLookupByLibrary.simpleMessage("Finished"),
+    "finishingInventoryPleaseWait": MessageLookupByLibrary.simpleMessage(
+      "Finishing inventory... please wait",
+    ),
     "flightDirection": MessageLookupByLibrary.simpleMessage("Flight direction"),
     "flightHeight": MessageLookupByLibrary.simpleMessage("Flight height"),
     "formatNumbers": MessageLookupByLibrary.simpleMessage("Format numbers"),
@@ -717,9 +720,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "inventoryExportOnboardingAction": MessageLookupByLibrary.simpleMessage(
       "Got it",
     ),
-    "inventoryExportOnboardingCsvDescription": MessageLookupByLibrary.simpleMessage(
-      "CSV exports now generate 3 separate files, and each file can include data from more than one inventory.",
-    ),
+    "inventoryExportOnboardingCsvDescription":
+        MessageLookupByLibrary.simpleMessage(
+          "CSV exports now generate 3 separate files, and each file can include data from more than one inventory.",
+        ),
     "inventoryExportOnboardingCsvTitle": MessageLookupByLibrary.simpleMessage(
       "CSV exports",
     ),
@@ -763,9 +767,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "inventoryIntervalQualitative": MessageLookupByLibrary.simpleMessage(
       "Interval Qualitative List",
     ),
-    "inventoryIntervalQualitativeDescription": MessageLookupByLibrary.simpleMessage(
-      "A qualitative list split into repeated time intervals. Three intervals without new species recorded is a common stopping rule.",
-    ),
+    "inventoryIntervalQualitativeDescription":
+        MessageLookupByLibrary.simpleMessage(
+          "A qualitative list split into repeated time intervals. Three intervals without new species recorded is a common stopping rule.",
+        ),
     "inventoryMackinnonList": MessageLookupByLibrary.simpleMessage(
       "Mackinnon List",
     ),
@@ -789,9 +794,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "inventoryTimedQualitative": MessageLookupByLibrary.simpleMessage(
       "Timed Qualitative List",
     ),
-    "inventoryTimedQualitativeDescription": MessageLookupByLibrary.simpleMessage(
-      "A qualitative list recorded during a fixed amount of time. Timer resets when a new species is recorded.",
-    ),
+    "inventoryTimedQualitativeDescription":
+        MessageLookupByLibrary.simpleMessage(
+          "A qualitative list recorded during a fixed amount of time. Timer resets when a new species is recorded.",
+        ),
     "inventoryTransectCount": MessageLookupByLibrary.simpleMessage(
       "Transect Count",
     ),
@@ -801,9 +807,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "inventoryTransectDetection": MessageLookupByLibrary.simpleMessage(
       "Detection Transect Count",
     ),
-    "inventoryTransectDetectionDescription": MessageLookupByLibrary.simpleMessage(
-      "Record detections along a transect with distance and/or flight height.",
-    ),
+    "inventoryTransectDetectionDescription":
+        MessageLookupByLibrary.simpleMessage(
+          "Record detections along a transect with distance and/or flight height.",
+        ),
     "inventoryType": MessageLookupByLibrary.simpleMessage("Inventory type"),
     "inventoryTypeChangeWarningMessage": m44,
     "inventoryTypeChangeWarningTitle": MessageLookupByLibrary.simpleMessage(
@@ -835,6 +842,19 @@ class MessageLookup extends MessageLookupByLibrary {
     "localitiesSurveyed": m47,
     "locality": MessageLookupByLibrary.simpleMessage("Locality"),
     "locationError": MessageLookupByLibrary.simpleMessage("Location error"),
+    "locationPermissionDeniedMessage": MessageLookupByLibrary.simpleMessage(
+      "Location permission denied.",
+    ),
+    "locationPermissionPermanentlyDeniedMessage":
+        MessageLookupByLibrary.simpleMessage(
+          "Location permission denied permanently. Open settings to allow access.",
+        ),
+    "locationServiceDisabledMessage": MessageLookupByLibrary.simpleMessage(
+      "Device GPS is turned off. Enable location in settings.",
+    ),
+    "locationTimeoutMessage": MessageLookupByLibrary.simpleMessage(
+      "Timed out while getting GPS location. Try again or enter coordinates manually.",
+    ),
     "longitude": MessageLookupByLibrary.simpleMessage("Longitude"),
     "mackinnonLists": MessageLookupByLibrary.simpleMessage("Mackinnon lists"),
     "male": MessageLookupByLibrary.simpleMessage("Male"),
@@ -959,6 +979,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "observersSettings": MessageLookupByLibrary.simpleMessage("Observers"),
     "ok": MessageLookupByLibrary.simpleMessage("OK"),
     "onlineHelp": MessageLookupByLibrary.simpleMessage("Online help"),
+    "openSettings": MessageLookupByLibrary.simpleMessage("Open settings"),
     "openSourceLicenses": MessageLookupByLibrary.simpleMessage(
       "Open Source Licenses",
     ),
@@ -1217,6 +1238,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "startInventory": MessageLookupByLibrary.simpleMessage("Start inventory"),
     "startNextList": MessageLookupByLibrary.simpleMessage("Start next list"),
     "startTime": MessageLookupByLibrary.simpleMessage("Start time"),
+    "startingPleaseWait": MessageLookupByLibrary.simpleMessage(
+      "Starting, please wait...",
+    ),
     "startupModule": MessageLookupByLibrary.simpleMessage("Startup module"),
     "statistics": MessageLookupByLibrary.simpleMessage("Statistics"),
     "suggestFeatureOrReportIssue": MessageLookupByLibrary.simpleMessage(

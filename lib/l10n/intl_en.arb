@@ -2246,6 +2246,36 @@
         "type": "text",
         "description": "Location error dialog message"
     },
+    "locationPermissionDeniedMessage": "Location permission denied.",
+    "@locationPermissionDeniedMessage": {
+        "type": "text",
+        "description": "Message shown when location permission is denied"
+    },
+    "locationPermissionPermanentlyDeniedMessage": "Location permission denied permanently. Open settings to allow access.",
+    "@locationPermissionPermanentlyDeniedMessage": {
+        "type": "text",
+        "description": "Message shown when location permission is permanently denied"
+    },
+    "locationServiceDisabledMessage": "Device GPS is turned off. Enable location in settings.",
+    "@locationServiceDisabledMessage": {
+        "type": "text",
+        "description": "Message shown when device location service is disabled"
+    },
+    "locationTimeoutMessage": "Timed out while getting GPS location. Try again or enter coordinates manually.",
+    "@locationTimeoutMessage": {
+        "type": "text",
+        "description": "Message shown when GPS acquisition times out"
+    },
+    "openSettings": "Open settings",
+    "@openSettings": {
+        "type": "text",
+        "description": "Open settings button label"
+    },
+    "finishingInventoryPleaseWait": "Finishing inventory... please wait",
+    "@finishingInventoryPleaseWait": {
+        "type": "text",
+        "description": "Message shown while inventory finalization is in progress"
+    },
     "continueWithout": "Continue without",
     "@continueWithout": {
         "type": "text",
@@ -3102,5 +3132,10 @@
     "@end": {
         "type": "text",
         "description": "End longitude/latitude label"
+    },
+    "startingPleaseWait": "Starting, please wait...",
+    "@startingPleaseWait": {
+        "type": "text",
+        "description": "Starting dialog message"
     }
 }

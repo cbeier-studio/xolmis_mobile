@@ -343,43 +343,96 @@ Future<Position?> _showManualCoordinatesDialog(BuildContext context) async {
   return result;
 }
 
+enum _LocationErrorAction {
+  continueWithout,
+  enterManually,
+  openSettings,
+}
+
+String _locationFailureMessage(BuildContext context, LocationFailure failure) {
+  final strings = S.of(context);
+
+  if (failure is LocationPermissionDeniedFailure) {
+    return strings.locationPermissionDeniedMessage;
+  }
+  if (failure is LocationPermissionPermanentlyDeniedFailure) {
+    return strings.locationPermissionPermanentlyDeniedMessage;
+  }
+  if (failure is LocationServiceDisabledFailure) {
+    return strings.locationServiceDisabledMessage;
+  }
+  if (failure is LocationTimeoutFailure) {
+    return strings.locationTimeoutMessage;
+  }
+  if (failure is LocationUnknownFailure && failure.message.isNotEmpty) {
+    return failure.message;
+  }
+
+  return strings.couldNotGetGpsLocation;
+}
+
+Future<void> _openSettingsForLocationFailure(LocationFailure failure) async {
+  if (failure is LocationServiceDisabledFailure) {
+    await Geolocator.openLocationSettings();
+    return;
+  }
+
+  await Geolocator.openAppSettings();
+}
+
 /// Returns the current device position or a manually entered fallback.
 ///
 /// If GPS retrieval fails, the user can choose to continue without coordinates
 /// or enter latitude and longitude manually.
 Future<Position?> getPosition(BuildContext context) async {
+  final rootNavigator = Navigator.of(context, rootNavigator: true);
+  final dialogContext = rootNavigator.context;
   final locationService = Provider.of<LocationService>(context, listen: false);
   final result = await locationService.getCurrentCoordinate();
 
   return await result.fold(
     (failure) async {
-      debugPrint("Error getting position: $failure");
-      if (!context.mounted) return null;
+      debugPrint('Error getting position (${failure.runtimeType}): $failure');
+      if (!dialogContext.mounted) return null;
+      final canOpenSettings =
+          failure is LocationPermissionPermanentlyDeniedFailure ||
+          failure is LocationServiceDisabledFailure;
 
-      final choice = await showDialog<bool>(
-        context: context,
+      final choice = await showDialog<_LocationErrorAction>(
+        context: dialogContext,
+        useRootNavigator: true,
         barrierDismissible: false,
         builder: (dialogContext) {
           return AlertDialog(
             title: Text(S.of(dialogContext).locationError),
-            content: Text(S.of(dialogContext).couldNotGetGpsLocation),
+            content: Text(_locationFailureMessage(dialogContext, failure)),
             actions: [
+              if (canOpenSettings)
+                TextButton(
+                  child: Text(S.of(dialogContext).openSettings),
+                  onPressed: () => Navigator.of(dialogContext).pop(_LocationErrorAction.openSettings),
+                ),
               TextButton(
                 child: Text(S.of(dialogContext).continueWithout),
-                onPressed: () => Navigator.of(dialogContext).pop(false),
+                onPressed: () => Navigator.of(dialogContext).pop(_LocationErrorAction.continueWithout),
               ),
               TextButton(
                 child: Text(S.of(dialogContext).enterManually),
-                onPressed: () => Navigator.of(dialogContext).pop(true),
+                onPressed: () => Navigator.of(dialogContext).pop(_LocationErrorAction.enterManually),
               ),
             ],
           );
         },
       );
 
-      if (choice == true) {
-        if (!context.mounted) return null;
-        return await _showManualCoordinatesDialog(context);
+      if (choice == _LocationErrorAction.openSettings) {
+        await _openSettingsForLocationFailure(failure);
+        return null;
+      }
+
+      if (choice == _LocationErrorAction.enterManually) {
+        if (!dialogContext.mounted) return null;
+        return await _showManualCoordinatesDialog(dialogContext);
       } else {
         return null;
       }

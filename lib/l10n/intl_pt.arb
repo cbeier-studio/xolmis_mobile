@@ -1747,6 +1747,36 @@
         "type": "text",
         "description": "Location error dialog message"
     },
+    "locationPermissionDeniedMessage": "Permissão de localização negada.",
+    "@locationPermissionDeniedMessage": {
+        "type": "text",
+        "description": "Message shown when location permission is denied"
+    },
+    "locationPermissionPermanentlyDeniedMessage": "Permissão de localização negada permanentemente. Abra as configurações para permitir o acesso.",
+    "@locationPermissionPermanentlyDeniedMessage": {
+        "type": "text",
+        "description": "Message shown when location permission is permanently denied"
+    },
+    "locationServiceDisabledMessage": "O GPS do dispositivo está desligado. Ative a localização nas configurações.",
+    "@locationServiceDisabledMessage": {
+        "type": "text",
+        "description": "Message shown when device location service is disabled"
+    },
+    "locationTimeoutMessage": "Tempo esgotado ao obter localização GPS. Tente novamente ou informe manualmente.",
+    "@locationTimeoutMessage": {
+        "type": "text",
+        "description": "Message shown when GPS acquisition times out"
+    },
+  "openSettings": "Abrir configurações",
+  "@openSettings": {
+    "type": "text",
+    "description": "Open settings button label"
+  },
+  "finishingInventoryPleaseWait": "Encerrando inventário... aguarde",
+  "@finishingInventoryPleaseWait": {
+    "type": "text",
+    "description": "Message shown while inventory finalization is in progress"
+  },
     "continueWithout": "Continuar sem",
     "@continueWithout": {
         "type": "text",
@@ -2543,5 +2573,10 @@
   "@end": {
     "type": "text",
     "description": "End longitude/latitude label"
+  },
+  "startingPleaseWait": "Iniciando, aguarde...",
+  "@startingPleaseWait": {
+    "type": "text",
+    "description": "Starting dialog message"
   }
 }

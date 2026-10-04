@@ -367,12 +367,19 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
               child: Align(
                 alignment: Alignment.centerRight,
                 child: _isSubmitting
-                    ? const SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
+                    ? Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                      ),
                     ),
+                    const SizedBox(width: 12),
+                    Text(S.current.startingPleaseWait),
+                  ],
                 )
                     : FilledButton(
                   onPressed: _submitForm,
@@ -487,7 +494,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
         final title = S.of(dialogContext).inventoryTypesDialogTitle;
         final items = _buildInventoryTypeDialogItems(dialogContext);
 
-        if (isFullScreen) {
+        if (!isFullScreen) {
           return Dialog.fullscreen(
             child: SafeArea(
               child: Column(

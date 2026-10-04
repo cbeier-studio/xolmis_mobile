@@ -1377,6 +1377,27 @@ class AppLocalizationsPt extends AppLocalizations {
   String get couldNotGetGpsLocation => 'Não foi possível obter a localização do GPS';
 
   @override
+  String get locationPermissionDeniedMessage => 'Permissão de localização negada.';
+
+  @override
+  String get locationPermissionPermanentlyDeniedMessage =>
+      'Permissão de localização negada permanentemente. Abra as configurações para permitir o acesso.';
+
+  @override
+  String get locationServiceDisabledMessage =>
+      'O GPS do dispositivo está desligado. Ative a localização nas configurações.';
+
+  @override
+  String get locationTimeoutMessage =>
+      'Tempo esgotado ao obter localização GPS. Tente novamente ou informe manualmente.';
+
+  @override
+  String get openSettings => 'Abrir configurações';
+
+  @override
+  String get finishingInventoryPleaseWait => 'Encerrando inventário... aguarde';
+
+  @override
   String get continueWithout => 'Continuar sem';
 
   @override
@@ -2082,6 +2103,9 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get end => 'Final';
+
+  @override
+  String get startingPleaseWait => 'Iniciando, aguarde...';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -3456,6 +3480,27 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get couldNotGetGpsLocation => 'Não foi possível obter a localização do GPS';
 
   @override
+  String get locationPermissionDeniedMessage => 'Permissão de localização negada.';
+
+  @override
+  String get locationPermissionPermanentlyDeniedMessage =>
+      'Permissão de localização negada permanentemente. Abra as configurações para permitir o acesso.';
+
+  @override
+  String get locationServiceDisabledMessage =>
+      'O GPS do dispositivo está desligado. Ative a localização nas configurações.';
+
+  @override
+  String get locationTimeoutMessage =>
+      'Tempo esgotado ao obter localização GPS. Tente novamente ou informe manualmente.';
+
+  @override
+  String get openSettings => 'Abrir configurações';
+
+  @override
+  String get finishingInventoryPleaseWait => 'Encerrando inventário... aguarde';
+
+  @override
   String get continueWithout => 'Continuar sem';
 
   @override
@@ -4161,4 +4206,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get end => 'Final';
+
+  @override
+  String get startingPleaseWait => 'Iniciando, aguarde...';
 }

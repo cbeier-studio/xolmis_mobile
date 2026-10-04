@@ -29,7 +29,7 @@ class InventoryCompletionService {
 
   /// Stops and persists the inventory as finished.
   Future<void> _finalizeInventory(BuildContext context) async {
-    inventory.stopTimer(context, inventoryDao);
+    await inventory.stopTimer(context, inventoryDao);
     inventoryProvider.updateInventory(inventory);
   }
 
@@ -71,7 +71,7 @@ class InventoryCompletionService {
   ///
   /// Depending on the current settings, this method can prompt the user to add
   /// missing vegetation or weather data before finishing the inventory.
-  Future<void> processConditionalRemindersAndFinalize(BuildContext context) async {
+  Future<bool> processConditionalRemindersAndFinalize(BuildContext context) async {
     bool proceedToFinalize = true;
 
     final VegetationProvider vegetationProvider = context.read<VegetationProvider>();
@@ -105,7 +105,7 @@ class InventoryCompletionService {
         }
       } else if (vegetationAction == ConditionalAction.cancelDialog) {
         proceedToFinalize = false;
-        return;
+        return false;
       }
     }
 
@@ -130,7 +130,7 @@ class InventoryCompletionService {
         }
       } else if (weatherAction == ConditionalAction.cancelDialog) {
         proceedToFinalize = false;
-        return;
+        return false;
       }
     }
 
@@ -138,12 +138,16 @@ class InventoryCompletionService {
     if (proceedToFinalize) {
       if (context.mounted) {
         await _finalizeInventory(context);
+        return true;
       }
+      return false;
     }
+
+    return false;
   }
 
   /// Starts the inventory finish flow by asking the user for confirmation.
-  Future<void> attemptFinishInventory(BuildContext context) async {
+  Future<bool> attemptFinishInventory(BuildContext context) async {
     final bool? confirmedFinish = await showDialog<bool>(
       context: context,
       builder: (BuildContext dialogContext) {
@@ -166,9 +170,11 @@ class InventoryCompletionService {
 
     if (confirmedFinish == true) {
       if (context.mounted) {
-        await processConditionalRemindersAndFinalize(context);
+        return await processConditionalRemindersAndFinalize(context);
       }
     }
+
+    return false;
   }
 }
 

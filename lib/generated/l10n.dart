@@ -1,6 +1,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -323,8 +324,7 @@ class S {
     return Intl.message(
       'Give feedback or contribute on GitHub',
       name: 'giveFeedbackOnGitHub',
-      desc:
-          'Label with a link to the app repository on GitHub in about the app section',
+      desc: 'Label with a link to the app repository on GitHub in about the app section',
       args: [],
     );
   }
@@ -586,8 +586,7 @@ class S {
     return Intl.message(
       'Limit of simultaneous inventories reached.',
       name: 'simultaneousLimitReached',
-      desc:
-          'Message shown when the limit of simultaneous inventories defined in settings is reached',
+      desc: 'Message shown when the limit of simultaneous inventories defined in settings is reached',
       args: [],
     );
   }
@@ -923,8 +922,7 @@ class S {
     return Intl.message(
       'Site name or abbreviation',
       name: 'siteAbbreviation',
-      desc:
-          'Field label asking the inventory site name or abbreviation to generate the ID',
+      desc: 'Field label asking the inventory site name or abbreviation to generate the ID',
       args: [],
     );
   }
@@ -1357,8 +1355,7 @@ class S {
     return Intl.message(
       'Error saving vegetation data',
       name: 'errorSavingVegetation',
-      desc:
-          'Message shown when an error occurred while saving a vegetation record',
+      desc: 'Message shown when an error occurred while saving a vegetation record',
       args: [],
     );
   }
@@ -1524,8 +1521,7 @@ class S {
     return Intl.message(
       'Count',
       name: 'count',
-      desc:
-          'Species info showing individuals count for the species in the actual list',
+      desc: 'Species info showing individuals count for the species in the actual list',
       args: [],
     );
   }
@@ -1535,8 +1531,7 @@ class S {
     return Intl.message(
       'Record time',
       name: 'recordTime',
-      desc:
-          'Species info showing the record time for the species in the actual list',
+      desc: 'Species info showing the record time for the species in the actual list',
       args: [],
     );
   }
@@ -1558,8 +1553,7 @@ class S {
     return Intl.message(
       'Out of the sample',
       name: 'outOfSample',
-      desc:
-          'Species info for when the species was added after the inventory was finished',
+      desc: 'Species info for when the species was added after the inventory was finished',
       args: [],
     );
   }
@@ -1569,8 +1563,7 @@ class S {
     return Intl.message(
       'Within the sample',
       name: 'withinSample',
-      desc:
-          'Species info for when the species was added while the inventory was active',
+      desc: 'Species info for when the species was added while the inventory was active',
       args: [],
     );
   }
@@ -2260,8 +2253,7 @@ class S {
     return Intl.message(
       'A specimen with this field number already exists.',
       name: 'errorSpecimenAlreadyExists',
-      desc:
-          'Message shown when a specimen already exists with the same field number',
+      desc: 'Message shown when a specimen already exists with the same field number',
       args: [],
     );
   }
@@ -2437,8 +2429,7 @@ class S {
     return Intl.message(
       'Export changes',
       name: 'inventoryExportOnboardingTitle',
-      desc:
-          'Title of the one-time onboarding screen that explains inventory export changes',
+      desc: 'Title of the one-time onboarding screen that explains inventory export changes',
       args: [],
     );
   }
@@ -2458,8 +2449,7 @@ class S {
     return Intl.message(
       'CSV exports',
       name: 'inventoryExportOnboardingCsvTitle',
-      desc:
-          'Section title for CSV changes on the inventory export onboarding screen',
+      desc: 'Section title for CSV changes on the inventory export onboarding screen',
       args: [],
     );
   }
@@ -2479,8 +2469,7 @@ class S {
     return Intl.message(
       'Excel exports',
       name: 'inventoryExportOnboardingExcelTitle',
-      desc:
-          'Section title for Excel changes on the inventory export onboarding screen',
+      desc: 'Section title for Excel changes on the inventory export onboarding screen',
       args: [],
     );
   }
@@ -2708,8 +2697,7 @@ class S {
     return Intl.message(
       'The list reached the maximum of species. Do you want to start the next list or finish now?',
       name: 'listFinishedMessage',
-      desc:
-          'Message asking user to take action when a Mackinnon list was finished',
+      desc: 'Message asking user to take action when a Mackinnon list was finished',
       args: [],
     );
   }
@@ -2810,8 +2798,7 @@ class S {
     return Intl.message(
       'Do you want to delete $speciesName from other active inventories?',
       name: 'confirmDeleteSpeciesMessage',
-      desc:
-          'Message of dialog to confirm deletion of species in other inventories',
+      desc: 'Message of dialog to confirm deletion of species in other inventories',
       args: [speciesName],
     );
   }
@@ -2831,8 +2818,7 @@ class S {
     return Intl.message(
       'Species propagation from inactive inventories',
       name: 'speciesPropagationBehavior',
-      desc:
-          'Settings option to define how species are propagated to other active inventories',
+      desc: 'Settings option to define how species are propagated to other active inventories',
       args: [],
     );
   }
@@ -2842,8 +2828,7 @@ class S {
     return Intl.message(
       'Always propagate',
       name: 'speciesPropagationAlways',
-      desc:
-          'Policy option to always propagate species to other active inventories',
+      desc: 'Policy option to always propagate species to other active inventories',
       args: [],
     );
   }
@@ -2853,8 +2838,7 @@ class S {
     return Intl.message(
       'Always ask',
       name: 'speciesPropagationAsk',
-      desc:
-          'Policy option to ask before propagating species to other active inventories',
+      desc: 'Policy option to ask before propagating species to other active inventories',
       args: [],
     );
   }
@@ -2864,8 +2848,7 @@ class S {
     return Intl.message(
       'Never propagate',
       name: 'speciesPropagationNever',
-      desc:
-          'Policy option to never propagate species to other active inventories',
+      desc: 'Policy option to never propagate species to other active inventories',
       args: [],
     );
   }
@@ -2875,8 +2858,7 @@ class S {
     return Intl.message(
       'Propagate species',
       name: 'confirmPropagateSpecies',
-      desc:
-          'Title of dialog to confirm species propagation to other active inventories',
+      desc: 'Title of dialog to confirm species propagation to other active inventories',
       args: [],
     );
   }
@@ -3296,8 +3278,7 @@ class S {
     return Intl.message(
       'Change inventory type?',
       name: 'inventoryTypeChangeWarningTitle',
-      desc:
-          'Title shown when the user attempts to change inventory type while editing',
+      desc: 'Title shown when the user attempts to change inventory type while editing',
       args: [],
     );
   }
@@ -3307,8 +3288,7 @@ class S {
     return Intl.message(
       'Changing from $currentType to $newType may alter assumptions and protocol-specific premises of this inventory. Continue with this change?',
       name: 'inventoryTypeChangeWarningMessage',
-      desc:
-          'Warning message shown before applying inventory type change in edit screen',
+      desc: 'Warning message shown before applying inventory type change in edit screen',
       args: [currentType, newType],
     );
   }
@@ -3556,8 +3536,7 @@ class S {
     return Intl.message(
       'Existing records on import',
       name: 'importExistingRecords',
-      desc:
-          'Settings title for choosing import behavior when records already exist',
+      desc: 'Settings title for choosing import behavior when records already exist',
       args: [],
     );
   }
@@ -4068,6 +4047,66 @@ class S {
       'Could not get GPS location',
       name: 'couldNotGetGpsLocation',
       desc: 'Location error dialog message',
+      args: [],
+    );
+  }
+
+  /// `Location permission denied.`
+  String get locationPermissionDeniedMessage {
+    return Intl.message(
+      'Location permission denied.',
+      name: 'locationPermissionDeniedMessage',
+      desc: 'Message shown when location permission is denied',
+      args: [],
+    );
+  }
+
+  /// `Location permission denied permanently. Open settings to allow access.`
+  String get locationPermissionPermanentlyDeniedMessage {
+    return Intl.message(
+      'Location permission denied permanently. Open settings to allow access.',
+      name: 'locationPermissionPermanentlyDeniedMessage',
+      desc: 'Message shown when location permission is permanently denied',
+      args: [],
+    );
+  }
+
+  /// `Device GPS is turned off. Enable location in settings.`
+  String get locationServiceDisabledMessage {
+    return Intl.message(
+      'Device GPS is turned off. Enable location in settings.',
+      name: 'locationServiceDisabledMessage',
+      desc: 'Message shown when device location service is disabled',
+      args: [],
+    );
+  }
+
+  /// `Timed out while getting GPS location. Try again or enter coordinates manually.`
+  String get locationTimeoutMessage {
+    return Intl.message(
+      'Timed out while getting GPS location. Try again or enter coordinates manually.',
+      name: 'locationTimeoutMessage',
+      desc: 'Message shown when GPS acquisition times out',
+      args: [],
+    );
+  }
+
+  /// `Open settings`
+  String get openSettings {
+    return Intl.message(
+      'Open settings',
+      name: 'openSettings',
+      desc: 'Open settings button label',
+      args: [],
+    );
+  }
+
+  /// `Finishing inventory... please wait`
+  String get finishingInventoryPleaseWait {
+    return Intl.message(
+      'Finishing inventory... please wait',
+      name: 'finishingInventoryPleaseWait',
+      desc: 'Message shown while inventory finalization is in progress',
       args: [],
     );
   }
@@ -4658,8 +4697,7 @@ class S {
     return Intl.message(
       'No valid inventories found in the imported file.',
       name: 'noValidInventoriesFoundInFile',
-      desc:
-          'Message shown when no valid inventories are found in the imported file',
+      desc: 'Message shown when no valid inventories are found in the imported file',
       args: [],
     );
   }
@@ -6001,8 +6039,7 @@ class S {
     return Intl.message(
       'Confirm add',
       name: 'confirmAdd',
-      desc:
-          'Title of dialog to confirm adding an individual to an existing species count',
+      desc: 'Title of dialog to confirm adding an individual to an existing species count',
       args: [],
     );
   }
@@ -6012,8 +6049,7 @@ class S {
     return Intl.message(
       'Do you want to add one individual to the count of $speciesName?',
       name: 'confirmAddIndividual',
-      desc:
-          'Message asking user confirmation to add one individual to existing species',
+      desc: 'Message asking user confirmation to add one individual to existing species',
       args: [speciesName],
     );
   }
@@ -6049,6 +6085,16 @@ class S {
       'End',
       name: 'end',
       desc: 'End longitude/latitude label',
+      args: [],
+    );
+  }
+
+  /// `Starting, please wait...`
+  String get startingPleaseWait {
+    return Intl.message(
+      'Starting, please wait...',
+      name: 'startingPleaseWait',
+      desc: 'Starting dialog message',
       args: [],
     );
   }

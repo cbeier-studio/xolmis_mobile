@@ -60,6 +60,8 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
   bool _isSubmitting = false;
   final fabController = FabMenuController();
 
+  bool get _canFinishInventory => !_isSubmitting && !widget.inventory.isFinished;
+
   @override
   void initState() {
     super.initState();
@@ -96,6 +98,65 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
   void dispose() {
     _tabController.dispose();
     super.dispose();
+  }
+
+  Future<void> _handleFinishPressed() async {
+    if (!_canFinishInventory) {
+      return;
+    }
+
+    setState(() {
+      _isSubmitting = true;
+    });
+
+    try {
+      final completionService = InventoryCompletionService(
+        context: context,
+        inventory: widget.inventory,
+        inventoryProvider: Provider.of<InventoryProvider>(context, listen: false),
+        inventoryDao: widget.inventoryDao,
+      );
+      final didFinish = await completionService.attemptFinishInventory(context);
+      if (didFinish && !widget.isEmbedded && mounted) {
+        Navigator.pop(context, true);
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSubmitting = false;
+        });
+      }
+    }
+  }
+
+  Widget _buildFinishingOverlay(BuildContext context) {
+    return Positioned.fill(
+      child: AbsorbPointer(
+        absorbing: true,
+        child: ColoredBox(
+          color: Colors.black54,
+          child: Center(
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(strokeWidth: 2.5),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(S.of(context).finishingInventoryPleaseWait),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   void _showAddVegetationScreen(BuildContext context) {
@@ -220,24 +281,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
               Visibility(
                 visible: !widget.inventory.isFinished,
                 child: IconButton.filled(
-                  onPressed: () async {
-                    setState(() {
-                      _isSubmitting = true;
-                    });
-                    final completionService = InventoryCompletionService(
-                      context: context,
-                      inventory: widget.inventory,
-                      inventoryProvider: Provider.of<InventoryProvider>(context, listen: false),
-                      inventoryDao: widget.inventoryDao,
-                    );
-                    await completionService.attemptFinishInventory(context);
-                    if (!widget.isEmbedded && context.mounted) {
-                      Navigator.pop(context, true);
-                    }
-                    setState(() {
-                      _isSubmitting = false;
-                    });
-                  },
+                  onPressed: _canFinishInventory ? _handleFinishPressed : null,
                   style: IconButton.styleFrom(
                     foregroundColor: Theme.of(context).brightness == Brightness.light
                         ? Colors.white
@@ -334,24 +378,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                       ActionChip(
                     label: Text(S.current.finish), 
                     avatar: const Icon(Icons.flag_outlined),
-                    onPressed: () async {
-                      setState(() {
-                      _isSubmitting = true;
-                    });
-                    final completionService = InventoryCompletionService(
-                      context: context,
-                      inventory: widget.inventory,
-                      inventoryProvider: Provider.of<InventoryProvider>(context, listen: false),
-                      inventoryDao: widget.inventoryDao,
-                    );
-                    await completionService.attemptFinishInventory(context);
-                    if (!widget.isEmbedded && context.mounted) {
-                      Navigator.pop(context, true);
-                    }
-                    setState(() {
-                      _isSubmitting = false;
-                    });
-                    },
+                    onPressed: _canFinishInventory ? _handleFinishPressed : null,
                   ),
                   const SizedBox(width: 8.0,),
                     ],
@@ -461,6 +488,9 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
             Consumer<SpeciesProvider>(
               builder: (context, speciesProvider, child) {
                 final speciesList = speciesProvider.getSpeciesForInventory(widget.inventory.id);
+                final speciesTabText = widget.inventory.type == InventoryType.invTransectDetection || widget.inventory.type == InventoryType.invPointDetection
+                    ? S.of(context).recordsCount(2)
+                    : S.of(context).species(2);
                 return speciesList.isNotEmpty
                     ? Badge.count(
                         backgroundColor: Colors.deepPurple[100],
@@ -468,15 +498,9 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                         alignment: AlignmentDirectional.centerEnd,
                         offset: const Offset(24, -8),
                         count: speciesList.length,
-                        child: Tab(text: widget.inventory.type == InventoryType.invTransectDetection ||
-                            widget.inventory.type == InventoryType.invPointDetection
-                            ? S.current.recordsCount(2)
-                            : S.current.species(2)),
+                        child: Tab(text: "${speciesTabText[0].toUpperCase()}${speciesTabText.substring(1).toLowerCase()}"),
                       )
-                    : Tab(text: widget.inventory.type == InventoryType.invTransectDetection ||
-                          widget.inventory.type == InventoryType.invPointDetection
-                          ? S.current.recordsCount(2)
-                          : S.current.species(2));
+                    : Tab(text: "${speciesTabText[0].toUpperCase()}${speciesTabText.substring(1).toLowerCase()}");
               },
             ),
             Consumer<VegetationProvider>(
@@ -519,74 +543,81 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
   Widget build(BuildContext context) {
     // If embedded, return widget without Scaffold/AppBar
     if (widget.isEmbedded) {
-      return SafeArea(
-        child: Column(
-          children: [
-            ValueListenableBuilder<bool>(
-              valueListenable: widget.inventory.isFinishedNotifier, // supondo que exista
-              builder: (context, isFinished, child) {
-                return _buildTopArea(context);
-              },
-            ),
-            Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                dragStartBehavior: DragStartBehavior.down,
-                children: [
-                  SpeciesTab(
-                    inventory: widget.inventory,
-                    speciesDao: widget.speciesDao,
-                    inventoryDao: widget.inventoryDao,
-                  ),
-                  VegetationTab(inventory: widget.inventory),
-                  WeatherTab(inventory: widget.inventory),
-                ],
-              ),
-            ),
-            // Floating actions in embedded mode: show FAB aligned bottom-right
-            Align(
-              alignment: Alignment.bottomRight,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: FabMenuM3E(
-                  controller: fabController,
-                  alignment: Alignment.bottomRight,
-                  direction: FabMenuDirection.up,
-                  overlay: false,
-                  primaryFab: FabM3E(
-                      icon: fabController.isOpen ? const Icon(Icons.close) : const Icon(Icons.add),
-                      onPressed: fabController.toggle),
-                  items: [
-                    FabMenuItem(
-                      icon: Theme.of(context).brightness == Brightness.light
-                          ? const Icon(Icons.local_florist_outlined)
-                          : const Icon(Icons.local_florist),
-                      label: Text(S.of(context).vegetationData),
-                      onPressed: () {
-                        _showAddVegetationScreen(context);
-                      },
-                    ),
-                    FabMenuItem(
-                      icon: Theme.of(context).brightness == Brightness.light
-                          ? const Icon(Icons.wb_sunny_outlined)
-                          : const Icon(Icons.wb_sunny),
-                      label: Text(S.of(context).weatherData),
-                      onPressed: () {
-                        _showAddWeatherScreen(context);
-                      },
-                    ),
-                  ],
+      return Stack(
+        children: [
+          SafeArea(
+            child: Column(
+              children: [
+                ValueListenableBuilder<bool>(
+                  valueListenable: widget.inventory.isFinishedNotifier, // supondo que exista
+                  builder: (context, isFinished, child) {
+                    return _buildTopArea(context);
+                  },
                 ),
-              ),
+                Expanded(
+                  child: TabBarView(
+                    controller: _tabController,
+                    dragStartBehavior: DragStartBehavior.down,
+                    children: [
+                      SpeciesTab(
+                        inventory: widget.inventory,
+                        speciesDao: widget.speciesDao,
+                        inventoryDao: widget.inventoryDao,
+                      ),
+                      VegetationTab(inventory: widget.inventory),
+                      WeatherTab(inventory: widget.inventory),
+                    ],
+                  ),
+                ),
+                // Floating actions in embedded mode: show FAB aligned bottom-right
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: FabMenuM3E(
+                      controller: fabController,
+                      alignment: Alignment.bottomRight,
+                      direction: FabMenuDirection.up,
+                      overlay: false,
+                      primaryFab: FabM3E(
+                          icon: fabController.isOpen ? const Icon(Icons.close) : const Icon(Icons.add),
+                          onPressed: fabController.toggle),
+                      items: [
+                        FabMenuItem(
+                          icon: Theme.of(context).brightness == Brightness.light
+                              ? const Icon(Icons.local_florist_outlined)
+                              : const Icon(Icons.local_florist),
+                          label: Text(S.of(context).vegetationData),
+                          onPressed: () {
+                            _showAddVegetationScreen(context);
+                          },
+                        ),
+                        FabMenuItem(
+                          icon: Theme.of(context).brightness == Brightness.light
+                              ? const Icon(Icons.wb_sunny_outlined)
+                              : const Icon(Icons.wb_sunny),
+                          label: Text(S.of(context).weatherData),
+                          onPressed: () {
+                            _showAddWeatherScreen(context);
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+          if (_isSubmitting) _buildFinishingOverlay(context),
+        ],
       );
     }
 
     // Not embedded: original Scaffold with AppBar
-    return Scaffold(
-      appBar: AppBar(
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: AppBar(
         title: Text(widget.inventory.id),
         actions: [
           !widget.inventory.isFinished && widget.inventory.duration > 0
@@ -610,26 +641,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
           Visibility(
               visible: !widget.inventory.isFinished,
               child: IconButton.filled(
-              onPressed: () async {
-                // Show confirmation dialog
-                  setState(() {
-                    _isSubmitting = true;
-                  });
-                  final completionService = InventoryCompletionService(
-                    context: context,
-                    inventory: widget.inventory,
-                    inventoryProvider: Provider.of<InventoryProvider>(context, listen: false),
-                    inventoryDao: widget.inventoryDao,
-                  );
-                  await completionService.attemptFinishInventory(context);
-                  if (context.mounted) {
-                    Navigator.pop(context, true);
-                  }
-                  setState(() {
-                    _isSubmitting = false;
-                  });
-                // }
-              },
+              onPressed: _canFinishInventory ? _handleFinishPressed : null,
               style: IconButton.styleFrom(
                 foregroundColor: Theme.of(context).brightness == Brightness.light
                     ? Colors.white
@@ -742,24 +754,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                       ActionChip(
                     label: Text(S.current.finish), 
                     avatar: const Icon(Icons.flag_outlined),
-                    onPressed: () async {
-                      setState(() {
-                      _isSubmitting = true;
-                    });
-                    final completionService = InventoryCompletionService(
-                      context: context,
-                      inventory: widget.inventory,
-                      inventoryProvider: Provider.of<InventoryProvider>(context, listen: false),
-                      inventoryDao: widget.inventoryDao,
-                    );
-                    await completionService.attemptFinishInventory(context);
-                    if (!widget.isEmbedded && context.mounted) {
-                      Navigator.pop(context, true);
-                    }
-                    setState(() {
-                      _isSubmitting = false;
-                    });
-                    },
+                    onPressed: _canFinishInventory ? _handleFinishPressed : null,
                   ),
                   const SizedBox(width: 8.0,),
                     ],
@@ -929,53 +924,56 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
           ),
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        dragStartBehavior: DragStartBehavior.down,
-        children: [
-          SpeciesTab(
-            inventory: widget.inventory,
-            speciesDao: widget.speciesDao,
-            inventoryDao: widget.inventoryDao,
+          body: TabBarView(
+            controller: _tabController,
+            dragStartBehavior: DragStartBehavior.down,
+            children: [
+              SpeciesTab(
+                inventory: widget.inventory,
+                speciesDao: widget.speciesDao,
+                inventoryDao: widget.inventoryDao,
+              ),
+              VegetationTab(
+                inventory: widget.inventory,
+              ),
+              WeatherTab(
+                inventory: widget.inventory,
+              ),
+            ],
           ),
-          VegetationTab(
-            inventory: widget.inventory,
+          floatingActionButton: FabMenuM3E(
+            controller: fabController,
+            alignment: Alignment.bottomRight,
+            direction: FabMenuDirection.up,
+            overlay: false,
+            primaryFab: FabM3E(
+                icon: fabController.isOpen ? const Icon(Icons.close) : const Icon(Icons.add),
+                onPressed: fabController.toggle
+            ),
+            items: [
+              FabMenuItem(
+                icon: Theme.of(context).brightness == Brightness.light
+                      ? const Icon(Icons.local_florist_outlined)
+                      : const Icon(Icons.local_florist),
+                label: Text(S.of(context).vegetationData),
+                onPressed: () {
+                  _showAddVegetationScreen(context);
+                },
+              ),
+              FabMenuItem(
+                icon: Theme.of(context).brightness == Brightness.light
+                  ? const Icon(Icons.wb_sunny_outlined)
+                  : const Icon(Icons.wb_sunny),
+                label: Text(S.of(context).weatherData),
+                onPressed: () {
+                  _showAddWeatherScreen(context);
+                },
+              ),
+            ],
           ),
-          WeatherTab(
-            inventory: widget.inventory,
-          ),
-        ],
-      ),
-      floatingActionButton: FabMenuM3E(
-        controller: fabController,
-        alignment: Alignment.bottomRight,
-        direction: FabMenuDirection.up,
-        overlay: false,
-        primaryFab: FabM3E(
-            icon: fabController.isOpen ? const Icon(Icons.close) : const Icon(Icons.add),
-            onPressed: fabController.toggle
         ),
-        items: [
-          FabMenuItem(
-            icon: Theme.of(context).brightness == Brightness.light
-                  ? const Icon(Icons.local_florist_outlined)
-                  : const Icon(Icons.local_florist),
-            label: Text(S.of(context).vegetationData),
-            onPressed: () {
-              _showAddVegetationScreen(context);
-            },
-          ),
-          FabMenuItem(
-            icon: Theme.of(context).brightness == Brightness.light
-              ? const Icon(Icons.wb_sunny_outlined)
-              : const Icon(Icons.wb_sunny),
-            label: Text(S.of(context).weatherData),
-            onPressed: () {
-              _showAddWeatherScreen(context);
-            },
-          ),
-        ],
-      ),
+        if (_isSubmitting) _buildFinishingOverlay(context),
+      ],
     );
   }
 
