@@ -14,6 +14,7 @@
 
 * The dialog to change the number of individuals of a species was not applying the value informed.
 * The statistics screen of selected inventories was stuck in loading.
+* Share Excel files sometimes did not work.
 
 ## 1.0.3
 

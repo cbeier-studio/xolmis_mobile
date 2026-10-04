@@ -245,7 +245,7 @@ Future<void> exportAllInventoriesToJson(BuildContext context, InventoryProvider 
     Directory tempDir = await getTemporaryDirectory();
     final filePath = '${tempDir.path}/inventories_$formattedDate.json';
     final file = File(filePath);
-    await file.writeAsString(jsonString);
+    await file.writeAsString(jsonString, flush: true);
 
     if (isDialogShown) {
         if (context.mounted) {
@@ -302,7 +302,7 @@ Future<void> exportInventoryToJson(BuildContext context, Inventory inventory, bo
     Directory tempDir = await getTemporaryDirectory();
     final filePath = '${tempDir.path}/inventory_${inventoryToExport.id}.json';
     final file = File(filePath);
-    await file.writeAsString(jsonString);
+    await file.writeAsString(jsonString, flush: true);
 
     // Share the file using share_plus
     if (shareIt) {
@@ -893,9 +893,12 @@ Future<String> exportInventoryToExcel(
     Directory tempDir = await getTemporaryDirectory();
     final filePath = '${tempDir.path}/inventory_${inventoryToExport.id}.xlsx';
     if (fileBytes != null) {
-      File(filePath)
-        ..create(recursive: true)
-        ..writeAsBytes(fileBytes);
+      final file = File(filePath);
+      await file.create(recursive: true);
+      await file.writeAsBytes(fileBytes, flush: true);
+
+      await Future.delayed(const Duration(milliseconds: 100));
+
       return filePath;
     } else {
       throw Exception('Failed to generate Excel file.');
@@ -937,7 +940,7 @@ Future<List<String>> exportInventoryToCsv(
       final speciesFilePath = '${tempDir.path}/inventory_${inventoryToExport.id}_species.csv';
       if (speciesCsv.isNotEmpty) {
         final file = File(speciesFilePath);
-        await file.writeAsString(speciesCsv);
+        await file.writeAsString(speciesCsv, flush: true);
         filePaths.add(speciesFilePath);
       }
     }
@@ -951,7 +954,7 @@ Future<List<String>> exportInventoryToCsv(
       final poiFilePath = '${tempDir.path}/inventory_${inventoryToExport.id}_pois.csv';
       if (poiCsv.isNotEmpty) {
         final file = File(poiFilePath);
-        await file.writeAsString(poiCsv);
+        await file.writeAsString(poiCsv, flush: true);
         filePaths.add(poiFilePath);
       }
     }
@@ -965,7 +968,7 @@ Future<List<String>> exportInventoryToCsv(
       final vegFilePath = '${tempDir.path}/inventory_${inventoryToExport.id}_vegetation.csv';
       if (vegCsv.isNotEmpty) {
         final file = File(vegFilePath);
-        await file.writeAsString(vegCsv);
+        await file.writeAsString(vegCsv, flush: true);
         filePaths.add(vegFilePath);
       }
     }
@@ -979,7 +982,7 @@ Future<List<String>> exportInventoryToCsv(
       final weatherFilePath = '${tempDir.path}/inventory_${inventoryToExport.id}_weather.csv';
       if (weatherCsv.isNotEmpty) {
         final file = File(weatherFilePath);
-        await file.writeAsString(weatherCsv);
+        await file.writeAsString(weatherCsv, flush: true);
         filePaths.add(weatherFilePath);
       }
     }
@@ -1071,7 +1074,7 @@ Future<void> exportInventoryToKml(
     final filePath =
         '${tempDir.path}/inventory_${inventoryToExport.id}_pois.kml';
     final file = File(filePath);
-    await file.writeAsString(kmlString);
+    await file.writeAsString(kmlString, flush: true);
 
     await SharePlus.instance.share(
       ShareParams(
@@ -1124,7 +1127,7 @@ Future<void> exportSelectedInventoriesToJson(
     Directory tempDir = await getTemporaryDirectory();
     final filePath = '${tempDir.path}/selected_inventories_$formattedDate.json';
     final file = File(filePath);
-    await file.writeAsString(jsonString);
+    await file.writeAsString(jsonString, flush: true);
 
     await SharePlus.instance.share(
       ShareParams(
@@ -1196,7 +1199,7 @@ Future<void> exportSelectedInventoriesToCsv(
       final speciesFilePath = '${tempDir.path}/selected_inventories_${formattedDate}_species.csv';
       if (speciesCsv.isNotEmpty) {
         final file = File(speciesFilePath);
-        await file.writeAsString(speciesCsv);
+        await file.writeAsString(speciesCsv, flush: true);
         filePaths.add(speciesFilePath);
       }
     }
@@ -1210,7 +1213,7 @@ Future<void> exportSelectedInventoriesToCsv(
       final poiFilePath = '${tempDir.path}/selected_inventories_${formattedDate}_pois.csv';
       if (poiCsv.isNotEmpty) {
         final file = File(poiFilePath);
-        await file.writeAsString(poiCsv);
+        await file.writeAsString(poiCsv, flush: true);
         filePaths.add(poiFilePath);
       }
     }
@@ -1224,7 +1227,7 @@ Future<void> exportSelectedInventoriesToCsv(
       final vegFilePath = '${tempDir.path}/selected_inventories_${formattedDate}_vegetation.csv';
       if (vegCsv.isNotEmpty) {
         final file = File(vegFilePath);
-        await file.writeAsString(vegCsv);
+        await file.writeAsString(vegCsv, flush: true);
         filePaths.add(vegFilePath);
       }
     }
@@ -1238,7 +1241,7 @@ Future<void> exportSelectedInventoriesToCsv(
       final weatherFilePath = '${tempDir.path}/selected_inventories_${formattedDate}_weather.csv';
       if (weatherCsv.isNotEmpty) {
         final file = File(weatherFilePath);
-        await file.writeAsString(weatherCsv);
+        await file.writeAsString(weatherCsv, flush: true);
         filePaths.add(weatherFilePath);
       }
     }
@@ -1314,9 +1317,11 @@ Future<void> exportSelectedInventoriesToExcel(
     final filePath =
         '${tempDir.path}/selected_inventories_$formattedDate.xlsx';
     if (fileBytes != null) {
-      File(filePath)
-        ..create(recursive: true)
-        ..writeAsBytes(fileBytes);
+      final file = File(filePath);
+      await file.create(recursive: true);
+      await file.writeAsBytes(fileBytes, flush: true);
+
+      await Future.delayed(const Duration(milliseconds: 100));
 
       await SharePlus.instance.share(
         ShareParams(
@@ -1426,7 +1431,7 @@ Future<void> exportSelectedInventoriesToKml(BuildContext context, List<Inventory
     final tempDir = await getTemporaryDirectory();
     final filePath = '${tempDir.path}/selected_inventories_$formattedDate.kml';
     final file = File(filePath);
-    await file.writeAsString(kmlString);
+    await file.writeAsString(kmlString, flush: true);
 
     await SharePlus.instance.share(
       ShareParams(
@@ -1925,7 +1930,7 @@ Future<void> exportSelectedJournalsToTxt(
     final tempDir = await getTemporaryDirectory();
     final filePath = '${tempDir.path}/selected_journals_$formattedDate.txt';
     final file = File(filePath);
-    await file.writeAsString(txtContent);
+    await file.writeAsString(txtContent, flush: true);
 
     await SharePlus.instance.share(
       ShareParams(
@@ -1961,7 +1966,7 @@ Future<void> exportSelectedJournalsToMarkdown(
     final tempDir = await getTemporaryDirectory();
     final filePath = '${tempDir.path}/selected_journals_$formattedDate.md';
     final file = File(filePath);
-    await file.writeAsString(markdownContent);
+    await file.writeAsString(markdownContent, flush: true);
 
     await SharePlus.instance.share(
       ShareParams(
@@ -2065,12 +2070,16 @@ Future<void> exportSelectedJournalsToWord(
 
     final tempDir = await getTemporaryDirectory();
     final filePath = '${tempDir.path}/selected_journals_$formattedDate.docx';
-    await File(filePath).writeAsBytes(bytes);
+    final file = File(filePath);
+    await file.create(recursive: true);
+    await file.writeAsBytes(bytes, flush: true);
 
     if (isDialogShown && context.mounted) {
       Navigator.of(context).pop();
       isDialogShown = false;
     }
+
+    await Future.delayed(const Duration(milliseconds: 100));
 
     await SharePlus.instance.share(
       ShareParams(
@@ -2127,7 +2136,7 @@ Future<void> exportSelectedJournalsToJson(
     final tempDir = await getTemporaryDirectory();
     final filePath = '${tempDir.path}/selected_journals_$formattedDate.json';
     final file = File(filePath);
-    await file.writeAsString(jsonString);
+    await file.writeAsString(jsonString, flush: true);
 
     await SharePlus.instance.share(
       ShareParams(
@@ -2169,7 +2178,9 @@ Future<void> exportSelectedNestsToJson(BuildContext context, List<Nest> nests) a
     Directory tempDir = await getTemporaryDirectory();
     final filePath = '${tempDir.path}/selected_nests_$formattedDate.json';
     final file = File(filePath);
-    await file.writeAsString(jsonString);
+    await file.writeAsString(jsonString, flush: true);
+
+    await Future.delayed(const Duration(milliseconds: 100));
 
     await SharePlus.instance.share(
       ShareParams(
@@ -2231,7 +2242,7 @@ Future<void> exportSelectedNestsToCsv(BuildContext context, List<Nest> nests) as
       final revFilePath = '${tempDir.path}/selected_nests_${formattedDate}_revisions.csv';
       if (revCsv.isNotEmpty) {
         final file = File(revFilePath);
-        await file.writeAsString(revCsv);
+        await file.writeAsString(revCsv, flush: true);
         filePaths.add(revFilePath);
       }
     }
@@ -2244,10 +2255,12 @@ Future<void> exportSelectedNestsToCsv(BuildContext context, List<Nest> nests) as
       final eggFilePath = '${tempDir.path}/selected_nests_${formattedDate}_eggs.csv';
       if (eggCsv.isNotEmpty) {
         final file = File(eggFilePath);
-        await file.writeAsString(eggCsv);
+        await file.writeAsString(eggCsv, flush: true);
         filePaths.add(eggFilePath);
       }
     }
+
+    await Future.delayed(const Duration(milliseconds: 100));
 
     if (filePaths.isNotEmpty) {
       await SharePlus.instance.share(
@@ -2310,9 +2323,11 @@ Future<void> exportSelectedNestsToExcel(BuildContext context, List<Nest> nests) 
     Directory tempDir = await getTemporaryDirectory();
     final filePath = '${tempDir.path}/selected_nests_$formattedDate.xlsx';
     if (fileBytes != null) {
-      File(filePath)
-        ..create(recursive: true)
-        ..writeAsBytes(fileBytes);
+      final file = File(filePath);
+      await file.create(recursive: true);
+      await file.writeAsBytes(fileBytes, flush: true);
+
+      await Future.delayed(const Duration(milliseconds: 100));
 
       await SharePlus.instance.share(
         ShareParams(
@@ -2392,7 +2407,7 @@ Future<void> exportSelectedNestsToKml(BuildContext context, List<Nest> nests) as
     final tempDir = await getTemporaryDirectory();
     final filePath = '${tempDir.path}/selected_nests_$formattedDate.kml';
     final file = File(filePath);
-    await file.writeAsString(kmlString);
+    await file.writeAsString(kmlString, flush: true);
 
     await SharePlus.instance.share(
       ShareParams(
@@ -2462,7 +2477,7 @@ Future<void> exportAllInactiveNestsToJson(BuildContext context) async {
     Directory tempDir = await getTemporaryDirectory();
     final filePath = '${tempDir.path}/nests.json';
     final file = File(filePath);
-    await file.writeAsString(jsonString);
+    await file.writeAsString(jsonString, flush: true);
 
     if (isDialogShown) {
         if (context.mounted) {
@@ -2516,7 +2531,7 @@ Future<void> exportNestToJson(BuildContext context, Nest nest) async {
     Directory tempDir = await getTemporaryDirectory();
     final filePath = '${tempDir.path}/nest_${nestToExport.fieldNumber}.json';
     final file = File(filePath);
-    await file.writeAsString(jsonString);
+    await file.writeAsString(jsonString, flush: true);
 
     // 3. Share the file using share_plus
     await SharePlus.instance.share(
@@ -2782,7 +2797,7 @@ Future<List<String>> exportNestToCsv(BuildContext context, Nest nest, Locale loc
       final revFilePath = '${tempDir.path}/nest_${nestToExport.fieldNumber}_revisions.csv';
       if (revCsv.isNotEmpty) {
         final file = File(revFilePath);
-        await file.writeAsString(revCsv);
+        await file.writeAsString(revCsv, flush: true);
         filePaths.add(revFilePath);
       }
     }
@@ -2795,7 +2810,7 @@ Future<List<String>> exportNestToCsv(BuildContext context, Nest nest, Locale loc
       final eggFilePath = '${tempDir.path}/nest_${nestToExport.fieldNumber}_eggs.csv';
       if (eggCsv.isNotEmpty) {
         final file = File(eggFilePath);
-        await file.writeAsString(eggCsv);
+        await file.writeAsString(eggCsv, flush: true);
         filePaths.add(eggFilePath);
       }
     }
@@ -2829,9 +2844,12 @@ Future<String> exportNestToExcel(BuildContext context, Nest nest, Locale locale)
     Directory tempDir = await getTemporaryDirectory();
     final filePath = '${tempDir.path}/nest_${nestToExport.fieldNumber}.xlsx';
     if (fileBytes != null) {
-      File(filePath)
-        ..create(recursive: true)
-        ..writeAsBytes(fileBytes);
+      final file = File(filePath);
+      await file.create(recursive: true);
+      await file.writeAsBytes(fileBytes, flush: true);
+
+      await Future.delayed(const Duration(milliseconds: 100));
+
       return filePath;
     } else {
       throw Exception('Failed to generate Excel file.');
@@ -2885,7 +2903,7 @@ Future<void> exportNestToKml(BuildContext context, Nest nest) async {
     Directory tempDir = await getTemporaryDirectory();
     final filePath = '${tempDir.path}/nest_${nestToExport.fieldNumber}.kml';
     final file = File(filePath);
-    await file.writeAsString(kmlString);
+    await file.writeAsString(kmlString, flush: true);
 
     await SharePlus.instance.share(
       ShareParams(
@@ -2947,7 +2965,7 @@ Future<void> exportAllSpecimensToJson(BuildContext context, List<Specimen> speci
     Directory tempDir = await getTemporaryDirectory();
     final filePath = '${tempDir.path}/specimens.json';
     final file = File(filePath);
-    await file.writeAsString(jsonString);
+    await file.writeAsString(jsonString, flush: true);
 
     if (isDialogShown) {
         if (context.mounted) {
@@ -3001,7 +3019,7 @@ Future<void> exportSelectedSpecimensToJson(BuildContext context, List<Specimen> 
     Directory tempDir = await getTemporaryDirectory();
     final filePath = '${tempDir.path}/selected_specimens_$formattedDate.json';
     final file = File(filePath);
-    await file.writeAsString(jsonString);
+    await file.writeAsString(jsonString, flush: true);
 
     await SharePlus.instance.share(
       ShareParams(
@@ -3061,7 +3079,7 @@ Future<void> exportSelectedSpecimensToCsv(BuildContext context, List<Specimen> s
     Directory tempDir = await getTemporaryDirectory();
     final filePath = '${tempDir.path}/selected_specimens_$formattedDate.csv';
     final file = File(filePath);
-    await file.writeAsString(csv);
+    await file.writeAsString(csv, flush: true);
 
     if (isDialogShown) {
       if (context.mounted) {
@@ -3140,9 +3158,11 @@ Future<void> exportSelectedSpecimensToExcel(BuildContext context, List<Specimen>
     Directory tempDir = await getTemporaryDirectory();
     final filePath = '${tempDir.path}/selected_specimens_$formattedDate.xlsx';
     if (fileBytes != null) {
-      File(filePath)
-        ..create(recursive: true)
-        ..writeAsBytes(fileBytes);
+      final file = File(filePath);
+      await file.create(recursive: true);
+      await file.writeAsBytes(fileBytes, flush: true);
+
+      await Future.delayed(const Duration(milliseconds: 100));
 
       if (isDialogShown) {
         if (context.mounted) {
@@ -3228,7 +3248,7 @@ Future<void> exportSelectedSpecimensToKml(BuildContext context, List<Specimen> s
     final tempDir = await getTemporaryDirectory();
     final filePath = '${tempDir.path}/selected_specimens_$formattedDate.kml';
     final file = File(filePath);
-    await file.writeAsString(kmlString);
+    await file.writeAsString(kmlString, flush: true);
 
     await SharePlus.instance.share(
       ShareParams(
@@ -3292,7 +3312,7 @@ Future<void> exportAllSpecimensToCsv(BuildContext context, List<Specimen> specim
     Directory tempDir = await getTemporaryDirectory();
     final filePath = '${tempDir.path}/specimens.csv';
     final file = File(filePath);
-    await file.writeAsString(csv);
+    await file.writeAsString(csv, flush: true);
 
     if (isDialogShown) {
         if (context.mounted) {
@@ -3379,9 +3399,11 @@ Future<void> exportAllSpecimensToExcel(BuildContext context, List<Specimen> spec
     Directory tempDir = await getTemporaryDirectory();
     final filePath = '${tempDir.path}/specimens_$formattedDate.xlsx';
     if (fileBytes != null) {
-      File(filePath)
-        ..create(recursive: true)
-        ..writeAsBytes(fileBytes);
+      final file = File(filePath);
+      await file.create(recursive: true);
+      await file.writeAsBytes(fileBytes, flush: true);
+
+      await Future.delayed(const Duration(milliseconds: 100));
 
       if (isDialogShown) {
         if (context.mounted) {
@@ -3500,7 +3522,7 @@ Future<void> exportSpecimenToKml(BuildContext context, Specimen specimen) async 
     Directory tempDir = await getTemporaryDirectory();
     final filePath = '${tempDir.path}/specimen_${specimen.fieldNumber}.kml';
     final file = File(filePath);
-    await file.writeAsString(kmlString);
+    await file.writeAsString(kmlString, flush: true);
 
     await SharePlus.instance.share(
       ShareParams(

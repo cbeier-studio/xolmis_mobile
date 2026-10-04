@@ -14,6 +14,7 @@
 
 * Diálogo para alterar o número de indivíduos de uma espécie não estava aplicando o valor informado.
 * Tela de estatísticas dos inventários selecionados ficava travada no carregamento.
+* Compartilhamento de arquivos Excel algumas vezes não funcionava.
 
 ## 1.0.3
 
