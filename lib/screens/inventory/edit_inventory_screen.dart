@@ -45,6 +45,18 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
   late final inventoryProvider = Provider.of<InventoryProvider>(
       context, listen: false);
 
+  bool get _hasStartTimeChanged {
+    final original = widget.inventory.startTime;
+    final updated = _startTime;
+    if (original == null && updated == null) {
+      return false;
+    }
+    if (original == null || updated == null) {
+      return true;
+    }
+    return !original.isAtSameMomentAs(updated);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -251,6 +263,43 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
+      List<Species> speciesToPersist = widget.inventory.speciesList;
+      if (_hasStartTimeChanged &&
+          widget.inventory.startTime != null &&
+          _startTime != null) {
+        await inventoryProvider.speciesProvider.loadSpeciesForInventory(widget.inventory.id);
+        final loadedSpeciesFromProvider = inventoryProvider
+            .speciesProvider
+            .getSpeciesForInventory(widget.inventory.id);
+
+        List<Species> sourceSpecies = loadedSpeciesFromProvider.isNotEmpty
+            ? loadedSpeciesFromProvider
+            : widget.inventory.speciesList;
+        if (sourceSpecies.isEmpty) {
+          await inventoryProvider.loadInventoryDetails(widget.inventory.id);
+          sourceSpecies = inventoryProvider.getInventoryById(widget.inventory.id)?.speciesList ?? const [];
+        }
+
+        final hasSpeciesWithSampleTime = sourceSpecies.any((species) => species.sampleTime != null);
+        if (hasSpeciesWithSampleTime) {
+          final shouldShiftSpeciesTimes = await _askToShiftSpeciesTimes();
+          if (shouldShiftSpeciesTimes == null || !mounted) {
+            return;
+          }
+
+          if (shouldShiftSpeciesTimes) {
+            speciesToPersist = _shiftSpeciesSampleTimes(
+              sourceSpecies,
+              widget.inventory.startTime!,
+              _startTime!,
+            );
+            await _persistSpeciesTimeUpdates(speciesToPersist);
+          } else {
+            speciesToPersist = sourceSpecies;
+          }
+        }
+      }
+
       final startLatText = _startLatitudeController.text.trim();
       final startLonText = _startLongitudeController.text.trim();
       final endLatText = _endLatitudeController.text.trim();
@@ -281,7 +330,7 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
         observer: _observerController.text.toUpperCase(),
         notes: _notesController.text.isNotEmpty ? _notesController.text : null,
         isDiscarded: _isDiscarded,
-        speciesList: widget.inventory.speciesList,
+        speciesList: speciesToPersist,
         speciesCount: widget.inventory.speciesCount,
         speciesWithinCount: widget.inventory.speciesWithinCount,
         speciesOutOfInventoryCount: widget.inventory.speciesOutOfInventoryCount,
@@ -299,6 +348,60 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
       if (!mounted) return;
       // Return to the previous screen with the updated inventory
       Navigator.of(context).pop(updatedInventory);
+    }
+  }
+
+  /// Asks whether species record times should be shifted after a start time edit.
+  Future<bool?> _askToShiftSpeciesTimes() {
+    return showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: Text(S.current.startTimeChangeWarningTitle),
+        content: Text(S.current.startTimeChangeWarningMessage),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(null),
+            child: Text(S.current.cancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text(S.current.keepSpeciesTimes),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text(S.current.updateSpeciesTimes),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Shifts species sample times preserving each record's offset from original start time.
+  List<Species> _shiftSpeciesSampleTimes(
+    List<Species> speciesList,
+    DateTime originalStart,
+    DateTime newStart,
+  ) {
+    return speciesList.map((species) {
+      final sampleTime = species.sampleTime;
+      if (sampleTime == null) {
+        return species;
+      }
+
+      final relativeOffset = sampleTime.difference(originalStart);
+      final shiftedSampleTime = newStart.add(relativeOffset);
+      return species.copyWith(sampleTime: shiftedSampleTime);
+    }).toList();
+  }
+
+  /// Persists shifted species times in storage and provider cache.
+  Future<void> _persistSpeciesTimeUpdates(List<Species> updatedSpecies) async {
+    final speciesProvider = inventoryProvider.speciesProvider;
+    for (final species in updatedSpecies) {
+      if (species.id == null) {
+        continue;
+      }
+      await speciesProvider.updateSpecies(widget.inventory.id, species);
     }
   }
 

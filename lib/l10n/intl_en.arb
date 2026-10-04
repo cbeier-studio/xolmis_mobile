@@ -1794,6 +1794,26 @@
             }
         }
     },
+    "startTimeChangeWarningTitle": "Update species record times?",
+    "@startTimeChangeWarningTitle": {
+        "type": "text",
+        "description": "Dialog title shown when inventory start time changes in edit screen"
+    },
+    "startTimeChangeWarningMessage": "The start time changed. Do you want to update associated species record times based on their relative offset from the original start time?",
+    "@startTimeChangeWarningMessage": {
+        "type": "text",
+        "description": "Dialog message asking whether to shift species times after start time change"
+    },
+    "keepSpeciesTimes": "Keep current times",
+    "@keepSpeciesTimes": {
+        "type": "text",
+        "description": "Action to keep species times unchanged after start time edit"
+    },
+    "updateSpeciesTimes": "Update species times",
+    "@updateSpeciesTimes": {
+        "type": "text",
+        "description": "Action to shift species times after start time edit"
+    },
     "remindMissingVegetationData": "Remind missing vegetation data",
     "@remindMissingVegetationData": {
         "type": "text",

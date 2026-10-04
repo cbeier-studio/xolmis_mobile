@@ -1233,6 +1233,26 @@
             }
         }
     },
+    "startTimeChangeWarningTitle": "Atualizar horários das espécies?",
+    "@startTimeChangeWarningTitle": {
+        "type": "text",
+        "description": "Título do diálogo exibido quando a hora inicial do inventário é alterada na edição"
+    },
+    "startTimeChangeWarningMessage": "A hora inicial foi alterada. Deseja atualizar os horários de registro das espécies associadas com base no tempo relativo à hora inicial original?",
+    "@startTimeChangeWarningMessage": {
+        "type": "text",
+        "description": "Mensagem que pergunta se os horários das espécies devem ser ajustados após alterar a hora inicial"
+    },
+    "keepSpeciesTimes": "Manter horários atuais",
+    "@keepSpeciesTimes": {
+        "type": "text",
+        "description": "Ação para manter os horários das espécies sem alterações após editar a hora inicial"
+    },
+    "updateSpeciesTimes": "Atualizar horários das espécies",
+    "@updateSpeciesTimes": {
+        "type": "text",
+        "description": "Ação para ajustar os horários das espécies após editar a hora inicial"
+    },
     "remindMissingVegetationData": "Lembrar dados faltantes de vegetação",
     "@remindMissingVegetationData": {
         "type": "text",
