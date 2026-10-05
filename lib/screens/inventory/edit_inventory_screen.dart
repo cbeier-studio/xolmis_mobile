@@ -298,6 +298,10 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
               widget.inventory.startTime!,
               _startTime!,
             );
+            _applyShiftToInventoryEndTime(
+              originalStart: widget.inventory.startTime!,
+              newStart: _startTime!,
+            );
             await _persistAssociatedTimeUpdates(
               species: speciesToPersist,
               vegetation: vegetationToPersist,
@@ -544,6 +548,26 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
       }
       await weatherProvider.updateWeather(item);
     }
+  }
+
+  /// Keeps end time offset in sync when start time is shifted by confirmation.
+  void _applyShiftToInventoryEndTime({
+    required DateTime originalStart,
+    required DateTime newStart,
+  }) {
+    final originalEnd = widget.inventory.endTime;
+    if (originalEnd == null) {
+      return;
+    }
+
+    final shiftedEnd = _shiftSampleTime(
+      originalEnd,
+      originalStart,
+      newStart,
+    );
+
+    _endTime = shiftedEnd;
+    _endTimeController.text = DateFormat('dd/MM/yyyy HH:mm').format(shiftedEnd);
   }
 
   @override

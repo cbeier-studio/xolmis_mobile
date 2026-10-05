@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/core_consts.dart';
 import '../../data/models/inventory.dart';
 import '../../generated/l10n.dart';
 import '../../providers/inventory_provider.dart';
@@ -102,10 +103,8 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
     accumulatedSpeciesWithinSampleData = prepareAccumulatedSpeciesWithinSample(widget.inventories);
     combinedSpeciesList = _getSpeciesList(widget.inventories);
     if (widget.inventories.isNotEmpty) {
-      // Use speciesCount if available (from lazy loading), otherwise count from speciesList
       int totalRichnessSum = widget.inventories.fold(0, (sum, inv) {
-        // Prefer speciesCount if it's non-zero, otherwise use speciesList.length
-        final count = inv.speciesCount > 0 ? inv.speciesCount : inv.speciesList.map((s) => s.name).toSet().length;
+        final count = _getSpeciesRichnessForInventory(inv);
         return sum + count;
       });
 
@@ -119,6 +118,23 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
     distinctLocalitiesCount = distinctLocalities.length;
 
     recordsPerHour = _getOccurrencesByHourOfDayWithFallback(widget.inventories);
+  }
+
+  bool _isDetectionInventory(Inventory inventory) {
+    return inventory.type == InventoryType.invTransectDetection ||
+        inventory.type == InventoryType.invPointDetection;
+  }
+
+  /// Detection inventories can contain repeated rows for the same species, so
+  /// richness must be based on distinct names.
+  int _getSpeciesRichnessForInventory(Inventory inventory) {
+    if (_isDetectionInventory(inventory)) {
+      return inventory.speciesList.map((s) => s.name).toSet().length;
+    }
+    if (inventory.speciesCount > 0) {
+      return inventory.speciesCount;
+    }
+    return inventory.speciesList.length;
   }
 
   // Uses species.sampleTime when available, otherwise falls back to inventory.startTime.
@@ -750,8 +766,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                                       x: index,
                                       barRods: [
                                         BarChartRodData(
-                                          toY: (inventory.speciesCount > 0 ? inventory.speciesCount : inventory
-                                              .speciesList.length).toDouble(),
+                                          toY: _getSpeciesRichnessForInventory(inventory).toDouble(),
                                           width: 12,
                                           borderRadius: const BorderRadius.only(
                                             topLeft: Radius.circular(6),
