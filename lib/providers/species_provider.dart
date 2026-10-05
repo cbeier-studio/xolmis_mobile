@@ -197,4 +197,9 @@ class SpeciesProvider with ChangeNotifier {
     final speciesList = getSpeciesForInventory(inventoryId);
     return speciesList.any((species) => species.name == speciesName);
   }
+
+  /// Returns whether [species] is the first record of that species in storage.
+  Future<bool> isFirstRecordForSpecies(Species species) async {
+    return await _speciesDao.isFirstRecordForSpecies(species);
+  }
 }

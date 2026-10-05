@@ -31,19 +31,61 @@ class SpeciesListItem extends StatefulWidget {
 /// State implementation for [SpeciesListItem].
 class SpeciesListItemState extends State<SpeciesListItem> {
   bool _isAddingPoi = false;
+  bool _isLifer = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadLiferStatus();
+  }
+
+  @override
+  void didUpdateWidget(covariant SpeciesListItem oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.species.id != widget.species.id ||
+        oldWidget.species.name != widget.species.name ||
+        oldWidget.species.sampleTime != widget.species.sampleTime) {
+      _loadLiferStatus();
+    }
+  }
+
+  Future<void> _loadLiferStatus() async {
+    final speciesProvider = Provider.of<SpeciesProvider>(context, listen: false);
+    final isLifer = await speciesProvider.isFirstRecordForSpecies(widget.species);
+
+    if (!mounted) return;
+    setState(() {
+      _isLifer = isLifer;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(
-        widget.species.name,
-        style: TextStyle(
-          fontFamily: Platform.isIOS ? 'CupertinoSystemDisplay' : null,
-          fontStyle: FontStyle.italic,
-          color: allSpeciesNames.contains(widget.species.name)
-              ? null
-              : Colors.red,
-        ),
+      title: Row(
+        children: [
+          Expanded(
+            child: Text(
+              widget.species.name,
+              style: TextStyle(
+                fontFamily: Platform.isIOS ? 'CupertinoSystemDisplay' : null,
+                fontStyle: FontStyle.italic,
+                color: allSpeciesNames.contains(widget.species.name)
+                    ? null
+                    : Colors.red,
+              ),
+            ),
+          ),
+          if (_isLifer)
+            Tooltip(
+              message: 'Lifer',
+              child: Icon(
+                Icons.stars,
+                color: Colors.amber[700],
+                size: 18,
+              ),
+            ),
+        ],
       ),
       subtitle: _buildSubtitle(),
       tileColor: widget.species.isOutOfInventory

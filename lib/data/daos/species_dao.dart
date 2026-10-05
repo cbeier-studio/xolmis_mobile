@@ -209,4 +209,26 @@ class SpeciesDao {
     return null;
   }
 
+  /// Returns `true` when [species] is the first stored record for its name.
+  ///
+  /// First is determined by ascending `sampleTime`, using `id` as tie-breaker.
+  /// If the record has no ID yet, this returns `false`.
+  Future<bool> isFirstRecordForSpecies(Species species) async {
+    final speciesId = species.id;
+    if (speciesId == null) return false;
+
+    final db = await _dbHelper.database;
+    final firstRow = await db?.query(
+      'species',
+      columns: ['id'],
+      where: 'name = ?',
+      whereArgs: [species.name],
+      orderBy: species.sampleTime != null ? 'sampleTime ASC, id ASC' : 'id ASC',
+      limit: 1,
+    );
+
+    if (firstRow == null || firstRow.isEmpty) return false;
+    final firstId = firstRow.first['id'] as int?;
+    return firstId == speciesId;
+  }
 }
