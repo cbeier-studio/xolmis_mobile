@@ -720,10 +720,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "inventoryExportOnboardingAction": MessageLookupByLibrary.simpleMessage(
       "Got it",
     ),
-    "inventoryExportOnboardingCsvDescription":
-        MessageLookupByLibrary.simpleMessage(
-          "CSV exports now generate 3 separate files, and each file can include data from more than one inventory.",
-        ),
+    "inventoryExportOnboardingCsvDescription": MessageLookupByLibrary.simpleMessage(
+      "CSV exports now generate 3 separate files, and each file can include data from more than one inventory.",
+    ),
     "inventoryExportOnboardingCsvTitle": MessageLookupByLibrary.simpleMessage(
       "CSV exports",
     ),
@@ -767,10 +766,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "inventoryIntervalQualitative": MessageLookupByLibrary.simpleMessage(
       "Interval Qualitative List",
     ),
-    "inventoryIntervalQualitativeDescription":
-        MessageLookupByLibrary.simpleMessage(
-          "A qualitative list split into repeated time intervals. Three intervals without new species recorded is a common stopping rule.",
-        ),
+    "inventoryIntervalQualitativeDescription": MessageLookupByLibrary.simpleMessage(
+      "A qualitative list split into repeated time intervals. Three intervals without new species recorded is a common stopping rule.",
+    ),
     "inventoryMackinnonList": MessageLookupByLibrary.simpleMessage(
       "Mackinnon List",
     ),
@@ -794,10 +792,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "inventoryTimedQualitative": MessageLookupByLibrary.simpleMessage(
       "Timed Qualitative List",
     ),
-    "inventoryTimedQualitativeDescription":
-        MessageLookupByLibrary.simpleMessage(
-          "A qualitative list recorded during a fixed amount of time. Timer resets when a new species is recorded.",
-        ),
+    "inventoryTimedQualitativeDescription": MessageLookupByLibrary.simpleMessage(
+      "A qualitative list recorded during a fixed amount of time. Timer resets when a new species is recorded.",
+    ),
     "inventoryTransectCount": MessageLookupByLibrary.simpleMessage(
       "Transect Count",
     ),
@@ -807,10 +804,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "inventoryTransectDetection": MessageLookupByLibrary.simpleMessage(
       "Detection Transect Count",
     ),
-    "inventoryTransectDetectionDescription":
-        MessageLookupByLibrary.simpleMessage(
-          "Record detections along a transect with distance and/or flight height.",
-        ),
+    "inventoryTransectDetectionDescription": MessageLookupByLibrary.simpleMessage(
+      "Record detections along a transect with distance and/or flight height.",
+    ),
     "inventoryType": MessageLookupByLibrary.simpleMessage("Inventory type"),
     "inventoryTypeChangeWarningMessage": m44,
     "inventoryTypeChangeWarningTitle": MessageLookupByLibrary.simpleMessage(
@@ -1242,10 +1238,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "startNextList": MessageLookupByLibrary.simpleMessage("Start next list"),
     "startTime": MessageLookupByLibrary.simpleMessage("Start time"),
     "startTimeChangeWarningMessage": MessageLookupByLibrary.simpleMessage(
-      "The start time changed. Do you want to update associated species record times based on their relative offset from the original start time?",
+      "The start time changed. Do you want to update associated species, POI, vegetation, and weather record times based on their relative offset from the original start time?",
     ),
     "startTimeChangeWarningTitle": MessageLookupByLibrary.simpleMessage(
-      "Update species record times?",
+      "Update related record times?",
     ),
     "startingPleaseWait": MessageLookupByLibrary.simpleMessage(
       "Starting, please wait...",
@@ -1284,7 +1280,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "trees": MessageLookupByLibrary.simpleMessage("Trees"),
     "type": MessageLookupByLibrary.simpleMessage("Type"),
     "updateSpeciesTimes": MessageLookupByLibrary.simpleMessage(
-      "Update species times",
+      "Update related times",
     ),
     "vegetation": MessageLookupByLibrary.simpleMessage("Vegetation"),
     "vegetationData": MessageLookupByLibrary.simpleMessage("Vegetation data"),

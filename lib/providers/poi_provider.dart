@@ -54,7 +54,7 @@ class PoiProvider with ChangeNotifier {
   }
 
   /// Updates a POI in storage and replaces the cached item when present.
-  void updatePoi(int speciesId, Poi poi) async {
+  Future<void> updatePoi(int speciesId, Poi poi) async {
     await _poiDao.updatePoi(poi);
 
     final poiList = _poiMap[speciesId];

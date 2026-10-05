@@ -1105,6 +1105,19 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get startTimeChangeWarningTitle => 'Update related record times?';
+
+  @override
+  String get startTimeChangeWarningMessage =>
+      'The start time changed. Do you want to update associated species, POI, vegetation, and weather record times based on their relative offset from the original start time?';
+
+  @override
+  String get keepSpeciesTimes => 'Keep current times';
+
+  @override
+  String get updateSpeciesTimes => 'Update related times';
+
+  @override
   String get remindMissingVegetationData => 'Remind missing vegetation data';
 
   @override

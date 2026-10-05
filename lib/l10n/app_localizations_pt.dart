@@ -1122,6 +1122,19 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
+  String get startTimeChangeWarningTitle => 'Atualizar horários associados?';
+
+  @override
+  String get startTimeChangeWarningMessage =>
+      'A hora inicial foi alterada. Deseja atualizar os horários de registro de espécies, POIs, vegetação e clima associados com base no tempo relativo à hora inicial original?';
+
+  @override
+  String get keepSpeciesTimes => 'Manter horários atuais';
+
+  @override
+  String get updateSpeciesTimes => 'Atualizar horários associados';
+
+  @override
   String get remindMissingVegetationData => 'Lembrar dados faltantes de vegetação';
 
   @override
@@ -3227,6 +3240,19 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String inventoryTypeChangeWarningMessage(String currentType, String newType) {
     return 'Alterar de $currentType para $newType pode mudar premissas e regras do protocolo deste inventário. Deseja continuar com a alteração?';
   }
+
+  @override
+  String get startTimeChangeWarningTitle => 'Atualizar horários associados?';
+
+  @override
+  String get startTimeChangeWarningMessage =>
+      'A hora inicial foi alterada. Deseja atualizar os horários de registro de espécies, POIs, vegetação e clima associados com base no tempo relativo à hora inicial original?';
+
+  @override
+  String get keepSpeciesTimes => 'Manter horários atuais';
+
+  @override
+  String get updateSpeciesTimes => 'Atualizar horários associados';
 
   @override
   String get remindMissingVegetationData => 'Lembrar dados faltantes de vegetação';

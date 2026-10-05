@@ -2012,6 +2012,30 @@ abstract class AppLocalizations {
   /// **'Changing from {currentType} to {newType} may alter assumptions and protocol-specific premises of this inventory. Continue with this change?'**
   String inventoryTypeChangeWarningMessage(String currentType, String newType);
 
+  /// Dialog title shown when inventory start time changes in edit screen
+  ///
+  /// In en, this message translates to:
+  /// **'Update related record times?'**
+  String get startTimeChangeWarningTitle;
+
+  /// Dialog message asking whether to shift species times after start time change
+  ///
+  /// In en, this message translates to:
+  /// **'The start time changed. Do you want to update associated species, POI, vegetation, and weather record times based on their relative offset from the original start time?'**
+  String get startTimeChangeWarningMessage;
+
+  /// Action to keep species times unchanged after start time edit
+  ///
+  /// In en, this message translates to:
+  /// **'Keep current times'**
+  String get keepSpeciesTimes;
+
+  /// Action to shift species times after start time edit
+  ///
+  /// In en, this message translates to:
+  /// **'Update related times'**
+  String get updateSpeciesTimes;
+
   /// Settings option to remind missing vegetation data
   ///
   /// In en, this message translates to:

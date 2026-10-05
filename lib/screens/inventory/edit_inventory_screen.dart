@@ -7,6 +7,7 @@ import '../../core/core_consts.dart';
 import '../../data/models/inventory.dart';
 import '../../generated/l10n.dart';
 import '../../providers/inventory_provider.dart';
+import '../../providers/poi_provider.dart';
 import '../../utils/utils.dart';
 
 /// Screen used to edit metadata of an existing inventory.
@@ -264,24 +265,18 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
       _formKey.currentState!.save();
 
       List<Species> speciesToPersist = widget.inventory.speciesList;
+      List<Vegetation> vegetationToPersist = widget.inventory.vegetationList;
+      List<Weather> weatherToPersist = widget.inventory.weatherList;
       if (_hasStartTimeChanged &&
           widget.inventory.startTime != null &&
           _startTime != null) {
-        await inventoryProvider.speciesProvider.loadSpeciesForInventory(widget.inventory.id);
-        final loadedSpeciesFromProvider = inventoryProvider
-            .speciesProvider
-            .getSpeciesForInventory(widget.inventory.id);
+        final sourceRecords = await _loadAssociatedRecordsForTimeShift();
 
-        List<Species> sourceSpecies = loadedSpeciesFromProvider.isNotEmpty
-            ? loadedSpeciesFromProvider
-            : widget.inventory.speciesList;
-        if (sourceSpecies.isEmpty) {
-          await inventoryProvider.loadInventoryDetails(widget.inventory.id);
-          sourceSpecies = inventoryProvider.getInventoryById(widget.inventory.id)?.speciesList ?? const [];
-        }
+        speciesToPersist = sourceRecords.species;
+        vegetationToPersist = sourceRecords.vegetation;
+        weatherToPersist = sourceRecords.weather;
 
-        final hasSpeciesWithSampleTime = sourceSpecies.any((species) => species.sampleTime != null);
-        if (hasSpeciesWithSampleTime) {
+        if (_hasAssociatedSampleTimes(sourceRecords)) {
           final shouldShiftSpeciesTimes = await _askToShiftSpeciesTimes();
           if (shouldShiftSpeciesTimes == null || !mounted) {
             return;
@@ -289,13 +284,25 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
 
           if (shouldShiftSpeciesTimes) {
             speciesToPersist = _shiftSpeciesSampleTimes(
-              sourceSpecies,
+              sourceRecords.species,
               widget.inventory.startTime!,
               _startTime!,
             );
-            await _persistSpeciesTimeUpdates(speciesToPersist);
-          } else {
-            speciesToPersist = sourceSpecies;
+            vegetationToPersist = _shiftVegetationSampleTimes(
+              sourceRecords.vegetation,
+              widget.inventory.startTime!,
+              _startTime!,
+            );
+            weatherToPersist = _shiftWeatherSampleTimes(
+              sourceRecords.weather,
+              widget.inventory.startTime!,
+              _startTime!,
+            );
+            await _persistAssociatedTimeUpdates(
+              species: speciesToPersist,
+              vegetation: vegetationToPersist,
+              weather: weatherToPersist,
+            );
           }
         }
       }
@@ -334,8 +341,8 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
         speciesCount: widget.inventory.speciesCount,
         speciesWithinCount: widget.inventory.speciesWithinCount,
         speciesOutOfInventoryCount: widget.inventory.speciesOutOfInventoryCount,
-        vegetationList: widget.inventory.vegetationList,
-        weatherList: widget.inventory.weatherList,
+        vegetationList: vegetationToPersist,
+        weatherList: weatherToPersist,
         currentInterval: widget.inventory.currentInterval,
         intervalsWithoutNewSpecies: widget.inventory.intervalsWithoutNewSpecies,
         currentIntervalSpeciesCount: widget.inventory.currentIntervalSpeciesCount,
@@ -376,6 +383,43 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
     );
   }
 
+  /// Loads associated records (species, vegetation and weather) for time shifting.
+  Future<_AssociatedInventoryRecords> _loadAssociatedRecordsForTimeShift() async {
+    await inventoryProvider.speciesProvider.loadSpeciesForInventory(widget.inventory.id);
+    await inventoryProvider.vegetationProvider.loadVegetationForInventory(widget.inventory.id);
+    await inventoryProvider.weatherProvider.loadWeatherForInventory(widget.inventory.id);
+
+    var species = inventoryProvider.speciesProvider.getSpeciesForInventory(widget.inventory.id);
+    var vegetation = inventoryProvider.vegetationProvider.getVegetationForInventory(widget.inventory.id);
+    var weather = inventoryProvider.weatherProvider.getWeatherForInventory(widget.inventory.id);
+
+    // Fallback to a fully hydrated inventory when providers have no cached data yet.
+    if (species.isEmpty && vegetation.isEmpty && weather.isEmpty) {
+      await inventoryProvider.loadInventoryDetails(widget.inventory.id);
+      final detailedInventory = inventoryProvider.getInventoryById(widget.inventory.id);
+      species = detailedInventory?.speciesList ?? const [];
+      vegetation = detailedInventory?.vegetationList ?? const [];
+      weather = detailedInventory?.weatherList ?? const [];
+    }
+
+    return _AssociatedInventoryRecords(
+      species: species,
+      vegetation: vegetation,
+      weather: weather,
+    );
+  }
+
+  /// Returns whether any related sample has a time that can be shifted.
+  bool _hasAssociatedSampleTimes(_AssociatedInventoryRecords records) {
+    final hasSpeciesTime = records.species.any((species) => species.sampleTime != null);
+    final hasPoiTime = records.species.any(
+      (species) => species.pois.any((poi) => poi.sampleTime != null),
+    );
+    final hasVegetationTime = records.vegetation.any((vegetation) => vegetation.sampleTime != null);
+    final hasWeatherTime = records.weather.any((weather) => weather.sampleTime != null);
+    return hasSpeciesTime || hasPoiTime || hasVegetationTime || hasWeatherTime;
+  }
+
   /// Shifts species sample times preserving each record's offset from original start time.
   List<Species> _shiftSpeciesSampleTimes(
     List<Species> speciesList,
@@ -384,24 +428,121 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
   ) {
     return speciesList.map((species) {
       final sampleTime = species.sampleTime;
-      if (sampleTime == null) {
-        return species;
-      }
+      final shiftedSampleTime = sampleTime == null
+          ? null
+          : _shiftSampleTime(
+              sampleTime,
+              originalStart,
+              newStart,
+            );
+      final shiftedPois = species.pois.map((poi) {
+        final poiSampleTime = poi.sampleTime;
+        if (poiSampleTime == null) {
+          return poi;
+        }
+        return poi.copyWith(
+          sampleTime: _shiftSampleTime(
+            poiSampleTime,
+            originalStart,
+            newStart,
+          ),
+        );
+      }).toList();
 
-      final relativeOffset = sampleTime.difference(originalStart);
-      final shiftedSampleTime = newStart.add(relativeOffset);
-      return species.copyWith(sampleTime: shiftedSampleTime);
+      return species.copyWith(
+        sampleTime: shiftedSampleTime,
+        pois: shiftedPois,
+      );
     }).toList();
   }
 
-  /// Persists shifted species times in storage and provider cache.
-  Future<void> _persistSpeciesTimeUpdates(List<Species> updatedSpecies) async {
+  /// Shifts vegetation sample times preserving each record's relative offset.
+  List<Vegetation> _shiftVegetationSampleTimes(
+    List<Vegetation> vegetationList,
+    DateTime originalStart,
+    DateTime newStart,
+  ) {
+    return vegetationList.map((vegetation) {
+      final sampleTime = vegetation.sampleTime;
+      if (sampleTime == null) {
+        return vegetation;
+      }
+      return vegetation.copyWith(
+        sampleTime: _shiftSampleTime(
+          sampleTime,
+          originalStart,
+          newStart,
+        ),
+      );
+    }).toList();
+  }
+
+  /// Shifts weather sample times preserving each record's relative offset.
+  List<Weather> _shiftWeatherSampleTimes(
+    List<Weather> weatherList,
+    DateTime originalStart,
+    DateTime newStart,
+  ) {
+    return weatherList.map((weather) {
+      final sampleTime = weather.sampleTime;
+      if (sampleTime == null) {
+        return weather;
+      }
+      return weather.copyWith(
+        sampleTime: _shiftSampleTime(
+          sampleTime,
+          originalStart,
+          newStart,
+        ),
+      );
+    }).toList();
+  }
+
+  /// Shifts one sample timestamp preserving its relative offset from start time.
+  DateTime _shiftSampleTime(
+    DateTime sampleTime,
+    DateTime originalStart,
+    DateTime newStart,
+  ) {
+    final relativeOffset = sampleTime.difference(originalStart);
+    return newStart.add(relativeOffset);
+  }
+
+  /// Persists shifted times in storage and provider caches.
+  Future<void> _persistAssociatedTimeUpdates({
+    required List<Species> species,
+    required List<Vegetation> vegetation,
+    required List<Weather> weather,
+  }) async {
     final speciesProvider = inventoryProvider.speciesProvider;
-    for (final species in updatedSpecies) {
-      if (species.id == null) {
+    final vegetationProvider = inventoryProvider.vegetationProvider;
+    final weatherProvider = inventoryProvider.weatherProvider;
+    final poiProvider = Provider.of<PoiProvider>(context, listen: false);
+
+    for (final item in species) {
+      if (item.id != null) {
+        await speciesProvider.updateSpecies(widget.inventory.id, item);
+      }
+      for (final poi in item.pois) {
+        if (poi.id == null) {
+          continue;
+        }
+        await poiProvider.updatePoi(poi.speciesId, poi);
+      }
+    }
+
+    for (final item in vegetation) {
+      if (item.id == null) {
         continue;
       }
-      await speciesProvider.updateSpecies(widget.inventory.id, species);
+      await vegetationProvider.updateVegetation(widget.inventory.id, item);
+    }
+
+    for (final item in weather) {
+      if (item.id == null) {
+        continue;
+      }
+      await weatherProvider.updateWeather(item);
     }
   }
 
@@ -966,4 +1107,16 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
       return _recentLocalities.where((item) => removeDiacritics(item).contains(query)).toList();
     }
   }
+}
+
+class _AssociatedInventoryRecords {
+  final List<Species> species;
+  final List<Vegetation> vegetation;
+  final List<Weather> weather;
+
+  const _AssociatedInventoryRecords({
+    required this.species,
+    required this.vegetation,
+    required this.weather,
+  });
 }
