@@ -129,5 +129,71 @@ void main() {
 
       expect(data.last.speciesCount, equals(2));
     });
+
+    test('ignores species added too long after inventory end', () {
+      final inventory = Inventory(
+        id: 'inv-late-1',
+        type: InventoryType.invCasual,
+        startTime: startTime,
+        duration: 10,
+        isFinished: true,
+        endTime: startTime.add(const Duration(minutes: 10)),
+        speciesList: [
+          Species(
+            inventoryId: 'inv-late-1',
+            name: 'Species On Time',
+            isOutOfInventory: false,
+            sampleTime: startTime.add(const Duration(minutes: 4)),
+          ),
+          // 3 hours after start; outside accepted post-finish window.
+          Species(
+            inventoryId: 'inv-late-1',
+            name: 'Species Too Late',
+            isOutOfInventory: false,
+            sampleTime: startTime.add(const Duration(hours: 3)),
+          ),
+        ],
+      );
+
+      final result = prepareSpeciesAccumulationData(inventory, inventory.speciesList);
+      final data = result['data'] as List<SpeciesAccumulationData>;
+      final duration = result['duration'] as double;
+
+      expect(duration, equals(600.0));
+      expect(data.last.interval, equals(600));
+      expect(data.last.speciesCount, equals(1));
+    });
+
+    test('keeps species added within post-finish window', () {
+      final inventory = Inventory(
+        id: 'inv-late-2',
+        type: InventoryType.invCasual,
+        startTime: startTime,
+        duration: 10,
+        isFinished: true,
+        endTime: startTime.add(const Duration(minutes: 10)),
+        speciesList: [
+          Species(
+            inventoryId: 'inv-late-2',
+            name: 'Species On Time',
+            isOutOfInventory: false,
+            sampleTime: startTime.add(const Duration(minutes: 5)),
+          ),
+          // 15 minutes after start (5 min after end), inside accepted window.
+          Species(
+            inventoryId: 'inv-late-2',
+            name: 'Species Slightly Late',
+            isOutOfInventory: false,
+            sampleTime: startTime.add(const Duration(minutes: 15)),
+          ),
+        ],
+      );
+
+      final result = prepareSpeciesAccumulationData(inventory, inventory.speciesList);
+      final data = result['data'] as List<SpeciesAccumulationData>;
+
+      expect(data.last.speciesCount, equals(2));
+      expect(data.last.interval, equals(900));
+    });
   });
 }

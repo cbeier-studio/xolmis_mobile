@@ -28,6 +28,13 @@ const String kInventoryExportOnboardingSeenPreferenceKey = 'inventoryExportOnboa
 /// Version threshold where inventory export onboarding was introduced.
 const int kInventoryExportOnboardingVersion = 152;
 
+/// Extra window (as a factor of inventory wall-clock duration) accepted after
+/// inventory end for species accumulation chart calculations.
+///
+/// Example: `1.0` means records up to one additional inventory duration after
+/// end time are still considered.
+const double kSpeciesChartPostFinishWindowFactor = 1.0;
+
 const String kRecentInventoryTypePreferenceKey = 'recentInventoryType';
 const String kRecentInventoryLocalitiesPreferenceKey = 'recentInventoryLocalities';
 const String kRecentNestLocalitiesPreferenceKey = 'recentNestLocalities';

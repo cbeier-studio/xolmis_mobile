@@ -24,8 +24,11 @@ Map<String, dynamic> prepareSpeciesAccumulationData(Inventory inventory, List<Sp
   final startTime = inventory.startTime;
   if (startTime == null) return {'data': [], 'intervalSize': 60, 'duration': 0.0};
 
-  final endTime = inventory.isFinished ? inventory.endTime! : DateTime.now();
+  final endTime = inventory.isFinished ? (inventory.endTime ?? DateTime.now()) : DateTime.now();
   final wallClockDuration = endTime.difference(startTime).inSeconds;
+  final maxAllowedElapsedSeconds = inventory.isFinished
+      ? wallClockDuration + (wallClockDuration * kSpeciesChartPostFinishWindowFactor).round()
+      : null;
 
   // For detection inventories (or any inventory where multiple records per species may exist),
   // count only the first record (earliest sampleTime) of each species in the inventory.
@@ -51,6 +54,12 @@ Map<String, dynamic> prepareSpeciesAccumulationData(Inventory inventory, List<Sp
   for (final species in effectiveSpeciesList) {
     if (species.sampleTime != null) {
       final elapsed = species.sampleTime!.difference(startTime).inSeconds;
+      if (elapsed < 0) {
+        continue;
+      }
+      if (maxAllowedElapsedSeconds != null && elapsed > maxAllowedElapsedSeconds) {
+        continue;
+      }
       if (elapsed > maxSpeciesElapsed) {
         maxSpeciesElapsed = elapsed;
       }
@@ -80,7 +89,7 @@ Map<String, dynamic> prepareSpeciesAccumulationData(Inventory inventory, List<Sp
 
   final totalIntervals = (totalElapsedSeconds / intervalSize).ceil();
 
-  for (final species in speciesList) {
+  for (final species in effectiveSpeciesList) {
     final sampleTime = species.sampleTime;
 
     // Skip species without sample time
@@ -90,6 +99,12 @@ Map<String, dynamic> prepareSpeciesAccumulationData(Inventory inventory, List<Sp
 
     // Calculate the interval index for the species
     final elapsedSeconds = sampleTime.difference(startTime).inSeconds;
+    if (elapsedSeconds < 0) {
+      continue;
+    }
+    if (maxAllowedElapsedSeconds != null && elapsedSeconds > maxAllowedElapsedSeconds) {
+      continue;
+    }
     final interval = elapsedSeconds ~/ intervalSize;
 
     if (!speciesByInterval.containsKey(interval)) {
