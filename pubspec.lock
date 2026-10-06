@@ -149,10 +149,10 @@ packages:
     dependency: transitive
     description:
       name: csv_plus
-      sha256: "9177fa81883d41867075388a4ab3a7b5b55145a2f00ced9ddd248b8988113046"
+      sha256: ab70d4231c8e5be91dc22ae3d0b5eff6104e8123c95be33697d07fea238e359d
       url: "https://pub.dev"
     source: hosted
-    version: "1.11.0"
+    version: "1.12.0"
   cupertino_ui:
     dependency: transitive
     description:
@@ -229,10 +229,10 @@ packages:
     dependency: "direct main"
     description:
       name: excel_plus
-      sha256: "1177823b1f3f437b003fc239f40becb47910e8c1a9b861c731ace4435cc6bd4f"
+      sha256: "3dda20d1327e3b0e5916667f9c898be2bb9af47aa6b00924c283c6a8a4ca9e95"
       url: "https://pub.dev"
     source: hosted
-    version: "2.24.0"
+    version: "2.27.1"
   fab_m3e:
     dependency: "direct main"
     description:
@@ -1166,10 +1166,10 @@ packages:
     dependency: "direct main"
     description:
       name: sqflite
-      sha256: "54ad23e2a79c846b596b6c56cdd9c867ea58c288258402316b602f78df0cbfe0"
+      sha256: "7419d02d128023f38586481c81e14e5692167f75b7f411a914b1eb50d28c010e"
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.4"
+    version: "2.4.4+1"
   sqflite_android:
     dependency: transitive
     description:
@@ -1182,10 +1182,10 @@ packages:
     dependency: transitive
     description:
       name: sqflite_common
-      sha256: "077e38e82c099534146a2fb31b608c2a3a4489a0f21d9af6b2f5c87b566a1ea0"
+      sha256: da542ae39840132566b8652d6bfab108a972099a8e4377b3bcd98ae1595e6629
       url: "https://pub.dev"
     source: hosted
-    version: "2.5.13"
+    version: "2.5.13+1"
   sqflite_common_ffi:
     dependency: "direct dev"
     description:

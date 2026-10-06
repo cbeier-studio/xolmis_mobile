@@ -35,11 +35,11 @@ dependencies:
   share_plus: ^13.3.1
 
   # Data and persistence dependencies
-  sqflite: ^2.4.2+1
+  sqflite: ^2.4.4+1
   csv: ^8.0.0
   shared_preferences: ^2.5.5
   docx_creator: ^1.4.0
-  excel_plus: ^2.24.0
+  excel_plus: ^2.27.1
 #  excel:
 #    git:
 #      url: https://github.com/justkawal/excel.git
