@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../../providers/poi_provider.dart';
 import '../../data/models/inventory.dart';
 
+import '../../providers/species_provider.dart';
 import '../../utils/utils.dart';
 import '../../generated/l10n.dart';
 
@@ -22,11 +23,13 @@ class SpeciesDetailScreen extends StatefulWidget {
 /// Manages POI loading, creation, and removal for the selected species.
 class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
   bool _isAddingPoi = false;
+  bool _isLifer = false;
 
   @override
   void initState() {
     super.initState();
     _loadSpeciesData();
+    _loadLiferStatus();
   }
 
   @override
@@ -40,6 +43,16 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
     final poiProvider = Provider.of<PoiProvider>(context, listen: false);
     setState(() {
       widget.species.pois = poiProvider.getPoisForSpecies(widget.species.id ?? 0);
+    });
+  }
+
+  Future<void> _loadLiferStatus() async {
+    final speciesProvider = Provider.of<SpeciesProvider>(context, listen: false);
+    final isLifer = await speciesProvider.isFirstRecordForSpecies(widget.species);
+
+    if (!mounted) return;
+    setState(() {
+      _isLifer = isLifer;
     });
   }
 
@@ -345,7 +358,8 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
 
   Widget _buildInfoPanel() {
     final species = widget.species;
-    return Card(
+    return Card.outlined(
+      color: species.isOutOfInventory ? Colors.orange.withValues(alpha: 0.2) : Colors.green.withValues(alpha: 0.2),
       margin: const EdgeInsets.all(8.0),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -360,10 +374,26 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
                     DateFormat('dd/MM/yyyy HH:mm:ss').format(species.sampleTime!),
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
+                if (_isLifer)
+                  Tooltip(
+                    message: 'Lifer',
+                    child: Icon(
+                      Icons.stars,
+                      color: Colors.amber[700],
+                      size: 18,
+                      shadows: [
+                        Shadow(
+                          color: Colors.white,
+                          offset: const Offset(0, 0),
+                          blurRadius: 16,
+                        ),
+                      ],
+                    ),
+                  ),
                 Text(
                   species.isOutOfInventory ? S.of(context).outOfSample : S.of(context).withinSample,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: species.isOutOfInventory ? Colors.orange : Colors.green,
+                    color: species.isOutOfInventory ? Colors.orange.shade800 : Colors.green.shade800,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
