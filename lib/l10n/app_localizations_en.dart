@@ -2085,4 +2085,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get viewSpeciesTable => 'View species table';
+
+  @override
+  String get transportMode => 'Transport mode';
+
+  @override
+  String get transportNotApplicable => 'Not applicable';
+
+  @override
+  String get transportWalking => 'On foot';
+
+  @override
+  String get transportVehicle => 'Vehicle';
+
+  @override
+  String get transportBoat => 'Boat';
+
+  @override
+  String get transportAircraft => 'Aircraft';
+
+  @override
+  String get transportBicycle => 'Bicycle';
+
+  @override
+  String get transportHorse => 'Horse';
+
+  @override
+  String get transportRemote => 'Remote';
+
+  @override
+  String get transportOther => 'Other';
 }

@@ -335,6 +335,7 @@ Future<void> exportInventoryToJson(BuildContext context, Inventory inventory, bo
 const List<String> kInventoryOccurrencesHeaders = [
   'eventID',
   'samplingProtocol',
+  'transportMode',
   'samplingEffort',
   'eventDate',
   'eventTime',
@@ -365,6 +366,7 @@ const List<String> kInventoryOccurrencesHeaders = [
 const List<String> kInventoryVegetationHeaders = [
   'eventID',
   'samplingProtocol',
+  'transportMode',
   'samplingEffort',
   'eventDate',
   'eventTime',
@@ -392,6 +394,7 @@ const List<String> kInventoryVegetationHeaders = [
 const List<String> kInventoryWeatherHeaders = [
   'eventID',
   'samplingProtocol',
+  'transportMode',
   'samplingEffort',
   'eventDate',
   'eventTime',
@@ -414,6 +417,7 @@ const List<String> kInventoryWeatherHeaders = [
 const List<String> kInventoryPoiHeaders = [
   'eventID',
   'samplingProtocol',
+  'transportMode',
   'eventDate',
   'locality',
   'recordedBy',
@@ -428,6 +432,7 @@ const List<String> kInventoryPoiHeaders = [
 const List<String> kInventoryEventsHeaders = [
   'eventID',
   'samplingProtocol',
+  'transportMode',
   'samplingEffort',
   'maxSpecies',
   'eventDate',
@@ -455,6 +460,7 @@ List<dynamic> _buildInventoryPrefix(
   return [
     inventory.id,
     inventoryTypeFriendlyNames[inventory.type] ?? '',
+    transportModeFriendlyNames[inventory.transportMode] ?? '',
     inventory.duration,
     inventory.startTime != null
         ? DateFormat('yyyy-MM-dd').format(inventory.startTime!)
@@ -564,6 +570,7 @@ Future<List<List<dynamic>>> buildInventoriesVegetationRows(
     final prefix = [
       inventory.id,
       inventoryTypeFriendlyNames[inventory.type] ?? '',
+      transportModeFriendlyNames[inventory.transportMode] ?? '',
       inventory.duration,
       inventory.startTime != null
           ? DateFormat('yyyy-MM-dd').format(inventory.startTime!)
@@ -635,6 +642,7 @@ Future<List<List<dynamic>>> buildInventoriesWeatherRows(
     final prefix = [
       inventory.id,
       inventoryTypeFriendlyNames[inventory.type] ?? '',
+      transportModeFriendlyNames[inventory.transportMode] ?? '',
       inventory.duration,
       inventory.startTime != null
           ? DateFormat('yyyy-MM-dd').format(inventory.startTime!)
@@ -696,6 +704,7 @@ Future<List<List<dynamic>>> buildInventoriesPoiRows(
     final prefix = [
       inventory.id,
       inventoryTypeFriendlyNames[inventory.type] ?? '',
+      transportModeFriendlyNames[inventory.transportMode] ?? '',
       inventory.startTime != null
           ? DateFormat('yyyy-MM-dd').format(inventory.startTime!)
           : '',

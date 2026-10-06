@@ -31,6 +31,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
   late TextEditingController _localityNameController;
   List<String> _recentLocalities = const [];
   InventoryType _selectedType = InventoryType.invFreeQualitative;
+  TransportMode _selectedTransportMode = TransportMode.tmodeWalking;
   bool _isSubmitting = false;
 
   @override
@@ -38,6 +39,9 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
     super.initState();
     _idController.text = widget.initialInventoryId ?? '';
     _selectedType = widget.initialInventoryType ?? _selectedType;
+    if (_selectedType == InventoryType.invPointCount || _selectedType == InventoryType.invPointDetection) {
+      _selectedTransportMode = TransportMode.tmodeNotApplicable;
+    }
     _maxSpeciesController.text = widget.initialMaxSpecies?.toString() ?? '';
     _totalObserversController.text = '1';
     _localityNameController = TextEditingController();
@@ -115,6 +119,34 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                         }
                         return null;
                       },
+                    ),
+                    const SizedBox(height: 16.0),
+                    // Transport mode
+                    DropdownButtonFormField<TransportMode>(
+                      initialValue: _selectedTransportMode,
+                      isExpanded: true,
+                      decoration: InputDecoration(
+                        labelText: '${S.of(context).transportMode} *',
+                        border: const OutlineInputBorder(),
+                      ),
+                      items: TransportMode.values.map((mode) {
+                        return DropdownMenuItem(
+                          value: mode,
+                          child: Text(
+                            transportModeFriendlyNames[mode]!,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (_selectedType == InventoryType.invPointCount || _selectedType == InventoryType.invPointDetection)
+                          ? null
+                          : (TransportMode? newValue) {
+                              if (newValue != null) {
+                                setState(() {
+                                  _selectedTransportMode = newValue;
+                                });
+                              }
+                            },
                     ),
                     const SizedBox(height: 16.0),
                     // Inventory ID
@@ -615,6 +647,12 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
 
     setState(() {
       _selectedType = newValue;
+      if (newValue == InventoryType.invPointCount ||
+          newValue == InventoryType.invPointDetection) {
+        _selectedTransportMode = TransportMode.tmodeNotApplicable;
+      } else if (_selectedTransportMode == TransportMode.tmodeNotApplicable) {
+        _selectedTransportMode = TransportMode.tmodeWalking;
+      }
       _idController.text = newId;
       if (newValue == InventoryType.invTimedQualitative) {
         _durationController.text = cumulativeTimeDuration.toString();
@@ -766,6 +804,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
       final newInventory = Inventory(
         id: _idController.text,
         type: _selectedType,
+        transportMode: _selectedTransportMode,
         localityName: _localityNameController.text,
         duration: int.tryParse(_durationController.text) ?? 0,
         maxSpecies: int.tryParse(_maxSpeciesController.text) ?? 0,

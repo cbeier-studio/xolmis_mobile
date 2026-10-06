@@ -584,6 +584,7 @@ class Inventory with ChangeNotifier {
   String? observer;
   String? notes;
   bool isDiscarded;
+  TransportMode transportMode;
   List<Species> speciesList;
   int speciesCount = 0; // Cached count of all species records
   int speciesWithinCount = 0; // Cached count of species inside sample
@@ -658,6 +659,7 @@ class Inventory with ChangeNotifier {
     this.observer,
     this.notes,
     this.isDiscarded = false,
+    TransportMode? transportMode,
     this.speciesList = const [],
     this.speciesCount = 0,
     this.speciesWithinCount = 0,
@@ -669,7 +671,10 @@ class Inventory with ChangeNotifier {
     this.currentIntervalSpeciesCount = 0,
     this.totalPausedTimeInSeconds = 0,
     this.pauseStartTime,
-  }) {
+  }) : transportMode = transportMode ??
+            ((type == InventoryType.invPointCount || type == InventoryType.invPointDetection)
+                ? TransportMode.tmodeNotApplicable
+                : TransportMode.tmodeWalking) {
     if (speciesList.isNotEmpty && speciesCount == 0) {
       speciesCount = speciesList.length;
       speciesOutOfInventoryCount =
@@ -709,6 +714,11 @@ class Inventory with ChangeNotifier {
         observer = map['observer'],
         notes = map['notes'],
         isDiscarded = map['isDiscarded'] == 1,
+        transportMode = map['transportMode'] != null
+            ? TransportMode.values[map['transportMode']]
+            : ((InventoryType.values[map['type']] == InventoryType.invPointCount || InventoryType.values[map['type']] == InventoryType.invPointDetection)
+                ? TransportMode.tmodeNotApplicable
+                : TransportMode.tmodeWalking),
         currentInterval = map['currentInterval'] ?? 1,
         intervalsWithoutNewSpecies = map['intervalsWithoutNewSpecies'] ?? 0,
         currentIntervalSpeciesCount = map['currentIntervalSpeciesCount'] ?? 0,
@@ -759,6 +769,7 @@ class Inventory with ChangeNotifier {
     String? observer,
     String? notes,
     bool? isDiscarded,
+    TransportMode? transportMode,
     List<Species>? speciesList,
     int? speciesCount,
     int? speciesWithinCount,
@@ -790,6 +801,7 @@ class Inventory with ChangeNotifier {
       observer: observer ?? this.observer,
       notes: notes ?? this.notes,
       isDiscarded: isDiscarded ?? this.isDiscarded,
+      transportMode: transportMode ?? this.transportMode,
       speciesList: speciesList ?? this.speciesList,
       speciesCount: speciesCount ?? this.speciesCount,
       speciesWithinCount: speciesWithinCount ?? this.speciesWithinCount,
@@ -828,6 +840,7 @@ class Inventory with ChangeNotifier {
       'observer': observer,
       'notes': notes,
       'isDiscarded': isDiscarded ? 1 : 0,
+      'transportMode': transportMode.index,
     };
   }
 
@@ -836,6 +849,7 @@ class Inventory with ChangeNotifier {
     return 'Inventory{'
         'id: $id, '
         'type: $type.index, '
+        'transportMode: $transportMode.index, '
         'duration: $duration, '
         'maxSpecies: $maxSpecies, '
         'isPaused: $isPaused, '
@@ -878,6 +892,7 @@ class Inventory with ChangeNotifier {
       'observer': observer,
       'notes': notes,
       'isDiscarded': isDiscarded,
+      'transportMode': transportMode.index,
       'currentInterval': currentInterval,
       'intervalsWithoutNewSpecies': intervalsWithoutNewSpecies,
       'currentIntervalSpeciesCount': currentIntervalSpeciesCount,
@@ -908,6 +923,11 @@ class Inventory with ChangeNotifier {
       observer: json['observer'],
       notes: json['notes'],
       isDiscarded: json['isDiscarded'] ?? false,
+      transportMode: json['transportMode'] != null
+          ? TransportMode.values[json['transportMode']]
+          : ((InventoryType.values[json['type']] == InventoryType.invPointCount || json['type'] == InventoryType.invPointDetection.index)
+              ? TransportMode.tmodeNotApplicable
+              : TransportMode.tmodeWalking),
       currentInterval: json['currentInterval'],
       intervalsWithoutNewSpecies: json['intervalsWithoutNewSpecies'],
       currentIntervalSpeciesCount: json['currentIntervalSpeciesCount'],
@@ -981,6 +1001,7 @@ class Inventory with ChangeNotifier {
     observer = source.observer;
     notes = source.notes;
     isDiscarded = source.isDiscarded;
+    transportMode = source.transportMode;
     currentInterval = source.currentInterval;
     intervalsWithoutNewSpecies = source.intervalsWithoutNewSpecies;
     currentIntervalSpeciesCount = source.currentIntervalSpeciesCount;

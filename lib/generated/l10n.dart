@@ -6174,6 +6174,106 @@ class S {
       args: [],
     );
   }
+
+  /// `Transport mode`
+  String get transportMode {
+    return Intl.message(
+      'Transport mode',
+      name: 'transportMode',
+      desc: 'Transport mode field label',
+      args: [],
+    );
+  }
+
+  /// `Not applicable`
+  String get transportNotApplicable {
+    return Intl.message(
+      'Not applicable',
+      name: 'transportNotApplicable',
+      desc: 'Not applicable transport mode label',
+      args: [],
+    );
+  }
+
+  /// `On foot`
+  String get transportWalking {
+    return Intl.message(
+      'On foot',
+      name: 'transportWalking',
+      desc: 'Walking transport mode label',
+      args: [],
+    );
+  }
+
+  /// `Vehicle`
+  String get transportVehicle {
+    return Intl.message(
+      'Vehicle',
+      name: 'transportVehicle',
+      desc: 'Vehicle transport mode label',
+      args: [],
+    );
+  }
+
+  /// `Boat`
+  String get transportBoat {
+    return Intl.message(
+      'Boat',
+      name: 'transportBoat',
+      desc: 'Boat transport mode label',
+      args: [],
+    );
+  }
+
+  /// `Aircraft`
+  String get transportAircraft {
+    return Intl.message(
+      'Aircraft',
+      name: 'transportAircraft',
+      desc: 'Aircraft transport mode label',
+      args: [],
+    );
+  }
+
+  /// `Bicycle`
+  String get transportBicycle {
+    return Intl.message(
+      'Bicycle',
+      name: 'transportBicycle',
+      desc: 'Bicycle transport mode label',
+      args: [],
+    );
+  }
+
+  /// `Horse`
+  String get transportHorse {
+    return Intl.message(
+      'Horse',
+      name: 'transportHorse',
+      desc: 'Horse transport mode label',
+      args: [],
+    );
+  }
+
+  /// `Remote`
+  String get transportRemote {
+    return Intl.message(
+      'Remote',
+      name: 'transportRemote',
+      desc: 'Remote transport mode label',
+      args: [],
+    );
+  }
+
+  /// `Other`
+  String get transportOther {
+    return Intl.message(
+      'Other',
+      name: 'transportOther',
+      desc: 'Other transport mode label',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

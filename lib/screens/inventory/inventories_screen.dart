@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../data/models/inventory.dart';
 import '../../data/daos/inventory_dao.dart';
@@ -19,7 +20,6 @@ import '../statistics/stats_inventories_screen.dart';
 import 'add_inventory_screen.dart';
 import 'edit_inventory_screen.dart';
 import 'inventory_detail_screen.dart';
-import '../statistics/inventory_report_screen.dart';
 
 import '../../core/core_consts.dart';
 import '../../utils/utils.dart';
@@ -1664,7 +1664,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Show the inventory type
-        _buildInventoryTypePill(context, inventory.type),
+        _buildInventoryTypePill(context, inventory.type, inventory.transportMode),
         // Show the inventory locality
         if (inventory.localityName != null &&
             inventory.localityName!.isNotEmpty)
@@ -1750,12 +1750,15 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
   Widget _buildInventoryTypePill(
     BuildContext context,
     InventoryType? type,
+    TransportMode? transportMode,
   ) {
     final backgroundColor = _inventoryTypePillColor(context, type);
     final foregroundColor =
         ThemeData.estimateBrightnessForColor(backgroundColor) == Brightness.dark
             ? Colors.white
             : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.85);
+
+    final iconData = transportMode != null ? transportModeIcons[transportMode] : null;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
@@ -1764,14 +1767,29 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
         border: Border.all(color: Theme.of(context).dividerColor.withValues(alpha: 0.12)),
         borderRadius: BorderRadius.circular(999.0),
       ),
-      child: Text(
-        inventoryTypeFriendlyNames[type] ?? S.current.type,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: foregroundColor,
-              fontWeight: FontWeight.w600,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Flexible(
+            child: Text(
+              inventoryTypeFriendlyNames[type] ?? S.current.type,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: foregroundColor,
+                    fontWeight: FontWeight.w600,
+                  ),
             ),
+          ),
+          if (iconData != null) ...[
+            const SizedBox(width: 4.0),
+            FaIcon(
+              iconData,
+              size: 12,
+              color: foregroundColor,
+            ),
+          ],
+        ],
       ),
     );
   }

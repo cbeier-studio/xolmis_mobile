@@ -1,4 +1,5 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../generated/l10n.dart';
 
 /// Minimum width (in dp) used to switch to tablet-oriented layouts.
@@ -197,6 +198,45 @@ Map<InventoryType, String> inventoryTypeFriendlyNames = {
   InventoryType.invCasual: S.current.inventoryCasual,
   InventoryType.invTransectDetection: S.current.inventoryTransectDetection,
   InventoryType.invPointDetection: S.current.inventoryPointDetection,
+};
+
+/// Transport modes used during field inventories.
+enum TransportMode {
+  tmodeNotApplicable,
+  tmodeWalking,
+  tmodeVehicle,
+  tmodeBoat,
+  tmodeAircraft,
+  tmodeBicycle,
+  tmodeHorse,
+  tmodeRemote,
+  tmodeOther,
+}
+
+/// Localized labels for [TransportMode] values.
+Map<TransportMode, String> transportModeFriendlyNames = {
+  TransportMode.tmodeNotApplicable: S.current.transportNotApplicable,
+  TransportMode.tmodeWalking: S.current.transportWalking,
+  TransportMode.tmodeVehicle: S.current.transportVehicle,
+  TransportMode.tmodeBoat: S.current.transportBoat,
+  TransportMode.tmodeAircraft: S.current.transportAircraft,
+  TransportMode.tmodeBicycle: S.current.transportBicycle,
+  TransportMode.tmodeHorse: S.current.transportHorse,
+  TransportMode.tmodeRemote: S.current.transportRemote,
+  TransportMode.tmodeOther: S.current.transportOther,
+};
+
+/// Icon mapping for [TransportMode] values (null if no icon should be shown).
+Map<TransportMode, FaIconData?> transportModeIcons = {
+  TransportMode.tmodeNotApplicable: null,
+  TransportMode.tmodeWalking: FontAwesomeIcons.personWalking,
+  TransportMode.tmodeVehicle: FontAwesomeIcons.car,
+  TransportMode.tmodeBoat: FontAwesomeIcons.ship,
+  TransportMode.tmodeAircraft: FontAwesomeIcons.plane,
+  TransportMode.tmodeBicycle: FontAwesomeIcons.bicycle,
+  TransportMode.tmodeHorse: FontAwesomeIcons.horse,
+  TransportMode.tmodeRemote: FontAwesomeIcons.satelliteDish,
+  TransportMode.tmodeOther: null,
 };
 
 /// Egg shape categories used by nest egg records.

@@ -3793,6 +3793,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'View species table'**
   String get viewSpeciesTable;
+
+  /// Transport mode field label
+  ///
+  /// In en, this message translates to:
+  /// **'Transport mode'**
+  String get transportMode;
+
+  /// Not applicable transport mode label
+  ///
+  /// In en, this message translates to:
+  /// **'Not applicable'**
+  String get transportNotApplicable;
+
+  /// Walking transport mode label
+  ///
+  /// In en, this message translates to:
+  /// **'On foot'**
+  String get transportWalking;
+
+  /// Vehicle transport mode label
+  ///
+  /// In en, this message translates to:
+  /// **'Vehicle'**
+  String get transportVehicle;
+
+  /// Boat transport mode label
+  ///
+  /// In en, this message translates to:
+  /// **'Boat'**
+  String get transportBoat;
+
+  /// Aircraft transport mode label
+  ///
+  /// In en, this message translates to:
+  /// **'Aircraft'**
+  String get transportAircraft;
+
+  /// Bicycle transport mode label
+  ///
+  /// In en, this message translates to:
+  /// **'Bicycle'**
+  String get transportBicycle;
+
+  /// Horse transport mode label
+  ///
+  /// In en, this message translates to:
+  /// **'Horse'**
+  String get transportHorse;
+
+  /// Remote transport mode label
+  ///
+  /// In en, this message translates to:
+  /// **'Remote'**
+  String get transportRemote;
+
+  /// Other transport mode label
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get transportOther;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

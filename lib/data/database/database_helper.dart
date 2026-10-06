@@ -39,7 +39,7 @@ class DatabaseHelper {
     String path = join(await getDatabasesPath(), 'xolmis_database.db');
     return await openDatabase(
       path,
-      version: 29,
+      version: 30,
       onCreate: _createTables,
       onUpgrade: _upgradeTables,
       onConfigure: (db) async {
@@ -75,7 +75,8 @@ class DatabaseHelper {
           totalObservers INTEGER,
           observer TEXT,
           notes TEXT,
-          isDiscarded INTEGER
+          isDiscarded INTEGER,
+          transportMode INTEGER
         )
       ''');
     await db.execute('''
@@ -611,6 +612,17 @@ class DatabaseHelper {
     }
     if (oldVersion < 29) {
       await _migrateToRelativeImagePaths(db);
+    }
+    if (oldVersion < 30) {
+      await db.execute('ALTER TABLE inventories ADD COLUMN transportMode INTEGER');
+      await db.rawUpdate('''
+        UPDATE inventories 
+        SET transportMode = CASE 
+          WHEN type IN (${InventoryType.invPointCount.index}, ${InventoryType.invPointDetection.index}) THEN ${TransportMode.tmodeNotApplicable.index}
+          ELSE ${TransportMode.tmodeWalking.index}
+        END
+        WHERE transportMode IS NULL
+      ''');
     }
   }
 

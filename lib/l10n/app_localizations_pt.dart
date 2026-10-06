@@ -2122,6 +2122,36 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get viewSpeciesTable => 'Ver tabela de espécies';
+
+  @override
+  String get transportMode => 'Modo de locomoção';
+
+  @override
+  String get transportNotApplicable => 'Não aplicável';
+
+  @override
+  String get transportWalking => 'A pé';
+
+  @override
+  String get transportVehicle => 'Veículo';
+
+  @override
+  String get transportBoat => 'Barco';
+
+  @override
+  String get transportAircraft => 'Aeronave';
+
+  @override
+  String get transportBicycle => 'Bicicleta';
+
+  @override
+  String get transportHorse => 'Cavalo';
+
+  @override
+  String get transportRemote => 'Remoto';
+
+  @override
+  String get transportOther => 'Outro';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -4241,4 +4271,34 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get viewSpeciesTable => 'Ver tabela de espécies';
+
+  @override
+  String get transportMode => 'Modo de locomoção';
+
+  @override
+  String get transportNotApplicable => 'Não aplicável';
+
+  @override
+  String get transportWalking => 'A pé';
+
+  @override
+  String get transportVehicle => 'Veículo';
+
+  @override
+  String get transportBoat => 'Barco';
+
+  @override
+  String get transportAircraft => 'Aeronave';
+
+  @override
+  String get transportBicycle => 'Bicicleta';
+
+  @override
+  String get transportHorse => 'Cavalo';
+
+  @override
+  String get transportRemote => 'Remoto';
+
+  @override
+  String get transportOther => 'Outro';
 }

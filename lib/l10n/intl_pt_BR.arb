@@ -2603,5 +2603,55 @@
   "@viewSpeciesTable": {
     "type": "text",
     "description": "View table button label"
+  },
+  "transportMode": "Modo de locomoção",
+  "@transportMode": {
+    "type": "text",
+    "description": "Transport mode field label"
+  },
+  "transportNotApplicable": "Não aplicável",
+  "@transportNotApplicable": {
+    "type": "text",
+    "description": "Not applicable transport mode label"
+  },
+  "transportWalking": "A pé",
+  "@transportWalking": {
+    "type": "text",
+    "description": "Walking transport mode label"
+  },
+  "transportVehicle": "Veículo",
+  "@transportVehicle": {
+    "type": "text",
+    "description": "Vehicle transport mode label"
+  },
+  "transportBoat": "Barco",
+  "@transportBoat": {
+    "type": "text",
+    "description": "Boat transport mode label"
+  },
+  "transportAircraft": "Aeronave",
+  "@transportAircraft": {
+    "type": "text",
+    "description": "Aircraft transport mode label"
+  },
+  "transportBicycle": "Bicicleta",
+  "@transportBicycle": {
+    "type": "text",
+    "description": "Bicycle transport mode label"
+  },
+  "transportHorse": "Cavalo",
+  "@transportHorse": {
+    "type": "text",
+    "description": "Horse transport mode label"
+  },
+  "transportRemote": "Remoto",
+  "@transportRemote": {
+    "type": "text",
+    "description": "Remote transport mode label"
+  },
+  "transportOther": "Outro",
+  "@transportOther": {
+    "type": "text",
+    "description": "Other transport mode label"
   }
 }

@@ -40,6 +40,7 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
   late bool _isDiscarded;
   late final InventoryType _initialType;
   InventoryType _selectedType = InventoryType.invFreeQualitative;
+  late TransportMode _selectedTransportMode;
   List<String> _recentLocalities = const [];
 
   final _formKey = GlobalKey<FormState>();
@@ -72,6 +73,7 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
     _totalObserversController = TextEditingController(text: widget.inventory.totalObservers.toString());
     _observerController = TextEditingController(text: widget.inventory.observer);
     _isDiscarded = widget.inventory.isDiscarded;
+    _selectedTransportMode = widget.inventory.transportMode;
 
     _startTime = widget.inventory.startTime;
     _startTimeController = TextEditingController(
@@ -195,6 +197,14 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
     final intervalsDuration = prefs.getInt('intervalsDuration') ?? 10;
 
     setState(() {
+      _selectedType = newValue;
+      if (newValue == InventoryType.invPointCount ||
+          newValue == InventoryType.invPointDetection) {
+        _selectedTransportMode = TransportMode.tmodeNotApplicable;
+      } else if (_selectedTransportMode == TransportMode.tmodeNotApplicable) {
+        _selectedTransportMode = TransportMode.tmodeWalking;
+      }
+
       if (newValue == InventoryType.invTimedQualitative) {
         if (widget.inventory.duration == 0) {
           _durationController.text = cumulativeTimeDuration.toString();
@@ -325,6 +335,7 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
       final updatedInventory = Inventory(
         id: _idController.text,
         type: _selectedType,
+        transportMode: _selectedTransportMode,
         duration: int.tryParse(_durationController.text) ?? widget.inventory.duration,
         maxSpecies: int.tryParse(_maxSpeciesController.text) ?? widget.inventory.maxSpecies,
         isPaused: widget.inventory.isPaused,
@@ -636,7 +647,35 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 8.0),
+                SizedBox(height: 8),
+                // Transport mode
+                DropdownButtonFormField<TransportMode>(
+                  initialValue: _selectedTransportMode,
+                  isExpanded: true,
+                  decoration: InputDecoration(
+                    labelText: '${S.of(context).transportMode} *',
+                    border: OutlineInputBorder(),
+                  ),
+                  items: TransportMode.values.map((mode) {
+                    return DropdownMenuItem(
+                      value: mode,
+                      child: Text(
+                        transportModeFriendlyNames[mode]!,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: (_selectedType == InventoryType.invPointCount || _selectedType == InventoryType.invPointDetection)
+                      ? null
+                      : (TransportMode? newValue) {
+                          if (newValue != null) {
+                            setState(() {
+                              _selectedTransportMode = newValue;
+                            });
+                          }
+                        },
+                ),
+                SizedBox(height: 8),
                 // Locality
                 Autocomplete<String>(
                   initialValue: widget.inventory.localityName != null

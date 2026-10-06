@@ -1277,6 +1277,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "totalSpeciesWithinSample": MessageLookupByLibrary.simpleMessage(
       "Species within sample",
     ),
+    "transportAircraft": MessageLookupByLibrary.simpleMessage("Aircraft"),
+    "transportBicycle": MessageLookupByLibrary.simpleMessage("Bicycle"),
+    "transportBoat": MessageLookupByLibrary.simpleMessage("Boat"),
+    "transportHorse": MessageLookupByLibrary.simpleMessage("Horse"),
+    "transportMode": MessageLookupByLibrary.simpleMessage("Transport mode"),
+    "transportNotApplicable": MessageLookupByLibrary.simpleMessage(
+      "Not applicable",
+    ),
+    "transportOther": MessageLookupByLibrary.simpleMessage("Other"),
+    "transportRemote": MessageLookupByLibrary.simpleMessage("Remote"),
+    "transportVehicle": MessageLookupByLibrary.simpleMessage("Vehicle"),
+    "transportWalking": MessageLookupByLibrary.simpleMessage("On foot"),
     "trees": MessageLookupByLibrary.simpleMessage("Trees"),
     "type": MessageLookupByLibrary.simpleMessage("Type"),
     "updateSpeciesTimes": MessageLookupByLibrary.simpleMessage(
