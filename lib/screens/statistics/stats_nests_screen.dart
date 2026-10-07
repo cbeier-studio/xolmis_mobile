@@ -181,7 +181,7 @@ class StatsNestsScreenState extends State<StatsNestsScreen> {
                   children: [
                     Text(
                       '${totalSuccessNests}%',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: XolmisColors.success),
+                      style: TextStyle(fontSize: Theme.of(context).textTheme.headlineSmall?.fontSize, fontWeight: FontWeight.bold, color: XolmisColors.success),
                     ),
                     const SizedBox(height: 2),
                     Text(
@@ -209,7 +209,7 @@ class StatsNestsScreenState extends State<StatsNestsScreen> {
                   children: [
                     Text(
                       '${totalNestsWithNidoparasitism}%',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: XolmisColors.warning),
+                      style: TextStyle(fontSize: Theme.of(context).textTheme.headlineSmall?.fontSize, fontWeight: FontWeight.bold, color: XolmisColors.warning),
                     ),
                     const SizedBox(height: 2),
                     Text(
@@ -253,7 +253,7 @@ class StatsNestsScreenState extends State<StatsNestsScreen> {
           Text(
             value,
             style: TextStyle(
-              fontSize: 20,
+              fontSize: Theme.of(context).textTheme.headlineSmall?.fontSize,
               fontWeight: FontWeight.bold,
               color: valueColor,
             ),

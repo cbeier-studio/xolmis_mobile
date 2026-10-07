@@ -122,21 +122,21 @@ class StatsSpecimensScreenState extends State<StatsSpecimensScreen> {
           label: S.current.localitiesSurveyed(distinctLocalitiesCount),
           value: '${distinctLocalitiesCount}',
           // subtext: '',
-          valueColor: XolmisColors.terraMadeira,
+          valueColor: XolmisColors.primary,
           isDark: isDark,
         ),
         _buildKpiTile(
           label: S.current.totalRichness,
           value: '${combinedSpeciesList.length}',
           // subtext: '',
-          valueColor: XolmisColors.folhaCampo,
+          valueColor: XolmisColors.primary,
           isDark: isDark,
         ),
         _buildKpiTile(
           label: S.current.observers(distinctObserversCount),
           value: '${distinctObserversCount}',
           // subtext: '',
-          valueColor: isDark ? Colors.white : Colors.black87,
+          valueColor: XolmisColors.primary,
           isDark: isDark,
         ),
       ],
@@ -168,7 +168,7 @@ class StatsSpecimensScreenState extends State<StatsSpecimensScreen> {
           Text(
             value,
             style: TextStyle(
-              fontSize: 20,
+              fontSize: Theme.of(context).textTheme.headlineSmall?.fontSize,
               fontWeight: FontWeight.bold,
               color: valueColor,
             ),

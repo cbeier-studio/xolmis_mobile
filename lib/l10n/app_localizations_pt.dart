@@ -2161,6 +2161,24 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get sample => 'Amostra';
+
+  @override
+  String get presenceWithinSample => ' - Presença dentro da amostra, ';
+
+  @override
+  String get presenceOutsideSample => ' - Fora da amostra.';
+
+  @override
+  String get firstOccurrenceIsHighlighted => 'Primeira ocorrência da espécie na tabela está grifada.';
+
+  @override
+  String get parenthesisIsOutsideSample => 'Valores entre parênteses são indivíduos fora da amostra.';
+
+  @override
+  String get viewCompleteList => 'Ver lista completa';
+
+  @override
+  String get noSpeciesSelected => 'Nenhuma espécie selecionada';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -4319,4 +4337,22 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get sample => 'Amostra';
+
+  @override
+  String get presenceWithinSample => ' - Presença dentro da amostra, ';
+
+  @override
+  String get presenceOutsideSample => ' - Fora da amostra.';
+
+  @override
+  String get firstOccurrenceIsHighlighted => 'Primeira ocorrência da espécie na tabela está grifada.';
+
+  @override
+  String get parenthesisIsOutsideSample => 'Valores entre parênteses são indivíduos fora da amostra.';
+
+  @override
+  String get viewCompleteList => 'Ver lista completa';
+
+  @override
+  String get noSpeciesSelected => 'Nenhuma espécie selecionada';
 }

@@ -8,6 +8,7 @@ import '../../generated/l10n.dart';
 import '../../providers/inventory_provider.dart';
 import '../../providers/poi_provider.dart';
 import '../../providers/species_provider.dart';
+import '../../reports/selected_inventories_pdf_report.dart';
 import '../../widgets/scrollable_chart_indicator.dart';
 import '../../utils/statistics_logic.dart';
 import '../../utils/themes.dart';
@@ -208,7 +209,24 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      appBar: AppBar(title: Text(S.current.statistics)),
+      appBar: AppBar(
+          title: Text(S.current.statistics),
+        // actions: [
+        //   IconButton(
+        //     icon: const Icon(Icons.print_outlined),
+        //     onPressed: () {
+        //       Navigator.push(
+        //         context,
+        //         MaterialPageRoute(
+        //           builder: (context) => InventoryPdfReportPreviewScreen(
+        //             inventories: widget.inventories,
+        //           ),
+        //         ),
+        //       );
+        //     },
+        //   ),
+        // ],
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
@@ -253,21 +271,21 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
           label: S.current.localitiesSurveyed(distinctLocalitiesCount),
           value: '${distinctLocalitiesCount}',
           // subtext: '',
-          valueColor: XolmisColors.terraMadeira,
+          valueColor: XolmisColors.primary,
           isDark: isDark,
         ),
         _buildKpiTile(
           label: S.current.totalRichness,
           value: '${combinedSpeciesList.length}',
           // subtext: '',
-          valueColor: XolmisColors.folhaCampo,
+          valueColor: XolmisColors.primary,
           isDark: isDark,
         ),
         _buildKpiTile(
           label: S.current.averageRichness,
           value: averageSpeciesCount.toStringAsFixed(1),
           // subtext: '',
-          valueColor: isDark ? Colors.white : Colors.black87,
+          valueColor: XolmisColors.primary,
           isDark: isDark,
         ),
       ],
@@ -299,7 +317,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
           Text(
             value,
             style: TextStyle(
-              fontSize: 20,
+              fontSize: Theme.of(context).textTheme.headlineSmall?.fontSize,
               fontWeight: FontWeight.bold,
               color: valueColor,
             ),
@@ -677,6 +695,9 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
   }
 
   Widget _buildHourlyRecordsCard(bool isDark) {
+    final maxHourlyValue = recordsPerHour.values.fold<int>(0, (max, value) => value > max ? value : max);
+    final yAxisMax = maxHourlyValue > 0 ? (maxHourlyValue * 1.15).ceilToDouble() : 4.0;
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -712,18 +733,18 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
             child: BarChart(
               BarChartData(
                 alignment: BarChartAlignment.spaceAround,
-                maxY: 32,
+                maxY: yAxisMax,
                 barTouchData: BarTouchData(
                   enabled: true,
                   touchTooltipData: BarTouchTooltipData(
                     getTooltipColor: (_) => XolmisColors.jacarandaDeep,
                     getTooltipItem: (group, groupIndex, rod, rodIndex) {
                       return BarTooltipItem(
-                        '${groupIndex.toString().padLeft(2, '0')}h: ${rod.toY.round()} reg.',
+                        '${groupIndex.toString().padLeft(2, '0')} h: ${rod.toY.round()} ${S.current.recordsCount(rod.toY.round())}',
                         TextStyle(
                           color: Colors.white,
-                          fontSize: 11,
-                          fontWeight: FontWeight.w600,
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
                         ),
                       );
                     },

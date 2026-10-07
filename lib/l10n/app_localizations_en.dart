@@ -2124,4 +2124,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sample => 'Sample';
+
+  @override
+  String get presenceWithinSample => ' - Presence within sample, ';
+
+  @override
+  String get presenceOutsideSample => ' - Outside sample.';
+
+  @override
+  String get firstOccurrenceIsHighlighted => 'First occurrence of species in the table is highlighted.';
+
+  @override
+  String get parenthesisIsOutsideSample => 'Values in parenthesis are individuals outside sample.';
+
+  @override
+  String get viewCompleteList => 'View complete list';
+
+  @override
+  String get noSpeciesSelected => 'No species selected';
 }

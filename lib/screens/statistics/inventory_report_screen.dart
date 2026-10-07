@@ -82,7 +82,12 @@ class _InventoryReportScreenState extends State<InventoryReportScreen> {
             ],
           ),
           body: SafeArea(
-            child: SingleChildScrollView(
+            child: Column(
+              children: [
+              Expanded(
+            child:
+            SingleChildScrollView(
+              padding: const EdgeInsets.all(8),
               scrollDirection: Axis.horizontal,
               child: SingleChildScrollView(
                 scrollDirection: Axis.vertical,
@@ -91,7 +96,8 @@ class _InventoryReportScreenState extends State<InventoryReportScreen> {
                   columnSpacing: 16,
                   horizontalMargin: 8,
                   headingRowHeight: 38,
-                  dataRowMinHeight: 40,
+                  dataRowMinHeight: 28,
+                  dataRowMaxHeight: 32,
                   headingRowColor: WidgetStateProperty.all(
                     isDark
                         ? Colors.grey.shade900
@@ -101,6 +107,77 @@ class _InventoryReportScreenState extends State<InventoryReportScreen> {
                   rows: _buildRows(speciesSet, reportData),
                 ),
               ),
+            ),
+              ),
+            Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+            padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+        color: isDark ? Colors.grey.shade900 : Colors.white,
+        border: Border.all(color: isDark ? Colors.grey.shade800 : XolmisColors.borderSubtle),
+        borderRadius: BorderRadius.circular(16),
+        shape: BoxShape.rectangle,
+        ),
+        child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Text(
+          //   'Legenda',
+          //   style: const TextStyle(
+          //     fontSize: 12,
+          //     fontWeight: FontWeight.bold,
+          //   ),
+          // ),
+          // const SizedBox(height: 8),
+          Row(
+            children: [
+              Text(
+                'X',
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                S.current.presenceWithinSample,
+                style: const TextStyle(
+                  fontSize: 12,
+                ),
+              ),
+              Text(
+                'O',
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                S.current.presenceOutsideSample,
+                style: const TextStyle(
+                  fontSize: 12,
+                ),
+              ),
+            ],
+          ),
+          Text(
+            S.current.parenthesisIsOutsideSample,
+            style: const TextStyle(
+              fontSize: 12,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            S.current.firstOccurrenceIsHighlighted,
+            style: const TextStyle(
+              fontSize: 12,
+            ),
+          ),
+        ],
+        ),
+        ),
+            ),
+            ],
             ),
           ),
         );
@@ -303,6 +380,7 @@ class _InventoryReportScreenState extends State<InventoryReportScreen> {
 
           return DataCell(
             Container(
+              alignment: colIndex == 0 ? Alignment.centerLeft : Alignment.centerRight,
               padding: const EdgeInsets.symmetric(
                   horizontal: 8, vertical: 4),
               decoration: BoxDecoration(

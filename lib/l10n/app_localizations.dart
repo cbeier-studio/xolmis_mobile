@@ -3871,6 +3871,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Sample'**
   String get sample;
+
+  /// Presence within sample legend label
+  ///
+  /// In en, this message translates to:
+  /// **' - Presence within sample, '**
+  String get presenceWithinSample;
+
+  /// Presence outside sample legend label
+  ///
+  /// In en, this message translates to:
+  /// **' - Outside sample.'**
+  String get presenceOutsideSample;
+
+  /// First occurrence is highlighted legend label
+  ///
+  /// In en, this message translates to:
+  /// **'First occurrence of species in the table is highlighted.'**
+  String get firstOccurrenceIsHighlighted;
+
+  /// Parenthesis is outside sample legend label
+  ///
+  /// In en, this message translates to:
+  /// **'Values in parenthesis are individuals outside sample.'**
+  String get parenthesisIsOutsideSample;
+
+  /// View complete list button label
+  ///
+  /// In en, this message translates to:
+  /// **'View complete list'**
+  String get viewCompleteList;
+
+  /// No species selected message
+  ///
+  /// In en, this message translates to:
+  /// **'No species selected'**
+  String get noSpeciesSelected;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

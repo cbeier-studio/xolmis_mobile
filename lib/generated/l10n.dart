@@ -6304,6 +6304,66 @@ class S {
       args: [],
     );
   }
+
+  /// ` - Presence within sample, `
+  String get presenceWithinSample {
+    return Intl.message(
+      ' - Presence within sample, ',
+      name: 'presenceWithinSample',
+      desc: 'Presence within sample legend label',
+      args: [],
+    );
+  }
+
+  /// ` - Outside sample.`
+  String get presenceOutsideSample {
+    return Intl.message(
+      ' - Outside sample.',
+      name: 'presenceOutsideSample',
+      desc: 'Presence outside sample legend label',
+      args: [],
+    );
+  }
+
+  /// `First occurrence of species in the table is highlighted.`
+  String get firstOccurrenceIsHighlighted {
+    return Intl.message(
+      'First occurrence of species in the table is highlighted.',
+      name: 'firstOccurrenceIsHighlighted',
+      desc: 'First occurrence is highlighted legend label',
+      args: [],
+    );
+  }
+
+  /// `Values in parenthesis are individuals outside sample.`
+  String get parenthesisIsOutsideSample {
+    return Intl.message(
+      'Values in parenthesis are individuals outside sample.',
+      name: 'parenthesisIsOutsideSample',
+      desc: 'Parenthesis is outside sample legend label',
+      args: [],
+    );
+  }
+
+  /// `View complete list`
+  String get viewCompleteList {
+    return Intl.message(
+      'View complete list',
+      name: 'viewCompleteList',
+      desc: 'View complete list button label',
+      args: [],
+    );
+  }
+
+  /// `No species selected`
+  String get noSpeciesSelected {
+    return Intl.message(
+      'No species selected',
+      name: 'noSpeciesSelected',
+      desc: 'No species selected message',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

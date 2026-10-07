@@ -2668,5 +2668,35 @@
   "@sample": {
     "type": "text",
     "description": "Sample legend label"
+  },
+  "presenceWithinSample": " - Presença dentro da amostra, ",
+  "@presenceWithinSample": {
+    "type": "text",
+    "description": "Presence within sample legend label"
+  },
+  "presenceOutsideSample": " - Fora da amostra.",
+  "@presenceOutsideSample": {
+    "type": "text",
+    "description": "Presence outside sample legend label"
+  },
+  "firstOccurrenceIsHighlighted": "Primeira ocorrência da espécie na tabela está grifada.",
+  "@firstOccurrenceIsHighlighted": {
+    "type": "text",
+    "description": "First occurrence is highlighted legend label"
+  },
+  "parenthesisIsOutsideSample": "Valores entre parênteses são indivíduos fora da amostra.",
+  "@parenthesisIsOutsideSample": {
+    "type": "text",
+    "description": "Parenthesis is outside sample legend label"
+  },
+  "viewCompleteList": "Ver lista completa",
+  "@viewCompleteList": {
+    "type": "text",
+    "description": "View complete list button label"
+  },
+  "noSpeciesSelected": "Nenhuma espécie selecionada",
+  "@noSpeciesSelected": {
+    "type": "text",
+    "description": "No species selected message"
   }
 }

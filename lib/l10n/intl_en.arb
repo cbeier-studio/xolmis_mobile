@@ -3227,5 +3227,35 @@
     "@sample": {
         "type": "text",
         "description": "Sample legend label"
+    },
+    "presenceWithinSample": " - Presence within sample, ",
+    "@presenceWithinSample": {
+        "type": "text",
+        "description": "Presence within sample legend label"
+    },
+    "presenceOutsideSample": " - Outside sample.",
+    "@presenceOutsideSample": {
+        "type": "text",
+        "description": "Presence outside sample legend label"
+    },
+    "firstOccurrenceIsHighlighted": "First occurrence of species in the table is highlighted.",
+    "@firstOccurrenceIsHighlighted": {
+        "type": "text",
+        "description": "First occurrence is highlighted legend label"
+    },
+    "parenthesisIsOutsideSample": "Values in parenthesis are individuals outside sample.",
+    "@parenthesisIsOutsideSample": {
+        "type": "text",
+        "description": "Parenthesis is outside sample legend label"
+    },
+    "viewCompleteList": "View complete list",
+    "@viewCompleteList": {
+        "type": "text",
+        "description": "View complete list button label"
+    },
+    "noSpeciesSelected": "No species selected",
+    "@noSpeciesSelected": {
+        "type": "text",
+        "description": "No species selected message"
     }
 }

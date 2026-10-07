@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math' as math;
 import 'package:fl_chart/fl_chart.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
@@ -263,6 +264,18 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
     }
   }
 
+  Widget _buildChartNoDataPlaceholder(bool isDark, {double height = 140}) {
+    return SizedBox(
+      height: height,
+      child: Center(
+        child: Text(
+          S.current.noDataAvailable,
+          style: TextStyle(fontSize: 12, color: isDark ? Colors.grey.shade400 : Colors.grey.shade600),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -313,386 +326,6 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
 
           _buildYearlyRecordsCard(isDark),
           const SizedBox(height: 16),
-
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.start,
-          //   children: [
-          //     Expanded(child:
-          //     // Nest fate per species
-          //     Card(
-          //       child: Padding(
-          //         padding: EdgeInsets.all(16.0),
-          //         child: Column(
-          //           children: [
-          //             Text(
-          //               S.current.recordsByHour,
-          //               style: TextTheme.of(context).titleMedium,
-          //             ),
-          //             const SizedBox(height: 8,),
-          //             recordsPerHour.isNotEmpty ?
-          //             SizedBox(
-          //               height: 150,
-          //               child: BarChart(
-          //                 BarChartData(
-          //                   alignment: BarChartAlignment.spaceAround,
-          //                   gridData: FlGridData(show: false),
-          //                   borderData: FlBorderData(
-          //                     show: true,
-          //                     border: Border(
-          //                       bottom: BorderSide(color: Colors.grey.withValues(alpha: 0.5), width: 1),
-          //                     ),
-          //                   ),
-          //                   barTouchData: BarTouchData(
-          //                     enabled: true,
-          //                     touchTooltipData: BarTouchTooltipData(
-          //                         fitInsideHorizontally: true,
-          //                         fitInsideVertically: true,
-          //                         getTooltipColor: (spot) => Colors.white.withValues(alpha: 0.8),
-          //                         getTooltipItem: (group, groupIndex, rod, rodIndex) {
-          //                           final hour = group.x.toInt();
-          //                           final value = rod.toY.toInt();
-          //                           if (value == 0) {
-          //                             return null;
-          //                           }
-          //                           return BarTooltipItem(
-          //                             '', // Main string empty, we use the children
-          //                             const TextStyle(),
-          //                             children: [
-          //                               TextSpan(
-          //                                 text: '$value\n',
-          //                                 style: const TextStyle(
-          //                                   color: Colors.blue,
-          //                                   fontWeight: FontWeight.bold,
-          //                                   fontSize: 16,
-          //                                 ),
-          //                               ),
-          //                               TextSpan(
-          //                                 text: '${hour.toString().padLeft(2, '0')} h',
-          //                                 style: const TextStyle(
-          //                                   color: Colors.black87,
-          //                                   fontWeight: FontWeight.normal,
-          //                                   fontSize: 12,
-          //                                 ),
-          //                               ),
-          //                             ],
-          //                           );
-          //                         }
-          //                     ),
-          //                   ),
-          //                   titlesData: FlTitlesData(
-          //                     show: true,
-          //                     bottomTitles: AxisTitles(
-          //                       sideTitles: SideTitles(
-          //                         showTitles: true,
-          //                         reservedSize: 30,
-          //                         getTitlesWidget: (value, meta) {
-          //                           // Show X axis titles only on specific intervals.
-          //                           final hour = value.toInt();
-          //                           if (hour % 3 == 0 || hour == 23) {
-          //                             return SideTitleWidget(meta: meta, child: Text(hour.toString().padLeft(2, '0')));
-          //                           } else {
-          //                             return SideTitleWidget(meta: meta, child: const Text(''));
-          //                           }
-          //                         },
-          //                       ),
-          //                     ),
-          //                     leftTitles: AxisTitles(
-          //                       sideTitles: SideTitles(showTitles: false, reservedSize: 28),
-          //                     ),
-          //                     topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          //                     rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          //                   ),
-          //                   barGroups: createBarGroupsFromOccurrencesMap(
-          //                     recordsPerHour,
-          //                     12,
-          //                   ),
-          //                 ),
-          //               ),
-          //             ) : Text(S.current.noDataAvailable),
-          //           ],
-          //         ),
-          //       ),
-          //     ),
-          //     ),
-          //    ],
-          //  ),
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.start,
-          //   children: [
-          //     Expanded(
-          //       child: Card(
-          //         child: Padding(
-          //           padding: EdgeInsets.all(16.0),
-          //           child: Column(
-          //             children: [
-          //               Text(S.current.recordsPerMonth, style: TextTheme.of(context).titleMedium),
-          //               const SizedBox(height: 8),
-          //               SizedBox(
-          //                 height: 150,
-          //                 child: BarChart(
-          //                   BarChartData(
-          //                     alignment: BarChartAlignment.spaceAround,
-          //                     gridData: FlGridData(show: false),
-          //                     borderData: FlBorderData(
-          //                       show: true,
-          //                       border: Border(bottom: BorderSide(color: Colors.grey.withValues(alpha: 0.5), width: 1)),
-          //                     ),
-          //                     barTouchData: BarTouchData(
-          //                       enabled: true,
-          //                       touchTooltipData: BarTouchTooltipData(
-          //                         fitInsideHorizontally: true,
-          //                         fitInsideVertically: true,
-          //                         getTooltipColor: (spot) => Colors.white.withValues(alpha: 0.8),
-          //                         getTooltipItem: (group, groupIndex, rod, rodIndex) {
-          //                           final month = group.x.toInt();
-          //                           final value = rod.toY.toInt();
-          //                           if (value == 0) {
-          //                             return null;
-          //                           }
-          //                           return BarTooltipItem(
-          //                             '',
-          //                             const TextStyle(),
-          //                             children: [
-          //                               TextSpan(
-          //                                 text: '$value\n',
-          //                                 style: const TextStyle(
-          //                                   color: Colors.blue,
-          //                                   fontWeight: FontWeight.bold,
-          //                                   fontSize: 16,
-          //                                 ),
-          //                               ),
-          //                               TextSpan(
-          //                                 text: _getMonthName(month),
-          //                                 style: const TextStyle(
-          //                                   color: Colors.black87,
-          //                                   fontWeight: FontWeight.normal,
-          //                                   fontSize: 12,
-          //                                 ),
-          //                               ),
-          //                             ],
-          //                           );
-          //                         },
-          //                       ),
-          //                     ),
-          //                     titlesData: FlTitlesData(
-          //                       show: true,
-          //                       bottomTitles: AxisTitles(
-          //                         sideTitles: SideTitles(
-          //                           showTitles: true,
-          //                           reservedSize: 30,
-          //                           getTitlesWidget: (value, meta) {
-          //                             final month = value.toInt();
-          //                             return SideTitleWidget(meta: meta, child: Text(_getMonthAbbrName(month)));
-          //                           },
-          //                         ),
-          //                       ),
-          //                       leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false, reservedSize: 28)),
-          //                       topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          //                       rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          //                     ),
-          //                     barGroups: _createBarGroupsFromMonthOccurrencesMap(recordsByMonth, 14, Colors.blue),
-          //                   ),
-          //                 ),
-          //               ),
-          //             ],
-          //           ),
-          //         ),
-          //       ),
-          //     ),
-          //   ],
-          // ),
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.start,
-          //   children: [
-          //     Expanded(
-          //       child: Card(
-          //         child: Padding(
-          //           padding: EdgeInsets.all(16.0),
-          //           child: Column(
-          //             children: [
-          //               Text(S.current.speciesRichnessPerMonth, style: TextTheme.of(context).titleMedium),
-          //               const SizedBox(height: 8),
-          //               SizedBox(
-          //                 height: 150,
-          //                 child: BarChart(
-          //                   BarChartData(
-          //                     alignment: BarChartAlignment.spaceAround,
-          //                     gridData: FlGridData(show: false),
-          //                     borderData: FlBorderData(
-          //                       show: true,
-          //                       border: Border(bottom: BorderSide(color: Colors.grey.withValues(alpha: 0.5), width: 1)),
-          //                     ),
-          //                     barTouchData: BarTouchData(
-          //                       enabled: true,
-          //                       touchTooltipData: BarTouchTooltipData(
-          //                         fitInsideHorizontally: true,
-          //                         fitInsideVertically: true,
-          //                         getTooltipColor: (spot) => Colors.white.withValues(alpha: 0.8),
-          //                         getTooltipItem: (group, groupIndex, rod, rodIndex) {
-          //                           final month = group.x.toInt();
-          //                           final value = rod.toY.toInt();
-          //                           if (value == 0) {
-          //                             return null;
-          //                           }
-          //                           return BarTooltipItem(
-          //                             '',
-          //                             const TextStyle(),
-          //                             children: [
-          //                               TextSpan(
-          //                                 text: '$value\n',
-          //                                 style: const TextStyle(
-          //                                   color: Colors.deepPurple,
-          //                                   fontWeight: FontWeight.bold,
-          //                                   fontSize: 16,
-          //                                 ),
-          //                               ),
-          //                               TextSpan(
-          //                                 text: _getMonthName(month),
-          //                                 style: const TextStyle(
-          //                                   color: Colors.black87,
-          //                                   fontWeight: FontWeight.normal,
-          //                                   fontSize: 12,
-          //                                 ),
-          //                               ),
-          //                             ],
-          //                           );
-          //                         },
-          //                       ),
-          //                     ),
-          //                     titlesData: FlTitlesData(
-          //                       show: true,
-          //                       bottomTitles: AxisTitles(
-          //                         sideTitles: SideTitles(
-          //                           showTitles: true,
-          //                           reservedSize: 30,
-          //                           getTitlesWidget: (value, meta) {
-          //                             final month = value.toInt();
-          //                             return SideTitleWidget(meta: meta, child: Text(_getMonthAbbrName(month)));
-          //                           },
-          //                         ),
-          //                       ),
-          //                       leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false, reservedSize: 28)),
-          //                       topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          //                       rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          //                     ),
-          //                     barGroups: _createBarGroupsFromMonthOccurrencesMap(
-          //                       speciesRichnessByMonth,
-          //                       14,
-          //                       Colors.deepPurple,
-          //                     ),
-          //                   ),
-          //                 ),
-          //               ),
-          //             ],
-          //           ),
-          //         ),
-          //       ),
-          //     ),
-          //   ],
-          // ),
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.start,
-          //   children: [
-          //     Expanded(
-          //       child: Card(
-          //         child: Padding(
-          //           padding: EdgeInsets.all(16.0),
-          //           child: Column(
-          //             children: [
-          //               Text(S.current.speciesRichnessPerYear, style: TextTheme.of(context).titleMedium),
-          //               const SizedBox(height: 8),
-          //               speciesRichnessByYear.isNotEmpty
-          //                   ? SizedBox(
-          //                     height: 150,
-          //                     child: BarChart(
-          //                       BarChartData(
-          //                         alignment: BarChartAlignment.spaceAround,
-          //                         gridData: FlGridData(show: false),
-          //                         borderData: FlBorderData(
-          //                           show: true,
-          //                           border: Border(
-          //                             bottom: BorderSide(color: Colors.grey.withValues(alpha: 0.5), width: 1),
-          //                           ),
-          //                         ),
-          //                         barTouchData: BarTouchData(
-          //                           enabled: true,
-          //                           touchTooltipData: BarTouchTooltipData(
-          //                             fitInsideHorizontally: true,
-          //                             fitInsideVertically: true,
-          //                             getTooltipColor: (spot) => Colors.white.withValues(alpha: 0.8),
-          //                             getTooltipItem: (group, groupIndex, rod, rodIndex) {
-          //                               final sortedYears = speciesRichnessByYear.keys.toList()..sort();
-          //                               final year = sortedYears[groupIndex];
-          //                               final value = rod.toY.toInt();
-          //                               if (value == 0) {
-          //                                 return null;
-          //                               }
-          //                               return BarTooltipItem(
-          //                                 '',
-          //                                 const TextStyle(),
-          //                                 children: [
-          //                                   TextSpan(
-          //                                     text: '$value\n',
-          //                                     style: const TextStyle(
-          //                                       color: Colors.teal,
-          //                                       fontWeight: FontWeight.bold,
-          //                                       fontSize: 16,
-          //                                     ),
-          //                                   ),
-          //                                   TextSpan(
-          //                                     text: year.toString(),
-          //                                     style: const TextStyle(
-          //                                       color: Colors.black87,
-          //                                       fontWeight: FontWeight.normal,
-          //                                       fontSize: 12,
-          //                                     ),
-          //                                   ),
-          //                                 ],
-          //                               );
-          //                             },
-          //                           ),
-          //                         ),
-          //                         titlesData: FlTitlesData(
-          //                           show: true,
-          //                           bottomTitles: AxisTitles(
-          //                             sideTitles: SideTitles(
-          //                               showTitles: true,
-          //                               reservedSize: 30,
-          //                               getTitlesWidget: (value, meta) {
-          //                                 final sortedYears = speciesRichnessByYear.keys.toList()..sort();
-          //                                 final index = value.toInt();
-          //                                 if (index >= 0 && index < sortedYears.length) {
-          //                                   return SideTitleWidget(
-          //                                     meta: meta,
-          //                                     child: Text(sortedYears[index].toString()),
-          //                                   );
-          //                                 } else {
-          //                                   return SideTitleWidget(meta: meta, child: Text(''));
-          //                                 }
-          //                               },
-          //                             ),
-          //                           ),
-          //                           leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false, reservedSize: 28)),
-          //                           topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          //                           rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          //                         ),
-          //                         barGroups: _createBarGroupsFromYearOccurrencesMap(
-          //                           speciesRichnessByYear,
-          //                           14,
-          //                           Colors.teal,
-          //                         ),
-          //                       ),
-          //                     ),
-          //                   )
-          //                   : Text(S.current.noDataAvailable),
-          //             ],
-          //           ),
-          //         ),
-          //       ),
-          //     ),
-          //   ],
-          // ),
-          // SizedBox(height: 16),
 
           _buildInventoryStatsCard(context, isDark),
           const SizedBox(height: 16),
@@ -807,19 +440,6 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
                   Text(S.current.topSpecies(5), style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
                 ],
               ),
-              InkWell(
-                onTap: () async {
-                  // Ação de navegação para a nova tela
-                  final allSpeciesRecords = await getTopSpeciesWithMostRecords(0);
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => AllSpeciesRecordsScreen(allSpeciesRecords: allSpeciesRecords)),
-                  );
-                },
-                child: Text(
-                  S.current.seeAll,
-                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: XolmisColors.primary),
-                ),
-              ),
             ],
           ),
           const SizedBox(height: 12),
@@ -865,12 +485,58 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
               }
             },
           ),
+          const SizedBox(height: 8),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              style: OutlinedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                backgroundColor: isDark
+                    ? XolmisColors.primary.withValues(alpha: 0.15)
+                    : XolmisColors.primaryContainer.withValues(alpha: 0.5),
+                side: BorderSide(
+                  color: isDark
+                      ? Colors.grey.shade800
+                      : XolmisColors.outlineVariant.withValues(alpha: 0.5),
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              icon: const Icon(
+                Icons.list_outlined,
+                size: 16,
+                color: XolmisColors.primary,
+              ),
+              label: Text(
+                S.current.viewCompleteList,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: isDark
+                      ? XolmisColors.primaryContainer
+                      : XolmisColors.onPrimaryContainer,
+                ),
+              ),
+              onPressed: () async {
+                final allSpeciesRecords = await getTopSpeciesWithMostRecords(0);
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => AllSpeciesRecordsScreen(allSpeciesRecords: allSpeciesRecords)),
+                );
+              },
+            ),
+          ),
         ],
       ),
     );
   }
 
   Widget _buildHourlyChartCard(BuildContext context, bool isDark) {
+    final maxHourlyValue = recordsPerHour.values.fold<int>(0, math.max);
+    final hasHourlyData = recordsPerHour.values.any((value) => value > 0);
+    // Keep a small headroom so the tallest bar does not touch chart bounds.
+    final yAxisMax = math.max(4.0, (maxHourlyValue * 1.15).ceilToDouble());
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -897,61 +563,29 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
             ],
           ),
           const SizedBox(height: 16),
-          SizedBox(
-            height: 180,
-            child: BarChart(
-              BarChartData(
-                alignment: BarChartAlignment.spaceAround,
-                maxY: 40,
-                barTouchData: BarTouchData(
-                  enabled: true,
-                  touchTooltipData: BarTouchTooltipData(
-                    fitInsideHorizontally: true,
-                    fitInsideVertically: true,
-                    getTooltipColor: (spot) => Colors.white.withValues(alpha: 0.8),
-                    getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                      final hour = group.x.toInt();
-                      final value = rod.toY.toInt();
-                      if (value == 0) {
-                        return null;
-                      }
-                      return BarTooltipItem(
-                        '', // Main string empty, we use the children
-                        const TextStyle(),
-                        children: [
-                          TextSpan(
-                            text: '$value\n',
-                            style: const TextStyle(
-                              color: XolmisColors.primary,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                            ),
-                          ),
-                          TextSpan(
-                            text: '${hour.toString().padLeft(2, '0')} h',
-                            style: const TextStyle(color: Colors.black87, fontWeight: FontWeight.normal, fontSize: 12),
-                          ),
-                        ],
-                      );
-                    },
-                  ),
-                ),
-                // barTouchData: BarTouchDataOptions(
-                //   enabled: true,
-                //   touchTooltipData: BarTouchTooltipData(
-                //     getTooltipColor: (_) => XolmisColors.jacarandaDeep,
-                //     getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                //       return BarTooltipItem(
-                //         '${groupIndex.toString().padLeft(2, '0')}h: ${rod.toY.round()} reg.',
-                //         TextStyle(
-                //           color: Colors.white,
-                //           fontSize: 11,
-                //           fontWeight: FontWeight.w600,
-                //         ),
-                //       );
-                //     },
-                //   ),
-                // ),
+          hasHourlyData
+              ? SizedBox(
+                height: 180,
+                child: BarChart(
+                  BarChartData(
+                    alignment: BarChartAlignment.spaceAround,
+                    maxY: yAxisMax,
+                    barTouchData: BarTouchData(
+                      enabled: true,
+                      touchTooltipData: BarTouchTooltipData(
+                        getTooltipColor: (_) => XolmisColors.jacarandaDeep,
+                        getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                          final value = rod.toY.toInt();
+                          if (value == 0) {
+                            return null;
+                          }
+                          return BarTooltipItem(
+                            '${group.x.toString().padLeft(2, '0')} h: ${rod.toY.round()} ${S.current.recordsCount(rod.toY.round())}',
+                            TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold),
+                          );
+                        },
+                      ),
+                    ),
                 titlesData: FlTitlesData(
                   show: true,
                   bottomTitles: AxisTitles(
@@ -1001,23 +635,24 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
                     bottom: BorderSide(color: isDark ? Colors.grey.shade800 : Colors.grey.shade200, width: 2),
                   ),
                 ),
-                barGroups: List.generate(
-                  24,
-                  (index) => BarChartGroupData(
-                    x: index,
-                    barRods: [
-                      BarChartRodData(
-                        toY: recordsPerHour[index]!.toDouble(),
-                        color: XolmisColors.primary,
-                        width: 10,
-                        borderRadius: const BorderRadius.vertical(top: Radius.circular(3)),
+                    barGroups: List.generate(
+                      24,
+                      (index) => BarChartGroupData(
+                        x: index,
+                        barRods: [
+                          BarChartRodData(
+                            toY: (recordsPerHour[index] ?? 0).toDouble(),
+                            color: XolmisColors.jacarandaCore,
+                            width: 10,
+                            borderRadius: const BorderRadius.only(topLeft: Radius.circular(6), topRight: Radius.circular(6)),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
-              ),
-            ),
-          ),
+              )
+              : _buildChartNoDataPlaceholder(isDark, height: 180),
         ],
       ),
     );
@@ -1025,6 +660,7 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
 
   Widget _buildMonthlyRecordsCard(bool isDark) {
     const monthLabels = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
+    final hasMonthlyRecordsData = recordsByMonth.values.any((value) => value > 0);
 
     final maxMonthly = recordsByMonth.values.toList().fold(1, (max, v) => v > max ? v : max);
 
@@ -1054,10 +690,11 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
             ],
           ),
           const SizedBox(height: 16),
-          SizedBox(
-            height: 150,
-            child: BarChart(
-              BarChartData(
+          hasMonthlyRecordsData
+              ? SizedBox(
+                height: 150,
+                child: BarChart(
+                  BarChartData(
                 alignment: BarChartAlignment.spaceAround,
                 maxY: maxMonthly.toDouble() + 2,
                 barTouchData: BarTouchData(
@@ -1066,8 +703,8 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
                     getTooltipColor: (_) => XolmisColors.jacarandaDeep,
                     getTooltipItem: (group, groupIndex, rod, rodIndex) {
                       return BarTooltipItem(
-                        '${monthLabels[groupIndex]}: ${rod.toY.round()} reg.',
-                        TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w600),
+                        '${rod.toY.round()} ${S.current.recordsCount(rod.toY.round())}',
+                        TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold),
                       );
                     },
                   ),
@@ -1125,10 +762,15 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
                     bottom: BorderSide(color: isDark ? Colors.grey.shade800 : Colors.grey.shade200, width: 2),
                   ),
                 ),
-                barGroups: _createBarGroupsFromMonthOccurrencesMap(recordsByMonth, 12, XolmisColors.jacarandaCore),
-              ),
-            ),
-          ),
+                    barGroups: _createBarGroupsFromMonthOccurrencesMap(
+                      recordsByMonth,
+                      12,
+                      XolmisColors.jacarandaCore,
+                    ),
+                  ),
+                ),
+              )
+              : _buildChartNoDataPlaceholder(isDark, height: 150),
         ],
       ),
     );
@@ -1136,6 +778,7 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
 
   Widget _buildMonthlyRichnessCard(bool isDark) {
     const monthLabels = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
+    final hasMonthlyRichnessData = speciesRichnessByMonth.values.any((value) => value > 0);
 
     final maxMonthly = speciesRichnessByMonth.values.toList().fold(1, (max, v) => v > max ? v : max);
 
@@ -1165,10 +808,11 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
             ],
           ),
           const SizedBox(height: 16),
-          SizedBox(
-            height: 150,
-            child: BarChart(
-              BarChartData(
+          hasMonthlyRichnessData
+              ? SizedBox(
+                height: 150,
+                child: BarChart(
+                  BarChartData(
                 alignment: BarChartAlignment.spaceAround,
                 maxY: maxMonthly.toDouble() + 2,
                 barTouchData: BarTouchData(
@@ -1177,8 +821,8 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
                     getTooltipColor: (_) => XolmisColors.jacarandaDeep,
                     getTooltipItem: (group, groupIndex, rod, rodIndex) {
                       return BarTooltipItem(
-                        '${monthLabels[groupIndex]}: ${rod.toY.round()} reg.',
-                        TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w600),
+                          rod.toY.round() > 1 ? '${rod.toY.round()} spp.' : '${rod.toY.round()} sp.',
+                        TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold),
                       );
                     },
                   ),
@@ -1236,14 +880,15 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
                     bottom: BorderSide(color: isDark ? Colors.grey.shade800 : Colors.grey.shade200, width: 2),
                   ),
                 ),
-                barGroups: _createBarGroupsFromMonthOccurrencesMap(
-                  speciesRichnessByMonth,
-                  12,
-                  XolmisColors.jacarandaCore,
+                    barGroups: _createBarGroupsFromMonthOccurrencesMap(
+                      speciesRichnessByMonth,
+                      12,
+                      XolmisColors.jacarandaCore,
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ),
+              )
+              : _buildChartNoDataPlaceholder(isDark, height: 150),
         ],
       ),
     );
@@ -1252,6 +897,7 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
   Widget _buildYearlyRecordsCard(bool isDark) {
     final years = speciesRichnessByYear.keys.toList();
     final values = speciesRichnessByYear.values.toList();
+    final hasYearlyRichnessData = values.any((value) => value > 0);
     final maxYearly = values.fold(1, (max, v) => v > max ? v : max);
 
     return Container(
@@ -1280,10 +926,11 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
             ],
           ),
           const SizedBox(height: 16),
-          SizedBox(
-            height: 130,
-            child: BarChart(
-              BarChartData(
+          hasYearlyRichnessData
+              ? SizedBox(
+                height: 130,
+                child: BarChart(
+                  BarChartData(
                 alignment: BarChartAlignment.spaceAround,
                 maxY: maxYearly.toDouble() + 3,
                 barTouchData: BarTouchData(enabled: true,
@@ -1291,8 +938,8 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
                     getTooltipColor: (_) => XolmisColors.jacarandaDeep,
                     getTooltipItem: (group, groupIndex, rod, rodIndex) {
                       return BarTooltipItem(
-                        '${rod.toY.round()} spp.',
-                        TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w600),
+                        rod.toY.round() > 1 ? '${rod.toY.round()} spp.' : '${rod.toY.round()} sp.',
+                        TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold),
                       );
                     },
                   ),
@@ -1371,10 +1018,15 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
                     bottom: BorderSide(color: isDark ? Colors.grey.shade800 : Colors.grey.shade200, width: 2),
                   ),
                 ),
-                barGroups: _createBarGroupsFromYearOccurrencesMap(speciesRichnessByYear, 20, XolmisColors.primary),
-              ),
-            ),
-          ),
+                    barGroups: _createBarGroupsFromYearOccurrencesMap(
+                      speciesRichnessByYear,
+                      20,
+                      XolmisColors.jacarandaCore,
+                    ),
+                  ),
+                ),
+              )
+              : _buildChartNoDataPlaceholder(isDark, height: 130),
         ],
       ),
     );
@@ -1483,6 +1135,7 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
         widget.nestProvider.allNestsCount == 0
             ? '—'
             : '${(totalNestsWithNidoparasitism / widget.nestProvider.allNestsCount * 100).toStringAsFixed(1)}%';
+    final hasNestFateData = nestFateSections.any((section) => section.value > 0);
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -1583,13 +1236,14 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
             ),
           ),
           const SizedBox(height: 12),
-          SizedBox(
-            height: 150,
-            child: Row(
-              children: [
-                Expanded(
-                  child: PieChart(
-                    PieChartData(
+          hasNestFateData
+              ? SizedBox(
+                height: 150,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: PieChart(
+                        PieChartData(
                       pieTouchData: PieTouchData(
                         enabled: true,
                         touchCallback: (FlTouchEvent event, pieTouchResponse) {
@@ -1640,9 +1294,9 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
                                       : sectionData.value.toInt().toString(),
                             );
                           }).toList(),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
                 // Column(
                 //   mainAxisAlignment: MainAxisAlignment.center,
                 //   crossAxisAlignment: CrossAxisAlignment.start,
@@ -1655,9 +1309,10 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
                 //         S.current.nestFateUnknown, Colors.grey, isDark),
                 //   ],
                 // ),
-              ],
-            ),
-          ),
+                  ],
+                ),
+              )
+              : _buildChartNoDataPlaceholder(isDark, height: 150),
         ],
       ),
     );
@@ -1673,6 +1328,7 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
     ];
 
     int colorIndex = 0;
+    final hasSpecimenTypeData = specimenTypeSections.any((section) => section.value > 0);
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -1700,13 +1356,14 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
             ],
           ),
           const SizedBox(height: 16),
-          SizedBox(
-            height: 150,
-            child: Row(
-              children: [
-                Expanded(
-                  child: PieChart(
-                    PieChartData(
+          hasSpecimenTypeData
+              ? SizedBox(
+                height: 150,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: PieChart(
+                        PieChartData(
                       pieTouchData: PieTouchData(
                         enabled: true,
                         touchCallback: (FlTouchEvent event, pieTouchResponse) {
@@ -1757,9 +1414,9 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
                                       : sectionData.value.toInt().toString(),
                             );
                           }).toList(),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
                 // Column(
                 //   mainAxisAlignment: MainAxisAlignment.center,
                 //   crossAxisAlignment: CrossAxisAlignment.start,
@@ -1772,9 +1429,10 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
                 //     );
                 //   }).toList(),
                 // ),
-              ],
-            ),
-          ),
+                  ],
+                ),
+              )
+              : _buildChartNoDataPlaceholder(isDark, height: 150),
         ],
       ),
     );

@@ -179,10 +179,10 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
   }
 
   String getRecordTypeFromColor(Color color) {
-    if (color == Colors.blue) return 'inventory';
-    if (color == Colors.orange) return 'nest';
-    if (color == Colors.green) return 'egg';
-    if (color == Colors.purple) return 'specimen';
+    if (color == XolmisColors.primary) return 'inventory';
+    if (color == XolmisColors.success) return 'nest';
+    if (color == XolmisColors.warning) return 'egg';
+    if (color == XolmisColors.error) return 'specimen';
     return '';
   }
 
@@ -281,7 +281,14 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
                   ] else if (isLoadingSpecies) ...[
                     Center(child: CircularProgressIndicator(year2023: false)),
                   ] else ...[
-                    Center(child: Text(S.current.selectSpeciesToShowStats)),
+                    Center(child: Column(
+                      children: [
+                        Icon(Icons.insert_chart_outlined, size: 48, color: Theme.of(context).colorScheme.surfaceDim),
+                        const SizedBox(height: 8),
+                        Text(S.current.noSpeciesSelected),
+                      ],
+                    ),
+                    ),
                   ],
                 ],
               ),
@@ -446,13 +453,6 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
   }
 
   Widget _buildRecordsByTypeCard(bool isDark) {
-    final typeColors = {
-      'Inventário': XolmisColors.primary,
-      'Ninho': XolmisColors.success,
-      'Ovo': XolmisColors.warning,
-      'Espécime': const Color(0xFF14B8A6),
-    };
-
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -646,8 +646,8 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
                     getTooltipColor: (_) => XolmisColors.jacarandaDeep,
                     getTooltipItem: (group, groupIndex, rod, rodIndex) {
                       return BarTooltipItem(
-                        '${monthLabels[groupIndex]}: ${rod.toY.round()} reg.',
-                        TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w600),
+                        '${rod.toY.round()}',
+                        TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold),
                       );
                     },
                   ),
@@ -757,8 +757,8 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
                     getTooltipColor: (_) => XolmisColors.jacarandaDeep,
                     getTooltipItem: (group, groupIndex, rod, rodIndex) {
                       return BarTooltipItem(
-                        '${rod.toY.round()} spp.',
-                        TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w600),
+                          rod.toY.round() > 1 ? '${rod.toY.round()} spp.' : '${rod.toY.round()} sp.',
+                        TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold),
                       );
                     },
                   ),
@@ -1118,8 +1118,8 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
                             getTooltipColor: (_) => XolmisColors.jacarandaDeep,
                             getTooltipItem: (group, groupIndex, rod, rodIndex) {
                               return BarTooltipItem(
-                                '${group.x.toString().padLeft(2, '0')}h: ${rod.toY.round()} reg.',
-                                TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w600),
+                                '${group.x.toString().padLeft(2, '0')} h: ${rod.toY.round()} ${S.current.recordsCount(rod.toY.round())}',
+                                TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold),
                               );
                             },
                           ),

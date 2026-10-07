@@ -568,6 +568,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "finishingInventoryPleaseWait": MessageLookupByLibrary.simpleMessage(
       "Finishing inventory... please wait",
     ),
+    "firstOccurrenceIsHighlighted": MessageLookupByLibrary.simpleMessage(
+      "First occurrence of species in the table is highlighted.",
+    ),
     "flightDirection": MessageLookupByLibrary.simpleMessage("Flight direction"),
     "flightHeight": MessageLookupByLibrary.simpleMessage("Flight height"),
     "formatNumbers": MessageLookupByLibrary.simpleMessage("Format numbers"),
@@ -947,6 +950,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "noSpeciesFound": MessageLookupByLibrary.simpleMessage(
       "No species recorded",
     ),
+    "noSpeciesSelected": MessageLookupByLibrary.simpleMessage(
+      "No species selected",
+    ),
     "noSpecimenCollected": MessageLookupByLibrary.simpleMessage(
       "No specimen collected.",
     ),
@@ -984,6 +990,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "optional": MessageLookupByLibrary.simpleMessage("* optional"),
     "outOfSample": MessageLookupByLibrary.simpleMessage("Out of the sample"),
+    "parenthesisIsOutsideSample": MessageLookupByLibrary.simpleMessage(
+      "Values in parenthesis are individuals outside sample.",
+    ),
     "pause": MessageLookupByLibrary.simpleMessage("Pause"),
     "pending": MessageLookupByLibrary.simpleMessage("Pending"),
     "perSpecies": MessageLookupByLibrary.simpleMessage("Per species"),
@@ -1035,6 +1044,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "Vocalization",
     ),
     "predefinedTagWeather": MessageLookupByLibrary.simpleMessage("Weather"),
+    "presenceOutsideSample": MessageLookupByLibrary.simpleMessage(
+      " - Outside sample.",
+    ),
+    "presenceWithinSample": MessageLookupByLibrary.simpleMessage(
+      " - Presence within sample, ",
+    ),
     "proportion": MessageLookupByLibrary.simpleMessage("Proportion"),
     "reactivate": MessageLookupByLibrary.simpleMessage("Reactivate"),
     "reactivateInventory": MessageLookupByLibrary.simpleMessage(
@@ -1300,6 +1315,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "vegetation": MessageLookupByLibrary.simpleMessage("Vegetation"),
     "vegetationData": MessageLookupByLibrary.simpleMessage("Vegetation data"),
     "version": MessageLookupByLibrary.simpleMessage("Version"),
+    "viewCompleteList": MessageLookupByLibrary.simpleMessage(
+      "View complete list",
+    ),
     "viewLicense": MessageLookupByLibrary.simpleMessage("View License"),
     "viewSpeciesTable": MessageLookupByLibrary.simpleMessage(
       "View species table",

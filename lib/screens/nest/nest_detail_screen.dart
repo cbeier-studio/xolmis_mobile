@@ -976,7 +976,7 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                       Text(
-                        nest.isActive ? S.of(context).active : S.of(context).inactive,
+                        nest.isActive ? S.of(context).nestStatusActive : S.of(context).nestStatusInactive,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: nest.isActive ? Colors.green : Colors.orange,
                           fontWeight: FontWeight.bold,
@@ -987,7 +987,7 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                   const SizedBox(height: 8,),
                   Text(
                     '${nest.speciesName}',
-                    style: Theme.of(context).textTheme.bodyLarge,
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w500),
                   ),
                   const SizedBox(height: 8),
                   Row(
