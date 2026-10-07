@@ -2771,13 +2771,13 @@ abstract class AppLocalizations {
   /// Apparent success rate field label
   ///
   /// In en, this message translates to:
-  /// **'apparent success rate'**
+  /// **'apparent success'**
   String get apparentSuccessRate;
 
   /// Nidoparasitism rate field label
   ///
   /// In en, this message translates to:
-  /// **'nidoparasitism rate'**
+  /// **'nidoparasitism'**
   String get nidoparasitismRate;
 
   /// Detection rate field label
@@ -3853,6 +3853,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Other'**
   String get transportOther;
+
+  /// Selected species field label
+  ///
+  /// In en, this message translates to:
+  /// **'Selected species'**
+  String get selectedSpecies;
+
+  /// Total legend label
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get total;
+
+  /// Sample legend label
+  ///
+  /// In en, this message translates to:
+  /// **'Sample'**
+  String get sample;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

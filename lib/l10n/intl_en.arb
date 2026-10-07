@@ -2532,12 +2532,12 @@
       "type": "text",
       "description": "See all button label"
     },
-    "apparentSuccessRate": "apparent success rate",
+    "apparentSuccessRate": "apparent success",
     "@apparentSuccessRate": {
       "type": "text",
       "description": "Apparent success rate field label"
     },
-    "nidoparasitismRate": "nidoparasitism rate",
+    "nidoparasitismRate": "nidoparasitism",
     "@nidoparasitismRate": {
       "type": "text",
       "description": "Nidoparasitism rate field label"
@@ -3212,5 +3212,20 @@
     "@transportOther": {
         "type": "text",
         "description": "Other transport mode label"
+    },
+    "selectedSpecies": "Selected species",
+    "@selectedSpecies": {
+        "type": "text",
+        "description": "Selected species field label"
+    },
+    "total": "Total",
+    "@total": {
+        "type": "text",
+        "description": "Total legend label"
+    },
+    "sample": "Sample",
+    "@sample": {
+        "type": "text",
+        "description": "Sample legend label"
     }
 }

@@ -19,7 +19,7 @@ dependencies:
   xml: ^7.1.0
 
   # UI dependencies
-  material_ui: ^1.5.0
+  material_ui: ^1.6.0
 #  cupertino_ui: any
 #  cupertino_icons: ^1.0.9
   font_awesome_flutter: ^11.0.0

@@ -10,6 +10,7 @@ import '../../providers/poi_provider.dart';
 import '../../providers/species_provider.dart';
 import '../../widgets/scrollable_chart_indicator.dart';
 import '../../utils/statistics_logic.dart';
+import '../../utils/themes.dart';
 import 'inventory_report_screen.dart';
 
 /// Loader screen that fetches full details for a list of inventory IDs before displaying [StatsInventoriesScreen].
@@ -188,7 +189,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
           barRods: [
             BarChartRodData(
               toY: count.toDouble(),
-              color: Colors.blue,
+              color: XolmisColors.primary,
               width: barWidth,
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(6),
@@ -204,615 +205,849 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       appBar: AppBar(title: Text(S.current.statistics)),
       body: SafeArea(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
-          child: SingleChildScrollView(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    // Number of selected inventories
-                    Expanded(child:
-                    Card(
-                      surfaceTintColor: Colors.deepPurple,
-                      child: Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              widget.inventories.length.toString(),
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.primary,
-                                fontWeight: Theme.of(context).textTheme.headlineSmall?.fontWeight,
-                                fontSize: Theme.of(context).textTheme.headlineSmall?.fontSize,
-                              ),
-                            ),
-                            Text(S.current.selectedInventories),
-                          ],
-                        ),
-                      ),
-                    ),
-                    ),
-                    // Localities surveyed
-                    Expanded(child:
-                    Card(
-                      child: Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              distinctLocalitiesCount.toString(),
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.primary,
-                                fontWeight: Theme.of(context).textTheme.headlineSmall?.fontWeight,
-                                fontSize: Theme.of(context).textTheme.headlineSmall?.fontSize,
-                              ),
-                            ),
-                            Text(S.current.localitiesSurveyed(distinctLocalitiesCount)),
-                          ],
-                        ),
-                      ),
-                    ),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    // Total species richness
-                    Expanded(child:
-                    Card(
-                      child: Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              combinedSpeciesList.length.toString(),
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.primary,
-                                fontWeight: Theme.of(context).textTheme.headlineSmall?.fontWeight,
-                                fontSize: Theme.of(context).textTheme.headlineSmall?.fontSize,
-                              ),
-                            ),
-                            Text(S.current.totalRichness),
-                          ],
-                        ),
-                      ),
-                    ),
-                    ),
-                    // Average species richness
-                    Expanded(child:
-                    Card(
-                      child: Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              averageSpeciesCount.toStringAsFixed(1),
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.primary,
-                                fontWeight: Theme.of(context).textTheme.headlineSmall?.fontWeight,
-                                fontSize: Theme.of(context).textTheme.headlineSmall?.fontSize,
-                              ),
-                            ),
-                            Text(S.current.averageRichness),
-                          ],
-                        ),
-                      ),
-                    ),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Card(
-                        child: Padding(
-                          padding: EdgeInsets.all(16.0),
-                          child: Column(
-                            children: [
-                              Text(
-                                S.current.speciesAccumulationCurve,
-                                style: TextTheme.of(context).titleMedium,
-                              ),
-                              const SizedBox(height: 8,),
-                              SizedBox(
-                                height: 400,
-                                child: ScrollableChartIndicator(
-                                  builder: (context, scrollController) {
-                                    return LayoutBuilder(
-                                      builder: (context, constraints) {
-                                        final chartWidth = _responsiveChartWidth(
-                                          constraints.maxWidth - 16,
-                                          pixelsPerInventory: 20,
-                                        );
-                                        return SingleChildScrollView(
-                                          controller: scrollController,
-                                          scrollDirection: Axis.horizontal,
-                                          padding: EdgeInsetsGeometry.fromLTRB(0, 8, 8, 8),
-                                          child: SizedBox(
-                                            width: chartWidth,
-                                            height: 400,
-                                            child: LineChart(
-                                              LineChartData(
-                                                maxX:
-                                                widget.inventories.length.toDouble() -
-                                                    1,
-                                                lineBarsData: [
-                                                  LineChartBarData(
-                                                    spots: accumulatedSpeciesData,
-                                                    isCurved: false,
-                                                    color:
-                                                    Theme
-                                                        .of(context)
-                                                        .brightness ==
-                                                        Brightness.light
-                                                        ? Colors.deepPurple
-                                                        : Colors.deepPurple[200],
-                                                    barWidth: 2,
-                                                    isStrokeCapRound: true,
-                                                    dotData: FlDotData(show: true),
-                                                    belowBarData: BarAreaData(
-                                                      show: true,
-                                                      color: Colors.deepPurpleAccent
-                                                          .withAlpha(30),
-                                                    ),
-                                                  ),
-                                                  LineChartBarData(
-                                                    spots:
-                                                    accumulatedSpeciesWithinSampleData,
-                                                    isCurved: false,
-                                                    color:
-                                                    Theme
-                                                        .of(context)
-                                                        .brightness ==
-                                                        Brightness.light
-                                                        ? Colors.pink
-                                                        : Colors.pink[200],
-                                                    barWidth: 2,
-                                                    isStrokeCapRound: true,
-                                                    dotData: FlDotData(show: true),
-                                                    belowBarData: BarAreaData(
-                                                      show: true,
-                                                      color: Colors.pinkAccent.withAlpha(
-                                                        30,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                                titlesData: FlTitlesData(
-                                                  bottomTitles: AxisTitles(
-                                                    sideTitles: SideTitles(
-                                                      showTitles: false,
-                                                      interval: 1,
-                                                      getTitlesWidget: (value, meta) {
-                                                        final index = value.toInt();
-                                                        if (index >= 0 &&
-                                                            index <
-                                                                widget.inventories
-                                                                    .length) {
-                                                          final parts =
-                                                          widget.inventories[index].id
-                                                              .split('-');
-                                                          final listNumber =
-                                                          parts.length > 1
-                                                              ? parts.last
-                                                              : widget.inventories[index]
-                                                              .id;
-                                                          return SideTitleWidget(meta: meta, child: Text(listNumber));
-                                                        } else {
-                                                          return SideTitleWidget(meta: meta, child: Text(''));
-                                                        }
-                                                      },
-                                                    ),
-                                                  ),
-                                                  leftTitles: AxisTitles(
-                                                    sideTitles: SideTitles(
-                                                      showTitles: true,
-                                                      interval: 5,
-                                                      reservedSize: 40,
-                                                      getTitlesWidget: (value, meta) {
-                                                        return Align(
-                                                          alignment: Alignment.center,
-                                                          child: SideTitleWidget(meta: meta, child: Text(
-                                                            value.toInt().toString(),
-                                                          )),
-                                                        );
-                                                      },
-                                                    ),
-                                                  ),
-                                                  rightTitles: AxisTitles(
-                                                    sideTitles: SideTitles(
-                                                      showTitles: false,
-                                                    ),
-                                                  ),
-                                                  topTitles: AxisTitles(
-                                                    sideTitles: SideTitles(
-                                                      showTitles: false,
-                                                    ),
-                                                  ),
-                                                ),
-                                                gridData: FlGridData(
-                                                  show: false,
-                                                  horizontalInterval: 1,
-                                                  verticalInterval: 1,
-                                                ),
-                                                borderData: FlBorderData(
-                                                  show: true,
-                                                  border: Border(
-                                                    bottom: BorderSide(
-                                                      color: Colors.grey,
-                                                      width: 1,
-                                                    ),
-                                                    left: BorderSide(
-                                                      color: Colors.grey,
-                                                      width: 1,
-                                                    ),
-                                                    top: BorderSide.none,
-                                                    right: BorderSide.none,
-                                                  ),
-                                                ),
-                                                lineTouchData: LineTouchData(
-                                                  handleBuiltInTouches: true,
-                                                  touchTooltipData: LineTouchTooltipData(
-                                                    getTooltipColor: (spot) => Colors.white.withAlpha(200),
-                                                    tooltipBorderRadius: BorderRadius.all(
-                                                      Radius.circular(8),
-                                                    ),
-                                                    fitInsideVertically: true,
-                                                    fitInsideHorizontally: true,
-                                                    getTooltipItems: (List<LineBarSpot> touchedSpots,) {
-                                                      if (touchedSpots.isEmpty) {
-                                                        return [];
-                                                      }
-                                                      final spotIndex = touchedSpots.first.spotIndex;
-                                                      final inventoryId = widget.inventories[spotIndex].id;
+                _buildKpiMetricsGrid(isDark),
+                const SizedBox(height: 16),
 
-                                                      return touchedSpots.map((spot) {
-                                                        final spotColor = spot.bar.gradient?.colors.first ??
-                                                            spot.bar.color ?? Colors.black87;
-                                                        return LineTooltipItem(
-                                                          '',
-                                                          const TextStyle(
-                                                            color: Colors.black87,
-                                                            fontWeight: FontWeight.bold,
-                                                          ),
-                                                          children: [
-                                                            TextSpan(
-                                                              text: '${spot.y.toInt()}',
-                                                              style: TextStyle(
-                                                                color: spotColor,
-                                                                fontWeight: FontWeight.bold,
-                                                                fontSize: 14,
-                                                              ),
-                                                            ),
-                                                            TextSpan(
-                                                              text: '\n$inventoryId',
-                                                              style: const TextStyle(
-                                                                color: Colors.black87,
-                                                                fontWeight: FontWeight.normal,
-                                                                fontSize: 10,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        );
-                                                      }).toList();
-                                                    },
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    );
-                                  },
-                                ),
-                              ),
-                              const SizedBox(height: 8,),
-                              TextButton(
-                                onPressed: () {
-                                  final inventories =
-                                  widget.inventories;
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder:
-                                          (context) => InventoryReportScreen(
-                                        selectedInventories:
-                                        inventories
-                                            .whereType<Inventory>()
-                                            .toList(),
-                                      ),
-                                    ),
-                                  );
-                                },
-                                child: Text(
-                                  S.current.viewSpeciesTable,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Card(
-                        child: Padding(
-                          padding: EdgeInsets.all(16.0),
-                          child: Column(
-                            children: [
-                              Text(
-                                S.current.recordsByHour,
-                                style: TextTheme.of(context).titleMedium,
-                              ),
-                              const SizedBox(height: 8),
-                              SizedBox(
-                                height: 150,
-                                child: BarChart(
-                                  BarChartData(
-                                    alignment: BarChartAlignment.spaceAround,
-                                    gridData: FlGridData(show: false),
-                                    borderData: FlBorderData(
-                                      show: true,
-                                      border: Border(
-                                        bottom: BorderSide(
-                                          color: Colors.grey.withValues(alpha: 0.5),
-                                          width: 1,
-                                        ),
-                                      ),
-                                    ),
-                                    barTouchData: BarTouchData(
-                                      enabled: true,
-                                      touchTooltipData: BarTouchTooltipData(
-                                        fitInsideHorizontally: true,
-                                        fitInsideVertically: true,
-                                        getTooltipColor: (spot) =>
-                                            Colors.white.withValues(alpha: 0.8),
-                                        getTooltipItem:
-                                            (group, groupIndex, rod, rodIndex) {
-                                          final hour = group.x.toInt();
-                                          final value = rod.toY.toInt();
-                                          if (value == 0) {
-                                            return null;
-                                          }
-                                          return BarTooltipItem(
-                                            '',
-                                            const TextStyle(),
-                                            children: [
-                                              TextSpan(
-                                                text: '$value\n',
-                                                style: const TextStyle(
-                                                  color: Colors.blue,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 16,
-                                                ),
-                                              ),
-                                              TextSpan(
-                                                text:
-                                                    '${hour.toString().padLeft(2, '0')} h',
-                                                style: const TextStyle(
-                                                  color: Colors.black87,
-                                                  fontWeight: FontWeight.normal,
-                                                  fontSize: 12,
-                                                ),
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                    titlesData: FlTitlesData(
-                                      show: true,
-                                      bottomTitles: AxisTitles(
-                                        sideTitles: SideTitles(
-                                          showTitles: true,
-                                          reservedSize: 30,
-                                          getTitlesWidget: (value, meta) {
-                                            final hour = value.toInt();
-                                            if (hour % 3 == 0 || hour == 23) {
-                                              return Padding(
-                                                padding: const EdgeInsets.only(top: 8.0),
-                                                child: Text(
-                                                  hour
-                                                      .toString()
-                                                      .padLeft(2, '0'),
-                                                ),
-                                              );
-                                            }
-                                            return const Text('');
-                                          },
-                                        ),
-                                      ),
-                                      leftTitles: AxisTitles(
-                                        sideTitles: SideTitles(
-                                          showTitles: false,
-                                          reservedSize: 28,
-                                        ),
-                                      ),
-                                      topTitles: const AxisTitles(
-                                        sideTitles: SideTitles(showTitles: false),
-                                      ),
-                                      rightTitles: const AxisTitles(
-                                        sideTitles: SideTitles(showTitles: false),
-                                      ),
-                                    ),
-                                    barGroups: _createBarGroupsFromOccurrencesMap(
-                                      recordsPerHour,
-                                      12,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                 Row(
-                   mainAxisAlignment: MainAxisAlignment.start,
-                   children: [
-             Expanded(
-             child: Card(
-             child: Padding(
-                 padding: EdgeInsets.all(16.0),
-             child: Column(
-               children: [
-               Text(
-               S.current.speciesRichness,
-               style: TextTheme.of(context).titleMedium,
-             ),
-            const SizedBox(height: 8),
-            SizedBox(
-              height: 150,
-              child: ScrollableChartIndicator(
-                builder: (context, scrollController) {
-                  return LayoutBuilder(
-                    builder: (context, constraints) {
-                      final chartWidth = _responsiveChartWidth(
-                        constraints.maxWidth,
-                        pixelsPerInventory: 20,
-                      );
-                      return SingleChildScrollView(
-                        controller: scrollController,
-                        scrollDirection: Axis.horizontal,
-                        child: SizedBox(
-                          width: chartWidth,
-                          height: 150,
-                          child: BarChart(
-                            BarChartData(
-                              alignment: BarChartAlignment.spaceAround,
-                              barTouchData: BarTouchData(
-                                enabled: true,
-                                touchTooltipData: BarTouchTooltipData(
-                                  fitInsideVertically: true,
-                                  fitInsideHorizontally: true,
-                                  getTooltipColor: (spot) => Colors.white.withAlpha(200),
-                                  getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                                    final inventoryId = widget.inventories[groupIndex].id;
-                                    return BarTooltipItem(
-                                        '',
-                                        TextStyle(
-                                          color: Colors.deepPurple,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                        children: [
-                                          TextSpan(
-                                            text: '${rod.toY.toInt()}\n',
-                                          ),
-                                          TextSpan(
-                                            text: inventoryId,
-                                            style: const TextStyle(
-                                              color: Colors.black87,
-                                              fontWeight: FontWeight.normal,
-                                              fontSize: 10,
-                                            ),
-                                          ),
-                                        ]
-                                    );
-                                  },
-                                ),
-                              ),
-                              titlesData: FlTitlesData(
-                                show: true,
-                                bottomTitles: AxisTitles(
-                                  sideTitles: SideTitles(
-                                    showTitles: true,
-                                    getTitlesWidget: (value, meta) {
-                                      final index = value.toInt() + 1;
-                                      return Text('$index');
-                                    },
-                                  ),
-                                ),
-                                leftTitles: AxisTitles(
-                                  sideTitles: SideTitles(
-                                    showTitles: false,
-                                    interval: 10,
-                                    reservedSize: 40,
-                                    getTitlesWidget: (value, meta) {
-                                      return Align(
-                                          alignment: Alignment.center,
-                                          child: Text(value.toInt().toString())
-                                      );
-                                    },
-                                  ),
-                                ),
-                                rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                                topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                              ),
-                              barGroups: widget.inventories
-                                  .asMap()
-                                  .map((index, inventory) =>
-                                  MapEntry(
-                                    index,
-                                    BarChartGroupData(
-                                      x: index,
-                                      barRods: [
-                                        BarChartRodData(
-                                          toY: _getSpeciesRichnessForInventory(inventory).toDouble(),
-                                          width: 12,
-                                          borderRadius: const BorderRadius.only(
-                                            topLeft: Radius.circular(6),
-                                            topRight: Radius.circular(6),
-                                          ),
-                                          color: Theme
-                                              .of(context)
-                                              .brightness == Brightness.light
-                                              ? Colors.deepPurple
-                                              : Colors.deepPurple[200],
-                                        ),
-                                      ],
-                                    ),
-                                  ))
-                                  .values
-                                  .toList(),
-                              gridData: FlGridData(show: false, horizontalInterval: 1, verticalInterval: 1),
-                              borderData: FlBorderData(
-                                show: true,
-                                border: Border(
-                                  bottom: BorderSide(
-                                    color: Colors.grey,
-                                    width: 1,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  );
-                },
-              ),
-            ),
-              ],
-            ),
-            ),
-            ),
-            ),
-                ],
-            ),
+                _buildAccumulationCurveCard(context, isDark),
+                const SizedBox(height: 16),
+
+                _buildHourlyRecordsCard(isDark),
+                const SizedBox(height: 16),
+
+                _buildRichnessPerInventoryCard(isDark),
+                const SizedBox(height: 24),
               ],
             ),
           ),
         ),
+    );
+  }
+
+  Widget _buildKpiMetricsGrid(bool isDark) {
+    return GridView.count(
+      crossAxisCount: 2,
+      crossAxisSpacing: 10,
+      mainAxisSpacing: 10,
+      childAspectRatio: 2.1,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      children: [
+        _buildKpiTile(
+          label: S.current.selectedInventories,
+          value: '${widget.inventories.length}',
+          // subtext: '',
+          valueColor: XolmisColors.primary,
+          isDark: isDark,
+        ),
+        _buildKpiTile(
+          label: S.current.localitiesSurveyed(distinctLocalitiesCount),
+          value: '${distinctLocalitiesCount}',
+          // subtext: '',
+          valueColor: XolmisColors.terraMadeira,
+          isDark: isDark,
+        ),
+        _buildKpiTile(
+          label: S.current.totalRichness,
+          value: '${combinedSpeciesList.length}',
+          // subtext: '',
+          valueColor: XolmisColors.folhaCampo,
+          isDark: isDark,
+        ),
+        _buildKpiTile(
+          label: S.current.averageRichness,
+          value: averageSpeciesCount.toStringAsFixed(1),
+          // subtext: '',
+          valueColor: isDark ? Colors.white : Colors.black87,
+          isDark: isDark,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildKpiTile({
+    required String label,
+    required String value,
+    // required String subtext,
+    required Color valueColor,
+    required bool isDark,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      decoration: BoxDecoration(
+        color: isDark
+            ? Colors.grey.shade900.withValues(alpha: 0.6)
+            : XolmisColors.secondaryContainer.withValues(alpha: 0.5),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: isDark ? Colors.grey.shade800 : XolmisColors.borderSubtle,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: valueColor,
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+              color: isDark ? Colors.grey.shade400 : XolmisColors.secondary,
+            ),
+          ),
+          // Row(
+          //   textBaseline: TextBaseline.alphabetic,
+          //   crossAxisAlignment: CrossAxisAlignment.baseline,
+          //   children: [
+          //
+          //     const SizedBox(width: 6),
+          //     Expanded(
+          //       child: Text(
+          //         subtext,
+          //         style: TextStyle(
+          //           fontSize: 10,
+          //           color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+          //         ),
+          //         overflow: TextOverflow.ellipsis,
+          //       ),
+          //     ),
+          //   ],
+          // ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAccumulationCurveCard(BuildContext context, bool isDark) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: isDark ? Colors.grey.shade900 : Colors.white,
+        border: Border.all(color: isDark ? Colors.grey.shade800 : XolmisColors.borderSubtle),
+        borderRadius: BorderRadius.circular(16),
+        shape: BoxShape.rectangle,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  const Icon(
+                    Icons.show_chart,
+                    size: 18,
+                    color: XolmisColors.primary,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    S.current.speciesAccumulationCurve,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: isDark ? Colors.white : Colors.black87,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  _buildLegendIndicator(S.current.total, XolmisColors.primary, isDark),
+                  const SizedBox(width: 8),
+                  _buildLegendIndicator(S.current.sample, XolmisColors.pinkAccent, isDark),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          SizedBox(
+            height: 300,
+            child: ScrollableChartIndicator(
+              builder: (context, scrollController) {
+                return LayoutBuilder(
+                  builder: (context, constraints) {
+                    final chartWidth = _responsiveChartWidth(
+                      constraints.maxWidth - 16,
+                      pixelsPerInventory: 20,
+                    );
+                    return SingleChildScrollView(
+                      controller: scrollController,
+                      scrollDirection: Axis.horizontal,
+                      padding: EdgeInsetsGeometry.fromLTRB(0, 8, 8, 8),
+                      child: SizedBox(
+                        width: chartWidth,
+                        height: 300,
+                        child: LineChart(
+                          LineChartData(
+                            maxX:
+                            widget.inventories.length.toDouble() -
+                                1,
+                            lineBarsData: [
+                              LineChartBarData(
+                                spots: accumulatedSpeciesData,
+                                isCurved: false,
+                                color:
+                                Theme
+                                    .of(context)
+                                    .brightness ==
+                                    Brightness.light
+                                    ? Colors.deepPurple
+                                    : Colors.deepPurple[200],
+                                barWidth: 2,
+                                isStrokeCapRound: true,
+                                dotData: FlDotData(show: true),
+                                belowBarData: BarAreaData(
+                                  show: true,
+                                  color: Colors.deepPurpleAccent
+                                      .withAlpha(12),
+                                ),
+                              ),
+                              LineChartBarData(
+                                spots:
+                                accumulatedSpeciesWithinSampleData,
+                                isCurved: false,
+                                color:
+                                Theme
+                                    .of(context)
+                                    .brightness ==
+                                    Brightness.light
+                                    ? Colors.pink
+                                    : Colors.pink[200],
+                                barWidth: 2,
+                                isStrokeCapRound: true,
+                                dotData: FlDotData(show: true),
+                                belowBarData: BarAreaData(
+                                  show: true,
+                                  color: Colors.pinkAccent.withAlpha(
+                                    12,
+                                  ),
+                                ),
+                              ),
+                            ],
+                            titlesData: FlTitlesData(
+                              bottomTitles: AxisTitles(
+                                sideTitles: SideTitles(
+                                  showTitles: true,
+                                  reservedSize: 22,
+                                  interval: 1.0,
+                                  getTitlesWidget: (value, meta) {
+                                    final idx = value.toInt();
+                                    if (idx >= 0 && idx < widget.inventories.length) {
+                                      return Text(
+                                        '${value.toInt() + 1}',
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.w500,
+                                          color: isDark
+                                              ? Colors.grey.shade400
+                                              : Colors.grey.shade600,
+                                        ),
+                                      );
+                                    }
+                                    return const SizedBox.shrink();
+                                  },
+                                ),
+                              ),
+                              leftTitles: AxisTitles(
+                                sideTitles: SideTitles(
+                                  showTitles: true,
+                                  reservedSize: 28,
+                                  interval: 5.0,
+                                  getTitlesWidget: (value, meta) {
+                                    // if (value % 20 == 0) {
+                                      return Text(
+                                        value.toInt().toString(),
+                                        style: TextStyle(
+                                          fontSize: 9,
+                                          color: isDark
+                                              ? Colors.grey.shade400
+                                              : Colors.grey.shade600,
+                                        ),
+                                      );
+                                    // }
+                                    // return const SizedBox.shrink();
+                                  },
+                                ),
+                              ),
+                              rightTitles: AxisTitles(
+                                sideTitles: SideTitles(
+                                  showTitles: false,
+                                ),
+                              ),
+                              topTitles: AxisTitles(
+                                sideTitles: SideTitles(
+                                  showTitles: false,
+                                ),
+                              ),
+                            ),
+                            gridData: FlGridData(
+                              show: true,
+                              drawVerticalLine: true,
+                              getDrawingHorizontalLine: (value) => FlLine(
+                                color: isDark
+                                    ? Colors.white.withValues(alpha: 0.05)
+                                    : Colors.black.withValues(alpha: 0.05),
+                                strokeWidth: 1,
+                              ),
+                              verticalInterval: 1.0,
+                              getDrawingVerticalLine: (value) => FlLine(
+                                color: isDark
+                                    ? Colors.white.withValues(alpha: 0.05)
+                                    : Colors.black.withValues(alpha: 0.05),
+                                strokeWidth: 1,
+                              ),
+                            ),
+                            borderData: FlBorderData(
+                              show: true,
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: isDark
+                                      ? Colors.grey.shade800
+                                      : XolmisColors.outlineVariant,
+                                  width: 1,
+                                ),
+                                left: BorderSide(
+                                  color: isDark
+                                      ? Colors.grey.shade800
+                                      : XolmisColors.outlineVariant,
+                                  width: 1,
+                                ),
+                                top: BorderSide(
+                                  color: isDark
+                                      ? Colors.white.withValues(alpha: 0.05)
+                                      : Colors.black.withValues(alpha: 0.05),
+                                  width: 1,
+                                ),
+                              ),
+                            ),
+                            lineTouchData: LineTouchData(
+                              handleBuiltInTouches: true,
+                              touchTooltipData: LineTouchTooltipData(
+                                getTooltipColor: (spot) => Colors.white.withAlpha(200),
+                                tooltipBorderRadius: BorderRadius.all(
+                                  Radius.circular(8),
+                                ),
+                                fitInsideVertically: true,
+                                fitInsideHorizontally: true,
+                                getTooltipItems: (List<LineBarSpot> touchedSpots,) {
+                                  if (touchedSpots.isEmpty) {
+                                    return [];
+                                  }
+                                  final spotIndex = touchedSpots.first.spotIndex;
+                                  final inventoryId = widget.inventories[spotIndex].id;
+
+                                  return touchedSpots.map((spot) {
+                                    final spotColor = spot.bar.gradient?.colors.first ??
+                                        spot.bar.color ?? Colors.black87;
+                                    return LineTooltipItem(
+                                      '',
+                                      const TextStyle(
+                                        color: Colors.black87,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      children: [
+                                        TextSpan(
+                                          text: '${spot.y.toInt()}',
+                                          style: TextStyle(
+                                            color: spotColor,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text: '\n$inventoryId',
+                                          style: const TextStyle(
+                                            color: Colors.black87,
+                                            fontWeight: FontWeight.normal,
+                                            fontSize: 10,
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  }).toList();
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              style: OutlinedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                backgroundColor: isDark
+                    ? XolmisColors.primary.withValues(alpha: 0.15)
+                    : XolmisColors.primaryContainer.withValues(alpha: 0.5),
+                side: BorderSide(
+                  color: isDark
+                      ? Colors.grey.shade800
+                      : XolmisColors.outlineVariant.withValues(alpha: 0.5),
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              icon: const Icon(
+                Icons.table_chart_outlined,
+                size: 16,
+                color: XolmisColors.primary,
+              ),
+              label: Text(
+                S.current.viewSpeciesTable,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: isDark
+                      ? XolmisColors.primaryContainer
+                      : XolmisColors.onPrimaryContainer,
+                ),
+              ),
+              onPressed: () {
+                final inventories =
+                    widget.inventories;
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                        (context) => InventoryReportScreen(
+                      selectedInventories:
+                      inventories
+                          .whereType<Inventory>()
+                          .toList(),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLegendIndicator(String label, Color color, bool isDark) {
+    return Row(
+      children: [
+        Container(
+          width: 8,
+          height: 8,
+          decoration: BoxDecoration(
+            color: color,
+            shape: BoxShape.circle,
+          ),
+        ),
+        const SizedBox(width: 4),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 10,
+            fontWeight: FontWeight.w500,
+            color: isDark ? Colors.grey.shade300 : Colors.grey.shade700,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildHourlyRecordsCard(bool isDark) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: isDark ? Colors.grey.shade900 : Colors.white,
+        border: Border.all(color: isDark ? Colors.grey.shade800 : XolmisColors.borderSubtle),
+        borderRadius: BorderRadius.circular(16),
+        shape: BoxShape.rectangle,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(
+                Icons.access_time_outlined,
+                size: 18,
+                color: XolmisColors.primary,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                S.current.recordsByHour,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: isDark ? Colors.white : Colors.black87,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          SizedBox(
+            height: 150,
+            child: BarChart(
+              BarChartData(
+                alignment: BarChartAlignment.spaceAround,
+                maxY: 32,
+                barTouchData: BarTouchData(
+                  enabled: true,
+                  touchTooltipData: BarTouchTooltipData(
+                    getTooltipColor: (_) => XolmisColors.jacarandaDeep,
+                    getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                      return BarTooltipItem(
+                        '${groupIndex.toString().padLeft(2, '0')}h: ${rod.toY.round()} reg.',
+                        TextStyle(
+                          color: Colors.white,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                titlesData: FlTitlesData(
+                  show: true,
+                  bottomTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      reservedSize: 22,
+                      getTitlesWidget: (value, meta) {
+                        final hour = value.toInt();
+                        if (hour % 4 == 0) {
+                          return Text(
+                            '${hour.toString().padLeft(2, '0')}h',
+                            style: TextStyle(
+                              fontSize: 9,
+                              color: isDark
+                                  ? Colors.grey.shade400
+                                  : Colors.grey.shade600,
+                            ),
+                          );
+                        }
+                        return const SizedBox.shrink();
+                      },
+                    ),
+                  ),
+                  leftTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      reservedSize: 24,
+                      getTitlesWidget: (value, meta) {
+                        return Text(
+                          value.toInt().toString(),
+                          style: TextStyle(
+                            fontSize: 9,
+                            color: isDark
+                                ? Colors.grey.shade400
+                                : Colors.grey.shade600,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  topTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false)),
+                  rightTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false)),
+                ),
+                gridData: FlGridData(
+                  show: true,
+                  drawVerticalLine: false,
+                  getDrawingHorizontalLine: (value) => FlLine(
+                    color: isDark
+                        ? Colors.white.withValues(alpha: 0.05)
+                        : Colors.black.withValues(alpha: 0.05),
+                    strokeWidth: 1,
+                  ),
+                ),
+                borderData: FlBorderData(
+                  show: true,
+                  border: Border(
+                    left: BorderSide(color: isDark ? Colors.grey.shade800 : Colors.grey.shade200, width: 2),
+                    bottom: BorderSide(color: isDark ? Colors.grey.shade800 : Colors.grey.shade200, width: 2),
+                  ),
+                ),
+                barGroups: _createBarGroupsFromOccurrencesMap(
+                  recordsPerHour,
+                  12,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRichnessPerInventoryCard(bool isDark) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: isDark ? Colors.grey.shade900 : Colors.white,
+        border: Border.all(color: isDark ? Colors.grey.shade800 : XolmisColors.borderSubtle),
+        borderRadius: BorderRadius.circular(16),
+        shape: BoxShape.rectangle,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  const Icon(
+                    Icons.bar_chart_rounded,
+                    size: 18,
+                    color: XolmisColors.primary,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    S.current.speciesRichness,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: isDark ? Colors.white : Colors.black87,
+                    ),
+                  ),
+                ],
+              ),
+              // Text(
+              //   'Total: 4 listas',
+              //   style: TextStyle(
+              //     fontSize: 11,
+              //     color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+              //   ),
+              // ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          SizedBox(
+            height: 150,
+            child: ScrollableChartIndicator(
+              builder: (context, scrollController) {
+                return LayoutBuilder(
+                  builder: (context, constraints) {
+                    final chartWidth = _responsiveChartWidth(
+                      constraints.maxWidth,
+                      pixelsPerInventory: 20,
+                    );
+                    return SingleChildScrollView(
+                      controller: scrollController,
+                      scrollDirection: Axis.horizontal,
+                      child: SizedBox(
+                        width: chartWidth,
+                        height: 150,
+                        child: BarChart(
+                          BarChartData(
+                            alignment: BarChartAlignment.spaceAround,
+                            barTouchData: BarTouchData(
+                              enabled: true,
+                              touchTooltipData: BarTouchTooltipData(
+                                fitInsideVertically: true,
+                                fitInsideHorizontally: true,
+                                getTooltipColor: (spot) => Colors.white.withAlpha(200),
+                                getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                                  final inventoryId = widget.inventories[groupIndex].id;
+                                  return BarTooltipItem(
+                                      '',
+                                      TextStyle(
+                                        color: Colors.deepPurple,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      children: [
+                                        TextSpan(
+                                          text: '${rod.toY.toInt()}\n',
+                                        ),
+                                        TextSpan(
+                                          text: inventoryId,
+                                          style: const TextStyle(
+                                            color: Colors.black87,
+                                            fontWeight: FontWeight.normal,
+                                            fontSize: 10,
+                                          ),
+                                        ),
+                                      ]
+                                  );
+                                },
+                              ),
+                            ),
+                            titlesData: FlTitlesData(
+                              show: true,
+                              bottomTitles: AxisTitles(
+                                sideTitles: SideTitles(
+                                  showTitles: true,
+                                  reservedSize: 22,
+                                  getTitlesWidget: (value, meta) {
+                                    final idx = value.toInt();
+                                    if (idx >= 0 && idx < widget.inventories.length) {
+                                      return Text(
+                                        '${idx + 1}',
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.bold,
+                                          color: isDark
+                                              ? Colors.grey.shade400
+                                              : Colors.grey.shade600,
+                                        ),
+                                      );
+                                    }
+                                    return const SizedBox.shrink();
+                                  },
+                                ),
+                              ),
+                              leftTitles: AxisTitles(
+                                sideTitles: SideTitles(
+                                  showTitles: true,
+                                  reservedSize: 24,
+                                  getTitlesWidget: (value, meta) {
+                                    return Text(
+                                      value.toInt().toString(),
+                                      style: TextStyle(
+                                        fontSize: 9,
+                                        color: isDark
+                                            ? Colors.grey.shade400
+                                            : Colors.grey.shade600,
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                              topTitles: const AxisTitles(
+                                  sideTitles: SideTitles(showTitles: false)),
+                              rightTitles: const AxisTitles(
+                                  sideTitles: SideTitles(showTitles: false)),
+                            ),
+                            barGroups: widget.inventories
+                                .asMap()
+                                .map((index, inventory) =>
+                                MapEntry(
+                                  index,
+                                  BarChartGroupData(
+                                    x: index,
+                                    barRods: [
+                                      BarChartRodData(
+                                        toY: _getSpeciesRichnessForInventory(inventory).toDouble(),
+                                        width: 12,
+                                        borderRadius: const BorderRadius.only(
+                                          topLeft: Radius.circular(6),
+                                          topRight: Radius.circular(6),
+                                        ),
+                                        color: Theme
+                                            .of(context)
+                                            .brightness == Brightness.light
+                                            ? Colors.deepPurple
+                                            : Colors.deepPurple[200],
+                                      ),
+                                    ],
+                                  ),
+                                ))
+                                .values
+                                .toList(),
+                            gridData: FlGridData(
+                              show: true,
+                              drawVerticalLine: false,
+                              getDrawingHorizontalLine: (value) => FlLine(
+                                color: isDark
+                                    ? Colors.white.withValues(alpha: 0.05)
+                                    : Colors.black.withValues(alpha: 0.05),
+                                strokeWidth: 1,
+                              ),
+                            ),
+                            borderData: FlBorderData(
+                              show: true,
+                              border: Border(
+                                left: BorderSide(color: isDark ? Colors.grey.shade800 : Colors.grey.shade200, width: 2),
+                                bottom: BorderSide(color: isDark ? Colors.grey.shade800 : Colors.grey.shade200, width: 2),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+          // const SizedBox(height: 12),
+          // Divider(
+          //   height: 1,
+          //   color: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
+          // ),
+          // const SizedBox(height: 12),
+          // Column(
+          //   children: widget.inventories.map((inv) {
+          //     return Padding(
+          //       padding: const EdgeInsets.only(bottom: 6.0),
+          //       child: Row(
+          //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //         children: [
+          //           RichText(
+          //             text: TextSpan(
+          //               style: TextStyle(
+          //                 fontSize: 11,
+          //                 color: isDark
+          //                     ? Colors.grey.shade300
+          //                     : Colors.grey.shade800,
+          //               ),
+          //               children: [
+          //                 // TextSpan(
+          //                 //   text: '${} ',
+          //                 //   style: const TextStyle(fontWeight: FontWeight.bold),
+          //                 // ),
+          //                 TextSpan(
+          //                   text: '(${inv.id})',
+          //                   style: TextStyle(
+          //                     color: isDark
+          //                         ? Colors.grey.shade500
+          //                         : Colors.grey.shade600,
+          //                     fontSize: 10,
+          //                   ),
+          //                 ),
+          //               ],
+          //             ),
+          //           ),
+          //           Text(
+          //             '${inv.speciesCount} spp',
+          //             style: TextStyle(
+          //               fontSize: 11,
+          //               fontWeight: FontWeight.bold,
+          //               color: isDark
+          //                   ? XolmisColors.primaryContainer
+          //                   : XolmisColors.primary,
+          //             ),
+          //           ),
+          //         ],
+          //       ),
+          //     );
+          //   }).toList(),
+          // ),
+        ],
       ),
     );
   }

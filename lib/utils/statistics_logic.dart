@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
+import 'package:xolmis/utils/themes.dart';
 
 import '../data/database/database_helper.dart';
 import '../data/models/nest.dart';
@@ -23,10 +24,10 @@ class MonthOccurrence {
 
 // Color mapping for each record type
 final Map<String, Color> _recordTypeColors = {
-  S.current.inventories: Colors.blue,
-  S.current.nests: Colors.orange,
-  S.current.egg(2): Colors.green,
-  S.current.specimens(2): Colors.purple,
+  S.current.inventories: XolmisColors.primary,
+  S.current.nests: XolmisColors.success,
+  S.current.egg(2): XolmisColors.warning,
+  S.current.specimens(2): XolmisColors.error,
 };
 
 /// Returns the chart color associated with a localized record type label.

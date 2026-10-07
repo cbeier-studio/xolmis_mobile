@@ -4584,20 +4584,20 @@ class S {
     );
   }
 
-  /// `apparent success rate`
+  /// `apparent success`
   String get apparentSuccessRate {
     return Intl.message(
-      'apparent success rate',
+      'apparent success',
       name: 'apparentSuccessRate',
       desc: 'Apparent success rate field label',
       args: [],
     );
   }
 
-  /// `nidoparasitism rate`
+  /// `nidoparasitism`
   String get nidoparasitismRate {
     return Intl.message(
-      'nidoparasitism rate',
+      'nidoparasitism',
       name: 'nidoparasitismRate',
       desc: 'Nidoparasitism rate field label',
       args: [],
@@ -6271,6 +6271,36 @@ class S {
       'Other',
       name: 'transportOther',
       desc: 'Other transport mode label',
+      args: [],
+    );
+  }
+
+  /// `Selected species`
+  String get selectedSpecies {
+    return Intl.message(
+      'Selected species',
+      name: 'selectedSpecies',
+      desc: 'Selected species field label',
+      args: [],
+    );
+  }
+
+  /// `Total`
+  String get total {
+    return Intl.message(
+      'Total',
+      name: 'total',
+      desc: 'Total legend label',
+      args: [],
+    );
+  }
+
+  /// `Sample`
+  String get sample {
+    return Intl.message(
+      'Sample',
+      name: 'sample',
+      desc: 'Sample legend label',
       args: [],
     );
   }

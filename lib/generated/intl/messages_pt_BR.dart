@@ -248,7 +248,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "allTypes": MessageLookupByLibrary.simpleMessage("Todos os tipos"),
     "apparentSuccessRate": MessageLookupByLibrary.simpleMessage(
-      "taxa de sucesso aparente",
+      "sucesso aparente",
     ),
     "appearance": MessageLookupByLibrary.simpleMessage("Aparência"),
     "archive": MessageLookupByLibrary.simpleMessage("Arquivar"),
@@ -961,7 +961,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "nidoparasite": MessageLookupByLibrary.simpleMessage("Nidoparasita"),
     "nidoparasitismRate": MessageLookupByLibrary.simpleMessage(
-      "taxa de nidoparasitismo",
+      "nidoparasitismo",
     ),
     "no": MessageLookupByLibrary.simpleMessage("Não"),
     "noDataAvailable": MessageLookupByLibrary.simpleMessage(
@@ -1164,6 +1164,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "restoringData": MessageLookupByLibrary.simpleMessage("Restaurando dados"),
     "resume": MessageLookupByLibrary.simpleMessage("Retomar"),
     "revision": m57,
+    "sample": MessageLookupByLibrary.simpleMessage("Amostra"),
     "sampleTime": MessageLookupByLibrary.simpleMessage("Hora da coleta"),
     "save": MessageLookupByLibrary.simpleMessage("Salvar"),
     "seeAll": MessageLookupByLibrary.simpleMessage("Ver tudo"),
@@ -1209,6 +1210,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "inventários selecionados",
     ),
     "selectedNests": m58,
+    "selectedSpecies": MessageLookupByLibrary.simpleMessage(
+      "Espécie selecionada",
+    ),
     "selectedSpecimens": m59,
     "sendBackupTo": MessageLookupByLibrary.simpleMessage(
       "Enviar backup para...",
@@ -1353,6 +1357,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "title": MessageLookupByLibrary.simpleMessage("Título"),
     "today": MessageLookupByLibrary.simpleMessage("Hoje"),
     "topSpecies": m68,
+    "total": MessageLookupByLibrary.simpleMessage("Total"),
     "totalAbundance": MessageLookupByLibrary.simpleMessage("abundância total"),
     "totalIndividuals": MessageLookupByLibrary.simpleMessage(
       "Total de indivíduos",

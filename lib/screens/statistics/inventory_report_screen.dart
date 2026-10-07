@@ -11,6 +11,7 @@ import 'package:xolmis/utils/utils.dart';
 
 import '../../data/models/inventory.dart';
 import '../../providers/inventory_provider.dart';
+import '../../utils/themes.dart';
 
 /// Builds a cross-inventory species report and allows CSV export.
 class InventoryReportScreen extends StatefulWidget {
@@ -34,6 +35,8 @@ class _InventoryReportScreenState extends State<InventoryReportScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return FutureBuilder<List<Inventory>>(
       future: _future,
       builder: (context, snapshot) {
@@ -85,6 +88,15 @@ class _InventoryReportScreenState extends State<InventoryReportScreen> {
                 scrollDirection: Axis.vertical,
                 // Build table with the report data
                 child: DataTable(
+                  columnSpacing: 16,
+                  horizontalMargin: 8,
+                  headingRowHeight: 38,
+                  dataRowMinHeight: 40,
+                  headingRowColor: WidgetStateProperty.all(
+                    isDark
+                        ? Colors.grey.shade900
+                        : XolmisColors.surfaceVariant.withValues(alpha: 0.5),
+                  ),
                   columns: _buildColumns(inventories),
                   rows: _buildRows(speciesSet, reportData),
                 ),
@@ -180,7 +192,16 @@ class _InventoryReportScreenState extends State<InventoryReportScreen> {
   /// Builds DataTable headers for species, inventories, and totals.
   List<DataColumn> _buildColumns(List<Inventory> inventories) {
     final headerLabels = _buildHeaderLabels(inventories);
-    return headerLabels.map((label) => DataColumn(label: Text(label))).toList();
+    return headerLabels.map((label) => DataColumn(
+        label: Text(
+          label,
+          style: TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.bold,
+          ),
+        )
+      )
+    ).toList();
   }
 
   /// Builds plain-text header labels for table and CSV export.
@@ -220,33 +241,80 @@ class _InventoryReportScreenState extends State<InventoryReportScreen> {
       }
 
       return DataRow(
+        color: WidgetStateProperty.all(
+          isTotalRow
+              ? Theme.of(context).brightness == Brightness.dark
+                ? Colors.grey.shade900
+                : XolmisColors.surfaceVariant.withValues(alpha: 0.5)
+              : Colors.transparent,
+        ),
         cells: row.asMap().entries.map((cellEntry) {
           int colIndex = cellEntry.key;
           String cellValue = cellEntry.value.toString();
 
           // Estilo padrão
-          TextStyle style = const TextStyle();
+          TextStyle style = const TextStyle(
+            fontSize: 11,
+          );
 
           // Highlights species not found
           if (colIndex == 0 && rowIndex != reportData.length - 1) {
+            style = const TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w500,
+            );
             if (!allSpeciesNames.contains(cellEntry.value.toString())) {
               style = const TextStyle(
+                fontSize: 11,
                 color: Colors.red,
+                fontWeight: FontWeight.w500,
               );
             }
           }
           // Aplica o destaque se for a primeira ocorrência
           if (colIndex == firstOccurrenceIndex) {
             style = const TextStyle(
+              fontSize: 11,
               fontWeight: FontWeight.bold,
-              color: Colors.blue, // Ou a cor de sua preferência
+              color: XolmisColors.primary,
+            );
+          }
+
+          if (colIndex == reportData[rowIndex].length - 1) {
+            style = const TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.bold,
+            );
+          }
+
+          if (isTotalRow) {
+            style = const TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.bold,
+            );
+          }
+
+          if (cellValue == '') {
+            style = const TextStyle(
+              fontSize: 11,
+              color: Colors.grey,
             );
           }
 
           return DataCell(
-            Text(
-              cellValue,
-              style: style,
+            Container(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: colIndex == firstOccurrenceIndex
+                    ? XolmisColors.primaryContainer.withValues(alpha: 0.4)
+                    : Colors.transparent,
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Text(
+                cellValue == '' ? '-' : cellValue,
+                style: style,
+              ),
             ),
           );
         }).toList(),

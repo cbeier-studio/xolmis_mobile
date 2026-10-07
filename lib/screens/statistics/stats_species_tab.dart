@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
@@ -14,6 +16,7 @@ import '../../providers/species_provider.dart';
 import '../../providers/specimen_provider.dart';
 import '../../utils/statistics_logic.dart';
 import '../../utils/utils.dart';
+import '../../utils/themes.dart';
 
 /// Per-species statistics tab with filters and species-level charts.
 class StatsSpeciesTab extends StatefulWidget {
@@ -206,6 +209,7 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     if (widget.inventoryProvider.allInventoriesCount == 0 &&
         widget.nestProvider.allNestsCount == 0 &&
@@ -235,643 +239,43 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Field to search for species
-          SearchAnchor(
-            searchController: searchController,
-            isFullScreen: MediaQuery.of(context).size.width < 600,
-            builder: (BuildContext context, SearchController controller) {
-              return TextField(
-                controller: controller,
-                decoration: InputDecoration(
-                  hintText: S.of(context).selectSpecies,
-                  prefixIcon: const Icon(Icons.search_outlined),
-                  border: const OutlineInputBorder(),
-                ),
-                readOnly: true,
-                onTap: () {
-                  controller.openView();
-                },
-              );
-            },
-            suggestionsBuilder: (context, controller) {
-              return List<String>.from(
-                recordedSpeciesNames,
-              ).where((species) => speciesMatchesQuery(species, controller.text.toLowerCase())).map((species) {
-                return ListTile(
-                  title: Text(species),
-                  onTap: () async {
-                    setState(() {
-                      selectedSpecies = species;
-                      isLoadingSpecies = true;
-                    });
-                    await loadDataLists(
-                      widget.speciesProvider,
-                      widget.nestProvider,
-                      widget.eggProvider,
-                      widget.specimenProvider,
-                    );
-                    setState(() {
-                      isLoadingSpecies = false;
-                    });
-                    controller.text = selectedSpecies ?? '';
-                    controller.closeView('');
-                  },
-                );
-              }).toList();
-            },
-          ),
-          SizedBox(height: 16.0),
+          _buildSpeciesSelectorCard(isDark),
+          const SizedBox(height: 16),
+
           if (selectedSpecies != null) ...[
-            Text(
-              selectedSpecies!,
-              style: const TextStyle(
-                color: Colors.deepPurple,
-                fontWeight: FontWeight.bold,
-                fontStyle: FontStyle.italic,
-                fontSize: 16,
-              ),
-            ),
+            _buildSpeciesHeaderBanner(isDark),
+            // const SizedBox(height: 16),
           ],
           SizedBox(height: 16.0),
           Expanded(
             child: SingleChildScrollView(
+              // padding: const EdgeInsets.all(16.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   if (selectedSpecies != null && !isLoadingSpecies) ...[
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child:
-                              // Total records per species
-                              Card(
-                                child: Padding(
-                                  padding: EdgeInsets.all(16.0),
-                                  child: Column(
-                                    children: [
-                                      Text(S.current.totalRecords, style: TextTheme.of(context).titleMedium),
-                                      Stack(
-                                        alignment: Alignment.center,
-                                        children: [
-                                          Text(
-                                            totalRecordsPerSpecies.toString(),
-                                            style: TextTheme.of(context).headlineSmall,
-                                          ),
-                                          SizedBox(
-                                            height: 200,
-                                            child: PieChart(
-                                              PieChartData(
-                                                borderData: FlBorderData(show: false),
-                                                pieTouchData: PieTouchData(
-                                                  enabled: true,
-                                                  touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                                                    setState(() {
-                                                      // Verifica se o evento é um toque ou se o usuário parou de tocar
-                                                      if (!event.isInterestedForInteractions ||
-                                                          pieTouchResponse == null ||
-                                                          pieTouchResponse.touchedSection == null) {
-                                                        _touchedIndexTotals = -1; // Nenhuma seção está sendo tocada
-                                                        return;
-                                                      }
-                                                      // Atualiza o estado com o índice da seção tocada
-                                                      _touchedIndexTotals =
-                                                          pieTouchResponse.touchedSection!.touchedSectionIndex;
-                                                    });
-                                                  },
-                                                ),
-                                                sectionsSpace: 2,
-                                                centerSpaceRadius: 50,
-                                                sections:
-                                                    totalsSections.asMap().entries.map((entry) {
-                                                      final index = entry.key;
-                                                      final sectionData = entry.value;
-                                                      final isTouched = index == _touchedIndexTotals;
+                        _buildRecordsByTypeCard(isDark),
+                        const SizedBox(height: 16),
 
-                                                      // Aumenta o raio e o tamanho da fonte se a seção estiver sendo tocada
-                                                      final double radius = isTouched ? 50.0 : 40.0;
-                                                      final double fontSize = isTouched ? 18.0 : 14.0;
-                                                      final color = sectionData.color; // A cor original da seção
+                        _buildMonthlyRecordsCard(isDark),
+                        const SizedBox(height: 16),
 
-                                                      // Cria uma nova PieChartSectionData com os estilos atualizados
-                                                      return PieChartSectionData(
-                                                        color: color,
-                                                        value: sectionData.value,
-                                                        radius: radius,
-                                                        titleStyle: TextStyle(
-                                                          fontSize: fontSize,
-                                                          fontWeight: FontWeight.bold,
-                                                          color: Colors.white,
-                                                          shadows: const [Shadow(color: Colors.black, blurRadius: 10)],
-                                                        ),
-                                                        // Mostra o nome do tipo de registro ao tocar, ou o valor numérico caso contrário
-                                                        title:
-                                                            isTouched
-                                                                ? getRecordFriendlyName(
-                                                                  getRecordTypeFromColor(color),
-                                                                  context,
-                                                                ) // Função para obter o nome amigável
-                                                                : sectionData.value.toInt().toString(),
-                                                      );
-                                                    }).toList(),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child:
-                              // Records per month
-                              Card(
-                                child: Padding(
-                                  padding: EdgeInsets.all(16.0),
-                                  child: Column(
-                                    children: [
-                                      Text(S.current.recordsPerMonth, style: TextTheme.of(context).titleMedium),
-                                      const SizedBox(height: 8),
-                                      SizedBox(
-                                        height: 150,
-                                        child: BarChart(
-                                          BarChartData(
-                                            alignment: BarChartAlignment.spaceAround,
-                                            gridData: FlGridData(show: false),
-                                            borderData: FlBorderData(
-                                              show: true,
-                                              border: Border(
-                                                bottom: BorderSide(color: Colors.grey.withValues(alpha: 0.5), width: 1),
-                                              ),
-                                            ),
-                                            barTouchData: BarTouchData(
-                                              enabled: true,
-                                              touchTooltipData: BarTouchTooltipData(
-                                                getTooltipColor: (spot) => Colors.white.withAlpha(200),
-                                                fitInsideVertically: true,
-                                                fitInsideHorizontally: true,
-                                              ),
-                                            ),
-                                            titlesData: FlTitlesData(
-                                              show: true,
-                                              bottomTitles: AxisTitles(
-                                                sideTitles: SideTitles(
-                                                  showTitles: true,
-                                                  reservedSize: 30,
-                                                  getTitlesWidget: (value, meta) {
-                                                    String monthAbbreviation = DateFormat(
-                                                      'MMM',
-                                                    ).format(DateTime(0, value.toInt()));
-                                                    return SideTitleWidget(meta: meta, child: Text(monthAbbreviation[0].toUpperCase()));
-                                                  },
-                                                ),
-                                              ),
-                                              leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                                              topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                                              rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                                            ),
-                                            barGroups: createBarGroupsFromOccurrencesMap(
-                                              _occurrencesByMonth,
-                                              16,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child:
-                              // Records per year
-                              Card(
-                                child: Padding(
-                                  padding: EdgeInsets.all(16.0),
-                                  child: Column(
-                                    children: [
-                                      Text(S.current.recordsPerYear, style: TextTheme.of(context).titleMedium),
-                                      const SizedBox(height: 8),
-                                      SizedBox(
-                                        height: 150,
-                                        child: BarChart(
-                                          BarChartData(
-                                            alignment: BarChartAlignment.spaceAround,
-                                            gridData: FlGridData(show: false),
-                                            borderData: FlBorderData(
-                                              show: true,
-                                              border: Border(
-                                                bottom: BorderSide(color: Colors.grey.withValues(alpha: 0.5), width: 1),
-                                              ),
-                                            ),
-                                            barTouchData: BarTouchData(
-                                              enabled: true,
-                                              touchTooltipData: BarTouchTooltipData(
-                                                getTooltipColor: (spot) => Colors.white.withAlpha(200),
-                                                fitInsideVertically: true,
-                                                fitInsideHorizontally: true,
-                                              ),
-                                            ),
-                                            titlesData: FlTitlesData(
-                                              show: true,
-                                              bottomTitles: AxisTitles(
-                                                sideTitles: SideTitles(
-                                                  showTitles: true,
-                                                  reservedSize: 30,
-                                                  getTitlesWidget: (value, meta) {
-                                                    return SideTitleWidget(meta: meta, child: Text(value.toInt().toString()));
-                                                  },
-                                                ),
-                                              ),
-                                              leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                                              topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                                              rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                                            ),
-                                            barGroups: createBarGroupsFromYearOccurrencesMap(
-                                              _occurrencesByYear,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 16.0),
-                        Text(S.current.inventories, style: TextTheme.of(context).titleLarge),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            // Total POIs recorded
-                            Expanded(
-                              child: Card(
-                                child: Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        relativeAbundance.toStringAsFixed(1),
-                                        style: TextStyle(
-                                          color: Theme.of(context).colorScheme.primary,
-                                          fontWeight: Theme.of(context).textTheme.headlineSmall?.fontWeight,
-                                          fontSize: Theme.of(context).textTheme.headlineSmall?.fontSize,
-                                        ),
-                                      ),
-                                      Text(S.current.relativeAbundance),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                            // Detection rate
-                            Expanded(
-                              child: Card(
-                                child: Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        relativeFrequency.toStringAsFixed(1),
-                                        style: TextStyle(
-                                          color: Theme.of(context).colorScheme.primary,
-                                          fontWeight: Theme.of(context).textTheme.headlineSmall?.fontWeight,
-                                          fontSize: Theme.of(context).textTheme.headlineSmall?.fontSize,
-                                        ),
-                                      ),
-                                      Text(S.current.relativeFrequency),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            // Apparent success rate
-                            Expanded(
-                              child: Card(
-                                child: Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        totalAbundance.toString(),
-                                        style: TextStyle(
-                                          color: Theme.of(context).colorScheme.primary,
-                                          fontWeight: Theme.of(context).textTheme.headlineSmall?.fontWeight,
-                                          fontSize: Theme.of(context).textTheme.headlineSmall?.fontSize,
-                                        ),
-                                      ),
-                                      Text(S.current.totalAbundance),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                            // Nidoparasitism rate
-                            Expanded(
-                              child: Card(
-                                child: Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        totalPoisCount.toString(),
-                                        style: TextStyle(
-                                          color: Theme.of(context).colorScheme.primary,
-                                          fontWeight: Theme.of(context).textTheme.headlineSmall?.fontWeight,
-                                          fontSize: Theme.of(context).textTheme.headlineSmall?.fontSize,
-                                        ),
-                                      ),
-                                      Text(S.current.poisRecorded(totalPoisCount)),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child:
-                              // Nest fate per species
-                              Card(
-                                child: Padding(
-                                  padding: EdgeInsets.all(16.0),
-                                  child: Column(
-                                    children: [
-                                      Text(S.current.recordsByHour, style: TextTheme.of(context).titleMedium),
-                                      const SizedBox(height: 8),
-                                      allSpeciesList.isNotEmpty
-                                          ? SizedBox(
-                                            height: 150,
-                                            child: BarChart(
-                                              BarChartData(
-                                                alignment: BarChartAlignment.spaceAround,
-                                                gridData: FlGridData(show: false),
-                                                borderData: FlBorderData(
-                                                  show: true,
-                                                  border: Border(
-                                                    bottom: BorderSide(
-                                                      color: Colors.grey.withValues(alpha: 0.5),
-                                                      width: 1,
-                                                    ),
-                                                  ),
-                                                ),
-                                                barTouchData: BarTouchData(
-                                                  enabled: true,
-                                                  touchTooltipData: BarTouchTooltipData(
-                                                    fitInsideHorizontally: true,
-                                                    fitInsideVertically: true,
-                                                    getTooltipColor: (spot) => Colors.white.withValues(alpha: 0.8),
-                                                    getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                                                      final hour = group.x.toInt();
-                                                      final value = rod.toY.toInt();
-                                                      if (value == 0) {
-                                                        return null;
-                                                      }
-                                                      return BarTooltipItem(
-                                                        '',
-                                                        // String principal vazia, usamos os children
-                                                        const TextStyle(),
-                                                        children: [
-                                                          TextSpan(
-                                                            text: '$value\n',
-                                                            style: const TextStyle(
-                                                              color: Colors.blue,
-                                                              fontWeight: FontWeight.bold,
-                                                              fontSize: 16,
-                                                            ),
-                                                          ),
-                                                          TextSpan(
-                                                            text: '${hour.toString().padLeft(2, '0')} h',
-                                                            style: const TextStyle(
-                                                              color: Colors.black87,
-                                                              fontWeight: FontWeight.normal,
-                                                              fontSize: 12,
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      );
-                                                    },
-                                                  ),
-                                                ),
-                                                titlesData: FlTitlesData(
-                                                  show: true,
-                                                  bottomTitles: AxisTitles(
-                                                    sideTitles: SideTitles(
-                                                      showTitles: true,
-                                                      reservedSize: 30,
-                                                      getTitlesWidget: (value, meta) {
-                                                        // Mostra os títulos do eixo X em intervalos (0, 6, 12, 18, 23) para não poluir.
-                                                        final hour = value.toInt();
-                                                        if (hour % 3 == 0 || hour == 23) {
-                                                          return SideTitleWidget(meta: meta, child: Text(hour.toString().padLeft(2, '0')));
-                                                        } else {
-                                                          return SideTitleWidget(meta: meta, child: Text(''));
-                                                        }
-                                                      },
-                                                    ),
-                                                  ),
-                                                  leftTitles: AxisTitles(
-                                                    sideTitles: SideTitles(showTitles: false, reservedSize: 28),
-                                                  ),
-                                                  topTitles: const AxisTitles(
-                                                    sideTitles: SideTitles(showTitles: false),
-                                                  ),
-                                                  rightTitles: const AxisTitles(
-                                                    sideTitles: SideTitles(showTitles: false),
-                                                  ),
-                                                ),
-                                                // Usa a nova função para obter os dados do histograma
-                                                barGroups: createBarGroupsFromOccurrencesMap(
-                                                  getOccurrencesByHourOfDay(allSpeciesList),
-                                                  12,
-                                                ),
-                                              ),
-                                            ),
-                                          )
-                                          : Text(S.current.noDataAvailable),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 16.0),
-                        Text(S.current.nests, style: TextTheme.of(context).titleLarge),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            // Apparent success rate
-                            Expanded(
-                              child: Card(
-                                child: Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        (totalSuccessNests / widget.nestProvider.inactiveNestsCount * 100)
-                                            .toStringAsFixed(1),
-                                        style: TextStyle(
-                                          color: Theme.of(context).colorScheme.primary,
-                                          fontWeight: Theme.of(context).textTheme.headlineSmall?.fontWeight,
-                                          fontSize: Theme.of(context).textTheme.headlineSmall?.fontSize,
-                                        ),
-                                      ),
-                                      Text(S.current.apparentSuccessRate),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                            // Nidoparasitism rate
-                            Expanded(
-                              child: Card(
-                                child: Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        (totalNestsWithNidoparasitism / widget.nestProvider.allNestsCount * 100)
-                                            .toStringAsFixed(1),
-                                        style: TextStyle(
-                                          color: Theme.of(context).colorScheme.primary,
-                                          fontWeight: Theme.of(context).textTheme.headlineSmall?.fontWeight,
-                                          fontSize: Theme.of(context).textTheme.headlineSmall?.fontSize,
-                                        ),
-                                      ),
-                                      Text(S.current.nidoparasitismRate),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child:
-                              // Nest fate per species
-                              Card(
-                                child: Padding(
-                                  padding: EdgeInsets.all(16.0),
-                                  child: Column(
-                                    children: [
-                                      Text(S.current.nestFate, style: TextTheme.of(context).titleMedium),
-                                      nestList.isNotEmpty
-                                          ? Stack(
-                                            alignment: Alignment.center,
-                                            children: [
-                                              Text(
-                                                nestList.length.toString(),
-                                                style: TextTheme.of(context).headlineSmall,
-                                              ),
-                                              SizedBox(
-                                                height: 200,
-                                                child: PieChart(
-                                                  PieChartData(
-                                                    borderData: FlBorderData(show: false),
-                                                    pieTouchData: PieTouchData(
-                                                      enabled: true,
-                                                      touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                                                        setState(() {
-                                                          // Verifica se o evento é um toque ou se o usuário parou de tocar
-                                                          if (!event.isInterestedForInteractions ||
-                                                              pieTouchResponse == null ||
-                                                              pieTouchResponse.touchedSection == null) {
-                                                            _touchedIndexNestFate =
-                                                                -1; // Nenhuma seção está sendo tocada
-                                                            return;
-                                                          }
-                                                          // Atualiza o estado com o índice da seção tocada
-                                                          _touchedIndexNestFate =
-                                                              pieTouchResponse.touchedSection!.touchedSectionIndex;
-                                                        });
-                                                      },
-                                                    ),
-                                                    sectionsSpace: 2,
-                                                    centerSpaceRadius: 50,
-                                                    sections:
-                                                        nestFateSections.asMap().entries.map((entry) {
-                                                          final index = entry.key;
-                                                          final sectionData = entry.value;
-                                                          final isTouched = index == _touchedIndexNestFate;
+                        _buildYearlyRecordsCard(isDark),
+                        const SizedBox(height: 16),
 
-                                                          // Aumenta o raio e o tamanho da fonte se a seção estiver sendo tocada
-                                                          final double radius = isTouched ? 50.0 : 40.0;
-                                                          final double fontSize = isTouched ? 18.0 : 14.0;
-                                                          final color = sectionData.color; // A cor original da seção
+                        _buildInventoryMetricsCard(isDark),
+                        const SizedBox(height: 16),
 
-                                                          // Cria uma nova PieChartSectionData com os estilos atualizados
-                                                          return PieChartSectionData(
-                                                            color: color,
-                                                            value: sectionData.value,
-                                                            radius: radius,
-                                                            titleStyle: TextStyle(
-                                                              fontSize: fontSize,
-                                                              fontWeight: FontWeight.bold,
-                                                              color: Colors.white,
-                                                              shadows: const [
-                                                                Shadow(color: Colors.black, blurRadius: 10),
-                                                              ],
-                                                            ),
-                                                            // Mostra o nome do tipo de registro ao tocar, ou o valor numérico caso contrário
-                                                            title:
-                                                                isTouched
-                                                                    ? getNestFateFriendlyName(
-                                                                      getNestFateFromColor(color),
-                                                                      context,
-                                                                    ) // Função para obter o nome amigável
-                                                                    : sectionData.value.toInt().toString(),
-                                                          );
-                                                        }).toList(),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          )
-                                          : Text(S.current.noDataAvailable),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                        _buildHourlyRecordsCard(isDark),
+                        const SizedBox(height: 16),
+
+                        _buildNestMetricsCard(isDark),
+                        const SizedBox(height: 24),
                       ],
                     ),
                   ] else if (isLoadingSpecies) ...[
@@ -888,6 +292,934 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
     );
   }
 
+  Widget _buildSpeciesSelectorCard(bool isDark) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: isDark ? Colors.grey.shade900 : Colors.white,
+        border: Border.all(color: isDark ? Colors.grey.shade800 : XolmisColors.borderSubtle),
+        borderRadius: BorderRadius.circular(16),
+        shape: BoxShape.rectangle,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            S.current.selectSpecies,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: isDark ? Colors.grey.shade400 : XolmisColors.secondary,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            decoration: BoxDecoration(
+              color: isDark
+                  ? Colors.grey.shade900
+                  : XolmisColors.surfaceVariant.withOpacity(0.3),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: isDark
+                    ? Colors.grey.shade800
+                    : XolmisColors.outlineVariant.withOpacity(0.5),
+              ),
+            ),
+            child: SearchAnchor(
+              searchController: searchController,
+              isFullScreen: MediaQuery.of(context).size.width < 600,
+              builder: (BuildContext context, SearchController controller) {
+                return TextButton(
+                  onPressed: () {
+                    controller.openView();
+                  },
+                  child: Row(
+                    children: [
+                      const Icon(Icons.search_outlined),
+                      const SizedBox(width: 8),
+                      Text(
+                        S.current.findSpecies,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: isDark ? Colors.grey.shade400 : XolmisColors.secondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+              suggestionsBuilder: (context, controller) {
+                return List<String>.from(
+                  recordedSpeciesNames,
+                ).where((species) => speciesMatchesQuery(species, controller.text.toLowerCase())).map((species) {
+                  return ListTile(
+                    title: Text(species),
+                    onTap: () async {
+                      setState(() {
+                        selectedSpecies = species;
+                        isLoadingSpecies = true;
+                      });
+                      await loadDataLists(
+                        widget.speciesProvider,
+                        widget.nestProvider,
+                        widget.eggProvider,
+                        widget.specimenProvider,
+                      );
+                      setState(() {
+                        isLoadingSpecies = false;
+                      });
+                      controller.text = selectedSpecies ?? '';
+                      controller.closeView('');
+                    },
+                  );
+                }).toList();
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSpeciesHeaderBanner(bool isDark) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: isDark ? Colors.grey.shade900.withValues(alpha: 0.8) : XolmisColors.jacarandaLight,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: isDark ? Colors.grey.shade800 : XolmisColors.jacarandaContainer),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  S.current.selectedSpecies.toUpperCase(),
+                  style: TextStyle(
+                    fontSize: 9,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 0.8,
+                    color: XolmisColors.primary,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  selectedSpecies ?? '',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontFamily: Platform.isIOS ? 'CupertinoSystemDisplay' : null,
+                    fontStyle: FontStyle.italic,
+                    fontWeight: FontWeight.bold,
+                    color: isDark ? XolmisColors.primaryContainer : XolmisColors.jacarandaDeep,
+                  ),
+                ),
+                // Text(
+                //   _selectedSpecies.commonName,
+                //   style: TextStyle(
+                //     fontSize: 12,
+                //     color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+                //   ),
+                // ),
+              ],
+            ),
+          ),
+          // Container(
+          //   width: 42,
+          //   height: 42,
+          //   decoration: BoxDecoration(
+          //     color: XolmisColors.jacarandaCore.withValues(alpha: 0.15),
+          //     shape: BoxShape.circle,
+          //   ),
+          //   child: const Icon(
+          //     Icons.flutter_dash,
+          //     color: XolmisColors.jacarandaDeep,
+          //     size: 22,
+          //   ),
+          // ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRecordsByTypeCard(bool isDark) {
+    final typeColors = {
+      'Inventário': XolmisColors.primary,
+      'Ninho': XolmisColors.success,
+      'Ovo': XolmisColors.warning,
+      'Espécime': const Color(0xFF14B8A6),
+    };
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: isDark ? Colors.grey.shade900 : Colors.white,
+        border: Border.all(color: isDark ? Colors.grey.shade800 : XolmisColors.borderSubtle),
+        borderRadius: BorderRadius.circular(16),
+        shape: BoxShape.rectangle,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.pie_chart_outline, size: 18, color: XolmisColors.primary),
+              const SizedBox(width: 8),
+              Text(
+                S.current.totalRecords,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: isDark ? Colors.white : Colors.black87,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          SizedBox(
+            height: 160,
+            child: Row(
+              children: [
+                Expanded(
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      PieChart(
+                        PieChartData(
+                          pieTouchData: PieTouchData(
+                            enabled: true,
+                            touchCallback: (FlTouchEvent event, pieTouchResponse) {
+                              setState(() {
+                                // Verifica se o evento é um toque ou se o usuário parou de tocar
+                                if (!event.isInterestedForInteractions ||
+                                    pieTouchResponse == null ||
+                                    pieTouchResponse.touchedSection == null) {
+                                  _touchedIndexTotals = -1; // Nenhuma seção está sendo tocada
+                                  return;
+                                }
+                                // Atualiza o estado com o índice da seção tocada
+                                _touchedIndexTotals = pieTouchResponse.touchedSection!.touchedSectionIndex;
+                              });
+                            },
+                          ),
+                          sectionsSpace: 2,
+                          centerSpaceRadius: 38,
+                          sections:
+                              totalsSections.asMap().entries.map((entry) {
+                                final index = entry.key;
+                                final sectionData = entry.value;
+                                final isTouched = index == _touchedIndexTotals;
+
+                                // Aumenta o raio e o tamanho da fonte se a seção estiver sendo tocada
+                                final double radius = isTouched ? 50.0 : 40.0;
+                                final double fontSize = isTouched ? 18.0 : 14.0;
+                                final color = sectionData.color; // A cor original da seção
+
+                                // Cria uma nova PieChartSectionData com os estilos atualizados
+                                return PieChartSectionData(
+                                  color: color,
+                                  value: sectionData.value,
+                                  radius: radius,
+                                  titleStyle: TextStyle(
+                                    fontSize: fontSize,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                    shadows: const [Shadow(color: Colors.black, blurRadius: 10)],
+                                  ),
+                                  // Mostra o nome do tipo de registro ao tocar, ou o valor numérico caso contrário
+                                  title:
+                                      isTouched
+                                          ? getRecordFriendlyName(
+                                            getRecordTypeFromColor(color),
+                                            context,
+                                          ) // Função para obter o nome amigável
+                                          : sectionData.value.toInt().toString(),
+                                );
+                              }).toList(),
+                        ),
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            '${totalRecordsPerSpecies}',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: isDark ? Colors.white : Colors.black87,
+                            ),
+                          ),
+                          Text(
+                            'total',
+                            style: TextStyle(fontSize: 10, color: isDark ? Colors.grey.shade400 : Colors.grey.shade600),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                // Column(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   crossAxisAlignment: CrossAxisAlignment.start,
+                //   children: selectedSpecies.recordsByType.entries.map((entry) {
+                //     final color =
+                //         typeColors[entry.key] ?? XolmisColors.secondary;
+                //     return Padding(
+                //       padding: const EdgeInsets.only(bottom: 6.0),
+                //       child: Row(
+                //         children: [
+                //           Container(
+                //             width: 10,
+                //             height: 10,
+                //             decoration: BoxDecoration(
+                //               color: color,
+                //               shape: BoxShape.circle,
+                //             ),
+                //           ),
+                //           const SizedBox(width: 8),
+                //           Text(
+                //             entry.key,
+                //             style: TextStyle(
+                //               fontSize: 11,
+                //               fontWeight: FontWeight.w500,
+                //               color: isDark
+                //                   ? Colors.grey.shade300
+                //                   : Colors.grey.shade800,
+                //             ),
+                //           ),
+                //         ],
+                //       ),
+                //     );
+                //   }).toList(),
+                // ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMonthlyRecordsCard(bool isDark) {
+    const monthLabels = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
+
+    final maxMonthly = _occurrencesByMonth.values.toList().fold(1, (max, v) => v > max ? v : max);
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: isDark ? Colors.grey.shade900 : Colors.white,
+        border: Border.all(color: isDark ? Colors.grey.shade800 : XolmisColors.borderSubtle),
+        borderRadius: BorderRadius.circular(16),
+        shape: BoxShape.rectangle,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.calendar_month_outlined, size: 18, color: XolmisColors.primary),
+              const SizedBox(width: 8),
+              Text(
+                S.current.recordsPerMonth,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: isDark ? Colors.white : Colors.black87,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          SizedBox(
+            height: 150,
+            child: BarChart(
+              BarChartData(
+                alignment: BarChartAlignment.spaceAround,
+                maxY: maxMonthly.toDouble() + 2,
+                barTouchData: BarTouchData(
+                  enabled: true,
+                  touchTooltipData: BarTouchTooltipData(
+                    getTooltipColor: (_) => XolmisColors.jacarandaDeep,
+                    getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                      return BarTooltipItem(
+                        '${monthLabels[groupIndex]}: ${rod.toY.round()} reg.',
+                        TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w600),
+                      );
+                    },
+                  ),
+                ),
+                titlesData: FlTitlesData(
+                  show: true,
+                  bottomTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      reservedSize: 20,
+                      getTitlesWidget: (value, meta) {
+                        final idx = value.toInt() - 1;
+                        if (idx >= 0 && idx < 12) {
+                          return Text(
+                            monthLabels[idx],
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w500,
+                              color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+                            ),
+                          );
+                        }
+                        return const SizedBox.shrink();
+                      },
+                    ),
+                  ),
+                  leftTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      reservedSize: 24,
+                      getTitlesWidget: (value, meta) {
+                        return Text(
+                          value.toInt().toString(),
+                          style: TextStyle(fontSize: 9, color: isDark ? Colors.grey.shade400 : Colors.grey.shade600),
+                        );
+                      },
+                    ),
+                  ),
+                  topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                  rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                ),
+                gridData: FlGridData(
+                  show: true,
+                  drawVerticalLine: false,
+                  getDrawingHorizontalLine:
+                      (value) => FlLine(
+                        color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.05),
+                        strokeWidth: 1,
+                      ),
+                ),
+                borderData: FlBorderData(
+                  show: true,
+                  border: Border(
+                    left: BorderSide(color: isDark ? Colors.grey.shade800 : Colors.grey.shade200, width: 2),
+                    bottom: BorderSide(color: isDark ? Colors.grey.shade800 : Colors.grey.shade200, width: 2),
+                  ),
+                ),
+                barGroups: createBarGroupsFromOccurrencesMap(_occurrencesByMonth, 12),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildYearlyRecordsCard(bool isDark) {
+    final years = _occurrencesByYear.keys.toList()..sort();
+    final values = _occurrencesByYear.values.toList();
+    final maxYearly = values.fold(1, (max, v) => v > max ? v : max);
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: isDark ? Colors.grey.shade900 : Colors.white,
+        border: Border.all(color: isDark ? Colors.grey.shade800 : XolmisColors.borderSubtle),
+        borderRadius: BorderRadius.circular(16),
+        shape: BoxShape.rectangle,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.trending_up, size: 18, color: XolmisColors.primary),
+              const SizedBox(width: 8),
+              Text(
+                S.current.speciesRichnessPerYear,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: isDark ? Colors.white : Colors.black87,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          SizedBox(
+            height: 130,
+            child: BarChart(
+              BarChartData(
+                alignment: BarChartAlignment.spaceAround,
+                maxY: maxYearly.toDouble() + 3,
+                barTouchData: BarTouchData(
+                  enabled: true,
+                  touchTooltipData: BarTouchTooltipData(
+                    getTooltipColor: (_) => XolmisColors.jacarandaDeep,
+                    getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                      return BarTooltipItem(
+                        '${rod.toY.round()} spp.',
+                        TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w600),
+                      );
+                    },
+                  ),
+                ),
+                titlesData: FlTitlesData(
+                  show: true,
+                  bottomTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      reservedSize: 30,
+                      interval: 1,
+                      getTitlesWidget: (value, meta) {
+                        final year = value.toInt();
+                        if (value == year && years.contains(year)) {
+                          return SideTitleWidget(
+                            meta: meta,
+                            child: Text(
+                              year.toString(),
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w500,
+                                color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+                              ),
+                            ),
+                          );
+                        }
+                        return const SizedBox.shrink();
+                      },
+                    ),
+                  ),
+                  leftTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      reservedSize: 24,
+                      getTitlesWidget: (value, meta) {
+                        return Text(
+                          value.toInt().toString(),
+                          style: TextStyle(fontSize: 9, color: isDark ? Colors.grey.shade400 : Colors.grey.shade600),
+                        );
+                      },
+                    ),
+                  ),
+                  topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                  rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                ),
+                gridData: FlGridData(
+                  show: true,
+                  drawVerticalLine: false,
+                  getDrawingHorizontalLine:
+                      (value) => FlLine(
+                        color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.05),
+                        strokeWidth: 1,
+                      ),
+                ),
+                borderData: FlBorderData(
+                  show: true,
+                  border: Border(
+                    left: BorderSide(color: isDark ? Colors.grey.shade800 : Colors.grey.shade200, width: 2),
+                    bottom: BorderSide(color: isDark ? Colors.grey.shade800 : Colors.grey.shade200, width: 2),
+                  ),
+                ),
+                barGroups: createBarGroupsFromYearOccurrencesMap(_occurrencesByYear),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInventoryMetricsCard(bool isDark) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: isDark ? Colors.grey.shade900 : Colors.white,
+        border: Border.all(color: isDark ? Colors.grey.shade800 : XolmisColors.borderSubtle),
+        borderRadius: BorderRadius.circular(16),
+        shape: BoxShape.rectangle,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.assignment_outlined, size: 18, color: XolmisColors.primary),
+              const SizedBox(width: 8),
+              Text(
+                S.current.inventories,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: isDark ? Colors.white : Colors.black87,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          GridView.count(
+            crossAxisCount: 2,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+            childAspectRatio: 2.2,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            children: [
+              _buildSubStatMetricBox(
+                S.current.relativeAbundance,
+                '${relativeAbundance.toStringAsFixed(1)}%',
+                XolmisColors.primary,
+                isDark,
+              ),
+              _buildSubStatMetricBox(
+                S.current.relativeFrequency,
+                '${relativeFrequency.toStringAsFixed(1)}%',
+                XolmisColors.primary,
+                isDark,
+              ),
+              _buildSubStatMetricBox(
+                S.current.totalAbundance,
+                '${totalAbundance.toStringAsFixed(1)}',
+                XolmisColors.primary,
+                isDark,
+              ),
+              _buildSubStatMetricBox(
+                S.current.poisRecorded(totalPoisCount),
+                '${totalPoisCount}',
+                XolmisColors.primary,
+                isDark,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNestMetricsCard(bool isDark) {
+    final hasNestFateData = nestFateSections.any((section) => section.value > 0);
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: isDark ? Colors.grey.shade900 : Colors.white,
+        border: Border.all(color: isDark ? Colors.grey.shade800 : XolmisColors.borderSubtle),
+        borderRadius: BorderRadius.circular(16),
+        shape: BoxShape.rectangle,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.egg_outlined, size: 18, color: XolmisColors.primary),
+              const SizedBox(width: 8),
+              Text(
+                S.current.nests,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: isDark ? Colors.white : Colors.black87,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: XolmisColors.successContainer.withValues(alpha: 0.3),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: XolmisColors.success.withValues(alpha: 0.3)),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${totalSuccessNests}%',
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: XolmisColors.success),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        S.current.apparentSuccessRate,
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          color: XolmisColors.onSuccessContainer,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: XolmisColors.warningContainer.withValues(alpha: 0.3),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: XolmisColors.warning.withValues(alpha: 0.3)),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${totalNestsWithNidoparasitism}%',
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: XolmisColors.warning),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        S.current.nidoparasitismRate,
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          color: XolmisColors.onWarningContainer,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Text(
+            S.current.nestFate,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: isDark ? Colors.grey.shade300 : Colors.black87,
+            ),
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            height: 150,
+            child:
+                hasNestFateData
+                    ? Row(
+                      children: [
+                        Expanded(
+                          child: PieChart(
+                            PieChartData(
+                              pieTouchData: PieTouchData(
+                                enabled: true,
+                                touchCallback: (FlTouchEvent event, pieTouchResponse) {
+                                  setState(() {
+                                    // Verifica se o evento é um toque ou se o usuário parou de tocar
+                                    if (!event.isInterestedForInteractions ||
+                                        pieTouchResponse == null ||
+                                        pieTouchResponse.touchedSection == null) {
+                                      _touchedIndexNestFate = -1; // Nenhuma seção está sendo tocada
+                                      return;
+                                    }
+                                    // Atualiza o estado com o índice da seção tocada
+                                    _touchedIndexNestFate = pieTouchResponse.touchedSection!.touchedSectionIndex;
+                                  });
+                                },
+                              ),
+                              sectionsSpace: 2,
+                              centerSpaceRadius: 35,
+                              sections:
+                                  nestFateSections.asMap().entries.map((entry) {
+                                    final index = entry.key;
+                                    final sectionData = entry.value;
+                                    final isTouched = index == _touchedIndexNestFate;
+
+                                    // Aumenta o raio e o tamanho da fonte se a seção estiver sendo tocada
+                                    final double radius = isTouched ? 50.0 : 40.0;
+                                    final double fontSize = isTouched ? 18.0 : 14.0;
+                                    final color = sectionData.color; // A cor original da seção
+
+                                    // Cria uma nova PieChartSectionData com os estilos atualizados
+                                    return PieChartSectionData(
+                                      color: color,
+                                      value: sectionData.value,
+                                      radius: radius,
+                                      titleStyle: TextStyle(
+                                        fontSize: fontSize,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                        shadows: const [Shadow(color: Colors.black, blurRadius: 10)],
+                                      ),
+                                      // Mostra o nome do tipo de registro ao tocar, ou o valor numérico caso contrário
+                                      title:
+                                          isTouched
+                                              ? getNestFateFriendlyName(
+                                                getNestFateFromColor(color),
+                                                context,
+                                              ) // Função para obter o nome amigável
+                                              : sectionData.value.toInt().toString(),
+                                    );
+                                  }).toList(),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                    : Center(
+                      child: Text(
+                        S.current.noDataAvailable,
+                        style: TextStyle(color: isDark ? Colors.grey.shade400 : Colors.grey.shade600),
+                      ),
+                    ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHourlyRecordsCard(bool isDark) {
+    final hourlyOccurrences = getOccurrencesByHourOfDay(allSpeciesList);
+    final hasHourlyData = hourlyOccurrences.values.any((count) => count > 0);
+    final maxHourly = hourlyOccurrences.values.fold(1, (max, count) => count > max ? count : max);
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: isDark ? Colors.grey.shade900 : Colors.white,
+        border: Border.all(color: isDark ? Colors.grey.shade800 : XolmisColors.borderSubtle),
+        borderRadius: BorderRadius.circular(16),
+        shape: BoxShape.rectangle,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.access_time_outlined, size: 18, color: XolmisColors.primary),
+              const SizedBox(width: 8),
+              Text(
+                S.current.recordsByHour,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: isDark ? Colors.white : Colors.black87,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          SizedBox(
+            height: 150,
+            child:
+                hasHourlyData
+                    ? BarChart(
+                      BarChartData(
+                        alignment: BarChartAlignment.spaceAround,
+                        maxY: maxHourly.toDouble() + 2,
+                        barTouchData: BarTouchData(
+                          enabled: true,
+                          touchTooltipData: BarTouchTooltipData(
+                            getTooltipColor: (_) => XolmisColors.jacarandaDeep,
+                            getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                              return BarTooltipItem(
+                                '${group.x.toString().padLeft(2, '0')}h: ${rod.toY.round()} reg.',
+                                TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w600),
+                              );
+                            },
+                          ),
+                        ),
+                        titlesData: FlTitlesData(
+                          show: true,
+                          bottomTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              reservedSize: 22,
+                              interval: 4,
+                              getTitlesWidget: (value, meta) {
+                                final hour = value.toInt();
+                                if (value == hour && hour >= 0 && hour < 24 && hour % 4 == 0) {
+                                  return Text(
+                                    '${hour}h',
+                                    style: TextStyle(
+                                      fontSize: 9,
+                                      color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+                                    ),
+                                  );
+                                }
+                                return const SizedBox.shrink();
+                              },
+                            ),
+                          ),
+                          leftTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              reservedSize: 24,
+                              getTitlesWidget: (value, meta) {
+                                return Text(
+                                  value.toInt().toString(),
+                                  style: TextStyle(
+                                    fontSize: 9,
+                                    color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                          rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                        ),
+                        gridData: FlGridData(
+                          show: true,
+                          drawVerticalLine: false,
+                          getDrawingHorizontalLine:
+                              (value) => FlLine(
+                                color: isDark ? Colors.white.withOpacity(0.05) : Colors.black.withOpacity(0.05),
+                                strokeWidth: 1,
+                              ),
+                        ),
+                        borderData: FlBorderData(
+                          show: true,
+                          border: Border(
+                            left: BorderSide(color: isDark ? Colors.grey.shade800 : Colors.grey.shade200, width: 2),
+                            bottom: BorderSide(color: isDark ? Colors.grey.shade800 : Colors.grey.shade200, width: 2),
+                          ),
+                        ),
+                        barGroups: createBarGroupsFromOccurrencesMap(hourlyOccurrences, 12),
+                      ),
+                    )
+                    : Center(
+                      child: Text(
+                        S.current.noDataAvailable,
+                        style: TextStyle(color: isDark ? Colors.grey.shade400 : Colors.grey.shade600),
+                      ),
+                    ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSubStatMetricBox(String title, String value, Color valueColor, bool isDark) {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: isDark ? Colors.grey.shade900 : XolmisColors.surfaceVariant.withOpacity(0.3),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: isDark ? Colors.grey.shade800 : XolmisColors.outlineVariant.withOpacity(0.3)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(value, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: valueColor)),
+          const SizedBox(height: 2),
+          Text(
+            title,
+            style: TextStyle(fontSize: 11, color: isDark ? Colors.grey.shade400 : Colors.grey.shade600),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      ),
+    );
+  }
+
   List<BarChartGroupData> createBarGroupsFromOccurrencesMap(Map<int, int> monthlyOccurrences, double barWidth) {
     final List<BarChartGroupData> barGroups = [];
     monthlyOccurrences.forEach((month, count) {
@@ -897,7 +1229,7 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
           barRods: [
             BarChartRodData(
               toY: count.toDouble(), // record count is the value of Y axis
-              color: Colors.blue,
+              color: XolmisColors.jacarandaCore,
               width: barWidth,
               borderRadius: const BorderRadius.only(topLeft: Radius.circular(6), topRight: Radius.circular(6)),
             ),
@@ -917,7 +1249,7 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
           barRods: [
             BarChartRodData(
               toY: count.toDouble(), // record count is the value of Y axis
-              color: Colors.blue,
+              color: XolmisColors.primary,
               width: 16,
               borderRadius: const BorderRadius.only(topLeft: Radius.circular(6), topRight: Radius.circular(6)),
             ),

@@ -1526,10 +1526,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get seeAll => 'See all';
 
   @override
-  String get apparentSuccessRate => 'apparent success rate';
+  String get apparentSuccessRate => 'apparent success';
 
   @override
-  String get nidoparasitismRate => 'nidoparasitism rate';
+  String get nidoparasitismRate => 'nidoparasitism';
 
   @override
   String get detectionRate => 'detection rate';
@@ -2115,4 +2115,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get transportOther => 'Other';
+
+  @override
+  String get selectedSpecies => 'Selected species';
+
+  @override
+  String get total => 'Total';
+
+  @override
+  String get sample => 'Sample';
 }

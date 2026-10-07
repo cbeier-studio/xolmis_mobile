@@ -1556,10 +1556,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String get seeAll => 'Ver tudo';
 
   @override
-  String get apparentSuccessRate => 'taxa de sucesso aparente';
+  String get apparentSuccessRate => 'sucesso aparente';
 
   @override
-  String get nidoparasitismRate => 'taxa de nidoparasitismo';
+  String get nidoparasitismRate => 'nidoparasitismo';
 
   @override
   String get detectionRate => 'taxa de detecção';
@@ -2152,6 +2152,15 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get transportOther => 'Outro';
+
+  @override
+  String get selectedSpecies => 'Espécie selecionada';
+
+  @override
+  String get total => 'Total';
+
+  @override
+  String get sample => 'Amostra';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -3705,10 +3714,10 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get seeAll => 'Ver tudo';
 
   @override
-  String get apparentSuccessRate => 'taxa de sucesso aparente';
+  String get apparentSuccessRate => 'sucesso aparente';
 
   @override
-  String get nidoparasitismRate => 'taxa de nidoparasitismo';
+  String get nidoparasitismRate => 'nidoparasitismo';
 
   @override
   String get detectionRate => 'taxa de detecção';
@@ -4301,4 +4310,13 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get transportOther => 'Outro';
+
+  @override
+  String get selectedSpecies => 'Espécie selecionada';
+
+  @override
+  String get total => 'Total';
+
+  @override
+  String get sample => 'Amostra';
 }

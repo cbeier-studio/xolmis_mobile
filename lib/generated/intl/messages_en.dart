@@ -239,7 +239,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "allLocalities": MessageLookupByLibrary.simpleMessage("All localities"),
     "allTypes": MessageLookupByLibrary.simpleMessage("All types"),
     "apparentSuccessRate": MessageLookupByLibrary.simpleMessage(
-      "apparent success rate",
+      "apparent success",
     ),
     "appearance": MessageLookupByLibrary.simpleMessage("Appearance"),
     "archive": MessageLookupByLibrary.simpleMessage("Archive"),
@@ -914,7 +914,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "newWeather": MessageLookupByLibrary.simpleMessage("New weather record"),
     "nidoparasite": MessageLookupByLibrary.simpleMessage("Nidoparasite"),
     "nidoparasitismRate": MessageLookupByLibrary.simpleMessage(
-      "nidoparasitism rate",
+      "nidoparasitism",
     ),
     "no": MessageLookupByLibrary.simpleMessage("No"),
     "noDataAvailable": MessageLookupByLibrary.simpleMessage(
@@ -1097,6 +1097,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "restoringData": MessageLookupByLibrary.simpleMessage("Restoring data"),
     "resume": MessageLookupByLibrary.simpleMessage("Resume"),
     "revision": m57,
+    "sample": MessageLookupByLibrary.simpleMessage("Sample"),
     "sampleTime": MessageLookupByLibrary.simpleMessage("Sample time"),
     "save": MessageLookupByLibrary.simpleMessage("Save"),
     "seeAll": MessageLookupByLibrary.simpleMessage("See all"),
@@ -1138,6 +1139,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "selected inventories",
     ),
     "selectedNests": m58,
+    "selectedSpecies": MessageLookupByLibrary.simpleMessage("Selected species"),
     "selectedSpecimens": m59,
     "sendBackupTo": MessageLookupByLibrary.simpleMessage("Send backup to..."),
     "settings": MessageLookupByLibrary.simpleMessage("Settings"),
@@ -1264,6 +1266,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "title": MessageLookupByLibrary.simpleMessage("Title"),
     "today": MessageLookupByLibrary.simpleMessage("Today"),
     "topSpecies": m68,
+    "total": MessageLookupByLibrary.simpleMessage("Total"),
     "totalAbundance": MessageLookupByLibrary.simpleMessage("total abundance"),
     "totalIndividuals": MessageLookupByLibrary.simpleMessage(
       "Total Individuals",
