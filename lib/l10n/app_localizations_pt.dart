@@ -523,6 +523,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get outOfSample => 'Fora da amostra';
 
   @override
+  String get doubtfulRecord => 'Registro duvidoso';
+
+  @override
   String get withinSample => 'Dentro da amostra';
 
   @override
@@ -2698,6 +2701,9 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get outOfSample => 'Fora da amostra';
+
+  @override
+  String get doubtfulRecord => 'Registro duvidoso';
 
   @override
   String get withinSample => 'Dentro da amostra';

@@ -39,7 +39,7 @@ class DatabaseHelper {
     String path = join(await getDatabasesPath(), 'xolmis_database.db');
     return await openDatabase(
       path,
-      version: 30,
+      version: 31,
       onCreate: _createTables,
       onUpgrade: _upgradeTables,
       onConfigure: (db) async {
@@ -85,6 +85,7 @@ class DatabaseHelper {
           inventoryId TEXT NOT NULL, 
           name TEXT, 
           isOutOfInventory INTEGER, 
+          isDoubtful INTEGER DEFAULT 0,
           count INTEGER, 
           distance REAL,
           flightHeight REAL,
@@ -623,6 +624,9 @@ class DatabaseHelper {
         END
         WHERE transportMode IS NULL
       ''');
+    }
+    if (oldVersion < 31) {
+      await db.execute('ALTER TABLE species ADD COLUMN isDoubtful INTEGER DEFAULT 0');
     }
   }
 

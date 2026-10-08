@@ -986,6 +986,12 @@ abstract class AppLocalizations {
   /// **'Out of the sample'**
   String get outOfSample;
 
+  /// Flag for species records that are uncertain
+  ///
+  /// In en, this message translates to:
+  /// **'Doubtful record'**
+  String get doubtfulRecord;
+
   /// Species info for when the species was added while the inventory was active
   ///
   /// In en, this message translates to:

@@ -513,6 +513,7 @@
         }
     },
     "outOfSample": "Fora da amostra",
+    "doubtfulRecord": "Registro duvidoso",
     "withinSample": "Dentro da amostra",
     "noPoiFound": "Nenhum POI encontrado.",
     "newPoi": "Novo POI",

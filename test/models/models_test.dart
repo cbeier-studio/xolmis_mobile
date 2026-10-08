@@ -105,6 +105,36 @@ void main() {
   });
 
   group('Inventory Model Tests', () {
+    test('Species map/json conversion preserves doubtful flag', () {
+      final species = Species(
+        id: 1,
+        inventoryId: 'INV-001',
+        name: 'Elaenia parvirostris',
+        isOutOfInventory: false,
+        isDoubtful: true,
+        count: 2,
+      );
+
+      final restoredFromMap = Species.fromMap(species.toMap(species.inventoryId), const []);
+      final restoredFromJson = Species.fromJson(species.toJson());
+
+      expect(restoredFromMap.isDoubtful, isTrue);
+      expect(restoredFromJson.isDoubtful, isTrue);
+    });
+
+    test('Species copyWith updates doubtful flag', () {
+      final species = Species(
+        inventoryId: 'INV-001',
+        name: 'Xolmis dominicanus',
+        isOutOfInventory: false,
+        isDoubtful: false,
+      );
+
+      final updated = species.copyWith(isDoubtful: true);
+      expect(updated.isDoubtful, isTrue);
+      expect(updated.name, equals(species.name));
+    });
+
     test('hasValidStartCoordinates identifies non-null and non-zero start coordinates', () {
       final invWithStart = Inventory(
         id: 'INV-001',

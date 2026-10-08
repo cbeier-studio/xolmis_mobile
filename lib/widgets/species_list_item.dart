@@ -85,6 +85,19 @@ class SpeciesListItemState extends State<SpeciesListItem> {
                 size: 18,
               ),
             ),
+          if (widget.species.isDoubtful)
+            Padding(
+              padding: const EdgeInsets.only(left: 6),
+              child: Tooltip(
+                message: S.of(context).doubtfulRecord,
+                child: Badge(
+                  // backgroundColor: Theme.of(context).colorScheme.errorContainer,
+                  // textColor: Theme.of(context).colorScheme.onErrorContainer,
+                  label: const Text('?'),
+                  smallSize: 14,
+                ),
+              ),
+            ),
         ],
       ),
       subtitle: _buildSubtitle(),

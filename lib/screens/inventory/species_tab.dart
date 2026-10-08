@@ -144,6 +144,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
       name: speciesName,
       sampleTime: DateTime.now(),
       isOutOfInventory: widget.inventory.isFinished,
+      isDoubtful: false,
       count: initialCount,
       pois: [],
     );
@@ -347,6 +348,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
         name: speciesName,
         sampleTime: DateTime.now(),
         isOutOfInventory: inventory.isFinished,
+        isDoubtful: false,
         count: initialCount,
         pois: [],
       );

@@ -29,6 +29,7 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
   late final TextEditingController _flightHeightController;
   late final TextEditingController _notesController;
   late bool _isOutOfInventory;
+  late bool _isDoubtful;
   String? _selectedFlightDirection;
   bool _wasNameSearchOpen = false;
   bool _selectedNameFromSearch = false;
@@ -47,6 +48,7 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
     _flightHeightController = TextEditingController(text: widget.species.flightHeight?.toString());
     _notesController = TextEditingController(text: widget.species.notes);
     _isOutOfInventory = widget.species.isOutOfInventory;
+    _isDoubtful = widget.species.isDoubtful;
     _selectedFlightDirection = widget.species.flightDirection;
   }
 
@@ -151,6 +153,7 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
         flightDirection: _selectedFlightDirection,
         notes: _notesController.text.isNotEmpty ? _notesController.text : null,
         isOutOfInventory: _isOutOfInventory,
+        isDoubtful: _isDoubtful,
         sampleTime: widget.species.sampleTime,
         pois: widget.species.pois,
       );
@@ -355,6 +358,15 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
                   onChanged: (bool value) {
                     setState(() {
                       _isOutOfInventory = value;
+                    });
+                  },
+                ),
+                SwitchListTile.adaptive(
+                  title: Text(S.current.doubtfulRecord),
+                  value: _isDoubtful,
+                  onChanged: (bool value) {
+                    setState(() {
+                      _isDoubtful = value;
                     });
                   },
                 ),

@@ -108,6 +108,7 @@ class Species {
   final String inventoryId;
   final String name;
   bool isOutOfInventory;
+  bool isDoubtful;
   int count;
   String? notes;
   DateTime? sampleTime;
@@ -121,6 +122,7 @@ class Species {
     required this.inventoryId,
     required this.name,
     required this.isOutOfInventory,
+    this.isDoubtful = false,
     this.count = 0,
     this.notes,
     this.sampleTime,
@@ -143,6 +145,7 @@ class Species {
           ? DateTime.parse(map['sampleTime'])
           : null,
       isOutOfInventory: map['isOutOfInventory'] == 1, // Convert int to boolean
+      isDoubtful: map['isDoubtful'] == 1,
       distance: map['distance'],
       flightHeight: map['flightHeight'],
       flightDirection: map['flightDirection'],
@@ -156,6 +159,7 @@ class Species {
     String? inventoryId,
     String? name,
     bool? isOutOfInventory,
+    bool? isDoubtful,
     int? count,
     String? notes,
     DateTime? sampleTime,
@@ -169,6 +173,7 @@ class Species {
       inventoryId: inventoryId ?? this.inventoryId,
       name: name ?? this.name,
       isOutOfInventory: isOutOfInventory ?? this.isOutOfInventory,
+      isDoubtful: isDoubtful ?? this.isDoubtful,
       count: count ?? this.count,
       notes: notes ?? this.notes,
       sampleTime: sampleTime ?? this.sampleTime,
@@ -187,6 +192,7 @@ class Species {
       'inventoryId': inventoryId,
       'name': name,
       'isOutOfInventory': isOutOfInventory ? 1 : 0,
+      'isDoubtful': isDoubtful ? 1 : 0,
       'count': count,
       'notes': notes,
       'sampleTime': sampleTime?.toIso8601String(),
@@ -204,6 +210,7 @@ class Species {
       'inventoryId': inventoryId,
       'name': name,
       'isOutOfInventory': isOutOfInventory ? 1 : 0,
+      'isDoubtful': isDoubtful ? 1 : 0,
       'count': count,
       'notes': notes,
       'sampleTime': sampleTime?.toIso8601String(),
@@ -221,6 +228,7 @@ class Species {
       inventoryId: json['inventoryId'],
       name: json['name'],
       isOutOfInventory: json['isOutOfInventory'] == 1,
+      isDoubtful: json['isDoubtful'] == 1,
       count: json['count'],
       notes: json['notes'],
       sampleTime: json['sampleTime'] != null ? DateTime.parse(json['sampleTime']) : null,
@@ -238,6 +246,7 @@ class Species {
         'inventoryId: $inventoryId, '
         'name: $name, '
         'isOutOfInventory: $isOutOfInventory, '
+        'isDoubtful: $isDoubtful, '
         'count: $count, '
         'sampleTime: $sampleTime, '
         'distance: $distance, '

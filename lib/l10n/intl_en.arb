@@ -830,6 +830,11 @@
         "type": "text",
         "description": "Species info for when the species was added after the inventory was finished"
     },
+    "doubtfulRecord": "Doubtful record",
+    "@doubtfulRecord": {
+        "type": "text",
+        "description": "Flag for species records that are uncertain"
+    },
     "withinSample": "Within the sample",
     "@withinSample": {
         "type": "text",

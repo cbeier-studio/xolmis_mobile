@@ -14,7 +14,7 @@ dependencies:
   flutter_localizations: 
     sdk: flutter
   intl: ^0.20.3
-  intl_utils: ^2.8.16
+  intl_utils: ^2.8.17
   fpdart: ^1.2.0
   xml: ^7.1.0
 

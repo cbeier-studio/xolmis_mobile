@@ -521,6 +521,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get outOfSample => 'Out of the sample';
 
   @override
+  String get doubtfulRecord => 'Doubtful record';
+
+  @override
   String get withinSample => 'Within the sample';
 
   @override
