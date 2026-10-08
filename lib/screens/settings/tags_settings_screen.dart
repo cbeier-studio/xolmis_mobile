@@ -65,29 +65,28 @@ class _TagsSettingsScreenState extends State<TagsSettingsScreen> {
   }
 
   Future<void> _showColorPicker(PredefinedTag tag) async {
+    final selectedIndex = ValueNotifier<int>(tag.colorIndex);
+
     final colorIndex = await showDialog<int>(
       context: context,
-      builder: (context) {
-        int selectedIndex = tag.colorIndex;
-
-        return StatefulBuilder(
-          builder: (context, setDialogState) {
-            return AlertDialog(
-              title: Text(S.current.changeTagColor),
-              content: SingleChildScrollView(
-                child: Wrap(
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: Text(S.current.changeTagColor),
+          content: SingleChildScrollView(
+            child: ValueListenableBuilder<int>(
+              valueListenable: selectedIndex,
+              builder: (context, currentIndex, _) {
+                return Wrap(
                   spacing: 10,
                   runSpacing: 10,
                   children: List.generate(kJournalTagColors.length, (index) {
                     final color = getTagColorByIndex(index);
-                    final isSelected = index == selectedIndex;
+                    final isSelected = index == currentIndex;
 
                     return InkWell(
                       borderRadius: BorderRadius.circular(999),
                       onTap: () {
-                        setDialogState(() {
-                          selectedIndex = index;
-                        });
+                        selectedIndex.value = index;
                       },
                       child: AnimatedContainer(
                         duration: const Duration(milliseconds: 150),
@@ -97,7 +96,7 @@ class _TagsSettingsScreenState extends State<TagsSettingsScreen> {
                           color: color,
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: isSelected ? Theme.of(context).colorScheme.onSurface : Colors.transparent,
+                            color: isSelected ? Theme.of(dialogContext).colorScheme.onSurface : Colors.transparent,
                             width: 3,
                           ),
                           boxShadow:
@@ -108,17 +107,22 @@ class _TagsSettingsScreenState extends State<TagsSettingsScreen> {
                       ),
                     );
                   }),
-                ),
-              ),
-              actions: [
-                TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(S.current.cancel)),
-                FilledButton(onPressed: () => Navigator.of(context).pop(selectedIndex), child: Text(S.current.save)),
-              ],
-            );
-          },
+                );
+              },
+            ),
+          ),
+          actions: [
+            TextButton(onPressed: () => Navigator.of(dialogContext).pop(), child: Text(S.current.cancel)),
+            FilledButton(
+              onPressed: () => Navigator.of(dialogContext).pop(selectedIndex.value),
+              child: Text(S.current.save),
+            ),
+          ],
         );
       },
     );
+
+    selectedIndex.dispose();
 
     if (colorIndex == null || !mounted) return;
 
