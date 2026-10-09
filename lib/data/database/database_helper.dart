@@ -39,7 +39,7 @@ class DatabaseHelper {
     String path = join(await getDatabasesPath(), 'xolmis_database.db');
     return await openDatabase(
       path,
-      version: 31,
+      version: 32,
       onCreate: _createTables,
       onUpgrade: _upgradeTables,
       onConfigure: (db) async {
@@ -90,6 +90,11 @@ class DatabaseHelper {
           distance REAL,
           flightHeight REAL,
           flightDirection TEXT,
+          habitats TEXT,
+          detectionModes TEXT,
+          reproductiveStatus TEXT,
+          sex TEXT,
+          activities TEXT,
           notes TEXT, 
           sampleTime TEXT,
           FOREIGN KEY (inventoryId) REFERENCES inventories(id) ON DELETE CASCADE 
@@ -627,6 +632,13 @@ class DatabaseHelper {
     }
     if (oldVersion < 31) {
       await db.execute('ALTER TABLE species ADD COLUMN isDoubtful INTEGER DEFAULT 0');
+    }
+    if (oldVersion < 32) {
+      await db.execute('ALTER TABLE species ADD COLUMN habitats TEXT');
+      await db.execute('ALTER TABLE species ADD COLUMN detectionModes TEXT');
+      await db.execute('ALTER TABLE species ADD COLUMN reproductiveStatus TEXT');
+      await db.execute('ALTER TABLE species ADD COLUMN sex TEXT');
+      await db.execute('ALTER TABLE species ADD COLUMN activities TEXT');
     }
   }
 

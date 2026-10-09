@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:material_ui/material_ui.dart';
 
 import 'package:geolocator/geolocator.dart';
@@ -10,6 +11,56 @@ import '../../utils/utils.dart';
 import '../daos/inventory_dao.dart';
 
 import '../../main.dart';
+
+T? _enumFromDynamic<T extends Enum>(List<T> values, dynamic raw) {
+  if (raw == null) return null;
+  if (raw is int && raw >= 0 && raw < values.length) {
+    return values[raw];
+  }
+
+  final rawString = raw.toString();
+  for (final value in values) {
+    if (value.name == rawString) {
+      return value;
+    }
+  }
+
+  final index = int.tryParse(rawString);
+  if (index != null && index >= 0 && index < values.length) {
+    return values[index];
+  }
+
+  return null;
+}
+
+List<T>? _enumListFromDynamic<T extends Enum>(List<T> values, dynamic raw) {
+  if (raw == null) return null;
+
+  final decoded = raw is String ? jsonDecode(raw) : raw;
+  if (decoded is! List) return null;
+
+  final result = <T>[];
+  for (final item in decoded) {
+    final value = _enumFromDynamic(values, item);
+    if (value != null) {
+      result.add(value);
+    }
+  }
+
+  return result.isEmpty ? null : result;
+}
+
+String? _enumValueToName<T extends Enum>(T? value) => value?.name;
+
+List<String>? _enumListToNames<T extends Enum>(List<T>? values) {
+  if (values == null || values.isEmpty) return null;
+  return values.map((value) => value.name).toList();
+}
+
+String? _enumListToJson<T extends Enum>(List<T>? values) {
+  final names = _enumListToNames(values);
+  return names == null ? null : jsonEncode(names);
+}
 
 /// Represents a point of interest linked to a species record.
 class Poi {
@@ -115,6 +166,11 @@ class Species {
   double? distance;
   double? flightHeight;
   String? flightDirection;
+  List<SpeciesHabitat>? habitats;
+  List<SpeciesDetectionMode>? detectionModes;
+  SpeciesReproductiveStatus? reproductiveStatus;
+  SpeciesSex? sex;
+  List<SpeciesActivity>? activities;
   List<Poi> pois;
 
   Species({
@@ -129,6 +185,11 @@ class Species {
     this.distance,
     this.flightHeight,
     this.flightDirection,
+    this.habitats,
+    this.detectionModes,
+    this.reproductiveStatus,
+    this.sex,
+    this.activities,
     this.pois = const [],
   });
 
@@ -149,6 +210,11 @@ class Species {
       distance: map['distance'],
       flightHeight: map['flightHeight'],
       flightDirection: map['flightDirection'],
+      habitats: _enumListFromDynamic(SpeciesHabitat.values, map['habitats']),
+      detectionModes: _enumListFromDynamic(SpeciesDetectionMode.values, map['detectionModes']),
+      reproductiveStatus: _enumFromDynamic(SpeciesReproductiveStatus.values, map['reproductiveStatus']),
+      sex: _enumFromDynamic(SpeciesSex.values, map['sex']),
+      activities: _enumListFromDynamic(SpeciesActivity.values, map['activities']),
       pois: pois,
     );
   }
@@ -166,6 +232,11 @@ class Species {
     double? distance,
     double? flightHeight,
     String? flightDirection,
+    List<SpeciesHabitat>? habitats,
+    List<SpeciesDetectionMode>? detectionModes,
+    SpeciesReproductiveStatus? reproductiveStatus,
+    SpeciesSex? sex,
+    List<SpeciesActivity>? activities,
     List<Poi>? pois
   }) {
     return Species(
@@ -180,6 +251,11 @@ class Species {
       distance: distance ?? this.distance,
       flightHeight: flightHeight ?? this.flightHeight,
       flightDirection: flightDirection ?? this.flightDirection,
+      habitats: habitats ?? this.habitats,
+      detectionModes: detectionModes ?? this.detectionModes,
+      reproductiveStatus: reproductiveStatus ?? this.reproductiveStatus,
+      sex: sex ?? this.sex,
+      activities: activities ?? this.activities,
       pois: pois ?? this.pois,
     );
   }
@@ -198,7 +274,12 @@ class Species {
       'sampleTime': sampleTime?.toIso8601String(),
       'distance': distance,
       'flightHeight': flightHeight,
-      'flightDirection': flightDirection
+      'flightDirection': flightDirection,
+      'habitats': _enumListToJson(habitats),
+      'detectionModes': _enumListToJson(detectionModes),
+      'reproductiveStatus': _enumValueToName(reproductiveStatus),
+      'sex': _enumValueToName(sex),
+      'activities': _enumListToJson(activities),
     };
   }
 
@@ -217,6 +298,11 @@ class Species {
       'distance': distance,
       'flightHeight': flightHeight,
       'flightDirection': flightDirection,
+      'habitats': _enumListToNames(habitats),
+      'detectionModes': _enumListToNames(detectionModes),
+      'reproductiveStatus': _enumValueToName(reproductiveStatus),
+      'sex': _enumValueToName(sex),
+      'activities': _enumListToNames(activities),
       'pois': pois.map((poi) => poi.toJson()).toList(),
     };
   }
@@ -235,6 +321,11 @@ class Species {
       distance: json['distance'],
       flightHeight: json['flightHeight'],
       flightDirection: json['flightDirection'],
+      habitats: _enumListFromDynamic(SpeciesHabitat.values, json['habitats']),
+      detectionModes: _enumListFromDynamic(SpeciesDetectionMode.values, json['detectionModes']),
+      reproductiveStatus: _enumFromDynamic(SpeciesReproductiveStatus.values, json['reproductiveStatus']),
+      sex: _enumFromDynamic(SpeciesSex.values, json['sex']),
+      activities: _enumListFromDynamic(SpeciesActivity.values, json['activities']),
       pois: (json['pois'] as List).map((item) => Poi.fromJson(item)).toList(),
     );
   }
@@ -252,6 +343,11 @@ class Species {
         'distance: $distance, '
         'flightHeight: $flightHeight, '
         'flightDirection: $flightDirection, '
+        'habitats: $habitats, '
+        'detectionModes: $detectionModes, '
+        'reproductiveStatus: $reproductiveStatus, '
+        'sex: $sex, '
+        'activities: $activities, '
         'notes: $notes}';
   }
 }

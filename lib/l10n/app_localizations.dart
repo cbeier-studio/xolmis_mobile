@@ -3913,6 +3913,306 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No species selected'**
   String get noSpeciesSelected;
+
+  /// Label used when an optional field is not selected
+  ///
+  /// In en, this message translates to:
+  /// **'Not specified'**
+  String get notSpecified;
+
+  /// Species habitat section label
+  ///
+  /// In en, this message translates to:
+  /// **'Habitat'**
+  String get speciesHabitat;
+
+  /// Species habitat label
+  ///
+  /// In en, this message translates to:
+  /// **'Forest'**
+  String get speciesHabitatForest;
+
+  /// Species habitat label
+  ///
+  /// In en, this message translates to:
+  /// **'Woodland'**
+  String get speciesHabitatWoodland;
+
+  /// Species habitat label
+  ///
+  /// In en, this message translates to:
+  /// **'Grassland'**
+  String get speciesHabitatGrassland;
+
+  /// Species habitat label
+  ///
+  /// In en, this message translates to:
+  /// **'Savanna'**
+  String get speciesHabitatSavanna;
+
+  /// Species habitat label
+  ///
+  /// In en, this message translates to:
+  /// **'Shrubland'**
+  String get speciesHabitatShrubland;
+
+  /// Species habitat label
+  ///
+  /// In en, this message translates to:
+  /// **'Wetland'**
+  String get speciesHabitatWetland;
+
+  /// Species habitat label
+  ///
+  /// In en, this message translates to:
+  /// **'Freshwater'**
+  String get speciesHabitatFreshwater;
+
+  /// Species habitat label
+  ///
+  /// In en, this message translates to:
+  /// **'Marine'**
+  String get speciesHabitatMarine;
+
+  /// Species habitat label
+  ///
+  /// In en, this message translates to:
+  /// **'Coastal'**
+  String get speciesHabitatCoastal;
+
+  /// Species habitat label
+  ///
+  /// In en, this message translates to:
+  /// **'Urban'**
+  String get speciesHabitatUrban;
+
+  /// Species habitat label
+  ///
+  /// In en, this message translates to:
+  /// **'Agricultural'**
+  String get speciesHabitatAgricultural;
+
+  /// Species habitat label
+  ///
+  /// In en, this message translates to:
+  /// **'Rocky terrain'**
+  String get speciesHabitatRocky;
+
+  /// Species habitat label
+  ///
+  /// In en, this message translates to:
+  /// **'Mangrove'**
+  String get speciesHabitatMangrove;
+
+  /// Species habitat label
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get speciesHabitatOther;
+
+  /// Species detection mode section label
+  ///
+  /// In en, this message translates to:
+  /// **'Detection mode'**
+  String get speciesDetectionMode;
+
+  /// Species detection mode label
+  ///
+  /// In en, this message translates to:
+  /// **'Visual'**
+  String get speciesDetectionVisual;
+
+  /// Species detection mode label
+  ///
+  /// In en, this message translates to:
+  /// **'Auditory'**
+  String get speciesDetectionAuditory;
+
+  /// Species detection mode label
+  ///
+  /// In en, this message translates to:
+  /// **'Capture'**
+  String get speciesDetectionCapture;
+
+  /// Species detection mode label
+  ///
+  /// In en, this message translates to:
+  /// **'Nest'**
+  String get speciesDetectionNest;
+
+  /// Species detection mode label
+  ///
+  /// In en, this message translates to:
+  /// **'Camera trap'**
+  String get speciesDetectionCameraTrap;
+
+  /// Species detection mode label
+  ///
+  /// In en, this message translates to:
+  /// **'Telemetry'**
+  String get speciesDetectionTelemetry;
+
+  /// Species detection mode label
+  ///
+  /// In en, this message translates to:
+  /// **'Tracks / signs'**
+  String get speciesDetectionTrackOrSign;
+
+  /// Species detection mode label
+  ///
+  /// In en, this message translates to:
+  /// **'Dead'**
+  String get speciesDetectionDead;
+
+  /// Species detection mode label
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get speciesDetectionOther;
+
+  /// Species reproductive status section label
+  ///
+  /// In en, this message translates to:
+  /// **'Reproductive status'**
+  String get speciesReproductiveStatus;
+
+  /// Species reproductive status label
+  ///
+  /// In en, this message translates to:
+  /// **'Possible breeding'**
+  String get speciesReproductivePossibleBreeding;
+
+  /// Species reproductive status label
+  ///
+  /// In en, this message translates to:
+  /// **'Probable breeding'**
+  String get speciesReproductiveProbableBreeding;
+
+  /// Species reproductive status label
+  ///
+  /// In en, this message translates to:
+  /// **'Confirmed breeding'**
+  String get speciesReproductiveConfirmedBreeding;
+
+  /// Species sex section label
+  ///
+  /// In en, this message translates to:
+  /// **'Sex'**
+  String get speciesSex;
+
+  /// Species sex label
+  ///
+  /// In en, this message translates to:
+  /// **'Indeterminate'**
+  String get speciesSexIndeterminate;
+
+  /// Species sex label
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get speciesSexMale;
+
+  /// Species sex label
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get speciesSexFemale;
+
+  /// Species sex label
+  ///
+  /// In en, this message translates to:
+  /// **'Both'**
+  String get speciesSexBoth;
+
+  /// Species activity section label
+  ///
+  /// In en, this message translates to:
+  /// **'Activity'**
+  String get speciesActivity;
+
+  /// Species activity label
+  ///
+  /// In en, this message translates to:
+  /// **'Flying'**
+  String get speciesActivityFlying;
+
+  /// Species activity label
+  ///
+  /// In en, this message translates to:
+  /// **'Foraging'**
+  String get speciesActivityForaging;
+
+  /// Species activity label
+  ///
+  /// In en, this message translates to:
+  /// **'Perching'**
+  String get speciesActivityPerching;
+
+  /// Species activity label
+  ///
+  /// In en, this message translates to:
+  /// **'Singing'**
+  String get speciesActivitySinging;
+
+  /// Species activity label
+  ///
+  /// In en, this message translates to:
+  /// **'Calling'**
+  String get speciesActivityCalling;
+
+  /// Species activity label
+  ///
+  /// In en, this message translates to:
+  /// **'Nesting'**
+  String get speciesActivityNesting;
+
+  /// Species activity label
+  ///
+  /// In en, this message translates to:
+  /// **'Feeding young'**
+  String get speciesActivityFeedingYoung;
+
+  /// Species activity label
+  ///
+  /// In en, this message translates to:
+  /// **'Resting'**
+  String get speciesActivityResting;
+
+  /// Species activity label
+  ///
+  /// In en, this message translates to:
+  /// **'Bathing'**
+  String get speciesActivityBathing;
+
+  /// Species activity label
+  ///
+  /// In en, this message translates to:
+  /// **'Moving'**
+  String get speciesActivityMoving;
+
+  /// Species activity label
+  ///
+  /// In en, this message translates to:
+  /// **'Displaying'**
+  String get speciesActivityDisplaying;
+
+  /// Species activity label
+  ///
+  /// In en, this message translates to:
+  /// **'Aggressive behavior'**
+  String get speciesActivityAggressive;
+
+  /// Species activity label
+  ///
+  /// In en, this message translates to:
+  /// **'Roosting'**
+  String get speciesActivityRoosting;
+
+  /// Species activity label
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get speciesActivityOther;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

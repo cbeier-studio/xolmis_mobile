@@ -2182,6 +2182,156 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get noSpeciesSelected => 'Nenhuma espécie selecionada';
+
+  @override
+  String get notSpecified => 'Não informado';
+
+  @override
+  String get speciesHabitat => 'Habitat';
+
+  @override
+  String get speciesHabitatForest => 'Floresta';
+
+  @override
+  String get speciesHabitatWoodland => 'Mata';
+
+  @override
+  String get speciesHabitatGrassland => 'Campo';
+
+  @override
+  String get speciesHabitatSavanna => 'Savana';
+
+  @override
+  String get speciesHabitatShrubland => 'Vegetação arbustiva';
+
+  @override
+  String get speciesHabitatWetland => 'Área úmida';
+
+  @override
+  String get speciesHabitatFreshwater => 'Água doce';
+
+  @override
+  String get speciesHabitatMarine => 'Marinho';
+
+  @override
+  String get speciesHabitatCoastal => 'Costeiro';
+
+  @override
+  String get speciesHabitatUrban => 'Urbano';
+
+  @override
+  String get speciesHabitatAgricultural => 'Agropecuário';
+
+  @override
+  String get speciesHabitatRocky => 'Rochoso';
+
+  @override
+  String get speciesHabitatMangrove => 'Manguezal';
+
+  @override
+  String get speciesHabitatOther => 'Outro';
+
+  @override
+  String get speciesDetectionMode => 'Modo de detecção';
+
+  @override
+  String get speciesDetectionVisual => 'Visual';
+
+  @override
+  String get speciesDetectionAuditory => 'Auditiva';
+
+  @override
+  String get speciesDetectionCapture => 'Captura';
+
+  @override
+  String get speciesDetectionNest => 'Ninho';
+
+  @override
+  String get speciesDetectionCameraTrap => 'Armadilha fotográfica';
+
+  @override
+  String get speciesDetectionTelemetry => 'Telemetria';
+
+  @override
+  String get speciesDetectionTrackOrSign => 'Vestígios / sinais';
+
+  @override
+  String get speciesDetectionDead => 'Morto';
+
+  @override
+  String get speciesDetectionOther => 'Outro';
+
+  @override
+  String get speciesReproductiveStatus => 'Status reprodutivo';
+
+  @override
+  String get speciesReproductivePossibleBreeding => 'Possível reprodução';
+
+  @override
+  String get speciesReproductiveProbableBreeding => 'Provável reprodução';
+
+  @override
+  String get speciesReproductiveConfirmedBreeding => 'Reprodução confirmada';
+
+  @override
+  String get speciesSex => 'Sexo';
+
+  @override
+  String get speciesSexIndeterminate => 'Indeterminado';
+
+  @override
+  String get speciesSexMale => 'Macho';
+
+  @override
+  String get speciesSexFemale => 'Fêmea';
+
+  @override
+  String get speciesSexBoth => 'Ambos';
+
+  @override
+  String get speciesActivity => 'Atividade';
+
+  @override
+  String get speciesActivityFlying => 'Voando';
+
+  @override
+  String get speciesActivityForaging => 'Forrageando';
+
+  @override
+  String get speciesActivityPerching => 'Empoleirado';
+
+  @override
+  String get speciesActivitySinging => 'Cantando';
+
+  @override
+  String get speciesActivityCalling => 'Chamando';
+
+  @override
+  String get speciesActivityNesting => 'Aninhando';
+
+  @override
+  String get speciesActivityFeedingYoung => 'Alimentando filhotes';
+
+  @override
+  String get speciesActivityResting => 'Descansando';
+
+  @override
+  String get speciesActivityBathing => 'Banhando-se';
+
+  @override
+  String get speciesActivityMoving => 'Movendo-se';
+
+  @override
+  String get speciesActivityDisplaying => 'Exibindo-se';
+
+  @override
+  String get speciesActivityAggressive => 'Comportamento agressivo';
+
+  @override
+  String get speciesActivityRoosting => 'Pernoitando';
+
+  @override
+  String get speciesActivityOther => 'Outro';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -4361,4 +4511,154 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get noSpeciesSelected => 'Nenhuma espécie selecionada';
+
+  @override
+  String get notSpecified => 'Não informado';
+
+  @override
+  String get speciesHabitat => 'Habitat';
+
+  @override
+  String get speciesHabitatForest => 'Floresta';
+
+  @override
+  String get speciesHabitatWoodland => 'Mata';
+
+  @override
+  String get speciesHabitatGrassland => 'Campo';
+
+  @override
+  String get speciesHabitatSavanna => 'Savana';
+
+  @override
+  String get speciesHabitatShrubland => 'Vegetação arbustiva';
+
+  @override
+  String get speciesHabitatWetland => 'Área úmida';
+
+  @override
+  String get speciesHabitatFreshwater => 'Água doce';
+
+  @override
+  String get speciesHabitatMarine => 'Marinho';
+
+  @override
+  String get speciesHabitatCoastal => 'Costeiro';
+
+  @override
+  String get speciesHabitatUrban => 'Urbano';
+
+  @override
+  String get speciesHabitatAgricultural => 'Agropecuário';
+
+  @override
+  String get speciesHabitatRocky => 'Rochoso';
+
+  @override
+  String get speciesHabitatMangrove => 'Manguezal';
+
+  @override
+  String get speciesHabitatOther => 'Outro';
+
+  @override
+  String get speciesDetectionMode => 'Modo de detecção';
+
+  @override
+  String get speciesDetectionVisual => 'Visual';
+
+  @override
+  String get speciesDetectionAuditory => 'Auditiva';
+
+  @override
+  String get speciesDetectionCapture => 'Captura';
+
+  @override
+  String get speciesDetectionNest => 'Ninho';
+
+  @override
+  String get speciesDetectionCameraTrap => 'Armadilha fotográfica';
+
+  @override
+  String get speciesDetectionTelemetry => 'Telemetria';
+
+  @override
+  String get speciesDetectionTrackOrSign => 'Vestígios / sinais';
+
+  @override
+  String get speciesDetectionDead => 'Morto';
+
+  @override
+  String get speciesDetectionOther => 'Outro';
+
+  @override
+  String get speciesReproductiveStatus => 'Status reprodutivo';
+
+  @override
+  String get speciesReproductivePossibleBreeding => 'Possível reprodução';
+
+  @override
+  String get speciesReproductiveProbableBreeding => 'Provável reprodução';
+
+  @override
+  String get speciesReproductiveConfirmedBreeding => 'Reprodução confirmada';
+
+  @override
+  String get speciesSex => 'Sexo';
+
+  @override
+  String get speciesSexIndeterminate => 'Indeterminado';
+
+  @override
+  String get speciesSexMale => 'Macho';
+
+  @override
+  String get speciesSexFemale => 'Fêmea';
+
+  @override
+  String get speciesSexBoth => 'Ambos';
+
+  @override
+  String get speciesActivity => 'Atividade';
+
+  @override
+  String get speciesActivityFlying => 'Voando';
+
+  @override
+  String get speciesActivityForaging => 'Forrageando';
+
+  @override
+  String get speciesActivityPerching => 'Empoleirado';
+
+  @override
+  String get speciesActivitySinging => 'Cantando';
+
+  @override
+  String get speciesActivityCalling => 'Chamando';
+
+  @override
+  String get speciesActivityNesting => 'Aninhando';
+
+  @override
+  String get speciesActivityFeedingYoung => 'Alimentando filhotes';
+
+  @override
+  String get speciesActivityResting => 'Descansando';
+
+  @override
+  String get speciesActivityBathing => 'Banhando-se';
+
+  @override
+  String get speciesActivityMoving => 'Movendo-se';
+
+  @override
+  String get speciesActivityDisplaying => 'Exibindo-se';
+
+  @override
+  String get speciesActivityAggressive => 'Comportamento agressivo';
+
+  @override
+  String get speciesActivityRoosting => 'Pernoitando';
+
+  @override
+  String get speciesActivityOther => 'Outro';
 }

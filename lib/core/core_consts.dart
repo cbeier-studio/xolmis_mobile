@@ -1,6 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import '../../generated/l10n.dart';
+import '../generated/l10n.dart';
 
 /// Minimum width (in dp) used to switch to tablet-oriented layouts.
 const double kTabletBreakpoint = 600.0;
@@ -114,6 +114,129 @@ enum SpeciesSortField {
   time,
   // type,
 }
+
+/// Broad habitat categories that can be assigned to a species record.
+enum SpeciesHabitat {
+  forest,
+  woodland,
+  grassland,
+  savanna,
+  shrubland,
+  wetland,
+  freshwater,
+  marine,
+  coastal,
+  urban,
+  agricultural,
+  rocky,
+  mangrove,
+  other,
+}
+
+/// Localized labels for [SpeciesHabitat] values.
+final Map<SpeciesHabitat, String> speciesHabitatFriendlyNames = {
+  SpeciesHabitat.forest: S.current.speciesHabitatForest,
+  SpeciesHabitat.woodland: S.current.speciesHabitatWoodland,
+  SpeciesHabitat.grassland: S.current.speciesHabitatGrassland,
+  SpeciesHabitat.savanna: S.current.speciesHabitatSavanna,
+  SpeciesHabitat.shrubland: S.current.speciesHabitatShrubland,
+  SpeciesHabitat.wetland: S.current.speciesHabitatWetland,
+  SpeciesHabitat.freshwater: S.current.speciesHabitatFreshwater,
+  SpeciesHabitat.marine: S.current.speciesHabitatMarine,
+  SpeciesHabitat.coastal: S.current.speciesHabitatCoastal,
+  SpeciesHabitat.urban: S.current.speciesHabitatUrban,
+  SpeciesHabitat.agricultural: S.current.speciesHabitatAgricultural,
+  SpeciesHabitat.rocky: S.current.speciesHabitatRocky,
+  SpeciesHabitat.mangrove: S.current.speciesHabitatMangrove,
+  SpeciesHabitat.other: S.current.speciesHabitatOther,
+};
+
+/// Detection modes used when a species is recorded.
+enum SpeciesDetectionMode {
+  visual,
+  auditory,
+  capture,
+  nest,
+  cameraTrap,
+  telemetry,
+  trackOrSign,
+  dead,
+  other,
+}
+
+/// Localized labels for [SpeciesDetectionMode] values.
+final Map<SpeciesDetectionMode, String> speciesDetectionModeFriendlyNames = {
+  SpeciesDetectionMode.visual: S.current.speciesDetectionVisual,
+  SpeciesDetectionMode.auditory: S.current.speciesDetectionAuditory,
+  SpeciesDetectionMode.capture: S.current.speciesDetectionCapture,
+  SpeciesDetectionMode.nest: S.current.speciesDetectionNest,
+  SpeciesDetectionMode.cameraTrap: S.current.speciesDetectionCameraTrap,
+  SpeciesDetectionMode.telemetry: S.current.speciesDetectionTelemetry,
+  SpeciesDetectionMode.trackOrSign: S.current.speciesDetectionTrackOrSign,
+  SpeciesDetectionMode.dead: S.current.speciesDetectionDead,
+  SpeciesDetectionMode.other: S.current.speciesDetectionOther,
+};
+
+/// Reproductive status values compatible with eBird-style breeding evidence.
+enum SpeciesReproductiveStatus {
+  possibleBreeding,
+  probableBreeding,
+  confirmedBreeding,
+}
+
+/// Localized labels for [SpeciesReproductiveStatus] values.
+final Map<SpeciesReproductiveStatus, String> speciesReproductiveStatusFriendlyNames = {
+  SpeciesReproductiveStatus.possibleBreeding: S.current.speciesReproductivePossibleBreeding,
+  SpeciesReproductiveStatus.probableBreeding: S.current.speciesReproductiveProbableBreeding,
+  SpeciesReproductiveStatus.confirmedBreeding: S.current.speciesReproductiveConfirmedBreeding,
+};
+
+/// Sex values that can be assigned to a species record.
+enum SpeciesSex { indeterminate, male, female, both }
+
+/// Localized labels for [SpeciesSex] values.
+final Map<SpeciesSex, String> speciesSexFriendlyNames = {
+  SpeciesSex.indeterminate: S.current.speciesSexIndeterminate,
+  SpeciesSex.male: S.current.speciesSexMale,
+  SpeciesSex.female: S.current.speciesSexFemale,
+  SpeciesSex.both: S.current.speciesSexBoth,
+};
+
+/// Main observed activities/behaviors that can be selected for a species.
+enum SpeciesActivity {
+  flying,
+  foraging,
+  perching,
+  singing,
+  calling,
+  nesting,
+  feedingYoung,
+  resting,
+  bathing,
+  moving,
+  displaying,
+  aggressive,
+  roosting,
+  other,
+}
+
+/// Localized labels for [SpeciesActivity] values.
+final Map<SpeciesActivity, String> speciesActivityFriendlyNames = {
+  SpeciesActivity.flying: S.current.speciesActivityFlying,
+  SpeciesActivity.foraging: S.current.speciesActivityForaging,
+  SpeciesActivity.perching: S.current.speciesActivityPerching,
+  SpeciesActivity.singing: S.current.speciesActivitySinging,
+  SpeciesActivity.calling: S.current.speciesActivityCalling,
+  SpeciesActivity.nesting: S.current.speciesActivityNesting,
+  SpeciesActivity.feedingYoung: S.current.speciesActivityFeedingYoung,
+  SpeciesActivity.resting: S.current.speciesActivityResting,
+  SpeciesActivity.bathing: S.current.speciesActivityBathing,
+  SpeciesActivity.moving: S.current.speciesActivityMoving,
+  SpeciesActivity.displaying: S.current.speciesActivityDisplaying,
+  SpeciesActivity.aggressive: S.current.speciesActivityAggressive,
+  SpeciesActivity.roosting: S.current.speciesActivityRoosting,
+  SpeciesActivity.other: S.current.speciesActivityOther,
+};
 
 /// Actions returned by conditional warning dialogs.
 enum ConditionalAction { add, ignore, cancelDialog }

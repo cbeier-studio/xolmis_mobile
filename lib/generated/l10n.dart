@@ -6349,6 +6349,506 @@ class S {
       args: [],
     );
   }
+
+  /// `Not specified`
+  String get notSpecified {
+    return Intl.message(
+      'Not specified',
+      name: 'notSpecified',
+      desc: 'Label used when an optional field is not selected',
+      args: [],
+    );
+  }
+
+  /// `Habitat`
+  String get speciesHabitat {
+    return Intl.message(
+      'Habitat',
+      name: 'speciesHabitat',
+      desc: 'Species habitat section label',
+      args: [],
+    );
+  }
+
+  /// `Forest`
+  String get speciesHabitatForest {
+    return Intl.message(
+      'Forest',
+      name: 'speciesHabitatForest',
+      desc: 'Species habitat label',
+      args: [],
+    );
+  }
+
+  /// `Woodland`
+  String get speciesHabitatWoodland {
+    return Intl.message(
+      'Woodland',
+      name: 'speciesHabitatWoodland',
+      desc: 'Species habitat label',
+      args: [],
+    );
+  }
+
+  /// `Grassland`
+  String get speciesHabitatGrassland {
+    return Intl.message(
+      'Grassland',
+      name: 'speciesHabitatGrassland',
+      desc: 'Species habitat label',
+      args: [],
+    );
+  }
+
+  /// `Savanna`
+  String get speciesHabitatSavanna {
+    return Intl.message(
+      'Savanna',
+      name: 'speciesHabitatSavanna',
+      desc: 'Species habitat label',
+      args: [],
+    );
+  }
+
+  /// `Shrubland`
+  String get speciesHabitatShrubland {
+    return Intl.message(
+      'Shrubland',
+      name: 'speciesHabitatShrubland',
+      desc: 'Species habitat label',
+      args: [],
+    );
+  }
+
+  /// `Wetland`
+  String get speciesHabitatWetland {
+    return Intl.message(
+      'Wetland',
+      name: 'speciesHabitatWetland',
+      desc: 'Species habitat label',
+      args: [],
+    );
+  }
+
+  /// `Freshwater`
+  String get speciesHabitatFreshwater {
+    return Intl.message(
+      'Freshwater',
+      name: 'speciesHabitatFreshwater',
+      desc: 'Species habitat label',
+      args: [],
+    );
+  }
+
+  /// `Marine`
+  String get speciesHabitatMarine {
+    return Intl.message(
+      'Marine',
+      name: 'speciesHabitatMarine',
+      desc: 'Species habitat label',
+      args: [],
+    );
+  }
+
+  /// `Coastal`
+  String get speciesHabitatCoastal {
+    return Intl.message(
+      'Coastal',
+      name: 'speciesHabitatCoastal',
+      desc: 'Species habitat label',
+      args: [],
+    );
+  }
+
+  /// `Urban`
+  String get speciesHabitatUrban {
+    return Intl.message(
+      'Urban',
+      name: 'speciesHabitatUrban',
+      desc: 'Species habitat label',
+      args: [],
+    );
+  }
+
+  /// `Agricultural`
+  String get speciesHabitatAgricultural {
+    return Intl.message(
+      'Agricultural',
+      name: 'speciesHabitatAgricultural',
+      desc: 'Species habitat label',
+      args: [],
+    );
+  }
+
+  /// `Rocky terrain`
+  String get speciesHabitatRocky {
+    return Intl.message(
+      'Rocky terrain',
+      name: 'speciesHabitatRocky',
+      desc: 'Species habitat label',
+      args: [],
+    );
+  }
+
+  /// `Mangrove`
+  String get speciesHabitatMangrove {
+    return Intl.message(
+      'Mangrove',
+      name: 'speciesHabitatMangrove',
+      desc: 'Species habitat label',
+      args: [],
+    );
+  }
+
+  /// `Other`
+  String get speciesHabitatOther {
+    return Intl.message(
+      'Other',
+      name: 'speciesHabitatOther',
+      desc: 'Species habitat label',
+      args: [],
+    );
+  }
+
+  /// `Detection mode`
+  String get speciesDetectionMode {
+    return Intl.message(
+      'Detection mode',
+      name: 'speciesDetectionMode',
+      desc: 'Species detection mode section label',
+      args: [],
+    );
+  }
+
+  /// `Visual`
+  String get speciesDetectionVisual {
+    return Intl.message(
+      'Visual',
+      name: 'speciesDetectionVisual',
+      desc: 'Species detection mode label',
+      args: [],
+    );
+  }
+
+  /// `Auditory`
+  String get speciesDetectionAuditory {
+    return Intl.message(
+      'Auditory',
+      name: 'speciesDetectionAuditory',
+      desc: 'Species detection mode label',
+      args: [],
+    );
+  }
+
+  /// `Capture`
+  String get speciesDetectionCapture {
+    return Intl.message(
+      'Capture',
+      name: 'speciesDetectionCapture',
+      desc: 'Species detection mode label',
+      args: [],
+    );
+  }
+
+  /// `Nest`
+  String get speciesDetectionNest {
+    return Intl.message(
+      'Nest',
+      name: 'speciesDetectionNest',
+      desc: 'Species detection mode label',
+      args: [],
+    );
+  }
+
+  /// `Camera trap`
+  String get speciesDetectionCameraTrap {
+    return Intl.message(
+      'Camera trap',
+      name: 'speciesDetectionCameraTrap',
+      desc: 'Species detection mode label',
+      args: [],
+    );
+  }
+
+  /// `Telemetry`
+  String get speciesDetectionTelemetry {
+    return Intl.message(
+      'Telemetry',
+      name: 'speciesDetectionTelemetry',
+      desc: 'Species detection mode label',
+      args: [],
+    );
+  }
+
+  /// `Tracks / signs`
+  String get speciesDetectionTrackOrSign {
+    return Intl.message(
+      'Tracks / signs',
+      name: 'speciesDetectionTrackOrSign',
+      desc: 'Species detection mode label',
+      args: [],
+    );
+  }
+
+  /// `Dead`
+  String get speciesDetectionDead {
+    return Intl.message(
+      'Dead',
+      name: 'speciesDetectionDead',
+      desc: 'Species detection mode label',
+      args: [],
+    );
+  }
+
+  /// `Other`
+  String get speciesDetectionOther {
+    return Intl.message(
+      'Other',
+      name: 'speciesDetectionOther',
+      desc: 'Species detection mode label',
+      args: [],
+    );
+  }
+
+  /// `Reproductive status`
+  String get speciesReproductiveStatus {
+    return Intl.message(
+      'Reproductive status',
+      name: 'speciesReproductiveStatus',
+      desc: 'Species reproductive status section label',
+      args: [],
+    );
+  }
+
+  /// `Possible breeding`
+  String get speciesReproductivePossibleBreeding {
+    return Intl.message(
+      'Possible breeding',
+      name: 'speciesReproductivePossibleBreeding',
+      desc: 'Species reproductive status label',
+      args: [],
+    );
+  }
+
+  /// `Probable breeding`
+  String get speciesReproductiveProbableBreeding {
+    return Intl.message(
+      'Probable breeding',
+      name: 'speciesReproductiveProbableBreeding',
+      desc: 'Species reproductive status label',
+      args: [],
+    );
+  }
+
+  /// `Confirmed breeding`
+  String get speciesReproductiveConfirmedBreeding {
+    return Intl.message(
+      'Confirmed breeding',
+      name: 'speciesReproductiveConfirmedBreeding',
+      desc: 'Species reproductive status label',
+      args: [],
+    );
+  }
+
+  /// `Sex`
+  String get speciesSex {
+    return Intl.message(
+      'Sex',
+      name: 'speciesSex',
+      desc: 'Species sex section label',
+      args: [],
+    );
+  }
+
+  /// `Indeterminate`
+  String get speciesSexIndeterminate {
+    return Intl.message(
+      'Indeterminate',
+      name: 'speciesSexIndeterminate',
+      desc: 'Species sex label',
+      args: [],
+    );
+  }
+
+  /// `Male`
+  String get speciesSexMale {
+    return Intl.message(
+      'Male',
+      name: 'speciesSexMale',
+      desc: 'Species sex label',
+      args: [],
+    );
+  }
+
+  /// `Female`
+  String get speciesSexFemale {
+    return Intl.message(
+      'Female',
+      name: 'speciesSexFemale',
+      desc: 'Species sex label',
+      args: [],
+    );
+  }
+
+  /// `Both`
+  String get speciesSexBoth {
+    return Intl.message(
+      'Both',
+      name: 'speciesSexBoth',
+      desc: 'Species sex label',
+      args: [],
+    );
+  }
+
+  /// `Activity`
+  String get speciesActivity {
+    return Intl.message(
+      'Activity',
+      name: 'speciesActivity',
+      desc: 'Species activity section label',
+      args: [],
+    );
+  }
+
+  /// `Flying`
+  String get speciesActivityFlying {
+    return Intl.message(
+      'Flying',
+      name: 'speciesActivityFlying',
+      desc: 'Species activity label',
+      args: [],
+    );
+  }
+
+  /// `Foraging`
+  String get speciesActivityForaging {
+    return Intl.message(
+      'Foraging',
+      name: 'speciesActivityForaging',
+      desc: 'Species activity label',
+      args: [],
+    );
+  }
+
+  /// `Perching`
+  String get speciesActivityPerching {
+    return Intl.message(
+      'Perching',
+      name: 'speciesActivityPerching',
+      desc: 'Species activity label',
+      args: [],
+    );
+  }
+
+  /// `Singing`
+  String get speciesActivitySinging {
+    return Intl.message(
+      'Singing',
+      name: 'speciesActivitySinging',
+      desc: 'Species activity label',
+      args: [],
+    );
+  }
+
+  /// `Calling`
+  String get speciesActivityCalling {
+    return Intl.message(
+      'Calling',
+      name: 'speciesActivityCalling',
+      desc: 'Species activity label',
+      args: [],
+    );
+  }
+
+  /// `Nesting`
+  String get speciesActivityNesting {
+    return Intl.message(
+      'Nesting',
+      name: 'speciesActivityNesting',
+      desc: 'Species activity label',
+      args: [],
+    );
+  }
+
+  /// `Feeding young`
+  String get speciesActivityFeedingYoung {
+    return Intl.message(
+      'Feeding young',
+      name: 'speciesActivityFeedingYoung',
+      desc: 'Species activity label',
+      args: [],
+    );
+  }
+
+  /// `Resting`
+  String get speciesActivityResting {
+    return Intl.message(
+      'Resting',
+      name: 'speciesActivityResting',
+      desc: 'Species activity label',
+      args: [],
+    );
+  }
+
+  /// `Bathing`
+  String get speciesActivityBathing {
+    return Intl.message(
+      'Bathing',
+      name: 'speciesActivityBathing',
+      desc: 'Species activity label',
+      args: [],
+    );
+  }
+
+  /// `Moving`
+  String get speciesActivityMoving {
+    return Intl.message(
+      'Moving',
+      name: 'speciesActivityMoving',
+      desc: 'Species activity label',
+      args: [],
+    );
+  }
+
+  /// `Displaying`
+  String get speciesActivityDisplaying {
+    return Intl.message(
+      'Displaying',
+      name: 'speciesActivityDisplaying',
+      desc: 'Species activity label',
+      args: [],
+    );
+  }
+
+  /// `Aggressive behavior`
+  String get speciesActivityAggressive {
+    return Intl.message(
+      'Aggressive behavior',
+      name: 'speciesActivityAggressive',
+      desc: 'Species activity label',
+      args: [],
+    );
+  }
+
+  /// `Roosting`
+  String get speciesActivityRoosting {
+    return Intl.message(
+      'Roosting',
+      name: 'speciesActivityRoosting',
+      desc: 'Species activity label',
+      args: [],
+    );
+  }
+
+  /// `Other`
+  String get speciesActivityOther {
+    return Intl.message(
+      'Other',
+      name: 'speciesActivityOther',
+      desc: 'Species activity label',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -3262,5 +3262,255 @@
     "@noSpeciesSelected": {
         "type": "text",
         "description": "No species selected message"
+    },
+    "notSpecified": "Not specified",
+    "@notSpecified": {
+        "type": "text",
+        "description": "Label used when an optional field is not selected"
+    },
+    "speciesHabitat": "Habitat",
+    "@speciesHabitat": {
+        "type": "text",
+        "description": "Species habitat section label"
+    },
+    "speciesHabitatForest": "Forest",
+    "@speciesHabitatForest": {
+        "type": "text",
+        "description": "Species habitat label"
+    },
+    "speciesHabitatWoodland": "Woodland",
+    "@speciesHabitatWoodland": {
+        "type": "text",
+        "description": "Species habitat label"
+    },
+    "speciesHabitatGrassland": "Grassland",
+    "@speciesHabitatGrassland": {
+        "type": "text",
+        "description": "Species habitat label"
+    },
+    "speciesHabitatSavanna": "Savanna",
+    "@speciesHabitatSavanna": {
+        "type": "text",
+        "description": "Species habitat label"
+    },
+    "speciesHabitatShrubland": "Shrubland",
+    "@speciesHabitatShrubland": {
+        "type": "text",
+        "description": "Species habitat label"
+    },
+    "speciesHabitatWetland": "Wetland",
+    "@speciesHabitatWetland": {
+        "type": "text",
+        "description": "Species habitat label"
+    },
+    "speciesHabitatFreshwater": "Freshwater",
+    "@speciesHabitatFreshwater": {
+        "type": "text",
+        "description": "Species habitat label"
+    },
+    "speciesHabitatMarine": "Marine",
+    "@speciesHabitatMarine": {
+        "type": "text",
+        "description": "Species habitat label"
+    },
+    "speciesHabitatCoastal": "Coastal",
+    "@speciesHabitatCoastal": {
+        "type": "text",
+        "description": "Species habitat label"
+    },
+    "speciesHabitatUrban": "Urban",
+    "@speciesHabitatUrban": {
+        "type": "text",
+        "description": "Species habitat label"
+    },
+    "speciesHabitatAgricultural": "Agricultural",
+    "@speciesHabitatAgricultural": {
+        "type": "text",
+        "description": "Species habitat label"
+    },
+    "speciesHabitatRocky": "Rocky terrain",
+    "@speciesHabitatRocky": {
+        "type": "text",
+        "description": "Species habitat label"
+    },
+    "speciesHabitatMangrove": "Mangrove",
+    "@speciesHabitatMangrove": {
+        "type": "text",
+        "description": "Species habitat label"
+    },
+    "speciesHabitatOther": "Other",
+    "@speciesHabitatOther": {
+        "type": "text",
+        "description": "Species habitat label"
+    },
+    "speciesDetectionMode": "Detection mode",
+    "@speciesDetectionMode": {
+        "type": "text",
+        "description": "Species detection mode section label"
+    },
+    "speciesDetectionVisual": "Visual",
+    "@speciesDetectionVisual": {
+        "type": "text",
+        "description": "Species detection mode label"
+    },
+    "speciesDetectionAuditory": "Auditory",
+    "@speciesDetectionAuditory": {
+        "type": "text",
+        "description": "Species detection mode label"
+    },
+    "speciesDetectionCapture": "Capture",
+    "@speciesDetectionCapture": {
+        "type": "text",
+        "description": "Species detection mode label"
+    },
+    "speciesDetectionNest": "Nest",
+    "@speciesDetectionNest": {
+        "type": "text",
+        "description": "Species detection mode label"
+    },
+    "speciesDetectionCameraTrap": "Camera trap",
+    "@speciesDetectionCameraTrap": {
+        "type": "text",
+        "description": "Species detection mode label"
+    },
+    "speciesDetectionTelemetry": "Telemetry",
+    "@speciesDetectionTelemetry": {
+        "type": "text",
+        "description": "Species detection mode label"
+    },
+    "speciesDetectionTrackOrSign": "Tracks / signs",
+    "@speciesDetectionTrackOrSign": {
+        "type": "text",
+        "description": "Species detection mode label"
+    },
+    "speciesDetectionDead": "Dead",
+    "@speciesDetectionDead": {
+        "type": "text",
+        "description": "Species detection mode label"
+    },
+    "speciesDetectionOther": "Other",
+    "@speciesDetectionOther": {
+        "type": "text",
+        "description": "Species detection mode label"
+    },
+    "speciesReproductiveStatus": "Reproductive status",
+    "@speciesReproductiveStatus": {
+        "type": "text",
+        "description": "Species reproductive status section label"
+    },
+    "speciesReproductivePossibleBreeding": "Possible breeding",
+    "@speciesReproductivePossibleBreeding": {
+        "type": "text",
+        "description": "Species reproductive status label"
+    },
+    "speciesReproductiveProbableBreeding": "Probable breeding",
+    "@speciesReproductiveProbableBreeding": {
+        "type": "text",
+        "description": "Species reproductive status label"
+    },
+    "speciesReproductiveConfirmedBreeding": "Confirmed breeding",
+    "@speciesReproductiveConfirmedBreeding": {
+        "type": "text",
+        "description": "Species reproductive status label"
+    },
+    "speciesSex": "Sex",
+    "@speciesSex": {
+        "type": "text",
+        "description": "Species sex section label"
+    },
+    "speciesSexIndeterminate": "Indeterminate",
+    "@speciesSexIndeterminate": {
+        "type": "text",
+        "description": "Species sex label"
+    },
+    "speciesSexMale": "Male",
+    "@speciesSexMale": {
+        "type": "text",
+        "description": "Species sex label"
+    },
+    "speciesSexFemale": "Female",
+    "@speciesSexFemale": {
+        "type": "text",
+        "description": "Species sex label"
+    },
+    "speciesSexBoth": "Both",
+    "@speciesSexBoth": {
+        "type": "text",
+        "description": "Species sex label"
+    },
+    "speciesActivity": "Activity",
+    "@speciesActivity": {
+        "type": "text",
+        "description": "Species activity section label"
+    },
+    "speciesActivityFlying": "Flying",
+    "@speciesActivityFlying": {
+        "type": "text",
+        "description": "Species activity label"
+    },
+    "speciesActivityForaging": "Foraging",
+    "@speciesActivityForaging": {
+        "type": "text",
+        "description": "Species activity label"
+    },
+    "speciesActivityPerching": "Perching",
+    "@speciesActivityPerching": {
+        "type": "text",
+        "description": "Species activity label"
+    },
+    "speciesActivitySinging": "Singing",
+    "@speciesActivitySinging": {
+        "type": "text",
+        "description": "Species activity label"
+    },
+    "speciesActivityCalling": "Calling",
+    "@speciesActivityCalling": {
+        "type": "text",
+        "description": "Species activity label"
+    },
+    "speciesActivityNesting": "Nesting",
+    "@speciesActivityNesting": {
+        "type": "text",
+        "description": "Species activity label"
+    },
+    "speciesActivityFeedingYoung": "Feeding young",
+    "@speciesActivityFeedingYoung": {
+        "type": "text",
+        "description": "Species activity label"
+    },
+    "speciesActivityResting": "Resting",
+    "@speciesActivityResting": {
+        "type": "text",
+        "description": "Species activity label"
+    },
+    "speciesActivityBathing": "Bathing",
+    "@speciesActivityBathing": {
+        "type": "text",
+        "description": "Species activity label"
+    },
+    "speciesActivityMoving": "Moving",
+    "@speciesActivityMoving": {
+        "type": "text",
+        "description": "Species activity label"
+    },
+    "speciesActivityDisplaying": "Displaying",
+    "@speciesActivityDisplaying": {
+        "type": "text",
+        "description": "Species activity label"
+    },
+    "speciesActivityAggressive": "Aggressive behavior",
+    "@speciesActivityAggressive": {
+        "type": "text",
+        "description": "Species activity label"
+    },
+    "speciesActivityRoosting": "Roosting",
+    "@speciesActivityRoosting": {
+        "type": "text",
+        "description": "Species activity label"
+    },
+    "speciesActivityOther": "Other",
+    "@speciesActivityOther": {
+        "type": "text",
+        "description": "Species activity label"
     }
 }

@@ -2699,5 +2699,255 @@
   "@noSpeciesSelected": {
     "type": "text",
     "description": "No species selected message"
-  }
+    },
+    "notSpecified": "Não informado",
+    "@notSpecified": {
+        "type": "text",
+        "description": "Label used when an optional field is not selected"
+    },
+    "speciesHabitat": "Habitat",
+    "@speciesHabitat": {
+        "type": "text",
+        "description": "Species habitat section label"
+    },
+    "speciesHabitatForest": "Floresta",
+    "@speciesHabitatForest": {
+        "type": "text",
+        "description": "Species habitat label"
+    },
+    "speciesHabitatWoodland": "Mata",
+    "@speciesHabitatWoodland": {
+        "type": "text",
+        "description": "Species habitat label"
+    },
+    "speciesHabitatGrassland": "Campo",
+    "@speciesHabitatGrassland": {
+        "type": "text",
+        "description": "Species habitat label"
+    },
+    "speciesHabitatSavanna": "Savana",
+    "@speciesHabitatSavanna": {
+        "type": "text",
+        "description": "Species habitat label"
+    },
+    "speciesHabitatShrubland": "Vegetação arbustiva",
+    "@speciesHabitatShrubland": {
+        "type": "text",
+        "description": "Species habitat label"
+    },
+    "speciesHabitatWetland": "Área úmida",
+    "@speciesHabitatWetland": {
+        "type": "text",
+        "description": "Species habitat label"
+    },
+    "speciesHabitatFreshwater": "Água doce",
+    "@speciesHabitatFreshwater": {
+        "type": "text",
+        "description": "Species habitat label"
+    },
+    "speciesHabitatMarine": "Marinho",
+    "@speciesHabitatMarine": {
+        "type": "text",
+        "description": "Species habitat label"
+    },
+    "speciesHabitatCoastal": "Costeiro",
+    "@speciesHabitatCoastal": {
+        "type": "text",
+        "description": "Species habitat label"
+    },
+    "speciesHabitatUrban": "Urbano",
+    "@speciesHabitatUrban": {
+        "type": "text",
+        "description": "Species habitat label"
+    },
+    "speciesHabitatAgricultural": "Agropecuário",
+    "@speciesHabitatAgricultural": {
+        "type": "text",
+        "description": "Species habitat label"
+    },
+    "speciesHabitatRocky": "Rochoso",
+    "@speciesHabitatRocky": {
+        "type": "text",
+        "description": "Species habitat label"
+    },
+    "speciesHabitatMangrove": "Manguezal",
+    "@speciesHabitatMangrove": {
+        "type": "text",
+        "description": "Species habitat label"
+    },
+    "speciesHabitatOther": "Outro",
+    "@speciesHabitatOther": {
+        "type": "text",
+        "description": "Species habitat label"
+    },
+    "speciesDetectionMode": "Modo de detecção",
+    "@speciesDetectionMode": {
+        "type": "text",
+        "description": "Species detection mode section label"
+    },
+    "speciesDetectionVisual": "Visual",
+    "@speciesDetectionVisual": {
+        "type": "text",
+        "description": "Species detection mode label"
+    },
+    "speciesDetectionAuditory": "Auditiva",
+    "@speciesDetectionAuditory": {
+        "type": "text",
+        "description": "Species detection mode label"
+    },
+    "speciesDetectionCapture": "Captura",
+    "@speciesDetectionCapture": {
+        "type": "text",
+        "description": "Species detection mode label"
+    },
+    "speciesDetectionNest": "Ninho",
+    "@speciesDetectionNest": {
+        "type": "text",
+        "description": "Species detection mode label"
+    },
+    "speciesDetectionCameraTrap": "Armadilha fotográfica",
+    "@speciesDetectionCameraTrap": {
+        "type": "text",
+        "description": "Species detection mode label"
+    },
+    "speciesDetectionTelemetry": "Telemetria",
+    "@speciesDetectionTelemetry": {
+        "type": "text",
+        "description": "Species detection mode label"
+    },
+    "speciesDetectionTrackOrSign": "Vestígios / sinais",
+    "@speciesDetectionTrackOrSign": {
+        "type": "text",
+        "description": "Species detection mode label"
+    },
+    "speciesDetectionDead": "Morto",
+    "@speciesDetectionDead": {
+        "type": "text",
+        "description": "Species detection mode label"
+    },
+    "speciesDetectionOther": "Outro",
+    "@speciesDetectionOther": {
+        "type": "text",
+        "description": "Species detection mode label"
+    },
+    "speciesReproductiveStatus": "Status reprodutivo",
+    "@speciesReproductiveStatus": {
+        "type": "text",
+        "description": "Species reproductive status section label"
+    },
+    "speciesReproductivePossibleBreeding": "Possível reprodução",
+    "@speciesReproductivePossibleBreeding": {
+        "type": "text",
+        "description": "Species reproductive status label"
+    },
+    "speciesReproductiveProbableBreeding": "Provável reprodução",
+    "@speciesReproductiveProbableBreeding": {
+        "type": "text",
+        "description": "Species reproductive status label"
+    },
+    "speciesReproductiveConfirmedBreeding": "Reprodução confirmada",
+    "@speciesReproductiveConfirmedBreeding": {
+        "type": "text",
+        "description": "Species reproductive status label"
+    },
+    "speciesSex": "Sexo",
+    "@speciesSex": {
+        "type": "text",
+        "description": "Species sex section label"
+    },
+    "speciesSexIndeterminate": "Indeterminado",
+    "@speciesSexIndeterminate": {
+        "type": "text",
+        "description": "Species sex label"
+    },
+    "speciesSexMale": "Macho",
+    "@speciesSexMale": {
+        "type": "text",
+        "description": "Species sex label"
+    },
+    "speciesSexFemale": "Fêmea",
+    "@speciesSexFemale": {
+        "type": "text",
+        "description": "Species sex label"
+    },
+    "speciesSexBoth": "Ambos",
+    "@speciesSexBoth": {
+        "type": "text",
+        "description": "Species sex label"
+    },
+    "speciesActivity": "Atividade",
+    "@speciesActivity": {
+        "type": "text",
+        "description": "Species activity section label"
+    },
+    "speciesActivityFlying": "Voando",
+    "@speciesActivityFlying": {
+        "type": "text",
+        "description": "Species activity label"
+    },
+    "speciesActivityForaging": "Forrageando",
+    "@speciesActivityForaging": {
+        "type": "text",
+        "description": "Species activity label"
+    },
+    "speciesActivityPerching": "Empoleirado",
+    "@speciesActivityPerching": {
+        "type": "text",
+        "description": "Species activity label"
+    },
+    "speciesActivitySinging": "Cantando",
+    "@speciesActivitySinging": {
+        "type": "text",
+        "description": "Species activity label"
+    },
+    "speciesActivityCalling": "Chamando",
+    "@speciesActivityCalling": {
+        "type": "text",
+        "description": "Species activity label"
+    },
+    "speciesActivityNesting": "Aninhando",
+    "@speciesActivityNesting": {
+        "type": "text",
+        "description": "Species activity label"
+    },
+    "speciesActivityFeedingYoung": "Alimentando filhotes",
+    "@speciesActivityFeedingYoung": {
+        "type": "text",
+        "description": "Species activity label"
+    },
+    "speciesActivityResting": "Descansando",
+    "@speciesActivityResting": {
+        "type": "text",
+        "description": "Species activity label"
+    },
+    "speciesActivityBathing": "Banhando-se",
+    "@speciesActivityBathing": {
+        "type": "text",
+        "description": "Species activity label"
+    },
+    "speciesActivityMoving": "Movendo-se",
+    "@speciesActivityMoving": {
+        "type": "text",
+        "description": "Species activity label"
+    },
+    "speciesActivityDisplaying": "Exibindo-se",
+    "@speciesActivityDisplaying": {
+        "type": "text",
+        "description": "Species activity label"
+    },
+    "speciesActivityAggressive": "Comportamento agressivo",
+    "@speciesActivityAggressive": {
+        "type": "text",
+        "description": "Species activity label"
+    },
+    "speciesActivityRoosting": "Pernoitando",
+    "@speciesActivityRoosting": {
+        "type": "text",
+        "description": "Species activity label"
+    },
+    "speciesActivityOther": "Outro",
+    "@speciesActivityOther": {
+        "type": "text",
+        "description": "Species activity label"
+    }
 }

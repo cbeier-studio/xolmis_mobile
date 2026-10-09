@@ -2145,4 +2145,154 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noSpeciesSelected => 'No species selected';
+
+  @override
+  String get notSpecified => 'Not specified';
+
+  @override
+  String get speciesHabitat => 'Habitat';
+
+  @override
+  String get speciesHabitatForest => 'Forest';
+
+  @override
+  String get speciesHabitatWoodland => 'Woodland';
+
+  @override
+  String get speciesHabitatGrassland => 'Grassland';
+
+  @override
+  String get speciesHabitatSavanna => 'Savanna';
+
+  @override
+  String get speciesHabitatShrubland => 'Shrubland';
+
+  @override
+  String get speciesHabitatWetland => 'Wetland';
+
+  @override
+  String get speciesHabitatFreshwater => 'Freshwater';
+
+  @override
+  String get speciesHabitatMarine => 'Marine';
+
+  @override
+  String get speciesHabitatCoastal => 'Coastal';
+
+  @override
+  String get speciesHabitatUrban => 'Urban';
+
+  @override
+  String get speciesHabitatAgricultural => 'Agricultural';
+
+  @override
+  String get speciesHabitatRocky => 'Rocky terrain';
+
+  @override
+  String get speciesHabitatMangrove => 'Mangrove';
+
+  @override
+  String get speciesHabitatOther => 'Other';
+
+  @override
+  String get speciesDetectionMode => 'Detection mode';
+
+  @override
+  String get speciesDetectionVisual => 'Visual';
+
+  @override
+  String get speciesDetectionAuditory => 'Auditory';
+
+  @override
+  String get speciesDetectionCapture => 'Capture';
+
+  @override
+  String get speciesDetectionNest => 'Nest';
+
+  @override
+  String get speciesDetectionCameraTrap => 'Camera trap';
+
+  @override
+  String get speciesDetectionTelemetry => 'Telemetry';
+
+  @override
+  String get speciesDetectionTrackOrSign => 'Tracks / signs';
+
+  @override
+  String get speciesDetectionDead => 'Dead';
+
+  @override
+  String get speciesDetectionOther => 'Other';
+
+  @override
+  String get speciesReproductiveStatus => 'Reproductive status';
+
+  @override
+  String get speciesReproductivePossibleBreeding => 'Possible breeding';
+
+  @override
+  String get speciesReproductiveProbableBreeding => 'Probable breeding';
+
+  @override
+  String get speciesReproductiveConfirmedBreeding => 'Confirmed breeding';
+
+  @override
+  String get speciesSex => 'Sex';
+
+  @override
+  String get speciesSexIndeterminate => 'Indeterminate';
+
+  @override
+  String get speciesSexMale => 'Male';
+
+  @override
+  String get speciesSexFemale => 'Female';
+
+  @override
+  String get speciesSexBoth => 'Both';
+
+  @override
+  String get speciesActivity => 'Activity';
+
+  @override
+  String get speciesActivityFlying => 'Flying';
+
+  @override
+  String get speciesActivityForaging => 'Foraging';
+
+  @override
+  String get speciesActivityPerching => 'Perching';
+
+  @override
+  String get speciesActivitySinging => 'Singing';
+
+  @override
+  String get speciesActivityCalling => 'Calling';
+
+  @override
+  String get speciesActivityNesting => 'Nesting';
+
+  @override
+  String get speciesActivityFeedingYoung => 'Feeding young';
+
+  @override
+  String get speciesActivityResting => 'Resting';
+
+  @override
+  String get speciesActivityBathing => 'Bathing';
+
+  @override
+  String get speciesActivityMoving => 'Moving';
+
+  @override
+  String get speciesActivityDisplaying => 'Displaying';
+
+  @override
+  String get speciesActivityAggressive => 'Aggressive behavior';
+
+  @override
+  String get speciesActivityRoosting => 'Roosting';
+
+  @override
+  String get speciesActivityOther => 'Other';
 }

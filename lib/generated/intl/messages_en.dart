@@ -974,6 +974,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "noWeatherFound": MessageLookupByLibrary.simpleMessage(
       "No weather records.",
     ),
+    "notSpecified": MessageLookupByLibrary.simpleMessage("Not specified"),
     "notes": MessageLookupByLibrary.simpleMessage("Notes"),
     "observer": MessageLookupByLibrary.simpleMessage("Observer"),
     "observerAbbreviation": MessageLookupByLibrary.simpleMessage(
@@ -1191,8 +1192,74 @@ class MessageLookup extends MessageLookupByLibrary {
       "Species accumulation",
     ),
     "speciesAcronym": m61,
+    "speciesActivity": MessageLookupByLibrary.simpleMessage("Activity"),
+    "speciesActivityAggressive": MessageLookupByLibrary.simpleMessage(
+      "Aggressive behavior",
+    ),
+    "speciesActivityBathing": MessageLookupByLibrary.simpleMessage("Bathing"),
+    "speciesActivityCalling": MessageLookupByLibrary.simpleMessage("Calling"),
+    "speciesActivityDisplaying": MessageLookupByLibrary.simpleMessage(
+      "Displaying",
+    ),
+    "speciesActivityFeedingYoung": MessageLookupByLibrary.simpleMessage(
+      "Feeding young",
+    ),
+    "speciesActivityFlying": MessageLookupByLibrary.simpleMessage("Flying"),
+    "speciesActivityForaging": MessageLookupByLibrary.simpleMessage("Foraging"),
+    "speciesActivityMoving": MessageLookupByLibrary.simpleMessage("Moving"),
+    "speciesActivityNesting": MessageLookupByLibrary.simpleMessage("Nesting"),
+    "speciesActivityOther": MessageLookupByLibrary.simpleMessage("Other"),
+    "speciesActivityPerching": MessageLookupByLibrary.simpleMessage("Perching"),
+    "speciesActivityResting": MessageLookupByLibrary.simpleMessage("Resting"),
+    "speciesActivityRoosting": MessageLookupByLibrary.simpleMessage("Roosting"),
+    "speciesActivitySinging": MessageLookupByLibrary.simpleMessage("Singing"),
     "speciesCount": m62,
     "speciesCounted": MessageLookupByLibrary.simpleMessage("Species counted"),
+    "speciesDetectionAuditory": MessageLookupByLibrary.simpleMessage(
+      "Auditory",
+    ),
+    "speciesDetectionCameraTrap": MessageLookupByLibrary.simpleMessage(
+      "Camera trap",
+    ),
+    "speciesDetectionCapture": MessageLookupByLibrary.simpleMessage("Capture"),
+    "speciesDetectionDead": MessageLookupByLibrary.simpleMessage("Dead"),
+    "speciesDetectionMode": MessageLookupByLibrary.simpleMessage(
+      "Detection mode",
+    ),
+    "speciesDetectionNest": MessageLookupByLibrary.simpleMessage("Nest"),
+    "speciesDetectionOther": MessageLookupByLibrary.simpleMessage("Other"),
+    "speciesDetectionTelemetry": MessageLookupByLibrary.simpleMessage(
+      "Telemetry",
+    ),
+    "speciesDetectionTrackOrSign": MessageLookupByLibrary.simpleMessage(
+      "Tracks / signs",
+    ),
+    "speciesDetectionVisual": MessageLookupByLibrary.simpleMessage("Visual"),
+    "speciesHabitat": MessageLookupByLibrary.simpleMessage("Habitat"),
+    "speciesHabitatAgricultural": MessageLookupByLibrary.simpleMessage(
+      "Agricultural",
+    ),
+    "speciesHabitatCoastal": MessageLookupByLibrary.simpleMessage("Coastal"),
+    "speciesHabitatForest": MessageLookupByLibrary.simpleMessage("Forest"),
+    "speciesHabitatFreshwater": MessageLookupByLibrary.simpleMessage(
+      "Freshwater",
+    ),
+    "speciesHabitatGrassland": MessageLookupByLibrary.simpleMessage(
+      "Grassland",
+    ),
+    "speciesHabitatMangrove": MessageLookupByLibrary.simpleMessage("Mangrove"),
+    "speciesHabitatMarine": MessageLookupByLibrary.simpleMessage("Marine"),
+    "speciesHabitatOther": MessageLookupByLibrary.simpleMessage("Other"),
+    "speciesHabitatRocky": MessageLookupByLibrary.simpleMessage(
+      "Rocky terrain",
+    ),
+    "speciesHabitatSavanna": MessageLookupByLibrary.simpleMessage("Savanna"),
+    "speciesHabitatShrubland": MessageLookupByLibrary.simpleMessage(
+      "Shrubland",
+    ),
+    "speciesHabitatUrban": MessageLookupByLibrary.simpleMessage("Urban"),
+    "speciesHabitatWetland": MessageLookupByLibrary.simpleMessage("Wetland"),
+    "speciesHabitatWoodland": MessageLookupByLibrary.simpleMessage("Woodland"),
     "speciesInfo": MessageLookupByLibrary.simpleMessage("Species information"),
     "speciesName": MessageLookupByLibrary.simpleMessage("Species name"),
     "speciesNotes": MessageLookupByLibrary.simpleMessage("Species notes"),
@@ -1210,6 +1277,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "speciesPropagationNever": MessageLookupByLibrary.simpleMessage(
       "Never propagate",
     ),
+    "speciesReproductiveConfirmedBreeding":
+        MessageLookupByLibrary.simpleMessage("Confirmed breeding"),
+    "speciesReproductivePossibleBreeding": MessageLookupByLibrary.simpleMessage(
+      "Possible breeding",
+    ),
+    "speciesReproductiveProbableBreeding": MessageLookupByLibrary.simpleMessage(
+      "Probable breeding",
+    ),
+    "speciesReproductiveStatus": MessageLookupByLibrary.simpleMessage(
+      "Reproductive status",
+    ),
     "speciesRichness": MessageLookupByLibrary.simpleMessage("Species richness"),
     "speciesRichnessPerMonth": MessageLookupByLibrary.simpleMessage(
       "Species richness per month",
@@ -1221,6 +1299,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "speciesSearchCountry": MessageLookupByLibrary.simpleMessage(
       "Species search country",
     ),
+    "speciesSex": MessageLookupByLibrary.simpleMessage("Sex"),
+    "speciesSexBoth": MessageLookupByLibrary.simpleMessage("Both"),
+    "speciesSexFemale": MessageLookupByLibrary.simpleMessage("Female"),
+    "speciesSexIndeterminate": MessageLookupByLibrary.simpleMessage(
+      "Indeterminate",
+    ),
+    "speciesSexMale": MessageLookupByLibrary.simpleMessage("Male"),
     "speciesUpgradeFailed": MessageLookupByLibrary.simpleMessage(
       "Species upgrade failed",
     ),
