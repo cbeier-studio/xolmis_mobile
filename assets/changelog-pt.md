@@ -2,6 +2,12 @@
 
 ## 1.0.4
 
+### Novas funcionalidades
+
+* Adicionado campo de modo de locomoção no inventário.
+* Adicionado campo de registro duvidoso no registro da espécie.
+* Indicador de lifer (primeiro registro) na lista de espécies do inventário.
+
 ### Melhorias
 
 * Adicionado link para a ajuda online no app.
@@ -9,12 +15,14 @@
 * Edição de data, hora e coordenadas de inventários, ninhos e espécimes.
 * Indicador de coordenadas geográficas faltantes.
 * Mostra tempo decorrido nos detalhes do inventário.
+* Renovado visual das telas de estatísticas.
 
 ### Correções
 
 * Diálogo para alterar o número de indivíduos de uma espécie não estava aplicando o valor informado.
 * Tela de estatísticas dos inventários selecionados ficava travada no carregamento.
 * Compartilhamento de arquivos Excel algumas vezes não funcionava.
+* Seletor de cor da tag não funcionava.
 
 ## 1.0.3
 

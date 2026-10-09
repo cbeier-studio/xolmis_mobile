@@ -6,9 +6,10 @@ O módulo **Inventários** é o núcleo do Xolmis Mobile, permitindo registrar l
 
 1. Abra **Inventários** no menu principal.  
 2. Toque no botão **+** no canto inferior direito.  
-3. Escolha o **tipo de inventário** (qualitativo, temporizado, intervalos, Mackinnon, transecto, ponto de escuta etc.).  
+3. Escolha o (**tipo de inventário**)[inventory-types.md] (qualitativo, temporizado, intervalos, Mackinnon, transecto, ponto de escuta etc.).  
 4. Preencha os campos necessários:
    - **ID** (ou gere automaticamente)
+   - **Meio de locomoção** (se aplicável)
    - **Localidade**
    - **Duração** (se aplicável)
    - **Máximo de espécies** (se aplicável)

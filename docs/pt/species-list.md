@@ -17,6 +17,8 @@ Esta seção explica como usar a lista de espécies durante o trabalho de campo.
 
 Se a espécie for adicionada após o inventário ser finalizado, ela será marcada como **fora da amostra**.
 
+Se for a primeira ocorrência da espécie em inventários, ela será marcada como **lifer** com um ícone de estrela :material-star-circle:.
+
 Se a espécie já estiver na lista:
 
 - Se o inventário for do tipo **Transecto de Detecções** ou **Ponto de Detecções**, adiciona um novo registro da espécie.
@@ -80,7 +82,20 @@ Essa distinção é importante para:
 - Listas de Mackinnon  
 - Curvas de acumulação  
 - Estatísticas  
-- Relatórios exportados  
+- Relatórios exportados
+
+## Registros duvidosos
+
+A espécie ou registro pode ser marcado como duvidoso, se necessário. Assim fica registrado que essa espécie precisa ser confirmada ou desconsiderada nas análises.
+
+Para marcar como duvidoso:
+
+- Toque e segure uma espécie na lista.
+- Selecione **Detalhes**.
+- Marque **Registro duvidoso**.
+- Toque em **Salvar**.
+
+Um indicador com um ponto de interrogação aparece ao lado do nome da espécie na lista.
 
 ## Métodos Baseados em Detecção
 

@@ -6,9 +6,10 @@ The **Inventories** module is the core of Xolmis Mobile, allowing you to record 
 
 1. Open **Inventories** from the main menu.  
 2. Tap the **+** button in the lower-right corner.  
-3. Choose the **inventory type** (qualitative, timed, interval, Mackinnon, transect, point count, etc.).  
+3. Choose the (**inventory type**)[inventory-types.md] (qualitative, timed, interval, Mackinnon, transect, point count, etc.).  
 4. Fill in the required fields:
    - **ID** (or generate automatically)
+   - **Transport mode** (if applicable)
    - **Locality**
    - **Duration** (if applicable)
    - **Maximum species** (if applicable)

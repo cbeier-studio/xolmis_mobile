@@ -17,6 +17,8 @@ This section explains how to use the species list during fieldwork.
 
 If the species is added after the inventory is finished, it will be marked **outside the sample**.
 
+If it is the first record of the species in inventories, it will be indicated as a **lifer** with a star icon :material-star-circle:.
+
 If the species is already in the list:
 
 - If the inventory is a **Detection Transect** or **Detection Point** inventory, add a new species record.
@@ -81,6 +83,19 @@ This distinction is important for:
 - Accumulation curves  
 - Statistics  
 - Exported reports  
+
+## Doubtful Records
+
+The species or record can be marked as doubtful, if necessary. This is recorded so that this species needs to be confirmed or discarded in the analysis.
+
+To mark as doubtful:
+
+- Long‑press a species in the list.
+- Select **Details**.
+- Mark **Doubtful record**.
+- Tap **Save**.
+
+An icon with a question mark appears next to the species name in the list.
 
 ## Detection-Based Methods
 

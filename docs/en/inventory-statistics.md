@@ -4,29 +4,12 @@ Xolmis Mobile allows you to compare multiple finished inventories using a dedica
 
 Statistics are available only when **two or more finished inventories** are selected. The Species per Inventory report is available when **one or more finished inventories** are selected.
 
-## Accessing the Species per Inventory report
-
-1. Open the **Inventories** module.  
-2. Switch to the **Finished** tab.  
-3. Select one or more inventories using the checkboxes.  
-4. Tap the **⋮ (More options)** button in the bottom bar.  
-5. Choose **Species per Inventory**.
-
-A new screen will open with a data table, where: 
-
-- The first column lists all species recorded alphabetically.
-- Following columns show one inventory each, listing the presence (X) or abundance for each species on the first column, with the value in blue if it is the first occurrence of the species in this comparison.
-- The last column and last row show the totals for rows and columns.
-
-This report can be exported to CSV tapping the **Export** icon on the screen top right.
-
 ## Accessing the Statistics Screen
 
 1. Open the **Inventories** module.  
 2. Switch to the **Finished** tab.  
 3. Select two or more inventories using the checkboxes.  
-4. Tap the **⋮ (More options)** button in the bottom bar.  
-5. Choose **Statistics**.
+4. Tap the :material-chart-box-outline: **Statistics** button in the bottom bar.
 
 A new screen will open with summary information and several charts.
 
@@ -52,6 +35,18 @@ This chart shows how species accumulate across the selected inventories.
   - **Purple line** – all species, including those outside the sample  
 
 This visualization is especially useful for **Mackinnon lists** or sequential surveys, helping assess sampling completeness.
+
+### Accessing the Species per Inventory report
+
+Below the species accumulation chart is a button to **View Species Table**.
+
+A new screen will open with a data table, where:
+
+- The first column lists all species recorded alphabetically.
+- Following columns show one inventory each, listing the presence (X) or abundance for each species on the first column, with the value in highlighted if it is the first occurrence of the species in this comparison.
+- The last column and last row show the totals for rows and columns.
+
+This report can be exported to CSV tapping the **Export** icon on the screen top right.
 
 ## Records per Hour
 

@@ -22,7 +22,7 @@ No topo da tela, você encontrará métricas globais importantes:
 - **Total de espécimes** – pendentes e arquivados.  
 - **Total de POIs registrados** – número de POIs criados.  
 - **Total de localidades amostradas** – número de localidades únicas em todos os registros.  
-- **Top 5 espécies mais registradas** – lista das espécies mais registradas; toque em **Ver todas** para abrir a lista completa.  
+- **Top 5 espécies mais registradas** – lista das espécies mais registradas; toque em **Ver lista completa** para abrir a lista completa.  
 - **Registros por hora** – histograma mostrando a distribuição de registros por hora.  
 - **Registros por mês** – histograma mostrando a distribuição de registros por mês do ano.  
 - **Riqueza de espécies por mês** – histograma mostrando a riqueza de espécies por mês do ano.  

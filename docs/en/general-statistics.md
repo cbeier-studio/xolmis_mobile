@@ -22,7 +22,7 @@ At the top of the screen, you will find key global metrics:
 - **Total specimens** – pending and archived.  
 - **Total POIs recorded** – number of POIs created.
 - **Total localities sampled** – number of unique localities across all records.
-- **Top 5 species most recorded** – list with the most recorded species across all records, tap **See all** to open the complete list.
+- **Top 5 species most recorded** – list with the most recorded species across all records, tap **View complete list** to open the complete list.
 - **Records per hour** – histogram showing the distribution of records per hour.
 - **Records per month** – histogram showing the distribution of records per month of the year.
 - **Species richness per month** – histogram showing the species richness per month of the year.

@@ -4,15 +4,26 @@ This section documents the changes, new features, and improvements introduced in
 
 ## v1.0.4 (unreleased)
 
+### New features
+
+- Added transport mode field in inventory.  
+- Added doubtful record field in species record.  
+- Added lifer (first record) indicator in inventory species list.  
+
 ### Enhancements
 
 - Added link to online help in the app.  
 - Modified layout of exported CSV and Excel files to improve compatibility with third-party software.
+- Edit date, time, and coordinates in inventories, nests, and specimens.  
+- Missing geographical coordinates indicator.
+- Show elapsed time in inventory details.
+- Revamped statistics screen design.
 
 ### Fixes
 
 - Dialog for changing the number of individuals of a species was not applying the entered value.
 - Statistics screen for selected inventories got stuck loading.
+- Share Excel files sometimes did not work.
 
 ## v1.0.3 (2026-09-19)
 

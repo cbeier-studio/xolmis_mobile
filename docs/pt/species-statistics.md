@@ -1,6 +1,6 @@
 # Estatísticas de Espécies
 
-O módulo **Estatísticas de Espécies** fornece informações detalhadas sobre cada espécie registrada no Xolmis Mobile. Ele agrega dados de todos os inventários e permite explorar padrões de detecção, frequência e distribuição.
+O módulo **Estatísticas por Espécie** fornece informações detalhadas sobre cada espécie registrada no Xolmis Mobile. Ele agrega dados de todos os inventários e permite explorar padrões de detecção, frequência e distribuição.
 
 Esse módulo ajuda você a entender quais espécies são mais comuns, quando foram detectadas e com que frequência aparecem nos seus levantamentos.
 

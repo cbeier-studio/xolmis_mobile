@@ -4,29 +4,12 @@ O Xolmis Mobile permite comparar vários inventários finalizados usando uma tel
 
 As estatísticas ficam disponíveis apenas quando **dois ou mais inventários finalizados** são selecionados. O relatório Espécies por Inventário fica disponível quando **um ou mais inventários finalizados** são selecionados.
 
-## Acessando o relatório Espécies por Inventário
-
-1. Abra o módulo **Inventários**.  
-2. Vá para a aba **Finalizados**.  
-3. Selecione um ou mais inventários usando as caixas de seleção.  
-4. Toque no botão **⋮ (Mais opções)** na barra inferior.  
-5. Escolha **Espécies por Inventário**.
-
-Uma nova tela será aberta com uma tabela de dados, onde:
-
-- A primeira coluna lista todas as espécies registradas em ordem alfabética.  
-- As colunas seguintes mostram um inventário por coluna, indicando presença (X) ou abundância para cada espécie da primeira coluna, com o valor em azul quando for a primeira ocorrência da espécie nessa comparação.  
-- A última coluna e a última linha mostram os totais das linhas e colunas.
-
-Esse relatório pode ser exportado para CSV tocando no ícone **Exportar** no canto superior direito da tela.
-
 ## Acessando a Tela de Estatísticas
 
 1. Abra o módulo **Inventários**.  
 2. Vá para a aba **Finalizados**.  
 3. Selecione dois ou mais inventários usando as caixas de seleção.  
-4. Toque no botão **⋮ (Mais opções)** na barra inferior.  
-5. Escolha **Estatísticas**.
+4. Toque no botão :material-chart-box-outline: **Estatísticas** na barra inferior.  
 
 Uma nova tela será aberta com informações resumidas e vários gráficos.
 
@@ -52,6 +35,18 @@ Este gráfico mostra como as espécies se acumulam ao longo dos inventários sel
   - **Linha roxa** – todas as espécies, incluindo as fora da amostra  
 
 Essa visualização é especialmente útil para **listas de Mackinnon** ou levantamentos sequenciais, ajudando a avaliar a completude da amostragem.
+
+### Acessando o relatório Espécies por Inventário
+
+Abaixo do gráfico de acumulação de espécies há um botão para **Ver Tabela de Espécies**.
+
+Uma nova tela será aberta com uma tabela de dados, onde:
+
+- A primeira coluna lista todas as espécies registradas em ordem alfabética.
+- As colunas seguintes mostram um inventário por coluna, indicando presença (X) ou abundância para cada espécie da primeira coluna, com o valor grifado quando for a primeira ocorrência da espécie nessa comparação.
+- A última coluna e a última linha mostram os totais das linhas e colunas.
+
+Esse relatório pode ser exportado para CSV tocando no ícone **Exportar** no canto superior direito da tela.
 
 ## Registros por Hora
 

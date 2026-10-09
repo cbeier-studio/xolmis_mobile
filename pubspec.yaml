@@ -27,7 +27,7 @@ dependencies:
   side_sheet: ^1.0.4+1
   fab_m3e: ^0.1.1
   m3e_design: ^0.2.1
-  settings_ui: ^4.0.1
+  settings_ui: ^4.0.2
   fleather: ^1.28.0
   fl_chart: ^1.2.0
   numberpicker: ^2.1.2
