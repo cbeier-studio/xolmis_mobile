@@ -359,6 +359,11 @@ const List<String> kInventoryOccurrencesHeaders = [
   'distance',
   'flightHeight',
   'flightDirection',
+  'habitats',
+  'detectionModes',
+  'reproductiveStatus',
+  'sex',
+  'activities',
   'occurrenceRemarks',
 ];
 
@@ -506,6 +511,20 @@ List<dynamic> _buildInventoryPrefix(
   ];
 }
 
+String _joinEnumLabels<T extends Enum>(List<T>? values, Map<T, String> labels) {
+  if (values == null || values.isEmpty) {
+    return '';
+  }
+  return values.map((value) => labels[value] ?? value.name).join('; ');
+}
+
+String _enumLabel<T extends Enum>(T? value, Map<T, String> labels) {
+  if (value == null) {
+    return '';
+  }
+  return labels[value] ?? value.name;
+}
+
 /// Builds flat denormalized species occurrences rows for a list of inventories.
 Future<List<List<dynamic>>> buildInventoriesSpeciesRows(
   List<Inventory> inventories,
@@ -540,13 +559,18 @@ Future<List<List<dynamic>>> buildInventoriesSpeciesRows(
                   : species.flightHeight)
               : '',
           species.flightDirection ?? '',
+          _joinEnumLabels(species.habitats, speciesHabitatFriendlyNames),
+          _joinEnumLabels(species.detectionModes, speciesDetectionModeFriendlyNames),
+          _enumLabel(species.reproductiveStatus, speciesReproductiveStatusFriendlyNames),
+          _enumLabel(species.sex, speciesSexFriendlyNames),
+          _joinEnumLabels(species.activities, speciesActivityFriendlyNames),
           species.notes ?? '',
         ]);
       }
     } else {
       rows.add([
         ...prefix,
-        '', '', '', '', '', '', '', ''
+        '', '', '', '', '', '', '', '', '', '', '', '', ''
       ]);
     }
   }

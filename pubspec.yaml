@@ -46,7 +46,7 @@ dependencies:
 #      url: https://github.com/justkawal/excel.git
 #      ref: 751dfc597c893a0b34eccfe6921f126e03a5c683
 #  geoxml: ^2.6.2
-  archive: ^4.3.0
+  archive: ^4.4.0
   flutter_markdown_plus: ^1.0.12
   pdf: ^3.13.1
   printing: ^5.15.1

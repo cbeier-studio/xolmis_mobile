@@ -7,6 +7,7 @@
 * Added transport mode field in inventory.
 * Added doubtful record field in species record.
 * Added lifer (first record) indicator in inventory species list.
+* Added new optional fields in species records: habitat, detection mode, reproductive status, sex, and activity/behavior.
 
 ### Improvements
 

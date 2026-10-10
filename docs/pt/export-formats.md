@@ -67,6 +67,11 @@ Contém os registros de espécies e os parâmetros de observação coletados dur
 | `distance` | Texto | Categoria de distância ou distância estimada do indivíduo. |
 | `flightHeight` | Texto | Categoria ou estimativa de altura de voo. |
 | `flightDirection` | Texto | Direção de voo ou deslocamento. |
+| `habitats` | Texto | Lista de habitats associados ao registro da espécie (múltipla seleção; exportada como valores separados por `;`). |
+| `detectionModes` | Texto | Lista de modos de detecção usados no registro (ex.: visual, auditivo, captura; valores separados por `;`). |
+| `reproductiveStatus` | Texto | Status reprodutivo opcional compatível com esquema eBird (*Possible Breeding*, *Probable Breeding*, *Confirmed Breeding*). |
+| `sex` | Texto | Sexo informado para o registro (*Indeterminate*, *Male*, *Female*, *Both*). |
+| `activities` | Texto | Lista de atividades/comportamentos observados no momento do registro (valores separados por `;`). |
 | `occurrenceRemarks` | Texto | Observações específicas deste registro de espécie. |
 
 #### Tabela de Vegetação (`..._vegetation.csv` / Aba no Excel: `Vegetation`)

@@ -7,6 +7,7 @@
 * Adicionado campo de modo de locomoção no inventário.
 * Adicionado campo de registro duvidoso no registro da espécie.
 * Indicador de lifer (primeiro registro) na lista de espécies do inventário.
+* Adicionados novos campos opcionais no registro de espécie: habitat, modo de detecção, status reprodutivo, sexo e atividade/comportamento.
 
 ### Melhorias
 

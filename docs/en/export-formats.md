@@ -67,6 +67,11 @@ Contains individual species records and observation parameters collected during 
 | `distance` | String | Distance category or measured distance to the individual. |
 | `flightHeight` | String | Flight height category or height estimate. |
 | `flightDirection` | String | Flight direction / movement direction. |
+| `habitats` | String | List of habitat categories assigned to the species record (multi-select; values separated by `;`). |
+| `detectionModes` | String | List of detection modes used for the record (for example visual, auditory, capture; values separated by `;`). |
+| `reproductiveStatus` | String | Optional reproductive status compatible with eBird breeding evidence (*Possible Breeding*, *Probable Breeding*, *Confirmed Breeding*). |
+| `sex` | String | Reported sex for the record (*Indeterminate*, *Male*, *Female*, *Both*). |
+| `activities` | String | List of observed activities/behaviors at the moment of record (values separated by `;`). |
 | `occurrenceRemarks` | String | Remarks or notes specific to this species record. |
 
 #### Vegetation Table (`..._vegetation.csv` / Excel tab: `Vegetation`)

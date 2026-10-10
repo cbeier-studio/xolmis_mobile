@@ -1,3 +1,4 @@
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import '../../core/core_consts.dart';
@@ -138,15 +139,8 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
   }
 
-  Widget _chipIcon(IconData icon, {Color? color}) {
-    return Icon(icon, size: 18, color: color);
-  }
-
-  String _selectionSummary(String label, int count) {
-    if (count == 0) {
-      return '$label: ${S.current.notSpecified}';
-    }
-    return count == 1 ? '$label: 1 ${S.current.selectedSpecies.toLowerCase()}' : '$label: $count ${S.current.selectedSpecies.toLowerCase()}';
+  Widget _chipIcon(FaIconData icon, {Color? color}) {
+    return FaIcon(icon, size: 18, color: color);
   }
 
   Widget _buildChipSection({
@@ -166,21 +160,85 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
     );
   }
 
-  Future<Set<T>?> _showSelectionDialog<T extends Enum>({
+  Future<Set<T>?> _showSelectionBottomSheet<T extends Enum>({
     required String title,
     required List<T> options,
     required Set<T> initialSelection,
     required String Function(T value) labelBuilder,
     Widget Function(T value)? avatarBuilder,
   }) async {
-    return showDialog<Set<T>>(
+    return showModalBottomSheet<Set<T>>(
       context: context,
-      builder: (dialogContext) => _SelectionChipsDialog<T>(
+      isScrollControlled: true,
+      useSafeArea: true,
+      builder: (sheetContext) => _SelectionChipsBottomSheet<T>(
         title: title,
         options: options,
         initialSelection: initialSelection,
         labelBuilder: labelBuilder,
         avatarBuilder: avatarBuilder,
+      ),
+    );
+  }
+
+  Widget _buildSelectedOptionsField<T extends Enum>({
+    required String label,
+    required List<T> options,
+    required Set<T> selectedValues,
+    required String Function(T value) labelBuilder,
+    required Future<void> Function() onEdit,
+  }) {
+    final selectedOptions = options.where(selectedValues.contains).toList();
+
+    return _buildChipSection(
+      label: label,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
+          color: Theme.of(context).colorScheme.surface,
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: selectedOptions.isEmpty
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: Text(
+                        S.current.notSpecified,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    )
+                  : Wrap(
+                      spacing: _chipSpacing,
+                      runSpacing: _chipRunSpacing,
+                      children: [
+                        for (final option in selectedOptions)
+                          Chip(
+                            label: Text(labelBuilder(option)),
+                            backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
+                            labelStyle: TextStyle(
+                              color: Theme.of(context).colorScheme.onTertiaryContainer,
+                            ),
+                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            visualDensity: VisualDensity.compact,
+                          ),
+                      ],
+                    ),
+            ),
+            IconButton(
+              onPressed: () {
+                onEdit();
+              },
+              icon: const Icon(Icons.edit_outlined),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -238,7 +296,7 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
         ...options.map(
           (value) => DropdownMenuItem<T?>(
             value: value,
-            child: Text(labelBuilder(value)),
+            child: Text(labelBuilder(value), overflow: TextOverflow.ellipsis),
           ),
         ),
       ],
@@ -450,17 +508,22 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
                           border: const OutlineInputBorder(),
                         ),
                         isExpanded: true,
-                        items:
-                            [
-                              // Pontos Cardeais
-                              'N', 'S', 'E', 'W',
-                              // Pontos Colaterais (Intercardinais)
-                              'NE', 'NW', 'SE', 'SW',
-                              // Pontos Subcolaterais (Secundários)
-                              // 'NNE', 'ENE', 'ESE', 'SSE', 'SSW', 'WSW', 'WNW', 'NNW',
-                            ].map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(value: value, child: Text(value));
-                            }).toList(),
+                        items: [
+                          DropdownMenuItem<String>(
+                            value: null,
+                            child: Text(S.current.notSpecified),
+                          ),
+                          ...[
+                            // Pontos Cardeais
+                            'N', 'S', 'E', 'W',
+                            // Pontos Colaterais (Intercardinais)
+                            'NE', 'NW', 'SE', 'SW',
+                            // Pontos Subcolaterais (Secundários)
+                            // 'NNE', 'ENE', 'ESE', 'SSE', 'SSW', 'WSW', 'WNW', 'NNW',
+                          ].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(value: value, child: Text(value));
+                          }),
+                        ],
                         onChanged: (String? newValue) {
                           setState(() {
                             _selectedFlightDirection = newValue;
@@ -510,15 +573,15 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
                   selectedValues: _selectedDetectionModes,
                   labelBuilder: (value) => speciesDetectionModeFriendlyNames[value] ?? value.name,
                   avatarBuilder: (value) => switch (value) {
-                    SpeciesDetectionMode.visual => _chipIcon(Icons.visibility_outlined),
-                    SpeciesDetectionMode.auditory => _chipIcon(Icons.hearing_outlined),
-                    SpeciesDetectionMode.capture => _chipIcon(Icons.grid_4x4_outlined),
-                    SpeciesDetectionMode.nest => _chipIcon(Icons.egg_outlined),
-                    SpeciesDetectionMode.cameraTrap => _chipIcon(Icons.photo_camera_outlined),
-                    SpeciesDetectionMode.telemetry => _chipIcon(Icons.sensors_outlined),
-                    SpeciesDetectionMode.trackOrSign => _chipIcon(Icons.pets_outlined),
-                    SpeciesDetectionMode.dead => _chipIcon(Icons.crisis_alert_outlined),
-                    SpeciesDetectionMode.other => _chipIcon(Icons.more_horiz),
+                    SpeciesDetectionMode.visual => _chipIcon(FontAwesomeIcons.solidEye),
+                    SpeciesDetectionMode.auditory => _chipIcon(FontAwesomeIcons.earListen),
+                    SpeciesDetectionMode.capture => _chipIcon(FontAwesomeIcons.boxOpen),
+                    SpeciesDetectionMode.nest => _chipIcon(FontAwesomeIcons.egg),
+                    SpeciesDetectionMode.cameraTrap => _chipIcon(FontAwesomeIcons.solidCamera),
+                    SpeciesDetectionMode.telemetry => _chipIcon(FontAwesomeIcons.satelliteDish),
+                    SpeciesDetectionMode.trackOrSign => _chipIcon(FontAwesomeIcons.feather),
+                    SpeciesDetectionMode.dead => _chipIcon(FontAwesomeIcons.skull),
+                    SpeciesDetectionMode.other => _chipIcon(FontAwesomeIcons.ellipsis),
                   },
                   onChanged: (value, selected) {
                     setState(() {
@@ -532,108 +595,38 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
                 ),
                 const SizedBox(height: 12),
 
-                // _buildDropdownSection<SpeciesReproductiveStatus>(
-                //   label: S.current.speciesReproductiveStatus,
-                //   options: SpeciesReproductiveStatus.values,
-                //   selectedValue: _selectedReproductiveStatus,
-                //   labelBuilder: (value) => speciesReproductiveStatusFriendlyNames[value] ?? value.name,
-                //   onChanged: (value) {
-                //     setState(() {
-                //       _selectedReproductiveStatus = value;
-                //     });
-                //   },
-                // ),
-                // const SizedBox(height: 12),
-                //
-                // _buildDropdownSection<SpeciesSex>(
-                //   label: S.current.speciesSex,
-                //   options: SpeciesSex.values,
-                //   selectedValue: _selectedSex,
-                //   labelBuilder: (value) => speciesSexFriendlyNames[value] ?? value.name,
-                //   onChanged: (value) {
-                //     setState(() {
-                //       _selectedSex = value;
-                //     });
-                //   },
-                // ),
-                // const SizedBox(height: 12),
-
-                Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(S.current.speciesHabitat),
-                            if (_selectedHabitats.isNotEmpty) ...[
-                              const SizedBox(width: 4),
-                              Badge(
-                                backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-                                textColor: Theme.of(context).colorScheme.onPrimaryContainer,
-                                label: Text('${_selectedHabitats.length}'),
-                              ),
-                            ],
-                          ],
-                        ),
-                        onPressed: () async {
-                          final result = await _showSelectionDialog<SpeciesHabitat>(
-                            title: S.current.speciesHabitat,
-                            options: SpeciesHabitat.values,
-                            initialSelection: _selectedHabitats,
-                            labelBuilder: (value) => speciesHabitatFriendlyNames[value] ?? value.name,
-                          );
-                          if (result == null || !mounted) return;
-                          setState(() => _selectedHabitats = result);
-                        },
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: OutlinedButton(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(S.current.speciesActivity),
-                            if (_selectedActivities.isNotEmpty) ...[
-                              const SizedBox(width: 4),
-                              Badge(
-                                backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-                                textColor: Theme.of(context).colorScheme.onPrimaryContainer,
-                                label: Text('${_selectedActivities.length}')
-                              ),
-                            ],
-                          ],
-                        ),
-                        onPressed: () async {
-                          final result = await _showSelectionDialog<SpeciesActivity>(
-                            title: S.current.speciesActivity,
-                            options: SpeciesActivity.values,
-                            initialSelection: _selectedActivities,
-                            labelBuilder: (value) => speciesActivityFriendlyNames[value] ?? value.name,
-                            // avatarBuilder: (value) => switch (value) {
-                            //   SpeciesActivity.flying => _chipIcon(Icons.flight_outlined),
-                            //   SpeciesActivity.foraging => _chipIcon(Icons.search_outlined),
-                            //   SpeciesActivity.perching => _chipIcon(Icons.nest_cam_wired_stand_outlined),
-                            //   SpeciesActivity.singing => _chipIcon(Icons.music_note_outlined),
-                            //   SpeciesActivity.calling => _chipIcon(Icons.record_voice_over_outlined),
-                            //   SpeciesActivity.nesting => _chipIcon(Icons.home_outlined),
-                            //   SpeciesActivity.feedingYoung => _chipIcon(Icons.child_care_outlined),
-                            //   SpeciesActivity.resting => _chipIcon(Icons.bedtime_outlined),
-                            //   SpeciesActivity.bathing => _chipIcon(Icons.water_drop_outlined),
-                            //   SpeciesActivity.moving => _chipIcon(Icons.directions_walk_outlined),
-                            //   SpeciesActivity.displaying => _chipIcon(Icons.flutter_dash_outlined),
-                            //   SpeciesActivity.aggressive => _chipIcon(Icons.warning_amber_outlined),
-                            //   SpeciesActivity.roosting => _chipIcon(Icons.nightlight_outlined),
-                            //   SpeciesActivity.other => _chipIcon(Icons.more_horiz),
-                            // },
-                          );
-                          if (result == null || !mounted) return;
-                          setState(() => _selectedActivities = result);
-                        },
-                      ),
-                    ),
-                  ],
+                _buildSelectedOptionsField<SpeciesHabitat>(
+                  label: S.current.speciesHabitat,
+                  options: SpeciesHabitat.values,
+                  selectedValues: _selectedHabitats,
+                  labelBuilder: (value) => speciesHabitatFriendlyNames[value] ?? value.name,
+                  onEdit: () async {
+                    final result = await _showSelectionBottomSheet<SpeciesHabitat>(
+                      title: S.current.speciesHabitat,
+                      options: SpeciesHabitat.values,
+                      initialSelection: _selectedHabitats,
+                      labelBuilder: (value) => speciesHabitatFriendlyNames[value] ?? value.name,
+                    );
+                    if (result == null || !mounted) return;
+                    setState(() => _selectedHabitats = result);
+                  },
+                ),
+                const SizedBox(height: 8),
+                _buildSelectedOptionsField<SpeciesActivity>(
+                  label: S.current.speciesActivity,
+                  options: SpeciesActivity.values,
+                  selectedValues: _selectedActivities,
+                  labelBuilder: (value) => speciesActivityFriendlyNames[value] ?? value.name,
+                  onEdit: () async {
+                    final result = await _showSelectionBottomSheet<SpeciesActivity>(
+                      title: S.current.speciesActivity,
+                      options: SpeciesActivity.values,
+                      initialSelection: _selectedActivities,
+                      labelBuilder: (value) => speciesActivityFriendlyNames[value] ?? value.name,
+                    );
+                    if (result == null || !mounted) return;
+                    setState(() => _selectedActivities = result);
+                  },
                 ),
                 const SizedBox(height: 16),
                 // --- Campo Notes ---
@@ -671,14 +664,14 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
   }
 }
 
-class _SelectionChipsDialog<T extends Enum> extends StatefulWidget {
+class _SelectionChipsBottomSheet<T extends Enum> extends StatefulWidget {
   final String title;
   final List<T> options;
   final Set<T> initialSelection;
   final String Function(T value) labelBuilder;
   final Widget Function(T value)? avatarBuilder;
 
-  const _SelectionChipsDialog({
+  const _SelectionChipsBottomSheet({
     required this.title,
     required this.options,
     required this.initialSelection,
@@ -687,10 +680,10 @@ class _SelectionChipsDialog<T extends Enum> extends StatefulWidget {
   });
 
   @override
-  State<_SelectionChipsDialog<T>> createState() => _SelectionChipsDialogState<T>();
+  State<_SelectionChipsBottomSheet<T>> createState() => _SelectionChipsBottomSheetState<T>();
 }
 
-class _SelectionChipsDialogState<T extends Enum> extends State<_SelectionChipsDialog<T>> {
+class _SelectionChipsBottomSheetState<T extends Enum> extends State<_SelectionChipsBottomSheet<T>> {
   late final Set<T> _selection = {...widget.initialSelection};
 
   @override
@@ -698,46 +691,65 @@ class _SelectionChipsDialogState<T extends Enum> extends State<_SelectionChipsDi
     final selectedColor = Theme.of(context).colorScheme.primaryContainer;
     final unselectedColor = Theme.of(context).colorScheme.surface;
 
-    return AlertDialog(
-      title: Text(widget.title),
-      content: SingleChildScrollView(
-        child: Wrap(
-          spacing: 6,
-          runSpacing: 6,
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.85),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            for (final option in widget.options)
-              FilterChip(
-                avatar: widget.avatarBuilder?.call(option),
-                label: Text(widget.labelBuilder(option)),
-                showCheckmark: true,
-                selectedColor: selectedColor,
-                backgroundColor: unselectedColor,
-                checkmarkColor: Theme.of(context).colorScheme.onPrimaryContainer,
-                side: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
-                selected: _selection.contains(option),
-                onSelected: (selected) {
-                  setState(() {
-                    if (selected) {
-                      _selection.add(option);
-                    } else {
-                      _selection.remove(option);
-                    }
-                  });
-                },
+            Row(
+              children: [
+                Expanded(
+                  child: Text(widget.title, style: Theme.of(context).textTheme.titleLarge),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(null),
+                  child: Text(S.current.cancel),
+                ),
+                const SizedBox(width: 8),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(_selection),
+                  child: Text(S.current.save),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Flexible(
+              fit: FlexFit.loose,
+              child: SingleChildScrollView(
+                child: Wrap(
+                  spacing: 6,
+                  runSpacing: 6,
+                  children: [
+                    for (final option in widget.options)
+                      FilterChip(
+                        avatar: widget.avatarBuilder?.call(option),
+                        label: Text(widget.labelBuilder(option)),
+                        showCheckmark: true,
+                        selectedColor: selectedColor,
+                        backgroundColor: unselectedColor,
+                        checkmarkColor: Theme.of(context).colorScheme.onPrimaryContainer,
+                        side: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
+                        selected: _selection.contains(option),
+                        onSelected: (selected) {
+                          setState(() {
+                            if (selected) {
+                              _selection.add(option);
+                            } else {
+                              _selection.remove(option);
+                            }
+                          });
+                        },
+                      ),
+                  ],
+                ),
               ),
+            ),
           ],
         ),
       ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(null),
-          child: Text(S.current.cancel),
-        ),
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(_selection),
-          child: Text(S.current.save),
-        ),
-      ],
     );
   }
 }
