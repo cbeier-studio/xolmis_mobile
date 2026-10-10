@@ -4025,8 +4025,32 @@ abstract class AppLocalizations {
   /// Species detection mode label
   ///
   /// In en, this message translates to:
-  /// **'Auditory'**
-  String get speciesDetectionAuditory;
+  /// **'Song'**
+  String get speciesDetectionSong;
+
+  /// Species detection mode label
+  ///
+  /// In en, this message translates to:
+  /// **'Call'**
+  String get speciesDetectionCall;
+
+  /// Species detection mode label
+  ///
+  /// In en, this message translates to:
+  /// **'Wing flapping'**
+  String get speciesDetectionWingFlapping;
+
+  /// Species detection mode label
+  ///
+  /// In en, this message translates to:
+  /// **'Drumming'**
+  String get speciesDetectionDrumming;
+
+  /// Species detection mode label
+  ///
+  /// In en, this message translates to:
+  /// **'Flying'**
+  String get speciesDetectionFlying;
 
   /// Species detection mode label
   ///
@@ -4037,32 +4061,14 @@ abstract class AppLocalizations {
   /// Species detection mode label
   ///
   /// In en, this message translates to:
-  /// **'Nest'**
-  String get speciesDetectionNest;
-
-  /// Species detection mode label
-  ///
-  /// In en, this message translates to:
-  /// **'Camera trap'**
-  String get speciesDetectionCameraTrap;
-
-  /// Species detection mode label
-  ///
-  /// In en, this message translates to:
-  /// **'Telemetry'**
-  String get speciesDetectionTelemetry;
+  /// **'Remote'**
+  String get speciesDetectionRemote;
 
   /// Species detection mode label
   ///
   /// In en, this message translates to:
   /// **'Tracks / signs'**
   String get speciesDetectionTrackOrSign;
-
-  /// Species detection mode label
-  ///
-  /// In en, this message translates to:
-  /// **'Dead'**
-  String get speciesDetectionDead;
 
   /// Species detection mode label
   ///
@@ -4093,6 +4099,168 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Confirmed breeding'**
   String get speciesReproductiveConfirmedBreeding;
+
+  /// Reproductive status section title for observed level
+  ///
+  /// In en, this message translates to:
+  /// **'Observed'**
+  String get speciesReproductiveGroupObserved;
+
+  /// Reproductive status section title for possible breeding level
+  ///
+  /// In en, this message translates to:
+  /// **'Possible'**
+  String get speciesReproductiveGroupPossible;
+
+  /// Reproductive status section title for probable breeding level
+  ///
+  /// In en, this message translates to:
+  /// **'Probable'**
+  String get speciesReproductiveGroupProbable;
+
+  /// Reproductive status section title for confirmed breeding level
+  ///
+  /// In en, this message translates to:
+  /// **'Confirmed'**
+  String get speciesReproductiveGroupConfirmed;
+
+  /// eBird reproductive code H
+  ///
+  /// In en, this message translates to:
+  /// **'In Appropriate Habitat (Possible)'**
+  String get speciesReproductiveCodeH;
+
+  /// eBird reproductive code S
+  ///
+  /// In en, this message translates to:
+  /// **'Singing Bird (Possible)'**
+  String get speciesReproductiveCodeS;
+
+  /// eBird reproductive code S7
+  ///
+  /// In en, this message translates to:
+  /// **'Singing Bird Present 7+ Days (Probable)'**
+  String get speciesReproductiveCodeS7;
+
+  /// eBird reproductive code M
+  ///
+  /// In en, this message translates to:
+  /// **'Multiple (7+) Singing Birds (Probable)'**
+  String get speciesReproductiveCodeM;
+
+  /// eBird reproductive code P
+  ///
+  /// In en, this message translates to:
+  /// **'Pair in Suitable Habitat (Probable)'**
+  String get speciesReproductiveCodeP;
+
+  /// eBird reproductive code T
+  ///
+  /// In en, this message translates to:
+  /// **'Territorial Defense (Probable)'**
+  String get speciesReproductiveCodeT;
+
+  /// eBird reproductive code C
+  ///
+  /// In en, this message translates to:
+  /// **'Courtship, Display or Copulation (Probable)'**
+  String get speciesReproductiveCodeC;
+
+  /// eBird reproductive code N
+  ///
+  /// In en, this message translates to:
+  /// **'Visiting Probable Nest Site (Probable)'**
+  String get speciesReproductiveCodeN;
+
+  /// eBird reproductive code A
+  ///
+  /// In en, this message translates to:
+  /// **'Agitated Behavior (Probable)'**
+  String get speciesReproductiveCodeA;
+
+  /// eBird reproductive code B
+  ///
+  /// In en, this message translates to:
+  /// **'Wren/Woodpecker Nest Building (Probable)'**
+  String get speciesReproductiveCodeB;
+
+  /// eBird reproductive code PE
+  ///
+  /// In en, this message translates to:
+  /// **'Physiological Evidence (Probable)'**
+  String get speciesReproductiveCodePE;
+
+  /// eBird reproductive code CN
+  ///
+  /// In en, this message translates to:
+  /// **'Carrying Nesting Material (Confirmed/Probable)'**
+  String get speciesReproductiveCodeCN;
+
+  /// eBird reproductive code NB
+  ///
+  /// In en, this message translates to:
+  /// **'Nest Building (Confirmed/Probable)'**
+  String get speciesReproductiveCodeNB;
+
+  /// eBird reproductive code DD
+  ///
+  /// In en, this message translates to:
+  /// **'Distraction Display (Confirmed)'**
+  String get speciesReproductiveCodeDD;
+
+  /// eBird reproductive code UN
+  ///
+  /// In en, this message translates to:
+  /// **'Used Nest (Confirmed)'**
+  String get speciesReproductiveCodeUN;
+
+  /// eBird reproductive code ON
+  ///
+  /// In en, this message translates to:
+  /// **'Occupied Nest (Confirmed)'**
+  String get speciesReproductiveCodeON;
+
+  /// eBird reproductive code FL
+  ///
+  /// In en, this message translates to:
+  /// **'Recently Fledged Young (Confirmed)'**
+  String get speciesReproductiveCodeFL;
+
+  /// eBird reproductive code CF
+  ///
+  /// In en, this message translates to:
+  /// **'Carrying Food (Confirmed)'**
+  String get speciesReproductiveCodeCF;
+
+  /// eBird reproductive code FY
+  ///
+  /// In en, this message translates to:
+  /// **'Feeding Young (Confirmed)'**
+  String get speciesReproductiveCodeFY;
+
+  /// eBird reproductive code FS
+  ///
+  /// In en, this message translates to:
+  /// **'Carrying Fecal Sac (Confirmed)'**
+  String get speciesReproductiveCodeFS;
+
+  /// eBird reproductive code NE
+  ///
+  /// In en, this message translates to:
+  /// **'Nest with Eggs (Confirmed)'**
+  String get speciesReproductiveCodeNE;
+
+  /// eBird reproductive code NY
+  ///
+  /// In en, this message translates to:
+  /// **'Nest with Young (Confirmed)'**
+  String get speciesReproductiveCodeNY;
+
+  /// eBird reproductive code F
+  ///
+  /// In en, this message translates to:
+  /// **'Flyover (Observed)'**
+  String get speciesReproductiveCodeF;
 
   /// Species sex section label
   ///

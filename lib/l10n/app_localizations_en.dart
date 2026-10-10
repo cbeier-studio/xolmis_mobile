@@ -2201,25 +2201,28 @@ class AppLocalizationsEn extends AppLocalizations {
   String get speciesDetectionVisual => 'Visual';
 
   @override
-  String get speciesDetectionAuditory => 'Auditory';
+  String get speciesDetectionSong => 'Song';
+
+  @override
+  String get speciesDetectionCall => 'Call';
+
+  @override
+  String get speciesDetectionWingFlapping => 'Wing flapping';
+
+  @override
+  String get speciesDetectionDrumming => 'Drumming';
+
+  @override
+  String get speciesDetectionFlying => 'Flying';
 
   @override
   String get speciesDetectionCapture => 'Capture';
 
   @override
-  String get speciesDetectionNest => 'Nest';
-
-  @override
-  String get speciesDetectionCameraTrap => 'Camera trap';
-
-  @override
-  String get speciesDetectionTelemetry => 'Telemetry';
+  String get speciesDetectionRemote => 'Remote';
 
   @override
   String get speciesDetectionTrackOrSign => 'Tracks / signs';
-
-  @override
-  String get speciesDetectionDead => 'Dead';
 
   @override
   String get speciesDetectionOther => 'Other';
@@ -2235,6 +2238,87 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get speciesReproductiveConfirmedBreeding => 'Confirmed breeding';
+
+  @override
+  String get speciesReproductiveGroupObserved => 'Observed';
+
+  @override
+  String get speciesReproductiveGroupPossible => 'Possible';
+
+  @override
+  String get speciesReproductiveGroupProbable => 'Probable';
+
+  @override
+  String get speciesReproductiveGroupConfirmed => 'Confirmed';
+
+  @override
+  String get speciesReproductiveCodeH => 'In Appropriate Habitat (Possible)';
+
+  @override
+  String get speciesReproductiveCodeS => 'Singing Bird (Possible)';
+
+  @override
+  String get speciesReproductiveCodeS7 => 'Singing Bird Present 7+ Days (Probable)';
+
+  @override
+  String get speciesReproductiveCodeM => 'Multiple (7+) Singing Birds (Probable)';
+
+  @override
+  String get speciesReproductiveCodeP => 'Pair in Suitable Habitat (Probable)';
+
+  @override
+  String get speciesReproductiveCodeT => 'Territorial Defense (Probable)';
+
+  @override
+  String get speciesReproductiveCodeC => 'Courtship, Display or Copulation (Probable)';
+
+  @override
+  String get speciesReproductiveCodeN => 'Visiting Probable Nest Site (Probable)';
+
+  @override
+  String get speciesReproductiveCodeA => 'Agitated Behavior (Probable)';
+
+  @override
+  String get speciesReproductiveCodeB => 'Wren/Woodpecker Nest Building (Probable)';
+
+  @override
+  String get speciesReproductiveCodePE => 'Physiological Evidence (Probable)';
+
+  @override
+  String get speciesReproductiveCodeCN => 'Carrying Nesting Material (Confirmed/Probable)';
+
+  @override
+  String get speciesReproductiveCodeNB => 'Nest Building (Confirmed/Probable)';
+
+  @override
+  String get speciesReproductiveCodeDD => 'Distraction Display (Confirmed)';
+
+  @override
+  String get speciesReproductiveCodeUN => 'Used Nest (Confirmed)';
+
+  @override
+  String get speciesReproductiveCodeON => 'Occupied Nest (Confirmed)';
+
+  @override
+  String get speciesReproductiveCodeFL => 'Recently Fledged Young (Confirmed)';
+
+  @override
+  String get speciesReproductiveCodeCF => 'Carrying Food (Confirmed)';
+
+  @override
+  String get speciesReproductiveCodeFY => 'Feeding Young (Confirmed)';
+
+  @override
+  String get speciesReproductiveCodeFS => 'Carrying Fecal Sac (Confirmed)';
+
+  @override
+  String get speciesReproductiveCodeNE => 'Nest with Eggs (Confirmed)';
+
+  @override
+  String get speciesReproductiveCodeNY => 'Nest with Young (Confirmed)';
+
+  @override
+  String get speciesReproductiveCodeF => 'Flyover (Observed)';
 
   @override
   String get speciesSex => 'Sex';

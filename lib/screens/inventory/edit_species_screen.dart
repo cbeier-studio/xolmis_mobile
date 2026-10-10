@@ -32,6 +32,7 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
   late final TextEditingController _countController;
   late final TextEditingController _distanceController;
   late final TextEditingController _flightHeightController;
+  late final TextEditingController _reproductiveStatusController;
   late final TextEditingController _notesController;
   late bool _isOutOfInventory;
   late bool _isDoubtful;
@@ -63,6 +64,7 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
     _selectedHabitats = widget.species.habitats?.toSet() ?? <SpeciesHabitat>{};
     _selectedDetectionModes = widget.species.detectionModes?.toSet() ?? <SpeciesDetectionMode>{};
     _selectedReproductiveStatus = widget.species.reproductiveStatus;
+    _reproductiveStatusController = TextEditingController(text: _selectedReproductiveStatus?.code ?? '');
     _selectedSex = widget.species.sex;
     _selectedActivities = widget.species.activities?.toSet() ?? <SpeciesActivity>{};
   }
@@ -76,6 +78,7 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
     _distanceController.dispose();
     _flightHeightController.dispose();
     _notesController.dispose();
+    _reproductiveStatusController.dispose();
     super.dispose();
   }
 
@@ -143,10 +146,7 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
     return FaIcon(icon, size: 18, color: color);
   }
 
-  Widget _buildChipSection({
-    required String label,
-    required Widget child,
-  }) {
+  Widget _buildChipSection({required String label, required Widget child}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Column(
@@ -171,13 +171,14 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
-      builder: (sheetContext) => _SelectionChipsBottomSheet<T>(
-        title: title,
-        options: options,
-        initialSelection: initialSelection,
-        labelBuilder: labelBuilder,
-        avatarBuilder: avatarBuilder,
-      ),
+      builder:
+          (sheetContext) => _SelectionChipsBottomSheet<T>(
+            title: title,
+            options: options,
+            initialSelection: initialSelection,
+            labelBuilder: labelBuilder,
+            avatarBuilder: avatarBuilder,
+          ),
     );
   }
 
@@ -204,32 +205,31 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Expanded(
-              child: selectedOptions.isEmpty
-                  ? Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      child: Text(
-                        S.current.notSpecified,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+              child:
+                  selectedOptions.isEmpty
+                      ? Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Text(
+                          S.current.notSpecified,
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
                         ),
-                      ),
-                    )
-                  : Wrap(
-                      spacing: _chipSpacing,
-                      runSpacing: _chipRunSpacing,
-                      children: [
-                        for (final option in selectedOptions)
-                          Chip(
-                            label: Text(labelBuilder(option)),
-                            backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
-                            labelStyle: TextStyle(
-                              color: Theme.of(context).colorScheme.onTertiaryContainer,
+                      )
+                      : Wrap(
+                        spacing: _chipSpacing,
+                        runSpacing: _chipRunSpacing,
+                        children: [
+                          for (final option in selectedOptions)
+                            Chip(
+                              label: Text(labelBuilder(option)),
+                              backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
+                              labelStyle: TextStyle(color: Theme.of(context).colorScheme.onTertiaryContainer),
+                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              visualDensity: VisualDensity.compact,
                             ),
-                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            visualDensity: VisualDensity.compact,
-                          ),
-                      ],
-                    ),
+                        ],
+                      ),
             ),
             IconButton(
               onPressed: () {
@@ -284,23 +284,91 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
     return DropdownButtonFormField<T?>(
       initialValue: selectedValue,
       isExpanded: true,
-      decoration: InputDecoration(
-        labelText: label,
-        border: const OutlineInputBorder(),
-      ),
+      decoration: InputDecoration(labelText: label, border: const OutlineInputBorder()),
       items: [
-        DropdownMenuItem<T?>(
-          value: null,
-          child: Text(S.current.notSpecified),
-        ),
+        DropdownMenuItem<T?>(value: null, child: Text(S.current.notSpecified)),
         ...options.map(
-          (value) => DropdownMenuItem<T?>(
-            value: value,
-            child: Text(labelBuilder(value), overflow: TextOverflow.ellipsis),
-          ),
+          (value) =>
+              DropdownMenuItem<T?>(value: value, child: Text(labelBuilder(value), overflow: TextOverflow.ellipsis)),
         ),
       ],
       onChanged: onChanged,
+    );
+  }
+
+  String _reproductiveStatusLabel(SpeciesReproductiveStatus value) {
+    final details = speciesReproductiveStatusFriendlyNames[value] ?? value.code;
+    return '${value.code} - $details';
+  }
+
+  List<_ReproductiveStatusGroup> _reproductiveStatusGroups() {
+    const observed = [SpeciesReproductiveStatus.f];
+    const possible = [SpeciesReproductiveStatus.h, SpeciesReproductiveStatus.s];
+    const probable = [
+      SpeciesReproductiveStatus.s7,
+      SpeciesReproductiveStatus.m,
+      SpeciesReproductiveStatus.p,
+      SpeciesReproductiveStatus.t,
+      SpeciesReproductiveStatus.c,
+      SpeciesReproductiveStatus.n,
+      SpeciesReproductiveStatus.a,
+      SpeciesReproductiveStatus.b,
+      SpeciesReproductiveStatus.pe,
+    ];
+
+    final confirmed = kSpeciesReproductiveStatusDisplayOrder
+        .where((status) => !observed.contains(status) && !possible.contains(status) && !probable.contains(status))
+        .toList(growable: false);
+
+    return [
+      _ReproductiveStatusGroup(title: S.current.speciesReproductiveGroupObserved, options: observed),
+      _ReproductiveStatusGroup(title: S.current.speciesReproductiveGroupPossible, options: possible),
+      _ReproductiveStatusGroup(title: S.current.speciesReproductiveGroupProbable, options: probable),
+      _ReproductiveStatusGroup(title: S.current.speciesReproductiveGroupConfirmed, options: confirmed),
+    ];
+  }
+
+  Future<SpeciesReproductiveStatus?> _showReproductiveStatusBottomSheet() async {
+    return showModalBottomSheet<SpeciesReproductiveStatus?>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      builder:
+          (sheetContext) => _ReproductiveStatusBottomSheet(
+            selectedStatus: _selectedReproductiveStatus,
+            labelBuilder: _reproductiveStatusLabel,
+            groups: _reproductiveStatusGroups(),
+          ),
+    );
+  }
+
+  Widget _buildReproductiveStatusField() {
+    return TextFormField(
+      controller: _reproductiveStatusController,
+      readOnly: true,
+      decoration: InputDecoration(
+        labelText: S.current.speciesReproductiveStatus,
+        border: const OutlineInputBorder(),
+        suffixIcon: _selectedReproductiveStatus != null
+            ? IconButton(
+                icon: const Icon(Icons.clear),
+                onPressed: () {
+                  setState(() {
+                    _selectedReproductiveStatus = null;
+                    _reproductiveStatusController.text = '';
+                  });
+                },
+              )
+            : const Icon(Icons.arrow_drop_down),
+      ),
+      onTap: () async {
+        final result = await _showReproductiveStatusBottomSheet();
+        if (!mounted || result == _selectedReproductiveStatus) return;
+        setState(() {
+          _selectedReproductiveStatus = result;
+          _reproductiveStatusController.text = _selectedReproductiveStatus?.code ?? '';
+        });
+      },
     );
   }
 
@@ -336,10 +404,14 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
         isDoubtful: _isDoubtful,
         sampleTime: widget.species.sampleTime,
         habitats: _selectedHabitats.isEmpty ? null : SpeciesHabitat.values.where(_selectedHabitats.contains).toList(),
-        detectionModes: _selectedDetectionModes.isEmpty ? null : SpeciesDetectionMode.values.where(_selectedDetectionModes.contains).toList(),
+        detectionModes:
+            _selectedDetectionModes.isEmpty
+                ? null
+                : SpeciesDetectionMode.values.where(_selectedDetectionModes.contains).toList(),
         reproductiveStatus: _selectedReproductiveStatus,
         sex: _selectedSex,
-        activities: _selectedActivities.isEmpty ? null : SpeciesActivity.values.where(_selectedActivities.contains).toList(),
+        activities:
+            _selectedActivities.isEmpty ? null : SpeciesActivity.values.where(_selectedActivities.contains).toList(),
         pois: widget.species.pois,
       );
 
@@ -509,10 +581,7 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
                         ),
                         isExpanded: true,
                         items: [
-                          DropdownMenuItem<String>(
-                            value: null,
-                            child: Text(S.current.notSpecified),
-                          ),
+                          DropdownMenuItem<String>(value: null, child: Text(S.current.notSpecified)),
                           ...[
                             // Pontos Cardeais
                             'N', 'S', 'E', 'W',
@@ -536,19 +605,7 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
                 const SizedBox(height: 16),
                 Row(
                   children: [
-                    Expanded(
-                      child: _buildDropdownSection<SpeciesReproductiveStatus>(
-                        label: S.current.speciesReproductiveStatus,
-                        options: SpeciesReproductiveStatus.values,
-                        selectedValue: _selectedReproductiveStatus,
-                        labelBuilder: (value) => speciesReproductiveStatusFriendlyNames[value] ?? value.name,
-                        onChanged: (value) {
-                          setState(() {
-                            _selectedReproductiveStatus = value;
-                          });
-                        },
-                      ),
-                    ),
+                    Expanded(child: _buildReproductiveStatusField()),
                     const SizedBox(width: 8),
                     Expanded(
                       child: _buildDropdownSection<SpeciesSex>(
@@ -572,17 +629,18 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
                   options: SpeciesDetectionMode.values,
                   selectedValues: _selectedDetectionModes,
                   labelBuilder: (value) => speciesDetectionModeFriendlyNames[value] ?? value.name,
-                  avatarBuilder: (value) => switch (value) {
-                    SpeciesDetectionMode.visual => _chipIcon(FontAwesomeIcons.solidEye),
-                    SpeciesDetectionMode.auditory => _chipIcon(FontAwesomeIcons.earListen),
-                    SpeciesDetectionMode.capture => _chipIcon(FontAwesomeIcons.boxOpen),
-                    SpeciesDetectionMode.nest => _chipIcon(FontAwesomeIcons.egg),
-                    SpeciesDetectionMode.cameraTrap => _chipIcon(FontAwesomeIcons.solidCamera),
-                    SpeciesDetectionMode.telemetry => _chipIcon(FontAwesomeIcons.satelliteDish),
-                    SpeciesDetectionMode.trackOrSign => _chipIcon(FontAwesomeIcons.feather),
-                    SpeciesDetectionMode.dead => _chipIcon(FontAwesomeIcons.skull),
-                    SpeciesDetectionMode.other => _chipIcon(FontAwesomeIcons.ellipsis),
-                  },
+                  avatarBuilder:
+                      (value) => switch (value) {
+                        SpeciesDetectionMode.visual => _chipIcon(FontAwesomeIcons.solidEye),
+                        SpeciesDetectionMode.song => _chipIcon(FontAwesomeIcons.music),
+                        SpeciesDetectionMode.call => _chipIcon(FontAwesomeIcons.volumeHigh),
+                        SpeciesDetectionMode.wingFlapping => _chipIcon(FontAwesomeIcons.dove),
+                        SpeciesDetectionMode.drumming => _chipIcon(FontAwesomeIcons.drum),
+                        SpeciesDetectionMode.capture => _chipIcon(FontAwesomeIcons.boxOpen),
+                        SpeciesDetectionMode.remote => _chipIcon(FontAwesomeIcons.satelliteDish),
+                        SpeciesDetectionMode.trackOrSign => _chipIcon(FontAwesomeIcons.feather),
+                        SpeciesDetectionMode.other => _chipIcon(FontAwesomeIcons.ellipsis),
+                      },
                   onChanged: (value, selected) {
                     setState(() {
                       if (selected) {
@@ -701,18 +759,10 @@ class _SelectionChipsBottomSheetState<T extends Enum> extends State<_SelectionCh
           children: [
             Row(
               children: [
-                Expanded(
-                  child: Text(widget.title, style: Theme.of(context).textTheme.titleLarge),
-                ),
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(null),
-                  child: Text(S.current.cancel),
-                ),
+                Expanded(child: Text(widget.title, style: Theme.of(context).textTheme.titleLarge)),
+                TextButton(onPressed: () => Navigator.of(context).pop(null), child: Text(S.current.cancel)),
                 const SizedBox(width: 8),
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(_selection),
-                  child: Text(S.current.save),
-                ),
+                TextButton(onPressed: () => Navigator.of(context).pop(_selection), child: Text(S.current.save)),
               ],
             ),
             const SizedBox(height: 12),
@@ -754,3 +804,82 @@ class _SelectionChipsBottomSheetState<T extends Enum> extends State<_SelectionCh
   }
 }
 
+class _ReproductiveStatusBottomSheet extends StatelessWidget {
+  final SpeciesReproductiveStatus? selectedStatus;
+  final String Function(SpeciesReproductiveStatus value) labelBuilder;
+  final List<_ReproductiveStatusGroup> groups;
+
+  const _ReproductiveStatusBottomSheet({
+    required this.selectedStatus,
+    required this.labelBuilder,
+    required this.groups,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.85),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Text(S.current.speciesReproductiveStatus, style: Theme.of(context).textTheme.titleLarge),
+                ),
+                TextButton(onPressed: () => Navigator.of(context).pop(null), child: Text(S.current.clearSelection)),
+                IconButton(
+                  tooltip: S.current.cancel,
+                  onPressed: () => Navigator.of(context).pop(selectedStatus),
+                  icon: const Icon(Icons.close),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Flexible(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    for (final group in groups) ...[
+                      for (final option in group.options)
+                        InkWell(
+                          borderRadius: BorderRadius.circular(12),
+                          onTap: () => Navigator.of(context).pop(option),
+                          child: Tooltip(
+                            message: labelBuilder(option),
+                            child: CircleAvatar(
+                              radius: 24,
+                              backgroundColor:
+                                  selectedStatus == option ? colorScheme.primary : colorScheme.secondaryContainer,
+                              foregroundColor:
+                                  selectedStatus == option ? colorScheme.onPrimary : colorScheme.onSecondaryContainer,
+                              child: Text(option.code),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ReproductiveStatusGroup {
+  final String title;
+  final List<SpeciesReproductiveStatus> options;
+
+  const _ReproductiveStatusGroup({required this.title, required this.options});
+}

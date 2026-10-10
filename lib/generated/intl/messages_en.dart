@@ -1215,26 +1215,25 @@ class MessageLookup extends MessageLookupByLibrary {
     "speciesActivitySinging": MessageLookupByLibrary.simpleMessage("Singing"),
     "speciesCount": m62,
     "speciesCounted": MessageLookupByLibrary.simpleMessage("Species counted"),
-    "speciesDetectionAuditory": MessageLookupByLibrary.simpleMessage(
-      "Auditory",
-    ),
-    "speciesDetectionCameraTrap": MessageLookupByLibrary.simpleMessage(
-      "Camera trap",
-    ),
+    "speciesDetectionCall": MessageLookupByLibrary.simpleMessage("Call"),
     "speciesDetectionCapture": MessageLookupByLibrary.simpleMessage("Capture"),
-    "speciesDetectionDead": MessageLookupByLibrary.simpleMessage("Dead"),
+    "speciesDetectionDrumming": MessageLookupByLibrary.simpleMessage(
+      "Drumming",
+    ),
+    "speciesDetectionFlying": MessageLookupByLibrary.simpleMessage("Flying"),
     "speciesDetectionMode": MessageLookupByLibrary.simpleMessage(
       "Detection mode",
     ),
-    "speciesDetectionNest": MessageLookupByLibrary.simpleMessage("Nest"),
     "speciesDetectionOther": MessageLookupByLibrary.simpleMessage("Other"),
-    "speciesDetectionTelemetry": MessageLookupByLibrary.simpleMessage(
-      "Telemetry",
-    ),
+    "speciesDetectionRemote": MessageLookupByLibrary.simpleMessage("Remote"),
+    "speciesDetectionSong": MessageLookupByLibrary.simpleMessage("Song"),
     "speciesDetectionTrackOrSign": MessageLookupByLibrary.simpleMessage(
       "Tracks / signs",
     ),
     "speciesDetectionVisual": MessageLookupByLibrary.simpleMessage("Visual"),
+    "speciesDetectionWingFlapping": MessageLookupByLibrary.simpleMessage(
+      "Wing flapping",
+    ),
     "speciesHabitat": MessageLookupByLibrary.simpleMessage("Habitat"),
     "speciesHabitatAgricultural": MessageLookupByLibrary.simpleMessage(
       "Agricultural",
@@ -1277,8 +1276,89 @@ class MessageLookup extends MessageLookupByLibrary {
     "speciesPropagationNever": MessageLookupByLibrary.simpleMessage(
       "Never propagate",
     ),
+    "speciesReproductiveCodeA": MessageLookupByLibrary.simpleMessage(
+      "Agitated Behavior (Probable)",
+    ),
+    "speciesReproductiveCodeB": MessageLookupByLibrary.simpleMessage(
+      "Wren/Woodpecker Nest Building (Probable)",
+    ),
+    "speciesReproductiveCodeC": MessageLookupByLibrary.simpleMessage(
+      "Courtship, Display or Copulation (Probable)",
+    ),
+    "speciesReproductiveCodeCF": MessageLookupByLibrary.simpleMessage(
+      "Carrying Food (Confirmed)",
+    ),
+    "speciesReproductiveCodeCN": MessageLookupByLibrary.simpleMessage(
+      "Carrying Nesting Material (Confirmed/Probable)",
+    ),
+    "speciesReproductiveCodeDD": MessageLookupByLibrary.simpleMessage(
+      "Distraction Display (Confirmed)",
+    ),
+    "speciesReproductiveCodeF": MessageLookupByLibrary.simpleMessage(
+      "Flyover (Observed)",
+    ),
+    "speciesReproductiveCodeFL": MessageLookupByLibrary.simpleMessage(
+      "Recently Fledged Young (Confirmed)",
+    ),
+    "speciesReproductiveCodeFS": MessageLookupByLibrary.simpleMessage(
+      "Carrying Fecal Sac (Confirmed)",
+    ),
+    "speciesReproductiveCodeFY": MessageLookupByLibrary.simpleMessage(
+      "Feeding Young (Confirmed)",
+    ),
+    "speciesReproductiveCodeH": MessageLookupByLibrary.simpleMessage(
+      "In Appropriate Habitat (Possible)",
+    ),
+    "speciesReproductiveCodeM": MessageLookupByLibrary.simpleMessage(
+      "Multiple (7+) Singing Birds (Probable)",
+    ),
+    "speciesReproductiveCodeN": MessageLookupByLibrary.simpleMessage(
+      "Visiting Probable Nest Site (Probable)",
+    ),
+    "speciesReproductiveCodeNB": MessageLookupByLibrary.simpleMessage(
+      "Nest Building (Confirmed/Probable)",
+    ),
+    "speciesReproductiveCodeNE": MessageLookupByLibrary.simpleMessage(
+      "Nest with Eggs (Confirmed)",
+    ),
+    "speciesReproductiveCodeNY": MessageLookupByLibrary.simpleMessage(
+      "Nest with Young (Confirmed)",
+    ),
+    "speciesReproductiveCodeON": MessageLookupByLibrary.simpleMessage(
+      "Occupied Nest (Confirmed)",
+    ),
+    "speciesReproductiveCodeP": MessageLookupByLibrary.simpleMessage(
+      "Pair in Suitable Habitat (Probable)",
+    ),
+    "speciesReproductiveCodePE": MessageLookupByLibrary.simpleMessage(
+      "Physiological Evidence (Probable)",
+    ),
+    "speciesReproductiveCodeS": MessageLookupByLibrary.simpleMessage(
+      "Singing Bird (Possible)",
+    ),
+    "speciesReproductiveCodeS7": MessageLookupByLibrary.simpleMessage(
+      "Singing Bird Present 7+ Days (Probable)",
+    ),
+    "speciesReproductiveCodeT": MessageLookupByLibrary.simpleMessage(
+      "Territorial Defense (Probable)",
+    ),
+    "speciesReproductiveCodeUN": MessageLookupByLibrary.simpleMessage(
+      "Used Nest (Confirmed)",
+    ),
     "speciesReproductiveConfirmedBreeding":
         MessageLookupByLibrary.simpleMessage("Confirmed breeding"),
+    "speciesReproductiveGroupConfirmed": MessageLookupByLibrary.simpleMessage(
+      "Confirmed",
+    ),
+    "speciesReproductiveGroupObserved": MessageLookupByLibrary.simpleMessage(
+      "Observed",
+    ),
+    "speciesReproductiveGroupPossible": MessageLookupByLibrary.simpleMessage(
+      "Possible",
+    ),
+    "speciesReproductiveGroupProbable": MessageLookupByLibrary.simpleMessage(
+      "Probable",
+    ),
     "speciesReproductivePossibleBreeding": MessageLookupByLibrary.simpleMessage(
       "Possible breeding",
     ),

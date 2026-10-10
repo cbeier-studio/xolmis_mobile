@@ -1302,26 +1302,25 @@ class MessageLookup extends MessageLookupByLibrary {
     "speciesCounted": MessageLookupByLibrary.simpleMessage(
       "Número de espécies",
     ),
-    "speciesDetectionAuditory": MessageLookupByLibrary.simpleMessage(
-      "Auditiva",
-    ),
-    "speciesDetectionCameraTrap": MessageLookupByLibrary.simpleMessage(
-      "Armadilha fotográfica",
-    ),
+    "speciesDetectionCall": MessageLookupByLibrary.simpleMessage("Chamado"),
     "speciesDetectionCapture": MessageLookupByLibrary.simpleMessage("Captura"),
-    "speciesDetectionDead": MessageLookupByLibrary.simpleMessage("Morto"),
+    "speciesDetectionDrumming": MessageLookupByLibrary.simpleMessage(
+      "Tamborilar",
+    ),
+    "speciesDetectionFlying": MessageLookupByLibrary.simpleMessage("Voo"),
     "speciesDetectionMode": MessageLookupByLibrary.simpleMessage(
       "Modo de detecção",
     ),
-    "speciesDetectionNest": MessageLookupByLibrary.simpleMessage("Ninho"),
     "speciesDetectionOther": MessageLookupByLibrary.simpleMessage("Outro"),
-    "speciesDetectionTelemetry": MessageLookupByLibrary.simpleMessage(
-      "Telemetria",
-    ),
+    "speciesDetectionRemote": MessageLookupByLibrary.simpleMessage("Remoto"),
+    "speciesDetectionSong": MessageLookupByLibrary.simpleMessage("Canto"),
     "speciesDetectionTrackOrSign": MessageLookupByLibrary.simpleMessage(
-      "Vestígios / sinais",
+      "Vestígios",
     ),
     "speciesDetectionVisual": MessageLookupByLibrary.simpleMessage("Visual"),
+    "speciesDetectionWingFlapping": MessageLookupByLibrary.simpleMessage(
+      "Batidas de asas",
+    ),
     "speciesHabitat": MessageLookupByLibrary.simpleMessage("Habitat"),
     "speciesHabitatAgricultural": MessageLookupByLibrary.simpleMessage(
       "Agropecuário",
@@ -1366,8 +1365,89 @@ class MessageLookup extends MessageLookupByLibrary {
     "speciesPropagationNever": MessageLookupByLibrary.simpleMessage(
       "Nunca propagar",
     ),
+    "speciesReproductiveCodeA": MessageLookupByLibrary.simpleMessage(
+      "Comportamento agitado (Provável)",
+    ),
+    "speciesReproductiveCodeB": MessageLookupByLibrary.simpleMessage(
+      "Construção de ninho por corruíra/pica-pau (Provável)",
+    ),
+    "speciesReproductiveCodeC": MessageLookupByLibrary.simpleMessage(
+      "Cortejo, exibição ou cópula (Provável)",
+    ),
+    "speciesReproductiveCodeCF": MessageLookupByLibrary.simpleMessage(
+      "Carregando alimento (Confirmado)",
+    ),
+    "speciesReproductiveCodeCN": MessageLookupByLibrary.simpleMessage(
+      "Carregando material de ninho (Confirmado/Provável)",
+    ),
+    "speciesReproductiveCodeDD": MessageLookupByLibrary.simpleMessage(
+      "Exibição de distração (Confirmado)",
+    ),
+    "speciesReproductiveCodeF": MessageLookupByLibrary.simpleMessage(
+      "Sobrevoo (Observado)",
+    ),
+    "speciesReproductiveCodeFL": MessageLookupByLibrary.simpleMessage(
+      "Jovem recém-emplumado (Confirmado)",
+    ),
+    "speciesReproductiveCodeFS": MessageLookupByLibrary.simpleMessage(
+      "Carregando saco fecal (Confirmado)",
+    ),
+    "speciesReproductiveCodeFY": MessageLookupByLibrary.simpleMessage(
+      "Alimentando jovens (Confirmado)",
+    ),
+    "speciesReproductiveCodeH": MessageLookupByLibrary.simpleMessage(
+      "Em habitat apropriado (Possível)",
+    ),
+    "speciesReproductiveCodeM": MessageLookupByLibrary.simpleMessage(
+      "Múltiplas (7+) aves cantando (Provável)",
+    ),
+    "speciesReproductiveCodeN": MessageLookupByLibrary.simpleMessage(
+      "Visitando provável local de ninho (Provável)",
+    ),
+    "speciesReproductiveCodeNB": MessageLookupByLibrary.simpleMessage(
+      "Construção de ninho (Confirmado/Provável)",
+    ),
+    "speciesReproductiveCodeNE": MessageLookupByLibrary.simpleMessage(
+      "Ninho com ovos (Confirmado)",
+    ),
+    "speciesReproductiveCodeNY": MessageLookupByLibrary.simpleMessage(
+      "Ninho com filhotes (Confirmado)",
+    ),
+    "speciesReproductiveCodeON": MessageLookupByLibrary.simpleMessage(
+      "Ninho ocupado (Confirmado)",
+    ),
+    "speciesReproductiveCodeP": MessageLookupByLibrary.simpleMessage(
+      "Par em habitat adequado (Provável)",
+    ),
+    "speciesReproductiveCodePE": MessageLookupByLibrary.simpleMessage(
+      "Evidência fisiológica (Provável)",
+    ),
+    "speciesReproductiveCodeS": MessageLookupByLibrary.simpleMessage(
+      "Ave cantando (Possível)",
+    ),
+    "speciesReproductiveCodeS7": MessageLookupByLibrary.simpleMessage(
+      "Ave cantando presente por 7+ dias (Provável)",
+    ),
+    "speciesReproductiveCodeT": MessageLookupByLibrary.simpleMessage(
+      "Defesa territorial (Provável)",
+    ),
+    "speciesReproductiveCodeUN": MessageLookupByLibrary.simpleMessage(
+      "Ninho usado (Confirmado)",
+    ),
     "speciesReproductiveConfirmedBreeding":
         MessageLookupByLibrary.simpleMessage("Reprodução confirmada"),
+    "speciesReproductiveGroupConfirmed": MessageLookupByLibrary.simpleMessage(
+      "Confirmado",
+    ),
+    "speciesReproductiveGroupObserved": MessageLookupByLibrary.simpleMessage(
+      "Observado",
+    ),
+    "speciesReproductiveGroupPossible": MessageLookupByLibrary.simpleMessage(
+      "Possível",
+    ),
+    "speciesReproductiveGroupProbable": MessageLookupByLibrary.simpleMessage(
+      "Provável",
+    ),
     "speciesReproductivePossibleBreeding": MessageLookupByLibrary.simpleMessage(
       "Possível reprodução",
     ),

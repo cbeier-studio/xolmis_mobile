@@ -2790,8 +2790,28 @@
     "type": "text",
     "description": "Species detection mode label"
   },
-  "speciesDetectionAuditory": "Auditiva",
-  "@speciesDetectionAuditory": {
+  "speciesDetectionSong": "Canto",
+  "@speciesDetectionSong": {
+    "type": "text",
+    "description": "Species detection mode label"
+  },
+  "speciesDetectionCall": "Chamado",
+  "@speciesDetectionCall": {
+    "type": "text",
+    "description": "Species detection mode label"
+  },
+  "speciesDetectionWingFlapping": "Batidas de asas",
+  "@speciesDetectionWingFlapping": {
+    "type": "text",
+    "description": "Species detection mode label"
+  },
+  "speciesDetectionDrumming": "Tamborilar",
+  "@speciesDetectionDrumming": {
+    "type": "text",
+    "description": "Species detection mode label"
+  },
+  "speciesDetectionFlying": "Voo",
+  "@speciesDetectionFlying": {
     "type": "text",
     "description": "Species detection mode label"
   },
@@ -2800,28 +2820,13 @@
     "type": "text",
     "description": "Species detection mode label"
   },
-  "speciesDetectionNest": "Ninho",
-  "@speciesDetectionNest": {
+  "speciesDetectionRemote": "Remoto",
+  "@speciesDetectionRemote": {
     "type": "text",
     "description": "Species detection mode label"
   },
-  "speciesDetectionCameraTrap": "Armadilha fotográfica",
-  "@speciesDetectionCameraTrap": {
-    "type": "text",
-    "description": "Species detection mode label"
-  },
-  "speciesDetectionTelemetry": "Telemetria",
-  "@speciesDetectionTelemetry": {
-    "type": "text",
-    "description": "Species detection mode label"
-  },
-  "speciesDetectionTrackOrSign": "Vestígios / sinais",
+  "speciesDetectionTrackOrSign": "Vestígios",
   "@speciesDetectionTrackOrSign": {
-    "type": "text",
-    "description": "Species detection mode label"
-  },
-  "speciesDetectionDead": "Morto",
-  "@speciesDetectionDead": {
     "type": "text",
     "description": "Species detection mode label"
   },
@@ -2849,6 +2854,141 @@
   "@speciesReproductiveConfirmedBreeding": {
     "type": "text",
     "description": "Species reproductive status label"
+  },
+  "speciesReproductiveGroupObserved": "Observado",
+  "@speciesReproductiveGroupObserved": {
+    "type": "text",
+    "description": "Reproductive status section title for observed level"
+  },
+  "speciesReproductiveGroupPossible": "Possível",
+  "@speciesReproductiveGroupPossible": {
+    "type": "text",
+    "description": "Reproductive status section title for possible breeding level"
+  },
+  "speciesReproductiveGroupProbable": "Provável",
+  "@speciesReproductiveGroupProbable": {
+    "type": "text",
+    "description": "Reproductive status section title for probable breeding level"
+  },
+  "speciesReproductiveGroupConfirmed": "Confirmado",
+  "@speciesReproductiveGroupConfirmed": {
+    "type": "text",
+    "description": "Reproductive status section title for confirmed breeding level"
+  },
+  "speciesReproductiveCodeH": "Em habitat apropriado (Possível)",
+  "@speciesReproductiveCodeH": {
+    "type": "text",
+    "description": "eBird reproductive code H"
+  },
+  "speciesReproductiveCodeS": "Ave cantando (Possível)",
+  "@speciesReproductiveCodeS": {
+    "type": "text",
+    "description": "eBird reproductive code S"
+  },
+  "speciesReproductiveCodeS7": "Ave cantando presente por 7+ dias (Provável)",
+  "@speciesReproductiveCodeS7": {
+    "type": "text",
+    "description": "eBird reproductive code S7"
+  },
+  "speciesReproductiveCodeM": "Múltiplas (7+) aves cantando (Provável)",
+  "@speciesReproductiveCodeM": {
+    "type": "text",
+    "description": "eBird reproductive code M"
+  },
+  "speciesReproductiveCodeP": "Par em habitat adequado (Provável)",
+  "@speciesReproductiveCodeP": {
+    "type": "text",
+    "description": "eBird reproductive code P"
+  },
+  "speciesReproductiveCodeT": "Defesa territorial (Provável)",
+  "@speciesReproductiveCodeT": {
+    "type": "text",
+    "description": "eBird reproductive code T"
+  },
+  "speciesReproductiveCodeC": "Cortejo, exibição ou cópula (Provável)",
+  "@speciesReproductiveCodeC": {
+    "type": "text",
+    "description": "eBird reproductive code C"
+  },
+  "speciesReproductiveCodeN": "Visitando provável local de ninho (Provável)",
+  "@speciesReproductiveCodeN": {
+    "type": "text",
+    "description": "eBird reproductive code N"
+  },
+  "speciesReproductiveCodeA": "Comportamento agitado (Provável)",
+  "@speciesReproductiveCodeA": {
+    "type": "text",
+    "description": "eBird reproductive code A"
+  },
+  "speciesReproductiveCodeB": "Construção de ninho por corruíra/pica-pau (Provável)",
+  "@speciesReproductiveCodeB": {
+    "type": "text",
+    "description": "eBird reproductive code B"
+  },
+  "speciesReproductiveCodePE": "Evidência fisiológica (Provável)",
+  "@speciesReproductiveCodePE": {
+    "type": "text",
+    "description": "eBird reproductive code PE"
+  },
+  "speciesReproductiveCodeCN": "Carregando material de ninho (Confirmado/Provável)",
+  "@speciesReproductiveCodeCN": {
+    "type": "text",
+    "description": "eBird reproductive code CN"
+  },
+  "speciesReproductiveCodeNB": "Construção de ninho (Confirmado/Provável)",
+  "@speciesReproductiveCodeNB": {
+    "type": "text",
+    "description": "eBird reproductive code NB"
+  },
+  "speciesReproductiveCodeDD": "Exibição de distração (Confirmado)",
+  "@speciesReproductiveCodeDD": {
+    "type": "text",
+    "description": "eBird reproductive code DD"
+  },
+  "speciesReproductiveCodeUN": "Ninho usado (Confirmado)",
+  "@speciesReproductiveCodeUN": {
+    "type": "text",
+    "description": "eBird reproductive code UN"
+  },
+  "speciesReproductiveCodeON": "Ninho ocupado (Confirmado)",
+  "@speciesReproductiveCodeON": {
+    "type": "text",
+    "description": "eBird reproductive code ON"
+  },
+  "speciesReproductiveCodeFL": "Jovem recém-emplumado (Confirmado)",
+  "@speciesReproductiveCodeFL": {
+    "type": "text",
+    "description": "eBird reproductive code FL"
+  },
+  "speciesReproductiveCodeCF": "Carregando alimento (Confirmado)",
+  "@speciesReproductiveCodeCF": {
+    "type": "text",
+    "description": "eBird reproductive code CF"
+  },
+  "speciesReproductiveCodeFY": "Alimentando jovens (Confirmado)",
+  "@speciesReproductiveCodeFY": {
+    "type": "text",
+    "description": "eBird reproductive code FY"
+  },
+  "speciesReproductiveCodeFS": "Carregando saco fecal (Confirmado)",
+  "@speciesReproductiveCodeFS": {
+    "type": "text",
+    "description": "eBird reproductive code FS"
+  },
+  "speciesReproductiveCodeNE": "Ninho com ovos (Confirmado)",
+  "@speciesReproductiveCodeNE": {
+    "type": "text",
+    "description": "eBird reproductive code NE"
+  },
+  "speciesReproductiveCodeNY": "Ninho com filhotes (Confirmado)",
+  "@speciesReproductiveCodeNY": {
+    "type": "text",
+    "description": "eBird reproductive code NY"
+  },
+  "speciesReproductiveCodeF": "Sobrevoo (Observado)",
+  "@speciesReproductiveCodeF": {
+    "type": "text",
+    "description": "eBird reproductive code F"
   },
   "speciesSex": "Sexo",
   "@speciesSex": {

@@ -3353,8 +3353,28 @@
         "type": "text",
         "description": "Species detection mode label"
     },
-    "speciesDetectionAuditory": "Auditory",
-    "@speciesDetectionAuditory": {
+    "speciesDetectionSong": "Song",
+    "@speciesDetectionSong": {
+        "type": "text",
+        "description": "Species detection mode label"
+    },
+    "speciesDetectionCall": "Call",
+    "@speciesDetectionCall": {
+        "type": "text",
+        "description": "Species detection mode label"
+    },
+    "speciesDetectionWingFlapping": "Wing flapping",
+    "@speciesDetectionWingFlapping": {
+        "type": "text",
+        "description": "Species detection mode label"
+    },
+    "speciesDetectionDrumming": "Drumming",
+    "@speciesDetectionDrumming": {
+        "type": "text",
+        "description": "Species detection mode label"
+    },
+    "speciesDetectionFlying": "Flying",
+    "@speciesDetectionFlying": {
         "type": "text",
         "description": "Species detection mode label"
     },
@@ -3363,28 +3383,13 @@
         "type": "text",
         "description": "Species detection mode label"
     },
-    "speciesDetectionNest": "Nest",
-    "@speciesDetectionNest": {
-        "type": "text",
-        "description": "Species detection mode label"
-    },
-    "speciesDetectionCameraTrap": "Camera trap",
-    "@speciesDetectionCameraTrap": {
-        "type": "text",
-        "description": "Species detection mode label"
-    },
-    "speciesDetectionTelemetry": "Telemetry",
-    "@speciesDetectionTelemetry": {
+    "speciesDetectionRemote": "Remote",
+    "@speciesDetectionRemote": {
         "type": "text",
         "description": "Species detection mode label"
     },
     "speciesDetectionTrackOrSign": "Tracks / signs",
     "@speciesDetectionTrackOrSign": {
-        "type": "text",
-        "description": "Species detection mode label"
-    },
-    "speciesDetectionDead": "Dead",
-    "@speciesDetectionDead": {
         "type": "text",
         "description": "Species detection mode label"
     },
@@ -3412,6 +3417,141 @@
     "@speciesReproductiveConfirmedBreeding": {
         "type": "text",
         "description": "Species reproductive status label"
+    },
+    "speciesReproductiveGroupObserved": "Observed",
+    "@speciesReproductiveGroupObserved": {
+        "type": "text",
+        "description": "Reproductive status section title for observed level"
+    },
+    "speciesReproductiveGroupPossible": "Possible",
+    "@speciesReproductiveGroupPossible": {
+        "type": "text",
+        "description": "Reproductive status section title for possible breeding level"
+    },
+    "speciesReproductiveGroupProbable": "Probable",
+    "@speciesReproductiveGroupProbable": {
+        "type": "text",
+        "description": "Reproductive status section title for probable breeding level"
+    },
+    "speciesReproductiveGroupConfirmed": "Confirmed",
+    "@speciesReproductiveGroupConfirmed": {
+        "type": "text",
+        "description": "Reproductive status section title for confirmed breeding level"
+    },
+    "speciesReproductiveCodeH": "In Appropriate Habitat (Possible)",
+    "@speciesReproductiveCodeH": {
+        "type": "text",
+        "description": "eBird reproductive code H"
+    },
+    "speciesReproductiveCodeS": "Singing Bird (Possible)",
+    "@speciesReproductiveCodeS": {
+        "type": "text",
+        "description": "eBird reproductive code S"
+    },
+    "speciesReproductiveCodeS7": "Singing Bird Present 7+ Days (Probable)",
+    "@speciesReproductiveCodeS7": {
+        "type": "text",
+        "description": "eBird reproductive code S7"
+    },
+    "speciesReproductiveCodeM": "Multiple (7+) Singing Birds (Probable)",
+    "@speciesReproductiveCodeM": {
+        "type": "text",
+        "description": "eBird reproductive code M"
+    },
+    "speciesReproductiveCodeP": "Pair in Suitable Habitat (Probable)",
+    "@speciesReproductiveCodeP": {
+        "type": "text",
+        "description": "eBird reproductive code P"
+    },
+    "speciesReproductiveCodeT": "Territorial Defense (Probable)",
+    "@speciesReproductiveCodeT": {
+        "type": "text",
+        "description": "eBird reproductive code T"
+    },
+    "speciesReproductiveCodeC": "Courtship, Display or Copulation (Probable)",
+    "@speciesReproductiveCodeC": {
+        "type": "text",
+        "description": "eBird reproductive code C"
+    },
+    "speciesReproductiveCodeN": "Visiting Probable Nest Site (Probable)",
+    "@speciesReproductiveCodeN": {
+        "type": "text",
+        "description": "eBird reproductive code N"
+    },
+    "speciesReproductiveCodeA": "Agitated Behavior (Probable)",
+    "@speciesReproductiveCodeA": {
+        "type": "text",
+        "description": "eBird reproductive code A"
+    },
+    "speciesReproductiveCodeB": "Wren/Woodpecker Nest Building (Probable)",
+    "@speciesReproductiveCodeB": {
+        "type": "text",
+        "description": "eBird reproductive code B"
+    },
+    "speciesReproductiveCodePE": "Physiological Evidence (Probable)",
+    "@speciesReproductiveCodePE": {
+        "type": "text",
+        "description": "eBird reproductive code PE"
+    },
+    "speciesReproductiveCodeCN": "Carrying Nesting Material (Confirmed/Probable)",
+    "@speciesReproductiveCodeCN": {
+        "type": "text",
+        "description": "eBird reproductive code CN"
+    },
+    "speciesReproductiveCodeNB": "Nest Building (Confirmed/Probable)",
+    "@speciesReproductiveCodeNB": {
+        "type": "text",
+        "description": "eBird reproductive code NB"
+    },
+    "speciesReproductiveCodeDD": "Distraction Display (Confirmed)",
+    "@speciesReproductiveCodeDD": {
+        "type": "text",
+        "description": "eBird reproductive code DD"
+    },
+    "speciesReproductiveCodeUN": "Used Nest (Confirmed)",
+    "@speciesReproductiveCodeUN": {
+        "type": "text",
+        "description": "eBird reproductive code UN"
+    },
+    "speciesReproductiveCodeON": "Occupied Nest (Confirmed)",
+    "@speciesReproductiveCodeON": {
+        "type": "text",
+        "description": "eBird reproductive code ON"
+    },
+    "speciesReproductiveCodeFL": "Recently Fledged Young (Confirmed)",
+    "@speciesReproductiveCodeFL": {
+        "type": "text",
+        "description": "eBird reproductive code FL"
+    },
+    "speciesReproductiveCodeCF": "Carrying Food (Confirmed)",
+    "@speciesReproductiveCodeCF": {
+        "type": "text",
+        "description": "eBird reproductive code CF"
+    },
+    "speciesReproductiveCodeFY": "Feeding Young (Confirmed)",
+    "@speciesReproductiveCodeFY": {
+        "type": "text",
+        "description": "eBird reproductive code FY"
+    },
+    "speciesReproductiveCodeFS": "Carrying Fecal Sac (Confirmed)",
+    "@speciesReproductiveCodeFS": {
+        "type": "text",
+        "description": "eBird reproductive code FS"
+    },
+    "speciesReproductiveCodeNE": "Nest with Eggs (Confirmed)",
+    "@speciesReproductiveCodeNE": {
+        "type": "text",
+        "description": "eBird reproductive code NE"
+    },
+    "speciesReproductiveCodeNY": "Nest with Young (Confirmed)",
+    "@speciesReproductiveCodeNY": {
+        "type": "text",
+        "description": "eBird reproductive code NY"
+    },
+    "speciesReproductiveCodeF": "Flyover (Observed)",
+    "@speciesReproductiveCodeF": {
+        "type": "text",
+        "description": "eBird reproductive code F"
     },
     "speciesSex": "Sex",
     "@speciesSex": {

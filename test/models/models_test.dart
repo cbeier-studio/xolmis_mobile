@@ -135,6 +135,28 @@ void main() {
       expect(updated.name, equals(species.name));
     });
 
+    test('Species map/json conversion preserves reproductiveStatus code', () {
+      final species = Species(
+        id: 1,
+        inventoryId: 'INV-001',
+        name: 'Xolmis irupero',
+        isOutOfInventory: false,
+        reproductiveStatus: SpeciesReproductiveStatus.h,
+      );
+
+      final map = species.toMap(species.inventoryId);
+      expect(map['reproductiveStatus'], equals('H'));
+
+      final restoredFromMap = Species.fromMap(map, const []);
+      expect(restoredFromMap.reproductiveStatus, equals(SpeciesReproductiveStatus.h));
+
+      final jsonMap = species.toJson();
+      expect(jsonMap['reproductiveStatus'], equals('H'));
+
+      final restoredFromJson = Species.fromJson(jsonMap);
+      expect(restoredFromJson.reproductiveStatus, equals(SpeciesReproductiveStatus.h));
+    });
+
     test('hasValidStartCoordinates identifies non-null and non-zero start coordinates', () {
       final invWithStart = Inventory(
         id: 'INV-001',

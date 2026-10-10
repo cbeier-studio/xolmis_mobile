@@ -152,44 +152,142 @@ final Map<SpeciesHabitat, String> speciesHabitatFriendlyNames = {
 };
 
 /// Detection modes used when a species is recorded.
-enum SpeciesDetectionMode {
-  visual,
-  auditory,
-  capture,
-  nest,
-  cameraTrap,
-  telemetry,
-  trackOrSign,
-  dead,
-  other,
-}
+enum SpeciesDetectionMode { visual, song, call, wingFlapping, drumming, capture, remote, trackOrSign, other }
 
 /// Localized labels for [SpeciesDetectionMode] values.
 final Map<SpeciesDetectionMode, String> speciesDetectionModeFriendlyNames = {
   SpeciesDetectionMode.visual: S.current.speciesDetectionVisual,
-  SpeciesDetectionMode.auditory: S.current.speciesDetectionAuditory,
+  SpeciesDetectionMode.song: S.current.speciesDetectionSong,
+  SpeciesDetectionMode.call: S.current.speciesDetectionCall,
+  SpeciesDetectionMode.wingFlapping: S.current.speciesDetectionWingFlapping,
+  SpeciesDetectionMode.drumming: S.current.speciesDetectionDrumming,
   SpeciesDetectionMode.capture: S.current.speciesDetectionCapture,
-  SpeciesDetectionMode.nest: S.current.speciesDetectionNest,
-  SpeciesDetectionMode.cameraTrap: S.current.speciesDetectionCameraTrap,
-  SpeciesDetectionMode.telemetry: S.current.speciesDetectionTelemetry,
+  SpeciesDetectionMode.remote: S.current.speciesDetectionRemote,
   SpeciesDetectionMode.trackOrSign: S.current.speciesDetectionTrackOrSign,
-  SpeciesDetectionMode.dead: S.current.speciesDetectionDead,
   SpeciesDetectionMode.other: S.current.speciesDetectionOther,
 };
 
-/// Reproductive status values compatible with eBird-style breeding evidence.
+/// Reproductive/breeding evidence values based on eBird breeding and behavior codes.
 enum SpeciesReproductiveStatus {
-  possibleBreeding,
-  probableBreeding,
-  confirmedBreeding,
+  h('H'),
+  s('S'),
+  s7('S7'),
+  m('M'),
+  p('P'),
+  t('T'),
+  c('C'),
+  n('N'),
+  a('A'),
+  b('B'),
+  pe('PE'),
+  cn('CN'),
+  nb('NB'),
+  dd('DD'),
+  un('UN'),
+  on('ON'),
+  fl('FL'),
+  cf('CF'),
+  fy('FY'),
+  fs('FS'),
+  ne('NE'),
+  ny('NY'),
+  f('F');
+
+  const SpeciesReproductiveStatus(this.code);
+
+  final String code;
 }
 
-/// Localized labels for [SpeciesReproductiveStatus] values.
+/// Display labels for [SpeciesReproductiveStatus] values.
 final Map<SpeciesReproductiveStatus, String> speciesReproductiveStatusFriendlyNames = {
-  SpeciesReproductiveStatus.possibleBreeding: S.current.speciesReproductivePossibleBreeding,
-  SpeciesReproductiveStatus.probableBreeding: S.current.speciesReproductiveProbableBreeding,
-  SpeciesReproductiveStatus.confirmedBreeding: S.current.speciesReproductiveConfirmedBreeding,
+  SpeciesReproductiveStatus.h: S.current.speciesReproductiveCodeH,
+  SpeciesReproductiveStatus.s: S.current.speciesReproductiveCodeS,
+  SpeciesReproductiveStatus.s7: S.current.speciesReproductiveCodeS7,
+  SpeciesReproductiveStatus.m: S.current.speciesReproductiveCodeM,
+  SpeciesReproductiveStatus.p: S.current.speciesReproductiveCodeP,
+  SpeciesReproductiveStatus.t: S.current.speciesReproductiveCodeT,
+  SpeciesReproductiveStatus.c: S.current.speciesReproductiveCodeC,
+  SpeciesReproductiveStatus.n: S.current.speciesReproductiveCodeN,
+  SpeciesReproductiveStatus.a: S.current.speciesReproductiveCodeA,
+  SpeciesReproductiveStatus.b: S.current.speciesReproductiveCodeB,
+  SpeciesReproductiveStatus.pe: S.current.speciesReproductiveCodePE,
+  SpeciesReproductiveStatus.cn: S.current.speciesReproductiveCodeCN,
+  SpeciesReproductiveStatus.nb: S.current.speciesReproductiveCodeNB,
+  SpeciesReproductiveStatus.dd: S.current.speciesReproductiveCodeDD,
+  SpeciesReproductiveStatus.un: S.current.speciesReproductiveCodeUN,
+  SpeciesReproductiveStatus.on: S.current.speciesReproductiveCodeON,
+  SpeciesReproductiveStatus.fl: S.current.speciesReproductiveCodeFL,
+  SpeciesReproductiveStatus.cf: S.current.speciesReproductiveCodeCF,
+  SpeciesReproductiveStatus.fy: S.current.speciesReproductiveCodeFY,
+  SpeciesReproductiveStatus.fs: S.current.speciesReproductiveCodeFS,
+  SpeciesReproductiveStatus.ne: S.current.speciesReproductiveCodeNE,
+  SpeciesReproductiveStatus.ny: S.current.speciesReproductiveCodeNY,
+  SpeciesReproductiveStatus.f: S.current.speciesReproductiveCodeF,
 };
+
+/// Preferred UI order by evidence strength from observed to confirmed.
+const List<SpeciesReproductiveStatus> kSpeciesReproductiveStatusDisplayOrder = [
+  SpeciesReproductiveStatus.f,
+  SpeciesReproductiveStatus.h,
+  SpeciesReproductiveStatus.s,
+  SpeciesReproductiveStatus.s7,
+  SpeciesReproductiveStatus.m,
+  SpeciesReproductiveStatus.p,
+  SpeciesReproductiveStatus.t,
+  SpeciesReproductiveStatus.c,
+  SpeciesReproductiveStatus.n,
+  SpeciesReproductiveStatus.a,
+  SpeciesReproductiveStatus.b,
+  SpeciesReproductiveStatus.pe,
+  SpeciesReproductiveStatus.cn,
+  SpeciesReproductiveStatus.nb,
+  SpeciesReproductiveStatus.dd,
+  SpeciesReproductiveStatus.un,
+  SpeciesReproductiveStatus.on,
+  SpeciesReproductiveStatus.fl,
+  SpeciesReproductiveStatus.cf,
+  SpeciesReproductiveStatus.fy,
+  SpeciesReproductiveStatus.fs,
+  SpeciesReproductiveStatus.ne,
+  SpeciesReproductiveStatus.ny,
+];
+
+const Map<String, SpeciesReproductiveStatus> _legacySpeciesReproductiveStatusAlias = {
+  'possiblebreeding': SpeciesReproductiveStatus.h,
+  'probablebreeding': SpeciesReproductiveStatus.p,
+  'confirmedbreeding': SpeciesReproductiveStatus.ne,
+};
+
+/// Parses persisted reproductive status values from either current code or legacy enum name.
+SpeciesReproductiveStatus? parseSpeciesReproductiveStatus(dynamic raw) {
+  if (raw == null) return null;
+
+  if (raw is int && raw >= 0 && raw < SpeciesReproductiveStatus.values.length) {
+    return SpeciesReproductiveStatus.values[raw];
+  }
+
+  final token = raw.toString().trim();
+  if (token.isEmpty) return null;
+
+  for (final value in SpeciesReproductiveStatus.values) {
+    if (value.code.toLowerCase() == token.toLowerCase()) {
+      return value;
+    }
+  }
+
+  for (final value in SpeciesReproductiveStatus.values) {
+    if (value.name.toLowerCase() == token.toLowerCase()) {
+      return value;
+    }
+  }
+
+  final index = int.tryParse(token);
+  if (index != null && index >= 0 && index < SpeciesReproductiveStatus.values.length) {
+    return SpeciesReproductiveStatus.values[index];
+  }
+
+  return _legacySpeciesReproductiveStatusAlias[token.toLowerCase()];
+}
 
 /// Sex values that can be assigned to a species record.
 enum SpeciesSex { indeterminate, male, female, both }

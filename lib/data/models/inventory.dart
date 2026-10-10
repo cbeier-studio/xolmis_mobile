@@ -52,6 +52,16 @@ List<T>? _enumListFromDynamic<T extends Enum>(List<T> values, dynamic raw) {
 
 String? _enumValueToName<T extends Enum>(T? value) => value?.name;
 
+String? _speciesReproductiveStatusToCode(SpeciesReproductiveStatus? value) => value?.code;
+
+SpeciesReproductiveStatus? _speciesReproductiveStatusFromDynamic(dynamic raw) {
+  if (raw is int && raw >= 0 && raw < SpeciesReproductiveStatus.values.length) {
+    return SpeciesReproductiveStatus.values[raw];
+  }
+
+  return parseSpeciesReproductiveStatus(raw);
+}
+
 List<String>? _enumListToNames<T extends Enum>(List<T>? values) {
   if (values == null || values.isEmpty) return null;
   return values.map((value) => value.name).toList();
@@ -202,9 +212,7 @@ class Species {
       name: map['name'],
       count: map['count'],
       notes: map['notes'],
-      sampleTime: map['sampleTime'] != null
-          ? DateTime.parse(map['sampleTime'])
-          : null,
+      sampleTime: map['sampleTime'] != null ? DateTime.parse(map['sampleTime']) : null,
       isOutOfInventory: map['isOutOfInventory'] == 1, // Convert int to boolean
       isDoubtful: map['isDoubtful'] == 1,
       distance: map['distance'],
@@ -212,7 +220,7 @@ class Species {
       flightDirection: map['flightDirection'],
       habitats: _enumListFromDynamic(SpeciesHabitat.values, map['habitats']),
       detectionModes: _enumListFromDynamic(SpeciesDetectionMode.values, map['detectionModes']),
-      reproductiveStatus: _enumFromDynamic(SpeciesReproductiveStatus.values, map['reproductiveStatus']),
+      reproductiveStatus: _speciesReproductiveStatusFromDynamic(map['reproductiveStatus']),
       sex: _enumFromDynamic(SpeciesSex.values, map['sex']),
       activities: _enumListFromDynamic(SpeciesActivity.values, map['activities']),
       pois: pois,
@@ -237,7 +245,7 @@ class Species {
     SpeciesReproductiveStatus? reproductiveStatus,
     SpeciesSex? sex,
     List<SpeciesActivity>? activities,
-    List<Poi>? pois
+    List<Poi>? pois,
   }) {
     return Species(
       id: id ?? this.id,
@@ -277,7 +285,7 @@ class Species {
       'flightDirection': flightDirection,
       'habitats': _enumListToJson(habitats),
       'detectionModes': _enumListToJson(detectionModes),
-      'reproductiveStatus': _enumValueToName(reproductiveStatus),
+      'reproductiveStatus': _speciesReproductiveStatusToCode(reproductiveStatus),
       'sex': _enumValueToName(sex),
       'activities': _enumListToJson(activities),
     };
@@ -300,7 +308,7 @@ class Species {
       'flightDirection': flightDirection,
       'habitats': _enumListToNames(habitats),
       'detectionModes': _enumListToNames(detectionModes),
-      'reproductiveStatus': _enumValueToName(reproductiveStatus),
+      'reproductiveStatus': _speciesReproductiveStatusToCode(reproductiveStatus),
       'sex': _enumValueToName(sex),
       'activities': _enumListToNames(activities),
       'pois': pois.map((poi) => poi.toJson()).toList(),
@@ -323,7 +331,7 @@ class Species {
       flightDirection: json['flightDirection'],
       habitats: _enumListFromDynamic(SpeciesHabitat.values, json['habitats']),
       detectionModes: _enumListFromDynamic(SpeciesDetectionMode.values, json['detectionModes']),
-      reproductiveStatus: _enumFromDynamic(SpeciesReproductiveStatus.values, json['reproductiveStatus']),
+      reproductiveStatus: _speciesReproductiveStatusFromDynamic(json['reproductiveStatus']),
       sex: _enumFromDynamic(SpeciesSex.values, json['sex']),
       activities: _enumListFromDynamic(SpeciesActivity.values, json['activities']),
       pois: (json['pois'] as List).map((item) => Poi.fromJson(item)).toList(),
@@ -393,9 +401,7 @@ class Vegetation {
     return Vegetation(
       id: map['id'],
       inventoryId: map['inventoryId'],
-      sampleTime: map['sampleTime'] != null
-          ? DateTime.parse(map['sampleTime'])
-          : null,
+      sampleTime: map['sampleTime'] != null ? DateTime.parse(map['sampleTime']) : null,
       longitude: map['longitude'],
       latitude: map['latitude'],
       herbsProportion: map['herbsProportion'],
@@ -500,13 +506,22 @@ class Vegetation {
       longitude: json['longitude'],
       latitude: json['latitude'],
       herbsProportion: json['herbsProportion'],
-      herbsDistribution: json['herbsDistribution'] != null ? DistributionType.values[json['herbsDistribution']] : DistributionType.disNone,
+      herbsDistribution:
+          json['herbsDistribution'] != null
+              ? DistributionType.values[json['herbsDistribution']]
+              : DistributionType.disNone,
       herbsHeight: json['herbsHeight'],
       shrubsProportion: json['shrubsProportion'],
-      shrubsDistribution: json['shrubsDistribution'] != null ? DistributionType.values[json['shrubsDistribution']] : DistributionType.disNone,
+      shrubsDistribution:
+          json['shrubsDistribution'] != null
+              ? DistributionType.values[json['shrubsDistribution']]
+              : DistributionType.disNone,
       shrubsHeight: json['shrubsHeight'],
       treesProportion: json['treesProportion'],
-      treesDistribution: json['treesDistribution'] != null ? DistributionType.values[json['treesDistribution']] : DistributionType.disNone,
+      treesDistribution:
+          json['treesDistribution'] != null
+              ? DistributionType.values[json['treesDistribution']]
+              : DistributionType.disNone,
       treesHeight: json['treesHeight'],
       notes: json['notes'],
     );
@@ -564,9 +579,7 @@ class Weather {
     return Weather(
       id: map['id'],
       inventoryId: map['inventoryId'],
-      sampleTime: map['sampleTime'] != null
-          ? DateTime.parse(map['sampleTime'])
-          : null,
+      sampleTime: map['sampleTime'] != null ? DateTime.parse(map['sampleTime']) : null,
       cloudCover: map['cloudCover'],
       precipitation: PrecipitationType.values[map['precipitation']],
       temperature: map['temperature'],
@@ -579,16 +592,16 @@ class Weather {
 
   /// Returns a copy of this [Weather] with the specified fields replaced.
   Weather copyWith({
-      int? id,
-      String? inventoryId,
-      DateTime? sampleTime,
-      int? cloudCover,
-      PrecipitationType? precipitation,
-      double? temperature,
-      int? windSpeed,
-      String? windDirection,
-      double? atmosphericPressure,
-      double? relativeHumidity,
+    int? id,
+    String? inventoryId,
+    DateTime? sampleTime,
+    int? cloudCover,
+    PrecipitationType? precipitation,
+    double? temperature,
+    int? windSpeed,
+    String? windDirection,
+    double? atmosphericPressure,
+    double? relativeHumidity,
   }) {
     return Weather(
       id: id ?? this.id,
@@ -642,16 +655,17 @@ class Weather {
     return Weather(
       id: json['id'],
       inventoryId: json['inventoryId'],
-      sampleTime: DateTime.parse(json['sampleTime']), 
+      sampleTime: DateTime.parse(json['sampleTime']),
       cloudCover: json['cloudCover'],
-      precipitation: json['precipitation'] != null ? PrecipitationType.values[json['precipitation']] : PrecipitationType.preNone,
+      precipitation:
+          json['precipitation'] != null ? PrecipitationType.values[json['precipitation']] : PrecipitationType.preNone,
       temperature: json['temperature'],
       windSpeed: json['windSpeed'],
       windDirection: json['windDirection'],
       atmosphericPressure: json['atmosphericPressure'],
       relativeHumidity: json['relativeHumidity'],
     );
-  } 
+  }
 
   @override
   String toString() {
@@ -698,6 +712,7 @@ class Inventory with ChangeNotifier {
   List<Weather> weatherList;
   StreamSubscription<void>? _timer;
   final ValueNotifier<double> _elapsedTimeNotifier = ValueNotifier<double>(0);
+
   /// Emits the current elapsed time for listeners interested in timer updates.
   ValueNotifier<double> get elapsedTimeNotifier => _elapsedTimeNotifier;
   final ValueNotifier<bool> _isFinishedNotifier = ValueNotifier<bool>(false);
@@ -705,23 +720,15 @@ class Inventory with ChangeNotifier {
   /// Emits whether the inventory is currently finished.
   ValueNotifier<bool> get isFinishedNotifier => _isFinishedNotifier;
 
-  bool get isStationary =>
-      type == InventoryType.invPointCount ||
-      type == InventoryType.invPointDetection;
+  bool get isStationary => type == InventoryType.invPointCount || type == InventoryType.invPointDetection;
 
   /// Returns true if both start latitude and start longitude are present and non-zero.
   bool get hasValidStartCoordinates =>
-      startLatitude != null &&
-      startLatitude != 0 &&
-      startLongitude != null &&
-      startLongitude != 0;
+      startLatitude != null && startLatitude != 0 && startLongitude != null && startLongitude != 0;
 
   /// Returns true if both end latitude and end longitude are present and non-zero.
   bool get hasValidEndCoordinates =>
-      endLatitude != null &&
-      endLatitude != 0 &&
-      endLongitude != null &&
-      endLongitude != 0;
+      endLatitude != null && endLatitude != 0 && endLongitude != null && endLongitude != 0;
 
   /// Returns true if start coordinates are missing/blank, or if finished and end coordinates are missing/blank.
   bool get hasMissingCoordinates =>
@@ -776,14 +783,14 @@ class Inventory with ChangeNotifier {
     this.currentIntervalSpeciesCount = 0,
     this.totalPausedTimeInSeconds = 0,
     this.pauseStartTime,
-  }) : transportMode = transportMode ??
-            ((type == InventoryType.invPointCount || type == InventoryType.invPointDetection)
-                ? TransportMode.tmodeNotApplicable
-                : TransportMode.tmodeWalking) {
+  }) : transportMode =
+           transportMode ??
+           ((type == InventoryType.invPointCount || type == InventoryType.invPointDetection)
+               ? TransportMode.tmodeNotApplicable
+               : TransportMode.tmodeWalking) {
     if (speciesList.isNotEmpty && speciesCount == 0) {
       speciesCount = speciesList.length;
-      speciesOutOfInventoryCount =
-          speciesList.where((s) => s.isOutOfInventory).length;
+      speciesOutOfInventoryCount = speciesList.where((s) => s.isOutOfInventory).length;
       speciesWithinCount = speciesCount - speciesOutOfInventoryCount;
     }
     if (duration == 0) {
@@ -792,57 +799,55 @@ class Inventory with ChangeNotifier {
   }
 
   /// Creates an [Inventory] from a SQLite row plus already loaded child lists.
-  Inventory.fromMap(Map<String, dynamic> map, List<Species> speciesList,
-      List<Vegetation> vegetationList, List<Weather> weatherList,
-      {int speciesCount = 0,
-      int speciesWithinCount = 0,
-      int speciesOutOfInventoryCount = 0})
-      : id = map['id'],
-        type = InventoryType.values[map['type']],
-        duration = map['duration'],
-        maxSpecies = map['maxSpecies'],
-        isPaused = map['isPaused'] == 1,
-        isFinished = map['isFinished'] == 1,
-        elapsedTime = map['elapsedTime'],
-        startTime = map['startTime'] != null
-            ? DateTime.parse(map['startTime'])
-            : null,
-        endTime = map['endTime'] != null
-            ? DateTime.parse(map['endTime'])
-            : null,
-        startLongitude = map['startLongitude'] ?? 0,
-        startLatitude = map['startLatitude'] ?? 0,
-        endLongitude = map['endLongitude'] ?? 0,
-        endLatitude = map['endLatitude'] ?? 0,
-        localityName = map['localityName'],
-        totalObservers = map['totalObservers'] ?? 1,
-        observer = map['observer'],
-        notes = map['notes'],
-        isDiscarded = map['isDiscarded'] == 1,
-        transportMode = map['transportMode'] != null
-            ? TransportMode.values[map['transportMode']]
-            : ((InventoryType.values[map['type']] == InventoryType.invPointCount || InventoryType.values[map['type']] == InventoryType.invPointDetection)
-                ? TransportMode.tmodeNotApplicable
-                : TransportMode.tmodeWalking),
-        currentInterval = map['currentInterval'] ?? 1,
-        intervalsWithoutNewSpecies = map['intervalsWithoutNewSpecies'] ?? 0,
-        currentIntervalSpeciesCount = map['currentIntervalSpeciesCount'] ?? 0,
-        totalPausedTimeInSeconds = map['totalPausedTimeInSeconds'] ?? 0,
-        pauseStartTime = map['pauseStartTime'] != null
-            ? DateTime.parse(map['pauseStartTime'])
-            : null,
-        speciesList = speciesList,
-        speciesCount = speciesCount,
-        speciesWithinCount = speciesWithinCount,
-        speciesOutOfInventoryCount = speciesOutOfInventoryCount,
-        vegetationList = vegetationList,
-        weatherList = weatherList {
+  Inventory.fromMap(
+    Map<String, dynamic> map,
+    List<Species> speciesList,
+    List<Vegetation> vegetationList,
+    List<Weather> weatherList, {
+    int speciesCount = 0,
+    int speciesWithinCount = 0,
+    int speciesOutOfInventoryCount = 0,
+  }) : id = map['id'],
+       type = InventoryType.values[map['type']],
+       duration = map['duration'],
+       maxSpecies = map['maxSpecies'],
+       isPaused = map['isPaused'] == 1,
+       isFinished = map['isFinished'] == 1,
+       elapsedTime = map['elapsedTime'],
+       startTime = map['startTime'] != null ? DateTime.parse(map['startTime']) : null,
+       endTime = map['endTime'] != null ? DateTime.parse(map['endTime']) : null,
+       startLongitude = map['startLongitude'] ?? 0,
+       startLatitude = map['startLatitude'] ?? 0,
+       endLongitude = map['endLongitude'] ?? 0,
+       endLatitude = map['endLatitude'] ?? 0,
+       localityName = map['localityName'],
+       totalObservers = map['totalObservers'] ?? 1,
+       observer = map['observer'],
+       notes = map['notes'],
+       isDiscarded = map['isDiscarded'] == 1,
+       transportMode =
+           map['transportMode'] != null
+               ? TransportMode.values[map['transportMode']]
+               : ((InventoryType.values[map['type']] == InventoryType.invPointCount ||
+                       InventoryType.values[map['type']] == InventoryType.invPointDetection)
+                   ? TransportMode.tmodeNotApplicable
+                   : TransportMode.tmodeWalking),
+       currentInterval = map['currentInterval'] ?? 1,
+       intervalsWithoutNewSpecies = map['intervalsWithoutNewSpecies'] ?? 0,
+       currentIntervalSpeciesCount = map['currentIntervalSpeciesCount'] ?? 0,
+       totalPausedTimeInSeconds = map['totalPausedTimeInSeconds'] ?? 0,
+       pauseStartTime = map['pauseStartTime'] != null ? DateTime.parse(map['pauseStartTime']) : null,
+       speciesList = speciesList,
+       speciesCount = speciesCount,
+       speciesWithinCount = speciesWithinCount,
+       speciesOutOfInventoryCount = speciesOutOfInventoryCount,
+       vegetationList = vegetationList,
+       weatherList = weatherList {
     if (this.speciesCount == 0 && speciesList.isNotEmpty) {
       this.speciesCount = speciesList.length;
     }
     if (this.speciesOutOfInventoryCount == 0 && speciesList.isNotEmpty) {
-      this.speciesOutOfInventoryCount =
-          speciesList.where((s) => s.isOutOfInventory).length;
+      this.speciesOutOfInventoryCount = speciesList.where((s) => s.isOutOfInventory).length;
     }
     if (this.speciesWithinCount == 0 && this.speciesCount > 0) {
       this.speciesWithinCount = this.speciesCount - this.speciesOutOfInventoryCount;
@@ -910,8 +915,7 @@ class Inventory with ChangeNotifier {
       speciesList: speciesList ?? this.speciesList,
       speciesCount: speciesCount ?? this.speciesCount,
       speciesWithinCount: speciesWithinCount ?? this.speciesWithinCount,
-      speciesOutOfInventoryCount:
-          speciesOutOfInventoryCount ?? this.speciesOutOfInventoryCount,
+      speciesOutOfInventoryCount: speciesOutOfInventoryCount ?? this.speciesOutOfInventoryCount,
       vegetationList: vegetationList ?? this.vegetationList,
       weatherList: weatherList ?? this.weatherList,
     );
@@ -1028,11 +1032,13 @@ class Inventory with ChangeNotifier {
       observer: json['observer'],
       notes: json['notes'],
       isDiscarded: json['isDiscarded'] ?? false,
-      transportMode: json['transportMode'] != null
-          ? TransportMode.values[json['transportMode']]
-          : ((InventoryType.values[json['type']] == InventoryType.invPointCount || json['type'] == InventoryType.invPointDetection.index)
-              ? TransportMode.tmodeNotApplicable
-              : TransportMode.tmodeWalking),
+      transportMode:
+          json['transportMode'] != null
+              ? TransportMode.values[json['transportMode']]
+              : ((InventoryType.values[json['type']] == InventoryType.invPointCount ||
+                      json['type'] == InventoryType.invPointDetection.index)
+                  ? TransportMode.tmodeNotApplicable
+                  : TransportMode.tmodeWalking),
       currentInterval: json['currentInterval'],
       intervalsWithoutNewSpecies: json['intervalsWithoutNewSpecies'],
       currentIntervalSpeciesCount: json['currentIntervalSpeciesCount'],
@@ -1138,7 +1144,9 @@ class Inventory with ChangeNotifier {
   /// `elapsedTime >= duration * 60`. When the inventory finishes automatically,
   /// [stopTimer] is called and a local notification is shown.
   Future<void> startTimer(BuildContext context, InventoryDao inventoryDao) async {
-    debugPrint('START_TIMER_CALLED for inventory $id. Current state: isFinished=$isFinished, isPaused=$isPaused, duration=$duration');
+    debugPrint(
+      'START_TIMER_CALLED for inventory $id. Current state: isFinished=$isFinished, isPaused=$isPaused, duration=$duration',
+    );
     // If duration was not defined, do not start the timer
     if (duration == 0) {
       debugPrint('...START_TIMER_ABORTED for $id: duration is 0.');
@@ -1182,7 +1190,9 @@ class Inventory with ChangeNotifier {
 
           // Elapsed time reach the defined duration
           if (elapsedTime >= duration * 60 && !isFinished) {
-            debugPrint('TIMER_TICK for $id: Interval duration reached! (elapsedTime: $elapsedTime >= ${duration * 60})');
+            debugPrint(
+              'TIMER_TICK for $id: Interval duration reached! (elapsedTime: $elapsedTime >= ${duration * 60})',
+            );
 
             // If inventory type is intervaled
             if (type == InventoryType.invIntervalQualitative) {
@@ -1352,10 +1362,8 @@ class Inventory with ChangeNotifier {
 
   /// Shows a local push notification informing the user that this inventory
   /// was finished automatically.
-  Future<void> showNotification(
-      FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin) async {
-    const AndroidNotificationDetails androidPlatformChannelSpecifics =
-    AndroidNotificationDetails(
+  Future<void> showNotification(FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin) async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails(
       'studio.cbeier.xolmis',
       'Xolmis',
       channelDescription: 'Xolmis notifications',
@@ -1364,13 +1372,13 @@ class Inventory with ChangeNotifier {
       playSound: true,
       ticker: 'ticker',
     );
-    const NotificationDetails platformChannelSpecifics =
-    NotificationDetails(android: androidPlatformChannelSpecifics);
+    const NotificationDetails platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.show(
-        id: 0,
-        title: 'Inventário Encerrado',
-        body: 'O inventário $id foi encerrado automaticamente.',
-        notificationDetails: platformChannelSpecifics,
-        payload: 'item x');
+      id: 0,
+      title: 'Inventário Encerrado',
+      body: 'O inventário $id foi encerrado automaticamente.',
+      notificationDetails: platformChannelSpecifics,
+      payload: 'item x',
+    );
   }
 }

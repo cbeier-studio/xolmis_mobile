@@ -6530,11 +6530,51 @@ class S {
     );
   }
 
-  /// `Auditory`
-  String get speciesDetectionAuditory {
+  /// `Song`
+  String get speciesDetectionSong {
     return Intl.message(
-      'Auditory',
-      name: 'speciesDetectionAuditory',
+      'Song',
+      name: 'speciesDetectionSong',
+      desc: 'Species detection mode label',
+      args: [],
+    );
+  }
+
+  /// `Call`
+  String get speciesDetectionCall {
+    return Intl.message(
+      'Call',
+      name: 'speciesDetectionCall',
+      desc: 'Species detection mode label',
+      args: [],
+    );
+  }
+
+  /// `Wing flapping`
+  String get speciesDetectionWingFlapping {
+    return Intl.message(
+      'Wing flapping',
+      name: 'speciesDetectionWingFlapping',
+      desc: 'Species detection mode label',
+      args: [],
+    );
+  }
+
+  /// `Drumming`
+  String get speciesDetectionDrumming {
+    return Intl.message(
+      'Drumming',
+      name: 'speciesDetectionDrumming',
+      desc: 'Species detection mode label',
+      args: [],
+    );
+  }
+
+  /// `Flying`
+  String get speciesDetectionFlying {
+    return Intl.message(
+      'Flying',
+      name: 'speciesDetectionFlying',
       desc: 'Species detection mode label',
       args: [],
     );
@@ -6550,31 +6590,11 @@ class S {
     );
   }
 
-  /// `Nest`
-  String get speciesDetectionNest {
+  /// `Remote`
+  String get speciesDetectionRemote {
     return Intl.message(
-      'Nest',
-      name: 'speciesDetectionNest',
-      desc: 'Species detection mode label',
-      args: [],
-    );
-  }
-
-  /// `Camera trap`
-  String get speciesDetectionCameraTrap {
-    return Intl.message(
-      'Camera trap',
-      name: 'speciesDetectionCameraTrap',
-      desc: 'Species detection mode label',
-      args: [],
-    );
-  }
-
-  /// `Telemetry`
-  String get speciesDetectionTelemetry {
-    return Intl.message(
-      'Telemetry',
-      name: 'speciesDetectionTelemetry',
+      'Remote',
+      name: 'speciesDetectionRemote',
       desc: 'Species detection mode label',
       args: [],
     );
@@ -6585,16 +6605,6 @@ class S {
     return Intl.message(
       'Tracks / signs',
       name: 'speciesDetectionTrackOrSign',
-      desc: 'Species detection mode label',
-      args: [],
-    );
-  }
-
-  /// `Dead`
-  String get speciesDetectionDead {
-    return Intl.message(
-      'Dead',
-      name: 'speciesDetectionDead',
       desc: 'Species detection mode label',
       args: [],
     );
@@ -6646,6 +6656,276 @@ class S {
       'Confirmed breeding',
       name: 'speciesReproductiveConfirmedBreeding',
       desc: 'Species reproductive status label',
+      args: [],
+    );
+  }
+
+  /// `Observed`
+  String get speciesReproductiveGroupObserved {
+    return Intl.message(
+      'Observed',
+      name: 'speciesReproductiveGroupObserved',
+      desc: 'Reproductive status section title for observed level',
+      args: [],
+    );
+  }
+
+  /// `Possible`
+  String get speciesReproductiveGroupPossible {
+    return Intl.message(
+      'Possible',
+      name: 'speciesReproductiveGroupPossible',
+      desc: 'Reproductive status section title for possible breeding level',
+      args: [],
+    );
+  }
+
+  /// `Probable`
+  String get speciesReproductiveGroupProbable {
+    return Intl.message(
+      'Probable',
+      name: 'speciesReproductiveGroupProbable',
+      desc: 'Reproductive status section title for probable breeding level',
+      args: [],
+    );
+  }
+
+  /// `Confirmed`
+  String get speciesReproductiveGroupConfirmed {
+    return Intl.message(
+      'Confirmed',
+      name: 'speciesReproductiveGroupConfirmed',
+      desc: 'Reproductive status section title for confirmed breeding level',
+      args: [],
+    );
+  }
+
+  /// `In Appropriate Habitat (Possible)`
+  String get speciesReproductiveCodeH {
+    return Intl.message(
+      'In Appropriate Habitat (Possible)',
+      name: 'speciesReproductiveCodeH',
+      desc: 'eBird reproductive code H',
+      args: [],
+    );
+  }
+
+  /// `Singing Bird (Possible)`
+  String get speciesReproductiveCodeS {
+    return Intl.message(
+      'Singing Bird (Possible)',
+      name: 'speciesReproductiveCodeS',
+      desc: 'eBird reproductive code S',
+      args: [],
+    );
+  }
+
+  /// `Singing Bird Present 7+ Days (Probable)`
+  String get speciesReproductiveCodeS7 {
+    return Intl.message(
+      'Singing Bird Present 7+ Days (Probable)',
+      name: 'speciesReproductiveCodeS7',
+      desc: 'eBird reproductive code S7',
+      args: [],
+    );
+  }
+
+  /// `Multiple (7+) Singing Birds (Probable)`
+  String get speciesReproductiveCodeM {
+    return Intl.message(
+      'Multiple (7+) Singing Birds (Probable)',
+      name: 'speciesReproductiveCodeM',
+      desc: 'eBird reproductive code M',
+      args: [],
+    );
+  }
+
+  /// `Pair in Suitable Habitat (Probable)`
+  String get speciesReproductiveCodeP {
+    return Intl.message(
+      'Pair in Suitable Habitat (Probable)',
+      name: 'speciesReproductiveCodeP',
+      desc: 'eBird reproductive code P',
+      args: [],
+    );
+  }
+
+  /// `Territorial Defense (Probable)`
+  String get speciesReproductiveCodeT {
+    return Intl.message(
+      'Territorial Defense (Probable)',
+      name: 'speciesReproductiveCodeT',
+      desc: 'eBird reproductive code T',
+      args: [],
+    );
+  }
+
+  /// `Courtship, Display or Copulation (Probable)`
+  String get speciesReproductiveCodeC {
+    return Intl.message(
+      'Courtship, Display or Copulation (Probable)',
+      name: 'speciesReproductiveCodeC',
+      desc: 'eBird reproductive code C',
+      args: [],
+    );
+  }
+
+  /// `Visiting Probable Nest Site (Probable)`
+  String get speciesReproductiveCodeN {
+    return Intl.message(
+      'Visiting Probable Nest Site (Probable)',
+      name: 'speciesReproductiveCodeN',
+      desc: 'eBird reproductive code N',
+      args: [],
+    );
+  }
+
+  /// `Agitated Behavior (Probable)`
+  String get speciesReproductiveCodeA {
+    return Intl.message(
+      'Agitated Behavior (Probable)',
+      name: 'speciesReproductiveCodeA',
+      desc: 'eBird reproductive code A',
+      args: [],
+    );
+  }
+
+  /// `Wren/Woodpecker Nest Building (Probable)`
+  String get speciesReproductiveCodeB {
+    return Intl.message(
+      'Wren/Woodpecker Nest Building (Probable)',
+      name: 'speciesReproductiveCodeB',
+      desc: 'eBird reproductive code B',
+      args: [],
+    );
+  }
+
+  /// `Physiological Evidence (Probable)`
+  String get speciesReproductiveCodePE {
+    return Intl.message(
+      'Physiological Evidence (Probable)',
+      name: 'speciesReproductiveCodePE',
+      desc: 'eBird reproductive code PE',
+      args: [],
+    );
+  }
+
+  /// `Carrying Nesting Material (Confirmed/Probable)`
+  String get speciesReproductiveCodeCN {
+    return Intl.message(
+      'Carrying Nesting Material (Confirmed/Probable)',
+      name: 'speciesReproductiveCodeCN',
+      desc: 'eBird reproductive code CN',
+      args: [],
+    );
+  }
+
+  /// `Nest Building (Confirmed/Probable)`
+  String get speciesReproductiveCodeNB {
+    return Intl.message(
+      'Nest Building (Confirmed/Probable)',
+      name: 'speciesReproductiveCodeNB',
+      desc: 'eBird reproductive code NB',
+      args: [],
+    );
+  }
+
+  /// `Distraction Display (Confirmed)`
+  String get speciesReproductiveCodeDD {
+    return Intl.message(
+      'Distraction Display (Confirmed)',
+      name: 'speciesReproductiveCodeDD',
+      desc: 'eBird reproductive code DD',
+      args: [],
+    );
+  }
+
+  /// `Used Nest (Confirmed)`
+  String get speciesReproductiveCodeUN {
+    return Intl.message(
+      'Used Nest (Confirmed)',
+      name: 'speciesReproductiveCodeUN',
+      desc: 'eBird reproductive code UN',
+      args: [],
+    );
+  }
+
+  /// `Occupied Nest (Confirmed)`
+  String get speciesReproductiveCodeON {
+    return Intl.message(
+      'Occupied Nest (Confirmed)',
+      name: 'speciesReproductiveCodeON',
+      desc: 'eBird reproductive code ON',
+      args: [],
+    );
+  }
+
+  /// `Recently Fledged Young (Confirmed)`
+  String get speciesReproductiveCodeFL {
+    return Intl.message(
+      'Recently Fledged Young (Confirmed)',
+      name: 'speciesReproductiveCodeFL',
+      desc: 'eBird reproductive code FL',
+      args: [],
+    );
+  }
+
+  /// `Carrying Food (Confirmed)`
+  String get speciesReproductiveCodeCF {
+    return Intl.message(
+      'Carrying Food (Confirmed)',
+      name: 'speciesReproductiveCodeCF',
+      desc: 'eBird reproductive code CF',
+      args: [],
+    );
+  }
+
+  /// `Feeding Young (Confirmed)`
+  String get speciesReproductiveCodeFY {
+    return Intl.message(
+      'Feeding Young (Confirmed)',
+      name: 'speciesReproductiveCodeFY',
+      desc: 'eBird reproductive code FY',
+      args: [],
+    );
+  }
+
+  /// `Carrying Fecal Sac (Confirmed)`
+  String get speciesReproductiveCodeFS {
+    return Intl.message(
+      'Carrying Fecal Sac (Confirmed)',
+      name: 'speciesReproductiveCodeFS',
+      desc: 'eBird reproductive code FS',
+      args: [],
+    );
+  }
+
+  /// `Nest with Eggs (Confirmed)`
+  String get speciesReproductiveCodeNE {
+    return Intl.message(
+      'Nest with Eggs (Confirmed)',
+      name: 'speciesReproductiveCodeNE',
+      desc: 'eBird reproductive code NE',
+      args: [],
+    );
+  }
+
+  /// `Nest with Young (Confirmed)`
+  String get speciesReproductiveCodeNY {
+    return Intl.message(
+      'Nest with Young (Confirmed)',
+      name: 'speciesReproductiveCodeNY',
+      desc: 'eBird reproductive code NY',
+      args: [],
+    );
+  }
+
+  /// `Flyover (Observed)`
+  String get speciesReproductiveCodeF {
+    return Intl.message(
+      'Flyover (Observed)',
+      name: 'speciesReproductiveCodeF',
+      desc: 'eBird reproductive code F',
       args: [],
     );
   }

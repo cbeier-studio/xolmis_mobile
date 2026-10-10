@@ -36,8 +36,7 @@ Future<Inventory> _ensureInventoryLoadedForExport(
   InventoryProvider? inventoryProvider,
 }) async {
   try {
-    final provider = inventoryProvider ??
-        Provider.of<InventoryProvider>(context, listen: false);
+    final provider = inventoryProvider ?? Provider.of<InventoryProvider>(context, listen: false);
     await provider.loadInventoryDetails(inventory.id);
     return provider.getInventoryById(inventory.id) ?? inventory;
   } catch (error) {
@@ -55,19 +54,15 @@ Future<List<Inventory>> _ensureInventoriesLoadedForExport(
   if (inventories.isEmpty) return inventories;
 
   try {
-    final provider = inventoryProvider ??
-        Provider.of<InventoryProvider>(context, listen: false);
-    final loaded =
-        await provider.loadInventoriesDetails(inventories.map((i) => i.id).toList());
+    final provider = inventoryProvider ?? Provider.of<InventoryProvider>(context, listen: false);
+    final loaded = await provider.loadInventoriesDetails(inventories.map((i) => i.id).toList());
 
     if (loaded.length == inventories.length) {
       return loaded;
     }
 
     final loadedById = {for (final inventory in loaded) inventory.id: inventory};
-    return inventories
-        .map((inventory) => loadedById[inventory.id] ?? inventory)
-        .toList();
+    return inventories.map((inventory) => loadedById[inventory.id] ?? inventory).toList();
   } catch (error) {
     debugPrint('Error loading inventories details for export: $error');
     return inventories;
@@ -75,11 +70,7 @@ Future<List<Inventory>> _ensureInventoriesLoadedForExport(
 }
 
 /// Ensures a single nest has revisions and eggs loaded before export.
-Future<Nest> _ensureNestLoadedForExport(
-  BuildContext context,
-  Nest nest, {
-  NestProvider? nestProvider,
-}) async {
+Future<Nest> _ensureNestLoadedForExport(BuildContext context, Nest nest, {NestProvider? nestProvider}) async {
   if (nest.id == null) return nest;
 
   try {
@@ -136,51 +127,57 @@ class _KmlWaypoint {
   final String description;
   final DateTime? time;
 
-  _KmlWaypoint({
-    required this.lat,
-    required this.lon,
-    required this.name,
-    this.description = '',
-    this.time,
-  });
+  _KmlWaypoint({required this.lat, required this.lon, required this.name, this.description = '', this.time});
 }
 
 /// Generates a KML string with waypoints using the `xml` package.
-String _buildKmlString({
-  required String name,
-  String? description,
-  required List<_KmlWaypoint> waypoints,
-}) {
+String _buildKmlString({required String name, String? description, required List<_KmlWaypoint> waypoints}) {
   final builder = XmlBuilder();
   builder.processing('xml', 'version="1.0" encoding="UTF-8"');
-  builder.element('kml', attributes: {'xmlns': 'http://www.opengis.net/kml/2.2'}, nest: () {
-    builder.element('Document', nest: () {
-      builder.element('name', nest: name);
-      if (description != null && description.isNotEmpty) {
-        builder.element('description', nest: description);
-      }
-
-      for (final wpt in waypoints) {
-        if (wpt.lat == null || wpt.lon == null) continue;
-
-        builder.element('Placemark', nest: () {
-          builder.element('name', nest: wpt.name);
-          if (wpt.description.isNotEmpty) {
-            builder.element('description', nest: wpt.description);
+  builder.element(
+    'kml',
+    attributes: {'xmlns': 'http://www.opengis.net/kml/2.2'},
+    nest: () {
+      builder.element(
+        'Document',
+        nest: () {
+          builder.element('name', nest: name);
+          if (description != null && description.isNotEmpty) {
+            builder.element('description', nest: description);
           }
-          if (wpt.time != null) {
-            builder.element('TimeStamp', nest: () {
-              builder.element('when', nest: wpt.time!.toIso8601String());
-            });
+
+          for (final wpt in waypoints) {
+            if (wpt.lat == null || wpt.lon == null) continue;
+
+            builder.element(
+              'Placemark',
+              nest: () {
+                builder.element('name', nest: wpt.name);
+                if (wpt.description.isNotEmpty) {
+                  builder.element('description', nest: wpt.description);
+                }
+                if (wpt.time != null) {
+                  builder.element(
+                    'TimeStamp',
+                    nest: () {
+                      builder.element('when', nest: wpt.time!.toIso8601String());
+                    },
+                  );
+                }
+                builder.element(
+                  'Point',
+                  nest: () {
+                    // KML coordinates are (longitude, latitude, [altitude])
+                    builder.element('coordinates', nest: '${wpt.lon},${wpt.lat},0');
+                  },
+                );
+              },
+            );
           }
-          builder.element('Point', nest: () {
-            // KML coordinates are (longitude, latitude, [altitude])
-            builder.element('coordinates', nest: '${wpt.lon},${wpt.lat},0');
-          });
-        });
-      }
-    });
-  });
+        },
+      );
+    },
+  );
 
   return builder.buildDocument().toXmlString(pretty: true, indent: '  ');
 }
@@ -200,27 +197,23 @@ Future<void> exportAllInventoriesToJson(BuildContext context, InventoryProvider 
 
   try {
     // Show a loading dialog
-      if (!context.mounted) return;
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return Dialog(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CircularProgressIndicator(year2023: false,),
-                  SizedBox(width: 16),
-                  Text(S.current.exporting),
-                ],
-              ),
+    if (!context.mounted) return;
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [CircularProgressIndicator(year2023: false), SizedBox(width: 16), Text(S.current.exporting)],
             ),
-          );
-        },
-      );
-      isDialogShown = true;
+          ),
+        );
+      },
+    );
+    isDialogShown = true;
 
     final finishedInventories = await _ensureInventoriesLoadedForExport(
       context,
@@ -248,30 +241,30 @@ Future<void> exportAllInventoriesToJson(BuildContext context, InventoryProvider 
     await file.writeAsString(jsonString, flush: true);
 
     if (isDialogShown) {
-        if (context.mounted) {
-          Navigator.of(context).pop();
-        }
-        isDialogShown = false; // Dialog is now closed
+      if (context.mounted) {
+        Navigator.of(context).pop();
       }
+      isDialogShown = false; // Dialog is now closed
+    }
 
     // Share the file using share_plus
     await SharePlus.instance.share(
       ShareParams(
-        files: [XFile(filePath, mimeType: 'application/json')], 
+        files: [XFile(filePath, mimeType: 'application/json')],
         title: S.current.inventoryExported(2),
-        subject: S.current.inventoryData(2)
+        subject: S.current.inventoryData(2),
       ),
     );
   } catch (error) {
     if (context.mounted) {
-    ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            persist: true,
-                            showCloseIcon: true,
-                            backgroundColor: Theme.of(context).colorScheme.error,
-                            content: Text(S.of(context).errorExportingInventory(1, error.toString())),
-                          ),
-                        );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          persist: true,
+          showCloseIcon: true,
+          backgroundColor: Theme.of(context).colorScheme.error,
+          content: Text(S.of(context).errorExportingInventory(1, error.toString())),
+        ),
+      );
     }
     return;
   } finally {
@@ -286,18 +279,17 @@ Future<void> exportAllInventoriesToJson(BuildContext context, InventoryProvider 
 /// Exports one inventory as JSON, ensuring lazy-loaded children are available.
 Future<void> exportInventoryToJson(BuildContext context, Inventory inventory, bool shareIt) async {
   try {
-    final inventoryToExport =
-        await _ensureInventoryLoadedForExport(context, inventory);
+    final inventoryToExport = await _ensureInventoryLoadedForExport(context, inventory);
     final jsonData = {
       'source': kExportSource,
       'schema': 'inventories',
       'schemaVersion': kExportSchemaVersion,
       'records': [inventoryToExport.toJson()],
     };
-    
+
     var encoder = JsonEncoder.withIndent("  ");
     final jsonString = encoder.convert(jsonData);
-    
+
     // Create the file in a temporary folder
     Directory tempDir = await getTemporaryDirectory();
     final filePath = '${tempDir.path}/inventory_${inventoryToExport.id}.json';
@@ -310,20 +302,20 @@ Future<void> exportInventoryToJson(BuildContext context, Inventory inventory, bo
         ShareParams(
           files: [XFile(filePath, mimeType: 'application/json')],
           title: S.current.inventoryExported(1),
-          subject: '${S.current.inventoryExported(1)} ${inventoryToExport.id}'
+          subject: '${S.current.inventoryExported(1)} ${inventoryToExport.id}',
         ),
       );
     }
   } catch (error) {
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            persist: true,
-                            showCloseIcon: true,
-                            backgroundColor: Theme.of(context).colorScheme.error,
-                            content: Text(S.of(context).errorExportingInventory(1, error.toString())),
-                          ),
-                        );
+        SnackBar(
+          persist: true,
+          showCloseIcon: true,
+          backgroundColor: Theme.of(context).colorScheme.error,
+          content: Text(S.of(context).errorExportingInventory(1, error.toString())),
+        ),
+      );
     }
     return;
   }
@@ -356,6 +348,7 @@ const List<String> kInventoryOccurrencesHeaders = [
   'individualCount',
   'occurrenceTime',
   'isOutOfSample',
+  'isDoubtful',
   'distance',
   'flightHeight',
   'flightDirection',
@@ -457,55 +450,33 @@ const List<String> kInventoryEventsHeaders = [
   'isDiscarded',
 ];
 
-List<dynamic> _buildInventoryPrefix(
-  Inventory inventory,
-  NumberFormat numberFormat,
-  bool formatNumbers,
-) {
+List<dynamic> _buildInventoryPrefix(Inventory inventory, NumberFormat numberFormat, bool formatNumbers) {
   return [
     inventory.id,
     inventoryTypeFriendlyNames[inventory.type] ?? '',
     transportModeFriendlyNames[inventory.transportMode] ?? '',
     inventory.duration,
-    inventory.startTime != null
-        ? DateFormat('yyyy-MM-dd').format(inventory.startTime!)
-        : '',
-    inventory.startTime != null
-        ? DateFormat('HH:mm:ss').format(inventory.startTime!)
-        : '',
-    inventory.endTime != null
-        ? DateFormat('yyyy-MM-dd').format(inventory.endTime!)
-        : '',
-    inventory.endTime != null
-        ? DateFormat('HH:mm:ss').format(inventory.endTime!)
-        : '',
+    inventory.startTime != null ? DateFormat('yyyy-MM-dd').format(inventory.startTime!) : '',
+    inventory.startTime != null ? DateFormat('HH:mm:ss').format(inventory.startTime!) : '',
+    inventory.endTime != null ? DateFormat('yyyy-MM-dd').format(inventory.endTime!) : '',
+    inventory.endTime != null ? DateFormat('HH:mm:ss').format(inventory.endTime!) : '',
     inventory.localityName ?? '',
     inventory.startLongitude != null
-        ? (formatNumbers
-            ? numberFormat.format(inventory.startLongitude)
-            : inventory.startLongitude)
+        ? (formatNumbers ? numberFormat.format(inventory.startLongitude) : inventory.startLongitude)
         : '',
     inventory.startLatitude != null
-        ? (formatNumbers
-            ? numberFormat.format(inventory.startLatitude)
-            : inventory.startLatitude)
+        ? (formatNumbers ? numberFormat.format(inventory.startLatitude) : inventory.startLatitude)
         : '',
     inventory.endLongitude != null
-        ? (formatNumbers
-            ? numberFormat.format(inventory.endLongitude)
-            : inventory.endLongitude)
+        ? (formatNumbers ? numberFormat.format(inventory.endLongitude) : inventory.endLongitude)
         : '',
     inventory.endLatitude != null
-        ? (formatNumbers
-            ? numberFormat.format(inventory.endLatitude)
-            : inventory.endLatitude)
+        ? (formatNumbers ? numberFormat.format(inventory.endLatitude) : inventory.endLatitude)
         : '',
     inventory.observer ?? '',
     inventory.totalObservers == 0 ? '' : inventory.totalObservers,
     inventory.currentInterval == 0 ? '' : inventory.currentInterval,
-    inventory.totalPausedTimeInSeconds == 0
-        ? ''
-        : inventory.totalPausedTimeInSeconds,
+    inventory.totalPausedTimeInSeconds == 0 ? '' : inventory.totalPausedTimeInSeconds,
     inventory.notes ?? '',
     inventory.isDiscarded ? 'Yes' : 'No',
   ];
@@ -515,7 +486,7 @@ String _joinEnumLabels<T extends Enum>(List<T>? values, Map<T, String> labels) {
   if (values == null || values.isEmpty) {
     return '';
   }
-  return values.map((value) => labels[value] ?? value.name).join('; ');
+  return values.map((value) => labels[value] ?? value.name).join(' | ');
 }
 
 String _enumLabel<T extends Enum>(T? value, Map<T, String> labels) {
@@ -526,13 +497,9 @@ String _enumLabel<T extends Enum>(T? value, Map<T, String> labels) {
 }
 
 /// Builds flat denormalized species occurrences rows for a list of inventories.
-Future<List<List<dynamic>>> buildInventoriesSpeciesRows(
-  List<Inventory> inventories,
-  Locale locale,
-) async {
+Future<List<List<dynamic>>> buildInventoriesSpeciesRows(List<Inventory> inventories, Locale locale) async {
   final List<List<dynamic>> rows = [kInventoryOccurrencesHeaders];
-  final numberFormat = NumberFormat.decimalPattern(locale.toString())
-    ..maximumFractionDigits = 7;
+  final numberFormat = NumberFormat.decimalPattern(locale.toString())..maximumFractionDigits = 7;
   final prefs = await SharedPreferences.getInstance();
   final formatNumbers = prefs.getBool('formatNumbers') ?? true;
 
@@ -544,34 +511,24 @@ Future<List<List<dynamic>>> buildInventoriesSpeciesRows(
           ...prefix,
           species.name,
           species.count,
-          species.sampleTime != null
-              ? DateFormat('yyyy-MM-dd HH:mm:ss').format(species.sampleTime!)
-              : '',
+          species.sampleTime != null ? DateFormat('yyyy-MM-dd HH:mm:ss').format(species.sampleTime!) : '',
           species.isOutOfInventory ? 'Yes' : 'No',
-          species.distance != null
-              ? (formatNumbers
-                  ? numberFormat.format(species.distance)
-                  : species.distance)
-              : '',
+          species.isDoubtful ? 'Yes' : 'No',
+          species.distance != null ? (formatNumbers ? numberFormat.format(species.distance) : species.distance) : '',
           species.flightHeight != null
-              ? (formatNumbers
-                  ? numberFormat.format(species.flightHeight)
-                  : species.flightHeight)
+              ? (formatNumbers ? numberFormat.format(species.flightHeight) : species.flightHeight)
               : '',
           species.flightDirection ?? '',
           _joinEnumLabels(species.habitats, speciesHabitatFriendlyNames),
           _joinEnumLabels(species.detectionModes, speciesDetectionModeFriendlyNames),
-          _enumLabel(species.reproductiveStatus, speciesReproductiveStatusFriendlyNames),
+          species.reproductiveStatus?.code ?? '',
           _enumLabel(species.sex, speciesSexFriendlyNames),
           _joinEnumLabels(species.activities, speciesActivityFriendlyNames),
           species.notes ?? '',
         ]);
       }
     } else {
-      rows.add([
-        ...prefix,
-        '', '', '', '', '', '', '', '', '', '', '', '', ''
-      ]);
+      rows.add([...prefix, '', '', '', '', '', '', '', '', '', '', '', '', '', '']);
     }
   }
 
@@ -579,13 +536,9 @@ Future<List<List<dynamic>>> buildInventoriesSpeciesRows(
 }
 
 /// Builds flat denormalized vegetation measurement rows for a list of inventories.
-Future<List<List<dynamic>>> buildInventoriesVegetationRows(
-  List<Inventory> inventories,
-  Locale locale,
-) async {
+Future<List<List<dynamic>>> buildInventoriesVegetationRows(List<Inventory> inventories, Locale locale) async {
   final List<List<dynamic>> rows = [kInventoryVegetationHeaders];
-  final numberFormat = NumberFormat.decimalPattern(locale.toString())
-    ..maximumFractionDigits = 7;
+  final numberFormat = NumberFormat.decimalPattern(locale.toString())..maximumFractionDigits = 7;
   final prefs = await SharedPreferences.getInstance();
   final formatNumbers = prefs.getBool('formatNumbers') ?? true;
 
@@ -596,22 +549,14 @@ Future<List<List<dynamic>>> buildInventoriesVegetationRows(
       inventoryTypeFriendlyNames[inventory.type] ?? '',
       transportModeFriendlyNames[inventory.transportMode] ?? '',
       inventory.duration,
-      inventory.startTime != null
-          ? DateFormat('yyyy-MM-dd').format(inventory.startTime!)
-          : '',
-      inventory.startTime != null
-          ? DateFormat('HH:mm:ss').format(inventory.startTime!)
-          : '',
+      inventory.startTime != null ? DateFormat('yyyy-MM-dd').format(inventory.startTime!) : '',
+      inventory.startTime != null ? DateFormat('HH:mm:ss').format(inventory.startTime!) : '',
       inventory.localityName ?? '',
       inventory.startLongitude != null
-          ? (formatNumbers
-              ? numberFormat.format(inventory.startLongitude)
-              : inventory.startLongitude)
+          ? (formatNumbers ? numberFormat.format(inventory.startLongitude) : inventory.startLongitude)
           : '',
       inventory.startLatitude != null
-          ? (formatNumbers
-              ? numberFormat.format(inventory.startLatitude)
-              : inventory.startLatitude)
+          ? (formatNumbers ? numberFormat.format(inventory.startLatitude) : inventory.startLatitude)
           : '',
       inventory.observer ?? '',
       inventory.notes ?? '',
@@ -620,19 +565,9 @@ Future<List<List<dynamic>>> buildInventoriesVegetationRows(
     for (var veg in inventory.vegetationList) {
       rows.add([
         ...prefix,
-        veg.sampleTime != null
-            ? DateFormat('yyyy-MM-dd HH:mm:ss').format(veg.sampleTime!)
-            : '',
-        veg.latitude != null
-            ? (formatNumbers
-                ? numberFormat.format(veg.latitude)
-                : veg.latitude)
-            : '',
-        veg.longitude != null
-            ? (formatNumbers
-                ? numberFormat.format(veg.longitude)
-                : veg.longitude)
-            : '',
+        veg.sampleTime != null ? DateFormat('yyyy-MM-dd HH:mm:ss').format(veg.sampleTime!) : '',
+        veg.latitude != null ? (formatNumbers ? numberFormat.format(veg.latitude) : veg.latitude) : '',
+        veg.longitude != null ? (formatNumbers ? numberFormat.format(veg.longitude) : veg.longitude) : '',
         veg.herbsProportion ?? '',
         veg.herbsDistribution?.index ?? '',
         veg.herbsHeight ?? '',
@@ -651,13 +586,9 @@ Future<List<List<dynamic>>> buildInventoriesVegetationRows(
 }
 
 /// Builds flat denormalized weather log rows for a list of inventories.
-Future<List<List<dynamic>>> buildInventoriesWeatherRows(
-  List<Inventory> inventories,
-  Locale locale,
-) async {
+Future<List<List<dynamic>>> buildInventoriesWeatherRows(List<Inventory> inventories, Locale locale) async {
   final List<List<dynamic>> rows = [kInventoryWeatherHeaders];
-  final numberFormat = NumberFormat.decimalPattern(locale.toString())
-    ..maximumFractionDigits = 7;
+  final numberFormat = NumberFormat.decimalPattern(locale.toString())..maximumFractionDigits = 7;
   final prefs = await SharedPreferences.getInstance();
   final formatNumbers = prefs.getBool('formatNumbers') ?? true;
 
@@ -668,22 +599,14 @@ Future<List<List<dynamic>>> buildInventoriesWeatherRows(
       inventoryTypeFriendlyNames[inventory.type] ?? '',
       transportModeFriendlyNames[inventory.transportMode] ?? '',
       inventory.duration,
-      inventory.startTime != null
-          ? DateFormat('yyyy-MM-dd').format(inventory.startTime!)
-          : '',
-      inventory.startTime != null
-          ? DateFormat('HH:mm:ss').format(inventory.startTime!)
-          : '',
+      inventory.startTime != null ? DateFormat('yyyy-MM-dd').format(inventory.startTime!) : '',
+      inventory.startTime != null ? DateFormat('HH:mm:ss').format(inventory.startTime!) : '',
       inventory.localityName ?? '',
       inventory.startLongitude != null
-          ? (formatNumbers
-              ? numberFormat.format(inventory.startLongitude)
-              : inventory.startLongitude)
+          ? (formatNumbers ? numberFormat.format(inventory.startLongitude) : inventory.startLongitude)
           : '',
       inventory.startLatitude != null
-          ? (formatNumbers
-              ? numberFormat.format(inventory.startLatitude)
-              : inventory.startLatitude)
+          ? (formatNumbers ? numberFormat.format(inventory.startLatitude) : inventory.startLatitude)
           : '',
       inventory.observer ?? '',
       inventory.notes ?? '',
@@ -692,15 +615,11 @@ Future<List<List<dynamic>>> buildInventoriesWeatherRows(
     for (var weather in inventory.weatherList) {
       rows.add([
         ...prefix,
-        weather.sampleTime != null
-            ? DateFormat('yyyy-MM-dd HH:mm:ss').format(weather.sampleTime!)
-            : '',
+        weather.sampleTime != null ? DateFormat('yyyy-MM-dd HH:mm:ss').format(weather.sampleTime!) : '',
         weather.cloudCover ?? '',
         precipitationTypeFriendlyNames[weather.precipitation] ?? '',
         weather.temperature != null
-            ? (formatNumbers
-                ? numberFormat.format(weather.temperature)
-                : weather.temperature)
+            ? (formatNumbers ? numberFormat.format(weather.temperature) : weather.temperature)
             : '',
         weather.windSpeed ?? '',
         weather.windDirection ?? '',
@@ -714,13 +633,9 @@ Future<List<List<dynamic>>> buildInventoriesWeatherRows(
 }
 
 /// Builds flat denormalized POI rows for a list of inventories.
-Future<List<List<dynamic>>> buildInventoriesPoiRows(
-  List<Inventory> inventories,
-  Locale locale,
-) async {
+Future<List<List<dynamic>>> buildInventoriesPoiRows(List<Inventory> inventories, Locale locale) async {
   final List<List<dynamic>> rows = [kInventoryPoiHeaders];
-  final numberFormat = NumberFormat.decimalPattern(locale.toString())
-    ..maximumFractionDigits = 7;
+  final numberFormat = NumberFormat.decimalPattern(locale.toString())..maximumFractionDigits = 7;
   final prefs = await SharedPreferences.getInstance();
   final formatNumbers = prefs.getBool('formatNumbers') ?? true;
 
@@ -729,9 +644,7 @@ Future<List<List<dynamic>>> buildInventoriesPoiRows(
       inventory.id,
       inventoryTypeFriendlyNames[inventory.type] ?? '',
       transportModeFriendlyNames[inventory.transportMode] ?? '',
-      inventory.startTime != null
-          ? DateFormat('yyyy-MM-dd').format(inventory.startTime!)
-          : '',
+      inventory.startTime != null ? DateFormat('yyyy-MM-dd').format(inventory.startTime!) : '',
       inventory.localityName ?? '',
       inventory.observer ?? '',
     ];
@@ -742,9 +655,7 @@ Future<List<List<dynamic>>> buildInventoriesPoiRows(
         rows.add([
           ...prefix,
           species.name,
-          poi.sampleTime != null
-              ? DateFormat('yyyy-MM-dd HH:mm:ss').format(poi.sampleTime!)
-              : '',
+          poi.sampleTime != null ? DateFormat('yyyy-MM-dd HH:mm:ss').format(poi.sampleTime!) : '',
           formatNumbers ? numberFormat.format(poi.latitude) : poi.latitude,
           formatNumbers ? numberFormat.format(poi.longitude) : poi.longitude,
           poi.notes ?? '',
@@ -757,13 +668,9 @@ Future<List<List<dynamic>>> buildInventoriesPoiRows(
 }
 
 /// Builds inventory summary rows for a list of inventories.
-Future<List<List<dynamic>>> buildInventoriesSummaryRows(
-  List<Inventory> inventories,
-  Locale locale,
-) async {
+Future<List<List<dynamic>>> buildInventoriesSummaryRows(List<Inventory> inventories, Locale locale) async {
   final List<List<dynamic>> rows = [kInventoryEventsHeaders];
-  final numberFormat = NumberFormat.decimalPattern(locale.toString())
-    ..maximumFractionDigits = 7;
+  final numberFormat = NumberFormat.decimalPattern(locale.toString())..maximumFractionDigits = 7;
   final prefs = await SharedPreferences.getInstance();
   final formatNumbers = prefs.getBool('formatNumbers') ?? true;
 
@@ -773,45 +680,27 @@ Future<List<List<dynamic>>> buildInventoriesSummaryRows(
       inventoryTypeFriendlyNames[inventory.type] ?? '',
       inventory.duration,
       inventory.maxSpecies,
-      inventory.startTime != null
-          ? DateFormat('yyyy-MM-dd').format(inventory.startTime!)
-          : '',
-      inventory.startTime != null
-          ? DateFormat('HH:mm:ss').format(inventory.startTime!)
-          : '',
-      inventory.endTime != null
-          ? DateFormat('yyyy-MM-dd').format(inventory.endTime!)
-          : '',
-      inventory.endTime != null
-          ? DateFormat('HH:mm:ss').format(inventory.endTime!)
-          : '',
+      inventory.startTime != null ? DateFormat('yyyy-MM-dd').format(inventory.startTime!) : '',
+      inventory.startTime != null ? DateFormat('HH:mm:ss').format(inventory.startTime!) : '',
+      inventory.endTime != null ? DateFormat('yyyy-MM-dd').format(inventory.endTime!) : '',
+      inventory.endTime != null ? DateFormat('HH:mm:ss').format(inventory.endTime!) : '',
       inventory.localityName ?? '',
       inventory.startLongitude != null
-          ? (formatNumbers
-              ? numberFormat.format(inventory.startLongitude)
-              : inventory.startLongitude)
+          ? (formatNumbers ? numberFormat.format(inventory.startLongitude) : inventory.startLongitude)
           : '',
       inventory.startLatitude != null
-          ? (formatNumbers
-              ? numberFormat.format(inventory.startLatitude)
-              : inventory.startLatitude)
+          ? (formatNumbers ? numberFormat.format(inventory.startLatitude) : inventory.startLatitude)
           : '',
       inventory.endLongitude != null
-          ? (formatNumbers
-              ? numberFormat.format(inventory.endLongitude)
-              : inventory.endLongitude)
+          ? (formatNumbers ? numberFormat.format(inventory.endLongitude) : inventory.endLongitude)
           : '',
       inventory.endLatitude != null
-          ? (formatNumbers
-              ? numberFormat.format(inventory.endLatitude)
-              : inventory.endLatitude)
+          ? (formatNumbers ? numberFormat.format(inventory.endLatitude) : inventory.endLatitude)
           : '',
       inventory.totalObservers == 0 ? '' : inventory.totalObservers,
       inventory.observer ?? '',
       inventory.currentInterval == 0 ? '' : inventory.currentInterval,
-      inventory.totalPausedTimeInSeconds == 0
-          ? ''
-          : inventory.totalPausedTimeInSeconds,
+      inventory.totalPausedTimeInSeconds == 0 ? '' : inventory.totalPausedTimeInSeconds,
       inventory.notes ?? '',
       inventory.isDiscarded ? 'Yes' : 'No',
     ]);
@@ -821,10 +710,7 @@ Future<List<List<dynamic>>> buildInventoriesSummaryRows(
 }
 
 /// Builds tabular rows for an inventory export.
-Future<List<List<dynamic>>> buildInventoryRows(
-  Inventory inventory,
-  Locale locale,
-) async {
+Future<List<List<dynamic>>> buildInventoryRows(Inventory inventory, Locale locale) async {
   return buildInventoriesSpeciesRows([inventory], locale);
 }
 
@@ -863,10 +749,7 @@ List<List<CellValue>> convertRowsToCellValues(List<List<dynamic>> dynamicRows) {
 }
 
 /// Builds an Excel workbook with sheets for Occurrences, Vegetation, Weather, POIs, and Events.
-Future<Excel> _createInventoriesExcel(
-  List<Inventory> inventories,
-  Locale locale,
-) async {
+Future<Excel> _createInventoriesExcel(List<Inventory> inventories, Locale locale) async {
   final excel = Excel.createExcel();
 
   final speciesRows = await buildInventoriesSpeciesRows(inventories, locale);
@@ -912,14 +795,9 @@ Future<Excel> _createInventoriesExcel(
 }
 
 /// Exports one inventory to an Excel file and returns the generated path.
-Future<String> exportInventoryToExcel(
-  BuildContext context,
-  Inventory inventory,
-  Locale locale,
-) async {
+Future<String> exportInventoryToExcel(BuildContext context, Inventory inventory, Locale locale) async {
   try {
-    final inventoryToExport =
-        await _ensureInventoryLoadedForExport(context, inventory);
+    final inventoryToExport = await _ensureInventoryLoadedForExport(context, inventory);
     final excel = await _createInventoriesExcel([inventoryToExport], locale);
 
     var fileBytes = excel.save();
@@ -943,9 +821,7 @@ Future<String> exportInventoryToExcel(
           persist: true,
           showCloseIcon: true,
           backgroundColor: Theme.of(context).colorScheme.error,
-          content: Text(
-            S.of(context).errorExportingInventory(1, error.toString()),
-          ),
+          content: Text(S.of(context).errorExportingInventory(1, error.toString())),
         ),
       );
     }
@@ -954,19 +830,13 @@ Future<String> exportInventoryToExcel(
 }
 
 /// Exports one inventory to CSV files (species, vegetation, weather, pois) and returns the list of generated paths.
-Future<List<String>> exportInventoryToCsv(
-  BuildContext context,
-  Inventory inventory,
-  Locale locale,
-) async {
+Future<List<String>> exportInventoryToCsv(BuildContext context, Inventory inventory, Locale locale) async {
   try {
-    final inventoryToExport =
-        await _ensureInventoryLoadedForExport(context, inventory);
+    final inventoryToExport = await _ensureInventoryLoadedForExport(context, inventory);
     final filePaths = <String>[];
 
     // Export species data
-    List<List<dynamic>> speciesRows =
-        await buildInventoriesSpeciesRows([inventoryToExport], locale);
+    List<List<dynamic>> speciesRows = await buildInventoriesSpeciesRows([inventoryToExport], locale);
     if (speciesRows.isNotEmpty) {
       String speciesCsv = Csv(fieldDelimiter: ';').encode(speciesRows);
       Directory tempDir = await getTemporaryDirectory();
@@ -979,8 +849,7 @@ Future<List<String>> exportInventoryToCsv(
     }
 
     // Export POI data
-    List<List<dynamic>> poiRows =
-        await buildInventoriesPoiRows([inventoryToExport], locale);
+    List<List<dynamic>> poiRows = await buildInventoriesPoiRows([inventoryToExport], locale);
     if (poiRows.length > 1) {
       String poiCsv = Csv(fieldDelimiter: ';').encode(poiRows);
       Directory tempDir = await getTemporaryDirectory();
@@ -993,8 +862,7 @@ Future<List<String>> exportInventoryToCsv(
     }
 
     // Export vegetation data
-    List<List<dynamic>> vegRows =
-        await buildInventoriesVegetationRows([inventoryToExport], locale);
+    List<List<dynamic>> vegRows = await buildInventoriesVegetationRows([inventoryToExport], locale);
     if (vegRows.length > 1) {
       String vegCsv = Csv(fieldDelimiter: ';').encode(vegRows);
       Directory tempDir = await getTemporaryDirectory();
@@ -1007,8 +875,7 @@ Future<List<String>> exportInventoryToCsv(
     }
 
     // Export weather data
-    List<List<dynamic>> weatherRows =
-        await buildInventoriesWeatherRows([inventoryToExport], locale);
+    List<List<dynamic>> weatherRows = await buildInventoriesWeatherRows([inventoryToExport], locale);
     if (weatherRows.length > 1) {
       String weatherCsv = Csv(fieldDelimiter: ';').encode(weatherRows);
       Directory tempDir = await getTemporaryDirectory();
@@ -1031,9 +898,7 @@ Future<List<String>> exportInventoryToCsv(
           persist: true,
           showCloseIcon: true,
           backgroundColor: Theme.of(context).colorScheme.error,
-          content: Text(
-            S.of(context).errorExportingInventory(1, error.toString()),
-          ),
+          content: Text(S.of(context).errorExportingInventory(1, error.toString())),
         ),
       );
     }
@@ -1042,57 +907,54 @@ Future<List<String>> exportInventoryToCsv(
 }
 
 /// Exports one inventory POI dataset to KML and opens the share sheet.
-Future<void> exportInventoryToKml(
-  BuildContext context,
-  Inventory inventory,
-) async {
+Future<void> exportInventoryToKml(BuildContext context, Inventory inventory) async {
   try {
-    final inventoryToExport =
-        await _ensureInventoryLoadedForExport(context, inventory);
+    final inventoryToExport = await _ensureInventoryLoadedForExport(context, inventory);
     final List<_KmlWaypoint> waypoints = [];
 
-    if (inventoryToExport.startLatitude != null &&
-        inventoryToExport.startLongitude != null) {
-      waypoints.add(_KmlWaypoint(
-        lat: inventoryToExport.startLatitude,
-        lon: inventoryToExport.startLongitude,
-        name: '${inventoryToExport.id} - Start',
-        description: inventoryTypeFriendlyNames[inventoryToExport.type] ?? '',
-        time: inventoryToExport.startTime,
-      ));
+    if (inventoryToExport.startLatitude != null && inventoryToExport.startLongitude != null) {
+      waypoints.add(
+        _KmlWaypoint(
+          lat: inventoryToExport.startLatitude,
+          lon: inventoryToExport.startLongitude,
+          name: '${inventoryToExport.id} - Start',
+          description: inventoryTypeFriendlyNames[inventoryToExport.type] ?? '',
+          time: inventoryToExport.startTime,
+        ),
+      );
     }
 
-    if (inventoryToExport.endLatitude != null &&
-        inventoryToExport.endLongitude != null) {
-      waypoints.add(_KmlWaypoint(
-        lat: inventoryToExport.endLatitude,
-        lon: inventoryToExport.endLongitude,
-        name: '${inventoryToExport.id} - End',
-        description: inventoryTypeFriendlyNames[inventoryToExport.type] ?? '',
-        time: inventoryToExport.endTime,
-      ));
+    if (inventoryToExport.endLatitude != null && inventoryToExport.endLongitude != null) {
+      waypoints.add(
+        _KmlWaypoint(
+          lat: inventoryToExport.endLatitude,
+          lon: inventoryToExport.endLongitude,
+          name: '${inventoryToExport.id} - End',
+          description: inventoryTypeFriendlyNames[inventoryToExport.type] ?? '',
+          time: inventoryToExport.endTime,
+        ),
+      );
     }
 
     for (var species in inventoryToExport.speciesList) {
       for (var poi in species.pois) {
-        waypoints.add(_KmlWaypoint(
-          lat: poi.latitude,
-          lon: poi.longitude,
-          name: '${species.name} - POI #${poi.id}',
-          description: poi.notes ?? '',
-          time: poi.sampleTime,
-        ));
+        waypoints.add(
+          _KmlWaypoint(
+            lat: poi.latitude,
+            lon: poi.longitude,
+            name: '${species.name} - POI #${poi.id}',
+            description: poi.notes ?? '',
+            time: poi.sampleTime,
+          ),
+        );
       }
     }
 
     if (waypoints.isEmpty) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            showCloseIcon: true,
-            content: Text(S.of(context).noPoisToExport),
-          ),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(showCloseIcon: true, content: Text(S.of(context).noPoisToExport)));
       }
       return;
     }
@@ -1104,16 +966,13 @@ Future<void> exportInventoryToKml(
     );
 
     Directory tempDir = await getTemporaryDirectory();
-    final filePath =
-        '${tempDir.path}/inventory_${inventoryToExport.id}_pois.kml';
+    final filePath = '${tempDir.path}/inventory_${inventoryToExport.id}_pois.kml';
     final file = File(filePath);
     await file.writeAsString(kmlString, flush: true);
 
     await SharePlus.instance.share(
       ShareParams(
-        files: [
-          XFile(filePath, mimeType: 'application/vnd.google-earth.kml+xml')
-        ],
+        files: [XFile(filePath, mimeType: 'application/vnd.google-earth.kml+xml')],
         title: S.current.inventoryExported(1),
         subject: '${S.current.inventoryExported(1)} ${inventoryToExport.id}',
       ),
@@ -1125,9 +984,7 @@ Future<void> exportInventoryToKml(
           persist: true,
           showCloseIcon: true,
           backgroundColor: Theme.of(context).colorScheme.error,
-          content: Text(
-            S.of(context).errorExportingInventory(1, error.toString()),
-          ),
+          content: Text(S.of(context).errorExportingInventory(1, error.toString())),
         ),
       );
     }
@@ -1136,19 +993,14 @@ Future<void> exportInventoryToKml(
 }
 
 /// Exports selected inventories to a single JSON envelope.
-Future<void> exportSelectedInventoriesToJson(
-  BuildContext context,
-  List<Inventory> inventories,
-) async {
+Future<void> exportSelectedInventoriesToJson(BuildContext context, List<Inventory> inventories) async {
   try {
-    final inventoriesToExport =
-        await _ensureInventoriesLoadedForExport(context, inventories);
+    final inventoriesToExport = await _ensureInventoriesLoadedForExport(context, inventories);
     final jsonData = {
       'source': kExportSource,
       'schema': 'inventories',
       'schemaVersion': kExportSchemaVersion,
-      'records':
-          inventoriesToExport.map((inventory) => inventory.toJson()).toList(),
+      'records': inventoriesToExport.map((inventory) => inventory.toJson()).toList(),
     };
     var encoder = JsonEncoder.withIndent("  ");
     final jsonString = encoder.convert(jsonData);
@@ -1176,12 +1028,7 @@ Future<void> exportSelectedInventoriesToJson(
           persist: true,
           showCloseIcon: true,
           backgroundColor: Theme.of(context).colorScheme.error,
-          content: Text(
-            S.of(context).errorExportingInventory(
-              inventories.length,
-              error.toString(),
-            ),
-          ),
+          content: Text(S.of(context).errorExportingInventory(inventories.length, error.toString())),
         ),
       );
     }
@@ -1189,10 +1036,7 @@ Future<void> exportSelectedInventoriesToJson(
 }
 
 /// Exports selected inventories to a single CSV file and shares it.
-Future<void> exportSelectedInventoriesToCsv(
-  BuildContext context,
-  List<Inventory> inventories,
-) async {
+Future<void> exportSelectedInventoriesToCsv(BuildContext context, List<Inventory> inventories) async {
   showDialog(
     context: context,
     barrierDismissible: false,
@@ -1214,8 +1058,7 @@ Future<void> exportSelectedInventoriesToCsv(
   );
   try {
     final locale = Localizations.localeOf(context);
-    final inventoriesToExport =
-        await _ensureInventoriesLoadedForExport(context, inventories);
+    final inventoriesToExport = await _ensureInventoriesLoadedForExport(context, inventories);
 
     final now = DateTime.now();
     final formatter = DateFormat('yyyyMMdd_HHmmss');
@@ -1224,8 +1067,7 @@ Future<void> exportSelectedInventoriesToCsv(
     final filePaths = <String>[];
 
     // Export species data
-    List<List<dynamic>> speciesRows =
-        await buildInventoriesSpeciesRows(inventoriesToExport, locale);
+    List<List<dynamic>> speciesRows = await buildInventoriesSpeciesRows(inventoriesToExport, locale);
     if (speciesRows.isNotEmpty) {
       String speciesCsv = Csv(fieldDelimiter: ';').encode(speciesRows);
       Directory tempDir = await getTemporaryDirectory();
@@ -1238,8 +1080,7 @@ Future<void> exportSelectedInventoriesToCsv(
     }
 
     // Export POI data
-    List<List<dynamic>> poiRows =
-        await buildInventoriesPoiRows(inventoriesToExport, locale);
+    List<List<dynamic>> poiRows = await buildInventoriesPoiRows(inventoriesToExport, locale);
     if (poiRows.length > 1) {
       String poiCsv = Csv(fieldDelimiter: ';').encode(poiRows);
       Directory tempDir = await getTemporaryDirectory();
@@ -1252,8 +1093,7 @@ Future<void> exportSelectedInventoriesToCsv(
     }
 
     // Export vegetation data
-    List<List<dynamic>> vegRows =
-        await buildInventoriesVegetationRows(inventoriesToExport, locale);
+    List<List<dynamic>> vegRows = await buildInventoriesVegetationRows(inventoriesToExport, locale);
     if (vegRows.length > 1) {
       String vegCsv = Csv(fieldDelimiter: ';').encode(vegRows);
       Directory tempDir = await getTemporaryDirectory();
@@ -1266,8 +1106,7 @@ Future<void> exportSelectedInventoriesToCsv(
     }
 
     // Export weather data
-    List<List<dynamic>> weatherRows =
-        await buildInventoriesWeatherRows(inventoriesToExport, locale);
+    List<List<dynamic>> weatherRows = await buildInventoriesWeatherRows(inventoriesToExport, locale);
     if (weatherRows.length > 1) {
       String weatherCsv = Csv(fieldDelimiter: ';').encode(weatherRows);
       Directory tempDir = await getTemporaryDirectory();
@@ -1295,12 +1134,7 @@ Future<void> exportSelectedInventoriesToCsv(
           persist: true,
           showCloseIcon: true,
           backgroundColor: Theme.of(context).colorScheme.error,
-          content: Text(
-            S.of(context).errorExportingInventory(
-              inventories.length,
-              error.toString(),
-            ),
-          ),
+          content: Text(S.of(context).errorExportingInventory(inventories.length, error.toString())),
         ),
       );
     }
@@ -1312,10 +1146,7 @@ Future<void> exportSelectedInventoriesToCsv(
 }
 
 /// Exports selected inventories to a single Excel file and shares it.
-Future<void> exportSelectedInventoriesToExcel(
-  BuildContext context,
-  List<Inventory> inventories,
-) async {
+Future<void> exportSelectedInventoriesToExcel(BuildContext context, List<Inventory> inventories) async {
   showDialog(
     context: context,
     barrierDismissible: false,
@@ -1337,8 +1168,7 @@ Future<void> exportSelectedInventoriesToExcel(
   );
   try {
     final locale = Localizations.localeOf(context);
-    final inventoriesToExport =
-        await _ensureInventoriesLoadedForExport(context, inventories);
+    final inventoriesToExport = await _ensureInventoriesLoadedForExport(context, inventories);
     final excel = await _createInventoriesExcel(inventoriesToExport, locale);
 
     var fileBytes = excel.save();
@@ -1347,8 +1177,7 @@ Future<void> exportSelectedInventoriesToExcel(
     final formattedDate = formatter.format(now);
 
     Directory tempDir = await getTemporaryDirectory();
-    final filePath =
-        '${tempDir.path}/selected_inventories_$formattedDate.xlsx';
+    final filePath = '${tempDir.path}/selected_inventories_$formattedDate.xlsx';
     if (fileBytes != null) {
       final file = File(filePath);
       await file.create(recursive: true);
@@ -1358,13 +1187,7 @@ Future<void> exportSelectedInventoriesToExcel(
 
       await SharePlus.instance.share(
         ShareParams(
-          files: [
-            XFile(
-              filePath,
-              mimeType:
-                  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            )
-          ],
+          files: [XFile(filePath, mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')],
           title: S.current.inventoryExported(inventories.length),
           subject: S.current.inventoryData(inventories.length),
         ),
@@ -1377,12 +1200,7 @@ Future<void> exportSelectedInventoriesToExcel(
           persist: true,
           showCloseIcon: true,
           backgroundColor: Theme.of(context).colorScheme.error,
-          content: Text(
-            S.of(context).errorExportingInventory(
-              inventories.length,
-              error.toString(),
-            ),
-          ),
+          content: Text(S.of(context).errorExportingInventory(inventories.length, error.toString())),
         ),
       );
     }
@@ -1396,8 +1214,7 @@ Future<void> exportSelectedInventoriesToExcel(
 /// Exports selected inventories to one KML file and opens the share sheet.
 Future<void> exportSelectedInventoriesToKml(BuildContext context, List<Inventory> inventories) async {
   try {
-    final inventoriesToExport =
-        await _ensureInventoriesLoadedForExport(context, inventories);
+    final inventoriesToExport = await _ensureInventoriesLoadedForExport(context, inventories);
     final List<_KmlWaypoint> waypoints = [];
 
     for (final inventory in inventoriesToExport) {
@@ -1442,12 +1259,9 @@ Future<void> exportSelectedInventoriesToKml(BuildContext context, List<Inventory
 
     if (waypoints.isEmpty) {
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          showCloseIcon: true,
-          content: Text(S.of(context).noPoisToExport),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(showCloseIcon: true, content: Text(S.of(context).noPoisToExport)));
       return;
     }
 
@@ -1480,9 +1294,7 @@ Future<void> exportSelectedInventoriesToKml(BuildContext context, List<Inventory
         persist: true,
         showCloseIcon: true,
         backgroundColor: Theme.of(context).colorScheme.error,
-        content: Text(
-          S.of(context).errorExportingInventory(inventories.length, error.toString()),
-        ),
+        content: Text(S.of(context).errorExportingInventory(inventories.length, error.toString())),
       ),
     );
   }
@@ -1526,12 +1338,7 @@ String _extractJournalEmbedPlaceholder(dynamic insert) {
 }
 
 String? _extractJournalImageSource(Map<dynamic, dynamic> insert) {
-  final directCandidates = <dynamic>[
-    insert['source'],
-    insert['src'],
-    insert['url'],
-    insert['path'],
-  ];
+  final directCandidates = <dynamic>[insert['source'], insert['src'], insert['url'], insert['path']];
 
   for (final candidate in directCandidates) {
     if (candidate is String && candidate.trim().isNotEmpty) {
@@ -1541,12 +1348,7 @@ String? _extractJournalImageSource(Map<dynamic, dynamic> insert) {
 
   final nested = insert['data'];
   if (nested is Map) {
-    final nestedCandidates = <dynamic>[
-      nested['source'],
-      nested['src'],
-      nested['url'],
-      nested['path'],
-    ];
+    final nestedCandidates = <dynamic>[nested['source'], nested['src'], nested['url'], nested['path']];
 
     for (final candidate in nestedCandidates) {
       if (candidate is String && candidate.trim().isNotEmpty) {
@@ -1595,17 +1397,12 @@ String _journalDeltaToPlainText(String? notes) {
   bool? currentLineChecked;
 
   bool isBlockType(String? blockType) {
-    return blockType == 'ul' ||
-        blockType == 'ol' ||
-        blockType == 'cl' ||
-        blockType == 'quote' ||
-        blockType == 'code';
+    return blockType == 'ul' || blockType == 'ol' || blockType == 'cl' || blockType == 'quote' || blockType == 'code';
   }
 
   void writeElement(String line, {String? blockType}) {
     final isBlock = isBlockType(blockType);
-    final sameBlockRun =
-        isBlock && hasWrittenElements && lastBlockType == blockType;
+    final sameBlockRun = isBlock && hasWrittenElements && lastBlockType == blockType;
 
     if (hasWrittenElements && !sameBlockRun) {
       output.writeln();
@@ -1691,9 +1488,8 @@ String _journalDeltaToPlainText(String? notes) {
         if (i < parts.length - 1) {
           // A \n inside a text op with block/heading attributes terminates a
           // styled paragraph; a \n without those attributes is a plain separator.
-          final hasLineAttrs = attributes != null &&
-              (attributes.containsKey('block') ||
-                  attributes.containsKey('heading'));
+          final hasLineAttrs =
+              attributes != null && (attributes.containsKey('block') || attributes.containsKey('heading'));
           flushLine(hasLineAttrs ? attributes : null);
         }
       }
@@ -1761,17 +1557,12 @@ String _journalDeltaToMarkdown(String? notes) {
   String? lastBlockType;
 
   bool _isBlockType(String? blockType) {
-    return blockType == 'ul' ||
-        blockType == 'ol' ||
-        blockType == 'cl' ||
-        blockType == 'quote' ||
-        blockType == 'code';
+    return blockType == 'ul' || blockType == 'ol' || blockType == 'cl' || blockType == 'quote' || blockType == 'code';
   }
 
   void writeElement(String line, {String? blockType}) {
     final isBlock = _isBlockType(blockType);
-    final sameBlockRun =
-        isBlock && hasWrittenElements && lastBlockType == blockType;
+    final sameBlockRun = isBlock && hasWrittenElements && lastBlockType == blockType;
 
     // Markdown expects a blank line between elements, except while we are in
     // the same contiguous block run (lists, quotes, code blocks, checklists).
@@ -1783,6 +1574,7 @@ String _journalDeltaToMarkdown(String? notes) {
     hasWrittenElements = true;
     lastBlockType = isBlock ? blockType : null;
   }
+
   // Tracks whether the current line's text had the `checked` inline attribute,
   // which is how Fleather marks checklist item state on text runs.
   bool? currentLineChecked;
@@ -1854,9 +1646,8 @@ String _journalDeltaToMarkdown(String? notes) {
         if (i < parts.length - 1) {
           // A \n inside a text op with block/heading attributes terminates a
           // styled paragraph; a \n without those attributes is a plain separator.
-          final hasLineAttrs = attributes != null &&
-              (attributes.containsKey('block') ||
-                  attributes.containsKey('heading'));
+          final hasLineAttrs =
+              attributes != null && (attributes.containsKey('block') || attributes.containsKey('heading'));
           flushLine(hasLineAttrs ? attributes : null);
         }
       }
@@ -1950,10 +1741,7 @@ String _buildJournalMarkdownExportContent(List<FieldJournal> journals) {
 }
 
 /// Exports selected field journal notes to TXT files.
-Future<void> exportSelectedJournalsToTxt(
-  BuildContext context,
-  List<FieldJournal> journals,
-) async {
+Future<void> exportSelectedJournalsToTxt(BuildContext context, List<FieldJournal> journals) async {
   try {
     final now = DateTime.now();
     final formatter = DateFormat('yyyyMMdd_HHmmss');
@@ -1986,10 +1774,7 @@ Future<void> exportSelectedJournalsToTxt(
 }
 
 /// Exports selected field journal notes to Markdown files.
-Future<void> exportSelectedJournalsToMarkdown(
-  BuildContext context,
-  List<FieldJournal> journals,
-) async {
+Future<void> exportSelectedJournalsToMarkdown(BuildContext context, List<FieldJournal> journals) async {
   try {
     final now = DateTime.now();
     final formatter = DateFormat('yyyyMMdd_HHmmss');
@@ -2028,10 +1813,7 @@ Future<void> exportSelectedJournalsToMarkdown(
 /// converted from Fleather Delta JSON via Markdown. Multiple entries are
 /// separated by a horizontal rule. The resulting file is shared through the
 /// platform share sheet.
-Future<void> exportSelectedJournalsToWord(
-  BuildContext context,
-  List<FieldJournal> journals,
-) async {
+Future<void> exportSelectedJournalsToWord(BuildContext context, List<FieldJournal> journals) async {
   bool isDialogShown = false;
 
   try {
@@ -2045,11 +1827,7 @@ Future<void> exportSelectedJournalsToWord(
             padding: const EdgeInsets.all(16.0),
             child: Row(
               mainAxisSize: MainAxisSize.min,
-              children: [
-                CircularProgressIndicator(year2023: false),
-                SizedBox(width: 16),
-                Text(S.current.exporting),
-              ],
+              children: [CircularProgressIndicator(year2023: false), SizedBox(width: 16), Text(S.current.exporting)],
             ),
           ),
         );
@@ -2116,13 +1894,7 @@ Future<void> exportSelectedJournalsToWord(
 
     await SharePlus.instance.share(
       ShareParams(
-        files: [
-          XFile(
-            filePath,
-            mimeType:
-                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-          ),
-        ],
+        files: [XFile(filePath, mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document')],
         title: S.current.journalEntries(journals.length),
         subject: S.current.journalEntries(journals.length),
       ),
@@ -2149,10 +1921,7 @@ Future<void> exportSelectedJournalsToWord(
 }
 
 /// Exports selected field journal entries to a single JSON envelope.
-Future<void> exportSelectedJournalsToJson(
-  BuildContext context,
-  List<FieldJournal> journals,
-) async {
+Future<void> exportSelectedJournalsToJson(BuildContext context, List<FieldJournal> journals) async {
   try {
     final jsonData = {
       'source': kExportSource,
@@ -2364,13 +2133,7 @@ Future<void> exportSelectedNestsToExcel(BuildContext context, List<Nest> nests) 
 
       await SharePlus.instance.share(
         ShareParams(
-          files: [
-            XFile(
-              filePath,
-              mimeType:
-                  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            )
-          ],
+          files: [XFile(filePath, mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')],
           title: S.current.nestExported(nests.length),
           subject: S.current.nestData(nests.length),
         ),
@@ -2418,12 +2181,9 @@ Future<void> exportSelectedNestsToKml(BuildContext context, List<Nest> nests) as
 
     if (waypoints.isEmpty) {
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          showCloseIcon: true,
-          content: Text(S.of(context).noPoisToExport),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(showCloseIcon: true, content: Text(S.of(context).noPoisToExport)));
       return;
     }
 
@@ -2456,9 +2216,7 @@ Future<void> exportSelectedNestsToKml(BuildContext context, List<Nest> nests) as
         persist: true,
         showCloseIcon: true,
         backgroundColor: Theme.of(context).colorScheme.error,
-        content: Text(
-          S.of(context).errorExportingNest(nests.length, error.toString()),
-        ),
+        content: Text(S.of(context).errorExportingNest(nests.length, error.toString())),
       ),
     );
   }
@@ -2470,7 +2228,7 @@ Future<void> exportAllInactiveNestsToJson(BuildContext context) async {
 
   try {
     // Show a loading dialog
-      if (context.mounted) {
+    if (context.mounted) {
       showDialog(
         context: context,
         barrierDismissible: false,
@@ -2480,18 +2238,14 @@ Future<void> exportAllInactiveNestsToJson(BuildContext context) async {
               padding: const EdgeInsets.all(16.0),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
-                children: [
-                  CircularProgressIndicator(year2023: false,),
-                  SizedBox(width: 16),
-                  Text(S.current.exporting),
-                ],
+                children: [CircularProgressIndicator(year2023: false), SizedBox(width: 16), Text(S.current.exporting)],
               ),
             ),
           );
         },
       );
       isDialogShown = true;
-      }
+    }
 
     final nestProvider = Provider.of<NestProvider>(context, listen: false);
     final inactiveNests = await _ensureNestsLoadedForExport(
@@ -2513,29 +2267,29 @@ Future<void> exportAllInactiveNestsToJson(BuildContext context) async {
     await file.writeAsString(jsonString, flush: true);
 
     if (isDialogShown) {
-        if (context.mounted) {
-          Navigator.of(context).pop();
-        }
-        isDialogShown = false; // Dialog is now closed
+      if (context.mounted) {
+        Navigator.of(context).pop();
       }
+      isDialogShown = false; // Dialog is now closed
+    }
 
     await SharePlus.instance.share(
       ShareParams(
-        files: [XFile(filePath, mimeType: 'application/json')], 
+        files: [XFile(filePath, mimeType: 'application/json')],
         title: S.current.nestExported(2),
-        subject: S.current.nestData(2)
+        subject: S.current.nestData(2),
       ),
     );
   } catch (error) {
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            persist: true,
-                            showCloseIcon: true,
-                            backgroundColor: Theme.of(context).colorScheme.error,
-                            content: Text(S.of(context).errorExportingInventory(1, error.toString())),
-                          ),
-                        );
+        SnackBar(
+          persist: true,
+          showCloseIcon: true,
+          backgroundColor: Theme.of(context).colorScheme.error,
+          content: Text(S.of(context).errorExportingInventory(1, error.toString())),
+        ),
+      );
     }
     return;
   } finally {
@@ -2569,21 +2323,21 @@ Future<void> exportNestToJson(BuildContext context, Nest nest) async {
     // 3. Share the file using share_plus
     await SharePlus.instance.share(
       ShareParams(
-        files: [XFile(filePath, mimeType: 'application/json')], 
+        files: [XFile(filePath, mimeType: 'application/json')],
         title: S.current.nestExported(1),
-        subject: '${S.current.nestData(1)} ${nestToExport.fieldNumber}'
+        subject: '${S.current.nestData(1)} ${nestToExport.fieldNumber}',
       ),
     );
   } catch (error) {
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            persist: true,
-                            showCloseIcon: true,
-                            backgroundColor: Theme.of(context).colorScheme.error,
-                            content: Text(S.of(context).errorExportingNest(1, error.toString())),
-                          ),
-                        );
+        SnackBar(
+          persist: true,
+          showCloseIcon: true,
+          backgroundColor: Theme.of(context).colorScheme.error,
+          content: Text(S.of(context).errorExportingNest(1, error.toString())),
+        ),
+      );
     }
     return;
   }
@@ -2641,13 +2395,9 @@ const List<String> kNestEggHeaders = [
 ];
 
 /// Builds flat summary rows for a list of nests.
-Future<List<List<dynamic>>> buildNestsSummaryRows(
-  List<Nest> nests,
-  Locale locale,
-) async {
+Future<List<List<dynamic>>> buildNestsSummaryRows(List<Nest> nests, Locale locale) async {
   final List<List<dynamic>> rows = [kNestHeaders];
-  final numberFormat = NumberFormat.decimalPattern(locale.toString())
-    ..maximumFractionDigits = 7;
+  final numberFormat = NumberFormat.decimalPattern(locale.toString())..maximumFractionDigits = 7;
   final prefs = await SharedPreferences.getInstance();
   final formatNumbers = prefs.getBool('formatNumbers') ?? true;
 
@@ -2656,27 +2406,17 @@ Future<List<List<dynamic>>> buildNestsSummaryRows(
       nest.fieldNumber ?? '',
       nest.speciesName ?? '',
       nest.localityName ?? '',
-      nest.longitude != null
-          ? (formatNumbers ? numberFormat.format(nest.longitude) : nest.longitude)
-          : '',
-      nest.latitude != null
-          ? (formatNumbers ? numberFormat.format(nest.latitude) : nest.latitude)
-          : '',
-      nest.foundTime != null
-          ? DateFormat('yyyy-MM-dd HH:mm:ss').format(nest.foundTime!)
-          : '',
+      nest.longitude != null ? (formatNumbers ? numberFormat.format(nest.longitude) : nest.longitude) : '',
+      nest.latitude != null ? (formatNumbers ? numberFormat.format(nest.latitude) : nest.latitude) : '',
+      nest.foundTime != null ? DateFormat('yyyy-MM-dd HH:mm:ss').format(nest.foundTime!) : '',
       nest.support ?? '',
       nest.heightAboveGround != null
-          ? (formatNumbers
-              ? numberFormat.format(nest.heightAboveGround)
-              : nest.heightAboveGround)
+          ? (formatNumbers ? numberFormat.format(nest.heightAboveGround) : nest.heightAboveGround)
           : '',
       nest.male ?? '',
       nest.female ?? '',
       nest.helpers ?? '',
-      nest.lastTime != null
-          ? DateFormat('yyyy-MM-dd HH:mm:ss').format(nest.lastTime!)
-          : '',
+      nest.lastTime != null ? DateFormat('yyyy-MM-dd HH:mm:ss').format(nest.lastTime!) : '',
       nest.observer ?? '',
       nestFateTypeFriendlyNames[nest.nestFate] ?? '',
     ]);
@@ -2686,13 +2426,9 @@ Future<List<List<dynamic>>> buildNestsSummaryRows(
 }
 
 /// Builds flat denormalized revision rows for a list of nests.
-Future<List<List<dynamic>>> buildNestsRevisionsRows(
-  List<Nest> nests,
-  Locale locale,
-) async {
+Future<List<List<dynamic>>> buildNestsRevisionsRows(List<Nest> nests, Locale locale) async {
   final List<List<dynamic>> rows = [kNestRevisionHeaders];
-  final numberFormat = NumberFormat.decimalPattern(locale.toString())
-    ..maximumFractionDigits = 7;
+  final numberFormat = NumberFormat.decimalPattern(locale.toString())..maximumFractionDigits = 7;
   final prefs = await SharedPreferences.getInstance();
   final formatNumbers = prefs.getBool('formatNumbers') ?? true;
 
@@ -2701,12 +2437,8 @@ Future<List<List<dynamic>>> buildNestsRevisionsRows(
       nest.fieldNumber ?? '',
       nest.speciesName ?? '',
       nest.localityName ?? '',
-      nest.longitude != null
-          ? (formatNumbers ? numberFormat.format(nest.longitude) : nest.longitude)
-          : '',
-      nest.latitude != null
-          ? (formatNumbers ? numberFormat.format(nest.latitude) : nest.latitude)
-          : '',
+      nest.longitude != null ? (formatNumbers ? numberFormat.format(nest.longitude) : nest.longitude) : '',
+      nest.latitude != null ? (formatNumbers ? numberFormat.format(nest.latitude) : nest.latitude) : '',
       nest.observer ?? '',
     ];
 
@@ -2715,9 +2447,7 @@ Future<List<List<dynamic>>> buildNestsRevisionsRows(
       for (var rev in revisions) {
         rows.add([
           ...prefix,
-          rev.sampleTime != null
-              ? DateFormat('yyyy-MM-dd HH:mm:ss').format(rev.sampleTime!)
-              : '',
+          rev.sampleTime != null ? DateFormat('yyyy-MM-dd HH:mm:ss').format(rev.sampleTime!) : '',
           nestStatusTypeFriendlyNames[rev.nestStatus] ?? '',
           nestStageTypeFriendlyNames[rev.nestStage] ?? '',
           rev.eggsHost ?? '',
@@ -2729,10 +2459,7 @@ Future<List<List<dynamic>>> buildNestsRevisionsRows(
         ]);
       }
     } else {
-      rows.add([
-        ...prefix,
-        '', '', '', '', '', '', '', '', ''
-      ]);
+      rows.add([...prefix, '', '', '', '', '', '', '', '', '']);
     }
   }
 
@@ -2740,13 +2467,9 @@ Future<List<List<dynamic>>> buildNestsRevisionsRows(
 }
 
 /// Builds flat egg rows for a list of nests.
-Future<List<List<dynamic>>> buildNestsEggsRows(
-  List<Nest> nests,
-  Locale locale,
-) async {
+Future<List<List<dynamic>>> buildNestsEggsRows(List<Nest> nests, Locale locale) async {
   final List<List<dynamic>> rows = [kNestEggHeaders];
-  final numberFormat = NumberFormat.decimalPattern(locale.toString())
-    ..maximumFractionDigits = 7;
+  final numberFormat = NumberFormat.decimalPattern(locale.toString())..maximumFractionDigits = 7;
   final prefs = await SharedPreferences.getInstance();
   final formatNumbers = prefs.getBool('formatNumbers') ?? true;
 
@@ -2759,21 +2482,13 @@ Future<List<List<dynamic>>> buildNestsEggsRows(
         nest.fieldNumber ?? '',
         nest.speciesName ?? '',
         nest.localityName ?? '',
-        egg.sampleTime != null
-            ? DateFormat('yyyy-MM-dd HH:mm:ss').format(egg.sampleTime!)
-            : '',
+        egg.sampleTime != null ? DateFormat('yyyy-MM-dd HH:mm:ss').format(egg.sampleTime!) : '',
         egg.fieldNumber ?? '',
         egg.speciesName ?? '',
         eggShapeTypeFriendlyNames[egg.eggShape] ?? '',
-        egg.width != null
-            ? (formatNumbers ? numberFormat.format(egg.width) : egg.width)
-            : '',
-        egg.length != null
-            ? (formatNumbers ? numberFormat.format(egg.length) : egg.length)
-            : '',
-        egg.mass != null
-            ? (formatNumbers ? numberFormat.format(egg.mass) : egg.mass)
-            : '',
+        egg.width != null ? (formatNumbers ? numberFormat.format(egg.width) : egg.width) : '',
+        egg.length != null ? (formatNumbers ? numberFormat.format(egg.length) : egg.length) : '',
+        egg.mass != null ? (formatNumbers ? numberFormat.format(egg.mass) : egg.mass) : '',
       ]);
     }
   }
@@ -2907,23 +2622,22 @@ Future<void> exportNestToKml(BuildContext context, Nest nest) async {
     final nestToExport = await _ensureNestLoadedForExport(context, nest);
     final List<_KmlWaypoint> waypoints = [];
     if (nestToExport.latitude != null && nestToExport.longitude != null) {
-      waypoints.add(_KmlWaypoint(
-        lat: nestToExport.latitude,
-        lon: nestToExport.longitude,
-        name: '${nestToExport.fieldNumber} - ${nestToExport.speciesName}',
-        description: nestToExport.localityName ?? '',
-        time: nestToExport.foundTime,
-      ));
+      waypoints.add(
+        _KmlWaypoint(
+          lat: nestToExport.latitude,
+          lon: nestToExport.longitude,
+          name: '${nestToExport.fieldNumber} - ${nestToExport.speciesName}',
+          description: nestToExport.localityName ?? '',
+          time: nestToExport.foundTime,
+        ),
+      );
     }
 
     if (waypoints.isEmpty) {
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          showCloseIcon: true,
-          content: Text(S.of(context).noPoisToExport),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(showCloseIcon: true, content: Text(S.of(context).noPoisToExport)));
       return;
     }
 
@@ -2948,13 +2662,13 @@ Future<void> exportNestToKml(BuildContext context, Nest nest) async {
   } catch (error) {
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            persist: true,
-                            showCloseIcon: true,
-                            backgroundColor: Theme.of(context).colorScheme.error,
-                            content: Text(S.of(context).errorExportingNest(1, error.toString())),
-                          ),
-                        );
+      SnackBar(
+        persist: true,
+        showCloseIcon: true,
+        backgroundColor: Theme.of(context).colorScheme.error,
+        content: Text(S.of(context).errorExportingNest(1, error.toString())),
+      ),
+    );
     return;
   }
 }
@@ -2965,27 +2679,23 @@ Future<void> exportAllSpecimensToJson(BuildContext context, List<Specimen> speci
 
   try {
     // Show a loading dialog
-      if (!context.mounted) return;
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return Dialog(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CircularProgressIndicator(year2023: false,),
-                  SizedBox(width: 16),
-                  Text(S.current.exporting),
-                ],
-              ),
+    if (!context.mounted) return;
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [CircularProgressIndicator(year2023: false), SizedBox(width: 16), Text(S.current.exporting)],
             ),
-          );
-        },
-      );
-      isDialogShown = true;
+          ),
+        );
+      },
+    );
+    isDialogShown = true;
 
     final jsonData = {
       'source': kExportSource,
@@ -3001,29 +2711,29 @@ Future<void> exportAllSpecimensToJson(BuildContext context, List<Specimen> speci
     await file.writeAsString(jsonString, flush: true);
 
     if (isDialogShown) {
-        if (context.mounted) {
-          Navigator.of(context).pop();
-        }
-        isDialogShown = false; // Dialog is now closed
+      if (context.mounted) {
+        Navigator.of(context).pop();
       }
+      isDialogShown = false; // Dialog is now closed
+    }
 
     await SharePlus.instance.share(
       ShareParams(
-        files: [XFile(filePath, mimeType: 'application/json')], 
+        files: [XFile(filePath, mimeType: 'application/json')],
         title: S.current.specimenExported(2),
-        subject: S.current.specimenData(2)
+        subject: S.current.specimenData(2),
       ),
     );
   } catch (error) {
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            persist: true,
-                            showCloseIcon: true,
-                            backgroundColor: Theme.of(context).colorScheme.error,
-                            content: Text(S.of(context).errorExportingSpecimen(1, error.toString())),
-                          ),
-                        );
+      SnackBar(
+        persist: true,
+        showCloseIcon: true,
+        backgroundColor: Theme.of(context).colorScheme.error,
+        content: Text(S.of(context).errorExportingSpecimen(1, error.toString())),
+      ),
+    );
   } finally {
     // Ensure the dialog is always closed if it was shown and an error occurred,
     // or if the function returned early while the dialog was up.
@@ -3089,11 +2799,7 @@ Future<void> exportSelectedSpecimensToCsv(BuildContext context, List<Specimen> s
             padding: const EdgeInsets.all(16.0),
             child: Row(
               mainAxisSize: MainAxisSize.min,
-              children: [
-                CircularProgressIndicator(year2023: false),
-                SizedBox(width: 16),
-                Text(S.current.exporting),
-              ],
+              children: [CircularProgressIndicator(year2023: false), SizedBox(width: 16), Text(S.current.exporting)],
             ),
           ),
         );
@@ -3160,11 +2866,7 @@ Future<void> exportSelectedSpecimensToExcel(BuildContext context, List<Specimen>
             padding: const EdgeInsets.all(16.0),
             child: Row(
               mainAxisSize: MainAxisSize.min,
-              children: [
-                CircularProgressIndicator(year2023: false),
-                SizedBox(width: 16),
-                Text(S.current.exporting),
-              ],
+              children: [CircularProgressIndicator(year2023: false), SizedBox(width: 16), Text(S.current.exporting)],
             ),
           ),
         );
@@ -3209,12 +2911,7 @@ Future<void> exportSelectedSpecimensToExcel(BuildContext context, List<Specimen>
 
     await SharePlus.instance.share(
       ShareParams(
-        files: [
-          XFile(
-            filePath,
-            mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-          ),
-        ],
+        files: [XFile(filePath, mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')],
         title: S.current.specimenExported(specimenList.length),
         subject: S.current.specimenData(specimenList.length),
       ),
@@ -3259,12 +2956,9 @@ Future<void> exportSelectedSpecimensToKml(BuildContext context, List<Specimen> s
 
     if (waypoints.isEmpty) {
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          showCloseIcon: true,
-          content: Text(S.of(context).noPoisToExport),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(showCloseIcon: true, content: Text(S.of(context).noPoisToExport)));
       return;
     }
 
@@ -3297,9 +2991,7 @@ Future<void> exportSelectedSpecimensToKml(BuildContext context, List<Specimen> s
         persist: true,
         showCloseIcon: true,
         backgroundColor: Theme.of(context).colorScheme.error,
-        content: Text(
-          S.of(context).errorExportingSpecimen(specimenList.length, error.toString()),
-        ),
+        content: Text(S.of(context).errorExportingSpecimen(specimenList.length, error.toString())),
       ),
     );
   }
@@ -3311,27 +3003,23 @@ Future<void> exportAllSpecimensToCsv(BuildContext context, List<Specimen> specim
 
   try {
     // Show a loading dialog
-      if (!context.mounted) return;
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return Dialog(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CircularProgressIndicator(year2023: false,),
-                  SizedBox(width: 16),
-                  Text(S.current.exporting),
-                ],
-              ),
+    if (!context.mounted) return;
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [CircularProgressIndicator(year2023: false), SizedBox(width: 16), Text(S.current.exporting)],
             ),
-          );
-        },
-      );
-      isDialogShown = true;
+          ),
+        );
+      },
+    );
+    isDialogShown = true;
 
     final locale = Localizations.localeOf(context);
 
@@ -3348,30 +3036,30 @@ Future<void> exportAllSpecimensToCsv(BuildContext context, List<Specimen> specim
     await file.writeAsString(csv, flush: true);
 
     if (isDialogShown) {
-        if (context.mounted) {
-          Navigator.of(context).pop();
-        }
-        isDialogShown = false; // Dialog is now closed
+      if (context.mounted) {
+        Navigator.of(context).pop();
       }
+      isDialogShown = false; // Dialog is now closed
+    }
 
     // 4. Share the file using share_plus
     await SharePlus.instance.share(
       ShareParams(
-        files: [XFile(filePath, mimeType: 'text/csv')], 
+        files: [XFile(filePath, mimeType: 'text/csv')],
         title: S.current.specimenExported(2),
-        subject: S.current.specimenData(2)
+        subject: S.current.specimenData(2),
       ),
     );
   } catch (error) {
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            persist: true,
-                            showCloseIcon: true,
-                            backgroundColor: Theme.of(context).colorScheme.error,
-                            content: Text(S.of(context).errorExportingSpecimen(1, error.toString())),
-                          ),
-                        );
+      SnackBar(
+        persist: true,
+        showCloseIcon: true,
+        backgroundColor: Theme.of(context).colorScheme.error,
+        content: Text(S.of(context).errorExportingSpecimen(1, error.toString())),
+      ),
+    );
   } finally {
     // Ensure the dialog is always closed if it was shown and an error occurred,
     // or if the function returned early while the dialog was up.
@@ -3387,29 +3075,25 @@ Future<void> exportAllSpecimensToExcel(BuildContext context, List<Specimen> spec
 
   try {
     // Show a loading dialog
-      if (!context.mounted) return;
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return Dialog(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CircularProgressIndicator(year2023: false,),
-                  SizedBox(width: 16),
-                  Text(S.current.exporting),
-                ],
-              ),
+    if (!context.mounted) return;
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [CircularProgressIndicator(year2023: false), SizedBox(width: 16), Text(S.current.exporting)],
             ),
-          );
-        },
-      );
-      isDialogShown = true;
+          ),
+        );
+      },
+    );
+    isDialogShown = true;
 
-      final locale = Localizations.localeOf(context);
+    final locale = Localizations.localeOf(context);
 
     // 1. Create a list of data
     List<List<dynamic>> rows = await buildSpecimensRows(specimenList, locale);
@@ -3427,7 +3111,7 @@ Future<void> exportAllSpecimensToExcel(BuildContext context, List<Specimen> spec
     final now = DateTime.now();
     final formatter = DateFormat('yyyyMMdd_HHmmss');
     final formattedDate = formatter.format(now);
-    
+
     var fileBytes = excel.save();
     Directory tempDir = await getTemporaryDirectory();
     final filePath = '${tempDir.path}/specimens_$formattedDate.xlsx';
@@ -3451,14 +3135,9 @@ Future<void> exportAllSpecimensToExcel(BuildContext context, List<Specimen> spec
     // 4. Share the file using share_plus
     await SharePlus.instance.share(
       ShareParams(
-        files: [
-          XFile(
-            filePath,
-            mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-          ),
-        ],
+        files: [XFile(filePath, mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')],
         title: S.current.specimenExported(2),
-        subject: S.current.specimenData(2)
+        subject: S.current.specimenData(2),
       ),
     );
   } catch (error) {
@@ -3508,12 +3187,8 @@ Future<List<List<dynamic>>> buildSpecimensRows(List<Specimen> specimenList, Loca
       specimen.speciesName ?? '',
       specimenTypeFriendlyNames[specimen.type] ?? '',
       specimen.locality ?? '',
-      specimen.longitude != null
-          ? (formatNumbers ? numberFormat.format(specimen.longitude) : specimen.longitude)
-          : '',
-      specimen.latitude != null
-          ? (formatNumbers ? numberFormat.format(specimen.latitude) : specimen.latitude)
-          : '',
+      specimen.longitude != null ? (formatNumbers ? numberFormat.format(specimen.longitude) : specimen.longitude) : '',
+      specimen.latitude != null ? (formatNumbers ? numberFormat.format(specimen.latitude) : specimen.latitude) : '',
       specimen.notes ?? '',
     ]);
   }
@@ -3526,23 +3201,22 @@ Future<void> exportSpecimenToKml(BuildContext context, Specimen specimen) async 
   try {
     final List<_KmlWaypoint> waypoints = [];
     if (specimen.latitude != null && specimen.longitude != null) {
-      waypoints.add(_KmlWaypoint(
-        lat: specimen.latitude,
-        lon: specimen.longitude,
-        name: '${specimen.fieldNumber} - ${specimen.speciesName}',
-        description: specimen.locality ?? '',
-        time: specimen.sampleTime,
-      ));
+      waypoints.add(
+        _KmlWaypoint(
+          lat: specimen.latitude,
+          lon: specimen.longitude,
+          name: '${specimen.fieldNumber} - ${specimen.speciesName}',
+          description: specimen.locality ?? '',
+          time: specimen.sampleTime,
+        ),
+      );
     }
 
     if (waypoints.isEmpty) {
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          showCloseIcon: true,
-          content: Text(S.of(context).noPoisToExport),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(showCloseIcon: true, content: Text(S.of(context).noPoisToExport)));
       return;
     }
 
@@ -3567,13 +3241,12 @@ Future<void> exportSpecimenToKml(BuildContext context, Specimen specimen) async 
   } catch (error) {
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            persist: true,
-                            showCloseIcon: true,
-                            backgroundColor: Theme.of(context).colorScheme.error,
-                            content: Text(S.of(context).errorExportingSpecimen(1, error.toString())),
-                          ),
-                        );
+      SnackBar(
+        persist: true,
+        showCloseIcon: true,
+        backgroundColor: Theme.of(context).colorScheme.error,
+        content: Text(S.of(context).errorExportingSpecimen(1, error.toString())),
+      ),
+    );
   }
 }
-

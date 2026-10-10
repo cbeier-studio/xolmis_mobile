@@ -2238,25 +2238,28 @@ class AppLocalizationsPt extends AppLocalizations {
   String get speciesDetectionVisual => 'Visual';
 
   @override
-  String get speciesDetectionAuditory => 'Auditiva';
+  String get speciesDetectionSong => 'Canto';
+
+  @override
+  String get speciesDetectionCall => 'Chamado';
+
+  @override
+  String get speciesDetectionWingFlapping => 'Batidas de asas';
+
+  @override
+  String get speciesDetectionDrumming => 'Tamborilar';
+
+  @override
+  String get speciesDetectionFlying => 'Voo';
 
   @override
   String get speciesDetectionCapture => 'Captura';
 
   @override
-  String get speciesDetectionNest => 'Ninho';
+  String get speciesDetectionRemote => 'Remoto';
 
   @override
-  String get speciesDetectionCameraTrap => 'Armadilha fotográfica';
-
-  @override
-  String get speciesDetectionTelemetry => 'Telemetria';
-
-  @override
-  String get speciesDetectionTrackOrSign => 'Vestígios / sinais';
-
-  @override
-  String get speciesDetectionDead => 'Morto';
+  String get speciesDetectionTrackOrSign => 'Vestígios';
 
   @override
   String get speciesDetectionOther => 'Outro';
@@ -2272,6 +2275,87 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get speciesReproductiveConfirmedBreeding => 'Reprodução confirmada';
+
+  @override
+  String get speciesReproductiveGroupObserved => 'Observado';
+
+  @override
+  String get speciesReproductiveGroupPossible => 'Possível';
+
+  @override
+  String get speciesReproductiveGroupProbable => 'Provável';
+
+  @override
+  String get speciesReproductiveGroupConfirmed => 'Confirmado';
+
+  @override
+  String get speciesReproductiveCodeH => 'Em habitat apropriado (Possível)';
+
+  @override
+  String get speciesReproductiveCodeS => 'Ave cantando (Possível)';
+
+  @override
+  String get speciesReproductiveCodeS7 => 'Ave cantando presente por 7+ dias (Provável)';
+
+  @override
+  String get speciesReproductiveCodeM => 'Múltiplas (7+) aves cantando (Provável)';
+
+  @override
+  String get speciesReproductiveCodeP => 'Par em habitat adequado (Provável)';
+
+  @override
+  String get speciesReproductiveCodeT => 'Defesa territorial (Provável)';
+
+  @override
+  String get speciesReproductiveCodeC => 'Cortejo, exibição ou cópula (Provável)';
+
+  @override
+  String get speciesReproductiveCodeN => 'Visitando provável local de ninho (Provável)';
+
+  @override
+  String get speciesReproductiveCodeA => 'Comportamento agitado (Provável)';
+
+  @override
+  String get speciesReproductiveCodeB => 'Construção de ninho por corruíra/pica-pau (Provável)';
+
+  @override
+  String get speciesReproductiveCodePE => 'Evidência fisiológica (Provável)';
+
+  @override
+  String get speciesReproductiveCodeCN => 'Carregando material de ninho (Confirmado/Provável)';
+
+  @override
+  String get speciesReproductiveCodeNB => 'Construção de ninho (Confirmado/Provável)';
+
+  @override
+  String get speciesReproductiveCodeDD => 'Exibição de distração (Confirmado)';
+
+  @override
+  String get speciesReproductiveCodeUN => 'Ninho usado (Confirmado)';
+
+  @override
+  String get speciesReproductiveCodeON => 'Ninho ocupado (Confirmado)';
+
+  @override
+  String get speciesReproductiveCodeFL => 'Jovem recém-emplumado (Confirmado)';
+
+  @override
+  String get speciesReproductiveCodeCF => 'Carregando alimento (Confirmado)';
+
+  @override
+  String get speciesReproductiveCodeFY => 'Alimentando jovens (Confirmado)';
+
+  @override
+  String get speciesReproductiveCodeFS => 'Carregando saco fecal (Confirmado)';
+
+  @override
+  String get speciesReproductiveCodeNE => 'Ninho com ovos (Confirmado)';
+
+  @override
+  String get speciesReproductiveCodeNY => 'Ninho com filhotes (Confirmado)';
+
+  @override
+  String get speciesReproductiveCodeF => 'Sobrevoo (Observado)';
 
   @override
   String get speciesSex => 'Sexo';
@@ -4567,25 +4651,28 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get speciesDetectionVisual => 'Visual';
 
   @override
-  String get speciesDetectionAuditory => 'Auditiva';
+  String get speciesDetectionSong => 'Canto';
+
+  @override
+  String get speciesDetectionCall => 'Chamado';
+
+  @override
+  String get speciesDetectionWingFlapping => 'Batidas de asas';
+
+  @override
+  String get speciesDetectionDrumming => 'Tamborilar';
+
+  @override
+  String get speciesDetectionFlying => 'Voo';
 
   @override
   String get speciesDetectionCapture => 'Captura';
 
   @override
-  String get speciesDetectionNest => 'Ninho';
+  String get speciesDetectionRemote => 'Remoto';
 
   @override
-  String get speciesDetectionCameraTrap => 'Armadilha fotográfica';
-
-  @override
-  String get speciesDetectionTelemetry => 'Telemetria';
-
-  @override
-  String get speciesDetectionTrackOrSign => 'Vestígios / sinais';
-
-  @override
-  String get speciesDetectionDead => 'Morto';
+  String get speciesDetectionTrackOrSign => 'Vestígios';
 
   @override
   String get speciesDetectionOther => 'Outro';
@@ -4601,6 +4688,87 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get speciesReproductiveConfirmedBreeding => 'Reprodução confirmada';
+
+  @override
+  String get speciesReproductiveGroupObserved => 'Observado';
+
+  @override
+  String get speciesReproductiveGroupPossible => 'Possível';
+
+  @override
+  String get speciesReproductiveGroupProbable => 'Provável';
+
+  @override
+  String get speciesReproductiveGroupConfirmed => 'Confirmado';
+
+  @override
+  String get speciesReproductiveCodeH => 'Em habitat apropriado (Possível)';
+
+  @override
+  String get speciesReproductiveCodeS => 'Ave cantando (Possível)';
+
+  @override
+  String get speciesReproductiveCodeS7 => 'Ave cantando presente por 7+ dias (Provável)';
+
+  @override
+  String get speciesReproductiveCodeM => 'Múltiplas (7+) aves cantando (Provável)';
+
+  @override
+  String get speciesReproductiveCodeP => 'Par em habitat adequado (Provável)';
+
+  @override
+  String get speciesReproductiveCodeT => 'Defesa territorial (Provável)';
+
+  @override
+  String get speciesReproductiveCodeC => 'Cortejo, exibição ou cópula (Provável)';
+
+  @override
+  String get speciesReproductiveCodeN => 'Visitando provável local de ninho (Provável)';
+
+  @override
+  String get speciesReproductiveCodeA => 'Comportamento agitado (Provável)';
+
+  @override
+  String get speciesReproductiveCodeB => 'Construção de ninho por corruíra/pica-pau (Provável)';
+
+  @override
+  String get speciesReproductiveCodePE => 'Evidência fisiológica (Provável)';
+
+  @override
+  String get speciesReproductiveCodeCN => 'Carregando material de ninho (Confirmado/Provável)';
+
+  @override
+  String get speciesReproductiveCodeNB => 'Construção de ninho (Confirmado/Provável)';
+
+  @override
+  String get speciesReproductiveCodeDD => 'Exibição de distração (Confirmado)';
+
+  @override
+  String get speciesReproductiveCodeUN => 'Ninho usado (Confirmado)';
+
+  @override
+  String get speciesReproductiveCodeON => 'Ninho ocupado (Confirmado)';
+
+  @override
+  String get speciesReproductiveCodeFL => 'Jovem recém-emplumado (Confirmado)';
+
+  @override
+  String get speciesReproductiveCodeCF => 'Carregando alimento (Confirmado)';
+
+  @override
+  String get speciesReproductiveCodeFY => 'Alimentando jovens (Confirmado)';
+
+  @override
+  String get speciesReproductiveCodeFS => 'Carregando saco fecal (Confirmado)';
+
+  @override
+  String get speciesReproductiveCodeNE => 'Ninho com ovos (Confirmado)';
+
+  @override
+  String get speciesReproductiveCodeNY => 'Ninho com filhotes (Confirmado)';
+
+  @override
+  String get speciesReproductiveCodeF => 'Sobrevoo (Observado)';
 
   @override
   String get speciesSex => 'Sexo';
