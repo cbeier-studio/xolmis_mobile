@@ -62,6 +62,27 @@ SpeciesReproductiveStatus? _speciesReproductiveStatusFromDynamic(dynamic raw) {
   return parseSpeciesReproductiveStatus(raw);
 }
 
+SpeciesActivity? _speciesActivityFromDynamic(dynamic raw) {
+  return parseSpeciesActivity(raw);
+}
+
+List<SpeciesActivity>? _speciesActivityListFromDynamic(dynamic raw) {
+  if (raw == null) return null;
+
+  final decoded = raw is String ? jsonDecode(raw) : raw;
+  if (decoded is! List) return null;
+
+  final result = <SpeciesActivity>[];
+  for (final item in decoded) {
+    final value = _speciesActivityFromDynamic(item);
+    if (value != null) {
+      result.add(value);
+    }
+  }
+
+  return result.isEmpty ? null : result;
+}
+
 List<String>? _enumListToNames<T extends Enum>(List<T>? values) {
   if (values == null || values.isEmpty) return null;
   return values.map((value) => value.name).toList();
@@ -222,7 +243,7 @@ class Species {
       detectionModes: _enumListFromDynamic(SpeciesDetectionMode.values, map['detectionModes']),
       reproductiveStatus: _speciesReproductiveStatusFromDynamic(map['reproductiveStatus']),
       sex: _enumFromDynamic(SpeciesSex.values, map['sex']),
-      activities: _enumListFromDynamic(SpeciesActivity.values, map['activities']),
+      activities: _speciesActivityListFromDynamic(map['activities']),
       pois: pois,
     );
   }
@@ -333,7 +354,7 @@ class Species {
       detectionModes: _enumListFromDynamic(SpeciesDetectionMode.values, json['detectionModes']),
       reproductiveStatus: _speciesReproductiveStatusFromDynamic(json['reproductiveStatus']),
       sex: _enumFromDynamic(SpeciesSex.values, json['sex']),
-      activities: _enumListFromDynamic(SpeciesActivity.values, json['activities']),
+      activities: _speciesActivityListFromDynamic(json['activities']),
       pois: (json['pois'] as List).map((item) => Poi.fromJson(item)).toList(),
     );
   }

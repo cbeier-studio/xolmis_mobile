@@ -39,7 +39,7 @@ dependencies:
   csv: ^8.0.0
   shared_preferences: ^2.5.6
   docx_creator: ^1.4.0
-  excel_plus: ^2.27.1
+  excel_plus: ^2.29.0
 #  excel:
 #    git:
 #      url: https://github.com/justkawal/excel.git
@@ -65,7 +65,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  sqflite_common_ffi: ^2.4.3
+  sqflite_common_ffi: ^2.4.4
 
   flutter_lints: ^6.0.0
 

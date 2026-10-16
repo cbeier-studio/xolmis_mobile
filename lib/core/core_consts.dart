@@ -331,41 +331,121 @@ Map<SpeciesSex, String> get speciesSexFriendlyNames {
 
 /// Main observed activities/behaviors that can be selected for a species.
 enum SpeciesActivity {
-  flying,
-  foraging,
-  perching,
-  singing,
-  calling,
-  nesting,
-  feedingYoung,
   resting,
-  bathing,
+  vocalizing,
+  overflying,
+  circling,
+  wandering,
   moving,
+  swimming,
+  foraging,
   displaying,
-  aggressive,
-  roosting,
+  mating,
+  nesting,
+  attendingYoung,
+  distraction,
+  selfMaintenance,
+  territorialDispute,
+  intraSpecificAggression,
+  interSpecificAggression,
   other,
 }
 
 /// Localized labels for [SpeciesActivity] values.
 Map<SpeciesActivity, String> get speciesActivityFriendlyNames {
-  final l10n = _activeL10n;
   return {
-    SpeciesActivity.flying: l10n.speciesActivityFlying,
-    SpeciesActivity.foraging: l10n.speciesActivityForaging,
-    SpeciesActivity.perching: l10n.speciesActivityPerching,
-    SpeciesActivity.singing: l10n.speciesActivitySinging,
-    SpeciesActivity.calling: l10n.speciesActivityCalling,
-    SpeciesActivity.nesting: l10n.speciesActivityNesting,
-    SpeciesActivity.feedingYoung: l10n.speciesActivityFeedingYoung,
-    SpeciesActivity.resting: l10n.speciesActivityResting,
-    SpeciesActivity.bathing: l10n.speciesActivityBathing,
-    SpeciesActivity.moving: l10n.speciesActivityMoving,
-    SpeciesActivity.displaying: l10n.speciesActivityDisplaying,
-    SpeciesActivity.aggressive: l10n.speciesActivityAggressive,
-    SpeciesActivity.roosting: l10n.speciesActivityRoosting,
-    SpeciesActivity.other: l10n.speciesActivityOther,
+    SpeciesActivity.resting: 'Repousando',
+    SpeciesActivity.vocalizing: 'Vocalizando',
+    SpeciesActivity.overflying: 'Sobrevoando',
+    SpeciesActivity.circling: 'Circulando',
+    SpeciesActivity.wandering: 'Vagando',
+    SpeciesActivity.moving: 'Deslocando',
+    SpeciesActivity.swimming: 'Nadando',
+    SpeciesActivity.foraging: 'Forrageando',
+    SpeciesActivity.displaying: 'Exibição',
+    SpeciesActivity.mating: 'Acasalando',
+    SpeciesActivity.nesting: 'Nidificando',
+    SpeciesActivity.attendingYoung: 'Atendendo filhotes',
+    SpeciesActivity.distraction: 'Distração',
+    SpeciesActivity.selfMaintenance: 'Manutenção individual',
+    SpeciesActivity.territorialDispute: 'Disputa territorial',
+    SpeciesActivity.intraSpecificAggression: 'Agressão intraespecífica',
+    SpeciesActivity.interSpecificAggression: 'Agressão interespecífica',
+    SpeciesActivity.other: 'Outro',
   };
+}
+
+const Map<String, SpeciesActivity> _legacySpeciesActivityAlias = {
+  'flying': SpeciesActivity.overflying,
+  'foraging': SpeciesActivity.foraging,
+  'perching': SpeciesActivity.resting,
+  'singing': SpeciesActivity.vocalizing,
+  'calling': SpeciesActivity.vocalizing,
+  'nesting': SpeciesActivity.nesting,
+  'feedingyoung': SpeciesActivity.attendingYoung,
+  'resting': SpeciesActivity.resting,
+  'bathing': SpeciesActivity.selfMaintenance,
+  'moving': SpeciesActivity.moving,
+  'displaying': SpeciesActivity.displaying,
+  'aggressive': SpeciesActivity.intraSpecificAggression,
+  'roosting': SpeciesActivity.resting,
+  'other': SpeciesActivity.other,
+};
+
+const Map<int, SpeciesActivity> _legacySpeciesActivityIndexAlias = {
+  0: SpeciesActivity.overflying,
+  1: SpeciesActivity.foraging,
+  2: SpeciesActivity.resting,
+  3: SpeciesActivity.vocalizing,
+  4: SpeciesActivity.vocalizing,
+  5: SpeciesActivity.nesting,
+  6: SpeciesActivity.attendingYoung,
+  7: SpeciesActivity.resting,
+  8: SpeciesActivity.selfMaintenance,
+  9: SpeciesActivity.moving,
+  10: SpeciesActivity.displaying,
+  11: SpeciesActivity.intraSpecificAggression,
+  12: SpeciesActivity.resting,
+  13: SpeciesActivity.other,
+};
+
+/// Parses persisted species activity values from either current enum names,
+/// legacy enum names, or legacy indexes.
+SpeciesActivity? parseSpeciesActivity(dynamic raw) {
+  if (raw == null) return null;
+
+  if (raw is int) {
+    final legacy = _legacySpeciesActivityIndexAlias[raw];
+    if (legacy != null) {
+      return legacy;
+    }
+    if (raw >= 0 && raw < SpeciesActivity.values.length) {
+      return SpeciesActivity.values[raw];
+    }
+    return null;
+  }
+
+  final token = raw.toString().trim();
+  if (token.isEmpty) return null;
+
+  for (final value in SpeciesActivity.values) {
+    if (value.name.toLowerCase() == token.toLowerCase()) {
+      return value;
+    }
+  }
+
+  final parsedIndex = int.tryParse(token);
+  if (parsedIndex != null) {
+    final legacy = _legacySpeciesActivityIndexAlias[parsedIndex];
+    if (legacy != null) {
+      return legacy;
+    }
+    if (parsedIndex >= 0 && parsedIndex < SpeciesActivity.values.length) {
+      return SpeciesActivity.values[parsedIndex];
+    }
+  }
+
+  return _legacySpeciesActivityAlias[token.toLowerCase()];
 }
 
 /// Actions returned by conditional warning dialogs.

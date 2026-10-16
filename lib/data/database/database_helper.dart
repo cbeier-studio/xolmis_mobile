@@ -39,7 +39,7 @@ class DatabaseHelper {
     String path = join(await getDatabasesPath(), 'xolmis_database.db');
     return await openDatabase(
       path,
-      version: 32,
+      version: 33,
       onCreate: _createTables,
       onUpgrade: _upgradeTables,
       onConfigure: (db) async {
@@ -639,6 +639,45 @@ class DatabaseHelper {
       await db.execute('ALTER TABLE species ADD COLUMN reproductiveStatus TEXT');
       await db.execute('ALTER TABLE species ADD COLUMN sex TEXT');
       await db.execute('ALTER TABLE species ADD COLUMN activities TEXT');
+    }
+    if (oldVersion < 33) {
+      await _migrateSpeciesActivitiesToV33(db);
+    }
+  }
+
+  Future<void> _migrateSpeciesActivitiesToV33(Database db) async {
+    final rows = await db.query('species', columns: ['id', 'activities'], where: 'activities IS NOT NULL');
+
+    for (final row in rows) {
+      final id = row['id'] as int?;
+      final rawActivities = row['activities'];
+      if (id == null || rawActivities is! String || rawActivities.trim().isEmpty) {
+        continue;
+      }
+
+      dynamic decoded;
+      try {
+        decoded = jsonDecode(rawActivities);
+      } catch (_) {
+        continue;
+      }
+
+      if (decoded is! List) {
+        continue;
+      }
+
+      final migrated = <String>[];
+      for (final item in decoded) {
+        final mapped = parseSpeciesActivity(item);
+        if (mapped != null) {
+          migrated.add(mapped.name);
+        }
+      }
+
+      final migratedJson = migrated.isEmpty ? null : jsonEncode(migrated);
+      if (migratedJson != rawActivities) {
+        await db.update('species', {'activities': migratedJson}, where: 'id = ?', whereArgs: [id]);
+      }
     }
   }
 
