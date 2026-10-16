@@ -1,2486 +1,3314 @@
 [
   {
-    "scientificName" : "Rhea americana"
+    "scientificName" : "Rhea americana",
+    "conservationStatus" : "NT"
   },
   {
-    "scientificName" : "Eudromia formosa"
+    "scientificName" : "Eudromia formosa",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Nothura boraquira"
+    "scientificName" : "Nothura boraquira",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Nothura minor"
+    "scientificName" : "Nothura minor",
+    "conservationStatus" : "VU"
   },
   {
-    "scientificName" : "Nothura maculosa"
+    "scientificName" : "Nothura maculosa",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Nothura boraquira/maculosa"
+    "scientificName" : "Nothura boraquira/maculosa",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Nothura minor/maculosa"
+    "scientificName" : "Nothura minor/maculosa",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Rhynchotus rufescens"
+    "scientificName" : "Rhynchotus rufescens",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Nothoprocta cinerascens"
+    "scientificName" : "Nothoprocta cinerascens",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Tinamus solitarius"
+    "scientificName" : "Tinamus solitarius",
+    "conservationStatus" : "NT"
   },
   {
-    "scientificName" : "Crypturellus parvirostris"
+    "scientificName" : "Crypturellus parvirostris",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Crypturellus tataupa"
+    "scientificName" : "Crypturellus tataupa",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Crypturellus obsoletus"
+    "scientificName" : "Crypturellus obsoletus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Crypturellus undulatus"
+    "scientificName" : "Crypturellus undulatus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Crypturellus sp."
+    "scientificName" : "Crypturellus sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Tinamidae sp."
+    "scientificName" : "Tinamidae sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Anhima cornuta"
+    "scientificName" : "Anhima cornuta",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Chauna torquata"
+    "scientificName" : "Chauna torquata",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Dendrocygna viduata"
+    "scientificName" : "Dendrocygna viduata",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Dendrocygna autumnalis"
+    "scientificName" : "Dendrocygna autumnalis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Dendrocygna bicolor"
+    "scientificName" : "Dendrocygna bicolor",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Dendrocygna sp."
+    "scientificName" : "Dendrocygna sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Coscoroba coscoroba"
+    "scientificName" : "Coscoroba coscoroba",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Sarkidiornis sylvicola"
+    "scientificName" : "Sarkidiornis sylvicola",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Oressochen jubatus"
+    "scientificName" : "Oressochen jubatus",
+    "conservationStatus" : "NT"
   },
   {
-    "scientificName" : "Cairina moschata"
+    "scientificName" : "Cairina moschata",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Cairina moschata (Domestic type)"
+    "scientificName" : "Cairina moschata (Domestic type)",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Callonetta leucophrys"
+    "scientificName" : "Callonetta leucophrys",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Amazonetta brasiliensis"
+    "scientificName" : "Amazonetta brasiliensis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Spatula versicolor"
+    "scientificName" : "Spatula versicolor",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Spatula discors"
+    "scientificName" : "Spatula discors",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Spatula cyanoptera"
+    "scientificName" : "Spatula cyanoptera",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Spatula discors/cyanoptera"
+    "scientificName" : "Spatula discors/cyanoptera",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Spatula platalea"
+    "scientificName" : "Spatula platalea",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Anas bahamensis"
+    "scientificName" : "Anas bahamensis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Anas georgica"
+    "scientificName" : "Anas georgica",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Anas flavirostris"
+    "scientificName" : "Anas flavirostris",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Anas georgica/flavirostris"
+    "scientificName" : "Anas georgica/flavirostris",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Anas sp."
+    "scientificName" : "Anas sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Netta peposaca"
+    "scientificName" : "Netta peposaca",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Heteronetta atricapilla"
+    "scientificName" : "Heteronetta atricapilla",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Nomonyx dominicus"
+    "scientificName" : "Nomonyx dominicus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Oxyura vittata"
+    "scientificName" : "Oxyura vittata",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Anatidae sp."
+    "scientificName" : "Anatidae sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Pipile jacutinga"
+    "scientificName" : "Pipile jacutinga",
+    "conservationStatus" : "EN"
   },
   {
-    "scientificName" : "Pipile grayi"
+    "scientificName" : "Pipile grayi",
+    "conservationStatus" : "NT"
   },
   {
-    "scientificName" : "Penelope obscura"
+    "scientificName" : "Penelope obscura",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Penelope superciliaris"
+    "scientificName" : "Penelope superciliaris",
+    "conservationStatus" : "NT"
   },
   {
-    "scientificName" : "Penelope obscura/superciliaris"
+    "scientificName" : "Penelope obscura/superciliaris",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Crax fasciolata"
+    "scientificName" : "Crax fasciolata",
+    "conservationStatus" : "VU"
   },
   {
-    "scientificName" : "Ortalis canicollis"
+    "scientificName" : "Ortalis canicollis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Odontophorus capueira"
+    "scientificName" : "Odontophorus capueira",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Columba livia"
+    "scientificName" : "Columba livia",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Columba livia (Feral Pigeon)"
+    "scientificName" : "Columba livia (Feral Pigeon)",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Patagioenas cayennensis"
+    "scientificName" : "Patagioenas cayennensis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Patagioenas speciosa"
+    "scientificName" : "Patagioenas speciosa",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Patagioenas picazuro"
+    "scientificName" : "Patagioenas picazuro",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Patagioenas maculosa"
+    "scientificName" : "Patagioenas maculosa",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Patagioenas sp."
+    "scientificName" : "Patagioenas sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Columbina minuta"
+    "scientificName" : "Columbina minuta",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Columbina talpacoti"
+    "scientificName" : "Columbina talpacoti",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Columbina squammata"
+    "scientificName" : "Columbina squammata",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Columbina picui"
+    "scientificName" : "Columbina picui",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Columbina sp."
+    "scientificName" : "Columbina sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Claravis pretiosa"
+    "scientificName" : "Claravis pretiosa",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Geotrygon montana"
+    "scientificName" : "Geotrygon montana",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Geotrygon violacea"
+    "scientificName" : "Geotrygon violacea",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Leptotila verreauxi"
+    "scientificName" : "Leptotila verreauxi",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Leptotila rufaxilla"
+    "scientificName" : "Leptotila rufaxilla",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Leptotila sp."
+    "scientificName" : "Leptotila sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Zenaida auriculata"
+    "scientificName" : "Zenaida auriculata",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Guira guira"
+    "scientificName" : "Guira guira",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Crotophaga major"
+    "scientificName" : "Crotophaga major",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Crotophaga ani"
+    "scientificName" : "Crotophaga ani",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Tapera naevia"
+    "scientificName" : "Tapera naevia",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Dromococcyx phasianellus"
+    "scientificName" : "Dromococcyx phasianellus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Dromococcyx pavoninus"
+    "scientificName" : "Dromococcyx pavoninus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Coccycua minuta"
+    "scientificName" : "Coccycua minuta",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Coccycua cinerea"
+    "scientificName" : "Coccycua cinerea",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Piaya cayana"
+    "scientificName" : "Piaya cayana",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Coccyzus melacoryphus"
+    "scientificName" : "Coccyzus melacoryphus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Coccyzus americanus"
+    "scientificName" : "Coccyzus americanus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Coccyzus euleri"
+    "scientificName" : "Coccyzus euleri",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Coccyzus americanus/euleri"
+    "scientificName" : "Coccyzus americanus/euleri",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Coccyzus erythropthalmus"
+    "scientificName" : "Coccyzus erythropthalmus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Coccyzus americanus/erythropthalmus"
+    "scientificName" : "Coccyzus americanus/erythropthalmus",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Coccyzus sp."
+    "scientificName" : "Coccyzus sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Chordeiles nacunda"
+    "scientificName" : "Chordeiles nacunda",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Chordeiles acutipennis"
+    "scientificName" : "Chordeiles acutipennis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Chordeiles minor"
+    "scientificName" : "Chordeiles minor",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Chordeiles sp."
+    "scientificName" : "Chordeiles sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Lurocalis semitorquatus"
+    "scientificName" : "Lurocalis semitorquatus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Nyctiprogne leucopyga"
+    "scientificName" : "Nyctiprogne leucopyga",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Nyctidromus albicollis"
+    "scientificName" : "Nyctidromus albicollis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Setopagis parvula"
+    "scientificName" : "Setopagis parvula",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Antiurus maculicaudus"
+    "scientificName" : "Antiurus maculicaudus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Systellura longirostris"
+    "scientificName" : "Systellura longirostris",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Eleothreptus candicans"
+    "scientificName" : "Eleothreptus candicans",
+    "conservationStatus" : "VU"
   },
   {
-    "scientificName" : "Eleothreptus anomalus"
+    "scientificName" : "Eleothreptus anomalus",
+    "conservationStatus" : "VU"
   },
   {
-    "scientificName" : "Hydropsalis torquata"
+    "scientificName" : "Hydropsalis torquata",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Hydropsalis forcipata"
+    "scientificName" : "Hydropsalis forcipata",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Hydropsalis sp."
+    "scientificName" : "Hydropsalis sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Nyctiphrynus ocellatus"
+    "scientificName" : "Nyctiphrynus ocellatus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Antrostomus rufus"
+    "scientificName" : "Antrostomus rufus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Antrostomus sericocaudatus"
+    "scientificName" : "Antrostomus sericocaudatus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Antrostomus sp."
+    "scientificName" : "Antrostomus sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Caprimulgidae sp."
+    "scientificName" : "Caprimulgidae sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Nyctibius grandis"
+    "scientificName" : "Nyctibius grandis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Nyctibius aethereus"
+    "scientificName" : "Nyctibius aethereus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Nyctibius griseus"
+    "scientificName" : "Nyctibius griseus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Nyctibiidae sp."
+    "scientificName" : "Nyctibiidae sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Cypseloides fumigatus"
+    "scientificName" : "Cypseloides fumigatus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Cypseloides senex"
+    "scientificName" : "Cypseloides senex",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Cypseloides sp."
+    "scientificName" : "Cypseloides sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Streptoprocne zonaris"
+    "scientificName" : "Streptoprocne zonaris",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Streptoprocne biscutata"
+    "scientificName" : "Streptoprocne biscutata",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Streptoprocne sp."
+    "scientificName" : "Streptoprocne sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Chaetura cinereiventris"
+    "scientificName" : "Chaetura cinereiventris",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Chaetura meridionalis"
+    "scientificName" : "Chaetura meridionalis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Chaetura sp."
+    "scientificName" : "Chaetura sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Florisuga fusca"
+    "scientificName" : "Florisuga fusca",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Phaethornis subochraceus"
+    "scientificName" : "Phaethornis subochraceus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Phaethornis pretrei"
+    "scientificName" : "Phaethornis pretrei",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Phaethornis eurynome"
+    "scientificName" : "Phaethornis eurynome",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Phaethornis sp."
+    "scientificName" : "Phaethornis sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Colibri serrirostris"
+    "scientificName" : "Colibri serrirostris",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Polytmus guainumbi"
+    "scientificName" : "Polytmus guainumbi",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Chrysolampis mosquitus"
+    "scientificName" : "Chrysolampis mosquitus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Anthracothorax nigricollis"
+    "scientificName" : "Anthracothorax nigricollis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Heliomaster longirostris"
+    "scientificName" : "Heliomaster longirostris",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Heliomaster furcifer"
+    "scientificName" : "Heliomaster furcifer",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Calliphlox amethystina"
+    "scientificName" : "Calliphlox amethystina",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Chlorostilbon lucidus"
+    "scientificName" : "Chlorostilbon lucidus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Stephanoxis loddigesii"
+    "scientificName" : "Stephanoxis loddigesii",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Thalurania glaucopis"
+    "scientificName" : "Thalurania glaucopis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Thalurania furcata"
+    "scientificName" : "Thalurania furcata",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Thalurania glaucopis/furcata"
+    "scientificName" : "Thalurania glaucopis/furcata",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Eupetomena macroura"
+    "scientificName" : "Eupetomena macroura",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Chrysuronia versicolor"
+    "scientificName" : "Chrysuronia versicolor",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Leucochloris albicollis"
+    "scientificName" : "Leucochloris albicollis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Chionomesa lactea"
+    "scientificName" : "Chionomesa lactea",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Hylocharis sapphirina"
+    "scientificName" : "Hylocharis sapphirina",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Hylocharis chrysura"
+    "scientificName" : "Hylocharis chrysura",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Trochilidae sp."
+    "scientificName" : "Trochilidae sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Pardirallus maculatus"
+    "scientificName" : "Pardirallus maculatus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Pardirallus nigricans"
+    "scientificName" : "Pardirallus nigricans",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Pardirallus sanguinolentus"
+    "scientificName" : "Pardirallus sanguinolentus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Mustelirallus albicollis"
+    "scientificName" : "Mustelirallus albicollis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Mustelirallus erythrops"
+    "scientificName" : "Mustelirallus erythrops",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Amaurolimnas concolor"
+    "scientificName" : "Amaurolimnas concolor",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Aramides ypecaha"
+    "scientificName" : "Aramides ypecaha",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Aramides cajaneus"
+    "scientificName" : "Aramides cajaneus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Aramides saracura"
+    "scientificName" : "Aramides saracura",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Aramides sp."
+    "scientificName" : "Aramides sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Porphyriops melanops"
+    "scientificName" : "Porphyriops melanops",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Gallinula galeata"
+    "scientificName" : "Gallinula galeata",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Fulica rufifrons"
+    "scientificName" : "Fulica rufifrons",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Fulica armillata"
+    "scientificName" : "Fulica armillata",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Fulica leucoptera"
+    "scientificName" : "Fulica leucoptera",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Fulica sp."
+    "scientificName" : "Fulica sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Porphyrio martinica"
+    "scientificName" : "Porphyrio martinica",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Porphyrio flavirostris"
+    "scientificName" : "Porphyrio flavirostris",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Gallinula/Fulica/Porphyrio sp."
+    "scientificName" : "Gallinula/Fulica/Porphyrio sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Rufirallus schomburgkii"
+    "scientificName" : "Rufirallus schomburgkii",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Rufirallus viridis"
+    "scientificName" : "Rufirallus viridis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Rufirallus leucopyrrhus"
+    "scientificName" : "Rufirallus leucopyrrhus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Rufirallus xenopterus"
+    "scientificName" : "Rufirallus xenopterus",
+    "conservationStatus" : "VU"
   },
   {
-    "scientificName" : "Laterallus notatus"
+    "scientificName" : "Laterallus notatus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Laterallus flaviventer"
+    "scientificName" : "Laterallus flaviventer",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Laterallus melanophaius"
+    "scientificName" : "Laterallus melanophaius",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Rufirallus leucopyrrhus/Laterallus melanophaius"
+    "scientificName" : "Rufirallus leucopyrrhus/Laterallus melanophaius",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Laterallus exilis"
+    "scientificName" : "Laterallus exilis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Rallidae sp. (rail/crake sp.)"
+    "scientificName" : "Rallidae sp. (rail/crake sp.)",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Heliornis fulica"
+    "scientificName" : "Heliornis fulica",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Aramus guarauna"
+    "scientificName" : "Aramus guarauna",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Himantopus mexicanus"
+    "scientificName" : "Himantopus mexicanus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Pluvialis squatarola"
+    "scientificName" : "Pluvialis squatarola",
+    "conservationStatus" : "VU"
   },
   {
-    "scientificName" : "Pluvialis dominica"
+    "scientificName" : "Pluvialis dominica",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Pluvialis sp."
+    "scientificName" : "Pluvialis sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Hoploxypterus cayanus"
+    "scientificName" : "Hoploxypterus cayanus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Zonibyx modestus"
+    "scientificName" : "Zonibyx modestus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Charadrius semipalmatus"
+    "scientificName" : "Charadrius semipalmatus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Vanellus chilensis"
+    "scientificName" : "Vanellus chilensis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Anarhynchus collaris"
+    "scientificName" : "Anarhynchus collaris",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Charadriidae sp."
+    "scientificName" : "Charadriidae sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Nycticryphes semicollaris"
+    "scientificName" : "Nycticryphes semicollaris",
+    "conservationStatus" : "NT"
   },
   {
-    "scientificName" : "Jacana jacana"
+    "scientificName" : "Jacana jacana",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Bartramia longicauda"
+    "scientificName" : "Bartramia longicauda",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Limosa haemastica"
+    "scientificName" : "Limosa haemastica",
+    "conservationStatus" : "VU"
   },
   {
-    "scientificName" : "Gallinago undulata"
+    "scientificName" : "Gallinago undulata",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Gallinago paraguaiae"
+    "scientificName" : "Gallinago paraguaiae",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Gallinago sp."
+    "scientificName" : "Gallinago sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Phalaropus tricolor"
+    "scientificName" : "Phalaropus tricolor",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Actitis macularius"
+    "scientificName" : "Actitis macularius",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Tringa solitaria"
+    "scientificName" : "Tringa solitaria",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Actitis macularius/Tringa solitaria"
+    "scientificName" : "Actitis macularius/Tringa solitaria",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Tringa flavipes"
+    "scientificName" : "Tringa flavipes",
+    "conservationStatus" : "VU"
   },
   {
-    "scientificName" : "Tringa melanoleuca"
+    "scientificName" : "Tringa melanoleuca",
+    "conservationStatus" : "NT"
   },
   {
-    "scientificName" : "Tringa flavipes/melanoleuca"
+    "scientificName" : "Tringa flavipes/melanoleuca",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Tringa sp."
+    "scientificName" : "Tringa sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Arenaria interpres"
+    "scientificName" : "Arenaria interpres",
+    "conservationStatus" : "NT"
   },
   {
-    "scientificName" : "Calidris canutus"
+    "scientificName" : "Calidris canutus",
+    "conservationStatus" : "NT"
   },
   {
-    "scientificName" : "Calidris himantopus"
+    "scientificName" : "Calidris himantopus",
+    "conservationStatus" : "NT"
   },
   {
-    "scientificName" : "Calidris subruficollis"
+    "scientificName" : "Calidris subruficollis",
+    "conservationStatus" : "VU"
   },
   {
-    "scientificName" : "Calidris alba"
+    "scientificName" : "Calidris alba",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Calidris alpina"
+    "scientificName" : "Calidris alpina",
+    "conservationStatus" : "NT"
   },
   {
-    "scientificName" : "Calidris bairdii"
+    "scientificName" : "Calidris bairdii",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Calidris fuscicollis"
+    "scientificName" : "Calidris fuscicollis",
+    "conservationStatus" : "VU"
   },
   {
-    "scientificName" : "Calidris minutilla"
+    "scientificName" : "Calidris minutilla",
+    "conservationStatus" : "NT"
   },
   {
-    "scientificName" : "Calidris melanotos"
+    "scientificName" : "Calidris melanotos",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Calidris pusilla"
+    "scientificName" : "Calidris pusilla",
+    "conservationStatus" : "NT"
   },
   {
-    "scientificName" : "Calidris sp."
+    "scientificName" : "Calidris sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Scolopacidae sp."
+    "scientificName" : "Scolopacidae sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Chroicocephalus maculipennis"
+    "scientificName" : "Chroicocephalus maculipennis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Chroicocephalus cirrocephalus"
+    "scientificName" : "Chroicocephalus cirrocephalus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Chroicocephalus maculipennis/cirrocephalus"
+    "scientificName" : "Chroicocephalus maculipennis/cirrocephalus",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Leucophaeus atricilla"
+    "scientificName" : "Leucophaeus atricilla",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Leucophaeus pipixcan"
+    "scientificName" : "Leucophaeus pipixcan",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Leucophaeus atricilla/pipixcan"
+    "scientificName" : "Leucophaeus atricilla/pipixcan",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Rynchops niger"
+    "scientificName" : "Rynchops niger",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Sternula superciliaris"
+    "scientificName" : "Sternula superciliaris",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Phaetusa simplex"
+    "scientificName" : "Phaetusa simplex",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Gelochelidon nilotica"
+    "scientificName" : "Gelochelidon nilotica",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Sterna hirundo"
+    "scientificName" : "Sterna hirundo",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Phoenicopterus chilensis"
+    "scientificName" : "Phoenicopterus chilensis",
+    "conservationStatus" : "NT"
   },
   {
-    "scientificName" : "Rollandia rolland"
+    "scientificName" : "Rollandia rolland",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Tachybaptus dominicus"
+    "scientificName" : "Tachybaptus dominicus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Podilymbus podiceps"
+    "scientificName" : "Podilymbus podiceps",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Podiceps major"
+    "scientificName" : "Podiceps major",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Podiceps occipitalis"
+    "scientificName" : "Podiceps occipitalis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Ciconia maguari"
+    "scientificName" : "Ciconia maguari",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Jabiru mycteria"
+    "scientificName" : "Jabiru mycteria",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Mycteria americana"
+    "scientificName" : "Mycteria americana",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Ciconiidae sp."
+    "scientificName" : "Ciconiidae sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Anhinga anhinga"
+    "scientificName" : "Anhinga anhinga",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Nannopterum brasilianum"
+    "scientificName" : "Nannopterum brasilianum",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Plegadis chihi"
+    "scientificName" : "Plegadis chihi",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Mesembrinibis cayennensis"
+    "scientificName" : "Mesembrinibis cayennensis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Phimosus infuscatus"
+    "scientificName" : "Phimosus infuscatus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Plegadis chihi/Phimosus infuscatus"
+    "scientificName" : "Plegadis chihi/Phimosus infuscatus",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Theristicus caerulescens"
+    "scientificName" : "Theristicus caerulescens",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Theristicus caudatus"
+    "scientificName" : "Theristicus caudatus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Platalea ajaja"
+    "scientificName" : "Platalea ajaja",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Tigrisoma lineatum"
+    "scientificName" : "Tigrisoma lineatum",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Cochlearius cochlearius"
+    "scientificName" : "Cochlearius cochlearius",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Botaurus pinnatus"
+    "scientificName" : "Botaurus pinnatus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Botaurus involucris"
+    "scientificName" : "Botaurus involucris",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Botaurus exilis"
+    "scientificName" : "Botaurus exilis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Botaurus sp. (small bittern sp.)"
+    "scientificName" : "Botaurus sp. (small bittern sp.)",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Nycticorax nycticorax"
+    "scientificName" : "Nycticorax nycticorax",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Pilherodius pileatus"
+    "scientificName" : "Pilherodius pileatus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Syrigma sibilatrix"
+    "scientificName" : "Syrigma sibilatrix",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Egretta caerulea"
+    "scientificName" : "Egretta caerulea",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Egretta thula"
+    "scientificName" : "Egretta thula",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Egretta sp."
+    "scientificName" : "Egretta sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Butorides striata"
+    "scientificName" : "Butorides striata",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Ardea ibis"
+    "scientificName" : "Ardea ibis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Ardea alba"
+    "scientificName" : "Ardea alba",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Ardea cocoi"
+    "scientificName" : "Ardea cocoi",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Ardeidae sp."
+    "scientificName" : "Ardeidae sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Egretta/Ardea sp."
+    "scientificName" : "Egretta/Ardea sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Sarcoramphus papa"
+    "scientificName" : "Sarcoramphus papa",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Coragyps atratus"
+    "scientificName" : "Coragyps atratus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Cathartes aura"
+    "scientificName" : "Cathartes aura",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Cathartes burrovianus"
+    "scientificName" : "Cathartes burrovianus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Cathartes sp."
+    "scientificName" : "Cathartes sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Pandion haliaetus"
+    "scientificName" : "Pandion haliaetus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Gampsonyx swainsonii"
+    "scientificName" : "Gampsonyx swainsonii",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Elanus leucurus"
+    "scientificName" : "Elanus leucurus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Chondrohierax uncinatus"
+    "scientificName" : "Chondrohierax uncinatus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Leptodon cayanensis"
+    "scientificName" : "Leptodon cayanensis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Elanoides forficatus"
+    "scientificName" : "Elanoides forficatus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Spizaetus tyrannus"
+    "scientificName" : "Spizaetus tyrannus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Spizaetus melanoleucus"
+    "scientificName" : "Spizaetus melanoleucus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Spizaetus ornatus"
+    "scientificName" : "Spizaetus ornatus",
+    "conservationStatus" : "NT"
   },
   {
-    "scientificName" : "Spizaetus sp."
+    "scientificName" : "Spizaetus sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Morphnus guianensis"
+    "scientificName" : "Morphnus guianensis",
+    "conservationStatus" : "NT"
   },
   {
-    "scientificName" : "Harpia harpyja"
+    "scientificName" : "Harpia harpyja",
+    "conservationStatus" : "VU"
   },
   {
-    "scientificName" : "Accipiter poliogaster"
+    "scientificName" : "Accipiter poliogaster",
+    "conservationStatus" : "NT"
   },
   {
-    "scientificName" : "Accipiter striatus"
+    "scientificName" : "Accipiter striatus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Astur bicolor"
+    "scientificName" : "Astur bicolor",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Circus buffoni"
+    "scientificName" : "Circus buffoni",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Circus cinereus"
+    "scientificName" : "Circus cinereus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Microspizias superciliosus"
+    "scientificName" : "Microspizias superciliosus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Harpagus diodon"
+    "scientificName" : "Harpagus diodon",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Ictinia mississippiensis"
+    "scientificName" : "Ictinia mississippiensis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Ictinia plumbea"
+    "scientificName" : "Ictinia plumbea",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Ictinia mississippiensis/plumbea"
+    "scientificName" : "Ictinia mississippiensis/plumbea",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Geranospiza caerulescens"
+    "scientificName" : "Geranospiza caerulescens",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Busarellus nigricollis"
+    "scientificName" : "Busarellus nigricollis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Rostrhamus sociabilis"
+    "scientificName" : "Rostrhamus sociabilis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Buteogallus meridionalis"
+    "scientificName" : "Buteogallus meridionalis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Buteogallus urubitinga"
+    "scientificName" : "Buteogallus urubitinga",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Buteogallus coronatus"
+    "scientificName" : "Buteogallus coronatus",
+    "conservationStatus" : "EN"
   },
   {
-    "scientificName" : "Buteogallus sp."
+    "scientificName" : "Buteogallus sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Rupornis magnirostris"
+    "scientificName" : "Rupornis magnirostris",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Parabuteo unicinctus"
+    "scientificName" : "Parabuteo unicinctus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Parabuteo leucorrhous"
+    "scientificName" : "Parabuteo leucorrhous",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Geranoaetus albicaudatus"
+    "scientificName" : "Geranoaetus albicaudatus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Geranoaetus melanoleucus"
+    "scientificName" : "Geranoaetus melanoleucus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Buteo nitidus"
+    "scientificName" : "Buteo nitidus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Buteo platypterus"
+    "scientificName" : "Buteo platypterus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Buteo albonotatus"
+    "scientificName" : "Buteo albonotatus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Buteo brachyurus"
+    "scientificName" : "Buteo brachyurus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Buteo swainsoni"
+    "scientificName" : "Buteo swainsoni",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Buteo sp."
+    "scientificName" : "Buteo sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Geranoaetus/Buteo sp."
+    "scientificName" : "Geranoaetus/Buteo sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Buteo/eagle sp."
+    "scientificName" : "Buteo/eagle sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Accipitridae sp. (hawk sp.)"
+    "scientificName" : "Accipitridae sp. (hawk sp.)",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Accipitridae sp. (eagle sp.)"
+    "scientificName" : "Accipitridae sp. (eagle sp.)",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Tyto furcata"
+    "scientificName" : "Tyto furcata",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Megascops choliba"
+    "scientificName" : "Megascops choliba",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Megascops atricapilla"
+    "scientificName" : "Megascops atricapilla",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Pulsatrix perspicillata"
+    "scientificName" : "Pulsatrix perspicillata",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Pulsatrix koeniswaldiana"
+    "scientificName" : "Pulsatrix koeniswaldiana",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Bubo virginianus"
+    "scientificName" : "Bubo virginianus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Glaucidium brasilianum"
+    "scientificName" : "Glaucidium brasilianum",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Athene cunicularia"
+    "scientificName" : "Athene cunicularia",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Strix virgata"
+    "scientificName" : "Strix virgata",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Strix huhula"
+    "scientificName" : "Strix huhula",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Strix hylophila"
+    "scientificName" : "Strix hylophila",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Strix chacoensis"
+    "scientificName" : "Strix chacoensis",
+    "conservationStatus" : "NT"
   },
   {
-    "scientificName" : "Strix sp."
+    "scientificName" : "Strix sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Asio clamator"
+    "scientificName" : "Asio clamator",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Asio stygius"
+    "scientificName" : "Asio stygius",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Asio flammeus"
+    "scientificName" : "Asio flammeus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Asio sp."
+    "scientificName" : "Asio sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Aegolius harrisii"
+    "scientificName" : "Aegolius harrisii",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Strigiformes sp."
+    "scientificName" : "Strigiformes sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Trogon curucui"
+    "scientificName" : "Trogon curucui",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Trogon surrucura"
+    "scientificName" : "Trogon surrucura",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Trogon chrysochloros"
+    "scientificName" : "Trogon chrysochloros",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Momotus momota"
+    "scientificName" : "Momotus momota",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Baryphthengus ruficapillus"
+    "scientificName" : "Baryphthengus ruficapillus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Megaceryle torquata"
+    "scientificName" : "Megaceryle torquata",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Chloroceryle amazona"
+    "scientificName" : "Chloroceryle amazona",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Chloroceryle aenea"
+    "scientificName" : "Chloroceryle aenea",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Chloroceryle americana"
+    "scientificName" : "Chloroceryle americana",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Chloroceryle inda"
+    "scientificName" : "Chloroceryle inda",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Chloroceryle sp."
+    "scientificName" : "Chloroceryle sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Alcedinidae sp."
+    "scientificName" : "Alcedinidae sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Notharchus swainsoni"
+    "scientificName" : "Notharchus swainsoni",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Nystalus chacuru"
+    "scientificName" : "Nystalus chacuru",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Nystalus maculatus"
+    "scientificName" : "Nystalus maculatus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Nonnula rubecula"
+    "scientificName" : "Nonnula rubecula",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Bucconidae sp."
+    "scientificName" : "Bucconidae sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Galbula ruficauda"
+    "scientificName" : "Galbula ruficauda",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Pteroglossus bailloni"
+    "scientificName" : "Pteroglossus bailloni",
+    "conservationStatus" : "NT"
   },
   {
-    "scientificName" : "Pteroglossus castanotis"
+    "scientificName" : "Pteroglossus castanotis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Selenidera maculirostris"
+    "scientificName" : "Selenidera maculirostris",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Ramphastidae (small toucan sp.)"
+    "scientificName" : "Ramphastidae (small toucan sp.)",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Ramphastos toco"
+    "scientificName" : "Ramphastos toco",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Ramphastos dicolorus"
+    "scientificName" : "Ramphastos dicolorus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Picumnus cirratus"
+    "scientificName" : "Picumnus cirratus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Picumnus temminckii"
+    "scientificName" : "Picumnus temminckii",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Picumnus cirratus/temminckii"
+    "scientificName" : "Picumnus cirratus/temminckii",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Picumnus albosquamatus"
+    "scientificName" : "Picumnus albosquamatus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Picumnus cirratus/albosquamatus"
+    "scientificName" : "Picumnus cirratus/albosquamatus",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Melanerpes candidus"
+    "scientificName" : "Melanerpes candidus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Melanerpes flavifrons"
+    "scientificName" : "Melanerpes flavifrons",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Melanerpes cactorum"
+    "scientificName" : "Melanerpes cactorum",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Melanerpes sp."
+    "scientificName" : "Melanerpes sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Veniliornis spilogaster"
+    "scientificName" : "Veniliornis spilogaster",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Veniliornis mixtus"
+    "scientificName" : "Veniliornis mixtus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Veniliornis passerinus"
+    "scientificName" : "Veniliornis passerinus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Veniliornis sp."
+    "scientificName" : "Veniliornis sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Campephilus robustus"
+    "scientificName" : "Campephilus robustus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Campephilus melanoleucos"
+    "scientificName" : "Campephilus melanoleucos",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Campephilus leucopogon"
+    "scientificName" : "Campephilus leucopogon",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Campephilus sp."
+    "scientificName" : "Campephilus sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Dryocopus lineatus"
+    "scientificName" : "Dryocopus lineatus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Campephilus sp./Dryocopus lineatus"
+    "scientificName" : "Campephilus sp./Dryocopus lineatus",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Dryocopus schulzii"
+    "scientificName" : "Dryocopus schulzii",
+    "conservationStatus" : "NT"
   },
   {
-    "scientificName" : "Dryocopus sp."
+    "scientificName" : "Dryocopus sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Celeus galeatus"
+    "scientificName" : "Celeus galeatus",
+    "conservationStatus" : "VU"
   },
   {
-    "scientificName" : "Celeus lugubris"
+    "scientificName" : "Celeus lugubris",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Celeus flavescens"
+    "scientificName" : "Celeus flavescens",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Celeus sp."
+    "scientificName" : "Celeus sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Piculus chrysochloros"
+    "scientificName" : "Piculus chrysochloros",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Piculus aurulentus"
+    "scientificName" : "Piculus aurulentus",
+    "conservationStatus" : "NT"
   },
   {
-    "scientificName" : "Piculus sp."
+    "scientificName" : "Piculus sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Colaptes melanochloros"
+    "scientificName" : "Colaptes melanochloros",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Colaptes campestris"
+    "scientificName" : "Colaptes campestris",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Colaptes sp."
+    "scientificName" : "Colaptes sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Picidae sp."
+    "scientificName" : "Picidae sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Cariama cristata"
+    "scientificName" : "Cariama cristata",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Chunga burmeisteri"
+    "scientificName" : "Chunga burmeisteri",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Herpetotheres cachinnans"
+    "scientificName" : "Herpetotheres cachinnans",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Micrastur semitorquatus"
+    "scientificName" : "Micrastur semitorquatus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Micrastur ruficollis"
+    "scientificName" : "Micrastur ruficollis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Spiziapteryx circumcincta"
+    "scientificName" : "Spiziapteryx circumcincta",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Caracara plancus"
+    "scientificName" : "Caracara plancus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Daptrius chimachima"
+    "scientificName" : "Daptrius chimachima",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Daptrius chimango"
+    "scientificName" : "Daptrius chimango",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Falco sparverius"
+    "scientificName" : "Falco sparverius",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Falco femoralis"
+    "scientificName" : "Falco femoralis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Falco rufigularis"
+    "scientificName" : "Falco rufigularis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Falco deiroleucus"
+    "scientificName" : "Falco deiroleucus",
+    "conservationStatus" : "NT"
   },
   {
-    "scientificName" : "Falco peregrinus"
+    "scientificName" : "Falco peregrinus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Falco sp."
+    "scientificName" : "Falco sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Accipitriformes/Falconiformes sp."
+    "scientificName" : "Accipitriformes/Falconiformes sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Myiopsitta monachus"
+    "scientificName" : "Myiopsitta monachus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Brotogeris chiriri"
+    "scientificName" : "Brotogeris chiriri",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Pionopsitta pileata"
+    "scientificName" : "Pionopsitta pileata",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Pionus maximiliani"
+    "scientificName" : "Pionus maximiliani",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Alipiopsitta xanthops"
+    "scientificName" : "Alipiopsitta xanthops",
+    "conservationStatus" : "NT"
   },
   {
-    "scientificName" : "Amazona vinacea"
+    "scientificName" : "Amazona vinacea",
+    "conservationStatus" : "EN"
   },
   {
-    "scientificName" : "Amazona aestiva"
+    "scientificName" : "Amazona aestiva",
+    "conservationStatus" : "NT"
   },
   {
-    "scientificName" : "Amazona amazonica"
+    "scientificName" : "Amazona amazonica",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Amazona sp."
+    "scientificName" : "Amazona sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Forpus xanthopterygius"
+    "scientificName" : "Forpus xanthopterygius",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Pyrrhura frontalis"
+    "scientificName" : "Pyrrhura frontalis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Pyrrhura molinae"
+    "scientificName" : "Pyrrhura molinae",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Anodorhynchus hyacinthinus"
+    "scientificName" : "Anodorhynchus hyacinthinus",
+    "conservationStatus" : "VU"
   },
   {
-    "scientificName" : "Eupsittula aurea"
+    "scientificName" : "Eupsittula aurea",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Aratinga nenday"
+    "scientificName" : "Aratinga nenday",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Primolius maracana"
+    "scientificName" : "Primolius maracana",
+    "conservationStatus" : "NT"
   },
   {
-    "scientificName" : "Primolius auricollis"
+    "scientificName" : "Primolius auricollis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Ara ararauna"
+    "scientificName" : "Ara ararauna",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Ara chloropterus"
+    "scientificName" : "Ara chloropterus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Thectocercus acuticaudatus"
+    "scientificName" : "Thectocercus acuticaudatus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Diopsittaca nobilis"
+    "scientificName" : "Diopsittaca nobilis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Psittacara leucophthalmus"
+    "scientificName" : "Psittacara leucophthalmus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Eupsittula/Aratinga/Thectocercus/Psittacara sp."
+    "scientificName" : "Eupsittula/Aratinga/Thectocercus/Psittacara sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Psittaciformes sp. (parakeet sp.)"
+    "scientificName" : "Psittaciformes sp. (parakeet sp.)",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Psittaciformes sp. (parrot sp.)"
+    "scientificName" : "Psittaciformes sp. (parrot sp.)",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Hypoedaleus guttatus"
+    "scientificName" : "Hypoedaleus guttatus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Batara cinerea"
+    "scientificName" : "Batara cinerea",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Mackenziaena leachii"
+    "scientificName" : "Mackenziaena leachii",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Mackenziaena severa"
+    "scientificName" : "Mackenziaena severa",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Taraba major"
+    "scientificName" : "Taraba major",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Thamnophilus doliatus"
+    "scientificName" : "Thamnophilus doliatus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Thamnophilus ruficapillus"
+    "scientificName" : "Thamnophilus ruficapillus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Thamnophilus torquatus"
+    "scientificName" : "Thamnophilus torquatus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Thamnophilus ruficapillus/torquatus"
+    "scientificName" : "Thamnophilus ruficapillus/torquatus",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Thamnophilus sticturus"
+    "scientificName" : "Thamnophilus sticturus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Thamnophilus caerulescens"
+    "scientificName" : "Thamnophilus caerulescens",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Thamnophilus sp."
+    "scientificName" : "Thamnophilus sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Thamnophilidae sp. (antshrike sp.)"
+    "scientificName" : "Thamnophilidae sp. (antshrike sp.)",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Dysithamnus mentalis"
+    "scientificName" : "Dysithamnus mentalis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Myrmorchilus strigilatus"
+    "scientificName" : "Myrmorchilus strigilatus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Herpsilochmus atricapillus"
+    "scientificName" : "Herpsilochmus atricapillus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Herpsilochmus longirostris"
+    "scientificName" : "Herpsilochmus longirostris",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Herpsilochmus rufimarginatus"
+    "scientificName" : "Herpsilochmus rufimarginatus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Herpsilochmus sp."
+    "scientificName" : "Herpsilochmus sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Formicivora melanogaster"
+    "scientificName" : "Formicivora melanogaster",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Formicivora rufa"
+    "scientificName" : "Formicivora rufa",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Thamnophilidae sp. (antwren sp.)"
+    "scientificName" : "Thamnophilidae sp. (antwren sp.)",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Drymophila rubricollis"
+    "scientificName" : "Drymophila rubricollis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Drymophila malura"
+    "scientificName" : "Drymophila malura",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Terenura maculata"
+    "scientificName" : "Terenura maculata",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Cercomacra melanaria"
+    "scientificName" : "Cercomacra melanaria",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Pyriglena maura"
+    "scientificName" : "Pyriglena maura",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Pyriglena leucoptera"
+    "scientificName" : "Pyriglena leucoptera",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Melanopareia torquata"
+    "scientificName" : "Melanopareia torquata",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Melanopareia maximiliani"
+    "scientificName" : "Melanopareia maximiliani",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Conopophaga lineata"
+    "scientificName" : "Conopophaga lineata",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Grallaria varia"
+    "scientificName" : "Grallaria varia",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Cryptopezus nattereri"
+    "scientificName" : "Cryptopezus nattereri",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Rhinocrypta lanceolata"
+    "scientificName" : "Rhinocrypta lanceolata",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Chamaeza campanisona"
+    "scientificName" : "Chamaeza campanisona",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Sclerurus scansor"
+    "scientificName" : "Sclerurus scansor",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Sittasomus griseicapillus"
+    "scientificName" : "Sittasomus griseicapillus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Dendrocincla turdina"
+    "scientificName" : "Dendrocincla turdina",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Dendrocolaptes picumnus"
+    "scientificName" : "Dendrocolaptes picumnus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Dendrocolaptes platyrostris"
+    "scientificName" : "Dendrocolaptes platyrostris",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Dendrocolaptes sp."
+    "scientificName" : "Dendrocolaptes sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Xiphocolaptes albicollis"
+    "scientificName" : "Xiphocolaptes albicollis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Xiphocolaptes major"
+    "scientificName" : "Xiphocolaptes major",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Xiphorhynchus fuscus"
+    "scientificName" : "Xiphorhynchus fuscus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Campylorhamphus trochilirostris"
+    "scientificName" : "Campylorhamphus trochilirostris",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Campylorhamphus falcularius"
+    "scientificName" : "Campylorhamphus falcularius",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Drymornis bridgesii"
+    "scientificName" : "Drymornis bridgesii",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Lepidocolaptes angustirostris"
+    "scientificName" : "Lepidocolaptes angustirostris",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Lepidocolaptes falcinellus"
+    "scientificName" : "Lepidocolaptes falcinellus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Xenops minutus"
+    "scientificName" : "Xenops minutus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Xenops rutilans"
+    "scientificName" : "Xenops rutilans",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Tarphonomus certhioides"
+    "scientificName" : "Tarphonomus certhioides",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Furnarius leucopus"
+    "scientificName" : "Furnarius leucopus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Furnarius rufus"
+    "scientificName" : "Furnarius rufus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Furnarius cristatus"
+    "scientificName" : "Furnarius cristatus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Furnarius sp."
+    "scientificName" : "Furnarius sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Lochmias nematura"
+    "scientificName" : "Lochmias nematura",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Phleocryptes melanops"
+    "scientificName" : "Phleocryptes melanops",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Cinclodes fuscus"
+    "scientificName" : "Cinclodes fuscus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Heliobletus contaminatus"
+    "scientificName" : "Heliobletus contaminatus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Philydor atricapillus"
+    "scientificName" : "Philydor atricapillus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Anabacerthia amaurotis"
+    "scientificName" : "Anabacerthia amaurotis",
+    "conservationStatus" : "NT"
   },
   {
-    "scientificName" : "Anabacerthia lichtensteini"
+    "scientificName" : "Anabacerthia lichtensteini",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Syndactyla rufosuperciliata"
+    "scientificName" : "Syndactyla rufosuperciliata",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Syndactyla dimidiata"
+    "scientificName" : "Syndactyla dimidiata",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Dendroma rufa"
+    "scientificName" : "Dendroma rufa",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Clibanornis rectirostris"
+    "scientificName" : "Clibanornis rectirostris",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Clibanornis dendrocolaptoides"
+    "scientificName" : "Clibanornis dendrocolaptoides",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Automolus leucophthalmus"
+    "scientificName" : "Automolus leucophthalmus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Furnariidae sp. (foliage-gleaner sp.)"
+    "scientificName" : "Furnariidae sp. (foliage-gleaner sp.)",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Phacellodomus rufifrons"
+    "scientificName" : "Phacellodomus rufifrons",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Phacellodomus sibilatrix"
+    "scientificName" : "Phacellodomus sibilatrix",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Phacellodomus ruber"
+    "scientificName" : "Phacellodomus ruber",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Phacellodomus sp."
+    "scientificName" : "Phacellodomus sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Anumbius annumbi"
+    "scientificName" : "Anumbius annumbi",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Coryphistera alaudina"
+    "scientificName" : "Coryphistera alaudina",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Asthenes baeri"
+    "scientificName" : "Asthenes baeri",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Asthenes pyrrholeuca"
+    "scientificName" : "Asthenes pyrrholeuca",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Asthenes sp."
+    "scientificName" : "Asthenes sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Cranioleuca vulpina"
+    "scientificName" : "Cranioleuca vulpina",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Cranioleuca pyrrhophia"
+    "scientificName" : "Cranioleuca pyrrhophia",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Cranioleuca obsoleta"
+    "scientificName" : "Cranioleuca obsoleta",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Cranioleuca sp."
+    "scientificName" : "Cranioleuca sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Spartonoica maluroides"
+    "scientificName" : "Spartonoica maluroides",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Pseudoseisura unirufa"
+    "scientificName" : "Pseudoseisura unirufa",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Pseudoseisura lophotes"
+    "scientificName" : "Pseudoseisura lophotes",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Certhiaxis cinnamomeus"
+    "scientificName" : "Certhiaxis cinnamomeus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Schoeniophylax phryganophilus"
+    "scientificName" : "Schoeniophylax phryganophilus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Synallaxis scutata"
+    "scientificName" : "Synallaxis scutata",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Synallaxis cinerascens"
+    "scientificName" : "Synallaxis cinerascens",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Synallaxis albilora"
+    "scientificName" : "Synallaxis albilora",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Synallaxis ruficapilla"
+    "scientificName" : "Synallaxis ruficapilla",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Synallaxis hypospodia"
+    "scientificName" : "Synallaxis hypospodia",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Synallaxis spixi"
+    "scientificName" : "Synallaxis spixi",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Synallaxis albescens"
+    "scientificName" : "Synallaxis albescens",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Synallaxis frontalis"
+    "scientificName" : "Synallaxis frontalis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Synallaxis sp."
+    "scientificName" : "Synallaxis sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Furnariidae sp. (spinetail sp.)"
+    "scientificName" : "Furnariidae sp. (spinetail sp.)",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Furnariidae sp."
+    "scientificName" : "Furnariidae sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Chiroxiphia galeata"
+    "scientificName" : "Chiroxiphia galeata",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Chiroxiphia caudata"
+    "scientificName" : "Chiroxiphia caudata",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Manacus manacus"
+    "scientificName" : "Manacus manacus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Pipra fasciicauda"
+    "scientificName" : "Pipra fasciicauda",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Phytotoma rutila"
+    "scientificName" : "Phytotoma rutila",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Phibalura flavirostris"
+    "scientificName" : "Phibalura flavirostris",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Pyroderus scutatus"
+    "scientificName" : "Pyroderus scutatus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Procnias nudicollis"
+    "scientificName" : "Procnias nudicollis",
+    "conservationStatus" : "NT"
   },
   {
-    "scientificName" : "Tityra cayana"
+    "scientificName" : "Tityra cayana",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Tityra inquisitor"
+    "scientificName" : "Tityra inquisitor",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Tityra semifasciata"
+    "scientificName" : "Tityra semifasciata",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Tityra sp."
+    "scientificName" : "Tityra sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Schiffornis virescens"
+    "scientificName" : "Schiffornis virescens",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Xenopsaris albinucha"
+    "scientificName" : "Xenopsaris albinucha",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Pachyramphus viridis"
+    "scientificName" : "Pachyramphus viridis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Pachyramphus castaneus"
+    "scientificName" : "Pachyramphus castaneus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Pachyramphus polychopterus"
+    "scientificName" : "Pachyramphus polychopterus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Pachyramphus validus"
+    "scientificName" : "Pachyramphus validus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Pachyramphus sp."
+    "scientificName" : "Pachyramphus sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Oxyruncus cristatus"
+    "scientificName" : "Oxyruncus cristatus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Piprites chloris"
+    "scientificName" : "Piprites chloris",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Platyrinchus mystaceus"
+    "scientificName" : "Platyrinchus mystaceus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Platyrinchus leucoryphus"
+    "scientificName" : "Platyrinchus leucoryphus",
+    "conservationStatus" : "VU"
   },
   {
-    "scientificName" : "Tachuris rubrigastra"
+    "scientificName" : "Tachuris rubrigastra",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Mionectes rufiventris"
+    "scientificName" : "Mionectes rufiventris",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Leptopogon amaurocephalus"
+    "scientificName" : "Leptopogon amaurocephalus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Pogonotriccus eximius"
+    "scientificName" : "Pogonotriccus eximius",
+    "conservationStatus" : "NT"
   },
   {
-    "scientificName" : "Pogonotriccus paulista"
+    "scientificName" : "Pogonotriccus paulista",
+    "conservationStatus" : "NT"
   },
   {
-    "scientificName" : "Phylloscartes ventralis"
+    "scientificName" : "Phylloscartes ventralis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Phylloscartes sylviolus"
+    "scientificName" : "Phylloscartes sylviolus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Corythopis delalandi"
+    "scientificName" : "Corythopis delalandi",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Myiornis auricularis"
+    "scientificName" : "Myiornis auricularis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Hemitriccus diops"
+    "scientificName" : "Hemitriccus diops",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Hemitriccus margaritaceiventer"
+    "scientificName" : "Hemitriccus margaritaceiventer",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Poecilotriccus plumbeiceps"
+    "scientificName" : "Poecilotriccus plumbeiceps",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Poecilotriccus latirostris"
+    "scientificName" : "Poecilotriccus latirostris",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Todirostrum cinereum"
+    "scientificName" : "Todirostrum cinereum",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Tolmomyias sulphurescens"
+    "scientificName" : "Tolmomyias sulphurescens",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Hirundinea ferruginea"
+    "scientificName" : "Hirundinea ferruginea",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Camptostoma obsoletum"
+    "scientificName" : "Camptostoma obsoletum",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Suiriri suiriri"
+    "scientificName" : "Suiriri suiriri",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Nesotriccus murinus"
+    "scientificName" : "Nesotriccus murinus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Capsiempis flaveola"
+    "scientificName" : "Capsiempis flaveola",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Polystictus pectoralis"
+    "scientificName" : "Polystictus pectoralis",
+    "conservationStatus" : "NT"
   },
   {
-    "scientificName" : "Culicivora caudacuta"
+    "scientificName" : "Culicivora caudacuta",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Pseudocolopteryx sclateri"
+    "scientificName" : "Pseudocolopteryx sclateri",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Pseudocolopteryx acutipennis"
+    "scientificName" : "Pseudocolopteryx acutipennis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Pseudocolopteryx dinelliana"
+    "scientificName" : "Pseudocolopteryx dinelliana",
+    "conservationStatus" : "NT"
   },
   {
-    "scientificName" : "Pseudocolopteryx flaviventris"
+    "scientificName" : "Pseudocolopteryx flaviventris",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Pseudocolopteryx citreola"
+    "scientificName" : "Pseudocolopteryx citreola",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Pseudocolopteryx flaviventris/citreola"
+    "scientificName" : "Pseudocolopteryx flaviventris/citreola",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Pseudocolopteryx sp."
+    "scientificName" : "Pseudocolopteryx sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Myiopagis gaimardii"
+    "scientificName" : "Myiopagis gaimardii",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Myiopagis caniceps"
+    "scientificName" : "Myiopagis caniceps",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Myiopagis viridicata"
+    "scientificName" : "Myiopagis viridicata",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Myiopagis sp."
+    "scientificName" : "Myiopagis sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Serpophaga subcristata"
+    "scientificName" : "Serpophaga subcristata",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Serpophaga griseicapilla"
+    "scientificName" : "Serpophaga griseicapilla",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Serpophaga subcristata/griseicapilla"
+    "scientificName" : "Serpophaga subcristata/griseicapilla",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Phyllomyias virescens"
+    "scientificName" : "Phyllomyias virescens",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Phyllomyias reiseri"
+    "scientificName" : "Phyllomyias reiseri",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Phyllomyias fasciatus"
+    "scientificName" : "Phyllomyias fasciatus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Phyllomyias sp."
+    "scientificName" : "Phyllomyias sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Acrochordopus burmeisteri"
+    "scientificName" : "Acrochordopus burmeisteri",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Euscarthmus meloryphus"
+    "scientificName" : "Euscarthmus meloryphus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Stigmatura budytoides"
+    "scientificName" : "Stigmatura budytoides",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Inezia inornata"
+    "scientificName" : "Inezia inornata",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Myiophobus fasciatus"
+    "scientificName" : "Myiophobus fasciatus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Lathrotriccus euleri"
+    "scientificName" : "Lathrotriccus euleri",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Contopus cinereus"
+    "scientificName" : "Contopus cinereus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Cnemotriccus fuscatus"
+    "scientificName" : "Cnemotriccus fuscatus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Empidonax alnorum"
+    "scientificName" : "Empidonax alnorum",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Sublegatus modestus"
+    "scientificName" : "Sublegatus modestus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Pyrocephalus rubinus"
+    "scientificName" : "Pyrocephalus rubinus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Lessonia rufa"
+    "scientificName" : "Lessonia rufa",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Knipolegus poecilurus"
+    "scientificName" : "Knipolegus poecilurus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Knipolegus lophotes"
+    "scientificName" : "Knipolegus lophotes",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Knipolegus cyanirostris"
+    "scientificName" : "Knipolegus cyanirostris",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Knipolegus striaticeps"
+    "scientificName" : "Knipolegus striaticeps",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Knipolegus aterrimus"
+    "scientificName" : "Knipolegus aterrimus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Knipolegus hudsoni"
+    "scientificName" : "Knipolegus hudsoni",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Knipolegus sp."
+    "scientificName" : "Knipolegus sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Hymenops perspicillatus"
+    "scientificName" : "Hymenops perspicillatus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Satrapa icterophrys"
+    "scientificName" : "Satrapa icterophrys",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Muscisaxicola maclovianus"
+    "scientificName" : "Muscisaxicola maclovianus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Xolmis velatus"
+    "scientificName" : "Xolmis velatus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Xolmis irupero"
+    "scientificName" : "Xolmis irupero",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Nengetus cinereus"
+    "scientificName" : "Nengetus cinereus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Neoxolmis coronatus"
+    "scientificName" : "Neoxolmis coronatus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Agriornis micropterus"
+    "scientificName" : "Agriornis micropterus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Agriornis murinus"
+    "scientificName" : "Agriornis murinus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Agriornis sp."
+    "scientificName" : "Agriornis sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Arundinicola leucocephala"
+    "scientificName" : "Arundinicola leucocephala",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Fluvicola albiventer"
+    "scientificName" : "Fluvicola albiventer",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Fluvicola nengeta"
+    "scientificName" : "Fluvicola nengeta",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Muscipipra vetula"
+    "scientificName" : "Muscipipra vetula",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Gubernetes yetapa"
+    "scientificName" : "Gubernetes yetapa",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Alectrurus tricolor"
+    "scientificName" : "Alectrurus tricolor",
+    "conservationStatus" : "VU"
   },
   {
-    "scientificName" : "Alectrurus risora"
+    "scientificName" : "Alectrurus risora",
+    "conservationStatus" : "VU"
   },
   {
-    "scientificName" : "Colonia colonus"
+    "scientificName" : "Colonia colonus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Ramphotrigon megacephalum"
+    "scientificName" : "Ramphotrigon megacephalum",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Sirystes sibilator"
+    "scientificName" : "Sirystes sibilator",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Casiornis rufus"
+    "scientificName" : "Casiornis rufus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Myiarchus swainsoni"
+    "scientificName" : "Myiarchus swainsoni",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Myiarchus ferox"
+    "scientificName" : "Myiarchus ferox",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Myiarchus tyrannulus"
+    "scientificName" : "Myiarchus tyrannulus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Myiarchus sp."
+    "scientificName" : "Myiarchus sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Machetornis rixosa"
+    "scientificName" : "Machetornis rixosa",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Pitangus sulphuratus"
+    "scientificName" : "Pitangus sulphuratus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Megarynchus pitangua"
+    "scientificName" : "Megarynchus pitangua",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Myiozetetes cayanensis"
+    "scientificName" : "Myiozetetes cayanensis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Myiozetetes similis"
+    "scientificName" : "Myiozetetes similis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Myiozetetes cayanensis/similis"
+    "scientificName" : "Myiozetetes cayanensis/similis",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Conopias trivirgatus"
+    "scientificName" : "Conopias trivirgatus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Myiodynastes maculatus"
+    "scientificName" : "Myiodynastes maculatus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Legatus leucophaius"
+    "scientificName" : "Legatus leucophaius",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Empidonomus varius"
+    "scientificName" : "Empidonomus varius",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Empidonomus aurantioatrocristatus"
+    "scientificName" : "Empidonomus aurantioatrocristatus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Tyrannus albogularis"
+    "scientificName" : "Tyrannus albogularis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Tyrannus melancholicus"
+    "scientificName" : "Tyrannus melancholicus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Tyrannus tyrannus"
+    "scientificName" : "Tyrannus tyrannus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Tyrannus savana"
+    "scientificName" : "Tyrannus savana",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Tyrannidae sp."
+    "scientificName" : "Tyrannidae sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Cyclarhis gujanensis"
+    "scientificName" : "Cyclarhis gujanensis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Hylophilus poicilotis"
+    "scientificName" : "Hylophilus poicilotis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Hylophilus pectoralis"
+    "scientificName" : "Hylophilus pectoralis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Vireo chivi"
+    "scientificName" : "Vireo chivi",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Cyanocorax caeruleus"
+    "scientificName" : "Cyanocorax caeruleus",
+    "conservationStatus" : "NT"
   },
   {
-    "scientificName" : "Cyanocorax cyanomelas"
+    "scientificName" : "Cyanocorax cyanomelas",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Cyanocorax cristatellus"
+    "scientificName" : "Cyanocorax cristatellus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Cyanocorax chrysops"
+    "scientificName" : "Cyanocorax chrysops",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Cyanocorax sp."
+    "scientificName" : "Cyanocorax sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Donacobius atricapilla"
+    "scientificName" : "Donacobius atricapilla",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Riparia riparia"
+    "scientificName" : "Riparia riparia",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Tachycineta albiventer"
+    "scientificName" : "Tachycineta albiventer",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Tachycineta leucorrhoa"
+    "scientificName" : "Tachycineta leucorrhoa",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Tachycineta leucopyga"
+    "scientificName" : "Tachycineta leucopyga",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Tachycineta leucorrhoa/leucopyga"
+    "scientificName" : "Tachycineta leucorrhoa/leucopyga",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Tachycineta sp."
+    "scientificName" : "Tachycineta sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Progne subis"
+    "scientificName" : "Progne subis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Progne chalybea"
+    "scientificName" : "Progne chalybea",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Progne elegans"
+    "scientificName" : "Progne elegans",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Progne subis/elegans"
+    "scientificName" : "Progne subis/elegans",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Progne chalybea/elegans"
+    "scientificName" : "Progne chalybea/elegans",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Progne tapera"
+    "scientificName" : "Progne tapera",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Progne sp."
+    "scientificName" : "Progne sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Stelgidopteryx ruficollis"
+    "scientificName" : "Stelgidopteryx ruficollis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Pygochelidon cyanoleuca"
+    "scientificName" : "Pygochelidon cyanoleuca",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Pygochelidon melanoleuca"
+    "scientificName" : "Pygochelidon melanoleuca",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Alopochelidon fucata"
+    "scientificName" : "Alopochelidon fucata",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Hirundo rustica"
+    "scientificName" : "Hirundo rustica",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Petrochelidon pyrrhonota"
+    "scientificName" : "Petrochelidon pyrrhonota",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Polioptila dumicola"
+    "scientificName" : "Polioptila dumicola",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Polioptila lactea"
+    "scientificName" : "Polioptila lactea",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Troglodytes musculus"
+    "scientificName" : "Troglodytes musculus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Cistothorus platensis"
+    "scientificName" : "Cistothorus platensis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Campylorhynchus turdinus"
+    "scientificName" : "Campylorhynchus turdinus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Cantorchilus leucotis"
+    "scientificName" : "Cantorchilus leucotis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Cantorchilus guarayanus"
+    "scientificName" : "Cantorchilus guarayanus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Sturnus vulgaris"
+    "scientificName" : "Sturnus vulgaris",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Mimus saturninus"
+    "scientificName" : "Mimus saturninus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Mimus triurus"
+    "scientificName" : "Mimus triurus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Catharus fuscescens"
+    "scientificName" : "Catharus fuscescens",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Turdus amaurochalinus"
+    "scientificName" : "Turdus amaurochalinus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Turdus flavipes"
+    "scientificName" : "Turdus flavipes",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Turdus subalaris"
+    "scientificName" : "Turdus subalaris",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Turdus albicollis"
+    "scientificName" : "Turdus albicollis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Turdus leucomelas"
+    "scientificName" : "Turdus leucomelas",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Turdus rufiventris"
+    "scientificName" : "Turdus rufiventris",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Turdus sp."
+    "scientificName" : "Turdus sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Passer domesticus"
+    "scientificName" : "Passer domesticus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Anthus chii"
+    "scientificName" : "Anthus chii",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Anthus furcatus"
+    "scientificName" : "Anthus furcatus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Anthus chacoensis"
+    "scientificName" : "Anthus chacoensis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Anthus correndera"
+    "scientificName" : "Anthus correndera",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Anthus nattereri"
+    "scientificName" : "Anthus nattereri",
+    "conservationStatus" : "VU"
   },
   {
-    "scientificName" : "Anthus hellmayri"
+    "scientificName" : "Anthus hellmayri",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Anthus sp."
+    "scientificName" : "Anthus sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Chlorophonia cyanocephala"
+    "scientificName" : "Chlorophonia cyanocephala",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Chlorophonia cyanea"
+    "scientificName" : "Chlorophonia cyanea",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Euphonia chlorotica"
+    "scientificName" : "Euphonia chlorotica",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Euphonia chalybea"
+    "scientificName" : "Euphonia chalybea",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Euphonia violacea"
+    "scientificName" : "Euphonia violacea",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Euphonia pectoralis"
+    "scientificName" : "Euphonia pectoralis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Euphonia sp."
+    "scientificName" : "Euphonia sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Spinus magellanicus"
+    "scientificName" : "Spinus magellanicus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Rhynchospiza strigiceps"
+    "scientificName" : "Rhynchospiza strigiceps",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Ammodramus humeralis"
+    "scientificName" : "Ammodramus humeralis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Arremon flavirostris"
+    "scientificName" : "Arremon flavirostris",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Zonotrichia capensis"
+    "scientificName" : "Zonotrichia capensis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Dolichonyx oryzivorus"
+    "scientificName" : "Dolichonyx oryzivorus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Leistes superciliaris"
+    "scientificName" : "Leistes superciliaris",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Psarocolius decumanus"
+    "scientificName" : "Psarocolius decumanus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Cacicus solitarius"
+    "scientificName" : "Cacicus solitarius",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Cacicus chrysopterus"
+    "scientificName" : "Cacicus chrysopterus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Cacicus haemorrhous"
+    "scientificName" : "Cacicus haemorrhous",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Cacicus sp."
+    "scientificName" : "Cacicus sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Icterus cayanensis"
+    "scientificName" : "Icterus cayanensis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Icterus pyrrhopterus"
+    "scientificName" : "Icterus pyrrhopterus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Icterus croconotus"
+    "scientificName" : "Icterus croconotus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Molothrus rufoaxillaris"
+    "scientificName" : "Molothrus rufoaxillaris",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Molothrus bonariensis"
+    "scientificName" : "Molothrus bonariensis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Molothrus rufoaxillaris/bonariensis"
+    "scientificName" : "Molothrus rufoaxillaris/bonariensis",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Molothrus oryzivorus"
+    "scientificName" : "Molothrus oryzivorus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Amblyramphus holosericeus"
+    "scientificName" : "Amblyramphus holosericeus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Gnorimopsar chopi"
+    "scientificName" : "Gnorimopsar chopi",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Agelaioides badius"
+    "scientificName" : "Agelaioides badius",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Agelasticus cyanopus"
+    "scientificName" : "Agelasticus cyanopus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Agelasticus thilius"
+    "scientificName" : "Agelasticus thilius",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Chrysomus ruficapillus"
+    "scientificName" : "Chrysomus ruficapillus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Xanthopsar flavus"
+    "scientificName" : "Xanthopsar flavus",
+    "conservationStatus" : "EN"
   },
   {
-    "scientificName" : "Pseudoleistes guirahuro"
+    "scientificName" : "Pseudoleistes guirahuro",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Pseudoleistes virescens"
+    "scientificName" : "Pseudoleistes virescens",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Oporornis agilis"
+    "scientificName" : "Oporornis agilis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Geothlypis velata"
+    "scientificName" : "Geothlypis velata",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Setophaga pitiayumi"
+    "scientificName" : "Setophaga pitiayumi",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Basileuterus culicivorus"
+    "scientificName" : "Basileuterus culicivorus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Myiothlypis flaveola"
+    "scientificName" : "Myiothlypis flaveola",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Myiothlypis leucoblephara"
+    "scientificName" : "Myiothlypis leucoblephara",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Myiothlypis rivularis"
+    "scientificName" : "Myiothlypis rivularis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Piranga flava"
+    "scientificName" : "Piranga flava",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Habia rubica"
+    "scientificName" : "Habia rubica",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Pheucticus aureoventris"
+    "scientificName" : "Pheucticus aureoventris",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Amaurospiza moesta"
+    "scientificName" : "Amaurospiza moesta",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Cyanoloxia glaucocaerulea"
+    "scientificName" : "Cyanoloxia glaucocaerulea",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Cyanoloxia brissonii"
+    "scientificName" : "Cyanoloxia brissonii",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Cyanoloxia glaucocaerulea/brissonii"
+    "scientificName" : "Cyanoloxia glaucocaerulea/brissonii",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Paroaria coronata"
+    "scientificName" : "Paroaria coronata",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Paroaria capitata"
+    "scientificName" : "Paroaria capitata",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Schistochlamys melanopis"
+    "scientificName" : "Schistochlamys melanopis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Cissopis leverianus"
+    "scientificName" : "Cissopis leverianus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Neothraupis fasciata"
+    "scientificName" : "Neothraupis fasciata",
+    "conservationStatus" : "NT"
   },
   {
-    "scientificName" : "Nemosia pileata"
+    "scientificName" : "Nemosia pileata",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Thlypopsis sordida"
+    "scientificName" : "Thlypopsis sordida",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Thlypopsis pyrrhocoma"
+    "scientificName" : "Thlypopsis pyrrhocoma",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Microspingus cabanisi"
+    "scientificName" : "Microspingus cabanisi",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Microspingus torquatus"
+    "scientificName" : "Microspingus torquatus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Microspingus melanoleucus"
+    "scientificName" : "Microspingus melanoleucus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Trichothraupis melanops"
+    "scientificName" : "Trichothraupis melanops",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Eucometis penicillata"
+    "scientificName" : "Eucometis penicillata",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Tachyphonus coronatus"
+    "scientificName" : "Tachyphonus coronatus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Tachyphonus rufus"
+    "scientificName" : "Tachyphonus rufus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Tachyphonus sp."
+    "scientificName" : "Tachyphonus sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Ramphocelus carbo"
+    "scientificName" : "Ramphocelus carbo",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Stephanophorus diadematus"
+    "scientificName" : "Stephanophorus diadematus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Pipraeidea melanonota"
+    "scientificName" : "Pipraeidea melanonota",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Rauenia bonariensis"
+    "scientificName" : "Rauenia bonariensis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Thraupis sayaca"
+    "scientificName" : "Thraupis sayaca",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Thraupis palmarum"
+    "scientificName" : "Thraupis palmarum",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Stilpnia preciosa"
+    "scientificName" : "Stilpnia preciosa",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Stilpnia cayana"
+    "scientificName" : "Stilpnia cayana",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Tangara seledon"
+    "scientificName" : "Tangara seledon",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Tersina viridis"
+    "scientificName" : "Tersina viridis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Dacnis cayana"
+    "scientificName" : "Dacnis cayana",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Cyanerpes cyaneus"
+    "scientificName" : "Cyanerpes cyaneus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Hemithraupis guira"
+    "scientificName" : "Hemithraupis guira",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Conirostrum speciosum"
+    "scientificName" : "Conirostrum speciosum",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Diuca diuca"
+    "scientificName" : "Diuca diuca",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Haplospiza unicolor"
+    "scientificName" : "Haplospiza unicolor",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Lophospingus pusillus"
+    "scientificName" : "Lophospingus pusillus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Cypsnagra hirundinacea"
+    "scientificName" : "Cypsnagra hirundinacea",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Donacospiza albifrons"
+    "scientificName" : "Donacospiza albifrons",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Poospiza nigrorufa"
+    "scientificName" : "Poospiza nigrorufa",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Sicalis flaveola"
+    "scientificName" : "Sicalis flaveola",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Sicalis luteola"
+    "scientificName" : "Sicalis luteola",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Emberizoides herbicola"
+    "scientificName" : "Emberizoides herbicola",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Emberizoides ypiranganus"
+    "scientificName" : "Emberizoides ypiranganus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Emberizoides herbicola/ypiranganus"
+    "scientificName" : "Emberizoides herbicola/ypiranganus",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Embernagra platensis"
+    "scientificName" : "Embernagra platensis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Volatinia jacarina"
+    "scientificName" : "Volatinia jacarina",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Sporophila lineola"
+    "scientificName" : "Sporophila lineola",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Sporophila leucoptera"
+    "scientificName" : "Sporophila leucoptera",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Sporophila bouvreuil"
+    "scientificName" : "Sporophila bouvreuil",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Sporophila pileata"
+    "scientificName" : "Sporophila pileata",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Sporophila hypoxantha"
+    "scientificName" : "Sporophila hypoxantha",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Sporophila ruficollis"
+    "scientificName" : "Sporophila ruficollis",
+    "conservationStatus" : "NT"
   },
   {
-    "scientificName" : "Sporophila iberaensis"
+    "scientificName" : "Sporophila iberaensis",
+    "conservationStatus" : "NT"
   },
   {
-    "scientificName" : "Sporophila palustris"
+    "scientificName" : "Sporophila palustris",
+    "conservationStatus" : "EN"
   },
   {
-    "scientificName" : "Sporophila hypochroma"
+    "scientificName" : "Sporophila hypochroma",
+    "conservationStatus" : "NT"
   },
   {
-    "scientificName" : "Sporophila cinnamomea"
+    "scientificName" : "Sporophila cinnamomea",
+    "conservationStatus" : "VU"
   },
   {
-    "scientificName" : "Sporophila hypochroma/cinnamomea"
+    "scientificName" : "Sporophila hypochroma/cinnamomea",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Sporophila angolensis"
+    "scientificName" : "Sporophila angolensis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Sporophila nigricollis"
+    "scientificName" : "Sporophila nigricollis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Sporophila ardesiaca"
+    "scientificName" : "Sporophila ardesiaca",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Sporophila nigricollis/ardesiaca"
+    "scientificName" : "Sporophila nigricollis/ardesiaca",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Sporophila caerulescens"
+    "scientificName" : "Sporophila caerulescens",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Sporophila falcirostris"
+    "scientificName" : "Sporophila falcirostris",
+    "conservationStatus" : "VU"
   },
   {
-    "scientificName" : "Sporophila plumbea"
+    "scientificName" : "Sporophila plumbea",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Sporophila collaris"
+    "scientificName" : "Sporophila collaris",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Sporophila sp."
+    "scientificName" : "Sporophila sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Coryphaspiza melanotis"
+    "scientificName" : "Coryphaspiza melanotis",
+    "conservationStatus" : "VU"
   },
   {
-    "scientificName" : "Coryphospingus cucullatus"
+    "scientificName" : "Coryphospingus cucullatus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Coereba flaveola"
+    "scientificName" : "Coereba flaveola",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Asemospiza obscura"
+    "scientificName" : "Asemospiza obscura",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Asemospiza fuliginosa"
+    "scientificName" : "Asemospiza fuliginosa",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Saltatricula multicolor"
+    "scientificName" : "Saltatricula multicolor",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Saltatricula atricollis"
+    "scientificName" : "Saltatricula atricollis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Saltator coerulescens"
+    "scientificName" : "Saltator coerulescens",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Saltator similis"
+    "scientificName" : "Saltator similis",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Saltator aurantiirostris"
+    "scientificName" : "Saltator aurantiirostris",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Saltator fuliginosus"
+    "scientificName" : "Saltator fuliginosus",
+    "conservationStatus" : "LC"
   },
   {
-    "scientificName" : "Saltator sp."
+    "scientificName" : "Saltator sp.",
+    "conservationStatus" : ""
   },
   {
-    "scientificName" : "Thraupidae sp."
+    "scientificName" : "Thraupidae sp.",
+    "conservationStatus" : ""
   }
 ]

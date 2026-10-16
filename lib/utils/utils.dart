@@ -21,6 +21,9 @@ import '../services/location_service.dart';
 /// Cached species names used by autocomplete and search flows.
 List<String> allSpeciesNames = [];
 
+/// Cached species conservation statuses mapped by scientific name.
+Map<String, String> allSpeciesConservationStatus = {};
+
 /// Optional callback invoked when an inventory stop action completes.
 void Function(String)? onInventoryStopped;
 
@@ -70,9 +73,24 @@ Future<List<String>> loadSpeciesSearchData() async {
     // Loads the JSON file content from assets bundle.
     final jsonString = await rootBundle.loadString(filePath);
 
-    // Decode JSON and convert it to a list of strings.
+    // Decode JSON and convert it to a list of strings and populate conservation status.
     final jsonData = json.decode(jsonString) as List<dynamic>;
-    final speciesList = jsonData.map((species) => species['scientificName'].toString()).toList();
+    
+    final speciesList = <String>[];
+    allSpeciesConservationStatus.clear();
+
+    for (final item in jsonData) {
+      if (item is Map<String, dynamic>) {
+        final scientificName = item['scientificName']?.toString();
+        if (scientificName != null && scientificName.isNotEmpty) {
+          speciesList.add(scientificName);
+          final conservationStatus = item['conservationStatus']?.toString();
+          if (conservationStatus != null && conservationStatus.isNotEmpty) {
+            allSpeciesConservationStatus[scientificName] = conservationStatus;
+          }
+        }
+      }
+    }
 
     debugPrint('Dados de espécies carregados com sucesso. Total: ${speciesList.length} espécies.');
     return speciesList;

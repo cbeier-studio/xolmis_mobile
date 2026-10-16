@@ -85,6 +85,49 @@ class SpeciesListItemState extends State<SpeciesListItem> {
                 size: 18,
               ),
             ),
+          Builder(
+            builder: (context) {
+              final status = allSpeciesConservationStatus[widget.species.name];
+              if (status == null || status.trim().isEmpty || status.toUpperCase() == 'LC') {
+                return const SizedBox.shrink();
+              }
+              final upperStatus = status.toUpperCase();
+              Color bgColor;
+              Color textColor = Colors.white;
+              switch (upperStatus) {
+                case 'CR':
+                  bgColor = Colors.red[900]!;
+                  break;
+                case 'EN':
+                  bgColor = Colors.red;
+                  break;
+                case 'VU':
+                  bgColor = Colors.orange[900]!;
+                  break;
+                case 'NT':
+                  bgColor = Colors.amber[700]!;
+                  textColor = Colors.black87;
+                  break;
+                case 'DD':
+                  bgColor = Colors.grey[700]!;
+                  break;
+                default:
+                  bgColor = Colors.grey;
+                  break;
+              }
+              return Padding(
+                padding: const EdgeInsets.only(left: 6),
+                child: Tooltip(
+                  message: 'Status: $status',
+                  child: Badge(
+                    backgroundColor: bgColor,
+                    textColor: textColor,
+                    label: Text(status),
+                  ),
+                ),
+              );
+            },
+          ),
           if (widget.species.isDoubtful)
             Padding(
               padding: const EdgeInsets.only(left: 6),
