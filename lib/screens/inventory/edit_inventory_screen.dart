@@ -242,9 +242,9 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) => AlertDialog(
-          title: Text(S.current.inventoryTypeChangeWarningTitle),
+          title: Text(S.of(context).inventoryTypeChangeWarningTitle),
           content: Text(
-            S.current.inventoryTypeChangeWarningMessage(
+            S.of(context).inventoryTypeChangeWarningMessage(
               inventoryTypeFriendlyNames[_initialType]!,
               inventoryTypeFriendlyNames[_selectedType]!,
             ),
@@ -252,11 +252,11 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: Text(S.current.cancel),
+              child: Text(S.of(context).cancel),
             ),
             TextButton(
               onPressed: () => Navigator.of(context).pop(true),
-              child: Text(S.current.continueAction),
+              child: Text(S.of(context).continueAction),
             ),
           ],
         ),
@@ -378,20 +378,20 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
     return showDialog<bool>(
       context: context,
       builder: (BuildContext context) => AlertDialog(
-        title: Text(S.current.startTimeChangeWarningTitle),
-        content: Text(S.current.startTimeChangeWarningMessage),
+        title: Text(S.of(context).startTimeChangeWarningTitle),
+        content: Text(S.of(context).startTimeChangeWarningMessage),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(null),
-            child: Text(S.current.cancel),
+            child: Text(S.of(context).cancel),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: Text(S.current.keepSpeciesTimes),
+            child: Text(S.of(context).keepSpeciesTimes),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: Text(S.current.updateSpeciesTimes),
+            child: Text(S.of(context).updateSpeciesTimes),
           ),
         ],
       ),
@@ -589,7 +589,7 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
         actions: [
           TextButton(
             onPressed: _saveForm,
-            child: Text(S.current.save,),
+            child: Text(S.of(context).save,),
           ),
         ],
       ),
@@ -609,7 +609,7 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return S.current.insertInventoryId;
+                      return S.of(context).insertInventoryId;
                     }
                     return null;
                   },
@@ -1019,10 +1019,10 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return S.current.insertCount;
+                      return S.of(context).insertCount;
                     }
                     if (int.tryParse(value) == null || int.tryParse(value)! < 1) {
-                      return S.current.insertValidNumber;
+                      return S.of(context).insertValidNumber;
                     }
                     return null;
                   },
@@ -1040,7 +1040,7 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return S.current.insertObserver;
+                          return S.of(context).insertObserver;
                         }
                         return null;
                       },
@@ -1062,7 +1062,7 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
                 SizedBox(height: 8),
                 // Discarded
                 SwitchListTile.adaptive(
-                  title: Text(S.current.discardedInventory),
+                  title: Text(S.of(context).discardedInventory),
                   value: _isDiscarded,
                   onChanged: (bool value) {
                     setState(() {

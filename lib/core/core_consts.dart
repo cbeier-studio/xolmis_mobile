@@ -2,6 +2,20 @@ import 'package:material_ui/material_ui.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../generated/l10n.dart';
 
+S get _activeL10n {
+  final dispatcher = WidgetsBinding.instance.platformDispatcher;
+  for (final locale in dispatcher.locales) {
+    if (S.delegate.isSupported(locale)) {
+      return lookupS(locale);
+    }
+    final fallbackLocale = Locale(locale.languageCode);
+    if (S.delegate.isSupported(fallbackLocale)) {
+      return lookupS(fallbackLocale);
+    }
+  }
+  return lookupS(const Locale('en'));
+}
+
 /// Minimum width (in dp) used to switch to tablet-oriented layouts.
 const double kTabletBreakpoint = 600.0;
 
@@ -72,12 +86,15 @@ enum SupportedCountry {
 }
 
 /// Localized metadata for each supported country.
-final Map<SupportedCountry, CountryMetadata> countryMetadata = {
-  SupportedCountry.AR: CountryMetadata(name: S.current.countryArgentina, isoCode: 'AR'),
-  SupportedCountry.BR: CountryMetadata(name: S.current.countryBrazil, isoCode: 'BR'),
-  SupportedCountry.PY: CountryMetadata(name: S.current.countryParaguay, isoCode: 'PY'),
-  SupportedCountry.UY: CountryMetadata(name: S.current.countryUruguay, isoCode: 'UY'),
-};
+Map<SupportedCountry, CountryMetadata> get countryMetadata {
+  final l10n = _activeL10n;
+  return {
+    SupportedCountry.AR: CountryMetadata(name: l10n.countryArgentina, isoCode: 'AR'),
+    SupportedCountry.BR: CountryMetadata(name: l10n.countryBrazil, isoCode: 'BR'),
+    SupportedCountry.PY: CountryMetadata(name: l10n.countryParaguay, isoCode: 'PY'),
+    SupportedCountry.UY: CountryMetadata(name: l10n.countryUruguay, isoCode: 'UY'),
+  };
+}
 
 /// Human-readable metadata associated with a supported country.
 class CountryMetadata {
@@ -134,38 +151,44 @@ enum SpeciesHabitat {
 }
 
 /// Localized labels for [SpeciesHabitat] values.
-final Map<SpeciesHabitat, String> speciesHabitatFriendlyNames = {
-  SpeciesHabitat.forest: S.current.speciesHabitatForest,
-  SpeciesHabitat.woodland: S.current.speciesHabitatWoodland,
-  SpeciesHabitat.grassland: S.current.speciesHabitatGrassland,
-  SpeciesHabitat.savanna: S.current.speciesHabitatSavanna,
-  SpeciesHabitat.shrubland: S.current.speciesHabitatShrubland,
-  SpeciesHabitat.wetland: S.current.speciesHabitatWetland,
-  SpeciesHabitat.freshwater: S.current.speciesHabitatFreshwater,
-  SpeciesHabitat.marine: S.current.speciesHabitatMarine,
-  SpeciesHabitat.coastal: S.current.speciesHabitatCoastal,
-  SpeciesHabitat.urban: S.current.speciesHabitatUrban,
-  SpeciesHabitat.agricultural: S.current.speciesHabitatAgricultural,
-  SpeciesHabitat.rocky: S.current.speciesHabitatRocky,
-  SpeciesHabitat.mangrove: S.current.speciesHabitatMangrove,
-  SpeciesHabitat.other: S.current.speciesHabitatOther,
-};
+Map<SpeciesHabitat, String> get speciesHabitatFriendlyNames {
+  final l10n = _activeL10n;
+  return {
+    SpeciesHabitat.forest: l10n.speciesHabitatForest,
+    SpeciesHabitat.woodland: l10n.speciesHabitatWoodland,
+    SpeciesHabitat.grassland: l10n.speciesHabitatGrassland,
+    SpeciesHabitat.savanna: l10n.speciesHabitatSavanna,
+    SpeciesHabitat.shrubland: l10n.speciesHabitatShrubland,
+    SpeciesHabitat.wetland: l10n.speciesHabitatWetland,
+    SpeciesHabitat.freshwater: l10n.speciesHabitatFreshwater,
+    SpeciesHabitat.marine: l10n.speciesHabitatMarine,
+    SpeciesHabitat.coastal: l10n.speciesHabitatCoastal,
+    SpeciesHabitat.urban: l10n.speciesHabitatUrban,
+    SpeciesHabitat.agricultural: l10n.speciesHabitatAgricultural,
+    SpeciesHabitat.rocky: l10n.speciesHabitatRocky,
+    SpeciesHabitat.mangrove: l10n.speciesHabitatMangrove,
+    SpeciesHabitat.other: l10n.speciesHabitatOther,
+  };
+}
 
 /// Detection modes used when a species is recorded.
 enum SpeciesDetectionMode { visual, song, call, wingFlapping, drumming, capture, remote, trackOrSign, other }
 
 /// Localized labels for [SpeciesDetectionMode] values.
-final Map<SpeciesDetectionMode, String> speciesDetectionModeFriendlyNames = {
-  SpeciesDetectionMode.visual: S.current.speciesDetectionVisual,
-  SpeciesDetectionMode.song: S.current.speciesDetectionSong,
-  SpeciesDetectionMode.call: S.current.speciesDetectionCall,
-  SpeciesDetectionMode.wingFlapping: S.current.speciesDetectionWingFlapping,
-  SpeciesDetectionMode.drumming: S.current.speciesDetectionDrumming,
-  SpeciesDetectionMode.capture: S.current.speciesDetectionCapture,
-  SpeciesDetectionMode.remote: S.current.speciesDetectionRemote,
-  SpeciesDetectionMode.trackOrSign: S.current.speciesDetectionTrackOrSign,
-  SpeciesDetectionMode.other: S.current.speciesDetectionOther,
-};
+Map<SpeciesDetectionMode, String> get speciesDetectionModeFriendlyNames {
+  final l10n = _activeL10n;
+  return {
+    SpeciesDetectionMode.visual: l10n.speciesDetectionVisual,
+    SpeciesDetectionMode.song: l10n.speciesDetectionSong,
+    SpeciesDetectionMode.call: l10n.speciesDetectionCall,
+    SpeciesDetectionMode.wingFlapping: l10n.speciesDetectionWingFlapping,
+    SpeciesDetectionMode.drumming: l10n.speciesDetectionDrumming,
+    SpeciesDetectionMode.capture: l10n.speciesDetectionCapture,
+    SpeciesDetectionMode.remote: l10n.speciesDetectionRemote,
+    SpeciesDetectionMode.trackOrSign: l10n.speciesDetectionTrackOrSign,
+    SpeciesDetectionMode.other: l10n.speciesDetectionOther,
+  };
+}
 
 /// Reproductive/breeding evidence values based on eBird breeding and behavior codes.
 enum SpeciesReproductiveStatus {
@@ -199,31 +222,34 @@ enum SpeciesReproductiveStatus {
 }
 
 /// Display labels for [SpeciesReproductiveStatus] values.
-final Map<SpeciesReproductiveStatus, String> speciesReproductiveStatusFriendlyNames = {
-  SpeciesReproductiveStatus.h: S.current.speciesReproductiveCodeH,
-  SpeciesReproductiveStatus.s: S.current.speciesReproductiveCodeS,
-  SpeciesReproductiveStatus.s7: S.current.speciesReproductiveCodeS7,
-  SpeciesReproductiveStatus.m: S.current.speciesReproductiveCodeM,
-  SpeciesReproductiveStatus.p: S.current.speciesReproductiveCodeP,
-  SpeciesReproductiveStatus.t: S.current.speciesReproductiveCodeT,
-  SpeciesReproductiveStatus.c: S.current.speciesReproductiveCodeC,
-  SpeciesReproductiveStatus.n: S.current.speciesReproductiveCodeN,
-  SpeciesReproductiveStatus.a: S.current.speciesReproductiveCodeA,
-  SpeciesReproductiveStatus.b: S.current.speciesReproductiveCodeB,
-  SpeciesReproductiveStatus.pe: S.current.speciesReproductiveCodePE,
-  SpeciesReproductiveStatus.cn: S.current.speciesReproductiveCodeCN,
-  SpeciesReproductiveStatus.nb: S.current.speciesReproductiveCodeNB,
-  SpeciesReproductiveStatus.dd: S.current.speciesReproductiveCodeDD,
-  SpeciesReproductiveStatus.un: S.current.speciesReproductiveCodeUN,
-  SpeciesReproductiveStatus.on: S.current.speciesReproductiveCodeON,
-  SpeciesReproductiveStatus.fl: S.current.speciesReproductiveCodeFL,
-  SpeciesReproductiveStatus.cf: S.current.speciesReproductiveCodeCF,
-  SpeciesReproductiveStatus.fy: S.current.speciesReproductiveCodeFY,
-  SpeciesReproductiveStatus.fs: S.current.speciesReproductiveCodeFS,
-  SpeciesReproductiveStatus.ne: S.current.speciesReproductiveCodeNE,
-  SpeciesReproductiveStatus.ny: S.current.speciesReproductiveCodeNY,
-  SpeciesReproductiveStatus.f: S.current.speciesReproductiveCodeF,
-};
+Map<SpeciesReproductiveStatus, String> get speciesReproductiveStatusFriendlyNames {
+  final l10n = _activeL10n;
+  return {
+    SpeciesReproductiveStatus.h: l10n.speciesReproductiveCodeH,
+    SpeciesReproductiveStatus.s: l10n.speciesReproductiveCodeS,
+    SpeciesReproductiveStatus.s7: l10n.speciesReproductiveCodeS7,
+    SpeciesReproductiveStatus.m: l10n.speciesReproductiveCodeM,
+    SpeciesReproductiveStatus.p: l10n.speciesReproductiveCodeP,
+    SpeciesReproductiveStatus.t: l10n.speciesReproductiveCodeT,
+    SpeciesReproductiveStatus.c: l10n.speciesReproductiveCodeC,
+    SpeciesReproductiveStatus.n: l10n.speciesReproductiveCodeN,
+    SpeciesReproductiveStatus.a: l10n.speciesReproductiveCodeA,
+    SpeciesReproductiveStatus.b: l10n.speciesReproductiveCodeB,
+    SpeciesReproductiveStatus.pe: l10n.speciesReproductiveCodePE,
+    SpeciesReproductiveStatus.cn: l10n.speciesReproductiveCodeCN,
+    SpeciesReproductiveStatus.nb: l10n.speciesReproductiveCodeNB,
+    SpeciesReproductiveStatus.dd: l10n.speciesReproductiveCodeDD,
+    SpeciesReproductiveStatus.un: l10n.speciesReproductiveCodeUN,
+    SpeciesReproductiveStatus.on: l10n.speciesReproductiveCodeON,
+    SpeciesReproductiveStatus.fl: l10n.speciesReproductiveCodeFL,
+    SpeciesReproductiveStatus.cf: l10n.speciesReproductiveCodeCF,
+    SpeciesReproductiveStatus.fy: l10n.speciesReproductiveCodeFY,
+    SpeciesReproductiveStatus.fs: l10n.speciesReproductiveCodeFS,
+    SpeciesReproductiveStatus.ne: l10n.speciesReproductiveCodeNE,
+    SpeciesReproductiveStatus.ny: l10n.speciesReproductiveCodeNY,
+    SpeciesReproductiveStatus.f: l10n.speciesReproductiveCodeF,
+  };
+}
 
 /// Preferred UI order by evidence strength from observed to confirmed.
 const List<SpeciesReproductiveStatus> kSpeciesReproductiveStatusDisplayOrder = [
@@ -293,12 +319,15 @@ SpeciesReproductiveStatus? parseSpeciesReproductiveStatus(dynamic raw) {
 enum SpeciesSex { indeterminate, male, female, both }
 
 /// Localized labels for [SpeciesSex] values.
-final Map<SpeciesSex, String> speciesSexFriendlyNames = {
-  SpeciesSex.indeterminate: S.current.speciesSexIndeterminate,
-  SpeciesSex.male: S.current.speciesSexMale,
-  SpeciesSex.female: S.current.speciesSexFemale,
-  SpeciesSex.both: S.current.speciesSexBoth,
-};
+Map<SpeciesSex, String> get speciesSexFriendlyNames {
+  final l10n = _activeL10n;
+  return {
+    SpeciesSex.indeterminate: l10n.speciesSexIndeterminate,
+    SpeciesSex.male: l10n.speciesSexMale,
+    SpeciesSex.female: l10n.speciesSexFemale,
+    SpeciesSex.both: l10n.speciesSexBoth,
+  };
+}
 
 /// Main observed activities/behaviors that can be selected for a species.
 enum SpeciesActivity {
@@ -319,22 +348,25 @@ enum SpeciesActivity {
 }
 
 /// Localized labels for [SpeciesActivity] values.
-final Map<SpeciesActivity, String> speciesActivityFriendlyNames = {
-  SpeciesActivity.flying: S.current.speciesActivityFlying,
-  SpeciesActivity.foraging: S.current.speciesActivityForaging,
-  SpeciesActivity.perching: S.current.speciesActivityPerching,
-  SpeciesActivity.singing: S.current.speciesActivitySinging,
-  SpeciesActivity.calling: S.current.speciesActivityCalling,
-  SpeciesActivity.nesting: S.current.speciesActivityNesting,
-  SpeciesActivity.feedingYoung: S.current.speciesActivityFeedingYoung,
-  SpeciesActivity.resting: S.current.speciesActivityResting,
-  SpeciesActivity.bathing: S.current.speciesActivityBathing,
-  SpeciesActivity.moving: S.current.speciesActivityMoving,
-  SpeciesActivity.displaying: S.current.speciesActivityDisplaying,
-  SpeciesActivity.aggressive: S.current.speciesActivityAggressive,
-  SpeciesActivity.roosting: S.current.speciesActivityRoosting,
-  SpeciesActivity.other: S.current.speciesActivityOther,
-};
+Map<SpeciesActivity, String> get speciesActivityFriendlyNames {
+  final l10n = _activeL10n;
+  return {
+    SpeciesActivity.flying: l10n.speciesActivityFlying,
+    SpeciesActivity.foraging: l10n.speciesActivityForaging,
+    SpeciesActivity.perching: l10n.speciesActivityPerching,
+    SpeciesActivity.singing: l10n.speciesActivitySinging,
+    SpeciesActivity.calling: l10n.speciesActivityCalling,
+    SpeciesActivity.nesting: l10n.speciesActivityNesting,
+    SpeciesActivity.feedingYoung: l10n.speciesActivityFeedingYoung,
+    SpeciesActivity.resting: l10n.speciesActivityResting,
+    SpeciesActivity.bathing: l10n.speciesActivityBathing,
+    SpeciesActivity.moving: l10n.speciesActivityMoving,
+    SpeciesActivity.displaying: l10n.speciesActivityDisplaying,
+    SpeciesActivity.aggressive: l10n.speciesActivityAggressive,
+    SpeciesActivity.roosting: l10n.speciesActivityRoosting,
+    SpeciesActivity.other: l10n.speciesActivityOther,
+  };
+}
 
 /// Actions returned by conditional warning dialogs.
 enum ConditionalAction { add, ignore, cancelDialog }
@@ -359,39 +391,45 @@ enum DistributionType {
 }
 
 /// Localized labels for [DistributionType] values.
-Map<DistributionType, String> distributionTypeFriendlyNames = {
-  DistributionType.disNone: S.current.distributionNone,
-  DistributionType.disRare: S.current.distributionRare,
-  DistributionType.disFewSparseIndividuals: S.current.distributionFewSparseIndividuals,
-  DistributionType.disOnePatch: S.current.distributionOnePatch,
-  DistributionType.disOnePatchFewSparseIndividuals: S.current.distributionOnePatchFewSparseIndividuals,
-  DistributionType.disManySparseIndividuals: S.current.distributionManySparseIndividuals,
-  DistributionType.disOnePatchManySparseIndividuals: S.current.distributionOnePatchManySparseIndividuals,
-  DistributionType.disFewPatches: S.current.distributionFewPatches,
-  DistributionType.disFewPatchesSparseIndividuals: S.current.distributionFewPatchesSparseIndividuals,
-  DistributionType.disManyPatches: S.current.distributionManyPatches,
-  DistributionType.disManyPatchesSparseIndividuals: S.current.distributionManyPatchesSparseIndividuals,
-  DistributionType.disHighDensityIndividuals: S.current.distributionHighDensityIndividuals,
-  DistributionType.disContinuousCoverWithGaps: S.current.distributionContinuousCoverWithGaps,
-  DistributionType.disContinuousDenseCover: S.current.distributionContinuousDenseCover,
-  DistributionType.disContinuousDenseCoverWithEdge: S.current.distributionContinuousDenseCoverWithEdge,
-};
+Map<DistributionType, String> get distributionTypeFriendlyNames {
+  final l10n = _activeL10n;
+  return {
+    DistributionType.disNone: l10n.distributionNone,
+    DistributionType.disRare: l10n.distributionRare,
+    DistributionType.disFewSparseIndividuals: l10n.distributionFewSparseIndividuals,
+    DistributionType.disOnePatch: l10n.distributionOnePatch,
+    DistributionType.disOnePatchFewSparseIndividuals: l10n.distributionOnePatchFewSparseIndividuals,
+    DistributionType.disManySparseIndividuals: l10n.distributionManySparseIndividuals,
+    DistributionType.disOnePatchManySparseIndividuals: l10n.distributionOnePatchManySparseIndividuals,
+    DistributionType.disFewPatches: l10n.distributionFewPatches,
+    DistributionType.disFewPatchesSparseIndividuals: l10n.distributionFewPatchesSparseIndividuals,
+    DistributionType.disManyPatches: l10n.distributionManyPatches,
+    DistributionType.disManyPatchesSparseIndividuals: l10n.distributionManyPatchesSparseIndividuals,
+    DistributionType.disHighDensityIndividuals: l10n.distributionHighDensityIndividuals,
+    DistributionType.disContinuousCoverWithGaps: l10n.distributionContinuousCoverWithGaps,
+    DistributionType.disContinuousDenseCover: l10n.distributionContinuousDenseCover,
+    DistributionType.disContinuousDenseCoverWithEdge: l10n.distributionContinuousDenseCoverWithEdge,
+  };
+}
 
 /// Precipitation categories used in weather samples.
 enum PrecipitationType { preNone, preFog, preMist, preDrizzle, preRain, preShowers, preSnow, preHail, preFrost }
 
 /// Localized labels for [PrecipitationType] values.
-Map<PrecipitationType, String> precipitationTypeFriendlyNames = {
-  PrecipitationType.preNone: S.current.precipitationNone,
-  PrecipitationType.preFog: S.current.precipitationFog,
-  PrecipitationType.preMist: S.current.precipitationMist,
-  PrecipitationType.preDrizzle: S.current.precipitationDrizzle,
-  PrecipitationType.preRain: S.current.precipitationRain,
-  PrecipitationType.preShowers: S.current.precipitationShowers,
-  PrecipitationType.preSnow: S.current.precipitationSnow,
-  PrecipitationType.preHail: S.current.precipitationHail,
-  PrecipitationType.preFrost: S.current.precipitationFrost,
-};
+Map<PrecipitationType, String> get precipitationTypeFriendlyNames {
+  final l10n = _activeL10n;
+  return {
+    PrecipitationType.preNone: l10n.precipitationNone,
+    PrecipitationType.preFog: l10n.precipitationFog,
+    PrecipitationType.preMist: l10n.precipitationMist,
+    PrecipitationType.preDrizzle: l10n.precipitationDrizzle,
+    PrecipitationType.preRain: l10n.precipitationRain,
+    PrecipitationType.preShowers: l10n.precipitationShowers,
+    PrecipitationType.preSnow: l10n.precipitationSnow,
+    PrecipitationType.preHail: l10n.precipitationHail,
+    PrecipitationType.preFrost: l10n.precipitationFrost,
+  };
+}
 
 /// Inventory protocol types available when creating an inventory.
 enum InventoryType {
@@ -408,18 +446,21 @@ enum InventoryType {
 }
 
 /// Localized labels for [InventoryType] values.
-Map<InventoryType, String> inventoryTypeFriendlyNames = {
-  InventoryType.invFreeQualitative: S.current.inventoryFreeQualitative,
-  InventoryType.invTimedQualitative: S.current.inventoryTimedQualitative,
-  InventoryType.invIntervalQualitative: S.current.inventoryIntervalQualitative,
-  InventoryType.invMackinnonList: S.current.inventoryMackinnonList,
-  InventoryType.invTransectCount: S.current.inventoryTransectCount,
-  InventoryType.invPointCount: S.current.inventoryPointCount,
-  InventoryType.invBanding: S.current.inventoryBanding,
-  InventoryType.invCasual: S.current.inventoryCasual,
-  InventoryType.invTransectDetection: S.current.inventoryTransectDetection,
-  InventoryType.invPointDetection: S.current.inventoryPointDetection,
-};
+Map<InventoryType, String> get inventoryTypeFriendlyNames {
+  final l10n = _activeL10n;
+  return {
+    InventoryType.invFreeQualitative: l10n.inventoryFreeQualitative,
+    InventoryType.invTimedQualitative: l10n.inventoryTimedQualitative,
+    InventoryType.invIntervalQualitative: l10n.inventoryIntervalQualitative,
+    InventoryType.invMackinnonList: l10n.inventoryMackinnonList,
+    InventoryType.invTransectCount: l10n.inventoryTransectCount,
+    InventoryType.invPointCount: l10n.inventoryPointCount,
+    InventoryType.invBanding: l10n.inventoryBanding,
+    InventoryType.invCasual: l10n.inventoryCasual,
+    InventoryType.invTransectDetection: l10n.inventoryTransectDetection,
+    InventoryType.invPointDetection: l10n.inventoryPointDetection,
+  };
+}
 
 /// Transport modes used during field inventories.
 enum TransportMode {
@@ -435,17 +476,20 @@ enum TransportMode {
 }
 
 /// Localized labels for [TransportMode] values.
-Map<TransportMode, String> transportModeFriendlyNames = {
-  TransportMode.tmodeNotApplicable: S.current.transportNotApplicable,
-  TransportMode.tmodeWalking: S.current.transportWalking,
-  TransportMode.tmodeVehicle: S.current.transportVehicle,
-  TransportMode.tmodeBoat: S.current.transportBoat,
-  TransportMode.tmodeAircraft: S.current.transportAircraft,
-  TransportMode.tmodeBicycle: S.current.transportBicycle,
-  TransportMode.tmodeHorse: S.current.transportHorse,
-  TransportMode.tmodeRemote: S.current.transportRemote,
-  TransportMode.tmodeOther: S.current.transportOther,
-};
+Map<TransportMode, String> get transportModeFriendlyNames {
+  final l10n = _activeL10n;
+  return {
+    TransportMode.tmodeNotApplicable: l10n.transportNotApplicable,
+    TransportMode.tmodeWalking: l10n.transportWalking,
+    TransportMode.tmodeVehicle: l10n.transportVehicle,
+    TransportMode.tmodeBoat: l10n.transportBoat,
+    TransportMode.tmodeAircraft: l10n.transportAircraft,
+    TransportMode.tmodeBicycle: l10n.transportBicycle,
+    TransportMode.tmodeHorse: l10n.transportHorse,
+    TransportMode.tmodeRemote: l10n.transportRemote,
+    TransportMode.tmodeOther: l10n.transportOther,
+  };
+}
 
 /// Icon mapping for [TransportMode] values (null if no icon should be shown).
 Map<TransportMode, FaIconData?> transportModeIcons = {
@@ -473,50 +517,62 @@ enum EggShapeType {
 }
 
 /// Localized labels for [EggShapeType] values.
-Map<EggShapeType, String> eggShapeTypeFriendlyNames = {
-  EggShapeType.estSpherical: S.current.eggShapeSpherical,
-  EggShapeType.estElliptical: S.current.eggShapeElliptical,
-  EggShapeType.estOval: S.current.eggShapeOval,
-  EggShapeType.estPyriform: S.current.eggShapePyriform,
-  EggShapeType.estConical: S.current.eggShapeConical,
-  EggShapeType.estBiconical: S.current.eggShapeBiconical,
-  EggShapeType.estCylindrical: S.current.eggShapeCylindrical,
-  EggShapeType.estLongitudinal: S.current.eggShapeLongitudinal,
-};
+Map<EggShapeType, String> get eggShapeTypeFriendlyNames {
+  final l10n = _activeL10n;
+  return {
+    EggShapeType.estSpherical: l10n.eggShapeSpherical,
+    EggShapeType.estElliptical: l10n.eggShapeElliptical,
+    EggShapeType.estOval: l10n.eggShapeOval,
+    EggShapeType.estPyriform: l10n.eggShapePyriform,
+    EggShapeType.estConical: l10n.eggShapeConical,
+    EggShapeType.estBiconical: l10n.eggShapeBiconical,
+    EggShapeType.estCylindrical: l10n.eggShapeCylindrical,
+    EggShapeType.estLongitudinal: l10n.eggShapeLongitudinal,
+  };
+}
 
 /// Stages of nest development recorded in revisions.
 enum NestStageType { stgUnknown, stgBuilding, stgLaying, stgIncubating, stgHatching, stgNestling, stgInactive }
 
 /// Localized labels for [NestStageType] values.
-Map<NestStageType, String> nestStageTypeFriendlyNames = {
-  NestStageType.stgUnknown: S.current.nestStageUnknown,
-  NestStageType.stgBuilding: S.current.nestStageBuilding,
-  NestStageType.stgLaying: S.current.nestStageLaying,
-  NestStageType.stgIncubating: S.current.nestStageIncubating,
-  NestStageType.stgHatching: S.current.nestStageHatching,
-  NestStageType.stgNestling: S.current.nestStageNestling,
-  NestStageType.stgInactive: S.current.nestStageInactive,
-};
+Map<NestStageType, String> get nestStageTypeFriendlyNames {
+  final l10n = _activeL10n;
+  return {
+    NestStageType.stgUnknown: l10n.nestStageUnknown,
+    NestStageType.stgBuilding: l10n.nestStageBuilding,
+    NestStageType.stgLaying: l10n.nestStageLaying,
+    NestStageType.stgIncubating: l10n.nestStageIncubating,
+    NestStageType.stgHatching: l10n.nestStageHatching,
+    NestStageType.stgNestling: l10n.nestStageNestling,
+    NestStageType.stgInactive: l10n.nestStageInactive,
+  };
+}
 
 /// Activity status of a nest during a revision.
 enum NestStatusType { nstUnknown, nstActive, nstInactive }
 
 /// Localized labels for [NestStatusType] values.
-Map<NestStatusType, String> nestStatusTypeFriendlyNames = {
-  NestStatusType.nstUnknown: S.current.nestStatusUnknown,
-  NestStatusType.nstActive: S.current.nestStatusActive,
-  NestStatusType.nstInactive: S.current.nestStatusInactive,
-};
+Map<NestStatusType, String> get nestStatusTypeFriendlyNames {
+  final l10n = _activeL10n;
+  return {
+    NestStatusType.nstUnknown: l10n.nestStatusUnknown,
+    NestStatusType.nstActive: l10n.nestStatusActive,
+    NestStatusType.nstInactive: l10n.nestStatusInactive,
+  };
+}
 
 /// Final fate categories used to close nest records.
 enum NestFateType { fatUnknown, fatSuccess, fatLost }
 
 /// Localized labels for [NestFateType] values.
-Map<NestFateType, String> nestFateTypeFriendlyNames = {
-  NestFateType.fatUnknown: S.current.nestFateUnknown,
-  NestFateType.fatSuccess: S.current.nestFateSuccess,
-  NestFateType.fatLost: S.current.nestFateLost,
-};
+Map<NestFateType, String> get nestFateTypeFriendlyNames {
+  final l10n = _activeL10n;
+  return {
+    NestFateType.fatUnknown: l10n.nestFateUnknown,
+    NestFateType.fatSuccess: l10n.nestFateSuccess,
+    NestFateType.fatLost: l10n.nestFateLost,
+  };
+}
 
 /// Biological specimen categories used when recording samples.
 enum SpecimenType {
@@ -536,21 +592,24 @@ enum SpecimenType {
 }
 
 /// Localized labels for [SpecimenType] values.
-Map<SpecimenType, String> specimenTypeFriendlyNames = {
-  SpecimenType.spcWholeCarcass: S.current.specimenWholeCarcass,
-  SpecimenType.spcPartialCarcass: S.current.specimenPartialCarcass,
-  SpecimenType.spcNest: S.current.specimenNest,
-  SpecimenType.spcBones: S.current.specimenBones,
-  SpecimenType.spcEgg: S.current.specimenEgg,
-  SpecimenType.spcParasites: S.current.specimenParasites,
-  SpecimenType.spcFeathers: S.current.specimenFeathers,
-  SpecimenType.spcBlood: S.current.specimenBlood,
-  SpecimenType.spcClaw: S.current.specimenClaw,
-  SpecimenType.spcSwab: S.current.specimenSwab,
-  SpecimenType.spcTissues: S.current.specimenTissues,
-  SpecimenType.spcFeces: S.current.specimenFeces,
-  SpecimenType.spcRegurgite: S.current.specimenRegurgite,
-};
+Map<SpecimenType, String> get specimenTypeFriendlyNames {
+  final l10n = _activeL10n;
+  return {
+    SpecimenType.spcWholeCarcass: l10n.specimenWholeCarcass,
+    SpecimenType.spcPartialCarcass: l10n.specimenPartialCarcass,
+    SpecimenType.spcNest: l10n.specimenNest,
+    SpecimenType.spcBones: l10n.specimenBones,
+    SpecimenType.spcEgg: l10n.specimenEgg,
+    SpecimenType.spcParasites: l10n.specimenParasites,
+    SpecimenType.spcFeathers: l10n.specimenFeathers,
+    SpecimenType.spcBlood: l10n.specimenBlood,
+    SpecimenType.spcClaw: l10n.specimenClaw,
+    SpecimenType.spcSwab: l10n.specimenSwab,
+    SpecimenType.spcTissues: l10n.specimenTissues,
+    SpecimenType.spcFeces: l10n.specimenFeces,
+    SpecimenType.spcRegurgite: l10n.specimenRegurgite,
+  };
+}
 
 /// Palette of predefined colors for journal tags with good contrast in light/dark themes.
 const List<Color> kJournalTagColors = [

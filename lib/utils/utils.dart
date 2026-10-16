@@ -197,11 +197,11 @@ void _showMackinnonDialog(BuildContext context, Inventory inventory, InventoryDa
     context: context,
     builder: (context) {
       return AlertDialog(
-        title: Text(S.current.listFinished),
-        content: Text(S.current.listFinishedMessage),
+        title: Text(S.of(context).listFinished),
+        content: Text(S.of(context).listFinishedMessage),
         actions: [
           TextButton(
-            child: Text(S.current.startNextList),
+            child: Text(S.of(context).startNextList),
             onPressed: () async {
               // Finish the inventory and open the screen to add inventory
               var maxSpecies = inventory.maxSpecies;
@@ -222,7 +222,7 @@ void _showMackinnonDialog(BuildContext context, Inventory inventory, InventoryDa
             },
           ),
           TextButton(
-            child: Text(S.current.finish),
+            child: Text(S.of(context).finish),
             onPressed: () async {
               // Finish the inventory and go back to the Home screen
               await inventory.stopTimer(context, inventoryDao);

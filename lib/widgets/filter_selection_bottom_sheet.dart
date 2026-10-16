@@ -137,7 +137,7 @@ class _FilterSelectionBottomSheetContentState<T>
                           context,
                         ).pop(FilterSelectionResult<T>.cleared());
                       },
-                      child: Text(widget.clearActionLabel ?? S.current.clearSearch),
+                      child: Text(widget.clearActionLabel ?? S.of(context).clearSearch),
                     ),
                 ],
               ),
@@ -165,7 +165,7 @@ class _FilterSelectionBottomSheetContentState<T>
                     filteredItems.isEmpty
                         ? Center(
                           child: Text(
-                            widget.emptyStateLabel ?? S.current.noResults,
+                            widget.emptyStateLabel ?? S.of(context).noResults,
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
                         )

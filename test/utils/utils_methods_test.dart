@@ -377,7 +377,7 @@ void main() {
 
      setUpAll(() async {
        SharedPreferences.setMockInitialValues({});
-       await S.load(const Locale('en'));
+       lookupS(const Locale('en'));
        await initializeDateFormatting('en_US', null);
      });
 

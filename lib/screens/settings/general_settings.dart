@@ -52,7 +52,7 @@ class _GeneralSettingsState extends State<GeneralSettings> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(S.current.generalSettings)),
+      appBar: AppBar(title: Text(S.of(context).generalSettings)),
       body: SettingsList(
         contentPadding: EdgeInsets.zero,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -100,7 +100,7 @@ class _GeneralSettingsState extends State<GeneralSettings> {
               ),
               SettingsTile.navigation(
                 leading: const Icon(Icons.language_outlined),
-                title: Text(S.current.speciesSearchCountry),
+                title: Text(S.of(context).speciesSearchCountry),
                 value: Text(countryMetadata[_userCountry]?.name ?? ''),
                 onPressed: (context) async {
                   // Abre o novo diálogo de seleção de país
@@ -124,8 +124,8 @@ class _GeneralSettingsState extends State<GeneralSettings> {
               ),
               SettingsTile.navigation(
                 leading: const Icon(Icons.local_offer_outlined),
-                title: Text(S.current.tags),
-                value: Text(S.current.manageTags),
+                title: Text(S.of(context).tags),
+                value: Text(S.of(context).manageTags),
                 onPressed: (context) {
                   Navigator.push(context, MaterialPageRoute(builder: (context) => const TagsSettingsScreen()));
                 },
@@ -147,7 +147,7 @@ class _GeneralSettingsState extends State<GeneralSettings> {
         return StatefulBuilder(
           builder: (context, setDialogState) {
             return AlertDialog(
-              title: Text(S.current.country),
+              title: Text(S.of(context).country),
               contentPadding: const EdgeInsets.only(top: 20.0),
               content: SingleChildScrollView(
                 child: RadioGroup<SupportedCountry>(

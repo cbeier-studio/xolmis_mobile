@@ -52,7 +52,7 @@ class _TagsSettingsScreenState extends State<TagsSettingsScreen> {
           persist: true,
           showCloseIcon: true,
           backgroundColor: Theme.of(context).colorScheme.error,
-          content: Text(S.current.errorSavingJournalEntry),
+          content: Text(S.of(context).errorSavingJournalEntry),
         ),
       );
     } finally {
@@ -71,7 +71,7 @@ class _TagsSettingsScreenState extends State<TagsSettingsScreen> {
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
-          title: Text(S.current.changeTagColor),
+          title: Text(S.of(context).changeTagColor),
           content: SingleChildScrollView(
             child: ValueListenableBuilder<int>(
               valueListenable: selectedIndex,
@@ -112,10 +112,10 @@ class _TagsSettingsScreenState extends State<TagsSettingsScreen> {
             ),
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.of(dialogContext).pop(), child: Text(S.current.cancel)),
+            TextButton(onPressed: () => Navigator.of(dialogContext).pop(), child: Text(S.of(context).cancel)),
             FilledButton(
               onPressed: () => Navigator.of(dialogContext).pop(selectedIndex.value),
-              child: Text(S.current.save),
+              child: Text(S.of(context).save),
             ),
           ],
         );
@@ -134,11 +134,11 @@ class _TagsSettingsScreenState extends State<TagsSettingsScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(S.current.confirmDelete),
-          content: Text(S.of(context).confirmDeleteMessage(1, 'female', S.current.tags.toLowerCase())),
+          title: Text(S.of(context).confirmDelete),
+          content: Text(S.of(context).confirmDeleteMessage(1, 'female', S.of(context).tags.toLowerCase())),
           actions: [
-            TextButton(onPressed: () => Navigator.of(context).pop(false), child: Text(S.current.cancel)),
-            TextButton(onPressed: () => Navigator.of(context).pop(true), child: Text(S.current.delete)),
+            TextButton(onPressed: () => Navigator.of(context).pop(false), child: Text(S.of(context).cancel)),
+            TextButton(onPressed: () => Navigator.of(context).pop(true), child: Text(S.of(context).delete)),
           ],
         );
       },
@@ -152,7 +152,7 @@ class _TagsSettingsScreenState extends State<TagsSettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(S.current.manageTags)),
+      appBar: AppBar(title: Text(S.of(context).manageTags)),
       body: Consumer<TagProvider>(
         builder: (context, tagProvider, child) {
           final tags = tagProvider.tagDefinitions;
@@ -169,7 +169,7 @@ class _TagsSettingsScreenState extends State<TagsSettingsScreen> {
                         textCapitalization: TextCapitalization.none,
                         decoration: InputDecoration(
                           border: const OutlineInputBorder(),
-                          labelText: S.current.addTag,
+                          labelText: S.of(context).addTag,
                           suffixIcon: _isAddingTag
                               ? const SizedBox(width: 26, height: 26, child: CircularProgressIndicator(strokeWidth: 2))
                               : IconButton(onPressed: _addCustomTag, icon: Icon(Icons.add))
@@ -183,7 +183,7 @@ class _TagsSettingsScreenState extends State<TagsSettingsScreen> {
                     //     : FilledButton.icon(
                     //       onPressed: _addCustomTag,
                     //       icon: const Icon(Icons.add),
-                    //       label: Text(S.current.addButton),
+                    //       label: Text(S.of(context).addButton),
                     //     ),
                   ],
                 ),
@@ -191,7 +191,7 @@ class _TagsSettingsScreenState extends State<TagsSettingsScreen> {
               Expanded(
                 child:
                     tags.isEmpty
-                        ? Center(child: Text(S.current.noTagsFound))
+                        ? Center(child: Text(S.of(context).noTagsFound))
                         : ListView.separated(
                           itemCount: tags.length,
                           separatorBuilder: (context, index) => const Divider(height: 1),
@@ -205,18 +205,18 @@ class _TagsSettingsScreenState extends State<TagsSettingsScreen> {
                                 decoration: BoxDecoration(color: color, shape: BoxShape.circle),
                               ),
                               title: Text(tag.name),
-                              // subtitle: Text(tag.isCustom ? S.current.customTag : S.current.predefinedTag),
+                              // subtitle: Text(tag.isCustom ? S.of(context).customTag : S.of(context).predefinedTag),
                               trailing: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   IconButton(
-                                    tooltip: S.current.changeTagColor,
+                                    tooltip: S.of(context).changeTagColor,
                                     icon: const Icon(Icons.palette_outlined),
                                     onPressed: () => _showColorPicker(tag),
                                   ),
                                   if (tag.isCustom)
                                     IconButton(
-                                      tooltip: S.current.delete,
+                                      tooltip: S.of(context).delete,
                                       icon: Icon(Icons.delete_outlined, color: Theme.of(context).colorScheme.error),
                                       onPressed: () => _deleteCustomTag(tag),
                                     ),

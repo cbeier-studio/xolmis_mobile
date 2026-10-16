@@ -38,16 +38,19 @@ class JournalsScreenState extends State<JournalsScreen> {
   SortOrder _sortOrder = SortOrder.descending;
   FieldJournal? _selectedJournalEntry;
 
-  static final Map<DateFilter, String> _dateFilterLabels = {
-    DateFilter.today: S.current.today,
-    DateFilter.yesterday: S.current.yesterday,
-    DateFilter.last7Days: S.current.last7Days,
-    DateFilter.last30Days: S.current.last30Days,
-    DateFilter.last90Days: S.current.last90Days,
-    DateFilter.last180Days: S.current.last180Days,
-    DateFilter.last365Days: S.current.last365Days,
-    DateFilter.customRange: S.current.dateInterval,
-  };
+  Map<DateFilter, String> get _dateFilterLabels {
+    final l10n = S.of(context);
+    return {
+      DateFilter.today: l10n.today,
+      DateFilter.yesterday: l10n.yesterday,
+      DateFilter.last7Days: l10n.last7Days,
+      DateFilter.last30Days: l10n.last30Days,
+      DateFilter.last90Days: l10n.last90Days,
+      DateFilter.last180Days: l10n.last180Days,
+      DateFilter.last365Days: l10n.last365Days,
+      DateFilter.customRange: l10n.dateInterval,
+    };
+  }
 
   @override
   void initState() {
@@ -141,7 +144,7 @@ class JournalsScreenState extends State<JournalsScreen> {
                         spacing: 8.0, // Space between chips
                         children: <Widget>[
                           ChoiceChip(
-                            label: Text(S.current.journalEntries(1)),
+                            label: Text(S.of(context).journalEntries(1)),
                             showCheckmark: false,
                             selected: _sortField == JournalSortField.title,
                             onSelected: (bool selected) {
@@ -154,7 +157,7 @@ class JournalsScreenState extends State<JournalsScreen> {
                             },
                           ),
                           ChoiceChip(
-                            label: Text(S.current.creationTime),
+                            label: Text(S.of(context).creationTime),
                             showCheckmark: false,
                             selected: _sortField == JournalSortField.creationDate,
                             onSelected: (bool selected) {
@@ -167,7 +170,7 @@ class JournalsScreenState extends State<JournalsScreen> {
                             },
                           ),
                           ChoiceChip(
-                            label: Text(S.current.lastModifiedTime),
+                            label: Text(S.of(context).lastModifiedTime),
                             showCheckmark: false,
                             selected: _sortField == JournalSortField.lastModifiedDate,
                             onSelected: (bool selected) {
@@ -407,7 +410,7 @@ class JournalsScreenState extends State<JournalsScreen> {
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
-          title: Text(S.current.selectJournalColor),
+          title: Text(S.of(context).selectJournalColor),
           content: Wrap(
             spacing: 12,
             runSpacing: 12,
@@ -440,7 +443,7 @@ class JournalsScreenState extends State<JournalsScreen> {
               );
             }).toList(),
           ),
-          actions: [TextButton(onPressed: () => Navigator.of(dialogContext).pop(), child: Text(S.current.cancel))],
+          actions: [TextButton(onPressed: () => Navigator.of(dialogContext).pop(), child: Text(S.of(context).cancel))],
         );
       },
     );
@@ -623,7 +626,7 @@ class JournalsScreenState extends State<JournalsScreen> {
                               selectedJournals.clear();
                             });
                           },
-                          child: Text(S.current.plainText),
+                          child: Text(S.of(context).plainText),
                         ),
                         MenuItemButton(
                           onPressed: () async {
@@ -664,7 +667,7 @@ class JournalsScreenState extends State<JournalsScreen> {
                     // Option to clear the selected specimens
                     IconButton(
                       icon: const Icon(Icons.clear_outlined),
-                      tooltip: S.current.clearSelection,
+                      tooltip: S.of(context).clearSelection,
                       onPressed: () {
                         setState(() {
                           selectedJournals.clear();
@@ -842,7 +845,7 @@ class JournalsScreenState extends State<JournalsScreen> {
                       MenuAnchor(
                         builder: (context, controller, child) {
                           return FilterChip(
-                            label: Text(_selectedObserver ?? S.current.observer),
+                            label: Text(_selectedObserver ?? S.of(context).observer),
                             // avatar: _selectedObserver == null ? Icon(Icons.person_outlined) : null,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
                             visualDensity: VisualDensity.compact,
@@ -875,7 +878,7 @@ class JournalsScreenState extends State<JournalsScreen> {
                       MenuAnchor(
                         builder: (context, controller, child) {
                           return FilterChip(
-                            label: Text(_selectedTag ?? S.current.tags),
+                            label: Text(_selectedTag ?? S.of(context).tags),
                             // avatar: _selectedTag == null ? const Icon(Icons.local_offer_outlined) : null,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
                             visualDensity: VisualDensity.compact,
@@ -1171,7 +1174,7 @@ class JournalsScreenState extends State<JournalsScreen> {
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         children: <Widget>[
-                          buildGridMenuItem(context, Icons.edit_outlined, S.current.edit, () {
+                          buildGridMenuItem(context, Icons.edit_outlined, S.of(context).edit, () {
                             Navigator.of(context).pop();
                             Navigator.push(
                               context,
@@ -1180,7 +1183,7 @@ class JournalsScreenState extends State<JournalsScreen> {
                               ),
                             );
                           }),
-                          buildGridMenuItem(context, Icons.format_color_fill_outlined, S.current.changeJournalColor, () async {
+                          buildGridMenuItem(context, Icons.format_color_fill_outlined, S.of(context).changeJournalColor, () async {
                             Navigator.of(context).pop();
                             await _showJournalColorPickerDialog(journalEntry);
                           }),
@@ -1226,7 +1229,7 @@ class JournalsScreenState extends State<JournalsScreen> {
                       Row(
                         children: [
                           const SizedBox(width: 8.0),
-                          Text(S.current.export, style: TextTheme.of(context).bodyMedium),
+                          Text(S.of(context).export, style: TextTheme.of(context).bodyMedium),
                           Expanded(
                             child: SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
@@ -1234,7 +1237,7 @@ class JournalsScreenState extends State<JournalsScreen> {
                                 children: [
                                   const SizedBox(width: 16.0),
                                   ActionChip(
-                                    label: Text(S.current.plainText),
+                                    label: Text(S.of(context).plainText),
                                     onPressed: () async {
                                       exportSelectedJournalsToTxt(context, [journalEntry]);
                                       Navigator.of(context).pop();

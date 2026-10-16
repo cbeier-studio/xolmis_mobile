@@ -83,7 +83,7 @@ class StatsSpecimensScreenState extends State<StatsSpecimensScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      appBar: AppBar(title: Text(S.current.statistics)),
+      appBar: AppBar(title: Text(S.of(context).statistics)),
       body: SafeArea(
         child: SingleChildScrollView(
             padding: const EdgeInsets.all(16.0),
@@ -112,28 +112,28 @@ class StatsSpecimensScreenState extends State<StatsSpecimensScreen> {
       physics: const NeverScrollableScrollPhysics(),
       children: [
         _buildKpiTile(
-          label: S.current.selectedSpecimens(2),
+          label: S.of(context).selectedSpecimens(2),
           value: '${widget.specimens.length}',
           // subtext: '',
           valueColor: XolmisColors.primary,
           isDark: isDark,
         ),
         _buildKpiTile(
-          label: S.current.localitiesSurveyed(distinctLocalitiesCount),
+          label: S.of(context).localitiesSurveyed(distinctLocalitiesCount),
           value: '${distinctLocalitiesCount}',
           // subtext: '',
           valueColor: XolmisColors.primary,
           isDark: isDark,
         ),
         _buildKpiTile(
-          label: S.current.totalRichness,
+          label: S.of(context).totalRichness,
           value: '${combinedSpeciesList.length}',
           // subtext: '',
           valueColor: XolmisColors.primary,
           isDark: isDark,
         ),
         _buildKpiTile(
-          label: S.current.observers(distinctObserversCount),
+          label: S.of(context).observers(distinctObserversCount),
           value: '${distinctObserversCount}',
           // subtext: '',
           valueColor: XolmisColors.primary,
@@ -232,7 +232,7 @@ class StatsSpecimensScreenState extends State<StatsSpecimensScreen> {
               const Icon(Icons.local_offer_outlined, size: 18, color: XolmisColors.primary),
               const SizedBox(width: 8),
               Text(
-                S.current.specimensByType,
+                S.of(context).specimensByType,
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -275,7 +275,7 @@ class StatsSpecimensScreenState extends State<StatsSpecimensScreen> {
                         final index = entry.key;
                         final sectionData = entry.value;
                         final isTouched = index == _touchedIndexSpecimenType;
-                        final typeLabel = specimenTypeFriendlyNames[sectionData.key] ?? S.current.specimenType;
+                        final typeLabel = specimenTypeFriendlyNames[sectionData.key] ?? S.of(context).specimenType;
 
                         // Aumenta o raio e o tamanho da fonte se a seção estiver sendo tocada
                         final double radius = isTouched ? 50.0 : 40.0;

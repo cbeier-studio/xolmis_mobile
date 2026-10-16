@@ -57,7 +57,7 @@ class _ImportExportSettingsState extends State<ImportExportSettings> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(S.current.importExportSettings),
+        title: Text(S.of(context).importExportSettings),
       ),
       body: SettingsList(
         contentPadding: EdgeInsets.zero,
@@ -69,7 +69,7 @@ class _ImportExportSettingsState extends State<ImportExportSettings> {
         darkTheme: getSettingsDarkTheme(context),
         sections: [
           SettingsSection(
-            title: Text(S.current.import.toUpperCase()),
+            title: Text(S.of(context).import.toUpperCase()),
             tiles: [
               SettingsTile.navigation(
                 leading: const Icon(Icons.find_replace_outlined),
@@ -96,7 +96,7 @@ class _ImportExportSettingsState extends State<ImportExportSettings> {
             ],
           ),
           SettingsSection(
-            title: Text(S.current.export.toUpperCase()),
+            title: Text(S.of(context).export.toUpperCase()),
             tiles: [
               SettingsTile.switchTile(
                 title: Text(S.of(context).formatNumbers),

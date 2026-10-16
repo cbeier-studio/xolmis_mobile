@@ -320,7 +320,7 @@ class AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
                 persist: true,
                 showCloseIcon: true,
                 backgroundColor: Theme.of(context).colorScheme.error,
-                content: Text(S.current.errorSavingRevision),
+                content: Text(S.of(context).errorSavingRevision),
               ),
             );
           }
@@ -361,7 +361,7 @@ class AddNestRevisionScreenState extends State<AddNestRevisionScreen> {
                 persist: true,
                 showCloseIcon: true,
                 backgroundColor: Theme.of(context).colorScheme.error,
-                content: Text(S.current.errorSavingRevision),
+                content: Text(S.of(context).errorSavingRevision),
               ),
             );
           }

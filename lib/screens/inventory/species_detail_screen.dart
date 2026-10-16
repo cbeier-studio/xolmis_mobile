@@ -228,7 +228,7 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
                     physics: const NeverScrollableScrollPhysics(),
                     children: <Widget>[
                       buildGridMenuItem(
-                          context, Icons.edit_outlined, S.current.details, () {
+                          context, Icons.edit_outlined, S.of(context).details, () {
                         Navigator.of(context).pop();
                         _showEditNotesDialog(context, poi);
                       }),
@@ -412,13 +412,13 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
                     const SizedBox(width: 8),
                     const Text('•'),
                     const SizedBox(width: 8),
-                    _buildInfoItem(Icons.straighten, '${species.distance} m', S.current.distance),
+                    _buildInfoItem(Icons.straighten, '${species.distance} m', S.of(context).distance),
                   ],
                   if (species.flightHeight != null) ...[
                     const SizedBox(width: 8),
                     const Text('•'),
                     const SizedBox(width: 4),
-                    _buildInfoItem(Icons.height, '${species.flightHeight} m', S.current.flightHeight),
+                    _buildInfoItem(Icons.height, '${species.flightHeight} m', S.of(context).flightHeight),
                   ],
                   if (species.flightDirection != null && species.flightDirection!.isNotEmpty) ...[
                     const SizedBox(width: 8),

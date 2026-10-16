@@ -50,15 +50,15 @@ class InventoryCompletionService {
           content: Text(content),
           actions: <Widget>[
             TextButton(
-              child: Text(S.current.cancel),
+              child: Text(S.of(alertContext).cancel),
               onPressed: () => Navigator.of(alertContext).pop(ConditionalAction.cancelDialog),
             ),
             TextButton(
-              child: Text(S.current.ignoreButton),
+              child: Text(S.of(alertContext).ignoreButton),
               onPressed: () => Navigator.of(alertContext).pop(ConditionalAction.ignore),
             ),
             FilledButton(
-              child: Text(S.current.addButton),
+              child: Text(S.of(alertContext).addButton),
               onPressed: () => Navigator.of(alertContext).pop(ConditionalAction.add),
             ),
           ],

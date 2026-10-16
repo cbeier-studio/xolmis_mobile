@@ -56,9 +56,9 @@ class SpecimenProvider with ChangeNotifier {
   }
 
   /// Adds a new specimen after validating that its field number is unique.
-  Future<void> addSpecimen(Specimen specimen) async {
+  Future<void> addSpecimen(BuildContext context, Specimen specimen) async {
     if (await specimenFieldNumberExists(specimen.fieldNumber)) {
-      throw Exception(S.current.errorSpecimenAlreadyExists);
+      throw Exception(S.of(context).errorSpecimenAlreadyExists);
     }
 
     await _specimenDao.insertSpecimen(specimen);

@@ -207,7 +207,7 @@ Future<void> exportAllInventoriesToJson(BuildContext context, InventoryProvider 
             padding: const EdgeInsets.all(16.0),
             child: Row(
               mainAxisSize: MainAxisSize.min,
-              children: [CircularProgressIndicator(year2023: false), SizedBox(width: 16), Text(S.current.exporting)],
+              children: [CircularProgressIndicator(year2023: false), SizedBox(width: 16), Text(S.of(context).exporting)],
             ),
           ),
         );
@@ -251,8 +251,8 @@ Future<void> exportAllInventoriesToJson(BuildContext context, InventoryProvider 
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(filePath, mimeType: 'application/json')],
-        title: S.current.inventoryExported(2),
-        subject: S.current.inventoryData(2),
+        title: S.of(context).inventoryExported(2),
+        subject: S.of(context).inventoryData(2),
       ),
     );
   } catch (error) {
@@ -301,8 +301,8 @@ Future<void> exportInventoryToJson(BuildContext context, Inventory inventory, bo
       await SharePlus.instance.share(
         ShareParams(
           files: [XFile(filePath, mimeType: 'application/json')],
-          title: S.current.inventoryExported(1),
-          subject: '${S.current.inventoryExported(1)} ${inventoryToExport.id}',
+          title: S.of(context).inventoryExported(1),
+          subject: '${S.of(context).inventoryExported(1)} ${inventoryToExport.id}',
         ),
       );
     }
@@ -973,8 +973,8 @@ Future<void> exportInventoryToKml(BuildContext context, Inventory inventory) asy
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(filePath, mimeType: 'application/vnd.google-earth.kml+xml')],
-        title: S.current.inventoryExported(1),
-        subject: '${S.current.inventoryExported(1)} ${inventoryToExport.id}',
+        title: S.of(context).inventoryExported(1),
+        subject: '${S.of(context).inventoryExported(1)} ${inventoryToExport.id}',
       ),
     );
   } catch (error) {
@@ -1017,8 +1017,8 @@ Future<void> exportSelectedInventoriesToJson(BuildContext context, List<Inventor
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(filePath, mimeType: 'application/json')],
-        title: S.current.inventoryExported(inventories.length),
-        subject: S.current.inventoryData(inventories.length),
+        title: S.of(context).inventoryExported(inventories.length),
+        subject: S.of(context).inventoryData(inventories.length),
       ),
     );
   } catch (error) {
@@ -1049,7 +1049,7 @@ Future<void> exportSelectedInventoriesToCsv(BuildContext context, List<Inventory
             children: [
               CircularProgressIndicator(year2023: false),
               SizedBox(width: 16),
-              Text(S.current.exportingPleaseWait),
+              Text(S.of(context).exportingPleaseWait),
             ],
           ),
         ),
@@ -1122,8 +1122,8 @@ Future<void> exportSelectedInventoriesToCsv(BuildContext context, List<Inventory
       await SharePlus.instance.share(
         ShareParams(
           files: filePaths.map((f) => XFile(f, mimeType: 'text/csv')).toList(),
-          title: S.current.inventoryExported(inventories.length),
-          subject: S.current.inventoryData(inventories.length),
+          title: S.of(context).inventoryExported(inventories.length),
+          subject: S.of(context).inventoryData(inventories.length),
         ),
       );
     }
@@ -1159,7 +1159,7 @@ Future<void> exportSelectedInventoriesToExcel(BuildContext context, List<Invento
             children: [
               CircularProgressIndicator(year2023: false),
               SizedBox(width: 16),
-              Text(S.current.exportingPleaseWait),
+              Text(S.of(context).exportingPleaseWait),
             ],
           ),
         ),
@@ -1188,8 +1188,8 @@ Future<void> exportSelectedInventoriesToExcel(BuildContext context, List<Invento
       await SharePlus.instance.share(
         ShareParams(
           files: [XFile(filePath, mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')],
-          title: S.current.inventoryExported(inventories.length),
-          subject: S.current.inventoryData(inventories.length),
+          title: S.of(context).inventoryExported(inventories.length),
+          subject: S.of(context).inventoryData(inventories.length),
         ),
       );
     }
@@ -1283,8 +1283,8 @@ Future<void> exportSelectedInventoriesToKml(BuildContext context, List<Inventory
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(filePath, mimeType: 'application/vnd.google-earth.kml+xml')],
-        title: S.current.inventoryExported(inventoriesToExport.length),
-        subject: S.current.inventoryData(inventoriesToExport.length),
+        title: S.of(context).inventoryExported(inventoriesToExport.length),
+        subject: S.of(context).inventoryData(inventoriesToExport.length),
       ),
     );
   } catch (error) {
@@ -1756,8 +1756,8 @@ Future<void> exportSelectedJournalsToTxt(BuildContext context, List<FieldJournal
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(filePath, mimeType: 'text/plain')],
-        title: S.current.journalEntries(journals.length),
-        subject: S.current.journalEntries(journals.length),
+        title: S.of(context).journalEntries(journals.length),
+        subject: S.of(context).journalEntries(journals.length),
       ),
     );
   } catch (error) {
@@ -1767,7 +1767,7 @@ Future<void> exportSelectedJournalsToTxt(BuildContext context, List<FieldJournal
         persist: true,
         showCloseIcon: true,
         backgroundColor: Theme.of(context).colorScheme.error,
-        content: Text('${S.current.errorSavingJournalEntry}: $error'),
+        content: Text('${S.of(context).errorSavingJournalEntry}: $error'),
       ),
     );
   }
@@ -1789,8 +1789,8 @@ Future<void> exportSelectedJournalsToMarkdown(BuildContext context, List<FieldJo
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(filePath, mimeType: 'text/markdown')],
-        title: S.current.journalEntries(journals.length),
-        subject: S.current.journalEntries(journals.length),
+        title: S.of(context).journalEntries(journals.length),
+        subject: S.of(context).journalEntries(journals.length),
       ),
     );
   } catch (error) {
@@ -1800,7 +1800,7 @@ Future<void> exportSelectedJournalsToMarkdown(BuildContext context, List<FieldJo
         persist: true,
         showCloseIcon: true,
         backgroundColor: Theme.of(context).colorScheme.error,
-        content: Text('${S.current.errorSavingJournalEntry}: $error'),
+        content: Text('${S.of(context).errorSavingJournalEntry}: $error'),
       ),
     );
   }
@@ -1827,7 +1827,7 @@ Future<void> exportSelectedJournalsToWord(BuildContext context, List<FieldJourna
             padding: const EdgeInsets.all(16.0),
             child: Row(
               mainAxisSize: MainAxisSize.min,
-              children: [CircularProgressIndicator(year2023: false), SizedBox(width: 16), Text(S.current.exporting)],
+              children: [CircularProgressIndicator(year2023: false), SizedBox(width: 16), Text(S.of(context).exporting)],
             ),
           ),
         );
@@ -1895,8 +1895,8 @@ Future<void> exportSelectedJournalsToWord(BuildContext context, List<FieldJourna
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(filePath, mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document')],
-        title: S.current.journalEntries(journals.length),
-        subject: S.current.journalEntries(journals.length),
+        title: S.of(context).journalEntries(journals.length),
+        subject: S.of(context).journalEntries(journals.length),
       ),
     );
   } catch (error) {
@@ -1910,7 +1910,7 @@ Future<void> exportSelectedJournalsToWord(BuildContext context, List<FieldJourna
         persist: true,
         showCloseIcon: true,
         backgroundColor: Theme.of(context).colorScheme.error,
-        content: Text('${S.current.errorSavingJournalEntry}: $error'),
+        content: Text('${S.of(context).errorSavingJournalEntry}: $error'),
       ),
     );
   } finally {
@@ -1943,8 +1943,8 @@ Future<void> exportSelectedJournalsToJson(BuildContext context, List<FieldJourna
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(filePath, mimeType: 'application/json')],
-        title: S.current.journalEntries(journals.length),
-        subject: S.current.journalEntries(journals.length),
+        title: S.of(context).journalEntries(journals.length),
+        subject: S.of(context).journalEntries(journals.length),
       ),
     );
   } catch (error) {
@@ -1954,7 +1954,7 @@ Future<void> exportSelectedJournalsToJson(BuildContext context, List<FieldJourna
         persist: true,
         showCloseIcon: true,
         backgroundColor: Theme.of(context).colorScheme.error,
-        content: Text('${S.current.errorSavingJournalEntry}: $error'),
+        content: Text('${S.of(context).errorSavingJournalEntry}: $error'),
       ),
     );
   }
@@ -1987,8 +1987,8 @@ Future<void> exportSelectedNestsToJson(BuildContext context, List<Nest> nests) a
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(filePath, mimeType: 'application/json')],
-        title: S.current.nestExported(nests.length),
-        subject: S.current.nestData(nests.length),
+        title: S.of(context).nestExported(nests.length),
+        subject: S.of(context).nestData(nests.length),
       ),
     );
   } catch (error) {
@@ -2019,7 +2019,7 @@ Future<void> exportSelectedNestsToCsv(BuildContext context, List<Nest> nests) as
             children: [
               CircularProgressIndicator(year2023: false),
               SizedBox(width: 16),
-              Text(S.current.exportingPleaseWait),
+              Text(S.of(context).exportingPleaseWait),
             ],
           ),
         ),
@@ -2068,8 +2068,8 @@ Future<void> exportSelectedNestsToCsv(BuildContext context, List<Nest> nests) as
       await SharePlus.instance.share(
         ShareParams(
           files: filePaths.map((f) => XFile(f, mimeType: 'text/csv')).toList(),
-          title: S.current.nestExported(nests.length),
-          subject: S.current.nestData(nests.length),
+          title: S.of(context).nestExported(nests.length),
+          subject: S.of(context).nestData(nests.length),
         ),
       );
     }
@@ -2105,7 +2105,7 @@ Future<void> exportSelectedNestsToExcel(BuildContext context, List<Nest> nests) 
             children: [
               CircularProgressIndicator(year2023: false),
               SizedBox(width: 16),
-              Text(S.current.exportingPleaseWait),
+              Text(S.of(context).exportingPleaseWait),
             ],
           ),
         ),
@@ -2134,8 +2134,8 @@ Future<void> exportSelectedNestsToExcel(BuildContext context, List<Nest> nests) 
       await SharePlus.instance.share(
         ShareParams(
           files: [XFile(filePath, mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')],
-          title: S.current.nestExported(nests.length),
-          subject: S.current.nestData(nests.length),
+          title: S.of(context).nestExported(nests.length),
+          subject: S.of(context).nestData(nests.length),
         ),
       );
     }
@@ -2205,8 +2205,8 @@ Future<void> exportSelectedNestsToKml(BuildContext context, List<Nest> nests) as
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(filePath, mimeType: 'application/vnd.google-earth.kml+xml')],
-        title: S.current.nestExported(waypoints.length),
-        subject: S.current.nestData(waypoints.length),
+        title: S.of(context).nestExported(waypoints.length),
+        subject: S.of(context).nestData(waypoints.length),
       ),
     );
   } catch (error) {
@@ -2238,7 +2238,7 @@ Future<void> exportAllInactiveNestsToJson(BuildContext context) async {
               padding: const EdgeInsets.all(16.0),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
-                children: [CircularProgressIndicator(year2023: false), SizedBox(width: 16), Text(S.current.exporting)],
+                children: [CircularProgressIndicator(year2023: false), SizedBox(width: 16), Text(S.of(context).exporting)],
               ),
             ),
           );
@@ -2276,8 +2276,8 @@ Future<void> exportAllInactiveNestsToJson(BuildContext context) async {
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(filePath, mimeType: 'application/json')],
-        title: S.current.nestExported(2),
-        subject: S.current.nestData(2),
+        title: S.of(context).nestExported(2),
+        subject: S.of(context).nestData(2),
       ),
     );
   } catch (error) {
@@ -2324,8 +2324,8 @@ Future<void> exportNestToJson(BuildContext context, Nest nest) async {
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(filePath, mimeType: 'application/json')],
-        title: S.current.nestExported(1),
-        subject: '${S.current.nestData(1)} ${nestToExport.fieldNumber}',
+        title: S.of(context).nestExported(1),
+        subject: '${S.of(context).nestData(1)} ${nestToExport.fieldNumber}',
       ),
     );
   } catch (error) {
@@ -2655,8 +2655,8 @@ Future<void> exportNestToKml(BuildContext context, Nest nest) async {
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(filePath, mimeType: 'application/vnd.google-earth.kml+xml')],
-        title: S.current.nestExported(1),
-        subject: '${S.current.nestExported(1)} ${nestToExport.fieldNumber}',
+        title: S.of(context).nestExported(1),
+        subject: '${S.of(context).nestExported(1)} ${nestToExport.fieldNumber}',
       ),
     );
   } catch (error) {
@@ -2689,7 +2689,7 @@ Future<void> exportAllSpecimensToJson(BuildContext context, List<Specimen> speci
             padding: const EdgeInsets.all(16.0),
             child: Row(
               mainAxisSize: MainAxisSize.min,
-              children: [CircularProgressIndicator(year2023: false), SizedBox(width: 16), Text(S.current.exporting)],
+              children: [CircularProgressIndicator(year2023: false), SizedBox(width: 16), Text(S.of(context).exporting)],
             ),
           ),
         );
@@ -2720,8 +2720,8 @@ Future<void> exportAllSpecimensToJson(BuildContext context, List<Specimen> speci
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(filePath, mimeType: 'application/json')],
-        title: S.current.specimenExported(2),
-        subject: S.current.specimenData(2),
+        title: S.of(context).specimenExported(2),
+        subject: S.of(context).specimenData(2),
       ),
     );
   } catch (error) {
@@ -2767,8 +2767,8 @@ Future<void> exportSelectedSpecimensToJson(BuildContext context, List<Specimen> 
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(filePath, mimeType: 'application/json')],
-        title: S.current.specimenExported(specimenList.length),
-        subject: S.current.specimenData(specimenList.length),
+        title: S.of(context).specimenExported(specimenList.length),
+        subject: S.of(context).specimenData(specimenList.length),
       ),
     );
   } catch (error) {
@@ -2799,7 +2799,7 @@ Future<void> exportSelectedSpecimensToCsv(BuildContext context, List<Specimen> s
             padding: const EdgeInsets.all(16.0),
             child: Row(
               mainAxisSize: MainAxisSize.min,
-              children: [CircularProgressIndicator(year2023: false), SizedBox(width: 16), Text(S.current.exporting)],
+              children: [CircularProgressIndicator(year2023: false), SizedBox(width: 16), Text(S.of(context).exporting)],
             ),
           ),
         );
@@ -2830,8 +2830,8 @@ Future<void> exportSelectedSpecimensToCsv(BuildContext context, List<Specimen> s
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(filePath, mimeType: 'text/csv')],
-        title: S.current.specimenExported(specimenList.length),
-        subject: S.current.specimenData(specimenList.length),
+        title: S.of(context).specimenExported(specimenList.length),
+        subject: S.of(context).specimenData(specimenList.length),
       ),
     );
   } catch (error) {
@@ -2866,7 +2866,7 @@ Future<void> exportSelectedSpecimensToExcel(BuildContext context, List<Specimen>
             padding: const EdgeInsets.all(16.0),
             child: Row(
               mainAxisSize: MainAxisSize.min,
-              children: [CircularProgressIndicator(year2023: false), SizedBox(width: 16), Text(S.current.exporting)],
+              children: [CircularProgressIndicator(year2023: false), SizedBox(width: 16), Text(S.of(context).exporting)],
             ),
           ),
         );
@@ -2912,8 +2912,8 @@ Future<void> exportSelectedSpecimensToExcel(BuildContext context, List<Specimen>
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(filePath, mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')],
-        title: S.current.specimenExported(specimenList.length),
-        subject: S.current.specimenData(specimenList.length),
+        title: S.of(context).specimenExported(specimenList.length),
+        subject: S.of(context).specimenData(specimenList.length),
       ),
     );
   } catch (error) {
@@ -2980,8 +2980,8 @@ Future<void> exportSelectedSpecimensToKml(BuildContext context, List<Specimen> s
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(filePath, mimeType: 'application/vnd.google-earth.kml+xml')],
-        title: S.current.specimenExported(waypoints.length),
-        subject: S.current.specimenData(waypoints.length),
+        title: S.of(context).specimenExported(waypoints.length),
+        subject: S.of(context).specimenData(waypoints.length),
       ),
     );
   } catch (error) {
@@ -3013,7 +3013,7 @@ Future<void> exportAllSpecimensToCsv(BuildContext context, List<Specimen> specim
             padding: const EdgeInsets.all(16.0),
             child: Row(
               mainAxisSize: MainAxisSize.min,
-              children: [CircularProgressIndicator(year2023: false), SizedBox(width: 16), Text(S.current.exporting)],
+              children: [CircularProgressIndicator(year2023: false), SizedBox(width: 16), Text(S.of(context).exporting)],
             ),
           ),
         );
@@ -3046,8 +3046,8 @@ Future<void> exportAllSpecimensToCsv(BuildContext context, List<Specimen> specim
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(filePath, mimeType: 'text/csv')],
-        title: S.current.specimenExported(2),
-        subject: S.current.specimenData(2),
+        title: S.of(context).specimenExported(2),
+        subject: S.of(context).specimenData(2),
       ),
     );
   } catch (error) {
@@ -3085,7 +3085,7 @@ Future<void> exportAllSpecimensToExcel(BuildContext context, List<Specimen> spec
             padding: const EdgeInsets.all(16.0),
             child: Row(
               mainAxisSize: MainAxisSize.min,
-              children: [CircularProgressIndicator(year2023: false), SizedBox(width: 16), Text(S.current.exporting)],
+              children: [CircularProgressIndicator(year2023: false), SizedBox(width: 16), Text(S.of(context).exporting)],
             ),
           ),
         );
@@ -3136,8 +3136,8 @@ Future<void> exportAllSpecimensToExcel(BuildContext context, List<Specimen> spec
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(filePath, mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')],
-        title: S.current.specimenExported(2),
-        subject: S.current.specimenData(2),
+        title: S.of(context).specimenExported(2),
+        subject: S.of(context).specimenData(2),
       ),
     );
   } catch (error) {
@@ -3234,8 +3234,8 @@ Future<void> exportSpecimenToKml(BuildContext context, Specimen specimen) async 
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(filePath, mimeType: 'application/vnd.google-earth.kml+xml')],
-        title: S.current.specimenExported(1),
-        subject: '${S.current.specimenExported(1)} ${specimen.fieldNumber}',
+        title: S.of(context).specimenExported(1),
+        subject: '${S.of(context).specimenExported(1)} ${specimen.fieldNumber}',
       ),
     );
   } catch (error) {

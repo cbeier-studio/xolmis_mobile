@@ -48,7 +48,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 SettingsTile.navigation(
                   // leading: const Icon(Icons.person_outlined),
                   title: Text(S.of(context).generalSettings),
-                  description: Text('${S.current.appearance} • ${S.current.startupModule} • ${S.current.speciesSearchCountry} • ${S.current.tags}'),
+                  description: Text('${S.of(context).appearance} • ${S.of(context).startupModule} • ${S.of(context).speciesSearchCountry} • ${S.of(context).tags}'),
                   onPressed: (context) {
                     Navigator.push(
                       context,
@@ -62,7 +62,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 SettingsTile.navigation(
                   // leading: const Icon(Icons.person_outlined),
                   title: Text(S.of(context).observersSettings),
-                  description: Text(S.current.defaultObserver),
+                  description: Text(S.of(context).defaultObserver),
                   onPressed: (context) {
                     Navigator.push(
                       context,
@@ -75,7 +75,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 SettingsTile.navigation(
                   // leading: const Icon(Icons.person_outlined),
                   title: Text(S.of(context).inventories),
-                  description: Text('${S.current.inventoryRules} • ${S.current.defaults} • ${S.current.reminders}'),
+                  description: Text('${S.of(context).inventoryRules} • ${S.of(context).defaults} • ${S.of(context).reminders}'),
                   onPressed: (context) {
                     Navigator.push(
                       context,
@@ -88,7 +88,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 SettingsTile.navigation(
                   // leading: const Icon(Icons.person_outlined),
                   title: Text(S.of(context).importExportSettings),
-                  description: Text('${S.current.importExistingRecords} • ${S.current.formatNumbers}'),
+                  description: Text('${S.of(context).importExistingRecords} • ${S.of(context).formatNumbers}'),
                   onPressed: (context) {
                     Navigator.push(
                       context,
@@ -101,7 +101,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 SettingsTile.navigation(
                   // leading: const Icon(Icons.person_outlined),
                   title: Text(S.of(context).backup),
-                  description: Text('${S.current.createBackup} • ${S.current.restoreBackup}'),
+                  description: Text('${S.of(context).createBackup} • ${S.of(context).restoreBackup}'),
                   onPressed: (context) {
                     Navigator.push(
                       context,
@@ -120,13 +120,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 SettingsTile.navigation(
                   // leading: const Icon(Icons.info_outlined),
                   title: Text(S.of(context).about),
-                  description: Text('${S.current.version} • ${S.current.changelog} • ${S.current.viewLicense}'),
+                  description: Text('${S.of(context).version} • ${S.of(context).changelog} • ${S.of(context).viewLicense}'),
                   onPressed: (context) => buildShowAboutPage(context),
                 ),
                 SettingsTile.navigation(
                   // leading: const Icon(Icons.feedback_outlined),
                   title: Text(S.of(context).suggestFeatureOrReportIssue),
-                  description: Text(S.current.giveFeedbackOnGitHub),
+                  description: Text(S.of(context).giveFeedbackOnGitHub),
                   onPressed: (context) => _openFeedbackUrl(),
                 ),
               ],

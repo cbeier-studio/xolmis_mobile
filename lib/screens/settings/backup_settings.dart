@@ -21,7 +21,7 @@ class _BackupSettingsState extends State<BackupSettings> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(S.current.backup),
+        title: Text(S.of(context).backup),
       ),
       body: SettingsList(
         contentPadding: EdgeInsets.zero,
@@ -36,8 +36,8 @@ class _BackupSettingsState extends State<BackupSettings> {
             tiles: [
               SettingsTile(
                 leading: const Icon(Icons.save_outlined),
-                title: Text(S.current.createBackup),
-                description: Text(S.current.createBackupDescription),
+                title: Text(S.of(context).createBackup),
+                description: Text(S.of(context).createBackupDescription),
                 onPressed: (context) async {
                   await runCreateBackup(context);
                 },
@@ -48,8 +48,8 @@ class _BackupSettingsState extends State<BackupSettings> {
             tiles: [
               SettingsTile(
                 leading: const Icon(Icons.settings_backup_restore_outlined),
-                title: Text(S.current.restoreBackup),
-                description: Text(S.current.restoreBackupDescription),
+                title: Text(S.of(context).restoreBackup),
+                description: Text(S.of(context).restoreBackupDescription),
                 onPressed: (context) async {
                   // 1. Mostra o diálogo de aviso e aguarda a confirmação do usuário.
                   final bool userConfirmed = await _showRestoreConfirmationDialog(context);
@@ -65,8 +65,8 @@ class _BackupSettingsState extends State<BackupSettings> {
               ),
               SettingsTile(
                 leading: const Icon(Icons.perm_media_outlined),
-                title: Text(S.current.restoreBackupImagesOnly),
-                description: Text(S.current.restoreBackupImagesOnlyDescription),
+                title: Text(S.of(context).restoreBackupImagesOnly),
+                description: Text(S.of(context).restoreBackupImagesOnlyDescription),
                 onPressed: (context) async {
                   // 1. Mostra o diálogo de aviso e aguarda a confirmação do usuário.
                   final bool userConfirmed = await _showRestoreImagesConfirmationDialog(context);
@@ -132,7 +132,7 @@ class _BackupSettingsState extends State<BackupSettings> {
         final result = await SharePlus.instance.share(
           ShareParams(
             files: [XFile(backupFilePath, mimeType: 'application/zip')],
-            text: S.current.sendBackupTo,
+            text: S.of(context).sendBackupTo,
           ),
         );
 
@@ -140,7 +140,7 @@ class _BackupSettingsState extends State<BackupSettings> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               backgroundColor: Colors.green,
-              content: Text(S.current.backupCreatedAndSharedSuccessfully),
+              content: Text(S.of(context).backupCreatedAndSharedSuccessfully),
             ),
           );
         }
@@ -155,7 +155,7 @@ class _BackupSettingsState extends State<BackupSettings> {
                 persist: true,
                 showCloseIcon: true,
                 backgroundColor: Theme.of(context).colorScheme.error,
-                content: Text(S.current.errorBackupNotFound)
+                content: Text(S.of(context).errorBackupNotFound)
             )
           );
         }
@@ -171,7 +171,7 @@ class _BackupSettingsState extends State<BackupSettings> {
             persist: true,
             showCloseIcon: true,
             backgroundColor: Theme.of(context).colorScheme.error,
-            content: Text('${S.current.errorCreatingBackup}: ${e.toString()}'),
+            content: Text('${S.of(context).errorCreatingBackup}: ${e.toString()}'),
           ),
         );
       }
@@ -188,8 +188,8 @@ class _BackupSettingsState extends State<BackupSettings> {
       barrierDismissible: false, // O usuário deve pressionar um dos botões
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(S.current.restoreBackup),
-          content: Text(S.current.restoreBackupConfirmation),
+          title: Text(S.of(context).restoreBackup),
+          content: Text(S.of(context).restoreBackupConfirmation),
           actions: <Widget>[
             // Botão para cancelar a ação
             TextButton(
@@ -203,7 +203,7 @@ class _BackupSettingsState extends State<BackupSettings> {
               style: TextButton.styleFrom(
                 foregroundColor: Theme.of(context).colorScheme.error,
               ),
-              child: Text(S.current.restore),
+              child: Text(S.of(context).restore),
               onPressed: () {
                 Navigator.of(context).pop(true); // Retorna 'true'
               },
@@ -223,8 +223,8 @@ class _BackupSettingsState extends State<BackupSettings> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(S.current.restoreBackup),
-          content: Text(S.current.restoreBackupImagesOnlyConfirmation),
+          title: Text(S.of(context).restoreBackup),
+          content: Text(S.of(context).restoreBackupImagesOnlyConfirmation),
           actions: <Widget>[
             TextButton(
               child: Text(S.of(context).cancel),
@@ -236,7 +236,7 @@ class _BackupSettingsState extends State<BackupSettings> {
               style: TextButton.styleFrom(
                 foregroundColor: Theme.of(context).colorScheme.error,
               ),
-              child: Text(S.current.restore),
+              child: Text(S.of(context).restore),
               onPressed: () {
                 Navigator.of(context).pop(true);
               },
@@ -264,7 +264,7 @@ class _BackupSettingsState extends State<BackupSettings> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               showCloseIcon: true,
-              content: Text(S.current.noFileSelected),
+              content: Text(S.of(context).noFileSelected),
             ),
           );
         }
@@ -319,7 +319,7 @@ class _BackupSettingsState extends State<BackupSettings> {
                 persist: true,
                 showCloseIcon: true,
                 backgroundColor: Theme.of(context).colorScheme.error,
-                content: Text(S.current.errorRestoringBackup)),
+                content: Text(S.of(context).errorRestoringBackup)),
           );
         }
       }
@@ -334,7 +334,7 @@ class _BackupSettingsState extends State<BackupSettings> {
             persist: true,
             showCloseIcon: true,
             backgroundColor: Theme.of(context).colorScheme.error,
-            content: Text('${S.current.errorRestoringBackup}: ${e.toString()}'),
+            content: Text('${S.of(context).errorRestoringBackup}: ${e.toString()}'),
           ),
         );
       }
@@ -354,7 +354,7 @@ class _BackupSettingsState extends State<BackupSettings> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               showCloseIcon: true,
-              content: Text(S.current.noFileSelected),
+              content: Text(S.of(context).noFileSelected),
             ),
           );
         }
@@ -375,7 +375,7 @@ class _BackupSettingsState extends State<BackupSettings> {
                   children: [
                     const CircularProgressIndicator(),
                     const SizedBox(width: 20),
-                    Text(S.current.restoringData),
+                    Text(S.of(context).restoringData),
                   ],
                 ),
               ),
@@ -397,7 +397,7 @@ class _BackupSettingsState extends State<BackupSettings> {
           SnackBar(
             showCloseIcon: true,
             backgroundColor: imagesCount > 0 ? Colors.green : null,
-            content: Text(S.current.imagesRestoredSuccessfully(imagesCount)),
+            content: Text(S.of(context).imagesRestoredSuccessfully(imagesCount)),
           ),
         );
       }
@@ -412,7 +412,7 @@ class _BackupSettingsState extends State<BackupSettings> {
             persist: true,
             showCloseIcon: true,
             backgroundColor: Theme.of(context).colorScheme.error,
-            content: Text('${S.current.errorRestoringBackup}: ${e.toString()}'),
+            content: Text('${S.of(context).errorRestoringBackup}: ${e.toString()}'),
           ),
         );
       }

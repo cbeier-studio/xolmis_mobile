@@ -48,16 +48,19 @@ class SpecimensScreenState extends State<SpecimensScreen> {
   SpecimenSortField _sortField = SpecimenSortField.sampleTime;
   Specimen? _selectedSpecimen;
 
-  static final Map<DateFilter, String> _dateFilterLabels = {
-    DateFilter.today: S.current.today,
-    DateFilter.yesterday: S.current.yesterday,
-    DateFilter.last7Days: S.current.last7Days,
-    DateFilter.last30Days: S.current.last30Days,
-    DateFilter.last90Days: S.current.last90Days,
-    DateFilter.last180Days: S.current.last180Days,
-    DateFilter.last365Days: S.current.last365Days,
-    DateFilter.customRange: S.current.dateInterval,
-  };
+  Map<DateFilter, String> get _dateFilterLabels {
+    final l10n = S.of(context);
+    return {
+      DateFilter.today: l10n.today,
+      DateFilter.yesterday: l10n.yesterday,
+      DateFilter.last7Days: l10n.last7Days,
+      DateFilter.last30Days: l10n.last30Days,
+      DateFilter.last90Days: l10n.last90Days,
+      DateFilter.last180Days: l10n.last180Days,
+      DateFilter.last365Days: l10n.last365Days,
+      DateFilter.customRange: l10n.dateInterval,
+    };
+  }
 
   @override
   void initState() {
@@ -179,7 +182,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                         spacing: 8.0, // Space between chips
                         children: <Widget>[
                           ChoiceChip(
-                            label: Text(S.current.fieldNumber),
+                            label: Text(S.of(context).fieldNumber),
                             showCheckmark: false,
                             selected:
                                 _sortField == SpecimenSortField.fieldNumber,
@@ -193,7 +196,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                             },
                           ),
                           ChoiceChip(
-                            label: Text(S.current.sampleTime),
+                            label: Text(S.of(context).sampleTime),
                             showCheckmark: false,
                             selected:
                                 _sortField == SpecimenSortField.sampleTime,
@@ -207,7 +210,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                             },
                           ),
                           ChoiceChip(
-                            label: Text(S.current.species(1)),
+                            label: Text(S.of(context).species(1)),
                             showCheckmark: false,
                             selected: _sortField == SpecimenSortField.species,
                             onSelected: (bool selected) {
@@ -220,7 +223,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                             },
                           ),
                           ChoiceChip(
-                            label: Text(S.current.locality),
+                            label: Text(S.of(context).locality),
                             showCheckmark: false,
                             selected: _sortField == SpecimenSortField.locality,
                             onSelected: (bool selected) {
@@ -233,7 +236,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                             },
                           ),
                           ChoiceChip(
-                            label: Text(S.current.specimenType),
+                            label: Text(S.of(context).specimenType),
                             showCheckmark: false,
                             selected:
                                 _sortField == SpecimenSortField.specimenType,
@@ -368,14 +371,14 @@ class SpecimensScreenState extends State<SpecimensScreen> {
           useSpeciesSearch
               ? (item, query, label) => speciesMatchesQuery(label, query)
               : null,
-      clearActionLabel: S.current.clearSelection,
+      clearActionLabel: S.of(context).clearSelection,
     );
   }
 
   /// Opens the species filter selector.
   Future<void> _selectSpeciesFromBottomSheet() async {
     final result = await _showStringFilterBottomSheet(
-      title: S.current.species(1),
+      title: S.of(context).species(1),
       items: _getUniqueSpecies(),
       useSpeciesSearch: true,
     );
@@ -389,7 +392,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
   /// Opens the locality filter selector.
   Future<void> _selectLocalityFromBottomSheet() async {
     final result = await _showStringFilterBottomSheet(
-      title: S.current.locality,
+      title: S.of(context).locality,
       items: _getUniqueLocalities(),
     );
     if (!mounted || result == null) return;
@@ -934,7 +937,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                     // Option to clear the selected specimens
                     IconButton(
                       icon: const Icon(Icons.clear_outlined),
-                      tooltip: S.current.clearSelection,
+                      tooltip: S.of(context).clearSelection,
                       onPressed: () {
                         setState(() {
                           selectedSpecimens.clear();
@@ -1208,7 +1211,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                       ),
                       const SizedBox(width: 8.0),
                       FilterChip(
-                        label: Text(_selectedSpecies ?? S.current.species(1)),
+                        label: Text(_selectedSpecies ?? S.of(context).species(1)),
                         // avatar:
                         //     _selectedSpecies == null
                         //         ? const Icon(Icons.account_tree_outlined)
@@ -1229,7 +1232,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                       ),
                       const SizedBox(width: 8.0),
                       FilterChip(
-                        label: Text(_selectedLocality ?? S.current.locality),
+                        label: Text(_selectedLocality ?? S.of(context).locality),
                         // avatar:
                         //     _selectedLocality == null
                         //         ? const Icon(Icons.location_on_outlined)
@@ -1254,7 +1257,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                         builder: (context, controller, child) {
                           return FilterChip(
                             label: Text(
-                              _selectedObserver ?? S.current.observer,
+                              _selectedObserver ?? S.of(context).observer,
                             ),
                             // avatar:
                             //     _selectedObserver == null
@@ -1541,7 +1544,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
         borderRadius: BorderRadius.circular(999.0),
       ),
       child: Text(
-        specimenTypeFriendlyNames[type] ?? S.current.specimenType,
+        specimenTypeFriendlyNames[type] ?? S.of(context).specimenType,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
         style: Theme.of(context).textTheme.labelSmall?.copyWith(
@@ -1633,7 +1636,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                           buildGridMenuItem(
                             context,
                             Icons.edit_outlined,
-                            S.current.edit,
+                            S.of(context).edit,
                             () {
                               Navigator.of(context).pop();
                               if (MediaQuery.sizeOf(context).width > 600) {
@@ -1676,7 +1679,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                             buildGridMenuItem(
                               context,
                               Icons.archive_outlined,
-                              S.current.archive,
+                              S.of(context).archive,
                               () {
                                 Navigator.of(context).pop();
                                 specimen.isPending = false;
@@ -1740,7 +1743,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                         children: [
                           const SizedBox(width: 8.0),
                           Text(
-                            S.current.export,
+                            S.of(context).export,
                             style: TextTheme.of(context).bodyMedium,
                           ),
                           Expanded(
@@ -1833,7 +1836,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                           children: [
                             const SizedBox(width: 8.0),
                             Text(
-                              S.current.exportAll,
+                              S.of(context).exportAll,
                               style: TextTheme.of(context).bodyMedium,
                             ),
                             Expanded(

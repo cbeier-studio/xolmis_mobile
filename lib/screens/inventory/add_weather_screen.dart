@@ -212,7 +212,7 @@ class AddWeatherScreenState extends State<AddWeatherScreen> {
                               child: DropdownButtonFormField<String>(
                                 initialValue: _selectedWindDirection,
                                 decoration: InputDecoration(
-                                  labelText: S.current.windDirection,
+                                  labelText: S.of(context).windDirection,
                                   border: const OutlineInputBorder(),
                                 ),
                                 isExpanded: true,

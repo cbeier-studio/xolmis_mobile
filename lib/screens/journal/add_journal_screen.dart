@@ -133,7 +133,7 @@ class AddJournalScreenState extends State<AddJournalScreen> {
             children: [
               Expanded(
                 child: Text(
-                  widget.isEditing ? S.current.editJournalEntry : S.current.newJournalEntry,
+                  widget.isEditing ? S.of(context).editJournalEntry : S.of(context).newJournalEntry,
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
               ),
@@ -200,7 +200,7 @@ class AddJournalScreenState extends State<AddJournalScreen> {
                       }
                     },
                     leadingIcon: const Icon(Icons.camera_alt_outlined),
-                    child: Text(S.current.camera),
+                    child: Text(S.of(context).camera),
                   ),
                   MenuItemButton(
                     onPressed: () async {
@@ -233,7 +233,7 @@ class AddJournalScreenState extends State<AddJournalScreen> {
                       }
                     },
                     leadingIcon: const Icon(Icons.photo_library_outlined),
-                    child: Text(S.current.gallery),
+                    child: Text(S.of(context).gallery),
                   ),
                 ],
               ),
@@ -318,7 +318,7 @@ class AddJournalScreenState extends State<AddJournalScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.isEditing ? S.current.editJournalEntry : S.of(context).newJournalEntry),
+        title: Text(widget.isEditing ? S.of(context).editJournalEntry : S.of(context).newJournalEntry),
         actions: [
           IconButton(
             icon: const Icon(Icons.add_location_alt_outlined),
@@ -383,7 +383,7 @@ class AddJournalScreenState extends State<AddJournalScreen> {
                       }
                     },
                     leadingIcon: const Icon(Icons.camera_alt_outlined),
-                    child: Text(S.current.camera),
+                    child: Text(S.of(context).camera),
                   ),
                   MenuItemButton(
                     onPressed: () async {
@@ -416,7 +416,7 @@ class AddJournalScreenState extends State<AddJournalScreen> {
                       }
                     },
                     leadingIcon: const Icon(Icons.photo_library_outlined),
-                    child: Text(S.current.gallery),
+                    child: Text(S.of(context).gallery),
                   ),
             ],
           ),
@@ -557,7 +557,7 @@ class AddJournalScreenState extends State<AddJournalScreen> {
           persist: false,
           showCloseIcon: true,
           backgroundColor: Theme.of(context).colorScheme.error,
-          content: Text(S.current.fieldCannotBeEmpty),
+          content: Text(S.of(context).fieldCannotBeEmpty),
         ),
       );
       return;
@@ -586,7 +586,7 @@ class AddJournalScreenState extends State<AddJournalScreen> {
               persist: true,
               showCloseIcon: true,
               backgroundColor: Theme.of(context).colorScheme.error,
-              content: Text(S.current.errorSavingJournalEntry),
+              content: Text(S.of(context).errorSavingJournalEntry),
             ),
           );
         }
@@ -618,7 +618,7 @@ class AddJournalScreenState extends State<AddJournalScreen> {
               persist: true,
               showCloseIcon: true,
               backgroundColor: Theme.of(context).colorScheme.error,
-              content: Text(S.current.errorSavingJournalEntry),
+              content: Text(S.of(context).errorSavingJournalEntry),
             ),
           );
         }

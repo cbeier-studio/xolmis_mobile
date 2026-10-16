@@ -186,7 +186,7 @@ class _VegetationTabState extends State<VegetationTab> with AutomaticKeepAliveCl
                     physics: const NeverScrollableScrollPhysics(),
                     children: <Widget>[
                       buildGridMenuItem(
-                          innerContext, Icons.edit_outlined, S.current.edit, () {
+                          innerContext, Icons.edit_outlined, S.of(context).edit, () {
                         Navigator.of(innerContext).pop();
                         _showEditVegetationScreen(context, vegetation);
                       }),

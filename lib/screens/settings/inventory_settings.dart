@@ -67,7 +67,7 @@ class _InventorySettingsState extends State<InventorySettings> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(S.current.inventories)),
+      appBar: AppBar(title: Text(S.of(context).inventories)),
       body: SettingsList(
         contentPadding: EdgeInsets.zero,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -78,7 +78,7 @@ class _InventorySettingsState extends State<InventorySettings> {
         darkTheme: getSettingsDarkTheme(context),
         sections: [
           SettingsSection(
-            title: Text(S.current.inventoryRules.toUpperCase()),
+            title: Text(S.of(context).inventoryRules.toUpperCase()),
             tiles: [
               // Maximum number of simultaneous inventories
               SettingsTile.navigation(
@@ -123,7 +123,7 @@ class _InventorySettingsState extends State<InventorySettings> {
             ],
           ),
           SettingsSection(
-            title: Text(S.current.defaults.toUpperCase()),
+            title: Text(S.of(context).defaults.toUpperCase()),
             tiles: [
               // Mackinnon lists default number of species
               SettingsTile.navigation(
@@ -228,7 +228,7 @@ class _InventorySettingsState extends State<InventorySettings> {
             ],
           ),
           SettingsSection(
-            title: Text(S.current.reminders.toUpperCase()),
+            title: Text(S.of(context).reminders.toUpperCase()),
             tiles: [
               SettingsTile.switchTile(
                 title: Text(S.of(context).remindMissingVegetationData),

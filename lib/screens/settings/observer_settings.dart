@@ -38,7 +38,7 @@ class _ObserverSettingsState extends State<ObserverSettings> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(S.current.observersSettings),
+        title: Text(S.of(context).observersSettings),
       ),
       body: SettingsList(
         contentPadding: EdgeInsets.zero,
@@ -50,7 +50,7 @@ class _ObserverSettingsState extends State<ObserverSettings> {
         darkTheme: getSettingsDarkTheme(context),
         sections: [
           SettingsSection(
-            title: Text(S.current.defaultObserver.toUpperCase()),
+            title: Text(S.of(context).defaultObserver.toUpperCase()),
             tiles: [
               SettingsTile.navigation(
                 leading: const Icon(Icons.person_outlined),

@@ -158,7 +158,7 @@ class TagSelectionFieldState extends State<TagSelectionField> {
     final inputDecoration =
         widget.decoration ??
         InputDecoration(
-          labelText: widget.label ?? S.current.addTag,
+          labelText: widget.label ?? S.of(context).addTag,
           hintText: widget.hint ?? '',
           border: InputBorder.none,
           isDense: true,
@@ -215,7 +215,7 @@ class TagSelectionFieldState extends State<TagSelectionField> {
               focusNode: focusNode,
               decoration: inputDecoration.copyWith(
                 hintText: '',
-                suffixIcon: IconButton(icon: const Icon(Icons.add), tooltip: S.current.addTag, onPressed: commitPendingTag),
+                suffixIcon: IconButton(icon: const Icon(Icons.add), tooltip: S.of(context).addTag, onPressed: commitPendingTag),
               ),
               textCapitalization: TextCapitalization.none,
               autocorrect: false,

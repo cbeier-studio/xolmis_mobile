@@ -717,7 +717,7 @@ class AddNestScreenState extends State<AddNestScreen> {
               persist: true,
               showCloseIcon: true,
               backgroundColor: Theme.of(context).colorScheme.error,
-              content: Text(S.current.errorSavingNest),
+              content: Text(S.of(context).errorSavingNest),
             ),
           );
         }
@@ -744,7 +744,7 @@ class AddNestScreenState extends State<AddNestScreen> {
         });
 
         try {
-          await nestProvider.addNest(newNest);
+          await nestProvider.addNest(context, newNest);
           if (!mounted) return;
           Navigator.pop(context);
         } catch (error) {
@@ -765,7 +765,7 @@ class AddNestScreenState extends State<AddNestScreen> {
                 persist: true,
                 showCloseIcon: true,
                 backgroundColor: Theme.of(context).colorScheme.error,
-                content: Text(S.current.errorSavingNest),
+                content: Text(S.of(context).errorSavingNest),
               ),
             );
           }

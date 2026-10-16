@@ -133,7 +133,7 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
       _occurrencesByMonth = await getOccurrencesByMonth(selectedSpecies);
       _occurrencesByYear = await getOccurrencesByYear(selectedSpecies);
       totalsSections =
-          getTotalsByRecordType(allSpeciesList, nestList, eggList, specimenList).entries.map((entry) {
+          getTotalsByRecordType(context, allSpeciesList, nestList, eggList, specimenList).entries.map((entry) {
             return PieChartSectionData(
               showTitle: true,
               title: entry.value.toString(),
@@ -220,7 +220,7 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
           children: [
             Icon(Icons.insert_chart_outlined, size: 48, color: Theme.of(context).colorScheme.surfaceDim),
             const SizedBox(height: 8),
-            Text(S.current.noDataAvailable, style: Theme.of(context).textTheme.titleMedium),
+            Text(S.of(context).noDataAvailable, style: Theme.of(context).textTheme.titleMedium),
             SizedBox(height: 16),
             ActionChip(
               label: Text(S.of(context).refresh),
@@ -285,7 +285,7 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
                       children: [
                         Icon(Icons.insert_chart_outlined, size: 48, color: Theme.of(context).colorScheme.surfaceDim),
                         const SizedBox(height: 8),
-                        Text(S.current.noSpeciesSelected),
+                        Text(S.of(context).noSpeciesSelected),
                       ],
                     ),
                     ),
@@ -312,7 +312,7 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            S.current.selectSpecies,
+            S.of(context).selectSpecies,
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w600,
@@ -346,7 +346,7 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
                       const Icon(Icons.search_outlined),
                       const SizedBox(width: 8),
                       Text(
-                        S.current.findSpecies,
+                        S.of(context).findSpecies,
                         style: TextStyle(
                           fontSize: 14,
                           color: isDark ? Colors.grey.shade400 : XolmisColors.secondary,
@@ -405,7 +405,7 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  S.current.selectedSpecies.toUpperCase(),
+                  S.of(context).selectedSpecies.toUpperCase(),
                   style: TextStyle(
                     fontSize: 9,
                     fontWeight: FontWeight.bold,
@@ -469,7 +469,7 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
               const Icon(Icons.pie_chart_outline, size: 18, color: XolmisColors.primary),
               const SizedBox(width: 8),
               Text(
-                S.current.totalRecords,
+                S.of(context).totalRecords,
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -624,7 +624,7 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
               const Icon(Icons.calendar_month_outlined, size: 18, color: XolmisColors.primary),
               const SizedBox(width: 8),
               Text(
-                S.current.recordsPerMonth,
+                S.of(context).recordsPerMonth,
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -646,7 +646,7 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
                     getTooltipColor: (_) => XolmisColors.jacarandaDeep,
                     getTooltipItem: (group, groupIndex, rod, rodIndex) {
                       return BarTooltipItem(
-                        '${rod.toY.round()} ${S.current.recordsCount(rod.toY.round())}',
+                        '${rod.toY.round()} ${S.of(context).recordsCount(rod.toY.round())}',
                         TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold),
                       );
                     },
@@ -735,7 +735,7 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
               const Icon(Icons.trending_up, size: 18, color: XolmisColors.primary),
               const SizedBox(width: 8),
               Text(
-                S.current.speciesRichnessPerYear,
+                S.of(context).speciesRichnessPerYear,
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -846,7 +846,7 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
               const Icon(Icons.assignment_outlined, size: 18, color: XolmisColors.primary),
               const SizedBox(width: 8),
               Text(
-                S.current.inventories,
+                S.of(context).inventories,
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -865,25 +865,25 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
             physics: const NeverScrollableScrollPhysics(),
             children: [
               _buildSubStatMetricBox(
-                S.current.relativeAbundance,
+                S.of(context).relativeAbundance,
                 '${relativeAbundance.toStringAsFixed(1)}%',
                 XolmisColors.primary,
                 isDark,
               ),
               _buildSubStatMetricBox(
-                S.current.relativeFrequency,
+                S.of(context).relativeFrequency,
                 '${relativeFrequency.toStringAsFixed(1)}%',
                 XolmisColors.primary,
                 isDark,
               ),
               _buildSubStatMetricBox(
-                S.current.totalAbundance,
+                S.of(context).totalAbundance,
                 '${totalAbundance.toStringAsFixed(1)}',
                 XolmisColors.primary,
                 isDark,
               ),
               _buildSubStatMetricBox(
-                S.current.poisRecorded(totalPoisCount),
+                S.of(context).poisRecorded(totalPoisCount),
                 '${totalPoisCount}',
                 XolmisColors.primary,
                 isDark,
@@ -914,7 +914,7 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
               const Icon(Icons.egg_outlined, size: 18, color: XolmisColors.primary),
               const SizedBox(width: 8),
               Text(
-                S.current.nests,
+                S.of(context).nests,
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -943,7 +943,7 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        S.current.apparentSuccessRate,
+                        S.of(context).apparentSuccessRate,
                         style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.w600,
@@ -973,7 +973,7 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        S.current.nidoparasitismRate,
+                        S.of(context).nidoparasitismRate,
                         style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.w600,
@@ -989,7 +989,7 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
           ),
           const SizedBox(height: 16),
           Text(
-            S.current.nestFate,
+            S.of(context).nestFate,
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w600,
@@ -1063,7 +1063,7 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
                     )
                     : Center(
                       child: Text(
-                        S.current.noDataAvailable,
+                        S.of(context).noDataAvailable,
                         style: TextStyle(color: isDark ? Colors.grey.shade400 : Colors.grey.shade600),
                       ),
                     ),
@@ -1094,7 +1094,7 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
               const Icon(Icons.access_time_outlined, size: 18, color: XolmisColors.primary),
               const SizedBox(width: 8),
               Text(
-                S.current.recordsByHour,
+                S.of(context).recordsByHour,
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -1118,7 +1118,7 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
                             getTooltipColor: (_) => XolmisColors.jacarandaDeep,
                             getTooltipItem: (group, groupIndex, rod, rodIndex) {
                               return BarTooltipItem(
-                                '${group.x.toString().padLeft(2, '0')} h: ${rod.toY.round()} ${S.current.recordsCount(rod.toY.round())}',
+                                '${group.x.toString().padLeft(2, '0')} h: ${rod.toY.round()} ${S.of(context).recordsCount(rod.toY.round())}',
                                 TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold),
                               );
                             },
@@ -1185,7 +1185,7 @@ class _StatsSpeciesTabState extends State<StatsSpeciesTab> with AutomaticKeepAli
                     )
                     : Center(
                       child: Text(
-                        S.current.noDataAvailable,
+                        S.of(context).noDataAvailable,
                         style: TextStyle(color: isDark ? Colors.grey.shade400 : Colors.grey.shade600),
                       ),
                     ),

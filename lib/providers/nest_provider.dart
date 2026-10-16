@@ -121,9 +121,9 @@ class NestProvider with ChangeNotifier {
   }
 
   /// Adds a new nest after validating that its field number is unique.
-  Future<void> addNest(Nest nest) async {
+  Future<void> addNest(BuildContext context, Nest nest) async {
     if (await nestFieldNumberExists(nest.fieldNumber!)) {
-      throw Exception(S.current.errorNestAlreadyExists);
+      throw Exception(S.of(context).errorNestAlreadyExists);
     }
 
     await _nestDao.insertNest(nest);

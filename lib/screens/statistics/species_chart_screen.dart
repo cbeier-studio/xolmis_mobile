@@ -105,7 +105,7 @@ class _SpeciesChartScreenState extends State<SpeciesChartScreen> {
                                 color: Theme.of(context).disabledColor,
                               ),
                               const SizedBox(height: 8),
-                              Text(S.current.noDataAvailable)
+                              Text(S.of(context).noDataAvailable)
                             ],
                           ))
                           : LineChart(
@@ -128,7 +128,7 @@ class _SpeciesChartScreenState extends State<SpeciesChartScreen> {
                                            //         ? Colors.pink
                                            //         : Colors.pink[200],
                                            //   ),
-                                           //   labelResolver: (line) => S.current.finished,
+                                           //   labelResolver: (line) => S.of(context).finished,
                                            // ),
                                            color: Theme.of(context).brightness == Brightness.light
                                                ? Colors.pink
@@ -145,8 +145,8 @@ class _SpeciesChartScreenState extends State<SpeciesChartScreen> {
                                     axisNameSize: 24,
                                     axisNameWidget: Text(
                                       intervalSize == 10
-                                          ? S.current.timeSeconds
-                                          : S.current.timeMinutes,
+                                          ? S.of(context).timeSeconds
+                                          : S.of(context).timeMinutes,
                                     ),
                                     sideTitles: SideTitles(
                                       showTitles: true,
@@ -166,7 +166,7 @@ class _SpeciesChartScreenState extends State<SpeciesChartScreen> {
                                   ),
                                   leftTitles: AxisTitles(
                                     axisNameSize: 24,
-                                    axisNameWidget: Text(S.current.speciesAccumulated),
+                                    axisNameWidget: Text(S.of(context).speciesAccumulated),
                                     sideTitles: SideTitles(
                                       showTitles: true,
                                       interval: maxY > 10 ? 5 : 1,
@@ -231,7 +231,7 @@ class _SpeciesChartScreenState extends State<SpeciesChartScreen> {
                                           textStyle,
                                           children: [
                                             TextSpan(
-                                              text: '${touchedSpot.y.toInt()} ${S.current.speciesAcronym(touchedSpot.y.toInt())}',
+                                              text: '${touchedSpot.y.toInt()} ${S.of(context).speciesAcronym(touchedSpot.y.toInt())}',
                                               style: TextStyle(
                                                 color: spotColor,
                                                 fontWeight: FontWeight.bold,

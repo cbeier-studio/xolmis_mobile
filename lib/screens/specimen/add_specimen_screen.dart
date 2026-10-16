@@ -609,7 +609,7 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
               persist: true,
               showCloseIcon: true,
               backgroundColor: Theme.of(context).colorScheme.error,
-              content: Text(S.current.errorSavingSpecimen),
+              content: Text(S.of(context).errorSavingSpecimen),
             ),
           );
         }
@@ -632,7 +632,7 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
         });
 
         try {
-          await specimenProvider.addSpecimen(newSpecimen);
+          await specimenProvider.addSpecimen(context, newSpecimen);
           if (!mounted) return;
           Navigator.pop(context);
         } catch (error) {
@@ -640,11 +640,11 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
             print('Error adding specimen: $error');
           }
           if (!mounted) return;
-          if (error.toString().contains(S.current.errorSpecimenAlreadyExists)) {
+          if (error.toString().contains(S.of(context).errorSpecimenAlreadyExists)) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 backgroundColor: Colors.amber,
-                content: Text(S.current.errorSpecimenAlreadyExists),
+                content: Text(S.of(context).errorSpecimenAlreadyExists),
               ),
             );
           } else {
@@ -653,7 +653,7 @@ class AddSpecimenScreenState extends State<AddSpecimenScreen> {
                 persist: true,
                 showCloseIcon: true,
                 backgroundColor: Theme.of(context).colorScheme.error,
-                content: Text(S.current.errorSavingSpecimen),
+                content: Text(S.of(context).errorSavingSpecimen),
               ),
             );
           }

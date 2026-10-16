@@ -3,7 +3,7 @@ description: "Collect ornithological data in the field."
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.4+162
+version: 1.0.4+163
 
 environment:
   sdk: ^3.7.0
@@ -14,16 +14,15 @@ dependencies:
   flutter_localizations: 
     sdk: flutter
   intl: ^0.20.3
-  intl_utils: ^2.8.17
   fpdart: ^1.2.0
   xml: ^7.1.0
 
   # UI dependencies
-  material_ui: ^1.6.0
+  material_ui: ^1.7.0
 #  cupertino_ui: any
 #  cupertino_icons: ^1.0.9
   font_awesome_flutter: ^11.0.0
-  flutter_local_notifications: ^22.3.1
+  flutter_local_notifications: ^22.3.2
   side_sheet: ^1.0.4+1
   fab_m3e: ^0.1.1
   m3e_design: ^0.2.1
@@ -36,7 +35,7 @@ dependencies:
   share_plus: ^13.3.1
 
   # Data and persistence dependencies
-  sqflite: ^2.4.4+1
+  sqflite: ^2.4.4+2
   csv: ^8.0.0
   shared_preferences: ^2.5.6
   docx_creator: ^1.4.0
@@ -46,7 +45,7 @@ dependencies:
 #      url: https://github.com/justkawal/excel.git
 #      ref: 751dfc597c893a0b34eccfe6921f126e03a5c683
 #  geoxml: ^2.6.2
-  archive: ^4.4.0
+  archive: ^4.5.2
   flutter_markdown_plus: ^1.0.12
   pdf: ^3.13.1
   printing: ^5.15.1
@@ -76,8 +75,8 @@ dev_dependencies:
 #  path_provider_foundation: 2.5.1
 
 flutter:
-  uses-material-design: true
   generate: true
+  uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
   # assets:
@@ -137,6 +136,3 @@ flutter_launcher_icons:
   adaptive_icon_monochrome: "assets/xolmis_icon_monochrome.png"
   remove_alpha_ios: true
   background_color_ios: "#ffffff"
-
-flutter_intl:
-  enabled: true

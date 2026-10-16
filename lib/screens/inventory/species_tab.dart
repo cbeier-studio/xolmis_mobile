@@ -750,7 +750,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         children: <Widget>[
-                          buildGridMenuItem(context, Icons.edit_outlined, S.current.details, () async {
+                          buildGridMenuItem(context, Icons.edit_outlined, S.of(context).details, () async {
                             Navigator.of(context).pop();
                             final speciesProvider = Provider.of<SpeciesProvider>(context, listen: false);
                             final editedSpecies = await Navigator.push(
@@ -772,7 +772,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                             }
                           }),
                           if (species.isOutOfInventory)
-                            buildGridMenuItem(context, Icons.inventory_outlined, S.current.addSpeciesToSample, () {
+                            buildGridMenuItem(context, Icons.inventory_outlined, S.of(context).addSpeciesToSample, () {
                               Navigator.of(context).pop();
                               _addSpeciesToSample(context, species);
                             }),
@@ -873,7 +873,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                         spacing: 8.0,
                         children: <Widget>[
                           ChoiceChip(
-                            label: Text(S.current.speciesName),
+                            label: Text(S.of(context).speciesName),
                             showCheckmark: false,
                             selected: _sortOption == SpeciesSortField.name,
                             onSelected: (bool selected) {
@@ -886,7 +886,7 @@ class _SpeciesTabState extends State<SpeciesTab> with AutomaticKeepAliveClientMi
                             },
                           ),
                           ChoiceChip(
-                            label: Text(S.current.sampleTime),
+                            label: Text(S.of(context).sampleTime),
                             showCheckmark: false,
                             selected: _sortOption == SpeciesSortField.time,
                             onSelected: (bool selected) {

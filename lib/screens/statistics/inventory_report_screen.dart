@@ -43,7 +43,7 @@ class _InventoryReportScreenState extends State<InventoryReportScreen> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Scaffold(
             appBar: AppBar(
-              title: Text(S.current.reportSpeciesByInventory),
+              title: Text(S.of(context).reportSpeciesByInventory),
             ),
             body: const Center(
               child: CircularProgressIndicator(
@@ -55,7 +55,7 @@ class _InventoryReportScreenState extends State<InventoryReportScreen> {
         if (snapshot.hasError) {
           return Scaffold(
             appBar: AppBar(
-              title: Text(S.current.reportSpeciesByInventory),
+              title: Text(S.of(context).reportSpeciesByInventory),
             ),
             body: Center(
               child: Text(snapshot.error.toString()),
@@ -70,7 +70,7 @@ class _InventoryReportScreenState extends State<InventoryReportScreen> {
 
         return Scaffold(
           appBar: AppBar(
-            title: Text(S.current.reportSpeciesByInventory),
+            title: Text(S.of(context).reportSpeciesByInventory),
             actions: [
               // Option to export the report to a CSV file
               IconButton(
@@ -140,7 +140,7 @@ class _InventoryReportScreenState extends State<InventoryReportScreen> {
                 ),
               ),
               Text(
-                S.current.presenceWithinSample,
+                S.of(context).presenceWithinSample,
                 style: const TextStyle(
                   fontSize: 12,
                 ),
@@ -153,7 +153,7 @@ class _InventoryReportScreenState extends State<InventoryReportScreen> {
                 ),
               ),
               Text(
-                S.current.presenceOutsideSample,
+                S.of(context).presenceOutsideSample,
                 style: const TextStyle(
                   fontSize: 12,
                 ),
@@ -161,14 +161,14 @@ class _InventoryReportScreenState extends State<InventoryReportScreen> {
             ],
           ),
           Text(
-            S.current.parenthesisIsOutsideSample,
+            S.of(context).parenthesisIsOutsideSample,
             style: const TextStyle(
               fontSize: 12,
             ),
           ),
           const SizedBox(height: 8),
           Text(
-            S.current.firstOccurrenceIsHighlighted,
+            S.of(context).firstOccurrenceIsHighlighted,
             style: const TextStyle(
               fontSize: 12,
             ),
@@ -241,7 +241,7 @@ class _InventoryReportScreenState extends State<InventoryReportScreen> {
     }
 
     // Add the total species row
-    final totalSpeciesRow = ['${S.current.totalSpecies}: ${speciesSet.length}'];
+    final totalSpeciesRow = ['${S.of(context).totalSpecies}: ${speciesSet.length}'];
     for (final inventory in inventories) {
       var totalSpeciesWithinSample = 0;
       var totalSpeciesOutsideSample = 0;
@@ -283,7 +283,7 @@ class _InventoryReportScreenState extends State<InventoryReportScreen> {
 
   /// Builds plain-text header labels for table and CSV export.
   List<String> _buildHeaderLabels(List<Inventory> inventories) {
-    final labels = <String>[S.current.species(2)];
+    final labels = <String>[S.of(context).species(2)];
 
     for (final inventory in inventories) {
       // Remove the date from the inventory ID
@@ -292,7 +292,7 @@ class _InventoryReportScreenState extends State<InventoryReportScreen> {
       labels.add(displayId);
     }
 
-    labels.add(S.current.totalIndividuals);
+    labels.add(S.of(context).totalIndividuals);
 
     return labels;
   }
@@ -407,7 +407,7 @@ class _InventoryReportScreenState extends State<InventoryReportScreen> {
     final hasSpeciesRows = reportData.length > 1;
     if (inventories.isEmpty || !hasSpeciesRows) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(S.current.noDataToExport)),
+        SnackBar(content: Text(S.of(context).noDataToExport)),
       );
       return;
     }
@@ -427,7 +427,7 @@ class _InventoryReportScreenState extends State<InventoryReportScreen> {
                 children: [
                   const CircularProgressIndicator(),
                   const SizedBox(width: 16),
-                  Text(S.current.exporting),
+                  Text(S.of(context).exporting),
                 ],
               ),
             ),
@@ -453,7 +453,7 @@ class _InventoryReportScreenState extends State<InventoryReportScreen> {
       }
 
       await SharePlus.instance.share(
-        ShareParams(files: [XFile(path)], text: S.current.reportSpeciesByInventory)
+        ShareParams(files: [XFile(path)], text: S.of(context).reportSpeciesByInventory)
       );
     } catch (error) {
       if (!context.mounted) return;
@@ -462,7 +462,7 @@ class _InventoryReportScreenState extends State<InventoryReportScreen> {
         persist: true,
               showCloseIcon: true,
         backgroundColor: Theme.of(context).colorScheme.error,
-        content: Text(S.current.errorExportingInventory(2, error.toString())),
+        content: Text(S.of(context).errorExportingInventory(2, error.toString())),
         ),
       );
     } finally {

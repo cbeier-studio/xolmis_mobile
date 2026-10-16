@@ -13,8 +13,8 @@
 - Images are file-backed plus DB-indexed. The `images` table stores absolute file paths; `backup_utils.dart` zips the DB and those image files together.
 
 ## Project-specific conventions
-- Localized strings use `S.of(context)` / `S.current` from `lib/generated/l10n.dart`; enums map to user-facing labels in `lib/core/core_consts.dart`.
-- Do not hand-edit generated localization files under `lib/generated/` or `lib/generated/intl/`.
+- Localized strings use `S.of(context)` from `lib/generated/l10n.dart`; enums map to user-facing labels in `lib/core/core_consts.dart`.
+- Do not hand-edit generated localization files under `lib/generated/`.
 - Species autocomplete data is asset-driven, not remote. `loadSpeciesSearchData()` reads `assets/checklists/species_data_<country>.json` based on `SharedPreferences['user_country']`.
 - Settings in `lib/screens/settings/settings_screen.dart` drive behavior across the app: observer initials, startup module (`kStartupModulePreferenceKey`), country checklist, export number formatting, default durations, reminders, theme.
 - Field journal notes are rich-text Delta JSON strings (Fleather), not plain text. `AddJournalScreen` serializes notes with `jsonEncode(_notesController.document.toDelta().toList())`; editing paths decode via `ParchmentDocument.fromJson(...)`.

@@ -66,7 +66,7 @@ class EggProvider with ChangeNotifier {
   /// Adds [egg] to [nestId] after validating its field number uniqueness.
   Future<void> addEgg(BuildContext context, int nestId, Egg egg) async {
     if (await eggFieldNumberExists(egg.fieldNumber!)) {
-      throw Exception(S.current.errorEggAlreadyExists);
+      throw Exception(S.of(context).errorEggAlreadyExists);
     }
 
     // Insert the egg in the database

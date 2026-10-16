@@ -343,7 +343,7 @@ class _AppImageScreenState extends State<AppImageScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             backgroundColor: Theme.of(context).colorScheme.error,
-              content: Text(S.current.permissionDeniedPermanently)
+              content: Text(S.of(context).permissionDeniedPermanently)
           ),
         );
         openAppSettings();
@@ -351,7 +351,7 @@ class _AppImageScreenState extends State<AppImageScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             backgroundColor: Theme.of(context).colorScheme.error,
-              content: Text(S.current.permissionDenied)
+              content: Text(S.of(context).permissionDenied)
           ),
         );
       }
@@ -445,12 +445,12 @@ class _AppImageScreenState extends State<AppImageScreen> {
                     physics: const NeverScrollableScrollPhysics(),
                     children: <Widget>[
                       buildGridMenuItem(
-                          context, Icons.edit_outlined, S.current.edit, () {
+                          context, Icons.edit_outlined, S.of(context).edit, () {
                         Navigator.of(context).pop();
                         _showEditNotesDialog(context, appImage);
                       }),
                       buildGridMenuItem(
-                          context, Icons.share_outlined, S.current.export, () {
+                          context, Icons.share_outlined, S.of(context).export, () {
                         Navigator.of(context).pop();
                         SharePlus.instance.share(
                           ShareParams(files: [XFile(appImage.imagePath)],),

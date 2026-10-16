@@ -45,14 +45,14 @@ class _StatsInventoriesLoadingScreenState extends State<StatsInventoriesLoadingS
           );
         } else if (snapshot.hasError) {
           return Scaffold(
-            appBar: AppBar(title: Text(S.current.statistics)),
+            appBar: AppBar(title: Text(S.of(context).statistics)),
             body: Center(
               child: Text('Error: ${snapshot.error}'),
             ),
           );
         } else {
           return Scaffold(
-            appBar: AppBar(title: Text(S.current.statistics)),
+            appBar: AppBar(title: Text(S.of(context).statistics)),
             body: const Center(
               child: CircularProgressIndicator(),
             ),
@@ -210,7 +210,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
 
     return Scaffold(
       appBar: AppBar(
-          title: Text(S.current.statistics),
+          title: Text(S.of(context).statistics),
         // actions: [
         //   IconButton(
         //     icon: const Icon(Icons.print_outlined),
@@ -261,28 +261,28 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
       physics: const NeverScrollableScrollPhysics(),
       children: [
         _buildKpiTile(
-          label: S.current.selectedInventories,
+          label: S.of(context).selectedInventories,
           value: '${widget.inventories.length}',
           // subtext: '',
           valueColor: XolmisColors.primary,
           isDark: isDark,
         ),
         _buildKpiTile(
-          label: S.current.localitiesSurveyed(distinctLocalitiesCount),
+          label: S.of(context).localitiesSurveyed(distinctLocalitiesCount),
           value: '${distinctLocalitiesCount}',
           // subtext: '',
           valueColor: XolmisColors.primary,
           isDark: isDark,
         ),
         _buildKpiTile(
-          label: S.current.totalRichness,
+          label: S.of(context).totalRichness,
           value: '${combinedSpeciesList.length}',
           // subtext: '',
           valueColor: XolmisColors.primary,
           isDark: isDark,
         ),
         _buildKpiTile(
-          label: S.current.averageRichness,
+          label: S.of(context).averageRichness,
           value: averageSpeciesCount.toStringAsFixed(1),
           // subtext: '',
           valueColor: XolmisColors.primary,
@@ -378,7 +378,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    S.current.speciesAccumulationCurve,
+                    S.of(context).speciesAccumulationCurve,
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
@@ -389,9 +389,9 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
               ),
               Row(
                 children: [
-                  _buildLegendIndicator(S.current.total, XolmisColors.primary, isDark),
+                  _buildLegendIndicator(S.of(context).total, XolmisColors.primary, isDark),
                   const SizedBox(width: 8),
-                  _buildLegendIndicator(S.current.sample, XolmisColors.pinkAccent, isDark),
+                  _buildLegendIndicator(S.of(context).sample, XolmisColors.pinkAccent, isDark),
                 ],
               ),
             ],
@@ -638,7 +638,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                 color: XolmisColors.primary,
               ),
               label: Text(
-                S.current.viewSpeciesTable,
+                S.of(context).viewSpeciesTable,
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
@@ -718,7 +718,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
               ),
               const SizedBox(width: 8),
               Text(
-                S.current.recordsByHour,
+                S.of(context).recordsByHour,
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -740,7 +740,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                     getTooltipColor: (_) => XolmisColors.jacarandaDeep,
                     getTooltipItem: (group, groupIndex, rod, rodIndex) {
                       return BarTooltipItem(
-                        '${groupIndex.toString().padLeft(2, '0')} h: ${rod.toY.round()} ${S.current.recordsCount(rod.toY.round())}',
+                        '${groupIndex.toString().padLeft(2, '0')} h: ${rod.toY.round()} ${S.of(context).recordsCount(rod.toY.round())}',
                         TextStyle(
                           color: Colors.white,
                           fontSize: 13,
@@ -848,7 +848,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    S.current.speciesRichness,
+                    S.of(context).speciesRichness,
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,

@@ -269,7 +269,7 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
       height: height,
       child: Center(
         child: Text(
-          S.current.noDataAvailable,
+          S.of(context).noDataAvailable,
           style: TextStyle(fontSize: 12, color: isDark ? Colors.grey.shade400 : Colors.grey.shade600),
         ),
       ),
@@ -290,7 +290,7 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
           children: [
             Icon(Icons.insert_chart_outlined, size: 48, color: Theme.of(context).colorScheme.surfaceDim),
             const SizedBox(height: 8),
-            Text(S.current.noDataAvailable, style: Theme.of(context).textTheme.titleMedium),
+            Text(S.of(context).noDataAvailable, style: Theme.of(context).textTheme.titleMedium),
             SizedBox(height: 16),
             ActionChip(
               label: Text(S.of(context).refresh),
@@ -350,34 +350,34 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
       physics: const NeverScrollableScrollPhysics(),
       children: [
         _buildMetricTile(
-          label: S.current.recordedSpecies,
+          label: S.of(context).recordedSpecies,
           value: '${totalDistinctSpecies}',
           valueColor: XolmisColors.primary,
           isDark: isDark,
         ),
         _buildMetricTile(
-          label: S.current.inventory(widget.inventoryProvider.allInventoriesCount),
+          label: S.of(context).inventory(widget.inventoryProvider.allInventoriesCount),
           value: '${widget.inventoryProvider.allInventoriesCount}',
           isDark: isDark,
         ),
         _buildMetricTile(
-          label: S.current.nest(widget.nestProvider.allNestsCount),
+          label: S.of(context).nest(widget.nestProvider.allNestsCount),
           value: '${widget.nestProvider.allNestsCount}',
           isDark: isDark,
         ),
         _buildMetricTile(
-          label: S.current.specimens(widget.specimenProvider.specimensCount).toLowerCase(),
+          label: S.of(context).specimens(widget.specimenProvider.specimensCount).toLowerCase(),
           value: '${widget.specimenProvider.specimensCount}',
           isDark: isDark,
         ),
         _buildMetricTile(
-          label: S.current.poisRecorded(totalPoisCount),
+          label: S.of(context).poisRecorded(totalPoisCount),
           value: '${totalPoisCount}',
           valueColor: XolmisColors.folhaCampo,
           isDark: isDark,
         ),
         _buildMetricTile(
-          label: S.current.localitiesSurveyed(allLocalitiesSurveyed),
+          label: S.of(context).localitiesSurveyed(allLocalitiesSurveyed),
           value: '${allLocalitiesSurveyed}',
           valueColor: XolmisColors.terraMadeira,
           isDark: isDark,
@@ -437,7 +437,7 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
                 children: [
                   const Icon(Icons.emoji_events_outlined, size: 18, color: XolmisColors.primary),
                   const SizedBox(width: 8),
-                  Text(S.current.topSpecies(5), style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                  Text(S.of(context).topSpecies(5), style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
                 ],
               ),
             ],
@@ -481,7 +481,7 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
                           .toList(),
                 );
               } else {
-                return Text(S.current.noDataAvailable);
+                return Text(S.of(context).noDataAvailable);
               }
             },
           ),
@@ -509,7 +509,7 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
                 color: XolmisColors.primary,
               ),
               label: Text(
-                S.current.viewCompleteList,
+                S.of(context).viewCompleteList,
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
@@ -553,7 +553,7 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
               const Icon(Icons.access_time, size: 18, color: XolmisColors.primary),
               const SizedBox(width: 8),
               Text(
-                S.current.recordsByHour,
+                S.of(context).recordsByHour,
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -580,7 +580,7 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
                             return null;
                           }
                           return BarTooltipItem(
-                            '${group.x.toString().padLeft(2, '0')} h: ${rod.toY.round()} ${S.current.recordsCount(rod.toY.round())}',
+                            '${group.x.toString().padLeft(2, '0')} h: ${rod.toY.round()} ${S.of(context).recordsCount(rod.toY.round())}',
                             TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold),
                           );
                         },
@@ -680,7 +680,7 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
               const Icon(Icons.calendar_month_outlined, size: 18, color: XolmisColors.primary),
               const SizedBox(width: 8),
               Text(
-                S.current.recordsPerMonth,
+                S.of(context).recordsPerMonth,
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -703,7 +703,7 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
                     getTooltipColor: (_) => XolmisColors.jacarandaDeep,
                     getTooltipItem: (group, groupIndex, rod, rodIndex) {
                       return BarTooltipItem(
-                        '${rod.toY.round()} ${S.current.recordsCount(rod.toY.round())}',
+                        '${rod.toY.round()} ${S.of(context).recordsCount(rod.toY.round())}',
                         TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold),
                       );
                     },
@@ -798,7 +798,7 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
               const Icon(Icons.calendar_month_outlined, size: 18, color: XolmisColors.primary),
               const SizedBox(width: 8),
               Text(
-                S.current.speciesRichnessPerMonth,
+                S.of(context).speciesRichnessPerMonth,
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -916,7 +916,7 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
               const Icon(Icons.trending_up, size: 18, color: XolmisColors.primary),
               const SizedBox(width: 8),
               Text(
-                S.current.speciesRichnessPerYear,
+                S.of(context).speciesRichnessPerYear,
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -1076,7 +1076,7 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
               const Icon(Icons.assignment_outlined, size: 18, color: XolmisColors.primary),
               const SizedBox(width: 8),
               Text(
-                S.current.inventories,
+                S.of(context).inventories,
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -1094,11 +1094,11 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             children: [
-              _buildStatSubBox(S.current.surveyHours, '${totalInventoryHours.toStringAsFixed(2)}', isDark),
-              _buildStatSubBox(S.current.averageSurveyHours, '${averageInventoryHours.toStringAsFixed(2)}', isDark),
-              _buildStatSubBox(S.current.daysSurveyed(totalInventoryDays), '${totalInventoryDays}', isDark),
+              _buildStatSubBox(S.of(context).surveyHours, '${totalInventoryHours.toStringAsFixed(2)}', isDark),
+              _buildStatSubBox(S.of(context).averageSurveyHours, '${averageInventoryHours.toStringAsFixed(2)}', isDark),
+              _buildStatSubBox(S.of(context).daysSurveyed(totalInventoryDays), '${totalInventoryDays}', isDark),
               _buildStatSubBox(
-                S.current.localitiesSurveyed(inventoryLocalitiesCount),
+                S.of(context).localitiesSurveyed(inventoryLocalitiesCount),
                 '${inventoryLocalitiesCount}',
                 isDark,
               ),
@@ -1153,7 +1153,7 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
               const Icon(Icons.egg_outlined, size: 18, color: XolmisColors.primary),
               const SizedBox(width: 8),
               Text(
-                S.current.nests,
+                S.of(context).nests,
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -1182,7 +1182,7 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        S.current.apparentSuccessRate,
+                        S.of(context).apparentSuccessRate,
                         style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.w600,
@@ -1212,7 +1212,7 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        S.current.nidoparasitismRate,
+                        S.of(context).nidoparasitismRate,
                         style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.w600,
@@ -1228,7 +1228,7 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
           ),
           const SizedBox(height: 16),
           Text(
-            S.current.nestFate,
+            S.of(context).nestFate,
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w600,
@@ -1301,12 +1301,12 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
                 //   mainAxisAlignment: MainAxisAlignment.center,
                 //   crossAxisAlignment: CrossAxisAlignment.start,
                 //   children: [
-                //     _buildLegendItem(S.current.nestFateSuccess, XolmisColors.success, isDark),
+                //     _buildLegendItem(S.of(context).nestFateSuccess, XolmisColors.success, isDark),
                 //     const SizedBox(height: 6),
-                //     _buildLegendItem(S.current.nestFateLost, XolmisColors.error, isDark),
+                //     _buildLegendItem(S.of(context).nestFateLost, XolmisColors.error, isDark),
                 //     const SizedBox(height: 6),
                 //     _buildLegendItem(
-                //         S.current.nestFateUnknown, Colors.grey, isDark),
+                //         S.of(context).nestFateUnknown, Colors.grey, isDark),
                 //   ],
                 // ),
                   ],
@@ -1346,7 +1346,7 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
               const Icon(Icons.local_offer_outlined, size: 18, color: XolmisColors.primary),
               const SizedBox(width: 8),
               Text(
-                S.current.specimensByType,
+                S.of(context).specimensByType,
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,

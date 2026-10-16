@@ -1,7160 +1,4428 @@
-// GENERATED CODE - DO NOT MODIFY BY HAND
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'dart:async';
 
-import 'intl/messages_all.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intl/intl.dart' as intl;
 
-// **************************************************************************
-// Generator: Flutter Intl IDE plugin
-// Made by Localizely
-// **************************************************************************
+import 'l10n_en.dart';
+import 'l10n_pt.dart';
 
-// ignore_for_file: non_constant_identifier_names, lines_longer_than_80_chars
-// ignore_for_file: join_return_with_assignment, prefer_final_in_for_each
-// ignore_for_file: avoid_redundant_argument_values, avoid_escaping_inner_quotes
+// ignore_for_file: type=lint
 
-class S {
-  S();
+/// Callers can lookup localized strings with an instance of S
+/// returned by `S.of(context)`.
+///
+/// Applications need to include `S.delegate()` in their app's
+/// `localizationDelegates` list, and the locales they support in the app's
+/// `supportedLocales` list. For example:
+///
+/// ```dart
+/// import 'generated/l10n.dart';
+///
+/// return MaterialApp(
+///   localizationsDelegates: S.localizationsDelegates,
+///   supportedLocales: S.supportedLocales,
+///   home: MyApplicationHome(),
+/// );
+/// ```
+///
+/// ## Update pubspec.yaml
+///
+/// Please make sure to update your pubspec.yaml to include the following
+/// packages:
+///
+/// ```yaml
+/// dependencies:
+///   # Internationalization support.
+///   flutter_localizations:
+///     sdk: flutter
+///   intl: any # Use the pinned version from flutter_localizations
+///
+///   # Rest of dependencies
+/// ```
+///
+/// ## iOS Applications
+///
+/// iOS applications define key application metadata, including supported
+/// locales, in an Info.plist file that is built into the application bundle.
+/// To configure the locales supported by your app, you’ll need to edit this
+/// file.
+///
+/// First, open your project’s ios/Runner.xcworkspace Xcode workspace file.
+/// Then, in the Project Navigator, open the Info.plist file under the Runner
+/// project’s Runner folder.
+///
+/// Next, select the Information Property List item, select Add Item from the
+/// Editor menu, then select Localizations from the pop-up menu.
+///
+/// Select and expand the newly-created Localizations item then, for each
+/// locale your application supports, add a new item and select the locale
+/// you wish to add from the pop-up menu in the Value field. This list should
+/// be consistent with the languages listed in the S.supportedLocales
+/// property.
+abstract class S {
+  S(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
-  static S? _current;
-
-  static S get current {
-    assert(
-      _current != null,
-      'No instance of S was loaded. Try to initialize the S delegate before accessing S.current.',
-    );
-    return _current!;
-  }
-
-  static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
-
-  static Future<S> load(Locale locale) {
-    final name = (locale.countryCode?.isEmpty ?? false)
-        ? locale.languageCode
-        : locale.toString();
-    final localeName = Intl.canonicalizedLocale(name);
-    return initializeMessages(localeName).then((_) {
-      Intl.defaultLocale = localeName;
-      final instance = S();
-      S._current = instance;
-
-      return instance;
-    });
-  }
+  final String localeName;
 
   static S of(BuildContext context) {
-    final instance = S.maybeOf(context);
-    assert(
-      instance != null,
-      'No instance of S present in the widget tree. Did you add S.delegate in localizationsDelegates?',
-    );
-    return instance!;
-  }
-
-  static S? maybeOf(BuildContext context) {
-    return Localizations.of<S>(context, S);
-  }
-
-  /// `Inventories`
-  String get inventories {
-    return Intl.message('Inventories', name: 'inventories', desc: '', args: []);
-  }
-
-  /// `Nests`
-  String get nests {
-    return Intl.message('Nests', name: 'nests', desc: '', args: []);
-  }
-
-  /// `{howMany, plural, one{Specimen} other{Specimens}}`
-  String specimens(int howMany) {
-    return Intl.plural(
-      howMany,
-      one: 'Specimen',
-      other: 'Specimens',
-      name: 'specimens',
-      desc: 'Titles and messages about specimens',
-      args: [howMany],
-    );
-  }
-
-  /// `Field journal`
-  String get fieldJournal {
-    return Intl.message(
-      'Field journal',
-      name: 'fieldJournal',
-      desc: 'Field journal option in navigation drawer',
-      args: [],
-    );
-  }
-
-  /// `{howMany, plural, one{Journal entry} other{Journal entries}}`
-  String journalEntries(int howMany) {
-    return Intl.plural(
-      howMany,
-      one: 'Journal entry',
-      other: 'Journal entries',
-      name: 'journalEntries',
-      desc: 'Titles and messages about field journal entries',
-      args: [howMany],
-    );
-  }
-
-  /// `Points of occurrence`
-  String get pointsOfOccurrence {
-    return Intl.message(
-      'Points of occurrence',
-      name: 'pointsOfOccurrence',
-      desc: 'Points of occurrence label',
-      args: [],
-    );
-  }
-
-  /// `Settings`
-  String get settings {
-    return Intl.message(
-      'Settings',
-      name: 'settings',
-      desc: 'Settings title and button label',
-      args: [],
-    );
-  }
-
-  /// `General`
-  String get general {
-    return Intl.message(
-      'General',
-      name: 'general',
-      desc: 'General section in settings',
-      args: [],
-    );
-  }
-
-  /// `Appearance`
-  String get appearance {
-    return Intl.message(
-      'Appearance',
-      name: 'appearance',
-      desc: 'Appearance option in settings',
-      args: [],
-    );
-  }
-
-  /// `Startup module`
-  String get startupModule {
-    return Intl.message(
-      'Startup module',
-      name: 'startupModule',
-      desc: 'Settings option to choose which module opens when the app starts',
-      args: [],
-    );
-  }
-
-  /// `Select the mode`
-  String get selectMode {
-    return Intl.message(
-      'Select the mode',
-      name: 'selectMode',
-      desc: 'Title of dialog to select the app mode',
-      args: [],
-    );
-  }
-
-  /// `Light`
-  String get lightMode {
-    return Intl.message(
-      'Light',
-      name: 'lightMode',
-      desc: 'Light mode name',
-      args: [],
-    );
-  }
-
-  /// `Dark`
-  String get darkMode {
-    return Intl.message(
-      'Dark',
-      name: 'darkMode',
-      desc: 'Dark mode name',
-      args: [],
-    );
-  }
-
-  /// `System theme`
-  String get systemMode {
-    return Intl.message(
-      'System theme',
-      name: 'systemMode',
-      desc: 'System theme name',
-      args: [],
-    );
-  }
-
-  /// `Observers`
-  String get observersSettings {
-    return Intl.message(
-      'Observers',
-      name: 'observersSettings',
-      desc: 'Observers option in settings',
-      args: [],
-    );
-  }
-
-  /// `Default observer`
-  String get defaultObserver {
-    return Intl.message(
-      'Default observer',
-      name: 'defaultObserver',
-      desc: 'Default observer option in settings',
-      args: [],
-    );
-  }
-
-  /// `Observer (abbreviation)`
-  String get observerSetting {
-    return Intl.message(
-      'Observer (abbreviation)',
-      name: 'observerSetting',
-      desc: 'Observer option in settings',
-      args: [],
-    );
-  }
-
-  /// `Observer`
-  String get observer {
-    return Intl.message(
-      'Observer',
-      name: 'observer',
-      desc: 'Title of dialog to inform observer abbreviation',
-      args: [],
-    );
-  }
-
-  /// `Observer abbreviation`
-  String get observerAbbreviation {
-    return Intl.message(
-      'Observer abbreviation',
-      name: 'observerAbbreviation',
-      desc: 'Label of text field to inform observer abbreviation',
-      args: [],
-    );
-  }
-
-  /// `General settings`
-  String get generalSettings {
-    return Intl.message(
-      'General settings',
-      name: 'generalSettings',
-      desc: 'General settings option in settings',
-      args: [],
-    );
-  }
-
-  /// `Species search country`
-  String get speciesSearchCountry {
-    return Intl.message(
-      'Species search country',
-      name: 'speciesSearchCountry',
-      desc: 'Species search country option in settings',
-      args: [],
-    );
-  }
-
-  /// `Inventory settings`
-  String get inventorySettings {
-    return Intl.message(
-      'Inventory settings',
-      name: 'inventorySettings',
-      desc: 'Inventory settings option in settings',
-      args: [],
-    );
-  }
-
-  /// `Limits`
-  String get limits {
-    return Intl.message(
-      'Limits',
-      name: 'limits',
-      desc: 'Limits section in inventory settings',
-      args: [],
-    );
-  }
-
-  /// `Defaults`
-  String get defaults {
-    return Intl.message(
-      'Defaults',
-      name: 'defaults',
-      desc: 'Defaults section in inventory settings',
-      args: [],
-    );
-  }
-
-  /// `Reminders`
-  String get reminders {
-    return Intl.message(
-      'Reminders',
-      name: 'reminders',
-      desc: 'Reminders section in inventory settings',
-      args: [],
-    );
-  }
-
-  /// `Import and export`
-  String get importExportSettings {
-    return Intl.message(
-      'Import and export',
-      name: 'importExportSettings',
-      desc: 'Import and export option in settings',
-      args: [],
-    );
-  }
-
-  /// `Version`
-  String get version {
-    return Intl.message(
-      'Version',
-      name: 'version',
-      desc: 'Version label in about the app section',
-      args: [],
-    );
-  }
-
-  /// `Give feedback or contribute on GitHub`
-  String get giveFeedbackOnGitHub {
-    return Intl.message(
-      'Give feedback or contribute on GitHub',
-      name: 'giveFeedbackOnGitHub',
-      desc: 'Label with a link to the app repository on GitHub in about the app section',
-      args: [],
-    );
-  }
-
-  /// `Backup file includes data and images`
-  String get createBackupDescription {
-    return Intl.message(
-      'Backup file includes data and images',
-      name: 'createBackupDescription',
-      desc: 'Label for the button to create a backup in settings',
-      args: [],
-    );
-  }
-
-  /// `All data files will be replaced`
-  String get restoreBackupDescription {
-    return Intl.message(
-      'All data files will be replaced',
-      name: 'restoreBackupDescription',
-      desc: 'Label for the button to restore backup in settings',
-      args: [],
-    );
-  }
-
-  /// `Cancel`
-  String get cancel {
-    return Intl.message(
-      'Cancel',
-      name: 'cancel',
-      desc: 'Cancel button label',
-      args: [],
-    );
-  }
-
-  /// `Save`
-  String get save {
-    return Intl.message(
-      'Save',
-      name: 'save',
-      desc: 'Save button label',
-      args: [],
-    );
-  }
-
-  /// `Simultaneous inventories`
-  String get simultaneousInventories {
-    return Intl.message(
-      'Simultaneous inventories',
-      name: 'simultaneousInventories',
-      desc: 'Simultaneous inventories option in settings',
-      args: [],
-    );
-  }
-
-  /// `{howMany, plural, one{inventory} other{inventories}}`
-  String inventory(int howMany) {
-    return Intl.plural(
-      howMany,
-      one: 'inventory',
-      other: 'inventories',
-      name: 'inventory',
-      desc: 'Titles and messages about inventories',
-      args: [howMany],
-    );
-  }
-
-  /// `{howMany, plural, one{inventory found} other{inventories found}}`
-  String inventoryFound(int howMany) {
-    return Intl.plural(
-      howMany,
-      one: 'inventory found',
-      other: 'inventories found',
-      name: 'inventoryFound',
-      desc: 'Message showing how many inventories were found',
-      args: [howMany],
-    );
-  }
-
-  /// `Mackinnon lists`
-  String get mackinnonLists {
-    return Intl.message(
-      'Mackinnon lists',
-      name: 'mackinnonLists',
-      desc: 'Mackinnon lists option in settings',
-      args: [],
-    );
-  }
-
-  /// `{howMany, plural, one{1 species} other{{howMany} species}} per list`
-  String speciesPerList(int howMany) {
-    return Intl.message(
-      '${Intl.plural(howMany, one: '1 species', other: '$howMany species')} per list',
-      name: 'speciesPerList',
-      desc: 'How many species per list in settings screen',
-      args: [howMany],
-    );
-  }
-
-  /// `Species per list`
-  String get speciesPerListTitle {
-    return Intl.message(
-      'Species per list',
-      name: 'speciesPerListTitle',
-      desc:
-          'Title of dialog to inform the number of species per Mackinnon list',
-      args: [],
-    );
-  }
-
-  /// `Point counts`
-  String get pointCounts {
-    return Intl.message(
-      'Point counts',
-      name: 'pointCounts',
-      desc: 'Point counts option in settings',
-      args: [],
-    );
-  }
-
-  /// `Duration (min)`
-  String get durationMin {
-    return Intl.message(
-      'Duration (min)',
-      name: 'durationMin',
-      desc: 'Title of dialog to inform inventory duration in minutes',
-      args: [],
-    );
-  }
-
-  /// `{howMany, plural, one{1 minute} other{{howMany} minutes}}`
-  String inventoryDuration(int howMany) {
-    return Intl.plural(
-      howMany,
-      one: '1 minute',
-      other: '$howMany minutes',
-      name: 'inventoryDuration',
-      desc: 'Time duration in minutes in settings screen',
-      args: [howMany],
-    );
-  }
-
-  /// `Timed qualitative lists`
-  String get timedQualitativeLists {
-    return Intl.message(
-      'Timed qualitative lists',
-      name: 'timedQualitativeLists',
-      desc: 'Timed qualitative lists option in settings',
-      args: [],
-    );
-  }
-
-  /// `Interval qualitative lists`
-  String get intervaledQualitativeLists {
-    return Intl.message(
-      'Interval qualitative lists',
-      name: 'intervaledQualitativeLists',
-      desc: 'Interval qualitative lists option in settings',
-      args: [],
-    );
-  }
-
-  /// `Format numbers`
-  String get formatNumbers {
-    return Intl.message(
-      'Format numbers',
-      name: 'formatNumbers',
-      desc: 'Format numbers option in settings',
-      args: [],
-    );
-  }
-
-  /// `About the app`
-  String get about {
-    return Intl.message(
-      'About the app',
-      name: 'about',
-      desc: 'About the app option in settings',
-      args: [],
-    );
-  }
-
-  /// `Danger zone`
-  String get dangerZone {
-    return Intl.message(
-      'Danger zone',
-      name: 'dangerZone',
-      desc: 'Danger zone in settings',
-      args: [],
-    );
-  }
-
-  /// `Delete the app data`
-  String get deleteAppData {
-    return Intl.message(
-      'Delete the app data',
-      name: 'deleteAppData',
-      desc: 'Delete app data option in settings',
-      args: [],
-    );
-  }
-
-  /// `All data will be erased. Use with caution! This action cannot be undone.`
-  String get deleteAppDataDescription {
-    return Intl.message(
-      'All data will be erased. Use with caution! This action cannot be undone.',
-      name: 'deleteAppDataDescription',
-      desc: 'Description of the action to delete all app data',
-      args: [],
-    );
-  }
-
-  /// `Delete data`
-  String get deleteData {
-    return Intl.message(
-      'Delete data',
-      name: 'deleteData',
-      desc: 'Title of dialog to confirm app data deletion',
-      args: [],
-    );
-  }
-
-  /// `Are you sure you want to delete all app data? This action cannot be undone.`
-  String get deleteDataMessage {
-    return Intl.message(
-      'Are you sure you want to delete all app data? This action cannot be undone.',
-      name: 'deleteDataMessage',
-      desc: 'Message asking user for confirmation before delete all app data',
-      args: [],
-    );
-  }
-
-  /// `Delete`
-  String get delete {
-    return Intl.message(
-      'Delete',
-      name: 'delete',
-      desc: 'Delete button label',
-      args: [],
-    );
-  }
-
-  /// `App data deleted successfully!`
-  String get dataDeleted {
-    return Intl.message(
-      'App data deleted successfully!',
-      name: 'dataDeleted',
-      desc: 'Message informing user that the data was successfully deleted',
-      args: [],
-    );
-  }
-
-  /// `OK`
-  String get ok {
-    return Intl.message('OK', name: 'ok', desc: 'OK button label', args: []);
-  }
-
-  /// `Limit of simultaneous inventories reached.`
-  String get simultaneousLimitReached {
-    return Intl.message(
-      'Limit of simultaneous inventories reached.',
-      name: 'simultaneousLimitReached',
-      desc: 'Message shown when the limit of simultaneous inventories defined in settings is reached',
-      args: [],
-    );
-  }
-
-  /// `Sort by Time`
-  String get sortByTime {
-    return Intl.message(
-      'Sort by Time',
-      name: 'sortByTime',
-      desc: 'Sort by time option in inventories list',
-      args: [],
-    );
-  }
-
-  /// `Sort by Name`
-  String get sortByName {
-    return Intl.message(
-      'Sort by Name',
-      name: 'sortByName',
-      desc: 'Sort by name option in inventories list',
-      args: [],
-    );
-  }
-
-  /// `Sort ascending`
-  String get sortAscending {
-    return Intl.message(
-      'Sort ascending',
-      name: 'sortAscending',
-      desc: 'Sort ascending option in inventories list',
-      args: [],
-    );
-  }
-
-  /// `Sort descending`
-  String get sortDescending {
-    return Intl.message(
-      'Sort descending',
-      name: 'sortDescending',
-      desc: 'Sort descending option in inventories list',
-      args: [],
-    );
-  }
-
-  /// `Find inventories...`
-  String get findInventories {
-    return Intl.message(
-      'Find inventories...',
-      name: 'findInventories',
-      desc: 'Hint text in inventories search field',
-      args: [],
-    );
-  }
-
-  /// `Active`
-  String get active {
-    return Intl.message(
-      'Active',
-      name: 'active',
-      desc: 'Segmented button label to filter for active inventories or nests',
-      args: [],
-    );
-  }
-
-  /// `Finished`
-  String get finished {
-    return Intl.message(
-      'Finished',
-      name: 'finished',
-      desc: 'Segmented button label to filter for finished inventories',
-      args: [],
-    );
-  }
-
-  /// `No inventories found.`
-  String get noInventoriesFound {
-    return Intl.message(
-      'No inventories found.',
-      name: 'noInventoriesFound',
-      desc: 'Text shown when no inventories found',
-      args: [],
-    );
-  }
-
-  /// `Delete inventory`
-  String get deleteInventory {
-    return Intl.message(
-      'Delete inventory',
-      name: 'deleteInventory',
-      desc: 'Delete inventory option in bottom sheet',
-      args: [],
-    );
-  }
-
-  /// `Confirm delete`
-  String get confirmDelete {
-    return Intl.message(
-      'Confirm delete',
-      name: 'confirmDelete',
-      desc: 'Title of dialog for confirm record deletion',
-      args: [],
-    );
-  }
-
-  /// `Are you sure you want to delete {howMany, plural, one{{gender, select, male{this} female{this} other{this}}} other{{gender, select, male{these} female{these} other{these}}}} {what}?`
-  String confirmDeleteMessage(int howMany, String gender, String what) {
-    return Intl.message(
-      'Are you sure you want to delete ${Intl.plural(howMany, one: '{gender, select, male{this} female{this} other{this}}', other: '{gender, select, male{these} female{these} other{these}}')} $what?',
-      name: 'confirmDeleteMessage',
-      desc: 'Message asking user confirmation to delete record',
-      args: [howMany, gender, what],
-    );
-  }
-
-  /// `Confirm finish`
-  String get confirmFinish {
-    return Intl.message(
-      'Confirm finish',
-      name: 'confirmFinish',
-      desc: 'Title of dialog to confirm finishing an inventory',
-      args: [],
-    );
-  }
-
-  /// `Are you sure you want to finish this inventory ({which})?`
-  String confirmFinishMessage(String which) {
-    return Intl.message(
-      'Are you sure you want to finish this inventory ($which)?',
-      name: 'confirmFinishMessage',
-      desc: 'Message asking confirmation to finish an inventory',
-      args: [which],
-    );
-  }
-
-  /// `Inventory automatically finished. Do you want to keep active or finish this inventory?`
-  String get confirmAutoFinishMessage {
-    return Intl.message(
-      'Inventory automatically finished. Do you want to keep active or finish this inventory?',
-      name: 'confirmAutoFinishMessage',
-      desc: 'Message asking confirmation to finish an inventory automatically',
-      args: [],
-    );
-  }
-
-  /// `Finish`
-  String get finish {
-    return Intl.message(
-      'Finish',
-      name: 'finish',
-      desc: 'Finish button label',
-      args: [],
-    );
-  }
-
-  /// `Keep active`
-  String get keepRunning {
-    return Intl.message(
-      'Keep active',
-      name: 'keepRunning',
-      desc: 'Keep running button label',
-      args: [],
-    );
-  }
-
-  /// `New inventory`
-  String get newInventory {
-    return Intl.message(
-      'New inventory',
-      name: 'newInventory',
-      desc: 'Title of dialog when adding new inventory',
-      args: [],
-    );
-  }
-
-  /// `{howMany, plural, zero{species} one{species} other{species}}`
-  String speciesCount(int howMany) {
-    return Intl.plural(
-      howMany,
-      zero: 'species',
-      one: 'species',
-      other: 'species',
-      name: 'speciesCount',
-      desc: 'How many species the inventory have',
-      args: [howMany],
-    );
-  }
-
-  /// `{howMany, plural, zero{records} one{record} other{records}}`
-  String recordsCount(int howMany) {
-    return Intl.plural(
-      howMany,
-      zero: 'records',
-      one: 'record',
-      other: 'records',
-      name: 'recordsCount',
-      desc: 'How many records the inventory have',
-      args: [howMany],
-    );
-  }
-
-  /// `Pause`
-  String get pause {
-    return Intl.message(
-      'Pause',
-      name: 'pause',
-      desc: 'Pause button hint',
-      args: [],
-    );
-  }
-
-  /// `Resume`
-  String get resume {
-    return Intl.message(
-      'Resume',
-      name: 'resume',
-      desc: 'Resume button hint',
-      args: [],
-    );
-  }
-
-  /// `Export`
-  String get export {
-    return Intl.message(
-      'Export',
-      name: 'export',
-      desc: 'Export button hint',
-      args: [],
-    );
-  }
-
-  /// `Export {what}`
-  String exportWhat(String what) {
-    return Intl.message(
-      'Export $what',
-      name: 'exportWhat',
-      desc: 'Menu option to export one record',
-      args: [what],
-    );
-  }
-
-  /// `Export all`
-  String get exportAll {
-    return Intl.message(
-      'Export all',
-      name: 'exportAll',
-      desc: 'Export all button hint',
-      args: [],
-    );
-  }
-
-  /// `Export all {what}`
-  String exportAllWhat(String what) {
-    return Intl.message(
-      'Export all $what',
-      name: 'exportAllWhat',
-      desc: 'Menu option to export all records',
-      args: [what],
-    );
-  }
-
-  /// `Finish inventory`
-  String get finishInventory {
-    return Intl.message(
-      'Finish inventory',
-      name: 'finishInventory',
-      desc: 'Menu option to finish the inventory',
-      args: [],
-    );
-  }
-
-  /// `* required`
-  String get requiredField {
-    return Intl.message(
-      '* required',
-      name: 'requiredField',
-      desc: 'Auxiliary label informing that the field is required',
-      args: [],
-    );
-  }
-
-  /// `Inventory type`
-  String get inventoryType {
-    return Intl.message(
-      'Inventory type',
-      name: 'inventoryType',
-      desc: 'Inventory type field label',
-      args: [],
-    );
-  }
-
-  /// `Please, select an inventory type`
-  String get selectInventoryType {
-    return Intl.message(
-      'Please, select an inventory type',
-      name: 'selectInventoryType',
-      desc: 'Validation message shown when the inventory type field is empty',
-      args: [],
-    );
-  }
-
-  /// `Inventory ID`
-  String get inventoryId {
-    return Intl.message(
-      'Inventory ID',
-      name: 'inventoryId',
-      desc: 'Inventory ID field label',
-      args: [],
-    );
-  }
-
-  /// `Generate ID`
-  String get generateId {
-    return Intl.message(
-      'Generate ID',
-      name: 'generateId',
-      desc: 'Title of dialog to generate an inventory ID',
-      args: [],
-    );
-  }
-
-  /// `Expedition`
-  String get expedition {
-    return Intl.message(
-      'Expedition',
-      name: 'expedition',
-      desc: 'Field label for expedition name used in ID generation',
-      args: [],
-    );
-  }
-
-  /// `Site name or abbreviation`
-  String get siteAbbreviation {
-    return Intl.message(
-      'Site name or abbreviation',
-      name: 'siteAbbreviation',
-      desc: 'Field label asking the inventory site name or abbreviation to generate the ID',
-      args: [],
-    );
-  }
-
-  /// `* optional`
-  String get optional {
-    return Intl.message(
-      '* optional',
-      name: 'optional',
-      desc: 'Auxiliary label informing that the field is optional',
-      args: [],
-    );
-  }
-
-  /// `Please, insert an ID for the inventory`
-  String get insertInventoryId {
-    return Intl.message(
-      'Please, insert an ID for the inventory',
-      name: 'insertInventoryId',
-      desc: 'Validation message shown when the inventory ID is empty',
-      args: [],
-    );
-  }
-
-  /// `Duration`
-  String get duration {
-    return Intl.message(
-      'Duration',
-      name: 'duration',
-      desc: 'Time duration field label',
-      args: [],
-    );
-  }
-
-  /// `Elapsed time`
-  String get elapsedTime {
-    return Intl.message(
-      'Elapsed time',
-      name: 'elapsedTime',
-      desc: 'Label for elapsed time since inventory start',
-      args: [],
-    );
-  }
-
-  /// `Remaining`
-  String get remainingTime {
-    return Intl.message(
-      'Remaining',
-      name: 'remainingTime',
-      desc: 'Label for remaining time in timed inventory',
-      args: [],
-    );
-  }
-
-  /// `{howMany, plural, one{minute} other{minutes}}`
-  String minutes(int howMany) {
-    return Intl.plural(
-      howMany,
-      one: 'minute',
-      other: 'minutes',
-      name: 'minutes',
-      desc: 'Field suffix and messages containing duration of time',
-      args: [howMany],
-    );
-  }
-
-  /// `Insert a duration`
-  String get insertDuration {
-    return Intl.message(
-      'Insert a duration',
-      name: 'insertDuration',
-      desc: 'Validation message shown when duration is empty',
-      args: [],
-    );
-  }
-
-  /// `Max species`
-  String get maxSpecies {
-    return Intl.message(
-      'Max species',
-      name: 'maxSpecies',
-      desc: 'Max number of species field label',
-      args: [],
-    );
-  }
-
-  /// `Insert the max of species`
-  String get insertMaxSpecies {
-    return Intl.message(
-      'Insert the max of species',
-      name: 'insertMaxSpecies',
-      desc: 'Validation message shown when the max of species field is empty',
-      args: [],
-    );
-  }
-
-  /// `Must be equal or higher than 5`
-  String get mustBeBiggerThanFive {
-    return Intl.message(
-      'Must be equal or higher than 5',
-      name: 'mustBeBiggerThanFive',
-      desc:
-          'Validation message shown when the max of species is lower than five',
-      args: [],
-    );
-  }
-
-  /// `Start inventory`
-  String get startInventory {
-    return Intl.message(
-      'Start inventory',
-      name: 'startInventory',
-      desc: 'Start inventory button label',
-      args: [],
-    );
-  }
-
-  /// `This inventory ID already exists.`
-  String get inventoryIdAlreadyExists {
-    return Intl.message(
-      'This inventory ID already exists.',
-      name: 'inventoryIdAlreadyExists',
-      desc: 'Message shown when the informed inventory ID already exists',
-      args: [],
-    );
-  }
-
-  /// `Error inserting inventory`
-  String get errorInsertingInventory {
-    return Intl.message(
-      'Error inserting inventory',
-      name: 'errorInsertingInventory',
-      desc: 'Message shown if an error occurred while inserting an inventory',
-      args: [],
-    );
-  }
-
-  /// `Species by inventory`
-  String get reportSpeciesByInventory {
-    return Intl.message(
-      'Species by inventory',
-      name: 'reportSpeciesByInventory',
-      desc: 'Title of report option to show species by inventory',
-      args: [],
-    );
-  }
-
-  /// `Total Species`
-  String get totalSpecies {
-    return Intl.message(
-      'Total Species',
-      name: 'totalSpecies',
-      desc: 'Total species field label',
-      args: [],
-    );
-  }
-
-  /// `Total Individuals`
-  String get totalIndividuals {
-    return Intl.message(
-      'Total Individuals',
-      name: 'totalIndividuals',
-      desc: 'Total individuals field label',
-      args: [],
-    );
-  }
-
-  /// `Species accumulation`
-  String get speciesAccumulationCurve {
-    return Intl.message(
-      'Species accumulation',
-      name: 'speciesAccumulationCurve',
-      desc: 'Title of report option to show species accumulation curve',
-      args: [],
-    );
-  }
-
-  /// `Species accumulated`
-  String get speciesAccumulated {
-    return Intl.message(
-      'Species accumulated',
-      name: 'speciesAccumulated',
-      desc: 'Species accumulated field label',
-      args: [],
-    );
-  }
-
-  /// `Minutes`
-  String get timeMinutes {
-    return Intl.message(
-      'Minutes',
-      name: 'timeMinutes',
-      desc: 'Time in minutes field label',
-      args: [],
-    );
-  }
-
-  /// `Seconds`
-  String get timeSeconds {
-    return Intl.message(
-      'Seconds',
-      name: 'timeSeconds',
-      desc: 'Time in seconds field label',
-      args: [],
-    );
-  }
-
-  /// `Species counted`
-  String get speciesCounted {
-    return Intl.message(
-      'Species counted',
-      name: 'speciesCounted',
-      desc: 'Species counted field label',
-      args: [],
-    );
-  }
-
-  /// `Individuals counted`
-  String get individualsCounted {
-    return Intl.message(
-      'Individuals counted',
-      name: 'individualsCounted',
-      desc: 'Individuals counted field label',
-      args: [],
-    );
-  }
-
-  /// `Close`
-  String get close {
-    return Intl.message(
-      'Close',
-      name: 'close',
-      desc: 'Close button label',
-      args: [],
-    );
-  }
-
-  /// `Refresh`
-  String get refreshList {
-    return Intl.message(
-      'Refresh',
-      name: 'refreshList',
-      desc: 'Refresh button hint',
-      args: [],
-    );
-  }
-
-  /// `No data available.`
-  String get noDataAvailable {
-    return Intl.message(
-      'No data available.',
-      name: 'noDataAvailable',
-      desc: 'Message shown when there is no data to show',
-      args: [],
-    );
-  }
-
-  /// `Clear selection`
-  String get clearSelection {
-    return Intl.message(
-      'Clear selection',
-      name: 'clearSelection',
-      desc: 'Button label to clear the selection',
-      args: [],
-    );
-  }
-
-  /// `Importing inventory...`
-  String get importingInventory {
-    return Intl.message(
-      'Importing inventory...',
-      name: 'importingInventory',
-      desc: 'Message shown when importing an inventory',
-      args: [],
-    );
-  }
-
-  /// `Inventory imported successfully!`
-  String get inventoryImportedSuccessfully {
-    return Intl.message(
-      'Inventory imported successfully!',
-      name: 'inventoryImportedSuccessfully',
-      desc: 'Message shown when an inventory is imported successfully',
-      args: [],
-    );
-  }
-
-  /// `Inventory import failed.`
-  String get inventoryImportFailed {
-    return Intl.message(
-      'Inventory import failed.',
-      name: 'inventoryImportFailed',
-      desc: 'Message shown when an inventory import failed',
-      args: [],
-    );
-  }
-
-  /// `No file selected.`
-  String get noFileSelected {
-    return Intl.message(
-      'No file selected.',
-      name: 'noFileSelected',
-      desc: 'Message shown when no file is selected to import',
-      args: [],
-    );
-  }
-
-  /// `Import`
-  String get import {
-    return Intl.message(
-      'Import',
-      name: 'import',
-      desc: 'Import button label',
-      args: [],
-    );
-  }
-
-  /// `Error importing inventory.`
-  String get errorImportingInventory {
-    return Intl.message(
-      'Error importing inventory.',
-      name: 'errorImportingInventory',
-      desc: 'Message shown when an error occurred while importing an inventory',
-      args: [],
-    );
-  }
-
-  /// `Vegetation data`
-  String get vegetationData {
-    return Intl.message(
-      'Vegetation data',
-      name: 'vegetationData',
-      desc: 'Vegetation data title or label',
-      args: [],
-    );
-  }
-
-  /// `Herbs`
-  String get herbs {
-    return Intl.message(
-      'Herbs',
-      name: 'herbs',
-      desc: 'Herbs section label in vegetation data',
-      args: [],
-    );
-  }
-
-  /// `Distribution`
-  String get distribution {
-    return Intl.message(
-      'Distribution',
-      name: 'distribution',
-      desc: 'Distribution field label',
-      args: [],
-    );
-  }
-
-  /// `Proportion`
-  String get proportion {
-    return Intl.message(
-      'Proportion',
-      name: 'proportion',
-      desc: 'Proportion field label',
-      args: [],
-    );
-  }
-
-  /// `Height`
-  String get height {
-    return Intl.message(
-      'Height',
-      name: 'height',
-      desc: 'Average height field label',
-      args: [],
-    );
-  }
-
-  /// `Shrubs`
-  String get shrubs {
-    return Intl.message(
-      'Shrubs',
-      name: 'shrubs',
-      desc: 'Shrubs section label in vegetation data',
-      args: [],
-    );
-  }
-
-  /// `Trees`
-  String get trees {
-    return Intl.message(
-      'Trees',
-      name: 'trees',
-      desc: 'Trees section label in vegetation data',
-      args: [],
-    );
-  }
-
-  /// `Notes`
-  String get notes {
-    return Intl.message(
-      'Notes',
-      name: 'notes',
-      desc: 'Notes field label',
-      args: [],
-    );
-  }
-
-  /// `Insert proportion`
-  String get insertProportion {
-    return Intl.message(
-      'Insert proportion',
-      name: 'insertProportion',
-      desc: 'Validation message shown when proportion field is empty',
-      args: [],
-    );
-  }
-
-  /// `Insert height`
-  String get insertHeight {
-    return Intl.message(
-      'Insert height',
-      name: 'insertHeight',
-      desc: 'Validation message shown when height field is empty',
-      args: [],
-    );
-  }
-
-  /// `Error saving vegetation data`
-  String get errorSavingVegetation {
-    return Intl.message(
-      'Error saving vegetation data',
-      name: 'errorSavingVegetation',
-      desc: 'Message shown when an error occurred while saving a vegetation record',
-      args: [],
-    );
-  }
-
-  /// `Weather data`
-  String get weatherData {
-    return Intl.message(
-      'Weather data',
-      name: 'weatherData',
-      desc: 'Weather data title or label',
-      args: [],
-    );
-  }
-
-  /// `Cloud cover`
-  String get cloudCover {
-    return Intl.message(
-      'Cloud cover',
-      name: 'cloudCover',
-      desc: 'Cloud cover field label',
-      args: [],
-    );
-  }
-
-  /// `Precipitation`
-  String get precipitation {
-    return Intl.message(
-      'Precipitation',
-      name: 'precipitation',
-      desc: 'Precipitation field label',
-      args: [],
-    );
-  }
-
-  /// `Select precipitation`
-  String get selectPrecipitation {
-    return Intl.message(
-      'Select precipitation',
-      name: 'selectPrecipitation',
-      desc: 'Validation message shown when the precipitation field is empty',
-      args: [],
-    );
-  }
-
-  /// `Temperature`
-  String get temperature {
-    return Intl.message(
-      'Temperature',
-      name: 'temperature',
-      desc: 'Temperature field label',
-      args: [],
-    );
-  }
-
-  /// `Wind speed`
-  String get windSpeed {
-    return Intl.message(
-      'Wind speed',
-      name: 'windSpeed',
-      desc: 'Wind speed field label',
-      args: [],
-    );
-  }
-
-  /// `Must be between 0 and 12 bft`
-  String get windSpeedRangeError {
-    return Intl.message(
-      'Must be between 0 and 12 bft',
-      name: 'windSpeedRangeError',
-      desc: 'Validation message shown when the wind speed is out of range',
-      args: [],
-    );
-  }
-
-  /// `Error saving weather data`
-  String get errorSavingWeather {
-    return Intl.message(
-      'Error saving weather data',
-      name: 'errorSavingWeather',
-      desc:
-          'Message shown when an error occurred while saving a weather record',
-      args: [],
-    );
-  }
-
-  /// `{howMany, plural, one{Species} other{Species}}`
-  String species(int howMany) {
-    return Intl.plural(
-      howMany,
-      one: 'Species',
-      other: 'Species',
-      name: 'species',
-      desc: 'Tabs and messages about species',
-      args: [howMany],
-    );
-  }
-
-  /// `{howMany, plural, one{sp.} other{spp.}}`
-  String speciesAcronym(int howMany) {
-    return Intl.plural(
-      howMany,
-      one: 'sp.',
-      other: 'spp.',
-      name: 'speciesAcronym',
-      desc: 'Abbreviation of species in labels and edits',
-      args: [howMany],
-    );
-  }
-
-  /// `Vegetation`
-  String get vegetation {
-    return Intl.message(
-      'Vegetation',
-      name: 'vegetation',
-      desc: 'Vegetation tab',
-      args: [],
-    );
-  }
-
-  /// `Weather`
-  String get weather {
-    return Intl.message(
-      'Weather',
-      name: 'weather',
-      desc: 'Weather tab',
-      args: [],
-    );
-  }
-
-  /// `Error getting location.`
-  String get errorGettingLocation {
-    return Intl.message(
-      'Error getting location.',
-      name: 'errorGettingLocation',
-      desc:
-          'Message shown when an error occurred while getting the GPS location',
-      args: [],
-    );
-  }
-
-  /// `POI`
-  String get poi {
-    return Intl.message(
-      'POI',
-      name: 'poi',
-      desc: 'Point of interest abbreviation in labels',
-      args: [],
-    );
-  }
-
-  /// `Species information`
-  String get speciesInfo {
-    return Intl.message(
-      'Species information',
-      name: 'speciesInfo',
-      desc: 'Species information expandable list title',
-      args: [],
-    );
-  }
-
-  /// `Count`
-  String get count {
-    return Intl.message(
-      'Count',
-      name: 'count',
-      desc: 'Species info showing individuals count for the species in the actual list',
-      args: [],
-    );
-  }
-
-  /// `Record time`
-  String get recordTime {
-    return Intl.message(
-      'Record time',
-      name: 'recordTime',
-      desc: 'Species info showing the record time for the species in the actual list',
-      args: [],
-    );
-  }
-
-  /// `{howMany, plural, one{individual} other{individuals}}`
-  String individual(int howMany) {
-    return Intl.plural(
-      howMany,
-      one: 'individual',
-      other: 'individuals',
-      name: 'individual',
-      desc: 'Messages and labels about individuals',
-      args: [howMany],
-    );
-  }
-
-  /// `Out of the sample`
-  String get outOfSample {
-    return Intl.message(
-      'Out of the sample',
-      name: 'outOfSample',
-      desc: 'Species info for when the species was added after the inventory was finished',
-      args: [],
-    );
-  }
-
-  /// `Doubtful record`
-  String get doubtfulRecord {
-    return Intl.message(
-      'Doubtful record',
-      name: 'doubtfulRecord',
-      desc: 'Flag for species records that are uncertain',
-      args: [],
-    );
-  }
-
-  /// `Within the sample`
-  String get withinSample {
-    return Intl.message(
-      'Within the sample',
-      name: 'withinSample',
-      desc: 'Species info for when the species was added while the inventory was active',
-      args: [],
-    );
-  }
-
-  /// `No POI found.`
-  String get noPoiFound {
-    return Intl.message(
-      'No POI found.',
-      name: 'noPoiFound',
-      desc: 'Message shown when no POI was found',
-      args: [],
-    );
-  }
-
-  /// `New POI`
-  String get newPoi {
-    return Intl.message(
-      'New POI',
-      name: 'newPoi',
-      desc: 'New POI button hint',
-      args: [],
-    );
-  }
-
-  /// `Delete POI`
-  String get deletePoi {
-    return Intl.message(
-      'Delete POI',
-      name: 'deletePoi',
-      desc: 'Menu option to delete POI',
-      args: [],
-    );
-  }
-
-  /// `Decrease individuals count`
-  String get decreaseIndividuals {
-    return Intl.message(
-      'Decrease individuals count',
-      name: 'decreaseIndividuals',
-      desc: 'Decrease individuals count button hint',
-      args: [],
-    );
-  }
-
-  /// `Increase individuals count`
-  String get increaseIndividuals {
-    return Intl.message(
-      'Increase individuals count',
-      name: 'increaseIndividuals',
-      desc: 'Increase individuals count button hint',
-      args: [],
-    );
-  }
-
-  /// `Add POI`
-  String get addPoi {
-    return Intl.message(
-      'Add POI',
-      name: 'addPoi',
-      desc: 'Add POI button hint',
-      args: [],
-    );
-  }
-
-  /// `Edit count`
-  String get editCount {
-    return Intl.message(
-      'Edit count',
-      name: 'editCount',
-      desc: 'Title of dialog to edit the number of individuals of a species',
-      args: [],
-    );
-  }
-
-  /// `Individuals count`
-  String get individualsCount {
-    return Intl.message(
-      'Individuals count',
-      name: 'individualsCount',
-      desc: 'Individuals count field label',
-      args: [],
-    );
-  }
-
-  /// `Delete vegetation record`
-  String get deleteVegetation {
-    return Intl.message(
-      'Delete vegetation record',
-      name: 'deleteVegetation',
-      desc: 'Menu option to delete a vegetation record',
-      args: [],
-    );
-  }
-
-  /// `No vegetation records.`
-  String get noVegetationFound {
-    return Intl.message(
-      'No vegetation records.',
-      name: 'noVegetationFound',
-      desc: 'Message shown when the vegetation list is empty',
-      args: [],
-    );
-  }
-
-  /// `weather record`
-  String get weatherRecord {
-    return Intl.message(
-      'weather record',
-      name: 'weatherRecord',
-      desc: 'Weather record label used in messages',
-      args: [],
-    );
-  }
-
-  /// `No weather records.`
-  String get noWeatherFound {
-    return Intl.message(
-      'No weather records.',
-      name: 'noWeatherFound',
-      desc: 'Message shown when the weather list is empty',
-      args: [],
-    );
-  }
-
-  /// `Delete weather record`
-  String get deleteWeather {
-    return Intl.message(
-      'Delete weather record',
-      name: 'deleteWeather',
-      desc: 'Menu option to delete a weather record',
-      args: [],
-    );
-  }
-
-  /// `Find nests...`
-  String get findNests {
-    return Intl.message(
-      'Find nests...',
-      name: 'findNests',
-      desc: 'Text hint in the nest search field',
-      args: [],
-    );
-  }
-
-  /// `Inactive`
-  String get inactive {
-    return Intl.message(
-      'Inactive',
-      name: 'inactive',
-      desc: 'Segmented button label for filter of inactive nests',
-      args: [],
-    );
-  }
-
-  /// `No nests found.`
-  String get noNestsFound {
-    return Intl.message(
-      'No nests found.',
-      name: 'noNestsFound',
-      desc: 'Message shown when the nests list is empty',
-      args: [],
-    );
-  }
-
-  /// `{howMany, plural, one{nest} other{nests}}`
-  String nest(int howMany) {
-    return Intl.plural(
-      howMany,
-      one: 'nest',
-      other: 'nests',
-      name: 'nest',
-      desc: 'Messages and labels about nests',
-      args: [howMany],
-    );
-  }
-
-  /// `New nest`
-  String get newNest {
-    return Intl.message(
-      'New nest',
-      name: 'newNest',
-      desc: 'New nest dialog title',
-      args: [],
-    );
-  }
-
-  /// `Delete nest`
-  String get deleteNest {
-    return Intl.message(
-      'Delete nest',
-      name: 'deleteNest',
-      desc: 'Menu option to delete a nest',
-      args: [],
-    );
-  }
-
-  /// `Confirm fate`
-  String get confirmFate {
-    return Intl.message(
-      'Confirm fate',
-      name: 'confirmFate',
-      desc: 'Title of dialog to confirm nest fate',
-      args: [],
-    );
-  }
-
-  /// `Nest fate`
-  String get nestFate {
-    return Intl.message(
-      'Nest fate',
-      name: 'nestFate',
-      desc: 'Nest fate field label',
-      args: [],
-    );
-  }
-
-  /// `Error inactivating nest: {errorMessage}`
-  String errorInactivatingNest(String errorMessage) {
-    return Intl.message(
-      'Error inactivating nest: $errorMessage',
-      name: 'errorInactivatingNest',
-      desc: 'Error message when inactivating nest',
-      args: [errorMessage],
-    );
-  }
-
-  /// `{howMany, plural, one{Revision} other{Revisions}}`
-  String revision(int howMany) {
-    return Intl.plural(
-      howMany,
-      one: 'Revision',
-      other: 'Revisions',
-      name: 'revision',
-      desc: 'Nest revision messages, tabs and labels',
-      args: [howMany],
-    );
-  }
-
-  /// `{howMany, plural, one{Egg} other{Eggs}}`
-  String egg(int howMany) {
-    return Intl.plural(
-      howMany,
-      one: 'Egg',
-      other: 'Eggs',
-      name: 'egg',
-      desc: 'Egg messages, tabs and labels',
-      args: [howMany],
-    );
-  }
-
-  /// `Nest information`
-  String get nestInfo {
-    return Intl.message(
-      'Nest information',
-      name: 'nestInfo',
-      desc: 'Nest information expandable list title',
-      args: [],
-    );
-  }
-
-  /// `Date and time found`
-  String get timeFound {
-    return Intl.message(
-      'Date and time found',
-      name: 'timeFound',
-      desc: 'Time found field label',
-      args: [],
-    );
-  }
-
-  /// `Locality`
-  String get locality {
-    return Intl.message(
-      'Locality',
-      name: 'locality',
-      desc: 'Locality field label',
-      args: [],
-    );
-  }
-
-  /// `Nest support`
-  String get nestSupport {
-    return Intl.message(
-      'Nest support',
-      name: 'nestSupport',
-      desc: 'Nest support field label',
-      args: [],
-    );
-  }
-
-  /// `Height above ground`
-  String get heightAboveGround {
-    return Intl.message(
-      'Height above ground',
-      name: 'heightAboveGround',
-      desc: 'Height above ground field label',
-      args: [],
-    );
-  }
-
-  /// `Male`
-  String get male {
-    return Intl.message(
-      'Male',
-      name: 'male',
-      desc: 'Male field label',
-      args: [],
-    );
-  }
-
-  /// `Female`
-  String get female {
-    return Intl.message(
-      'Female',
-      name: 'female',
-      desc: 'Female field label',
-      args: [],
-    );
-  }
-
-  /// `Nest helpers`
-  String get helpers {
-    return Intl.message(
-      'Nest helpers',
-      name: 'helpers',
-      desc: 'Nest helpers field label',
-      args: [],
-    );
-  }
-
-  /// `No eggs recorded.`
-  String get noEggsFound {
-    return Intl.message(
-      'No eggs recorded.',
-      name: 'noEggsFound',
-      desc: 'Message shown when the eggs list is empty',
-      args: [],
-    );
-  }
-
-  /// `Delete egg`
-  String get deleteEgg {
-    return Intl.message(
-      'Delete egg',
-      name: 'deleteEgg',
-      desc: 'Menu option to delete an egg',
-      args: [],
-    );
-  }
-
-  /// `No revisions recorded.`
-  String get noRevisionsFound {
-    return Intl.message(
-      'No revisions recorded.',
-      name: 'noRevisionsFound',
-      desc: 'Message shown when the nest revision list is empty',
-      args: [],
-    );
-  }
-
-  /// `Delete nest revision`
-  String get deleteRevision {
-    return Intl.message(
-      'Delete nest revision',
-      name: 'deleteRevision',
-      desc: 'Menu option to delete a nest revision',
-      args: [],
-    );
-  }
-
-  /// `Host`
-  String get host {
-    return Intl.message(
-      'Host',
-      name: 'host',
-      desc: 'Nest owner section label',
-      args: [],
-    );
-  }
-
-  /// `Nidoparasite`
-  String get nidoparasite {
-    return Intl.message(
-      'Nidoparasite',
-      name: 'nidoparasite',
-      desc: 'Nidoparasite section label',
-      args: [],
-    );
-  }
-
-  /// `{howMany, plural, one{Nestling} other{Nestlings}}`
-  String nestling(int howMany) {
-    return Intl.plural(
-      howMany,
-      one: 'Nestling',
-      other: 'Nestlings',
-      name: 'nestling',
-      desc: 'Nestling messages and labels',
-      args: [howMany],
-    );
-  }
-
-  /// `Add egg`
-  String get addEgg {
-    return Intl.message(
-      'Add egg',
-      name: 'addEgg',
-      desc: 'Add egg dialog title',
-      args: [],
-    );
-  }
-
-  /// `Field number`
-  String get fieldNumber {
-    return Intl.message(
-      'Field number',
-      name: 'fieldNumber',
-      desc: 'Field number field label',
-      args: [],
-    );
-  }
-
-  /// `Insert the field number`
-  String get insertFieldNumber {
-    return Intl.message(
-      'Insert the field number',
-      name: 'insertFieldNumber',
-      desc: 'Validation message shown when the field number is empty',
-      args: [],
-    );
-  }
-
-  /// `Select a species`
-  String get selectSpecies {
-    return Intl.message(
-      'Select a species',
-      name: 'selectSpecies',
-      desc: 'Validation message shown when the species is empty',
-      args: [],
-    );
-  }
-
-  /// `Egg shape`
-  String get eggShape {
-    return Intl.message(
-      'Egg shape',
-      name: 'eggShape',
-      desc: 'Egg shape field label',
-      args: [],
-    );
-  }
-
-  /// `Width`
-  String get width {
-    return Intl.message(
-      'Width',
-      name: 'width',
-      desc: 'Width field label',
-      args: [],
-    );
-  }
-
-  /// `Length`
-  String get length {
-    return Intl.message(
-      'Length',
-      name: 'length',
-      desc: 'Length field label',
-      args: [],
-    );
-  }
-
-  /// `Weight`
-  String get weight {
-    return Intl.message(
-      'Weight',
-      name: 'weight',
-      desc: 'Weight field label',
-      args: [],
-    );
-  }
-
-  /// `An egg with this field number already exists.`
-  String get errorEggAlreadyExists {
-    return Intl.message(
-      'An egg with this field number already exists.',
-      name: 'errorEggAlreadyExists',
-      desc:
-          'Message shown when an egg already exists with the same field number',
-      args: [],
-    );
-  }
-
-  /// `Error saving egg.`
-  String get errorSavingEgg {
-    return Intl.message(
-      'Error saving egg.',
-      name: 'errorSavingEgg',
-      desc: 'Message shown when an error occurred while saving an egg',
-      args: [],
-    );
-  }
-
-  /// `Please, insert locality name`
-  String get insertLocality {
-    return Intl.message(
-      'Please, insert locality name',
-      name: 'insertLocality',
-      desc: 'Validation message shown when locality name is empty',
-      args: [],
-    );
-  }
-
-  /// `Please, insert nest support`
-  String get insertNestSupport {
-    return Intl.message(
-      'Please, insert nest support',
-      name: 'insertNestSupport',
-      desc: 'Validation message shown when nest support is empty',
-      args: [],
-    );
-  }
-
-  /// `A nest with this field number already exists.`
-  String get errorNestAlreadyExists {
-    return Intl.message(
-      'A nest with this field number already exists.',
-      name: 'errorNestAlreadyExists',
-      desc:
-          'Message shown when a nest already exists with the same field number',
-      args: [],
-    );
-  }
-
-  /// `Error saving nest.`
-  String get errorSavingNest {
-    return Intl.message(
-      'Error saving nest.',
-      name: 'errorSavingNest',
-      desc: 'Message shown when an error occurred while saving a nest',
-      args: [],
-    );
-  }
-
-  /// `Nest revision`
-  String get nestRevision {
-    return Intl.message(
-      'Nest revision',
-      name: 'nestRevision',
-      desc: 'New nest revision dialog title',
-      args: [],
-    );
-  }
-
-  /// `Nest status`
-  String get nestStatus {
-    return Intl.message(
-      'Nest status',
-      name: 'nestStatus',
-      desc: 'Nest status field label',
-      args: [],
-    );
-  }
-
-  /// `Nest phase`
-  String get nestPhase {
-    return Intl.message(
-      'Nest phase',
-      name: 'nestPhase',
-      desc: 'Nest phase field label',
-      args: [],
-    );
-  }
-
-  /// `Select nest status`
-  String get selectNestStatus {
-    return Intl.message(
-      'Select nest status',
-      name: 'selectNestStatus',
-      desc: 'Validation message shown when the nest status is empty',
-      args: [],
-    );
-  }
-
-  /// `Select nest phase`
-  String get selectNestPhase {
-    return Intl.message(
-      'Select nest phase',
-      name: 'selectNestPhase',
-      desc: 'Validation message shown when the nest phase is empty',
-      args: [],
-    );
-  }
-
-  /// `Invalid nest phase`
-  String get invalidNestPhase {
-    return Intl.message(
-      'Invalid nest phase',
-      name: 'invalidNestPhase',
-      desc: 'Message shown when the nest phase is invalid',
-      args: [],
-    );
-  }
-
-  /// `Select egg shape`
-  String get selectEggShape {
-    return Intl.message(
-      'Select egg shape',
-      name: 'selectEggShape',
-      desc: 'Validation message shown when the egg shape is empty',
-      args: [],
-    );
-  }
-
-  /// `Philornis larvae present`
-  String get philornisLarvaePresent {
-    return Intl.message(
-      'Philornis larvae present',
-      name: 'philornisLarvaePresent',
-      desc: 'Philornis larvae present field label',
-      args: [],
-    );
-  }
-
-  /// `Error saving nest revision.`
-  String get errorSavingRevision {
-    return Intl.message(
-      'Error saving nest revision.',
-      name: 'errorSavingRevision',
-      desc: 'Message shown when an error occurred while saving a nest revision',
-      args: [],
-    );
-  }
-
-  /// `Find specimens...`
-  String get findSpecimens {
-    return Intl.message(
-      'Find specimens...',
-      name: 'findSpecimens',
-      desc: 'Text hint in the specimen search field',
-      args: [],
-    );
-  }
-
-  /// `No specimen collected.`
-  String get noSpecimenCollected {
-    return Intl.message(
-      'No specimen collected.',
-      name: 'noSpecimenCollected',
-      desc: 'Message shown when the specimens list is empty',
-      args: [],
-    );
-  }
-
-  /// `New specimen`
-  String get newSpecimen {
-    return Intl.message(
-      'New specimen',
-      name: 'newSpecimen',
-      desc: 'New specimen dialog title',
-      args: [],
-    );
-  }
-
-  /// `Delete specimen`
-  String get deleteSpecimen {
-    return Intl.message(
-      'Delete specimen',
-      name: 'deleteSpecimen',
-      desc: 'Menu option to delete a specimen',
-      args: [],
-    );
-  }
-
-  /// `Specimen type`
-  String get specimenType {
-    return Intl.message(
-      'Specimen type',
-      name: 'specimenType',
-      desc: 'Specimen type field label',
-      args: [],
-    );
-  }
-
-  /// `A specimen with this field number already exists.`
-  String get errorSpecimenAlreadyExists {
-    return Intl.message(
-      'A specimen with this field number already exists.',
-      name: 'errorSpecimenAlreadyExists',
-      desc: 'Message shown when a specimen already exists with the same field number',
-      args: [],
-    );
-  }
-
-  /// `Error saving specimen.`
-  String get errorSavingSpecimen {
-    return Intl.message(
-      'Error saving specimen.',
-      name: 'errorSavingSpecimen',
-      desc: 'Message shown when an error occurred while saving a specimen',
-      args: [],
-    );
-  }
-
-  /// `{howMany, plural, one{Image} other{Images}}`
-  String images(int howMany) {
-    return Intl.plural(
-      howMany,
-      one: 'Image',
-      other: 'Images',
-      name: 'images',
-      desc: 'Images titles, messages and labels',
-      args: [howMany],
-    );
-  }
-
-  /// `No images found.`
-  String get noImagesFound {
-    return Intl.message(
-      'No images found.',
-      name: 'noImagesFound',
-      desc: 'Message shown when the images list is empty',
-      args: [],
-    );
-  }
-
-  /// `Add image`
-  String get addImage {
-    return Intl.message(
-      'Add image',
-      name: 'addImage',
-      desc: 'Add image dialog title',
-      args: [],
-    );
-  }
-
-  /// `Gallery`
-  String get gallery {
-    return Intl.message(
-      'Gallery',
-      name: 'gallery',
-      desc: 'Gallery button label',
-      args: [],
-    );
-  }
-
-  /// `Camera`
-  String get camera {
-    return Intl.message(
-      'Camera',
-      name: 'camera',
-      desc: 'Camera button label',
-      args: [],
-    );
-  }
-
-  /// `Permission denied.`
-  String get permissionDenied {
-    return Intl.message(
-      'Permission denied.',
-      name: 'permissionDenied',
-      desc: 'Message shown when the permission was denied',
-      args: [],
-    );
-  }
-
-  /// `Permission denied permanently.`
-  String get permissionDeniedPermanently {
-    return Intl.message(
-      'Permission denied permanently.',
-      name: 'permissionDeniedPermanently',
-      desc: 'Message shown when the permission was denied permanently',
-      args: [],
-    );
-  }
-
-  /// `Share image`
-  String get shareImage {
-    return Intl.message(
-      'Share image',
-      name: 'shareImage',
-      desc: 'Menu option to share an image',
-      args: [],
-    );
-  }
-
-  /// `Edit image notes`
-  String get editImageNotes {
-    return Intl.message(
-      'Edit image notes',
-      name: 'editImageNotes',
-      desc: 'Menu option to edit the image notes',
-      args: [],
-    );
-  }
-
-  /// `Delete image`
-  String get deleteImage {
-    return Intl.message(
-      'Delete image',
-      name: 'deleteImage',
-      desc: 'Menu option to delete an image',
-      args: [],
-    );
-  }
-
-  /// `Edit notes`
-  String get editNotes {
-    return Intl.message(
-      'Edit notes',
-      name: 'editNotes',
-      desc: 'Edit notes dialog title',
-      args: [],
-    );
-  }
-
-  /// `Image details`
-  String get imageDetails {
-    return Intl.message(
-      'Image details',
-      name: 'imageDetails',
-      desc: 'Image details dialog title',
-      args: [],
-    );
-  }
-
-  /// `{howMany, plural, one{Inventory exported!} other{Inventories exported!}}`
-  String inventoryExported(int howMany) {
-    return Intl.plural(
-      howMany,
-      one: 'Inventory exported!',
-      other: 'Inventories exported!',
-      name: 'inventoryExported',
-      desc: 'Message when inventory was exported',
-      args: [howMany],
-    );
-  }
-
-  /// `{howMany, plural, one{Inventory data} other{Inventories data}}`
-  String inventoryData(int howMany) {
-    return Intl.plural(
-      howMany,
-      one: 'Inventory data',
-      other: 'Inventories data',
-      name: 'inventoryData',
-      desc: 'Subject when exporting inventories',
-      args: [howMany],
-    );
-  }
-
-  /// `Error exporting {howMany, plural, one{inventory} other{inventories}}: {errorMessage}`
-  String errorExportingInventory(int howMany, String errorMessage) {
-    return Intl.message(
-      'Error exporting ${Intl.plural(howMany, one: 'inventory', other: 'inventories')}: $errorMessage',
-      name: 'errorExportingInventory',
-      desc: 'Error message when exporting inventories',
-      args: [howMany, errorMessage],
-    );
-  }
-
-  /// `Export changes`
-  String get inventoryExportOnboardingTitle {
-    return Intl.message(
-      'Export changes',
-      name: 'inventoryExportOnboardingTitle',
-      desc: 'Title of the one-time onboarding screen that explains inventory export changes',
-      args: [],
-    );
-  }
-
-  /// `For best compatibility, CSV and Excel exports now use a new file structure.`
-  String get inventoryExportOnboardingMessage {
-    return Intl.message(
-      'For best compatibility, CSV and Excel exports now use a new file structure.',
-      name: 'inventoryExportOnboardingMessage',
-      desc: 'Introductory message on the inventory export onboarding screen',
-      args: [],
-    );
-  }
-
-  /// `CSV exports`
-  String get inventoryExportOnboardingCsvTitle {
-    return Intl.message(
-      'CSV exports',
-      name: 'inventoryExportOnboardingCsvTitle',
-      desc: 'Section title for CSV changes on the inventory export onboarding screen',
-      args: [],
-    );
-  }
-
-  /// `CSV exports now generate 3 separate files, and each file can include data from more than one inventory.`
-  String get inventoryExportOnboardingCsvDescription {
-    return Intl.message(
-      'CSV exports now generate 3 separate files, and each file can include data from more than one inventory.',
-      name: 'inventoryExportOnboardingCsvDescription',
-      desc: 'Description of the new CSV export behavior for inventories',
-      args: [],
-    );
-  }
-
-  /// `Excel exports`
-  String get inventoryExportOnboardingExcelTitle {
-    return Intl.message(
-      'Excel exports',
-      name: 'inventoryExportOnboardingExcelTitle',
-      desc: 'Section title for Excel changes on the inventory export onboarding screen',
-      args: [],
-    );
-  }
-
-  /// `Excel exports now generate 1 file with 4 tabs, and the workbook can include data from more than one inventory.`
-  String get inventoryExportOnboardingExcelDescription {
-    return Intl.message(
-      'Excel exports now generate 1 file with 4 tabs, and the workbook can include data from more than one inventory.',
-      name: 'inventoryExportOnboardingExcelDescription',
-      desc: 'Description of the new Excel export behavior for inventories',
-      args: [],
-    );
-  }
-
-  /// `If you have any questions, please contact support@xolmis.app.`
-  String get inventoryExportOnboardingSupport {
-    return Intl.message(
-      'If you have any questions, please contact support@xolmis.app.',
-      name: 'inventoryExportOnboardingSupport',
-      desc: 'Support contact shown on the inventory export onboarding screen',
-      args: [],
-    );
-  }
-
-  /// `Got it`
-  String get inventoryExportOnboardingAction {
-    return Intl.message(
-      'Got it',
-      name: 'inventoryExportOnboardingAction',
-      desc: 'Button label used to close the inventory export onboarding screen',
-      args: [],
-    );
-  }
-
-  /// `{howMany, plural, one{Nest exported!} other{Nests exported!}}`
-  String nestExported(int howMany) {
-    return Intl.plural(
-      howMany,
-      one: 'Nest exported!',
-      other: 'Nests exported!',
-      name: 'nestExported',
-      desc: 'Message when nest was exported',
-      args: [howMany],
-    );
-  }
-
-  /// `{howMany, plural, one{Nest data} other{Nests data}}`
-  String nestData(int howMany) {
-    return Intl.plural(
-      howMany,
-      one: 'Nest data',
-      other: 'Nests data',
-      name: 'nestData',
-      desc: 'Subject when exporting nest',
-      args: [howMany],
-    );
-  }
-
-  /// `Error exporting {howMany, plural, one{nest} other{nests}}: {errorMessage}`
-  String errorExportingNest(int howMany, String errorMessage) {
-    return Intl.message(
-      'Error exporting ${Intl.plural(howMany, one: 'nest', other: 'nests')}: $errorMessage',
-      name: 'errorExportingNest',
-      desc: 'Error message when exporting nests',
-      args: [howMany, errorMessage],
-    );
-  }
-
-  /// `{howMany, plural, one{Specimen exported!} other{Specimens exported!}}`
-  String specimenExported(int howMany) {
-    return Intl.plural(
-      howMany,
-      one: 'Specimen exported!',
-      other: 'Specimens exported!',
-      name: 'specimenExported',
-      desc: 'Message when specimen was exported',
-      args: [howMany],
-    );
-  }
-
-  /// `{howMany, plural, one{Specimen data} other{Specimens data}}`
-  String specimenData(int howMany) {
-    return Intl.plural(
-      howMany,
-      one: 'Specimen data',
-      other: 'Specimens data',
-      name: 'specimenData',
-      desc: 'Subject when exporting specimen',
-      args: [howMany],
-    );
-  }
-
-  /// `Error exporting {howMany, plural, one{specimen} other{specimens}}: {errorMessage}`
-  String errorExportingSpecimen(int howMany, String errorMessage) {
-    return Intl.message(
-      'Error exporting ${Intl.plural(howMany, one: 'specimen', other: 'specimens')}: $errorMessage',
-      name: 'errorExportingSpecimen',
-      desc: 'Error message when exporting specimens',
-      args: [howMany, errorMessage],
-    );
-  }
-
-  /// `Find species`
-  String get findSpecies {
-    return Intl.message(
-      'Find species',
-      name: 'findSpecies',
-      desc: 'Hint in the species\' search field',
-      args: [],
-    );
-  }
-
-  /// `Add species`
-  String get addSpecies {
-    return Intl.message(
-      'Add species',
-      name: 'addSpecies',
-      desc: 'Add species dialog title and text hint in find species field',
-      args: [],
-    );
-  }
-
-  /// `Add custom species`
-  String get addCustomSpecies {
-    return Intl.message(
-      'Add custom species',
-      name: 'addCustomSpecies',
-      desc: 'Add custom species dialog title',
-      args: [],
-    );
-  }
-
-  /// `Delete species`
-  String get deleteSpecies {
-    return Intl.message(
-      'Delete species',
-      name: 'deleteSpecies',
-      desc: 'Menu option to delete a species',
-      args: [],
-    );
-  }
-
-  /// `Species notes`
-  String get speciesNotes {
-    return Intl.message(
-      'Species notes',
-      name: 'speciesNotes',
-      desc: 'Menu option to add notes to a species',
-      args: [],
-    );
-  }
-
-  /// `No species recorded`
-  String get noSpeciesFound {
-    return Intl.message(
-      'No species recorded',
-      name: 'noSpeciesFound',
-      desc: 'Message shown when the species list is empty',
-      args: [],
-    );
-  }
-
-  /// `Species name`
-  String get speciesName {
-    return Intl.message(
-      'Species name',
-      name: 'speciesName',
-      desc: 'Species name field label',
-      args: [],
-    );
-  }
-
-  /// `Species already added to the list`
-  String get errorSpeciesAlreadyExists {
-    return Intl.message(
-      'Species already added to the list',
-      name: 'errorSpeciesAlreadyExists',
-      desc: 'Message shown when a species is already in the list',
-      args: [],
-    );
-  }
-
-  /// `Add to the sample`
-  String get addSpeciesToSample {
-    return Intl.message(
-      'Add to the sample',
-      name: 'addSpeciesToSample',
-      desc: 'Menu option to add species to the sample',
-      args: [],
-    );
-  }
-
-  /// `Remove from the sample`
-  String get removeSpeciesFromSample {
-    return Intl.message(
-      'Remove from the sample',
-      name: 'removeSpeciesFromSample',
-      desc: 'Menu option to remove species from the sample',
-      args: [],
-    );
-  }
-
-  /// `Reactivate inventory`
-  String get reactivateInventory {
-    return Intl.message(
-      'Reactivate inventory',
-      name: 'reactivateInventory',
-      desc: 'Menu option to reactivate a finished inventory',
-      args: [],
-    );
-  }
-
-  /// `List finished`
-  String get listFinished {
-    return Intl.message(
-      'List finished',
-      name: 'listFinished',
-      desc: 'Dialog title when a Mackinnon list was finished',
-      args: [],
-    );
-  }
-
-  /// `The list reached the maximum of species. Do you want to start the next list or finish now?`
-  String get listFinishedMessage {
-    return Intl.message(
-      'The list reached the maximum of species. Do you want to start the next list or finish now?',
-      name: 'listFinishedMessage',
-      desc: 'Message asking user to take action when a Mackinnon list was finished',
-      args: [],
-    );
-  }
-
-  /// `Start next list`
-  String get startNextList {
-    return Intl.message(
-      'Start next list',
-      name: 'startNextList',
-      desc: 'Button caption to start the next Mackinnon list',
-      args: [],
-    );
-  }
-
-  /// `Edit specimen`
-  String get editSpecimen {
-    return Intl.message(
-      'Edit specimen',
-      name: 'editSpecimen',
-      desc: 'Menu option to edit a specimen',
-      args: [],
-    );
-  }
-
-  /// `Edit nest`
-  String get editNest {
-    return Intl.message(
-      'Edit nest',
-      name: 'editNest',
-      desc: 'Menu option to edit a nest',
-      args: [],
-    );
-  }
-
-  /// `Edit nest revision`
-  String get editNestRevision {
-    return Intl.message(
-      'Edit nest revision',
-      name: 'editNestRevision',
-      desc: 'Menu option to edit a nest revision',
-      args: [],
-    );
-  }
-
-  /// `Edit egg`
-  String get editEgg {
-    return Intl.message(
-      'Edit egg',
-      name: 'editEgg',
-      desc: 'Menu option to edit an egg',
-      args: [],
-    );
-  }
-
-  /// `Edit weather`
-  String get editWeather {
-    return Intl.message(
-      'Edit weather',
-      name: 'editWeather',
-      desc: 'Menu option to edit a weather record',
-      args: [],
-    );
-  }
-
-  /// `Edit vegetation`
-  String get editVegetation {
-    return Intl.message(
-      'Edit vegetation',
-      name: 'editVegetation',
-      desc: 'Menu option to edit a vegetation record',
-      args: [],
-    );
-  }
-
-  /// `Edit ID`
-  String get editInventoryId {
-    return Intl.message(
-      'Edit ID',
-      name: 'editInventoryId',
-      desc: 'Menu option to edit an inventory ID',
-      args: [],
-    );
-  }
-
-  /// `Delete species`
-  String get confirmDeleteSpecies {
-    return Intl.message(
-      'Delete species',
-      name: 'confirmDeleteSpecies',
-      desc:
-          'Title of dialog to confirm deletion of species in other inventories',
-      args: [],
-    );
-  }
-
-  /// `Do you want to delete {speciesName} from other active inventories?`
-  String confirmDeleteSpeciesMessage(String speciesName) {
-    return Intl.message(
-      'Do you want to delete $speciesName from other active inventories?',
-      name: 'confirmDeleteSpeciesMessage',
-      desc: 'Message of dialog to confirm deletion of species in other inventories',
-      args: [speciesName],
-    );
-  }
-
-  /// `Inventory rules`
-  String get inventoryRules {
-    return Intl.message(
-      'Inventory rules',
-      name: 'inventoryRules',
-      desc: 'Inventory rules tab',
-      args: [],
-    );
-  }
-
-  /// `Species propagation from inactive inventories`
-  String get speciesPropagationBehavior {
-    return Intl.message(
-      'Species propagation from inactive inventories',
-      name: 'speciesPropagationBehavior',
-      desc: 'Settings option to define how species are propagated to other active inventories',
-      args: [],
-    );
-  }
-
-  /// `Always propagate`
-  String get speciesPropagationAlways {
-    return Intl.message(
-      'Always propagate',
-      name: 'speciesPropagationAlways',
-      desc: 'Policy option to always propagate species to other active inventories',
-      args: [],
-    );
-  }
-
-  /// `Always ask`
-  String get speciesPropagationAsk {
-    return Intl.message(
-      'Always ask',
-      name: 'speciesPropagationAsk',
-      desc: 'Policy option to ask before propagating species to other active inventories',
-      args: [],
-    );
-  }
-
-  /// `Never propagate`
-  String get speciesPropagationNever {
-    return Intl.message(
-      'Never propagate',
-      name: 'speciesPropagationNever',
-      desc: 'Policy option to never propagate species to other active inventories',
-      args: [],
-    );
-  }
-
-  /// `Propagate species`
-  String get confirmPropagateSpecies {
-    return Intl.message(
-      'Propagate species',
-      name: 'confirmPropagateSpecies',
-      desc: 'Title of dialog to confirm species propagation to other active inventories',
-      args: [],
-    );
-  }
-
-  /// `Do you want to add {speciesName} to other active inventories?`
-  String confirmPropagateSpeciesMessage(String speciesName) {
-    return Intl.message(
-      'Do you want to add $speciesName to other active inventories?',
-      name: 'confirmPropagateSpeciesMessage',
-      desc: 'Message of dialog to confirm species propagation',
-      args: [speciesName],
-    );
-  }
-
-  /// `Yes`
-  String get yes {
-    return Intl.message(
-      'Yes',
-      name: 'yes',
-      desc: 'Affirmative button label',
-      args: [],
-    );
-  }
-
-  /// `No`
-  String get no {
-    return Intl.message(
-      'No',
-      name: 'no',
-      desc: 'Negative button label',
-      args: [],
-    );
-  }
-
-  /// `New journal entry`
-  String get newJournalEntry {
-    return Intl.message(
-      'New journal entry',
-      name: 'newJournalEntry',
-      desc: 'New journal entry screen title and button hint',
-      args: [],
-    );
-  }
-
-  /// `Sort by Last Modified Time`
-  String get sortByLastModified {
-    return Intl.message(
-      'Sort by Last Modified Time',
-      name: 'sortByLastModified',
-      desc: 'Menu option to sort by last modified date',
-      args: [],
-    );
-  }
-
-  /// `Sort by Title`
-  String get sortByTitle {
-    return Intl.message(
-      'Sort by Title',
-      name: 'sortByTitle',
-      desc: 'Menu option to sort by title text',
-      args: [],
-    );
-  }
-
-  /// `Find journal entries`
-  String get findJournalEntries {
-    return Intl.message(
-      'Find journal entries',
-      name: 'findJournalEntries',
-      desc: 'Field journal search bar hint',
-      args: [],
-    );
-  }
-
-  /// `No journal entries found.`
-  String get noJournalEntriesFound {
-    return Intl.message(
-      'No journal entries found.',
-      name: 'noJournalEntriesFound',
-      desc: 'Message when no journal entries are found',
-      args: [],
-    );
-  }
-
-  /// `Title`
-  String get title {
-    return Intl.message(
-      'Title',
-      name: 'title',
-      desc: 'Title field label',
-      args: [],
-    );
-  }
-
-  /// `Insert a title for the journal entry`
-  String get insertTitle {
-    return Intl.message(
-      'Insert a title for the journal entry',
-      name: 'insertTitle',
-      desc: 'Validation message for title field',
-      args: [],
-    );
-  }
-
-  /// `Error saving journal entry`
-  String get errorSavingJournalEntry {
-    return Intl.message(
-      'Error saving journal entry',
-      name: 'errorSavingJournalEntry',
-      desc: 'Error message when saving journal entry',
-      args: [],
-    );
-  }
-
-  /// `Delete journal entry`
-  String get deleteJournalEntry {
-    return Intl.message(
-      'Delete journal entry',
-      name: 'deleteJournalEntry',
-      desc: 'Menu option to delete a field journal entry',
-      args: [],
-    );
-  }
-
-  /// `Edit journal entry`
-  String get editJournalEntry {
-    return Intl.message(
-      'Edit journal entry',
-      name: 'editJournalEntry',
-      desc: 'Menu option to edit a field journal entry',
-      args: [],
-    );
-  }
-
-  /// `Change note color`
-  String get changeJournalColor {
-    return Intl.message(
-      'Change note color',
-      name: 'changeJournalColor',
-      desc: 'Menu option to change a field journal note background color',
-      args: [],
-    );
-  }
-
-  /// `Select note color`
-  String get selectJournalColor {
-    return Intl.message(
-      'Select note color',
-      name: 'selectJournalColor',
-      desc: 'Dialog title to choose a field journal note background color',
-      args: [],
-    );
-  }
-
-  /// `Statistics`
-  String get statistics {
-    return Intl.message(
-      'Statistics',
-      name: 'statistics',
-      desc: 'Title for statistics screen and labels',
-      args: [],
-    );
-  }
-
-  /// `Select a species to show the statistics`
-  String get selectSpeciesToShowStats {
-    return Intl.message(
-      'Select a species to show the statistics',
-      name: 'selectSpeciesToShowStats',
-      desc: 'Message shown when no species is selected in statistics',
-      args: [],
-    );
-  }
-
-  /// `Per species`
-  String get perSpecies {
-    return Intl.message(
-      'Per species',
-      name: 'perSpecies',
-      desc: 'Per species section title in statistics',
-      args: [],
-    );
-  }
-
-  /// `Total of records`
-  String get totalRecords {
-    return Intl.message(
-      'Total of records',
-      name: 'totalRecords',
-      desc: 'Total of records card title in statistics',
-      args: [],
-    );
-  }
-
-  /// `Records per month`
-  String get recordsPerMonth {
-    return Intl.message(
-      'Records per month',
-      name: 'recordsPerMonth',
-      desc: 'Records per month card title in statistics',
-      args: [],
-    );
-  }
-
-  /// `Records per year`
-  String get recordsPerYear {
-    return Intl.message(
-      'Records per year',
-      name: 'recordsPerYear',
-      desc: 'Records per year card title in statistics',
-      args: [],
-    );
-  }
-
-  /// `Add coordinates`
-  String get addCoordinates {
-    return Intl.message(
-      'Add coordinates',
-      name: 'addCoordinates',
-      desc: 'Add coordinates button hint',
-      args: [],
-    );
-  }
-
-  /// `recorded species`
-  String get recordedSpecies {
-    return Intl.message(
-      'recorded species',
-      name: 'recordedSpecies',
-      desc: 'Recorded species card title in statistics',
-      args: [],
-    );
-  }
-
-  /// `Top {howMany} most recorded species`
-  String topSpecies(int howMany) {
-    return Intl.message(
-      'Top $howMany most recorded species',
-      name: 'topSpecies',
-      desc: 'Top most recorded species card title in statistics',
-      args: [howMany],
-    );
-  }
-
-  /// `survey hours`
-  String get surveyHours {
-    return Intl.message(
-      'survey hours',
-      name: 'surveyHours',
-      desc: 'Survey hours card title in statistics',
-      args: [],
-    );
-  }
-
-  /// `average survey hours`
-  String get averageSurveyHours {
-    return Intl.message(
-      'average survey hours',
-      name: 'averageSurveyHours',
-      desc: 'Average survey hours card title in statistics',
-      args: [],
-    );
-  }
-
-  /// `Pending`
-  String get pending {
-    return Intl.message(
-      'Pending',
-      name: 'pending',
-      desc: 'Pending segmented button label in specimens',
-      args: [],
-    );
-  }
-
-  /// `Archived`
-  String get archived {
-    return Intl.message(
-      'Archived',
-      name: 'archived',
-      desc: 'Archived segmented button label in specimens',
-      args: [],
-    );
-  }
-
-  /// `Archive specimen`
-  String get archiveSpecimen {
-    return Intl.message(
-      'Archive specimen',
-      name: 'archiveSpecimen',
-      desc: 'Menu option to archive a specimen',
-      args: [],
-    );
-  }
-
-  /// `Male name or ID`
-  String get maleNameOrId {
-    return Intl.message(
-      'Male name or ID',
-      name: 'maleNameOrId',
-      desc: 'Male name or ID field hint',
-      args: [],
-    );
-  }
-
-  /// `Female name or ID`
-  String get femaleNameOrId {
-    return Intl.message(
-      'Female name or ID',
-      name: 'femaleNameOrId',
-      desc: 'Female name or ID field hint',
-      args: [],
-    );
-  }
-
-  /// `Helpers names or IDs`
-  String get helpersNamesOrIds {
-    return Intl.message(
-      'Helpers names or IDs',
-      name: 'helpersNamesOrIds',
-      desc: 'Helpers names or IDs field hint',
-      args: [],
-    );
-  }
-
-  /// `Plant species or support type`
-  String get plantSpeciesOrSupportType {
-    return Intl.message(
-      'Plant species or support type',
-      name: 'plantSpeciesOrSupportType',
-      desc: 'Plant species or support type field hint',
-      args: [],
-    );
-  }
-
-  /// `Uncheck this to format numbers with point as decimal separator`
-  String get formatNumbersDescription {
-    return Intl.message(
-      'Uncheck this to format numbers with point as decimal separator',
-      name: 'formatNumbersDescription',
-      desc: 'Description of the format numbers option in settings',
-      args: [],
-    );
-  }
-
-  /// `Select all`
-  String get selectAll {
-    return Intl.message(
-      'Select all',
-      name: 'selectAll',
-      desc: 'Select all menu and button label',
-      args: [],
-    );
-  }
-
-  /// `Exporting...`
-  String get exporting {
-    return Intl.message(
-      'Exporting...',
-      name: 'exporting',
-      desc: 'Message shown when exporting data',
-      args: [],
-    );
-  }
-
-  /// `No data to export.`
-  String get noDataToExport {
-    return Intl.message(
-      'No data to export.',
-      name: 'noDataToExport',
-      desc: 'Message shown when there is no data to export',
-      args: [],
-    );
-  }
-
-  /// `Exporting, please wait...`
-  String get exportingPleaseWait {
-    return Intl.message(
-      'Exporting, please wait...',
-      name: 'exportingPleaseWait',
-      desc: 'Message shown when exporting data',
-      args: [],
-    );
-  }
-
-  /// `Error`
-  String get errorTitle {
-    return Intl.message(
-      'Error',
-      name: 'errorTitle',
-      desc: 'Error title',
-      args: [],
-    );
-  }
-
-  /// `Warning`
-  String get warningTitle {
-    return Intl.message(
-      'Warning',
-      name: 'warningTitle',
-      desc: 'Warning title',
-      args: [],
-    );
-  }
-
-  /// `Continue`
-  String get continueAction {
-    return Intl.message(
-      'Continue',
-      name: 'continueAction',
-      desc: 'Action label to proceed with an operation',
-      args: [],
-    );
-  }
-
-  /// `Change inventory type?`
-  String get inventoryTypeChangeWarningTitle {
-    return Intl.message(
-      'Change inventory type?',
-      name: 'inventoryTypeChangeWarningTitle',
-      desc: 'Title shown when the user attempts to change inventory type while editing',
-      args: [],
-    );
-  }
-
-  /// `Changing from {currentType} to {newType} may alter assumptions and protocol-specific premises of this inventory. Continue with this change?`
-  String inventoryTypeChangeWarningMessage(String currentType, String newType) {
-    return Intl.message(
-      'Changing from $currentType to $newType may alter assumptions and protocol-specific premises of this inventory. Continue with this change?',
-      name: 'inventoryTypeChangeWarningMessage',
-      desc: 'Warning message shown before applying inventory type change in edit screen',
-      args: [currentType, newType],
-    );
-  }
-
-  /// `Update related record times?`
-  String get startTimeChangeWarningTitle {
-    return Intl.message(
-      'Update related record times?',
-      name: 'startTimeChangeWarningTitle',
-      desc:
-          'Dialog title shown when inventory start time changes in edit screen',
-      args: [],
-    );
-  }
-
-  /// `The start time changed. Do you want to update associated species, POI, vegetation, and weather record times based on their relative offset from the original start time?`
-  String get startTimeChangeWarningMessage {
-    return Intl.message(
-      'The start time changed. Do you want to update associated species, POI, vegetation, and weather record times based on their relative offset from the original start time?',
-      name: 'startTimeChangeWarningMessage',
-      desc: 'Dialog message asking whether to shift species times after start time change',
-      args: [],
-    );
-  }
-
-  /// `Keep current times`
-  String get keepSpeciesTimes {
-    return Intl.message(
-      'Keep current times',
-      name: 'keepSpeciesTimes',
-      desc: 'Action to keep species times unchanged after start time edit',
-      args: [],
-    );
-  }
-
-  /// `Update related times`
-  String get updateSpeciesTimes {
-    return Intl.message(
-      'Update related times',
-      name: 'updateSpeciesTimes',
-      desc: 'Action to shift species times after start time edit',
-      args: [],
-    );
-  }
-
-  /// `Remind missing vegetation data`
-  String get remindMissingVegetationData {
-    return Intl.message(
-      'Remind missing vegetation data',
-      name: 'remindMissingVegetationData',
-      desc: 'Settings option to remind missing vegetation data',
-      args: [],
-    );
-  }
-
-  /// `Remind missing weather data`
-  String get remindMissingWeatherData {
-    return Intl.message(
-      'Remind missing weather data',
-      name: 'remindMissingWeatherData',
-      desc: 'Settings option to remind missing weather data',
-      args: [],
-    );
-  }
-
-  /// `There is no vegetation data.`
-  String get missingVegetationData {
-    return Intl.message(
-      'There is no vegetation data.',
-      name: 'missingVegetationData',
-      desc: 'Message shown when there is no vegetation data',
-      args: [],
-    );
-  }
-
-  /// `There is no weather data.`
-  String get missingWeatherData {
-    return Intl.message(
-      'There is no weather data.',
-      name: 'missingWeatherData',
-      desc: 'Message shown when there is no weather data',
-      args: [],
-    );
-  }
-
-  /// `Add`
-  String get addButton {
-    return Intl.message(
-      'Add',
-      name: 'addButton',
-      desc: 'Add button label',
-      args: [],
-    );
-  }
-
-  /// `Ignore`
-  String get ignoreButton {
-    return Intl.message(
-      'Ignore',
-      name: 'ignoreButton',
-      desc: 'Ignore button label',
-      args: [],
-    );
-  }
-
-  /// `Observer abbreviation is missing. Please add it in the settings.`
-  String get observerAbbreviationMissing {
-    return Intl.message(
-      'Observer abbreviation is missing. Please add it in the settings.',
-      name: 'observerAbbreviationMissing',
-      desc: 'Message shown when the observer abbreviation is missing',
-      args: [],
-    );
-  }
-
-  /// `Invalid numeric value`
-  String get invalidNumericValue {
-    return Intl.message(
-      'Invalid numeric value',
-      name: 'invalidNumericValue',
-      desc: 'Message shown when the value is not a number',
-      args: [],
-    );
-  }
-
-  /// `There are no revisions for this nest. Add at least one revision.`
-  String get nestRevisionsMissing {
-    return Intl.message(
-      'There are no revisions for this nest. Add at least one revision.',
-      name: 'nestRevisionsMissing',
-      desc: 'Message shown when there are no revisions for a nest',
-      args: [],
-    );
-  }
-
-  /// `Edit locality`
-  String get editLocality {
-    return Intl.message(
-      'Edit locality',
-      name: 'editLocality',
-      desc: 'Dialog title to edit a locality',
-      args: [],
-    );
-  }
-
-  /// `Add/edit notes`
-  String get addEditNotes {
-    return Intl.message(
-      'Add/edit notes',
-      name: 'addEditNotes',
-      desc: 'Dialog title and menu option to add/edit notes',
-      args: [],
-    );
-  }
-
-  /// `Export KML`
-  String get exportKml {
-    return Intl.message(
-      'Export KML',
-      name: 'exportKml',
-      desc: 'Menu option to export to KML',
-      args: [],
-    );
-  }
-
-  /// `Edit`
-  String get edit {
-    return Intl.message(
-      'Edit',
-      name: 'edit',
-      desc: 'Edit button label',
-      args: [],
-    );
-  }
-
-  /// `No POIs to export.`
-  String get noPoisToExport {
-    return Intl.message(
-      'No POIs to export.',
-      name: 'noPoisToExport',
-      desc: 'Message shown when there are no POIs to export',
-      args: [],
-    );
-  }
-
-  /// `Species within sample`
-  String get totalSpeciesWithinSample {
-    return Intl.message(
-      'Species within sample',
-      name: 'totalSpeciesWithinSample',
-      desc: 'Total species within sample card title in statistics',
-      args: [],
-    );
-  }
-
-  /// `Details`
-  String get details {
-    return Intl.message(
-      'Details',
-      name: 'details',
-      desc: 'Details button label',
-      args: [],
-    );
-  }
-
-  /// `Inventory details`
-  String get editInventoryDetails {
-    return Intl.message(
-      'Inventory details',
-      name: 'editInventoryDetails',
-      desc: 'Menu option to edit inventory details',
-      args: [],
-    );
-  }
-
-  /// `Discarded inventory`
-  String get discardedInventory {
-    return Intl.message(
-      'Discarded inventory',
-      name: 'discardedInventory',
-      desc: 'Menu option to discard an inventory',
-      args: [],
-    );
-  }
-
-  /// `Format error importing inventory: {errorMessage}`
-  String errorImportingInventoryWithFormatError(String errorMessage) {
-    return Intl.message(
-      'Format error importing inventory: $errorMessage',
-      name: 'errorImportingInventoryWithFormatError',
-      desc: 'Error message when importing inventories with a format error',
-      args: [errorMessage],
-    );
-  }
-
-  /// `Inventories imported successfully: {howMany}`
-  String inventoriesImportedSuccessfully(int howMany) {
-    return Intl.message(
-      'Inventories imported successfully: $howMany',
-      name: 'inventoriesImportedSuccessfully',
-      desc: 'Message when inventories are imported successfully',
-      args: [howMany],
-    );
-  }
-
-  /// `Import completed with errors: {successfullyImportedCount} successful, {importErrorsCount} errors`
-  String importCompletedWithErrors(
-    int successfullyImportedCount,
-    int importErrorsCount,
-  ) {
-    return Intl.message(
-      'Import completed with errors: $successfullyImportedCount successful, $importErrorsCount errors',
-      name: 'importCompletedWithErrors',
-      desc: 'Message when import is completed with errors',
-      args: [successfullyImportedCount, importErrorsCount],
-    );
-  }
-
-  /// `Import finished: {newCount} new, {updatedCount} updated, {skippedCount} skipped, {errorsCount} errors`
-  String importCompletedSummary(
-    int newCount,
-    int updatedCount,
-    int skippedCount,
-    int errorsCount,
-  ) {
-    return Intl.message(
-      'Import finished: $newCount new, $updatedCount updated, $skippedCount skipped, $errorsCount errors',
-      name: 'importCompletedSummary',
-      desc: 'Detailed summary for import operations with conflict handling',
-      args: [newCount, updatedCount, skippedCount, errorsCount],
-    );
-  }
-
-  /// `Import cancelled.`
-  String get importCancelled {
-    return Intl.message(
-      'Import cancelled.',
-      name: 'importCancelled',
-      desc: 'Message shown when user cancels import after conflict prompt',
-      args: [],
-    );
-  }
-
-  /// `Existing records on import`
-  String get importExistingRecords {
-    return Intl.message(
-      'Existing records on import',
-      name: 'importExistingRecords',
-      desc: 'Settings title for choosing import behavior when records already exist',
-      args: [],
-    );
-  }
-
-  /// `Ask every time`
-  String get importPolicyAskEveryTime {
-    return Intl.message(
-      'Ask every time',
-      name: 'importPolicyAskEveryTime',
-      desc: 'Import policy option to ask the user when conflicts are found',
-      args: [],
-    );
-  }
-
-  /// `Update existing records`
-  String get importPolicyUpdateExisting {
-    return Intl.message(
-      'Update existing records',
-      name: 'importPolicyUpdateExisting',
-      desc: 'Import policy option to overwrite existing records',
-      args: [],
-    );
-  }
-
-  /// `Skip existing records`
-  String get importPolicySkipExisting {
-    return Intl.message(
-      'Skip existing records',
-      name: 'importPolicySkipExisting',
-      desc: 'Import policy option to keep existing records untouched',
-      args: [],
-    );
-  }
-
-  /// `Existing records found`
-  String get importConflictDialogTitle {
-    return Intl.message(
-      'Existing records found',
-      name: 'importConflictDialogTitle',
-      desc: 'Title of the dialog shown when imported records already exist',
-      args: [],
-    );
-  }
-
-  /// `{conflictsCount} imported records already exist locally. What do you want to do?`
-  String importConflictDialogMessage(int conflictsCount) {
-    return Intl.message(
-      '$conflictsCount imported records already exist locally. What do you want to do?',
-      name: 'importConflictDialogMessage',
-      desc: 'Dialog message shown when import conflicts are detected',
-      args: [conflictsCount],
-    );
-  }
-
-  /// `Update`
-  String get importConflictDialogUpdateAction {
-    return Intl.message(
-      'Update',
-      name: 'importConflictDialogUpdateAction',
-      desc: 'Action label to update existing records during import',
-      args: [],
-    );
-  }
-
-  /// `Skip`
-  String get importConflictDialogSkipAction {
-    return Intl.message(
-      'Skip',
-      name: 'importConflictDialogSkipAction',
-      desc: 'Action label to skip existing records during import',
-      args: [],
-    );
-  }
-
-  /// `Import and export`
-  String get importAndExport {
-    return Intl.message(
-      'Import and export',
-      name: 'importAndExport',
-      desc: 'Settings section title for import and export options',
-      args: [],
-    );
-  }
-
-  /// `Failed to import inventory with ID: {id}`
-  String failedToImportInventoryWithId(String id) {
-    return Intl.message(
-      'Failed to import inventory with ID: $id',
-      name: 'failedToImportInventoryWithId',
-      desc: 'Message when failed to import an inventory',
-      args: [id],
-    );
-  }
-
-  /// `Invalid JSON format. Expected an object or an array.`
-  String get invalidJsonFormatExpectedObjectOrArray {
-    return Intl.message(
-      'Invalid JSON format. Expected an object or an array.',
-      name: 'invalidJsonFormatExpectedObjectOrArray',
-      desc: 'Message when the JSON format is invalid',
-      args: [],
-    );
-  }
-
-  /// `Importing nests`
-  String get importingNests {
-    return Intl.message(
-      'Importing nests',
-      name: 'importingNests',
-      desc: 'Message when importing nests',
-      args: [],
-    );
-  }
-
-  /// `Error importing nests`
-  String get errorImportingNests {
-    return Intl.message(
-      'Error importing nests',
-      name: 'errorImportingNests',
-      desc: 'Error message when importing nests',
-      args: [],
-    );
-  }
-
-  /// `Format error importing nest: {errorMessage}`
-  String errorImportingNestsWithFormatError(String errorMessage) {
-    return Intl.message(
-      'Format error importing nest: $errorMessage',
-      name: 'errorImportingNestsWithFormatError',
-      desc: 'Error message when importing nests with a format error',
-      args: [errorMessage],
-    );
-  }
-
-  /// `Nests imported successfully: {howMany}`
-  String nestsImportedSuccessfully(int howMany) {
-    return Intl.message(
-      'Nests imported successfully: $howMany',
-      name: 'nestsImportedSuccessfully',
-      desc: 'Message when nests are imported successfully',
-      args: [howMany],
-    );
-  }
-
-  /// `Failed to import nest with ID: {id}`
-  String failedToImportNestWithId(int id) {
-    return Intl.message(
-      'Failed to import nest with ID: $id',
-      name: 'failedToImportNestWithId',
-      desc: 'Message when failed to import a nest',
-      args: [id],
-    );
-  }
-
-  /// `Plain text`
-  String get plainText {
-    return Intl.message(
-      'Plain text',
-      name: 'plainText',
-      desc: 'Plain text export format option',
-      args: [],
-    );
-  }
-
-  /// `Backup`
-  String get backup {
-    return Intl.message(
-      'Backup',
-      name: 'backup',
-      desc: 'Settings backup section title',
-      args: [],
-    );
-  }
-
-  /// `Create backup`
-  String get createBackup {
-    return Intl.message(
-      'Create backup',
-      name: 'createBackup',
-      desc: 'Create backup settings tile title',
-      args: [],
-    );
-  }
-
-  /// `Send backup to...`
-  String get sendBackupTo {
-    return Intl.message(
-      'Send backup to...',
-      name: 'sendBackupTo',
-      desc: 'Share backup title',
-      args: [],
-    );
-  }
-
-  /// `Backup created and shared successfully`
-  String get backupCreatedAndSharedSuccessfully {
-    return Intl.message(
-      'Backup created and shared successfully',
-      name: 'backupCreatedAndSharedSuccessfully',
-      desc: 'Message when backup is created and shared successfully',
-      args: [],
-    );
-  }
-
-  /// `Error creating backup`
-  String get errorCreatingBackup {
-    return Intl.message(
-      'Error creating backup',
-      name: 'errorCreatingBackup',
-      desc: 'Error message when creating backup',
-      args: [],
-    );
-  }
-
-  /// `Backup not found`
-  String get errorBackupNotFound {
-    return Intl.message(
-      'Backup not found',
-      name: 'errorBackupNotFound',
-      desc: 'Error message when backup is not found',
-      args: [],
-    );
-  }
-
-  /// `Restore`
-  String get restore {
-    return Intl.message(
-      'Restore',
-      name: 'restore',
-      desc: 'Restore button label',
-      args: [],
-    );
-  }
-
-  /// `Current data will be replaced by the backup and some data could be lost. Are you sure you want to proceed?`
-  String get restoreBackupConfirmation {
-    return Intl.message(
-      'Current data will be replaced by the backup and some data could be lost. Are you sure you want to proceed?',
-      name: 'restoreBackupConfirmation',
-      desc: 'Restore backup confirmation dialog text',
-      args: [],
-    );
-  }
-
-  /// `Restore backup`
-  String get restoreBackup {
-    return Intl.message(
-      'Restore backup',
-      name: 'restoreBackup',
-      desc: 'Restore backup settings tile title',
-      args: [],
-    );
-  }
-
-  /// `Only the images of the backup file will be restored. Are you sure you want to proceed?`
-  String get restoreBackupImagesOnlyConfirmation {
-    return Intl.message(
-      'Only the images of the backup file will be restored. Are you sure you want to proceed?',
-      name: 'restoreBackupImagesOnlyConfirmation',
-      desc: 'Restore backup images only confirmation dialog text',
-      args: [],
-    );
-  }
-
-  /// `Restore images only`
-  String get restoreBackupImagesOnly {
-    return Intl.message(
-      'Restore images only',
-      name: 'restoreBackupImagesOnly',
-      desc: 'Restore images only checkbox label',
-      args: [],
-    );
-  }
-
-  /// `Restore only the images in the backup file. Do not restore database.`
-  String get restoreBackupImagesOnlyDescription {
-    return Intl.message(
-      'Restore only the images in the backup file. Do not restore database.',
-      name: 'restoreBackupImagesOnlyDescription',
-      desc: 'Restore images only checkbox description',
-      args: [],
-    );
-  }
-
-  /// `{howMany} images restored successfully!`
-  String imagesRestoredSuccessfully(int howMany) {
-    return Intl.message(
-      '$howMany images restored successfully!',
-      name: 'imagesRestoredSuccessfully',
-      desc: 'Message when images are restored successfully',
-      args: [howMany],
-    );
-  }
-
-  /// `Backup restored successfully! Restart the app to apply the changes.`
-  String get backupRestoredSuccessfully {
-    return Intl.message(
-      'Backup restored successfully! Restart the app to apply the changes.',
-      name: 'backupRestoredSuccessfully',
-      desc: 'Message when backup is restored successfully',
-      args: [],
-    );
-  }
-
-  /// `Error restoring backup`
-  String get errorRestoringBackup {
-    return Intl.message(
-      'Error restoring backup',
-      name: 'errorRestoringBackup',
-      desc: 'Error message when restoring backup',
-      args: [],
-    );
-  }
-
-  /// `Backing up data`
-  String get backingUpData {
-    return Intl.message(
-      'Backing up data',
-      name: 'backingUpData',
-      desc: 'Message when backing up data',
-      args: [],
-    );
-  }
-
-  /// `Restoring data`
-  String get restoringData {
-    return Intl.message(
-      'Restoring data',
-      name: 'restoringData',
-      desc: 'Message when restoring data',
-      args: [],
-    );
-  }
-
-  /// `Importing specimens`
-  String get importingSpecimens {
-    return Intl.message(
-      'Importing specimens',
-      name: 'importingSpecimens',
-      desc: 'Message when importing specimens',
-      args: [],
-    );
-  }
-
-  /// `Error importing specimens`
-  String get errorImportingSpecimens {
-    return Intl.message(
-      'Error importing specimens',
-      name: 'errorImportingSpecimens',
-      desc: 'Error message when importing specimens',
-      args: [],
-    );
-  }
-
-  /// `Format error importing specimen: {errorMessage}`
-  String errorImportingSpecimensWithFormatError(String errorMessage) {
-    return Intl.message(
-      'Format error importing specimen: $errorMessage',
-      name: 'errorImportingSpecimensWithFormatError',
-      desc: 'Error message when importing specimens with a format error',
-      args: [errorMessage],
-    );
-  }
-
-  /// `Specimens imported successfully: {howMany}`
-  String specimensImportedSuccessfully(int howMany) {
-    return Intl.message(
-      'Specimens imported successfully: $howMany',
-      name: 'specimensImportedSuccessfully',
-      desc: 'Message when specimens are imported successfully',
-      args: [howMany],
-    );
-  }
-
-  /// `Failed to import specimen with ID: {id}`
-  String failedToImportSpecimenWithId(int id) {
-    return Intl.message(
-      'Failed to import specimen with ID: $id',
-      name: 'failedToImportSpecimenWithId',
-      desc: 'Message when failed to import a specimen',
-      args: [id],
-    );
-  }
-
-  /// `Cloud cover must be between 0 and 100`
-  String get cloudCoverRangeError {
-    return Intl.message(
-      'Cloud cover must be between 0 and 100',
-      name: 'cloudCoverRangeError',
-      desc: 'Error message when cloud cover is out of range',
-      args: [],
-    );
-  }
-
-  /// `Relative humidity must be between 0 and 100`
-  String get relativeHumidityRangeError {
-    return Intl.message(
-      'Relative humidity must be between 0 and 100',
-      name: 'relativeHumidityRangeError',
-      desc: 'Error message when relative humidity is out of range',
-      args: [],
-    );
-  }
-
-  /// `Atmospheric pressure`
-  String get atmosphericPressure {
-    return Intl.message(
-      'Atmospheric pressure',
-      name: 'atmosphericPressure',
-      desc: 'Atmospheric pressure field label',
-      args: [],
-    );
-  }
-
-  /// `Relative humidity`
-  String get relativeHumidity {
-    return Intl.message(
-      'Relative humidity',
-      name: 'relativeHumidity',
-      desc: 'Relative humidity field label',
-      args: [],
-    );
-  }
-
-  /// `Total of observers`
-  String get totalOfObservers {
-    return Intl.message(
-      'Total of observers',
-      name: 'totalOfObservers',
-      desc: 'Total of observers field label',
-      args: [],
-    );
-  }
-
-  /// `Enter coordinates`
-  String get enterCoordinates {
-    return Intl.message(
-      'Enter coordinates',
-      name: 'enterCoordinates',
-      desc: 'Enter coordinates dialog title',
-      args: [],
-    );
-  }
-
-  /// `Latitude`
-  String get latitude {
-    return Intl.message(
-      'Latitude',
-      name: 'latitude',
-      desc: 'Latitude field label',
-      args: [],
-    );
-  }
-
-  /// `Longitude`
-  String get longitude {
-    return Intl.message(
-      'Longitude',
-      name: 'longitude',
-      desc: 'Longitude field label',
-      args: [],
-    );
-  }
-
-  /// `Invalid latitude`
-  String get invalidLatitude {
-    return Intl.message(
-      'Invalid latitude',
-      name: 'invalidLatitude',
-      desc: 'Error message when the latitude is invalid',
-      args: [],
-    );
-  }
-
-  /// `Invalid longitude`
-  String get invalidLongitude {
-    return Intl.message(
-      'Invalid longitude',
-      name: 'invalidLongitude',
-      desc: 'Error message when the longitude is invalid',
-      args: [],
-    );
-  }
-
-  /// `Field cannot be empty`
-  String get fieldCannotBeEmpty {
-    return Intl.message(
-      'Field cannot be empty',
-      name: 'fieldCannotBeEmpty',
-      desc: 'Error message when a field is empty',
-      args: [],
-    );
-  }
-
-  /// `Location error`
-  String get locationError {
-    return Intl.message(
-      'Location error',
-      name: 'locationError',
-      desc: 'Location error dialog title',
-      args: [],
-    );
-  }
-
-  /// `Could not get GPS location`
-  String get couldNotGetGpsLocation {
-    return Intl.message(
-      'Could not get GPS location',
-      name: 'couldNotGetGpsLocation',
-      desc: 'Location error dialog message',
-      args: [],
-    );
-  }
-
-  /// `Location permission denied.`
-  String get locationPermissionDeniedMessage {
-    return Intl.message(
-      'Location permission denied.',
-      name: 'locationPermissionDeniedMessage',
-      desc: 'Message shown when location permission is denied',
-      args: [],
-    );
-  }
-
-  /// `Location permission denied permanently. Open settings to allow access.`
-  String get locationPermissionPermanentlyDeniedMessage {
-    return Intl.message(
-      'Location permission denied permanently. Open settings to allow access.',
-      name: 'locationPermissionPermanentlyDeniedMessage',
-      desc: 'Message shown when location permission is permanently denied',
-      args: [],
-    );
-  }
-
-  /// `Device GPS is turned off. Enable location in settings.`
-  String get locationServiceDisabledMessage {
-    return Intl.message(
-      'Device GPS is turned off. Enable location in settings.',
-      name: 'locationServiceDisabledMessage',
-      desc: 'Message shown when device location service is disabled',
-      args: [],
-    );
-  }
-
-  /// `Timed out while getting GPS location. Try again or enter coordinates manually.`
-  String get locationTimeoutMessage {
-    return Intl.message(
-      'Timed out while getting GPS location. Try again or enter coordinates manually.',
-      name: 'locationTimeoutMessage',
-      desc: 'Message shown when GPS acquisition times out',
-      args: [],
-    );
-  }
-
-  /// `Open settings`
-  String get openSettings {
-    return Intl.message(
-      'Open settings',
-      name: 'openSettings',
-      desc: 'Open settings button label',
-      args: [],
-    );
-  }
-
-  /// `Finishing inventory... please wait`
-  String get finishingInventoryPleaseWait {
-    return Intl.message(
-      'Finishing inventory... please wait',
-      name: 'finishingInventoryPleaseWait',
-      desc: 'Message shown while inventory finalization is in progress',
-      args: [],
-    );
-  }
-
-  /// `Continue without`
-  String get continueWithout {
-    return Intl.message(
-      'Continue without',
-      name: 'continueWithout',
-      desc: 'Continue without button label',
-      args: [],
-    );
-  }
-
-  /// `Enter manually`
-  String get enterManually {
-    return Intl.message(
-      'Enter manually',
-      name: 'enterManually',
-      desc: 'Enter manually button label',
-      args: [],
-    );
-  }
-
-  /// `Distance`
-  String get distance {
-    return Intl.message(
-      'Distance',
-      name: 'distance',
-      desc: 'Distance field label',
-      args: [],
-    );
-  }
-
-  /// `Flight height`
-  String get flightHeight {
-    return Intl.message(
-      'Flight height',
-      name: 'flightHeight',
-      desc: 'Flight height field label',
-      args: [],
-    );
-  }
-
-  /// `Flight direction`
-  String get flightDirection {
-    return Intl.message(
-      'Flight direction',
-      name: 'flightDirection',
-      desc: 'Flight direction field label',
-      args: [],
-    );
-  }
-
-  /// `Insert count`
-  String get insertCount {
-    return Intl.message(
-      'Insert count',
-      name: 'insertCount',
-      desc: 'Insert count field label',
-      args: [],
-    );
-  }
-
-  /// `Insert a valid number`
-  String get insertValidNumber {
-    return Intl.message(
-      'Insert a valid number',
-      name: 'insertValidNumber',
-      desc: 'Validation message for insert count field',
-      args: [],
-    );
-  }
-
-  /// `Wind direction`
-  String get windDirection {
-    return Intl.message(
-      'Wind direction',
-      name: 'windDirection',
-      desc: 'Wind direction field label',
-      args: [],
-    );
-  }
-
-  /// `Reactivate`
-  String get reactivate {
-    return Intl.message(
-      'Reactivate',
-      name: 'reactivate',
-      desc: 'Reactivate button label',
-      args: [],
-    );
-  }
-
-  /// `Confirm reactivate`
-  String get confirmReactivate {
-    return Intl.message(
-      'Confirm reactivate',
-      name: 'confirmReactivate',
-      desc: 'Title of dialog to confirm reactivating a nest or inventory',
-      args: [],
-    );
-  }
-
-  /// `Are you sure you want to reactivate {gender, select, male{this} female{this} other{this}} {what} ({which})?`
-  String confirmReactivateMessage(String gender, String what, String which) {
-    return Intl.message(
-      'Are you sure you want to reactivate ${Intl.gender(gender, male: 'this', female: 'this', other: 'this')} $what ($which)?',
-      name: 'confirmReactivateMessage',
-      desc: 'Message asking confirmation to reactivate a nest or inventory',
-      args: [gender, what, which],
-    );
-  }
-
-  /// `Archive`
-  String get archive {
-    return Intl.message(
-      'Archive',
-      name: 'archive',
-      desc: 'Archive button label',
-      args: [],
-    );
-  }
-
-  /// `Platinum Sponsor`
-  String get platinumSponsor {
-    return Intl.message(
-      'Platinum Sponsor',
-      name: 'platinumSponsor',
-      desc: 'Platinum Sponsor field label',
-      args: [],
-    );
-  }
-
-  /// `Changelog`
-  String get changelog {
-    return Intl.message(
-      'Changelog',
-      name: 'changelog',
-      desc: 'Changelog button label',
-      args: [],
-    );
-  }
-
-  /// `View License`
-  String get viewLicense {
-    return Intl.message(
-      'View License',
-      name: 'viewLicense',
-      desc: 'View License button label',
-      args: [],
-    );
-  }
-
-  /// `Open Source Licenses`
-  String get openSourceLicenses {
-    return Intl.message(
-      'Open Source Licenses',
-      name: 'openSourceLicenses',
-      desc: 'Open Source Licenses button label',
-      args: [],
-    );
-  }
-
-  /// `Sort by`
-  String get sortBy {
-    return Intl.message(
-      'Sort by',
-      name: 'sortBy',
-      desc: 'Sort by button label',
-      args: [],
-    );
-  }
-
-  /// `Start time`
-  String get startTime {
-    return Intl.message(
-      'Start time',
-      name: 'startTime',
-      desc: 'Start time field label',
-      args: [],
-    );
-  }
-
-  /// `End time`
-  String get endTime {
-    return Intl.message(
-      'End time',
-      name: 'endTime',
-      desc: 'End time field label',
-      args: [],
-    );
-  }
-
-  /// `Direction`
-  String get direction {
-    return Intl.message(
-      'Direction',
-      name: 'direction',
-      desc: 'Direction field label',
-      args: [],
-    );
-  }
-
-  /// `Ascending`
-  String get ascending {
-    return Intl.message(
-      'Ascending',
-      name: 'ascending',
-      desc: 'Ascending direction option',
-      args: [],
-    );
-  }
-
-  /// `Descending`
-  String get descending {
-    return Intl.message(
-      'Descending',
-      name: 'descending',
-      desc: 'Descending direction option',
-      args: [],
-    );
-  }
-
-  /// `Found time`
-  String get foundTime {
-    return Intl.message(
-      'Found time',
-      name: 'foundTime',
-      desc: 'Found time field label',
-      args: [],
-    );
-  }
-
-  /// `Last time`
-  String get lastTime {
-    return Intl.message(
-      'Last time',
-      name: 'lastTime',
-      desc: 'Last time field label',
-      args: [],
-    );
-  }
-
-  /// `Creation time`
-  String get creationTime {
-    return Intl.message(
-      'Creation time',
-      name: 'creationTime',
-      desc: 'Creation time field label',
-      args: [],
-    );
-  }
-
-  /// `Last modified time`
-  String get lastModifiedTime {
-    return Intl.message(
-      'Last modified time',
-      name: 'lastModifiedTime',
-      desc: 'Last modified time field label',
-      args: [],
-    );
-  }
-
-  /// `Sample time`
-  String get sampleTime {
-    return Intl.message(
-      'Sample time',
-      name: 'sampleTime',
-      desc: 'Sample time field label',
-      args: [],
-    );
-  }
-
-  /// `Refresh`
-  String get refresh {
-    return Intl.message(
-      'Refresh',
-      name: 'refresh',
-      desc: 'Refresh button label',
-      args: [],
-    );
-  }
-
-  /// `Inventory ID updated successfully!`
-  String get inventoryIdUpdated {
-    return Intl.message(
-      'Inventory ID updated successfully!',
-      name: 'inventoryIdUpdated',
-      desc: 'Message when inventory ID is updated successfully',
-      args: [],
-    );
-  }
-
-  /// `Species upgrade failed`
-  String get speciesUpgradeFailed {
-    return Intl.message(
-      'Species upgrade failed',
-      name: 'speciesUpgradeFailed',
-      desc: 'Message when species upgrade fails',
-      args: [],
-    );
-  }
-
-  /// `Country`
-  String get country {
-    return Intl.message(
-      'Country',
-      name: 'country',
-      desc: 'Country field label',
-      args: [],
-    );
-  }
-
-  /// `Species search`
-  String get speciesSearch {
-    return Intl.message(
-      'Species search',
-      name: 'speciesSearch',
-      desc: 'Species search section label',
-      args: [],
-    );
-  }
-
-  /// `Select an inventory to view its details`
-  String get selectInventoryToView {
-    return Intl.message(
-      'Select an inventory to view its details',
-      name: 'selectInventoryToView',
-      desc: 'Message shown when no inventory is selected',
-      args: [],
-    );
-  }
-
-  /// `Select a nest to view its details`
-  String get selectNestToView {
-    return Intl.message(
-      'Select a nest to view its details',
-      name: 'selectNestToView',
-      desc: 'Message shown when no nest is selected',
-      args: [],
-    );
-  }
-
-  /// `Select a specimen to view its details`
-  String get selectSpecimenToView {
-    return Intl.message(
-      'Select a specimen to view its details',
-      name: 'selectSpecimenToView',
-      desc: 'Message shown when no specimen is selected',
-      args: [],
-    );
-  }
-
-  /// `Select a note to view its details`
-  String get selectJournalToView {
-    return Intl.message(
-      'Select a note to view its details',
-      name: 'selectJournalToView',
-      desc: 'Message shown when no note is selected',
-      args: [],
-    );
-  }
-
-  /// `Suggest a feature or report an issue`
-  String get suggestFeatureOrReportIssue {
-    return Intl.message(
-      'Suggest a feature or report an issue',
-      name: 'suggestFeatureOrReportIssue',
-      desc: 'Suggest a feature or report an issue button label',
-      args: [],
-    );
-  }
-
-  /// `{howMany, plural, one{locality} other{localities}} surveyed`
-  String localitiesSurveyed(int howMany) {
-    return Intl.message(
-      '${Intl.plural(howMany, one: 'locality', other: 'localities')} surveyed',
-      name: 'localitiesSurveyed',
-      desc: 'Localities surveyed field label',
-      args: [howMany],
-    );
-  }
-
-  /// `{howMany, plural, one{day} other{days}} surveyed`
-  String daysSurveyed(int howMany) {
-    return Intl.message(
-      '${Intl.plural(howMany, one: 'day', other: 'days')} surveyed',
-      name: 'daysSurveyed',
-      desc: 'Days surveyed field label',
-      args: [howMany],
-    );
-  }
-
-  /// `{howMany, plural, one{POI} other{POIs}} recorded`
-  String poisRecorded(int howMany) {
-    return Intl.message(
-      '${Intl.plural(howMany, one: 'POI', other: 'POIs')} recorded',
-      name: 'poisRecorded',
-      desc: 'POIs recorded field label',
-      args: [howMany],
-    );
-  }
-
-  /// `See all`
-  String get seeAll {
-    return Intl.message(
-      'See all',
-      name: 'seeAll',
-      desc: 'See all button label',
-      args: [],
-    );
-  }
-
-  /// `apparent success`
-  String get apparentSuccessRate {
-    return Intl.message(
-      'apparent success',
-      name: 'apparentSuccessRate',
-      desc: 'Apparent success rate field label',
-      args: [],
-    );
-  }
-
-  /// `nidoparasitism`
-  String get nidoparasitismRate {
-    return Intl.message(
-      'nidoparasitism',
-      name: 'nidoparasitismRate',
-      desc: 'Nidoparasitism rate field label',
-      args: [],
-    );
-  }
-
-  /// `detection rate`
-  String get detectionRate {
-    return Intl.message(
-      'detection rate',
-      name: 'detectionRate',
-      desc: 'Detection rate field label',
-      args: [],
-    );
-  }
-
-  /// `Species richness`
-  String get speciesRichness {
-    return Intl.message(
-      'Species richness',
-      name: 'speciesRichness',
-      desc: 'Species richness field label',
-      args: [],
-    );
-  }
-
-  /// `total richness`
-  String get totalRichness {
-    return Intl.message(
-      'total richness',
-      name: 'totalRichness',
-      desc: 'Total richness field label',
-      args: [],
-    );
-  }
-
-  /// `average richness`
-  String get averageRichness {
-    return Intl.message(
-      'average richness',
-      name: 'averageRichness',
-      desc: 'Average richness field label',
-      args: [],
-    );
-  }
-
-  /// `relative frequency`
-  String get relativeFrequency {
-    return Intl.message(
-      'relative frequency',
-      name: 'relativeFrequency',
-      desc: 'Relative frequency field label',
-      args: [],
-    );
-  }
-
-  /// `relative abundance`
-  String get relativeAbundance {
-    return Intl.message(
-      'relative abundance',
-      name: 'relativeAbundance',
-      desc: 'Relative abundance field label',
-      args: [],
-    );
-  }
-
-  /// `Records by hour`
-  String get recordsByHour {
-    return Intl.message(
-      'Records by hour',
-      name: 'recordsByHour',
-      desc: 'Records by hour field label',
-      args: [],
-    );
-  }
-
-  /// `total abundance`
-  String get totalAbundance {
-    return Intl.message(
-      'total abundance',
-      name: 'totalAbundance',
-      desc: 'Total abundance field label',
-      args: [],
-    );
-  }
-
-  /// `selected inventories`
-  String get selectedInventories {
-    return Intl.message(
-      'selected inventories',
-      name: 'selectedInventories',
-      desc: 'Selected inventories field label',
-      args: [],
-    );
-  }
-
-  /// `Error parsing array item: {errorMessage} \nItem: {item}`
-  String errorParsingArrayItem(String item, String errorMessage) {
-    return Intl.message(
-      'Error parsing array item: $errorMessage \nItem: $item',
-      name: 'errorParsingArrayItem',
-      desc: 'Error message when parsing array item fails',
-      args: [item, errorMessage],
-    );
-  }
-
-  /// `Unexpected item in JSON array: {item}`
-  String errorUnexpectedArrayItem(String item) {
-    return Intl.message(
-      'Unexpected item in JSON array: $item',
-      name: 'errorUnexpectedArrayItem',
-      desc: 'Error message when unexpected array item is encountered',
-      args: [item],
-    );
-  }
-
-  /// `Error parsing 'inventories' array item: {errorMessage} \nItem: {item}`
-  String errorParsingInventoriesArrayItem(String item, String errorMessage) {
-    return Intl.message(
-      'Error parsing \'inventories\' array item: $errorMessage \nItem: $item',
-      name: 'errorParsingInventoriesArrayItem',
-      desc: 'Error message when parsing inventories array item fails',
-      args: [item, errorMessage],
-    );
-  }
-
-  /// `Unexpected item in 'inventories' JSON array: {item}`
-  String errorUnexpectedInventoriesArrayItem(String item) {
-    return Intl.message(
-      'Unexpected item in \'inventories\' JSON array: $item',
-      name: 'errorUnexpectedInventoriesArrayItem',
-      desc:
-          'Error message when unexpected inventories array item is encountered',
-      args: [item],
-    );
-  }
-
-  /// `Error parsing object: {errorMessage}`
-  String errorParsingObject(String errorMessage) {
-    return Intl.message(
-      'Error parsing object: $errorMessage',
-      name: 'errorParsingObject',
-      desc: 'Error message when parsing object fails',
-      args: [errorMessage],
-    );
-  }
-
-  /// `No inventories found in the imported file.`
-  String get noInventoriesFoundInFile {
-    return Intl.message(
-      'No inventories found in the imported file.',
-      name: 'noInventoriesFoundInFile',
-      desc: 'Message shown when no inventories are found in the imported file',
-      args: [],
-    );
-  }
-
-  /// `No valid inventories found in the imported file.`
-  String get noValidInventoriesFoundInFile {
-    return Intl.message(
-      'No valid inventories found in the imported file.',
-      name: 'noValidInventoriesFoundInFile',
-      desc: 'Message shown when no valid inventories are found in the imported file',
-      args: [],
-    );
-  }
-
-  /// `Error importing inventory {inventoryId}: {errorMessage}`
-  String errorImportingInventoryWithId(
-    String inventoryId,
-    String errorMessage,
-  ) {
-    return Intl.message(
-      'Error importing inventory $inventoryId: $errorMessage',
-      name: 'errorImportingInventoryWithId',
-      desc: 'Error message when importing inventory fails',
-      args: [inventoryId, errorMessage],
-    );
-  }
-
-  /// `Error parsing 'nests' array item: {errorMessage} \nItem: {item}`
-  String errorParsingNestsArrayItem(String item, String errorMessage) {
-    return Intl.message(
-      'Error parsing \'nests\' array item: $errorMessage \nItem: $item',
-      name: 'errorParsingNestsArrayItem',
-      desc: 'Error message when parsing nests array item fails',
-      args: [item, errorMessage],
-    );
-  }
-
-  /// `Unexpected item in 'nests' JSON array: {item}`
-  String errorUnexpectedNestsArrayItem(String item) {
-    return Intl.message(
-      'Unexpected item in \'nests\' JSON array: $item',
-      name: 'errorUnexpectedNestsArrayItem',
-      desc: 'Error message when unexpected nests array item is encountered',
-      args: [item],
-    );
-  }
-
-  /// `Error parsing 'specimens' array item: {errorMessage} \nItem: {item}`
-  String errorParsingSpecimensArrayItem(String item, String errorMessage) {
-    return Intl.message(
-      'Error parsing \'specimens\' array item: $errorMessage \nItem: $item',
-      name: 'errorParsingSpecimensArrayItem',
-      desc: 'Error message when parsing specimens array item fails',
-      args: [item, errorMessage],
-    );
-  }
-
-  /// `Unexpected item in 'specimens' JSON array: {item}`
-  String errorUnexpectedSpecimensArrayItem(String item) {
-    return Intl.message(
-      'Unexpected item in \'specimens\' JSON array: $item',
-      name: 'errorUnexpectedSpecimensArrayItem',
-      desc: 'Error message when unexpected specimens array item is encountered',
-      args: [item],
-    );
-  }
-
-  /// `Insert observer`
-  String get insertObserver {
-    return Intl.message(
-      'Insert observer',
-      name: 'insertObserver',
-      desc: 'Insert observer button label',
-      args: [],
-    );
-  }
-
-  /// `selected {howMany, plural, one{nest} other{nests}}`
-  String selectedNests(int howMany) {
-    return Intl.message(
-      'selected ${Intl.plural(howMany, one: 'nest', other: 'nests')}',
-      name: 'selectedNests',
-      desc: 'Selected nests field label',
-      args: [howMany],
-    );
-  }
-
-  /// `Clear filters`
-  String get clearFilters {
-    return Intl.message(
-      'Clear filters',
-      name: 'clearFilters',
-      desc: 'Clear filters button label',
-      args: [],
-    );
-  }
-
-  /// `New vegetation record`
-  String get newVegetation {
-    return Intl.message(
-      'New vegetation record',
-      name: 'newVegetation',
-      desc: 'New vegetation button label',
-      args: [],
-    );
-  }
-
-  /// `New weather record`
-  String get newWeather {
-    return Intl.message(
-      'New weather record',
-      name: 'newWeather',
-      desc: 'New weather button label',
-      args: [],
-    );
-  }
-
-  /// `New revision`
-  String get newRevision {
-    return Intl.message(
-      'New revision',
-      name: 'newRevision',
-      desc: 'New revision button label',
-      args: [],
-    );
-  }
-
-  /// `New egg`
-  String get newEgg {
-    return Intl.message(
-      'New egg',
-      name: 'newEgg',
-      desc: 'New egg button label',
-      args: [],
-    );
-  }
-
-  /// `{howMany, plural, one{observer} other{observers}}`
-  String observers(int howMany) {
-    return Intl.plural(
-      howMany,
-      one: 'observer',
-      other: 'observers',
-      name: 'observers',
-      desc: 'Observers field label',
-      args: [howMany],
-    );
-  }
-
-  /// `All types`
-  String get allTypes {
-    return Intl.message(
-      'All types',
-      name: 'allTypes',
-      desc: 'All types option in type filter',
-      args: [],
-    );
-  }
-
-  /// `All localities`
-  String get allLocalities {
-    return Intl.message(
-      'All localities',
-      name: 'allLocalities',
-      desc: 'All localities option in locality filter',
-      args: [],
-    );
-  }
-
-  /// `Date`
-  String get date {
-    return Intl.message(
-      'Date',
-      name: 'date',
-      desc: 'Date field label',
-      args: [],
-    );
-  }
-
-  /// `All dates`
-  String get allDates {
-    return Intl.message(
-      'All dates',
-      name: 'allDates',
-      desc: 'All dates option in date filter',
-      args: [],
-    );
-  }
-
-  /// `Today`
-  String get today {
-    return Intl.message(
-      'Today',
-      name: 'today',
-      desc: 'Today option in date filter',
-      args: [],
-    );
-  }
-
-  /// `Yesterday`
-  String get yesterday {
-    return Intl.message(
-      'Yesterday',
-      name: 'yesterday',
-      desc: 'Yesterday option in date filter',
-      args: [],
-    );
-  }
-
-  /// `Last week`
-  String get last7Days {
-    return Intl.message(
-      'Last week',
-      name: 'last7Days',
-      desc: 'Last 7 days option in date filter',
-      args: [],
-    );
-  }
-
-  /// `Last month`
-  String get last30Days {
-    return Intl.message(
-      'Last month',
-      name: 'last30Days',
-      desc: 'Last 30 days option in date filter',
-      args: [],
-    );
-  }
-
-  /// `Last 3 months`
-  String get last90Days {
-    return Intl.message(
-      'Last 3 months',
-      name: 'last90Days',
-      desc: 'Last 90 days option in date filter',
-      args: [],
-    );
-  }
-
-  /// `Last 6 months`
-  String get last180Days {
-    return Intl.message(
-      'Last 6 months',
-      name: 'last180Days',
-      desc: 'Last 180 days option in date filter',
-      args: [],
-    );
-  }
-
-  /// `Last year`
-  String get last365Days {
-    return Intl.message(
-      'Last year',
-      name: 'last365Days',
-      desc: 'Last 365 days option in date filter',
-      args: [],
-    );
-  }
-
-  /// `Date interval`
-  String get dateInterval {
-    return Intl.message(
-      'Date interval',
-      name: 'dateInterval',
-      desc: 'Date interval field label',
-      args: [],
-    );
-  }
-
-  /// `Type`
-  String get type {
-    return Intl.message(
-      'Type',
-      name: 'type',
-      desc: 'Type field label',
-      args: [],
-    );
-  }
-
-  /// `Invalid JSON source. Expected: Xolmis Mobile.`
-  String get invalidJsonSource {
-    return Intl.message(
-      'Invalid JSON source. Expected: Xolmis Mobile.',
-      name: 'invalidJsonSource',
-      desc: 'Invalid JSON file source error message',
-      args: [],
-    );
-  }
-
-  /// `Invalid JSON schema.`
-  String get invalidJsonSchema {
-    return Intl.message(
-      'Invalid JSON schema.',
-      name: 'invalidJsonSchema',
-      desc: 'Invalid JSON file schema error message',
-      args: [],
-    );
-  }
-
-  /// `No results`
-  String get noResults {
-    return Intl.message(
-      'No results',
-      name: 'noResults',
-      desc: 'No results message',
-      args: [],
-    );
-  }
-
-  /// `Clear search`
-  String get clearSearch {
-    return Intl.message(
-      'Clear search',
-      name: 'clearSearch',
-      desc: 'Clear search button label',
-      args: [],
-    );
-  }
-
-  /// `Argentina`
-  String get countryArgentina {
-    return Intl.message(
-      'Argentina',
-      name: 'countryArgentina',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Brazil`
-  String get countryBrazil {
-    return Intl.message('Brazil', name: 'countryBrazil', desc: '', args: []);
-  }
-
-  /// `Paraguay`
-  String get countryParaguay {
-    return Intl.message(
-      'Paraguay',
-      name: 'countryParaguay',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Uruguay`
-  String get countryUruguay {
-    return Intl.message('Uruguay', name: 'countryUruguay', desc: '', args: []);
-  }
-
-  /// `None`
-  String get precipitationNone {
-    return Intl.message('None', name: 'precipitationNone', desc: '', args: []);
-  }
-
-  /// `Fog`
-  String get precipitationFog {
-    return Intl.message('Fog', name: 'precipitationFog', desc: '', args: []);
-  }
-
-  /// `Mist`
-  String get precipitationMist {
-    return Intl.message('Mist', name: 'precipitationMist', desc: '', args: []);
-  }
-
-  /// `Drizzle`
-  String get precipitationDrizzle {
-    return Intl.message(
-      'Drizzle',
-      name: 'precipitationDrizzle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Rain`
-  String get precipitationRain {
-    return Intl.message('Rain', name: 'precipitationRain', desc: '', args: []);
-  }
-
-  /// `Showers`
-  String get precipitationShowers {
-    return Intl.message(
-      'Showers',
-      name: 'precipitationShowers',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Snow`
-  String get precipitationSnow {
-    return Intl.message('Snow', name: 'precipitationSnow', desc: '', args: []);
-  }
-
-  /// `Hail`
-  String get precipitationHail {
-    return Intl.message('Hail', name: 'precipitationHail', desc: '', args: []);
-  }
-
-  /// `Frost`
-  String get precipitationFrost {
-    return Intl.message(
-      'Frost',
-      name: 'precipitationFrost',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `None`
-  String get distributionNone {
-    return Intl.message('None', name: 'distributionNone', desc: '', args: []);
-  }
-
-  /// `Rare`
-  String get distributionRare {
-    return Intl.message('Rare', name: 'distributionRare', desc: '', args: []);
-  }
-
-  /// `Few sparse individuals`
-  String get distributionFewSparseIndividuals {
-    return Intl.message(
-      'Few sparse individuals',
-      name: 'distributionFewSparseIndividuals',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `One patch`
-  String get distributionOnePatch {
-    return Intl.message(
-      'One patch',
-      name: 'distributionOnePatch',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `One patch and isolated individuals`
-  String get distributionOnePatchFewSparseIndividuals {
-    return Intl.message(
-      'One patch and isolated individuals',
-      name: 'distributionOnePatchFewSparseIndividuals',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Many sparse individuals`
-  String get distributionManySparseIndividuals {
-    return Intl.message(
-      'Many sparse individuals',
-      name: 'distributionManySparseIndividuals',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Patch and many isolated individuals`
-  String get distributionOnePatchManySparseIndividuals {
-    return Intl.message(
-      'Patch and many isolated individuals',
-      name: 'distributionOnePatchManySparseIndividuals',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Few patches`
-  String get distributionFewPatches {
-    return Intl.message(
-      'Few patches',
-      name: 'distributionFewPatches',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Few patches and isolated individuals`
-  String get distributionFewPatchesSparseIndividuals {
-    return Intl.message(
-      'Few patches and isolated individuals',
-      name: 'distributionFewPatchesSparseIndividuals',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Many equidistant patches`
-  String get distributionManyPatches {
-    return Intl.message(
-      'Many equidistant patches',
-      name: 'distributionManyPatches',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Many patches and scattered individuals`
-  String get distributionManyPatchesSparseIndividuals {
-    return Intl.message(
-      'Many patches and scattered individuals',
-      name: 'distributionManyPatchesSparseIndividuals',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Isolated individuals in high density`
-  String get distributionHighDensityIndividuals {
-    return Intl.message(
-      'Isolated individuals in high density',
-      name: 'distributionHighDensityIndividuals',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Continuous with gaps`
-  String get distributionContinuousCoverWithGaps {
-    return Intl.message(
-      'Continuous with gaps',
-      name: 'distributionContinuousCoverWithGaps',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Continuous and dense`
-  String get distributionContinuousDenseCover {
-    return Intl.message(
-      'Continuous and dense',
-      name: 'distributionContinuousDenseCover',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Continuous with edge between strata`
-  String get distributionContinuousDenseCoverWithEdge {
-    return Intl.message(
-      'Continuous with edge between strata',
-      name: 'distributionContinuousDenseCoverWithEdge',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Inventory types`
-  String get inventoryTypesDialogTitle {
-    return Intl.message(
-      'Inventory types',
-      name: 'inventoryTypesDialogTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Free-form qualitative observations without a fixed duration.`
-  String get inventoryFreeQualitativeDescription {
-    return Intl.message(
-      'Free-form qualitative observations without a fixed duration.',
-      name: 'inventoryFreeQualitativeDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `A qualitative list recorded during a fixed amount of time. Timer resets when a new species is recorded.`
-  String get inventoryTimedQualitativeDescription {
-    return Intl.message(
-      'A qualitative list recorded during a fixed amount of time. Timer resets when a new species is recorded.',
-      name: 'inventoryTimedQualitativeDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `A qualitative list split into repeated time intervals. Three intervals without new species recorded is a common stopping rule.`
-  String get inventoryIntervalQualitativeDescription {
-    return Intl.message(
-      'A qualitative list split into repeated time intervals. Three intervals without new species recorded is a common stopping rule.',
-      name: 'inventoryIntervalQualitativeDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `A species accumulation list completed until the target number of species is reached.`
-  String get inventoryMackinnonListDescription {
-    return Intl.message(
-      'A species accumulation list completed until the target number of species is reached.',
-      name: 'inventoryMackinnonListDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Count every individual detected while moving along a transect.`
-  String get inventoryTransectCountDescription {
-    return Intl.message(
-      'Count every individual detected while moving along a transect.',
-      name: 'inventoryTransectCountDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Count every individual detected from a fixed point during a set duration.`
-  String get inventoryPointCountDescription {
-    return Intl.message(
-      'Count every individual detected from a fixed point during a set duration.',
-      name: 'inventoryPointCountDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Record birds captured, handled, or banded during a banding session.`
-  String get inventoryBandingDescription {
-    return Intl.message(
-      'Record birds captured, handled, or banded during a banding session.',
-      name: 'inventoryBandingDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Record opportunistic observations without a fixed protocol or time limit.`
-  String get inventoryCasualDescription {
-    return Intl.message(
-      'Record opportunistic observations without a fixed protocol or time limit.',
-      name: 'inventoryCasualDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Record detections along a transect with distance and/or flight height.`
-  String get inventoryTransectDetectionDescription {
-    return Intl.message(
-      'Record detections along a transect with distance and/or flight height.',
-      name: 'inventoryTransectDetectionDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Record detections from a fixed point with distance and/or flight height.`
-  String get inventoryPointDetectionDescription {
-    return Intl.message(
-      'Record detections from a fixed point with distance and/or flight height.',
-      name: 'inventoryPointDetectionDescription',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Free Qualitative List`
-  String get inventoryFreeQualitative {
-    return Intl.message(
-      'Free Qualitative List',
-      name: 'inventoryFreeQualitative',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Timed Qualitative List`
-  String get inventoryTimedQualitative {
-    return Intl.message(
-      'Timed Qualitative List',
-      name: 'inventoryTimedQualitative',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Interval Qualitative List`
-  String get inventoryIntervalQualitative {
-    return Intl.message(
-      'Interval Qualitative List',
-      name: 'inventoryIntervalQualitative',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Mackinnon List`
-  String get inventoryMackinnonList {
-    return Intl.message(
-      'Mackinnon List',
-      name: 'inventoryMackinnonList',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Transect Count`
-  String get inventoryTransectCount {
-    return Intl.message(
-      'Transect Count',
-      name: 'inventoryTransectCount',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Point Count`
-  String get inventoryPointCount {
-    return Intl.message(
-      'Point Count',
-      name: 'inventoryPointCount',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Banding`
-  String get inventoryBanding {
-    return Intl.message(
-      'Banding',
-      name: 'inventoryBanding',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Casual Observation`
-  String get inventoryCasual {
-    return Intl.message(
-      'Casual Observation',
-      name: 'inventoryCasual',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Detection Transect Count`
-  String get inventoryTransectDetection {
-    return Intl.message(
-      'Detection Transect Count',
-      name: 'inventoryTransectDetection',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Detection Point Count`
-  String get inventoryPointDetection {
-    return Intl.message(
-      'Detection Point Count',
-      name: 'inventoryPointDetection',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Spherical`
-  String get eggShapeSpherical {
-    return Intl.message(
-      'Spherical',
-      name: 'eggShapeSpherical',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Elliptical`
-  String get eggShapeElliptical {
-    return Intl.message(
-      'Elliptical',
-      name: 'eggShapeElliptical',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Oval`
-  String get eggShapeOval {
-    return Intl.message('Oval', name: 'eggShapeOval', desc: '', args: []);
-  }
-
-  /// `Pyriform`
-  String get eggShapePyriform {
-    return Intl.message(
-      'Pyriform',
-      name: 'eggShapePyriform',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Conical`
-  String get eggShapeConical {
-    return Intl.message('Conical', name: 'eggShapeConical', desc: '', args: []);
-  }
-
-  /// `Biconical`
-  String get eggShapeBiconical {
-    return Intl.message(
-      'Biconical',
-      name: 'eggShapeBiconical',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Cylindrical`
-  String get eggShapeCylindrical {
-    return Intl.message(
-      'Cylindrical',
-      name: 'eggShapeCylindrical',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Longitudinal`
-  String get eggShapeLongitudinal {
-    return Intl.message(
-      'Longitudinal',
-      name: 'eggShapeLongitudinal',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Unknown`
-  String get nestStageUnknown {
-    return Intl.message(
-      'Unknown',
-      name: 'nestStageUnknown',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Building`
-  String get nestStageBuilding {
-    return Intl.message(
-      'Building',
-      name: 'nestStageBuilding',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Laying`
-  String get nestStageLaying {
-    return Intl.message('Laying', name: 'nestStageLaying', desc: '', args: []);
-  }
-
-  /// `Incubating`
-  String get nestStageIncubating {
-    return Intl.message(
-      'Incubating',
-      name: 'nestStageIncubating',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Hatching`
-  String get nestStageHatching {
-    return Intl.message(
-      'Hatching',
-      name: 'nestStageHatching',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Nestling`
-  String get nestStageNestling {
-    return Intl.message(
-      'Nestling',
-      name: 'nestStageNestling',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Inactive`
-  String get nestStageInactive {
-    return Intl.message(
-      'Inactive',
-      name: 'nestStageInactive',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Unknown`
-  String get nestStatusUnknown {
-    return Intl.message(
-      'Unknown',
-      name: 'nestStatusUnknown',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Active`
-  String get nestStatusActive {
-    return Intl.message('Active', name: 'nestStatusActive', desc: '', args: []);
-  }
-
-  /// `Inactive`
-  String get nestStatusInactive {
-    return Intl.message(
-      'Inactive',
-      name: 'nestStatusInactive',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Unknown`
-  String get nestFateUnknown {
-    return Intl.message('Unknown', name: 'nestFateUnknown', desc: '', args: []);
-  }
-
-  /// `Lost`
-  String get nestFateLost {
-    return Intl.message('Lost', name: 'nestFateLost', desc: '', args: []);
-  }
-
-  /// `Success`
-  String get nestFateSuccess {
-    return Intl.message('Success', name: 'nestFateSuccess', desc: '', args: []);
-  }
-
-  /// `Whole carcass`
-  String get specimenWholeCarcass {
-    return Intl.message(
-      'Whole carcass',
-      name: 'specimenWholeCarcass',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Partial carcass`
-  String get specimenPartialCarcass {
-    return Intl.message(
-      'Partial carcass',
-      name: 'specimenPartialCarcass',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Nest`
-  String get specimenNest {
-    return Intl.message('Nest', name: 'specimenNest', desc: '', args: []);
-  }
-
-  /// `Bones`
-  String get specimenBones {
-    return Intl.message('Bones', name: 'specimenBones', desc: '', args: []);
-  }
-
-  /// `Egg`
-  String get specimenEgg {
-    return Intl.message('Egg', name: 'specimenEgg', desc: '', args: []);
-  }
-
-  /// `Parasites`
-  String get specimenParasites {
-    return Intl.message(
-      'Parasites',
-      name: 'specimenParasites',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Feathers`
-  String get specimenFeathers {
-    return Intl.message(
-      'Feathers',
-      name: 'specimenFeathers',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Blood`
-  String get specimenBlood {
-    return Intl.message('Blood', name: 'specimenBlood', desc: '', args: []);
-  }
-
-  /// `Claw`
-  String get specimenClaw {
-    return Intl.message('Claw', name: 'specimenClaw', desc: '', args: []);
-  }
-
-  /// `Swab`
-  String get specimenSwab {
-    return Intl.message('Swab', name: 'specimenSwab', desc: '', args: []);
-  }
-
-  /// `Tissues`
-  String get specimenTissues {
-    return Intl.message('Tissues', name: 'specimenTissues', desc: '', args: []);
-  }
-
-  /// `Feces`
-  String get specimenFeces {
-    return Intl.message('Feces', name: 'specimenFeces', desc: '', args: []);
-  }
-
-  /// `Regurgite`
-  String get specimenRegurgite {
-    return Intl.message(
-      'Regurgite',
-      name: 'specimenRegurgite',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `{howMany, plural, one{selected specimen} other{selected specimens}}`
-  String selectedSpecimens(int howMany) {
-    return Intl.plural(
-      howMany,
-      one: 'selected specimen',
-      other: 'selected specimens',
-      name: 'selectedSpecimens',
-      desc: 'Number of selected specimens',
-      args: [howMany],
-    );
-  }
-
-  /// `Specimens by type`
-  String get specimensByType {
-    return Intl.message(
-      'Specimens by type',
-      name: 'specimensByType',
-      desc: 'Chart title: specimens grouped by type',
-      args: [],
-    );
-  }
-
-  /// `Specimens by species`
-  String get specimensBySpecies {
-    return Intl.message(
-      'Specimens by species',
-      name: 'specimensBySpecies',
-      desc: 'Chart title: specimens grouped by species',
-      args: [],
-    );
-  }
-
-  /// `Specimens by locality`
-  String get specimensByLocality {
-    return Intl.message(
-      'Specimens by locality',
-      name: 'specimensByLocality',
-      desc: 'Chart title: specimens grouped by locality',
-      args: [],
-    );
-  }
-
-  /// `Collections by hour of day`
-  String get collectionsByHourOfDay {
-    return Intl.message(
-      'Collections by hour of day',
-      name: 'collectionsByHourOfDay',
-      desc: 'Chart title: specimen collections by hour of day',
-      args: [],
-    );
-  }
-
-  /// `Species richness per month`
-  String get speciesRichnessPerMonth {
-    return Intl.message(
-      'Species richness per month',
-      name: 'speciesRichnessPerMonth',
-      desc: 'Chart title: species richness per month',
-      args: [],
-    );
-  }
-
-  /// `Species richness per year`
-  String get speciesRichnessPerYear {
-    return Intl.message(
-      'Species richness per year',
-      name: 'speciesRichnessPerYear',
-      desc: 'Chart title: species richness per year',
-      args: [],
-    );
-  }
-
-  /// `Importing journals`
-  String get importingJournals {
-    return Intl.message(
-      'Importing journals',
-      name: 'importingJournals',
-      desc: 'Message when importing journals',
-      args: [],
-    );
-  }
-
-  /// `Error importing journals`
-  String get errorImportingJournals {
-    return Intl.message(
-      'Error importing journals',
-      name: 'errorImportingJournals',
-      desc: 'Error message when importing journals',
-      args: [],
-    );
-  }
-
-  /// `Journals imported successfully: {howMany}`
-  String journalsImportedSuccessfully(int howMany) {
-    return Intl.message(
-      'Journals imported successfully: $howMany',
-      name: 'journalsImportedSuccessfully',
-      desc: 'Message when journals are imported successfully',
-      args: [howMany],
-    );
-  }
-
-  /// `Error parsing 'journals' array item: {errorMessage} \nItem: {item}`
-  String errorParsingJournalsArrayItem(String item, String errorMessage) {
-    return Intl.message(
-      'Error parsing \'journals\' array item: $errorMessage \nItem: $item',
-      name: 'errorParsingJournalsArrayItem',
-      desc: 'Error message when parsing journals array item fails',
-      args: [item, errorMessage],
-    );
-  }
-
-  /// `Unexpected item in 'journals' JSON array: {item}`
-  String errorUnexpectedJournalsArrayItem(String item) {
-    return Intl.message(
-      'Unexpected item in \'journals\' JSON array: $item',
-      name: 'errorUnexpectedJournalsArrayItem',
-      desc: 'Error message when unexpected journals array item is encountered',
-      args: [item],
-    );
-  }
-
-  /// `No valid journal entries found in the imported file.`
-  String get noValidJournalEntriesFoundInFile {
-    return Intl.message(
-      'No valid journal entries found in the imported file.',
-      name: 'noValidJournalEntriesFoundInFile',
-      desc: 'Message when no valid journal entries are found in imported file',
-      args: [],
-    );
-  }
-
-  /// `Tags`
-  String get tags {
-    return Intl.message(
-      'Tags',
-      name: 'tags',
-      desc: 'Label for tag selection field in journal entries',
-      args: [],
-    );
-  }
-
-  /// `Behavior`
-  String get predefinedTagBehavior {
-    return Intl.message(
-      'Behavior',
-      name: 'predefinedTagBehavior',
-      desc: 'Predefined journal tag for behavior observations',
-      args: [],
-    );
-  }
-
-  /// `Feeding`
-  String get predefinedTagFeeding {
-    return Intl.message(
-      'Feeding',
-      name: 'predefinedTagFeeding',
-      desc: 'Predefined journal tag for feeding observations',
-      args: [],
-    );
-  }
-
-  /// `Vocalization`
-  String get predefinedTagVocalization {
-    return Intl.message(
-      'Vocalization',
-      name: 'predefinedTagVocalization',
-      desc: 'Predefined journal tag for vocalization observations',
-      args: [],
-    );
-  }
-
-  /// `Identification`
-  String get predefinedTagIdentification {
-    return Intl.message(
-      'Identification',
-      name: 'predefinedTagIdentification',
-      desc: 'Predefined journal tag for identification notes',
-      args: [],
-    );
-  }
-
-  /// `Doubt`
-  String get predefinedTagDoubt {
-    return Intl.message(
-      'Doubt',
-      name: 'predefinedTagDoubt',
-      desc: 'Predefined journal tag for uncertain observations',
-      args: [],
-    );
-  }
-
-  /// `Habitat`
-  String get predefinedTagHabitat {
-    return Intl.message(
-      'Habitat',
-      name: 'predefinedTagHabitat',
-      desc: 'Predefined journal tag for habitat notes',
-      args: [],
-    );
-  }
-
-  /// `Weather`
-  String get predefinedTagWeather {
-    return Intl.message(
-      'Weather',
-      name: 'predefinedTagWeather',
-      desc: 'Predefined journal tag for weather notes',
-      args: [],
-    );
-  }
-
-  /// `List`
-  String get predefinedTagList {
-    return Intl.message(
-      'List',
-      name: 'predefinedTagList',
-      desc: 'Predefined journal tag for checklist or list-related notes',
-      args: [],
-    );
-  }
-
-  /// `Breeding`
-  String get predefinedTagBreeding {
-    return Intl.message(
-      'Breeding',
-      name: 'predefinedTagBreeding',
-      desc: 'Predefined journal tag for breeding observations',
-      args: [],
-    );
-  }
-
-  /// `Season arrival`
-  String get predefinedTagSeasonArrival {
-    return Intl.message(
-      'Season arrival',
-      name: 'predefinedTagSeasonArrival',
-      desc: 'Predefined journal tag for seasonal arrival records',
-      args: [],
-    );
-  }
-
-  /// `Fieldwork`
-  String get predefinedTagFieldwork {
-    return Intl.message(
-      'Fieldwork',
-      name: 'predefinedTagFieldwork',
-      desc: 'Predefined journal tag for fieldwork notes',
-      args: [],
-    );
-  }
-
-  /// `Add tag`
-  String get addTag {
-    return Intl.message(
-      'Add tag',
-      name: 'addTag',
-      desc: 'Button label for adding a tag to a journal entry',
-      args: [],
-    );
-  }
-
-  /// `Manage tags`
-  String get manageTags {
-    return Intl.message(
-      'Manage tags',
-      name: 'manageTags',
-      desc: 'Settings screen title for managing journal tags',
-      args: [],
-    );
-  }
-
-  /// `New tag name`
-  String get newTagName {
-    return Intl.message(
-      'New tag name',
-      name: 'newTagName',
-      desc: 'Input label for creating a custom tag',
-      args: [],
-    );
-  }
-
-  /// `Custom`
-  String get customTag {
-    return Intl.message(
-      'Custom',
-      name: 'customTag',
-      desc: 'Badge for user-created tags',
-      args: [],
-    );
-  }
-
-  /// `Predefined`
-  String get predefinedTag {
-    return Intl.message(
-      'Predefined',
-      name: 'predefinedTag',
-      desc: 'Badge for built-in predefined tags',
-      args: [],
-    );
-  }
-
-  /// `Change tag color`
-  String get changeTagColor {
-    return Intl.message(
-      'Change tag color',
-      name: 'changeTagColor',
-      desc: 'Action to change a tag color',
-      args: [],
-    );
-  }
-
-  /// `No tags found`
-  String get noTagsFound {
-    return Intl.message(
-      'No tags found',
-      name: 'noTagsFound',
-      desc: 'Empty state for tag management list',
-      args: [],
-    );
-  }
-
-  /// `Confirm add`
-  String get confirmAdd {
-    return Intl.message(
-      'Confirm add',
-      name: 'confirmAdd',
-      desc: 'Title of dialog to confirm adding an individual to an existing species count',
-      args: [],
-    );
-  }
-
-  /// `Do you want to add one individual to the count of {speciesName}?`
-  String confirmAddIndividual(String speciesName) {
-    return Intl.message(
-      'Do you want to add one individual to the count of $speciesName?',
-      name: 'confirmAddIndividual',
-      desc: 'Message asking user confirmation to add one individual to existing species',
-      args: [speciesName],
-    );
-  }
-
-  /// `Add`
-  String get add {
-    return Intl.message('Add', name: 'add', desc: 'Add button label', args: []);
-  }
-
-  /// `Online help`
-  String get onlineHelp {
-    return Intl.message(
-      'Online help',
-      name: 'onlineHelp',
-      desc: 'Online help button label',
-      args: [],
-    );
-  }
-
-  /// `Start`
-  String get start {
-    return Intl.message(
-      'Start',
-      name: 'start',
-      desc: 'Start longitude/latitude label',
-      args: [],
-    );
-  }
-
-  /// `End`
-  String get end {
-    return Intl.message(
-      'End',
-      name: 'end',
-      desc: 'End longitude/latitude label',
-      args: [],
-    );
-  }
-
-  /// `Starting, please wait...`
-  String get startingPleaseWait {
-    return Intl.message(
-      'Starting, please wait...',
-      name: 'startingPleaseWait',
-      desc: 'Starting dialog message',
-      args: [],
-    );
-  }
-
-  /// `View species table`
-  String get viewSpeciesTable {
-    return Intl.message(
-      'View species table',
-      name: 'viewSpeciesTable',
-      desc: 'View table button label',
-      args: [],
-    );
-  }
-
-  /// `Transport mode`
-  String get transportMode {
-    return Intl.message(
-      'Transport mode',
-      name: 'transportMode',
-      desc: 'Transport mode field label',
-      args: [],
-    );
-  }
-
-  /// `Not applicable`
-  String get transportNotApplicable {
-    return Intl.message(
-      'Not applicable',
-      name: 'transportNotApplicable',
-      desc: 'Not applicable transport mode label',
-      args: [],
-    );
-  }
-
-  /// `On foot`
-  String get transportWalking {
-    return Intl.message(
-      'On foot',
-      name: 'transportWalking',
-      desc: 'Walking transport mode label',
-      args: [],
-    );
-  }
-
-  /// `Vehicle`
-  String get transportVehicle {
-    return Intl.message(
-      'Vehicle',
-      name: 'transportVehicle',
-      desc: 'Vehicle transport mode label',
-      args: [],
-    );
-  }
-
-  /// `Boat`
-  String get transportBoat {
-    return Intl.message(
-      'Boat',
-      name: 'transportBoat',
-      desc: 'Boat transport mode label',
-      args: [],
-    );
-  }
-
-  /// `Aircraft`
-  String get transportAircraft {
-    return Intl.message(
-      'Aircraft',
-      name: 'transportAircraft',
-      desc: 'Aircraft transport mode label',
-      args: [],
-    );
-  }
-
-  /// `Bicycle`
-  String get transportBicycle {
-    return Intl.message(
-      'Bicycle',
-      name: 'transportBicycle',
-      desc: 'Bicycle transport mode label',
-      args: [],
-    );
-  }
-
-  /// `Horse`
-  String get transportHorse {
-    return Intl.message(
-      'Horse',
-      name: 'transportHorse',
-      desc: 'Horse transport mode label',
-      args: [],
-    );
-  }
-
-  /// `Remote`
-  String get transportRemote {
-    return Intl.message(
-      'Remote',
-      name: 'transportRemote',
-      desc: 'Remote transport mode label',
-      args: [],
-    );
-  }
-
-  /// `Other`
-  String get transportOther {
-    return Intl.message(
-      'Other',
-      name: 'transportOther',
-      desc: 'Other transport mode label',
-      args: [],
-    );
-  }
-
-  /// `Selected species`
-  String get selectedSpecies {
-    return Intl.message(
-      'Selected species',
-      name: 'selectedSpecies',
-      desc: 'Selected species field label',
-      args: [],
-    );
-  }
-
-  /// `Total`
-  String get total {
-    return Intl.message(
-      'Total',
-      name: 'total',
-      desc: 'Total legend label',
-      args: [],
-    );
-  }
-
-  /// `Sample`
-  String get sample {
-    return Intl.message(
-      'Sample',
-      name: 'sample',
-      desc: 'Sample legend label',
-      args: [],
-    );
-  }
-
-  /// ` - Presence within sample, `
-  String get presenceWithinSample {
-    return Intl.message(
-      ' - Presence within sample, ',
-      name: 'presenceWithinSample',
-      desc: 'Presence within sample legend label',
-      args: [],
-    );
-  }
-
-  /// ` - Outside sample.`
-  String get presenceOutsideSample {
-    return Intl.message(
-      ' - Outside sample.',
-      name: 'presenceOutsideSample',
-      desc: 'Presence outside sample legend label',
-      args: [],
-    );
-  }
-
-  /// `First occurrence of species in the table is highlighted.`
-  String get firstOccurrenceIsHighlighted {
-    return Intl.message(
-      'First occurrence of species in the table is highlighted.',
-      name: 'firstOccurrenceIsHighlighted',
-      desc: 'First occurrence is highlighted legend label',
-      args: [],
-    );
-  }
-
-  /// `Values in parenthesis are individuals outside sample.`
-  String get parenthesisIsOutsideSample {
-    return Intl.message(
-      'Values in parenthesis are individuals outside sample.',
-      name: 'parenthesisIsOutsideSample',
-      desc: 'Parenthesis is outside sample legend label',
-      args: [],
-    );
-  }
-
-  /// `View complete list`
-  String get viewCompleteList {
-    return Intl.message(
-      'View complete list',
-      name: 'viewCompleteList',
-      desc: 'View complete list button label',
-      args: [],
-    );
-  }
-
-  /// `No species selected`
-  String get noSpeciesSelected {
-    return Intl.message(
-      'No species selected',
-      name: 'noSpeciesSelected',
-      desc: 'No species selected message',
-      args: [],
-    );
-  }
-
-  /// `Not specified`
-  String get notSpecified {
-    return Intl.message(
-      'Not specified',
-      name: 'notSpecified',
-      desc: 'Label used when an optional field is not selected',
-      args: [],
-    );
-  }
-
-  /// `Habitat`
-  String get speciesHabitat {
-    return Intl.message(
-      'Habitat',
-      name: 'speciesHabitat',
-      desc: 'Species habitat section label',
-      args: [],
-    );
-  }
-
-  /// `Forest`
-  String get speciesHabitatForest {
-    return Intl.message(
-      'Forest',
-      name: 'speciesHabitatForest',
-      desc: 'Species habitat label',
-      args: [],
-    );
-  }
-
-  /// `Woodland`
-  String get speciesHabitatWoodland {
-    return Intl.message(
-      'Woodland',
-      name: 'speciesHabitatWoodland',
-      desc: 'Species habitat label',
-      args: [],
-    );
-  }
-
-  /// `Grassland`
-  String get speciesHabitatGrassland {
-    return Intl.message(
-      'Grassland',
-      name: 'speciesHabitatGrassland',
-      desc: 'Species habitat label',
-      args: [],
-    );
-  }
-
-  /// `Savanna`
-  String get speciesHabitatSavanna {
-    return Intl.message(
-      'Savanna',
-      name: 'speciesHabitatSavanna',
-      desc: 'Species habitat label',
-      args: [],
-    );
-  }
-
-  /// `Shrubland`
-  String get speciesHabitatShrubland {
-    return Intl.message(
-      'Shrubland',
-      name: 'speciesHabitatShrubland',
-      desc: 'Species habitat label',
-      args: [],
-    );
-  }
-
-  /// `Wetland`
-  String get speciesHabitatWetland {
-    return Intl.message(
-      'Wetland',
-      name: 'speciesHabitatWetland',
-      desc: 'Species habitat label',
-      args: [],
-    );
-  }
-
-  /// `Freshwater`
-  String get speciesHabitatFreshwater {
-    return Intl.message(
-      'Freshwater',
-      name: 'speciesHabitatFreshwater',
-      desc: 'Species habitat label',
-      args: [],
-    );
-  }
-
-  /// `Marine`
-  String get speciesHabitatMarine {
-    return Intl.message(
-      'Marine',
-      name: 'speciesHabitatMarine',
-      desc: 'Species habitat label',
-      args: [],
-    );
-  }
-
-  /// `Coastal`
-  String get speciesHabitatCoastal {
-    return Intl.message(
-      'Coastal',
-      name: 'speciesHabitatCoastal',
-      desc: 'Species habitat label',
-      args: [],
-    );
-  }
-
-  /// `Urban`
-  String get speciesHabitatUrban {
-    return Intl.message(
-      'Urban',
-      name: 'speciesHabitatUrban',
-      desc: 'Species habitat label',
-      args: [],
-    );
-  }
-
-  /// `Agricultural`
-  String get speciesHabitatAgricultural {
-    return Intl.message(
-      'Agricultural',
-      name: 'speciesHabitatAgricultural',
-      desc: 'Species habitat label',
-      args: [],
-    );
-  }
-
-  /// `Rocky terrain`
-  String get speciesHabitatRocky {
-    return Intl.message(
-      'Rocky terrain',
-      name: 'speciesHabitatRocky',
-      desc: 'Species habitat label',
-      args: [],
-    );
-  }
-
-  /// `Mangrove`
-  String get speciesHabitatMangrove {
-    return Intl.message(
-      'Mangrove',
-      name: 'speciesHabitatMangrove',
-      desc: 'Species habitat label',
-      args: [],
-    );
-  }
-
-  /// `Other`
-  String get speciesHabitatOther {
-    return Intl.message(
-      'Other',
-      name: 'speciesHabitatOther',
-      desc: 'Species habitat label',
-      args: [],
-    );
-  }
-
-  /// `Detection mode`
-  String get speciesDetectionMode {
-    return Intl.message(
-      'Detection mode',
-      name: 'speciesDetectionMode',
-      desc: 'Species detection mode section label',
-      args: [],
-    );
-  }
-
-  /// `Visual`
-  String get speciesDetectionVisual {
-    return Intl.message(
-      'Visual',
-      name: 'speciesDetectionVisual',
-      desc: 'Species detection mode label',
-      args: [],
-    );
-  }
-
-  /// `Song`
-  String get speciesDetectionSong {
-    return Intl.message(
-      'Song',
-      name: 'speciesDetectionSong',
-      desc: 'Species detection mode label',
-      args: [],
-    );
-  }
-
-  /// `Call`
-  String get speciesDetectionCall {
-    return Intl.message(
-      'Call',
-      name: 'speciesDetectionCall',
-      desc: 'Species detection mode label',
-      args: [],
-    );
-  }
-
-  /// `Wing flapping`
-  String get speciesDetectionWingFlapping {
-    return Intl.message(
-      'Wing flapping',
-      name: 'speciesDetectionWingFlapping',
-      desc: 'Species detection mode label',
-      args: [],
-    );
-  }
-
-  /// `Drumming`
-  String get speciesDetectionDrumming {
-    return Intl.message(
-      'Drumming',
-      name: 'speciesDetectionDrumming',
-      desc: 'Species detection mode label',
-      args: [],
-    );
-  }
-
-  /// `Flying`
-  String get speciesDetectionFlying {
-    return Intl.message(
-      'Flying',
-      name: 'speciesDetectionFlying',
-      desc: 'Species detection mode label',
-      args: [],
-    );
-  }
-
-  /// `Capture`
-  String get speciesDetectionCapture {
-    return Intl.message(
-      'Capture',
-      name: 'speciesDetectionCapture',
-      desc: 'Species detection mode label',
-      args: [],
-    );
-  }
-
-  /// `Remote`
-  String get speciesDetectionRemote {
-    return Intl.message(
-      'Remote',
-      name: 'speciesDetectionRemote',
-      desc: 'Species detection mode label',
-      args: [],
-    );
-  }
-
-  /// `Tracks / signs`
-  String get speciesDetectionTrackOrSign {
-    return Intl.message(
-      'Tracks / signs',
-      name: 'speciesDetectionTrackOrSign',
-      desc: 'Species detection mode label',
-      args: [],
-    );
-  }
-
-  /// `Other`
-  String get speciesDetectionOther {
-    return Intl.message(
-      'Other',
-      name: 'speciesDetectionOther',
-      desc: 'Species detection mode label',
-      args: [],
-    );
-  }
-
-  /// `Reproductive status`
-  String get speciesReproductiveStatus {
-    return Intl.message(
-      'Reproductive status',
-      name: 'speciesReproductiveStatus',
-      desc: 'Species reproductive status section label',
-      args: [],
-    );
-  }
-
-  /// `Possible breeding`
-  String get speciesReproductivePossibleBreeding {
-    return Intl.message(
-      'Possible breeding',
-      name: 'speciesReproductivePossibleBreeding',
-      desc: 'Species reproductive status label',
-      args: [],
-    );
-  }
-
-  /// `Probable breeding`
-  String get speciesReproductiveProbableBreeding {
-    return Intl.message(
-      'Probable breeding',
-      name: 'speciesReproductiveProbableBreeding',
-      desc: 'Species reproductive status label',
-      args: [],
-    );
-  }
-
-  /// `Confirmed breeding`
-  String get speciesReproductiveConfirmedBreeding {
-    return Intl.message(
-      'Confirmed breeding',
-      name: 'speciesReproductiveConfirmedBreeding',
-      desc: 'Species reproductive status label',
-      args: [],
-    );
-  }
-
-  /// `Observed`
-  String get speciesReproductiveGroupObserved {
-    return Intl.message(
-      'Observed',
-      name: 'speciesReproductiveGroupObserved',
-      desc: 'Reproductive status section title for observed level',
-      args: [],
-    );
-  }
-
-  /// `Possible`
-  String get speciesReproductiveGroupPossible {
-    return Intl.message(
-      'Possible',
-      name: 'speciesReproductiveGroupPossible',
-      desc: 'Reproductive status section title for possible breeding level',
-      args: [],
-    );
-  }
-
-  /// `Probable`
-  String get speciesReproductiveGroupProbable {
-    return Intl.message(
-      'Probable',
-      name: 'speciesReproductiveGroupProbable',
-      desc: 'Reproductive status section title for probable breeding level',
-      args: [],
-    );
-  }
-
-  /// `Confirmed`
-  String get speciesReproductiveGroupConfirmed {
-    return Intl.message(
-      'Confirmed',
-      name: 'speciesReproductiveGroupConfirmed',
-      desc: 'Reproductive status section title for confirmed breeding level',
-      args: [],
-    );
-  }
-
-  /// `In Appropriate Habitat (Possible)`
-  String get speciesReproductiveCodeH {
-    return Intl.message(
-      'In Appropriate Habitat (Possible)',
-      name: 'speciesReproductiveCodeH',
-      desc: 'eBird reproductive code H',
-      args: [],
-    );
-  }
-
-  /// `Singing Bird (Possible)`
-  String get speciesReproductiveCodeS {
-    return Intl.message(
-      'Singing Bird (Possible)',
-      name: 'speciesReproductiveCodeS',
-      desc: 'eBird reproductive code S',
-      args: [],
-    );
-  }
-
-  /// `Singing Bird Present 7+ Days (Probable)`
-  String get speciesReproductiveCodeS7 {
-    return Intl.message(
-      'Singing Bird Present 7+ Days (Probable)',
-      name: 'speciesReproductiveCodeS7',
-      desc: 'eBird reproductive code S7',
-      args: [],
-    );
-  }
-
-  /// `Multiple (7+) Singing Birds (Probable)`
-  String get speciesReproductiveCodeM {
-    return Intl.message(
-      'Multiple (7+) Singing Birds (Probable)',
-      name: 'speciesReproductiveCodeM',
-      desc: 'eBird reproductive code M',
-      args: [],
-    );
-  }
-
-  /// `Pair in Suitable Habitat (Probable)`
-  String get speciesReproductiveCodeP {
-    return Intl.message(
-      'Pair in Suitable Habitat (Probable)',
-      name: 'speciesReproductiveCodeP',
-      desc: 'eBird reproductive code P',
-      args: [],
-    );
-  }
-
-  /// `Territorial Defense (Probable)`
-  String get speciesReproductiveCodeT {
-    return Intl.message(
-      'Territorial Defense (Probable)',
-      name: 'speciesReproductiveCodeT',
-      desc: 'eBird reproductive code T',
-      args: [],
-    );
-  }
-
-  /// `Courtship, Display or Copulation (Probable)`
-  String get speciesReproductiveCodeC {
-    return Intl.message(
-      'Courtship, Display or Copulation (Probable)',
-      name: 'speciesReproductiveCodeC',
-      desc: 'eBird reproductive code C',
-      args: [],
-    );
-  }
-
-  /// `Visiting Probable Nest Site (Probable)`
-  String get speciesReproductiveCodeN {
-    return Intl.message(
-      'Visiting Probable Nest Site (Probable)',
-      name: 'speciesReproductiveCodeN',
-      desc: 'eBird reproductive code N',
-      args: [],
-    );
-  }
-
-  /// `Agitated Behavior (Probable)`
-  String get speciesReproductiveCodeA {
-    return Intl.message(
-      'Agitated Behavior (Probable)',
-      name: 'speciesReproductiveCodeA',
-      desc: 'eBird reproductive code A',
-      args: [],
-    );
-  }
-
-  /// `Wren/Woodpecker Nest Building (Probable)`
-  String get speciesReproductiveCodeB {
-    return Intl.message(
-      'Wren/Woodpecker Nest Building (Probable)',
-      name: 'speciesReproductiveCodeB',
-      desc: 'eBird reproductive code B',
-      args: [],
-    );
-  }
-
-  /// `Physiological Evidence (Probable)`
-  String get speciesReproductiveCodePE {
-    return Intl.message(
-      'Physiological Evidence (Probable)',
-      name: 'speciesReproductiveCodePE',
-      desc: 'eBird reproductive code PE',
-      args: [],
-    );
-  }
-
-  /// `Carrying Nesting Material (Confirmed/Probable)`
-  String get speciesReproductiveCodeCN {
-    return Intl.message(
-      'Carrying Nesting Material (Confirmed/Probable)',
-      name: 'speciesReproductiveCodeCN',
-      desc: 'eBird reproductive code CN',
-      args: [],
-    );
-  }
-
-  /// `Nest Building (Confirmed/Probable)`
-  String get speciesReproductiveCodeNB {
-    return Intl.message(
-      'Nest Building (Confirmed/Probable)',
-      name: 'speciesReproductiveCodeNB',
-      desc: 'eBird reproductive code NB',
-      args: [],
-    );
-  }
-
-  /// `Distraction Display (Confirmed)`
-  String get speciesReproductiveCodeDD {
-    return Intl.message(
-      'Distraction Display (Confirmed)',
-      name: 'speciesReproductiveCodeDD',
-      desc: 'eBird reproductive code DD',
-      args: [],
-    );
-  }
-
-  /// `Used Nest (Confirmed)`
-  String get speciesReproductiveCodeUN {
-    return Intl.message(
-      'Used Nest (Confirmed)',
-      name: 'speciesReproductiveCodeUN',
-      desc: 'eBird reproductive code UN',
-      args: [],
-    );
-  }
-
-  /// `Occupied Nest (Confirmed)`
-  String get speciesReproductiveCodeON {
-    return Intl.message(
-      'Occupied Nest (Confirmed)',
-      name: 'speciesReproductiveCodeON',
-      desc: 'eBird reproductive code ON',
-      args: [],
-    );
-  }
-
-  /// `Recently Fledged Young (Confirmed)`
-  String get speciesReproductiveCodeFL {
-    return Intl.message(
-      'Recently Fledged Young (Confirmed)',
-      name: 'speciesReproductiveCodeFL',
-      desc: 'eBird reproductive code FL',
-      args: [],
-    );
-  }
-
-  /// `Carrying Food (Confirmed)`
-  String get speciesReproductiveCodeCF {
-    return Intl.message(
-      'Carrying Food (Confirmed)',
-      name: 'speciesReproductiveCodeCF',
-      desc: 'eBird reproductive code CF',
-      args: [],
-    );
-  }
-
-  /// `Feeding Young (Confirmed)`
-  String get speciesReproductiveCodeFY {
-    return Intl.message(
-      'Feeding Young (Confirmed)',
-      name: 'speciesReproductiveCodeFY',
-      desc: 'eBird reproductive code FY',
-      args: [],
-    );
-  }
-
-  /// `Carrying Fecal Sac (Confirmed)`
-  String get speciesReproductiveCodeFS {
-    return Intl.message(
-      'Carrying Fecal Sac (Confirmed)',
-      name: 'speciesReproductiveCodeFS',
-      desc: 'eBird reproductive code FS',
-      args: [],
-    );
-  }
-
-  /// `Nest with Eggs (Confirmed)`
-  String get speciesReproductiveCodeNE {
-    return Intl.message(
-      'Nest with Eggs (Confirmed)',
-      name: 'speciesReproductiveCodeNE',
-      desc: 'eBird reproductive code NE',
-      args: [],
-    );
-  }
-
-  /// `Nest with Young (Confirmed)`
-  String get speciesReproductiveCodeNY {
-    return Intl.message(
-      'Nest with Young (Confirmed)',
-      name: 'speciesReproductiveCodeNY',
-      desc: 'eBird reproductive code NY',
-      args: [],
-    );
-  }
-
-  /// `Flyover (Observed)`
-  String get speciesReproductiveCodeF {
-    return Intl.message(
-      'Flyover (Observed)',
-      name: 'speciesReproductiveCodeF',
-      desc: 'eBird reproductive code F',
-      args: [],
-    );
-  }
-
-  /// `Sex`
-  String get speciesSex {
-    return Intl.message(
-      'Sex',
-      name: 'speciesSex',
-      desc: 'Species sex section label',
-      args: [],
-    );
-  }
-
-  /// `Indeterminate`
-  String get speciesSexIndeterminate {
-    return Intl.message(
-      'Indeterminate',
-      name: 'speciesSexIndeterminate',
-      desc: 'Species sex label',
-      args: [],
-    );
-  }
-
-  /// `Male`
-  String get speciesSexMale {
-    return Intl.message(
-      'Male',
-      name: 'speciesSexMale',
-      desc: 'Species sex label',
-      args: [],
-    );
-  }
-
-  /// `Female`
-  String get speciesSexFemale {
-    return Intl.message(
-      'Female',
-      name: 'speciesSexFemale',
-      desc: 'Species sex label',
-      args: [],
-    );
-  }
-
-  /// `Both`
-  String get speciesSexBoth {
-    return Intl.message(
-      'Both',
-      name: 'speciesSexBoth',
-      desc: 'Species sex label',
-      args: [],
-    );
-  }
-
-  /// `Activity`
-  String get speciesActivity {
-    return Intl.message(
-      'Activity',
-      name: 'speciesActivity',
-      desc: 'Species activity section label',
-      args: [],
-    );
-  }
-
-  /// `Flying`
-  String get speciesActivityFlying {
-    return Intl.message(
-      'Flying',
-      name: 'speciesActivityFlying',
-      desc: 'Species activity label',
-      args: [],
-    );
-  }
-
-  /// `Foraging`
-  String get speciesActivityForaging {
-    return Intl.message(
-      'Foraging',
-      name: 'speciesActivityForaging',
-      desc: 'Species activity label',
-      args: [],
-    );
-  }
-
-  /// `Perching`
-  String get speciesActivityPerching {
-    return Intl.message(
-      'Perching',
-      name: 'speciesActivityPerching',
-      desc: 'Species activity label',
-      args: [],
-    );
-  }
-
-  /// `Singing`
-  String get speciesActivitySinging {
-    return Intl.message(
-      'Singing',
-      name: 'speciesActivitySinging',
-      desc: 'Species activity label',
-      args: [],
-    );
-  }
-
-  /// `Calling`
-  String get speciesActivityCalling {
-    return Intl.message(
-      'Calling',
-      name: 'speciesActivityCalling',
-      desc: 'Species activity label',
-      args: [],
-    );
-  }
-
-  /// `Nesting`
-  String get speciesActivityNesting {
-    return Intl.message(
-      'Nesting',
-      name: 'speciesActivityNesting',
-      desc: 'Species activity label',
-      args: [],
-    );
-  }
-
-  /// `Feeding young`
-  String get speciesActivityFeedingYoung {
-    return Intl.message(
-      'Feeding young',
-      name: 'speciesActivityFeedingYoung',
-      desc: 'Species activity label',
-      args: [],
-    );
-  }
-
-  /// `Resting`
-  String get speciesActivityResting {
-    return Intl.message(
-      'Resting',
-      name: 'speciesActivityResting',
-      desc: 'Species activity label',
-      args: [],
-    );
-  }
-
-  /// `Bathing`
-  String get speciesActivityBathing {
-    return Intl.message(
-      'Bathing',
-      name: 'speciesActivityBathing',
-      desc: 'Species activity label',
-      args: [],
-    );
-  }
-
-  /// `Moving`
-  String get speciesActivityMoving {
-    return Intl.message(
-      'Moving',
-      name: 'speciesActivityMoving',
-      desc: 'Species activity label',
-      args: [],
-    );
-  }
-
-  /// `Displaying`
-  String get speciesActivityDisplaying {
-    return Intl.message(
-      'Displaying',
-      name: 'speciesActivityDisplaying',
-      desc: 'Species activity label',
-      args: [],
-    );
-  }
-
-  /// `Aggressive behavior`
-  String get speciesActivityAggressive {
-    return Intl.message(
-      'Aggressive behavior',
-      name: 'speciesActivityAggressive',
-      desc: 'Species activity label',
-      args: [],
-    );
-  }
-
-  /// `Roosting`
-  String get speciesActivityRoosting {
-    return Intl.message(
-      'Roosting',
-      name: 'speciesActivityRoosting',
-      desc: 'Species activity label',
-      args: [],
-    );
-  }
-
-  /// `Other`
-  String get speciesActivityOther {
-    return Intl.message(
-      'Other',
-      name: 'speciesActivityOther',
-      desc: 'Species activity label',
-      args: [],
-    );
-  }
+    return Localizations.of<S>(context, S)!;
+  }
+
+  static const LocalizationsDelegate<S> delegate = _SDelegate();
+
+  /// A list of this localizations delegate along with the default localizations
+  /// delegates.
+  ///
+  /// Returns a list of localizations delegates containing this delegate along with
+  /// GlobalMaterialLocalizations.delegate, GlobalCupertinoLocalizations.delegate,
+  /// and GlobalWidgetsLocalizations.delegate.
+  ///
+  /// Additional delegates can be added by appending to this list in
+  /// MaterialApp. This list does not have to be used at all if a custom list
+  /// of delegates is preferred or required.
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
+    delegate,
+    GlobalMaterialLocalizations.delegate,
+    GlobalCupertinoLocalizations.delegate,
+    GlobalWidgetsLocalizations.delegate,
+  ];
+
+  /// A list of this localizations delegate's supported locales.
+  static const List<Locale> supportedLocales = <Locale>[Locale('en'), Locale('pt'), Locale('pt', 'BR')];
+
+  /// No description provided for @inventories.
+  ///
+  /// In en, this message translates to:
+  /// **'Inventories'**
+  String get inventories;
+
+  /// No description provided for @nests.
+  ///
+  /// In en, this message translates to:
+  /// **'Nests'**
+  String get nests;
+
+  /// Titles and messages about specimens
+  ///
+  /// In en, this message translates to:
+  /// **'{howMany, plural, one{Specimen} other{Specimens}}'**
+  String specimens(int howMany);
+
+  /// Field journal option in navigation drawer
+  ///
+  /// In en, this message translates to:
+  /// **'Field journal'**
+  String get fieldJournal;
+
+  /// Titles and messages about field journal entries
+  ///
+  /// In en, this message translates to:
+  /// **'{howMany, plural, one{Journal entry} other{Journal entries}}'**
+  String journalEntries(int howMany);
+
+  /// Points of occurrence label
+  ///
+  /// In en, this message translates to:
+  /// **'Points of occurrence'**
+  String get pointsOfOccurrence;
+
+  /// Settings title and button label
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settings;
+
+  /// General section in settings
+  ///
+  /// In en, this message translates to:
+  /// **'General'**
+  String get general;
+
+  /// Appearance option in settings
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get appearance;
+
+  /// Settings option to choose which module opens when the app starts
+  ///
+  /// In en, this message translates to:
+  /// **'Startup module'**
+  String get startupModule;
+
+  /// Title of dialog to select the app mode
+  ///
+  /// In en, this message translates to:
+  /// **'Select the mode'**
+  String get selectMode;
+
+  /// Light mode name
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get lightMode;
+
+  /// Dark mode name
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get darkMode;
+
+  /// System theme name
+  ///
+  /// In en, this message translates to:
+  /// **'System theme'**
+  String get systemMode;
+
+  /// Observers option in settings
+  ///
+  /// In en, this message translates to:
+  /// **'Observers'**
+  String get observersSettings;
+
+  /// Default observer option in settings
+  ///
+  /// In en, this message translates to:
+  /// **'Default observer'**
+  String get defaultObserver;
+
+  /// Observer option in settings
+  ///
+  /// In en, this message translates to:
+  /// **'Observer (abbreviation)'**
+  String get observerSetting;
+
+  /// Title of dialog to inform observer abbreviation
+  ///
+  /// In en, this message translates to:
+  /// **'Observer'**
+  String get observer;
+
+  /// Label of text field to inform observer abbreviation
+  ///
+  /// In en, this message translates to:
+  /// **'Observer abbreviation'**
+  String get observerAbbreviation;
+
+  /// General settings option in settings
+  ///
+  /// In en, this message translates to:
+  /// **'General settings'**
+  String get generalSettings;
+
+  /// Species search country option in settings
+  ///
+  /// In en, this message translates to:
+  /// **'Species search country'**
+  String get speciesSearchCountry;
+
+  /// Inventory settings option in settings
+  ///
+  /// In en, this message translates to:
+  /// **'Inventory settings'**
+  String get inventorySettings;
+
+  /// Limits section in inventory settings
+  ///
+  /// In en, this message translates to:
+  /// **'Limits'**
+  String get limits;
+
+  /// Defaults section in inventory settings
+  ///
+  /// In en, this message translates to:
+  /// **'Defaults'**
+  String get defaults;
+
+  /// Reminders section in inventory settings
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders'**
+  String get reminders;
+
+  /// Import and export option in settings
+  ///
+  /// In en, this message translates to:
+  /// **'Import and export'**
+  String get importExportSettings;
+
+  /// Version label in about the app section
+  ///
+  /// In en, this message translates to:
+  /// **'Version'**
+  String get version;
+
+  /// Label with a link to the app repository on GitHub in about the app section
+  ///
+  /// In en, this message translates to:
+  /// **'Give feedback or contribute on GitHub'**
+  String get giveFeedbackOnGitHub;
+
+  /// Label for the button to create a backup in settings
+  ///
+  /// In en, this message translates to:
+  /// **'Backup file includes data and images'**
+  String get createBackupDescription;
+
+  /// Label for the button to restore backup in settings
+  ///
+  /// In en, this message translates to:
+  /// **'All data files will be replaced'**
+  String get restoreBackupDescription;
+
+  /// Cancel button label
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// Save button label
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// Simultaneous inventories option in settings
+  ///
+  /// In en, this message translates to:
+  /// **'Simultaneous inventories'**
+  String get simultaneousInventories;
+
+  /// Titles and messages about inventories
+  ///
+  /// In en, this message translates to:
+  /// **'{howMany, plural, one{inventory} other{inventories}}'**
+  String inventory(int howMany);
+
+  /// Message showing how many inventories were found
+  ///
+  /// In en, this message translates to:
+  /// **'{howMany, plural, one{inventory found} other{inventories found}}'**
+  String inventoryFound(int howMany);
+
+  /// Mackinnon lists option in settings
+  ///
+  /// In en, this message translates to:
+  /// **'Mackinnon lists'**
+  String get mackinnonLists;
+
+  /// How many species per list in settings screen
+  ///
+  /// In en, this message translates to:
+  /// **'{howMany, plural, one{1 species} other{{howMany} species}} per list'**
+  String speciesPerList(int howMany);
+
+  /// Title of dialog to inform the number of species per Mackinnon list
+  ///
+  /// In en, this message translates to:
+  /// **'Species per list'**
+  String get speciesPerListTitle;
+
+  /// Point counts option in settings
+  ///
+  /// In en, this message translates to:
+  /// **'Point counts'**
+  String get pointCounts;
+
+  /// Title of dialog to inform inventory duration in minutes
+  ///
+  /// In en, this message translates to:
+  /// **'Duration (min)'**
+  String get durationMin;
+
+  /// Time duration in minutes in settings screen
+  ///
+  /// In en, this message translates to:
+  /// **'{howMany, plural, one{1 minute} other{{howMany} minutes}}'**
+  String inventoryDuration(int howMany);
+
+  /// Timed qualitative lists option in settings
+  ///
+  /// In en, this message translates to:
+  /// **'Timed qualitative lists'**
+  String get timedQualitativeLists;
+
+  /// Interval qualitative lists option in settings
+  ///
+  /// In en, this message translates to:
+  /// **'Interval qualitative lists'**
+  String get intervaledQualitativeLists;
+
+  /// Format numbers option in settings
+  ///
+  /// In en, this message translates to:
+  /// **'Format numbers'**
+  String get formatNumbers;
+
+  /// About the app option in settings
+  ///
+  /// In en, this message translates to:
+  /// **'About the app'**
+  String get about;
+
+  /// Danger zone in settings
+  ///
+  /// In en, this message translates to:
+  /// **'Danger zone'**
+  String get dangerZone;
+
+  /// Delete app data option in settings
+  ///
+  /// In en, this message translates to:
+  /// **'Delete the app data'**
+  String get deleteAppData;
+
+  /// Description of the action to delete all app data
+  ///
+  /// In en, this message translates to:
+  /// **'All data will be erased. Use with caution! This action cannot be undone.'**
+  String get deleteAppDataDescription;
+
+  /// Title of dialog to confirm app data deletion
+  ///
+  /// In en, this message translates to:
+  /// **'Delete data'**
+  String get deleteData;
+
+  /// Message asking user for confirmation before delete all app data
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete all app data? This action cannot be undone.'**
+  String get deleteDataMessage;
+
+  /// Delete button label
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// Message informing user that the data was successfully deleted
+  ///
+  /// In en, this message translates to:
+  /// **'App data deleted successfully!'**
+  String get dataDeleted;
+
+  /// OK button label
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get ok;
+
+  /// Message shown when the limit of simultaneous inventories defined in settings is reached
+  ///
+  /// In en, this message translates to:
+  /// **'Limit of simultaneous inventories reached.'**
+  String get simultaneousLimitReached;
+
+  /// Sort by time option in inventories list
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by Time'**
+  String get sortByTime;
+
+  /// Sort by name option in inventories list
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by Name'**
+  String get sortByName;
+
+  /// Sort ascending option in inventories list
+  ///
+  /// In en, this message translates to:
+  /// **'Sort ascending'**
+  String get sortAscending;
+
+  /// Sort descending option in inventories list
+  ///
+  /// In en, this message translates to:
+  /// **'Sort descending'**
+  String get sortDescending;
+
+  /// Hint text in inventories search field
+  ///
+  /// In en, this message translates to:
+  /// **'Find inventories...'**
+  String get findInventories;
+
+  /// Segmented button label to filter for active inventories or nests
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get active;
+
+  /// Segmented button label to filter for finished inventories
+  ///
+  /// In en, this message translates to:
+  /// **'Finished'**
+  String get finished;
+
+  /// Text shown when no inventories found
+  ///
+  /// In en, this message translates to:
+  /// **'No inventories found.'**
+  String get noInventoriesFound;
+
+  /// Delete inventory option in bottom sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Delete inventory'**
+  String get deleteInventory;
+
+  /// Title of dialog for confirm record deletion
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm delete'**
+  String get confirmDelete;
+
+  /// Message asking user confirmation to delete record
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete {howMany, plural, one{{gender, select, male{this} female{this} other{this}}} other{{gender, select, male{these} female{these} other{these}}}} {what}?'**
+  String confirmDeleteMessage(int howMany, String gender, String what);
+
+  /// Title of dialog to confirm finishing an inventory
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm finish'**
+  String get confirmFinish;
+
+  /// Message asking confirmation to finish an inventory
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to finish this inventory ({which})?'**
+  String confirmFinishMessage(String which);
+
+  /// Message asking confirmation to finish an inventory automatically
+  ///
+  /// In en, this message translates to:
+  /// **'Inventory automatically finished. Do you want to keep active or finish this inventory?'**
+  String get confirmAutoFinishMessage;
+
+  /// Finish button label
+  ///
+  /// In en, this message translates to:
+  /// **'Finish'**
+  String get finish;
+
+  /// Keep running button label
+  ///
+  /// In en, this message translates to:
+  /// **'Keep active'**
+  String get keepRunning;
+
+  /// Title of dialog when adding new inventory
+  ///
+  /// In en, this message translates to:
+  /// **'New inventory'**
+  String get newInventory;
+
+  /// How many species the inventory have
+  ///
+  /// In en, this message translates to:
+  /// **'{howMany, plural, zero{species} one{species} other{species}}'**
+  String speciesCount(int howMany);
+
+  /// How many records the inventory have
+  ///
+  /// In en, this message translates to:
+  /// **'{howMany, plural, zero{records} one{record} other{records}}'**
+  String recordsCount(int howMany);
+
+  /// Pause button hint
+  ///
+  /// In en, this message translates to:
+  /// **'Pause'**
+  String get pause;
+
+  /// Resume button hint
+  ///
+  /// In en, this message translates to:
+  /// **'Resume'**
+  String get resume;
+
+  /// Export button hint
+  ///
+  /// In en, this message translates to:
+  /// **'Export'**
+  String get export;
+
+  /// Menu option to export one record
+  ///
+  /// In en, this message translates to:
+  /// **'Export {what}'**
+  String exportWhat(String what);
+
+  /// Export all button hint
+  ///
+  /// In en, this message translates to:
+  /// **'Export all'**
+  String get exportAll;
+
+  /// Menu option to export all records
+  ///
+  /// In en, this message translates to:
+  /// **'Export all {what}'**
+  String exportAllWhat(String what);
+
+  /// Menu option to finish the inventory
+  ///
+  /// In en, this message translates to:
+  /// **'Finish inventory'**
+  String get finishInventory;
+
+  /// Auxiliary label informing that the field is required
+  ///
+  /// In en, this message translates to:
+  /// **'* required'**
+  String get requiredField;
+
+  /// Inventory type field label
+  ///
+  /// In en, this message translates to:
+  /// **'Inventory type'**
+  String get inventoryType;
+
+  /// Validation message shown when the inventory type field is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Please, select an inventory type'**
+  String get selectInventoryType;
+
+  /// Inventory ID field label
+  ///
+  /// In en, this message translates to:
+  /// **'Inventory ID'**
+  String get inventoryId;
+
+  /// Title of dialog to generate an inventory ID
+  ///
+  /// In en, this message translates to:
+  /// **'Generate ID'**
+  String get generateId;
+
+  /// Field label for expedition name used in ID generation
+  ///
+  /// In en, this message translates to:
+  /// **'Expedition'**
+  String get expedition;
+
+  /// Field label asking the inventory site name or abbreviation to generate the ID
+  ///
+  /// In en, this message translates to:
+  /// **'Site name or abbreviation'**
+  String get siteAbbreviation;
+
+  /// Auxiliary label informing that the field is optional
+  ///
+  /// In en, this message translates to:
+  /// **'* optional'**
+  String get optional;
+
+  /// Validation message shown when the inventory ID is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Please, insert an ID for the inventory'**
+  String get insertInventoryId;
+
+  /// Time duration field label
+  ///
+  /// In en, this message translates to:
+  /// **'Duration'**
+  String get duration;
+
+  /// Label for elapsed time since inventory start
+  ///
+  /// In en, this message translates to:
+  /// **'Elapsed time'**
+  String get elapsedTime;
+
+  /// Label for remaining time in timed inventory
+  ///
+  /// In en, this message translates to:
+  /// **'Remaining'**
+  String get remainingTime;
+
+  /// Field suffix and messages containing duration of time
+  ///
+  /// In en, this message translates to:
+  /// **'{howMany, plural, one{minute} other{minutes}}'**
+  String minutes(int howMany);
+
+  /// Validation message shown when duration is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Insert a duration'**
+  String get insertDuration;
+
+  /// Max number of species field label
+  ///
+  /// In en, this message translates to:
+  /// **'Max species'**
+  String get maxSpecies;
+
+  /// Validation message shown when the max of species field is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Insert the max of species'**
+  String get insertMaxSpecies;
+
+  /// Validation message shown when the max of species is lower than five
+  ///
+  /// In en, this message translates to:
+  /// **'Must be equal or higher than 5'**
+  String get mustBeBiggerThanFive;
+
+  /// Start inventory button label
+  ///
+  /// In en, this message translates to:
+  /// **'Start inventory'**
+  String get startInventory;
+
+  /// Message shown when the informed inventory ID already exists
+  ///
+  /// In en, this message translates to:
+  /// **'This inventory ID already exists.'**
+  String get inventoryIdAlreadyExists;
+
+  /// Message shown if an error occurred while inserting an inventory
+  ///
+  /// In en, this message translates to:
+  /// **'Error inserting inventory'**
+  String get errorInsertingInventory;
+
+  /// Title of report option to show species by inventory
+  ///
+  /// In en, this message translates to:
+  /// **'Species by inventory'**
+  String get reportSpeciesByInventory;
+
+  /// Total species field label
+  ///
+  /// In en, this message translates to:
+  /// **'Total Species'**
+  String get totalSpecies;
+
+  /// Total individuals field label
+  ///
+  /// In en, this message translates to:
+  /// **'Total Individuals'**
+  String get totalIndividuals;
+
+  /// Title of report option to show species accumulation curve
+  ///
+  /// In en, this message translates to:
+  /// **'Species accumulation'**
+  String get speciesAccumulationCurve;
+
+  /// Species accumulated field label
+  ///
+  /// In en, this message translates to:
+  /// **'Species accumulated'**
+  String get speciesAccumulated;
+
+  /// Time in minutes field label
+  ///
+  /// In en, this message translates to:
+  /// **'Minutes'**
+  String get timeMinutes;
+
+  /// Time in seconds field label
+  ///
+  /// In en, this message translates to:
+  /// **'Seconds'**
+  String get timeSeconds;
+
+  /// Species counted field label
+  ///
+  /// In en, this message translates to:
+  /// **'Species counted'**
+  String get speciesCounted;
+
+  /// Individuals counted field label
+  ///
+  /// In en, this message translates to:
+  /// **'Individuals counted'**
+  String get individualsCounted;
+
+  /// Close button label
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get close;
+
+  /// Refresh button hint
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get refreshList;
+
+  /// Message shown when there is no data to show
+  ///
+  /// In en, this message translates to:
+  /// **'No data available.'**
+  String get noDataAvailable;
+
+  /// Button label to clear the selection
+  ///
+  /// In en, this message translates to:
+  /// **'Clear selection'**
+  String get clearSelection;
+
+  /// Message shown when importing an inventory
+  ///
+  /// In en, this message translates to:
+  /// **'Importing inventory...'**
+  String get importingInventory;
+
+  /// Message shown when an inventory is imported successfully
+  ///
+  /// In en, this message translates to:
+  /// **'Inventory imported successfully!'**
+  String get inventoryImportedSuccessfully;
+
+  /// Message shown when an inventory import failed
+  ///
+  /// In en, this message translates to:
+  /// **'Inventory import failed.'**
+  String get inventoryImportFailed;
+
+  /// Message shown when no file is selected to import
+  ///
+  /// In en, this message translates to:
+  /// **'No file selected.'**
+  String get noFileSelected;
+
+  /// Import button label
+  ///
+  /// In en, this message translates to:
+  /// **'Import'**
+  String get import;
+
+  /// Message shown when an error occurred while importing an inventory
+  ///
+  /// In en, this message translates to:
+  /// **'Error importing inventory.'**
+  String get errorImportingInventory;
+
+  /// Vegetation data title or label
+  ///
+  /// In en, this message translates to:
+  /// **'Vegetation data'**
+  String get vegetationData;
+
+  /// Herbs section label in vegetation data
+  ///
+  /// In en, this message translates to:
+  /// **'Herbs'**
+  String get herbs;
+
+  /// Distribution field label
+  ///
+  /// In en, this message translates to:
+  /// **'Distribution'**
+  String get distribution;
+
+  /// Proportion field label
+  ///
+  /// In en, this message translates to:
+  /// **'Proportion'**
+  String get proportion;
+
+  /// Average height field label
+  ///
+  /// In en, this message translates to:
+  /// **'Height'**
+  String get height;
+
+  /// Shrubs section label in vegetation data
+  ///
+  /// In en, this message translates to:
+  /// **'Shrubs'**
+  String get shrubs;
+
+  /// Trees section label in vegetation data
+  ///
+  /// In en, this message translates to:
+  /// **'Trees'**
+  String get trees;
+
+  /// Notes field label
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get notes;
+
+  /// Validation message shown when proportion field is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Insert proportion'**
+  String get insertProportion;
+
+  /// Validation message shown when height field is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Insert height'**
+  String get insertHeight;
+
+  /// Message shown when an error occurred while saving a vegetation record
+  ///
+  /// In en, this message translates to:
+  /// **'Error saving vegetation data'**
+  String get errorSavingVegetation;
+
+  /// Weather data title or label
+  ///
+  /// In en, this message translates to:
+  /// **'Weather data'**
+  String get weatherData;
+
+  /// Cloud cover field label
+  ///
+  /// In en, this message translates to:
+  /// **'Cloud cover'**
+  String get cloudCover;
+
+  /// Precipitation field label
+  ///
+  /// In en, this message translates to:
+  /// **'Precipitation'**
+  String get precipitation;
+
+  /// Validation message shown when the precipitation field is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Select precipitation'**
+  String get selectPrecipitation;
+
+  /// Temperature field label
+  ///
+  /// In en, this message translates to:
+  /// **'Temperature'**
+  String get temperature;
+
+  /// Wind speed field label
+  ///
+  /// In en, this message translates to:
+  /// **'Wind speed'**
+  String get windSpeed;
+
+  /// Validation message shown when the wind speed is out of range
+  ///
+  /// In en, this message translates to:
+  /// **'Must be between 0 and 12 bft'**
+  String get windSpeedRangeError;
+
+  /// Message shown when an error occurred while saving a weather record
+  ///
+  /// In en, this message translates to:
+  /// **'Error saving weather data'**
+  String get errorSavingWeather;
+
+  /// Tabs and messages about species
+  ///
+  /// In en, this message translates to:
+  /// **'{howMany, plural, one{Species} other{Species}}'**
+  String species(int howMany);
+
+  /// Abbreviation of species in labels and edits
+  ///
+  /// In en, this message translates to:
+  /// **'{howMany, plural, one{sp.} other{spp.}}'**
+  String speciesAcronym(int howMany);
+
+  /// Vegetation tab
+  ///
+  /// In en, this message translates to:
+  /// **'Vegetation'**
+  String get vegetation;
+
+  /// Weather tab
+  ///
+  /// In en, this message translates to:
+  /// **'Weather'**
+  String get weather;
+
+  /// Message shown when an error occurred while getting the GPS location
+  ///
+  /// In en, this message translates to:
+  /// **'Error getting location.'**
+  String get errorGettingLocation;
+
+  /// Point of interest abbreviation in labels
+  ///
+  /// In en, this message translates to:
+  /// **'POI'**
+  String get poi;
+
+  /// Species information expandable list title
+  ///
+  /// In en, this message translates to:
+  /// **'Species information'**
+  String get speciesInfo;
+
+  /// Species info showing individuals count for the species in the actual list
+  ///
+  /// In en, this message translates to:
+  /// **'Count'**
+  String get count;
+
+  /// Species info showing the record time for the species in the actual list
+  ///
+  /// In en, this message translates to:
+  /// **'Record time'**
+  String get recordTime;
+
+  /// Messages and labels about individuals
+  ///
+  /// In en, this message translates to:
+  /// **'{howMany, plural, one{individual} other{individuals}}'**
+  String individual(int howMany);
+
+  /// Species info for when the species was added after the inventory was finished
+  ///
+  /// In en, this message translates to:
+  /// **'Out of the sample'**
+  String get outOfSample;
+
+  /// Flag for species records that are uncertain
+  ///
+  /// In en, this message translates to:
+  /// **'Doubtful record'**
+  String get doubtfulRecord;
+
+  /// Species info for when the species was added while the inventory was active
+  ///
+  /// In en, this message translates to:
+  /// **'Within the sample'**
+  String get withinSample;
+
+  /// Message shown when no POI was found
+  ///
+  /// In en, this message translates to:
+  /// **'No POI found.'**
+  String get noPoiFound;
+
+  /// New POI button hint
+  ///
+  /// In en, this message translates to:
+  /// **'New POI'**
+  String get newPoi;
+
+  /// Menu option to delete POI
+  ///
+  /// In en, this message translates to:
+  /// **'Delete POI'**
+  String get deletePoi;
+
+  /// Decrease individuals count button hint
+  ///
+  /// In en, this message translates to:
+  /// **'Decrease individuals count'**
+  String get decreaseIndividuals;
+
+  /// Increase individuals count button hint
+  ///
+  /// In en, this message translates to:
+  /// **'Increase individuals count'**
+  String get increaseIndividuals;
+
+  /// Add POI button hint
+  ///
+  /// In en, this message translates to:
+  /// **'Add POI'**
+  String get addPoi;
+
+  /// Title of dialog to edit the number of individuals of a species
+  ///
+  /// In en, this message translates to:
+  /// **'Edit count'**
+  String get editCount;
+
+  /// Individuals count field label
+  ///
+  /// In en, this message translates to:
+  /// **'Individuals count'**
+  String get individualsCount;
+
+  /// Menu option to delete a vegetation record
+  ///
+  /// In en, this message translates to:
+  /// **'Delete vegetation record'**
+  String get deleteVegetation;
+
+  /// Message shown when the vegetation list is empty
+  ///
+  /// In en, this message translates to:
+  /// **'No vegetation records.'**
+  String get noVegetationFound;
+
+  /// Weather record label used in messages
+  ///
+  /// In en, this message translates to:
+  /// **'weather record'**
+  String get weatherRecord;
+
+  /// Message shown when the weather list is empty
+  ///
+  /// In en, this message translates to:
+  /// **'No weather records.'**
+  String get noWeatherFound;
+
+  /// Menu option to delete a weather record
+  ///
+  /// In en, this message translates to:
+  /// **'Delete weather record'**
+  String get deleteWeather;
+
+  /// Text hint in the nest search field
+  ///
+  /// In en, this message translates to:
+  /// **'Find nests...'**
+  String get findNests;
+
+  /// Segmented button label for filter of inactive nests
+  ///
+  /// In en, this message translates to:
+  /// **'Inactive'**
+  String get inactive;
+
+  /// Message shown when the nests list is empty
+  ///
+  /// In en, this message translates to:
+  /// **'No nests found.'**
+  String get noNestsFound;
+
+  /// Messages and labels about nests
+  ///
+  /// In en, this message translates to:
+  /// **'{howMany, plural, one{nest} other{nests}}'**
+  String nest(int howMany);
+
+  /// New nest dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'New nest'**
+  String get newNest;
+
+  /// Menu option to delete a nest
+  ///
+  /// In en, this message translates to:
+  /// **'Delete nest'**
+  String get deleteNest;
+
+  /// Title of dialog to confirm nest fate
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm fate'**
+  String get confirmFate;
+
+  /// Nest fate field label
+  ///
+  /// In en, this message translates to:
+  /// **'Nest fate'**
+  String get nestFate;
+
+  /// Error message when inactivating nest
+  ///
+  /// In en, this message translates to:
+  /// **'Error inactivating nest: {errorMessage}'**
+  String errorInactivatingNest(String errorMessage);
+
+  /// Nest revision messages, tabs and labels
+  ///
+  /// In en, this message translates to:
+  /// **'{howMany, plural, one{Revision} other{Revisions}}'**
+  String revision(int howMany);
+
+  /// Egg messages, tabs and labels
+  ///
+  /// In en, this message translates to:
+  /// **'{howMany, plural, one{Egg} other{Eggs}}'**
+  String egg(int howMany);
+
+  /// Nest information expandable list title
+  ///
+  /// In en, this message translates to:
+  /// **'Nest information'**
+  String get nestInfo;
+
+  /// Time found field label
+  ///
+  /// In en, this message translates to:
+  /// **'Date and time found'**
+  String get timeFound;
+
+  /// Locality field label
+  ///
+  /// In en, this message translates to:
+  /// **'Locality'**
+  String get locality;
+
+  /// Nest support field label
+  ///
+  /// In en, this message translates to:
+  /// **'Nest support'**
+  String get nestSupport;
+
+  /// Height above ground field label
+  ///
+  /// In en, this message translates to:
+  /// **'Height above ground'**
+  String get heightAboveGround;
+
+  /// Male field label
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get male;
+
+  /// Female field label
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get female;
+
+  /// Nest helpers field label
+  ///
+  /// In en, this message translates to:
+  /// **'Nest helpers'**
+  String get helpers;
+
+  /// Message shown when the eggs list is empty
+  ///
+  /// In en, this message translates to:
+  /// **'No eggs recorded.'**
+  String get noEggsFound;
+
+  /// Menu option to delete an egg
+  ///
+  /// In en, this message translates to:
+  /// **'Delete egg'**
+  String get deleteEgg;
+
+  /// Message shown when the nest revision list is empty
+  ///
+  /// In en, this message translates to:
+  /// **'No revisions recorded.'**
+  String get noRevisionsFound;
+
+  /// Menu option to delete a nest revision
+  ///
+  /// In en, this message translates to:
+  /// **'Delete nest revision'**
+  String get deleteRevision;
+
+  /// Nest owner section label
+  ///
+  /// In en, this message translates to:
+  /// **'Host'**
+  String get host;
+
+  /// Nidoparasite section label
+  ///
+  /// In en, this message translates to:
+  /// **'Nidoparasite'**
+  String get nidoparasite;
+
+  /// Nestling messages and labels
+  ///
+  /// In en, this message translates to:
+  /// **'{howMany, plural, one{Nestling} other{Nestlings}}'**
+  String nestling(int howMany);
+
+  /// Add egg dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Add egg'**
+  String get addEgg;
+
+  /// Field number field label
+  ///
+  /// In en, this message translates to:
+  /// **'Field number'**
+  String get fieldNumber;
+
+  /// Validation message shown when the field number is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Insert the field number'**
+  String get insertFieldNumber;
+
+  /// Validation message shown when the species is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Select a species'**
+  String get selectSpecies;
+
+  /// Egg shape field label
+  ///
+  /// In en, this message translates to:
+  /// **'Egg shape'**
+  String get eggShape;
+
+  /// Width field label
+  ///
+  /// In en, this message translates to:
+  /// **'Width'**
+  String get width;
+
+  /// Length field label
+  ///
+  /// In en, this message translates to:
+  /// **'Length'**
+  String get length;
+
+  /// Weight field label
+  ///
+  /// In en, this message translates to:
+  /// **'Weight'**
+  String get weight;
+
+  /// Message shown when an egg already exists with the same field number
+  ///
+  /// In en, this message translates to:
+  /// **'An egg with this field number already exists.'**
+  String get errorEggAlreadyExists;
+
+  /// Message shown when an error occurred while saving an egg
+  ///
+  /// In en, this message translates to:
+  /// **'Error saving egg.'**
+  String get errorSavingEgg;
+
+  /// Validation message shown when locality name is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Please, insert locality name'**
+  String get insertLocality;
+
+  /// Validation message shown when nest support is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Please, insert nest support'**
+  String get insertNestSupport;
+
+  /// Message shown when a nest already exists with the same field number
+  ///
+  /// In en, this message translates to:
+  /// **'A nest with this field number already exists.'**
+  String get errorNestAlreadyExists;
+
+  /// Message shown when an error occurred while saving a nest
+  ///
+  /// In en, this message translates to:
+  /// **'Error saving nest.'**
+  String get errorSavingNest;
+
+  /// New nest revision dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Nest revision'**
+  String get nestRevision;
+
+  /// Nest status field label
+  ///
+  /// In en, this message translates to:
+  /// **'Nest status'**
+  String get nestStatus;
+
+  /// Nest phase field label
+  ///
+  /// In en, this message translates to:
+  /// **'Nest phase'**
+  String get nestPhase;
+
+  /// Validation message shown when the nest status is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Select nest status'**
+  String get selectNestStatus;
+
+  /// Validation message shown when the nest phase is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Select nest phase'**
+  String get selectNestPhase;
+
+  /// Message shown when the nest phase is invalid
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid nest phase'**
+  String get invalidNestPhase;
+
+  /// Validation message shown when the egg shape is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Select egg shape'**
+  String get selectEggShape;
+
+  /// Philornis larvae present field label
+  ///
+  /// In en, this message translates to:
+  /// **'Philornis larvae present'**
+  String get philornisLarvaePresent;
+
+  /// Message shown when an error occurred while saving a nest revision
+  ///
+  /// In en, this message translates to:
+  /// **'Error saving nest revision.'**
+  String get errorSavingRevision;
+
+  /// Text hint in the specimen search field
+  ///
+  /// In en, this message translates to:
+  /// **'Find specimens...'**
+  String get findSpecimens;
+
+  /// Message shown when the specimens list is empty
+  ///
+  /// In en, this message translates to:
+  /// **'No specimen collected.'**
+  String get noSpecimenCollected;
+
+  /// New specimen dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'New specimen'**
+  String get newSpecimen;
+
+  /// Menu option to delete a specimen
+  ///
+  /// In en, this message translates to:
+  /// **'Delete specimen'**
+  String get deleteSpecimen;
+
+  /// Specimen type field label
+  ///
+  /// In en, this message translates to:
+  /// **'Specimen type'**
+  String get specimenType;
+
+  /// Message shown when a specimen already exists with the same field number
+  ///
+  /// In en, this message translates to:
+  /// **'A specimen with this field number already exists.'**
+  String get errorSpecimenAlreadyExists;
+
+  /// Message shown when an error occurred while saving a specimen
+  ///
+  /// In en, this message translates to:
+  /// **'Error saving specimen.'**
+  String get errorSavingSpecimen;
+
+  /// Images titles, messages and labels
+  ///
+  /// In en, this message translates to:
+  /// **'{howMany, plural, one{Image} other{Images}}'**
+  String images(int howMany);
+
+  /// Message shown when the images list is empty
+  ///
+  /// In en, this message translates to:
+  /// **'No images found.'**
+  String get noImagesFound;
+
+  /// Add image dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Add image'**
+  String get addImage;
+
+  /// Gallery button label
+  ///
+  /// In en, this message translates to:
+  /// **'Gallery'**
+  String get gallery;
+
+  /// Camera button label
+  ///
+  /// In en, this message translates to:
+  /// **'Camera'**
+  String get camera;
+
+  /// Message shown when the permission was denied
+  ///
+  /// In en, this message translates to:
+  /// **'Permission denied.'**
+  String get permissionDenied;
+
+  /// Message shown when the permission was denied permanently
+  ///
+  /// In en, this message translates to:
+  /// **'Permission denied permanently.'**
+  String get permissionDeniedPermanently;
+
+  /// Menu option to share an image
+  ///
+  /// In en, this message translates to:
+  /// **'Share image'**
+  String get shareImage;
+
+  /// Menu option to edit the image notes
+  ///
+  /// In en, this message translates to:
+  /// **'Edit image notes'**
+  String get editImageNotes;
+
+  /// Menu option to delete an image
+  ///
+  /// In en, this message translates to:
+  /// **'Delete image'**
+  String get deleteImage;
+
+  /// Edit notes dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Edit notes'**
+  String get editNotes;
+
+  /// Image details dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Image details'**
+  String get imageDetails;
+
+  /// Message when inventory was exported
+  ///
+  /// In en, this message translates to:
+  /// **'{howMany, plural, one{Inventory exported!} other{Inventories exported!}}'**
+  String inventoryExported(int howMany);
+
+  /// Subject when exporting inventories
+  ///
+  /// In en, this message translates to:
+  /// **'{howMany, plural, one{Inventory data} other{Inventories data}}'**
+  String inventoryData(int howMany);
+
+  /// Error message when exporting inventories
+  ///
+  /// In en, this message translates to:
+  /// **'Error exporting {howMany, plural, one{inventory} other{inventories}}: {errorMessage}'**
+  String errorExportingInventory(int howMany, String errorMessage);
+
+  /// Title of the one-time onboarding screen that explains inventory export changes
+  ///
+  /// In en, this message translates to:
+  /// **'Export changes'**
+  String get inventoryExportOnboardingTitle;
+
+  /// Introductory message on the inventory export onboarding screen
+  ///
+  /// In en, this message translates to:
+  /// **'For best compatibility, CSV and Excel exports now use a new file structure.'**
+  String get inventoryExportOnboardingMessage;
+
+  /// Section title for CSV changes on the inventory export onboarding screen
+  ///
+  /// In en, this message translates to:
+  /// **'CSV exports'**
+  String get inventoryExportOnboardingCsvTitle;
+
+  /// Description of the new CSV export behavior for inventories
+  ///
+  /// In en, this message translates to:
+  /// **'CSV exports now generate 3 separate files, and each file can include data from more than one inventory.'**
+  String get inventoryExportOnboardingCsvDescription;
+
+  /// Section title for Excel changes on the inventory export onboarding screen
+  ///
+  /// In en, this message translates to:
+  /// **'Excel exports'**
+  String get inventoryExportOnboardingExcelTitle;
+
+  /// Description of the new Excel export behavior for inventories
+  ///
+  /// In en, this message translates to:
+  /// **'Excel exports now generate 1 file with 4 tabs, and the workbook can include data from more than one inventory.'**
+  String get inventoryExportOnboardingExcelDescription;
+
+  /// Support contact shown on the inventory export onboarding screen
+  ///
+  /// In en, this message translates to:
+  /// **'If you have any questions, please contact support@xolmis.app.'**
+  String get inventoryExportOnboardingSupport;
+
+  /// Button label used to close the inventory export onboarding screen
+  ///
+  /// In en, this message translates to:
+  /// **'Got it'**
+  String get inventoryExportOnboardingAction;
+
+  /// Message when nest was exported
+  ///
+  /// In en, this message translates to:
+  /// **'{howMany, plural, one{Nest exported!} other{Nests exported!}}'**
+  String nestExported(int howMany);
+
+  /// Subject when exporting nest
+  ///
+  /// In en, this message translates to:
+  /// **'{howMany, plural, one{Nest data} other{Nests data}}'**
+  String nestData(int howMany);
+
+  /// Error message when exporting nests
+  ///
+  /// In en, this message translates to:
+  /// **'Error exporting {howMany, plural, one{nest} other{nests}}: {errorMessage}'**
+  String errorExportingNest(int howMany, String errorMessage);
+
+  /// Message when specimen was exported
+  ///
+  /// In en, this message translates to:
+  /// **'{howMany, plural, one{Specimen exported!} other{Specimens exported!}}'**
+  String specimenExported(int howMany);
+
+  /// Subject when exporting specimen
+  ///
+  /// In en, this message translates to:
+  /// **'{howMany, plural, one{Specimen data} other{Specimens data}}'**
+  String specimenData(int howMany);
+
+  /// Error message when exporting specimens
+  ///
+  /// In en, this message translates to:
+  /// **'Error exporting {howMany, plural, one{specimen} other{specimens}}: {errorMessage}'**
+  String errorExportingSpecimen(int howMany, String errorMessage);
+
+  /// Hint in the species' search field
+  ///
+  /// In en, this message translates to:
+  /// **'Find species'**
+  String get findSpecies;
+
+  /// Add species dialog title and text hint in find species field
+  ///
+  /// In en, this message translates to:
+  /// **'Add species'**
+  String get addSpecies;
+
+  /// Add custom species dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Add custom species'**
+  String get addCustomSpecies;
+
+  /// Menu option to delete a species
+  ///
+  /// In en, this message translates to:
+  /// **'Delete species'**
+  String get deleteSpecies;
+
+  /// Menu option to add notes to a species
+  ///
+  /// In en, this message translates to:
+  /// **'Species notes'**
+  String get speciesNotes;
+
+  /// Message shown when the species list is empty
+  ///
+  /// In en, this message translates to:
+  /// **'No species recorded'**
+  String get noSpeciesFound;
+
+  /// Species name field label
+  ///
+  /// In en, this message translates to:
+  /// **'Species name'**
+  String get speciesName;
+
+  /// Message shown when a species is already in the list
+  ///
+  /// In en, this message translates to:
+  /// **'Species already added to the list'**
+  String get errorSpeciesAlreadyExists;
+
+  /// Menu option to add species to the sample
+  ///
+  /// In en, this message translates to:
+  /// **'Add to the sample'**
+  String get addSpeciesToSample;
+
+  /// Menu option to remove species from the sample
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from the sample'**
+  String get removeSpeciesFromSample;
+
+  /// Menu option to reactivate a finished inventory
+  ///
+  /// In en, this message translates to:
+  /// **'Reactivate inventory'**
+  String get reactivateInventory;
+
+  /// Dialog title when a Mackinnon list was finished
+  ///
+  /// In en, this message translates to:
+  /// **'List finished'**
+  String get listFinished;
+
+  /// Message asking user to take action when a Mackinnon list was finished
+  ///
+  /// In en, this message translates to:
+  /// **'The list reached the maximum of species. Do you want to start the next list or finish now?'**
+  String get listFinishedMessage;
+
+  /// Button caption to start the next Mackinnon list
+  ///
+  /// In en, this message translates to:
+  /// **'Start next list'**
+  String get startNextList;
+
+  /// Menu option to edit a specimen
+  ///
+  /// In en, this message translates to:
+  /// **'Edit specimen'**
+  String get editSpecimen;
+
+  /// Menu option to edit a nest
+  ///
+  /// In en, this message translates to:
+  /// **'Edit nest'**
+  String get editNest;
+
+  /// Menu option to edit a nest revision
+  ///
+  /// In en, this message translates to:
+  /// **'Edit nest revision'**
+  String get editNestRevision;
+
+  /// Menu option to edit an egg
+  ///
+  /// In en, this message translates to:
+  /// **'Edit egg'**
+  String get editEgg;
+
+  /// Menu option to edit a weather record
+  ///
+  /// In en, this message translates to:
+  /// **'Edit weather'**
+  String get editWeather;
+
+  /// Menu option to edit a vegetation record
+  ///
+  /// In en, this message translates to:
+  /// **'Edit vegetation'**
+  String get editVegetation;
+
+  /// Menu option to edit an inventory ID
+  ///
+  /// In en, this message translates to:
+  /// **'Edit ID'**
+  String get editInventoryId;
+
+  /// Title of dialog to confirm deletion of species in other inventories
+  ///
+  /// In en, this message translates to:
+  /// **'Delete species'**
+  String get confirmDeleteSpecies;
+
+  /// Message of dialog to confirm deletion of species in other inventories
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to delete {speciesName} from other active inventories?'**
+  String confirmDeleteSpeciesMessage(String speciesName);
+
+  /// Inventory rules tab
+  ///
+  /// In en, this message translates to:
+  /// **'Inventory rules'**
+  String get inventoryRules;
+
+  /// Settings option to define how species are propagated to other active inventories
+  ///
+  /// In en, this message translates to:
+  /// **'Species propagation from inactive inventories'**
+  String get speciesPropagationBehavior;
+
+  /// Policy option to always propagate species to other active inventories
+  ///
+  /// In en, this message translates to:
+  /// **'Always propagate'**
+  String get speciesPropagationAlways;
+
+  /// Policy option to ask before propagating species to other active inventories
+  ///
+  /// In en, this message translates to:
+  /// **'Always ask'**
+  String get speciesPropagationAsk;
+
+  /// Policy option to never propagate species to other active inventories
+  ///
+  /// In en, this message translates to:
+  /// **'Never propagate'**
+  String get speciesPropagationNever;
+
+  /// Title of dialog to confirm species propagation to other active inventories
+  ///
+  /// In en, this message translates to:
+  /// **'Propagate species'**
+  String get confirmPropagateSpecies;
+
+  /// Message of dialog to confirm species propagation
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to add {speciesName} to other active inventories?'**
+  String confirmPropagateSpeciesMessage(String speciesName);
+
+  /// Affirmative button label
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get yes;
+
+  /// Negative button label
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get no;
+
+  /// New journal entry screen title and button hint
+  ///
+  /// In en, this message translates to:
+  /// **'New journal entry'**
+  String get newJournalEntry;
+
+  /// Menu option to sort by last modified date
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by Last Modified Time'**
+  String get sortByLastModified;
+
+  /// Menu option to sort by title text
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by Title'**
+  String get sortByTitle;
+
+  /// Field journal search bar hint
+  ///
+  /// In en, this message translates to:
+  /// **'Find journal entries'**
+  String get findJournalEntries;
+
+  /// Message when no journal entries are found
+  ///
+  /// In en, this message translates to:
+  /// **'No journal entries found.'**
+  String get noJournalEntriesFound;
+
+  /// Title field label
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get title;
+
+  /// Validation message for title field
+  ///
+  /// In en, this message translates to:
+  /// **'Insert a title for the journal entry'**
+  String get insertTitle;
+
+  /// Error message when saving journal entry
+  ///
+  /// In en, this message translates to:
+  /// **'Error saving journal entry'**
+  String get errorSavingJournalEntry;
+
+  /// Menu option to delete a field journal entry
+  ///
+  /// In en, this message translates to:
+  /// **'Delete journal entry'**
+  String get deleteJournalEntry;
+
+  /// Menu option to edit a field journal entry
+  ///
+  /// In en, this message translates to:
+  /// **'Edit journal entry'**
+  String get editJournalEntry;
+
+  /// Menu option to change a field journal note background color
+  ///
+  /// In en, this message translates to:
+  /// **'Change note color'**
+  String get changeJournalColor;
+
+  /// Dialog title to choose a field journal note background color
+  ///
+  /// In en, this message translates to:
+  /// **'Select note color'**
+  String get selectJournalColor;
+
+  /// Title for statistics screen and labels
+  ///
+  /// In en, this message translates to:
+  /// **'Statistics'**
+  String get statistics;
+
+  /// Message shown when no species is selected in statistics
+  ///
+  /// In en, this message translates to:
+  /// **'Select a species to show the statistics'**
+  String get selectSpeciesToShowStats;
+
+  /// Per species section title in statistics
+  ///
+  /// In en, this message translates to:
+  /// **'Per species'**
+  String get perSpecies;
+
+  /// Total of records card title in statistics
+  ///
+  /// In en, this message translates to:
+  /// **'Total of records'**
+  String get totalRecords;
+
+  /// Records per month card title in statistics
+  ///
+  /// In en, this message translates to:
+  /// **'Records per month'**
+  String get recordsPerMonth;
+
+  /// Records per year card title in statistics
+  ///
+  /// In en, this message translates to:
+  /// **'Records per year'**
+  String get recordsPerYear;
+
+  /// Add coordinates button hint
+  ///
+  /// In en, this message translates to:
+  /// **'Add coordinates'**
+  String get addCoordinates;
+
+  /// Recorded species card title in statistics
+  ///
+  /// In en, this message translates to:
+  /// **'recorded species'**
+  String get recordedSpecies;
+
+  /// Top most recorded species card title in statistics
+  ///
+  /// In en, this message translates to:
+  /// **'Top {howMany} most recorded species'**
+  String topSpecies(int howMany);
+
+  /// Survey hours card title in statistics
+  ///
+  /// In en, this message translates to:
+  /// **'survey hours'**
+  String get surveyHours;
+
+  /// Average survey hours card title in statistics
+  ///
+  /// In en, this message translates to:
+  /// **'average survey hours'**
+  String get averageSurveyHours;
+
+  /// Pending segmented button label in specimens
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get pending;
+
+  /// Archived segmented button label in specimens
+  ///
+  /// In en, this message translates to:
+  /// **'Archived'**
+  String get archived;
+
+  /// Menu option to archive a specimen
+  ///
+  /// In en, this message translates to:
+  /// **'Archive specimen'**
+  String get archiveSpecimen;
+
+  /// Male name or ID field hint
+  ///
+  /// In en, this message translates to:
+  /// **'Male name or ID'**
+  String get maleNameOrId;
+
+  /// Female name or ID field hint
+  ///
+  /// In en, this message translates to:
+  /// **'Female name or ID'**
+  String get femaleNameOrId;
+
+  /// Helpers names or IDs field hint
+  ///
+  /// In en, this message translates to:
+  /// **'Helpers names or IDs'**
+  String get helpersNamesOrIds;
+
+  /// Plant species or support type field hint
+  ///
+  /// In en, this message translates to:
+  /// **'Plant species or support type'**
+  String get plantSpeciesOrSupportType;
+
+  /// Description of the format numbers option in settings
+  ///
+  /// In en, this message translates to:
+  /// **'Uncheck this to format numbers with point as decimal separator'**
+  String get formatNumbersDescription;
+
+  /// Select all menu and button label
+  ///
+  /// In en, this message translates to:
+  /// **'Select all'**
+  String get selectAll;
+
+  /// Message shown when exporting data
+  ///
+  /// In en, this message translates to:
+  /// **'Exporting...'**
+  String get exporting;
+
+  /// Message shown when there is no data to export
+  ///
+  /// In en, this message translates to:
+  /// **'No data to export.'**
+  String get noDataToExport;
+
+  /// Message shown when exporting data
+  ///
+  /// In en, this message translates to:
+  /// **'Exporting, please wait...'**
+  String get exportingPleaseWait;
+
+  /// Error title
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get errorTitle;
+
+  /// Warning title
+  ///
+  /// In en, this message translates to:
+  /// **'Warning'**
+  String get warningTitle;
+
+  /// Action label to proceed with an operation
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continueAction;
+
+  /// Title shown when the user attempts to change inventory type while editing
+  ///
+  /// In en, this message translates to:
+  /// **'Change inventory type?'**
+  String get inventoryTypeChangeWarningTitle;
+
+  /// Warning message shown before applying inventory type change in edit screen
+  ///
+  /// In en, this message translates to:
+  /// **'Changing from {currentType} to {newType} may alter assumptions and protocol-specific premises of this inventory. Continue with this change?'**
+  String inventoryTypeChangeWarningMessage(String currentType, String newType);
+
+  /// Dialog title shown when inventory start time changes in edit screen
+  ///
+  /// In en, this message translates to:
+  /// **'Update related record times?'**
+  String get startTimeChangeWarningTitle;
+
+  /// Dialog message asking whether to shift species times after start time change
+  ///
+  /// In en, this message translates to:
+  /// **'The start time changed. Do you want to update associated species, POI, vegetation, and weather record times based on their relative offset from the original start time?'**
+  String get startTimeChangeWarningMessage;
+
+  /// Action to keep species times unchanged after start time edit
+  ///
+  /// In en, this message translates to:
+  /// **'Keep current times'**
+  String get keepSpeciesTimes;
+
+  /// Action to shift species times after start time edit
+  ///
+  /// In en, this message translates to:
+  /// **'Update related times'**
+  String get updateSpeciesTimes;
+
+  /// Settings option to remind missing vegetation data
+  ///
+  /// In en, this message translates to:
+  /// **'Remind missing vegetation data'**
+  String get remindMissingVegetationData;
+
+  /// Settings option to remind missing weather data
+  ///
+  /// In en, this message translates to:
+  /// **'Remind missing weather data'**
+  String get remindMissingWeatherData;
+
+  /// Message shown when there is no vegetation data
+  ///
+  /// In en, this message translates to:
+  /// **'There is no vegetation data.'**
+  String get missingVegetationData;
+
+  /// Message shown when there is no weather data
+  ///
+  /// In en, this message translates to:
+  /// **'There is no weather data.'**
+  String get missingWeatherData;
+
+  /// Add button label
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get addButton;
+
+  /// Ignore button label
+  ///
+  /// In en, this message translates to:
+  /// **'Ignore'**
+  String get ignoreButton;
+
+  /// Message shown when the observer abbreviation is missing
+  ///
+  /// In en, this message translates to:
+  /// **'Observer abbreviation is missing. Please add it in the settings.'**
+  String get observerAbbreviationMissing;
+
+  /// Message shown when the value is not a number
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid numeric value'**
+  String get invalidNumericValue;
+
+  /// Message shown when there are no revisions for a nest
+  ///
+  /// In en, this message translates to:
+  /// **'There are no revisions for this nest. Add at least one revision.'**
+  String get nestRevisionsMissing;
+
+  /// Dialog title to edit a locality
+  ///
+  /// In en, this message translates to:
+  /// **'Edit locality'**
+  String get editLocality;
+
+  /// Dialog title and menu option to add/edit notes
+  ///
+  /// In en, this message translates to:
+  /// **'Add/edit notes'**
+  String get addEditNotes;
+
+  /// Menu option to export to KML
+  ///
+  /// In en, this message translates to:
+  /// **'Export KML'**
+  String get exportKml;
+
+  /// Edit button label
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get edit;
+
+  /// Message shown when there are no POIs to export
+  ///
+  /// In en, this message translates to:
+  /// **'No POIs to export.'**
+  String get noPoisToExport;
+
+  /// Total species within sample card title in statistics
+  ///
+  /// In en, this message translates to:
+  /// **'Species within sample'**
+  String get totalSpeciesWithinSample;
+
+  /// Details button label
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get details;
+
+  /// Menu option to edit inventory details
+  ///
+  /// In en, this message translates to:
+  /// **'Inventory details'**
+  String get editInventoryDetails;
+
+  /// Menu option to discard an inventory
+  ///
+  /// In en, this message translates to:
+  /// **'Discarded inventory'**
+  String get discardedInventory;
+
+  /// Error message when importing inventories with a format error
+  ///
+  /// In en, this message translates to:
+  /// **'Format error importing inventory: {errorMessage}'**
+  String errorImportingInventoryWithFormatError(String errorMessage);
+
+  /// Message when inventories are imported successfully
+  ///
+  /// In en, this message translates to:
+  /// **'Inventories imported successfully: {howMany}'**
+  String inventoriesImportedSuccessfully(int howMany);
+
+  /// Message when import is completed with errors
+  ///
+  /// In en, this message translates to:
+  /// **'Import completed with errors: {successfullyImportedCount} successful, {importErrorsCount} errors'**
+  String importCompletedWithErrors(int successfullyImportedCount, int importErrorsCount);
+
+  /// Detailed summary for import operations with conflict handling
+  ///
+  /// In en, this message translates to:
+  /// **'Import finished: {newCount} new, {updatedCount} updated, {skippedCount} skipped, {errorsCount} errors'**
+  String importCompletedSummary(int newCount, int updatedCount, int skippedCount, int errorsCount);
+
+  /// Message shown when user cancels import after conflict prompt
+  ///
+  /// In en, this message translates to:
+  /// **'Import cancelled.'**
+  String get importCancelled;
+
+  /// Settings title for choosing import behavior when records already exist
+  ///
+  /// In en, this message translates to:
+  /// **'Existing records on import'**
+  String get importExistingRecords;
+
+  /// Import policy option to ask the user when conflicts are found
+  ///
+  /// In en, this message translates to:
+  /// **'Ask every time'**
+  String get importPolicyAskEveryTime;
+
+  /// Import policy option to overwrite existing records
+  ///
+  /// In en, this message translates to:
+  /// **'Update existing records'**
+  String get importPolicyUpdateExisting;
+
+  /// Import policy option to keep existing records untouched
+  ///
+  /// In en, this message translates to:
+  /// **'Skip existing records'**
+  String get importPolicySkipExisting;
+
+  /// Title of the dialog shown when imported records already exist
+  ///
+  /// In en, this message translates to:
+  /// **'Existing records found'**
+  String get importConflictDialogTitle;
+
+  /// Dialog message shown when import conflicts are detected
+  ///
+  /// In en, this message translates to:
+  /// **'{conflictsCount} imported records already exist locally. What do you want to do?'**
+  String importConflictDialogMessage(int conflictsCount);
+
+  /// Action label to update existing records during import
+  ///
+  /// In en, this message translates to:
+  /// **'Update'**
+  String get importConflictDialogUpdateAction;
+
+  /// Action label to skip existing records during import
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get importConflictDialogSkipAction;
+
+  /// Settings section title for import and export options
+  ///
+  /// In en, this message translates to:
+  /// **'Import and export'**
+  String get importAndExport;
+
+  /// Message when failed to import an inventory
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to import inventory with ID: {id}'**
+  String failedToImportInventoryWithId(String id);
+
+  /// Message when the JSON format is invalid
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid JSON format. Expected an object or an array.'**
+  String get invalidJsonFormatExpectedObjectOrArray;
+
+  /// Message when importing nests
+  ///
+  /// In en, this message translates to:
+  /// **'Importing nests'**
+  String get importingNests;
+
+  /// Error message when importing nests
+  ///
+  /// In en, this message translates to:
+  /// **'Error importing nests'**
+  String get errorImportingNests;
+
+  /// Error message when importing nests with a format error
+  ///
+  /// In en, this message translates to:
+  /// **'Format error importing nest: {errorMessage}'**
+  String errorImportingNestsWithFormatError(String errorMessage);
+
+  /// Message when nests are imported successfully
+  ///
+  /// In en, this message translates to:
+  /// **'Nests imported successfully: {howMany}'**
+  String nestsImportedSuccessfully(int howMany);
+
+  /// Message when failed to import a nest
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to import nest with ID: {id}'**
+  String failedToImportNestWithId(int id);
+
+  /// Plain text export format option
+  ///
+  /// In en, this message translates to:
+  /// **'Plain text'**
+  String get plainText;
+
+  /// Settings backup section title
+  ///
+  /// In en, this message translates to:
+  /// **'Backup'**
+  String get backup;
+
+  /// Create backup settings tile title
+  ///
+  /// In en, this message translates to:
+  /// **'Create backup'**
+  String get createBackup;
+
+  /// Share backup title
+  ///
+  /// In en, this message translates to:
+  /// **'Send backup to...'**
+  String get sendBackupTo;
+
+  /// Message when backup is created and shared successfully
+  ///
+  /// In en, this message translates to:
+  /// **'Backup created and shared successfully'**
+  String get backupCreatedAndSharedSuccessfully;
+
+  /// Error message when creating backup
+  ///
+  /// In en, this message translates to:
+  /// **'Error creating backup'**
+  String get errorCreatingBackup;
+
+  /// Error message when backup is not found
+  ///
+  /// In en, this message translates to:
+  /// **'Backup not found'**
+  String get errorBackupNotFound;
+
+  /// Restore button label
+  ///
+  /// In en, this message translates to:
+  /// **'Restore'**
+  String get restore;
+
+  /// Restore backup confirmation dialog text
+  ///
+  /// In en, this message translates to:
+  /// **'Current data will be replaced by the backup and some data could be lost. Are you sure you want to proceed?'**
+  String get restoreBackupConfirmation;
+
+  /// Restore backup settings tile title
+  ///
+  /// In en, this message translates to:
+  /// **'Restore backup'**
+  String get restoreBackup;
+
+  /// Restore backup images only confirmation dialog text
+  ///
+  /// In en, this message translates to:
+  /// **'Only the images of the backup file will be restored. Are you sure you want to proceed?'**
+  String get restoreBackupImagesOnlyConfirmation;
+
+  /// Restore images only checkbox label
+  ///
+  /// In en, this message translates to:
+  /// **'Restore images only'**
+  String get restoreBackupImagesOnly;
+
+  /// Restore images only checkbox description
+  ///
+  /// In en, this message translates to:
+  /// **'Restore only the images in the backup file. Do not restore database.'**
+  String get restoreBackupImagesOnlyDescription;
+
+  /// Message when images are restored successfully
+  ///
+  /// In en, this message translates to:
+  /// **'{howMany} images restored successfully!'**
+  String imagesRestoredSuccessfully(int howMany);
+
+  /// Message when backup is restored successfully
+  ///
+  /// In en, this message translates to:
+  /// **'Backup restored successfully! Restart the app to apply the changes.'**
+  String get backupRestoredSuccessfully;
+
+  /// Error message when restoring backup
+  ///
+  /// In en, this message translates to:
+  /// **'Error restoring backup'**
+  String get errorRestoringBackup;
+
+  /// Message when backing up data
+  ///
+  /// In en, this message translates to:
+  /// **'Backing up data'**
+  String get backingUpData;
+
+  /// Message when restoring data
+  ///
+  /// In en, this message translates to:
+  /// **'Restoring data'**
+  String get restoringData;
+
+  /// Message when importing specimens
+  ///
+  /// In en, this message translates to:
+  /// **'Importing specimens'**
+  String get importingSpecimens;
+
+  /// Error message when importing specimens
+  ///
+  /// In en, this message translates to:
+  /// **'Error importing specimens'**
+  String get errorImportingSpecimens;
+
+  /// Error message when importing specimens with a format error
+  ///
+  /// In en, this message translates to:
+  /// **'Format error importing specimen: {errorMessage}'**
+  String errorImportingSpecimensWithFormatError(String errorMessage);
+
+  /// Message when specimens are imported successfully
+  ///
+  /// In en, this message translates to:
+  /// **'Specimens imported successfully: {howMany}'**
+  String specimensImportedSuccessfully(int howMany);
+
+  /// Message when failed to import a specimen
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to import specimen with ID: {id}'**
+  String failedToImportSpecimenWithId(int id);
+
+  /// Error message when cloud cover is out of range
+  ///
+  /// In en, this message translates to:
+  /// **'Cloud cover must be between 0 and 100'**
+  String get cloudCoverRangeError;
+
+  /// Error message when relative humidity is out of range
+  ///
+  /// In en, this message translates to:
+  /// **'Relative humidity must be between 0 and 100'**
+  String get relativeHumidityRangeError;
+
+  /// Atmospheric pressure field label
+  ///
+  /// In en, this message translates to:
+  /// **'Atmospheric pressure'**
+  String get atmosphericPressure;
+
+  /// Relative humidity field label
+  ///
+  /// In en, this message translates to:
+  /// **'Relative humidity'**
+  String get relativeHumidity;
+
+  /// Total of observers field label
+  ///
+  /// In en, this message translates to:
+  /// **'Total of observers'**
+  String get totalOfObservers;
+
+  /// Enter coordinates dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Enter coordinates'**
+  String get enterCoordinates;
+
+  /// Latitude field label
+  ///
+  /// In en, this message translates to:
+  /// **'Latitude'**
+  String get latitude;
+
+  /// Longitude field label
+  ///
+  /// In en, this message translates to:
+  /// **'Longitude'**
+  String get longitude;
+
+  /// Error message when the latitude is invalid
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid latitude'**
+  String get invalidLatitude;
+
+  /// Error message when the longitude is invalid
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid longitude'**
+  String get invalidLongitude;
+
+  /// Error message when a field is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Field cannot be empty'**
+  String get fieldCannotBeEmpty;
+
+  /// Location error dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Location error'**
+  String get locationError;
+
+  /// Location error dialog message
+  ///
+  /// In en, this message translates to:
+  /// **'Could not get GPS location'**
+  String get couldNotGetGpsLocation;
+
+  /// Message shown when location permission is denied
+  ///
+  /// In en, this message translates to:
+  /// **'Location permission denied.'**
+  String get locationPermissionDeniedMessage;
+
+  /// Message shown when location permission is permanently denied
+  ///
+  /// In en, this message translates to:
+  /// **'Location permission denied permanently. Open settings to allow access.'**
+  String get locationPermissionPermanentlyDeniedMessage;
+
+  /// Message shown when device location service is disabled
+  ///
+  /// In en, this message translates to:
+  /// **'Device GPS is turned off. Enable location in settings.'**
+  String get locationServiceDisabledMessage;
+
+  /// Message shown when GPS acquisition times out
+  ///
+  /// In en, this message translates to:
+  /// **'Timed out while getting GPS location. Try again or enter coordinates manually.'**
+  String get locationTimeoutMessage;
+
+  /// Open settings button label
+  ///
+  /// In en, this message translates to:
+  /// **'Open settings'**
+  String get openSettings;
+
+  /// Message shown while inventory finalization is in progress
+  ///
+  /// In en, this message translates to:
+  /// **'Finishing inventory... please wait'**
+  String get finishingInventoryPleaseWait;
+
+  /// Continue without button label
+  ///
+  /// In en, this message translates to:
+  /// **'Continue without'**
+  String get continueWithout;
+
+  /// Enter manually button label
+  ///
+  /// In en, this message translates to:
+  /// **'Enter manually'**
+  String get enterManually;
+
+  /// Distance field label
+  ///
+  /// In en, this message translates to:
+  /// **'Distance'**
+  String get distance;
+
+  /// Flight height field label
+  ///
+  /// In en, this message translates to:
+  /// **'Flight height'**
+  String get flightHeight;
+
+  /// Flight direction field label
+  ///
+  /// In en, this message translates to:
+  /// **'Flight direction'**
+  String get flightDirection;
+
+  /// Insert count field label
+  ///
+  /// In en, this message translates to:
+  /// **'Insert count'**
+  String get insertCount;
+
+  /// Validation message for insert count field
+  ///
+  /// In en, this message translates to:
+  /// **'Insert a valid number'**
+  String get insertValidNumber;
+
+  /// Wind direction field label
+  ///
+  /// In en, this message translates to:
+  /// **'Wind direction'**
+  String get windDirection;
+
+  /// Reactivate button label
+  ///
+  /// In en, this message translates to:
+  /// **'Reactivate'**
+  String get reactivate;
+
+  /// Title of dialog to confirm reactivating a nest or inventory
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm reactivate'**
+  String get confirmReactivate;
+
+  /// Message asking confirmation to reactivate a nest or inventory
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to reactivate {gender, select, male{this} female{this} other{this}} {what} ({which})?'**
+  String confirmReactivateMessage(String gender, String what, String which);
+
+  /// Archive button label
+  ///
+  /// In en, this message translates to:
+  /// **'Archive'**
+  String get archive;
+
+  /// Platinum Sponsor field label
+  ///
+  /// In en, this message translates to:
+  /// **'Platinum Sponsor'**
+  String get platinumSponsor;
+
+  /// Changelog button label
+  ///
+  /// In en, this message translates to:
+  /// **'Changelog'**
+  String get changelog;
+
+  /// View License button label
+  ///
+  /// In en, this message translates to:
+  /// **'View License'**
+  String get viewLicense;
+
+  /// Open Source Licenses button label
+  ///
+  /// In en, this message translates to:
+  /// **'Open Source Licenses'**
+  String get openSourceLicenses;
+
+  /// Sort by button label
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by'**
+  String get sortBy;
+
+  /// Start time field label
+  ///
+  /// In en, this message translates to:
+  /// **'Start time'**
+  String get startTime;
+
+  /// End time field label
+  ///
+  /// In en, this message translates to:
+  /// **'End time'**
+  String get endTime;
+
+  /// Direction field label
+  ///
+  /// In en, this message translates to:
+  /// **'Direction'**
+  String get direction;
+
+  /// Ascending direction option
+  ///
+  /// In en, this message translates to:
+  /// **'Ascending'**
+  String get ascending;
+
+  /// Descending direction option
+  ///
+  /// In en, this message translates to:
+  /// **'Descending'**
+  String get descending;
+
+  /// Found time field label
+  ///
+  /// In en, this message translates to:
+  /// **'Found time'**
+  String get foundTime;
+
+  /// Last time field label
+  ///
+  /// In en, this message translates to:
+  /// **'Last time'**
+  String get lastTime;
+
+  /// Creation time field label
+  ///
+  /// In en, this message translates to:
+  /// **'Creation time'**
+  String get creationTime;
+
+  /// Last modified time field label
+  ///
+  /// In en, this message translates to:
+  /// **'Last modified time'**
+  String get lastModifiedTime;
+
+  /// Sample time field label
+  ///
+  /// In en, this message translates to:
+  /// **'Sample time'**
+  String get sampleTime;
+
+  /// Refresh button label
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get refresh;
+
+  /// Message when inventory ID is updated successfully
+  ///
+  /// In en, this message translates to:
+  /// **'Inventory ID updated successfully!'**
+  String get inventoryIdUpdated;
+
+  /// Message when species upgrade fails
+  ///
+  /// In en, this message translates to:
+  /// **'Species upgrade failed'**
+  String get speciesUpgradeFailed;
+
+  /// Country field label
+  ///
+  /// In en, this message translates to:
+  /// **'Country'**
+  String get country;
+
+  /// Species search section label
+  ///
+  /// In en, this message translates to:
+  /// **'Species search'**
+  String get speciesSearch;
+
+  /// Message shown when no inventory is selected
+  ///
+  /// In en, this message translates to:
+  /// **'Select an inventory to view its details'**
+  String get selectInventoryToView;
+
+  /// Message shown when no nest is selected
+  ///
+  /// In en, this message translates to:
+  /// **'Select a nest to view its details'**
+  String get selectNestToView;
+
+  /// Message shown when no specimen is selected
+  ///
+  /// In en, this message translates to:
+  /// **'Select a specimen to view its details'**
+  String get selectSpecimenToView;
+
+  /// Message shown when no note is selected
+  ///
+  /// In en, this message translates to:
+  /// **'Select a note to view its details'**
+  String get selectJournalToView;
+
+  /// Suggest a feature or report an issue button label
+  ///
+  /// In en, this message translates to:
+  /// **'Suggest a feature or report an issue'**
+  String get suggestFeatureOrReportIssue;
+
+  /// Localities surveyed field label
+  ///
+  /// In en, this message translates to:
+  /// **'{howMany, plural, one{locality} other{localities}} surveyed'**
+  String localitiesSurveyed(int howMany);
+
+  /// Days surveyed field label
+  ///
+  /// In en, this message translates to:
+  /// **'{howMany, plural, one{day} other{days}} surveyed'**
+  String daysSurveyed(int howMany);
+
+  /// POIs recorded field label
+  ///
+  /// In en, this message translates to:
+  /// **'{howMany, plural, one{POI} other{POIs}} recorded'**
+  String poisRecorded(int howMany);
+
+  /// See all button label
+  ///
+  /// In en, this message translates to:
+  /// **'See all'**
+  String get seeAll;
+
+  /// Apparent success rate field label
+  ///
+  /// In en, this message translates to:
+  /// **'apparent success'**
+  String get apparentSuccessRate;
+
+  /// Nidoparasitism rate field label
+  ///
+  /// In en, this message translates to:
+  /// **'nidoparasitism'**
+  String get nidoparasitismRate;
+
+  /// Detection rate field label
+  ///
+  /// In en, this message translates to:
+  /// **'detection rate'**
+  String get detectionRate;
+
+  /// Species richness field label
+  ///
+  /// In en, this message translates to:
+  /// **'Species richness'**
+  String get speciesRichness;
+
+  /// Total richness field label
+  ///
+  /// In en, this message translates to:
+  /// **'total richness'**
+  String get totalRichness;
+
+  /// Average richness field label
+  ///
+  /// In en, this message translates to:
+  /// **'average richness'**
+  String get averageRichness;
+
+  /// Relative frequency field label
+  ///
+  /// In en, this message translates to:
+  /// **'relative frequency'**
+  String get relativeFrequency;
+
+  /// Relative abundance field label
+  ///
+  /// In en, this message translates to:
+  /// **'relative abundance'**
+  String get relativeAbundance;
+
+  /// Records by hour field label
+  ///
+  /// In en, this message translates to:
+  /// **'Records by hour'**
+  String get recordsByHour;
+
+  /// Total abundance field label
+  ///
+  /// In en, this message translates to:
+  /// **'total abundance'**
+  String get totalAbundance;
+
+  /// Selected inventories field label
+  ///
+  /// In en, this message translates to:
+  /// **'selected inventories'**
+  String get selectedInventories;
+
+  /// Error message when parsing array item fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error parsing array item: {errorMessage} \nItem: {item}'**
+  String errorParsingArrayItem(String item, String errorMessage);
+
+  /// Error message when unexpected array item is encountered
+  ///
+  /// In en, this message translates to:
+  /// **'Unexpected item in JSON array: {item}'**
+  String errorUnexpectedArrayItem(String item);
+
+  /// Error message when parsing inventories array item fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error parsing \'inventories\' array item: {errorMessage} \nItem: {item}'**
+  String errorParsingInventoriesArrayItem(String item, String errorMessage);
+
+  /// Error message when unexpected inventories array item is encountered
+  ///
+  /// In en, this message translates to:
+  /// **'Unexpected item in \'inventories\' JSON array: {item}'**
+  String errorUnexpectedInventoriesArrayItem(String item);
+
+  /// Error message when parsing object fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error parsing object: {errorMessage}'**
+  String errorParsingObject(String errorMessage);
+
+  /// Message shown when no inventories are found in the imported file
+  ///
+  /// In en, this message translates to:
+  /// **'No inventories found in the imported file.'**
+  String get noInventoriesFoundInFile;
+
+  /// Message shown when no valid inventories are found in the imported file
+  ///
+  /// In en, this message translates to:
+  /// **'No valid inventories found in the imported file.'**
+  String get noValidInventoriesFoundInFile;
+
+  /// Error message when importing inventory fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error importing inventory {inventoryId}: {errorMessage}'**
+  String errorImportingInventoryWithId(String inventoryId, String errorMessage);
+
+  /// Error message when parsing nests array item fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error parsing \'nests\' array item: {errorMessage} \nItem: {item}'**
+  String errorParsingNestsArrayItem(String item, String errorMessage);
+
+  /// Error message when unexpected nests array item is encountered
+  ///
+  /// In en, this message translates to:
+  /// **'Unexpected item in \'nests\' JSON array: {item}'**
+  String errorUnexpectedNestsArrayItem(String item);
+
+  /// Error message when parsing specimens array item fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error parsing \'specimens\' array item: {errorMessage} \nItem: {item}'**
+  String errorParsingSpecimensArrayItem(String item, String errorMessage);
+
+  /// Error message when unexpected specimens array item is encountered
+  ///
+  /// In en, this message translates to:
+  /// **'Unexpected item in \'specimens\' JSON array: {item}'**
+  String errorUnexpectedSpecimensArrayItem(String item);
+
+  /// Insert observer button label
+  ///
+  /// In en, this message translates to:
+  /// **'Insert observer'**
+  String get insertObserver;
+
+  /// Selected nests field label
+  ///
+  /// In en, this message translates to:
+  /// **'selected {howMany, plural, one{nest} other{nests}}'**
+  String selectedNests(int howMany);
+
+  /// Clear filters button label
+  ///
+  /// In en, this message translates to:
+  /// **'Clear filters'**
+  String get clearFilters;
+
+  /// New vegetation button label
+  ///
+  /// In en, this message translates to:
+  /// **'New vegetation record'**
+  String get newVegetation;
+
+  /// New weather button label
+  ///
+  /// In en, this message translates to:
+  /// **'New weather record'**
+  String get newWeather;
+
+  /// New revision button label
+  ///
+  /// In en, this message translates to:
+  /// **'New revision'**
+  String get newRevision;
+
+  /// New egg button label
+  ///
+  /// In en, this message translates to:
+  /// **'New egg'**
+  String get newEgg;
+
+  /// Observers field label
+  ///
+  /// In en, this message translates to:
+  /// **'{howMany, plural, one{observer} other{observers}}'**
+  String observers(int howMany);
+
+  /// All types option in type filter
+  ///
+  /// In en, this message translates to:
+  /// **'All types'**
+  String get allTypes;
+
+  /// All localities option in locality filter
+  ///
+  /// In en, this message translates to:
+  /// **'All localities'**
+  String get allLocalities;
+
+  /// Date field label
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get date;
+
+  /// All dates option in date filter
+  ///
+  /// In en, this message translates to:
+  /// **'All dates'**
+  String get allDates;
+
+  /// Today option in date filter
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get today;
+
+  /// Yesterday option in date filter
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get yesterday;
+
+  /// Last 7 days option in date filter
+  ///
+  /// In en, this message translates to:
+  /// **'Last week'**
+  String get last7Days;
+
+  /// Last 30 days option in date filter
+  ///
+  /// In en, this message translates to:
+  /// **'Last month'**
+  String get last30Days;
+
+  /// Last 90 days option in date filter
+  ///
+  /// In en, this message translates to:
+  /// **'Last 3 months'**
+  String get last90Days;
+
+  /// Last 180 days option in date filter
+  ///
+  /// In en, this message translates to:
+  /// **'Last 6 months'**
+  String get last180Days;
+
+  /// Last 365 days option in date filter
+  ///
+  /// In en, this message translates to:
+  /// **'Last year'**
+  String get last365Days;
+
+  /// Date interval field label
+  ///
+  /// In en, this message translates to:
+  /// **'Date interval'**
+  String get dateInterval;
+
+  /// Type field label
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get type;
+
+  /// Invalid JSON file source error message
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid JSON source. Expected: Xolmis Mobile.'**
+  String get invalidJsonSource;
+
+  /// Invalid JSON file schema error message
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid JSON schema.'**
+  String get invalidJsonSchema;
+
+  /// No results message
+  ///
+  /// In en, this message translates to:
+  /// **'No results'**
+  String get noResults;
+
+  /// Clear search button label
+  ///
+  /// In en, this message translates to:
+  /// **'Clear search'**
+  String get clearSearch;
+
+  /// No description provided for @countryArgentina.
+  ///
+  /// In en, this message translates to:
+  /// **'Argentina'**
+  String get countryArgentina;
+
+  /// No description provided for @countryBrazil.
+  ///
+  /// In en, this message translates to:
+  /// **'Brazil'**
+  String get countryBrazil;
+
+  /// No description provided for @countryParaguay.
+  ///
+  /// In en, this message translates to:
+  /// **'Paraguay'**
+  String get countryParaguay;
+
+  /// No description provided for @countryUruguay.
+  ///
+  /// In en, this message translates to:
+  /// **'Uruguay'**
+  String get countryUruguay;
+
+  /// No description provided for @precipitationNone.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get precipitationNone;
+
+  /// No description provided for @precipitationFog.
+  ///
+  /// In en, this message translates to:
+  /// **'Fog'**
+  String get precipitationFog;
+
+  /// No description provided for @precipitationMist.
+  ///
+  /// In en, this message translates to:
+  /// **'Mist'**
+  String get precipitationMist;
+
+  /// No description provided for @precipitationDrizzle.
+  ///
+  /// In en, this message translates to:
+  /// **'Drizzle'**
+  String get precipitationDrizzle;
+
+  /// No description provided for @precipitationRain.
+  ///
+  /// In en, this message translates to:
+  /// **'Rain'**
+  String get precipitationRain;
+
+  /// No description provided for @precipitationShowers.
+  ///
+  /// In en, this message translates to:
+  /// **'Showers'**
+  String get precipitationShowers;
+
+  /// No description provided for @precipitationSnow.
+  ///
+  /// In en, this message translates to:
+  /// **'Snow'**
+  String get precipitationSnow;
+
+  /// No description provided for @precipitationHail.
+  ///
+  /// In en, this message translates to:
+  /// **'Hail'**
+  String get precipitationHail;
+
+  /// No description provided for @precipitationFrost.
+  ///
+  /// In en, this message translates to:
+  /// **'Frost'**
+  String get precipitationFrost;
+
+  /// No description provided for @distributionNone.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get distributionNone;
+
+  /// No description provided for @distributionRare.
+  ///
+  /// In en, this message translates to:
+  /// **'Rare'**
+  String get distributionRare;
+
+  /// No description provided for @distributionFewSparseIndividuals.
+  ///
+  /// In en, this message translates to:
+  /// **'Few sparse individuals'**
+  String get distributionFewSparseIndividuals;
+
+  /// No description provided for @distributionOnePatch.
+  ///
+  /// In en, this message translates to:
+  /// **'One patch'**
+  String get distributionOnePatch;
+
+  /// No description provided for @distributionOnePatchFewSparseIndividuals.
+  ///
+  /// In en, this message translates to:
+  /// **'One patch and isolated individuals'**
+  String get distributionOnePatchFewSparseIndividuals;
+
+  /// No description provided for @distributionManySparseIndividuals.
+  ///
+  /// In en, this message translates to:
+  /// **'Many sparse individuals'**
+  String get distributionManySparseIndividuals;
+
+  /// No description provided for @distributionOnePatchManySparseIndividuals.
+  ///
+  /// In en, this message translates to:
+  /// **'Patch and many isolated individuals'**
+  String get distributionOnePatchManySparseIndividuals;
+
+  /// No description provided for @distributionFewPatches.
+  ///
+  /// In en, this message translates to:
+  /// **'Few patches'**
+  String get distributionFewPatches;
+
+  /// No description provided for @distributionFewPatchesSparseIndividuals.
+  ///
+  /// In en, this message translates to:
+  /// **'Few patches and isolated individuals'**
+  String get distributionFewPatchesSparseIndividuals;
+
+  /// No description provided for @distributionManyPatches.
+  ///
+  /// In en, this message translates to:
+  /// **'Many equidistant patches'**
+  String get distributionManyPatches;
+
+  /// No description provided for @distributionManyPatchesSparseIndividuals.
+  ///
+  /// In en, this message translates to:
+  /// **'Many patches and scattered individuals'**
+  String get distributionManyPatchesSparseIndividuals;
+
+  /// No description provided for @distributionHighDensityIndividuals.
+  ///
+  /// In en, this message translates to:
+  /// **'Isolated individuals in high density'**
+  String get distributionHighDensityIndividuals;
+
+  /// No description provided for @distributionContinuousCoverWithGaps.
+  ///
+  /// In en, this message translates to:
+  /// **'Continuous with gaps'**
+  String get distributionContinuousCoverWithGaps;
+
+  /// No description provided for @distributionContinuousDenseCover.
+  ///
+  /// In en, this message translates to:
+  /// **'Continuous and dense'**
+  String get distributionContinuousDenseCover;
+
+  /// No description provided for @distributionContinuousDenseCoverWithEdge.
+  ///
+  /// In en, this message translates to:
+  /// **'Continuous with edge between strata'**
+  String get distributionContinuousDenseCoverWithEdge;
+
+  /// No description provided for @inventoryTypesDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Inventory types'**
+  String get inventoryTypesDialogTitle;
+
+  /// No description provided for @inventoryFreeQualitativeDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Free-form qualitative observations without a fixed duration.'**
+  String get inventoryFreeQualitativeDescription;
+
+  /// No description provided for @inventoryTimedQualitativeDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'A qualitative list recorded during a fixed amount of time. Timer resets when a new species is recorded.'**
+  String get inventoryTimedQualitativeDescription;
+
+  /// No description provided for @inventoryIntervalQualitativeDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'A qualitative list split into repeated time intervals. Three intervals without new species recorded is a common stopping rule.'**
+  String get inventoryIntervalQualitativeDescription;
+
+  /// No description provided for @inventoryMackinnonListDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'A species accumulation list completed until the target number of species is reached.'**
+  String get inventoryMackinnonListDescription;
+
+  /// No description provided for @inventoryTransectCountDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Count every individual detected while moving along a transect.'**
+  String get inventoryTransectCountDescription;
+
+  /// No description provided for @inventoryPointCountDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Count every individual detected from a fixed point during a set duration.'**
+  String get inventoryPointCountDescription;
+
+  /// No description provided for @inventoryBandingDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Record birds captured, handled, or banded during a banding session.'**
+  String get inventoryBandingDescription;
+
+  /// No description provided for @inventoryCasualDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Record opportunistic observations without a fixed protocol or time limit.'**
+  String get inventoryCasualDescription;
+
+  /// No description provided for @inventoryTransectDetectionDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Record detections along a transect with distance and/or flight height.'**
+  String get inventoryTransectDetectionDescription;
+
+  /// No description provided for @inventoryPointDetectionDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Record detections from a fixed point with distance and/or flight height.'**
+  String get inventoryPointDetectionDescription;
+
+  /// No description provided for @inventoryFreeQualitative.
+  ///
+  /// In en, this message translates to:
+  /// **'Free Qualitative List'**
+  String get inventoryFreeQualitative;
+
+  /// No description provided for @inventoryTimedQualitative.
+  ///
+  /// In en, this message translates to:
+  /// **'Timed Qualitative List'**
+  String get inventoryTimedQualitative;
+
+  /// No description provided for @inventoryIntervalQualitative.
+  ///
+  /// In en, this message translates to:
+  /// **'Interval Qualitative List'**
+  String get inventoryIntervalQualitative;
+
+  /// No description provided for @inventoryMackinnonList.
+  ///
+  /// In en, this message translates to:
+  /// **'Mackinnon List'**
+  String get inventoryMackinnonList;
+
+  /// No description provided for @inventoryTransectCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Transect Count'**
+  String get inventoryTransectCount;
+
+  /// No description provided for @inventoryPointCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Point Count'**
+  String get inventoryPointCount;
+
+  /// No description provided for @inventoryBanding.
+  ///
+  /// In en, this message translates to:
+  /// **'Banding'**
+  String get inventoryBanding;
+
+  /// No description provided for @inventoryCasual.
+  ///
+  /// In en, this message translates to:
+  /// **'Casual Observation'**
+  String get inventoryCasual;
+
+  /// No description provided for @inventoryTransectDetection.
+  ///
+  /// In en, this message translates to:
+  /// **'Detection Transect Count'**
+  String get inventoryTransectDetection;
+
+  /// No description provided for @inventoryPointDetection.
+  ///
+  /// In en, this message translates to:
+  /// **'Detection Point Count'**
+  String get inventoryPointDetection;
+
+  /// No description provided for @eggShapeSpherical.
+  ///
+  /// In en, this message translates to:
+  /// **'Spherical'**
+  String get eggShapeSpherical;
+
+  /// No description provided for @eggShapeElliptical.
+  ///
+  /// In en, this message translates to:
+  /// **'Elliptical'**
+  String get eggShapeElliptical;
+
+  /// No description provided for @eggShapeOval.
+  ///
+  /// In en, this message translates to:
+  /// **'Oval'**
+  String get eggShapeOval;
+
+  /// No description provided for @eggShapePyriform.
+  ///
+  /// In en, this message translates to:
+  /// **'Pyriform'**
+  String get eggShapePyriform;
+
+  /// No description provided for @eggShapeConical.
+  ///
+  /// In en, this message translates to:
+  /// **'Conical'**
+  String get eggShapeConical;
+
+  /// No description provided for @eggShapeBiconical.
+  ///
+  /// In en, this message translates to:
+  /// **'Biconical'**
+  String get eggShapeBiconical;
+
+  /// No description provided for @eggShapeCylindrical.
+  ///
+  /// In en, this message translates to:
+  /// **'Cylindrical'**
+  String get eggShapeCylindrical;
+
+  /// No description provided for @eggShapeLongitudinal.
+  ///
+  /// In en, this message translates to:
+  /// **'Longitudinal'**
+  String get eggShapeLongitudinal;
+
+  /// No description provided for @nestStageUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get nestStageUnknown;
+
+  /// No description provided for @nestStageBuilding.
+  ///
+  /// In en, this message translates to:
+  /// **'Building'**
+  String get nestStageBuilding;
+
+  /// No description provided for @nestStageLaying.
+  ///
+  /// In en, this message translates to:
+  /// **'Laying'**
+  String get nestStageLaying;
+
+  /// No description provided for @nestStageIncubating.
+  ///
+  /// In en, this message translates to:
+  /// **'Incubating'**
+  String get nestStageIncubating;
+
+  /// No description provided for @nestStageHatching.
+  ///
+  /// In en, this message translates to:
+  /// **'Hatching'**
+  String get nestStageHatching;
+
+  /// No description provided for @nestStageNestling.
+  ///
+  /// In en, this message translates to:
+  /// **'Nestling'**
+  String get nestStageNestling;
+
+  /// No description provided for @nestStageInactive.
+  ///
+  /// In en, this message translates to:
+  /// **'Inactive'**
+  String get nestStageInactive;
+
+  /// No description provided for @nestStatusUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get nestStatusUnknown;
+
+  /// No description provided for @nestStatusActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get nestStatusActive;
+
+  /// No description provided for @nestStatusInactive.
+  ///
+  /// In en, this message translates to:
+  /// **'Inactive'**
+  String get nestStatusInactive;
+
+  /// No description provided for @nestFateUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get nestFateUnknown;
+
+  /// No description provided for @nestFateLost.
+  ///
+  /// In en, this message translates to:
+  /// **'Lost'**
+  String get nestFateLost;
+
+  /// No description provided for @nestFateSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Success'**
+  String get nestFateSuccess;
+
+  /// No description provided for @specimenWholeCarcass.
+  ///
+  /// In en, this message translates to:
+  /// **'Whole carcass'**
+  String get specimenWholeCarcass;
+
+  /// No description provided for @specimenPartialCarcass.
+  ///
+  /// In en, this message translates to:
+  /// **'Partial carcass'**
+  String get specimenPartialCarcass;
+
+  /// No description provided for @specimenNest.
+  ///
+  /// In en, this message translates to:
+  /// **'Nest'**
+  String get specimenNest;
+
+  /// No description provided for @specimenBones.
+  ///
+  /// In en, this message translates to:
+  /// **'Bones'**
+  String get specimenBones;
+
+  /// No description provided for @specimenEgg.
+  ///
+  /// In en, this message translates to:
+  /// **'Egg'**
+  String get specimenEgg;
+
+  /// No description provided for @specimenParasites.
+  ///
+  /// In en, this message translates to:
+  /// **'Parasites'**
+  String get specimenParasites;
+
+  /// No description provided for @specimenFeathers.
+  ///
+  /// In en, this message translates to:
+  /// **'Feathers'**
+  String get specimenFeathers;
+
+  /// No description provided for @specimenBlood.
+  ///
+  /// In en, this message translates to:
+  /// **'Blood'**
+  String get specimenBlood;
+
+  /// No description provided for @specimenClaw.
+  ///
+  /// In en, this message translates to:
+  /// **'Claw'**
+  String get specimenClaw;
+
+  /// No description provided for @specimenSwab.
+  ///
+  /// In en, this message translates to:
+  /// **'Swab'**
+  String get specimenSwab;
+
+  /// No description provided for @specimenTissues.
+  ///
+  /// In en, this message translates to:
+  /// **'Tissues'**
+  String get specimenTissues;
+
+  /// No description provided for @specimenFeces.
+  ///
+  /// In en, this message translates to:
+  /// **'Feces'**
+  String get specimenFeces;
+
+  /// No description provided for @specimenRegurgite.
+  ///
+  /// In en, this message translates to:
+  /// **'Regurgite'**
+  String get specimenRegurgite;
+
+  /// Number of selected specimens
+  ///
+  /// In en, this message translates to:
+  /// **'{howMany, plural, one{selected specimen} other{selected specimens}}'**
+  String selectedSpecimens(int howMany);
+
+  /// Chart title: specimens grouped by type
+  ///
+  /// In en, this message translates to:
+  /// **'Specimens by type'**
+  String get specimensByType;
+
+  /// Chart title: specimens grouped by species
+  ///
+  /// In en, this message translates to:
+  /// **'Specimens by species'**
+  String get specimensBySpecies;
+
+  /// Chart title: specimens grouped by locality
+  ///
+  /// In en, this message translates to:
+  /// **'Specimens by locality'**
+  String get specimensByLocality;
+
+  /// Chart title: specimen collections by hour of day
+  ///
+  /// In en, this message translates to:
+  /// **'Collections by hour of day'**
+  String get collectionsByHourOfDay;
+
+  /// Chart title: species richness per month
+  ///
+  /// In en, this message translates to:
+  /// **'Species richness per month'**
+  String get speciesRichnessPerMonth;
+
+  /// Chart title: species richness per year
+  ///
+  /// In en, this message translates to:
+  /// **'Species richness per year'**
+  String get speciesRichnessPerYear;
+
+  /// Message when importing journals
+  ///
+  /// In en, this message translates to:
+  /// **'Importing journals'**
+  String get importingJournals;
+
+  /// Error message when importing journals
+  ///
+  /// In en, this message translates to:
+  /// **'Error importing journals'**
+  String get errorImportingJournals;
+
+  /// Message when journals are imported successfully
+  ///
+  /// In en, this message translates to:
+  /// **'Journals imported successfully: {howMany}'**
+  String journalsImportedSuccessfully(int howMany);
+
+  /// Error message when parsing journals array item fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error parsing \'journals\' array item: {errorMessage} \nItem: {item}'**
+  String errorParsingJournalsArrayItem(String item, String errorMessage);
+
+  /// Error message when unexpected journals array item is encountered
+  ///
+  /// In en, this message translates to:
+  /// **'Unexpected item in \'journals\' JSON array: {item}'**
+  String errorUnexpectedJournalsArrayItem(String item);
+
+  /// Message when no valid journal entries are found in imported file
+  ///
+  /// In en, this message translates to:
+  /// **'No valid journal entries found in the imported file.'**
+  String get noValidJournalEntriesFoundInFile;
+
+  /// Label for tag selection field in journal entries
+  ///
+  /// In en, this message translates to:
+  /// **'Tags'**
+  String get tags;
+
+  /// Predefined journal tag for behavior observations
+  ///
+  /// In en, this message translates to:
+  /// **'Behavior'**
+  String get predefinedTagBehavior;
+
+  /// Predefined journal tag for feeding observations
+  ///
+  /// In en, this message translates to:
+  /// **'Feeding'**
+  String get predefinedTagFeeding;
+
+  /// Predefined journal tag for vocalization observations
+  ///
+  /// In en, this message translates to:
+  /// **'Vocalization'**
+  String get predefinedTagVocalization;
+
+  /// Predefined journal tag for identification notes
+  ///
+  /// In en, this message translates to:
+  /// **'Identification'**
+  String get predefinedTagIdentification;
+
+  /// Predefined journal tag for uncertain observations
+  ///
+  /// In en, this message translates to:
+  /// **'Doubt'**
+  String get predefinedTagDoubt;
+
+  /// Predefined journal tag for habitat notes
+  ///
+  /// In en, this message translates to:
+  /// **'Habitat'**
+  String get predefinedTagHabitat;
+
+  /// Predefined journal tag for weather notes
+  ///
+  /// In en, this message translates to:
+  /// **'Weather'**
+  String get predefinedTagWeather;
+
+  /// Predefined journal tag for checklist or list-related notes
+  ///
+  /// In en, this message translates to:
+  /// **'List'**
+  String get predefinedTagList;
+
+  /// Predefined journal tag for breeding observations
+  ///
+  /// In en, this message translates to:
+  /// **'Breeding'**
+  String get predefinedTagBreeding;
+
+  /// Predefined journal tag for seasonal arrival records
+  ///
+  /// In en, this message translates to:
+  /// **'Season arrival'**
+  String get predefinedTagSeasonArrival;
+
+  /// Predefined journal tag for fieldwork notes
+  ///
+  /// In en, this message translates to:
+  /// **'Fieldwork'**
+  String get predefinedTagFieldwork;
+
+  /// Button label for adding a tag to a journal entry
+  ///
+  /// In en, this message translates to:
+  /// **'Add tag'**
+  String get addTag;
+
+  /// Settings screen title for managing journal tags
+  ///
+  /// In en, this message translates to:
+  /// **'Manage tags'**
+  String get manageTags;
+
+  /// Input label for creating a custom tag
+  ///
+  /// In en, this message translates to:
+  /// **'New tag name'**
+  String get newTagName;
+
+  /// Badge for user-created tags
+  ///
+  /// In en, this message translates to:
+  /// **'Custom'**
+  String get customTag;
+
+  /// Badge for built-in predefined tags
+  ///
+  /// In en, this message translates to:
+  /// **'Predefined'**
+  String get predefinedTag;
+
+  /// Action to change a tag color
+  ///
+  /// In en, this message translates to:
+  /// **'Change tag color'**
+  String get changeTagColor;
+
+  /// Empty state for tag management list
+  ///
+  /// In en, this message translates to:
+  /// **'No tags found'**
+  String get noTagsFound;
+
+  /// Title of dialog to confirm adding an individual to an existing species count
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm add'**
+  String get confirmAdd;
+
+  /// Message asking user confirmation to add one individual to existing species
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to add one individual to the count of {speciesName}?'**
+  String confirmAddIndividual(String speciesName);
+
+  /// Add button label
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get add;
+
+  /// Online help button label
+  ///
+  /// In en, this message translates to:
+  /// **'Online help'**
+  String get onlineHelp;
+
+  /// Start longitude/latitude label
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get start;
+
+  /// End longitude/latitude label
+  ///
+  /// In en, this message translates to:
+  /// **'End'**
+  String get end;
+
+  /// Starting dialog message
+  ///
+  /// In en, this message translates to:
+  /// **'Starting, please wait...'**
+  String get startingPleaseWait;
+
+  /// View table button label
+  ///
+  /// In en, this message translates to:
+  /// **'View species table'**
+  String get viewSpeciesTable;
+
+  /// Transport mode field label
+  ///
+  /// In en, this message translates to:
+  /// **'Transport mode'**
+  String get transportMode;
+
+  /// Not applicable transport mode label
+  ///
+  /// In en, this message translates to:
+  /// **'Not applicable'**
+  String get transportNotApplicable;
+
+  /// Walking transport mode label
+  ///
+  /// In en, this message translates to:
+  /// **'On foot'**
+  String get transportWalking;
+
+  /// Vehicle transport mode label
+  ///
+  /// In en, this message translates to:
+  /// **'Vehicle'**
+  String get transportVehicle;
+
+  /// Boat transport mode label
+  ///
+  /// In en, this message translates to:
+  /// **'Boat'**
+  String get transportBoat;
+
+  /// Aircraft transport mode label
+  ///
+  /// In en, this message translates to:
+  /// **'Aircraft'**
+  String get transportAircraft;
+
+  /// Bicycle transport mode label
+  ///
+  /// In en, this message translates to:
+  /// **'Bicycle'**
+  String get transportBicycle;
+
+  /// Horse transport mode label
+  ///
+  /// In en, this message translates to:
+  /// **'Horse'**
+  String get transportHorse;
+
+  /// Remote transport mode label
+  ///
+  /// In en, this message translates to:
+  /// **'Remote'**
+  String get transportRemote;
+
+  /// Other transport mode label
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get transportOther;
+
+  /// Selected species field label
+  ///
+  /// In en, this message translates to:
+  /// **'Selected species'**
+  String get selectedSpecies;
+
+  /// Total legend label
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get total;
+
+  /// Sample legend label
+  ///
+  /// In en, this message translates to:
+  /// **'Sample'**
+  String get sample;
+
+  /// Presence within sample legend label
+  ///
+  /// In en, this message translates to:
+  /// **' - Presence within sample, '**
+  String get presenceWithinSample;
+
+  /// Presence outside sample legend label
+  ///
+  /// In en, this message translates to:
+  /// **' - Outside sample.'**
+  String get presenceOutsideSample;
+
+  /// First occurrence is highlighted legend label
+  ///
+  /// In en, this message translates to:
+  /// **'First occurrence of species in the table is highlighted.'**
+  String get firstOccurrenceIsHighlighted;
+
+  /// Parenthesis is outside sample legend label
+  ///
+  /// In en, this message translates to:
+  /// **'Values in parenthesis are individuals outside sample.'**
+  String get parenthesisIsOutsideSample;
+
+  /// View complete list button label
+  ///
+  /// In en, this message translates to:
+  /// **'View complete list'**
+  String get viewCompleteList;
+
+  /// No species selected message
+  ///
+  /// In en, this message translates to:
+  /// **'No species selected'**
+  String get noSpeciesSelected;
+
+  /// Label used when an optional field is not selected
+  ///
+  /// In en, this message translates to:
+  /// **'Not specified'**
+  String get notSpecified;
+
+  /// Species habitat section label
+  ///
+  /// In en, this message translates to:
+  /// **'Habitat'**
+  String get speciesHabitat;
+
+  /// Species habitat label
+  ///
+  /// In en, this message translates to:
+  /// **'Forest'**
+  String get speciesHabitatForest;
+
+  /// Species habitat label
+  ///
+  /// In en, this message translates to:
+  /// **'Woodland'**
+  String get speciesHabitatWoodland;
+
+  /// Species habitat label
+  ///
+  /// In en, this message translates to:
+  /// **'Grassland'**
+  String get speciesHabitatGrassland;
+
+  /// Species habitat label
+  ///
+  /// In en, this message translates to:
+  /// **'Savanna'**
+  String get speciesHabitatSavanna;
+
+  /// Species habitat label
+  ///
+  /// In en, this message translates to:
+  /// **'Shrubland'**
+  String get speciesHabitatShrubland;
+
+  /// Species habitat label
+  ///
+  /// In en, this message translates to:
+  /// **'Wetland'**
+  String get speciesHabitatWetland;
+
+  /// Species habitat label
+  ///
+  /// In en, this message translates to:
+  /// **'Freshwater'**
+  String get speciesHabitatFreshwater;
+
+  /// Species habitat label
+  ///
+  /// In en, this message translates to:
+  /// **'Marine'**
+  String get speciesHabitatMarine;
+
+  /// Species habitat label
+  ///
+  /// In en, this message translates to:
+  /// **'Coastal'**
+  String get speciesHabitatCoastal;
+
+  /// Species habitat label
+  ///
+  /// In en, this message translates to:
+  /// **'Urban'**
+  String get speciesHabitatUrban;
+
+  /// Species habitat label
+  ///
+  /// In en, this message translates to:
+  /// **'Agricultural'**
+  String get speciesHabitatAgricultural;
+
+  /// Species habitat label
+  ///
+  /// In en, this message translates to:
+  /// **'Rocky terrain'**
+  String get speciesHabitatRocky;
+
+  /// Species habitat label
+  ///
+  /// In en, this message translates to:
+  /// **'Mangrove'**
+  String get speciesHabitatMangrove;
+
+  /// Species habitat label
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get speciesHabitatOther;
+
+  /// Species detection mode section label
+  ///
+  /// In en, this message translates to:
+  /// **'Detection mode'**
+  String get speciesDetectionMode;
+
+  /// Species detection mode label
+  ///
+  /// In en, this message translates to:
+  /// **'Visual'**
+  String get speciesDetectionVisual;
+
+  /// Species detection mode label
+  ///
+  /// In en, this message translates to:
+  /// **'Song'**
+  String get speciesDetectionSong;
+
+  /// Species detection mode label
+  ///
+  /// In en, this message translates to:
+  /// **'Call'**
+  String get speciesDetectionCall;
+
+  /// Species detection mode label
+  ///
+  /// In en, this message translates to:
+  /// **'Wing flapping'**
+  String get speciesDetectionWingFlapping;
+
+  /// Species detection mode label
+  ///
+  /// In en, this message translates to:
+  /// **'Drumming'**
+  String get speciesDetectionDrumming;
+
+  /// Species detection mode label
+  ///
+  /// In en, this message translates to:
+  /// **'Flying'**
+  String get speciesDetectionFlying;
+
+  /// Species detection mode label
+  ///
+  /// In en, this message translates to:
+  /// **'Capture'**
+  String get speciesDetectionCapture;
+
+  /// Species detection mode label
+  ///
+  /// In en, this message translates to:
+  /// **'Remote'**
+  String get speciesDetectionRemote;
+
+  /// Species detection mode label
+  ///
+  /// In en, this message translates to:
+  /// **'Tracks / signs'**
+  String get speciesDetectionTrackOrSign;
+
+  /// Species detection mode label
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get speciesDetectionOther;
+
+  /// Species reproductive status section label
+  ///
+  /// In en, this message translates to:
+  /// **'Reproductive status'**
+  String get speciesReproductiveStatus;
+
+  /// Species reproductive status label
+  ///
+  /// In en, this message translates to:
+  /// **'Possible breeding'**
+  String get speciesReproductivePossibleBreeding;
+
+  /// Species reproductive status label
+  ///
+  /// In en, this message translates to:
+  /// **'Probable breeding'**
+  String get speciesReproductiveProbableBreeding;
+
+  /// Species reproductive status label
+  ///
+  /// In en, this message translates to:
+  /// **'Confirmed breeding'**
+  String get speciesReproductiveConfirmedBreeding;
+
+  /// Reproductive status section title for observed level
+  ///
+  /// In en, this message translates to:
+  /// **'Observed'**
+  String get speciesReproductiveGroupObserved;
+
+  /// Reproductive status section title for possible breeding level
+  ///
+  /// In en, this message translates to:
+  /// **'Possible'**
+  String get speciesReproductiveGroupPossible;
+
+  /// Reproductive status section title for probable breeding level
+  ///
+  /// In en, this message translates to:
+  /// **'Probable'**
+  String get speciesReproductiveGroupProbable;
+
+  /// Reproductive status section title for confirmed breeding level
+  ///
+  /// In en, this message translates to:
+  /// **'Confirmed'**
+  String get speciesReproductiveGroupConfirmed;
+
+  /// eBird reproductive code H
+  ///
+  /// In en, this message translates to:
+  /// **'In Appropriate Habitat (Possible)'**
+  String get speciesReproductiveCodeH;
+
+  /// eBird reproductive code S
+  ///
+  /// In en, this message translates to:
+  /// **'Singing Bird (Possible)'**
+  String get speciesReproductiveCodeS;
+
+  /// eBird reproductive code S7
+  ///
+  /// In en, this message translates to:
+  /// **'Singing Bird Present 7+ Days (Probable)'**
+  String get speciesReproductiveCodeS7;
+
+  /// eBird reproductive code M
+  ///
+  /// In en, this message translates to:
+  /// **'Multiple (7+) Singing Birds (Probable)'**
+  String get speciesReproductiveCodeM;
+
+  /// eBird reproductive code P
+  ///
+  /// In en, this message translates to:
+  /// **'Pair in Suitable Habitat (Probable)'**
+  String get speciesReproductiveCodeP;
+
+  /// eBird reproductive code T
+  ///
+  /// In en, this message translates to:
+  /// **'Territorial Defense (Probable)'**
+  String get speciesReproductiveCodeT;
+
+  /// eBird reproductive code C
+  ///
+  /// In en, this message translates to:
+  /// **'Courtship, Display or Copulation (Probable)'**
+  String get speciesReproductiveCodeC;
+
+  /// eBird reproductive code N
+  ///
+  /// In en, this message translates to:
+  /// **'Visiting Probable Nest Site (Probable)'**
+  String get speciesReproductiveCodeN;
+
+  /// eBird reproductive code A
+  ///
+  /// In en, this message translates to:
+  /// **'Agitated Behavior (Probable)'**
+  String get speciesReproductiveCodeA;
+
+  /// eBird reproductive code B
+  ///
+  /// In en, this message translates to:
+  /// **'Wren/Woodpecker Nest Building (Probable)'**
+  String get speciesReproductiveCodeB;
+
+  /// eBird reproductive code PE
+  ///
+  /// In en, this message translates to:
+  /// **'Physiological Evidence (Probable)'**
+  String get speciesReproductiveCodePE;
+
+  /// eBird reproductive code CN
+  ///
+  /// In en, this message translates to:
+  /// **'Carrying Nesting Material (Confirmed/Probable)'**
+  String get speciesReproductiveCodeCN;
+
+  /// eBird reproductive code NB
+  ///
+  /// In en, this message translates to:
+  /// **'Nest Building (Confirmed/Probable)'**
+  String get speciesReproductiveCodeNB;
+
+  /// eBird reproductive code DD
+  ///
+  /// In en, this message translates to:
+  /// **'Distraction Display (Confirmed)'**
+  String get speciesReproductiveCodeDD;
+
+  /// eBird reproductive code UN
+  ///
+  /// In en, this message translates to:
+  /// **'Used Nest (Confirmed)'**
+  String get speciesReproductiveCodeUN;
+
+  /// eBird reproductive code ON
+  ///
+  /// In en, this message translates to:
+  /// **'Occupied Nest (Confirmed)'**
+  String get speciesReproductiveCodeON;
+
+  /// eBird reproductive code FL
+  ///
+  /// In en, this message translates to:
+  /// **'Recently Fledged Young (Confirmed)'**
+  String get speciesReproductiveCodeFL;
+
+  /// eBird reproductive code CF
+  ///
+  /// In en, this message translates to:
+  /// **'Carrying Food (Confirmed)'**
+  String get speciesReproductiveCodeCF;
+
+  /// eBird reproductive code FY
+  ///
+  /// In en, this message translates to:
+  /// **'Feeding Young (Confirmed)'**
+  String get speciesReproductiveCodeFY;
+
+  /// eBird reproductive code FS
+  ///
+  /// In en, this message translates to:
+  /// **'Carrying Fecal Sac (Confirmed)'**
+  String get speciesReproductiveCodeFS;
+
+  /// eBird reproductive code NE
+  ///
+  /// In en, this message translates to:
+  /// **'Nest with Eggs (Confirmed)'**
+  String get speciesReproductiveCodeNE;
+
+  /// eBird reproductive code NY
+  ///
+  /// In en, this message translates to:
+  /// **'Nest with Young (Confirmed)'**
+  String get speciesReproductiveCodeNY;
+
+  /// eBird reproductive code F
+  ///
+  /// In en, this message translates to:
+  /// **'Flyover (Observed)'**
+  String get speciesReproductiveCodeF;
+
+  /// Species sex section label
+  ///
+  /// In en, this message translates to:
+  /// **'Sex'**
+  String get speciesSex;
+
+  /// Species sex label
+  ///
+  /// In en, this message translates to:
+  /// **'Indeterminate'**
+  String get speciesSexIndeterminate;
+
+  /// Species sex label
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get speciesSexMale;
+
+  /// Species sex label
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get speciesSexFemale;
+
+  /// Species sex label
+  ///
+  /// In en, this message translates to:
+  /// **'Both'**
+  String get speciesSexBoth;
+
+  /// Species activity section label
+  ///
+  /// In en, this message translates to:
+  /// **'Activity'**
+  String get speciesActivity;
+
+  /// Species activity label
+  ///
+  /// In en, this message translates to:
+  /// **'Flying'**
+  String get speciesActivityFlying;
+
+  /// Species activity label
+  ///
+  /// In en, this message translates to:
+  /// **'Foraging'**
+  String get speciesActivityForaging;
+
+  /// Species activity label
+  ///
+  /// In en, this message translates to:
+  /// **'Perching'**
+  String get speciesActivityPerching;
+
+  /// Species activity label
+  ///
+  /// In en, this message translates to:
+  /// **'Singing'**
+  String get speciesActivitySinging;
+
+  /// Species activity label
+  ///
+  /// In en, this message translates to:
+  /// **'Calling'**
+  String get speciesActivityCalling;
+
+  /// Species activity label
+  ///
+  /// In en, this message translates to:
+  /// **'Nesting'**
+  String get speciesActivityNesting;
+
+  /// Species activity label
+  ///
+  /// In en, this message translates to:
+  /// **'Feeding young'**
+  String get speciesActivityFeedingYoung;
+
+  /// Species activity label
+  ///
+  /// In en, this message translates to:
+  /// **'Resting'**
+  String get speciesActivityResting;
+
+  /// Species activity label
+  ///
+  /// In en, this message translates to:
+  /// **'Bathing'**
+  String get speciesActivityBathing;
+
+  /// Species activity label
+  ///
+  /// In en, this message translates to:
+  /// **'Moving'**
+  String get speciesActivityMoving;
+
+  /// Species activity label
+  ///
+  /// In en, this message translates to:
+  /// **'Displaying'**
+  String get speciesActivityDisplaying;
+
+  /// Species activity label
+  ///
+  /// In en, this message translates to:
+  /// **'Aggressive behavior'**
+  String get speciesActivityAggressive;
+
+  /// Species activity label
+  ///
+  /// In en, this message translates to:
+  /// **'Roosting'**
+  String get speciesActivityRoosting;
+
+  /// Species activity label
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get speciesActivityOther;
 }
 
-class AppLocalizationDelegate extends LocalizationsDelegate<S> {
-  const AppLocalizationDelegate();
+class _SDelegate extends LocalizationsDelegate<S> {
+  const _SDelegate();
 
-  List<Locale> get supportedLocales {
-    return const <Locale>[
-      Locale.fromSubtags(languageCode: 'en'),
-      Locale.fromSubtags(languageCode: 'pt'),
-      Locale.fromSubtags(languageCode: 'pt', countryCode: 'BR'),
-    ];
+  @override
+  Future<S> load(Locale locale) {
+    return SynchronousFuture<S>(lookupS(locale));
   }
 
   @override
-  bool isSupported(Locale locale) => _isSupported(locale);
-  @override
-  Future<S> load(Locale locale) => S.load(locale);
-  @override
-  bool shouldReload(AppLocalizationDelegate old) => false;
+  bool isSupported(Locale locale) => <String>['en', 'pt'].contains(locale.languageCode);
 
-  bool _isSupported(Locale locale) {
-    for (var supportedLocale in supportedLocales) {
-      if (supportedLocale.languageCode == locale.languageCode) {
-        return true;
+  @override
+  bool shouldReload(_SDelegate old) => false;
+}
+
+S lookupS(Locale locale) {
+  // Lookup logic when language+country codes are specified.
+  switch (locale.languageCode) {
+    case 'pt':
+      {
+        switch (locale.countryCode) {
+          case 'BR':
+            return SPtBr();
+        }
+        break;
       }
-    }
-    return false;
   }
+
+  // Lookup logic when only language code is specified.
+  switch (locale.languageCode) {
+    case 'en':
+      return SEn();
+    case 'pt':
+      return SPt();
+  }
+
+  throw FlutterError(
+    'S.delegate failed to load unsupported locale "$locale". This is likely '
+    'an issue with the localizations generation tool. Please file an issue '
+    'on GitHub with a reproducible sample app and the gen-l10n configuration '
+    'that was used.',
+  );
 }

@@ -210,7 +210,7 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
                       ? Padding(
                         padding: const EdgeInsets.symmetric(vertical: 10),
                         child: Text(
-                          S.current.notSpecified,
+                          S.of(context).notSpecified,
                           style: Theme.of(
                             context,
                           ).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
@@ -286,7 +286,7 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
       isExpanded: true,
       decoration: InputDecoration(labelText: label, border: const OutlineInputBorder()),
       items: [
-        DropdownMenuItem<T?>(value: null, child: Text(S.current.notSpecified)),
+        DropdownMenuItem<T?>(value: null, child: Text(S.of(context).notSpecified)),
         ...options.map(
           (value) =>
               DropdownMenuItem<T?>(value: value, child: Text(labelBuilder(value), overflow: TextOverflow.ellipsis)),
@@ -321,10 +321,10 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
         .toList(growable: false);
 
     return [
-      _ReproductiveStatusGroup(title: S.current.speciesReproductiveGroupObserved, options: observed),
-      _ReproductiveStatusGroup(title: S.current.speciesReproductiveGroupPossible, options: possible),
-      _ReproductiveStatusGroup(title: S.current.speciesReproductiveGroupProbable, options: probable),
-      _ReproductiveStatusGroup(title: S.current.speciesReproductiveGroupConfirmed, options: confirmed),
+      _ReproductiveStatusGroup(title: S.of(context).speciesReproductiveGroupObserved, options: observed),
+      _ReproductiveStatusGroup(title: S.of(context).speciesReproductiveGroupPossible, options: possible),
+      _ReproductiveStatusGroup(title: S.of(context).speciesReproductiveGroupProbable, options: probable),
+      _ReproductiveStatusGroup(title: S.of(context).speciesReproductiveGroupConfirmed, options: confirmed),
     ];
   }
 
@@ -347,7 +347,7 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
       controller: _reproductiveStatusController,
       readOnly: true,
       decoration: InputDecoration(
-        labelText: S.current.speciesReproductiveStatus,
+        labelText: S.of(context).speciesReproductiveStatus,
         border: const OutlineInputBorder(),
         suffixIcon: _selectedReproductiveStatus != null
             ? IconButton(
@@ -376,12 +376,12 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
     final speciesName = _nameController.text.trim();
 
     if (speciesName.isEmpty) {
-      _showNameValidationError(S.current.requiredField);
+      _showNameValidationError(S.of(context).requiredField);
       return;
     }
 
     if (_hasDuplicatedName(speciesName)) {
-      _showNameValidationError(S.current.errorSpeciesAlreadyExists);
+      _showNameValidationError(S.of(context).errorSpeciesAlreadyExists);
       return;
     }
 
@@ -425,7 +425,7 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_nameController.text.trim().isEmpty ? widget.species.name : _nameController.text),
-        actions: [TextButton(onPressed: _saveForm, child: Text(S.current.save))],
+        actions: [TextButton(onPressed: _saveForm, child: Text(S.of(context).save))],
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -446,7 +446,7 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
                       enableSuggestions: false,
                       decoration: InputDecoration(
                         filled: true,
-                        labelText: S.current.speciesName,
+                        labelText: S.of(context).speciesName,
                         border: const OutlineInputBorder(),
                         prefixIcon: const Icon(Icons.search_outlined),
                       ),
@@ -462,10 +462,10 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
                       validator: (value) {
                         final name = value?.trim() ?? '';
                         if (name.isEmpty) {
-                          return S.current.requiredField;
+                          return S.of(context).requiredField;
                         }
                         if (_hasDuplicatedName(name)) {
-                          return S.current.errorSpeciesAlreadyExists;
+                          return S.of(context).errorSpeciesAlreadyExists;
                         }
                         return null;
                       },
@@ -503,7 +503,7 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
                       child: TextFormField(
                         controller: _countController,
                         decoration: InputDecoration(
-                          labelText: S.current.count,
+                          labelText: S.of(context).count,
                           border: OutlineInputBorder(),
                           prefixIcon: IconButton(
                             onPressed: () {
@@ -533,10 +533,10 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
                         textAlign: TextAlign.center,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return S.current.insertCount;
+                            return S.of(context).insertCount;
                           }
                           if (int.tryParse(value) == null) {
-                            return S.current.insertValidNumber;
+                            return S.of(context).insertValidNumber;
                           }
                           return null;
                         },
@@ -547,7 +547,7 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
                       child: TextFormField(
                         controller: _distanceController,
                         decoration: InputDecoration(
-                          labelText: S.current.distance,
+                          labelText: S.of(context).distance,
                           suffixText: 'm',
                           border: OutlineInputBorder(),
                         ),
@@ -564,7 +564,7 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
                       child: TextFormField(
                         controller: _flightHeightController,
                         decoration: InputDecoration(
-                          labelText: S.current.flightHeight,
+                          labelText: S.of(context).flightHeight,
                           suffixText: 'm',
                           border: OutlineInputBorder(),
                         ),
@@ -576,12 +576,12 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
                       child: DropdownButtonFormField<String>(
                         initialValue: _selectedFlightDirection,
                         decoration: InputDecoration(
-                          labelText: S.current.flightDirection,
+                          labelText: S.of(context).flightDirection,
                           border: const OutlineInputBorder(),
                         ),
                         isExpanded: true,
                         items: [
-                          DropdownMenuItem<String>(value: null, child: Text(S.current.notSpecified)),
+                          DropdownMenuItem<String>(value: null, child: Text(S.of(context).notSpecified)),
                           ...[
                             // Pontos Cardeais
                             'N', 'S', 'E', 'W',
@@ -609,7 +609,7 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
                     const SizedBox(width: 8),
                     Expanded(
                       child: _buildDropdownSection<SpeciesSex>(
-                        label: S.current.speciesSex,
+                        label: S.of(context).speciesSex,
                         options: SpeciesSex.values,
                         selectedValue: _selectedSex,
                         labelBuilder: (value) => speciesSexFriendlyNames[value] ?? value.name,
@@ -625,7 +625,7 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
                 const SizedBox(height: 16),
 
                 _buildMultiSelectChipSection<SpeciesDetectionMode>(
-                  label: S.current.speciesDetectionMode,
+                  label: S.of(context).speciesDetectionMode,
                   options: SpeciesDetectionMode.values,
                   selectedValues: _selectedDetectionModes,
                   labelBuilder: (value) => speciesDetectionModeFriendlyNames[value] ?? value.name,
@@ -654,13 +654,13 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
                 const SizedBox(height: 12),
 
                 _buildSelectedOptionsField<SpeciesHabitat>(
-                  label: S.current.speciesHabitat,
+                  label: S.of(context).speciesHabitat,
                   options: SpeciesHabitat.values,
                   selectedValues: _selectedHabitats,
                   labelBuilder: (value) => speciesHabitatFriendlyNames[value] ?? value.name,
                   onEdit: () async {
                     final result = await _showSelectionBottomSheet<SpeciesHabitat>(
-                      title: S.current.speciesHabitat,
+                      title: S.of(context).speciesHabitat,
                       options: SpeciesHabitat.values,
                       initialSelection: _selectedHabitats,
                       labelBuilder: (value) => speciesHabitatFriendlyNames[value] ?? value.name,
@@ -671,13 +671,13 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
                 ),
                 const SizedBox(height: 8),
                 _buildSelectedOptionsField<SpeciesActivity>(
-                  label: S.current.speciesActivity,
+                  label: S.of(context).speciesActivity,
                   options: SpeciesActivity.values,
                   selectedValues: _selectedActivities,
                   labelBuilder: (value) => speciesActivityFriendlyNames[value] ?? value.name,
                   onEdit: () async {
                     final result = await _showSelectionBottomSheet<SpeciesActivity>(
-                      title: S.current.speciesActivity,
+                      title: S.of(context).speciesActivity,
                       options: SpeciesActivity.values,
                       initialSelection: _selectedActivities,
                       labelBuilder: (value) => speciesActivityFriendlyNames[value] ?? value.name,
@@ -690,13 +690,13 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
                 // --- Campo Notes ---
                 TextFormField(
                   controller: _notesController,
-                  decoration: InputDecoration(labelText: S.current.notes, border: OutlineInputBorder()),
+                  decoration: InputDecoration(labelText: S.of(context).notes, border: OutlineInputBorder()),
                   maxLines: 3,
                 ),
                 const SizedBox(height: 16),
                 // --- Campo Is Out Of Inventory ---
                 SwitchListTile.adaptive(
-                  title: Text(S.current.outOfSample),
+                  title: Text(S.of(context).outOfSample),
                   value: _isOutOfInventory,
                   onChanged: (bool value) {
                     setState(() {
@@ -705,7 +705,7 @@ class _EditSpeciesScreenState extends State<EditSpeciesScreen> {
                   },
                 ),
                 SwitchListTile.adaptive(
-                  title: Text(S.current.doubtfulRecord),
+                  title: Text(S.of(context).doubtfulRecord),
                   value: _isDoubtful,
                   onChanged: (bool value) {
                     setState(() {
@@ -760,9 +760,9 @@ class _SelectionChipsBottomSheetState<T extends Enum> extends State<_SelectionCh
             Row(
               children: [
                 Expanded(child: Text(widget.title, style: Theme.of(context).textTheme.titleLarge)),
-                TextButton(onPressed: () => Navigator.of(context).pop(null), child: Text(S.current.cancel)),
+                TextButton(onPressed: () => Navigator.of(context).pop(null), child: Text(S.of(context).cancel)),
                 const SizedBox(width: 8),
-                TextButton(onPressed: () => Navigator.of(context).pop(_selection), child: Text(S.current.save)),
+                TextButton(onPressed: () => Navigator.of(context).pop(_selection), child: Text(S.of(context).save)),
               ],
             ),
             const SizedBox(height: 12),
@@ -830,11 +830,11 @@ class _ReproductiveStatusBottomSheet extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: Text(S.current.speciesReproductiveStatus, style: Theme.of(context).textTheme.titleLarge),
+                  child: Text(S.of(context).speciesReproductiveStatus, style: Theme.of(context).textTheme.titleLarge),
                 ),
-                TextButton(onPressed: () => Navigator.of(context).pop(null), child: Text(S.current.clearSelection)),
+                TextButton(onPressed: () => Navigator.of(context).pop(null), child: Text(S.of(context).clearSelection)),
                 IconButton(
-                  tooltip: S.current.cancel,
+                  tooltip: S.of(context).cancel,
                   onPressed: () => Navigator.of(context).pop(selectedStatus),
                   icon: const Icon(Icons.close),
                 ),

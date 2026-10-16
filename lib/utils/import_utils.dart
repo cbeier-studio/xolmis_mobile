@@ -146,7 +146,7 @@ Future<void> importInventoryFromJson(BuildContext context) async {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             showCloseIcon: true,
-            content: Text(S.current.noFileSelected)),
+            content: Text(S.of(context).noFileSelected)),
         );
       }
       return;
@@ -169,7 +169,7 @@ Future<void> importInventoryFromJson(BuildContext context) async {
                 children: [
                   CircularProgressIndicator(),
                   SizedBox(width: 16),
-                  Text(S.current.importingInventory),
+                  Text(S.of(context).importingInventory),
                 ],
               ),
             ),
@@ -185,10 +185,10 @@ Future<void> importInventoryFromJson(BuildContext context) async {
 
     if (jsonData is Map<String, dynamic>) {
       if (jsonData['source'] != kExportSource) {
-        throw FormatException(S.current.invalidJsonSource);
+        throw FormatException(S.of(context).invalidJsonSource);
       }
       if (jsonData['schema'] != 'inventories') {
-        throw FormatException(S.current.invalidJsonSchema);
+        throw FormatException(S.of(context).invalidJsonSchema);
       }
     }
 
@@ -217,14 +217,14 @@ Future<void> importInventoryFromJson(BuildContext context) async {
           try {
             inventoriesToImport.add(Inventory.fromJson(item));
           } catch (e) {
-            importErrors.add(S.current.errorParsingInventoriesArrayItem(item.toString(), e.toString()));
+            importErrors.add(S.of(context).errorParsingInventoriesArrayItem(item.toString(), e.toString()));
           }
         } else {
-          importErrors.add(S.current.errorUnexpectedInventoriesArrayItem(item.toString()));
+          importErrors.add(S.of(context).errorUnexpectedInventoriesArrayItem(item.toString()));
         }
       }
     } else {
-      throw FormatException(S.current.invalidJsonFormatExpectedObjectOrArray);
+      throw FormatException(S.of(context).invalidJsonFormatExpectedObjectOrArray);
     }
 
     // If there were no items in the JSON at all
@@ -237,7 +237,7 @@ Future<void> importInventoryFromJson(BuildContext context) async {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             showCloseIcon: true,
-            content: Text(S.current.noInventoriesFoundInFile)),
+            content: Text(S.of(context).noInventoriesFoundInFile)),
         );
       }
       return;
@@ -252,8 +252,8 @@ Future<void> importInventoryFromJson(BuildContext context) async {
       if (context.mounted) {
         final errorCount = importErrors.length;
         final message = errorCount > 0
-            ? S.current.importCompletedWithErrors(0, errorCount)
-            : S.current.noValidInventoriesFoundInFile;
+            ? S.of(context).importCompletedWithErrors(0, errorCount)
+            : S.of(context).noValidInventoriesFoundInFile;
         if (importErrors.isNotEmpty) debugPrint("Import errors: \n${importErrors.join('\n')}");
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -289,7 +289,7 @@ Future<void> importInventoryFromJson(BuildContext context) async {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             showCloseIcon: true,
-            content: Text(S.current.importCancelled),
+            content: Text(S.of(context).importCancelled),
           ),
         );
       }
@@ -316,10 +316,10 @@ Future<void> importInventoryFromJson(BuildContext context) async {
             newImportedCount++;
           }
         } else {
-          importErrors.add(S.current.failedToImportInventoryWithId(inventory.id));
+          importErrors.add(S.of(context).failedToImportInventoryWithId(inventory.id));
         }
       } catch (e) {
-        importErrors.add(S.current.errorImportingInventoryWithId(inventory.id, e.toString()));
+        importErrors.add(S.of(context).errorImportingInventoryWithId(inventory.id, e.toString()));
       }
     }
 
@@ -338,7 +338,7 @@ Future<void> importInventoryFromJson(BuildContext context) async {
         skippedCount: skippedCount,
         errorsCount: importErrors.length,
         successFallback:
-            S.current.inventoriesImportedSuccessfully(newImportedCount),
+            S.of(context).inventoriesImportedSuccessfully(newImportedCount),
       );
       if (importErrors.isNotEmpty) {
         debugPrint("Import errors: \n${importErrors.join('\n')}");
@@ -363,9 +363,9 @@ Future<void> importInventoryFromJson(BuildContext context) async {
     }
 
     if (context.mounted) {
-      String errorMessage = '${S.current.errorImportingInventory}: ${error.toString()}';
+      String errorMessage = '${S.of(context).errorImportingInventory}: ${error.toString()}';
       if (error is FormatException) {
-        errorMessage = S.current.errorImportingInventoryWithFormatError(error.message);
+        errorMessage = S.of(context).errorImportingInventoryWithFormatError(error.message);
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -427,7 +427,7 @@ Future<void> importNestsFromJson(BuildContext context) async {
                 children: [
                   CircularProgressIndicator(year2023: false,),
                   SizedBox(width: 16),
-                  Text(S.current.importingNests),
+                  Text(S.of(context).importingNests),
                 ],
               ),
             ),
@@ -442,10 +442,10 @@ Future<void> importNestsFromJson(BuildContext context) async {
 
       if (jsonData is Map<String, dynamic>) {
         if (jsonData['source'] != kExportSource) {
-          throw FormatException(S.current.invalidJsonSource);
+          throw FormatException(S.of(context).invalidJsonSource);
         }
         if (jsonData['schema'] != 'nests') {
-          throw FormatException(S.current.invalidJsonSchema);
+          throw FormatException(S.of(context).invalidJsonSchema);
         }
       }
 
@@ -459,14 +459,14 @@ Future<void> importNestsFromJson(BuildContext context) async {
             try {
               nestsToImport.add(Nest.fromJson(item));
             } catch (e) {
-              importErrors.add(S.current.errorParsingNestsArrayItem(e.toString(), item.toString()));
+              importErrors.add(S.of(context).errorParsingNestsArrayItem(e.toString(), item.toString()));
             }
           } else {
-            importErrors.add(S.current.errorUnexpectedNestsArrayItem(item.toString()));
+            importErrors.add(S.of(context).errorUnexpectedNestsArrayItem(item.toString()));
           }
         }
       } else {
-        throw FormatException(S.current.invalidJsonFormatExpectedObjectOrArray);
+        throw FormatException(S.of(context).invalidJsonFormatExpectedObjectOrArray);
       }
 
       if (!context.mounted) return;
@@ -495,7 +495,7 @@ Future<void> importNestsFromJson(BuildContext context) async {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               showCloseIcon: true,
-              content: Text(S.current.importCancelled),
+              content: Text(S.of(context).importCancelled),
             ),
           );
         }
@@ -524,7 +524,7 @@ Future<void> importNestsFromJson(BuildContext context) async {
             newImportedCount++;
           }
         } else {
-          importErrors.add(S.current.failedToImportNestWithId(nest.id ?? -1));
+          importErrors.add(S.of(context).failedToImportNestWithId(nest.id ?? -1));
         }
       }
 
@@ -539,7 +539,7 @@ Future<void> importNestsFromJson(BuildContext context) async {
         updatedCount: updatedCount,
         skippedCount: skippedCount,
         errorsCount: importErrors.length,
-        successFallback: S.current.nestsImportedSuccessfully(newImportedCount),
+        successFallback: S.of(context).nestsImportedSuccessfully(newImportedCount),
       );
       if (importErrors.isNotEmpty) debugPrint("Import errors: \n${importErrors.join('\n')}");
 
@@ -555,7 +555,7 @@ Future<void> importNestsFromJson(BuildContext context) async {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text(S.current.noFileSelected)
+              content: Text(S.of(context).noFileSelected)
           )
       );
     }
@@ -563,8 +563,8 @@ Future<void> importNestsFromJson(BuildContext context) async {
     if (isDialogShown && context.mounted) Navigator.of(context).pop();
     debugPrint('Error importing nests: $error');
     if (!context.mounted) return;
-    String errorMessage = '${S.current.errorImportingNests}: ${error.toString()}';
-    if (error is FormatException) errorMessage = S.current.errorImportingNestsWithFormatError(error.message);
+    String errorMessage = '${S.of(context).errorImportingNests}: ${error.toString()}';
+    if (error is FormatException) errorMessage = S.of(context).errorImportingNestsWithFormatError(error.message);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         persist: true,
@@ -619,7 +619,7 @@ Future<void> importSpecimensFromJson(BuildContext context) async {
                 children: [
                   CircularProgressIndicator(year2023: false,),
                   SizedBox(width: 16),
-                  Text(S.current.importingSpecimens),
+                  Text(S.of(context).importingSpecimens),
                 ],
               ),
             ),
@@ -634,10 +634,10 @@ Future<void> importSpecimensFromJson(BuildContext context) async {
 
       if (jsonData is Map<String, dynamic>) {
         if (jsonData['source'] != kExportSource) {
-          throw FormatException(S.current.invalidJsonSource);
+          throw FormatException(S.of(context).invalidJsonSource);
         }
         if (jsonData['schema'] != 'specimens') {
-          throw FormatException(S.current.invalidJsonSchema);
+          throw FormatException(S.of(context).invalidJsonSchema);
         }
       }
 
@@ -651,14 +651,14 @@ Future<void> importSpecimensFromJson(BuildContext context) async {
             try {
               specimensToImport.add(Specimen.fromJson(item));
             } catch (e) {
-              importErrors.add(S.current.errorParsingSpecimensArrayItem(item.toString(), e.toString()));
+              importErrors.add(S.of(context).errorParsingSpecimensArrayItem(item.toString(), e.toString()));
             }
           } else {
-            importErrors.add(S.current.errorUnexpectedSpecimensArrayItem(item.toString()));
+            importErrors.add(S.of(context).errorUnexpectedSpecimensArrayItem(item.toString()));
           }
         }
       } else {
-        throw FormatException(S.current.invalidJsonFormatExpectedObjectOrArray);
+        throw FormatException(S.of(context).invalidJsonFormatExpectedObjectOrArray);
       }
 
       if (!context.mounted) return;
@@ -687,7 +687,7 @@ Future<void> importSpecimensFromJson(BuildContext context) async {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               showCloseIcon: true,
-              content: Text(S.current.importCancelled),
+              content: Text(S.of(context).importCancelled),
             ),
           );
         }
@@ -717,7 +717,7 @@ Future<void> importSpecimensFromJson(BuildContext context) async {
           }
         } else {
           importErrors.add(
-            S.current.failedToImportSpecimenWithId(specimen.id ?? -1),
+            S.of(context).failedToImportSpecimenWithId(specimen.id ?? -1),
           );
         }
       }
@@ -733,7 +733,7 @@ Future<void> importSpecimensFromJson(BuildContext context) async {
         updatedCount: updatedCount,
         skippedCount: skippedCount,
         errorsCount: importErrors.length,
-        successFallback: S.current.specimensImportedSuccessfully(newImportedCount),
+        successFallback: S.of(context).specimensImportedSuccessfully(newImportedCount),
       );
       if (importErrors.isNotEmpty) debugPrint("Import errors: \n${importErrors.join('\n')}");
 
@@ -749,7 +749,7 @@ Future<void> importSpecimensFromJson(BuildContext context) async {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text(S.current.noFileSelected)
+              content: Text(S.of(context).noFileSelected)
           )
       );
     }
@@ -757,8 +757,8 @@ Future<void> importSpecimensFromJson(BuildContext context) async {
     if (isDialogShown && context.mounted) Navigator.of(context).pop();
     debugPrint('Error importing specimens: $error');
     if (!context.mounted) return;
-    String errorMessage = '${S.current.errorImportingSpecimens}: ${error.toString()}';
-    if (error is FormatException) errorMessage = S.current.errorImportingSpecimensWithFormatError(error.message);
+    String errorMessage = '${S.of(context).errorImportingSpecimens}: ${error.toString()}';
+    if (error is FormatException) errorMessage = S.of(context).errorImportingSpecimensWithFormatError(error.message);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         persist: true,
@@ -955,7 +955,7 @@ Future<void> importJournalsFromJson(BuildContext context) async {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             showCloseIcon: true,
-            content: Text(S.current.noFileSelected),
+            content: Text(S.of(context).noFileSelected),
           ),
         );
       }
@@ -969,7 +969,7 @@ Future<void> importJournalsFromJson(BuildContext context) async {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             showCloseIcon: true,
-            content: Text(S.current.noFileSelected),
+            content: Text(S.of(context).noFileSelected),
           ),
         );
       }
@@ -995,7 +995,7 @@ Future<void> importJournalsFromJson(BuildContext context) async {
                 children: [
                   CircularProgressIndicator(),
                   SizedBox(width: 16),
-                  Text(S.current.importingInventory),
+                  Text(S.of(context).importingInventory),
                 ],
               ),
             ),
@@ -1013,13 +1013,13 @@ Future<void> importJournalsFromJson(BuildContext context) async {
 
     if (jsonData is Map<String, dynamic>) {
       if (jsonData['source'] != kExportSource) {
-        throw FormatException(S.current.invalidJsonSource);
+        throw FormatException(S.of(context).invalidJsonSource);
       }
       if (jsonData['schema'] != 'journals') {
-        throw FormatException(S.current.invalidJsonSchema);
+        throw FormatException(S.of(context).invalidJsonSchema);
       }
     } else {
-      throw FormatException(S.current.invalidJsonFormatExpectedObjectOrArray);
+      throw FormatException(S.of(context).invalidJsonFormatExpectedObjectOrArray);
     }
 
 
@@ -1038,7 +1038,7 @@ Future<void> importJournalsFromJson(BuildContext context) async {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             showCloseIcon: true,
-            content: Text(S.current.noJournalEntriesFound),
+            content: Text(S.of(context).noJournalEntriesFound),
           ),
         );
       }
@@ -1053,12 +1053,12 @@ Future<void> importJournalsFromJson(BuildContext context) async {
           final normalizedItem = _normalizeJournalJsonRecord(item);
           journalsToImport.add(FieldJournal.fromJson(normalizedItem));
         } catch (e) {
-          final errorMsg = S.current.errorParsingJournalsArrayItem(item.toString(), e.toString());
+          final errorMsg = S.of(context).errorParsingJournalsArrayItem(item.toString(), e.toString());
           importErrors.add(errorMsg);
           debugPrint('[importJournalsFromJson] Parse error: $errorMsg');
         }
       } else {
-        final errorMsg = S.current.errorUnexpectedJournalsArrayItem(item.toString());
+        final errorMsg = S.of(context).errorUnexpectedJournalsArrayItem(item.toString());
         importErrors.add(errorMsg);
         debugPrint('[importJournalsFromJson] Unexpected item type: $errorMsg');
       }
@@ -1081,8 +1081,8 @@ Future<void> importJournalsFromJson(BuildContext context) async {
                 : null,
             content: Text(
               importErrors.isNotEmpty
-                  ? S.current.noValidJournalEntriesFoundInFile
-                  : S.current.noJournalEntriesFound,
+                  ? S.of(context).noValidJournalEntriesFoundInFile
+                  : S.of(context).noJournalEntriesFound,
             ),
           ),
         );
@@ -1124,7 +1124,7 @@ Future<void> importJournalsFromJson(BuildContext context) async {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             showCloseIcon: true,
-            content: Text(S.current.importCancelled),
+            content: Text(S.of(context).importCancelled),
           ),
         );
       }
@@ -1174,7 +1174,7 @@ Future<void> importJournalsFromJson(BuildContext context) async {
       updatedCount: updatedCount,
       skippedCount: skippedCount,
       errorsCount: errorCount,
-      successFallback: S.current.journalsImportedSuccessfully(newImportedCount),
+      successFallback: S.of(context).journalsImportedSuccessfully(newImportedCount),
     );
     debugPrint('[importJournalsFromJson] Displaying import summary to user: $summaryMessage');
 
@@ -1198,9 +1198,9 @@ Future<void> importJournalsFromJson(BuildContext context) async {
       debugPrint('[importJournalsFromJson] Context unmounted during error handling');
       return;
     }
-    String errorMessage = '${S.current.errorImportingJournals}: ${error.toString()}';
+    String errorMessage = '${S.of(context).errorImportingJournals}: ${error.toString()}';
     if (error is FormatException) {
-      errorMessage = '${S.current.errorImportingJournals}: ${error.message}';
+      errorMessage = '${S.of(context).errorImportingJournals}: ${error.message}';
     }
     debugPrint('[importJournalsFromJson] Showing error to user: $errorMessage');
     ScaffoldMessenger.of(context).showSnackBar(

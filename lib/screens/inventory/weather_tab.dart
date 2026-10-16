@@ -188,7 +188,7 @@ class _WeatherTabState extends State<WeatherTab>
                         buildGridMenuItem(
                           innerContext,
                           Icons.edit_outlined,
-                          S.current.edit,
+                          S.of(context).edit,
                           () {
                             Navigator.of(innerContext).pop();
                             _showEditWeatherScreen(context, weather);

@@ -22,13 +22,30 @@ class MonthOccurrence {
   MonthOccurrence({required this.month, required this.occurrences});
 }
 
+S get _activeL10n {
+  final dispatcher = WidgetsBinding.instance.platformDispatcher;
+  for (final locale in dispatcher.locales) {
+    if (S.delegate.isSupported(locale)) {
+      return lookupS(locale);
+    }
+    final fallbackLocale = Locale(locale.languageCode);
+    if (S.delegate.isSupported(fallbackLocale)) {
+      return lookupS(fallbackLocale);
+    }
+  }
+  return lookupS(const Locale('en'));
+}
+
 // Color mapping for each record type
-final Map<String, Color> _recordTypeColors = {
-  S.current.inventories: XolmisColors.primary,
-  S.current.nests: XolmisColors.success,
-  S.current.egg(2): XolmisColors.warning,
-  S.current.specimens(2): XolmisColors.error,
-};
+Map<String, Color> get _recordTypeColors {
+  final l10n = _activeL10n;
+  return {
+    l10n.inventories: XolmisColors.primary,
+    l10n.nests: XolmisColors.success,
+    l10n.egg(2): XolmisColors.warning,
+    l10n.specimens(2): XolmisColors.error,
+  };
+}
 
 /// Returns the chart color associated with a localized record type label.
 ///
@@ -40,21 +57,24 @@ Color getRecordColor(String recordType) {
 }
 
 // Color mapping for each specimen type
-final Map<String, Color> _specimenTypeColors = {
-  S.current.specimenWholeCarcass: Colors.blue,
-  S.current.specimenPartialCarcass: Colors.orange,
-  S.current.specimenNest: Colors.green,
-  S.current.specimenBones: Colors.purple,
-  S.current.specimenEgg: Colors.yellow,
-  S.current.specimenParasites: Colors.cyan,
-  S.current.specimenFeathers: Colors.deepPurple,
-  S.current.specimenBlood: Colors.red,
-  S.current.specimenClaw: Colors.teal,
-  S.current.specimenSwab: Colors.amber,
-  S.current.specimenTissues: Colors.lightGreen,
-  S.current.specimenFeces: Colors.deepOrange,
-  S.current.specimenRegurgite: Colors.pink,
-};
+Map<String, Color> get _specimenTypeColors {
+  final l10n = _activeL10n;
+  return {
+    l10n.specimenWholeCarcass: Colors.blue,
+    l10n.specimenPartialCarcass: Colors.orange,
+    l10n.specimenNest: Colors.green,
+    l10n.specimenBones: Colors.purple,
+    l10n.specimenEgg: Colors.yellow,
+    l10n.specimenParasites: Colors.cyan,
+    l10n.specimenFeathers: Colors.deepPurple,
+    l10n.specimenBlood: Colors.red,
+    l10n.specimenClaw: Colors.teal,
+    l10n.specimenSwab: Colors.amber,
+    l10n.specimenTissues: Colors.lightGreen,
+    l10n.specimenFeces: Colors.deepOrange,
+    l10n.specimenRegurgite: Colors.pink,
+  };
+}
 
 /// Returns the chart color associated with a localized specimen type label.
 ///
@@ -66,11 +86,14 @@ Color getSpecimenColor(String specimenType) {
 }
 
 // Color mapping for each nest fate type
-final Map<String, Color> _nestFateTypeColors = {
-  S.current.nestFateUnknown: Colors.grey,
-  S.current.nestFateLost: Colors.red,
-  S.current.nestFateSuccess: Colors.blue,
-};
+Map<String, Color> get _nestFateTypeColors {
+  final l10n = _activeL10n;
+  return {
+    l10n.nestFateUnknown: Colors.grey,
+    l10n.nestFateLost: Colors.red,
+    l10n.nestFateSuccess: Colors.blue,
+  };
+}
 
 /// Returns the chart color associated with a localized nest fate label.
 ///
@@ -420,13 +443,13 @@ Future<Map<int, int>> getOccurrencesByYear(String? selectedSpecies) async {
 ///
 /// The resulting map contains counts for inventory species records, nests,
 /// eggs, and specimens using the translated labels expected by the charts.
-Map<String, int> getTotalsByRecordType(List<Species> inventories,
+Map<String, int> getTotalsByRecordType(BuildContext context, List<Species> inventories,
     List<Nest> nests, List<Egg> eggs, List<Specimen> specimens) {
   return {
-    S.current.inventories: inventories.length,
-    S.current.nests: nests.length,
-    S.current.egg(2): eggs.length,
-    S.current.specimens(2): specimens.length,
+    S.of(context).inventories: inventories.length,
+    S.of(context).nests: nests.length,
+    S.of(context).egg(2): eggs.length,
+    S.of(context).specimens(2): specimens.length,
   };
 }
 

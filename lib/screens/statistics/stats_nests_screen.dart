@@ -112,7 +112,7 @@ class StatsNestsScreenState extends State<StatsNestsScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      appBar: AppBar(title: Text(S.current.statistics)),
+      appBar: AppBar(title: Text(S.of(context).statistics)),
       body: SafeArea(
         child: SingleChildScrollView(
             padding: const EdgeInsets.all(16.0),
@@ -141,28 +141,28 @@ class StatsNestsScreenState extends State<StatsNestsScreen> {
       physics: const NeverScrollableScrollPhysics(),
       children: [
         _buildKpiTile(
-          label: S.current.selectedNests(2),
+          label: S.of(context).selectedNests(2),
           value: '${widget.nests.length}',
           // subtext: '',
           valueColor: XolmisColors.primary,
           isDark: isDark,
         ),
         _buildKpiTile(
-          label: S.current.localitiesSurveyed(distinctLocalitiesCount),
+          label: S.of(context).localitiesSurveyed(distinctLocalitiesCount),
           value: '${distinctLocalitiesCount}',
           // subtext: '',
           valueColor: XolmisColors.primary,
           isDark: isDark,
         ),
         _buildKpiTile(
-          label: S.current.totalRichness,
+          label: S.of(context).totalRichness,
           value: '${combinedSpeciesList.length}',
           // subtext: '',
           valueColor: XolmisColors.primary,
           isDark: isDark,
         ),
         _buildKpiTile(
-          label: S.current.observers(distinctObserversCount),
+          label: S.of(context).observers(distinctObserversCount),
           value: '${distinctObserversCount}',
           // subtext: '',
           valueColor: XolmisColors.primary,
@@ -185,7 +185,7 @@ class StatsNestsScreenState extends State<StatsNestsScreen> {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      S.current.apparentSuccessRate,
+                      S.of(context).apparentSuccessRate,
                       style: TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w600,
@@ -213,7 +213,7 @@ class StatsNestsScreenState extends State<StatsNestsScreen> {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      S.current.nidoparasitismRate,
+                      S.of(context).nidoparasitismRate,
                       style: TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w600,
@@ -309,7 +309,7 @@ class StatsNestsScreenState extends State<StatsNestsScreen> {
               const Icon(Icons.egg_outlined, size: 18, color: XolmisColors.primary),
               const SizedBox(width: 8),
               Text(
-                S.current.nestFate,
+                S.of(context).nestFate,
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -385,7 +385,7 @@ class StatsNestsScreenState extends State<StatsNestsScreen> {
             )
                 : Center(
               child: Text(
-                S.current.noDataAvailable,
+                S.of(context).noDataAvailable,
                 style: TextStyle(color: isDark ? Colors.grey.shade400 : Colors.grey.shade600),
               ),
             ),

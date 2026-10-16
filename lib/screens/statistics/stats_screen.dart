@@ -57,7 +57,7 @@ class StatsScreenState extends State<StatsScreen> with SingleTickerProviderState
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            title: Text(S.current.statistics),
+            title: Text(S.of(context).statistics),
             leading:
             MediaQuery.sizeOf(context).width < 600
                 ? Builder(
@@ -72,7 +72,7 @@ class StatsScreenState extends State<StatsScreen> with SingleTickerProviderState
                 : SizedBox.shrink(),
             bottom: TabBar(
               controller: _tabController,
-              tabs: [Tab(text: S.current.general), Tab(text: S.current.perSpecies)],
+              tabs: [Tab(text: S.of(context).general), Tab(text: S.of(context).perSpecies)],
             ),
         ),
       body: SafeArea(

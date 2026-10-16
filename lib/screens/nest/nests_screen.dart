@@ -48,16 +48,19 @@ class NestsScreenState extends State<NestsScreen> {
   Nest? _selectedNest;
   late ScrollController _scrollController;
 
-  static final Map<DateFilter, String> _dateFilterLabels = {
-    DateFilter.today: S.current.today,
-    DateFilter.yesterday: S.current.yesterday,
-    DateFilter.last7Days: S.current.last7Days,
-    DateFilter.last30Days: S.current.last30Days,
-    DateFilter.last90Days: S.current.last90Days,
-    DateFilter.last180Days: S.current.last180Days,
-    DateFilter.last365Days: S.current.last365Days,
-    DateFilter.customRange: S.current.dateInterval,
-  };
+  Map<DateFilter, String> get _dateFilterLabels {
+    final l10n = S.of(context);
+    return {
+      DateFilter.today: l10n.today,
+      DateFilter.yesterday: l10n.yesterday,
+      DateFilter.last7Days: l10n.last7Days,
+      DateFilter.last30Days: l10n.last30Days,
+      DateFilter.last90Days: l10n.last90Days,
+      DateFilter.last180Days: l10n.last180Days,
+      DateFilter.last365Days: l10n.last365Days,
+      DateFilter.customRange: l10n.dateInterval,
+    };
+  }
 
   @override
   void initState() {
@@ -186,7 +189,7 @@ class NestsScreenState extends State<NestsScreen> {
                         spacing: 8.0, // Space between chips
                         children: <Widget>[
                           ChoiceChip(
-                            label: Text(S.current.fieldNumber),
+                            label: Text(S.of(context).fieldNumber),
                             showCheckmark: false,
                             selected: _sortField == NestSortField.fieldNumber,
                             onSelected: (bool selected) {
@@ -199,7 +202,7 @@ class NestsScreenState extends State<NestsScreen> {
                             },
                           ),
                           ChoiceChip(
-                            label: Text(S.current.foundTime),
+                            label: Text(S.of(context).foundTime),
                             showCheckmark: false,
                             selected: _sortField == NestSortField.foundTime,
                             onSelected: (bool selected) {
@@ -212,7 +215,7 @@ class NestsScreenState extends State<NestsScreen> {
                             },
                           ),
                           ChoiceChip(
-                            label: Text(S.current.lastTime),
+                            label: Text(S.of(context).lastTime),
                             showCheckmark: false,
                             selected: _sortField == NestSortField.lastTime,
                             onSelected: (bool selected) {
@@ -225,7 +228,7 @@ class NestsScreenState extends State<NestsScreen> {
                             },
                           ),
                           ChoiceChip(
-                            label: Text(S.current.species(1)),
+                            label: Text(S.of(context).species(1)),
                             showCheckmark: false,
                             selected: _sortField == NestSortField.species,
                             onSelected: (bool selected) {
@@ -238,7 +241,7 @@ class NestsScreenState extends State<NestsScreen> {
                             },
                           ),
                           ChoiceChip(
-                            label: Text(S.current.locality),
+                            label: Text(S.of(context).locality),
                             showCheckmark: false,
                             selected: _sortField == NestSortField.locality,
                             onSelected: (bool selected) {
@@ -251,7 +254,7 @@ class NestsScreenState extends State<NestsScreen> {
                             },
                           ),
                           ChoiceChip(
-                            label: Text(S.current.nestFate),
+                            label: Text(S.of(context).nestFate),
                             showCheckmark: false,
                             selected: _sortField == NestSortField.nestFate,
                             onSelected: (bool selected) {
@@ -371,13 +374,13 @@ class NestsScreenState extends State<NestsScreen> {
           useSpeciesSearch
               ? (item, query, label) => speciesMatchesQuery(label, query)
               : null,
-      clearActionLabel: S.current.clearSelection,
+      clearActionLabel: S.of(context).clearSelection,
     );
   }
 
   Future<void> _selectSpeciesFromBottomSheet() async {
     final result = await _showStringFilterBottomSheet(
-      title: S.current.species(1),
+      title: S.of(context).species(1),
       items: _getUniqueSpecies(),
       useSpeciesSearch: true,
     );
@@ -390,7 +393,7 @@ class NestsScreenState extends State<NestsScreen> {
 
   Future<void> _selectLocalityFromBottomSheet() async {
     final result = await _showStringFilterBottomSheet(
-      title: S.current.locality,
+      title: S.of(context).locality,
       items: _getUniqueLocalities(),
     );
     if (!mounted || result == null) return;
@@ -868,7 +871,7 @@ class NestsScreenState extends State<NestsScreen> {
                     // Option to clear the selected nests
                     IconButton(
                       icon: const Icon(Icons.clear_outlined),
-                      tooltip: S.current.clearSelection,
+                      tooltip: S.of(context).clearSelection,
                       onPressed: () {
                         setState(() {
                           selectedNests.clear();
@@ -1115,8 +1118,8 @@ class NestsScreenState extends State<NestsScreen> {
                             label: Text(
                               _selectedFate != null
                                   ? nestFateTypeFriendlyNames[_selectedFate] ??
-                                      S.current.nestFate
-                                  : S.current.nestFate,
+                                      S.of(context).nestFate
+                                  : S.of(context).nestFate,
                             ),
                             // avatar:
                             //     _selectedFate == null
@@ -1156,7 +1159,7 @@ class NestsScreenState extends State<NestsScreen> {
                       ),
                       const SizedBox(width: 8.0),
                       FilterChip(
-                        label: Text(_selectedSpecies ?? S.current.species(1)),
+                        label: Text(_selectedSpecies ?? S.of(context).species(1)),
                         // avatar:
                         //     _selectedSpecies == null
                         //         ? const Icon(Icons.account_tree_outlined)
@@ -1178,7 +1181,7 @@ class NestsScreenState extends State<NestsScreen> {
                       ),
                       const SizedBox(width: 8.0),
                       FilterChip(
-                        label: Text(_selectedLocality ?? S.current.locality),
+                        label: Text(_selectedLocality ?? S.of(context).locality),
                         // avatar:
                         //     _selectedLocality == null
                         //         ? const Icon(Icons.location_on_outlined)
@@ -1203,7 +1206,7 @@ class NestsScreenState extends State<NestsScreen> {
                         builder: (context, controller, child) {
                           return FilterChip(
                             label: Text(
-                              _selectedObserver ?? S.current.observer,
+                              _selectedObserver ?? S.of(context).observer,
                             ),
                             // avatar:
                             //     _selectedObserver == null
@@ -1561,7 +1564,7 @@ class NestsScreenState extends State<NestsScreen> {
                           buildGridMenuItem(
                             context,
                             Icons.edit_outlined,
-                            S.current.edit,
+                            S.of(context).edit,
                             () {
                               Navigator.of(context).pop();
                               if (MediaQuery.sizeOf(context).width > 600) {
@@ -1665,7 +1668,7 @@ class NestsScreenState extends State<NestsScreen> {
                         children: [
                           const SizedBox(width: 8.0),
                           Text(
-                            S.current.export,
+                            S.of(context).export,
                             style: TextTheme.of(context).bodyMedium,
                           ),
                           Expanded(
@@ -1690,8 +1693,8 @@ class NestsScreenState extends State<NestsScreen> {
                                         await SharePlus.instance.share(
                                           ShareParams(
                                             files: csvFiles.map((f) => XFile(f, mimeType: 'text/csv')).toList(),
-                                            text: S.current.nestExported(1),
-                                            subject: S.current.nestData(1),
+                                            text: S.of(context).nestExported(1),
+                                            subject: S.of(context).nestData(1),
                                           ),
                                         );
                                       }
@@ -1720,8 +1723,8 @@ class NestsScreenState extends State<NestsScreen> {
                                                   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                                             ),
                                           ],
-                                          text: S.current.nestExported(1),
-                                          subject: S.current.nestData(1),
+                                          text: S.of(context).nestExported(1),
+                                          subject: S.of(context).nestData(1),
                                         ),
                                       );
                                       Navigator.of(context).pop();
@@ -1819,7 +1822,7 @@ class NestsScreenState extends State<NestsScreen> {
                           children: [
                             const SizedBox(width: 8.0),
                             Text(
-                              S.current.exportAll,
+                              S.of(context).exportAll,
                               style: TextTheme.of(context).bodyMedium,
                             ),
                             Expanded(

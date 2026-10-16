@@ -62,16 +62,19 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
   InventorySortField _sortField = InventorySortField.startTime; // Default sort field
   Inventory? _selectedInventory;
 
-  static final Map<DateFilter, String> _dateFilterLabels = {
-    DateFilter.today: S.current.today,
-    DateFilter.yesterday: S.current.yesterday,
-    DateFilter.last7Days: S.current.last7Days,
-    DateFilter.last30Days: S.current.last30Days,
-    DateFilter.last90Days: S.current.last90Days,
-    DateFilter.last180Days: S.current.last180Days,
-    DateFilter.last365Days: S.current.last365Days,
-    DateFilter.customRange: S.current.dateInterval,
-  };
+  Map<DateFilter, String> get _dateFilterLabels {
+    final l10n = S.of(context);
+    return {
+      DateFilter.today: l10n.today,
+      DateFilter.yesterday: l10n.yesterday,
+      DateFilter.last7Days: l10n.last7Days,
+      DateFilter.last30Days: l10n.last30Days,
+      DateFilter.last90Days: l10n.last90Days,
+      DateFilter.last180Days: l10n.last180Days,
+      DateFilter.last365Days: l10n.last365Days,
+      DateFilter.customRange: l10n.dateInterval,
+    };
+  }
 
   @override
   void initState() {
@@ -210,7 +213,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                         spacing: 8.0, // Space between chips
                         children: <Widget>[
                           ChoiceChip(
-                            label: Text(S.current.inventoryId),
+                            label: Text(S.of(context).inventoryId),
                             showCheckmark: false,
                             selected: _sortField == InventorySortField.id,
                             onSelected: (bool selected) {
@@ -223,7 +226,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                             },
                           ),
                           ChoiceChip(
-                            label: Text(S.current.startTime),
+                            label: Text(S.of(context).startTime),
                             showCheckmark: false,
                             selected:
                                 _sortField == InventorySortField.startTime,
@@ -237,7 +240,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                             },
                           ),
                           ChoiceChip(
-                            label: Text(S.current.endTime),
+                            label: Text(S.of(context).endTime),
                             showCheckmark: false,
                             selected: _sortField == InventorySortField.endTime,
                             onSelected: (bool selected) {
@@ -250,7 +253,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                             },
                           ),
                           ChoiceChip(
-                            label: Text(S.current.locality),
+                            label: Text(S.of(context).locality),
                             showCheckmark: false,
                             selected: _sortField == InventorySortField.locality,
                             onSelected: (bool selected) {
@@ -263,7 +266,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                             },
                           ),
                           ChoiceChip(
-                            label: Text(S.current.inventoryType),
+                            label: Text(S.of(context).inventoryType),
                             showCheckmark: false,
                             selected:
                                 _sortField == InventorySortField.inventoryType,
@@ -374,13 +377,13 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
           useSpeciesSearch
               ? (item, query, label) => speciesMatchesQuery(label, query)
               : null,
-      clearActionLabel: S.current.clearSelection,
+      clearActionLabel: S.of(context).clearSelection,
     );
   }
 
   Future<void> _selectLocalityFromBottomSheet() async {
     final result = await _showStringFilterBottomSheet(
-      title: S.current.locality,
+      title: S.of(context).locality,
       items: _getUniqueLocalities(),
     );
     if (!mounted || result == null) return;
@@ -399,7 +402,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     if (!mounted) return;
 
     final result = await _showStringFilterBottomSheet(
-      title: S.current.species(1),
+      title: S.of(context).species(1),
       items: species,
       useSpeciesSearch: true,
     );
@@ -887,7 +890,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                     if (selectedInventories.length > 1)
                     IconButton(
                       icon: const Icon(Icons.insert_chart_outlined),
-                      tooltip: S.current.statistics,
+                      tooltip: S.of(context).statistics,
                       onPressed: () {
                         Navigator.push(
                           context,
@@ -903,7 +906,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                     // Option to clear the selected inventories
                     IconButton(
                       icon: const Icon(Icons.clear_outlined),
-                      tooltip: S.current.clearSelection,
+                      tooltip: S.of(context).clearSelection,
                       onPressed: () {
                         setState(() {
                           selectedInventories.clear();
@@ -1165,8 +1168,8 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                             label: Text(
                               _selectedInventoryType != null
                                   ? inventoryTypeFriendlyNames[_selectedInventoryType] ??
-                                      S.current.type
-                                  : S.current.type,
+                                      S.of(context).type
+                                  : S.of(context).type,
                             ),
                             // avatar:
                             //     _selectedInventoryType == null
@@ -1206,7 +1209,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                       ),
                       const SizedBox(width: 8.0),
                       FilterChip(
-                        label: Text(_selectedLocality ?? S.current.locality),
+                        label: Text(_selectedLocality ?? S.of(context).locality),
                         // avatar:
                         //     _selectedLocality == null
                         //         ? const Icon(Icons.location_on_outlined)
@@ -1231,7 +1234,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                         builder: (context, controller, child) {
                           return FilterChip(
                             label: Text(
-                              _selectedObserver ?? S.current.observer,
+                              _selectedObserver ?? S.of(context).observer,
                             ),
                             // avatar:
                             //     _selectedObserver == null
@@ -1269,7 +1272,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                       const SizedBox(width: 8.0),
                       FilterChip(
                         label: Text(
-                          _selectedSpeciesFilter ?? S.current.species(1),
+                          _selectedSpeciesFilter ?? S.of(context).species(1),
                         ),
                         // avatar:
                         //     _selectedSpeciesFilter == null
@@ -1723,8 +1726,8 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                 const SizedBox(width: 4),
                 Text(
                   useRecordsLabel
-                      ? S.current.recordsCount(withinCount + outCount)
-                      : S.current.speciesCount(withinCount + outCount),
+                      ? S.of(context).recordsCount(withinCount + outCount)
+                      : S.of(context).speciesCount(withinCount + outCount),
                   overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(width: 8),
@@ -1772,7 +1775,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
         children: [
           Flexible(
             child: Text(
-              inventoryTypeFriendlyNames[type] ?? S.current.type,
+              inventoryTypeFriendlyNames[type] ?? S.of(context).type,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
@@ -1964,7 +1967,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                           buildGridMenuItem(
                             context,
                             Icons.edit_outlined,
-                            S.current.edit,
+                            S.of(context).edit,
                             () async {
                               Navigator.of(context).pop();
                               Inventory? editedInventory;
@@ -2038,7 +2041,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                       ).showSnackBar(
                                         SnackBar(
                                           content: Text(
-                                            S.current.inventoryIdUpdated,
+                                            S.of(context).inventoryIdUpdated,
                                           ),
                                           backgroundColor: Colors.green,
                                         ),
@@ -2130,7 +2133,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                         children: [
                           const SizedBox(width: 8.0),
                           Text(
-                            S.current.export,
+                            S.of(context).export,
                             style: TextTheme.of(context).bodyMedium,
                           ),
                           Expanded(
@@ -2156,8 +2159,8 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                         await SharePlus.instance.share(
                                           ShareParams(
                                             files: csvFiles.map((f) => XFile(f, mimeType: 'text/csv')).toList(),
-                                            text: S.current.inventoryExported(1),
-                                            subject: S.current.inventoryData(1),
+                                            text: S.of(context).inventoryExported(1),
+                                            subject: S.of(context).inventoryData(1),
                                           ),
                                         );
                                       }
@@ -2189,8 +2192,8 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                                   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                                             ),
                                           ],
-                                          text: S.current.inventoryExported(1),
-                                          subject: S.current.inventoryData(1),
+                                          text: S.of(context).inventoryExported(1),
+                                          subject: S.of(context).inventoryData(1),
                                         ),
                                       );
                                       if (context.mounted) {
@@ -2339,7 +2342,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                           children: [
                             const SizedBox(width: 8.0),
                             Text(
-                              S.current.exportAll,
+                              S.of(context).exportAll,
                               style: TextTheme.of(context).bodyMedium,
                             ),
                             Expanded(

@@ -335,8 +335,8 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                           await SharePlus.instance.share(
                             ShareParams(
                               files: csvFiles.map((f) => XFile(f, mimeType: 'text/csv')).toList(),
-                              text: S.current.nestExported(1),
-                              subject: S.current.nestData(1),
+                              text: S.of(context).nestExported(1),
+                              subject: S.of(context).nestData(1),
                             ),
                           );
                         }
@@ -353,8 +353,8 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                         await SharePlus.instance.share(
                           ShareParams(
                             files: [XFile(excelFile, mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')], 
-                            text: S.current.nestExported(1), 
-                            subject: S.current.nestData(1)
+                            text: S.of(context).nestExported(1), 
+                            subject: S.of(context).nestData(1)
                           ),
                         );
                       },
@@ -653,8 +653,8 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                           await SharePlus.instance.share(
                             ShareParams(
                               files: csvFiles.map((f) => XFile(f, mimeType: 'text/csv')).toList(),
-                              text: S.current.nestExported(1),
-                              subject: S.current.nestData(1),
+                              text: S.of(context).nestExported(1),
+                              subject: S.of(context).nestData(1),
                             ),
                           );
                         }
@@ -671,8 +671,8 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                         await SharePlus.instance.share(
                           ShareParams(
                             files: [XFile(excelFile, mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')], 
-                            text: S.current.nestExported(1), 
-                            subject: S.current.nestData(1)
+                            text: S.of(context).nestExported(1), 
+                            subject: S.of(context).nestData(1)
                           ),
                         );
                         Navigator.of(context).pop();
@@ -718,7 +718,7 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
     final hasRevisions = revisionProvider.getRevisionForNest(widget.nest.id!).isNotEmpty;
     if (!hasRevisions) return const SizedBox.shrink();
     return ActionChip(
-                    label: Text(S.current.finish), 
+                    label: Text(S.of(context).finish), 
                     avatar: const Icon(Icons.flag_outlined),
                     onPressed: () async {
                       NestFateType? selectedNestFate;
@@ -816,7 +816,7 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                     ),
                     const SizedBox(width: 8.0,),
                   ActionChip(
-                    label: Text('${S.current.addButton} ${S.of(context).revision(1).toLowerCase()}'), 
+                    label: Text('${S.of(context).addButton} ${S.of(context).revision(1).toLowerCase()}'), 
                     avatar: const Icon(Icons.beenhere_outlined),
                     onPressed: () {
                       _showAddRevisionScreen(context);
@@ -824,7 +824,7 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                   ),
                   const SizedBox(width: 8.0,),
                   ActionChip(
-                    label: Text('${S.current.addButton} ${S.of(context).egg(1).toLowerCase()}'), 
+                    label: Text('${S.of(context).addButton} ${S.of(context).egg(1).toLowerCase()}'), 
                     avatar: const Icon(Icons.egg_outlined),
                     onPressed: () {
                       _showAddEggScreen(context);
@@ -833,7 +833,7 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                   ],
                   if (!widget.nest.isActive) ...[
                    ActionChip(
-                     label: Text('${S.current.export} CSV'),
+                     label: Text('${S.of(context).export} CSV'),
                      avatar: const Icon(Icons.share_outlined),
                      onPressed: () async {
                        final locale = Localizations.localeOf(context);
@@ -843,8 +843,8 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                            await SharePlus.instance.share(
                              ShareParams(
                                files: csvFiles.map((f) => XFile(f, mimeType: 'text/csv')).toList(),
-                               text: S.current.nestExported(1),
-                               subject: S.current.nestData(1),
+                               text: S.of(context).nestExported(1),
+                               subject: S.of(context).nestData(1),
                              ),
                            );
                          }
@@ -852,7 +852,7 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                    ),
                   const SizedBox(width: 8.0,),
                   ActionChip(
-                    label: Text('${S.current.export} JSON'), 
+                    label: Text('${S.of(context).export} JSON'), 
                     avatar: const Icon(Icons.share_outlined),
                     onPressed: () {
                       exportNestToJson(context, widget.nest);
@@ -1087,7 +1087,7 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                       Row(
                         children: [
                           const SizedBox(width: 8.0),
-                          Text(S.current.export, style: TextTheme
+                          Text(S.of(context).export, style: TextTheme
                               .of(context)
                               .bodyMedium,),
                           Expanded(
@@ -1108,8 +1108,8 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                                          await SharePlus.instance.share(
                                            ShareParams(
                                              files: csvFiles.map((f) => XFile(f, mimeType: 'text/csv')).toList(),
-                                             text: S.current.nestExported(1),
-                                             subject: S.current.nestData(1),
+                                             text: S.of(context).nestExported(1),
+                                             subject: S.of(context).nestData(1),
                                            ),
                                          );
                                        }
@@ -1126,8 +1126,8 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                                       await SharePlus.instance.share(
                                         ShareParams(
                                             files: [XFile(excelFile, mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')],
-                                            text: S.current.nestExported(1),
-                                            subject: S.current.nestData(1)
+                                            text: S.of(context).nestExported(1),
+                                            subject: S.of(context).nestData(1)
                                         ),
                                       );
                                     },

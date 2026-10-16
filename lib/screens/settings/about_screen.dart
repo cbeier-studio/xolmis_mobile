@@ -128,7 +128,7 @@ class _AboutScreenState extends State<AboutScreen> {
             // Tiles for sub-pages
             ListTile(
               leading: const Icon(Icons.list),
-              title: Text(S.current.changelog),
+              title: Text(S.of(context).changelog),
               trailing: const Icon(Icons.chevron_right),
               onTap: () {
                 final locale = Localizations.localeOf(context);
@@ -140,7 +140,7 @@ class _AboutScreenState extends State<AboutScreen> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => MarkdownViewerScreen(
-                      title: S.current.changelog,
+                      title: S.of(context).changelog,
                       assetPath: assetPath,
                     ),
                   ),
@@ -149,14 +149,14 @@ class _AboutScreenState extends State<AboutScreen> {
             ),
             ListTile(
               leading: const Icon(Icons.description),
-              title: Text(S.current.viewLicense),
+              title: Text(S.of(context).viewLicense),
               trailing: const Icon(Icons.chevron_right),
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => MarkdownViewerScreen(
-                      title: S.current.viewLicense,
+                      title: S.of(context).viewLicense,
                       assetPath: 'assets/license.md',
                     ),
                   ),
@@ -165,7 +165,7 @@ class _AboutScreenState extends State<AboutScreen> {
             ),
             ListTile(
               leading: const Icon(Icons.favorite),
-              title: Text(S.current.openSourceLicenses),
+              title: Text(S.of(context).openSourceLicenses),
               trailing: const Icon(Icons.chevron_right),
               onTap: () {
                 showLicensePage(

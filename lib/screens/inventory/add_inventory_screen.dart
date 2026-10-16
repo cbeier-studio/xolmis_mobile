@@ -372,10 +372,10 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                             ),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return S.current.insertCount;
+                                return S.of(context).insertCount;
                               }
                               if (int.tryParse(value) == null || int.tryParse(value)! < 1) {
-                                return S.current.insertValidNumber;
+                                return S.of(context).insertValidNumber;
                               }
                               return null;
                             },
@@ -410,7 +410,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                       ),
                     ),
                     const SizedBox(width: 12),
-                    Text(S.current.startingPleaseWait),
+                    Text(S.of(context).startingPleaseWait),
                   ],
                 )
                     : FilledButton(

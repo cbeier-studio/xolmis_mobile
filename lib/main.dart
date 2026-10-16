@@ -249,7 +249,7 @@ class MyApp extends StatelessWidget {
               FleatherLocalizations.delegate,
               ...GlobalMaterialLocalizations.delegates,
             ],
-            supportedLocales: S.delegate.supportedLocales,
+            supportedLocales: S.supportedLocales,
             localeResolutionCallback: (Locale? locale, Iterable<Locale> supportedLocales) {
               if (locale == null) {
                 return supportedLocales.first;
