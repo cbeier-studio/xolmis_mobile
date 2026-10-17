@@ -2379,4 +2379,34 @@ class SEn extends S {
 
   @override
   String get speciesActivityOther => 'Other';
+
+  @override
+  String get conservationStatus => 'Conservation status';
+
+  @override
+  String get biodiversityIndices => 'Biodiversity Indices';
+
+  @override
+  String get shannonWienerIndex => 'Shannon-Wiener (H\')';
+
+  @override
+  String get pielouEvennessIndex => 'Pielou Evenness (J\')';
+
+  @override
+  String get chao1Estimator => 'Chao1 Expected Richness';
+
+  @override
+  String get rarefactionCurve => 'Rarefaction & Chao1 Curve';
+
+  @override
+  String get sampledRichness => 'Sampled Richness';
+
+  @override
+  String get expectedRichness => 'Expected Richness (Chao1)';
+
+  @override
+  String get diversityTable => 'Diversity Indices per Inventory';
+
+  @override
+  String get threatenedSpecies => 'Threatened Species';
 }

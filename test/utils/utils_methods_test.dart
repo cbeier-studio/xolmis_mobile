@@ -532,6 +532,24 @@ void main() {
       expect(dataRow[headers.indexOf('occurrenceID')], equals('SPC-001'));
       expect(dataRow[headers.indexOf('scientificName')], equals('Furnarius rufus'));
     });
+
+    group('diversity metrics and rarefaction', () {
+      test('computeDiversityMetrics calculates S, N, Shannon, Pielou and Chao1 correctly', () {
+        final speciesList = [
+          Species(inventoryId: 'INV-1', name: 'Species A', isOutOfInventory: false, count: 5),
+          Species(inventoryId: 'INV-1', name: 'Species B', isOutOfInventory: false, count: 3),
+          Species(inventoryId: 'INV-1', name: 'Species C', isOutOfInventory: false, count: 1),
+          Species(inventoryId: 'INV-1', name: 'Species D', isOutOfInventory: false, count: 1),
+        ];
+
+        final metrics = computeDiversityMetrics('Test', speciesList);
+        expect(metrics.richness, equals(4));
+        expect(metrics.totalIndividuals, equals(10));
+        expect(metrics.shannonWiener, greaterThan(0));
+        expect(metrics.pielouEvenness, greaterThan(0));
+        expect(metrics.chao1, greaterThanOrEqualTo(4.0));
+      });
+    });
   });
 }
 

@@ -4381,6 +4381,66 @@ abstract class S {
   /// In en, this message translates to:
   /// **'Other'**
   String get speciesActivityOther;
+
+  /// Conservation status table column header
+  ///
+  /// In en, this message translates to:
+  /// **'Conservation status'**
+  String get conservationStatus;
+
+  /// Biodiversity indices card title
+  ///
+  /// In en, this message translates to:
+  /// **'Biodiversity Indices'**
+  String get biodiversityIndices;
+
+  /// Shannon-Wiener diversity index label
+  ///
+  /// In en, this message translates to:
+  /// **'Shannon-Wiener (H\')'**
+  String get shannonWienerIndex;
+
+  /// Pielou's evenness index label
+  ///
+  /// In en, this message translates to:
+  /// **'Pielou Evenness (J\')'**
+  String get pielouEvennessIndex;
+
+  /// Chao1 expected richness estimator label
+  ///
+  /// In en, this message translates to:
+  /// **'Chao1 Expected Richness'**
+  String get chao1Estimator;
+
+  /// Rarefaction and Chao1 curve chart title
+  ///
+  /// In en, this message translates to:
+  /// **'Rarefaction & Chao1 Curve'**
+  String get rarefactionCurve;
+
+  /// Sampled richness label
+  ///
+  /// In en, this message translates to:
+  /// **'Sampled Richness'**
+  String get sampledRichness;
+
+  /// Expected richness label
+  ///
+  /// In en, this message translates to:
+  /// **'Expected Richness (Chao1)'**
+  String get expectedRichness;
+
+  /// Diversity indices table title
+  ///
+  /// In en, this message translates to:
+  /// **'Diversity Indices per Inventory'**
+  String get diversityTable;
+
+  /// Threatened species label
+  ///
+  /// In en, this message translates to:
+  /// **'Threatened Species'**
+  String get threatenedSpecies;
 }
 
 class _SDelegate extends LocalizationsDelegate<S> {

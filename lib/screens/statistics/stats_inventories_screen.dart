@@ -12,6 +12,7 @@ import '../../reports/selected_inventories_pdf_report.dart';
 import '../../widgets/scrollable_chart_indicator.dart';
 import '../../utils/statistics_logic.dart';
 import '../../utils/themes.dart';
+import '../../utils/utils.dart';
 import 'inventory_report_screen.dart';
 
 /// Loader screen that fetches full details for a list of inventory IDs before displaying [StatsInventoriesScreen].
@@ -78,6 +79,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
   late InventoryProvider inventoryProvider;
   late SpeciesProvider speciesProvider;
   late PoiProvider poiProvider;
+  late List<Inventory> _sortedInventories;
   late List<FlSpot> accumulatedSpeciesData = [];
   late List<FlSpot> accumulatedSpeciesWithinSampleData = [];
   late List<String> combinedSpeciesList = [];
@@ -91,7 +93,17 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
     inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
     speciesProvider = Provider.of<SpeciesProvider>(context, listen: false);
     poiProvider = Provider.of<PoiProvider>(context, listen: false);
+    _sortedInventories = _getSortedInventories(widget.inventories);
     _loadData();
+  }
+
+  @override
+  void didUpdateWidget(covariant StatsInventoriesScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (!identical(oldWidget.inventories, widget.inventories)) {
+      _sortedInventories = _getSortedInventories(widget.inventories);
+      _loadData();
+    }
   }
 
   @override
@@ -99,27 +111,52 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
     super.dispose();
   }
 
+  List<Inventory> _getSortedInventories(List<Inventory> inventories) {
+    final sorted = List<Inventory>.from(inventories);
+    sorted.sort((a, b) {
+      final aDate = a.startTime ?? a.endTime;
+      final bDate = b.startTime ?? b.endTime;
+
+      if (aDate == null && bDate == null) {
+        return a.id.compareTo(b.id);
+      }
+      if (aDate == null) {
+        return 1;
+      }
+      if (bDate == null) {
+        return -1;
+      }
+
+      final byDate = aDate.compareTo(bDate);
+      if (byDate != 0) {
+        return byDate;
+      }
+      return a.id.compareTo(b.id);
+    });
+    return sorted;
+  }
+
   /// Loads precomputed metrics and chart datasets for inventories.
   Future<void> _loadData() async {
-    accumulatedSpeciesData = prepareAccumulatedSpeciesData(widget.inventories);
-    accumulatedSpeciesWithinSampleData = prepareAccumulatedSpeciesWithinSample(widget.inventories);
-    combinedSpeciesList = _getSpeciesList(widget.inventories);
-    if (widget.inventories.isNotEmpty) {
-      int totalRichnessSum = widget.inventories.fold(0, (sum, inv) {
+    accumulatedSpeciesData = prepareAccumulatedSpeciesData(_sortedInventories);
+    accumulatedSpeciesWithinSampleData = prepareAccumulatedSpeciesWithinSample(_sortedInventories);
+    combinedSpeciesList = _getSpeciesList(_sortedInventories);
+    if (_sortedInventories.isNotEmpty) {
+      int totalRichnessSum = _sortedInventories.fold(0, (sum, inv) {
         final count = _getSpeciesRichnessForInventory(inv);
         return sum + count;
       });
 
-      averageSpeciesCount = totalRichnessSum / widget.inventories.length;
+      averageSpeciesCount = totalRichnessSum / _sortedInventories.length;
     } else {
       averageSpeciesCount = 0;
     }
 
-    final allLocalities = widget.inventories.map((inventory) => inventory.localityName).toList();
+    final allLocalities = _sortedInventories.map((inventory) => inventory.localityName).toList();
     final distinctLocalities = allLocalities.toSet();
     distinctLocalitiesCount = distinctLocalities.length;
 
-    recordsPerHour = _getOccurrencesByHourOfDayWithFallback(widget.inventories);
+    recordsPerHour = _getOccurrencesByHourOfDayWithFallback(_sortedInventories);
   }
 
   bool _isDetectionInventory(Inventory inventory) {
@@ -164,7 +201,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
     double availableWidth, {
     required double pixelsPerInventory,
   }) {
-    final calculatedWidth = widget.inventories.length * pixelsPerInventory;
+    final calculatedWidth = _sortedInventories.length * pixelsPerInventory;
     return calculatedWidth > availableWidth ? calculatedWidth : availableWidth;
   }
 
@@ -243,6 +280,12 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                 const SizedBox(height: 16),
 
                 _buildRichnessPerInventoryCard(isDark),
+                const SizedBox(height: 16),
+
+                _buildConservationStatusCard(isDark),
+                const SizedBox(height: 16),
+
+                _buildBiodiversityIndicesCard(context, isDark),
                 const SizedBox(height: 24),
               ],
             ),
@@ -262,7 +305,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
       children: [
         _buildKpiTile(
           label: S.of(context).selectedInventories,
-          value: '${widget.inventories.length}',
+          value: '${_sortedInventories.length}',
           // subtext: '',
           valueColor: XolmisColors.primary,
           isDark: isDark,
@@ -355,6 +398,11 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
   }
 
   Widget _buildAccumulationCurveCard(BuildContext context, bool isDark) {
+    final accumulationMaxY = [
+      ...accumulatedSpeciesData.map((spot) => spot.y),
+      ...accumulatedSpeciesWithinSampleData.map((spot) => spot.y),
+    ].fold<double>(1.0, (max, value) => value > max ? value : max) * 1.15;
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -416,9 +464,10 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                         height: 300,
                         child: LineChart(
                           LineChartData(
-                            maxX:
-                            widget.inventories.length.toDouble() -
-                                1,
+                            minX: 0,
+                            minY: 0,
+                            maxX: _sortedInventories.length > 1 ? _sortedInventories.length.toDouble() : 1.0,
+                            maxY: accumulationMaxY,
                             lineBarsData: [
                               LineChartBarData(
                                 spots: accumulatedSpeciesData,
@@ -469,9 +518,9 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                                   interval: 1.0,
                                   getTitlesWidget: (value, meta) {
                                     final idx = value.toInt();
-                                    if (idx >= 0 && idx < widget.inventories.length) {
+                                    if (idx >= 0 && idx <= _sortedInventories.length) {
                                       return Text(
-                                        '${value.toInt() + 1}',
+                                        '${idx}',
                                         style: TextStyle(
                                           fontSize: 10,
                                           fontWeight: FontWeight.w500,
@@ -570,8 +619,6 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                                   if (touchedSpots.isEmpty) {
                                     return [];
                                   }
-                                  final spotIndex = touchedSpots.first.spotIndex;
-                                  final inventoryId = widget.inventories[spotIndex].id;
 
                                   return touchedSpots.map((spot) {
                                     final spotColor = spot.bar.gradient?.colors.first ??
@@ -591,14 +638,14 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                                             fontSize: 14,
                                           ),
                                         ),
-                                        TextSpan(
-                                          text: '\n$inventoryId',
-                                          style: const TextStyle(
-                                            color: Colors.black87,
-                                            fontWeight: FontWeight.normal,
-                                            fontSize: 10,
-                                          ),
-                                        ),
+                                        // TextSpan(
+                                        //   text: '\n$inventoryId',
+                                        //   style: const TextStyle(
+                                        //     color: Colors.black87,
+                                        //     fontWeight: FontWeight.normal,
+                                        //     fontSize: 10,
+                                        //   ),
+                                        // ),
                                       ],
                                     );
                                   }).toList();
@@ -649,7 +696,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
               ),
               onPressed: () {
                 final inventories =
-                    widget.inventories;
+                    _sortedInventories;
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -893,7 +940,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                                 fitInsideHorizontally: true,
                                 getTooltipColor: (spot) => Colors.white.withAlpha(200),
                                 getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                                  final inventoryId = widget.inventories[groupIndex].id;
+                                  final inventoryId = _sortedInventories[groupIndex].id;
                                   return BarTooltipItem(
                                       '',
                                       TextStyle(
@@ -925,7 +972,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                                   reservedSize: 22,
                                   getTitlesWidget: (value, meta) {
                                     final idx = value.toInt();
-                                    if (idx >= 0 && idx < widget.inventories.length) {
+                                    if (idx >= 0 && idx < _sortedInventories.length) {
                                       return Text(
                                         '${idx + 1}',
                                         style: TextStyle(
@@ -963,7 +1010,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                               rightTitles: const AxisTitles(
                                   sideTitles: SideTitles(showTitles: false)),
                             ),
-                            barGroups: widget.inventories
+                            barGroups: _sortedInventories
                                 .asMap()
                                 .map((index, inventory) =>
                                 MapEntry(
@@ -1068,6 +1115,723 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
           //     );
           //   }).toList(),
           // ),
+        ],
+      ),
+    );
+  }
+
+  Map<String, int> _getConservationStatusCounts(List<Inventory> inventories) {
+    final speciesSet = <String>{};
+    for (final inventory in inventories) {
+      for (final species in inventory.speciesList) {
+        speciesSet.add(species.name);
+      }
+    }
+
+    final counts = {
+      'LC': 0,
+      'NT': 0,
+      'VU': 0,
+      'EN': 0,
+      'CR': 0,
+      'DD': 0,
+    };
+
+    for (final speciesName in speciesSet) {
+      final status = allSpeciesConservationStatus[speciesName]?.trim().toUpperCase();
+      if (status != null && counts.containsKey(status)) {
+        counts[status] = (counts[status] ?? 0) + 1;
+      }
+    }
+
+    return counts;
+  }
+
+  Map<String, List<String>> _getThreatenedSpeciesByCategory(
+    List<Inventory> inventories,
+  ) {
+    final categories = ['NT', 'VU', 'EN', 'CR', 'DD'];
+    final grouped = {for (final category in categories) category: <String>{}};
+
+    final speciesSet = <String>{};
+    for (final inventory in inventories) {
+      for (final species in inventory.speciesList) {
+        speciesSet.add(species.name);
+      }
+    }
+
+    for (final speciesName in speciesSet) {
+      final status = allSpeciesConservationStatus[speciesName]?.trim().toUpperCase();
+      if (status != null && grouped.containsKey(status)) {
+        grouped[status]!.add(speciesName);
+      }
+    }
+
+    return {
+      for (final entry in grouped.entries)
+        entry.key: (entry.value.toList()..sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase())))
+    };
+  }
+
+  Map<String, Color> _getConservationCategoryColors() {
+    return {
+      'LC': Colors.green[700]!,
+      'NT': Colors.amber[700]!,
+      'VU': Colors.orange[900]!,
+      'EN': Colors.red,
+      'CR': Colors.red[900]!,
+      'DD': Colors.grey[700]!,
+    };
+  }
+
+  Widget _buildThreatenedSpeciesListContent({
+    required Map<String, List<String>> threatenedByCategory,
+    required bool isDark,
+  }) {
+    final categories = ['NT', 'VU', 'EN', 'CR', 'DD'];
+    final nonEmptyCategories = categories
+        .where((category) => (threatenedByCategory[category]?.isNotEmpty ?? false))
+        .toList();
+    final colors = _getConservationCategoryColors();
+    final contentTextColor = isDark ? Colors.grey.shade200 : Colors.black87;
+
+    if (nonEmptyCategories.isEmpty) {
+      return Center(
+        child: Text(
+          '-',
+          style: TextStyle(
+            fontSize: 12,
+            color: isDark ? Colors.grey.shade500 : Colors.grey.shade600,
+          ),
+        ),
+      );
+    }
+
+    return ListView(
+      children: [
+        for (final category in nonEmptyCategories) ...[
+          Builder(
+            builder: (context) {
+              final color = colors[category] ?? Colors.grey;
+              final count = threatenedByCategory[category]!.length;
+              final badgeTextColor = category == 'NT' ? Colors.black87 : Colors.white;
+
+              return Padding(
+                padding: const EdgeInsets.only(top: 10, bottom: 8),
+                child: Row(
+                  children: [
+                    Text(
+                      category,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        color: color,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: color,
+                        borderRadius: BorderRadius.circular(999),
+                      ),
+                      child: Text(
+                        '$count',
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                          color: badgeTextColor,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+          ...threatenedByCategory[category]!.map(
+            (speciesName) => Padding(
+              padding: const EdgeInsets.only(bottom: 5),
+              child: Text(
+                speciesName,
+                style: TextStyle(color: contentTextColor),
+              ),
+            ),
+          ),
+          Divider(
+            height: 16,
+            color: isDark ? Colors.grey.shade800 : Colors.grey.shade300,
+          ),
+        ],
+      ],
+    );
+  }
+
+  Future<void> _showThreatenedSpeciesDialog(BuildContext context, bool isDark) async {
+    final threatenedByCategory = _getThreatenedSpeciesByCategory(_sortedInventories);
+    final isSmallScreen = MediaQuery.of(context).size.shortestSide < 600;
+
+    final content = _buildThreatenedSpeciesListContent(
+      threatenedByCategory: threatenedByCategory,
+      isDark: isDark,
+    );
+
+    if (isSmallScreen) {
+      await showDialog<void>(
+        context: context,
+        builder: (dialogContext) {
+          return Dialog.fullscreen(
+            child: Scaffold(
+              appBar: AppBar(
+                title: Text(S.of(context).threatenedSpecies),
+              ),
+              body: Padding(
+                padding: const EdgeInsets.all(16),
+                child: content,
+              ),
+            ),
+          );
+        },
+      );
+      return;
+    }
+
+    await showDialog<void>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: Text(S.of(context).threatenedSpecies),
+          content: SizedBox(
+            width: 460,
+            height: 460,
+            child: content,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: Text(MaterialLocalizations.of(dialogContext).closeButtonLabel),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildConservationStatusCard(bool isDark) {
+    final statusCounts = _getConservationStatusCounts(_sortedInventories);
+    final categories = ['LC', 'NT', 'VU', 'EN', 'CR', 'DD'];
+    final colors = _getConservationCategoryColors();
+
+    final speciesSet = <String>{};
+    for (final inventory in _sortedInventories) {
+      for (final species in inventory.speciesList) {
+        speciesSet.add(species.name);
+      }
+    }
+    final totalSpecies = speciesSet.length;
+    final threatenedCount = ['NT', 'VU', 'EN', 'CR', 'DD']
+        .fold<int>(0, (sum, category) => sum + (statusCounts[category] ?? 0));
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: isDark ? Colors.grey.shade900 : Colors.white,
+        border: Border.all(color: isDark ? Colors.grey.shade800 : XolmisColors.borderSubtle),
+        borderRadius: BorderRadius.circular(16),
+        shape: BoxShape.rectangle,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(
+                Icons.shield_outlined,
+                size: 18,
+                color: XolmisColors.primary,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                S.of(context).conservationStatus,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: isDark ? Colors.white : Colors.black87,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          ...categories.map((category) {
+            final count = statusCounts[category] ?? 0;
+            final color = colors[category] ?? Colors.grey;
+            final double percentage = totalSpecies > 0 ? count / totalSpecies : 0.0;
+
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 10.0),
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 36,
+                    child: Text(
+                      category,
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: color,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(6),
+                      child: LinearProgressIndicator(
+                        value: percentage,
+                        minHeight: 12,
+                        backgroundColor: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
+                        valueColor: AlwaysStoppedAnimation<Color>(color),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  SizedBox(
+                    width: 30,
+                    child: Text(
+                      count.toString(),
+                      textAlign: TextAlign.right,
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: isDark ? Colors.grey.shade300 : Colors.grey.shade700,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }),
+          const SizedBox(height: 6),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              style: OutlinedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                backgroundColor: isDark
+                    ? XolmisColors.primary.withValues(alpha: 0.15)
+                    : XolmisColors.primaryContainer.withValues(alpha: 0.5),
+                side: BorderSide(
+                  color: isDark
+                      ? Colors.grey.shade800
+                      : XolmisColors.outlineVariant.withValues(alpha: 0.5),
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              icon: const Icon(
+                Icons.table_chart_outlined,
+                size: 16,
+                color: XolmisColors.primary,
+              ),
+              label: Text(
+                S.of(context).viewSpeciesTable,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: isDark
+                      ? XolmisColors.primaryContainer
+                      : XolmisColors.onPrimaryContainer,
+                ),
+              ),
+              onPressed: threatenedCount > 0
+                  ? () => _showThreatenedSpeciesDialog(context, isDark)
+                  : null,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBiodiversityIndicesCard(BuildContext context, bool isDark) {
+    final allSpecies = <Species>[];
+    for (final inv in _sortedInventories) {
+      allSpecies.addAll(inv.speciesList);
+    }
+    final combinedMetrics = computeDiversityMetrics(S.of(context).total, allSpecies);
+    final perInventoryMetrics = _sortedInventories.map((inv) {
+      return computeDiversityMetrics(inv.id, inv.speciesList);
+    }).toList();
+
+    final rarefaction = prepareRarefactionCurveSpots(_sortedInventories);
+    final sampledSpots = rarefaction.sampled;
+    final expectedSpots = rarefaction.expected;
+
+    final maxRichness = [
+      ...sampledSpots.map((s) => s.y),
+      ...expectedSpots.map((s) => s.y),
+    ].fold<double>(10.0, (max, v) => v > max ? v : max);
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: isDark ? Colors.grey.shade900 : Colors.white,
+        border: Border.all(color: isDark ? Colors.grey.shade800 : XolmisColors.borderSubtle),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(
+                Icons.analytics_outlined,
+                size: 18,
+                color: XolmisColors.primary,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                S.of(context).biodiversityIndices,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: isDark ? Colors.white : Colors.black87,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          // Combined metrics summary
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: isDark ? Colors.grey.shade900 : XolmisColors.secondaryContainer.withValues(alpha: 0.3),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: isDark ? Colors.grey.shade800 : XolmisColors.outlineVariant.withValues(alpha: 0.5)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '${S.of(context).total} (${_sortedInventories.length} ${S.of(context).inventories.toLowerCase()})',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: isDark ? XolmisColors.primaryContainer : XolmisColors.primary,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                GridView.count(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  childAspectRatio: 3.0,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  children: [
+                    _buildMetricChip(S.of(context).speciesRichness, '${combinedMetrics.richness}', isDark),
+                    _buildMetricChip(S.of(context).totalIndividuals, '${combinedMetrics.totalIndividuals}', isDark),
+                    _buildMetricChip(S.of(context).shannonWienerIndex, combinedMetrics.shannonWiener.toStringAsFixed(3), isDark),
+                    _buildMetricChip(S.of(context).pielouEvennessIndex, combinedMetrics.pielouEvenness.toStringAsFixed(3), isDark),
+                    _buildMetricChip(S.of(context).chao1Estimator, combinedMetrics.chao1.toStringAsFixed(1), isDark),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 20),
+          // Rarefaction curve (observed vs sample-based expectation)
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //   children: [
+          //     Text(
+          //       S.of(context).rarefactionCurve,
+          //       style: TextStyle(
+          //         fontSize: 13,
+          //         fontWeight: FontWeight.w600,
+          //         color: isDark ? Colors.grey.shade200 : Colors.black87,
+          //       ),
+          //     ),
+          //   ],
+          // ),
+          // const SizedBox(height: 12),
+          // SizedBox(
+          //   height: 220,
+          //   child: ScrollableChartIndicator(
+          //     builder: (context, scrollController) {
+          //       return LayoutBuilder(
+          //         builder: (context, constraints) {
+          //           final chartWidth = _responsiveChartWidth(
+          //             constraints.maxWidth - 16,
+          //             pixelsPerInventory: 25,
+          //           );
+          //           return SingleChildScrollView(
+          //             controller: scrollController,
+          //             scrollDirection: Axis.horizontal,
+          //             child: SizedBox(
+          //               width: chartWidth,
+          //               height: 220,
+          //               child: LineChart(
+          //                 LineChartData(
+          //                   minX: 0,
+          //                   minY: 0,
+          //                   maxX: _sortedInventories.length > 1 ? _sortedInventories.length.toDouble() : 1.0,
+          //                   maxY: maxRichness * 1.15,
+          //                   lineBarsData: [
+          //                     LineChartBarData(
+          //                       spots: sampledSpots,
+          //                       isCurved: false,
+          //                       color: Colors.deepPurple,
+          //                       barWidth: 2,
+          //                       dotData: FlDotData(show: true),
+          //                       belowBarData: BarAreaData(
+          //                         show: true,
+          //                         color: Colors.deepPurple.withAlpha(20),
+          //                       ),
+          //                     ),
+          //                     LineChartBarData(
+          //                       spots: expectedSpots,
+          //                       isCurved: true,
+          //                       color: Colors.teal,
+          //                       barWidth: 2,
+          //                       dashArray: [5, 5],
+          //                       dotData: FlDotData(show: true),
+          //                     ),
+          //                   ],
+          //                   titlesData: FlTitlesData(
+          //                     bottomTitles: AxisTitles(
+          //                       sideTitles: SideTitles(
+          //                         showTitles: true,
+          //                         reservedSize: 22,
+          //                         interval: 1.0,
+          //                         getTitlesWidget: (value, meta) {
+          //                           final idx = value.toInt();
+          //                           if (idx >= 0 && idx <= _sortedInventories.length) {
+          //                             return Text(
+          //                               '${idx}',
+          //                               style: TextStyle(fontSize: 10, color: isDark ? Colors.grey.shade400 : Colors.grey.shade600),
+          //                             );
+          //                           }
+          //                           return const SizedBox.shrink();
+          //                         },
+          //                       ),
+          //                     ),
+          //                     leftTitles: AxisTitles(
+          //                       sideTitles: SideTitles(
+          //                         showTitles: true,
+          //                         reservedSize: 28,
+          //                         getTitlesWidget: (value, meta) {
+          //                           return Text(
+          //                             value.toInt().toString(),
+          //                             style: TextStyle(fontSize: 9, color: isDark ? Colors.grey.shade400 : Colors.grey.shade600),
+          //                           );
+          //                         },
+          //                       ),
+          //                     ),
+          //                     topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          //                     rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          //                   ),
+          //                   gridData: FlGridData(show: true, drawVerticalLine: true),
+          //                   borderData: FlBorderData(show: true),
+          //                   lineTouchData: LineTouchData(
+          //                     handleBuiltInTouches: true,
+          //                     touchTooltipData: LineTouchTooltipData(
+          //                       getTooltipColor: (spot) => Colors.white.withAlpha(200),
+          //                       tooltipBorderRadius: BorderRadius.all(
+          //                         Radius.circular(8),
+          //                       ),
+          //                       fitInsideVertically: true,
+          //                       fitInsideHorizontally: true,
+          //                       getTooltipItems: (List<LineBarSpot> touchedSpots,) {
+          //                         if (touchedSpots.isEmpty) {
+          //                           return [];
+          //                         }
+          //
+          //                         return touchedSpots.map((spot) {
+          //                           final spotColor = spot.bar.gradient?.colors.first ??
+          //                               spot.bar.color ?? Colors.black87;
+          //                           return LineTooltipItem(
+          //                             '',
+          //                             const TextStyle(
+          //                               color: Colors.black87,
+          //                               fontWeight: FontWeight.bold,
+          //                             ),
+          //                             children: [
+          //                               TextSpan(
+          //                                 text: '${spot.y.toInt()}',
+          //                                 style: TextStyle(
+          //                                   color: spotColor,
+          //                                   fontWeight: FontWeight.bold,
+          //                                   fontSize: 14,
+          //                                 ),
+          //                               ),
+          //                               // TextSpan(
+          //                               //   text: '\n$inventoryId',
+          //                               //   style: const TextStyle(
+          //                               //     color: Colors.black87,
+          //                               //     fontWeight: FontWeight.normal,
+          //                               //     fontSize: 10,
+          //                               //   ),
+          //                               // ),
+          //                             ],
+          //                           );
+          //                         }).toList();
+          //                       },
+          //                     ),
+          //                   ),
+          //                 ),
+          //               ),
+          //             ),
+          //           );
+          //         },
+          //       );
+          //     },
+          //   ),
+          // ),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.center,
+          //   children: [
+          //     _buildLegendIndicator(S.of(context).sampledRichness, Colors.deepPurple, isDark),
+          //     const SizedBox(width: 8),
+          //     _buildLegendIndicator(S.of(context).expectedRichness, Colors.teal, isDark),
+          //   ],
+          // ),
+          // const SizedBox(height: 20),
+          // Per-inventory table title
+          Text(
+            S.of(context).diversityTable,
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: isDark ? Colors.grey.shade200 : Colors.black87,
+            ),
+          ),
+          const SizedBox(height: 10),
+          // Table of metrics per inventory
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: DataTable(
+              horizontalMargin: 8,
+              columnSpacing: 20,
+              headingRowHeight: 34,
+              dataRowMinHeight: 28,
+              dataRowMaxHeight: 32,
+              border: TableBorder(
+                verticalInside: BorderSide(color: isDark ? Colors.grey.shade800 : Colors.grey.shade300),
+                horizontalInside: BorderSide(color: isDark ? Colors.grey.shade800 : Colors.grey.shade300),
+                top: BorderSide(width: 2, color: isDark ? Colors.grey.shade800 : Colors.grey.shade300),
+                bottom: BorderSide(width: 2, color: isDark ? Colors.grey.shade800 : Colors.grey.shade300),
+                left: BorderSide(width: 2, color: isDark ? Colors.grey.shade800 : Colors.grey.shade300),
+                right: BorderSide(width: 2, color: isDark ? Colors.grey.shade800 : Colors.grey.shade300),
+              ),
+              headingRowColor: WidgetStateProperty.all(
+                isDark ? Colors.grey.shade900 : XolmisColors.surfaceVariant.withValues(alpha: 0.5),
+              ),
+              columns: [
+                DataColumn(label: Text(S.of(context).inventories, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold))),
+                DataColumn(label: Text('S', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)), headingRowAlignment: MainAxisAlignment.end),
+                DataColumn(label: Text('N', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)), headingRowAlignment: MainAxisAlignment.end),
+                DataColumn(label: Text("H'", style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)), headingRowAlignment: MainAxisAlignment.end),
+                DataColumn(label: Text("J'", style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)), headingRowAlignment: MainAxisAlignment.end),
+                DataColumn(label: Text('Chao1', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)), headingRowAlignment: MainAxisAlignment.end),
+              ],
+              rows: perInventoryMetrics.map((m) {
+                return DataRow(
+                  cells: [
+                    DataCell(Text(m.label, style: const TextStyle(fontSize: 11))),
+                    DataCell(Container(
+                      alignment: Alignment.centerRight,
+                      // padding: const EdgeInsets.symmetric(
+                      //     horizontal: 4, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.transparent,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text('${m.richness}', style: const TextStyle(fontSize: 11)),
+                    ),
+                    ),
+                    DataCell(Container(
+                      alignment: Alignment.centerRight,
+                      // padding: const EdgeInsets.symmetric(
+                      //   horizontal: 4, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.transparent,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text('${m.totalIndividuals}', style: const TextStyle(fontSize: 11)),
+                    ),
+                    ),
+                    DataCell(
+                Container(
+                alignment: Alignment.centerRight,
+                // padding: const EdgeInsets.symmetric(
+                // horizontal: 4, vertical: 4),
+                decoration: BoxDecoration(
+                color: Colors.transparent,
+                borderRadius: BorderRadius.circular(6),
+                ),
+                child: Text(m.shannonWiener.toStringAsFixed(3), style: const TextStyle(fontSize: 11)),
+                ),
+                ),
+                    DataCell(Container(
+                alignment: Alignment.centerRight,
+                // padding: const EdgeInsets.symmetric(
+                // horizontal: 4, vertical: 4),
+                decoration: BoxDecoration(
+                color: Colors.transparent,
+                borderRadius: BorderRadius.circular(6),
+                ),
+                child: Text(m.pielouEvenness.toStringAsFixed(3), style: const TextStyle(fontSize: 11)),
+                ),
+                ),
+                    DataCell(Container(
+                alignment: Alignment.centerRight,
+                // padding: const EdgeInsets.symmetric(
+                // horizontal: 4, vertical: 4),
+                decoration: BoxDecoration(
+                color: Colors.transparent,
+                borderRadius: BorderRadius.circular(6),
+                ),
+                child: Text(m.chao1.toStringAsFixed(1), style: const TextStyle(fontSize: 11)),
+                ),
+                ),
+                  ],
+                );
+              }).toList(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMetricChip(String label, String value, bool isDark) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: isDark ? Colors.grey.shade800 : Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: isDark ? Colors.grey.shade700 : XolmisColors.borderSubtle),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.bold,
+              color: isDark ? XolmisColors.primaryContainer : XolmisColors.primary,
+            ),
+          ),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 10,
+              color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+            ),
+          ),
         ],
       ),
     );

@@ -203,8 +203,10 @@ class _InventoryReportScreenState extends State<InventoryReportScreen> {
     final reportData = <List<dynamic>>[];
 
     for (final species in speciesSet) {
-      final row = <dynamic>[species];
+      final conservationStatus = allSpeciesConservationStatus[species] ?? '';
+      final row = <dynamic>[species, conservationStatus];
       int totalIndividuals = 0;
+      int inventoriesWithSpecies = 0;
 
       for (final inventory in inventories) {
         // Find the species in the inventory
@@ -214,6 +216,7 @@ class _InventoryReportScreenState extends State<InventoryReportScreen> {
         );
 
         if (speciesInInventory.name.isNotEmpty) {
+          inventoriesWithSpecies++;
           // Add the species count to the row
           final speciesCount = speciesInInventory.count;
           // Add 'X' if the species is in the inventory, 'O' if it is out of inventory, if count is 0
@@ -237,11 +240,15 @@ class _InventoryReportScreenState extends State<InventoryReportScreen> {
       }
 
       row.add(totalIndividuals);
+      final double frequency = inventories.isNotEmpty
+          ? (inventoriesWithSpecies / inventories.length) * 100
+          : 0.0;
+      row.add('${frequency.toStringAsFixed(1)}%');
       reportData.add(row);
     }
 
     // Add the total species row
-    final totalSpeciesRow = ['${S.of(context).totalSpecies}: ${speciesSet.length}'];
+    final totalSpeciesRow = <dynamic>['${S.of(context).totalSpecies}: ${speciesSet.length}', ''];
     for (final inventory in inventories) {
       var totalSpeciesWithinSample = 0;
       var totalSpeciesOutsideSample = 0;
@@ -258,7 +265,8 @@ class _InventoryReportScreenState extends State<InventoryReportScreen> {
         totalSpeciesRow.add(totalSpeciesWithinSample.toString());
       }
     }
-    totalSpeciesRow.add(reportData.fold(0, (sum, row) => sum + (row.last as int)).toString());
+    totalSpeciesRow.add(reportData.fold(0, (sum, row) => sum + (row[row.length - 2] as int)).toString());
+    totalSpeciesRow.add('');
 
     reportData.add(totalSpeciesRow);
 
@@ -283,7 +291,7 @@ class _InventoryReportScreenState extends State<InventoryReportScreen> {
 
   /// Builds plain-text header labels for table and CSV export.
   List<String> _buildHeaderLabels(List<Inventory> inventories) {
-    final labels = <String>[S.of(context).species(2)];
+    final labels = <String>[S.of(context).species(2), S.of(context).conservationStatus];
 
     for (final inventory in inventories) {
       // Remove the date from the inventory ID
@@ -293,6 +301,7 @@ class _InventoryReportScreenState extends State<InventoryReportScreen> {
     }
 
     labels.add(S.of(context).totalIndividuals);
+    labels.add(S.of(context).relativeFrequency);
 
     return labels;
   }
@@ -308,8 +317,8 @@ class _InventoryReportScreenState extends State<InventoryReportScreen> {
 
       int? firstOccurrenceIndex;
       if (!isTotalRow) {
-        // Encontra o índice da primeira coluna (após o nome da espécie) que não está vazia
-        for (int i = 1; i < row.length - 1; i++) {
+        // Encontra o índice da primeira coluna de inventário (após espécie e status) que não está vazia
+        for (int i = 2; i < row.length - 2; i++) {
           if (row[i].toString().isNotEmpty) {
             firstOccurrenceIndex = i;
             break;
@@ -348,6 +357,41 @@ class _InventoryReportScreenState extends State<InventoryReportScreen> {
               );
             }
           }
+
+          // Coloring for conservation status column (colIndex == 1)
+          if (colIndex == 1 && !isTotalRow && cellValue.isNotEmpty && cellValue != '-') {
+            final upperStatus = cellValue.toUpperCase();
+            Color statusColor;
+            switch (upperStatus) {
+              case 'CR':
+                statusColor = Colors.red[900]!;
+                break;
+              case 'EN':
+                statusColor = Colors.red;
+                break;
+              case 'VU':
+                statusColor = Colors.orange[900]!;
+                break;
+              case 'NT':
+                statusColor = Colors.amber[700]!;
+                break;
+              case 'DD':
+                statusColor = Colors.grey[700]!;
+                break;
+              case 'LC':
+                statusColor = Colors.green[700]!;
+                break;
+              default:
+                statusColor = Theme.of(context).colorScheme.onSurface;
+                break;
+            }
+            style = TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.bold,
+              color: statusColor,
+            );
+          }
+
           // Aplica o destaque se for a primeira ocorrência
           if (colIndex == firstOccurrenceIndex) {
             style = const TextStyle(
@@ -380,7 +424,11 @@ class _InventoryReportScreenState extends State<InventoryReportScreen> {
 
           return DataCell(
             Container(
-              alignment: colIndex == 0 ? Alignment.centerLeft : Alignment.centerRight,
+              alignment: colIndex == 0
+                  ? Alignment.centerLeft
+                  : colIndex == 1
+                      ? Alignment.center
+                      : Alignment.centerRight,
               padding: const EdgeInsets.symmetric(
                   horizontal: 8, vertical: 4),
               decoration: BoxDecoration(

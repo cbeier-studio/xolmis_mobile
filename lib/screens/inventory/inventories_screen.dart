@@ -2079,16 +2079,17 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                               Icons.flag_outlined,
                               S.of(context).finish,
                               () async {
+                                final pageContext = this.context;
                                 Navigator.of(context).pop();
                                 final completionService =
                                     InventoryCompletionService(
-                                      context: context,
+                                      context: pageContext,
                                       inventory: inventory,
                                       inventoryProvider: inventoryProvider,
                                       inventoryDao: inventoryDao,
                                     );
                                 await completionService.attemptFinishInventory(
-                                  context,
+                                  pageContext,
                                 );
                               },
                             ),

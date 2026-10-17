@@ -3089,5 +3089,55 @@
     "@speciesActivityOther": {
         "type": "text",
         "description": "Species activity label"
-    }
+    },
+    "conservationStatus": "Estado de conservação",
+    "@conservationStatus": {
+        "type": "text",
+        "description": "Conservation status table column header"
+    },
+    "biodiversityIndices": "Índices de Biodiversidade",
+    "@biodiversityIndices": {
+        "type": "text",
+        "description": "Biodiversity indices card title"
+    },
+    "shannonWienerIndex": "Shannon-Wiener (H')",
+    "@shannonWienerIndex": {
+        "type": "text",
+        "description": "Shannon-Wiener diversity index label"
+    },
+    "pielouEvennessIndex": "Equitabilidade de Pielou (J')",
+    "@pielouEvennessIndex": {
+        "type": "text",
+        "description": "Pielou's evenness index label"
+    },
+    "chao1Estimator": "Riqueza Esperada Chao1",
+    "@chao1Estimator": {
+        "type": "text",
+        "description": "Chao1 expected richness estimator label"
+    },
+    "rarefactionCurve": "Curva de Rarefação e Chao1",
+    "@rarefactionCurve": {
+        "type": "text",
+        "description": "Rarefaction and Chao1 curve chart title"
+    },
+    "sampledRichness": "Riqueza Amostrada",
+    "@sampledRichness": {
+        "type": "text",
+        "description": "Sampled richness label"
+    },
+    "expectedRichness": "Riqueza Esperada (Chao1)",
+    "@expectedRichness": {
+        "type": "text",
+        "description": "Expected richness label"
+    },
+    "diversityTable": "Índices por Inventário",
+    "@diversityTable": {
+        "type": "text",
+        "description": "Diversity indices table title"
+    },
+  "threatenedSpecies": "Espécies ameaçadas",
+  "@threatenedSpecies": {
+    "type": "text",
+    "description": "Threatened species label"
+  }
 }

@@ -2416,6 +2416,36 @@ class SPt extends S {
 
   @override
   String get speciesActivityOther => 'Outro';
+
+  @override
+  String get conservationStatus => 'Estado de conservação';
+
+  @override
+  String get biodiversityIndices => 'Índices de Biodiversidade';
+
+  @override
+  String get shannonWienerIndex => 'Shannon-Wiener (H\')';
+
+  @override
+  String get pielouEvennessIndex => 'Equitabilidade de Pielou (J\')';
+
+  @override
+  String get chao1Estimator => 'Riqueza Esperada Chao1';
+
+  @override
+  String get rarefactionCurve => 'Curva de Rarefação e Chao1';
+
+  @override
+  String get sampledRichness => 'Riqueza Amostrada';
+
+  @override
+  String get expectedRichness => 'Riqueza Esperada (Chao1)';
+
+  @override
+  String get diversityTable => 'Índices por Inventário';
+
+  @override
+  String get threatenedSpecies => 'Espécies ameaçadas';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -4829,4 +4859,34 @@ class SPtBr extends SPt {
 
   @override
   String get speciesActivityOther => 'Outro';
+
+  @override
+  String get conservationStatus => 'Estado de conservação';
+
+  @override
+  String get biodiversityIndices => 'Índices de Biodiversidade';
+
+  @override
+  String get shannonWienerIndex => 'Shannon-Wiener (H\')';
+
+  @override
+  String get pielouEvennessIndex => 'Equitabilidade de Pielou (J\')';
+
+  @override
+  String get chao1Estimator => 'Riqueza Esperada Chao1';
+
+  @override
+  String get rarefactionCurve => 'Curva de Rarefação e Chao1';
+
+  @override
+  String get sampledRichness => 'Riqueza Amostrada';
+
+  @override
+  String get expectedRichness => 'Riqueza Esperada (Chao1)';
+
+  @override
+  String get diversityTable => 'Índices por Inventário';
+
+  @override
+  String get threatenedSpecies => 'Espécies ameaçadas';
 }

@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
@@ -597,14 +598,14 @@ Map<String, int> getNestFateCounts(List<Nest> nests) {
 /// y-axis value.
 List<FlSpot> prepareAccumulatedSpeciesData(List<Inventory> selectedInventories) {
   final speciesSet = <String>{};
-  final accumulatedSpeciesData = <FlSpot>[];
+  final accumulatedSpeciesData = <FlSpot>[const FlSpot(0, 0)];
 
   for (var i = 0; i < selectedInventories.length; i++) {
     final inventory = selectedInventories[i];
     for (final species in inventory.speciesList) {
       speciesSet.add(species.name);
     }
-    accumulatedSpeciesData.add(FlSpot(i.toDouble(), speciesSet.length.toDouble()));
+    accumulatedSpeciesData.add(FlSpot((i + 1).toDouble(), speciesSet.length.toDouble()));
   }
 
   return accumulatedSpeciesData;
@@ -617,7 +618,7 @@ List<FlSpot> prepareAccumulatedSpeciesData(List<Inventory> selectedInventories) 
 /// distinct in-sample species as the y-axis value.
 List<FlSpot> prepareAccumulatedSpeciesWithinSample(List<Inventory> selectedInventories) {
   final speciesSet = <String>{};
-  final accumulatedSpeciesData = <FlSpot>[];
+  final accumulatedSpeciesData = <FlSpot>[const FlSpot(0, 0)];
 
   for (var i = 0; i < selectedInventories.length; i++) {
     final inventory = selectedInventories[i];
@@ -626,7 +627,7 @@ List<FlSpot> prepareAccumulatedSpeciesWithinSample(List<Inventory> selectedInven
         speciesSet.add(species.name);
       }
     }
-    accumulatedSpeciesData.add(FlSpot(i.toDouble(), speciesSet.length.toDouble()));
+    accumulatedSpeciesData.add(FlSpot((i + 1).toDouble(), speciesSet.length.toDouble()));
   }
 
   return accumulatedSpeciesData;
@@ -956,4 +957,124 @@ Map<int, int> getSpeciesRichnessPerMonth(List<Inventory> inventories) {
 
   // Convert sets to counts
   return speciesByMonth.map((month, species) => MapEntry(month, species.length));
+}
+
+/// Stores biodiversity diversity indices and richness estimates for an inventory or set of inventories.
+class InventoryDiversityMetrics {
+  final String label;
+  final int richness; // S
+  final int totalIndividuals; // N
+  final double shannonWiener; // H'
+  final double pielouEvenness; // J'
+  final double chao1; // Chao1 richness estimate
+
+  InventoryDiversityMetrics({
+    required this.label,
+    required this.richness,
+    required this.totalIndividuals,
+    required this.shannonWiener,
+    required this.pielouEvenness,
+    required this.chao1,
+  });
+}
+
+/// Computes Shannon-Wiener diversity index (H'), Pielou evenness (J'),
+/// species richness (S), total individuals (N), and Chao1 estimate for a collection of species.
+InventoryDiversityMetrics computeDiversityMetrics(String label, List<Species> allSpecies) {
+  final Map<String, int> abundances = {};
+  for (final species in allSpecies) {
+    final name = species.name;
+    final count = species.count > 0 ? species.count : 1;
+    abundances[name] = (abundances[name] ?? 0) + count;
+  }
+
+  final int S = abundances.length;
+  final int N = abundances.values.fold(0, (sum, c) => sum + c);
+
+  double hPrime = 0.0;
+  if (N > 0) {
+    for (final count in abundances.values) {
+      if (count > 0) {
+        final double p = count / N;
+        hPrime -= p * log(p);
+      }
+    }
+  }
+
+  double jPrime = 0.0;
+  if (S > 1) {
+    jPrime = hPrime / log(S.toDouble());
+  } else if (S == 1 && hPrime == 0.0) {
+    jPrime = 1.0;
+  }
+
+  int a1 = abundances.values.where((c) => c == 1).length;
+  int a2 = abundances.values.where((c) => c == 2).length;
+  double chao1 = S.toDouble();
+  if (a2 > 0) {
+    chao1 = S + (a1 * a1) / (2.0 * a2);
+  } else if (a1 > 1) {
+    chao1 = S + (a1 * (a1 - 1)) / (2.0);
+  }
+
+  return InventoryDiversityMetrics(
+    label: label,
+    richness: S,
+    totalIndividuals: N,
+    shannonWiener: hPrime,
+    pielouEvenness: jPrime,
+    chao1: chao1,
+  );
+}
+
+/// Prepares cumulative observed richness and sample-based rarefaction richness
+/// across inventories.
+///
+/// The rarefaction expectation is estimated by randomizing inventory order
+/// multiple times and averaging cumulative richness at each sample size.
+({List<FlSpot> sampled, List<FlSpot> expected}) prepareRarefactionCurveSpots(
+  List<Inventory> inventories, {
+  int iterations = 300,
+}) {
+  final sampledSpots = <FlSpot>[const FlSpot(0, 0)];
+  final expectedSpots = <FlSpot>[const FlSpot(0, 0)];
+
+  if (inventories.isEmpty) {
+    return (sampled: sampledSpots, expected: expectedSpots);
+  }
+
+  final inventorySpeciesSets = inventories
+      .map((inventory) => inventory.speciesList.map((s) => s.name).where((name) => name.isNotEmpty).toSet())
+      .toList();
+
+  final observedAccumulated = <String>{};
+  for (var i = 0; i < inventorySpeciesSets.length; i++) {
+    observedAccumulated.addAll(inventorySpeciesSets[i]);
+    sampledSpots.add(FlSpot((i + 1).toDouble(), observedAccumulated.length.toDouble()));
+  }
+
+  if (inventorySpeciesSets.length == 1) {
+    expectedSpots.addAll(sampledSpots.skip(1));
+    return (sampled: sampledSpots, expected: expectedSpots);
+  }
+
+  final totalsByStep = List<double>.filled(inventorySpeciesSets.length, 0);
+  final random = Random(42);
+  final simulationOrder = List<Set<String>>.from(inventorySpeciesSets);
+
+  for (var it = 0; it < iterations; it++) {
+    simulationOrder.shuffle(random);
+    final runningSpecies = <String>{};
+
+    for (var step = 0; step < simulationOrder.length; step++) {
+      runningSpecies.addAll(simulationOrder[step]);
+      totalsByStep[step] += runningSpecies.length;
+    }
+  }
+
+  for (var i = 0; i < totalsByStep.length; i++) {
+    expectedSpots.add(FlSpot((i + 1).toDouble(), totalsByStep[i] / iterations));
+  }
+
+  return (sampled: sampledSpots, expected: expectedSpots);
 }
