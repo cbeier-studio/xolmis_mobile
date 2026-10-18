@@ -1547,7 +1547,7 @@ class SEn extends S {
   String get averageRichness => 'average richness';
 
   @override
-  String get relativeFrequency => 'relative frequency';
+  String get relativeFrequency => 'Relative Frequency';
 
   @override
   String get relativeAbundance => 'relative abundance';
@@ -2409,4 +2409,22 @@ class SEn extends S {
 
   @override
   String get threatenedSpecies => 'Threatened Species';
+
+  @override
+  String get sharedSpecies => 'Shared species';
+
+  @override
+  String get sharedSpeciesAcrossAllSelected => 'Shared across all selected inventories';
+
+  @override
+  String get sharedSpeciesByPair => 'Shared species by inventory pair';
+
+  @override
+  String get exclusiveSpecies => 'Exclusive species';
+
+  @override
+  String get exclusiveSpeciesByInventory => 'Exclusive species by inventory';
+
+  @override
+  String get status => 'Status';
 }

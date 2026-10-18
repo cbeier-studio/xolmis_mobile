@@ -2813,7 +2813,7 @@ abstract class S {
   /// Relative frequency field label
   ///
   /// In en, this message translates to:
-  /// **'relative frequency'**
+  /// **'Relative Frequency'**
   String get relativeFrequency;
 
   /// Relative abundance field label
@@ -4441,6 +4441,42 @@ abstract class S {
   /// In en, this message translates to:
   /// **'Threatened Species'**
   String get threatenedSpecies;
+
+  /// Label for the shared species indicator
+  ///
+  /// In en, this message translates to:
+  /// **'Shared species'**
+  String get sharedSpecies;
+
+  /// Label for species shared by all selected inventories
+  ///
+  /// In en, this message translates to:
+  /// **'Shared across all selected inventories'**
+  String get sharedSpeciesAcrossAllSelected;
+
+  /// Label for species shared by each inventory pair
+  ///
+  /// In en, this message translates to:
+  /// **'Shared species by inventory pair'**
+  String get sharedSpeciesByPair;
+
+  /// Label for the exclusive species indicator
+  ///
+  /// In en, this message translates to:
+  /// **'Exclusive species'**
+  String get exclusiveSpecies;
+
+  /// Label for exclusive species grouped by inventory
+  ///
+  /// In en, this message translates to:
+  /// **'Exclusive species by inventory'**
+  String get exclusiveSpeciesByInventory;
+
+  /// Status field label
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get status;
 }
 
 class _SDelegate extends LocalizationsDelegate<S> {

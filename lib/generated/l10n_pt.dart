@@ -1577,7 +1577,7 @@ class SPt extends S {
   String get averageRichness => 'riqueza média';
 
   @override
-  String get relativeFrequency => 'frequência relativa';
+  String get relativeFrequency => 'Frequência relativa';
 
   @override
   String get relativeAbundance => 'abundância relativa';
@@ -2427,7 +2427,7 @@ class SPt extends S {
   String get shannonWienerIndex => 'Shannon-Wiener (H\')';
 
   @override
-  String get pielouEvennessIndex => 'Equitabilidade de Pielou (J\')';
+  String get pielouEvennessIndex => 'Equitabilidade (J\')';
 
   @override
   String get chao1Estimator => 'Riqueza Esperada Chao1';
@@ -2446,6 +2446,24 @@ class SPt extends S {
 
   @override
   String get threatenedSpecies => 'Espécies ameaçadas';
+
+  @override
+  String get sharedSpecies => 'Espécies compartilhadas';
+
+  @override
+  String get sharedSpeciesAcrossAllSelected => 'Compartilhadas entre todos os inventários selecionados';
+
+  @override
+  String get sharedSpeciesByPair => 'Espécies compartilhadas por par de inventários';
+
+  @override
+  String get exclusiveSpecies => 'Espécies exclusivas';
+
+  @override
+  String get exclusiveSpeciesByInventory => 'Espécies exclusivas por inventário';
+
+  @override
+  String get status => 'Status';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -4020,7 +4038,7 @@ class SPtBr extends SPt {
   String get averageRichness => 'riqueza média';
 
   @override
-  String get relativeFrequency => 'frequência relativa';
+  String get relativeFrequency => 'Frequência relativa';
 
   @override
   String get relativeAbundance => 'abundância relativa';
@@ -4870,7 +4888,7 @@ class SPtBr extends SPt {
   String get shannonWienerIndex => 'Shannon-Wiener (H\')';
 
   @override
-  String get pielouEvennessIndex => 'Equitabilidade de Pielou (J\')';
+  String get pielouEvennessIndex => 'Equitabilidade (J\')';
 
   @override
   String get chao1Estimator => 'Riqueza Esperada Chao1';
@@ -4889,4 +4907,22 @@ class SPtBr extends SPt {
 
   @override
   String get threatenedSpecies => 'Espécies ameaçadas';
+
+  @override
+  String get sharedSpecies => 'Espécies compartilhadas';
+
+  @override
+  String get sharedSpeciesAcrossAllSelected => 'Compartilhadas entre todos os inventários selecionados';
+
+  @override
+  String get sharedSpeciesByPair => 'Espécies compartilhadas por par de inventários';
+
+  @override
+  String get exclusiveSpecies => 'Espécies exclusivas';
+
+  @override
+  String get exclusiveSpeciesByInventory => 'Espécies exclusivas por inventário';
+
+  @override
+  String get status => 'Status';
 }

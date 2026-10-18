@@ -979,13 +979,29 @@ class InventoryDiversityMetrics {
 }
 
 /// Computes Shannon-Wiener diversity index (H'), Pielou evenness (J'),
-/// species richness (S), total individuals (N), and Chao1 estimate for a collection of species.
-InventoryDiversityMetrics computeDiversityMetrics(String label, List<Species> allSpecies) {
+/// species richness (S), total individuals (N), and Chao1 estimate for a
+/// collection of species.
+///
+/// When [ignoreZeroCountSpeciesInChao1] is true, species records with
+/// `count <= 0` still contribute presence data to richness, N, Shannon, and
+/// Pielou, but they are excluded from Chao1 singleton/doubleton frequencies.
+/// This avoids inflating the estimator in inventories that mix true abundance
+/// counts with qualitative presence-only records stored as zero.
+InventoryDiversityMetrics computeDiversityMetrics(
+  String label,
+  List<Species> allSpecies, {
+  bool ignoreZeroCountSpeciesInChao1 = false,
+}) {
   final Map<String, int> abundances = {};
+  final Map<String, int> chao1Abundances = {};
   for (final species in allSpecies) {
     final name = species.name;
     final count = species.count > 0 ? species.count : 1;
     abundances[name] = (abundances[name] ?? 0) + count;
+
+    if (!ignoreZeroCountSpeciesInChao1 || species.count > 0) {
+      chao1Abundances[name] = (chao1Abundances[name] ?? 0) + species.count;
+    }
   }
 
   final int S = abundances.length;
@@ -1008,8 +1024,9 @@ InventoryDiversityMetrics computeDiversityMetrics(String label, List<Species> al
     jPrime = 1.0;
   }
 
-  int a1 = abundances.values.where((c) => c == 1).length;
-  int a2 = abundances.values.where((c) => c == 2).length;
+  final chao1Source = ignoreZeroCountSpeciesInChao1 ? chao1Abundances : abundances;
+  int a1 = chao1Source.values.where((c) => c == 1).length;
+  int a2 = chao1Source.values.where((c) => c == 2).length;
   double chao1 = S.toDouble();
   if (a2 > 0) {
     chao1 = S + (a1 * a1) / (2.0 * a2);

@@ -2064,7 +2064,7 @@
     "type": "text",
     "description": "Average richness field label"
   },
-  "relativeFrequency": "frequência relativa",
+  "relativeFrequency": "Frequência relativa",
   "@relativeFrequency": {
     "type": "text",
     "description": "Relative frequency field label"
@@ -3105,7 +3105,7 @@
     "type": "text",
     "description": "Shannon-Wiener diversity index label"
   },
-  "pielouEvennessIndex": "Equitabilidade de Pielou (J')",
+  "pielouEvennessIndex": "Equitabilidade (J')",
   "@pielouEvennessIndex": {
     "type": "text",
     "description": "Pielou's evenness index label"
@@ -3134,5 +3134,35 @@
   "@threatenedSpecies": {
     "type": "text",
     "description": "Threatened species label"
+  },
+  "sharedSpecies": "Espécies compartilhadas",
+  "@sharedSpecies": {
+    "type": "text",
+    "description": "Label for the shared species indicator"
+  },
+  "sharedSpeciesAcrossAllSelected": "Compartilhadas entre todos os inventários selecionados",
+  "@sharedSpeciesAcrossAllSelected": {
+    "type": "text",
+    "description": "Label for species shared by all selected inventories"
+  },
+  "sharedSpeciesByPair": "Espécies compartilhadas por par de inventários",
+  "@sharedSpeciesByPair": {
+    "type": "text",
+    "description": "Label for species shared by each inventory pair"
+  },
+  "exclusiveSpecies": "Espécies exclusivas",
+  "@exclusiveSpecies": {
+    "type": "text",
+    "description": "Label for the exclusive species indicator"
+  },
+  "exclusiveSpeciesByInventory": "Espécies exclusivas por inventário",
+  "@exclusiveSpeciesByInventory": {
+    "type": "text",
+    "description": "Label for exclusive species grouped by inventory"
+  },
+  "status": "Status",
+  "@status": {
+    "type": "text",
+    "description": "Status field label"
   }
 }

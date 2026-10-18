@@ -549,6 +549,24 @@ void main() {
         expect(metrics.pielouEvenness, greaterThan(0));
         expect(metrics.chao1, greaterThanOrEqualTo(4.0));
       });
+
+      test('computeDiversityMetrics ignores zero-count qualitative records in Chao1 when requested', () {
+        final speciesList = [
+          Species(inventoryId: 'INV-1', name: 'Species A', isOutOfInventory: false, count: 2),
+          Species(inventoryId: 'INV-1', name: 'Species B', isOutOfInventory: false, count: 0),
+          Species(inventoryId: 'INV-1', name: 'Species C', isOutOfInventory: false, count: 0),
+        ];
+
+        final metrics = computeDiversityMetrics(
+          'Qualitative',
+          speciesList,
+          ignoreZeroCountSpeciesInChao1: true,
+        );
+
+        expect(metrics.richness, equals(3));
+        expect(metrics.totalIndividuals, equals(4));
+        expect(metrics.chao1, equals(3.0));
+      });
     });
   });
 }

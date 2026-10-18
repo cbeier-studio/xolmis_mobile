@@ -291,7 +291,7 @@ class _InventoryReportScreenState extends State<InventoryReportScreen> {
 
   /// Builds plain-text header labels for table and CSV export.
   List<String> _buildHeaderLabels(List<Inventory> inventories) {
-    final labels = <String>[S.of(context).species(2), S.of(context).conservationStatus];
+    final labels = <String>[S.of(context).species(2), S.of(context).status];
 
     for (final inventory in inventories) {
       // Remove the date from the inventory ID

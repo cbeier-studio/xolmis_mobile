@@ -2567,7 +2567,7 @@
       "type": "text",
       "description": "Average richness field label"
     },
-  "relativeFrequency": "relative frequency",
+  "relativeFrequency": "Relative Frequency",
     "@relativeFrequency": {
       "type": "text",
       "description": "Relative frequency field label"
@@ -3702,5 +3702,35 @@
     "@threatenedSpecies": {
         "type": "text",
         "description": "Threatened species label"
+    },
+    "sharedSpecies": "Shared species",
+    "@sharedSpecies": {
+        "type": "text",
+        "description": "Label for the shared species indicator"
+    },
+    "sharedSpeciesAcrossAllSelected": "Shared across all selected inventories",
+    "@sharedSpeciesAcrossAllSelected": {
+        "type": "text",
+        "description": "Label for species shared by all selected inventories"
+    },
+    "sharedSpeciesByPair": "Shared species by inventory pair",
+    "@sharedSpeciesByPair": {
+        "type": "text",
+        "description": "Label for species shared by each inventory pair"
+    },
+    "exclusiveSpecies": "Exclusive species",
+    "@exclusiveSpecies": {
+        "type": "text",
+        "description": "Label for the exclusive species indicator"
+    },
+    "exclusiveSpeciesByInventory": "Exclusive species by inventory",
+    "@exclusiveSpeciesByInventory": {
+        "type": "text",
+        "description": "Label for exclusive species grouped by inventory"
+    },
+    "status": "Status",
+    "@status": {
+        "type": "text",
+        "description": "Status field label"
     }
 }

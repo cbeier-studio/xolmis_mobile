@@ -8,7 +8,6 @@ import '../../generated/l10n.dart';
 import '../../providers/inventory_provider.dart';
 import '../../providers/poi_provider.dart';
 import '../../providers/species_provider.dart';
-import '../../reports/selected_inventories_pdf_report.dart';
 import '../../widgets/scrollable_chart_indicator.dart';
 import '../../utils/statistics_logic.dart';
 import '../../utils/themes.dart';
@@ -86,6 +85,11 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
   late double averageSpeciesCount = 0;
   late int distinctLocalitiesCount = 0;
   late Map<int, int> recordsPerHour = {};
+  late List<String> sharedSpeciesAcrossAll = [];
+  late int sharedSpeciesAcrossAllCount = 0;
+  late Map<String, List<String>> sharedSpeciesByPair = {};
+  late Map<String, List<String>> exclusiveSpeciesByInventory = {};
+  late int exclusiveSpeciesCount = 0;
 
   @override
   void initState() {
@@ -141,6 +145,14 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
     accumulatedSpeciesData = prepareAccumulatedSpeciesData(_sortedInventories);
     accumulatedSpeciesWithinSampleData = prepareAccumulatedSpeciesWithinSample(_sortedInventories);
     combinedSpeciesList = _getSpeciesList(_sortedInventories);
+    sharedSpeciesAcrossAll = _getSharedSpeciesAcrossAll(_sortedInventories);
+    sharedSpeciesAcrossAllCount = sharedSpeciesAcrossAll.length;
+    sharedSpeciesByPair = _getSharedSpeciesByPair(_sortedInventories);
+    exclusiveSpeciesByInventory = _getExclusiveSpeciesByInventory(_sortedInventories);
+    exclusiveSpeciesCount = exclusiveSpeciesByInventory.values.fold<int>(
+      0,
+      (sum, species) => sum + species.length,
+    );
     if (_sortedInventories.isNotEmpty) {
       int totalRichnessSum = _sortedInventories.fold(0, (sum, inv) {
         final count = _getSpeciesRichnessForInventory(inv);
@@ -215,6 +227,64 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
     return speciesSet.toList()..sort();
   }
 
+  Set<String> _getSpeciesSetForInventory(Inventory inventory) {
+    return inventory.speciesList.map((species) => species.name).toSet();
+  }
+
+  List<String> _sortedSpeciesList(Iterable<String> species) {
+    final list = species.toList();
+    list.sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
+    return list;
+  }
+
+  List<String> _getSharedSpeciesAcrossAll(List<Inventory> inventories) {
+    if (inventories.isEmpty) {
+      return [];
+    }
+
+    final shared = Set<String>.from(_getSpeciesSetForInventory(inventories.first));
+    for (final inventory in inventories.skip(1)) {
+      shared.retainAll(_getSpeciesSetForInventory(inventory));
+    }
+
+    return _sortedSpeciesList(shared);
+  }
+
+  Map<String, List<String>> _getSharedSpeciesByPair(List<Inventory> inventories) {
+    final result = <String, List<String>>{};
+    final sets = inventories.map(_getSpeciesSetForInventory).toList();
+
+    for (var i = 0; i < inventories.length; i++) {
+      for (var j = i + 1; j < inventories.length; j++) {
+        final pairShared = sets[i].intersection(sets[j]);
+        final pairLabel = '${inventories[i].id} × ${inventories[j].id}';
+        result[pairLabel] = _sortedSpeciesList(pairShared);
+      }
+    }
+
+    return result;
+  }
+
+  Map<String, List<String>> _getExclusiveSpeciesByInventory(List<Inventory> inventories) {
+    final sets = inventories.map(_getSpeciesSetForInventory).toList();
+    final occurrences = <String, int>{};
+
+    for (final speciesSet in sets) {
+      for (final species in speciesSet) {
+        occurrences[species] = (occurrences[species] ?? 0) + 1;
+      }
+    }
+
+    final result = <String, List<String>>{};
+    for (var i = 0; i < inventories.length; i++) {
+      final inventory = inventories[i];
+      final exclusiveSpecies = sets[i].where((species) => occurrences[species] == 1);
+      result[inventory.id] = _sortedSpeciesList(exclusiveSpecies);
+    }
+
+    return result;
+  }
+
   List<BarChartGroupData> _createBarGroupsFromOccurrencesMap(
     Map<int, int> hourlyOccurrences,
     double barWidth,
@@ -227,7 +297,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
           barRods: [
             BarChartRodData(
               toY: count.toDouble(),
-              color: XolmisColors.primary,
+              color: XolmisColors.jacarandaCore,
               width: barWidth,
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(6),
@@ -239,6 +309,244 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
       );
     });
     return barGroups;
+  }
+
+  Widget _buildSpeciesListSection({
+    required String title,
+    required List<String> species,
+    required bool isDark,
+  }) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: isDark ? Colors.grey.shade900 : XolmisColors.surfaceVariant.withValues(alpha: 0.25),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: isDark ? Colors.grey.shade800 : XolmisColors.outlineVariant.withValues(alpha: 0.5),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w700,
+              color: isDark ? Colors.white : Colors.black87,
+            ),
+          ),
+          if (species.length > 0) ...[
+          const SizedBox(width: 8),
+          Badge(
+            backgroundColor: XolmisColors.primary,
+              textColor: XolmisColors.onPrimary,
+              label: Text(species.length.toString())),
+    ],
+          ],
+          ),
+          const SizedBox(height: 8),
+          if (species.isEmpty)
+            Text(
+              '-',
+              style: TextStyle(
+                fontSize: 11,
+                color: isDark ? Colors.grey.shade500 : Colors.grey.shade600,
+              ),
+            )
+          else
+            ...species.map(
+              (speciesName) => Padding(
+                padding: const EdgeInsets.only(bottom: 4),
+                child: Text(
+                  speciesName,
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: isDark ? Colors.grey.shade200 : Colors.black87,
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSpeciesDialogContent({
+    required List<Widget> sections,
+  }) {
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: sections,
+      ),
+    );
+  }
+
+  Future<void> _showSharedSpeciesDialog(BuildContext context, bool isDark) async {
+    final sharedAcrossAll = sharedSpeciesAcrossAll;
+    final sharedSections = <Widget>[
+      _buildSpeciesListSection(
+        title: '${S.of(context).sharedSpeciesAcrossAllSelected}',
+        species: sharedAcrossAll,
+        isDark: isDark,
+      ),
+      const SizedBox(height: 16),
+      Text(
+        S.of(context).sharedSpeciesByPair,
+        style: TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w700,
+          color: isDark ? Colors.white : Colors.black87,
+        ),
+      ),
+      const SizedBox(height: 10),
+      if (sharedSpeciesByPair.isEmpty)
+        Text(
+          '-',
+          style: TextStyle(
+            fontSize: 11,
+            color: isDark ? Colors.grey.shade500 : Colors.grey.shade600,
+          ),
+        )
+      else
+        ...sharedSpeciesByPair.entries.expand(
+          (entry) => [
+            _buildSpeciesListSection(
+              title: '${entry.key}',
+              species: entry.value,
+              isDark: isDark,
+            ),
+            const SizedBox(height: 10),
+          ],
+        ),
+    ];
+
+    final isSmallScreen = MediaQuery.of(context).size.shortestSide < 600;
+
+    if (isSmallScreen) {
+      await showDialog<void>(
+        context: context,
+        builder: (dialogContext) {
+          return Dialog.fullscreen(
+            child: Scaffold(
+              appBar: AppBar(
+                title: Text(S.of(dialogContext).sharedSpecies),
+              ),
+              body: Padding(
+                padding: const EdgeInsets.all(16),
+                child: _buildSpeciesDialogContent(sections: sharedSections),
+              ),
+            ),
+          );
+        },
+      );
+      return;
+    }
+
+    await showDialog<void>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: Text(S.of(dialogContext).sharedSpecies),
+          content: SizedBox(
+            width: 520,
+            height: 520,
+            child: Padding(
+              padding: const EdgeInsets.only(right: 4),
+              child: _buildSpeciesDialogContent(sections: sharedSections),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: Text(MaterialLocalizations.of(dialogContext).closeButtonLabel),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _showExclusiveSpeciesDialog(BuildContext context, bool isDark) async {
+    final exclusiveSections = <Widget>[
+      Text(
+        S.of(context).exclusiveSpeciesByInventory,
+        style: TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w700,
+          color: isDark ? Colors.white : Colors.black87,
+        ),
+      ),
+      const SizedBox(height: 10),
+      if (_sortedInventories.isEmpty)
+        Text(
+          '-',
+          style: TextStyle(
+            fontSize: 11,
+            color: isDark ? Colors.grey.shade500 : Colors.grey.shade600,
+          ),
+        )
+      else
+        ..._sortedInventories.asMap().entries.expand(
+          (entry) => [
+            _buildSpeciesListSection(
+              title: '${entry.value.id}',
+              species: exclusiveSpeciesByInventory[entry.value.id] ?? const <String>[],
+              isDark: isDark,
+            ),
+            const SizedBox(height: 10),
+          ],
+        ),
+    ];
+
+    final isSmallScreen = MediaQuery.of(context).size.shortestSide < 600;
+
+    if (isSmallScreen) {
+      await showDialog<void>(
+        context: context,
+        builder: (dialogContext) {
+          return Dialog.fullscreen(
+            child: Scaffold(
+              appBar: AppBar(
+                title: Text(S.of(dialogContext).exclusiveSpecies),
+              ),
+              body: Padding(
+                padding: const EdgeInsets.all(16),
+                child: _buildSpeciesDialogContent(sections: exclusiveSections),
+              ),
+            ),
+          );
+        },
+      );
+      return;
+    }
+
+    await showDialog<void>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: Text(S.of(dialogContext).exclusiveSpecies),
+          content: SizedBox(
+            width: 520,
+            height: 520,
+            child: Padding(
+              padding: const EdgeInsets.only(right: 4),
+              child: _buildSpeciesDialogContent(sections: exclusiveSections),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: Text(MaterialLocalizations.of(dialogContext).closeButtonLabel),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -299,7 +607,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
       crossAxisCount: 2,
       crossAxisSpacing: 10,
       mainAxisSpacing: 10,
-      childAspectRatio: 2.1,
+      mainAxisExtent: 118,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       children: [
@@ -331,6 +639,22 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
           valueColor: XolmisColors.primary,
           isDark: isDark,
         ),
+        _buildKpiTile(
+          label: S.of(context).sharedSpecies.toLowerCase(),
+          value: '$sharedSpeciesAcrossAllCount',
+          valueColor: XolmisColors.primary,
+          isDark: isDark,
+          actionLabel: S.of(context).details,
+          onPressed: () => _showSharedSpeciesDialog(context, isDark),
+        ),
+        _buildKpiTile(
+          label: S.of(context).exclusiveSpecies.toLowerCase(),
+          value: '$exclusiveSpeciesCount',
+          valueColor: XolmisColors.primary,
+          isDark: isDark,
+          actionLabel: S.of(context).details,
+          onPressed: () => _showExclusiveSpeciesDialog(context, isDark),
+        ),
       ],
     );
   }
@@ -341,6 +665,8 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
     // required String subtext,
     required Color valueColor,
     required bool isDark,
+    String? actionLabel,
+    VoidCallback? onPressed,
   }) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
@@ -374,24 +700,40 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
               color: isDark ? Colors.grey.shade400 : XolmisColors.secondary,
             ),
           ),
-          // Row(
-          //   textBaseline: TextBaseline.alphabetic,
-          //   crossAxisAlignment: CrossAxisAlignment.baseline,
-          //   children: [
-          //
-          //     const SizedBox(width: 6),
-          //     Expanded(
-          //       child: Text(
-          //         subtext,
-          //         style: TextStyle(
-          //           fontSize: 10,
-          //           color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
-          //         ),
-          //         overflow: TextOverflow.ellipsis,
-          //       ),
-          //     ),
-          //   ],
-          // ),
+          if (actionLabel != null && onPressed != null) ...[
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              height: 28,
+              child: OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  // padding: const EdgeInsets.symmetric(vertical: 4),
+                  backgroundColor: isDark
+                      ? XolmisColors.primary.withValues(alpha: 0.15)
+                      : XolmisColors.primaryContainer.withValues(alpha: 0.5),
+                  side: BorderSide(
+                    color: isDark
+                        ? Colors.grey.shade800
+                        : XolmisColors.outlineVariant.withValues(alpha: 0.5),
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                onPressed: onPressed,
+                child: Text(
+                  actionLabel,
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                    color: isDark
+                        ? XolmisColors.primaryContainer
+                        : XolmisColors.onPrimaryContainer,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ],
       ),
     );
@@ -1025,11 +1367,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                                           topLeft: Radius.circular(6),
                                           topRight: Radius.circular(6),
                                         ),
-                                        color: Theme
-                                            .of(context)
-                                            .brightness == Brightness.light
-                                            ? Colors.deepPurple
-                                            : Colors.deepPurple[200],
+                                        color: XolmisColors.jacarandaCore,
                                       ),
                                     ],
                                   ),
@@ -1410,7 +1748,8 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
               ),
             );
           }),
-          const SizedBox(height: 6),
+          if (threatenedCount > 0) ...[
+            const SizedBox(height: 6),
           SizedBox(
             width: double.infinity,
             child: OutlinedButton.icon(
@@ -1448,6 +1787,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                   : null,
             ),
           ),
+    ],
         ],
       ),
     );
@@ -1460,17 +1800,13 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
     }
     final combinedMetrics = computeDiversityMetrics(S.of(context).total, allSpecies);
     final perInventoryMetrics = _sortedInventories.map((inv) {
-      return computeDiversityMetrics(inv.id, inv.speciesList);
+      return computeDiversityMetrics(
+        inv.id,
+        inv.speciesList,
+        ignoreZeroCountSpeciesInChao1: inv.speciesList.any((species) => species.count <= 0),
+      );
     }).toList();
 
-    final rarefaction = prepareRarefactionCurveSpots(_sortedInventories);
-    final sampledSpots = rarefaction.sampled;
-    final expectedSpots = rarefaction.expected;
-
-    final maxRichness = [
-      ...sampledSpots.map((s) => s.y),
-      ...expectedSpots.map((s) => s.y),
-    ].fold<double>(10.0, (max, v) => v > max ? v : max);
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -1502,43 +1838,44 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
           ),
           const SizedBox(height: 16),
           // Combined metrics summary
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: isDark ? Colors.grey.shade900 : XolmisColors.secondaryContainer.withValues(alpha: 0.3),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: isDark ? Colors.grey.shade800 : XolmisColors.outlineVariant.withValues(alpha: 0.5)),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '${S.of(context).total} (${_sortedInventories.length} ${S.of(context).inventories.toLowerCase()})',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                    color: isDark ? XolmisColors.primaryContainer : XolmisColors.primary,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                GridView.count(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  childAspectRatio: 3.0,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  children: [
-                    _buildMetricChip(S.of(context).speciesRichness, '${combinedMetrics.richness}', isDark),
-                    _buildMetricChip(S.of(context).totalIndividuals, '${combinedMetrics.totalIndividuals}', isDark),
-                    _buildMetricChip(S.of(context).shannonWienerIndex, combinedMetrics.shannonWiener.toStringAsFixed(3), isDark),
-                    _buildMetricChip(S.of(context).pielouEvennessIndex, combinedMetrics.pielouEvenness.toStringAsFixed(3), isDark),
-                    _buildMetricChip(S.of(context).chao1Estimator, combinedMetrics.chao1.toStringAsFixed(1), isDark),
-                  ],
-                ),
-              ],
-            ),
+          // Container(
+          //   width: double.infinity,
+          //   padding: const EdgeInsets.all(12),
+          //   decoration: BoxDecoration(
+          //     color: isDark ? Colors.grey.shade900 : XolmisColors.secondaryContainer.withValues(alpha: 0.3),
+          //     borderRadius: BorderRadius.circular(12),
+          //     border: Border.all(color: isDark ? Colors.grey.shade800 : XolmisColors.outlineVariant.withValues(alpha: 0.5)),
+          //   ),
+          //   child: Column(
+          //     crossAxisAlignment: CrossAxisAlignment.start,
+          //     children: [
+          //       Text(
+          //         '${S.of(context).total} (${_sortedInventories.length} ${S.of(context).inventories.toLowerCase()})',
+          //         style: TextStyle(
+          //           fontSize: 12,
+          //           fontWeight: FontWeight.bold,
+          //           color: isDark ? XolmisColors.primaryContainer : XolmisColors.primary,
+          //         ),
+          //       ),
+          //       const SizedBox(height: 10),
+          //
+          //     ],
+          //   ),
+          // ),
+          GridView.count(
+            crossAxisCount: 2,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+            childAspectRatio: 2.7,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            children: [
+              _buildMetricChip(S.of(context).speciesRichness, '${combinedMetrics.richness}', isDark),
+              _buildMetricChip(S.of(context).totalIndividuals, '${combinedMetrics.totalIndividuals}', isDark),
+              _buildMetricChip(S.of(context).shannonWienerIndex, combinedMetrics.shannonWiener.toStringAsFixed(3), isDark),
+              _buildMetricChip(S.of(context).pielouEvennessIndex, combinedMetrics.pielouEvenness.toStringAsFixed(3), isDark),
+              _buildMetricChip(S.of(context).chao1Estimator, combinedMetrics.chao1.toStringAsFixed(1), isDark),
+            ],
           ),
           const SizedBox(height: 20),
           // Rarefaction curve (observed vs sample-based expectation)
@@ -1810,17 +2147,18 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: isDark ? Colors.grey.shade800 : Colors.white,
+        color: isDark ? Colors.grey.shade900 : XolmisColors.surfaceVariant.withValues(alpha: 0.4),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: isDark ? Colors.grey.shade700 : XolmisColors.borderSubtle),
+        border: Border.all(color: isDark ? Colors.grey.shade800 : XolmisColors.outlineVariant.withValues(alpha: 0.3)),
       ),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             value,
             style: TextStyle(
-              fontSize: 13,
+              fontSize: 16,
               fontWeight: FontWeight.bold,
               color: isDark ? XolmisColors.primaryContainer : XolmisColors.primary,
             ),
@@ -1828,7 +2166,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
           Text(
             label,
             style: TextStyle(
-              fontSize: 10,
+              fontSize: 11,
               color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
             ),
           ),
