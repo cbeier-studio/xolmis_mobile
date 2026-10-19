@@ -8,6 +8,10 @@
 * Adicionado campo de registro duvidoso no registro da espécie.
 * Indicador de lifer (primeiro registro) na lista de espécies do inventário.
 * Adicionados novos campos opcionais no registro de espécie: habitat, modo de detecção, status reprodutivo, sexo e atividade/comportamento.
+* Adicionado indicador de estado de conservação global na lista de espécies.
+* Adicionados indicadores e listas de espécies compartilhadas e exclusivas nas estatísticas dos inventários selecionados.
+* Adicionado gráfico e lista de espécies ameaçadas nas estatísticas dos inventários selecionados.
+* Adicionados índices de biodiversidade nas estatísticas dos inventários selecionados.
 
 ### Melhorias
 

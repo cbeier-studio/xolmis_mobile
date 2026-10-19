@@ -8,6 +8,10 @@
 * Added doubtful record field in species record.
 * Added lifer (first record) indicator in inventory species list.
 * Added new optional fields in species records: habitat, detection mode, reproductive status, sex, and activity/behavior.
+* Added global conservation status indicator in species list.
+* Added indicators and shared and exclusive species lists in selected inventories statistics.
+* Added charts and species list in selected inventories statistics.
+* Added species indexes in selected inventories statistics.
 
 ### Improvements
 
