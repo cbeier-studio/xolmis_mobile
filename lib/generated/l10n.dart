@@ -608,6 +608,18 @@ abstract class S {
   /// **'Expedition'**
   String get expedition;
 
+  /// Header label for inventories without expedition
+  ///
+  /// In en, this message translates to:
+  /// **'No Expedition'**
+  String get noExpedition;
+
+  /// Field label for project name in inventory metadata
+  ///
+  /// In en, this message translates to:
+  /// **'Project'**
+  String get project;
+
   /// Field label asking the inventory site name or abbreviation to generate the ID
   ///
   /// In en, this message translates to:

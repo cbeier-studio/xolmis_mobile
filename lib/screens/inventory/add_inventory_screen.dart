@@ -15,7 +15,13 @@ class AddInventoryScreen extends StatefulWidget {
   final String? initialLocalityName;
   final int? initialMaxSpecies;
 
-  const AddInventoryScreen({super.key, this.initialInventoryId, this.initialInventoryType, this.initialLocalityName, this.initialMaxSpecies});
+  const AddInventoryScreen({
+    super.key,
+    this.initialInventoryId,
+    this.initialInventoryType,
+    this.initialLocalityName,
+    this.initialMaxSpecies,
+  });
 
   @override
   AddInventoryScreenState createState() => AddInventoryScreenState();
@@ -29,7 +35,11 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
   final _maxSpeciesController = TextEditingController();
   final _totalObserversController = TextEditingController();
   late TextEditingController _localityNameController;
+  late TextEditingController _projectNameController;
+  late TextEditingController _expeditionNameController;
   List<String> _recentLocalities = const [];
+  List<String> _recentProjects = const [];
+  List<String> _recentExpeditions = const [];
   InventoryType _selectedType = InventoryType.invFreeQualitative;
   TransportMode _selectedTransportMode = TransportMode.tmodeWalking;
   bool _isSubmitting = false;
@@ -45,8 +55,10 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
     _maxSpeciesController.text = widget.initialMaxSpecies?.toString() ?? '';
     _totalObserversController.text = '1';
     _localityNameController = TextEditingController();
+    _projectNameController = TextEditingController();
+    _expeditionNameController = TextEditingController();
     _localityNameController.text = widget.initialLocalityName ?? '';
-    _loadRecentLocalities();
+    _loadRecentMetadata();
 
     if (widget.initialInventoryId == null) {
       generateSimpleId().then((id) {
@@ -68,21 +80,26 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
     _maxSpeciesController.dispose();
     _totalObserversController.dispose();
     _localityNameController.dispose();
+    _projectNameController.dispose();
+    _expeditionNameController.dispose();
     super.dispose();
+  }
+
+  String _projectLabel(BuildContext context) {
+    return S.of(context).project;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(S.of(context).newInventory),
-      ),
+      appBar: AppBar(title: Text(S.of(context).newInventory)),
       body: Column(
         children: [
           Expanded(
             child: Form(
               key: _formKey,
-              child: SingleChildScrollView( // Prevent keyboard overflow
+              child: SingleChildScrollView(
+                // Prevent keyboard overflow
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,15 +116,13 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                           icon: const Icon(Icons.help_outline),
                         ),
                       ),
-                      items: InventoryType.values.map((type) {
-                        return DropdownMenuItem(
-                          value: type,
-                          child: Text(
-                            inventoryTypeFriendlyNames[type]!,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        );
-                      }).toList(),
+                      items:
+                          InventoryType.values.map((type) {
+                            return DropdownMenuItem(
+                              value: type,
+                              child: Text(inventoryTypeFriendlyNames[type]!, overflow: TextOverflow.ellipsis),
+                            );
+                          }).toList(),
                       onChanged: (InventoryType? newValue) {
                         if (newValue != null) {
                           _updateFormFields(newValue);
@@ -129,24 +144,24 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                         labelText: '${S.of(context).transportMode} *',
                         border: const OutlineInputBorder(),
                       ),
-                      items: TransportMode.values.map((mode) {
-                        return DropdownMenuItem(
-                          value: mode,
-                          child: Text(
-                            transportModeFriendlyNames[mode]!,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        );
-                      }).toList(),
-                      onChanged: (_selectedType == InventoryType.invPointCount || _selectedType == InventoryType.invPointDetection)
-                          ? null
-                          : (TransportMode? newValue) {
-                              if (newValue != null) {
-                                setState(() {
-                                  _selectedTransportMode = newValue;
-                                });
-                              }
-                            },
+                      items:
+                          TransportMode.values.map((mode) {
+                            return DropdownMenuItem(
+                              value: mode,
+                              child: Text(transportModeFriendlyNames[mode]!, overflow: TextOverflow.ellipsis),
+                            );
+                          }).toList(),
+                      onChanged:
+                          (_selectedType == InventoryType.invPointCount ||
+                                  _selectedType == InventoryType.invPointDetection)
+                              ? null
+                              : (TransportMode? newValue) {
+                                if (newValue != null) {
+                                  setState(() {
+                                    _selectedTransportMode = newValue;
+                                  });
+                                }
+                              },
                     ),
                     const SizedBox(height: 16.0),
                     // Inventory ID
@@ -172,9 +187,10 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                     ),
                     const SizedBox(height: 16.0),
                     Autocomplete<String>(
-                      initialValue: widget.initialLocalityName != null
-                          ? TextEditingValue(text: widget.initialLocalityName!)
-                          : TextEditingValue.empty,
+                      initialValue:
+                          widget.initialLocalityName != null
+                              ? TextEditingValue(text: widget.initialLocalityName!)
+                              : TextEditingValue.empty,
                       optionsBuilder: (TextEditingValue textEditingValue) async {
                         return await _getLocalitySuggestions(textEditingValue.text);
                       },
@@ -183,11 +199,11 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                         _saveRecentLocality(selection);
                       },
                       fieldViewBuilder: (
-                          BuildContext context,
-                          TextEditingController fieldTextEditingController,
-                          FocusNode fieldFocusNode,
-                          VoidCallback onFieldSubmitted,
-                          ) {
+                        BuildContext context,
+                        TextEditingController fieldTextEditingController,
+                        FocusNode fieldFocusNode,
+                        VoidCallback onFieldSubmitted,
+                      ) {
                         return TextFormField(
                           controller: fieldTextEditingController,
                           focusNode: fieldFocusNode,
@@ -215,10 +231,10 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                         );
                       },
                       optionsViewBuilder: (
-                          BuildContext context,
-                          AutocompleteOnSelected<String> onSelected,
-                          Iterable<String> options,
-                          ) {
+                        BuildContext context,
+                        AutocompleteOnSelected<String> onSelected,
+                        Iterable<String> options,
+                      ) {
                         return Align(
                           alignment: Alignment.topLeft,
                           child: Material(
@@ -245,7 +261,89 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                         );
                       },
                     ),
-                    SizedBox(height: 16.0,),
+                    const SizedBox(height: 16.0),
+                    Autocomplete<String>(
+                      optionsBuilder: (TextEditingValue textEditingValue) async {
+                        return await _getProjectSuggestions(textEditingValue.text);
+                      },
+                      onSelected: (String selection) {
+                        _projectNameController.text = selection;
+                        _saveRecentProject(selection);
+                      },
+                      fieldViewBuilder: (
+                        BuildContext context,
+                        TextEditingController fieldTextEditingController,
+                        FocusNode fieldFocusNode,
+                        VoidCallback onFieldSubmitted,
+                      ) {
+                        if (fieldTextEditingController.text != _projectNameController.text) {
+                          fieldTextEditingController.value = TextEditingValue(
+                            text: _projectNameController.text,
+                            selection: TextSelection.collapsed(offset: _projectNameController.text.length),
+                          );
+                        }
+                        return TextFormField(
+                          controller: fieldTextEditingController,
+                          focusNode: fieldFocusNode,
+                          decoration: InputDecoration(
+                            labelText: _projectLabel(context),
+                            border: const OutlineInputBorder(),
+                          ),
+                          onChanged: (value) {
+                            _projectNameController.text = value;
+                          },
+                          onFieldSubmitted: (String value) {
+                            _projectNameController.text = value;
+                            if (value.trim().isNotEmpty) {
+                              _saveRecentProject(value);
+                            }
+                            onFieldSubmitted();
+                          },
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 16.0),
+                    Autocomplete<String>(
+                      optionsBuilder: (TextEditingValue textEditingValue) async {
+                        return await _getExpeditionSuggestions(textEditingValue.text);
+                      },
+                      onSelected: (String selection) {
+                        _expeditionNameController.text = selection;
+                        _saveRecentExpedition(selection);
+                      },
+                      fieldViewBuilder: (
+                        BuildContext context,
+                        TextEditingController fieldTextEditingController,
+                        FocusNode fieldFocusNode,
+                        VoidCallback onFieldSubmitted,
+                      ) {
+                        if (fieldTextEditingController.text != _expeditionNameController.text) {
+                          fieldTextEditingController.value = TextEditingValue(
+                            text: _expeditionNameController.text,
+                            selection: TextSelection.collapsed(offset: _expeditionNameController.text.length),
+                          );
+                        }
+                        return TextFormField(
+                          controller: fieldTextEditingController,
+                          focusNode: fieldFocusNode,
+                          decoration: InputDecoration(
+                            labelText: S.of(context).expedition,
+                            border: const OutlineInputBorder(),
+                          ),
+                          onChanged: (value) {
+                            _expeditionNameController.text = value;
+                          },
+                          onFieldSubmitted: (String value) {
+                            _expeditionNameController.text = value;
+                            if (value.trim().isNotEmpty) {
+                              _saveRecentExpedition(value);
+                            }
+                            onFieldSubmitted();
+                          },
+                        );
+                      },
+                    ),
+                    SizedBox(height: 16.0),
                     Row(
                       children: [
                         Expanded(
@@ -259,31 +357,33 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                               border: OutlineInputBorder(),
                               suffixText: 'min',
                               prefixIcon: IconButton(
-                                  onPressed: () {
-                                    int count = int.tryParse(_durationController.text) ?? 1;
-                                    if (count > 1) {
-                                      setState(() {
-                                        count--;
-                                        _durationController.text = count.toString();
-                                      });
-                                    }
-                                  },
-                                  icon: Icon(Icons.remove_outlined)),
-                              suffixIcon: IconButton(
-                                  onPressed: () {
-                                    int count = int.tryParse(_durationController.text) ?? 1;
+                                onPressed: () {
+                                  int count = int.tryParse(_durationController.text) ?? 1;
+                                  if (count > 1) {
                                     setState(() {
-                                      count++;
+                                      count--;
                                       _durationController.text = count.toString();
                                     });
-                                  },
-                                  icon: Icon(Icons.add_outlined)),
+                                  }
+                                },
+                                icon: Icon(Icons.remove_outlined),
+                              ),
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  int count = int.tryParse(_durationController.text) ?? 1;
+                                  setState(() {
+                                    count++;
+                                    _durationController.text = count.toString();
+                                  });
+                                },
+                                icon: Icon(Icons.add_outlined),
+                              ),
                             ),
                             validator: (value) {
                               if ((_selectedType == InventoryType.invTimedQualitative ||
-                                  _selectedType == InventoryType.invIntervalQualitative ||
-                                  _selectedType == InventoryType.invPointCount ||
-                                  _selectedType == InventoryType.invPointDetection) &&
+                                      _selectedType == InventoryType.invIntervalQualitative ||
+                                      _selectedType == InventoryType.invPointCount ||
+                                      _selectedType == InventoryType.invPointDetection) &&
                                   (value == null || value.isEmpty)) {
                                 return S.of(context).insertDuration;
                               }
@@ -303,28 +403,31 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                               border: OutlineInputBorder(),
                               suffixText: 'spp.',
                               prefixIcon: IconButton(
-                                  onPressed: () {
-                                    int count = int.tryParse(_maxSpeciesController.text) ?? 10;
-                                    if (count > 5) {
-                                      setState(() {
-                                        count--;
-                                        _maxSpeciesController.text = count.toString();
-                                      });
-                                    }
-                                  },
-                                  icon: Icon(Icons.remove_outlined)),
-                              suffixIcon: IconButton(
-                                  onPressed: () {
-                                    int count = int.tryParse(_maxSpeciesController.text) ?? 10;
+                                onPressed: () {
+                                  int count = int.tryParse(_maxSpeciesController.text) ?? 10;
+                                  if (count > 5) {
                                     setState(() {
-                                      count++;
+                                      count--;
                                       _maxSpeciesController.text = count.toString();
                                     });
-                                  },
-                                  icon: Icon(Icons.add_outlined)),
+                                  }
+                                },
+                                icon: Icon(Icons.remove_outlined),
+                              ),
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  int count = int.tryParse(_maxSpeciesController.text) ?? 10;
+                                  setState(() {
+                                    count++;
+                                    _maxSpeciesController.text = count.toString();
+                                  });
+                                },
+                                icon: Icon(Icons.add_outlined),
+                              ),
                             ),
                             validator: (value) {
-                              if ((_selectedType == InventoryType.invMackinnonList) && (value == null || value.isEmpty)) {
+                              if ((_selectedType == InventoryType.invMackinnonList) &&
+                                  (value == null || value.isEmpty)) {
                                 return S.of(context).insertMaxSpecies;
                               }
                               if ((value != null && value.isNotEmpty) && int.tryParse(value)! < 5) {
@@ -336,7 +439,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 16.0,),
+                    SizedBox(height: 16.0),
                     Row(
                       children: [
                         Expanded(
@@ -350,25 +453,27 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                               labelText: S.of(context).totalOfObservers,
                               border: OutlineInputBorder(),
                               prefixIcon: IconButton(
-                                  onPressed: () {
-                                    int count = int.tryParse(_totalObserversController.text) ?? 1;
-                                    if (count > 1) {
-                                      setState(() {
-                                        count--;
-                                        _totalObserversController.text = count.toString();
-                                      });
-                                    }
-                                  },
-                                  icon: Icon(Icons.remove_outlined)),
-                              suffixIcon: IconButton(
-                                  onPressed: () {
-                                    int count = int.tryParse(_totalObserversController.text) ?? 1;
+                                onPressed: () {
+                                  int count = int.tryParse(_totalObserversController.text) ?? 1;
+                                  if (count > 1) {
                                     setState(() {
-                                      count++;
+                                      count--;
                                       _totalObserversController.text = count.toString();
                                     });
-                                  },
-                                  icon: Icon(Icons.add_outlined)),
+                                  }
+                                },
+                                icon: Icon(Icons.remove_outlined),
+                              ),
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  int count = int.tryParse(_totalObserversController.text) ?? 1;
+                                  setState(() {
+                                    count++;
+                                    _totalObserversController.text = count.toString();
+                                  });
+                                },
+                                icon: Icon(Icons.add_outlined),
+                              ),
                             ),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
@@ -382,9 +487,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                           ),
                         ),
                         const SizedBox(width: 8.0),
-                        Expanded(
-                          child: SizedBox(width: 8.0,),
-                        ),
+                        Expanded(child: SizedBox(width: 8.0)),
                       ],
                     ),
                   ],
@@ -398,26 +501,18 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
               width: double.infinity,
               child: Align(
                 alignment: Alignment.centerRight,
-                child: _isSubmitting
-                    ? Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const SizedBox(
-                      width: 24,
-                      height: 24,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Text(S.of(context).startingPleaseWait),
-                  ],
-                )
-                    : FilledButton(
-                  onPressed: _submitForm,
-                  child: Text(S.of(context).startInventory),
-                ),
-              )
+                child:
+                    _isSubmitting
+                        ? Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2)),
+                            const SizedBox(width: 12),
+                            Text(S.of(context).startingPleaseWait),
+                          ],
+                        )
+                        : FilledButton(onPressed: _submitForm, child: Text(S.of(context).startInventory)),
+              ),
             ),
           ),
         ],
@@ -425,40 +520,75 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
     );
   }
 
-  /// Loads recent localities used in inventory creation.
-  Future<void> _loadRecentLocalities() async {
+  /// Loads recent locality/project/expedition metadata used in inventory creation.
+  Future<void> _loadRecentMetadata() async {
     final prefs = await SharedPreferences.getInstance();
-    final saved = prefs.getStringList(kRecentInventoryLocalitiesPreferenceKey) ?? const [];
+    final savedLocalities = prefs.getStringList(kRecentInventoryLocalitiesPreferenceKey) ?? const [];
+    final savedProjects = prefs.getStringList(kRecentInventoryProjectsPreferenceKey) ?? const [];
+    final savedExpeditions = prefs.getStringList(kRecentInventoryExpeditionsPreferenceKey) ?? const [];
 
     if (!mounted) {
       return;
     }
 
     setState(() {
-      _recentLocalities = saved.where((item) => item.trim().isNotEmpty).take(3).toList();
+      _recentLocalities = savedLocalities.where((item) => item.trim().isNotEmpty).take(3).toList();
+      _recentProjects = savedProjects.where((item) => item.trim().isNotEmpty).take(3).toList();
+      _recentExpeditions = savedExpeditions.where((item) => item.trim().isNotEmpty).take(3).toList();
+
+      if (_projectNameController.text.trim().isEmpty && _recentProjects.isNotEmpty) {
+        _projectNameController.text = _recentProjects.first;
+      }
+      if (_expeditionNameController.text.trim().isEmpty && _recentExpeditions.isNotEmpty) {
+        _expeditionNameController.text = _recentExpeditions.first;
+      }
     });
   }
 
   /// Stores a locality at the top of the recent list, keeping only the last three entries.
   Future<void> _saveRecentLocality(String locality) async {
-    final normalized = locality.trim();
-    if (normalized.isEmpty) {
-      return;
-    }
-
-    final updated = [
-      normalized,
-      ..._recentLocalities.where((item) => item.toLowerCase() != normalized.toLowerCase()),
-    ].take(3).toList();
-
+    final updated = _withRecentValue(locality, _recentLocalities);
+    if (updated.isEmpty) return;
     if (mounted) {
       setState(() {
         _recentLocalities = updated;
       });
     }
-
     final prefs = await SharedPreferences.getInstance();
     await prefs.setStringList(kRecentInventoryLocalitiesPreferenceKey, updated);
+  }
+
+  Future<void> _saveRecentProject(String project) async {
+    final updated = _withRecentValue(project, _recentProjects);
+    if (updated.isEmpty) return;
+    if (mounted) {
+      setState(() {
+        _recentProjects = updated;
+      });
+    }
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList(kRecentInventoryProjectsPreferenceKey, updated);
+  }
+
+  Future<void> _saveRecentExpedition(String expedition) async {
+    final updated = _withRecentValue(expedition, _recentExpeditions);
+    if (updated.isEmpty) return;
+    if (mounted) {
+      setState(() {
+        _recentExpeditions = updated;
+      });
+    }
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList(kRecentInventoryExpeditionsPreferenceKey, updated);
+  }
+
+  List<String> _withRecentValue(String rawValue, List<String> current) {
+    final normalized = rawValue.trim();
+    if (normalized.isEmpty) {
+      return const [];
+    }
+
+    return [normalized, ...current.where((item) => item.toLowerCase() != normalized.toLowerCase())].take(3).toList();
   }
 
   /// Returns locality suggestions with recent entries pinned to the top.
@@ -483,12 +613,8 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
 
       final normalizedOptions = normalizedOptionsByKey.values.toList();
 
-      final filteredRecent = _recentLocalities
-          .where((item) => removeDiacritics(item).contains(query))
-          .toList();
-      final filteredOptions = normalizedOptions
-          .where((item) => removeDiacritics(item).contains(query))
-          .toList();
+      final filteredRecent = _recentLocalities.where((item) => removeDiacritics(item).contains(query)).toList();
+      final filteredOptions = normalizedOptions.where((item) => removeDiacritics(item).contains(query)).toList();
 
       final merged = <String>[];
       final mergedIndexByKey = <String, int>{};
@@ -517,12 +643,71 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
     }
   }
 
+  Future<List<String>> _getProjectSuggestions(String queryText) async {
+    return _mergeSuggestions(
+      queryText: queryText,
+      recentValues: _recentProjects,
+      persistedValuesLoader: () => Provider.of<InventoryProvider>(context, listen: false).getDistinctProjects(),
+    );
+  }
+
+  Future<List<String>> _getExpeditionSuggestions(String queryText) async {
+    return _mergeSuggestions(
+      queryText: queryText,
+      recentValues: _recentExpeditions,
+      persistedValuesLoader: () => Provider.of<InventoryProvider>(context, listen: false).getDistinctExpeditions(),
+    );
+  }
+
+  Future<List<String>> _mergeSuggestions({
+    required String queryText,
+    required List<String> recentValues,
+    required Future<List<String>> Function() persistedValuesLoader,
+  }) async {
+    final query = removeDiacritics(queryText.trim());
+
+    try {
+      final options = await persistedValuesLoader();
+      final normalizedOptionsByKey = <String, String>{};
+
+      for (final option in options) {
+        final normalized = option.trim();
+        final key = removeDiacritics(normalized);
+        if (normalized.isEmpty) {
+          continue;
+        }
+        normalizedOptionsByKey.putIfAbsent(key, () => normalized);
+      }
+
+      final normalizedOptions = normalizedOptionsByKey.values.toList();
+      final filteredRecent = recentValues.where((item) => removeDiacritics(item).contains(query)).toList();
+      final filteredOptions = normalizedOptions.where((item) => removeDiacritics(item).contains(query)).toList();
+
+      final merged = <String>[];
+      final mergedKeys = <String>{};
+
+      for (final item in [...filteredRecent, ...filteredOptions]) {
+        final key = removeDiacritics(item);
+        if (mergedKeys.add(key)) {
+          merged.add(item);
+        }
+      }
+
+      return merged;
+    } catch (e) {
+      debugPrint('Error fetching metadata options: $e');
+      return recentValues.where((item) => removeDiacritics(item).contains(query)).toList();
+    }
+  }
+
   /// Shows a dialog explaining the available inventory protocols.
   void _showInventoryTypesDialog() {
     showDialog<void>(
       context: context,
       builder: (dialogContext) {
-        final isFullScreen = Responsive.isMediumScreen(dialogContext) || Responsive.isLargeScreen(dialogContext);  // MediaQuery.sizeOf(dialogContext).width < kTabletBreakpoint;
+        final isFullScreen =
+            Responsive.isMediumScreen(dialogContext) ||
+            Responsive.isLargeScreen(dialogContext); // MediaQuery.sizeOf(dialogContext).width < kTabletBreakpoint;
         final title = S.of(dialogContext).inventoryTypesDialogTitle;
         final items = _buildInventoryTypeDialogItems(dialogContext);
 
@@ -535,12 +720,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                     padding: const EdgeInsets.fromLTRB(16, 12, 8, 12),
                     child: Row(
                       children: [
-                        Expanded(
-                          child: Text(
-                            title,
-                            style: Theme.of(dialogContext).textTheme.titleLarge,
-                          ),
-                        ),
+                        Expanded(child: Text(title, style: Theme.of(dialogContext).textTheme.titleLarge)),
                         IconButton(
                           tooltip: S.of(dialogContext).close,
                           onPressed: () => Navigator.of(dialogContext).pop(),
@@ -569,10 +749,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
             ),
           ),
           actions: [
-            TextButton(
-              onPressed: () => Navigator.of(dialogContext).pop(),
-              child: Text(S.of(dialogContext).close),
-            ),
+            TextButton(onPressed: () => Navigator.of(dialogContext).pop(), child: Text(S.of(dialogContext).close)),
           ],
         );
       },
@@ -647,8 +824,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
 
     setState(() {
       _selectedType = newValue;
-      if (newValue == InventoryType.invPointCount ||
-          newValue == InventoryType.invPointDetection) {
+      if (newValue == InventoryType.invPointCount || newValue == InventoryType.invPointDetection) {
         _selectedTransportMode = TransportMode.tmodeNotApplicable;
       } else if (_selectedTransportMode == TransportMode.tmodeNotApplicable) {
         _selectedTransportMode = TransportMode.tmodeWalking;
@@ -663,8 +839,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
       } else if (newValue == InventoryType.invMackinnonList) {
         _maxSpeciesController.text = maxSpeciesMackinnon.toString();
         _durationController.text = '';
-      } else if (newValue == InventoryType.invPointCount ||
-          newValue == InventoryType.invPointDetection) {
+      } else if (newValue == InventoryType.invPointCount || newValue == InventoryType.invPointDetection) {
         _durationController.text = pointCountsDuration.toString();
         _maxSpeciesController.text = '';
       } else {
@@ -713,16 +888,11 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
             ],
           ),
           actions: <Widget>[
-            TextButton(
-              child: Text(S.of(context).cancel),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
+            TextButton(child: Text(S.of(context).cancel), onPressed: () => Navigator.of(context).pop()),
             TextButton(
               child: Text(S.of(context).ok),
-              onPressed: () => Navigator.of(context).pop({
-                'expedition': expedition,
-                'siteAbbreviation': siteAbbreviation,
-              }),
+              onPressed:
+                  () => Navigator.of(context).pop({'expedition': expedition, 'siteAbbreviation': siteAbbreviation}),
             ),
           ],
         );
@@ -806,6 +976,8 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
         type: _selectedType,
         transportMode: _selectedTransportMode,
         localityName: _localityNameController.text,
+        projectName: _projectNameController.text.trim().isEmpty ? null : _projectNameController.text.trim(),
+        expeditionName: _expeditionNameController.text.trim().isEmpty ? null : _expeditionNameController.text.trim(),
         duration: int.tryParse(_durationController.text) ?? 0,
         maxSpecies: int.tryParse(_maxSpeciesController.text) ?? 0,
         totalObservers: int.tryParse(_totalObserversController.text) ?? 1,
@@ -818,7 +990,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
       // Check if the ID already exists in the database
       final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
       final idExists = await inventoryProvider.inventoryIdExists(newInventory.id);
-      
+
       if (!mounted) return;
 
       if (idExists) {
@@ -826,11 +998,7 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
           _isSubmitting = false;
         });
         // ID already exists, show a SnackBar
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(S.of(context).inventoryIdAlreadyExists),
-          ),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(S.of(context).inventoryIdAlreadyExists)));
         return; // Prevent adding inventory
       }
 
@@ -846,6 +1014,8 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
       if (success) {
         prefs.setInt(kRecentInventoryTypePreferenceKey, _selectedType.index);
         await _saveRecentLocality(_localityNameController.text);
+        await _saveRecentProject(_projectNameController.text);
+        await _saveRecentExpedition(_expeditionNameController.text);
         if (mounted) {
           Navigator.pop(context); // Return to the previous screen
         }
@@ -874,11 +1044,7 @@ class _InventoryTypeDialogItem {
   final String description;
   final IconData icon;
 
-  const _InventoryTypeDialogItem({
-    required this.type,
-    required this.description,
-    required this.icon,
-  });
+  const _InventoryTypeDialogItem({required this.type, required this.description, required this.icon});
 }
 
 /// Scrollable list used by the inventory types information dialog.
@@ -899,10 +1065,7 @@ class _InventoryTypesDialogList extends StatelessWidget {
           contentPadding: EdgeInsets.zero,
           leading: Icon(item.icon),
           title: Text(inventoryTypeFriendlyNames[item.type] ?? ''),
-          subtitle: Padding(
-            padding: const EdgeInsets.only(top: 4),
-            child: Text(item.description),
-          ),
+          subtitle: Padding(padding: const EdgeInsets.only(top: 4), child: Text(item.description)),
         );
       },
     );

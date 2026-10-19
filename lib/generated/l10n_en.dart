@@ -320,6 +320,12 @@ class SEn extends S {
   String get expedition => 'Expedition';
 
   @override
+  String get noExpedition => 'No Expedition';
+
+  @override
+  String get project => 'Project';
+
+  @override
   String get siteAbbreviation => 'Site name or abbreviation';
 
   @override

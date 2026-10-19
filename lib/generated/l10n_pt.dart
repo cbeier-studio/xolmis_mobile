@@ -322,6 +322,12 @@ class SPt extends S {
   String get expedition => 'Expedição';
 
   @override
+  String get noExpedition => 'Sem expedição';
+
+  @override
+  String get project => 'Projeto';
+
+  @override
   String get siteAbbreviation => 'Nome ou sigla do local';
 
   @override
@@ -2782,6 +2788,12 @@ class SPtBr extends SPt {
 
   @override
   String get expedition => 'Expedição';
+
+  @override
+  String get noExpedition => 'Sem expedição';
+
+  @override
+  String get project => 'Projeto';
 
   @override
   String get siteAbbreviation => 'Nome ou sigla do local';

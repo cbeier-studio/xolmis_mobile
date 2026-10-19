@@ -33,11 +33,7 @@ class InventoryDao {
         inventory.startLongitude = position.longitude;
       }
 
-      int? recordId = await db?.insert(
-        'inventories',
-        inventory.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.replace,
-      );
+      int? recordId = await db?.insert('inventories', inventory.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
       return recordId != null && recordId > 0;
     } on DatabaseException catch (e) {
       debugPrint('Database error: $e');
@@ -66,10 +62,7 @@ class InventoryDao {
   /// The imported inventory is always marked as finished. The transaction is
   /// rolled back entirely if any database operation fails.
   /// Returns `true` on success, or `false` if an error occurs.
-  Future<bool> importInventory(
-    Inventory inventory, {
-    bool updateExisting = true,
-  }) async {
+  Future<bool> importInventory(Inventory inventory, {bool updateExisting = true}) async {
     final db = await _dbHelper.database;
     if (db == null) {
       debugPrint('[DAO] !!! ERROR importing inventory: Database instance is null.');
@@ -82,11 +75,9 @@ class InventoryDao {
         final String currentInventoryId = inventory.id;
         final inventoryMap = inventory.toMap();
 
-        final int existingCount = Sqflite.firstIntValue(
-              await txn.rawQuery(
-                'SELECT COUNT(*) FROM inventories WHERE id = ?',
-                [currentInventoryId],
-              ),
+        final int existingCount =
+            Sqflite.firstIntValue(
+              await txn.rawQuery('SELECT COUNT(*) FROM inventories WHERE id = ?', [currentInventoryId]),
             ) ??
             0;
         final bool alreadyExists = existingCount > 0;
@@ -96,37 +87,16 @@ class InventoryDao {
         }
 
         if (alreadyExists) {
-          await txn.rawDelete(
-            'DELETE FROM pois WHERE speciesId IN (SELECT id FROM species WHERE inventoryId = ?)',
-            [currentInventoryId],
-          );
-          await txn.delete(
-            'species',
-            where: 'inventoryId = ?',
-            whereArgs: [currentInventoryId],
-          );
-          await txn.delete(
-            'vegetation',
-            where: 'inventoryId = ?',
-            whereArgs: [currentInventoryId],
-          );
-          await txn.delete(
-            'weather',
-            where: 'inventoryId = ?',
-            whereArgs: [currentInventoryId],
-          );
+          await txn.rawDelete('DELETE FROM pois WHERE speciesId IN (SELECT id FROM species WHERE inventoryId = ?)', [
+            currentInventoryId,
+          ]);
+          await txn.delete('species', where: 'inventoryId = ?', whereArgs: [currentInventoryId]);
+          await txn.delete('vegetation', where: 'inventoryId = ?', whereArgs: [currentInventoryId]);
+          await txn.delete('weather', where: 'inventoryId = ?', whereArgs: [currentInventoryId]);
 
-          await txn.update(
-            'inventories',
-            inventoryMap,
-            where: 'id = ?',
-            whereArgs: [currentInventoryId],
-          );
+          await txn.update('inventories', inventoryMap, where: 'id = ?', whereArgs: [currentInventoryId]);
         } else {
-          final int? recordId = await txn.insert(
-            'inventories',
-            inventoryMap,
-          );
+          final int? recordId = await txn.insert('inventories', inventoryMap);
           if (recordId == null || recordId <= 0) {
             throw Exception('Failed to insert inventory: ${inventory.toString()}');
           }
@@ -205,23 +175,14 @@ class InventoryDao {
   /// Deletes the [Inventory] record identified by [inventoryId] from the database.
   Future<void> deleteInventory(String? inventoryId) async {
     final db = await _dbHelper.database;
-    await db?.delete(
-      'inventories',
-      where: 'id = ?',
-      whereArgs: [inventoryId],
-    );
+    await db?.delete('inventories', where: 'id = ?', whereArgs: [inventoryId]);
   }
 
   /// Updates the database record for the given [inventory] using its [Inventory.id].
   Future<void> updateInventory(Inventory inventory) async {
     try {
       final db = await _dbHelper.database;
-      await db?.update(
-        'inventories',
-        inventory.toMap(),
-        where: 'id = ?',
-        whereArgs: [inventory.id],
-      );
+      await db?.update('inventories', inventory.toMap(), where: 'id = ?', whereArgs: [inventory.id]);
       debugPrint('[DAO] Inventory updated: ${inventory.id}');
     } catch (e) {
       debugPrint('[DAO] !!! ERROR updating inventory: $e');
@@ -232,24 +193,14 @@ class InventoryDao {
   /// [inventoryId] to [elapsedTime].
   Future<void> updateInventoryElapsedTime(String inventoryId, double elapsedTime) async {
     final db = await _dbHelper.database;
-    await db?.update(
-      'inventories',
-      {'elapsedTime': elapsedTime},
-      where: 'id = ?',
-      whereArgs: [inventoryId],
-    );
+    await db?.update('inventories', {'elapsedTime': elapsedTime}, where: 'id = ?', whereArgs: [inventoryId]);
   }
 
   /// Updates only the `currentInterval` field of the inventory identified by
   /// [inventoryId] to [currentInterval].
   Future<void> updateInventoryCurrentInterval(String inventoryId, int currentInterval) async {
     final db = await _dbHelper.database;
-    await db?.update(
-      'inventories',
-      {'currentInterval': currentInterval},
-      where: 'id = ?',
-      whereArgs: [inventoryId],
-    );
+    await db?.update('inventories', {'currentInterval': currentInterval}, where: 'id = ?', whereArgs: [inventoryId]);
   }
 
   /// Updates only the `intervalsWithoutNewSpecies` field of the inventory
@@ -297,47 +248,27 @@ class InventoryDao {
       await db.execute('PRAGMA foreign_keys = OFF;');
       // 2. Run transaction logic
       await db.transaction((txn) async {
-
         // 3. Update the main table 'inventories'.
-        int inventoryUpdated = await txn.update(
-          'inventories',
-          {'id': newId},
-          where: 'id = ?',
-          whereArgs: [oldId],
-        );
+        int inventoryUpdated = await txn.update('inventories', {'id': newId}, where: 'id = ?', whereArgs: [oldId]);
 
         // 4. Crucial check: if main record was not found, stop transaction
         if (inventoryUpdated == 0) {
-          debugPrint('[DAO] !!! ERROR changing inventory ID: Inventory with old ID "$oldId" not found. Transaction rolled back.');
+          debugPrint(
+            '[DAO] !!! ERROR changing inventory ID: Inventory with old ID "$oldId" not found. Transaction rolled back.',
+          );
           throw Exception('Inventory with old ID "$oldId" not found. Transaction rolled back.');
         }
 
         // 5. Update related tables with the 'inventoryId'.
-        await txn.update(
-          'species',
-          {'inventoryId': newId},
-          where: 'inventoryId = ?',
-          whereArgs: [oldId],
-        );
+        await txn.update('species', {'inventoryId': newId}, where: 'inventoryId = ?', whereArgs: [oldId]);
 
-        await txn.update(
-          'vegetation',
-          {'inventoryId': newId},
-          where: 'inventoryId = ?',
-          whereArgs: [oldId],
-        );
+        await txn.update('vegetation', {'inventoryId': newId}, where: 'inventoryId = ?', whereArgs: [oldId]);
 
-        await txn.update(
-          'weather',
-          {'inventoryId': newId},
-          where: 'inventoryId = ?',
-          whereArgs: [oldId],
-        );
+        await txn.update('weather', {'inventoryId': newId}, where: 'inventoryId = ?', whereArgs: [oldId]);
       });
       await db.execute('PRAGMA foreign_keys = ON;');
 
       debugPrint('[DAO] ...Successfully changed inventory ID from "$oldId" to "$newId"');
-
     } on DatabaseException catch (e, s) {
       // 6. Capture database errors (e.g.: constraint violation)
       debugPrint('[DAO] !!! DATABASE ERROR changing inventory ID: $e');
@@ -354,11 +285,7 @@ class InventoryDao {
   /// database (case-insensitive comparison).
   Future<bool> inventoryIdExists(String id) async {
     final db = await _dbHelper.database;
-    final result = await db?.query(
-      'inventories',
-      where: 'LOWER(id) = ?',
-      whereArgs: [id.toLowerCase()],
-    );
+    final result = await db?.query('inventories', where: 'LOWER(id) = ?', whereArgs: [id.toLowerCase()]);
     return result!.isNotEmpty;
   }
 
@@ -377,15 +304,17 @@ class InventoryDao {
     try {
       final List<Map<String, dynamic>> maps = await db?.query('inventories') ?? [];
 
-      List<Inventory> inventories = await Future.wait(maps.map((map) async {
-        List<Species> speciesList = await _speciesDao.getSpeciesByInventory(map['id'], false);
-        List<Vegetation> vegetationList = await _vegetationDao.getVegetationByInventory(map['id']);
-        List<Weather> weatherList = await _weatherDao.getWeatherByInventory(map['id']);
+      List<Inventory> inventories = await Future.wait(
+        maps.map((map) async {
+          List<Species> speciesList = await _speciesDao.getSpeciesByInventory(map['id'], false);
+          List<Vegetation> vegetationList = await _vegetationDao.getVegetationByInventory(map['id']);
+          List<Weather> weatherList = await _weatherDao.getWeatherByInventory(map['id']);
 
-        Inventory inventory = Inventory.fromMap(map, speciesList, vegetationList, weatherList);
+          Inventory inventory = Inventory.fromMap(map, speciesList, vegetationList, weatherList);
 
-        return inventory;
-      }).toList());
+          return inventory;
+        }).toList(),
+      );
 
       debugPrint('[DAO] Loaded inventories: ${inventories.length}');
 
@@ -404,11 +333,7 @@ class InventoryDao {
   /// Throws an [Exception] if no inventory with the given ID is found.
   Future<Inventory> getInventoryById(String id) async {
     final db = await _dbHelper.database;
-    final List<Map<String, dynamic>> maps = await db?.query(
-        'inventories',
-        where: 'id = ?',
-        whereArgs: [id]
-    ) ?? [];
+    final List<Map<String, dynamic>> maps = await db?.query('inventories', where: 'id = ?', whereArgs: [id]) ?? [];
     if (maps.isNotEmpty) {
       final map = maps.first;
       List<Species> speciesList = await _speciesDao.getSpeciesByInventory(map['id'], false);
@@ -427,10 +352,19 @@ class InventoryDao {
   /// The ID prefix is built as
   /// `[<local>-]<observer>-<year><month><day>-[<typeChar>]`.
   /// If no existing inventory matches the prefix, returns `1`.
-  Future<int> getNextSequentialNumber(String? expedition, String? local, String observer, int ano, int mes, int dia, String? typeChar) async {
+  Future<int> getNextSequentialNumber(
+    String? expedition,
+    String? local,
+    String observer,
+    int ano,
+    int mes,
+    int dia,
+    String? typeChar,
+  ) async {
     final db = await _dbHelper.database;
 
-    final prefix = "${expedition != null && expedition.isNotEmpty ? '$expedition-' : ''}${local != null && local.isNotEmpty ? '$local-' : ''}$observer-$ano${mes.toString().padLeft(2, '0')}${dia.toString().padLeft(2, '0')}-${typeChar ?? ''}";
+    final prefix =
+        "${expedition != null && expedition.isNotEmpty ? '$expedition-' : ''}${local != null && local.isNotEmpty ? '$local-' : ''}$observer-$ano${mes.toString().padLeft(2, '0')}${dia.toString().padLeft(2, '0')}-${typeChar ?? ''}";
 
     final results = await db?.query(
       'inventories',
@@ -471,13 +405,93 @@ class InventoryDao {
 
       final localities = results.map((row) => row['localityName'] as String).toList();
       localities.sort();
-      
+
       debugPrint('[DAO] Distinct localities from inventories: $localities');
       return localities;
     } catch (e, s) {
       debugPrint('[DAO] !!! ERROR fetching inventories distinct localities: $e\n$s');
       return [];
     }
+  }
+
+  /// Returns a sorted list of distinct project names used by inventories.
+  Future<List<String>> getDistinctProjects() async {
+    try {
+      final db = await _dbHelper.database;
+      if (db == null) {
+        throw Exception('Database is not available');
+      }
+
+      final results = await db.query(
+        'inventories',
+        distinct: true,
+        columns: ['projectName'],
+        where: 'projectName IS NOT NULL AND TRIM(projectName) <> ""',
+      );
+
+      final projects = results.map((row) => row['projectName'] as String).toList()..sort();
+      return projects;
+    } catch (e, s) {
+      debugPrint('[DAO] !!! ERROR fetching inventories distinct projects: $e\n$s');
+      return [];
+    }
+  }
+
+  /// Returns a sorted list of distinct expedition/campaign names used by inventories.
+  Future<List<String>> getDistinctExpeditions() async {
+    try {
+      final db = await _dbHelper.database;
+      if (db == null) {
+        throw Exception('Database is not available');
+      }
+
+      final results = await db.query(
+        'inventories',
+        distinct: true,
+        columns: ['expeditionName'],
+        where: 'expeditionName IS NOT NULL AND TRIM(expeditionName) <> ""',
+      );
+
+      final expeditions = results.map((row) => row['expeditionName'] as String).toList()..sort();
+      return expeditions;
+    } catch (e, s) {
+      debugPrint('[DAO] !!! ERROR fetching inventories distinct expeditions: $e\n$s');
+      return [];
+    }
+  }
+
+  /// Updates project and/or expedition fields for multiple inventories in one transaction.
+  Future<void> assignProjectAndExpeditionToInventories({
+    required List<String> inventoryIds,
+    String? projectName,
+    String? expeditionName,
+  }) async {
+    if (inventoryIds.isEmpty) {
+      return;
+    }
+
+    final db = await _dbHelper.database;
+    if (db == null) {
+      throw Exception('Database is not available');
+    }
+
+    final updates = <String, Object?>{};
+    if (projectName != null) {
+      updates['projectName'] = projectName.trim().isEmpty ? null : projectName.trim();
+    }
+    if (expeditionName != null) {
+      updates['expeditionName'] = expeditionName.trim().isEmpty ? null : expeditionName.trim();
+    }
+
+    if (updates.isEmpty) {
+      return;
+    }
+
+    final placeholders = List<String>.filled(inventoryIds.length, '?').join(',');
+
+    await db.transaction((txn) async {
+      await txn.update('inventories', updates, where: 'id IN ($placeholders)', whereArgs: inventoryIds);
+    });
   }
 
   /// Returns a summary list of all [Inventory] records including aggregate
@@ -488,7 +502,8 @@ class InventoryDao {
     final db = await _dbHelper.database;
     try {
       // JOIN LEFT com COUNT de espécies para preencher especiesCount
-      final List<Map<String, dynamic>> maps = await db?.rawQuery('''
+      final List<Map<String, dynamic>> maps =
+          await db?.rawQuery('''
         SELECT 
           i.*,
           COUNT(s.id) as speciesCount,
@@ -497,24 +512,25 @@ class InventoryDao {
         FROM inventories i
         LEFT JOIN species s ON s.inventoryId = i.id
         GROUP BY i.id
-      ''') ?? [];
+      ''') ??
+          [];
 
-      List<Inventory> inventories = maps.map((map) {
-        final speciesCount = map['speciesCount'] as int? ?? 0;
-        final speciesWithinCount = map['speciesWithinCount'] as int? ?? 0;
-        final speciesOutOfInventoryCount =
-            map['speciesOutOfInventoryCount'] as int? ?? 0;
-        // Cria inventário sem especies/vegetação/clima
-        return Inventory.fromMap(
-          map,
-          [],
-          [],
-          [],
-          speciesCount: speciesCount,
-          speciesWithinCount: speciesWithinCount,
-          speciesOutOfInventoryCount: speciesOutOfInventoryCount,
-        );
-      }).toList();
+      List<Inventory> inventories =
+          maps.map((map) {
+            final speciesCount = map['speciesCount'] as int? ?? 0;
+            final speciesWithinCount = map['speciesWithinCount'] as int? ?? 0;
+            final speciesOutOfInventoryCount = map['speciesOutOfInventoryCount'] as int? ?? 0;
+            // Cria inventário sem especies/vegetação/clima
+            return Inventory.fromMap(
+              map,
+              [],
+              [],
+              [],
+              speciesCount: speciesCount,
+              speciesWithinCount: speciesWithinCount,
+              speciesOutOfInventoryCount: speciesOutOfInventoryCount,
+            );
+          }).toList();
 
       debugPrint('[DAO] Loaded inventories summary: ${inventories.length}');
       return inventories;
@@ -532,18 +548,16 @@ class InventoryDao {
     final db = await _dbHelper.database;
     try {
       final List<Map<String, dynamic>> maps =
-      await db?.query(
-          'species',
-          columns: ['inventoryId'],
-          where: 'name = ?',
-          whereArgs: [speciesName],
-          distinct: true,
-      ) ?? [];
+          await db?.query(
+            'species',
+            columns: ['inventoryId'],
+            where: 'name = ?',
+            whereArgs: [speciesName],
+            distinct: true,
+          ) ??
+          [];
 
-      return maps
-          .map((m) => m['inventoryId'] as String?)
-          .whereType<String>()
-          .toSet();
+      return maps.map((m) => m['inventoryId'] as String?).whereType<String>().toSet();
     } catch (e) {
       debugPrint('[DAO] !!! ERROR fetching inventory IDs by species: $e');
       return <String>{};
@@ -556,12 +570,17 @@ class InventoryDao {
     final db = await _dbHelper.database;
     try {
       // SQL query que busca direto: inventários que contêm a espécie
-      final List<Map<String, dynamic>> maps = await db?.rawQuery('''
+      final List<Map<String, dynamic>> maps =
+          await db?.rawQuery(
+            '''
         SELECT DISTINCT i.* 
         FROM inventories i
         INNER JOIN species s ON s.inventoryId = i.id
         WHERE s.name = ?
-      ''', [speciesName]) ?? [];
+      ''',
+            [speciesName],
+          ) ??
+          [];
 
       List<Inventory> inventories = [];
       for (var map in maps) {
@@ -656,12 +675,14 @@ class InventoryDao {
   Future<List<String>> getUniqueSpeciesNames() async {
     final db = await _dbHelper.database;
     try {
-      final result = await db?.rawQuery('''
+      final result =
+          await db?.rawQuery('''
         SELECT DISTINCT s.name 
         FROM species s
         INNER JOIN inventories i ON s.inventoryId = i.id
         ORDER BY s.name ASC
-      ''') ?? [];
+      ''') ??
+          [];
 
       final speciesNames = result.map((r) => r['name'] as String).toList();
       debugPrint('[DAO] Found ${speciesNames.length} unique species');

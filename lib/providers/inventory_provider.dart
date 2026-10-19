@@ -27,12 +27,10 @@ class InventoryProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
 
   /// Inventories that are still active.
-  List<Inventory> get activeInventories =>
-      _inventories.where((inventory) => !inventory.isFinished).toList();
+  List<Inventory> get activeInventories => _inventories.where((inventory) => !inventory.isFinished).toList();
 
   /// Inventories that have already finished.
-  List<Inventory> get finishedInventories =>
-      _inventories.where((inventory) => inventory.isFinished).toList();
+  List<Inventory> get finishedInventories => _inventories.where((inventory) => inventory.isFinished).toList();
 
   /// Number of active inventories.
   int get inventoriesCount => activeInventories.length;
@@ -43,6 +41,7 @@ class InventoryProvider with ChangeNotifier {
   final SpeciesProvider _speciesProvider;
   final VegetationProvider _vegetationProvider;
   final WeatherProvider _weatherProvider;
+
   /// Access to the species provider used for inventory child records.
   SpeciesProvider get speciesProvider => _speciesProvider;
 
@@ -56,11 +55,7 @@ class InventoryProvider with ChangeNotifier {
 
   /// Synchronizes persisted data from [source] into [target] without replacing
   /// the in-memory instance, preserving runtime timer subscriptions.
-  void _syncInventoryInstance(
-    Inventory target,
-    Inventory source, {
-    bool includeCollections = false,
-  }) {
+  void _syncInventoryInstance(Inventory target, Inventory source, {bool includeCollections = false}) {
     target.applyPersistedState(source, includeCollections: includeCollections);
   }
 
@@ -77,35 +72,36 @@ class InventoryProvider with ChangeNotifier {
     debugPrint('[PROVIDER] ----------------------------------');
     debugPrint('[PROVIDER] Fetching all inventories...');
     _isLoading = true;
-    try {final inventoriesFromDb = await _inventoryDao.getInventories();
-    final Set<String> dbInventoryIds = inventoriesFromDb.map((inv) => inv.id).toSet();
+    try {
+      final inventoriesFromDb = await _inventoryDao.getInventories();
+      final Set<String> dbInventoryIds = inventoriesFromDb.map((inv) => inv.id).toSet();
 
-    // Cancel timers for inventories that do not exist in DB anymore
-    final removedInventories = _inventoryMap.values.where((inv) => !dbInventoryIds.contains(inv.id)).toList();
-    for (var inv in removedInventories) {
-      inv.cancelTimer();
-    }
-
-    // Remove from memory the inventories that does not exist in DB anymore
-    _inventoryMap.removeWhere((id, inventory) => !dbInventoryIds.contains(id));
-    _inventories.removeWhere((inventory) => !dbInventoryIds.contains(inventory.id));
-
-    // Update existing or add new inventories
-    for (var dbInventory in inventoriesFromDb) {
-      if (_inventoryMap.containsKey(dbInventory.id)) {
-        final memoryInventory = _inventoryMap[dbInventory.id]!;
-        _syncInventoryInstance(memoryInventory, dbInventory, includeCollections: true);
-      } else {
-        // Object does not exist in memory: ADD IT.
-        _inventories.add(dbInventory);
-        _inventoryMap[dbInventory.id] = dbInventory;
+      // Cancel timers for inventories that do not exist in DB anymore
+      final removedInventories = _inventoryMap.values.where((inv) => !dbInventoryIds.contains(inv.id)).toList();
+      for (var inv in removedInventories) {
+        inv.cancelTimer();
       }
-      // Load subitems if necessary
-      await _speciesProvider.loadSpeciesForInventory(dbInventory.id);
-      await _vegetationProvider.loadVegetationForInventory(dbInventory.id);
-      await _weatherProvider.loadWeatherForInventory(dbInventory.id);
-    }
-    debugPrint('[PROVIDER] ...Sync complete. Current active count: ${activeInventories.length}');
+
+      // Remove from memory the inventories that does not exist in DB anymore
+      _inventoryMap.removeWhere((id, inventory) => !dbInventoryIds.contains(id));
+      _inventories.removeWhere((inventory) => !dbInventoryIds.contains(inventory.id));
+
+      // Update existing or add new inventories
+      for (var dbInventory in inventoriesFromDb) {
+        if (_inventoryMap.containsKey(dbInventory.id)) {
+          final memoryInventory = _inventoryMap[dbInventory.id]!;
+          _syncInventoryInstance(memoryInventory, dbInventory, includeCollections: true);
+        } else {
+          // Object does not exist in memory: ADD IT.
+          _inventories.add(dbInventory);
+          _inventoryMap[dbInventory.id] = dbInventory;
+        }
+        // Load subitems if necessary
+        await _speciesProvider.loadSpeciesForInventory(dbInventory.id);
+        await _vegetationProvider.loadVegetationForInventory(dbInventory.id);
+        await _weatherProvider.loadWeatherForInventory(dbInventory.id);
+      }
+      debugPrint('[PROVIDER] ...Sync complete. Current active count: ${activeInventories.length}');
     } catch (e, s) {
       debugPrint('[PROVIDER] !!! ERROR syncing inventories: $e\n$s');
     } finally {
@@ -154,16 +150,10 @@ class InventoryProvider with ChangeNotifier {
   /// When [updateExisting] is `false`, imports that collide by ID are skipped
   /// by the DAO and this method returns `false` for that record.
   /// Returns `true` when the import succeeds and `false` otherwise.
-  Future<bool> importInventory(
-    Inventory inventory, {
-    bool updateExisting = true,
-  }) async {
+  Future<bool> importInventory(Inventory inventory, {bool updateExisting = true}) async {
     debugPrint('[PROVIDER] Importing inventory: ${inventory.id}');
     try {
-      final success = await _inventoryDao.importInventory(
-        inventory,
-        updateExisting: updateExisting,
-      );
+      final success = await _inventoryDao.importInventory(inventory, updateExisting: updateExisting);
       if (!success) {
         return false;
       }
@@ -201,7 +191,7 @@ class InventoryProvider with ChangeNotifier {
     }
     // Ensure the map also has the updated instance, though if instances are shared, this might be redundant.
     _inventoryMap[inventory.id] = inventory;
-    
+
     inventoryFinishedNotifier.value = inventory.isFinished;
     notifyListeners();
     debugPrint('[PROVIDER] ...Update complete for ${inventory.id}. Notifying listeners.');
@@ -235,7 +225,9 @@ class InventoryProvider with ChangeNotifier {
       updateInventory(inventory);
       // notifyListeners();
     } else {
-      debugPrint('[PROVIDER] SKIPPED commanding START timer for ${inventory.id} (isFinished=${inventory.isFinished}, isPaused=${inventory.isPaused})');
+      debugPrint(
+        '[PROVIDER] SKIPPED commanding START timer for ${inventory.id} (isFinished=${inventory.isFinished}, isPaused=${inventory.isPaused})',
+      );
     }
   }
 
@@ -298,17 +290,23 @@ class InventoryProvider with ChangeNotifier {
     if (inventory != null) {
       final speciesList = _speciesProvider.getSpeciesForInventory(inventoryId);
       inventory.speciesCount = speciesList.length;
-      inventory.speciesOutOfInventoryCount =
-          speciesList.where((s) => s.isOutOfInventory).length;
-      inventory.speciesWithinCount =
-          inventory.speciesCount - inventory.speciesOutOfInventoryCount;
+      inventory.speciesOutOfInventoryCount = speciesList.where((s) => s.isOutOfInventory).length;
+      inventory.speciesWithinCount = inventory.speciesCount - inventory.speciesOutOfInventoryCount;
       speciesCountNotifier.value = inventory.speciesCount;
       notifyListeners();
     }
   }
 
   /// Returns the next sequential inventory number for the given identifier parts.
-  Future<int> getNextSequentialNumber(String? expedition, String? local, String observer, int ano, int mes, int dia, String? typeChar) {
+  Future<int> getNextSequentialNumber(
+    String? expedition,
+    String? local,
+    String observer,
+    int ano,
+    int mes,
+    int dia,
+    String? typeChar,
+  ) {
     return _inventoryDao.getNextSequentialNumber(expedition, local, observer, ano, mes, dia, typeChar);
   }
 
@@ -321,15 +319,55 @@ class InventoryProvider with ChangeNotifier {
   Future<double> getAverageSamplingHours() async {
     return await _inventoryDao.getAverageSamplingHours_SQL();
   }
+
   /// Returns the total number of sampling days across all inventories using SQL.
   Future<int> getTotalSamplingDays() async {
     return await _inventoryDao.getTotalSamplingDays_SQL();
   }
 
-
   /// Returns distinct inventory localities for autocomplete suggestions.
   Future<List<String>> getDistinctLocalities() {
     return _inventoryDao.getDistinctLocalities();
+  }
+
+  /// Returns distinct inventory project names for autocomplete suggestions.
+  Future<List<String>> getDistinctProjects() {
+    return _inventoryDao.getDistinctProjects();
+  }
+
+  /// Returns distinct inventory expedition/campaign names for autocomplete suggestions.
+  Future<List<String>> getDistinctExpeditions() {
+    return _inventoryDao.getDistinctExpeditions();
+  }
+
+  /// Assigns project and/or expedition values to multiple inventories.
+  Future<void> assignProjectAndExpeditionToInventories({
+    required List<String> inventoryIds,
+    String? projectName,
+    String? expeditionName,
+  }) async {
+    await _inventoryDao.assignProjectAndExpeditionToInventories(
+      inventoryIds: inventoryIds,
+      projectName: projectName,
+      expeditionName: expeditionName,
+    );
+
+    for (final id in inventoryIds) {
+      final inventory = _inventoryMap[id];
+      if (inventory == null) {
+        continue;
+      }
+      if (projectName != null) {
+        final trimmed = projectName.trim();
+        inventory.projectName = trimmed.isEmpty ? null : trimmed;
+      }
+      if (expeditionName != null) {
+        final trimmed = expeditionName.trim();
+        inventory.expeditionName = trimmed.isEmpty ? null : trimmed;
+      }
+    }
+
+    notifyListeners();
   }
 
   /// Returns all distinct species names found across persisted inventories.
@@ -373,10 +411,8 @@ class InventoryProvider with ChangeNotifier {
 
       // Active inventories must stay fully hydrated in memory so timer state
       // survives refreshes and we avoid replacing live instances.
-      final activeIds = inventoriesFromDb
-          .where((inventory) => !inventory.isFinished)
-          .map((inventory) => inventory.id)
-          .toSet();
+      final activeIds =
+          inventoriesFromDb.where((inventory) => !inventory.isFinished).map((inventory) => inventory.id).toSet();
       for (final id in activeIds) {
         try {
           final detailedInventory = await _inventoryDao.getInventoryById(id);

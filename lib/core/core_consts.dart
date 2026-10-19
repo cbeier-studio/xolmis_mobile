@@ -52,6 +52,8 @@ const double kSpeciesChartPostFinishWindowFactor = 1.0;
 
 const String kRecentInventoryTypePreferenceKey = 'recentInventoryType';
 const String kRecentInventoryLocalitiesPreferenceKey = 'recentInventoryLocalities';
+const String kRecentInventoryProjectsPreferenceKey = 'recentInventoryProjects';
+const String kRecentInventoryExpeditionsPreferenceKey = 'recentInventoryExpeditions';
 const String kRecentNestLocalitiesPreferenceKey = 'recentNestLocalities';
 const String kRecentSpecimenLocalitiesPreferenceKey = 'recentSpecimenLocalities';
 

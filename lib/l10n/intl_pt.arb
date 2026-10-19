@@ -317,6 +317,12 @@
     "inventoryId": "ID do Inventário",
     "generateId": "Gerar ID",
     "expedition": "Expedição",
+  "noExpedition": "Sem expedição",
+  "@noExpedition": {
+    "type": "text",
+    "description": "Header label for inventories without expedition"
+  },
+    "project": "Projeto",
     "siteAbbreviation": "Nome ou sigla do local",
     "optional": "* opcional",
     "insertInventoryId": "Por favor, insira uma ID para o inventário",

@@ -14,6 +14,7 @@ import '../../data/daos/weather_dao.dart';
 
 import '../../providers/inventory_provider.dart';
 
+import '../../utils/themes.dart';
 import '../../widgets/timer_progress_indicator.dart';
 import '../../widgets/filter_selection_bottom_sheet.dart';
 import '../statistics/stats_inventories_screen.dart';
@@ -38,6 +39,15 @@ class InventoriesScreen extends StatefulWidget {
   State<InventoriesScreen> createState() => _InventoriesScreenState();
 }
 
+class _InventoryExpeditionGroup {
+  final String name;
+  final List<Inventory> inventories;
+
+  const _InventoryExpeditionGroup({required this.name, required this.inventories});
+}
+
+enum _ExpeditionGroupSortField { name, startTime }
+
 /// State controller for inventory search, filtering, sorting, and selection.
 class _InventoriesScreenState extends State<InventoriesScreen> {
   late InventoryProvider inventoryProvider;
@@ -51,6 +61,8 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
   String _searchQuery = ''; // Default search query
   InventoryType? _selectedInventoryType;
   String? _selectedLocality;
+  String? _selectedProject;
+  String? _selectedExpedition;
   String? _selectedObserver;
   String? _selectedSpeciesFilter;
   Set<String>? _speciesFilteredInventoryIds;
@@ -60,6 +72,8 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
   Set<String> selectedInventories = {}; // Set of selected inventories
   SortOrder _sortOrder = SortOrder.descending; // Default sort order
   InventorySortField _sortField = InventorySortField.startTime; // Default sort field
+  _ExpeditionGroupSortField _expeditionGroupSortField = _ExpeditionGroupSortField.name;
+  SortOrder _expeditionGroupSortOrder = SortOrder.ascending;
   Inventory? _selectedInventory;
 
   Map<DateFilter, String> get _dateFilterLabels {
@@ -120,9 +134,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
       case DateFilter.today:
         return date.isAfter(todayStart) || date.isAtSameMomentAs(todayStart);
       case DateFilter.yesterday:
-        return (date.isAfter(yesterdayStart) ||
-                date.isAtSameMomentAs(yesterdayStart)) &&
-            date.isBefore(todayStart);
+        return (date.isAfter(yesterdayStart) || date.isAtSameMomentAs(yesterdayStart)) && date.isBefore(todayStart);
       case DateFilter.last7Days:
         return date.isAfter(weekStart) || date.isAtSameMomentAs(weekStart);
       case DateFilter.last30Days:
@@ -130,17 +142,14 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
       case DateFilter.last90Days:
         return date.isAfter(last90Start) || date.isAtSameMomentAs(last90Start);
       case DateFilter.last180Days:
-        return date.isAfter(last180Start) ||
-            date.isAtSameMomentAs(last180Start);
+        return date.isAfter(last180Start) || date.isAtSameMomentAs(last180Start);
       case DateFilter.last365Days:
-        return date.isAfter(last365Start) ||
-            date.isAtSameMomentAs(last365Start);
+        return date.isAfter(last365Start) || date.isAtSameMomentAs(last365Start);
       case DateFilter.customRange:
         if (_selectedDateRange == null) return true;
         // Ajuste para incluir o dia inteiro da data final (até 23:59:59)
         final endOfDay = _selectedDateRange!.end.add(const Duration(days: 1));
-        return (date.isAfter(_selectedDateRange!.start) ||
-                date.isAtSameMomentAs(_selectedDateRange!.start)) &&
+        return (date.isAfter(_selectedDateRange!.start) || date.isAtSameMomentAs(_selectedDateRange!.start)) &&
             date.isBefore(endOfDay);
     }
   }
@@ -204,10 +213,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        S.of(context).sortBy,
-                        style: Theme.of(context).textTheme.bodyLarge,
-                      ),
+                      Text(S.of(context).sortBy, style: Theme.of(context).textTheme.bodyLarge),
                       const SizedBox(height: 8),
                       Wrap(
                         spacing: 8.0, // Space between chips
@@ -228,8 +234,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                           ChoiceChip(
                             label: Text(S.of(context).startTime),
                             showCheckmark: false,
-                            selected:
-                                _sortField == InventorySortField.startTime,
+                            selected: _sortField == InventorySortField.startTime,
                             onSelected: (bool selected) {
                               setModalState(() {
                                 _sortField = InventorySortField.startTime;
@@ -268,8 +273,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                           ChoiceChip(
                             label: Text(S.of(context).inventoryType),
                             showCheckmark: false,
-                            selected:
-                                _sortField == InventorySortField.inventoryType,
+                            selected: _sortField == InventorySortField.inventoryType,
                             onSelected: (bool selected) {
                               setModalState(() {
                                 _sortField = InventorySortField.inventoryType;
@@ -282,10 +286,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                         ],
                       ),
                       const Divider(),
-                      Text(
-                        S.of(context).direction,
-                        style: Theme.of(context).textTheme.bodyLarge,
-                      ),
+                      Text(S.of(context).direction, style: Theme.of(context).textTheme.bodyLarge),
                       const SizedBox(height: 8),
                       SegmentedButton<SortOrder>(
                         segments: [
@@ -311,6 +312,68 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                           });
                         },
                       ),
+                      const Divider(),
+                      Text(
+                        '${S.of(context).expedition} - ${S.of(context).sortBy}',
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                      const SizedBox(height: 8),
+                      Wrap(
+                        spacing: 8.0,
+                        children: [
+                          ChoiceChip(
+                            label: Text(S.of(context).sortByName),
+                            showCheckmark: false,
+                            selected: _expeditionGroupSortField == _ExpeditionGroupSortField.name,
+                            onSelected: (_) {
+                              setModalState(() {
+                                _expeditionGroupSortField = _ExpeditionGroupSortField.name;
+                              });
+                              setState(() {
+                                _expeditionGroupSortField = _ExpeditionGroupSortField.name;
+                              });
+                            },
+                          ),
+                          ChoiceChip(
+                            label: Text(S.of(context).sortByTime),
+                            showCheckmark: false,
+                            selected: _expeditionGroupSortField == _ExpeditionGroupSortField.startTime,
+                            onSelected: (_) {
+                              setModalState(() {
+                                _expeditionGroupSortField = _ExpeditionGroupSortField.startTime;
+                              });
+                              setState(() {
+                                _expeditionGroupSortField = _ExpeditionGroupSortField.startTime;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      SegmentedButton<SortOrder>(
+                        segments: [
+                          ButtonSegment(
+                            value: SortOrder.ascending,
+                            label: Text(S.of(context).ascending),
+                            icon: const Icon(Icons.south_outlined),
+                          ),
+                          ButtonSegment(
+                            value: SortOrder.descending,
+                            label: Text(S.of(context).descending),
+                            icon: const Icon(Icons.north_outlined),
+                          ),
+                        ],
+                        selected: {_expeditionGroupSortOrder},
+                        showSelectedIcon: false,
+                        onSelectionChanged: (selection) {
+                          setModalState(() {
+                            _expeditionGroupSortOrder = selection.first;
+                          });
+                          setState(() {
+                            _expeditionGroupSortOrder = selection.first;
+                          });
+                        },
+                      ),
                     ],
                   ),
                 ),
@@ -324,15 +387,11 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
 
   List<String> _getUniqueLocalities() {
     final inventories =
-        _isShowingActiveInventories
-            ? inventoryProvider.activeInventories
-            : inventoryProvider.finishedInventories;
+        _isShowingActiveInventories ? inventoryProvider.activeInventories : inventoryProvider.finishedInventories;
 
     final localities =
         inventories
-            .where(
-              (inv) => inv.localityName != null && inv.localityName!.isNotEmpty,
-            )
+            .where((inv) => inv.localityName != null && inv.localityName!.isNotEmpty)
             .map((inv) => inv.localityName!)
             .toSet()
             .toList();
@@ -343,9 +402,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
 
   List<String> _getUniqueObservers() {
     final inventories =
-        _isShowingActiveInventories
-            ? inventoryProvider.activeInventories
-            : inventoryProvider.finishedInventories;
+        _isShowingActiveInventories ? inventoryProvider.activeInventories : inventoryProvider.finishedInventories;
 
     final observers =
         inventories
@@ -356,6 +413,36 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
 
     observers.sort();
     return observers;
+  }
+
+  List<String> _getUniqueProjects() {
+    final inventories =
+        _isShowingActiveInventories ? inventoryProvider.activeInventories : inventoryProvider.finishedInventories;
+
+    final projects =
+        inventories
+            .where((inv) => inv.projectName != null && inv.projectName!.isNotEmpty)
+            .map((inv) => inv.projectName!)
+            .toSet()
+            .toList();
+
+    projects.sort();
+    return projects;
+  }
+
+  List<String> _getUniqueExpeditions() {
+    final inventories =
+        _isShowingActiveInventories ? inventoryProvider.activeInventories : inventoryProvider.finishedInventories;
+
+    final expeditions =
+        inventories
+            .where((inv) => inv.expeditionName != null && inv.expeditionName!.isNotEmpty)
+            .map((inv) => inv.expeditionName!)
+            .toSet()
+            .toList();
+
+    expeditions.sort();
+    return expeditions;
   }
 
   // New async method to load unique species from DB
@@ -373,19 +460,13 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
       title: title,
       items: items,
       itemLabel: (item) => item,
-      matchesQuery:
-          useSpeciesSearch
-              ? (item, query, label) => speciesMatchesQuery(label, query)
-              : null,
+      matchesQuery: useSpeciesSearch ? (item, query, label) => speciesMatchesQuery(label, query) : null,
       clearActionLabel: S.of(context).clearSelection,
     );
   }
 
   Future<void> _selectLocalityFromBottomSheet() async {
-    final result = await _showStringFilterBottomSheet(
-      title: S.of(context).locality,
-      items: _getUniqueLocalities(),
-    );
+    final result = await _showStringFilterBottomSheet(title: S.of(context).locality, items: _getUniqueLocalities());
     if (!mounted || result == null) return;
 
     setState(() {
@@ -447,22 +528,25 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
 
     // Filtro por tipo de inventário
     if (_selectedInventoryType != null) {
-      filtered =
-          filtered.where((inv) => inv.type == _selectedInventoryType).toList();
+      filtered = filtered.where((inv) => inv.type == _selectedInventoryType).toList();
     }
 
     // Filtro por localidade
     if (_selectedLocality != null) {
-      filtered =
-          filtered
-              .where((inv) => inv.localityName == _selectedLocality)
-              .toList();
+      filtered = filtered.where((inv) => inv.localityName == _selectedLocality).toList();
+    }
+
+    if (_selectedProject != null) {
+      filtered = filtered.where((inv) => inv.projectName == _selectedProject).toList();
+    }
+
+    if (_selectedExpedition != null) {
+      filtered = filtered.where((inv) => inv.expeditionName == _selectedExpedition).toList();
     }
 
     // Filtro por observador
     if (_selectedObserver != null) {
-      filtered =
-          filtered.where((inv) => inv.observer == _selectedObserver).toList();
+      filtered = filtered.where((inv) => inv.observer == _selectedObserver).toList();
     }
 
     // Filtro por espécie
@@ -473,25 +557,14 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
 
     // Filtro por data (usa startTime)
     if (_selectedDateFilter != null) {
-      if (_selectedDateFilter == DateFilter.customRange &&
-          _selectedDateRange != null) {
+      if (_selectedDateFilter == DateFilter.customRange && _selectedDateRange != null) {
         filtered =
             filtered.where((inv) {
-              return inv.startTime!.isAfter(
-                    _selectedDateRange!.start.subtract(const Duration(days: 1)),
-                  ) &&
-                  inv.startTime!.isBefore(
-                    _selectedDateRange!.end.add(const Duration(days: 1)),
-                  );
+              return inv.startTime!.isAfter(_selectedDateRange!.start.subtract(const Duration(days: 1))) &&
+                  inv.startTime!.isBefore(_selectedDateRange!.end.add(const Duration(days: 1)));
             }).toList();
       } else {
-        filtered =
-            filtered
-                .where(
-                  (inv) =>
-                      _isWithinDateFilter(inv.startTime, _selectedDateFilter),
-                )
-                .toList();
+        filtered = filtered.where((inv) => _isWithinDateFilter(inv.startTime, _selectedDateFilter)).toList();
       }
     }
 
@@ -501,13 +574,10 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
           filtered
               .where(
                 (inventory) =>
-                    inventory.id.toLowerCase().contains(
-                      _searchQuery.toLowerCase(),
-                    ) ||
-                    (inventory.localityName?.toLowerCase().contains(
-                          _searchQuery.toLowerCase(),
-                        ) ??
-                        false),
+                    inventory.id.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+                    (inventory.localityName?.toLowerCase().contains(_searchQuery.toLowerCase()) ?? false) ||
+                    (inventory.projectName?.toLowerCase().contains(_searchQuery.toLowerCase()) ?? false) ||
+                    (inventory.expeditionName?.toLowerCase().contains(_searchQuery.toLowerCase()) ?? false),
               )
               .toList();
     }
@@ -515,10 +585,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     return _sortInventories(filtered);
   }
 
-  Inventory? _getEffectiveSelectedInventory(
-    List<Inventory> filteredInventories,
-    bool isSplitScreen,
-  ) {
+  Inventory? _getEffectiveSelectedInventory(List<Inventory> filteredInventories, bool isSplitScreen) {
     if (!isSplitScreen || filteredInventories.isEmpty) {
       return _selectedInventory;
     }
@@ -527,9 +594,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
       return filteredInventories.first;
     }
 
-    final selectedIndex = filteredInventories.indexWhere(
-      (inventory) => inventory.id == _selectedInventory!.id,
-    );
+    final selectedIndex = filteredInventories.indexWhere((inventory) => inventory.id == _selectedInventory!.id);
 
     if (selectedIndex == -1) {
       return filteredInventories.first;
@@ -538,21 +603,14 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     return filteredInventories[selectedIndex];
   }
 
-  String? _getEffectiveSelectedInventoryId(
-    List<Inventory> filteredInventories,
-    bool isSplitScreen,
-  ) {
-    return _getEffectiveSelectedInventory(
-      filteredInventories,
-      isSplitScreen,
-    )?.id;
+  String? _getEffectiveSelectedInventoryId(List<Inventory> filteredInventories, bool isSplitScreen) {
+    return _getEffectiveSelectedInventory(filteredInventories, isSplitScreen)?.id;
   }
 
   // Show the dialog to add a new inventory
   Future<void> showAddInventoryScreen(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
-    final String observerAbbreviation =
-        prefs.getString('observerAcronym') ?? '';
+    final String observerAbbreviation = prefs.getString('observerAcronym') ?? '';
     final InventoryType lastInventoryType = InventoryType.values[prefs.getInt(kRecentInventoryTypePreferenceKey) ?? 0];
 
     if (observerAbbreviation.isEmpty) {
@@ -561,10 +619,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
           SnackBar(
             showCloseIcon: true,
             backgroundColor: Colors.amber,
-            content: Text(
-              S.of(context).observerAbbreviationMissing,
-              softWrap: true,
-            ),
+            content: Text(S.of(context).observerAbbreviationMissing, softWrap: true),
           ),
         );
       }
@@ -572,15 +627,11 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     }
 
     // Check if the maximum number of simultaneous inventories has been reached
-    if (inventoryProvider.activeInventories.length ==
-        (prefs.getInt('maxSimultaneousInventories') ?? 2)) {
+    if (inventoryProvider.activeInventories.length == (prefs.getInt('maxSimultaneousInventories') ?? 2)) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            showCloseIcon: true,
-            content: Text(S.of(context).simultaneousLimitReached),
-          ),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(showCloseIcon: true, content: Text(S.of(context).simultaneousLimitReached)));
       }
       return;
     }
@@ -592,12 +643,10 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
           context: context,
           builder: (context) {
             return Dialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16.0),
-              ),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 400),
-                child: AddInventoryScreen(initialInventoryType: lastInventoryType,),
+                child: AddInventoryScreen(initialInventoryType: lastInventoryType),
               ),
             );
           },
@@ -611,7 +660,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
         // Show full screen on small screens
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => AddInventoryScreen(initialInventoryType: lastInventoryType,)),
+          MaterialPageRoute(builder: (context) => AddInventoryScreen(initialInventoryType: lastInventoryType)),
         ).then((newInventory) {
           // Update the inventory list
           if (newInventory != null) {
@@ -624,10 +673,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
 
   // Delete all selected inventories
   void _deleteSelectedInventories() async {
-    final inventoryProvider = Provider.of<InventoryProvider>(
-      context,
-      listen: false,
-    );
+    final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
 
     // Ask for user confirmation
     showDialog(
@@ -652,9 +698,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
               child: Text(S.of(context).cancel),
             ),
             TextButton(
-              style: TextButton.styleFrom(
-                foregroundColor: Theme.of(context).colorScheme.error,
-              ),
+              style: TextButton.styleFrom(foregroundColor: Theme.of(context).colorScheme.error),
               onPressed: () async {
                 // Call the function to delete species
                 for (final id in selectedInventories) {
@@ -673,11 +717,224 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     );
   }
 
+  Future<void> _saveRecentMetadataValue(String key, String value) async {
+    final normalized = value.trim();
+    if (normalized.isEmpty) {
+      return;
+    }
+
+    final prefs = await SharedPreferences.getInstance();
+    final existing = prefs.getStringList(key) ?? const [];
+    final updated =
+        [normalized, ...existing.where((item) => item.toLowerCase() != normalized.toLowerCase())].take(3).toList();
+    await prefs.setStringList(key, updated);
+  }
+
+  Future<void> _showBulkAssignMetadataDialog() async {
+    final projectController = TextEditingController();
+    final expeditionController = TextEditingController();
+    bool applyProject = false;
+    bool applyExpedition = false;
+
+    final projects = await inventoryProvider.getDistinctProjects();
+    final expeditions = await inventoryProvider.getDistinctExpeditions();
+    if (!mounted) return;
+
+    final shouldApply = await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              title: Text('${S.of(context).project} / ${S.of(context).expedition}'),
+              content: SizedBox(
+                width: 420,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      CheckboxListTile(
+                        value: applyProject,
+                        contentPadding: EdgeInsets.zero,
+                        title: Text(S.of(context).project),
+                        onChanged: (value) {
+                          setDialogState(() {
+                            applyProject = value ?? false;
+                          });
+                        },
+                      ),
+                      // Align(
+                      //   alignment: Alignment.centerRight,
+                      //   child: TextButton.icon(
+                      //     onPressed: () {
+                      //       setDialogState(() {
+                      //         applyProject = true;
+                      //         projectController.clear();
+                      //       });
+                      //     },
+                      //     icon: const Icon(Icons.clear_outlined),
+                      //     label: Text(S.of(context).clearSelection),
+                      //   ),
+                      // ),
+                      Autocomplete<String>(
+                        optionsBuilder: (value) {
+                          final query = value.text.trim().toLowerCase();
+                          if (query.isEmpty) return projects;
+                          return projects.where((item) => item.toLowerCase().contains(query));
+                        },
+                        onSelected: (value) {
+                          projectController.text = value;
+                          setDialogState(() {
+                            applyProject = true;
+                          });
+                        },
+                        fieldViewBuilder: (context, controller, focusNode, onFieldSubmitted) {
+                          if (controller.text != projectController.text) {
+                            controller.value = TextEditingValue(
+                              text: projectController.text,
+                              selection: TextSelection.collapsed(offset: projectController.text.length),
+                            );
+                          }
+                          return TextField(
+                            controller: controller,
+                            focusNode: focusNode,
+                            decoration: InputDecoration(
+                              border: const OutlineInputBorder(),
+                              labelText: S.of(context).project,
+                              helperText: S.of(context).optional,
+                              suffixIcon: IconButton(
+                                icon: const Icon(Icons.clear_outlined),
+                                onPressed: () {
+                                  setDialogState(() {
+                                    applyProject = true;
+                                    projectController.clear();
+                                  });
+                                },
+                              ),
+                            ),
+                            onChanged: (value) {
+                              projectController.text = value;
+                            },
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 12),
+                      CheckboxListTile(
+                        value: applyExpedition,
+                        contentPadding: EdgeInsets.zero,
+                        title: Text(S.of(context).expedition),
+                        onChanged: (value) {
+                          setDialogState(() {
+                            applyExpedition = value ?? false;
+                          });
+                        },
+                      ),
+                      // Align(
+                      //   alignment: Alignment.centerRight,
+                      //   child: TextButton.icon(
+                      //     onPressed: () {
+                      //       setDialogState(() {
+                      //         applyExpedition = true;
+                      //         expeditionController.clear();
+                      //       });
+                      //     },
+                      //     icon: const Icon(Icons.clear_outlined),
+                      //     label: Text(S.of(context).clearSelection),
+                      //   ),
+                      // ),
+                      Autocomplete<String>(
+                        optionsBuilder: (value) {
+                          final query = value.text.trim().toLowerCase();
+                          if (query.isEmpty) return expeditions;
+                          return expeditions.where((item) => item.toLowerCase().contains(query));
+                        },
+                        onSelected: (value) {
+                          expeditionController.text = value;
+                          setDialogState(() {
+                            applyExpedition = true;
+                          });
+                        },
+                        fieldViewBuilder: (context, controller, focusNode, onFieldSubmitted) {
+                          if (controller.text != expeditionController.text) {
+                            controller.value = TextEditingValue(
+                              text: expeditionController.text,
+                              selection: TextSelection.collapsed(offset: expeditionController.text.length),
+                            );
+                          }
+                          return TextField(
+                            controller: controller,
+                            focusNode: focusNode,
+                            decoration: InputDecoration(
+                              border: const OutlineInputBorder(),
+                              labelText: S.of(context).expedition,
+                              helperText: S.of(context).optional,
+                              suffixIcon: IconButton(
+                                icon: const Icon(Icons.clear_outlined),
+                                onPressed: () {
+                                  setDialogState(() {
+                                    applyExpedition = true;
+                                    expeditionController.clear();
+                                  });
+                                },
+                              ),
+                            ),
+                            onChanged: (value) {
+                              expeditionController.text = value;
+                            },
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              actions: [
+                TextButton(onPressed: () => Navigator.of(context).pop(false), child: Text(S.of(context).cancel)),
+                FilledButton(
+                  onPressed: (applyProject || applyExpedition) ? () => Navigator.of(context).pop(true) : null,
+                  child: Text(S.of(context).save),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+
+    if (!mounted || shouldApply != true) {
+      projectController.dispose();
+      expeditionController.dispose();
+      return;
+    }
+
+    await inventoryProvider.assignProjectAndExpeditionToInventories(
+      inventoryIds: selectedInventories.toList(),
+      projectName: applyProject ? projectController.text.trim() : null,
+      expeditionName: applyExpedition ? expeditionController.text.trim() : null,
+    );
+
+    if (applyProject) {
+      await _saveRecentMetadataValue(kRecentInventoryProjectsPreferenceKey, projectController.text);
+    }
+    if (applyExpedition) {
+      await _saveRecentMetadataValue(kRecentInventoryExpeditionsPreferenceKey, expeditionController.text);
+    }
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(S.of(context).save)));
+    }
+
+    projectController.dispose();
+    expeditionController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     // final screenWidth = MediaQuery.sizeOf(context).width;
-    final isSplitScreen = Responsive.isMediumScreen(context) || Responsive.isLargeScreen(context);  // screenWidth >= kTabletBreakpoint;
-    final isMenuShown = Responsive.isSmallScreen(context) || Responsive.isMediumScreen(context);  // screenWidth < kDesktopBreakpoint;
+    final isSplitScreen =
+        Responsive.isMediumScreen(context) || Responsive.isLargeScreen(context); // screenWidth >= kTabletBreakpoint;
+    final isMenuShown =
+        Responsive.isSmallScreen(context) || Responsive.isMediumScreen(context); // screenWidth < kDesktopBreakpoint;
 
     return Scaffold(
       appBar:
@@ -694,8 +951,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                 (context) => IconButton(
                                   icon: const Icon(Icons.menu_outlined),
                                   onPressed: () {
-                                    widget.scaffoldKey.currentState
-                                        ?.openDrawer();
+                                    widget.scaffoldKey.currentState?.openDrawer();
                                   },
                                 ),
                           )
@@ -738,17 +994,11 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
         builder: (context, constraints) {
           // On large screens we show a split screen master/detail
           if (isSplitScreen) {
-            final leftPaneWidth = (constraints.maxWidth * 0.4).clamp(
-              kSideSheetWidth,
-              520.0,
-            );
+            final leftPaneWidth = (constraints.maxWidth * 0.4).clamp(kSideSheetWidth, 520.0);
             return Row(
               children: [
                 // Left: list pane with bounded width for better readability.
-                Container(
-                  width: leftPaneWidth,
-                  child: _buildListPane(context, isSplitScreen, isMenuShown),
-                ),
+                Container(width: leftPaneWidth, child: _buildListPane(context, isSplitScreen, isMenuShown)),
                 VerticalDivider(),
                 // Right: detail pane
                 Expanded(child: _buildDetailPane(context)),
@@ -792,9 +1042,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                       builder: (context, controller, child) {
                         return IconButton(
                           icon: const Icon(Icons.share_outlined),
-                          tooltip: S
-                              .of(context)
-                              .exportWhat(S.of(context).inventory(2)),
+                          tooltip: S.of(context).exportWhat(S.of(context).inventory(2)),
                           onPressed: () {
                             if (controller.isOpen) {
                               controller.close();
@@ -809,16 +1057,10 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                           onPressed: () async {
                             final inventories =
                                 selectedInventories
-                                    .map(
-                                      (id) => inventoryProvider
-                                          .getInventoryById(id),
-                                    )
+                                    .map((id) => inventoryProvider.getInventoryById(id))
                                     .whereType<Inventory>()
                                     .toList();
-                            await exportSelectedInventoriesToCsv(
-                              context,
-                              inventories,
-                            );
+                            await exportSelectedInventoriesToCsv(context, inventories);
                             setState(() {
                               selectedInventories.clear();
                             });
@@ -829,16 +1071,10 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                           onPressed: () async {
                             final inventories =
                                 selectedInventories
-                                    .map(
-                                      (id) => inventoryProvider
-                                          .getInventoryById(id),
-                                    )
+                                    .map((id) => inventoryProvider.getInventoryById(id))
                                     .whereType<Inventory>()
                                     .toList();
-                            await exportSelectedInventoriesToExcel(
-                              context,
-                              inventories,
-                            );
+                            await exportSelectedInventoriesToExcel(context, inventories);
                             setState(() {
                               selectedInventories.clear();
                             });
@@ -849,16 +1085,10 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                           onPressed: () async {
                             final inventories =
                                 selectedInventories
-                                    .map(
-                                      (id) => inventoryProvider
-                                          .getInventoryById(id),
-                                    )
+                                    .map((id) => inventoryProvider.getInventoryById(id))
                                     .whereType<Inventory>()
                                     .toList();
-                            await exportSelectedInventoriesToJson(
-                              context,
-                              inventories,
-                            );
+                            await exportSelectedInventoriesToJson(context, inventories);
                             setState(() {
                               selectedInventories.clear();
                             });
@@ -869,16 +1099,10 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                           onPressed: () async {
                             final inventories =
                                 selectedInventories
-                                    .map(
-                                      (id) => inventoryProvider
-                                          .getInventoryById(id),
-                                    )
+                                    .map((id) => inventoryProvider.getInventoryById(id))
                                     .whereType<Inventory>()
                                     .toList();
-                            await exportSelectedInventoriesToKml(
-                              context,
-                              inventories,
-                            );
+                            await exportSelectedInventoriesToKml(context, inventories);
                             setState(() {
                               selectedInventories.clear();
                             });
@@ -888,19 +1112,25 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                       ],
                     ),
                     if (selectedInventories.length > 1)
-                    IconButton(
-                      icon: const Icon(Icons.insert_chart_outlined),
-                      tooltip: S.of(context).statistics,
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => StatsInventoriesLoadingScreen(
-                              inventoryIds: selectedInventories.toList(),
+                      IconButton(
+                        icon: const Icon(Icons.insert_chart_outlined),
+                        tooltip: S.of(context).statistics,
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) =>
+                                      StatsInventoriesLoadingScreen(inventoryIds: selectedInventories.toList()),
                             ),
-                          ),
-                        );
-                      },
+                          );
+                        },
+                      ),
+                    const VerticalDivider(),
+                    IconButton(
+                      icon: const Icon(Icons.label_outline),
+                      tooltip: S.of(context).project,
+                      onPressed: _showBulkAssignMetadataDialog,
                     ),
                     const VerticalDivider(),
                     // Option to clear the selected inventories
@@ -920,11 +1150,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     );
   }
 
-  Widget _buildListPane(
-    BuildContext context,
-    bool isSplitScreen,
-    bool isMenuShown,
-  ) {
+  Widget _buildListPane(BuildContext context, bool isSplitScreen, bool isMenuShown) {
     return Column(
       children: [
         if (isSplitScreen) const SizedBox(height: 16.0),
@@ -943,8 +1169,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                   (context) => IconButton(
                                     icon: const Icon(Icons.menu_outlined),
                                     onPressed: () {
-                                      widget.scaffoldKey.currentState
-                                          ?.openDrawer();
+                                      widget.scaffoldKey.currentState?.openDrawer();
                                     },
                                   ),
                             )
@@ -985,18 +1210,11 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                           // Action to select all inventories
                           if (!_isShowingActiveInventories)
                             MenuItemButton(
-                              leadingIcon: const Icon(
-                                Icons.library_add_check_outlined,
-                              ),
+                              leadingIcon: const Icon(Icons.library_add_check_outlined),
                               onPressed: () {
-                                final filteredInventories = _filterInventories(
-                                  inventoryProvider.finishedInventories,
-                                );
+                                final filteredInventories = _filterInventories(inventoryProvider.finishedInventories);
                                 setState(() {
-                                  selectedInventories =
-                                      filteredInventories
-                                          .map((inventory) => inventory.id)
-                                          .toSet();
+                                  selectedInventories = filteredInventories.map((inventory) => inventory.id).toSet();
                                 });
                               },
                               child: Text(S.of(context).selectAll),
@@ -1006,31 +1224,19 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                             leadingIcon: const Icon(Icons.file_open_outlined),
                             onPressed: () async {
                               await importInventoryFromJson(context);
-                              await inventoryProvider.fetchInventoriesSummary(
-                                context,
-                              );
-                              for (var inventory
-                                  in inventoryProvider.activeInventories) {
-                                inventoryProvider.startInventoryTimer(
-                                  context,
-                                  inventory,
-                                  inventoryDao,
-                                );
+                              await inventoryProvider.fetchInventoriesSummary(context);
+                              for (var inventory in inventoryProvider.activeInventories) {
+                                inventoryProvider.startInventoryTimer(context, inventory, inventoryDao);
                               }
                             },
                             child: Text(S.of(context).import),
                           ),
-                          if (inventoryProvider
-                              .finishedInventories
-                              .isNotEmpty) ...[
+                          if (inventoryProvider.finishedInventories.isNotEmpty) ...[
                             // Action to export all finished inventories to JSON
                             MenuItemButton(
                               leadingIcon: const Icon(Icons.share_outlined),
                               onPressed: () async {
-                                await exportAllInventoriesToJson(
-                                  context,
-                                  inventoryProvider,
-                                );
+                                await exportAllInventoriesToJson(context, inventoryProvider);
                               },
                               child: Text(S.of(context).exportAll),
                             ),
@@ -1057,14 +1263,8 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                 width: buttonWidth,
                 child: SegmentedButton<bool>(
                   segments: [
-                    ButtonSegment(
-                      value: true,
-                      label: Text(S.of(context).active),
-                    ),
-                    ButtonSegment(
-                      value: false,
-                      label: Text(S.of(context).finished),
-                    ),
+                    ButtonSegment(value: true, label: Text(S.of(context).active)),
+                    ButtonSegment(value: false, label: Text(S.of(context).finished)),
                   ],
                   selected: {_isShowingActiveInventories},
                   onSelectionChanged: (Set<bool> newSelection) {
@@ -1090,14 +1290,9 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                       MenuAnchor(
                         builder: (context, controller, child) {
                           String label;
-                          if (_selectedDateFilter == DateFilter.customRange &&
-                              _selectedDateRange != null) {
-                            final start = DateFormat(
-                              'dd/MM/yyyy',
-                            ).format(_selectedDateRange!.start);
-                            final end = DateFormat(
-                              'dd/MM/yyyy',
-                            ).format(_selectedDateRange!.end);
+                          if (_selectedDateFilter == DateFilter.customRange && _selectedDateRange != null) {
+                            final start = DateFormat('dd/MM/yyyy').format(_selectedDateRange!.start);
+                            final end = DateFormat('dd/MM/yyyy').format(_selectedDateRange!.end);
                             label = "$start - $end";
                           } else {
                             label =
@@ -1112,9 +1307,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                             //     _selectedDateFilter == null
                             //         ? const Icon(Icons.calendar_today_outlined)
                             //         : null,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
                             visualDensity: VisualDensity.compact,
                             onSelected: (selected) {
                               if (selected) {
@@ -1134,15 +1327,12 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                             return MenuItemButton(
                               onPressed: () async {
                                 if (filter == DateFilter.customRange) {
-                                  final DateTimeRange? picked =
-                                      await showDateRangePicker(
-                                        context: context,
-                                        firstDate: DateTime(2020),
-                                        lastDate: DateTime.now().add(
-                                          const Duration(days: 365),
-                                        ),
-                                        initialDateRange: _selectedDateRange,
-                                      );
+                                  final DateTimeRange? picked = await showDateRangePicker(
+                                    context: context,
+                                    firstDate: DateTime(2020),
+                                    lastDate: DateTime.now().add(const Duration(days: 365)),
+                                    initialDateRange: _selectedDateRange,
+                                  );
                                   if (picked != null) {
                                     setState(() {
                                       _selectedDateFilter = filter;
@@ -1167,17 +1357,14 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                           return FilterChip(
                             label: Text(
                               _selectedInventoryType != null
-                                  ? inventoryTypeFriendlyNames[_selectedInventoryType] ??
-                                      S.of(context).type
+                                  ? inventoryTypeFriendlyNames[_selectedInventoryType] ?? S.of(context).type
                                   : S.of(context).type,
                             ),
                             // avatar:
                             //     _selectedInventoryType == null
                             //         ? Icon(Icons.category_outlined)
                             //         : null,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
                             visualDensity: VisualDensity.compact,
                             onSelected: (selected) {
                               if (selected) {
@@ -1199,10 +1386,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                   _selectedInventoryType = type;
                                 });
                               },
-                              child: Text(
-                                inventoryTypeFriendlyNames[type] ??
-                                    type.toString(),
-                              ),
+                              child: Text(inventoryTypeFriendlyNames[type] ?? type.toString()),
                             );
                           }),
                         ],
@@ -1214,9 +1398,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                         //     _selectedLocality == null
                         //         ? const Icon(Icons.location_on_outlined)
                         //         : null,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
                         visualDensity: VisualDensity.compact,
                         selected: _selectedLocality != null,
                         onSelected: (selected) async {
@@ -1230,19 +1412,61 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                         },
                       ),
                       const SizedBox(width: 8.0),
+                      FilterChip(
+                        label: Text(_selectedProject ?? S.of(context).project),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+                        visualDensity: VisualDensity.compact,
+                        selected: _selectedProject != null,
+                        onSelected: (selected) async {
+                          if (selected) {
+                            final result = await _showStringFilterBottomSheet(
+                              title: S.of(context).project,
+                              items: _getUniqueProjects(),
+                            );
+                            if (!mounted || result == null) return;
+                            setState(() {
+                              _selectedProject = result.cleared ? null : result.selectedItem;
+                            });
+                          } else {
+                            setState(() {
+                              _selectedProject = null;
+                            });
+                          }
+                        },
+                      ),
+                      const SizedBox(width: 8.0),
+                      FilterChip(
+                        label: Text(_selectedExpedition ?? S.of(context).expedition),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+                        visualDensity: VisualDensity.compact,
+                        selected: _selectedExpedition != null,
+                        onSelected: (selected) async {
+                          if (selected) {
+                            final result = await _showStringFilterBottomSheet(
+                              title: S.of(context).expedition,
+                              items: _getUniqueExpeditions(),
+                            );
+                            if (!mounted || result == null) return;
+                            setState(() {
+                              _selectedExpedition = result.cleared ? null : result.selectedItem;
+                            });
+                          } else {
+                            setState(() {
+                              _selectedExpedition = null;
+                            });
+                          }
+                        },
+                      ),
+                      const SizedBox(width: 8.0),
                       MenuAnchor(
                         builder: (context, controller, child) {
                           return FilterChip(
-                            label: Text(
-                              _selectedObserver ?? S.of(context).observer,
-                            ),
+                            label: Text(_selectedObserver ?? S.of(context).observer),
                             // avatar:
                             //     _selectedObserver == null
                             //         ? Icon(Icons.person_outlined)
                             //         : null,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
                             visualDensity: VisualDensity.compact,
                             onSelected: (selected) {
                               if (selected) {
@@ -1271,16 +1495,12 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                       ),
                       const SizedBox(width: 8.0),
                       FilterChip(
-                        label: Text(
-                          _selectedSpeciesFilter ?? S.of(context).species(1),
-                        ),
+                        label: Text(_selectedSpeciesFilter ?? S.of(context).species(1)),
                         // avatar:
                         //     _selectedSpeciesFilter == null
                         //         ? const Icon(Icons.account_tree_outlined)
                         //         : null,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
                         visualDensity: VisualDensity.compact,
                         selected: _selectedSpeciesFilter != null,
                         onSelected: (selected) async {
@@ -1307,44 +1527,27 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
             onRefresh: () async {
               await inventoryProvider.fetchInventoriesSummary(context);
               for (var inventory in inventoryProvider.activeInventories) {
-                inventoryProvider.startInventoryTimer(
-                  context,
-                  inventory,
-                  inventoryDao,
-                );
+                inventoryProvider.startInventoryTimer(context, inventory, inventoryDao);
               }
             },
             child: Consumer<InventoryProvider>(
               builder: (context, inventoryProvider, child) {
                 if (inventoryProvider.isLoading) {
                   return const Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: CircularProgressIndicator(year2023: false),
-                    ),
+                    child: Padding(padding: EdgeInsets.all(16.0), child: CircularProgressIndicator(year2023: false)),
                   );
-                } else if (_selectedSpeciesFilter != null &&
-                    _isSpeciesFilterLoading) {
+                } else if (_selectedSpeciesFilter != null && _isSpeciesFilterLoading) {
                   return const Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: CircularProgressIndicator(year2023: false),
-                    ),
+                    child: Padding(padding: EdgeInsets.all(16.0), child: CircularProgressIndicator(year2023: false)),
                   );
-                } else if (_isShowingActiveInventories &&
-                        inventoryProvider.activeInventories.isEmpty ||
-                    !_isShowingActiveInventories &&
-                        inventoryProvider.finishedInventories.isEmpty) {
+                } else if (_isShowingActiveInventories && inventoryProvider.activeInventories.isEmpty ||
+                    !_isShowingActiveInventories && inventoryProvider.finishedInventories.isEmpty) {
                   return Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Icon(
-                          Icons.list_alt_outlined,
-                          size: 48,
-                          color: Theme.of(context).colorScheme.surfaceDim,
-                        ),
+                        Icon(Icons.list_alt_outlined, size: 48, color: Theme.of(context).colorScheme.surfaceDim),
                         const SizedBox(height: 8),
                         Text(S.of(context).noInventoriesFound),
                         const SizedBox(height: 8),
@@ -1362,16 +1565,9 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                             avatar: const Icon(Icons.file_open_outlined),
                             onPressed: () async {
                               await importInventoryFromJson(context);
-                              await inventoryProvider.fetchInventoriesSummary(
-                                context,
-                              );
-                              for (var inventory
-                                  in inventoryProvider.activeInventories) {
-                                inventoryProvider.startInventoryTimer(
-                                  context,
-                                  inventory,
-                                  inventoryDao,
-                                );
+                              await inventoryProvider.fetchInventoriesSummary(context);
+                              for (var inventory in inventoryProvider.activeInventories) {
+                                inventoryProvider.startInventoryTimer(context, inventory, inventoryDao);
                               }
                             },
                           ),
@@ -1385,6 +1581,16 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                               setState(() {
                                 _searchQuery = '';
                                 _searchController.clear();
+                                _selectedDateFilter = null;
+                                _selectedDateRange = null;
+                                _selectedInventoryType = null;
+                                _selectedLocality = null;
+                                _selectedProject = null;
+                                _selectedExpedition = null;
+                                _selectedObserver = null;
+                                _selectedSpeciesFilter = null;
+                                _speciesFilteredInventoryIds = null;
+                                _isSpeciesFilterLoading = false;
                               });
                             },
                           ),
@@ -1394,16 +1600,9 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                           label: Text(S.of(context).refresh),
                           avatar: const Icon(Icons.refresh_outlined),
                           onPressed: () async {
-                            await inventoryProvider.fetchInventoriesSummary(
-                              context,
-                            );
-                            for (var inventory
-                                in inventoryProvider.activeInventories) {
-                              inventoryProvider.startInventoryTimer(
-                                context,
-                                inventory,
-                                inventoryDao,
-                              );
+                            await inventoryProvider.fetchInventoriesSummary(context);
+                            for (var inventory in inventoryProvider.activeInventories) {
+                              inventoryProvider.startInventoryTimer(context, inventory, inventoryDao);
                             }
                           },
                         ),
@@ -1416,11 +1615,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                         ? inventoryProvider.activeInventories
                         : inventoryProvider.finishedInventories,
                   );
-                  final effectiveSelectedInventory =
-                      _getEffectiveSelectedInventory(
-                        filteredInventories,
-                        isSplitScreen,
-                      );
+                  final effectiveSelectedInventory = _getEffectiveSelectedInventory(filteredInventories, isSplitScreen);
 
                   if (isSplitScreen &&
                       effectiveSelectedInventory != null &&
@@ -1442,25 +1637,10 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                         ),
                       ),
                       Expanded(
-                        child: LayoutBuilder(
-                          builder: (
-                            BuildContext context,
-                            BoxConstraints constraints,
-                          ) {
-                            return ListView.separated(
-                              separatorBuilder: (context, index) => Divider(),
-                              shrinkWrap: true,
-                              itemCount: filteredInventories.length,
-                              itemBuilder: (context, index) {
-                                return inventoryListTileItem(
-                                  filteredInventories,
-                                  index,
-                                  context,
-                                  inventoryProvider,
-                                );
-                              },
-                            );
-                          },
+                        child: _buildGroupedInventoryList(
+                          context: context,
+                          filteredInventories: filteredInventories,
+                          inventoryProvider: inventoryProvider,
                         ),
                       ),
                     ],
@@ -1501,19 +1681,136 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     );
   }
 
-  ListTile inventoryListTileItem(
-    List<Inventory> filteredInventories,
-    int index,
-    BuildContext context,
-    InventoryProvider inventoryProvider,
-  ) {
-    final inventory = filteredInventories[index];
-    final isSelected = selectedInventories.contains(inventory.id);
-    final isLargeScreen = Responsive.isMediumScreen(context) || Responsive.isLargeScreen(context);  // MediaQuery.sizeOf(context).width >= kTabletBreakpoint;
-    final selectedInventoryId = _getEffectiveSelectedInventoryId(
-      filteredInventories,
-      isLargeScreen,
+  Widget _buildGroupedInventoryList({
+    required BuildContext context,
+    required List<Inventory> filteredInventories,
+    required InventoryProvider inventoryProvider,
+  }) {
+    final isLargeScreen = Responsive.isMediumScreen(context) || Responsive.isLargeScreen(context);
+    final selectedInventoryId = _getEffectiveSelectedInventoryId(filteredInventories, isLargeScreen);
+    final groups = _groupInventoriesByExpedition(filteredInventories);
+
+    return CustomScrollView(
+      slivers: [
+        for (final group in groups) ...[
+          SliverToBoxAdapter(child: _buildExpeditionHeader(context: context, group: group)),
+          SliverList(
+            delegate: SliverChildBuilderDelegate((context, index) {
+              final inventory = group.inventories[index];
+              return inventoryListTileItem(
+                inventory: inventory,
+                context: context,
+                inventoryProvider: inventoryProvider,
+                selectedInventoryId: selectedInventoryId,
+                isLargeScreen: isLargeScreen,
+              );
+            }, childCount: group.inventories.length),
+          ),
+        ],
+      ],
     );
+  }
+
+  List<_InventoryExpeditionGroup> _groupInventoriesByExpedition(List<Inventory> inventories) {
+    final grouped = <String, List<Inventory>>{};
+
+    for (final inventory in inventories) {
+      final key = (inventory.expeditionName ?? '').trim();
+      final groupKey = key.isEmpty ? S.of(context).noExpedition : key;
+      grouped.putIfAbsent(groupKey, () => <Inventory>[]).add(inventory);
+    }
+
+    final groups =
+        grouped.entries.map((entry) => _InventoryExpeditionGroup(name: entry.key, inventories: entry.value)).toList();
+
+    DateTime? latestStartTime(List<Inventory> list) {
+      DateTime? latest;
+      for (final inv in list) {
+        final start = inv.startTime;
+        if (start == null) continue;
+        if (latest == null || start.isAfter(latest)) {
+          latest = start;
+        }
+      }
+      return latest;
+    }
+
+    groups.sort((a, b) {
+      final noExpeditionLabel = S.of(context).noExpedition;
+      if (a.name == noExpeditionLabel) return 1;
+      if (b.name == noExpeditionLabel) return -1;
+
+      int result;
+      if (_expeditionGroupSortField == _ExpeditionGroupSortField.startTime) {
+        final aStart = latestStartTime(a.inventories);
+        final bStart = latestStartTime(b.inventories);
+        if (aStart == null && bStart == null) {
+          result = 0;
+        } else if (aStart == null) {
+          result = -1;
+        } else if (bStart == null) {
+          result = 1;
+        } else {
+          result = aStart.compareTo(bStart);
+        }
+      } else {
+        result = a.name.toLowerCase().compareTo(b.name.toLowerCase());
+      }
+
+      return _expeditionGroupSortOrder == SortOrder.ascending ? result : -result;
+    });
+
+    return groups;
+  }
+
+  Widget _buildExpeditionHeader({required BuildContext context, required _InventoryExpeditionGroup group}) {
+    final groupIds = group.inventories.map((inventory) => inventory.id).toSet();
+    final selectedInGroup = selectedInventories.intersection(groupIds).length;
+    final allSelected = groupIds.isNotEmpty && selectedInGroup == groupIds.length;
+
+    return Container(
+      color: Theme.of(context).colorScheme.surfaceContainerHighest,
+      padding: const EdgeInsets.fromLTRB(12, 8, 8, 8),
+      child: Row(
+        children: [
+          if (!_isShowingActiveInventories)
+            Checkbox(
+              tristate: true,
+              value: allSelected ? true : (selectedInGroup > 0 ? null : false),
+              onChanged: (value) {
+                setState(() {
+                  if (value == true) {
+                    selectedInventories.addAll(groupIds);
+                  } else {
+                    selectedInventories.removeAll(groupIds);
+                  }
+                });
+              },
+            ),
+          Expanded(
+            child: Text('${group.name}', style: Theme.of(context).textTheme.titleSmall),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: Badge(
+              backgroundColor: XolmisColors.primary,
+              textColor: XolmisColors.onPrimary,
+              label: Text(group.inventories.length.toString()),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  ListTile inventoryListTileItem({
+    required Inventory inventory,
+    required BuildContext context,
+    required InventoryProvider inventoryProvider,
+    required String? selectedInventoryId,
+    required bool isLargeScreen,
+  }) {
+    final isSelected = selectedInventories.contains(inventory.id);
     final isDetailSelected = selectedInventoryId == inventory.id;
 
     return ListTile(
@@ -1522,8 +1819,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
         clipBehavior: Clip.none,
         alignment: Alignment.center,
         children: [
-          if (_isShowingActiveInventories && inventory.duration == 0)
-            const SizedBox(width: 48),
+          if (_isShowingActiveInventories && inventory.duration == 0) const SizedBox(width: 48),
           if (_isShowingActiveInventories && inventory.duration > 0)
             ValueListenableBuilder<double>(
               valueListenable: inventory.elapsedTimeNotifier,
@@ -1533,11 +1829,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                         ? null
                         : (elapsedTime / (inventory.duration * 60)).toDouble();
 
-                if (progress != null &&
-                    (progress.isNaN ||
-                        progress.isInfinite ||
-                        progress < 0 ||
-                        progress > 1)) {
+                if (progress != null && (progress.isNaN || progress.isInfinite || progress < 0 || progress > 1)) {
                   progress = 0;
                 }
 
@@ -1564,8 +1856,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
               ),
             ),
           // Show current interval for qualitative inventories
-          if (_isShowingActiveInventories &&
-              inventory.type == InventoryType.invIntervalQualitative)
+          if (_isShowingActiveInventories && inventory.type == InventoryType.invIntervalQualitative)
             ValueListenableBuilder<int>(
               valueListenable: inventory.currentIntervalNotifier,
               builder: (context, currentInterval, child) {
@@ -1601,19 +1892,13 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
         mainAxisSize: MainAxisSize.min,
         children: [
           // Show icon for discarded inventory
-          Visibility(
-            visible: inventory.isDiscarded,
-            child: const Icon(Icons.block),
-          ),
+          Visibility(visible: inventory.isDiscarded, child: const Icon(Icons.block)),
           // Show the pause/resume button for active inventories
           Visibility(
             visible: _isShowingActiveInventories && inventory.duration > 0,
             child: IconButton(
               icon: Icon(inventory.isPaused ? Icons.play_arrow : Icons.pause),
-              tooltip:
-                  inventory.isPaused
-                      ? S.of(context).resume
-                      : S.of(context).pause,
+              tooltip: inventory.isPaused ? S.of(context).resume : S.of(context).pause,
               onPressed: () {
                 if (inventory.isPaused) {
                   Provider.of<InventoryProvider>(
@@ -1621,10 +1906,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                     listen: false,
                   ).resumeInventoryTimer(context, inventory, inventoryDao);
                 } else {
-                  Provider.of<InventoryProvider>(
-                    context,
-                    listen: false,
-                  ).pauseInventoryTimer(inventory, inventoryDao);
+                  Provider.of<InventoryProvider>(context, listen: false).pauseInventoryTimer(inventory, inventoryDao);
                 }
               },
             ),
@@ -1669,9 +1951,12 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
         // Show the inventory type
         _buildInventoryTypePill(context, inventory.type, inventory.transportMode),
         // Show the inventory locality
-        if (inventory.localityName != null &&
-            inventory.localityName!.isNotEmpty)
+        if (inventory.localityName != null && inventory.localityName!.isNotEmpty)
           Text(inventory.localityName!, overflow: TextOverflow.ellipsis),
+        // if (inventory.projectName != null && inventory.projectName!.isNotEmpty)
+        //   Text('${S.of(context).project}: ${inventory.projectName!}', overflow: TextOverflow.ellipsis),
+        // if (inventory.expeditionName != null && inventory.expeditionName!.isNotEmpty)
+        //   Text('${S.of(context).expedition}: ${inventory.expeditionName!}', overflow: TextOverflow.ellipsis),
         // Show the inventory timer duration if active
         if (_isShowingActiveInventories && inventory.duration > 0)
           Text(S.of(context).inventoryDuration(inventory.duration)),
@@ -1687,13 +1972,9 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                 return Text(startStr);
               }
 
-              final isSameDay = start.year == end.year &&
-                  start.month == end.month &&
-                  start.day == end.day;
+              final isSameDay = start.year == end.year && start.month == end.month && start.day == end.day;
 
-              final endStr = isSameDay
-                  ? DateFormat('HH:mm').format(end)
-                  : DateFormat('dd/MM/yyyy HH:mm').format(end);
+              final endStr = isSameDay ? DateFormat('HH:mm').format(end) : DateFormat('dd/MM/yyyy HH:mm').format(end);
 
               return Text('$startStr - $endStr');
             },
@@ -1703,10 +1984,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
           builder: (context) {
             final colorScheme = Theme.of(context).colorScheme;
             final int outCount = inventory.speciesOutOfInventoryCount;
-            final int withinCount = (inventory.speciesCount - outCount).clamp(
-              0,
-              inventory.speciesCount,
-            );
+            final int withinCount = (inventory.speciesCount - outCount).clamp(0, inventory.speciesCount);
             final bool useRecordsLabel =
                 inventory.type == InventoryType.invTransectDetection ||
                 inventory.type == InventoryType.invPointDetection;
@@ -1750,11 +2028,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     );
   }
 
-  Widget _buildInventoryTypePill(
-    BuildContext context,
-    InventoryType? type,
-    TransportMode? transportMode,
-  ) {
+  Widget _buildInventoryTypePill(BuildContext context, InventoryType? type, TransportMode? transportMode) {
     final backgroundColor = _inventoryTypePillColor(context, type);
     final foregroundColor =
         ThemeData.estimateBrightnessForColor(backgroundColor) == Brightness.dark
@@ -1778,20 +2052,12 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
               inventoryTypeFriendlyNames[type] ?? S.of(context).type,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: foregroundColor,
-                    fontWeight: FontWeight.w600,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.labelSmall?.copyWith(color: foregroundColor, fontWeight: FontWeight.w600),
             ),
           ),
-          if (iconData != null) ...[
-            const SizedBox(width: 4.0),
-            FaIcon(
-              iconData,
-              size: 12,
-              color: foregroundColor,
-            ),
-          ],
+          if (iconData != null) ...[const SizedBox(width: 4.0), FaIcon(iconData, size: 12, color: foregroundColor)],
         ],
       ),
     );
@@ -1802,78 +2068,37 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
 
     switch (type) {
       case InventoryType.invFreeQualitative:
-        return _themeAwarePillColor(
-          context,
-          seedColor: Colors.grey,
-        );
+        return _themeAwarePillColor(context, seedColor: Colors.grey);
       case InventoryType.invTimedQualitative:
-        return _themeAwarePillColor(
-          context,
-          seedColor: Colors.teal,
-        );
+        return _themeAwarePillColor(context, seedColor: Colors.teal);
       case InventoryType.invIntervalQualitative:
-        return _themeAwarePillColor(
-          context,
-          seedColor: Colors.red,
-        );
+        return _themeAwarePillColor(context, seedColor: Colors.red);
       case InventoryType.invMackinnonList:
-        return _themeAwarePillColor(
-          context,
-          seedColor: Colors.cyan,
-        );
+        return _themeAwarePillColor(context, seedColor: Colors.cyan);
       case InventoryType.invTransectCount:
-        return _themeAwarePillColor(
-          context,
-          seedColor: Colors.purpleAccent,
-        );
+        return _themeAwarePillColor(context, seedColor: Colors.purpleAccent);
       case InventoryType.invPointCount:
-        return _themeAwarePillColor(
-          context,
-          seedColor: Colors.amber,
-        );
+        return _themeAwarePillColor(context, seedColor: Colors.amber);
       case InventoryType.invBanding:
-        return _themeAwarePillColor(
-          context,
-          seedColor: Colors.brown,
-        );
+        return _themeAwarePillColor(context, seedColor: Colors.brown);
       case InventoryType.invCasual:
-        return _themeAwarePillColor(
-          context,
-          seedColor: Colors.blueGrey,
-        );
+        return _themeAwarePillColor(context, seedColor: Colors.blueGrey);
       case InventoryType.invTransectDetection:
-        return _themeAwarePillColor(
-          context,
-          seedColor: Colors.blue,
-        );
+        return _themeAwarePillColor(context, seedColor: Colors.blue);
       case InventoryType.invPointDetection:
-        return _themeAwarePillColor(
-          context,
-          seedColor: Colors.green,
-        );
+        return _themeAwarePillColor(context, seedColor: Colors.green);
       case null:
-        return _themeAwarePillColor(
-          context,
-          seedColor: Colors.white,
-        );
+        return _themeAwarePillColor(context, seedColor: Colors.white);
     }
   }
 
-  Color _themeAwarePillColor(
-    BuildContext context, {
-    required Color seedColor,
-  }) {
+  Color _themeAwarePillColor(BuildContext context, {required Color seedColor}) {
     final colorScheme = Theme.of(context).colorScheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final baseSurface = isDark
-        ? colorScheme.surfaceContainerHighest
-        : colorScheme.surface;
+    final baseSurface = isDark ? colorScheme.surfaceContainerHighest : colorScheme.surface;
     final overlayOpacity = isDark ? 0.40 : 0.22;
 
-    return Color.alphaBlend(
-      seedColor.withValues(alpha: overlayOpacity),
-      baseSurface,
-    );
+    return Color.alphaBlend(seedColor.withValues(alpha: overlayOpacity), baseSurface);
   }
 
   Widget _buildSpeciesCountSplitPill(
@@ -1901,15 +2126,11 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
             color: primaryColor,
             child: Text(
               withinCount.toString(),
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: primaryForeground,
-                    fontWeight: FontWeight.w600,
-                  ) ??
-                  TextStyle(
-                    color: primaryForeground,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 11,
-                  ),
+              style:
+                  Theme.of(
+                    context,
+                  ).textTheme.labelSmall?.copyWith(color: primaryForeground, fontWeight: FontWeight.w600) ??
+                  TextStyle(color: primaryForeground, fontWeight: FontWeight.w600, fontSize: 11),
             ),
           ),
           if (hasOutCount)
@@ -1918,15 +2139,11 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
               color: secondaryColor,
               child: Text(
                 '+ $outCount',
-                style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: secondaryForeground,
-                      fontWeight: FontWeight.w600,
-                    ) ??
-                    TextStyle(
-                      color: secondaryForeground,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 11,
-                    ),
+                style:
+                    Theme.of(
+                      context,
+                    ).textTheme.labelSmall?.copyWith(color: secondaryForeground, fontWeight: FontWeight.w600) ??
+                    TextStyle(color: secondaryForeground, fontWeight: FontWeight.w600, fontSize: 11),
               ),
             ),
         ],
@@ -1951,192 +2168,116 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                       // Show the inventory ID
                       Align(
                         alignment: Alignment.centerLeft,
-                        child: Text(
-                          inventory.id,
-                          style: TextTheme.of(context).bodyLarge,
-                        ),
+                        child: Text(inventory.id, style: TextTheme.of(context).bodyLarge),
                       ),
                       const Divider(),
 
                       GridView.count(
-                        crossAxisCount:
-                            MediaQuery.sizeOf(context).width < 600 ? 4 : 5,
+                        crossAxisCount: MediaQuery.sizeOf(context).width < 600 ? 4 : 5,
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         children: <Widget>[
-                          buildGridMenuItem(
-                            context,
-                            Icons.edit_outlined,
-                            S.of(context).edit,
-                            () async {
-                              Navigator.of(context).pop();
-                              Inventory? editedInventory;
-                              if (MediaQuery.sizeOf(context).width > 600) {
-                                editedInventory = await showDialog<Inventory>(
-                                  context: context,
-                                  builder: (context) {
-                                    return Dialog(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                          16.0,
-                                        ),
-                                      ),
-                                      child: ConstrainedBox(
-                                        constraints: const BoxConstraints(
-                                          maxWidth: 400,
-                                        ),
-                                        child: EditInventoryScreen(
-                                          inventory: inventory,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                );
-                              } else {
-                                editedInventory =
-                                    await Navigator.push<Inventory>(
+                          buildGridMenuItem(context, Icons.edit_outlined, S.of(context).edit, () async {
+                            Navigator.of(context).pop();
+                            Inventory? editedInventory;
+                            if (MediaQuery.sizeOf(context).width > 600) {
+                              editedInventory = await showDialog<Inventory>(
+                                context: context,
+                                builder: (context) {
+                                  return Dialog(
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
+                                    child: ConstrainedBox(
+                                      constraints: const BoxConstraints(maxWidth: 400),
+                                      child: EditInventoryScreen(inventory: inventory),
+                                    ),
+                                  );
+                                },
+                              );
+                            } else {
+                              editedInventory = await Navigator.push<Inventory>(
+                                context,
+                                MaterialPageRoute(builder: (context) => EditInventoryScreen(inventory: inventory)),
+                              );
+                            }
+                            if (editedInventory != null) {
+                              if (inventory.id != editedInventory.id) {
+                                final idExists = await inventoryProvider.inventoryIdExists(editedInventory.id);
+
+                                if (idExists) {
+                                  if (context.mounted) {
+                                    ScaffoldMessenger.of(
                                       context,
-                                      MaterialPageRoute(
-                                        builder:
-                                            (context) => EditInventoryScreen(
-                                              inventory: inventory,
-                                            ),
-                                      ),
-                                    );
-                              }
-                              if (editedInventory != null) {
-                                if (inventory.id != editedInventory.id) {
-                                  final idExists = await inventoryProvider
-                                      .inventoryIdExists(editedInventory.id);
-
-                                  if (idExists) {
-                                    if (context.mounted) {
-                                      ScaffoldMessenger.of(
-                                        context,
-                                      ).showSnackBar(
-                                        SnackBar(
-                                          content: Text(
-                                            S
-                                                .of(context)
-                                                .inventoryIdAlreadyExists,
-                                          ),
-                                        ),
-                                      );
-                                    }
-                                    return;
+                                    ).showSnackBar(SnackBar(content: Text(S.of(context).inventoryIdAlreadyExists)));
                                   }
-
-                                  try {
-                                    await inventoryProvider.changeInventoryId(
-                                      context,
-                                      inventory.id,
-                                      editedInventory.id,
-                                    );
-
-                                    // If successful, close the dialog
-                                    if (context.mounted) {
-                                      Navigator.of(context).pop();
-                                      ScaffoldMessenger.of(
-                                        context,
-                                      ).showSnackBar(
-                                        SnackBar(
-                                          content: Text(
-                                            S.of(context).inventoryIdUpdated,
-                                          ),
-                                          backgroundColor: Colors.green,
-                                        ),
-                                      );
-                                    }
-                                  } catch (e) {
-                                    // If an error occurs, show a message
-                                    if (context.mounted) {
-                                      ScaffoldMessenger.of(
-                                        context,
-                                      ).showSnackBar(
-                                        SnackBar(
-                                          persist: true,
-                                          showCloseIcon: true,
-                                          content: Text('Update ID failed: $e'),
-                                          backgroundColor:
-                                              Theme.of(
-                                                context,
-                                              ).colorScheme.error,
-                                        ),
-                                      );
-                                    }
-                                  }
+                                  return;
                                 }
 
-                                await inventoryProvider.updateInventory(
-                                  editedInventory,
-                                );
-                              }
-                            },
-                          ),
-                          if (_isShowingActiveInventories)
-                            buildGridMenuItem(
-                              context,
-                              Icons.flag_outlined,
-                              S.of(context).finish,
-                              () async {
-                                final pageContext = this.context;
-                                Navigator.of(context).pop();
-                                final completionService =
-                                    InventoryCompletionService(
-                                      context: pageContext,
-                                      inventory: inventory,
-                                      inventoryProvider: inventoryProvider,
-                                      inventoryDao: inventoryDao,
+                                try {
+                                  await inventoryProvider.changeInventoryId(context, inventory.id, editedInventory.id);
+
+                                  // If successful, close the dialog
+                                  if (context.mounted) {
+                                    Navigator.of(context).pop();
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(S.of(context).inventoryIdUpdated),
+                                        backgroundColor: Colors.green,
+                                      ),
                                     );
-                                await completionService.attemptFinishInventory(
-                                  pageContext,
-                                );
-                              },
-                            ),
-                          if (!_isShowingActiveInventories)
-                            buildGridMenuItem(
-                              context,
-                              Icons.undo_outlined,
-                              S.of(context).reactivate,
-                              () {
-                                Navigator.of(context).pop();
-                                inventory.updateElapsedTime(0);
-                                inventory.updateCurrentInterval(
-                                  inventory.currentInterval + 1,
-                                );
-                                inventory.currentIntervalSpeciesCount = 0;
-                                inventory.intervalsWithoutNewSpecies = 0;
-                                inventory.intervalWithoutSpeciesNotifier.value =
-                                    inventory.intervalsWithoutNewSpecies;
-                                inventory.updateIsFinished(false);
-                                inventoryProvider.updateInventory(inventory);
-                                inventoryProvider.startInventoryTimer(
-                                  context,
-                                  inventory,
-                                  inventoryDao,
-                                );
-                              },
-                            ),
-                          buildGridMenuItem(
-                            context,
-                            Icons.delete_outlined,
-                            S.of(context).delete,
-                            () {
+                                  }
+                                } catch (e) {
+                                  // If an error occurs, show a message
+                                  if (context.mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        persist: true,
+                                        showCloseIcon: true,
+                                        content: Text('Update ID failed: $e'),
+                                        backgroundColor: Theme.of(context).colorScheme.error,
+                                      ),
+                                    );
+                                  }
+                                }
+                              }
+
+                              await inventoryProvider.updateInventory(editedInventory);
+                            }
+                          }),
+                          if (_isShowingActiveInventories)
+                            buildGridMenuItem(context, Icons.flag_outlined, S.of(context).finish, () async {
+                              final pageContext = this.context;
                               Navigator.of(context).pop();
-                              // Ask for user confirmation
-                              _confirmDelete(context, inventory);
-                            },
-                            color: Theme.of(context).colorScheme.error,
-                          ),
+                              final completionService = InventoryCompletionService(
+                                context: pageContext,
+                                inventory: inventory,
+                                inventoryProvider: inventoryProvider,
+                                inventoryDao: inventoryDao,
+                              );
+                              await completionService.attemptFinishInventory(pageContext);
+                            }),
+                          if (!_isShowingActiveInventories)
+                            buildGridMenuItem(context, Icons.undo_outlined, S.of(context).reactivate, () {
+                              Navigator.of(context).pop();
+                              inventory.updateElapsedTime(0);
+                              inventory.updateCurrentInterval(inventory.currentInterval + 1);
+                              inventory.currentIntervalSpeciesCount = 0;
+                              inventory.intervalsWithoutNewSpecies = 0;
+                              inventory.intervalWithoutSpeciesNotifier.value = inventory.intervalsWithoutNewSpecies;
+                              inventory.updateIsFinished(false);
+                              inventoryProvider.updateInventory(inventory);
+                              inventoryProvider.startInventoryTimer(context, inventory, inventoryDao);
+                            }),
+                          buildGridMenuItem(context, Icons.delete_outlined, S.of(context).delete, () {
+                            Navigator.of(context).pop();
+                            // Ask for user confirmation
+                            _confirmDelete(context, inventory);
+                          }, color: Theme.of(context).colorScheme.error),
                         ],
                       ),
                       Row(
                         children: [
                           const SizedBox(width: 8.0),
-                          Text(
-                            S.of(context).export,
-                            style: TextTheme.of(context).bodyMedium,
-                          ),
+                          Text(S.of(context).export, style: TextTheme.of(context).bodyMedium),
                           Expanded(
                             child: SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
@@ -2146,15 +2287,8 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                   ActionChip(
                                     label: const Text('CSV'),
                                     onPressed: () async {
-                                      final locale = Localizations.localeOf(
-                                        context,
-                                      );
-                                      final csvFiles =
-                                          await exportInventoryToCsv(
-                                            context,
-                                            inventory,
-                                            locale,
-                                          );
+                                      final locale = Localizations.localeOf(context);
+                                      final csvFiles = await exportInventoryToCsv(context, inventory, locale);
                                       if (csvFiles.isNotEmpty) {
                                         // Share the files using share_plus
                                         await SharePlus.instance.share(
@@ -2174,15 +2308,8 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                   ActionChip(
                                     label: const Text('Excel'),
                                     onPressed: () async {
-                                      final locale = Localizations.localeOf(
-                                        context,
-                                      );
-                                      final excelFile =
-                                          await exportInventoryToExcel(
-                                            context,
-                                            inventory,
-                                            locale,
-                                          );
+                                      final locale = Localizations.localeOf(context);
+                                      final excelFile = await exportInventoryToExcel(context, inventory, locale);
                                       // Share the file using share_plus
                                       await SharePlus.instance.share(
                                         ShareParams(
@@ -2206,11 +2333,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                   ActionChip(
                                     label: const Text('JSON'),
                                     onPressed: () async {
-                                      exportInventoryToJson(
-                                        context,
-                                        inventory,
-                                        true,
-                                      );
+                                      exportInventoryToJson(context, inventory, true);
                                       Navigator.of(context).pop();
                                     },
                                   ),
@@ -2246,9 +2369,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(S.of(context).confirmDelete),
-          content: Text(
-            S.of(context).confirmDeleteMessage(1, "male", S.of(context).inventory(1)),
-          ),
+          content: Text(S.of(context).confirmDeleteMessage(1, "male", S.of(context).inventory(1))),
           actions: <Widget>[
             TextButton(
               onPressed: () {
@@ -2257,18 +2378,13 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
               child: Text(S.of(context).cancel),
             ),
             TextButton(
-              style: TextButton.styleFrom(
-                foregroundColor: Theme.of(context).colorScheme.error,
-              ),
+              style: TextButton.styleFrom(foregroundColor: Theme.of(context).colorScheme.error),
               onPressed: () async {
                 Navigator.of(context).pop(true);
                 // Call the function to delete species
                 await inventoryProvider.removeInventory(inventory.id);
               },
-              child: Text(
-                S.of(context).delete,
-                style: TextStyle(color: ThemeData().colorScheme.error),
-              ),
+              child: Text(S.of(context).delete, style: TextStyle(color: ThemeData().colorScheme.error)),
             ),
           ],
         );
@@ -2291,8 +2407,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       GridView.count(
-                        crossAxisCount:
-                            MediaQuery.sizeOf(context).width < 600 ? 4 : 5,
+                        crossAxisCount: MediaQuery.sizeOf(context).width < 600 ? 4 : 5,
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         children: <Widget>[
@@ -2303,38 +2418,21 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                               S.of(context).selectAll,
                               () async {
                                 Navigator.of(context).pop();
-                                final filteredInventories = _filterInventories(
-                                  inventoryProvider.finishedInventories,
-                                );
+                                final filteredInventories = _filterInventories(inventoryProvider.finishedInventories);
                                 setState(() {
-                                  selectedInventories =
-                                      filteredInventories
-                                          .map((inventory) => inventory.id)
-                                          .toSet();
+                                  selectedInventories = filteredInventories.map((inventory) => inventory.id).toSet();
                                 });
                               },
                             ),
                           // Action to import inventories from JSON
-                          buildGridMenuItem(
-                            context,
-                            Icons.file_open_outlined,
-                            S.of(context).import,
-                            () async {
-                              await importInventoryFromJson(context);
-                              await inventoryProvider.fetchInventoriesSummary(
-                                context,
-                              );
-                              for (var inventory
-                                  in inventoryProvider.activeInventories) {
-                                inventoryProvider.startInventoryTimer(
-                                  context,
-                                  inventory,
-                                  inventoryDao,
-                                );
-                              }
-                              Navigator.of(context).pop();
-                            },
-                          ),
+                          buildGridMenuItem(context, Icons.file_open_outlined, S.of(context).import, () async {
+                            await importInventoryFromJson(context);
+                            await inventoryProvider.fetchInventoriesSummary(context);
+                            for (var inventory in inventoryProvider.activeInventories) {
+                              inventoryProvider.startInventoryTimer(context, inventory, inventoryDao);
+                            }
+                            Navigator.of(context).pop();
+                          }),
                         ],
                       ),
                       if (inventoryProvider.finishedInventories.isNotEmpty) ...[
@@ -2342,10 +2440,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                         Row(
                           children: [
                             const SizedBox(width: 8.0),
-                            Text(
-                              S.of(context).exportAll,
-                              style: TextTheme.of(context).bodyMedium,
-                            ),
+                            Text(S.of(context).exportAll, style: TextTheme.of(context).bodyMedium),
                             Expanded(
                               child: SingleChildScrollView(
                                 scrollDirection: Axis.horizontal,
@@ -2356,10 +2451,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                       label: const Text('JSON'),
                                       onPressed: () async {
                                         Navigator.of(context).pop();
-                                        await exportAllInventoriesToJson(
-                                          context,
-                                          inventoryProvider,
-                                        );
+                                        await exportAllInventoriesToJson(context, inventoryProvider);
                                       },
                                     ),
                                     const SizedBox(width: 8.0),

@@ -39,7 +39,7 @@ class DatabaseHelper {
     String path = join(await getDatabasesPath(), 'xolmis_database.db');
     return await openDatabase(
       path,
-      version: 33,
+      version: 34,
       onCreate: _createTables,
       onUpgrade: _upgradeTables,
       onConfigure: (db) async {
@@ -72,6 +72,8 @@ class DatabaseHelper {
           totalPausedTimeInSeconds REAL,
           pauseStartTime TEXT,
           localityName TEXT,
+          projectName TEXT,
+          expeditionName TEXT,
           totalObservers INTEGER,
           observer TEXT,
           notes TEXT,
@@ -376,6 +378,8 @@ class DatabaseHelper {
     await db.execute('CREATE INDEX IF NOT EXISTS idx_species_name ON species(name)');
     await db.execute('CREATE INDEX IF NOT EXISTS idx_inventories_is_finished ON inventories(isFinished)');
     await db.execute('CREATE INDEX IF NOT EXISTS idx_species_is_out_of_inventory ON species(isOutOfInventory)');
+    await db.execute('CREATE INDEX IF NOT EXISTS idx_inventories_project_name ON inventories(projectName)');
+    await db.execute('CREATE INDEX IF NOT EXISTS idx_inventories_expedition_name ON inventories(expeditionName)');
     await db.execute('CREATE INDEX IF NOT EXISTS idx_nests_found_time ON nests(foundTime DESC)');
     await db.execute('CREATE INDEX IF NOT EXISTS idx_nests_species_name ON nests(speciesName)');
     await db.execute('CREATE INDEX IF NOT EXISTS idx_nests_field_number ON nests(fieldNumber)');
@@ -642,6 +646,11 @@ class DatabaseHelper {
     }
     if (oldVersion < 33) {
       await _migrateSpeciesActivitiesToV33(db);
+    }
+    if (oldVersion < 34) {
+      await db.execute('ALTER TABLE inventories ADD COLUMN projectName TEXT');
+      await db.execute('ALTER TABLE inventories ADD COLUMN expeditionName TEXT');
+      await _createPerformanceIndexes(db);
     }
   }
 

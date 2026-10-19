@@ -720,6 +720,8 @@ class Inventory with ChangeNotifier {
   double? endLongitude;
   double? endLatitude;
   String? localityName;
+  String? projectName;
+  String? expeditionName;
   int totalObservers;
   String? observer;
   String? notes;
@@ -788,6 +790,8 @@ class Inventory with ChangeNotifier {
     this.endLongitude,
     this.endLatitude,
     this.localityName,
+    this.projectName,
+    this.expeditionName,
     this.totalObservers = 1,
     this.observer,
     this.notes,
@@ -842,6 +846,8 @@ class Inventory with ChangeNotifier {
        endLongitude = map['endLongitude'] ?? 0,
        endLatitude = map['endLatitude'] ?? 0,
        localityName = map['localityName'],
+       projectName = map['projectName'],
+       expeditionName = map['expeditionName'],
        totalObservers = map['totalObservers'] ?? 1,
        observer = map['observer'],
        notes = map['notes'],
@@ -896,6 +902,8 @@ class Inventory with ChangeNotifier {
     double? totalPausedTimeInSeconds,
     DateTime? pauseStartTime,
     String? localityName,
+    String? projectName,
+    String? expeditionName,
     int? totalObservers,
     String? observer,
     String? notes,
@@ -928,6 +936,8 @@ class Inventory with ChangeNotifier {
       totalPausedTimeInSeconds: totalPausedTimeInSeconds ?? this.totalPausedTimeInSeconds,
       pauseStartTime: pauseStartTime ?? this.pauseStartTime,
       localityName: localityName ?? this.localityName,
+      projectName: projectName ?? this.projectName,
+      expeditionName: expeditionName ?? this.expeditionName,
       totalObservers: totalObservers ?? this.totalObservers,
       observer: observer ?? this.observer,
       notes: notes ?? this.notes,
@@ -966,6 +976,8 @@ class Inventory with ChangeNotifier {
       'totalPausedTimeInSeconds': totalPausedTimeInSeconds,
       'pauseStartTime': pauseStartTime?.toIso8601String(),
       'localityName': localityName,
+      'projectName': projectName,
+      'expeditionName': expeditionName,
       'totalObservers': totalObservers,
       'observer': observer,
       'notes': notes,
@@ -997,6 +1009,8 @@ class Inventory with ChangeNotifier {
         'totalPausedTimeInSeconds: $totalPausedTimeInSeconds, '
         'pauseStartTime: $pauseStartTime, '
         'localityName: $localityName, '
+        'projectName: $projectName, '
+        'expeditionName: $expeditionName, '
         'totalObservers: $totalObservers, '
         'observer: $observer, '
         'notes: $notes, '
@@ -1018,6 +1032,8 @@ class Inventory with ChangeNotifier {
       'endLongitude': endLongitude,
       'endLatitude': endLatitude,
       'localityName': localityName,
+      'projectName': projectName,
+      'expeditionName': expeditionName,
       'totalObservers': totalObservers,
       'observer': observer,
       'notes': notes,
@@ -1049,6 +1065,8 @@ class Inventory with ChangeNotifier {
       endLongitude: json['endLongitude'] ?? 0,
       endLatitude: json['endLatitude'] ?? 0,
       localityName: json['localityName'],
+      projectName: json['projectName'],
+      expeditionName: json['expeditionName'],
       totalObservers: json['totalObservers'] ?? 1,
       observer: json['observer'],
       notes: json['notes'],
@@ -1129,6 +1147,8 @@ class Inventory with ChangeNotifier {
     endLongitude = source.endLongitude;
     endLatitude = source.endLatitude;
     localityName = source.localityName;
+    projectName = source.projectName;
+    expeditionName = source.expeditionName;
     totalObservers = source.totalObservers;
     observer = source.observer;
     notes = source.notes;

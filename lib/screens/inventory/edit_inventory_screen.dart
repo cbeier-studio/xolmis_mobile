@@ -24,6 +24,8 @@ class EditInventoryScreen extends StatefulWidget {
 class _EditInventoryScreenState extends State<EditInventoryScreen> {
   late final TextEditingController _idController;
   late final TextEditingController _localityNameController;
+  late final TextEditingController _projectNameController;
+  late final TextEditingController _expeditionNameController;
   late final TextEditingController _durationController;
   late final TextEditingController _maxSpeciesController;
   late final TextEditingController _notesController;
@@ -42,10 +44,11 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
   InventoryType _selectedType = InventoryType.invFreeQualitative;
   late TransportMode _selectedTransportMode;
   List<String> _recentLocalities = const [];
+  List<String> _recentProjects = const [];
+  List<String> _recentExpeditions = const [];
 
   final _formKey = GlobalKey<FormState>();
-  late final inventoryProvider = Provider.of<InventoryProvider>(
-      context, listen: false);
+  late final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
 
   bool get _hasStartTimeChanged {
     final original = widget.inventory.startTime;
@@ -67,6 +70,8 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
     _selectedType = widget.inventory.type;
     _initialType = widget.inventory.type;
     _localityNameController = TextEditingController(text: widget.inventory.localityName);
+    _projectNameController = TextEditingController(text: widget.inventory.projectName);
+    _expeditionNameController = TextEditingController(text: widget.inventory.expeditionName);
     _notesController = TextEditingController(text: widget.inventory.notes);
     _durationController = TextEditingController(text: widget.inventory.duration.toString());
     _maxSpeciesController = TextEditingController(text: widget.inventory.maxSpecies.toString());
@@ -86,27 +91,31 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
     );
 
     _startLatitudeController = TextEditingController(
-      text: widget.inventory.startLatitude != null && widget.inventory.startLatitude != 0
-          ? widget.inventory.startLatitude.toString()
-          : '',
+      text:
+          widget.inventory.startLatitude != null && widget.inventory.startLatitude != 0
+              ? widget.inventory.startLatitude.toString()
+              : '',
     );
     _startLongitudeController = TextEditingController(
-      text: widget.inventory.startLongitude != null && widget.inventory.startLongitude != 0
-          ? widget.inventory.startLongitude.toString()
-          : '',
+      text:
+          widget.inventory.startLongitude != null && widget.inventory.startLongitude != 0
+              ? widget.inventory.startLongitude.toString()
+              : '',
     );
     _endLatitudeController = TextEditingController(
-      text: widget.inventory.endLatitude != null && widget.inventory.endLatitude != 0
-          ? widget.inventory.endLatitude.toString()
-          : '',
+      text:
+          widget.inventory.endLatitude != null && widget.inventory.endLatitude != 0
+              ? widget.inventory.endLatitude.toString()
+              : '',
     );
     _endLongitudeController = TextEditingController(
-      text: widget.inventory.endLongitude != null && widget.inventory.endLongitude != 0
-          ? widget.inventory.endLongitude.toString()
-          : '',
+      text:
+          widget.inventory.endLongitude != null && widget.inventory.endLongitude != 0
+              ? widget.inventory.endLongitude.toString()
+              : '',
     );
 
-    _loadRecentLocalities();
+    _loadRecentMetadata();
   }
 
   @override
@@ -114,6 +123,8 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
     // Libera os recursos dos controladores
     _idController.dispose();
     _localityNameController.dispose();
+    _projectNameController.dispose();
+    _expeditionNameController.dispose();
     _notesController.dispose();
     _durationController.dispose();
     _maxSpeciesController.dispose();
@@ -128,6 +139,10 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
     super.dispose();
   }
 
+  String _projectLabel(BuildContext context) {
+    return S.of(context).project;
+  }
+
   /// Opens date and time pickers to update the inventory start time.
   Future<void> _selectStartTime(BuildContext context) async {
     final current = _startTime ?? DateTime.now();
@@ -139,19 +154,10 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
     );
     if (pickedDate == null || !mounted || !context.mounted) return;
 
-    final pickedTime = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.fromDateTime(current),
-    );
+    final pickedTime = await showTimePicker(context: context, initialTime: TimeOfDay.fromDateTime(current));
     if (pickedTime == null || !mounted) return;
 
-    final newDateTime = DateTime(
-      pickedDate.year,
-      pickedDate.month,
-      pickedDate.day,
-      pickedTime.hour,
-      pickedTime.minute,
-    );
+    final newDateTime = DateTime(pickedDate.year, pickedDate.month, pickedDate.day, pickedTime.hour, pickedTime.minute);
     setState(() {
       _startTime = newDateTime;
       _startTimeController.text = DateFormat('dd/MM/yyyy HH:mm').format(newDateTime);
@@ -169,19 +175,10 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
     );
     if (pickedDate == null || !mounted || !context.mounted) return;
 
-    final pickedTime = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.fromDateTime(current),
-    );
+    final pickedTime = await showTimePicker(context: context, initialTime: TimeOfDay.fromDateTime(current));
     if (pickedTime == null || !mounted) return;
 
-    final newDateTime = DateTime(
-      pickedDate.year,
-      pickedDate.month,
-      pickedDate.day,
-      pickedTime.hour,
-      pickedTime.minute,
-    );
+    final newDateTime = DateTime(pickedDate.year, pickedDate.month, pickedDate.day, pickedTime.hour, pickedTime.minute);
     setState(() {
       _endTime = newDateTime;
       _endTimeController.text = DateFormat('dd/MM/yyyy HH:mm').format(newDateTime);
@@ -198,8 +195,7 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
 
     setState(() {
       _selectedType = newValue;
-      if (newValue == InventoryType.invPointCount ||
-          newValue == InventoryType.invPointDetection) {
+      if (newValue == InventoryType.invPointCount || newValue == InventoryType.invPointDetection) {
         _selectedTransportMode = TransportMode.tmodeNotApplicable;
       } else if (_selectedTransportMode == TransportMode.tmodeNotApplicable) {
         _selectedTransportMode = TransportMode.tmodeWalking;
@@ -220,8 +216,7 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
           _maxSpeciesController.text = maxSpeciesMackinnon.toString();
         }
         _durationController.text = '';
-      } else if (newValue == InventoryType.invPointCount ||
-          newValue == InventoryType.invPointDetection) {
+      } else if (newValue == InventoryType.invPointCount || newValue == InventoryType.invPointDetection) {
         if (widget.inventory.duration == 0) {
           _durationController.text = pointCountsDuration.toString();
         }
@@ -238,29 +233,31 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
     // Validate and save form
     if (_selectedType != _initialType) {
       // Show warning dialog when inventory type is changed
-      final shouldContinue = await showDialog<bool>(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) => AlertDialog(
-          title: Text(S.of(context).inventoryTypeChangeWarningTitle),
-          content: Text(
-            S.of(context).inventoryTypeChangeWarningMessage(
-              inventoryTypeFriendlyNames[_initialType]!,
-              inventoryTypeFriendlyNames[_selectedType]!,
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: Text(S.of(context).cancel),
-            ),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              child: Text(S.of(context).continueAction),
-            ),
-          ],
-        ),
-      ) ?? false;
+      final shouldContinue =
+          await showDialog<bool>(
+            context: context,
+            barrierDismissible: false,
+            builder:
+                (BuildContext context) => AlertDialog(
+                  title: Text(S.of(context).inventoryTypeChangeWarningTitle),
+                  content: Text(
+                    S
+                        .of(context)
+                        .inventoryTypeChangeWarningMessage(
+                          inventoryTypeFriendlyNames[_initialType]!,
+                          inventoryTypeFriendlyNames[_selectedType]!,
+                        ),
+                  ),
+                  actions: [
+                    TextButton(onPressed: () => Navigator.of(context).pop(false), child: Text(S.of(context).cancel)),
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(true),
+                      child: Text(S.of(context).continueAction),
+                    ),
+                  ],
+                ),
+          ) ??
+          false;
 
       // If user cancelled the type change, revert the selection
       if (!shouldContinue) {
@@ -277,9 +274,7 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
       List<Species> speciesToPersist = widget.inventory.speciesList;
       List<Vegetation> vegetationToPersist = widget.inventory.vegetationList;
       List<Weather> weatherToPersist = widget.inventory.weatherList;
-      if (_hasStartTimeChanged &&
-          widget.inventory.startTime != null &&
-          _startTime != null) {
+      if (_hasStartTimeChanged && widget.inventory.startTime != null && _startTime != null) {
         final sourceRecords = await _loadAssociatedRecordsForTimeShift();
 
         speciesToPersist = sourceRecords.species;
@@ -308,10 +303,7 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
               widget.inventory.startTime!,
               _startTime!,
             );
-            _applyShiftToInventoryEndTime(
-              originalStart: widget.inventory.startTime!,
-              newStart: _startTime!,
-            );
+            _applyShiftToInventoryEndTime(originalStart: widget.inventory.startTime!, newStart: _startTime!);
             await _persistAssociatedTimeUpdates(
               species: speciesToPersist,
               vegetation: vegetationToPersist,
@@ -348,6 +340,8 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
         endLongitude: endLon,
         endLatitude: endLat,
         localityName: _localityNameController.text,
+        projectName: _projectNameController.text.trim().isEmpty ? null : _projectNameController.text.trim(),
+        expeditionName: _expeditionNameController.text.trim().isEmpty ? null : _expeditionNameController.text.trim(),
         totalObservers: int.tryParse(_totalObserversController.text) ?? widget.inventory.totalObservers,
         observer: _observerController.text.toUpperCase(),
         notes: _notesController.text.isNotEmpty ? _notesController.text : null,
@@ -366,6 +360,8 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
       );
 
       await _saveRecentLocality(_localityNameController.text);
+      await _saveRecentProject(_projectNameController.text);
+      await _saveRecentExpedition(_expeditionNameController.text);
 
       if (!mounted) return;
       // Return to the previous screen with the updated inventory
@@ -377,24 +373,22 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
   Future<bool?> _askToShiftSpeciesTimes() {
     return showDialog<bool>(
       context: context,
-      builder: (BuildContext context) => AlertDialog(
-        title: Text(S.of(context).startTimeChangeWarningTitle),
-        content: Text(S.of(context).startTimeChangeWarningMessage),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(null),
-            child: Text(S.of(context).cancel),
+      builder:
+          (BuildContext context) => AlertDialog(
+            title: Text(S.of(context).startTimeChangeWarningTitle),
+            content: Text(S.of(context).startTimeChangeWarningMessage),
+            actions: [
+              TextButton(onPressed: () => Navigator.of(context).pop(null), child: Text(S.of(context).cancel)),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: Text(S.of(context).keepSpeciesTimes),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: Text(S.of(context).updateSpeciesTimes),
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: Text(S.of(context).keepSpeciesTimes),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: Text(S.of(context).updateSpeciesTimes),
-          ),
-        ],
-      ),
     );
   }
 
@@ -417,57 +411,33 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
       weather = detailedInventory?.weatherList ?? const [];
     }
 
-    return _AssociatedInventoryRecords(
-      species: species,
-      vegetation: vegetation,
-      weather: weather,
-    );
+    return _AssociatedInventoryRecords(species: species, vegetation: vegetation, weather: weather);
   }
 
   /// Returns whether any related sample has a time that can be shifted.
   bool _hasAssociatedSampleTimes(_AssociatedInventoryRecords records) {
     final hasSpeciesTime = records.species.any((species) => species.sampleTime != null);
-    final hasPoiTime = records.species.any(
-      (species) => species.pois.any((poi) => poi.sampleTime != null),
-    );
+    final hasPoiTime = records.species.any((species) => species.pois.any((poi) => poi.sampleTime != null));
     final hasVegetationTime = records.vegetation.any((vegetation) => vegetation.sampleTime != null);
     final hasWeatherTime = records.weather.any((weather) => weather.sampleTime != null);
     return hasSpeciesTime || hasPoiTime || hasVegetationTime || hasWeatherTime;
   }
 
   /// Shifts species sample times preserving each record's offset from original start time.
-  List<Species> _shiftSpeciesSampleTimes(
-    List<Species> speciesList,
-    DateTime originalStart,
-    DateTime newStart,
-  ) {
+  List<Species> _shiftSpeciesSampleTimes(List<Species> speciesList, DateTime originalStart, DateTime newStart) {
     return speciesList.map((species) {
       final sampleTime = species.sampleTime;
-      final shiftedSampleTime = sampleTime == null
-          ? null
-          : _shiftSampleTime(
-              sampleTime,
-              originalStart,
-              newStart,
-            );
-      final shiftedPois = species.pois.map((poi) {
-        final poiSampleTime = poi.sampleTime;
-        if (poiSampleTime == null) {
-          return poi;
-        }
-        return poi.copyWith(
-          sampleTime: _shiftSampleTime(
-            poiSampleTime,
-            originalStart,
-            newStart,
-          ),
-        );
-      }).toList();
+      final shiftedSampleTime = sampleTime == null ? null : _shiftSampleTime(sampleTime, originalStart, newStart);
+      final shiftedPois =
+          species.pois.map((poi) {
+            final poiSampleTime = poi.sampleTime;
+            if (poiSampleTime == null) {
+              return poi;
+            }
+            return poi.copyWith(sampleTime: _shiftSampleTime(poiSampleTime, originalStart, newStart));
+          }).toList();
 
-      return species.copyWith(
-        sampleTime: shiftedSampleTime,
-        pois: shiftedPois,
-      );
+      return species.copyWith(sampleTime: shiftedSampleTime, pois: shiftedPois);
     }).toList();
   }
 
@@ -482,43 +452,23 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
       if (sampleTime == null) {
         return vegetation;
       }
-      return vegetation.copyWith(
-        sampleTime: _shiftSampleTime(
-          sampleTime,
-          originalStart,
-          newStart,
-        ),
-      );
+      return vegetation.copyWith(sampleTime: _shiftSampleTime(sampleTime, originalStart, newStart));
     }).toList();
   }
 
   /// Shifts weather sample times preserving each record's relative offset.
-  List<Weather> _shiftWeatherSampleTimes(
-    List<Weather> weatherList,
-    DateTime originalStart,
-    DateTime newStart,
-  ) {
+  List<Weather> _shiftWeatherSampleTimes(List<Weather> weatherList, DateTime originalStart, DateTime newStart) {
     return weatherList.map((weather) {
       final sampleTime = weather.sampleTime;
       if (sampleTime == null) {
         return weather;
       }
-      return weather.copyWith(
-        sampleTime: _shiftSampleTime(
-          sampleTime,
-          originalStart,
-          newStart,
-        ),
-      );
+      return weather.copyWith(sampleTime: _shiftSampleTime(sampleTime, originalStart, newStart));
     }).toList();
   }
 
   /// Shifts one sample timestamp preserving its relative offset from start time.
-  DateTime _shiftSampleTime(
-    DateTime sampleTime,
-    DateTime originalStart,
-    DateTime newStart,
-  ) {
+  DateTime _shiftSampleTime(DateTime sampleTime, DateTime originalStart, DateTime newStart) {
     final relativeOffset = sampleTime.difference(originalStart);
     return newStart.add(relativeOffset);
   }
@@ -562,20 +512,13 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
   }
 
   /// Keeps end time offset in sync when start time is shifted by confirmation.
-  void _applyShiftToInventoryEndTime({
-    required DateTime originalStart,
-    required DateTime newStart,
-  }) {
+  void _applyShiftToInventoryEndTime({required DateTime originalStart, required DateTime newStart}) {
     final originalEnd = widget.inventory.endTime;
     if (originalEnd == null) {
       return;
     }
 
-    final shiftedEnd = _shiftSampleTime(
-      originalEnd,
-      originalStart,
-      newStart,
-    );
+    final shiftedEnd = _shiftSampleTime(originalEnd, originalStart, newStart);
 
     _endTime = shiftedEnd;
     _endTimeController.text = DateFormat('dd/MM/yyyy HH:mm').format(shiftedEnd);
@@ -586,12 +529,7 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.inventory.id),
-        actions: [
-          TextButton(
-            onPressed: _saveForm,
-            child: Text(S.of(context).save,),
-          ),
-        ],
+        actions: [TextButton(onPressed: _saveForm, child: Text(S.of(context).save))],
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -603,10 +541,7 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
               children: [
                 TextFormField(
                   controller: _idController,
-                  decoration: InputDecoration(
-                    labelText: S.of(context).inventoryId,
-                    border: OutlineInputBorder(),
-                  ),
+                  decoration: InputDecoration(labelText: S.of(context).inventoryId, border: OutlineInputBorder()),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return S.of(context).insertInventoryId;
@@ -623,15 +558,13 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
                     labelText: '${S.of(context).inventoryType} *',
                     border: OutlineInputBorder(),
                   ),
-                  items: InventoryType.values.map((type) {
-                    return DropdownMenuItem(
-                      value: type,
-                      child: Text(
-                        inventoryTypeFriendlyNames[type]!,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    );
-                  }).toList(),
+                  items:
+                      InventoryType.values.map((type) {
+                        return DropdownMenuItem(
+                          value: type,
+                          child: Text(inventoryTypeFriendlyNames[type]!, overflow: TextOverflow.ellipsis),
+                        );
+                      }).toList(),
                   onChanged: (InventoryType? newValue) {
                     if (newValue != null) {
                       setState(() {
@@ -656,31 +589,31 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
                     labelText: '${S.of(context).transportMode} *',
                     border: OutlineInputBorder(),
                   ),
-                  items: TransportMode.values.map((mode) {
-                    return DropdownMenuItem(
-                      value: mode,
-                      child: Text(
-                        transportModeFriendlyNames[mode]!,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    );
-                  }).toList(),
-                  onChanged: (_selectedType == InventoryType.invPointCount || _selectedType == InventoryType.invPointDetection)
-                      ? null
-                      : (TransportMode? newValue) {
-                          if (newValue != null) {
-                            setState(() {
-                              _selectedTransportMode = newValue;
-                            });
-                          }
-                        },
+                  items:
+                      TransportMode.values.map((mode) {
+                        return DropdownMenuItem(
+                          value: mode,
+                          child: Text(transportModeFriendlyNames[mode]!, overflow: TextOverflow.ellipsis),
+                        );
+                      }).toList(),
+                  onChanged:
+                      (_selectedType == InventoryType.invPointCount || _selectedType == InventoryType.invPointDetection)
+                          ? null
+                          : (TransportMode? newValue) {
+                            if (newValue != null) {
+                              setState(() {
+                                _selectedTransportMode = newValue;
+                              });
+                            }
+                          },
                 ),
                 SizedBox(height: 8),
                 // Locality
                 Autocomplete<String>(
-                  initialValue: widget.inventory.localityName != null
-                      ? TextEditingValue(text: widget.inventory.localityName!)
-                      : TextEditingValue.empty,
+                  initialValue:
+                      widget.inventory.localityName != null
+                          ? TextEditingValue(text: widget.inventory.localityName!)
+                          : TextEditingValue.empty,
                   optionsBuilder: (TextEditingValue textEditingValue) async {
                     return await _getLocalitySuggestions(textEditingValue.text);
                   },
@@ -689,11 +622,11 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
                     _saveRecentLocality(selection);
                   },
                   fieldViewBuilder: (
-                      BuildContext context,
-                      TextEditingController fieldTextEditingController,
-                      FocusNode fieldFocusNode,
-                      VoidCallback onFieldSubmitted,
-                      ) {
+                    BuildContext context,
+                    TextEditingController fieldTextEditingController,
+                    FocusNode fieldFocusNode,
+                    VoidCallback onFieldSubmitted,
+                  ) {
                     return TextFormField(
                       controller: fieldTextEditingController,
                       focusNode: fieldFocusNode,
@@ -721,10 +654,10 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
                     );
                   },
                   optionsViewBuilder: (
-                      BuildContext context,
-                      AutocompleteOnSelected<String> onSelected,
-                      Iterable<String> options,
-                      ) {
+                    BuildContext context,
+                    AutocompleteOnSelected<String> onSelected,
+                    Iterable<String> options,
+                  ) {
                     return Align(
                       alignment: Alignment.topLeft,
                       child: Material(
@@ -752,44 +685,126 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
                   },
                 ),
                 const SizedBox(height: 8.0),
+                Autocomplete<String>(
+                  optionsBuilder: (TextEditingValue textEditingValue) async {
+                    return await _getProjectSuggestions(textEditingValue.text);
+                  },
+                  onSelected: (String selection) {
+                    _projectNameController.text = selection;
+                    _saveRecentProject(selection);
+                  },
+                  fieldViewBuilder: (
+                    BuildContext context,
+                    TextEditingController fieldTextEditingController,
+                    FocusNode fieldFocusNode,
+                    VoidCallback onFieldSubmitted,
+                  ) {
+                    if (fieldTextEditingController.text != _projectNameController.text) {
+                      fieldTextEditingController.value = TextEditingValue(
+                        text: _projectNameController.text,
+                        selection: TextSelection.collapsed(offset: _projectNameController.text.length),
+                      );
+                    }
+                    return TextFormField(
+                      controller: fieldTextEditingController,
+                      focusNode: fieldFocusNode,
+                      decoration: InputDecoration(
+                        labelText: _projectLabel(context),
+                        border: const OutlineInputBorder(),
+                      ),
+                      onChanged: (value) {
+                        _projectNameController.text = value;
+                      },
+                      onFieldSubmitted: (String value) {
+                        _projectNameController.text = value;
+                        if (value.trim().isNotEmpty) {
+                          _saveRecentProject(value);
+                        }
+                        onFieldSubmitted();
+                      },
+                    );
+                  },
+                ),
+                const SizedBox(height: 8.0),
+                Autocomplete<String>(
+                  optionsBuilder: (TextEditingValue textEditingValue) async {
+                    return await _getExpeditionSuggestions(textEditingValue.text);
+                  },
+                  onSelected: (String selection) {
+                    _expeditionNameController.text = selection;
+                    _saveRecentExpedition(selection);
+                  },
+                  fieldViewBuilder: (
+                    BuildContext context,
+                    TextEditingController fieldTextEditingController,
+                    FocusNode fieldFocusNode,
+                    VoidCallback onFieldSubmitted,
+                  ) {
+                    if (fieldTextEditingController.text != _expeditionNameController.text) {
+                      fieldTextEditingController.value = TextEditingValue(
+                        text: _expeditionNameController.text,
+                        selection: TextSelection.collapsed(offset: _expeditionNameController.text.length),
+                      );
+                    }
+                    return TextFormField(
+                      controller: fieldTextEditingController,
+                      focusNode: fieldFocusNode,
+                      decoration: InputDecoration(
+                        labelText: S.of(context).expedition,
+                        border: const OutlineInputBorder(),
+                      ),
+                      onChanged: (value) {
+                        _expeditionNameController.text = value;
+                      },
+                      onFieldSubmitted: (String value) {
+                        _expeditionNameController.text = value;
+                        if (value.trim().isNotEmpty) {
+                          _saveRecentExpedition(value);
+                        }
+                        onFieldSubmitted();
+                      },
+                    );
+                  },
+                ),
+                const SizedBox(height: 8.0),
                 // Start & End Time
                 TextFormField(
-                        controller: _startTimeController,
-                        readOnly: true,
-                        decoration: InputDecoration(
-                          labelText: S.of(context).startTime,
-                          border: const OutlineInputBorder(),
-                          suffixIcon: const Icon(Icons.calendar_today),
-                        ),
-                        onTap: () => _selectStartTime(context),
-                      ),
-                    const SizedBox(height: 8.0),
-            TextFormField(
-                        controller: _endTimeController,
-                        readOnly: true,
-                        decoration: InputDecoration(
-                          labelText: S.of(context).endTime,
-                          border: const OutlineInputBorder(),
-                          suffixIcon: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              if (_endTimeController.text.isNotEmpty)
-                                IconButton(
-                                  icon: const Icon(Icons.clear, size: 18),
-                                  onPressed: () {
-                                    setState(() {
-                                      _endTime = null;
-                                      _endTimeController.clear();
-                                    });
-                                  },
-                                ),
-                              const Icon(Icons.calendar_today),
-                              const SizedBox(width: 8),
-                            ],
+                  controller: _startTimeController,
+                  readOnly: true,
+                  decoration: InputDecoration(
+                    labelText: S.of(context).startTime,
+                    border: const OutlineInputBorder(),
+                    suffixIcon: const Icon(Icons.calendar_today),
+                  ),
+                  onTap: () => _selectStartTime(context),
+                ),
+                const SizedBox(height: 8.0),
+                TextFormField(
+                  controller: _endTimeController,
+                  readOnly: true,
+                  decoration: InputDecoration(
+                    labelText: S.of(context).endTime,
+                    border: const OutlineInputBorder(),
+                    suffixIcon: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (_endTimeController.text.isNotEmpty)
+                          IconButton(
+                            icon: const Icon(Icons.clear, size: 18),
+                            onPressed: () {
+                              setState(() {
+                                _endTime = null;
+                                _endTimeController.clear();
+                              });
+                            },
                           ),
-                        ),
-                        onTap: () => _selectEndTime(context),
-                      ),
+                        const Icon(Icons.calendar_today),
+                        const SizedBox(width: 8),
+                      ],
+                    ),
+                  ),
+                  onTap: () => _selectEndTime(context),
+                ),
                 const SizedBox(height: 8.0),
                 // Start Coordinates
                 Row(
@@ -802,9 +817,7 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
                           labelText: '${S.of(context).longitude} (${S.of(context).start})',
                           border: const OutlineInputBorder(),
                         ),
-                        inputFormatters: [
-                          CommaToDotTextInputFormatter(),
-                        ],
+                        inputFormatters: [CommaToDotTextInputFormatter()],
                         validator: (value) {
                           if (value != null && value.trim().isNotEmpty) {
                             final lon = double.tryParse(value.trim());
@@ -825,9 +838,7 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
                           labelText: '${S.of(context).latitude} (${S.of(context).start})',
                           border: const OutlineInputBorder(),
                         ),
-                        inputFormatters: [
-                          CommaToDotTextInputFormatter(),
-                        ],
+                        inputFormatters: [CommaToDotTextInputFormatter()],
                         validator: (value) {
                           if (value != null && value.trim().isNotEmpty) {
                             final lat = double.tryParse(value.trim());
@@ -853,9 +864,7 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
                           labelText: '${S.of(context).longitude} (${S.of(context).end})',
                           border: const OutlineInputBorder(),
                         ),
-                        inputFormatters: [
-                          CommaToDotTextInputFormatter(),
-                        ],
+                        inputFormatters: [CommaToDotTextInputFormatter()],
                         validator: (value) {
                           if (value != null && value.trim().isNotEmpty) {
                             final lon = double.tryParse(value.trim());
@@ -876,9 +885,7 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
                           labelText: '${S.of(context).latitude} (${S.of(context).end})',
                           border: const OutlineInputBorder(),
                         ),
-                        inputFormatters: [
-                          CommaToDotTextInputFormatter(),
-                        ],
+                        inputFormatters: [CommaToDotTextInputFormatter()],
                         validator: (value) {
                           if (value != null && value.trim().isNotEmpty) {
                             final lat = double.tryParse(value.trim());
@@ -906,31 +913,33 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
                           border: OutlineInputBorder(),
                           suffixText: 'min',
                           prefixIcon: IconButton(
-                              onPressed: () {
-                                int count = int.tryParse(_durationController.text) ?? 1;
-                                if (count > 1) {
-                                  setState(() {
-                                    count--;
-                                    _durationController.text = count.toString();
-                                  });
-                                }
-                              },
-                              icon: Icon(Icons.remove_outlined)),
-                          suffixIcon: IconButton(
-                              onPressed: () {
-                                int count = int.tryParse(_durationController.text) ?? 1;
+                            onPressed: () {
+                              int count = int.tryParse(_durationController.text) ?? 1;
+                              if (count > 1) {
                                 setState(() {
-                                  count++;
+                                  count--;
                                   _durationController.text = count.toString();
                                 });
-                              },
-                              icon: Icon(Icons.add_outlined)),
+                              }
+                            },
+                            icon: Icon(Icons.remove_outlined),
+                          ),
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              int count = int.tryParse(_durationController.text) ?? 1;
+                              setState(() {
+                                count++;
+                                _durationController.text = count.toString();
+                              });
+                            },
+                            icon: Icon(Icons.add_outlined),
+                          ),
                         ),
                         validator: (value) {
                           if ((_selectedType == InventoryType.invTimedQualitative ||
-                              _selectedType == InventoryType.invIntervalQualitative ||
-                              _selectedType == InventoryType.invPointCount ||
-                              _selectedType == InventoryType.invPointDetection) &&
+                                  _selectedType == InventoryType.invIntervalQualitative ||
+                                  _selectedType == InventoryType.invPointCount ||
+                                  _selectedType == InventoryType.invPointDetection) &&
                               (value == null || value.isEmpty)) {
                             return S.of(context).insertDuration;
                           }
@@ -950,31 +959,35 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
                           border: OutlineInputBorder(),
                           suffixText: 'spp.',
                           prefixIcon: IconButton(
-                              onPressed: () {
-                                int count = int.tryParse(_maxSpeciesController.text) ?? 10;
-                                if (count > 5) {
-                                  setState(() {
-                                    count--;
-                                    _maxSpeciesController.text = count.toString();
-                                  });
-                                }
-                              },
-                              icon: Icon(Icons.remove_outlined)),
-                          suffixIcon: IconButton(
-                              onPressed: () {
-                                int count = int.tryParse(_maxSpeciesController.text) ?? 10;
+                            onPressed: () {
+                              int count = int.tryParse(_maxSpeciesController.text) ?? 10;
+                              if (count > 5) {
                                 setState(() {
-                                  count++;
+                                  count--;
                                   _maxSpeciesController.text = count.toString();
                                 });
-                              },
-                              icon: Icon(Icons.add_outlined)),
+                              }
+                            },
+                            icon: Icon(Icons.remove_outlined),
+                          ),
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              int count = int.tryParse(_maxSpeciesController.text) ?? 10;
+                              setState(() {
+                                count++;
+                                _maxSpeciesController.text = count.toString();
+                              });
+                            },
+                            icon: Icon(Icons.add_outlined),
+                          ),
                         ),
                         validator: (value) {
                           if ((_selectedType == InventoryType.invMackinnonList) && (value == null || value.isEmpty)) {
                             return S.of(context).insertMaxSpecies;
                           }
-                          if ((value != null && value.isNotEmpty) && int.tryParse(value)! > 0 && int.tryParse(value)! < 5) {
+                          if ((value != null && value.isNotEmpty) &&
+                              int.tryParse(value)! > 0 &&
+                              int.tryParse(value)! < 5) {
                             return S.of(context).mustBeBiggerThanFive;
                           }
                           return null;
@@ -984,69 +997,68 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
                   ],
                 ),
                 SizedBox(height: 8),
-                Row(children: [
-                  // Total observers
-                  Expanded(
-                    child:
-                TextFormField(
-                  controller: _totalObserversController,
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  textAlign: TextAlign.center,
-                  decoration: InputDecoration(
-                    labelText: S.of(context).totalOfObservers,
-                    border: OutlineInputBorder(),
-                    prefixIcon: IconButton(
-                        onPressed: () {
-                          int count = int.tryParse(_totalObserversController.text) ?? 1;
-                          if (count > 1) {
-                            setState(() {
-                              count--;
-                              _totalObserversController.text = count.toString();
-                            });
+                Row(
+                  children: [
+                    // Total observers
+                    Expanded(
+                      child: TextFormField(
+                        controller: _totalObserversController,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                        textAlign: TextAlign.center,
+                        decoration: InputDecoration(
+                          labelText: S.of(context).totalOfObservers,
+                          border: OutlineInputBorder(),
+                          prefixIcon: IconButton(
+                            onPressed: () {
+                              int count = int.tryParse(_totalObserversController.text) ?? 1;
+                              if (count > 1) {
+                                setState(() {
+                                  count--;
+                                  _totalObserversController.text = count.toString();
+                                });
+                              }
+                            },
+                            icon: Icon(Icons.remove_outlined),
+                          ),
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              int count = int.tryParse(_totalObserversController.text) ?? 1;
+                              setState(() {
+                                count++;
+                                _totalObserversController.text = count.toString();
+                              });
+                            },
+                            icon: Icon(Icons.add_outlined),
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return S.of(context).insertCount;
                           }
+                          if (int.tryParse(value) == null || int.tryParse(value)! < 1) {
+                            return S.of(context).insertValidNumber;
+                          }
+                          return null;
                         },
-                        icon: Icon(Icons.remove_outlined)),
-                    suffixIcon: IconButton(
-                        onPressed: () {
-                          int count = int.tryParse(_totalObserversController.text) ?? 1;
-                          setState(() {
-                            count++;
-                            _totalObserversController.text = count.toString();
-                          });
-                        },
-                        icon: Icon(Icons.add_outlined)),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return S.of(context).insertCount;
-                    }
-                    if (int.tryParse(value) == null || int.tryParse(value)! < 1) {
-                      return S.of(context).insertValidNumber;
-                    }
-                    return null;
-                  },
-                ),
-                  ),
-                  const SizedBox(width: 8),
-                  // Observer
-                  Expanded(
-                    child: TextFormField(
-                      controller: _observerController,
-                      textCapitalization: TextCapitalization.characters,
-                      decoration: InputDecoration(
-                        labelText: S.of(context).observer,
-                        border: OutlineInputBorder(),
                       ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return S.of(context).insertObserver;
-                        }
-                        return null;
-                      },
                     ),
-                  ),
-                ],
+                    const SizedBox(width: 8),
+                    // Observer
+                    Expanded(
+                      child: TextFormField(
+                        controller: _observerController,
+                        textCapitalization: TextCapitalization.characters,
+                        decoration: InputDecoration(labelText: S.of(context).observer, border: OutlineInputBorder()),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return S.of(context).insertObserver;
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                  ],
                 ),
                 SizedBox(height: 8),
                 // Notes
@@ -1054,10 +1066,7 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
                   controller: _notesController,
                   textCapitalization: TextCapitalization.sentences,
                   maxLines: 3,
-                  decoration: InputDecoration(
-                    labelText: S.of(context).notes,
-                    border: OutlineInputBorder(),
-                  ),
+                  decoration: InputDecoration(labelText: S.of(context).notes, border: OutlineInputBorder()),
                 ),
                 SizedBox(height: 8),
                 // Discarded
@@ -1079,31 +1088,35 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
     );
   }
 
-  /// Loads recent localities used in inventory creation.
-  Future<void> _loadRecentLocalities() async {
+  /// Loads recent locality/project/expedition metadata used in inventory editing.
+  Future<void> _loadRecentMetadata() async {
     final prefs = await SharedPreferences.getInstance();
-    final saved = prefs.getStringList(kRecentInventoryLocalitiesPreferenceKey) ?? const [];
+    final savedLocalities = prefs.getStringList(kRecentInventoryLocalitiesPreferenceKey) ?? const [];
+    final savedProjects = prefs.getStringList(kRecentInventoryProjectsPreferenceKey) ?? const [];
+    final savedExpeditions = prefs.getStringList(kRecentInventoryExpeditionsPreferenceKey) ?? const [];
 
     if (!mounted) {
       return;
     }
 
     setState(() {
-      _recentLocalities = saved.where((item) => item.trim().isNotEmpty).take(3).toList();
+      _recentLocalities = savedLocalities.where((item) => item.trim().isNotEmpty).take(3).toList();
+      _recentProjects = savedProjects.where((item) => item.trim().isNotEmpty).take(3).toList();
+      _recentExpeditions = savedExpeditions.where((item) => item.trim().isNotEmpty).take(3).toList();
+
+      if (_projectNameController.text.trim().isEmpty && _recentProjects.isNotEmpty) {
+        _projectNameController.text = _recentProjects.first;
+      }
+      if (_expeditionNameController.text.trim().isEmpty && _recentExpeditions.isNotEmpty) {
+        _expeditionNameController.text = _recentExpeditions.first;
+      }
     });
   }
 
   /// Stores a locality at the top of the recent list, keeping only the last three entries.
   Future<void> _saveRecentLocality(String locality) async {
-    final normalized = locality.trim();
-    if (normalized.isEmpty) {
-      return;
-    }
-
-    final updated = [
-      normalized,
-      ..._recentLocalities.where((item) => item.toLowerCase() != normalized.toLowerCase()),
-    ].take(3).toList();
+    final updated = _withRecentValue(locality, _recentLocalities);
+    if (updated.isEmpty) return;
 
     if (mounted) {
       setState(() {
@@ -1113,6 +1126,39 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
 
     final prefs = await SharedPreferences.getInstance();
     await prefs.setStringList(kRecentInventoryLocalitiesPreferenceKey, updated);
+  }
+
+  Future<void> _saveRecentProject(String project) async {
+    final updated = _withRecentValue(project, _recentProjects);
+    if (updated.isEmpty) return;
+    if (mounted) {
+      setState(() {
+        _recentProjects = updated;
+      });
+    }
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList(kRecentInventoryProjectsPreferenceKey, updated);
+  }
+
+  Future<void> _saveRecentExpedition(String expedition) async {
+    final updated = _withRecentValue(expedition, _recentExpeditions);
+    if (updated.isEmpty) return;
+    if (mounted) {
+      setState(() {
+        _recentExpeditions = updated;
+      });
+    }
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList(kRecentInventoryExpeditionsPreferenceKey, updated);
+  }
+
+  List<String> _withRecentValue(String rawValue, List<String> current) {
+    final normalized = rawValue.trim();
+    if (normalized.isEmpty) {
+      return const [];
+    }
+
+    return [normalized, ...current.where((item) => item.toLowerCase() != normalized.toLowerCase())].take(3).toList();
   }
 
   /// Returns locality suggestions with recent entries pinned to the top.
@@ -1137,12 +1183,8 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
 
       final normalizedOptions = normalizedOptionsByKey.values.toList();
 
-      final filteredRecent = _recentLocalities
-          .where((item) => removeDiacritics(item).contains(query))
-          .toList();
-      final filteredOptions = normalizedOptions
-          .where((item) => removeDiacritics(item).contains(query))
-          .toList();
+      final filteredRecent = _recentLocalities.where((item) => removeDiacritics(item).contains(query)).toList();
+      final filteredOptions = normalizedOptions.where((item) => removeDiacritics(item).contains(query)).toList();
 
       final merged = <String>[];
       final mergedIndexByKey = <String, int>{};
@@ -1170,6 +1212,62 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
       return _recentLocalities.where((item) => removeDiacritics(item).contains(query)).toList();
     }
   }
+
+  Future<List<String>> _getProjectSuggestions(String queryText) async {
+    return _mergeSuggestions(
+      queryText: queryText,
+      recentValues: _recentProjects,
+      persistedValuesLoader: () => Provider.of<InventoryProvider>(context, listen: false).getDistinctProjects(),
+    );
+  }
+
+  Future<List<String>> _getExpeditionSuggestions(String queryText) async {
+    return _mergeSuggestions(
+      queryText: queryText,
+      recentValues: _recentExpeditions,
+      persistedValuesLoader: () => Provider.of<InventoryProvider>(context, listen: false).getDistinctExpeditions(),
+    );
+  }
+
+  Future<List<String>> _mergeSuggestions({
+    required String queryText,
+    required List<String> recentValues,
+    required Future<List<String>> Function() persistedValuesLoader,
+  }) async {
+    final query = removeDiacritics(queryText.trim());
+
+    try {
+      final options = await persistedValuesLoader();
+      final normalizedOptionsByKey = <String, String>{};
+
+      for (final option in options) {
+        final normalized = option.trim();
+        final key = removeDiacritics(normalized);
+        if (normalized.isEmpty) {
+          continue;
+        }
+        normalizedOptionsByKey.putIfAbsent(key, () => normalized);
+      }
+
+      final normalizedOptions = normalizedOptionsByKey.values.toList();
+      final filteredRecent = recentValues.where((item) => removeDiacritics(item).contains(query)).toList();
+      final filteredOptions = normalizedOptions.where((item) => removeDiacritics(item).contains(query)).toList();
+
+      final merged = <String>[];
+      final mergedKeys = <String>{};
+      for (final item in [...filteredRecent, ...filteredOptions]) {
+        final key = removeDiacritics(item);
+        if (mergedKeys.add(key)) {
+          merged.add(item);
+        }
+      }
+
+      return merged;
+    } catch (e) {
+      debugPrint('Error fetching metadata options: $e');
+      return recentValues.where((item) => removeDiacritics(item).contains(query)).toList();
+    }
+  }
 }
 
 class _AssociatedInventoryRecords {
@@ -1177,9 +1275,5 @@ class _AssociatedInventoryRecords {
   final List<Vegetation> vegetation;
   final List<Weather> weather;
 
-  const _AssociatedInventoryRecords({
-    required this.species,
-    required this.vegetation,
-    required this.weather,
-  });
+  const _AssociatedInventoryRecords({required this.species, required this.vegetation, required this.weather});
 }

@@ -494,6 +494,16 @@
         "type": "text",
         "description": "Field label for expedition name used in ID generation"
     },
+    "noExpedition": "No Expedition",
+    "@noExpedition": {
+        "type": "text",
+        "description": "Header label for inventories without expedition"
+    },
+    "project": "Project",
+    "@project": {
+        "type": "text",
+        "description": "Field label for project name in inventory metadata"
+    },
     "siteAbbreviation": "Site name or abbreviation",
     "@siteAbbreviation": {
         "type": "text",
