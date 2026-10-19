@@ -85,10 +85,6 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
     super.dispose();
   }
 
-  String _projectLabel(BuildContext context) {
-    return S.of(context).project;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -286,8 +282,16 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                           controller: fieldTextEditingController,
                           focusNode: fieldFocusNode,
                           decoration: InputDecoration(
-                            labelText: _projectLabel(context),
+                            labelText: S.of(context).project,
                             border: const OutlineInputBorder(),
+                            suffixIcon: IconButton(
+                              icon: const Icon(Icons.clear, size: 18),
+                              onPressed: () {
+                                setState(() {
+                                  _projectNameController.clear();
+                                });
+                              },
+                            ),
                           ),
                           onChanged: (value) {
                             _projectNameController.text = value;
@@ -329,6 +333,14 @@ class AddInventoryScreenState extends State<AddInventoryScreen> {
                           decoration: InputDecoration(
                             labelText: S.of(context).expedition,
                             border: const OutlineInputBorder(),
+                            suffixIcon: IconButton(
+                              icon: const Icon(Icons.clear, size: 18),
+                              onPressed: () {
+                                setState(() {
+                                  _expeditionNameController.clear();
+                                });
+                              },
+                            ),
                           ),
                           onChanged: (value) {
                             _expeditionNameController.text = value;

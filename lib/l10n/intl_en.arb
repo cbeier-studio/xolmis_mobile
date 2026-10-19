@@ -504,6 +504,11 @@
         "type": "text",
         "description": "Field label for project name in inventory metadata"
     },
+    "assignProjectExpedition": "Assign project and/or expedition",
+    "@assignProjectExpedition": {
+        "type": "text",
+        "description": "Button label to assign project and/or expedition"
+    },
     "siteAbbreviation": "Site name or abbreviation",
     "@siteAbbreviation": {
         "type": "text",

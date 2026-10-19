@@ -90,7 +90,7 @@ abstract class S {
   ];
 
   /// A list of this localizations delegate's supported locales.
-  static const List<Locale> supportedLocales = <Locale>[Locale('en'), Locale('pt'), Locale('pt', 'BR')];
+  static const List<Locale> supportedLocales = <Locale>[Locale('en'), Locale('pt')];
 
   /// No description provided for @inventories.
   ///
@@ -619,6 +619,12 @@ abstract class S {
   /// In en, this message translates to:
   /// **'Project'**
   String get project;
+
+  /// Button label to assign project and/or expedition
+  ///
+  /// In en, this message translates to:
+  /// **'Assign project and/or expedition'**
+  String get assignProjectExpedition;
 
   /// Field label asking the inventory site name or abbreviation to generate the ID
   ///
@@ -4507,18 +4513,6 @@ class _SDelegate extends LocalizationsDelegate<S> {
 }
 
 S lookupS(Locale locale) {
-  // Lookup logic when language+country codes are specified.
-  switch (locale.languageCode) {
-    case 'pt':
-      {
-        switch (locale.countryCode) {
-          case 'BR':
-            return SPtBr();
-        }
-        break;
-      }
-  }
-
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
     case 'en':

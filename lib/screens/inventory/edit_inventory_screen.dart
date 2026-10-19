@@ -139,10 +139,6 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
     super.dispose();
   }
 
-  String _projectLabel(BuildContext context) {
-    return S.of(context).project;
-  }
-
   /// Opens date and time pickers to update the inventory start time.
   Future<void> _selectStartTime(BuildContext context) async {
     final current = _startTime ?? DateTime.now();
@@ -709,8 +705,16 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
                       controller: fieldTextEditingController,
                       focusNode: fieldFocusNode,
                       decoration: InputDecoration(
-                        labelText: _projectLabel(context),
+                        labelText: S.of(context).project,
                         border: const OutlineInputBorder(),
+                        suffixIcon: IconButton(
+                          icon: const Icon(Icons.clear, size: 18),
+                          onPressed: () {
+                            setState(() {
+                              _projectNameController.clear();
+                            });
+                          },
+                        ),
                       ),
                       onChanged: (value) {
                         _projectNameController.text = value;
@@ -752,6 +756,14 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
                       decoration: InputDecoration(
                         labelText: S.of(context).expedition,
                         border: const OutlineInputBorder(),
+                        suffixIcon: IconButton(
+                          icon: const Icon(Icons.clear, size: 18),
+                          onPressed: () {
+                            setState(() {
+                              _expeditionNameController.clear();
+                            });
+                          },
+                        ),
                       ),
                       onChanged: (value) {
                         _expeditionNameController.text = value;

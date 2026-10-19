@@ -323,6 +323,11 @@
     "description": "Header label for inventories without expedition"
   },
     "project": "Projeto",
+  "assignProjectExpedition": "Atribuir projeto e/ou expedição",
+  "@assignProjectExpedition": {
+    "type": "text",
+    "description": "Button label to assign project and/or expedition"
+  },
     "siteAbbreviation": "Nome ou sigla do local",
     "optional": "* opcional",
     "insertInventoryId": "Por favor, insira uma ID para o inventário",

@@ -42,7 +42,7 @@
 - Run checklist integrity test only before build: `flutter test test/checklists_integrity_test.dart`
 - Run utils tests only when modified `lib/utils/` files: `flutter test test/utils/utils_methods_test.dart`
 - Launch locally: `flutter run`
-- Generate localization output after ARB changes: `flutter pub global run intl_utils:generate`
+- Generate localization output after ARB changes: `flutter gen-l10n`
 
 ## Current repo realities
 - `flutter analyze` currently reports many pre-existing infos/warnings, including generated localization files and async-context lint noise; do not assume a clean analyzer baseline.

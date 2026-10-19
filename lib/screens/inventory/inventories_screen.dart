@@ -72,8 +72,8 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
   Set<String> selectedInventories = {}; // Set of selected inventories
   SortOrder _sortOrder = SortOrder.descending; // Default sort order
   InventorySortField _sortField = InventorySortField.startTime; // Default sort field
-  _ExpeditionGroupSortField _expeditionGroupSortField = _ExpeditionGroupSortField.name;
-  SortOrder _expeditionGroupSortOrder = SortOrder.ascending;
+  _ExpeditionGroupSortField _expeditionGroupSortField = _ExpeditionGroupSortField.startTime;
+  SortOrder _expeditionGroupSortOrder = SortOrder.descending;
   Inventory? _selectedInventory;
 
   Map<DateFilter, String> get _dateFilterLabels {
@@ -1128,8 +1128,8 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                       ),
                     const VerticalDivider(),
                     IconButton(
-                      icon: const Icon(Icons.label_outline),
-                      tooltip: S.of(context).project,
+                      icon: const Icon(Icons.collections_bookmark_outlined),
+                      tooltip: S.of(context).assignProjectExpedition,
                       onPressed: _showBulkAssignMetadataDialog,
                     ),
                     const VerticalDivider(),
@@ -1693,18 +1693,30 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     return CustomScrollView(
       slivers: [
         for (final group in groups) ...[
-          SliverToBoxAdapter(child: _buildExpeditionHeader(context: context, group: group)),
-          SliverList(
-            delegate: SliverChildBuilderDelegate((context, index) {
-              final inventory = group.inventories[index];
-              return inventoryListTileItem(
-                inventory: inventory,
-                context: context,
-                inventoryProvider: inventoryProvider,
-                selectedInventoryId: selectedInventoryId,
-                isLargeScreen: isLargeScreen,
-              );
-            }, childCount: group.inventories.length),
+          SliverMainAxisGroup(
+            slivers: [
+              // Fixa o cabeçalho no topo durante a rolagem do grupo
+              PinnedHeaderSliver(
+                child: _buildExpeditionHeader(context: context, group: group),
+              ),
+              // Lista de inventários com divisores
+              SliverList.separated(
+                itemCount: group.inventories.length,
+                itemBuilder: (context, index) {
+                  final inventory = group.inventories[index];
+                  return inventoryListTileItem(
+                    inventory: inventory,
+                    context: context,
+                    inventoryProvider: inventoryProvider,
+                    selectedInventoryId: selectedInventoryId,
+                    isLargeScreen: isLargeScreen,
+                  );
+                },
+                separatorBuilder: (context, index) {
+                  return const Divider(height: 1);
+                },
+              ),
+            ],
           ),
         ],
       ],
@@ -1769,7 +1781,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     final allSelected = groupIds.isNotEmpty && selectedInGroup == groupIds.length;
 
     return Container(
-      color: Theme.of(context).colorScheme.surfaceContainerHighest,
+      color: Theme.of(context).colorScheme.primaryContainer,
       padding: const EdgeInsets.fromLTRB(12, 8, 8, 8),
       child: Row(
         children: [
@@ -1788,7 +1800,12 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
               },
             ),
           Expanded(
-            child: Text('${group.name}', style: Theme.of(context).textTheme.titleSmall),
+            child: Text('${group.name}',
+                style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                ),
+                // overflow: TextOverflow.ellipsis,
+            ),
           ),
           Padding(
             padding: const EdgeInsets.only(right: 8.0),
