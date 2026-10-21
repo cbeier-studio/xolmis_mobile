@@ -11,6 +11,18 @@ Thank you for your interest in contributing to Xolmis! Here are some guidelines 
 
 Keep the code clean and well-documented. Use comments to explain complex parts and follow naming conventions.
 
+For architecture and implementation conventions, follow:
+
+- `AGENTS.md` (authoritative guide for architecture, data flow, and feature-specific rules)
+- `.github/copilot-instructions.md` (operational guidance for AI-assisted coding)
+
+Minimum standards for every change:
+
+- Respect the layer boundaries: `screens/` -> `providers/` -> `data/daos/` -> `data/models/`
+- Add/adjust tests when behavior changes
+- Add localization keys in `lib/l10n/*.arb` for new user-facing text
+- Do not manually edit generated files under `lib/generated/`
+
 ## Reporting Issues
 
 If you find a bug or have a suggestion, create an issue on GitHub. Describe the problem or idea in detail so we can understand and assist as best as possible.
@@ -19,6 +31,7 @@ If you find a bug or have a suggestion, create an issue on GitHub. Describe the 
 
 - **Tests:** If possible, include tests for your changes.
 - **Documentation:** Update documentation as needed to reflect the changes made.
+- **Validation:** Run `flutter analyze` and relevant tests before submitting a PR.
 
 ## Communication
 
