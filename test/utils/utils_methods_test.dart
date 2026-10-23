@@ -567,6 +567,63 @@ void main() {
         expect(metrics.totalIndividuals, equals(4));
         expect(metrics.chao1, equals(3.0));
       });
+
+      test('prepareRarefactionCurveSpots uses incidence-based Mao Tau expectation', () {
+        final inventories = [
+          Inventory(
+            id: 'INV-1',
+            type: InventoryType.invCasual,
+            duration: 10,
+            speciesList: [
+              Species(inventoryId: 'INV-1', name: 'Species A', isOutOfInventory: false, count: 50),
+              Species(inventoryId: 'INV-1', name: 'Species B', isOutOfInventory: false, count: 1),
+            ],
+          ),
+          Inventory(
+            id: 'INV-2',
+            type: InventoryType.invCasual,
+            duration: 10,
+            speciesList: [
+              Species(inventoryId: 'INV-2', name: 'Species A', isOutOfInventory: false, count: 3),
+              Species(inventoryId: 'INV-2', name: 'Species C', isOutOfInventory: false, count: 1),
+              Species(inventoryId: 'INV-2', name: 'Species C', isOutOfInventory: false, count: 99),
+            ],
+          ),
+          Inventory(
+            id: 'INV-3',
+            type: InventoryType.invCasual,
+            duration: 10,
+            speciesList: [
+              Species(inventoryId: 'INV-3', name: 'Species A', isOutOfInventory: false, count: 2),
+            ],
+          ),
+        ];
+
+        final spots = prepareRarefactionCurveSpots(inventories);
+
+        expect(spots.sampled, hasLength(4));
+        expect(spots.expected, hasLength(4));
+
+        expect(spots.sampled[1].y, equals(2));
+        expect(spots.sampled[2].y, equals(3));
+        expect(spots.sampled[3].y, equals(3));
+
+        // H=3, incidences {3,1,1}: E[S1]=5/3, E[S2]=7/3, E[S3]=3.
+        expect(spots.expected[1].y, closeTo(5 / 3, 1e-9));
+        expect(spots.expected[2].y, closeTo(7 / 3, 1e-9));
+        expect(spots.expected[3].y, closeTo(3.0, 1e-9));
+      });
+
+      test('prepareRarefactionCurveSpots returns origin only for empty input', () {
+        final spots = prepareRarefactionCurveSpots([]);
+
+        expect(spots.sampled, hasLength(1));
+        expect(spots.expected, hasLength(1));
+        expect(spots.sampled.first.x, equals(0));
+        expect(spots.sampled.first.y, equals(0));
+        expect(spots.expected.first.x, equals(0));
+        expect(spots.expected.first.y, equals(0));
+      });
     });
   });
 }

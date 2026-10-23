@@ -1047,12 +1047,11 @@ InventoryDiversityMetrics computeDiversityMetrics(
 /// Prepares cumulative observed richness and sample-based rarefaction richness
 /// across inventories.
 ///
-/// The rarefaction expectation is estimated by randomizing inventory order
-/// multiple times and averaging cumulative richness at each sample size.
+/// The expected curve follows the analytical Mao Tau estimator over incidence
+/// (presence/absence) data, avoiding expensive random permutations.
 ({List<FlSpot> sampled, List<FlSpot> expected}) prepareRarefactionCurveSpots(
-  List<Inventory> inventories, {
-  int iterations = 300,
-}) {
+  List<Inventory> inventories,
+) {
   final sampledSpots = <FlSpot>[const FlSpot(0, 0)];
   final expectedSpots = <FlSpot>[const FlSpot(0, 0)];
 
@@ -1061,7 +1060,7 @@ InventoryDiversityMetrics computeDiversityMetrics(
   }
 
   final inventorySpeciesSets = inventories
-      .map((inventory) => inventory.speciesList.map((s) => s.name).where((name) => name.isNotEmpty).toSet())
+      .map((inventory) => inventory.speciesList.map((s) => s.name.trim()).where((name) => name.isNotEmpty).toSet())
       .toList();
 
   final observedAccumulated = <String>{};
@@ -1070,28 +1069,47 @@ InventoryDiversityMetrics computeDiversityMetrics(
     sampledSpots.add(FlSpot((i + 1).toDouble(), observedAccumulated.length.toDouble()));
   }
 
-  if (inventorySpeciesSets.length == 1) {
-    expectedSpots.addAll(sampledSpots.skip(1));
-    return (sampled: sampledSpots, expected: expectedSpots);
-  }
-
-  final totalsByStep = List<double>.filled(inventorySpeciesSets.length, 0);
-  final random = Random(42);
-  final simulationOrder = List<Set<String>>.from(inventorySpeciesSets);
-
-  for (var it = 0; it < iterations; it++) {
-    simulationOrder.shuffle(random);
-    final runningSpecies = <String>{};
-
-    for (var step = 0; step < simulationOrder.length; step++) {
-      runningSpecies.addAll(simulationOrder[step]);
-      totalsByStep[step] += runningSpecies.length;
+  final H = inventorySpeciesSets.length;
+  final speciesIncidence = <String, int>{};
+  for (final speciesSet in inventorySpeciesSets) {
+    for (final speciesName in speciesSet) {
+      speciesIncidence[speciesName] = (speciesIncidence[speciesName] ?? 0) + 1;
     }
   }
 
-  for (var i = 0; i < totalsByStep.length; i++) {
-    expectedSpots.add(FlSpot((i + 1).toDouble(), totalsByStep[i] / iterations));
+  final observedRichness = speciesIncidence.length.toDouble();
+  final logFactorials = List<double>.filled(H + 1, 0.0);
+  for (var i = 2; i <= H; i++) {
+    logFactorials[i] = logFactorials[i - 1] + log(i.toDouble());
+  }
+  final logCombHh = List<double>.filled(H + 1, 0.0);
+  for (var h = 0; h <= H; h++) {
+    logCombHh[h] = _logCombination(H, h, logFactorials);
+  }
+
+  for (var h = 1; h <= H; h++) {
+    var absentProbabilitySum = 0.0;
+
+    for (final xi in speciesIncidence.values) {
+      final n = H - xi;
+      if (h > n) {
+        continue;
+      }
+
+      final absentProbability = exp(_logCombination(n, h, logFactorials) - logCombHh[h]);
+      absentProbabilitySum += absentProbability.clamp(0.0, 1.0);
+    }
+
+    final expectedRichness = (observedRichness - absentProbabilitySum).clamp(0.0, observedRichness);
+    expectedSpots.add(FlSpot(h.toDouble(), expectedRichness));
   }
 
   return (sampled: sampledSpots, expected: expectedSpots);
+}
+
+double _logCombination(int n, int k, List<double> logFactorials) {
+  if (k < 0 || k > n) {
+    return double.negativeInfinity;
+  }
+  return logFactorials[n] - logFactorials[k] - logFactorials[n - k];
 }

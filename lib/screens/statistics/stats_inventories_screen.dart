@@ -90,6 +90,9 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
   late Map<String, List<String>> sharedSpeciesByPair = {};
   late Map<String, List<String>> exclusiveSpeciesByInventory = {};
   late int exclusiveSpeciesCount = 0;
+  late List<FlSpot> sampledSpots = [const FlSpot(0, 0)];
+  late List<FlSpot> expectedSpots = [const FlSpot(0, 0)];
+  late double maxRichness = 1;
 
   @override
   void initState() {
@@ -169,6 +172,14 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
     distinctLocalitiesCount = distinctLocalities.length;
 
     recordsPerHour = _getOccurrencesByHourOfDayWithFallback(_sortedInventories);
+
+    final rarefaction = prepareRarefactionCurveSpots(_sortedInventories);
+    sampledSpots = rarefaction.sampled;
+    expectedSpots = rarefaction.expected;
+    maxRichness = [
+      ...sampledSpots.map((spot) => spot.y),
+      ...expectedSpots.map((spot) => spot.y),
+    ].fold<double>(1.0, (max, value) => value > max ? value : max);
   }
 
   bool _isDetectionInventory(Inventory inventory) {
@@ -1879,153 +1890,153 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
           ),
           const SizedBox(height: 20),
           // Rarefaction curve (observed vs sample-based expectation)
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //   children: [
-          //     Text(
-          //       S.of(context).rarefactionCurve,
-          //       style: TextStyle(
-          //         fontSize: 13,
-          //         fontWeight: FontWeight.w600,
-          //         color: isDark ? Colors.grey.shade200 : Colors.black87,
-          //       ),
-          //     ),
-          //   ],
-          // ),
-          // const SizedBox(height: 12),
-          // SizedBox(
-          //   height: 220,
-          //   child: ScrollableChartIndicator(
-          //     builder: (context, scrollController) {
-          //       return LayoutBuilder(
-          //         builder: (context, constraints) {
-          //           final chartWidth = _responsiveChartWidth(
-          //             constraints.maxWidth - 16,
-          //             pixelsPerInventory: 25,
-          //           );
-          //           return SingleChildScrollView(
-          //             controller: scrollController,
-          //             scrollDirection: Axis.horizontal,
-          //             child: SizedBox(
-          //               width: chartWidth,
-          //               height: 220,
-          //               child: LineChart(
-          //                 LineChartData(
-          //                   minX: 0,
-          //                   minY: 0,
-          //                   maxX: _sortedInventories.length > 1 ? _sortedInventories.length.toDouble() : 1.0,
-          //                   maxY: maxRichness * 1.15,
-          //                   lineBarsData: [
-          //                     LineChartBarData(
-          //                       spots: sampledSpots,
-          //                       isCurved: false,
-          //                       color: Colors.deepPurple,
-          //                       barWidth: 2,
-          //                       dotData: FlDotData(show: true),
-          //                       belowBarData: BarAreaData(
-          //                         show: true,
-          //                         color: Colors.deepPurple.withAlpha(20),
-          //                       ),
-          //                     ),
-          //                     LineChartBarData(
-          //                       spots: expectedSpots,
-          //                       isCurved: true,
-          //                       color: Colors.teal,
-          //                       barWidth: 2,
-          //                       dashArray: [5, 5],
-          //                       dotData: FlDotData(show: true),
-          //                     ),
-          //                   ],
-          //                   titlesData: FlTitlesData(
-          //                     bottomTitles: AxisTitles(
-          //                       sideTitles: SideTitles(
-          //                         showTitles: true,
-          //                         reservedSize: 22,
-          //                         interval: 1.0,
-          //                         getTitlesWidget: (value, meta) {
-          //                           final idx = value.toInt();
-          //                           if (idx >= 0 && idx <= _sortedInventories.length) {
-          //                             return Text(
-          //                               '${idx}',
-          //                               style: TextStyle(fontSize: 10, color: isDark ? Colors.grey.shade400 : Colors.grey.shade600),
-          //                             );
-          //                           }
-          //                           return const SizedBox.shrink();
-          //                         },
-          //                       ),
-          //                     ),
-          //                     leftTitles: AxisTitles(
-          //                       sideTitles: SideTitles(
-          //                         showTitles: true,
-          //                         reservedSize: 28,
-          //                         getTitlesWidget: (value, meta) {
-          //                           return Text(
-          //                             value.toInt().toString(),
-          //                             style: TextStyle(fontSize: 9, color: isDark ? Colors.grey.shade400 : Colors.grey.shade600),
-          //                           );
-          //                         },
-          //                       ),
-          //                     ),
-          //                     topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          //                     rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          //                   ),
-          //                   gridData: FlGridData(show: true, drawVerticalLine: true),
-          //                   borderData: FlBorderData(show: true),
-          //                   lineTouchData: LineTouchData(
-          //                     handleBuiltInTouches: true,
-          //                     touchTooltipData: LineTouchTooltipData(
-          //                       getTooltipColor: (spot) => Colors.white.withAlpha(200),
-          //                       tooltipBorderRadius: BorderRadius.all(
-          //                         Radius.circular(8),
-          //                       ),
-          //                       fitInsideVertically: true,
-          //                       fitInsideHorizontally: true,
-          //                       getTooltipItems: (List<LineBarSpot> touchedSpots,) {
-          //                         if (touchedSpots.isEmpty) {
-          //                           return [];
-          //                         }
-          //
-          //                         return touchedSpots.map((spot) {
-          //                           final spotColor = spot.bar.gradient?.colors.first ??
-          //                               spot.bar.color ?? Colors.black87;
-          //                           return LineTooltipItem(
-          //                             '',
-          //                             const TextStyle(
-          //                               color: Colors.black87,
-          //                               fontWeight: FontWeight.bold,
-          //                             ),
-          //                             children: [
-          //                               TextSpan(
-          //                                 text: '${spot.y.toInt()}',
-          //                                 style: TextStyle(
-          //                                   color: spotColor,
-          //                                   fontWeight: FontWeight.bold,
-          //                                   fontSize: 14,
-          //                                 ),
-          //                               ),
-          //                               // TextSpan(
-          //                               //   text: '\n$inventoryId',
-          //                               //   style: const TextStyle(
-          //                               //     color: Colors.black87,
-          //                               //     fontWeight: FontWeight.normal,
-          //                               //     fontSize: 10,
-          //                               //   ),
-          //                               // ),
-          //                             ],
-          //                           );
-          //                         }).toList();
-          //                       },
-          //                     ),
-          //                   ),
-          //                 ),
-          //               ),
-          //             ),
-          //           );
-          //         },
-          //       );
-          //     },
-          //   ),
-          // ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                S.of(context).expectedRichness,
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: isDark ? Colors.grey.shade200 : Colors.black87,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            height: 220,
+            child: ScrollableChartIndicator(
+              builder: (context, scrollController) {
+                return LayoutBuilder(
+                  builder: (context, constraints) {
+                    final chartWidth = _responsiveChartWidth(
+                      constraints.maxWidth - 16,
+                      pixelsPerInventory: 25,
+                    );
+                    return SingleChildScrollView(
+                      controller: scrollController,
+                      scrollDirection: Axis.horizontal,
+                      child: SizedBox(
+                        width: chartWidth,
+                        height: 220,
+                        child: LineChart(
+                          LineChartData(
+                            minX: 0,
+                            minY: 0,
+                            maxX: _sortedInventories.length > 1 ? _sortedInventories.length.toDouble() : 1.0,
+                            maxY: maxRichness * 1.15,
+                            lineBarsData: [
+                              // LineChartBarData(
+                              //   spots: sampledSpots,
+                              //   isCurved: false,
+                              //   color: Colors.deepPurple,
+                              //   barWidth: 2,
+                              //   dotData: FlDotData(show: true),
+                              //   belowBarData: BarAreaData(
+                              //     show: true,
+                              //     color: Colors.deepPurple.withAlpha(20),
+                              //   ),
+                              // ),
+                              LineChartBarData(
+                                spots: expectedSpots,
+                                isCurved: true,
+                                color: Colors.teal,
+                                barWidth: 2,
+                                // dashArray: [5, 5],
+                                dotData: FlDotData(show: true),
+                              ),
+                            ],
+                            titlesData: FlTitlesData(
+                              bottomTitles: AxisTitles(
+                                sideTitles: SideTitles(
+                                  showTitles: true,
+                                  reservedSize: 22,
+                                  interval: 1.0,
+                                  getTitlesWidget: (value, meta) {
+                                    final idx = value.toInt();
+                                    if (idx >= 0 && idx <= _sortedInventories.length) {
+                                      return Text(
+                                        '${idx}',
+                                        style: TextStyle(fontSize: 10, color: isDark ? Colors.grey.shade400 : Colors.grey.shade600),
+                                      );
+                                    }
+                                    return const SizedBox.shrink();
+                                  },
+                                ),
+                              ),
+                              leftTitles: AxisTitles(
+                                sideTitles: SideTitles(
+                                  showTitles: true,
+                                  reservedSize: 28,
+                                  getTitlesWidget: (value, meta) {
+                                    return Text(
+                                      value.toInt().toString(),
+                                      style: TextStyle(fontSize: 9, color: isDark ? Colors.grey.shade400 : Colors.grey.shade600),
+                                    );
+                                  },
+                                ),
+                              ),
+                              topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                              rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                            ),
+                            gridData: FlGridData(show: true, drawVerticalLine: true),
+                            borderData: FlBorderData(show: true),
+                            lineTouchData: LineTouchData(
+                              handleBuiltInTouches: true,
+                              touchTooltipData: LineTouchTooltipData(
+                                getTooltipColor: (spot) => Colors.white.withAlpha(200),
+                                tooltipBorderRadius: BorderRadius.all(
+                                  Radius.circular(8),
+                                ),
+                                fitInsideVertically: true,
+                                fitInsideHorizontally: true,
+                                getTooltipItems: (List<LineBarSpot> touchedSpots,) {
+                                  if (touchedSpots.isEmpty) {
+                                    return [];
+                                  }
+
+                                  return touchedSpots.map((spot) {
+                                    final spotColor = spot.bar.gradient?.colors.first ??
+                                        spot.bar.color ?? Colors.black87;
+                                    return LineTooltipItem(
+                                      '',
+                                      const TextStyle(
+                                        color: Colors.black87,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      children: [
+                                        TextSpan(
+                                          text: '${spot.y.toInt()}',
+                                          style: TextStyle(
+                                            color: spotColor,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                        // TextSpan(
+                                        //   text: '\n$inventoryId',
+                                        //   style: const TextStyle(
+                                        //     color: Colors.black87,
+                                        //     fontWeight: FontWeight.normal,
+                                        //     fontSize: 10,
+                                        //   ),
+                                        // ),
+                                      ],
+                                    );
+                                  }).toList();
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          ),
           // Row(
           //   mainAxisAlignment: MainAxisAlignment.center,
           //   children: [
@@ -2034,7 +2045,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
           //     _buildLegendIndicator(S.of(context).expectedRichness, Colors.teal, isDark),
           //   ],
           // ),
-          // const SizedBox(height: 20),
+          const SizedBox(height: 20),
           // Per-inventory table title
           Text(
             S.of(context).diversityTable,
