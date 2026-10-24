@@ -3105,10 +3105,30 @@
         "type": "text",
         "description": "Shannon-Wiener diversity index label"
     },
+    "simpsonDiversityIndex": "Simpson (1-D)",
+    "@simpsonDiversityIndex": {
+        "type": "text",
+        "description": "Simpson diversity index label"
+    },
     "pielouEvennessIndex": "Equitabilidade (J')",
     "@pielouEvennessIndex": {
         "type": "text",
         "description": "Pielou's evenness index label"
+    },
+    "hillNumberQ0": "Hill N0 (q=0)",
+    "@hillNumberQ0": {
+        "type": "text",
+        "description": "Hill number of order 0 (species richness)"
+    },
+    "hillNumberQ1": "Hill N1 (q=1)",
+    "@hillNumberQ1": {
+        "type": "text",
+        "description": "Hill number of order 1 (exp Shannon)"
+    },
+    "hillNumberQ2": "Hill N2 (q=2)",
+    "@hillNumberQ2": {
+        "type": "text",
+        "description": "Hill number of order 2 (inverse Simpson)"
     },
     "chao1Estimator": "Riqueza Esperada Chao1",
     "@chao1Estimator": {

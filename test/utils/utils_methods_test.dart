@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -534,7 +536,7 @@ void main() {
     });
 
     group('diversity metrics and rarefaction', () {
-      test('computeDiversityMetrics calculates S, N, Shannon, Pielou and Chao1 correctly', () {
+      test('computeDiversityMetrics calculates S, N, Shannon, Simpson, Hill numbers, Pielou and Chao1 correctly', () {
         final speciesList = [
           Species(inventoryId: 'INV-1', name: 'Species A', isOutOfInventory: false, count: 5),
           Species(inventoryId: 'INV-1', name: 'Species B', isOutOfInventory: false, count: 3),
@@ -546,6 +548,10 @@ void main() {
         expect(metrics.richness, equals(4));
         expect(metrics.totalIndividuals, equals(10));
         expect(metrics.shannonWiener, greaterThan(0));
+        expect(metrics.simpsonDiversity, closeTo(0.64, 1e-9));
+        expect(metrics.hillQ0, equals(4.0));
+        expect(metrics.hillQ1, closeTo(exp(metrics.shannonWiener), 1e-9));
+        expect(metrics.hillQ2, closeTo(1 / (1 - metrics.simpsonDiversity), 1e-9));
         expect(metrics.pielouEvenness, greaterThan(0));
         expect(metrics.chao1, greaterThanOrEqualTo(4.0));
       });
@@ -565,6 +571,10 @@ void main() {
 
         expect(metrics.richness, equals(3));
         expect(metrics.totalIndividuals, equals(4));
+        expect(metrics.simpsonDiversity, closeTo(0.625, 1e-9));
+        expect(metrics.hillQ0, equals(3.0));
+        expect(metrics.hillQ1, closeTo(exp(metrics.shannonWiener), 1e-9));
+        expect(metrics.hillQ2, closeTo(8 / 3, 1e-9));
         expect(metrics.chao1, equals(3.0));
       });
 

@@ -4400,11 +4400,35 @@ abstract class S {
   /// **'Shannon-Wiener (H\')'**
   String get shannonWienerIndex;
 
+  /// Simpson diversity index label
+  ///
+  /// In en, this message translates to:
+  /// **'Simpson Diversity (1-D)'**
+  String get simpsonDiversityIndex;
+
   /// Pielou's evenness index label
   ///
   /// In en, this message translates to:
   /// **'Pielou Evenness (J\')'**
   String get pielouEvennessIndex;
+
+  /// Hill number of order 0 (species richness)
+  ///
+  /// In en, this message translates to:
+  /// **'Hill N0 (q=0)'**
+  String get hillNumberQ0;
+
+  /// Hill number of order 1 (exp Shannon)
+  ///
+  /// In en, this message translates to:
+  /// **'Hill N1 (q=1)'**
+  String get hillNumberQ1;
+
+  /// Hill number of order 2 (inverse Simpson)
+  ///
+  /// In en, this message translates to:
+  /// **'Hill N2 (q=2)'**
+  String get hillNumberQ2;
 
   /// Chao1 expected richness estimator label
   ///

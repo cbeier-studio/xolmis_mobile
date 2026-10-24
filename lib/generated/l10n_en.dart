@@ -2390,7 +2390,19 @@ class SEn extends S {
   String get shannonWienerIndex => 'Shannon-Wiener (H\')';
 
   @override
+  String get simpsonDiversityIndex => 'Simpson Diversity (1-D)';
+
+  @override
   String get pielouEvennessIndex => 'Pielou Evenness (J\')';
+
+  @override
+  String get hillNumberQ0 => 'Hill N0 (q=0)';
+
+  @override
+  String get hillNumberQ1 => 'Hill N1 (q=1)';
+
+  @override
+  String get hillNumberQ2 => 'Hill N2 (q=2)';
 
   @override
   String get chao1Estimator => 'Chao1 Expected Richness';

@@ -14,6 +14,13 @@ import '../../utils/themes.dart';
 import '../../utils/utils.dart';
 import 'inventory_report_screen.dart';
 
+class _SimilarityIndices {
+  const _SimilarityIndices({required this.jaccard, required this.sorensen});
+
+  final double jaccard;
+  final double sorensen;
+}
+
 /// Loader screen that fetches full details for a list of inventory IDs before displaying [StatsInventoriesScreen].
 class StatsInventoriesLoadingScreen extends StatefulWidget {
   final List<String> inventoryIds;
@@ -30,8 +37,7 @@ class _StatsInventoriesLoadingScreenState extends State<StatsInventoriesLoadingS
   @override
   void initState() {
     super.initState();
-    _future = Provider.of<InventoryProvider>(context, listen: false)
-        .loadInventoriesDetails(widget.inventoryIds);
+    _future = Provider.of<InventoryProvider>(context, listen: false).loadInventoriesDetails(widget.inventoryIds);
   }
 
   @override
@@ -40,22 +46,16 @@ class _StatsInventoriesLoadingScreenState extends State<StatsInventoriesLoadingS
       future: _future,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
-          return StatsInventoriesScreen(
-            inventories: snapshot.data ?? [],
-          );
+          return StatsInventoriesScreen(inventories: snapshot.data ?? []);
         } else if (snapshot.hasError) {
           return Scaffold(
             appBar: AppBar(title: Text(S.of(context).statistics)),
-            body: Center(
-              child: Text('Error: ${snapshot.error}'),
-            ),
+            body: Center(child: Text('Error: ${snapshot.error}')),
           );
         } else {
           return Scaffold(
             appBar: AppBar(title: Text(S.of(context).statistics)),
-            body: const Center(
-              child: CircularProgressIndicator(),
-            ),
+            body: const Center(child: CircularProgressIndicator()),
           );
         }
       },
@@ -89,6 +89,8 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
   late int sharedSpeciesAcrossAllCount = 0;
   late Map<String, List<String>> sharedSpeciesByPair = {};
   late Map<String, List<String>> exclusiveSpeciesByInventory = {};
+  late Map<String, List<String>> _exclusiveSpeciesByPair = {};
+  late Map<String, _SimilarityIndices> _similarityIndicesByPair = {};
   late int exclusiveSpeciesCount = 0;
   late List<FlSpot> sampledSpots = [const FlSpot(0, 0)];
   late List<FlSpot> expectedSpots = [const FlSpot(0, 0)];
@@ -152,10 +154,9 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
     sharedSpeciesAcrossAllCount = sharedSpeciesAcrossAll.length;
     sharedSpeciesByPair = _getSharedSpeciesByPair(_sortedInventories);
     exclusiveSpeciesByInventory = _getExclusiveSpeciesByInventory(_sortedInventories);
-    exclusiveSpeciesCount = exclusiveSpeciesByInventory.values.fold<int>(
-      0,
-      (sum, species) => sum + species.length,
-    );
+    _exclusiveSpeciesByPair = _getExclusiveSpeciesByPair(_sortedInventories);
+    _similarityIndicesByPair = _getSimilarityIndicesByPair(_sortedInventories);
+    exclusiveSpeciesCount = exclusiveSpeciesByInventory.values.fold<int>(0, (sum, species) => sum + species.length);
     if (_sortedInventories.isNotEmpty) {
       int totalRichnessSum = _sortedInventories.fold(0, (sum, inv) {
         final count = _getSpeciesRichnessForInventory(inv);
@@ -183,8 +184,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
   }
 
   bool _isDetectionInventory(Inventory inventory) {
-    return inventory.type == InventoryType.invTransectDetection ||
-        inventory.type == InventoryType.invPointDetection;
+    return inventory.type == InventoryType.invTransectDetection || inventory.type == InventoryType.invPointDetection;
   }
 
   /// Detection inventories can contain repeated rows for the same species, so
@@ -201,9 +201,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
 
   // Uses species.sampleTime when available, otherwise falls back to inventory.startTime.
   /// Builds hourly occurrence counts using species time or inventory start time.
-  Map<int, int> _getOccurrencesByHourOfDayWithFallback(
-    List<Inventory> inventories,
-  ) {
+  Map<int, int> _getOccurrencesByHourOfDayWithFallback(List<Inventory> inventories) {
     final Map<int, int> occurrences = {for (var i = 0; i < 24; i++) i: 0};
 
     for (final inventory in inventories) {
@@ -220,10 +218,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
   }
 
   /// Returns a chart width that adapts to the number of inventories.
-  double _responsiveChartWidth(
-    double availableWidth, {
-    required double pixelsPerInventory,
-  }) {
+  double _responsiveChartWidth(double availableWidth, {required double pixelsPerInventory}) {
     final calculatedWidth = _sortedInventories.length * pixelsPerInventory;
     return calculatedWidth > availableWidth ? calculatedWidth : availableWidth;
   }
@@ -240,6 +235,51 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
 
   Set<String> _getSpeciesSetForInventory(Inventory inventory) {
     return inventory.speciesList.map((species) => species.name).toSet();
+  }
+
+  String _pairLabel(Inventory first, Inventory second) {
+    return '${first.id} × ${second.id}';
+  }
+
+  _SimilarityIndices _calculateSimilarityIndices(Set<String> firstSpecies, Set<String> secondSpecies) {
+    final intersectionCount = firstSpecies.intersection(secondSpecies).length;
+    final unionCount = firstSpecies.union(secondSpecies).length;
+    final totalCount = firstSpecies.length + secondSpecies.length;
+
+    final jaccard = unionCount > 0 ? intersectionCount / unionCount : 1.0;
+    final sorensen = totalCount > 0 ? (2 * intersectionCount) / totalCount : 1.0;
+
+    return _SimilarityIndices(jaccard: jaccard, sorensen: sorensen);
+  }
+
+  Widget _buildSimilarityIndicesBadges(String pairLabel, bool isDark) {
+    final indices = _similarityIndicesByPair[pairLabel];
+    if (indices == null) {
+      return const SizedBox.shrink();
+    }
+
+    final jaccardPercentage = (indices.jaccard * 100).toStringAsFixed(1);
+    final sorensenPercentage = (indices.sorensen * 100).toStringAsFixed(1);
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 8),
+      child: Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        children: [
+          Badge(
+            backgroundColor: isDark ? XolmisColors.primary.withValues(alpha: 0.25) : XolmisColors.primaryContainer,
+            textColor: isDark ? XolmisColors.primaryContainer : XolmisColors.onPrimaryContainer,
+            label: Text('Jaccard: $jaccardPercentage%'),
+          ),
+          Badge(
+            backgroundColor: isDark ? XolmisColors.jacarandaDeep.withValues(alpha: 0.35) : XolmisColors.surfaceVariant,
+            textColor: isDark ? Colors.white : Colors.black87,
+            label: Text('Sorensen: $sorensenPercentage%'),
+          ),
+        ],
+      ),
+    );
   }
 
   List<String> _sortedSpeciesList(Iterable<String> species) {
@@ -296,10 +336,39 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
     return result;
   }
 
-  List<BarChartGroupData> _createBarGroupsFromOccurrencesMap(
-    Map<int, int> hourlyOccurrences,
-    double barWidth,
-  ) {
+  Map<String, List<String>> _getExclusiveSpeciesByPair(List<Inventory> inventories) {
+    final result = <String, List<String>>{};
+    final sets = inventories.map(_getSpeciesSetForInventory).toList();
+
+    for (var i = 0; i < inventories.length; i++) {
+      for (var j = i + 1; j < inventories.length; j++) {
+        final exclusiveToFirst = sets[i].difference(sets[j]);
+        final exclusiveToSecond = sets[j].difference(sets[i]);
+        final pairExclusive = {...exclusiveToFirst, ...exclusiveToSecond};
+        final pairLabel = _pairLabel(inventories[i], inventories[j]);
+
+        result[pairLabel] = _sortedSpeciesList(pairExclusive);
+      }
+    }
+
+    return result;
+  }
+
+  Map<String, _SimilarityIndices> _getSimilarityIndicesByPair(List<Inventory> inventories) {
+    final result = <String, _SimilarityIndices>{};
+    final sets = inventories.map(_getSpeciesSetForInventory).toList();
+
+    for (var i = 0; i < inventories.length; i++) {
+      for (var j = i + 1; j < inventories.length; j++) {
+        final pairLabel = _pairLabel(inventories[i], inventories[j]);
+        result[pairLabel] = _calculateSimilarityIndices(sets[i], sets[j]);
+      }
+    }
+
+    return result;
+  }
+
+  List<BarChartGroupData> _createBarGroupsFromOccurrencesMap(Map<int, int> hourlyOccurrences, double barWidth) {
     final List<BarChartGroupData> barGroups = [];
     hourlyOccurrences.forEach((hour, count) {
       barGroups.add(
@@ -310,10 +379,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
               toY: count.toDouble(),
               color: XolmisColors.jacarandaCore,
               width: barWidth,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(6),
-                topRight: Radius.circular(6),
-              ),
+              borderRadius: const BorderRadius.only(topLeft: Radius.circular(6), topRight: Radius.circular(6)),
             ),
           ],
         ),
@@ -326,6 +392,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
     required String title,
     required List<String> species,
     required bool isDark,
+    Widget? headerDetails,
   }) {
     return Container(
       width: double.infinity,
@@ -333,51 +400,44 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
       decoration: BoxDecoration(
         color: isDark ? Colors.grey.shade900 : XolmisColors.surfaceVariant.withValues(alpha: 0.25),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: isDark ? Colors.grey.shade800 : XolmisColors.outlineVariant.withValues(alpha: 0.5),
-        ),
+        border: Border.all(color: isDark ? Colors.grey.shade800 : XolmisColors.outlineVariant.withValues(alpha: 0.5)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-        children: [
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w700,
-              color: isDark ? Colors.white : Colors.black87,
-            ),
+            children: [
+              Expanded(
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                    color: isDark ? Colors.white : Colors.black87,
+                  ),
+                ),
+              ),
+              if (species.isNotEmpty) ...[
+                const SizedBox(width: 8),
+                Badge(
+                  backgroundColor: XolmisColors.primary,
+                  textColor: XolmisColors.onPrimary,
+                  label: Text(species.length.toString()),
+                ),
+              ],
+            ],
           ),
-          if (species.length > 0) ...[
-          const SizedBox(width: 8),
-          Badge(
-            backgroundColor: XolmisColors.primary,
-              textColor: XolmisColors.onPrimary,
-              label: Text(species.length.toString())),
-    ],
-          ],
-          ),
+          if (headerDetails != null) headerDetails,
           const SizedBox(height: 8),
           if (species.isEmpty)
-            Text(
-              '-',
-              style: TextStyle(
-                fontSize: 11,
-                color: isDark ? Colors.grey.shade500 : Colors.grey.shade600,
-              ),
-            )
+            Text('-', style: TextStyle(fontSize: 11, color: isDark ? Colors.grey.shade500 : Colors.grey.shade600))
           else
             ...species.map(
               (speciesName) => Padding(
                 padding: const EdgeInsets.only(bottom: 4),
                 child: Text(
                   speciesName,
-                  style: TextStyle(
-                    fontSize: 11,
-                    color: isDark ? Colors.grey.shade200 : Colors.black87,
-                  ),
+                  style: TextStyle(fontSize: 11, color: isDark ? Colors.grey.shade200 : Colors.black87),
                 ),
               ),
             ),
@@ -386,15 +446,8 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
     );
   }
 
-  Widget _buildSpeciesDialogContent({
-    required List<Widget> sections,
-  }) {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: sections,
-      ),
-    );
+  Widget _buildSpeciesDialogContent({required List<Widget> sections}) {
+    return SingleChildScrollView(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: sections));
   }
 
   Future<void> _showSharedSpeciesDialog(BuildContext context, bool isDark) async {
@@ -408,21 +461,11 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
       const SizedBox(height: 16),
       Text(
         S.of(context).sharedSpeciesByPair,
-        style: TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.w700,
-          color: isDark ? Colors.white : Colors.black87,
-        ),
+        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: isDark ? Colors.white : Colors.black87),
       ),
       const SizedBox(height: 10),
       if (sharedSpeciesByPair.isEmpty)
-        Text(
-          '-',
-          style: TextStyle(
-            fontSize: 11,
-            color: isDark ? Colors.grey.shade500 : Colors.grey.shade600,
-          ),
-        )
+        Text('-', style: TextStyle(fontSize: 11, color: isDark ? Colors.grey.shade500 : Colors.grey.shade600))
       else
         ...sharedSpeciesByPair.entries.expand(
           (entry) => [
@@ -430,6 +473,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
               title: '${entry.key}',
               species: entry.value,
               isDark: isDark,
+              headerDetails: _buildSimilarityIndicesBadges(entry.key, isDark),
             ),
             const SizedBox(height: 10),
           ],
@@ -444,9 +488,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
         builder: (dialogContext) {
           return Dialog.fullscreen(
             child: Scaffold(
-              appBar: AppBar(
-                title: Text(S.of(dialogContext).sharedSpecies),
-              ),
+              appBar: AppBar(title: Text(S.of(dialogContext).sharedSpecies)),
               body: Padding(
                 padding: const EdgeInsets.all(16),
                 child: _buildSpeciesDialogContent(sections: sharedSections),
@@ -486,28 +528,19 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
     final exclusiveSections = <Widget>[
       Text(
         S.of(context).exclusiveSpeciesByInventory,
-        style: TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.w700,
-          color: isDark ? Colors.white : Colors.black87,
-        ),
+        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: isDark ? Colors.white : Colors.black87),
       ),
       const SizedBox(height: 10),
-      if (_sortedInventories.isEmpty)
-        Text(
-          '-',
-          style: TextStyle(
-            fontSize: 11,
-            color: isDark ? Colors.grey.shade500 : Colors.grey.shade600,
-          ),
-        )
+      if (_exclusiveSpeciesByPair.isEmpty)
+        Text('-', style: TextStyle(fontSize: 11, color: isDark ? Colors.grey.shade500 : Colors.grey.shade600))
       else
-        ..._sortedInventories.asMap().entries.expand(
+        ..._exclusiveSpeciesByPair.entries.expand(
           (entry) => [
             _buildSpeciesListSection(
-              title: '${entry.value.id}',
-              species: exclusiveSpeciesByInventory[entry.value.id] ?? const <String>[],
+              title: entry.key,
+              species: entry.value,
               isDark: isDark,
+              headerDetails: _buildSimilarityIndicesBadges(entry.key, isDark),
             ),
             const SizedBox(height: 10),
           ],
@@ -522,9 +555,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
         builder: (dialogContext) {
           return Dialog.fullscreen(
             child: Scaffold(
-              appBar: AppBar(
-                title: Text(S.of(dialogContext).exclusiveSpecies),
-              ),
+              appBar: AppBar(title: Text(S.of(dialogContext).exclusiveSpecies)),
               body: Padding(
                 padding: const EdgeInsets.all(16),
                 child: _buildSpeciesDialogContent(sections: exclusiveSections),
@@ -566,7 +597,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
 
     return Scaffold(
       appBar: AppBar(
-          title: Text(S.of(context).statistics),
+        title: Text(S.of(context).statistics),
         // actions: [
         //   IconButton(
         //     icon: const Icon(Icons.print_outlined),
@@ -586,30 +617,30 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _buildKpiMetricsGrid(isDark),
-                const SizedBox(height: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _buildKpiMetricsGrid(isDark),
+              const SizedBox(height: 16),
 
-                _buildAccumulationCurveCard(context, isDark),
-                const SizedBox(height: 16),
+              _buildAccumulationCurveCard(context, isDark),
+              const SizedBox(height: 16),
 
-                _buildHourlyRecordsCard(isDark),
-                const SizedBox(height: 16),
+              _buildHourlyRecordsCard(isDark),
+              const SizedBox(height: 16),
 
-                _buildRichnessPerInventoryCard(isDark),
-                const SizedBox(height: 16),
+              _buildRichnessPerInventoryCard(isDark),
+              const SizedBox(height: 16),
 
-                _buildConservationStatusCard(isDark),
-                const SizedBox(height: 16),
+              _buildConservationStatusCard(isDark),
+              const SizedBox(height: 16),
 
-                _buildBiodiversityIndicesCard(context, isDark),
-                const SizedBox(height: 24),
-              ],
-            ),
+              _buildBiodiversityIndicesCard(context, isDark),
+              const SizedBox(height: 24),
+            ],
           ),
         ),
+      ),
     );
   }
 
@@ -682,13 +713,12 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(
-        color: isDark
-            ? Colors.grey.shade900.withValues(alpha: 0.6)
-            : XolmisColors.secondaryContainer.withValues(alpha: 0.5),
+        color:
+            isDark
+                ? Colors.grey.shade900.withValues(alpha: 0.6)
+                : XolmisColors.secondaryContainer.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: isDark ? Colors.grey.shade800 : XolmisColors.borderSubtle,
-        ),
+        border: Border.all(color: isDark ? Colors.grey.shade800 : XolmisColors.borderSubtle),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -719,17 +749,14 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
               child: OutlinedButton(
                 style: OutlinedButton.styleFrom(
                   // padding: const EdgeInsets.symmetric(vertical: 4),
-                  backgroundColor: isDark
-                      ? XolmisColors.primary.withValues(alpha: 0.15)
-                      : XolmisColors.primaryContainer.withValues(alpha: 0.5),
+                  backgroundColor:
+                      isDark
+                          ? XolmisColors.primary.withValues(alpha: 0.15)
+                          : XolmisColors.primaryContainer.withValues(alpha: 0.5),
                   side: BorderSide(
-                    color: isDark
-                        ? Colors.grey.shade800
-                        : XolmisColors.outlineVariant.withValues(alpha: 0.5),
+                    color: isDark ? Colors.grey.shade800 : XolmisColors.outlineVariant.withValues(alpha: 0.5),
                   ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
                 onPressed: onPressed,
                 child: Text(
@@ -737,9 +764,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                   style: TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.w600,
-                    color: isDark
-                        ? XolmisColors.primaryContainer
-                        : XolmisColors.onPrimaryContainer,
+                    color: isDark ? XolmisColors.primaryContainer : XolmisColors.onPrimaryContainer,
                   ),
                 ),
               ),
@@ -751,10 +776,12 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
   }
 
   Widget _buildAccumulationCurveCard(BuildContext context, bool isDark) {
-    final accumulationMaxY = [
-      ...accumulatedSpeciesData.map((spot) => spot.y),
-      ...accumulatedSpeciesWithinSampleData.map((spot) => spot.y),
-    ].fold<double>(1.0, (max, value) => value > max ? value : max) * 1.15;
+    final accumulationMaxY =
+        [
+          ...accumulatedSpeciesData.map((spot) => spot.y),
+          ...accumulatedSpeciesWithinSampleData.map((spot) => spot.y),
+        ].fold<double>(1.0, (max, value) => value > max ? value : max) *
+        1.15;
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -772,11 +799,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
             children: [
               Row(
                 children: [
-                  const Icon(
-                    Icons.show_chart,
-                    size: 18,
-                    color: XolmisColors.primary,
-                  ),
+                  const Icon(Icons.show_chart, size: 18, color: XolmisColors.primary),
                   const SizedBox(width: 8),
                   Text(
                     S.of(context).speciesAccumulationCurve,
@@ -804,10 +827,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
               builder: (context, scrollController) {
                 return LayoutBuilder(
                   builder: (context, constraints) {
-                    final chartWidth = _responsiveChartWidth(
-                      constraints.maxWidth - 16,
-                      pixelsPerInventory: 20,
-                    );
+                    final chartWidth = _responsiveChartWidth(constraints.maxWidth - 16, pixelsPerInventory: 20);
                     return SingleChildScrollView(
                       controller: scrollController,
                       scrollDirection: Axis.horizontal,
@@ -826,41 +846,23 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                                 spots: accumulatedSpeciesData,
                                 isCurved: false,
                                 color:
-                                Theme
-                                    .of(context)
-                                    .brightness ==
-                                    Brightness.light
-                                    ? Colors.deepPurple
-                                    : Colors.deepPurple[200],
+                                    Theme.of(context).brightness == Brightness.light
+                                        ? Colors.deepPurple
+                                        : Colors.deepPurple[200],
                                 barWidth: 2,
                                 isStrokeCapRound: true,
                                 dotData: FlDotData(show: true),
-                                belowBarData: BarAreaData(
-                                  show: true,
-                                  color: Colors.deepPurpleAccent
-                                      .withAlpha(12),
-                                ),
+                                belowBarData: BarAreaData(show: true, color: Colors.deepPurpleAccent.withAlpha(12)),
                               ),
                               LineChartBarData(
-                                spots:
-                                accumulatedSpeciesWithinSampleData,
+                                spots: accumulatedSpeciesWithinSampleData,
                                 isCurved: false,
                                 color:
-                                Theme
-                                    .of(context)
-                                    .brightness ==
-                                    Brightness.light
-                                    ? Colors.pink
-                                    : Colors.pink[200],
+                                    Theme.of(context).brightness == Brightness.light ? Colors.pink : Colors.pink[200],
                                 barWidth: 2,
                                 isStrokeCapRound: true,
                                 dotData: FlDotData(show: true),
-                                belowBarData: BarAreaData(
-                                  show: true,
-                                  color: Colors.pinkAccent.withAlpha(
-                                    12,
-                                  ),
-                                ),
+                                belowBarData: BarAreaData(show: true, color: Colors.pinkAccent.withAlpha(12)),
                               ),
                             ],
                             titlesData: FlTitlesData(
@@ -877,9 +879,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                                         style: TextStyle(
                                           fontSize: 10,
                                           fontWeight: FontWeight.w500,
-                                          color: isDark
-                                              ? Colors.grey.shade400
-                                              : Colors.grey.shade600,
+                                          color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
                                         ),
                                       );
                                     }
@@ -894,67 +894,58 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                                   interval: 5.0,
                                   getTitlesWidget: (value, meta) {
                                     // if (value % 20 == 0) {
-                                      return Text(
-                                        value.toInt().toString(),
-                                        style: TextStyle(
-                                          fontSize: 9,
-                                          color: isDark
-                                              ? Colors.grey.shade400
-                                              : Colors.grey.shade600,
-                                        ),
-                                      );
+                                    return Text(
+                                      value.toInt().toString(),
+                                      style: TextStyle(
+                                        fontSize: 9,
+                                        color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+                                      ),
+                                    );
                                     // }
                                     // return const SizedBox.shrink();
                                   },
                                 ),
                               ),
-                              rightTitles: AxisTitles(
-                                sideTitles: SideTitles(
-                                  showTitles: false,
-                                ),
-                              ),
-                              topTitles: AxisTitles(
-                                sideTitles: SideTitles(
-                                  showTitles: false,
-                                ),
-                              ),
+                              rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                              topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
                             ),
                             gridData: FlGridData(
                               show: true,
                               drawVerticalLine: true,
-                              getDrawingHorizontalLine: (value) => FlLine(
-                                color: isDark
-                                    ? Colors.white.withValues(alpha: 0.05)
-                                    : Colors.black.withValues(alpha: 0.05),
-                                strokeWidth: 1,
-                              ),
+                              getDrawingHorizontalLine:
+                                  (value) => FlLine(
+                                    color:
+                                        isDark
+                                            ? Colors.white.withValues(alpha: 0.05)
+                                            : Colors.black.withValues(alpha: 0.05),
+                                    strokeWidth: 1,
+                                  ),
                               verticalInterval: 1.0,
-                              getDrawingVerticalLine: (value) => FlLine(
-                                color: isDark
-                                    ? Colors.white.withValues(alpha: 0.05)
-                                    : Colors.black.withValues(alpha: 0.05),
-                                strokeWidth: 1,
-                              ),
+                              getDrawingVerticalLine:
+                                  (value) => FlLine(
+                                    color:
+                                        isDark
+                                            ? Colors.white.withValues(alpha: 0.05)
+                                            : Colors.black.withValues(alpha: 0.05),
+                                    strokeWidth: 1,
+                                  ),
                             ),
                             borderData: FlBorderData(
                               show: true,
                               border: Border(
                                 bottom: BorderSide(
-                                  color: isDark
-                                      ? Colors.grey.shade800
-                                      : XolmisColors.outlineVariant,
+                                  color: isDark ? Colors.grey.shade800 : XolmisColors.outlineVariant,
                                   width: 1,
                                 ),
                                 left: BorderSide(
-                                  color: isDark
-                                      ? Colors.grey.shade800
-                                      : XolmisColors.outlineVariant,
+                                  color: isDark ? Colors.grey.shade800 : XolmisColors.outlineVariant,
                                   width: 1,
                                 ),
                                 top: BorderSide(
-                                  color: isDark
-                                      ? Colors.white.withValues(alpha: 0.05)
-                                      : Colors.black.withValues(alpha: 0.05),
+                                  color:
+                                      isDark
+                                          ? Colors.white.withValues(alpha: 0.05)
+                                          : Colors.black.withValues(alpha: 0.05),
                                   width: 1,
                                 ),
                               ),
@@ -963,33 +954,24 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                               handleBuiltInTouches: true,
                               touchTooltipData: LineTouchTooltipData(
                                 getTooltipColor: (spot) => Colors.white.withAlpha(200),
-                                tooltipBorderRadius: BorderRadius.all(
-                                  Radius.circular(8),
-                                ),
+                                tooltipBorderRadius: BorderRadius.all(Radius.circular(8)),
                                 fitInsideVertically: true,
                                 fitInsideHorizontally: true,
-                                getTooltipItems: (List<LineBarSpot> touchedSpots,) {
+                                getTooltipItems: (List<LineBarSpot> touchedSpots) {
                                   if (touchedSpots.isEmpty) {
                                     return [];
                                   }
 
                                   return touchedSpots.map((spot) {
-                                    final spotColor = spot.bar.gradient?.colors.first ??
-                                        spot.bar.color ?? Colors.black87;
+                                    final spotColor =
+                                        spot.bar.gradient?.colors.first ?? spot.bar.color ?? Colors.black87;
                                     return LineTooltipItem(
                                       '',
-                                      const TextStyle(
-                                        color: Colors.black87,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                      const TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
                                       children: [
                                         TextSpan(
                                           text: '${spot.y.toInt()}',
-                                          style: TextStyle(
-                                            color: spotColor,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14,
-                                          ),
+                                          style: TextStyle(color: spotColor, fontWeight: FontWeight.bold, fontSize: 14),
                                         ),
                                         // TextSpan(
                                         //   text: '\n$inventoryId',
@@ -1020,46 +1002,32 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
             child: OutlinedButton.icon(
               style: OutlinedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 12),
-                backgroundColor: isDark
-                    ? XolmisColors.primary.withValues(alpha: 0.15)
-                    : XolmisColors.primaryContainer.withValues(alpha: 0.5),
+                backgroundColor:
+                    isDark
+                        ? XolmisColors.primary.withValues(alpha: 0.15)
+                        : XolmisColors.primaryContainer.withValues(alpha: 0.5),
                 side: BorderSide(
-                  color: isDark
-                      ? Colors.grey.shade800
-                      : XolmisColors.outlineVariant.withValues(alpha: 0.5),
+                  color: isDark ? Colors.grey.shade800 : XolmisColors.outlineVariant.withValues(alpha: 0.5),
                 ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
-              icon: const Icon(
-                Icons.table_chart_outlined,
-                size: 16,
-                color: XolmisColors.primary,
-              ),
+              icon: const Icon(Icons.table_chart_outlined, size: 16, color: XolmisColors.primary),
               label: Text(
                 S.of(context).viewSpeciesTable,
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
-                  color: isDark
-                      ? XolmisColors.primaryContainer
-                      : XolmisColors.onPrimaryContainer,
+                  color: isDark ? XolmisColors.primaryContainer : XolmisColors.onPrimaryContainer,
                 ),
               ),
               onPressed: () {
-                final inventories =
-                    _sortedInventories;
+                final inventories = _sortedInventories;
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder:
-                        (context) => InventoryReportScreen(
-                      selectedInventories:
-                      inventories
-                          .whereType<Inventory>()
-                          .toList(),
-                    ),
+                        (context) =>
+                            InventoryReportScreen(selectedInventories: inventories.whereType<Inventory>().toList()),
                   ),
                 );
               },
@@ -1073,14 +1041,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
   Widget _buildLegendIndicator(String label, Color color, bool isDark) {
     return Row(
       children: [
-        Container(
-          width: 8,
-          height: 8,
-          decoration: BoxDecoration(
-            color: color,
-            shape: BoxShape.circle,
-          ),
-        ),
+        Container(width: 8, height: 8, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
         const SizedBox(width: 4),
         Text(
           label,
@@ -1111,11 +1072,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
         children: [
           Row(
             children: [
-              const Icon(
-                Icons.access_time_outlined,
-                size: 18,
-                color: XolmisColors.primary,
-              ),
+              const Icon(Icons.access_time_outlined, size: 18, color: XolmisColors.primary),
               const SizedBox(width: 8),
               Text(
                 S.of(context).recordsByHour,
@@ -1141,11 +1098,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                     getTooltipItem: (group, groupIndex, rod, rodIndex) {
                       return BarTooltipItem(
                         '${groupIndex.toString().padLeft(2, '0')} h: ${rod.toY.round()} ${S.of(context).recordsCount(rod.toY.round())}',
-                        TextStyle(
-                          color: Colors.white,
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold),
                       );
                     },
                   ),
@@ -1161,12 +1114,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                         if (hour % 4 == 0) {
                           return Text(
                             '${hour.toString().padLeft(2, '0')}h',
-                            style: TextStyle(
-                              fontSize: 9,
-                              color: isDark
-                                  ? Colors.grey.shade400
-                                  : Colors.grey.shade600,
-                            ),
+                            style: TextStyle(fontSize: 9, color: isDark ? Colors.grey.shade400 : Colors.grey.shade600),
                           );
                         }
                         return const SizedBox.shrink();
@@ -1180,30 +1128,22 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                       getTitlesWidget: (value, meta) {
                         return Text(
                           value.toInt().toString(),
-                          style: TextStyle(
-                            fontSize: 9,
-                            color: isDark
-                                ? Colors.grey.shade400
-                                : Colors.grey.shade600,
-                          ),
+                          style: TextStyle(fontSize: 9, color: isDark ? Colors.grey.shade400 : Colors.grey.shade600),
                         );
                       },
                     ),
                   ),
-                  topTitles: const AxisTitles(
-                      sideTitles: SideTitles(showTitles: false)),
-                  rightTitles: const AxisTitles(
-                      sideTitles: SideTitles(showTitles: false)),
+                  topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                  rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
                 ),
                 gridData: FlGridData(
                   show: true,
                   drawVerticalLine: false,
-                  getDrawingHorizontalLine: (value) => FlLine(
-                    color: isDark
-                        ? Colors.white.withValues(alpha: 0.05)
-                        : Colors.black.withValues(alpha: 0.05),
-                    strokeWidth: 1,
-                  ),
+                  getDrawingHorizontalLine:
+                      (value) => FlLine(
+                        color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.05),
+                        strokeWidth: 1,
+                      ),
                 ),
                 borderData: FlBorderData(
                   show: true,
@@ -1212,10 +1152,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                     bottom: BorderSide(color: isDark ? Colors.grey.shade800 : Colors.grey.shade200, width: 2),
                   ),
                 ),
-                barGroups: _createBarGroupsFromOccurrencesMap(
-                  recordsPerHour,
-                  12,
-                ),
+                barGroups: _createBarGroupsFromOccurrencesMap(recordsPerHour, 12),
               ),
             ),
           ),
@@ -1241,11 +1178,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
             children: [
               Row(
                 children: [
-                  const Icon(
-                    Icons.bar_chart_rounded,
-                    size: 18,
-                    color: XolmisColors.primary,
-                  ),
+                  const Icon(Icons.bar_chart_rounded, size: 18, color: XolmisColors.primary),
                   const SizedBox(width: 8),
                   Text(
                     S.of(context).speciesRichness,
@@ -1273,10 +1206,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
               builder: (context, scrollController) {
                 return LayoutBuilder(
                   builder: (context, constraints) {
-                    final chartWidth = _responsiveChartWidth(
-                      constraints.maxWidth,
-                      pixelsPerInventory: 20,
-                    );
+                    final chartWidth = _responsiveChartWidth(constraints.maxWidth, pixelsPerInventory: 20);
                     return SingleChildScrollView(
                       controller: scrollController,
                       scrollDirection: Axis.horizontal,
@@ -1295,24 +1225,19 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                                 getTooltipItem: (group, groupIndex, rod, rodIndex) {
                                   final inventoryId = _sortedInventories[groupIndex].id;
                                   return BarTooltipItem(
-                                      '',
-                                      TextStyle(
-                                        color: Colors.deepPurple,
-                                        fontWeight: FontWeight.bold,
+                                    '',
+                                    TextStyle(color: Colors.deepPurple, fontWeight: FontWeight.bold),
+                                    children: [
+                                      TextSpan(text: '${rod.toY.toInt()}\n'),
+                                      TextSpan(
+                                        text: inventoryId,
+                                        style: const TextStyle(
+                                          color: Colors.black87,
+                                          fontWeight: FontWeight.normal,
+                                          fontSize: 10,
+                                        ),
                                       ),
-                                      children: [
-                                        TextSpan(
-                                          text: '${rod.toY.toInt()}\n',
-                                        ),
-                                        TextSpan(
-                                          text: inventoryId,
-                                          style: const TextStyle(
-                                            color: Colors.black87,
-                                            fontWeight: FontWeight.normal,
-                                            fontSize: 10,
-                                          ),
-                                        ),
-                                      ]
+                                    ],
                                   );
                                 },
                               ),
@@ -1331,9 +1256,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                                         style: TextStyle(
                                           fontSize: 10,
                                           fontWeight: FontWeight.bold,
-                                          color: isDark
-                                              ? Colors.grey.shade400
-                                              : Colors.grey.shade600,
+                                          color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
                                         ),
                                       );
                                     }
@@ -1350,56 +1273,59 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                                       value.toInt().toString(),
                                       style: TextStyle(
                                         fontSize: 9,
-                                        color: isDark
-                                            ? Colors.grey.shade400
-                                            : Colors.grey.shade600,
+                                        color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
                                       ),
                                     );
                                   },
                                 ),
                               ),
-                              topTitles: const AxisTitles(
-                                  sideTitles: SideTitles(showTitles: false)),
-                              rightTitles: const AxisTitles(
-                                  sideTitles: SideTitles(showTitles: false)),
+                              topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                              rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
                             ),
-                            barGroups: _sortedInventories
-                                .asMap()
-                                .map((index, inventory) =>
-                                MapEntry(
-                                  index,
-                                  BarChartGroupData(
-                                    x: index,
-                                    barRods: [
-                                      BarChartRodData(
-                                        toY: _getSpeciesRichnessForInventory(inventory).toDouble(),
-                                        width: 12,
-                                        borderRadius: const BorderRadius.only(
-                                          topLeft: Radius.circular(6),
-                                          topRight: Radius.circular(6),
+                            barGroups:
+                                _sortedInventories
+                                    .asMap()
+                                    .map(
+                                      (index, inventory) => MapEntry(
+                                        index,
+                                        BarChartGroupData(
+                                          x: index,
+                                          barRods: [
+                                            BarChartRodData(
+                                              toY: _getSpeciesRichnessForInventory(inventory).toDouble(),
+                                              width: 12,
+                                              borderRadius: const BorderRadius.only(
+                                                topLeft: Radius.circular(6),
+                                                topRight: Radius.circular(6),
+                                              ),
+                                              color: XolmisColors.jacarandaCore,
+                                            ),
+                                          ],
                                         ),
-                                        color: XolmisColors.jacarandaCore,
                                       ),
-                                    ],
-                                  ),
-                                ))
-                                .values
-                                .toList(),
+                                    )
+                                    .values
+                                    .toList(),
                             gridData: FlGridData(
                               show: true,
                               drawVerticalLine: false,
-                              getDrawingHorizontalLine: (value) => FlLine(
-                                color: isDark
-                                    ? Colors.white.withValues(alpha: 0.05)
-                                    : Colors.black.withValues(alpha: 0.05),
-                                strokeWidth: 1,
-                              ),
+                              getDrawingHorizontalLine:
+                                  (value) => FlLine(
+                                    color:
+                                        isDark
+                                            ? Colors.white.withValues(alpha: 0.05)
+                                            : Colors.black.withValues(alpha: 0.05),
+                                    strokeWidth: 1,
+                                  ),
                             ),
                             borderData: FlBorderData(
                               show: true,
                               border: Border(
                                 left: BorderSide(color: isDark ? Colors.grey.shade800 : Colors.grey.shade200, width: 2),
-                                bottom: BorderSide(color: isDark ? Colors.grey.shade800 : Colors.grey.shade200, width: 2),
+                                bottom: BorderSide(
+                                  color: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
+                                  width: 2,
+                                ),
                               ),
                             ),
                           ),
@@ -1477,14 +1403,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
       }
     }
 
-    final counts = {
-      'LC': 0,
-      'NT': 0,
-      'VU': 0,
-      'EN': 0,
-      'CR': 0,
-      'DD': 0,
-    };
+    final counts = {'LC': 0, 'NT': 0, 'VU': 0, 'EN': 0, 'CR': 0, 'DD': 0};
 
     for (final speciesName in speciesSet) {
       final status = allSpeciesConservationStatus[speciesName]?.trim().toUpperCase();
@@ -1496,9 +1415,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
     return counts;
   }
 
-  Map<String, List<String>> _getThreatenedSpeciesByCategory(
-    List<Inventory> inventories,
-  ) {
+  Map<String, List<String>> _getThreatenedSpeciesByCategory(List<Inventory> inventories) {
     final categories = ['NT', 'VU', 'EN', 'CR', 'DD'];
     final grouped = {for (final category in categories) category: <String>{}};
 
@@ -1518,7 +1435,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
 
     return {
       for (final entry in grouped.entries)
-        entry.key: (entry.value.toList()..sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase())))
+        entry.key: (entry.value.toList()..sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()))),
     };
   }
 
@@ -1538,21 +1455,14 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
     required bool isDark,
   }) {
     final categories = ['NT', 'VU', 'EN', 'CR', 'DD'];
-    final nonEmptyCategories = categories
-        .where((category) => (threatenedByCategory[category]?.isNotEmpty ?? false))
-        .toList();
+    final nonEmptyCategories =
+        categories.where((category) => (threatenedByCategory[category]?.isNotEmpty ?? false)).toList();
     final colors = _getConservationCategoryColors();
     final contentTextColor = isDark ? Colors.grey.shade200 : Colors.black87;
 
     if (nonEmptyCategories.isEmpty) {
       return Center(
-        child: Text(
-          '-',
-          style: TextStyle(
-            fontSize: 12,
-            color: isDark ? Colors.grey.shade500 : Colors.grey.shade600,
-          ),
-        ),
+        child: Text('-', style: TextStyle(fontSize: 12, color: isDark ? Colors.grey.shade500 : Colors.grey.shade600)),
       );
     }
 
@@ -1569,27 +1479,14 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                 padding: const EdgeInsets.only(top: 10, bottom: 8),
                 child: Row(
                   children: [
-                    Text(
-                      category,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        color: color,
-                      ),
-                    ),
+                    Text(category, style: TextStyle(fontWeight: FontWeight.w700, color: color)),
                     const SizedBox(width: 8),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: color,
-                        borderRadius: BorderRadius.circular(999),
-                      ),
+                      decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(999)),
                       child: Text(
                         '$count',
-                        style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w700,
-                          color: badgeTextColor,
-                        ),
+                        style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: badgeTextColor),
                       ),
                     ),
                   ],
@@ -1600,16 +1497,10 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
           ...threatenedByCategory[category]!.map(
             (speciesName) => Padding(
               padding: const EdgeInsets.only(bottom: 5),
-              child: Text(
-                speciesName,
-                style: TextStyle(color: contentTextColor),
-              ),
+              child: Text(speciesName, style: TextStyle(color: contentTextColor)),
             ),
           ),
-          Divider(
-            height: 16,
-            color: isDark ? Colors.grey.shade800 : Colors.grey.shade300,
-          ),
+          Divider(height: 16, color: isDark ? Colors.grey.shade800 : Colors.grey.shade300),
         ],
       ],
     );
@@ -1619,10 +1510,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
     final threatenedByCategory = _getThreatenedSpeciesByCategory(_sortedInventories);
     final isSmallScreen = MediaQuery.of(context).size.shortestSide < 600;
 
-    final content = _buildThreatenedSpeciesListContent(
-      threatenedByCategory: threatenedByCategory,
-      isDark: isDark,
-    );
+    final content = _buildThreatenedSpeciesListContent(threatenedByCategory: threatenedByCategory, isDark: isDark);
 
     if (isSmallScreen) {
       await showDialog<void>(
@@ -1630,13 +1518,8 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
         builder: (dialogContext) {
           return Dialog.fullscreen(
             child: Scaffold(
-              appBar: AppBar(
-                title: Text(S.of(context).threatenedSpecies),
-              ),
-              body: Padding(
-                padding: const EdgeInsets.all(16),
-                child: content,
-              ),
+              appBar: AppBar(title: Text(S.of(context).threatenedSpecies)),
+              body: Padding(padding: const EdgeInsets.all(16), child: content),
             ),
           );
         },
@@ -1649,11 +1532,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
       builder: (dialogContext) {
         return AlertDialog(
           title: Text(S.of(context).threatenedSpecies),
-          content: SizedBox(
-            width: 460,
-            height: 460,
-            child: content,
-          ),
+          content: SizedBox(width: 460, height: 460, child: content),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(dialogContext).pop(),
@@ -1677,8 +1556,13 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
       }
     }
     final totalSpecies = speciesSet.length;
-    final threatenedCount = ['NT', 'VU', 'EN', 'CR', 'DD']
-        .fold<int>(0, (sum, category) => sum + (statusCounts[category] ?? 0));
+    final threatenedCount = [
+      'NT',
+      'VU',
+      'EN',
+      'CR',
+      'DD',
+    ].fold<int>(0, (sum, category) => sum + (statusCounts[category] ?? 0));
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -1693,11 +1577,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
         children: [
           Row(
             children: [
-              const Icon(
-                Icons.shield_outlined,
-                size: 18,
-                color: XolmisColors.primary,
-              ),
+              const Icon(Icons.shield_outlined, size: 18, color: XolmisColors.primary),
               const SizedBox(width: 8),
               Text(
                 S.of(context).conservationStatus,
@@ -1721,14 +1601,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                 children: [
                   SizedBox(
                     width: 36,
-                    child: Text(
-                      category,
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: color,
-                      ),
-                    ),
+                    child: Text(category, style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: color)),
                   ),
                   const SizedBox(width: 8),
                   Expanded(
@@ -1761,44 +1634,33 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
           }),
           if (threatenedCount > 0) ...[
             const SizedBox(height: 6),
-          SizedBox(
-            width: double.infinity,
-            child: OutlinedButton.icon(
-              style: OutlinedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                backgroundColor: isDark
-                    ? XolmisColors.primary.withValues(alpha: 0.15)
-                    : XolmisColors.primaryContainer.withValues(alpha: 0.5),
-                side: BorderSide(
-                  color: isDark
-                      ? Colors.grey.shade800
-                      : XolmisColors.outlineVariant.withValues(alpha: 0.5),
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  backgroundColor:
+                      isDark
+                          ? XolmisColors.primary.withValues(alpha: 0.15)
+                          : XolmisColors.primaryContainer.withValues(alpha: 0.5),
+                  side: BorderSide(
+                    color: isDark ? Colors.grey.shade800 : XolmisColors.outlineVariant.withValues(alpha: 0.5),
+                  ),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                icon: const Icon(Icons.table_chart_outlined, size: 16, color: XolmisColors.primary),
+                label: Text(
+                  S.of(context).viewSpeciesTable,
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: isDark ? XolmisColors.primaryContainer : XolmisColors.onPrimaryContainer,
+                  ),
                 ),
+                onPressed: threatenedCount > 0 ? () => _showThreatenedSpeciesDialog(context, isDark) : null,
               ),
-              icon: const Icon(
-                Icons.table_chart_outlined,
-                size: 16,
-                color: XolmisColors.primary,
-              ),
-              label: Text(
-                S.of(context).viewSpeciesTable,
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  color: isDark
-                      ? XolmisColors.primaryContainer
-                      : XolmisColors.onPrimaryContainer,
-                ),
-              ),
-              onPressed: threatenedCount > 0
-                  ? () => _showThreatenedSpeciesDialog(context, isDark)
-                  : null,
             ),
-          ),
-    ],
+          ],
         ],
       ),
     );
@@ -1810,14 +1672,14 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
       allSpecies.addAll(inv.speciesList);
     }
     final combinedMetrics = computeDiversityMetrics(S.of(context).total, allSpecies);
-    final perInventoryMetrics = _sortedInventories.map((inv) {
-      return computeDiversityMetrics(
-        inv.id,
-        inv.speciesList,
-        ignoreZeroCountSpeciesInChao1: inv.speciesList.any((species) => species.count <= 0),
-      );
-    }).toList();
-
+    final perInventoryMetrics =
+        _sortedInventories.map((inv) {
+          return computeDiversityMetrics(
+            inv.id,
+            inv.speciesList,
+            ignoreZeroCountSpeciesInChao1: inv.speciesList.any((species) => species.count <= 0),
+          );
+        }).toList();
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -1831,11 +1693,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
         children: [
           Row(
             children: [
-              const Icon(
-                Icons.analytics_outlined,
-                size: 18,
-                color: XolmisColors.primary,
-              ),
+              const Icon(Icons.analytics_outlined, size: 18, color: XolmisColors.primary),
               const SizedBox(width: 8),
               Text(
                 S.of(context).biodiversityIndices,
@@ -1883,8 +1741,24 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
             children: [
               _buildMetricChip(S.of(context).speciesRichness, '${combinedMetrics.richness}', isDark),
               _buildMetricChip(S.of(context).totalIndividuals, '${combinedMetrics.totalIndividuals}', isDark),
-              _buildMetricChip(S.of(context).shannonWienerIndex, combinedMetrics.shannonWiener.toStringAsFixed(3), isDark),
-              _buildMetricChip(S.of(context).pielouEvennessIndex, combinedMetrics.pielouEvenness.toStringAsFixed(3), isDark),
+              _buildMetricChip(
+                S.of(context).shannonWienerIndex,
+                combinedMetrics.shannonWiener.toStringAsFixed(3),
+                isDark,
+              ),
+              _buildMetricChip(
+                S.of(context).simpsonDiversityIndex,
+                combinedMetrics.simpsonDiversity.toStringAsFixed(3),
+                isDark,
+              ),
+              _buildMetricChip(
+                S.of(context).pielouEvennessIndex,
+                combinedMetrics.pielouEvenness.toStringAsFixed(3),
+                isDark,
+              ),
+              _buildMetricChip(S.of(context).hillNumberQ0, combinedMetrics.hillQ0.toStringAsFixed(1), isDark),
+              _buildMetricChip(S.of(context).hillNumberQ1, combinedMetrics.hillQ1.toStringAsFixed(3), isDark),
+              _buildMetricChip(S.of(context).hillNumberQ2, combinedMetrics.hillQ2.toStringAsFixed(3), isDark),
               _buildMetricChip(S.of(context).chao1Estimator, combinedMetrics.chao1.toStringAsFixed(1), isDark),
             ],
           ),
@@ -1910,10 +1784,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
               builder: (context, scrollController) {
                 return LayoutBuilder(
                   builder: (context, constraints) {
-                    final chartWidth = _responsiveChartWidth(
-                      constraints.maxWidth - 16,
-                      pixelsPerInventory: 25,
-                    );
+                    final chartWidth = _responsiveChartWidth(constraints.maxWidth - 16, pixelsPerInventory: 25);
                     return SingleChildScrollView(
                       controller: scrollController,
                       scrollDirection: Axis.horizontal,
@@ -1958,7 +1829,10 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                                     if (idx >= 0 && idx <= _sortedInventories.length) {
                                       return Text(
                                         '${idx}',
-                                        style: TextStyle(fontSize: 10, color: isDark ? Colors.grey.shade400 : Colors.grey.shade600),
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+                                        ),
                                       );
                                     }
                                     return const SizedBox.shrink();
@@ -1972,7 +1846,10 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                                   getTitlesWidget: (value, meta) {
                                     return Text(
                                       value.toInt().toString(),
-                                      style: TextStyle(fontSize: 9, color: isDark ? Colors.grey.shade400 : Colors.grey.shade600),
+                                      style: TextStyle(
+                                        fontSize: 9,
+                                        color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+                                      ),
                                     );
                                   },
                                 ),
@@ -1986,33 +1863,24 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                               handleBuiltInTouches: true,
                               touchTooltipData: LineTouchTooltipData(
                                 getTooltipColor: (spot) => Colors.white.withAlpha(200),
-                                tooltipBorderRadius: BorderRadius.all(
-                                  Radius.circular(8),
-                                ),
+                                tooltipBorderRadius: BorderRadius.all(Radius.circular(8)),
                                 fitInsideVertically: true,
                                 fitInsideHorizontally: true,
-                                getTooltipItems: (List<LineBarSpot> touchedSpots,) {
+                                getTooltipItems: (List<LineBarSpot> touchedSpots) {
                                   if (touchedSpots.isEmpty) {
                                     return [];
                                   }
 
                                   return touchedSpots.map((spot) {
-                                    final spotColor = spot.bar.gradient?.colors.first ??
-                                        spot.bar.color ?? Colors.black87;
+                                    final spotColor =
+                                        spot.bar.gradient?.colors.first ?? spot.bar.color ?? Colors.black87;
                                     return LineTooltipItem(
                                       '',
-                                      const TextStyle(
-                                        color: Colors.black87,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                      const TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
                                       children: [
                                         TextSpan(
                                           text: '${spot.y.toInt()}',
-                                          style: TextStyle(
-                                            color: spotColor,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14,
-                                          ),
+                                          style: TextStyle(color: spotColor, fontWeight: FontWeight.bold, fontSize: 14),
                                         ),
                                         // TextSpan(
                                         //   text: '\n$inventoryId',
@@ -2077,76 +1945,157 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                 isDark ? Colors.grey.shade900 : XolmisColors.surfaceVariant.withValues(alpha: 0.5),
               ),
               columns: [
-                DataColumn(label: Text(S.of(context).inventories, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold))),
-                DataColumn(label: Text('S', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)), headingRowAlignment: MainAxisAlignment.end),
-                DataColumn(label: Text('N', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)), headingRowAlignment: MainAxisAlignment.end),
-                DataColumn(label: Text("H'", style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)), headingRowAlignment: MainAxisAlignment.end),
-                DataColumn(label: Text("J'", style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)), headingRowAlignment: MainAxisAlignment.end),
-                DataColumn(label: Text('Chao1', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)), headingRowAlignment: MainAxisAlignment.end),
+                DataColumn(
+                  label: Text(
+                    S.of(context).inventories,
+                    style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                DataColumn(
+                  label: Text('S', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                  headingRowAlignment: MainAxisAlignment.end,
+                ),
+                DataColumn(
+                  label: Text('N', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                  headingRowAlignment: MainAxisAlignment.end,
+                ),
+                DataColumn(
+                  label: Text("H'", style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                  headingRowAlignment: MainAxisAlignment.end,
+                ),
+                DataColumn(
+                  label: Text('1-D', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                  headingRowAlignment: MainAxisAlignment.end,
+                ),
+                DataColumn(
+                  label: Text("J'", style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                  headingRowAlignment: MainAxisAlignment.end,
+                ),
+                DataColumn(
+                  label: Text('N0', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                  headingRowAlignment: MainAxisAlignment.end,
+                ),
+                DataColumn(
+                  label: Text('N1', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                  headingRowAlignment: MainAxisAlignment.end,
+                ),
+                DataColumn(
+                  label: Text('N2', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                  headingRowAlignment: MainAxisAlignment.end,
+                ),
+                DataColumn(
+                  label: Text('Chao1', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                  headingRowAlignment: MainAxisAlignment.end,
+                ),
               ],
-              rows: perInventoryMetrics.map((m) {
-                return DataRow(
-                  cells: [
-                    DataCell(Text(m.label, style: const TextStyle(fontSize: 11))),
-                    DataCell(Container(
-                      alignment: Alignment.centerRight,
-                      // padding: const EdgeInsets.symmetric(
-                      //     horizontal: 4, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: Text('${m.richness}', style: const TextStyle(fontSize: 11)),
-                    ),
-                    ),
-                    DataCell(Container(
-                      alignment: Alignment.centerRight,
-                      // padding: const EdgeInsets.symmetric(
-                      //   horizontal: 4, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: Text('${m.totalIndividuals}', style: const TextStyle(fontSize: 11)),
-                    ),
-                    ),
-                    DataCell(
-                Container(
-                alignment: Alignment.centerRight,
-                // padding: const EdgeInsets.symmetric(
-                // horizontal: 4, vertical: 4),
-                decoration: BoxDecoration(
-                color: Colors.transparent,
-                borderRadius: BorderRadius.circular(6),
-                ),
-                child: Text(m.shannonWiener.toStringAsFixed(3), style: const TextStyle(fontSize: 11)),
-                ),
-                ),
-                    DataCell(Container(
-                alignment: Alignment.centerRight,
-                // padding: const EdgeInsets.symmetric(
-                // horizontal: 4, vertical: 4),
-                decoration: BoxDecoration(
-                color: Colors.transparent,
-                borderRadius: BorderRadius.circular(6),
-                ),
-                child: Text(m.pielouEvenness.toStringAsFixed(3), style: const TextStyle(fontSize: 11)),
-                ),
-                ),
-                    DataCell(Container(
-                alignment: Alignment.centerRight,
-                // padding: const EdgeInsets.symmetric(
-                // horizontal: 4, vertical: 4),
-                decoration: BoxDecoration(
-                color: Colors.transparent,
-                borderRadius: BorderRadius.circular(6),
-                ),
-                child: Text(m.chao1.toStringAsFixed(1), style: const TextStyle(fontSize: 11)),
-                ),
-                ),
-                  ],
-                );
-              }).toList(),
+              rows:
+                  perInventoryMetrics.map((m) {
+                    return DataRow(
+                      cells: [
+                        DataCell(Text(m.label, style: const TextStyle(fontSize: 11))),
+                        DataCell(
+                          Container(
+                            alignment: Alignment.centerRight,
+                            // padding: const EdgeInsets.symmetric(
+                            //     horizontal: 4, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text('${m.richness}', style: const TextStyle(fontSize: 11)),
+                          ),
+                        ),
+                        DataCell(
+                          Container(
+                            alignment: Alignment.centerRight,
+                            // padding: const EdgeInsets.symmetric(
+                            //   horizontal: 4, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text('${m.totalIndividuals}', style: const TextStyle(fontSize: 11)),
+                          ),
+                        ),
+                        DataCell(
+                          Container(
+                            alignment: Alignment.centerRight,
+                            // padding: const EdgeInsets.symmetric(
+                            // horizontal: 4, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text(m.shannonWiener.toStringAsFixed(3), style: const TextStyle(fontSize: 11)),
+                          ),
+                        ),
+                        DataCell(
+                          Container(
+                            alignment: Alignment.centerRight,
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text(m.simpsonDiversity.toStringAsFixed(3), style: const TextStyle(fontSize: 11)),
+                          ),
+                        ),
+                        DataCell(
+                          Container(
+                            alignment: Alignment.centerRight,
+                            // padding: const EdgeInsets.symmetric(
+                            // horizontal: 4, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text(m.pielouEvenness.toStringAsFixed(3), style: const TextStyle(fontSize: 11)),
+                          ),
+                        ),
+                        DataCell(
+                          Container(
+                            alignment: Alignment.centerRight,
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text(m.hillQ0.toStringAsFixed(1), style: const TextStyle(fontSize: 11)),
+                          ),
+                        ),
+                        DataCell(
+                          Container(
+                            alignment: Alignment.centerRight,
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text(m.hillQ1.toStringAsFixed(3), style: const TextStyle(fontSize: 11)),
+                          ),
+                        ),
+                        DataCell(
+                          Container(
+                            alignment: Alignment.centerRight,
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text(m.hillQ2.toStringAsFixed(3), style: const TextStyle(fontSize: 11)),
+                          ),
+                        ),
+                        DataCell(
+                          Container(
+                            alignment: Alignment.centerRight,
+                            // padding: const EdgeInsets.symmetric(
+                            // horizontal: 4, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text(m.chao1.toStringAsFixed(1), style: const TextStyle(fontSize: 11)),
+                          ),
+                        ),
+                      ],
+                    );
+                  }).toList(),
             ),
           ),
         ],
@@ -2174,13 +2123,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
               color: isDark ? XolmisColors.primaryContainer : XolmisColors.primary,
             ),
           ),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 11,
-              color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
-            ),
-          ),
+          Text(label, style: TextStyle(fontSize: 11, color: isDark ? Colors.grey.shade400 : Colors.grey.shade600)),
         ],
       ),
     );

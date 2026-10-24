@@ -965,7 +965,11 @@ class InventoryDiversityMetrics {
   final int richness; // S
   final int totalIndividuals; // N
   final double shannonWiener; // H'
+  final double simpsonDiversity; // 1 - D
   final double pielouEvenness; // J'
+  final double hillQ0; // Hill number q=0 (richness)
+  final double hillQ1; // Hill number q=1 (exp(H'))
+  final double hillQ2; // Hill number q=2 (1 / D)
   final double chao1; // Chao1 richness estimate
 
   InventoryDiversityMetrics({
@@ -973,14 +977,18 @@ class InventoryDiversityMetrics {
     required this.richness,
     required this.totalIndividuals,
     required this.shannonWiener,
+    required this.simpsonDiversity,
     required this.pielouEvenness,
+    required this.hillQ0,
+    required this.hillQ1,
+    required this.hillQ2,
     required this.chao1,
   });
 }
 
-/// Computes Shannon-Wiener diversity index (H'), Pielou evenness (J'),
-/// species richness (S), total individuals (N), and Chao1 estimate for a
-/// collection of species.
+/// Computes Shannon-Wiener (H'), Simpson (1-D), Pielou (J'), Hill numbers
+/// (q0, q1, q2), species richness (S), total individuals (N), and Chao1
+/// estimate for a collection of species.
 ///
 /// When [ignoreZeroCountSpeciesInChao1] is true, species records with
 /// `count <= 0` still contribute presence data to richness, N, Shannon, and
@@ -1008,14 +1016,18 @@ InventoryDiversityMetrics computeDiversityMetrics(
   final int N = abundances.values.fold(0, (sum, c) => sum + c);
 
   double hPrime = 0.0;
+  double simpsonDominance = 0.0;
   if (N > 0) {
     for (final count in abundances.values) {
       if (count > 0) {
         final double p = count / N;
         hPrime -= p * log(p);
+        simpsonDominance += p * p;
       }
     }
   }
+
+  final simpsonDiversity = N > 0 ? (1.0 - simpsonDominance) : 0.0;
 
   double jPrime = 0.0;
   if (S > 1) {
@@ -1034,12 +1046,20 @@ InventoryDiversityMetrics computeDiversityMetrics(
     chao1 = S + (a1 * (a1 - 1)) / (2.0);
   }
 
+  final hillQ0 = S.toDouble();
+  final hillQ1 = N > 0 ? exp(hPrime) : 0.0;
+  final hillQ2 = (N > 0 && simpsonDominance > 0) ? (1.0 / simpsonDominance) : 0.0;
+
   return InventoryDiversityMetrics(
     label: label,
     richness: S,
     totalIndividuals: N,
     shannonWiener: hPrime,
+    simpsonDiversity: simpsonDiversity,
     pielouEvenness: jPrime,
+    hillQ0: hillQ0,
+    hillQ1: hillQ1,
+    hillQ2: hillQ2,
     chao1: chao1,
   );
 }
