@@ -3,12 +3,14 @@ import 'package:material_ui/material_ui.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/core_consts.dart';
 import '../../providers/poi_provider.dart';
+import '../../providers/inventory_provider.dart';
 import '../../data/models/inventory.dart';
-
 import '../../providers/species_provider.dart';
 import '../../utils/utils.dart';
 import '../../generated/l10n.dart';
+import 'edit_species_screen.dart';
 
 /// Detail screen for a species record, including its POI samples.
 class SpeciesDetailScreen extends StatefulWidget {
@@ -22,12 +24,14 @@ class SpeciesDetailScreen extends StatefulWidget {
 
 /// Manages POI loading, creation, and removal for the selected species.
 class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
+  late Species _species;
   bool _isAddingPoi = false;
   bool _isLifer = false;
 
   @override
   void initState() {
     super.initState();
+    _species = widget.species;
     _loadSpeciesData();
     _loadLiferStatus();
   }
@@ -37,18 +41,34 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
     super.dispose();
   }
 
+  bool get _allowsDuplicatedSpeciesNames {
+    final inventoryProvider = Provider.of<InventoryProvider>(context, listen: false);
+    final inventory = inventoryProvider.getInventoryById(_species.inventoryId);
+    return inventory?.type == InventoryType.invTransectDetection ||
+        inventory?.type == InventoryType.invPointDetection;
+  }
+
+  Set<String> _existingSpeciesNamesExcluding(Species species) {
+    final speciesProvider = Provider.of<SpeciesProvider>(context, listen: false);
+    return speciesProvider
+        .getSpeciesForInventory(species.inventoryId)
+        .where((item) => item.id != species.id)
+        .map((item) => item.name)
+        .toSet();
+  }
+
   // Load the POIs for the species
   /// Loads POIs already associated with this species.
   Future<void> _loadSpeciesData() async {
     final poiProvider = Provider.of<PoiProvider>(context, listen: false);
     setState(() {
-      widget.species.pois = poiProvider.getPoisForSpecies(widget.species.id ?? 0);
+      _species.pois = poiProvider.getPoisForSpecies(_species.id ?? 0);
     });
   }
 
   Future<void> _loadLiferStatus() async {
     final speciesProvider = Provider.of<SpeciesProvider>(context, listen: false);
-    final isLifer = await speciesProvider.isFirstRecordForSpecies(widget.species);
+    final isLifer = await speciesProvider.isFirstRecordForSpecies(_species);
 
     if (!mounted) return;
     setState(() {
@@ -69,7 +89,7 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
     if (position != null) {
       // Create a new POI
       final poi = Poi(
-        speciesId: widget.species.id!,
+        speciesId: _species.id!,
         sampleTime: DateTime.now(),
         longitude: position.longitude,
         latitude: position.latitude,
@@ -78,7 +98,7 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
       // Insert the POI in the database
       if (mounted) {
         final poiProvider = Provider.of<PoiProvider>(context, listen: false);
-        await poiProvider.addPoi(context, widget.species.id!, poi);
+        await poiProvider.addPoi(context, _species.id!, poi);
       }
     } else {
       if (mounted) {
@@ -109,7 +129,7 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
       // Delete the POI from database
       if (mounted) {
         final poiProvider = Provider.of<PoiProvider>(context, listen: false);
-        await poiProvider.removePoi(widget.species.id!, poi.id!);
+        await poiProvider.removePoi(_species.id!, poi.id!);
       }
     }
   }
@@ -144,7 +164,37 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.species.name),
+        title: Text(_species.name),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.edit_outlined),
+            onPressed: () async {
+              final speciesProvider = Provider.of<SpeciesProvider>(context, listen: false);
+              final editedSpecies = await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder:
+                      (context) => EditSpeciesScreen(
+                        species: _species,
+                        allowDuplicatedSpeciesNames: _allowsDuplicatedSpeciesNames,
+                        existingSpeciesNames: _existingSpeciesNamesExcluding(_species),
+                      ),
+                ),
+              );
+              if (editedSpecies != null && editedSpecies is Species) {
+                await speciesProvider.updateSpecies(_species.inventoryId, editedSpecies);
+                if (context.mounted) {
+                  context.read<InventoryProvider>().updateSpeciesCount(_species.inventoryId);
+                }
+                if (mounted) {
+                  setState(() {
+                    _species = editedSpecies;
+                  });
+                }
+              }
+            },
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -163,11 +213,11 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
             child: Consumer<PoiProvider>(
                 builder: (context, poiProvider, child) {
                   // Get the POIs for the species
-                  final pois = poiProvider.getPoisForSpecies(widget.species.id ?? 0);
+                  final pois = poiProvider.getPoisForSpecies(_species.id ?? 0);
                   return RefreshIndicator(
                     onRefresh: () async {
                       // Refresh the POIs
-                      poiProvider.getPoisForSpecies(widget.species.id ?? 0);
+                      poiProvider.getPoisForSpecies(_species.id ?? 0);
                     },
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -195,7 +245,6 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
           height: 24,
           child: CircularProgressIndicator(
             strokeWidth: 2,
-            year2023: false,
           ),
         )
             : const Icon(Icons.add_location_outlined),
@@ -294,7 +343,7 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
             },
             onDismissed: (direction) async {
               // Delete the POI from database
-              await poiProvider.removePoi(widget.species.id!, poi.id!);
+              await poiProvider.removePoi(_species.id!, poi.id!);
             },
             child: PoiListItem(
               poi: poi,
@@ -357,7 +406,7 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
   }
 
   Widget _buildInfoPanel() {
-    final species = widget.species;
+    final species = _species;
     return Card.outlined(
       color: species.isOutOfInventory ? Colors.orange.withValues(alpha: 0.2) : Colors.green.withValues(alpha: 0.2),
       margin: const EdgeInsets.all(8.0),

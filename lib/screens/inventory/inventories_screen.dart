@@ -1142,6 +1142,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                           const Duration(days: 365),
                                         ),
                                         initialDateRange: _selectedDateRange,
+                                        saveText: S.of(context).apply,
                                       );
                                   if (picked != null) {
                                     setState(() {

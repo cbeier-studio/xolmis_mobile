@@ -90,7 +90,7 @@ abstract class S {
   ];
 
   /// A list of this localizations delegate's supported locales.
-  static const List<Locale> supportedLocales = <Locale>[Locale('en'), Locale('pt'), Locale('pt', 'BR')];
+  static const List<Locale> supportedLocales = <Locale>[Locale('en'), Locale('pt')];
 
   /// No description provided for @inventories.
   ///
@@ -4501,6 +4501,12 @@ abstract class S {
   /// In en, this message translates to:
   /// **'Status'**
   String get status;
+
+  /// Apply button label
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get apply;
 }
 
 class _SDelegate extends LocalizationsDelegate<S> {
@@ -4519,18 +4525,6 @@ class _SDelegate extends LocalizationsDelegate<S> {
 }
 
 S lookupS(Locale locale) {
-  // Lookup logic when language+country codes are specified.
-  switch (locale.languageCode) {
-    case 'pt':
-      {
-        switch (locale.countryCode) {
-          case 'BR':
-            return SPtBr();
-        }
-        break;
-      }
-  }
-
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
     case 'en':

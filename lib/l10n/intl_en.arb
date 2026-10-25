@@ -3752,5 +3752,10 @@
     "@status": {
         "type": "text",
         "description": "Status field label"
+    },
+    "apply": "Apply",
+    "@apply": {
+        "type": "text",
+        "description": "Apply button label"
     }
 }

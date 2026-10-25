@@ -2439,4 +2439,7 @@ class SEn extends S {
 
   @override
   String get status => 'Status';
+
+  @override
+  String get apply => 'Apply';
 }
