@@ -2049,6 +2049,19 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                             ),
                           buildGridMenuItem(
                             context,
+                            Icons.share_outlined,
+                            S.of(context).export,
+                                () {
+                              Navigator.of(context).pop();
+                              exportInventoriesWithDialog(
+                                context,
+                                [inventory],
+                                defaultPrefix: 'inventory_${inventory.id}',
+                              );
+                            },
+                          ),
+                          buildGridMenuItem(
+                            context,
                             Icons.delete_outlined,
                             S.of(context).delete,
                             () {
@@ -2060,23 +2073,23 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                           ),
                         ],
                       ),
-                      Row(
-                        children: [
-                          const SizedBox(width: 8.0),
-                          ActionChip(
-                            avatar: const Icon(Icons.share_outlined, size: 18),
-                            label: Text(S.of(context).export),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                              exportInventoriesWithDialog(
-                                context,
-                                [inventory],
-                                defaultPrefix: 'inventory_${inventory.id}',
-                              );
-                            },
-                          ),
-                        ],
-                      ),
+                      // Row(
+                      //   children: [
+                      //     const SizedBox(width: 8.0),
+                      //     ActionChip(
+                      //       avatar: const Icon(Icons.share_outlined, size: 18),
+                      //       label: Text(S.of(context).export),
+                      //       onPressed: () {
+                      //         Navigator.of(context).pop();
+                      //         exportInventoriesWithDialog(
+                      //           context,
+                      //           [inventory],
+                      //           defaultPrefix: 'inventory_${inventory.id}',
+                      //         );
+                      //       },
+                      //     ),
+                      //   ],
+                      // ),
                     ],
                   ),
                 ),

@@ -1580,6 +1580,19 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                             ),
                           buildGridMenuItem(
                             context,
+                            Icons.share_outlined,
+                            S.of(context).export,
+                                () {
+                                  Navigator.of(context).pop();
+                                  exportSpecimensWithDialog(
+                                    context,
+                                    [specimen],
+                                    defaultPrefix: 'specimen_${specimen.fieldNumber}',
+                                  );
+                            },
+                          ),
+                          buildGridMenuItem(
+                            context,
                             Icons.delete_outlined,
                             S.of(context).delete,
                             () {
@@ -1631,23 +1644,23 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                         ],
                       ),
                       // Divider(),
-                      Row(
-                        children: [
-                          const SizedBox(width: 8.0),
-                          ActionChip(
-                            avatar: const Icon(Icons.share_outlined, size: 18),
-                            label: Text(S.of(context).export),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                              exportSpecimensWithDialog(
-                                context,
-                                [specimen],
-                                defaultPrefix: 'specimen_${specimen.fieldNumber}',
-                              );
-                            },
-                          ),
-                        ],
-                      ),
+                      // Row(
+                      //   children: [
+                      //     const SizedBox(width: 8.0),
+                      //     ActionChip(
+                      //       avatar: const Icon(Icons.share_outlined, size: 18),
+                      //       label: Text(S.of(context).export),
+                      //       onPressed: () {
+                      //         Navigator.of(context).pop();
+                      //         exportSpecimensWithDialog(
+                      //           context,
+                      //           [specimen],
+                      //           defaultPrefix: 'specimen_${specimen.fieldNumber}',
+                      //         );
+                      //       },
+                      //     ),
+                      //   ],
+                      // ),
                     ],
                   ),
                 ),
