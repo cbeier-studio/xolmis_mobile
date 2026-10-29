@@ -28,6 +28,7 @@
 * Tela de estatísticas dos inventários selecionados ficava travada no carregamento.
 * Compartilhamento de arquivos Excel algumas vezes não funcionava.
 * Seletor de cor da tag não funcionava.
+* A exportação de POI não incluía o identificador.
 
 ## 1.0.3
 

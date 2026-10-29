@@ -28,6 +28,7 @@
 * The statistics screen of selected inventories was stuck in loading.
 * Share Excel files sometimes did not work.
 * Tag color selector was not working.
+* POI export was not including the identifier.
 
 ## 1.0.3
 
