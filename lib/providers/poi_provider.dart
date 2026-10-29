@@ -43,6 +43,12 @@ class PoiProvider with ChangeNotifier {
     return _poiMap[speciesId] ?? [];
   }
 
+  /// Sets the cached POIs for [speciesId] directly without querying DB.
+  void setPoiListForSpecies(int speciesId, List<Poi> pois) {
+    _poiMap[speciesId] = List.from(pois);
+    notifyListeners();
+  }
+
   /// Persists [poi] for [speciesId] and updates the local cache.
   Future<void> addPoi(BuildContext context, int speciesId, Poi poi) async {
     // Insert the POI in the database

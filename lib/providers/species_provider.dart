@@ -4,13 +4,20 @@ import 'package:provider/provider.dart';
 import '../data/models/inventory.dart';
 import '../data/daos/species_dao.dart';
 
+import 'poi_provider.dart';
 import '../providers/inventory_provider.dart';
 
 /// Manages species records grouped by inventory identifier.
 class SpeciesProvider with ChangeNotifier {
   final SpeciesDao _speciesDao;
+  PoiProvider? _poiProvider;
 
-  SpeciesProvider(this._speciesDao);
+  SpeciesProvider(this._speciesDao, {PoiProvider? poiProvider}) : _poiProvider = poiProvider;
+
+  /// Sets the [PoiProvider] reference used to synchronize POI caches.
+  void setPoiProvider(PoiProvider poiProvider) {
+    _poiProvider = poiProvider;
+  }
 
   final Map<String, List<Species>> _speciesMap = {};
 
@@ -36,6 +43,15 @@ class SpeciesProvider with ChangeNotifier {
     try {
       final speciesList = await _speciesDao.getSpeciesByInventory(inventoryId, false);
       _speciesMap[inventoryId] = speciesList;
+
+      if (_poiProvider != null) {
+        for (final species in speciesList) {
+          if (species.id != null) {
+            _poiProvider!.setPoiListForSpecies(species.id!, species.pois);
+          }
+        }
+      }
+
       debugPrint('[PROVIDER] Loaded ${speciesList.length} species for inventory $inventoryId');
     } catch (e) {
       debugPrint('[PROVIDER] !!! ERROR loading species list for inventory $inventoryId: $e');

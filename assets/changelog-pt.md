@@ -28,7 +28,8 @@
 * Tela de estatísticas dos inventários selecionados ficava travada no carregamento.
 * Compartilhamento de arquivos Excel algumas vezes não funcionava.
 * Seletor de cor da tag não funcionava.
-* A exportação de POI não incluía o identificador.
+* A exportação de pontos de ocorrência não incluía o identificador.
+* Os pontos de ocorrência salvos não estavam aparecendo na lista e nos detalhes da espécie.
 
 ## 1.0.3
 

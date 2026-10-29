@@ -28,7 +28,8 @@
 * The statistics screen of selected inventories was stuck in loading.
 * Share Excel files sometimes did not work.
 * Tag color selector was not working.
-* POI export was not including the identifier.
+* Occurrence points export was not including the identifier.
+* Saved occurrence points were not showing in the list and in the species details.
 
 ## 1.0.3
 
