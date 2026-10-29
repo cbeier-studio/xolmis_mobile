@@ -700,38 +700,16 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                             MenuItemButton(
                               leadingIcon: const Icon(Icons.share_outlined),
                               onPressed: () {
-                                exportAllSpecimensToCsv(
+                                final specimens = _showPending
+                                    ? specimenProvider.pendingSpecimens
+                                    : specimenProvider.archivedSpecimens;
+                                exportSpecimensWithDialog(
                                   context,
-                                  _showPending
-                                      ? specimenProvider.pendingSpecimens
-                                      : specimenProvider.archivedSpecimens,
+                                  specimens,
+                                  defaultPrefix: 'specimens',
                                 );
                               },
-                              child: Text('${S.of(context).exportAll} (CSV)'),
-                            ),
-                            MenuItemButton(
-                              leadingIcon: const Icon(Icons.share_outlined),
-                              onPressed: () {
-                                exportAllSpecimensToExcel(
-                                  context,
-                                  _showPending
-                                      ? specimenProvider.pendingSpecimens
-                                      : specimenProvider.archivedSpecimens,
-                                );
-                              },
-                              child: Text('${S.of(context).exportAll} (Excel)'),
-                            ),
-                            MenuItemButton(
-                              leadingIcon: const Icon(Icons.share_outlined),
-                              onPressed: () {
-                                exportAllSpecimensToJson(
-                                  context,
-                                  _showPending
-                                      ? specimenProvider.pendingSpecimens
-                                      : specimenProvider.archivedSpecimens,
-                                );
-                              },
-                              child: Text('${S.of(context).exportAll} (JSON)'),
+                              child: Text(S.of(context).exportAll),
                             ),
                           ],
                         ),
@@ -794,98 +772,34 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                       onPressed: _deleteSelectedSpecimens,
                     ),
                     const VerticalDivider(),
-                    MenuAnchor(
-                      builder: (context, controller, child) {
-                        return IconButton(
-                          icon: const Icon(Icons.share_outlined),
-                          tooltip: S
-                              .of(context)
-                              .exportWhat(
-                                S.of(context).specimens(2).toLowerCase(),
-                              ),
-                          onPressed: () {
-                            if (controller.isOpen) {
-                              controller.close();
-                            } else {
-                              controller.open();
+                    // Option to export all selected specimens
+                    IconButton(
+                      icon: const Icon(Icons.share_outlined),
+                      tooltip: S
+                          .of(context)
+                          .exportWhat(
+                            S.of(context).specimens(2).toLowerCase(),
+                          ),
+                      onPressed: () async {
+                        final specimens = await Future.wait(
+                          selectedSpecimens.map(
+                            (id) => specimenProvider.getSpecimenById(id),
+                          ),
+                        );
+                        if (!mounted) return;
+                        await exportSpecimensWithDialog(
+                          context,
+                          specimens,
+                          defaultPrefix: 'selected_specimens',
+                          onCompleted: () {
+                            if (mounted) {
+                              setState(() {
+                                selectedSpecimens.clear();
+                              });
                             }
                           },
                         );
                       },
-                      menuChildren: [
-                        MenuItemButton(
-                          onPressed: () async {
-                            final specimens = await Future.wait(
-                              selectedSpecimens.map(
-                                (id) => specimenProvider.getSpecimenById(id),
-                              ),
-                            );
-                            await exportSelectedSpecimensToCsv(
-                              context,
-                              specimens,
-                            );
-                            if (!mounted) return;
-                            setState(() {
-                              selectedSpecimens.clear();
-                            });
-                          },
-                          child: const Text('CSV'),
-                        ),
-                        MenuItemButton(
-                          onPressed: () async {
-                            final specimens = await Future.wait(
-                              selectedSpecimens.map(
-                                (id) => specimenProvider.getSpecimenById(id),
-                              ),
-                            );
-                            await exportSelectedSpecimensToExcel(
-                              context,
-                              specimens,
-                            );
-                            if (!mounted) return;
-                            setState(() {
-                              selectedSpecimens.clear();
-                            });
-                          },
-                          child: const Text('Excel'),
-                        ),
-                        MenuItemButton(
-                          onPressed: () async {
-                            final specimens = await Future.wait(
-                              selectedSpecimens.map(
-                                (id) => specimenProvider.getSpecimenById(id),
-                              ),
-                            );
-                            await exportSelectedSpecimensToJson(
-                              context,
-                              specimens,
-                            );
-                            if (!mounted) return;
-                            setState(() {
-                              selectedSpecimens.clear();
-                            });
-                          },
-                          child: const Text('JSON'),
-                        ),
-                        MenuItemButton(
-                          onPressed: () async {
-                            final specimens = await Future.wait(
-                              selectedSpecimens.map(
-                                (id) => specimenProvider.getSpecimenById(id),
-                              ),
-                            );
-                            await exportSelectedSpecimensToKml(
-                              context,
-                              specimens,
-                            );
-                            if (!mounted) return;
-                            setState(() {
-                              selectedSpecimens.clear();
-                            });
-                          },
-                          child: const Text('KML'),
-                        ),
-                      ],
                     ),
                     if (selectedSpecimens.length > 1)
                       IconButton(
@@ -1048,38 +962,16 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                             MenuItemButton(
                               leadingIcon: const Icon(Icons.share_outlined),
                               onPressed: () {
-                                exportAllSpecimensToCsv(
+                                final specimens = _showPending
+                                    ? specimenProvider.pendingSpecimens
+                                    : specimenProvider.archivedSpecimens;
+                                exportSpecimensWithDialog(
                                   context,
-                                  _showPending
-                                      ? specimenProvider.pendingSpecimens
-                                      : specimenProvider.archivedSpecimens,
+                                  specimens,
+                                  defaultPrefix: 'specimens',
                                 );
                               },
-                              child: Text('${S.of(context).exportAll} (CSV)'),
-                            ),
-                            MenuItemButton(
-                              leadingIcon: const Icon(Icons.share_outlined),
-                              onPressed: () {
-                                exportAllSpecimensToExcel(
-                                  context,
-                                  _showPending
-                                      ? specimenProvider.pendingSpecimens
-                                      : specimenProvider.archivedSpecimens,
-                                );
-                              },
-                              child: Text('${S.of(context).exportAll} (Excel)'),
-                            ),
-                            MenuItemButton(
-                              leadingIcon: const Icon(Icons.share_outlined),
-                              onPressed: () {
-                                exportAllSpecimensToJson(
-                                  context,
-                                  _showPending
-                                      ? specimenProvider.pendingSpecimens
-                                      : specimenProvider.archivedSpecimens,
-                                );
-                              },
-                              child: Text('${S.of(context).exportAll} (JSON)'),
+                              child: Text(S.of(context).exportAll),
                             ),
                           ],
                         ],
@@ -1742,27 +1634,17 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                       Row(
                         children: [
                           const SizedBox(width: 8.0),
-                          Text(
-                            S.of(context).export,
-                            style: TextTheme.of(context).bodyMedium,
-                          ),
-                          Expanded(
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Row(
-                                children: [
-                                  const SizedBox(width: 16.0),
-                                  ActionChip(
-                                    label: const Text('KML'),
-                                    onPressed: () async {
-                                      exportSpecimenToKml(context, specimen);
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                  const SizedBox(width: 8.0),
-                                ],
-                              ),
-                            ),
+                          ActionChip(
+                            avatar: const Icon(Icons.share_outlined, size: 18),
+                            label: Text(S.of(context).export),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                              exportSpecimensWithDialog(
+                                context,
+                                [specimen],
+                                defaultPrefix: 'specimen_${specimen.fieldNumber}',
+                              );
+                            },
                           ),
                         ],
                       ),
@@ -1831,68 +1713,24 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                         ],
                       ),
                       if (specimenProvider.specimens.isNotEmpty) ...[
-                        Divider(),
+                        const Divider(),
                         Row(
                           children: [
                             const SizedBox(width: 8.0),
-                            Text(
-                              S.of(context).exportAll,
-                              style: TextTheme.of(context).bodyMedium,
-                            ),
-                            Expanded(
-                              child: SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Row(
-                                  children: [
-                                    const SizedBox(width: 16.0),
-                                    ActionChip(
-                                      label: const Text('CSV'),
-                                      onPressed: () async {
-                                        Navigator.of(context).pop();
-                                        exportAllSpecimensToCsv(
-                                          context,
-                                          _showPending
-                                              ? specimenProvider
-                                                  .pendingSpecimens
-                                              : specimenProvider
-                                                  .archivedSpecimens,
-                                        );
-                                      },
-                                    ),
-                                    const SizedBox(width: 8.0),
-                                    ActionChip(
-                                      label: const Text('Excel'),
-                                      onPressed: () async {
-                                        Navigator.of(context).pop();
-                                        exportAllSpecimensToExcel(
-                                          context,
-                                          _showPending
-                                              ? specimenProvider
-                                                  .pendingSpecimens
-                                              : specimenProvider
-                                                  .archivedSpecimens,
-                                        );
-                                      },
-                                    ),
-                                    const SizedBox(width: 8.0),
-                                    ActionChip(
-                                      label: const Text('JSON'),
-                                      onPressed: () async {
-                                        Navigator.of(context).pop();
-                                        exportAllSpecimensToJson(
-                                          context,
-                                          _showPending
-                                              ? specimenProvider
-                                                  .pendingSpecimens
-                                              : specimenProvider
-                                                  .archivedSpecimens,
-                                        );
-                                      },
-                                    ),
-                                    const SizedBox(width: 8.0),
-                                  ],
-                                ),
-                              ),
+                            ActionChip(
+                              avatar: const Icon(Icons.share_outlined, size: 18),
+                              label: Text(S.of(context).exportAll),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                final specimens = _showPending
+                                    ? specimenProvider.pendingSpecimens
+                                    : specimenProvider.archivedSpecimens;
+                                exportSpecimensWithDialog(
+                                  context,
+                                  specimens,
+                                  defaultPrefix: 'specimens',
+                                );
+                              },
                             ),
                           ],
                         ),

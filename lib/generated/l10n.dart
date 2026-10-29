@@ -566,6 +566,54 @@ abstract class S {
   /// **'Export all {what}'**
   String exportAllWhat(String what);
 
+  /// Title of the export options dialog or bottom sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Export options'**
+  String get exportOptions;
+
+  /// Section header for export formats selection
+  ///
+  /// In en, this message translates to:
+  /// **'Export formats'**
+  String get exportFormats;
+
+  /// Label for file name prefix input
+  ///
+  /// In en, this message translates to:
+  /// **'File name prefix'**
+  String get fileNamePrefix;
+
+  /// Helper text explaining the file name suffix
+  ///
+  /// In en, this message translates to:
+  /// **'Date and time suffix will be appended automatically.'**
+  String get fileNamePrefixHelper;
+
+  /// Preview of the exported file name
+  ///
+  /// In en, this message translates to:
+  /// **'Preview: {preview}'**
+  String fileNamePreview(String preview);
+
+  /// Validation message when no export format is selected
+  ///
+  /// In en, this message translates to:
+  /// **'Select at least one format to export.'**
+  String get selectAtLeastOneFormat;
+
+  /// Validation message when file name prefix is empty
+  ///
+  /// In en, this message translates to:
+  /// **'File name prefix cannot be empty.'**
+  String get fileNamePrefixRequired;
+
+  /// Format-specific settings header in export dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Format settings'**
+  String get formatSpecificSettings;
+
   /// Menu option to finish the inventory
   ///
   /// In en, this message translates to:

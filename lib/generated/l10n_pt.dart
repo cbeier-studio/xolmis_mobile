@@ -301,6 +301,32 @@ class SPt extends S {
   }
 
   @override
+  String get exportOptions => 'Opções de exportação';
+
+  @override
+  String get exportFormats => 'Formatos de exportação';
+
+  @override
+  String get fileNamePrefix => 'Prefixo do nome do arquivo';
+
+  @override
+  String get fileNamePrefixHelper => 'Um sufixo de data e hora será adicionado automaticamente.';
+
+  @override
+  String fileNamePreview(String preview) {
+    return 'Prévia: $preview';
+  }
+
+  @override
+  String get selectAtLeastOneFormat => 'Selecione ao menos um formato para exportar.';
+
+  @override
+  String get fileNamePrefixRequired => 'O prefixo do nome do arquivo não pode ficar vazio.';
+
+  @override
+  String get formatSpecificSettings => 'Configurações do formato';
+
+  @override
   String get finishInventory => 'Encerrar inventário';
 
   @override

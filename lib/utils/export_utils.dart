@@ -22,12 +22,17 @@ import '../providers/nest_provider.dart';
 
 import '../core/core_consts.dart';
 import '../generated/l10n.dart';
+import '../widgets/export_options_bottom_sheet.dart';
+export '../widgets/export_options_bottom_sheet.dart';
 
 /// Marker written into every exported payload to identify the app source.
 const String kExportSource = 'Xolmis Mobile';
 
 /// Current version of the shared JSON export envelope schema.
 const String kExportSchemaVersion = '1';
+
+/// Sanitizes a file name by removing or replacing invalid characters.
+String _sanitizeFileName(String name) => name.replaceAll(RegExp(r'[\\/:*?"<>|]'), '_');
 
 /// Ensures a single inventory has all child collections loaded before export.
 Future<Inventory> _ensureInventoryLoadedForExport(
@@ -1302,6 +1307,236 @@ Future<void> exportSelectedInventoriesToKml(BuildContext context, List<Inventory
   }
 }
 
+/// Exports [inventories] to all specified [formats] using [filePrefix] and a timestamp suffix,
+/// then opens the share sheet with all generated files.
+Future<void> exportInventories(
+  BuildContext context,
+  List<Inventory> inventories, {
+  required String filePrefix,
+  required Set<ExportFormat> formats,
+}) async {
+  if (inventories.isEmpty || formats.isEmpty) return;
+
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return Dialog(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const CircularProgressIndicator(year2023: false),
+              const SizedBox(width: 16),
+              Text(S.of(context).exportingPleaseWait),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+
+  try {
+    final locale = Localizations.localeOf(context);
+    final inventoriesToExport = await _ensureInventoriesLoadedForExport(context, inventories);
+
+    final now = DateTime.now();
+    final formatter = DateFormat('yyyyMMdd_HHmmss');
+    final formattedDate = formatter.format(now);
+    final prefix = _sanitizeFileName(filePrefix.trim().isEmpty ? 'inventories' : filePrefix.trim());
+    final tempDir = await getTemporaryDirectory();
+    final generatedFiles = <XFile>[];
+
+    // CSV format
+    if (formats.contains(ExportFormat.csv)) {
+      final speciesRows = await buildInventoriesSpeciesRows(inventoriesToExport, locale);
+      if (speciesRows.isNotEmpty) {
+        final speciesCsv = Csv(fieldDelimiter: ';').encode(speciesRows);
+        final path = '${tempDir.path}/${prefix}_${formattedDate}_species.csv';
+        if (speciesCsv.isNotEmpty) {
+          final file = File(path);
+          await file.writeAsString(speciesCsv, flush: true);
+          generatedFiles.add(XFile(path, mimeType: ExportFormat.csv.mimeType));
+        }
+      }
+
+      final poiRows = await buildInventoriesPoiRows(inventoriesToExport, locale);
+      if (poiRows.length > 1) {
+        final poiCsv = Csv(fieldDelimiter: ';').encode(poiRows);
+        final path = '${tempDir.path}/${prefix}_${formattedDate}_pois.csv';
+        if (poiCsv.isNotEmpty) {
+          final file = File(path);
+          await file.writeAsString(poiCsv, flush: true);
+          generatedFiles.add(XFile(path, mimeType: ExportFormat.csv.mimeType));
+        }
+      }
+
+      final vegRows = await buildInventoriesVegetationRows(inventoriesToExport, locale);
+      if (vegRows.length > 1) {
+        final vegCsv = Csv(fieldDelimiter: ';').encode(vegRows);
+        final path = '${tempDir.path}/${prefix}_${formattedDate}_vegetation.csv';
+        if (vegCsv.isNotEmpty) {
+          final file = File(path);
+          await file.writeAsString(vegCsv, flush: true);
+          generatedFiles.add(XFile(path, mimeType: ExportFormat.csv.mimeType));
+        }
+      }
+
+      final weatherRows = await buildInventoriesWeatherRows(inventoriesToExport, locale);
+      if (weatherRows.length > 1) {
+        final weatherCsv = Csv(fieldDelimiter: ';').encode(weatherRows);
+        final path = '${tempDir.path}/${prefix}_${formattedDate}_weather.csv';
+        if (weatherCsv.isNotEmpty) {
+          final file = File(path);
+          await file.writeAsString(weatherCsv, flush: true);
+          generatedFiles.add(XFile(path, mimeType: ExportFormat.csv.mimeType));
+        }
+      }
+    }
+
+    // Excel format
+    if (formats.contains(ExportFormat.excel)) {
+      final excel = await _createInventoriesExcel(inventoriesToExport, locale);
+      final fileBytes = excel.save();
+      if (fileBytes != null) {
+        final path = '${tempDir.path}/${prefix}_$formattedDate.xlsx';
+        final file = File(path);
+        await file.create(recursive: true);
+        await file.writeAsBytes(fileBytes, flush: true);
+        generatedFiles.add(XFile(path, mimeType: ExportFormat.excel.mimeType));
+      }
+    }
+
+    // JSON format
+    if (formats.contains(ExportFormat.json)) {
+      final jsonData = {
+        'source': kExportSource,
+        'schema': 'inventories',
+        'schemaVersion': kExportSchemaVersion,
+        'records': inventoriesToExport.map((inventory) => inventory.toJson()).toList(),
+      };
+      final encoder = const JsonEncoder.withIndent("  ");
+      final jsonString = encoder.convert(jsonData);
+      final path = '${tempDir.path}/${prefix}_$formattedDate.json';
+      final file = File(path);
+      await file.writeAsString(jsonString, flush: true);
+      generatedFiles.add(XFile(path, mimeType: ExportFormat.json.mimeType));
+    }
+
+    // KML format
+    if (formats.contains(ExportFormat.kml)) {
+      final waypoints = <_KmlWaypoint>[];
+      for (final inventory in inventoriesToExport) {
+        if (inventory.startLatitude != null && inventory.startLongitude != null) {
+          waypoints.add(
+            _KmlWaypoint(
+              lat: inventory.startLatitude,
+              lon: inventory.startLongitude,
+              name: '${inventory.id} - Start',
+              description: inventoryTypeFriendlyNames[inventory.type] ?? '',
+              time: inventory.startTime,
+            ),
+          );
+        }
+
+        if (inventory.endLatitude != null && inventory.endLongitude != null) {
+          waypoints.add(
+            _KmlWaypoint(
+              lat: inventory.endLatitude,
+              lon: inventory.endLongitude,
+              name: '${inventory.id} - End',
+              description: inventoryTypeFriendlyNames[inventory.type] ?? '',
+              time: inventory.endTime,
+            ),
+          );
+        }
+
+        for (final species in inventory.speciesList) {
+          for (final poi in species.pois) {
+            waypoints.add(
+              _KmlWaypoint(
+                lat: poi.latitude,
+                lon: poi.longitude,
+                name: '${inventory.id} - ${species.name} - POI #${poi.id}',
+                description: poi.notes ?? '',
+                time: poi.sampleTime,
+              ),
+            );
+          }
+        }
+      }
+
+      if (waypoints.isNotEmpty) {
+        final kmlString = _buildKmlString(
+          name: prefix,
+          description: 'Points of Interest for inventories',
+          waypoints: waypoints,
+        );
+        final path = '${tempDir.path}/${prefix}_$formattedDate.kml';
+        final file = File(path);
+        await file.writeAsString(kmlString, flush: true);
+        generatedFiles.add(XFile(path, mimeType: ExportFormat.kml.mimeType));
+      }
+    }
+
+    if (generatedFiles.isNotEmpty) {
+      await SharePlus.instance.share(
+        ShareParams(
+          files: generatedFiles,
+          title: S.of(context).inventoryExported(inventoriesToExport.length),
+          subject: S.of(context).inventoryData(inventoriesToExport.length),
+        ),
+      );
+    }
+  } catch (error) {
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          persist: true,
+          showCloseIcon: true,
+          backgroundColor: Theme.of(context).colorScheme.error,
+          content: Text(S.of(context).errorExportingInventory(inventories.length, error.toString())),
+        ),
+      );
+    }
+  } finally {
+    if (context.mounted) {
+      Navigator.of(context).pop();
+    }
+  }
+}
+
+/// Opens the export options dialog/sheet for [inventories] and exports to the chosen formats.
+Future<void> exportInventoriesWithDialog(
+  BuildContext context,
+  List<Inventory> inventories, {
+  String defaultPrefix = 'selected_inventories',
+  VoidCallback? onCompleted,
+}) async {
+  if (inventories.isEmpty) return;
+
+  final title = inventories.length == 1
+      ? S.of(context).exportWhat(S.of(context).inventory(1))
+      : S.of(context).exportWhat(S.of(context).inventory(2));
+
+  final result = await showExportOptionsBottomSheet(
+    context: context,
+    defaultPrefix: defaultPrefix,
+    title: title,
+  );
+
+  if (result != null && context.mounted) {
+    await exportInventories(
+      context,
+      inventories,
+      filePrefix: result.prefix,
+      formats: result.formats,
+    );
+    onCompleted?.call();
+  }
+}
+
 List<dynamic>? _parseJournalDeltaOps(String? notes) {
   if (notes == null || notes.trim().isEmpty) {
     return null;
@@ -2224,6 +2459,187 @@ Future<void> exportSelectedNestsToKml(BuildContext context, List<Nest> nests) as
   }
 }
 
+/// Exports [nests] to all specified [formats] using [filePrefix] and a timestamp suffix,
+/// then opens the share sheet with all generated files.
+Future<void> exportNests(
+  BuildContext context,
+  List<Nest> nests, {
+  required String filePrefix,
+  required Set<ExportFormat> formats,
+}) async {
+  if (nests.isEmpty || formats.isEmpty) return;
+
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return Dialog(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const CircularProgressIndicator(year2023: false),
+              const SizedBox(width: 16),
+              Text(S.of(context).exportingPleaseWait),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+
+  try {
+    final locale = Localizations.localeOf(context);
+    final nestsToExport = await _ensureNestsLoadedForExport(context, nests);
+    final now = DateTime.now();
+    final formatter = DateFormat('yyyyMMdd_HHmmss');
+    final formattedDate = formatter.format(now);
+    final prefix = _sanitizeFileName(filePrefix.trim().isEmpty ? 'nests' : filePrefix.trim());
+    final tempDir = await getTemporaryDirectory();
+    final generatedFiles = <XFile>[];
+
+    // CSV format
+    if (formats.contains(ExportFormat.csv)) {
+      final revRows = await buildNestsRevisionsRows(nestsToExport, locale);
+      if (revRows.isNotEmpty) {
+        final revCsv = Csv(fieldDelimiter: ';').encode(revRows);
+        final path = '${tempDir.path}/${prefix}_${formattedDate}_revisions.csv';
+        if (revCsv.isNotEmpty) {
+          final file = File(path);
+          await file.writeAsString(revCsv, flush: true);
+          generatedFiles.add(XFile(path, mimeType: ExportFormat.csv.mimeType));
+        }
+      }
+
+      final eggRows = await buildNestsEggsRows(nestsToExport, locale);
+      if (eggRows.isNotEmpty) {
+        final eggCsv = Csv(fieldDelimiter: ';').encode(eggRows);
+        final path = '${tempDir.path}/${prefix}_${formattedDate}_eggs.csv';
+        if (eggCsv.isNotEmpty) {
+          final file = File(path);
+          await file.writeAsString(eggCsv, flush: true);
+          generatedFiles.add(XFile(path, mimeType: ExportFormat.csv.mimeType));
+        }
+      }
+    }
+
+    // Excel format
+    if (formats.contains(ExportFormat.excel)) {
+      final excel = await _createNestsExcel(nestsToExport, locale);
+      final fileBytes = excel.save();
+      if (fileBytes != null) {
+        final path = '${tempDir.path}/${prefix}_$formattedDate.xlsx';
+        final file = File(path);
+        await file.create(recursive: true);
+        await file.writeAsBytes(fileBytes, flush: true);
+        generatedFiles.add(XFile(path, mimeType: ExportFormat.excel.mimeType));
+      }
+    }
+
+    // JSON format
+    if (formats.contains(ExportFormat.json)) {
+      final jsonData = {
+        'source': kExportSource,
+        'schema': 'nests',
+        'schemaVersion': kExportSchemaVersion,
+        'records': nestsToExport.map((nest) => nest.toJson()).toList(),
+      };
+      final encoder = const JsonEncoder.withIndent("  ");
+      final jsonString = encoder.convert(jsonData);
+      final path = '${tempDir.path}/${prefix}_$formattedDate.json';
+      final file = File(path);
+      await file.writeAsString(jsonString, flush: true);
+      generatedFiles.add(XFile(path, mimeType: ExportFormat.json.mimeType));
+    }
+
+    // KML format
+    if (formats.contains(ExportFormat.kml)) {
+      final waypoints = <_KmlWaypoint>[];
+      for (final nest in nestsToExport) {
+        if (nest.latitude != null && nest.longitude != null) {
+          waypoints.add(
+            _KmlWaypoint(
+              lat: nest.latitude,
+              lon: nest.longitude,
+              name: '${nest.fieldNumber} - ${nest.speciesName ?? ''}',
+              description: nest.localityName ?? '',
+              time: nest.foundTime,
+            ),
+          );
+        }
+      }
+
+      if (waypoints.isNotEmpty) {
+        final kmlString = _buildKmlString(
+          name: prefix,
+          description: 'Nests coordinates',
+          waypoints: waypoints,
+        );
+        final path = '${tempDir.path}/${prefix}_$formattedDate.kml';
+        final file = File(path);
+        await file.writeAsString(kmlString, flush: true);
+        generatedFiles.add(XFile(path, mimeType: ExportFormat.kml.mimeType));
+      }
+    }
+
+    if (generatedFiles.isNotEmpty) {
+      await SharePlus.instance.share(
+        ShareParams(
+          files: generatedFiles,
+          title: S.of(context).nestExported(nestsToExport.length),
+          subject: S.of(context).nestData(nestsToExport.length),
+        ),
+      );
+    }
+  } catch (error) {
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          persist: true,
+          showCloseIcon: true,
+          backgroundColor: Theme.of(context).colorScheme.error,
+          content: Text(S.of(context).errorExportingNest(nests.length, error.toString())),
+        ),
+      );
+    }
+  } finally {
+    if (context.mounted) {
+      Navigator.of(context).pop();
+    }
+  }
+}
+
+/// Opens the export options dialog/sheet for [nests] and exports to the chosen formats.
+Future<void> exportNestsWithDialog(
+  BuildContext context,
+  List<Nest> nests, {
+  String defaultPrefix = 'selected_nests',
+  VoidCallback? onCompleted,
+}) async {
+  if (nests.isEmpty) return;
+
+  final title = nests.length == 1
+      ? S.of(context).exportWhat(S.of(context).nest(1))
+      : S.of(context).exportWhat(S.of(context).nest(2));
+
+  final result = await showExportOptionsBottomSheet(
+    context: context,
+    defaultPrefix: defaultPrefix,
+    title: title,
+  );
+
+  if (result != null && context.mounted) {
+    await exportNests(
+      context,
+      nests,
+      filePrefix: result.prefix,
+      formats: result.formats,
+    );
+    onCompleted?.call();
+  }
+}
+
 /// Exports all inactive nests to a JSON envelope and opens the share sheet.
 Future<void> exportAllInactiveNestsToJson(BuildContext context) async {
   bool isDialogShown = false;
@@ -2996,6 +3412,181 @@ Future<void> exportSelectedSpecimensToKml(BuildContext context, List<Specimen> s
         content: Text(S.of(context).errorExportingSpecimen(specimenList.length, error.toString())),
       ),
     );
+  }
+}
+
+/// Exports [specimens] to all specified [formats] using [filePrefix] and a timestamp suffix,
+/// then opens the share sheet with all generated files.
+Future<void> exportSpecimens(
+  BuildContext context,
+  List<Specimen> specimens, {
+  required String filePrefix,
+  required Set<ExportFormat> formats,
+}) async {
+  if (specimens.isEmpty || formats.isEmpty) return;
+
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return Dialog(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const CircularProgressIndicator(year2023: false),
+              const SizedBox(width: 16),
+              Text(S.of(context).exportingPleaseWait),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+
+  try {
+    final locale = Localizations.localeOf(context);
+    final now = DateTime.now();
+    final formatter = DateFormat('yyyyMMdd_HHmmss');
+    final formattedDate = formatter.format(now);
+    final prefix = _sanitizeFileName(filePrefix.trim().isEmpty ? 'specimens' : filePrefix.trim());
+    final tempDir = await getTemporaryDirectory();
+    final generatedFiles = <XFile>[];
+
+    // CSV format
+    if (formats.contains(ExportFormat.csv)) {
+      final rows = await buildSpecimensRows(specimens, locale);
+      if (rows.isNotEmpty) {
+        final csv = Csv(fieldDelimiter: ';').encode(rows);
+        final path = '${tempDir.path}/${prefix}_$formattedDate.csv';
+        if (csv.isNotEmpty) {
+          final file = File(path);
+          await file.writeAsString(csv, flush: true);
+          generatedFiles.add(XFile(path, mimeType: ExportFormat.csv.mimeType));
+        }
+      }
+    }
+
+    // Excel format
+    if (formats.contains(ExportFormat.excel)) {
+      final rows = await buildSpecimensRows(specimens, locale);
+      final cellRows = convertRowsToCellValues(rows);
+      final excel = Excel.createExcel();
+      final Sheet sheet = excel['Sheet1'];
+      for (final row in cellRows) {
+        sheet.appendRow(row);
+      }
+      final fileBytes = excel.save();
+      if (fileBytes != null) {
+        final path = '${tempDir.path}/${prefix}_$formattedDate.xlsx';
+        final file = File(path);
+        await file.create(recursive: true);
+        await file.writeAsBytes(fileBytes, flush: true);
+        generatedFiles.add(XFile(path, mimeType: ExportFormat.excel.mimeType));
+      }
+    }
+
+    // JSON format
+    if (formats.contains(ExportFormat.json)) {
+      final jsonData = {
+        'source': kExportSource,
+        'schema': 'specimens',
+        'schemaVersion': kExportSchemaVersion,
+        'records': specimens.map((specimen) => specimen.toJson()).toList(),
+      };
+      final encoder = const JsonEncoder.withIndent("  ");
+      final jsonString = encoder.convert(jsonData);
+      final path = '${tempDir.path}/${prefix}_$formattedDate.json';
+      final file = File(path);
+      await file.writeAsString(jsonString, flush: true);
+      generatedFiles.add(XFile(path, mimeType: ExportFormat.json.mimeType));
+    }
+
+    // KML format
+    if (formats.contains(ExportFormat.kml)) {
+      final waypoints = <_KmlWaypoint>[];
+      for (final specimen in specimens) {
+        if (specimen.latitude != null && specimen.longitude != null) {
+          waypoints.add(
+            _KmlWaypoint(
+              lat: specimen.latitude,
+              lon: specimen.longitude,
+              name: '${specimen.fieldNumber} - ${specimen.speciesName ?? ''}',
+              description: specimen.locality ?? '',
+              time: specimen.sampleTime,
+            ),
+          );
+        }
+      }
+
+      if (waypoints.isNotEmpty) {
+        final kmlString = _buildKmlString(
+          name: prefix,
+          description: 'Coordinates for specimens',
+          waypoints: waypoints,
+        );
+        final path = '${tempDir.path}/${prefix}_$formattedDate.kml';
+        final file = File(path);
+        await file.writeAsString(kmlString, flush: true);
+        generatedFiles.add(XFile(path, mimeType: ExportFormat.kml.mimeType));
+      }
+    }
+
+    if (generatedFiles.isNotEmpty) {
+      await SharePlus.instance.share(
+        ShareParams(
+          files: generatedFiles,
+          title: S.of(context).specimenExported(specimens.length),
+          subject: S.of(context).specimenData(specimens.length),
+        ),
+      );
+    }
+  } catch (error) {
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          persist: true,
+          showCloseIcon: true,
+          backgroundColor: Theme.of(context).colorScheme.error,
+          content: Text(S.of(context).errorExportingSpecimen(specimens.length, error.toString())),
+        ),
+      );
+    }
+  } finally {
+    if (context.mounted) {
+      Navigator.of(context).pop();
+    }
+  }
+}
+
+/// Opens the export options dialog/sheet for [specimens] and exports to the chosen formats.
+Future<void> exportSpecimensWithDialog(
+  BuildContext context,
+  List<Specimen> specimens, {
+  String defaultPrefix = 'selected_specimens',
+  VoidCallback? onCompleted,
+}) async {
+  if (specimens.isEmpty) return;
+
+  final title = specimens.length == 1
+      ? S.of(context).exportWhat(S.of(context).specimens(1).toLowerCase())
+      : S.of(context).exportWhat(S.of(context).specimens(2).toLowerCase());
+
+  final result = await showExportOptionsBottomSheet(
+    context: context,
+    defaultPrefix: defaultPrefix,
+    title: title,
+  );
+
+  if (result != null && context.mounted) {
+    await exportSpecimens(
+      context,
+      specimens,
+      filePrefix: result.prefix,
+      formats: result.formats,
+    );
+    onCompleted?.call();
   }
 }
 

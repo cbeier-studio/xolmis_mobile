@@ -310,6 +310,51 @@
             }
         }
     },
+    "exportOptions": "Opções de exportação",
+    "@exportOptions": {
+        "type": "text",
+        "description": "Title of the export options dialog or bottom sheet"
+    },
+    "exportFormats": "Formatos de exportação",
+    "@exportFormats": {
+        "type": "text",
+        "description": "Section header for export formats selection"
+    },
+    "fileNamePrefix": "Prefixo do nome do arquivo",
+    "@fileNamePrefix": {
+        "type": "text",
+        "description": "Label for file name prefix input"
+    },
+    "fileNamePrefixHelper": "Um sufixo de data e hora será adicionado automaticamente.",
+    "@fileNamePrefixHelper": {
+        "type": "text",
+        "description": "Helper text explaining the file name suffix"
+    },
+    "fileNamePreview": "Prévia: {preview}",
+    "@fileNamePreview": {
+        "type": "text",
+        "description": "Preview of the exported file name",
+        "placeholders": {
+            "preview": {
+                "type": "String"
+            }
+        }
+    },
+    "selectAtLeastOneFormat": "Selecione ao menos um formato para exportar.",
+    "@selectAtLeastOneFormat": {
+        "type": "text",
+        "description": "Validation message when no export format is selected"
+    },
+    "fileNamePrefixRequired": "O prefixo do nome do arquivo não pode ficar vazio.",
+    "@fileNamePrefixRequired": {
+        "type": "text",
+        "description": "Validation message when file name prefix is empty"
+    },
+    "formatSpecificSettings": "Configurações do formato",
+    "@formatSpecificSettings": {
+        "type": "text",
+        "description": "Format-specific settings header in export dialog"
+    },
     "finishInventory": "Encerrar inventário",
     "requiredField": "* obrigatório",
     "inventoryType": "Tipo de inventário",

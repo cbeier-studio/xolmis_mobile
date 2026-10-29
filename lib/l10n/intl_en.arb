@@ -459,6 +459,51 @@
             }
         }
     },
+    "exportOptions": "Export options",
+    "@exportOptions": {
+        "type": "text",
+        "description": "Title of the export options dialog or bottom sheet"
+    },
+    "exportFormats": "Export formats",
+    "@exportFormats": {
+        "type": "text",
+        "description": "Section header for export formats selection"
+    },
+    "fileNamePrefix": "File name prefix",
+    "@fileNamePrefix": {
+        "type": "text",
+        "description": "Label for file name prefix input"
+    },
+    "fileNamePrefixHelper": "Date and time suffix will be appended automatically.",
+    "@fileNamePrefixHelper": {
+        "type": "text",
+        "description": "Helper text explaining the file name suffix"
+    },
+    "fileNamePreview": "Preview: {preview}",
+    "@fileNamePreview": {
+        "type": "text",
+        "description": "Preview of the exported file name",
+        "placeholders": {
+            "preview": {
+                "type": "String"
+            }
+        }
+    },
+    "selectAtLeastOneFormat": "Select at least one format to export.",
+    "@selectAtLeastOneFormat": {
+        "type": "text",
+        "description": "Validation message when no export format is selected"
+    },
+    "fileNamePrefixRequired": "File name prefix cannot be empty.",
+    "@fileNamePrefixRequired": {
+        "type": "text",
+        "description": "Validation message when file name prefix is empty"
+    },
+    "formatSpecificSettings": "Format settings",
+    "@formatSpecificSettings": {
+        "type": "text",
+        "description": "Format-specific settings header in export dialog"
+    },
     "finishInventory": "Finish inventory",
     "@finishInventory": {
         "type": "text",

@@ -299,6 +299,32 @@ class SEn extends S {
   }
 
   @override
+  String get exportOptions => 'Export options';
+
+  @override
+  String get exportFormats => 'Export formats';
+
+  @override
+  String get fileNamePrefix => 'File name prefix';
+
+  @override
+  String get fileNamePrefixHelper => 'Date and time suffix will be appended automatically.';
+
+  @override
+  String fileNamePreview(String preview) {
+    return 'Preview: $preview';
+  }
+
+  @override
+  String get selectAtLeastOneFormat => 'Select at least one format to export.';
+
+  @override
+  String get fileNamePrefixRequired => 'File name prefix cannot be empty.';
+
+  @override
+  String get formatSpecificSettings => 'Format settings';
+
+  @override
   String get finishInventory => 'Finish inventory';
 
   @override

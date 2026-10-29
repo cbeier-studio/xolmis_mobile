@@ -302,64 +302,16 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                           _showMoreOptionsBottomSheet(context, widget.inventory);
                         },
                       )
-                    : MenuAnchor(
-                        builder: (context, controller, child) {
-                          return IconButton(
-                            icon: const Icon(Icons.more_vert_outlined),
-                            tooltip: S.of(context).exportWhat(S.of(context).inventory(1)),
-                            onPressed: () {
-                              if (controller.isOpen) {
-                                controller.close();
-                              } else {
-                                controller.open();
-                              }
-                            },
+                    : IconButton(
+                        icon: const Icon(Icons.share_outlined),
+                        tooltip: S.of(context).exportWhat(S.of(context).inventory(1)),
+                        onPressed: () {
+                          exportInventoriesWithDialog(
+                            context,
+                            [widget.inventory],
+                            defaultPrefix: 'inventory_${widget.inventory.id}',
                           );
                         },
-                        menuChildren: [
-                          MenuItemButton(
-                            leadingIcon: const Icon(Icons.share_outlined),
-                            onPressed: () async {
-                              final locale = Localizations.localeOf(context);
-                              final csvFiles = await exportInventoryToCsv(context, widget.inventory, locale);
-                              if (csvFiles.isNotEmpty) {
-                                await SharePlus.instance.share(ShareParams(
-                                  files: csvFiles.map((f) => XFile(f, mimeType: 'text/csv')).toList(),
-                                  text: S.of(context).inventoryExported(1),
-                                  subject: S.of(context).inventoryData(1),
-                                ));
-                              }
-                            },
-                            child: Text('${S.of(context).export} CSV'),
-                          ),
-                          MenuItemButton(
-                            leadingIcon: const Icon(Icons.share_outlined),
-                            onPressed: () async {
-                              final locale = Localizations.localeOf(context);
-                              final excelFile = await exportInventoryToExcel(context, widget.inventory, locale);
-                              await SharePlus.instance.share(ShareParams(
-                                files: [XFile(excelFile, mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')],
-                                text: S.of(context).inventoryExported(1),
-                                subject: S.of(context).inventoryData(1),
-                              ));
-                            },
-                            child: Text('${S.of(context).export} Excel'),
-                          ),
-                          MenuItemButton(
-                            leadingIcon: const Icon(Icons.share_outlined),
-                            onPressed: () {
-                              exportInventoryToJson(context, widget.inventory, true);
-                            },
-                            child: Text('${S.of(context).export} JSON'),
-                          ),
-                          MenuItemButton(
-                            leadingIcon: const Icon(Icons.share_outlined),
-                            onPressed: () {
-                              exportInventoryToKml(context, widget.inventory);
-                            },
-                            child: Text('${S.of(context).export} KML'),
-                          ),
-                        ],
                       ),
               ),
             ],
@@ -400,34 +352,19 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                   const SizedBox(width: 8.0,),
                   ],
                   if (widget.inventory.isFinished) ...[
-                     const SizedBox(width: 8.0,),
-                   ActionChip(
-                     label: Text('${S.of(context).export} CSV'),
-                     avatar: const Icon(Icons.share_outlined),
-                     onPressed: () {
-                       final locale = Localizations.localeOf(context);
-                       exportInventoryToCsv(context, widget.inventory, locale).then((csvFiles) async {
-                         if (csvFiles.isNotEmpty) {
-                           // Share the files using share_plus
-                           await SharePlus.instance.share(
-                             ShareParams(
-                               files: csvFiles.map((f) => XFile(f, mimeType: 'text/csv')).toList(),
-                               text: S.of(context).inventoryExported(1),
-                               subject: S.of(context).inventoryData(1),
-                             ),
-                           );
-                         }
-                       });
-                     },
-                   ),
-                   const SizedBox(width: 8.0,),
-                   ActionChip(
-                     label: Text('${S.of(context).export} JSON'),
-                     avatar: const Icon(Icons.share_outlined),
-                     onPressed: () {
-                       exportInventoryToJson(context, widget.inventory, true);
-                     },
-                   ),
+                    const SizedBox(width: 8.0),
+                    ActionChip(
+                      label: Text(S.of(context).export),
+                      avatar: const Icon(Icons.share_outlined),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        exportInventoriesWithDialog(
+                          context,
+                          [widget.inventory],
+                          defaultPrefix: 'inventory_${widget.inventory.id}',
+                        );
+                      },
+                    ),
                   ],
                   const SizedBox(width: 8.0,),
                 ],
@@ -668,71 +605,17 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                   _showMoreOptionsBottomSheet(context, widget.inventory);
                 },
               )
-                  : MenuAnchor(
-              builder: (context, controller, child) {
-                return IconButton(
-                  icon: Icon(Icons.more_vert_outlined),
-                  tooltip: S.of(context).exportWhat(S.of(context).inventory(1)),
-                  onPressed: () {
-                    if (controller.isOpen) {
-                      controller.close();
-                    } else {
-                      controller.open();
-                    }
-                  },
-                );
-              },
-              menuChildren: [
-               MenuItemButton(
-                   leadingIcon: const Icon(Icons.share_outlined),
-                   onPressed: () async {
-                     final locale = Localizations.localeOf(context);
-                     final csvFiles = await exportInventoryToCsv(context, widget.inventory, locale);
-                     if (csvFiles.isNotEmpty) {
-                       // Share the files using share_plus
-                       await SharePlus.instance.share(
-                         ShareParams(
-                           files: csvFiles.map((f) => XFile(f, mimeType: 'text/csv')).toList(),
-                           text: S.of(context).inventoryExported(1),
-                           subject: S.of(context).inventoryData(1),
-                         ),
-                       );
-                     }
-                   },
-                   child: Text('${S.of(context).export} CSV'),
-                 ),
-                MenuItemButton(
-                  leadingIcon: const Icon(Icons.share_outlined),
-                  onPressed: () async {
-                    final locale = Localizations.localeOf(context);
-                    final excelFile = await exportInventoryToExcel(context, widget.inventory, locale);
-                    // Share the file using share_plus
-                    await SharePlus.instance.share(
-                      ShareParams(
-                        files: [XFile(excelFile, mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')],
-                        text: S.of(context).inventoryExported(1),
-                        subject: S.of(context).inventoryData(1),
-                      ),
-                    );
-                  },
-                  child: Text('${S.of(context).export} Excel'),
-                ),
-                MenuItemButton(
-                  leadingIcon: const Icon(Icons.share_outlined),
-                  onPressed: () {
-                    exportInventoryToJson(context, widget.inventory, true);
-                  },
-                  child: Text('${S.of(context).export} JSON'),
-                ),
-                MenuItemButton(
-                  leadingIcon: const Icon(Icons.share_outlined),
-                  onPressed: () {
-                    exportInventoryToKml(context, widget.inventory);
-                  },
-                  child: Text('${S.of(context).export} KML'),
-                ),
-              ],
-            ),
+                  : IconButton(
+                      icon: const Icon(Icons.share_outlined),
+                      tooltip: S.of(context).exportWhat(S.of(context).inventory(1)),
+                      onPressed: () {
+                        exportInventoriesWithDialog(
+                          context,
+                          [widget.inventory],
+                          defaultPrefix: 'inventory_${widget.inventory.id}',
+                        );
+                      },
+                    ),
           ),
         ],
         bottom: PreferredSize( // Wrap TabBar and LinearProgressIndicator in PreferredSize
@@ -1000,79 +883,17 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                       Row(
                         children: [
                           const SizedBox(width: 8.0),
-                          Text(S.of(context).export, style: TextTheme
-                              .of(context)
-                              .bodyMedium,),
-                          Expanded(
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child:
-                              Row(
-                                children: [
-                                  const SizedBox(width: 16.0),
-                                  ActionChip(
-                                    label: const Text('CSV'),
-                                    onPressed: () async {
-                                      Navigator.of(context).pop();
-                                      final locale = Localizations.localeOf(
-                                          context);
-                                      final csvFiles = await exportInventoryToCsv(
-                                          context, inventory, locale);
-                                      if (csvFiles.isNotEmpty) {
-                                        // Share the files using share_plus
-                                        await SharePlus.instance.share(
-                                          ShareParams(
-                                              files: csvFiles.map((f) => XFile(f, mimeType: 'text/csv')).toList(),
-                                              text: S.of(context).inventoryExported(1),
-                                              subject: S.of(context).inventoryData(1)
-                                          ),
-                                        );
-                                      }
-                                    },
-                                  ),
-                                  const SizedBox(width: 8.0),
-                                  ActionChip(
-                                    label: const Text('Excel'),
-                                    onPressed: () async {
-                                      Navigator.of(context).pop();
-                                      final locale = Localizations.localeOf(
-                                          context);
-                                      final excelFile = await exportInventoryToExcel(
-                                          context, inventory, locale);
-                                      // Share the file using share_plus
-                                      await SharePlus.instance.share(
-                                        ShareParams(
-                                            files: [
-                                              XFile(excelFile,
-                                                  mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-                                            ],
-                                            text: S.of(context).inventoryExported(1),
-                                            subject: S.of(context).inventoryData(1)
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                  const SizedBox(width: 8.0),
-                                  ActionChip(
-                                    label: const Text('JSON'),
-                                    onPressed: () async {
-                                      Navigator.of(context).pop();
-                                      exportInventoryToJson(
-                                          context, inventory, true);
-                                    },
-                                  ),
-                                  const SizedBox(width: 8.0),
-                                  ActionChip(
-                                    label: const Text('KML'),
-                                    onPressed: () async {
-                                      Navigator.of(context).pop();
-                                      exportInventoryToKml(context, inventory);
-                                    },
-                                  ),
-                                  const SizedBox(width: 8.0),
-                                ],
-                              ),
-                            ),
+                          ActionChip(
+                            avatar: const Icon(Icons.share_outlined, size: 18),
+                            label: Text(S.of(context).export),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                              exportInventoriesWithDialog(
+                                context,
+                                [inventory],
+                                defaultPrefix: 'inventory_${inventory.id}',
+                              );
+                            },
                           ),
                         ],
                       ),

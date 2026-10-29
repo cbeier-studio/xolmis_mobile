@@ -310,73 +310,16 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                     _showMoreOptionsBottomSheet(context, widget.nest);
                   },
                 )
-                    : MenuAnchor(
-                  builder: (context, controller, child) {
-                    return IconButton(
-                      icon: Icon(Icons.more_vert_outlined),
-                      onPressed: () {
-                        if (controller.isOpen) {
-                          controller.close();
-                        } else {
-                          controller.open();
-                        }
-                      },
+                    : IconButton(
+                  icon: const Icon(Icons.share_outlined),
+                  tooltip: S.of(context).exportWhat(S.of(context).nest(1)),
+                  onPressed: () {
+                    exportNestsWithDialog(
+                      context,
+                      [widget.nest],
+                      defaultPrefix: 'nest_${widget.nest.fieldNumber}',
                     );
                   },
-                  menuChildren: [
-                    // Option to export the selected nest to CSV
-                    MenuItemButton(
-                      onPressed: () async {
-                        Navigator.of(context).pop();
-                        final locale = Localizations.localeOf(context);
-                        final csvFiles = await exportNestToCsv(context, widget.nest, locale);
-                        if (csvFiles.isNotEmpty) {
-                          // Share the files using share_plus
-                          await SharePlus.instance.share(
-                            ShareParams(
-                              files: csvFiles.map((f) => XFile(f, mimeType: 'text/csv')).toList(),
-                              text: S.of(context).nestExported(1),
-                              subject: S.of(context).nestData(1),
-                            ),
-                          );
-                        }
-                      },
-                      child: const Text('CSV'),
-                    ),
-                    // Option to export the selected nest to Excel
-                    MenuItemButton(
-                      onPressed: () async {
-                        Navigator.of(context).pop();
-                        final locale = Localizations.localeOf(context);
-                        final excelFile = await exportNestToExcel(context, widget.nest, locale);
-                        // Share the file using share_plus
-                        await SharePlus.instance.share(
-                          ShareParams(
-                            files: [XFile(excelFile, mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')], 
-                            text: S.of(context).nestExported(1), 
-                            subject: S.of(context).nestData(1)
-                          ),
-                        );
-                      },
-                      child: const Text('Excel'),
-                    ),
-                    // Option to export the selected nest to JSON
-                    MenuItemButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        exportNestToJson(context, widget.nest);
-                      },
-                      child: const Text('JSON'),
-                    ),
-                    // Option to export the selected nest to KML
-                    MenuItemButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        exportNestToKml(context, widget.nest);
-                      },
-                      child: const Text('KML'),
-                    ),
-                  ],
                 ),
             ],
           ),
@@ -629,73 +572,16 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                     _showMoreOptionsBottomSheet(context, widget.nest);
                   },
                 )
-                    : MenuAnchor(
-                  builder: (context, controller, child) {
-                    return IconButton(
-                      icon: Icon(Icons.more_vert_outlined),
-                      onPressed: () {
-                        if (controller.isOpen) {
-                          controller.close();
-                        } else {
-                          controller.open();
-                        }
-                      },
+                    : IconButton(
+                  icon: const Icon(Icons.share_outlined),
+                  tooltip: S.of(context).exportWhat(S.of(context).nest(1)),
+                  onPressed: () {
+                    exportNestsWithDialog(
+                      context,
+                      [widget.nest],
+                      defaultPrefix: 'nest_${widget.nest.fieldNumber}',
                     );
                   },
-                  menuChildren: [
-                    // Option to export the selected nest to CSV
-                    MenuItemButton(
-                      onPressed: () async {
-                        final locale = Localizations.localeOf(context);
-                        final csvFiles = await exportNestToCsv(context, widget.nest, locale);
-                        if (csvFiles.isNotEmpty) {
-                          // Share the files using share_plus
-                          await SharePlus.instance.share(
-                            ShareParams(
-                              files: csvFiles.map((f) => XFile(f, mimeType: 'text/csv')).toList(),
-                              text: S.of(context).nestExported(1),
-                              subject: S.of(context).nestData(1),
-                            ),
-                          );
-                        }
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text('CSV'),
-                    ),
-                    // Option to export the selected nest to Excel
-                    MenuItemButton(
-                      onPressed: () async {
-                        final locale = Localizations.localeOf(context);
-                        final excelFile = await exportNestToExcel(context, widget.nest, locale);
-                        // Share the file using share_plus
-                        await SharePlus.instance.share(
-                          ShareParams(
-                            files: [XFile(excelFile, mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')], 
-                            text: S.of(context).nestExported(1), 
-                            subject: S.of(context).nestData(1)
-                          ),
-                        );
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text('Excel'),
-                    ),
-                    // Option to export the selected nest to JSON
-                    MenuItemButton(
-                      onPressed: () {
-                        exportNestToJson(context, widget.nest);
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text('JSON'),
-                    ),
-                    // Option to export the selected nest to KML
-                    MenuItemButton(
-                      onPressed: () {
-                        exportNestToKml(context, widget.nest);
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text('KML'),
-                    ),
-                  ],
                 ),
             ],
             bottom: PreferredSize(
@@ -1087,71 +973,17 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                       Row(
                         children: [
                           const SizedBox(width: 8.0),
-                          Text(S.of(context).export, style: TextTheme
-                              .of(context)
-                              .bodyMedium,),
-                          Expanded(
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child:
-                              Row(
-                                children: [
-                                  const SizedBox(width: 16.0),
-                                   ActionChip(
-                                     label: const Text('CSV'),
-                                     onPressed: () async {
-                                       Navigator.of(context).pop();
-                                       final locale = Localizations.localeOf(context);
-                                       final csvFiles = await exportNestToCsv(context, nest, locale);
-                                       if (csvFiles.isNotEmpty) {
-                                         // Share the files using share_plus
-                                         await SharePlus.instance.share(
-                                           ShareParams(
-                                             files: csvFiles.map((f) => XFile(f, mimeType: 'text/csv')).toList(),
-                                             text: S.of(context).nestExported(1),
-                                             subject: S.of(context).nestData(1),
-                                           ),
-                                         );
-                                       }
-                                     },
-                                   ),
-                                  const SizedBox(width: 8.0),
-                                  ActionChip(
-                                    label: const Text('Excel'),
-                                    onPressed: () async {
-                                      Navigator.of(context).pop();
-                                      final locale = Localizations.localeOf(context);
-                                      final excelFile = await exportNestToExcel(context, nest, locale);
-                                      // Share the file using share_plus
-                                      await SharePlus.instance.share(
-                                        ShareParams(
-                                            files: [XFile(excelFile, mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')],
-                                            text: S.of(context).nestExported(1),
-                                            subject: S.of(context).nestData(1)
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                  const SizedBox(width: 8.0),
-                                  ActionChip(
-                                    label: const Text('JSON'),
-                                    onPressed: () async {
-                                      Navigator.of(context).pop();
-                                      exportNestToJson(context, nest);
-                                    },
-                                  ),
-                                  const SizedBox(width: 8.0),
-                                  ActionChip(
-                                    label: const Text('KML'),
-                                    onPressed: () async {
-                                      Navigator.of(context).pop();
-                                      exportNestToKml(context, nest);
-                                    },
-                                  ),
-                                  const SizedBox(width: 8.0),
-                                ],
-                              ),
-                            ),
+                          ActionChip(
+                            avatar: const Icon(Icons.share_outlined, size: 18),
+                            label: Text(S.of(context).export),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                              exportNestsWithDialog(
+                                context,
+                                [nest],
+                                defaultPrefix: 'nest_${nest.fieldNumber}',
+                              );
+                            },
                           ),
                         ],
                       ),

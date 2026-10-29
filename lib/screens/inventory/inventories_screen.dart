@@ -1,7 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -787,105 +786,34 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                       onPressed: _deleteSelectedInventories,
                     ),
                     const VerticalDivider(),
-                    // Option to export all selected inventories to CSV or JSON
-                    MenuAnchor(
-                      builder: (context, controller, child) {
-                        return IconButton(
-                          icon: const Icon(Icons.share_outlined),
-                          tooltip: S
-                              .of(context)
-                              .exportWhat(S.of(context).inventory(2)),
-                          onPressed: () {
-                            if (controller.isOpen) {
-                              controller.close();
-                            } else {
-                              controller.open();
+                    // Option to export all selected inventories
+                    IconButton(
+                      icon: const Icon(Icons.share_outlined),
+                      tooltip: S
+                          .of(context)
+                          .exportWhat(S.of(context).inventory(2)),
+                      onPressed: () async {
+                        final inventories =
+                            selectedInventories
+                                .map(
+                                  (id) => inventoryProvider
+                                      .getInventoryById(id),
+                                )
+                                .whereType<Inventory>()
+                                .toList();
+                        await exportInventoriesWithDialog(
+                          context,
+                          inventories,
+                          defaultPrefix: 'selected_inventories',
+                          onCompleted: () {
+                            if (mounted) {
+                              setState(() {
+                                selectedInventories.clear();
+                              });
                             }
                           },
                         );
                       },
-                      menuChildren: [
-                        MenuItemButton(
-                          onPressed: () async {
-                            final inventories =
-                                selectedInventories
-                                    .map(
-                                      (id) => inventoryProvider
-                                          .getInventoryById(id),
-                                    )
-                                    .whereType<Inventory>()
-                                    .toList();
-                            await exportSelectedInventoriesToCsv(
-                              context,
-                              inventories,
-                            );
-                            setState(() {
-                              selectedInventories.clear();
-                            });
-                          },
-                          child: const Text('CSV'),
-                        ),
-                        MenuItemButton(
-                          onPressed: () async {
-                            final inventories =
-                                selectedInventories
-                                    .map(
-                                      (id) => inventoryProvider
-                                          .getInventoryById(id),
-                                    )
-                                    .whereType<Inventory>()
-                                    .toList();
-                            await exportSelectedInventoriesToExcel(
-                              context,
-                              inventories,
-                            );
-                            setState(() {
-                              selectedInventories.clear();
-                            });
-                          },
-                          child: const Text('Excel'),
-                        ),
-                        MenuItemButton(
-                          onPressed: () async {
-                            final inventories =
-                                selectedInventories
-                                    .map(
-                                      (id) => inventoryProvider
-                                          .getInventoryById(id),
-                                    )
-                                    .whereType<Inventory>()
-                                    .toList();
-                            await exportSelectedInventoriesToJson(
-                              context,
-                              inventories,
-                            );
-                            setState(() {
-                              selectedInventories.clear();
-                            });
-                          },
-                          child: const Text('JSON'),
-                        ),
-                        MenuItemButton(
-                          onPressed: () async {
-                            final inventories =
-                                selectedInventories
-                                    .map(
-                                      (id) => inventoryProvider
-                                          .getInventoryById(id),
-                                    )
-                                    .whereType<Inventory>()
-                                    .toList();
-                            await exportSelectedInventoriesToKml(
-                              context,
-                              inventories,
-                            );
-                            setState(() {
-                              selectedInventories.clear();
-                            });
-                          },
-                          child: const Text('KML'),
-                        ),
-                      ],
                     ),
                     if (selectedInventories.length > 1)
                     IconButton(
@@ -1023,13 +951,14 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                           if (inventoryProvider
                               .finishedInventories
                               .isNotEmpty) ...[
-                            // Action to export all finished inventories to JSON
+                            // Action to export all finished inventories
                             MenuItemButton(
                               leadingIcon: const Icon(Icons.share_outlined),
                               onPressed: () async {
-                                await exportAllInventoriesToJson(
+                                await exportInventoriesWithDialog(
                                   context,
-                                  inventoryProvider,
+                                  inventoryProvider.finishedInventories,
+                                  defaultPrefix: 'inventories',
                                 );
                               },
                               child: Text(S.of(context).exportAll),
@@ -2134,99 +2063,17 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                       Row(
                         children: [
                           const SizedBox(width: 8.0),
-                          Text(
-                            S.of(context).export,
-                            style: TextTheme.of(context).bodyMedium,
-                          ),
-                          Expanded(
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Row(
-                                children: [
-                                  const SizedBox(width: 16.0),
-                                  ActionChip(
-                                    label: const Text('CSV'),
-                                    onPressed: () async {
-                                      final locale = Localizations.localeOf(
-                                        context,
-                                      );
-                                      final csvFiles =
-                                          await exportInventoryToCsv(
-                                            context,
-                                            inventory,
-                                            locale,
-                                          );
-                                      if (csvFiles.isNotEmpty) {
-                                        // Share the files using share_plus
-                                        await SharePlus.instance.share(
-                                          ShareParams(
-                                            files: csvFiles.map((f) => XFile(f, mimeType: 'text/csv')).toList(),
-                                            text: S.of(context).inventoryExported(1),
-                                            subject: S.of(context).inventoryData(1),
-                                          ),
-                                        );
-                                      }
-                                      if (context.mounted) {
-                                        Navigator.of(context).pop();
-                                      }
-                                    },
-                                  ),
-                                  const SizedBox(width: 8.0),
-                                  ActionChip(
-                                    label: const Text('Excel'),
-                                    onPressed: () async {
-                                      final locale = Localizations.localeOf(
-                                        context,
-                                      );
-                                      final excelFile =
-                                          await exportInventoryToExcel(
-                                            context,
-                                            inventory,
-                                            locale,
-                                          );
-                                      // Share the file using share_plus
-                                      await SharePlus.instance.share(
-                                        ShareParams(
-                                          files: [
-                                            XFile(
-                                              excelFile,
-                                              mimeType:
-                                                  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                                            ),
-                                          ],
-                                          text: S.of(context).inventoryExported(1),
-                                          subject: S.of(context).inventoryData(1),
-                                        ),
-                                      );
-                                      if (context.mounted) {
-                                        Navigator.of(context).pop();
-                                      }
-                                    },
-                                  ),
-                                  const SizedBox(width: 8.0),
-                                  ActionChip(
-                                    label: const Text('JSON'),
-                                    onPressed: () async {
-                                      exportInventoryToJson(
-                                        context,
-                                        inventory,
-                                        true,
-                                      );
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                  const SizedBox(width: 8.0),
-                                  ActionChip(
-                                    label: const Text('KML'),
-                                    onPressed: () async {
-                                      exportInventoryToKml(context, inventory);
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                  const SizedBox(width: 8.0),
-                                ],
-                              ),
-                            ),
+                          ActionChip(
+                            avatar: const Icon(Icons.share_outlined, size: 18),
+                            label: Text(S.of(context).export),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                              exportInventoriesWithDialog(
+                                context,
+                                [inventory],
+                                defaultPrefix: 'inventory_${inventory.id}',
+                              );
+                            },
                           ),
                         ],
                       ),
@@ -2339,34 +2186,21 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                         ],
                       ),
                       if (inventoryProvider.finishedInventories.isNotEmpty) ...[
-                        Divider(),
+                        const Divider(),
                         Row(
                           children: [
                             const SizedBox(width: 8.0),
-                            Text(
-                              S.of(context).exportAll,
-                              style: TextTheme.of(context).bodyMedium,
-                            ),
-                            Expanded(
-                              child: SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Row(
-                                  children: [
-                                    const SizedBox(width: 16.0),
-                                    ActionChip(
-                                      label: const Text('JSON'),
-                                      onPressed: () async {
-                                        Navigator.of(context).pop();
-                                        await exportAllInventoriesToJson(
-                                          context,
-                                          inventoryProvider,
-                                        );
-                                      },
-                                    ),
-                                    const SizedBox(width: 8.0),
-                                  ],
-                                ),
-                              ),
+                            ActionChip(
+                              avatar: const Icon(Icons.share_outlined, size: 18),
+                              label: Text(S.of(context).exportAll),
+                              onPressed: () async {
+                                Navigator.of(context).pop();
+                                await exportInventoriesWithDialog(
+                                  context,
+                                  inventoryProvider.finishedInventories,
+                                  defaultPrefix: 'inventories',
+                                );
+                              },
                             ),
                           ],
                         ),
