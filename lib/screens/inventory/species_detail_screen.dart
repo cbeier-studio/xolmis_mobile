@@ -61,8 +61,17 @@ class SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
   /// Loads POIs already associated with this species.
   Future<void> _loadSpeciesData() async {
     final poiProvider = Provider.of<PoiProvider>(context, listen: false);
+    var pois = poiProvider.getPoisForSpecies(_species.id ?? 0);
+    if (pois.isEmpty && _species.id != null) {
+      await poiProvider.loadPoisForSpecies(_species.id!);
+      pois = poiProvider.getPoisForSpecies(_species.id!);
+    }
     setState(() {
-      _species.pois = poiProvider.getPoisForSpecies(_species.id ?? 0);
+      if (pois.isNotEmpty) {
+        _species.pois = pois;
+      } else if (_species.pois.isNotEmpty) {
+        poiProvider.setPoiListForSpecies(_species.id ?? 0, _species.pois);
+      }
     });
   }
 

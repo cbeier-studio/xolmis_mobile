@@ -92,7 +92,7 @@ Future<void> main() async {
 
     final appImageProvider = AppImageProvider(appImageDao);
     final poiProvider = PoiProvider(poiDao);
-    final speciesProvider = SpeciesProvider(speciesDao);
+    final speciesProvider = SpeciesProvider(speciesDao, poiProvider: poiProvider);
     final vegetationProvider = VegetationProvider(vegetationDao);
     final weatherProvider = WeatherProvider(weatherDao);
     final nestRevisionProvider = NestRevisionProvider(nestRevisionDao);
