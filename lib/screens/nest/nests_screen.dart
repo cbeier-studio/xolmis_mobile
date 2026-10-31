@@ -1489,14 +1489,14 @@ class NestsScreenState extends State<NestsScreen> {
   }
 
   // Show the bottom sheet with options to edit, delete, and export the nest
-  void _showBottomSheet(BuildContext context, Nest nest) {
+  void _showBottomSheet(BuildContext screenContext, Nest nest) {
     showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
+      context: screenContext,
+      builder: (BuildContext sheetContext) {
         return SafeArea(
           child: BottomSheet(
             onClosing: () {},
-            builder: (BuildContext context) {
+            builder: (BuildContext sheetContentContext) {
               return Container(
                 padding: const EdgeInsets.all(16.0),
                 child: SingleChildScrollView(
@@ -1508,25 +1508,25 @@ class NestsScreenState extends State<NestsScreen> {
                         alignment: Alignment.centerLeft,
                         child: Text(
                           nest.fieldNumber!,
-                          style: TextTheme.of(context).bodyLarge,
+                          style: TextTheme.of(sheetContentContext).bodyLarge,
                         ),
                       ),
                       const Divider(),
                       GridView.count(
                         crossAxisCount:
-                            MediaQuery.sizeOf(context).width < 600 ? 4 : 5,
+                            MediaQuery.sizeOf(sheetContentContext).width < 600 ? 4 : 5,
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         children: <Widget>[
                           buildGridMenuItem(
-                            context,
+                            sheetContentContext,
                             Icons.edit_outlined,
-                            S.of(context).edit,
+                            S.of(sheetContentContext).edit,
                             () {
-                              Navigator.of(context).pop();
-                              if (MediaQuery.sizeOf(context).width > 600) {
+                              Navigator.of(sheetContentContext).pop();
+                              if (MediaQuery.sizeOf(screenContext).width > 600) {
                                 showDialog(
-                                  context: context,
+                                  context: screenContext,
                                   builder: (context) {
                                     return Dialog(
                                       shape: RoundedRectangleBorder(
@@ -1548,7 +1548,7 @@ class NestsScreenState extends State<NestsScreen> {
                                 );
                               } else {
                                 Navigator.push(
-                                  context,
+                                  screenContext,
                                   MaterialPageRoute(
                                     builder:
                                         (context) => AddNestScreen(
@@ -1562,74 +1562,73 @@ class NestsScreenState extends State<NestsScreen> {
                           ),
                           if (!_showActive)
                             buildGridMenuItem(
-                              context,
+                              sheetContentContext,
                               Icons.undo_outlined,
-                              S.of(context).reactivate,
+                              S.of(sheetContentContext).reactivate,
                               () {
-                                Navigator.of(context).pop();
+                                Navigator.of(sheetContentContext).pop();
                                 _confirmReactivateNest(nest);
                               },
                             ),
                           buildGridMenuItem(
-                            context,
+                            sheetContentContext,
                             Icons.share_outlined,
-                            S.of(context).export,
-                                () {
-                              Navigator.of(context).pop();
+                            S.of(sheetContentContext).export,
+                            () {
+                              Navigator.of(sheetContentContext).pop();
                               exportNestsWithDialog(
-                                context,
+                                screenContext,
                                 [nest],
                                 defaultPrefix: 'nest_${nest.fieldNumber}',
                               );
                             },
                           ),
                           buildGridMenuItem(
-                            context,
+                            sheetContentContext,
                             Icons.delete_outlined,
-                            S.of(context).delete,
+                            S.of(sheetContentContext).delete,
                             () {
-                              Navigator.of(context).pop();
+                              Navigator.of(sheetContentContext).pop();
                               // Ask for user confirmation
                               showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
+                                context: screenContext,
+                                builder: (BuildContext dialogContext) {
                                   return AlertDialog(
-                                    title: Text(S.of(context).confirmDelete),
+                                    title: Text(S.of(dialogContext).confirmDelete),
                                     content: Text(
-                                      S.of(context).confirmDeleteMessage(
+                                      S.of(dialogContext).confirmDeleteMessage(
                                             1,
                                             "male",
-                                            S.of(context).nest(1),
+                                            S.of(dialogContext).nest(1),
                                           ),
                                     ),
                                     actions: <Widget>[
                                       TextButton(
                                         onPressed: () {
-                                          Navigator.of(context).pop(false);
-                                          Navigator.of(context).pop();
+                                          Navigator.of(dialogContext).pop(false);
                                         },
-                                        child: Text(S.of(context).cancel),
+                                        child: Text(S.of(dialogContext).cancel),
                                       ),
                                       TextButton(
                                         style: TextButton.styleFrom(
-                                          foregroundColor: Theme.of(context).colorScheme.error,
+                                          foregroundColor: Theme.of(dialogContext).colorScheme.error,
                                         ),
                                         onPressed: () async {
-                                          Navigator.of(context).pop(true);
+                                          Navigator.of(dialogContext).pop(true);
                                           // Call the function to delete species
                                           await Provider.of<NestProvider>(
-                                            context,
+                                            screenContext,
                                             listen: false,
                                           ).removeNest(nest);
                                         },
-                                        child: Text(S.of(context).delete),
+                                        child: Text(S.of(dialogContext).delete),
                                       ),
                                     ],
                                   );
                                 },
                               );
                             },
-                            color: Theme.of(context).colorScheme.error,
+                            color: Theme.of(sheetContentContext).colorScheme.error,
                           ),
                         ],
                       ),

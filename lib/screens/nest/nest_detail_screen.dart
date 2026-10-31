@@ -936,14 +936,14 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
     );
   }
 
-  void _showMoreOptionsBottomSheet(BuildContext context, Nest nest) {
+  void _showMoreOptionsBottomSheet(BuildContext screenContext, Nest nest) {
     showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
+      context: screenContext,
+      builder: (BuildContext sheetContext) {
         return SafeArea(
           child: BottomSheet(
             onClosing: () {},
-            builder: (BuildContext context) {
+            builder: (BuildContext sheetContentContext) {
               return Container(
                 padding: const EdgeInsets.all(16.0),
                 child: SingleChildScrollView(
@@ -953,7 +953,7 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                       // Show the inventory ID
                       Align(
                         alignment: Alignment.centerLeft,
-                        child: Text(nest.fieldNumber ?? '', style: TextTheme.of(context).bodyLarge,),
+                        child: Text(nest.fieldNumber ?? '', style: TextTheme.of(sheetContentContext).bodyLarge,),
                       ),
                       const Divider(),
                       Row(
@@ -961,11 +961,11 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                           const SizedBox(width: 8.0),
                           ActionChip(
                             avatar: const Icon(Icons.share_outlined, size: 18),
-                            label: Text(S.of(context).export),
+                            label: Text(S.of(sheetContentContext).export),
                             onPressed: () {
-                              Navigator.of(context).pop();
+                              Navigator.of(sheetContentContext).pop();
                               exportNestsWithDialog(
-                                context,
+                                screenContext,
                                 [nest],
                                 defaultPrefix: 'nest_${nest.fieldNumber}',
                               );

@@ -1497,14 +1497,14 @@ class SpecimensScreenState extends State<SpecimensScreen> {
     );
   }
 
-  void _showBottomSheet(BuildContext context, Specimen specimen) {
+  void _showBottomSheet(BuildContext screenContext, Specimen specimen) {
     showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
+      context: screenContext,
+      builder: (BuildContext sheetContext) {
         return SafeArea(
           child: BottomSheet(
             onClosing: () {},
-            builder: (BuildContext context) {
+            builder: (BuildContext sheetContentContext) {
               return Container(
                 padding: const EdgeInsets.all(16.0),
                 child: SingleChildScrollView(
@@ -1515,25 +1515,25 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                         alignment: Alignment.centerLeft,
                         child: Text(
                           specimen.fieldNumber,
-                          style: TextTheme.of(context).bodyLarge,
+                          style: TextTheme.of(sheetContentContext).bodyLarge,
                         ),
                       ),
                       const Divider(),
                       GridView.count(
                         crossAxisCount:
-                            MediaQuery.sizeOf(context).width < 600 ? 4 : 5,
+                            MediaQuery.sizeOf(sheetContentContext).width < 600 ? 4 : 5,
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         children: <Widget>[
                           buildGridMenuItem(
-                            context,
+                            sheetContentContext,
                             Icons.edit_outlined,
-                            S.of(context).edit,
+                            S.of(sheetContentContext).edit,
                             () {
-                              Navigator.of(context).pop();
-                              if (MediaQuery.sizeOf(context).width > 600) {
+                              Navigator.of(sheetContentContext).pop();
+                              if (MediaQuery.sizeOf(screenContext).width > 600) {
                                 showDialog(
-                                  context: context,
+                                  context: screenContext,
                                   builder: (context) {
                                     return Dialog(
                                       shape: RoundedRectangleBorder(
@@ -1555,7 +1555,7 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                                 );
                               } else {
                                 Navigator.push(
-                                  context,
+                                  screenContext,
                                   MaterialPageRoute(
                                     builder:
                                         (context) => AddSpecimenScreen(
@@ -1569,77 +1569,77 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                           ),
                           if (_showPending)
                             buildGridMenuItem(
-                              context,
+                              sheetContentContext,
                               Icons.archive_outlined,
-                              S.of(context).archive,
+                              S.of(sheetContentContext).archive,
                               () {
-                                Navigator.of(context).pop();
+                                Navigator.of(sheetContentContext).pop();
                                 specimen.isPending = false;
                                 specimenProvider.updateSpecimen(specimen);
                               },
                             ),
                           buildGridMenuItem(
-                            context,
+                            sheetContentContext,
                             Icons.share_outlined,
-                            S.of(context).export,
-                                () {
-                                  Navigator.of(context).pop();
-                                  exportSpecimensWithDialog(
-                                    context,
-                                    [specimen],
-                                    defaultPrefix: 'specimen_${specimen.fieldNumber}',
-                                  );
+                            S.of(sheetContentContext).export,
+                            () {
+                              Navigator.of(sheetContentContext).pop();
+                              exportSpecimensWithDialog(
+                                screenContext,
+                                [specimen],
+                                defaultPrefix: 'specimen_${specimen.fieldNumber}',
+                              );
                             },
                           ),
                           buildGridMenuItem(
-                            context,
+                            sheetContentContext,
                             Icons.delete_outlined,
-                            S.of(context).delete,
+                            S.of(sheetContentContext).delete,
                             () {
-                              Navigator.of(context).pop();
+                              Navigator.of(sheetContentContext).pop();
                               // Ask for user confirmation
                               showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
+                                context: screenContext,
+                                builder: (BuildContext dialogContext) {
                                   return AlertDialog(
-                                    title: Text(S.of(context).confirmDelete),
+                                    title: Text(S.of(dialogContext).confirmDelete),
                                     content: Text(
                                       S
-                                          .of(context)
+                                          .of(dialogContext)
                                           .confirmDeleteMessage(
                                             1,
                                             "male",
-                                            S.of(context).specimens(1),
+                                            S.of(dialogContext).specimens(1),
                                           ),
                                     ),
                                     actions: <Widget>[
                                       TextButton(
                                         onPressed: () {
-                                          Navigator.of(context).pop(false);
+                                          Navigator.of(dialogContext).pop(false);
                                         },
-                                        child: Text(S.of(context).cancel),
+                                        child: Text(S.of(dialogContext).cancel),
                                       ),
                                       TextButton(
                                         style: TextButton.styleFrom(
-                                          foregroundColor: Theme.of(context)
+                                          foregroundColor: Theme.of(dialogContext)
                                               .colorScheme
                                               .error,
                                         ),
                                         onPressed: () async {
-                                          Navigator.of(context).pop(true);
+                                          Navigator.of(dialogContext).pop(true);
                                           // Call the function to delete species
                                           await specimenProvider.removeSpecimen(
                                             specimen,
                                           );
                                         },
-                                        child: Text(S.of(context).delete),
+                                        child: Text(S.of(dialogContext).delete),
                                       ),
                                     ],
                                   );
                                 },
                               );
                             },
-                            color: Theme.of(context).colorScheme.error,
+                            color: Theme.of(sheetContentContext).colorScheme.error,
                           ),
                         ],
                       ),

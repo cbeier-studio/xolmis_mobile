@@ -1344,25 +1344,30 @@ Future<void> exportInventories(
 }) async {
   if (inventories.isEmpty || formats.isEmpty) return;
 
-  showDialog(
-    context: context,
-    barrierDismissible: false,
-    builder: (BuildContext context) {
-      return Dialog(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const CircularProgressIndicator(year2023: false),
-              const SizedBox(width: 16),
-              Text(S.of(context).exportingPleaseWait),
-            ],
+  bool isDialogShown = false;
+
+  if (context.mounted) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const CircularProgressIndicator(year2023: false),
+                const SizedBox(width: 16),
+                Text(S.of(context).exportingPleaseWait),
+              ],
+            ),
           ),
-        ),
-      );
-    },
-  );
+        );
+      },
+    );
+    isDialogShown = true;
+  }
 
   try {
     final locale = Localizations.localeOf(context);
@@ -1507,7 +1512,13 @@ Future<void> exportInventories(
       }
     }
 
+    if (isDialogShown && context.mounted) {
+      Navigator.of(context).pop();
+      isDialogShown = false;
+    }
+
     if (generatedFiles.isNotEmpty) {
+      await Future.delayed(const Duration(milliseconds: 100));
       await SharePlus.instance.share(
         ShareParams(
           files: generatedFiles,
@@ -1517,6 +1528,10 @@ Future<void> exportInventories(
       );
     }
   } catch (error) {
+    if (isDialogShown && context.mounted) {
+      Navigator.of(context).pop();
+      isDialogShown = false;
+    }
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -1528,8 +1543,9 @@ Future<void> exportInventories(
       );
     }
   } finally {
-    if (context.mounted) {
+    if (isDialogShown && context.mounted) {
       Navigator.of(context).pop();
+      isDialogShown = false;
     }
   }
 }
@@ -2779,25 +2795,30 @@ Future<void> exportNests(
 }) async {
   if (nests.isEmpty || formats.isEmpty) return;
 
-  showDialog(
-    context: context,
-    barrierDismissible: false,
-    builder: (BuildContext context) {
-      return Dialog(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const CircularProgressIndicator(year2023: false),
-              const SizedBox(width: 16),
-              Text(S.of(context).exportingPleaseWait),
-            ],
+  bool isDialogShown = false;
+
+  if (context.mounted) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const CircularProgressIndicator(year2023: false),
+                const SizedBox(width: 16),
+                Text(S.of(context).exportingPleaseWait),
+              ],
+            ),
           ),
-        ),
-      );
-    },
-  );
+        );
+      },
+    );
+    isDialogShown = true;
+  }
 
   try {
     final locale = Localizations.localeOf(context);
@@ -2893,7 +2914,13 @@ Future<void> exportNests(
       }
     }
 
+    if (isDialogShown && context.mounted) {
+      Navigator.of(context).pop();
+      isDialogShown = false;
+    }
+
     if (generatedFiles.isNotEmpty) {
+      await Future.delayed(const Duration(milliseconds: 100));
       await SharePlus.instance.share(
         ShareParams(
           files: generatedFiles,
@@ -2903,6 +2930,10 @@ Future<void> exportNests(
       );
     }
   } catch (error) {
+    if (isDialogShown && context.mounted) {
+      Navigator.of(context).pop();
+      isDialogShown = false;
+    }
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -2914,8 +2945,9 @@ Future<void> exportNests(
       );
     }
   } finally {
-    if (context.mounted) {
+    if (isDialogShown && context.mounted) {
       Navigator.of(context).pop();
+      isDialogShown = false;
     }
   }
 }
@@ -3735,25 +3767,30 @@ Future<void> exportSpecimens(
 }) async {
   if (specimens.isEmpty || formats.isEmpty) return;
 
-  showDialog(
-    context: context,
-    barrierDismissible: false,
-    builder: (BuildContext context) {
-      return Dialog(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const CircularProgressIndicator(year2023: false),
-              const SizedBox(width: 16),
-              Text(S.of(context).exportingPleaseWait),
-            ],
+  bool isDialogShown = false;
+
+  if (context.mounted) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const CircularProgressIndicator(year2023: false),
+                const SizedBox(width: 16),
+                Text(S.of(context).exportingPleaseWait),
+              ],
+            ),
           ),
-        ),
-      );
-    },
-  );
+        );
+      },
+    );
+    isDialogShown = true;
+  }
 
   try {
     final locale = Localizations.localeOf(context);
@@ -3843,7 +3880,13 @@ Future<void> exportSpecimens(
       }
     }
 
+    if (isDialogShown && context.mounted) {
+      Navigator.of(context).pop();
+      isDialogShown = false;
+    }
+
     if (generatedFiles.isNotEmpty) {
+      await Future.delayed(const Duration(milliseconds: 100));
       await SharePlus.instance.share(
         ShareParams(
           files: generatedFiles,
@@ -3853,6 +3896,10 @@ Future<void> exportSpecimens(
       );
     }
   } catch (error) {
+    if (isDialogShown && context.mounted) {
+      Navigator.of(context).pop();
+      isDialogShown = false;
+    }
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -3864,8 +3911,9 @@ Future<void> exportSpecimens(
       );
     }
   } finally {
-    if (context.mounted) {
+    if (isDialogShown && context.mounted) {
       Navigator.of(context).pop();
+      isDialogShown = false;
     }
   }
 }

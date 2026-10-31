@@ -846,14 +846,14 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
     );
   }
 
-  void _showMoreOptionsBottomSheet(BuildContext context, Inventory inventory) {
+  void _showMoreOptionsBottomSheet(BuildContext screenContext, Inventory inventory) {
     showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
+      context: screenContext,
+      builder: (BuildContext sheetContext) {
         return SafeArea(
           child: BottomSheet(
             onClosing: () {},
-            builder: (BuildContext context) {
+            builder: (BuildContext sheetContentContext) {
               return Container(
                 padding: const EdgeInsets.all(16.0),
                 child: SingleChildScrollView(
@@ -863,7 +863,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                       // Show the inventory ID
                       Align(
                         alignment: Alignment.centerLeft,
-                        child: Text(inventory.id, style: TextTheme.of(context).bodyLarge,),
+                        child: Text(inventory.id, style: TextTheme.of(sheetContentContext).bodyLarge,),
                       ),
                       const Divider(),
                       Row(
@@ -871,11 +871,11 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                           const SizedBox(width: 8.0),
                           ActionChip(
                             avatar: const Icon(Icons.share_outlined, size: 18),
-                            label: Text(S.of(context).export),
+                            label: Text(S.of(sheetContentContext).export),
                             onPressed: () {
-                              Navigator.of(context).pop();
+                              Navigator.of(sheetContentContext).pop();
                               exportInventoriesWithDialog(
-                                context,
+                                screenContext,
                                 [inventory],
                                 defaultPrefix: 'inventory_${inventory.id}',
                               );

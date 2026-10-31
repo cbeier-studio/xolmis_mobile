@@ -1864,14 +1864,14 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
     );
   }
 
-  void _showBottomSheet(BuildContext context, Inventory inventory) {
+  void _showBottomSheet(BuildContext screenContext, Inventory inventory) {
     showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
+      context: screenContext,
+      builder: (BuildContext sheetContext) {
         return SafeArea(
           child: BottomSheet(
             onClosing: () {},
-            builder: (BuildContext context) {
+            builder: (BuildContext sheetContentContext) {
               return Container(
                 padding: const EdgeInsets.all(16.0),
                 child: SingleChildScrollView(
@@ -1883,27 +1883,27 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                         alignment: Alignment.centerLeft,
                         child: Text(
                           inventory.id,
-                          style: TextTheme.of(context).bodyLarge,
+                          style: TextTheme.of(sheetContentContext).bodyLarge,
                         ),
                       ),
                       const Divider(),
 
                       GridView.count(
                         crossAxisCount:
-                            MediaQuery.sizeOf(context).width < 600 ? 4 : 5,
+                            MediaQuery.sizeOf(sheetContentContext).width < 600 ? 4 : 5,
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         children: <Widget>[
                           buildGridMenuItem(
-                            context,
+                            sheetContentContext,
                             Icons.edit_outlined,
-                            S.of(context).edit,
+                            S.of(sheetContentContext).edit,
                             () async {
-                              Navigator.of(context).pop();
+                              Navigator.of(sheetContentContext).pop();
                               Inventory? editedInventory;
-                              if (MediaQuery.sizeOf(context).width > 600) {
+                              if (MediaQuery.sizeOf(screenContext).width > 600) {
                                 editedInventory = await showDialog<Inventory>(
-                                  context: context,
+                                  context: screenContext,
                                   builder: (context) {
                                     return Dialog(
                                       shape: RoundedRectangleBorder(
@@ -1925,7 +1925,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                               } else {
                                 editedInventory =
                                     await Navigator.push<Inventory>(
-                                      context,
+                                      screenContext,
                                       MaterialPageRoute(
                                         builder:
                                             (context) => EditInventoryScreen(
@@ -1940,14 +1940,14 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                       .inventoryIdExists(editedInventory.id);
 
                                   if (idExists) {
-                                    if (context.mounted) {
+                                    if (screenContext.mounted) {
                                       ScaffoldMessenger.of(
-                                        context,
+                                        screenContext,
                                       ).showSnackBar(
                                         SnackBar(
                                           content: Text(
                                             S
-                                                .of(context)
+                                                .of(screenContext)
                                                 .inventoryIdAlreadyExists,
                                           ),
                                         ),
@@ -1958,20 +1958,20 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
 
                                   try {
                                     await inventoryProvider.changeInventoryId(
-                                      context,
+                                      screenContext,
                                       inventory.id,
                                       editedInventory.id,
                                     );
 
                                     // If successful, close the dialog
-                                    if (context.mounted) {
-                                      Navigator.of(context).pop();
+                                    if (screenContext.mounted) {
+                                      Navigator.of(screenContext).pop();
                                       ScaffoldMessenger.of(
-                                        context,
+                                        screenContext,
                                       ).showSnackBar(
                                         SnackBar(
                                           content: Text(
-                                            S.of(context).inventoryIdUpdated,
+                                            S.of(screenContext).inventoryIdUpdated,
                                           ),
                                           backgroundColor: Colors.green,
                                         ),
@@ -1979,9 +1979,9 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                     }
                                   } catch (e) {
                                     // If an error occurs, show a message
-                                    if (context.mounted) {
+                                    if (screenContext.mounted) {
                                       ScaffoldMessenger.of(
-                                        context,
+                                        screenContext,
                                       ).showSnackBar(
                                         SnackBar(
                                           persist: true,
@@ -1989,7 +1989,7 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                           content: Text('Update ID failed: $e'),
                                           backgroundColor:
                                               Theme.of(
-                                                context,
+                                                screenContext,
                                               ).colorScheme.error,
                                         ),
                                       );
@@ -2005,12 +2005,12 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                           ),
                           if (_isShowingActiveInventories)
                             buildGridMenuItem(
-                              context,
+                              sheetContentContext,
                               Icons.flag_outlined,
-                              S.of(context).finish,
+                              S.of(sheetContentContext).finish,
                               () async {
-                                final pageContext = this.context;
-                                Navigator.of(context).pop();
+                                final pageContext = screenContext;
+                                Navigator.of(sheetContentContext).pop();
                                 final completionService =
                                     InventoryCompletionService(
                                       context: pageContext,
@@ -2025,11 +2025,11 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                             ),
                           if (!_isShowingActiveInventories)
                             buildGridMenuItem(
-                              context,
+                              sheetContentContext,
                               Icons.undo_outlined,
-                              S.of(context).reactivate,
+                              S.of(sheetContentContext).reactivate,
                               () {
-                                Navigator.of(context).pop();
+                                Navigator.of(sheetContentContext).pop();
                                 inventory.updateElapsedTime(0);
                                 inventory.updateCurrentInterval(
                                   inventory.currentInterval + 1,
@@ -2041,35 +2041,35 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                                 inventory.updateIsFinished(false);
                                 inventoryProvider.updateInventory(inventory);
                                 inventoryProvider.startInventoryTimer(
-                                  context,
+                                  screenContext,
                                   inventory,
                                   inventoryDao,
                                 );
                               },
                             ),
                           buildGridMenuItem(
-                            context,
+                            sheetContentContext,
                             Icons.share_outlined,
-                            S.of(context).export,
+                            S.of(sheetContentContext).export,
                                 () {
-                              Navigator.of(context).pop();
+                              Navigator.of(sheetContentContext).pop();
                               exportInventoriesWithDialog(
-                                context,
+                                screenContext,
                                 [inventory],
                                 defaultPrefix: 'inventory_${inventory.id}',
                               );
                             },
                           ),
                           buildGridMenuItem(
-                            context,
+                            sheetContentContext,
                             Icons.delete_outlined,
-                            S.of(context).delete,
+                            S.of(sheetContentContext).delete,
                             () {
-                              Navigator.of(context).pop();
+                              Navigator.of(sheetContentContext).pop();
                               // Ask for user confirmation
-                              _confirmDelete(context, inventory);
+                              _confirmDelete(screenContext, inventory);
                             },
-                            color: Theme.of(context).colorScheme.error,
+                            color: Theme.of(sheetContentContext).colorScheme.error,
                           ),
                         ],
                       ),

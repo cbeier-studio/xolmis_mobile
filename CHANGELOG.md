@@ -30,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Fixed Excel export cell formatting: integer fields are now formatted as numeric cells and empty/blank fields are exported as true empty cells.
 - The dialog to change the number of individuals of a species was not applying the value informed.
-- Fixed single journal entry export flow and loading dialog dismissal.
+- Fixed single record export flow for inventories, nests, specimens, and field journal when triggered from bottom action sheets.
 - Formatted field journal PDF export headers to highlight creation date and time.
 - The statistics screen of selected inventories was stuck in loading.
 - Share Excel files sometimes did not work.
