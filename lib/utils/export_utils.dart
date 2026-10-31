@@ -664,7 +664,7 @@ Future<List<List<dynamic>>> buildInventoriesPoiRows(List<Inventory> inventories,
         rows.add([
           ...prefix,
           species.name,
-          poi.id.toString(),
+          poi.id,
           poi.sampleTime != null ? DateFormat('yyyy-MM-dd HH:mm:ss').format(poi.sampleTime!) : '',
           formatNumbers ? numberFormat.format(poi.latitude) : poi.latitude,
           formatNumbers ? numberFormat.format(poi.longitude) : poi.longitude,
@@ -725,11 +725,24 @@ Future<List<List<dynamic>>> buildInventoryRows(Inventory inventory, Locale local
 }
 
 /// Converts a dynamic value into an Excel [CellValue] preserving basic types.
-CellValue _convertToCellValue(dynamic val) {
+///
+/// Returns `null` for empty or missing values so Excel handles them as blank cells.
+CellValue? _convertToCellValue(dynamic val) {
   if (val == null) {
-    return TextCellValue('');
+    return null;
   }
   if (val is String) {
+    if (val.trim().isEmpty) {
+      return null;
+    }
+    // Preserves codes with leading zeros (e.g., "001", "01") as text cells.
+    if (val.length > 1 && val.startsWith('0') && !val.startsWith('0.')) {
+      return TextCellValue(val);
+    }
+    final parsedInt = int.tryParse(val);
+    if (parsedInt != null) {
+      return IntCellValue(parsedInt);
+    }
     return TextCellValue(val);
   }
   if (val is int) {
@@ -742,14 +755,25 @@ CellValue _convertToCellValue(dynamic val) {
     return BoolCellValue(val);
   }
 
-  return TextCellValue(val.toString());
+  final str = val.toString();
+  if (str.trim().isEmpty) {
+    return null;
+  }
+  if (str.length > 1 && str.startsWith('0') && !str.startsWith('0.')) {
+    return TextCellValue(str);
+  }
+  final parsedInt = int.tryParse(str);
+  if (parsedInt != null) {
+    return IntCellValue(parsedInt);
+  }
+  return TextCellValue(str);
 }
 
-/// Converts matrix rows into Excel-compatible [CellValue] rows.
-List<List<CellValue>> convertRowsToCellValues(List<List<dynamic>> dynamicRows) {
-  List<List<CellValue>> cellValueRows = [];
+/// Converts matrix rows into Excel-compatible [CellValue?] rows.
+List<List<CellValue?>> convertRowsToCellValues(List<List<dynamic>> dynamicRows) {
+  List<List<CellValue?>> cellValueRows = [];
   for (var dynamicRow in dynamicRows) {
-    List<CellValue> cellValueRow = [];
+    List<CellValue?> cellValueRow = [];
     for (var val in dynamicRow) {
       cellValueRow.add(_convertToCellValue(val));
     }
@@ -3580,12 +3604,12 @@ Future<void> exportSelectedSpecimensToExcel(BuildContext context, List<Specimen>
 
     final locale = Localizations.localeOf(context);
     List<List<dynamic>> rows = await buildSpecimensRows(specimenList, locale);
-    List<List<CellValue>> cellRows = convertRowsToCellValues(rows);
+    final cellRows = convertRowsToCellValues(rows);
 
     final excel = Excel.createExcel();
     final Sheet sheet = excel['Sheet1'];
 
-    for (List<CellValue> row in cellRows) {
+    for (final row in cellRows) {
       sheet.appendRow(row);
     }
 
@@ -3976,13 +4000,13 @@ Future<void> exportAllSpecimensToExcel(BuildContext context, List<Specimen> spec
 
     // 1. Create a list of data
     List<List<dynamic>> rows = await buildSpecimensRows(specimenList, locale);
-    List<List<CellValue>> cellRows = convertRowsToCellValues(rows);
+    final cellRows = convertRowsToCellValues(rows);
 
     // 2. Convert the list of data to Excel
     final excel = Excel.createExcel();
     final Sheet sheet = excel['Sheet1'];
 
-    for (List<CellValue> row in cellRows) {
+    for (final row in cellRows) {
       sheet.appendRow(row);
     }
 
