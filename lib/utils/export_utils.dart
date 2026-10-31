@@ -1,9 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:csv/csv.dart';
 import 'package:docx_creator/docx_creator.dart';
 import 'package:excel_plus/excel_plus.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
 import 'package:xml/xml.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
@@ -1910,23 +1913,31 @@ String _journalDeltaToMarkdown(String? notes) {
   return output.toString().trimRight();
 }
 
+/// Resolves a display title for a field journal entry, preferring creation date and time.
+String _journalDisplayTitle(FieldJournal journal) {
+  if (journal.creationDate != null) {
+    final formattedDate = DateFormat('dd/MM/yyyy HH:mm').format(journal.creationDate!);
+    return formattedDate;
+  }
+  return 'Journal Note';
+}
+
 String _buildJournalTxtExportContent(List<FieldJournal> journals) {
   final content = StringBuffer();
 
   for (var i = 0; i < journals.length; i++) {
     final journal = journals[i];
-    // content.writeln('Title: ${journal.title}');
+    content.writeln(_journalDisplayTitle(journal));
     if (journal.observer != null && journal.observer!.isNotEmpty) {
       content.writeln('Observer: ${journal.observer}');
     }
     if (journal.tags.isNotEmpty) {
       content.writeln('Tags: ${journal.tags.join(', ')}');
     }
-    if (journal.creationDate != null) {
-      content.writeln('Created: ${journal.creationDate!.toIso8601String()}');
-    }
-    if (journal.lastModifiedDate != null) {
-      content.writeln('Last modified: ${journal.lastModifiedDate!.toIso8601String()}');
+    if (journal.lastModifiedDate != null &&
+        (journal.creationDate == null ||
+            journal.lastModifiedDate!.difference(journal.creationDate!).inMinutes.abs() > 1)) {
+      content.writeln('Last modified: ${DateFormat('dd/MM/yyyy HH:mm').format(journal.lastModifiedDate!)}');
     }
     content.writeln('');
     content.writeln(_journalDeltaToPlainText(journal.notes));
@@ -1950,7 +1961,6 @@ String _buildJournalMarkdownExportContent(List<FieldJournal> journals) {
   for (var i = 0; i < journals.length; i++) {
     final journal = journals[i];
     content.writeln('---');
-    // content.writeln('title: ${_toYamlStringValue(journal.title)}');
     if (journal.observer != null && journal.observer!.isNotEmpty) {
       content.writeln('observer: ${_toYamlStringValue(journal.observer!)}');
     }
@@ -1965,7 +1975,7 @@ String _buildJournalMarkdownExportContent(List<FieldJournal> journals) {
     }
     content.writeln('---');
     content.writeln('');
-    content.writeln('# ${journal.title}');
+    content.writeln('# ${_journalDisplayTitle(journal)}');
     content.writeln('');
     content.writeln(_journalDeltaToMarkdown(journal.notes));
 
@@ -2194,6 +2204,282 @@ Future<void> exportSelectedJournalsToJson(BuildContext context, List<FieldJourna
         content: Text('${S.of(context).errorSavingJournalEntry}: $error'),
       ),
     );
+  }
+}
+
+/// Default available export formats for Field Journal entries.
+const List<ExportFormat> kJournalExportFormats = [
+  ExportFormat.txt,
+  ExportFormat.markdown,
+  ExportFormat.word,
+  ExportFormat.json,
+  ExportFormat.pdf,
+];
+
+/// Generates PDF document bytes for a list of field journal entries.
+Future<Uint8List> _buildJournalPdfBytes(List<FieldJournal> journals) async {
+  final pdf = pw.Document();
+
+  pdf.addPage(
+    pw.MultiPage(
+      pageFormat: PdfPageFormat.a4,
+      build: (pw.Context context) {
+        final widgets = <pw.Widget>[];
+
+        for (var i = 0; i < journals.length; i++) {
+          final journal = journals[i];
+
+          widgets.add(
+            pw.Text(
+              _journalDisplayTitle(journal),
+              style: pw.TextStyle(
+                fontSize: 16,
+                fontWeight: pw.FontWeight.bold,
+              ),
+            ),
+          );
+          widgets.add(pw.SizedBox(height: 6));
+
+          if (journal.observer != null && journal.observer!.isNotEmpty) {
+            widgets.add(
+              pw.Text(
+                'Observer: ${journal.observer}',
+                style: const pw.TextStyle(fontSize: 10, color: PdfColors.grey700),
+              ),
+            );
+          }
+          if (journal.tags.isNotEmpty) {
+            widgets.add(
+              pw.Text(
+                'Tags: ${journal.tags.join(', ')}',
+                style: const pw.TextStyle(fontSize: 10, color: PdfColors.grey700),
+              ),
+            );
+          }
+          if (journal.lastModifiedDate != null &&
+              (journal.creationDate == null ||
+                  journal.lastModifiedDate!.difference(journal.creationDate!).inMinutes.abs() > 1)) {
+            widgets.add(
+              pw.Text(
+                'Last modified: ${DateFormat('dd/MM/yyyy HH:mm').format(journal.lastModifiedDate!)}',
+                style: const pw.TextStyle(fontSize: 10, color: PdfColors.grey700),
+              ),
+            );
+          }
+
+          widgets.add(pw.SizedBox(height: 12));
+
+          final bodyText = _journalDeltaToPlainText(journal.notes);
+          if (bodyText.isNotEmpty) {
+            widgets.add(pw.Text(bodyText, style: const pw.TextStyle(fontSize: 11)));
+          }
+
+          if (i < journals.length - 1) {
+            widgets.add(pw.SizedBox(height: 16));
+            widgets.add(pw.Divider());
+            widgets.add(pw.SizedBox(height: 16));
+          }
+        }
+
+        return widgets;
+      },
+    ),
+  );
+
+  return pdf.save();
+}
+
+/// Exports [journals] to all specified [formats] using [filePrefix] and a timestamp suffix,
+/// then opens the share sheet with all generated files.
+Future<void> exportJournals(
+  BuildContext context,
+  List<FieldJournal> journals, {
+  required String filePrefix,
+  required Set<ExportFormat> formats,
+}) async {
+  if (journals.isEmpty || formats.isEmpty) return;
+
+  bool isDialogShown = false;
+
+  if (context.mounted) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const CircularProgressIndicator(year2023: false),
+                const SizedBox(width: 16),
+                Text(S.of(context).exportingPleaseWait),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+    isDialogShown = true;
+  }
+
+  try {
+    final now = DateTime.now();
+    final formatter = DateFormat('yyyyMMdd_HHmmss');
+    final formattedDate = formatter.format(now);
+    final prefix = _sanitizeFileName(filePrefix.trim().isEmpty ? 'selected_journals' : filePrefix.trim());
+    final tempDir = await getTemporaryDirectory();
+    final generatedFiles = <XFile>[];
+
+    // Plain Text (.txt)
+    if (formats.contains(ExportFormat.txt)) {
+      final txtContent = _buildJournalTxtExportContent(journals);
+      final path = '${tempDir.path}/${prefix}_$formattedDate.txt';
+      final file = File(path);
+      await file.writeAsString(txtContent, flush: true);
+      generatedFiles.add(XFile(path, mimeType: ExportFormat.txt.mimeType));
+    }
+
+    // Markdown (.md)
+    if (formats.contains(ExportFormat.markdown)) {
+      final markdownContent = _buildJournalMarkdownExportContent(journals);
+      final path = '${tempDir.path}/${prefix}_$formattedDate.md';
+      final file = File(path);
+      await file.writeAsString(markdownContent, flush: true);
+      generatedFiles.add(XFile(path, mimeType: ExportFormat.markdown.mimeType));
+    }
+
+    // Word (.docx)
+    if (formats.contains(ExportFormat.word)) {
+      final builder = docx();
+      for (var i = 0; i < journals.length; i++) {
+        final journal = journals[i];
+        builder.h1(_journalDisplayTitle(journal));
+        if (journal.observer != null && journal.observer!.isNotEmpty) {
+          builder.p('Observer: ${journal.observer}');
+        }
+        if (journal.tags.isNotEmpty) {
+          builder.p('Tags: ${journal.tags.join(', ')}');
+        }
+        if (journal.lastModifiedDate != null &&
+            (journal.creationDate == null ||
+                journal.lastModifiedDate!.difference(journal.creationDate!).inMinutes.abs() > 1)) {
+          builder.p('Last modified: ${DateFormat('dd/MM/yyyy HH:mm').format(journal.lastModifiedDate!)}');
+        }
+
+        final markdownContent = _journalDeltaToMarkdown(journal.notes);
+        if (markdownContent.isNotEmpty) {
+          final nodes = await MarkdownParser.parse(markdownContent);
+          for (final node in nodes) {
+            builder.add(node);
+          }
+        }
+
+        if (i < journals.length - 1) {
+          builder.hr();
+        }
+      }
+      final doc = builder.build();
+      final bytes = await DocxExporter().exportToBytes(doc);
+      final path = '${tempDir.path}/${prefix}_$formattedDate.docx';
+      final file = File(path);
+      await file.create(recursive: true);
+      await file.writeAsBytes(bytes, flush: true);
+      generatedFiles.add(XFile(path, mimeType: ExportFormat.word.mimeType));
+    }
+
+    // JSON (.json)
+    if (formats.contains(ExportFormat.json)) {
+      final jsonData = {
+        'source': kExportSource,
+        'schema': 'journals',
+        'schemaVersion': kExportSchemaVersion,
+        'records': journals.map((journal) => journal.toJson()).toList(),
+      };
+      final jsonString = JsonEncoder.withIndent('  ').convert(jsonData);
+      final path = '${tempDir.path}/${prefix}_$formattedDate.json';
+      final file = File(path);
+      await file.writeAsString(jsonString, flush: true);
+      generatedFiles.add(XFile(path, mimeType: ExportFormat.json.mimeType));
+    }
+
+    // PDF (.pdf)
+    if (formats.contains(ExportFormat.pdf)) {
+      final pdfBytes = await _buildJournalPdfBytes(journals);
+      final path = '${tempDir.path}/${prefix}_$formattedDate.pdf';
+      final file = File(path);
+      await file.create(recursive: true);
+      await file.writeAsBytes(pdfBytes, flush: true);
+      generatedFiles.add(XFile(path, mimeType: ExportFormat.pdf.mimeType));
+    }
+
+    if (isDialogShown && context.mounted) {
+      Navigator.of(context).pop();
+      isDialogShown = false;
+    }
+
+    if (generatedFiles.isNotEmpty) {
+      await Future.delayed(const Duration(milliseconds: 100));
+      await SharePlus.instance.share(
+        ShareParams(
+          files: generatedFiles,
+          title: S.of(context).journalEntries(journals.length),
+          subject: S.of(context).journalEntries(journals.length),
+        ),
+      );
+    }
+  } catch (error) {
+    if (isDialogShown && context.mounted) {
+      Navigator.of(context).pop();
+      isDialogShown = false;
+    }
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          persist: true,
+          showCloseIcon: true,
+          backgroundColor: Theme.of(context).colorScheme.error,
+          content: Text('${S.of(context).errorSavingJournalEntry}: $error'),
+        ),
+      );
+    }
+  } finally {
+    if (isDialogShown && context.mounted) {
+      Navigator.of(context).pop();
+      isDialogShown = false;
+    }
+  }
+}
+
+/// Opens the export options dialog/sheet for [journals] and exports to the chosen formats.
+Future<void> exportJournalsWithDialog(
+  BuildContext context,
+  List<FieldJournal> journals, {
+  String defaultPrefix = 'selected_journals',
+  VoidCallback? onCompleted,
+}) async {
+  if (journals.isEmpty) return;
+
+  final title = S.of(context).exportWhat(
+    S.of(context).journalEntries(journals.length).toLowerCase(),
+  );
+
+  final result = await showExportOptionsBottomSheet(
+    context: context,
+    defaultPrefix: defaultPrefix,
+    title: title,
+    availableFormats: kJournalExportFormats,
+  );
+
+  if (result != null && context.mounted) {
+    await exportJournals(
+      context,
+      journals,
+      filePrefix: result.prefix,
+      formats: result.formats,
+    );
+    onCompleted?.call();
   }
 }
 

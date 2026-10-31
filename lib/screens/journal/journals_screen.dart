@@ -602,66 +602,23 @@ class JournalsScreenState extends State<JournalsScreen> {
                       onPressed: _deleteSelectedEntries,
                     ),
                     const VerticalDivider(),
-                    MenuAnchor(
-                      builder: (context, controller, child) {
-                        return IconButton(
-                          icon: const Icon(Icons.share_outlined),
-                          tooltip: S.of(context).exportWhat(S.of(context).journalEntries(2).toLowerCase()),
-                          onPressed: () {
-                            if (controller.isOpen) {
-                              controller.close();
-                            } else {
-                              controller.open();
-                            }
+                    IconButton(
+                      icon: const Icon(Icons.share_outlined),
+                      tooltip: S.of(context).exportWhat(S.of(context).journalEntries(2).toLowerCase()),
+                      onPressed: () async {
+                        final journals = await _getSelectedJournalEntries();
+                        if (!mounted) return;
+                        await exportJournalsWithDialog(
+                          context,
+                          journals,
+                          onCompleted: () {
+                            if (!mounted) return;
+                            setState(() {
+                              selectedJournals.clear();
+                            });
                           },
                         );
                       },
-                      menuChildren: [
-                        MenuItemButton(
-                          onPressed: () async {
-                            final journals = await _getSelectedJournalEntries();
-                            await exportSelectedJournalsToTxt(context, journals);
-                            if (!mounted) return;
-                            setState(() {
-                              selectedJournals.clear();
-                            });
-                          },
-                          child: Text(S.of(context).plainText),
-                        ),
-                        MenuItemButton(
-                          onPressed: () async {
-                            final journals = await _getSelectedJournalEntries();
-                            await exportSelectedJournalsToMarkdown(context, journals);
-                            if (!mounted) return;
-                            setState(() {
-                              selectedJournals.clear();
-                            });
-                          },
-                          child: const Text('Markdown'),
-                        ),
-                        MenuItemButton(
-                          onPressed: () async {
-                            final journals = await _getSelectedJournalEntries();
-                            await exportSelectedJournalsToWord(context, journals);
-                            if (!mounted) return;
-                            setState(() {
-                              selectedJournals.clear();
-                            });
-                          },
-                          child: const Text('Word'),
-                        ),
-                        MenuItemButton(
-                          onPressed: () async {
-                            final journals = await _getSelectedJournalEntries();
-                            await exportSelectedJournalsToJson(context, journals);
-                            if (!mounted) return;
-                            setState(() {
-                              selectedJournals.clear();
-                            });
-                          },
-                          child: const Text('JSON'),
-                        ),
-                      ],
                     ),
                     const VerticalDivider(),
                     // Option to clear the selected specimens
@@ -1149,15 +1106,15 @@ class JournalsScreenState extends State<JournalsScreen> {
   }
 
   /// Shows contextual actions for a journal entry.
-  void _showBottomSheet(BuildContext context, FieldJournal journalEntry) {
+  void _showBottomSheet(BuildContext screenContext, FieldJournal journalEntry) {
     showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
+      context: screenContext,
+      builder: (BuildContext sheetContext) {
         final preview = firstSentenceFromDelta(journalEntry.notes);
         return SafeArea(
           child: BottomSheet(
             onClosing: () {},
-            builder: (BuildContext context) {
+            builder: (BuildContext sheetContentContext) {
               return Container(
                 padding: const EdgeInsets.all(16.0),
                 child: SingleChildScrollView(
@@ -1166,112 +1123,72 @@ class JournalsScreenState extends State<JournalsScreen> {
                     children: <Widget>[
                       Align(
                         alignment: Alignment.centerLeft,
-                        child: Text(preview, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextTheme.of(context).bodyLarge),
+                        child: Text(preview, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextTheme.of(sheetContentContext).bodyLarge),
                       ),
                       const Divider(),
                       GridView.count(
-                        crossAxisCount: MediaQuery.sizeOf(context).width < 600 ? 4 : 5,
+                        crossAxisCount: MediaQuery.sizeOf(sheetContentContext).width < 600 ? 4 : 5,
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         children: <Widget>[
-                          buildGridMenuItem(context, Icons.edit_outlined, S.of(context).edit, () {
-                            Navigator.of(context).pop();
+                          buildGridMenuItem(sheetContentContext, Icons.edit_outlined, S.of(sheetContentContext).edit, () {
+                            Navigator.of(sheetContentContext).pop();
                             Navigator.push(
-                              context,
+                              screenContext,
                               MaterialPageRoute(
                                 builder: (context) => AddJournalScreen(journalEntry: journalEntry, isEditing: true),
                               ),
                             );
                           }),
-                          buildGridMenuItem(context, Icons.format_color_fill_outlined, S.of(context).changeJournalColor, () async {
-                            Navigator.of(context).pop();
+                          buildGridMenuItem(sheetContentContext, Icons.format_color_fill_outlined, S.of(sheetContentContext).changeJournalColor, () async {
+                            Navigator.of(sheetContentContext).pop();
                             await _showJournalColorPickerDialog(journalEntry);
                           }),
-                          buildGridMenuItem(context, Icons.delete_outlined, S.of(context).delete, () {
-                            Navigator.of(context).pop();
+                          buildGridMenuItem(sheetContentContext, Icons.share_outlined, S.of(sheetContentContext).export, () {
+                            Navigator.of(sheetContentContext).pop();
+                            exportJournalsWithDialog(
+                              screenContext,
+                              [journalEntry],
+                              defaultPrefix: 'journal_${journalEntry.id}',
+                            );
+                          }),
+                          buildGridMenuItem(sheetContentContext, Icons.delete_outlined, S.of(sheetContentContext).delete, () {
+                            Navigator.of(sheetContentContext).pop();
                             // Ask for user confirmation
                             showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
+                              context: screenContext,
+                              builder: (BuildContext dialogContext) {
                                 return AlertDialog(
-                                  title: Text(S.of(context).confirmDelete),
+                                  title: Text(S.of(dialogContext).confirmDelete),
                                   content: Text(
                                     S
-                                        .of(context)
+                                        .of(dialogContext)
                                         .confirmDeleteMessage(
                                           1,
                                           "female",
-                                          S.of(context).journalEntries(1).toLowerCase(),
+                                          S.of(dialogContext).journalEntries(1).toLowerCase(),
                                         ),
                                   ),
                                   actions: <Widget>[
                                     TextButton(
                                       onPressed: () {
-                                        Navigator.of(context).pop(false);
+                                        Navigator.of(dialogContext).pop(false);
                                       },
-                                      child: Text(S.of(context).cancel),
+                                      child: Text(S.of(dialogContext).cancel),
                                     ),
                                     TextButton(
                                       onPressed: () async {
-                                        Navigator.of(context).pop(true);
+                                        Navigator.of(dialogContext).pop(true);
                                         // Call the function to delete species
                                         await journalProvider.removeJournalEntry(journalEntry);
                                       },
-                                      child: Text(S.of(context).delete),
+                                      child: Text(S.of(dialogContext).delete),
                                     ),
                                   ],
                                 );
                               },
                             );
-                          }, color: Theme.of(context).colorScheme.error),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          const SizedBox(width: 8.0),
-                          Text(S.of(context).export, style: TextTheme.of(context).bodyMedium),
-                          Expanded(
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Row(
-                                children: [
-                                  const SizedBox(width: 16.0),
-                                  ActionChip(
-                                    label: Text(S.of(context).plainText),
-                                    onPressed: () async {
-                                      exportSelectedJournalsToTxt(context, [journalEntry]);
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                  const SizedBox(width: 8.0),
-                                  ActionChip(
-                                    label: const Text('Markdown'),
-                                    onPressed: () async {
-                                      exportSelectedJournalsToMarkdown(context, [journalEntry]);
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                  const SizedBox(width: 8.0),
-                                  ActionChip(
-                                    label: const Text('Word'),
-                                    onPressed: () async {
-                                      exportSelectedJournalsToWord(context, [journalEntry]);
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                  const SizedBox(width: 8.0),
-                                  ActionChip(
-                                    label: const Text('JSON'),
-                                    onPressed: () async {
-                                      exportSelectedJournalsToJson(context, [journalEntry]);
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                  const SizedBox(width: 8.0),
-                                ],
-                              ),
-                            ),
-                          ),
+                          }, color: Theme.of(sheetContentContext).colorScheme.error),
                         ],
                       ),
                     ],

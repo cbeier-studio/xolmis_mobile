@@ -189,4 +189,57 @@ void main() {
     expect(result, isNotNull);
     expect(result!.formats, {ExportFormat.csv, ExportFormat.json});
   });
+
+  testWidgets('renders custom availableFormats for Field Journal export', (tester) async {
+    ExportOptionsResult? result;
+
+    await tester.pumpWidget(
+      _buildTestApp(
+        child: Builder(
+          builder: (context) {
+            return ElevatedButton(
+              onPressed: () async {
+                result = await showExportOptionsBottomSheet(
+                  context: context,
+                  defaultPrefix: 'selected_journals',
+                  title: 'Export journals',
+                  availableFormats: const [
+                    ExportFormat.txt,
+                    ExportFormat.markdown,
+                    ExportFormat.word,
+                    ExportFormat.json,
+                    ExportFormat.pdf,
+                  ],
+                );
+              },
+              child: const Text('Open'),
+            );
+          },
+        ),
+      ),
+    );
+
+    await tester.tap(find.text('Open'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Export journals'), findsOneWidget);
+    expect(find.text('Plain Text'), findsOneWidget);
+    expect(find.text('Markdown'), findsOneWidget);
+    expect(find.text('Word'), findsOneWidget);
+    expect(find.text('JSON'), findsOneWidget);
+    expect(find.text('PDF'), findsOneWidget);
+
+    await tester.tap(find.widgetWithText(FilledButton, 'Export'));
+    await tester.pumpAndSettle();
+
+    expect(result, isNotNull);
+    expect(result!.prefix, 'selected_journals');
+    expect(result!.formats, {
+      ExportFormat.txt,
+      ExportFormat.markdown,
+      ExportFormat.word,
+      ExportFormat.json,
+      ExportFormat.pdf,
+    });
+  });
 }

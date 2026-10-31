@@ -11,6 +11,10 @@ enum ExportFormat {
   excel,
   json,
   kml,
+  txt,
+  markdown,
+  word,
+  pdf,
 }
 
 /// Convenience extension providing labels, extensions, icons, and MIME types for [ExportFormat].
@@ -25,6 +29,14 @@ extension ExportFormatExtension on ExportFormat {
         return 'JSON';
       case ExportFormat.kml:
         return 'KML';
+      case ExportFormat.txt:
+        return 'Plain Text';
+      case ExportFormat.markdown:
+        return 'Markdown';
+      case ExportFormat.word:
+        return 'Word';
+      case ExportFormat.pdf:
+        return 'PDF';
     }
   }
 
@@ -38,6 +50,14 @@ extension ExportFormatExtension on ExportFormat {
         return '.json';
       case ExportFormat.kml:
         return '.kml';
+      case ExportFormat.txt:
+        return '.txt';
+      case ExportFormat.markdown:
+        return '.md';
+      case ExportFormat.word:
+        return '.docx';
+      case ExportFormat.pdf:
+        return '.pdf';
     }
   }
 
@@ -51,6 +71,14 @@ extension ExportFormatExtension on ExportFormat {
         return 'application/json';
       case ExportFormat.kml:
         return 'application/vnd.google-earth.kml+xml';
+      case ExportFormat.txt:
+        return 'text/plain';
+      case ExportFormat.markdown:
+        return 'text/markdown';
+      case ExportFormat.word:
+        return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+      case ExportFormat.pdf:
+        return 'application/pdf';
     }
   }
 
@@ -64,6 +92,14 @@ extension ExportFormatExtension on ExportFormat {
         return Icons.code_outlined;
       case ExportFormat.kml:
         return Icons.map_outlined;
+      case ExportFormat.txt:
+        return Icons.text_snippet_outlined;
+      case ExportFormat.markdown:
+        return Icons.article_outlined;
+      case ExportFormat.word:
+        return Icons.description_outlined;
+      case ExportFormat.pdf:
+        return Icons.picture_as_pdf_outlined;
     }
   }
 }
@@ -99,11 +135,30 @@ Future<Set<ExportFormat>> loadExportSelectedFormats() async {
 }
 
 /// Persists selected export formats to [SharedPreferences].
-Future<void> saveExportSelectedFormats(Set<ExportFormat> formats) async {
+Future<void> saveExportSelectedFormats(
+  Set<ExportFormat> formats, {
+  List<ExportFormat>? contextFormats,
+}) async {
   final prefs = await SharedPreferences.getInstance();
+  Set<ExportFormat> finalSet = Set.from(formats);
+
+  if (contextFormats != null && contextFormats.isNotEmpty) {
+    final existingList = prefs.getStringList(kExportSelectedFormatsPreferenceKey) ?? [];
+    final existingFormats = <ExportFormat>{};
+    for (final name in existingList) {
+      for (final format in ExportFormat.values) {
+        if (format.name == name) {
+          existingFormats.add(format);
+        }
+      }
+    }
+    final nonContextFormats = existingFormats.difference(contextFormats.toSet());
+    finalSet = nonContextFormats.union(formats);
+  }
+
   await prefs.setStringList(
     kExportSelectedFormatsPreferenceKey,
-    formats.map((f) => f.name).toList(),
+    finalSet.map((f) => f.name).toList(),
   );
 }
 
@@ -234,9 +289,14 @@ class _ExportOptionsContentState extends State<_ExportOptionsContent> {
       final savedFormats = await loadExportSelectedFormats();
       if (mounted) {
         setState(() {
-          _selectedFormats.addAll(
-            savedFormats.where((f) => widget.availableFormats.contains(f)),
-          );
+          final matching = savedFormats.where((f) => widget.availableFormats.contains(f)).toSet();
+          final hasModuleSpecificSavedFormat = matching.any((f) => f != ExportFormat.json);
+
+          if (matching.isEmpty || !hasModuleSpecificSavedFormat) {
+            _selectedFormats.addAll(widget.availableFormats);
+          } else {
+            _selectedFormats.addAll(matching);
+          }
           _isLoadingFormats = false;
         });
       }
@@ -257,14 +317,14 @@ class _ExportOptionsContentState extends State<_ExportOptionsContent> {
         _selectedFormats.remove(format);
       }
     });
-    saveExportSelectedFormats(_selectedFormats);
+    saveExportSelectedFormats(_selectedFormats, contextFormats: widget.availableFormats);
   }
 
   void _onExportPressed() {
     final prefix = _prefixController.text.trim();
     if (prefix.isEmpty || _selectedFormats.isEmpty) return;
 
-    saveExportSelectedFormats(_selectedFormats);
+    saveExportSelectedFormats(_selectedFormats, contextFormats: widget.availableFormats);
     Navigator.of(context).pop(
       ExportOptionsResult(
         prefix: prefix,
@@ -388,7 +448,7 @@ class _ExportOptionsContentState extends State<_ExportOptionsContent> {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    '${displayPrefix}_${_sampleTimestamp}$previewExtensions',
+                    '${displayPrefix}_$_sampleTimestamp$previewExtensions',
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant,
                       fontFamily: 'monospace',

@@ -25,9 +25,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Show elapsed time in inventory details.
 - Revamped statistics screen design.
 - Unified export flow allowing to define the name of the files and export to more than one format at a time.
+- Unified field journal export flow using export options dialog and added PDF export support.
 
 ### Fixed
 - The dialog to change the number of individuals of a species was not applying the value informed.
+- Fixed single journal entry export flow and loading dialog dismissal.
+- Formatted field journal PDF export headers to highlight creation date and time.
 - The statistics screen of selected inventories was stuck in loading.
 - Share Excel files sometimes did not work.
 - Tag color selector was not working.
