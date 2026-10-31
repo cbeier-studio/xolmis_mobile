@@ -21,6 +21,7 @@
 * Missing geographical coordinates indicator.
 * Show elapsed time in inventory details.
 * Revamped statistics screen design.
+* Unified export flow allowing to define the name of the files and export to more than one format at a time.
 
 ### Bug fixes
 

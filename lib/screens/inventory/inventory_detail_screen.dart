@@ -295,14 +295,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
               // More / export menu
               Visibility(
                 visible: widget.inventory.isFinished,
-                child: MediaQuery.sizeOf(context).width < 600
-                    ? IconButton(
-                        icon: const Icon(Icons.more_vert_outlined),
-                        onPressed: () {
-                          _showMoreOptionsBottomSheet(context, widget.inventory);
-                        },
-                      )
-                    : IconButton(
+                child: IconButton(
                         icon: const Icon(Icons.share_outlined),
                         tooltip: S.of(context).exportWhat(S.of(context).inventory(1)),
                         onPressed: () {
@@ -351,22 +344,22 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
                   ),
                   const SizedBox(width: 8.0,),
                   ],
-                  if (widget.inventory.isFinished) ...[
-                    const SizedBox(width: 8.0),
-                    ActionChip(
-                      label: Text(S.of(context).export),
-                      avatar: const Icon(Icons.share_outlined),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        exportInventoriesWithDialog(
-                          context,
-                          [widget.inventory],
-                          defaultPrefix: 'inventory_${widget.inventory.id}',
-                        );
-                      },
-                    ),
-                  ],
-                  const SizedBox(width: 8.0,),
+                  // if (widget.inventory.isFinished) ...[
+                  //   const SizedBox(width: 8.0),
+                  //   ActionChip(
+                  //     label: Text(S.of(context).export),
+                  //     avatar: const Icon(Icons.share_outlined),
+                  //     onPressed: () {
+                  //       Navigator.of(context).pop();
+                  //       exportInventoriesWithDialog(
+                  //         context,
+                  //         [widget.inventory],
+                  //         defaultPrefix: 'inventory_${widget.inventory.id}',
+                  //       );
+                  //     },
+                  //   ),
+                  // ],
+                  // const SizedBox(width: 8.0,),
                 ],
               ),
               ),
@@ -598,14 +591,7 @@ class InventoryDetailScreenState extends State<InventoryDetailScreen>
           ),
           Visibility(
               visible: widget.inventory.isFinished,
-              child: MediaQuery.sizeOf(context).width < 600
-                  ? IconButton(
-                icon: const Icon(Icons.more_vert_outlined),
-                onPressed: () {
-                  _showMoreOptionsBottomSheet(context, widget.inventory);
-                },
-              )
-                  : IconButton(
+              child: IconButton(
                       icon: const Icon(Icons.share_outlined),
                       tooltip: S.of(context).exportWhat(S.of(context).inventory(1)),
                       onPressed: () {

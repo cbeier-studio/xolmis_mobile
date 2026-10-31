@@ -21,6 +21,7 @@
 * Indicador de coordenadas geográficas faltantes.
 * Mostra tempo decorrido nos detalhes do inventário.
 * Renovado visual das telas de estatísticas.
+* Fluxo unificado de exportação permitindo definir o nome dos arquivos e exportar para mais de um formato de uma vez.
 
 ### Correções
 

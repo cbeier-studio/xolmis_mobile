@@ -307,8 +307,8 @@ class _ExportOptionsContentState extends State<_ExportOptionsContent> {
           // Title & Subtitle Header
           Row(
             children: [
-              Icon(Icons.share_outlined, color: theme.colorScheme.primary),
-              const SizedBox(width: 10),
+              // Icon(Icons.share_outlined, color: theme.colorScheme.primary),
+              // const SizedBox(width: 10),
               Expanded(
                 child: Text(
                   widget.title ?? S.of(context).exportOptions,
@@ -388,9 +388,7 @@ class _ExportOptionsContentState extends State<_ExportOptionsContent> {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    S.of(context).fileNamePreview(
-                      '${displayPrefix}_${_sampleTimestamp}$previewExtensions',
-                    ),
+                    '${displayPrefix}_${_sampleTimestamp}$previewExtensions',
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant,
                       fontFamily: 'monospace',

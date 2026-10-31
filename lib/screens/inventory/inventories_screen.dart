@@ -2196,17 +2196,13 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                               Navigator.of(context).pop();
                             },
                           ),
-                        ],
-                      ),
-                      if (inventoryProvider.finishedInventories.isNotEmpty) ...[
-                        const Divider(),
-                        Row(
-                          children: [
-                            const SizedBox(width: 8.0),
-                            ActionChip(
-                              avatar: const Icon(Icons.share_outlined, size: 18),
-                              label: Text(S.of(context).exportAll),
-                              onPressed: () async {
+                          if (inventoryProvider.finishedInventories.isNotEmpty) ...[
+                            // Action to export all nests
+                            buildGridMenuItem(
+                              context,
+                              Icons.share_outlined,
+                              S.of(context).exportAll,
+                                  () async {
                                 Navigator.of(context).pop();
                                 await exportInventoriesWithDialog(
                                   context,
@@ -2216,8 +2212,28 @@ class _InventoriesScreenState extends State<InventoriesScreen> {
                               },
                             ),
                           ],
-                        ),
-                      ],
+                        ],
+                      ),
+                      // if (inventoryProvider.finishedInventories.isNotEmpty) ...[
+                      //   const Divider(),
+                      //   Row(
+                      //     children: [
+                      //       const SizedBox(width: 8.0),
+                      //       ActionChip(
+                      //         avatar: const Icon(Icons.share_outlined, size: 18),
+                      //         label: Text(S.of(context).exportAll),
+                      //         onPressed: () async {
+                      //           Navigator.of(context).pop();
+                      //           await exportInventoriesWithDialog(
+                      //             context,
+                      //             inventoryProvider.finishedInventories,
+                      //             defaultPrefix: 'inventories',
+                      //           );
+                      //         },
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ],
                     ],
                   ),
                 ),

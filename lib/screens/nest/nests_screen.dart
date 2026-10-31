@@ -1572,6 +1572,19 @@ class NestsScreenState extends State<NestsScreen> {
                             ),
                           buildGridMenuItem(
                             context,
+                            Icons.share_outlined,
+                            S.of(context).export,
+                                () {
+                              Navigator.of(context).pop();
+                              exportNestsWithDialog(
+                                context,
+                                [nest],
+                                defaultPrefix: 'nest_${nest.fieldNumber}',
+                              );
+                            },
+                          ),
+                          buildGridMenuItem(
+                            context,
                             Icons.delete_outlined,
                             S.of(context).delete,
                             () {
@@ -1621,23 +1634,23 @@ class NestsScreenState extends State<NestsScreen> {
                         ],
                       ),
                       // Divider(),
-                      Row(
-                        children: [
-                          const SizedBox(width: 8.0),
-                          ActionChip(
-                            avatar: const Icon(Icons.share_outlined, size: 18),
-                            label: Text(S.of(context).export),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                              exportNestsWithDialog(
-                                context,
-                                [nest],
-                                defaultPrefix: 'nest_${nest.fieldNumber}',
-                              );
-                            },
-                          ),
-                        ],
-                      ),
+                      // Row(
+                      //   children: [
+                      //     const SizedBox(width: 8.0),
+                      //     ActionChip(
+                      //       avatar: const Icon(Icons.share_outlined, size: 18),
+                      //       label: Text(S.of(context).export),
+                      //       onPressed: () {
+                      //         Navigator.of(context).pop();
+                      //         exportNestsWithDialog(
+                      //           context,
+                      //           [nest],
+                      //           defaultPrefix: 'nest_${nest.fieldNumber}',
+                      //         );
+                      //       },
+                      //     ),
+                      //   ],
+                      // ),
                     ],
                   ),
                 ),
@@ -1699,34 +1712,56 @@ class NestsScreenState extends State<NestsScreen> {
                               Navigator.of(context).pop();
                             },
                           ),
+              if (nestProvider.inactiveNests.isNotEmpty) ...[
+                          // Action to export all nests
+                          buildGridMenuItem(
+                            context,
+                            Icons.share_outlined,
+                            S.of(context).exportAll,
+                                () async {
+                                  Navigator.of(context).pop();
+                                  final inactiveNests = await Future.wait(
+                                    nestProvider.inactiveNests.map(
+                                          (summary) => nestProvider.getNestById(summary.id!),
+                                    ),
+                                  );
+                                  if (!context.mounted) return;
+                                  await exportNestsWithDialog(
+                                    context,
+                                    inactiveNests,
+                                    defaultPrefix: 'nests',
+                                  );
+                            },
+                          ),
+              ],
                         ],
                       ),
-                      if (nestProvider.inactiveNests.isNotEmpty) ...[
-                        const Divider(),
-                        Row(
-                          children: [
-                            const SizedBox(width: 8.0),
-                            ActionChip(
-                              avatar: const Icon(Icons.share_outlined, size: 18),
-                              label: Text(S.of(context).exportAll),
-                              onPressed: () async {
-                                Navigator.of(context).pop();
-                                final inactiveNests = await Future.wait(
-                                  nestProvider.inactiveNests.map(
-                                    (summary) => nestProvider.getNestById(summary.id!),
-                                  ),
-                                );
-                                if (!context.mounted) return;
-                                await exportNestsWithDialog(
-                                  context,
-                                  inactiveNests,
-                                  defaultPrefix: 'nests',
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
+                      // if (nestProvider.inactiveNests.isNotEmpty) ...[
+                      //   const Divider(),
+                      //   Row(
+                      //     children: [
+                      //       const SizedBox(width: 8.0),
+                      //       ActionChip(
+                      //         avatar: const Icon(Icons.share_outlined, size: 18),
+                      //         label: Text(S.of(context).exportAll),
+                      //         onPressed: () async {
+                      //           Navigator.of(context).pop();
+                      //           final inactiveNests = await Future.wait(
+                      //             nestProvider.inactiveNests.map(
+                      //               (summary) => nestProvider.getNestById(summary.id!),
+                      //             ),
+                      //           );
+                      //           if (!context.mounted) return;
+                      //           await exportNestsWithDialog(
+                      //             context,
+                      //             inactiveNests,
+                      //             defaultPrefix: 'nests',
+                      //           );
+                      //         },
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ],
                     ],
                   ),
                 ),

@@ -303,14 +303,7 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                       : const Icon(Icons.flag_outlined),
                 ),
               if (widget.nest.isActive == false)
-                MediaQuery.sizeOf(context).width < 600
-                    ? IconButton(
-                  icon: const Icon(Icons.more_vert_outlined),
-                  onPressed: () {
-                    _showMoreOptionsBottomSheet(context, widget.nest);
-                  },
-                )
-                    : IconButton(
+                IconButton(
                   icon: const Icon(Icons.share_outlined),
                   tooltip: S.of(context).exportWhat(S.of(context).nest(1)),
                   onPressed: () {
@@ -565,14 +558,7 @@ class NestDetailScreenState extends State<NestDetailScreen> with SingleTickerPro
                       : const Icon(Icons.flag_outlined),
                 ),
               if (widget.nest.isActive == false)
-                MediaQuery.sizeOf(context).width < 600
-                    ? IconButton(
-                  icon: const Icon(Icons.more_vert_outlined),
-                  onPressed: () {
-                    _showMoreOptionsBottomSheet(context, widget.nest);
-                  },
-                )
-                    : IconButton(
+                IconButton(
                   icon: const Icon(Icons.share_outlined),
                   tooltip: S.of(context).exportWhat(S.of(context).nest(1)),
                   onPressed: () {

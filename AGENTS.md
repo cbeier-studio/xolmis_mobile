@@ -61,12 +61,16 @@ This file is the authoritative implementation guide for AI agents and contributo
 - Regenerate localization output after ARB changes; never hand-edit `lib/generated/`.
 - Reuse existing wording style (short, clear, action-oriented labels and messages).
 
-### 4) UI and UX consistency
+### 4) Documentation
+- Code documentation written in **English** using Dart documentation comments.
+- Substantial changes and bug fixes should be written in the `[Unreleased]` section of `CHANGELOG.md` file.
+
+### 5) UI and UX consistency
 - Reuse existing spacing, typography, and widgets where possible.
 - Prefer persistent `SnackBar` for recoverable errors unless the existing flow uses dialogs.
 - Keep responsive behavior aligned with breakpoints in `lib/core/core_consts.dart`.
 
-### 5) Safety constraints
+### 6) Safety constraints
 - Do not add new runtime dependencies without clear necessity.
 - Do not commit secrets, absolute machine-specific paths, or temporary debug code.
 - Do not modify generated artifacts unless regeneration is part of the task.

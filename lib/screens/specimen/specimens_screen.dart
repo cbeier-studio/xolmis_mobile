@@ -1723,17 +1723,13 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                               Navigator.of(context).pop();
                             },
                           ),
-                        ],
-                      ),
-                      if (specimenProvider.specimens.isNotEmpty) ...[
-                        const Divider(),
-                        Row(
-                          children: [
-                            const SizedBox(width: 8.0),
-                            ActionChip(
-                              avatar: const Icon(Icons.share_outlined, size: 18),
-                              label: Text(S.of(context).exportAll),
-                              onPressed: () {
+                          if (specimenProvider.specimens.isNotEmpty) ...[
+                            // Action to export all specimens
+                            buildGridMenuItem(
+                              context,
+                              Icons.share_outlined,
+                              S.of(context).exportAll,
+                                  () async {
                                 Navigator.of(context).pop();
                                 final specimens = _showPending
                                     ? specimenProvider.pendingSpecimens
@@ -1746,8 +1742,31 @@ class SpecimensScreenState extends State<SpecimensScreen> {
                               },
                             ),
                           ],
-                        ),
-                      ],
+                        ],
+                      ),
+                      // if (specimenProvider.specimens.isNotEmpty) ...[
+                      //   const Divider(),
+                      //   Row(
+                      //     children: [
+                      //       const SizedBox(width: 8.0),
+                      //       ActionChip(
+                      //         avatar: const Icon(Icons.share_outlined, size: 18),
+                      //         label: Text(S.of(context).exportAll),
+                      //         onPressed: () {
+                      //           Navigator.of(context).pop();
+                      //           final specimens = _showPending
+                      //               ? specimenProvider.pendingSpecimens
+                      //               : specimenProvider.archivedSpecimens;
+                      //           exportSpecimensWithDialog(
+                      //             context,
+                      //             specimens,
+                      //             defaultPrefix: 'specimens',
+                      //           );
+                      //         },
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ],
                     ],
                   ),
                 ),
