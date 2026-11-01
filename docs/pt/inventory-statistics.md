@@ -21,6 +21,8 @@ No topo da tela de estatísticas, você encontrará métricas importantes:
 - **Localidades amostradas** – número de localidades distintas representadas.  
 - **Riqueza total** – número total de espécies únicas entre todos os inventários selecionados.  
 - **Riqueza média** – média de espécies por inventário.
+- **Espécies compartilhadas** – número de espécies que ocorrem em todos inventários selecionados, com botão de **Detalhes** que leva para listas detalhadas por pares de inventários, incluindo índices de similaridade de Jaccard e Sorensen.
+- **Espécies exclusivas** – número de espécies que só ocorreram em um inventário selecionado, com botão de **Detalhes** que leva para listas detalhadas por pares de inventários, incluindo índices de similaridade de Jaccard e Sorensen.
 
 Esses valores fornecem uma visão rápida da cobertura amostral e da diversidade.
 
@@ -30,9 +32,10 @@ Este gráfico mostra como as espécies se acumulam ao longo dos inventários sel
 
 - O **eixo X** representa os inventários na ordem em que foram selecionados.  
 - O **eixo Y** mostra o número cumulativo de espécies.  
-- Duas linhas são exibidas:
+- Três linhas são exibidas:
   - **Linha rosa** – espécies dentro da amostra  
-  - **Linha roxa** – todas as espécies, incluindo as fora da amostra  
+  - **Linha roxa** – todas as espécies, incluindo as fora da amostra
+  - **Linha turquesa tracejada** - curva de rarefação (Mao Tau)
 
 Essa visualização é especialmente útil para **listas de Mackinnon** ou levantamentos sequenciais, ajudando a avaliar a completude da amostragem.
 
@@ -43,8 +46,10 @@ Abaixo do gráfico de acumulação de espécies há um botão para **Ver Tabela 
 Uma nova tela será aberta com uma tabela de dados, onde:
 
 - A primeira coluna lista todas as espécies registradas em ordem alfabética.
-- As colunas seguintes mostram um inventário por coluna, indicando presença (X) ou abundância para cada espécie da primeira coluna, com o valor grifado quando for a primeira ocorrência da espécie nessa comparação.
-- A última coluna e a última linha mostram os totais das linhas e colunas.
+- A segunda coluna mostra o estado de conservação global da espécie.
+- As colunas seguintes mostram um inventário por coluna, indicando presença (X - dentro da amostra, O - fora da amostra) ou abundância para cada espécie da primeira coluna, com o valor grifado quando for a primeira ocorrência da espécie nessa comparação.
+- A penúltima coluna e a última linha mostram os totais das linhas e colunas.
+- A última coluna mostra a frequência relativa das espécies.
 
 Esse relatório pode ser exportado para CSV tocando no ícone **Exportar** no canto superior direito da tela.
 
@@ -71,6 +76,30 @@ Um gráfico de barras comparando o número total de espécies registradas em cad
 - Diferentes métodos de amostragem  
 
 Esse gráfico ajuda a destacar inventários com riqueza excepcionalmente alta ou baixa.
+
+## Estado de Conservação
+
+Gráfico de barras que mostra a distribuição das espécies nas diferentes categorias de estado de conservação global.
+
+Caso alguma espécie esteja em alguma categoria de ameaça, abaixo do gráfico é disponibilizado um botão **Ver Tabela de Espécies**, que abre a lista das espécies registradas ameaçadas.
+
+## Índices de Biodiversidade
+
+### Indicadores de diversidade
+
+- **Riqueza observada (Hill N0)** - riqueza observada (`S`) e Número de Hill N0 (q=0), que são equivalentes.
+- **Total de indivíduos** - abundância total (`N`).
+- **Índice de Shannon-Wiener (H')**: mede a diversidade considerando tanto a riqueza quanto a equitabilidade, sendo sensível a espécies raras.
+- **Índice de Simpson (1-D)**: mede a probabilidade de dois indivíduos selecionados ao acaso pertencerem a espécies diferentes, sendo mais sensível às espécies dominantes.
+- **Equitabilidade de Pielou (J')**: mede quão uniformemente os indivíduos estão distribuídos entre as espécies presentes (varia de 0 a 1).
+- **Números de Hill**: família unificada de índices que expressam a diversidade em termos de número efetivo de espécies.
+  - **Hill N1 (q=1)**: exponencial do índice de Shannon; pondera as espécies de acordo com sua abundância proporcional.
+  - **Hill N2 (q=2)**: inverso do índice de Simpson; dá maior peso às espécies dominantes.
+- **Estimador de riqueza Chao1**: estimativa não paramétrica da riqueza total de espécies baseada na proporção de espécies raras (*singletons* e *doubletons*).
+
+### Índices por Inventário
+
+Tabela com os mesmos indicadores de diversidade calculados para cada inventário selecionado.
 
 ## Quando Usar as Estatísticas de Inventários
 

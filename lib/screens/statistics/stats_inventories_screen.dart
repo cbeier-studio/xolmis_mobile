@@ -776,12 +776,18 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
   }
 
   Widget _buildAccumulationCurveCard(BuildContext context, bool isDark) {
+    // final allSpecies = <Species>[];
+    // for (final inv in _sortedInventories) {
+    //   allSpecies.addAll(inv.speciesList);
+    // }
+    // final combinedMetrics = computeDiversityMetrics(S.of(context).total, allSpecies);
     final accumulationMaxY =
         [
           ...accumulatedSpeciesData.map((spot) => spot.y),
           ...accumulatedSpeciesWithinSampleData.map((spot) => spot.y),
         ].fold<double>(1.0, (max, value) => value > max ? value : max) *
         1.15;
+    // final accumulationMaxY = (combinedMetrics.chao1 > maxRichness ? combinedMetrics.chao1 : maxRichness) * 1.15;
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -811,13 +817,6 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                   ),
                 ],
               ),
-              Row(
-                children: [
-                  _buildLegendIndicator(S.of(context).total, XolmisColors.primary, isDark),
-                  const SizedBox(width: 8),
-                  _buildLegendIndicator(S.of(context).sample, XolmisColors.pinkAccent, isDark),
-                ],
-              ),
             ],
           ),
           const SizedBox(height: 16),
@@ -841,6 +840,27 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                             minY: 0,
                             maxX: _sortedInventories.length > 1 ? _sortedInventories.length.toDouble() : 1.0,
                             maxY: accumulationMaxY,
+                            // extraLinesData: ExtraLinesData(
+                            //   horizontalLines: [
+                            //     HorizontalLine(
+                            //       y: combinedMetrics.chao1,
+                            //       color: isDark ? Colors.redAccent.withValues(alpha: 0.6) : Colors.redAccent,
+                            //       strokeWidth: 1.5,
+                            //       dashArray: [8, 6],
+                            //       label: HorizontalLineLabel(
+                            //         show: true,
+                            //         alignment: Alignment.topRight,
+                            //         padding: const EdgeInsets.only(right: 8, bottom: 4),
+                            //         style: TextStyle(
+                            //           fontSize: 10,
+                            //           fontWeight: FontWeight.bold,
+                            //           color: isDark ? Colors.redAccent.shade100 : Colors.redAccent,
+                            //         ),
+                            //         labelResolver: (line) => 'Chao1 (${line.y.toInt()})',
+                            //       ),
+                            //     ),
+                            //   ],
+                            // ),
                             lineBarsData: [
                               LineChartBarData(
                                 spots: accumulatedSpeciesData,
@@ -863,6 +883,14 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                                 isStrokeCapRound: true,
                                 dotData: FlDotData(show: true),
                                 belowBarData: BarAreaData(show: true, color: Colors.pinkAccent.withAlpha(12)),
+                              ),
+                              LineChartBarData(
+                                spots: expectedSpots,
+                                isCurved: true,
+                                color: Colors.teal,
+                                barWidth: 2,
+                                dashArray: [5, 5],
+                                dotData: FlDotData(show: true),
                               ),
                             ],
                             titlesData: FlTitlesData(
@@ -995,6 +1023,16 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                 );
               },
             ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _buildLegendIndicator(S.of(context).total, XolmisColors.primary, isDark),
+              const SizedBox(width: 8),
+              _buildLegendIndicator(S.of(context).sample, XolmisColors.pinkAccent, isDark),
+              const SizedBox(width: 8),
+              _buildLegendIndicator(S.of(context).rarefactionCurve, Colors.teal, isDark),
+            ],
           ),
           const SizedBox(height: 12),
           SizedBox(
@@ -1735,11 +1773,11 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
             crossAxisCount: 2,
             crossAxisSpacing: 10,
             mainAxisSpacing: 10,
-            childAspectRatio: 2.7,
+            childAspectRatio: 2.2,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             children: [
-              _buildMetricChip(S.of(context).speciesRichness, '${combinedMetrics.richness}', isDark),
+              _buildMetricChip(S.of(context).observedRichnessHillN0, '${combinedMetrics.richness}', isDark),
               _buildMetricChip(S.of(context).totalIndividuals, '${combinedMetrics.totalIndividuals}', isDark),
               _buildMetricChip(
                 S.of(context).shannonWienerIndex,
@@ -1756,7 +1794,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                 combinedMetrics.pielouEvenness.toStringAsFixed(3),
                 isDark,
               ),
-              _buildMetricChip(S.of(context).hillNumberQ0, combinedMetrics.hillQ0.toStringAsFixed(1), isDark),
+              // _buildMetricChip(S.of(context).hillNumberQ0, combinedMetrics.hillQ0.toStringAsFixed(1), isDark),
               _buildMetricChip(S.of(context).hillNumberQ1, combinedMetrics.hillQ1.toStringAsFixed(3), isDark),
               _buildMetricChip(S.of(context).hillNumberQ2, combinedMetrics.hillQ2.toStringAsFixed(3), isDark),
               _buildMetricChip(S.of(context).chao1Estimator, combinedMetrics.chao1.toStringAsFixed(1), isDark),
@@ -1764,147 +1802,168 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
           ),
           const SizedBox(height: 20),
           // Rarefaction curve (observed vs sample-based expectation)
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                S.of(context).expectedRichness,
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: isDark ? Colors.grey.shade200 : Colors.black87,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          SizedBox(
-            height: 220,
-            child: ScrollableChartIndicator(
-              builder: (context, scrollController) {
-                return LayoutBuilder(
-                  builder: (context, constraints) {
-                    final chartWidth = _responsiveChartWidth(constraints.maxWidth - 16, pixelsPerInventory: 25);
-                    return SingleChildScrollView(
-                      controller: scrollController,
-                      scrollDirection: Axis.horizontal,
-                      child: SizedBox(
-                        width: chartWidth,
-                        height: 220,
-                        child: LineChart(
-                          LineChartData(
-                            minX: 0,
-                            minY: 0,
-                            maxX: _sortedInventories.length > 1 ? _sortedInventories.length.toDouble() : 1.0,
-                            maxY: maxRichness * 1.15,
-                            lineBarsData: [
-                              // LineChartBarData(
-                              //   spots: sampledSpots,
-                              //   isCurved: false,
-                              //   color: Colors.deepPurple,
-                              //   barWidth: 2,
-                              //   dotData: FlDotData(show: true),
-                              //   belowBarData: BarAreaData(
-                              //     show: true,
-                              //     color: Colors.deepPurple.withAlpha(20),
-                              //   ),
-                              // ),
-                              LineChartBarData(
-                                spots: expectedSpots,
-                                isCurved: true,
-                                color: Colors.teal,
-                                barWidth: 2,
-                                // dashArray: [5, 5],
-                                dotData: FlDotData(show: true),
-                              ),
-                            ],
-                            titlesData: FlTitlesData(
-                              bottomTitles: AxisTitles(
-                                sideTitles: SideTitles(
-                                  showTitles: true,
-                                  reservedSize: 22,
-                                  interval: 1.0,
-                                  getTitlesWidget: (value, meta) {
-                                    final idx = value.toInt();
-                                    if (idx >= 0 && idx <= _sortedInventories.length) {
-                                      return Text(
-                                        '${idx}',
-                                        style: TextStyle(
-                                          fontSize: 10,
-                                          color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
-                                        ),
-                                      );
-                                    }
-                                    return const SizedBox.shrink();
-                                  },
-                                ),
-                              ),
-                              leftTitles: AxisTitles(
-                                sideTitles: SideTitles(
-                                  showTitles: true,
-                                  reservedSize: 28,
-                                  getTitlesWidget: (value, meta) {
-                                    return Text(
-                                      value.toInt().toString(),
-                                      style: TextStyle(
-                                        fontSize: 9,
-                                        color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                              topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                              rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                            ),
-                            gridData: FlGridData(show: true, drawVerticalLine: true),
-                            borderData: FlBorderData(show: true),
-                            lineTouchData: LineTouchData(
-                              handleBuiltInTouches: true,
-                              touchTooltipData: LineTouchTooltipData(
-                                getTooltipColor: (spot) => Colors.white.withAlpha(200),
-                                tooltipBorderRadius: BorderRadius.all(Radius.circular(8)),
-                                fitInsideVertically: true,
-                                fitInsideHorizontally: true,
-                                getTooltipItems: (List<LineBarSpot> touchedSpots) {
-                                  if (touchedSpots.isEmpty) {
-                                    return [];
-                                  }
-
-                                  return touchedSpots.map((spot) {
-                                    final spotColor =
-                                        spot.bar.gradient?.colors.first ?? spot.bar.color ?? Colors.black87;
-                                    return LineTooltipItem(
-                                      '',
-                                      const TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
-                                      children: [
-                                        TextSpan(
-                                          text: '${spot.y.toInt()}',
-                                          style: TextStyle(color: spotColor, fontWeight: FontWeight.bold, fontSize: 14),
-                                        ),
-                                        // TextSpan(
-                                        //   text: '\n$inventoryId',
-                                        //   style: const TextStyle(
-                                        //     color: Colors.black87,
-                                        //     fontWeight: FontWeight.normal,
-                                        //     fontSize: 10,
-                                        //   ),
-                                        // ),
-                                      ],
-                                    );
-                                  }).toList();
-                                },
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
-          ),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //   children: [
+          //     Text(
+          //       S.of(context).rarefactionCurve,
+          //       style: TextStyle(
+          //         fontSize: 13,
+          //         fontWeight: FontWeight.w600,
+          //         color: isDark ? Colors.grey.shade200 : Colors.black87,
+          //       ),
+          //     ),
+          //   ],
+          // ),
+          // const SizedBox(height: 12),
+          // SizedBox(
+          //   height: 220,
+          //   child: ScrollableChartIndicator(
+          //     builder: (context, scrollController) {
+          //       return LayoutBuilder(
+          //         builder: (context, constraints) {
+          //           final chartWidth = _responsiveChartWidth(constraints.maxWidth - 16, pixelsPerInventory: 25);
+          //           return SingleChildScrollView(
+          //             controller: scrollController,
+          //             scrollDirection: Axis.horizontal,
+          //             child: SizedBox(
+          //               width: chartWidth,
+          //               height: 220,
+          //               child: LineChart(
+          //                 LineChartData(
+          //                   minX: 0,
+          //                   minY: 0,
+          //                   maxX: _sortedInventories.length > 1 ? _sortedInventories.length.toDouble() : 1.0,
+          //                   maxY: (combinedMetrics.chao1 > maxRichness ? combinedMetrics.chao1 : maxRichness) * 1.15,
+          //                   extraLinesData: ExtraLinesData(
+          //                     horizontalLines: [
+          //                       HorizontalLine(
+          //                         y: combinedMetrics.chao1,
+          //                         color: isDark ? Colors.redAccent.withValues(alpha: 0.6) : Colors.redAccent,
+          //                         strokeWidth: 1.5,
+          //                         dashArray: [8, 6],
+          //                         label: HorizontalLineLabel(
+          //                           show: true,
+          //                           alignment: Alignment.topRight,
+          //                           padding: const EdgeInsets.only(right: 8, bottom: 4),
+          //                           style: TextStyle(
+          //                             fontSize: 10,
+          //                             fontWeight: FontWeight.bold,
+          //                             color: isDark ? Colors.redAccent.shade100 : Colors.redAccent,
+          //                           ),
+          //                           labelResolver: (line) => 'Chao1 (${line.y.toInt()})',
+          //                         ),
+          //                       ),
+          //                     ],
+          //                   ),
+          //                   lineBarsData: [
+          //                     // LineChartBarData(
+          //                     //   spots: sampledSpots,
+          //                     //   isCurved: false,
+          //                     //   color: Colors.deepPurple,
+          //                     //   barWidth: 2,
+          //                     //   dotData: FlDotData(show: true),
+          //                     //   belowBarData: BarAreaData(
+          //                     //     show: true,
+          //                     //     color: Colors.deepPurple.withAlpha(20),
+          //                     //   ),
+          //                     // ),
+          //                     LineChartBarData(
+          //                       spots: expectedSpots,
+          //                       isCurved: true,
+          //                       color: Colors.teal,
+          //                       barWidth: 2,
+          //                       // dashArray: [5, 5],
+          //                       dotData: FlDotData(show: true),
+          //                     ),
+          //                   ],
+          //                   titlesData: FlTitlesData(
+          //                     bottomTitles: AxisTitles(
+          //                       sideTitles: SideTitles(
+          //                         showTitles: true,
+          //                         reservedSize: 22,
+          //                         interval: 1.0,
+          //                         getTitlesWidget: (value, meta) {
+          //                           final idx = value.toInt();
+          //                           if (idx >= 0 && idx <= _sortedInventories.length) {
+          //                             return Text(
+          //                               '${idx}',
+          //                               style: TextStyle(
+          //                                 fontSize: 10,
+          //                                 color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+          //                               ),
+          //                             );
+          //                           }
+          //                           return const SizedBox.shrink();
+          //                         },
+          //                       ),
+          //                     ),
+          //                     leftTitles: AxisTitles(
+          //                       sideTitles: SideTitles(
+          //                         showTitles: true,
+          //                         reservedSize: 28,
+          //                         getTitlesWidget: (value, meta) {
+          //                           return Text(
+          //                             value.toInt().toString(),
+          //                             style: TextStyle(
+          //                               fontSize: 9,
+          //                               color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+          //                             ),
+          //                           );
+          //                         },
+          //                       ),
+          //                     ),
+          //                     topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          //                     rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          //                   ),
+          //                   gridData: FlGridData(show: true, drawVerticalLine: true),
+          //                   borderData: FlBorderData(show: true),
+          //                   lineTouchData: LineTouchData(
+          //                     handleBuiltInTouches: true,
+          //                     touchTooltipData: LineTouchTooltipData(
+          //                       getTooltipColor: (spot) => Colors.white.withAlpha(200),
+          //                       tooltipBorderRadius: BorderRadius.all(Radius.circular(8)),
+          //                       fitInsideVertically: true,
+          //                       fitInsideHorizontally: true,
+          //                       getTooltipItems: (List<LineBarSpot> touchedSpots) {
+          //                         if (touchedSpots.isEmpty) {
+          //                           return [];
+          //                         }
+          //
+          //                         return touchedSpots.map((spot) {
+          //                           final spotColor =
+          //                               spot.bar.gradient?.colors.first ?? spot.bar.color ?? Colors.black87;
+          //                           return LineTooltipItem(
+          //                             '',
+          //                             const TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
+          //                             children: [
+          //                               TextSpan(
+          //                                 text: '${spot.y.toInt()}',
+          //                                 style: TextStyle(color: spotColor, fontWeight: FontWeight.bold, fontSize: 14),
+          //                               ),
+          //                               // TextSpan(
+          //                               //   text: '\n$inventoryId',
+          //                               //   style: const TextStyle(
+          //                               //     color: Colors.black87,
+          //                               //     fontWeight: FontWeight.normal,
+          //                               //     fontSize: 10,
+          //                               //   ),
+          //                               // ),
+          //                             ],
+          //                           );
+          //                         }).toList();
+          //                       },
+          //                     ),
+          //                   ),
+          //                 ),
+          //               ),
+          //             ),
+          //           );
+          //         },
+          //       );
+          //     },
+          //   ),
+          // ),
           // Row(
           //   mainAxisAlignment: MainAxisAlignment.center,
           //   children: [
@@ -1913,7 +1972,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
           //     _buildLegendIndicator(S.of(context).expectedRichness, Colors.teal, isDark),
           //   ],
           // ),
-          const SizedBox(height: 20),
+          // const SizedBox(height: 20),
           // Per-inventory table title
           Text(
             S.of(context).diversityTable,
@@ -1952,7 +2011,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                   ),
                 ),
                 DataColumn(
-                  label: Text('S', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                  label: Text('S (N0)', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
                 DataColumn(
@@ -1971,10 +2030,10 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                   label: Text("J'", style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
-                DataColumn(
-                  label: Text('N0', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
-                  headingRowAlignment: MainAxisAlignment.end,
-                ),
+                // DataColumn(
+                //   label: Text('N0', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                //   headingRowAlignment: MainAxisAlignment.end,
+                // ),
                 DataColumn(
                   label: Text('N1', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
                   headingRowAlignment: MainAxisAlignment.end,
@@ -2051,16 +2110,16 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                             child: Text(m.pielouEvenness.toStringAsFixed(3), style: const TextStyle(fontSize: 11)),
                           ),
                         ),
-                        DataCell(
-                          Container(
-                            alignment: Alignment.centerRight,
-                            decoration: BoxDecoration(
-                              color: Colors.transparent,
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            child: Text(m.hillQ0.toStringAsFixed(1), style: const TextStyle(fontSize: 11)),
-                          ),
-                        ),
+                        // DataCell(
+                        //   Container(
+                        //     alignment: Alignment.centerRight,
+                        //     decoration: BoxDecoration(
+                        //       color: Colors.transparent,
+                        //       borderRadius: BorderRadius.circular(6),
+                        //     ),
+                        //     child: Text(m.hillQ0.toStringAsFixed(1), style: const TextStyle(fontSize: 11)),
+                        //   ),
+                        // ),
                         DataCell(
                           Container(
                             alignment: Alignment.centerRight,

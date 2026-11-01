@@ -8,7 +8,12 @@ This section documents the changes, new features, and improvements introduced in
 
 - Added transport mode field in inventory.  
 - Added doubtful record field in species record.  
-- Added lifer (first record) indicator in inventory species list.  
+- Added lifer (first record) indicator in inventory species list.
+- Added new optional fields in species records: habitat, detection mode, reproductive status, sex, and activity/behavior.
+- Added global conservation status indicator in species list.
+- Added indicators and shared and exclusive species lists in selected inventories statistics.
+- Added charts and species list in selected inventories statistics.
+- Added species indexes in selected inventories statistics.
 
 ### Enhancements
 
@@ -18,12 +23,16 @@ This section documents the changes, new features, and improvements introduced in
 - Missing geographical coordinates indicator.
 - Show elapsed time in inventory details.
 - Revamped statistics screen design.
+- Unified export flow allowing to define the name of the files and export to more than one format at a time.
 
 ### Fixes
 
 - Dialog for changing the number of individuals of a species was not applying the entered value.
 - Statistics screen for selected inventories got stuck loading.
 - Share Excel files sometimes did not work.
+- Tag color selector was not working.
+- Occurrence points export was not including the identifier.
+- Saved occurrence points were not showing in the list and in the species details.
 
 ## v1.0.3 (2026-09-19)
 

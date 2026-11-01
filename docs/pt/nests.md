@@ -85,23 +85,31 @@ Ninhos podem ser exportados individualmente ou em grupos.
 
 ### Exportar um ninho
 
-1. Toque e segure o ninho.  
-2. Escolha o formato de exportação:
+1. Toque e segure o ninho.
+2. Toque na opção **Exportar**.
+3. Defina o prefixo do nome do arquivo, se desejar. Um sufixo com data e hora da exportação são automaticamente adicionados ao nome do arquivo.
+4. Selecione um ou mais formatos de exportação:
    - **CSV**
    - **Excel**
    - **JSON**
    - **KML**
+5. Toque no botão **Exportar**.
 
 ### Exportar vários ninhos
 
 1. Selecione os ninhos usando as caixas de seleção.  
 2. Toque no ícone **Exportar**.  
-3. Escolha o formato desejado.
+3. Defina o prefixo do nome do arquivo, se desejar.
+4. Selecione um ou mais formatos de exportação.
+5. Toque no botão **Exportar**.
 
 ### Exportar todos os ninhos inativos
 
 1. Toque no menu **⋮**.  
-2. Selecione **Exportar todos (JSON)**.
+2. Selecione **Exportar todos**.
+3. Defina o prefixo do nome do arquivo, se desejar.
+4. Selecione um ou mais formatos de exportação.
+5. Toque no botão **Exportar**.
 
 !!! tip
 

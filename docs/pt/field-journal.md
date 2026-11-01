@@ -69,12 +69,15 @@ Você pode importar notas do diário a partir de arquivos JSON exportados por ou
 Você pode exportar várias notas de uma vez.
 
 1. Selecione uma ou mais notas.  
-2. Toque no ícone **Exportar**.  
-3. Escolha o formato de exportação:
+2. Toque no ícone **Exportar**.
+3. Defina o prefixo do nome do arquivo, se desejar. Um sufixo com data e hora da exportação são automaticamente adicionados ao nome do arquivo.
+4. Selecione um ou mais formatos de exportação:
    - **Texto simples** — texto sem formatação.  
    - **Markdown** — texto com marcações de formatação.  
    - **Word** — documento formatado compatível com Microsoft Word.
+   - **PDF** — documento PDF com texto simples.
    - **JSON** — arquivo estruturado usado para importar no Xolmis.
+5. Toque no botão **Exportar**.
 
 Um painel de compartilhamento será exibido para que você envie o arquivo para a nuvem ou outro dispositivo.
 

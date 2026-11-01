@@ -2471,7 +2471,10 @@ class SPt extends S {
   String get chao1Estimator => 'Riqueza Esperada Chao1';
 
   @override
-  String get rarefactionCurve => 'Curva de Rarefação e Chao1';
+  String get rarefactionCurve => 'Rarefação (Mao Tau)';
+
+  @override
+  String get observedRichnessHillN0 => 'Riqueza observada (Hill N0)';
 
   @override
   String get sampledRichness => 'Riqueza Amostrada';

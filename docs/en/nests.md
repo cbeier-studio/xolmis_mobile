@@ -86,22 +86,30 @@ Nests can be exported individually or in groups.
 ### Export one nest
 
 1. Long-press the nest.  
-2. Choose the export format:
+2. Tap the **Export** option. 
+3. Set the file name prefix, if you want. A suffix with export date and time is automatically added to the file name.
+4. Select one or more export formats:
    - **CSV**
    - **Excel**
    - **JSON**
    - **KML**
+5. Tap the **Export** button.
 
 ### Export multiple nests
 
 1. Select nests using the checkboxes.  
 2. Tap the **Export** icon.  
-3. Choose the format.
+3. Set the file name prefix, if you want.
+4. Select one or more export formats.
+5. Tap the **Export** button.
 
 ### Export all inactive nests
 
 1. Tap the **⋮** menu.  
-2. Select **Export all (JSON)**.
+2. Select **Export all**.
+3. Set the file name prefix, if you want.
+4. Select one or more export formats.
+5. Tap the **Export** button.
 
 !!! tip
 

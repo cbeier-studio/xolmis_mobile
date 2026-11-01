@@ -4484,11 +4484,17 @@ abstract class S {
   /// **'Chao1 Expected Richness'**
   String get chao1Estimator;
 
-  /// Rarefaction and Chao1 curve chart title
+  /// Rarefaction curve chart title
   ///
   /// In en, this message translates to:
-  /// **'Rarefaction & Chao1 Curve'**
+  /// **'Rarefaction (Mao Tau)'**
   String get rarefactionCurve;
+
+  /// Observed richness label (Hill N0)
+  ///
+  /// In en, this message translates to:
+  /// **'Observed Richness (Hill N0)'**
+  String get observedRichnessHillN0;
 
   /// Sampled richness label
   ///

@@ -108,22 +108,30 @@ Inventories can be exported individually or in groups.
 ### Export one
 
 1. Long-press the inventory.  
-2. Choose the export format:
+2. Tap the **Export** option. 
+3. Set the file name prefix, if you want. A suffix with export date and time is automatically added to the file name.
+4. Select one or more export formats:
    - **CSV**
-   - **Excel** (experimental)
+   - **Excel**
    - **JSON**
-   - **KML** (including POIs)
+   - **KML** (including occurrence points)
+5. Tap the **Export** button.
 
 ### Export multiple
 
 1. Select two or more inventories.  
 2. Tap the **Export** icon.  
-3. Choose the desired format.
+3. Set the file name prefix, if you want.
+4. Select one or more export formats.
+5. Tap the **Export** button.
 
 ### Export all finished inventories
 
 1. Tap the **⋮** menu in the top-right corner.  
-2. Select **Export all (JSON)**.
+2. Select **Export all**.
+3. Set the file name prefix, if you want.
+4. Select one or more export formats.
+5. Tap the **Export** button.
 
 A sharing panel will appear so you can send the file to cloud storage or another device.
 

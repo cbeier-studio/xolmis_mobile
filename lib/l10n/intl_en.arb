@@ -3743,10 +3743,15 @@
         "type": "text",
         "description": "Chao1 expected richness estimator label"
     },
-    "rarefactionCurve": "Rarefaction & Chao1 Curve",
+    "rarefactionCurve": "Rarefaction (Mao Tau)",
     "@rarefactionCurve": {
         "type": "text",
-        "description": "Rarefaction and Chao1 curve chart title"
+        "description": "Rarefaction curve chart title"
+    },
+    "observedRichnessHillN0": "Observed Richness (Hill N0)",
+    "@observedRichnessHillN0": {
+        "type": "text",
+        "description": "Observed richness label (Hill N0)"
     },
     "sampledRichness": "Sampled Richness",
     "@sampledRichness": {

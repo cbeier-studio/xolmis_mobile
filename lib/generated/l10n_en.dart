@@ -2434,7 +2434,10 @@ class SEn extends S {
   String get chao1Estimator => 'Chao1 Expected Richness';
 
   @override
-  String get rarefactionCurve => 'Rarefaction & Chao1 Curve';
+  String get rarefactionCurve => 'Rarefaction (Mao Tau)';
+
+  @override
+  String get observedRichnessHillN0 => 'Observed Richness (Hill N0)';
 
   @override
   String get sampledRichness => 'Sampled Richness';

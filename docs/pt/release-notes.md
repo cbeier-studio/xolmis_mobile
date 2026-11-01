@@ -8,7 +8,12 @@ Esta seção documenta as mudanças, novos recursos e melhorias introduzidas em 
 
 - Adicionado campo de modo de locomoção no inventário.  
 - Adicionado campo de registro duvidoso no registro da espécie.  
-- Indicador de lifer (primeiro registro) na lista de espécies do inventário.  
+- Indicador de lifer (primeiro registro) na lista de espécies do inventário.
+- Adicionados novos campos opcionais no registro de espécie: habitat, modo de detecção, status reprodutivo, sexo e atividade/comportamento.
+- Adicionado indicador de estado de conservação global na lista de espécies.
+- Adicionados indicadores e listas de espécies compartilhadas e exclusivas nas estatísticas dos inventários selecionados.
+- Adicionado gráfico e lista de espécies ameaçadas nas estatísticas dos inventários selecionados.
+- Adicionados índices de biodiversidade nas estatísticas dos inventários selecionados.
 
 ### Melhorias
 
@@ -18,12 +23,16 @@ Esta seção documenta as mudanças, novos recursos e melhorias introduzidas em 
 - Indicador de coordenadas geográficas faltantes.
 - Mostra tempo decorrido nos detalhes do inventário.
 - Renovado visual das telas de estatísticas.
+- Fluxo unificado de exportação permitindo definir o nome dos arquivos e exportar para mais de um formato de uma vez.
 
 ### Correções
 
 - Diálogo para alterar o número de indivíduos de uma espécie não estava aplicando o valor informado.
 - Tela de estatísticas dos inventários selecionados ficava travada no carregamento.
 - Compartilhamento de arquivos Excel algumas vezes não funcionava.
+- Seletor de cor da tag não funcionava.
+- A exportação de pontos de ocorrência não incluía o identificador.
+- Os pontos de ocorrência salvos não estavam aparecendo na lista e nos detalhes da espécie.
 
 ## v1.0.3 (2026-09-19)
 

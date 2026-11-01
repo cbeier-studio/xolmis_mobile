@@ -23,6 +23,7 @@ Depending on the chosen export format, an export operation may produce **a singl
 | **Field Journal** | **Plain Text** | **1 file**                | Single `.txt` file formatted with text entries.                                                                                                              |
 | | **Markdown** | **1 file**                | Single `.md` file formatted with headers and metadata.                                                                                                       |
 | | **Word** | **1 file**                | Single `.docx` Word document with styled headings and paragraphs.                                                                                            |
+| | **PDF** | **1 file** | Single `.pdf` document. |
 | | **JSON** | **1 file**                | Single `.json` file containing rich-text Delta JSON strings wrapped in the envelope.                                                                         |
 | **Backup** | **ZIP** | **1 file**                | Archive containing `xolmis_database.db` and all indexed photo media files.                                                                                   |
 
@@ -129,7 +130,7 @@ Contains atmospheric and weather condition samples recorded during inventories.
 | `atmosphericPressure` | Double | Barometric pressure (hPa). |
 | `relativeHumidity` | Double | Relative air humidity (%). |
 
-#### Points of Interest Table (`..._pois.csv` / Excel tab: `POIs`)
+#### Occurrence Points Table (`..._pois.csv` / Excel tab: `POIs`)
 
 Included in Excel workbooks to record individual GPS waypoints logged during species observations.
 
@@ -141,6 +142,7 @@ Included in Excel workbooks to record individual GPS waypoints logged during spe
 | `locality` | String | Locality name. |
 | `recordedBy` | String | Observer initials. |
 | `scientificName` | String | Scientific name of the species associated with the POI. |
+| `poiNumber` | Integer | Identifier number of the occurrence point. |
 | `poiDate` | String | Timestamp when the POI coordinate was captured (`YYYY-MM-DD HH:MM:SS`). |
 | `decimalLatitude` | Double | Latitude of the point of interest. |
 | `decimalLongitude` | Double | Longitude of the point of interest. |

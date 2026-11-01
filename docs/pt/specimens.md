@@ -95,11 +95,15 @@ Espécimes podem ser exportados em lote.
 
 ### Exportar todos os espécimes
 
-1. Toque no menu **⋮** no canto superior direito.  
-2. Selecione o formato de exportação:
+1. Toque no menu **⋮** no canto superior direito.
+2. Toque na opção **Exportar todos**. 
+3. Defina o prefixo do nome do arquivo, se desejar. Um sufixo com data e hora da exportação são automaticamente adicionados ao nome do arquivo.
+4. Selecione um ou mais formatos de exportação:
    - **CSV**
    - **Excel**
    - **JSON**
+   - **KML**
+5. Toque no botão **Exportar**. 
 
 Um painel de compartilhamento aparecerá para enviar o arquivo para a nuvem ou outro dispositivo.
 
@@ -107,11 +111,9 @@ Um painel de compartilhamento aparecerá para enviar o arquivo para a nuvem ou o
 
 1. Selecione os espécimes usando as caixas de seleção.  
 2. Toque no ícone **Exportar**.  
-3. Escolha o formato:
-   - **CSV**
-   - **Excel**
-   - **JSON**
-   - **KML**
+3. Defina o prefixo do nome do arquivo, se desejar.
+4. Selecione um ou mais formatos de exportação.
+5. Toque no botão **Exportar**.
 
 !!! tip
 

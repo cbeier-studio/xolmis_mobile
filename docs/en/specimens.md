@@ -95,11 +95,15 @@ Specimens can be exported in bulk.
 
 ### Export all specimens
 
-1. Tap the **⋮** menu in the top-right corner.  
-2. Select the export format:
+1. Tap the **⋮** menu in the top-right corner.
+2. Select **Export all**.
+3. Set the file name prefix, if you want.
+4. Select one or more export formats:
    - **CSV**
    - **Excel**
    - **JSON**
+   - **KML**
+5. Tap the **Export** button.
 
 A sharing panel will appear so you can send the file to cloud storage or another device.
 
@@ -107,11 +111,9 @@ A sharing panel will appear so you can send the file to cloud storage or another
 
 1. Select specimens using the checkboxes.  
 2. Tap the **Export** icon.  
-3. Choose the format.
-   - **CSV**
-   - **Excel**
-   - **JSON**
-   - **KML**
+3. Set the file name prefix, if you want.
+4. Select one or more export formats.
+5. Tap the **Export** button.
 
 !!! tip
 

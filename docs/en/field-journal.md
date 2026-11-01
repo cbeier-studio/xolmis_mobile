@@ -67,12 +67,15 @@ You can import journal notes from JSON files exported by another device.
 You can export selected notes at once.
 
 1. Select one or more notes.
-1. Tap the **Export** icon.  
-2. Select the export format:
+2. Tap the **Export** icon.
+3. Set the file name prefix, if you want. A suffix with export date and time is automatically added to the file name.
+4. Select one or more export formats:
    - **Plain text** — simple text without formatting.
    - **Markdown** — simple text with formatting marks.
    - **Word** — formatted document compatible with Microsoft Word.
+   - **PDF** — PDF document with plain text.
    - **JSON** — structured file used to import in Xolmis.
+5. Tap the **Export** button.
 
 A sharing panel will appear so you can send the file to cloud storage or another device.
 

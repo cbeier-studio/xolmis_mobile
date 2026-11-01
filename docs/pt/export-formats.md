@@ -23,6 +23,7 @@ Dependendo do formato escolhido, uma operação de exportação pode gerar **um 
 | **Diário de Campo** | **Texto Simples** | **1 arquivo**                  | Arquivo `.txt` único formatado com as anotações.                                                                                                                    |
 | | **Markdown** | **1 arquivo**                  | Arquivo `.md` único formatado com cabeçalhos e metadados.                                                                                                           |
 | | **Word** | **1 arquivo**                  | Documento Word `.docx` único com estilos em títulos e parágrafos.                                                                                                   |
+| | **PDF** | **1 arquivo**                  | Documento `.pdf` único.                                                                                                   |
 | | **JSON** | **1 arquivo**                  | Arquivo `.json` único contendo estruturas Delta JSON envelopadas.                                                                                                   |
 | **Backup** | **ZIP** | **1 arquivo**                  | Arquivo compactado contendo o banco de dados `xolmis_database.db` e todas as fotos anexadas.                                                                        |
 
@@ -129,7 +130,7 @@ Contém amostras das condições atmosféricas registradas durante o inventário
 | `atmosphericPressure` | Decimal | Pressão atmosférica (hPa). |
 | `relativeHumidity` | Decimal | Umidade relativa do ar (%). |
 
-#### Tabela de Pontos de Interesse (`..._pois.csv` / Aba no Excel: `POIs`)
+#### Tabela de Pontos de Ocorrência (`..._pois.csv` / Aba no Excel: `POIs`)
 
 Incluída nas planilhas Excel para registrar waypoints de GPS individuais marcados durante a observação de espécies.
 
@@ -141,6 +142,7 @@ Incluída nas planilhas Excel para registrar waypoints de GPS individuais marcad
 | `locality` | Texto | Nome da localidade. |
 | `recordedBy` | Texto | Iniciais do observador. |
 | `scientificName` | Texto | Nome científico da espécie associada ao POI. |
+| `poiNumber` | Inteiro | Número identificador do ponto de ocorrência. |
 | `poiDate` | Texto | Data/hora em que as coordenadas do POI foram capturadas (`YYYY-MM-DD HH:MM:SS`). |
 | `decimalLatitude` | Decimal | Latitude do ponto de interesse. |
 | `decimalLongitude` | Decimal | Longitude do ponto de interesse. |
