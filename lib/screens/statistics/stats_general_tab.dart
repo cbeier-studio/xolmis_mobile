@@ -373,13 +373,13 @@ class _StatsGeneralTabState extends State<StatsGeneralTab> with AutomaticKeepAli
         _buildMetricTile(
           label: S.of(context).poisRecorded(totalPoisCount),
           value: '${totalPoisCount}',
-          valueColor: XolmisColors.folhaCampo,
+          // valueColor: XolmisColors.folhaCampo,
           isDark: isDark,
         ),
         _buildMetricTile(
           label: S.of(context).localitiesSurveyed(allLocalitiesSurveyed),
           value: '${allLocalitiesSurveyed}',
-          valueColor: XolmisColors.terraMadeira,
+          // valueColor: XolmisColors.terraMadeira,
           isDark: isDark,
         ),
       ],

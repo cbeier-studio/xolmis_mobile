@@ -16,17 +16,23 @@ class XolmisColors {
   static const Color surfaceVariant = Color(0xFFE7E0EC);
   static const Color outline = Color(0xFF79747E);
   static const Color outlineVariant = Color(0xFFC9C5D0);
+  static const Color borderSubtle = Color(0xFFE0E2EC);
 
-  // Cores de Suporte Xolmis
+  // Xolmis Support Colors
   static const Color jacarandaCore = Color(0xFF6B66C5);
   static const Color jacarandaDeep = Color(0xFF48429B);
   static const Color jacarandaLight = Color(0xFFECECFA);
   static const Color jacarandaContainer = Color(0xFFE2E0F9);
+  static const Color rosaOrquideaCore = Color(0xFFC25283);
+  static const Color rosaOrquideaDeep = Color(0xFF8E2A59);
+  static const Color rosaOrquideaContainer = Color(0xFFF8D7E3);
   static const Color folhaCampo = Color(0xFF3A7D52);
-  static const Color terraMadeira = Color(0xFF8C6D52);
-  static const Color borderSubtle = Color(0xFFE0E2EC);
 
-  // Status Semânticos
+  // Categorical Palette
+  static const Color verdeLimaoPastel = Color(0xFFF9FBE7);
+  static const Color verdeLimaoVivo = Color(0xFF827717);
+
+  // Semantic Statuses
   static const Color success = Color(0xFF2E7D32);
   static const Color successContainer = Color(0xFFC8E6C9);
   static const Color onSuccessContainer = Color(0xFF1B5E20);

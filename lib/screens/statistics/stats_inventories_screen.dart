@@ -887,7 +887,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
                               LineChartBarData(
                                 spots: expectedSpots,
                                 isCurved: true,
-                                color: Colors.teal,
+                                color: Colors.lightGreen,
                                 barWidth: 2,
                                 dashArray: [5, 5],
                                 dotData: FlDotData(show: true),
@@ -1031,7 +1031,7 @@ class StatsInventoriesScreenState extends State<StatsInventoriesScreen> {
               const SizedBox(width: 8),
               _buildLegendIndicator(S.of(context).sample, XolmisColors.pinkAccent, isDark),
               const SizedBox(width: 8),
-              _buildLegendIndicator(S.of(context).rarefactionCurve, Colors.teal, isDark),
+              _buildLegendIndicator(S.of(context).rarefactionCurve, Colors.lightGreen, isDark),
             ],
           ),
           const SizedBox(height: 12),
